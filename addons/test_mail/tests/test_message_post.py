@@ -1678,8 +1678,12 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                 )
 
     @users('employee')
-    def test_post_with_out_of_office(self):
-        """ Test out of office support. Test setup :
+    def test_post_with_out_of_office_email(self):
+        """ Test out of office support for incoming emails. Posting with the
+        'email' message type emulates the mail gateway, where the parent comes
+        from the email headers: the parent author is then considered as the
+        replied person. Chatter posts are covered by
+        'test_post_with_out_of_office_parent_author'. Test setup :
          * record followers: user_employee_c2
          * OOO users: user_admin, user_employee_c2, user_portal
         """
@@ -1788,6 +1792,64 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                             'subtype': 'mail.mt_comment',
                         }],
                     )
+
+    @users('employee')
+    def test_post_with_out_of_office_parent_author(self):
+        """ On flat threads, chatter posts (backend, portal, public) never set
+        the parent: it is computed as the last message. Its author, when not
+        notified, should not send an OOO reply, as the new message does not
+        answer them. Incoming emails are covered by
+        'test_post_with_out_of_office_email'. """
+        test_record = self.env['mail.test.simple'].browse(self.test_record.ids)
+
+        # each case has its own author, as OOO replies are limited to one per
+        # author / recipient every 4 days, which would hide a faulty reply
+        for msg, parent_author_follows, post_user, post_sudo, post_values in [
+            (
+                'Internal note, parent author follows but notes do not notify followers',
+                True, self.user_employee, False,
+                {'subtype_xmlid': 'mail.mt_note'},
+            ),
+            (
+                'Internal message, parent author does not follow',
+                False, self.user_employee_2, False,
+                {'subtype_xmlid': 'mail.mt_comment'},
+            ),
+            (
+                'Portal chatter, posted as sudo by the controller',
+                False, self.user_portal, True,
+                {'subtype_xmlid': 'mail.mt_comment'},
+            ),
+            (
+                'Public chatter, posted as sudo by the controller with the token partner as author',
+                False, self.user_public, True,
+                {'author_id': self.partner_1.id, 'subtype_xmlid': 'mail.mt_comment'},
+            ),
+        ]:
+            with self.subTest(msg=msg):
+                with self.mock_mail_gateway():
+                    parent = test_record.with_user(self.user_admin).message_post(
+                        body='Posting before leaving on holidays',
+                        message_type='comment',
+                        subtype_xmlid='mail.mt_comment',
+                    )
+                if not parent_author_follows:
+                    test_record.message_unsubscribe(self.partner_admin.ids)
+                self._setup_out_of_office(self.user_admin)
+
+                poster = test_record.with_user(post_user)
+                if post_sudo:
+                    poster = poster.sudo()
+                with self.mock_mail_gateway(), self.mock_mail_app():
+                    message = poster.message_post(
+                        body='An unrelated message',
+                        message_type='comment',
+                        **post_values,
+                    )
+
+                self.assertEqual(message.parent_id, parent)
+                self.assertNotIn(self.partner_admin, message.notified_partner_ids)
+                self.assertEqual(self._new_msgs, message, 'A non notified parent author should not send an OOO reply')
 
 
 @tagged('mail_post')
