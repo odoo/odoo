@@ -99,7 +99,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
             node = {
                 **({
                     'InvoiceID': {'_text': transaction.name},
-                    'IssueDate': {'_text': self._format_date(transaction.date)},
+                    'IssueDate': {'_text': self._format_date(transaction.invoice_date or transaction.date)},
                 } if transaction else {}),
                 'Payment': {
                     'Date': {'_text': self._format_date(date)},
@@ -209,7 +209,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
             buyer = move.company_id.partner_id if is_purchase else move.commercial_partner_id
             invoice_node = {
                 'ID': {'_text': move.name},
-                'IssueDate': {'_text': self._format_date(move.date)},
+                'IssueDate': {'_text': self._format_date(move.invoice_date or move.date)},
                 'TypeCode': {'_text': self._get_move_typecode(move)},
                 'CurrencyCode': {'_text': move.currency_id.name},
                 'DueDate': {'_text': self._format_date(move.invoice_date_due or move.date)},
@@ -238,7 +238,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
         summary = self._get_tax_summary(
             move_lines=moves.line_ids,
             agregation_function=lambda line: frozendict({
-                'date': line.date,
+                'date': line.move_id.invoice_date or line.date,
                 'currency_id': line.currency_id,
                 'tax_due_date_type_code': self._get_move_tax_data(line.move_id)['tax_due_date_type_code'],
                 'category_code': self._get_line_category_code(line),
@@ -338,7 +338,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
     def _invoice_add_referenced_documents(self, invoice, move):
         invoice['ReferencedDocument'] = [{
             'ID': {'_text': ref_doc.name},
-            'IssueDate': {'_text': self._format_date(ref_doc.date)}
+            'IssueDate': {'_text': self._format_date(ref_doc.invoice_date or ref_doc.date)}
         } for ref_doc in move._l10n_fr_pdp_get_referenced_documents()]
 
     @api.model
@@ -585,7 +585,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
                     for previous_move in sale_line.invoice_lines.move_id:
                         if not previous_move or previous_move == move or previous_move.state != 'posted':
                             continue
-                        refs.append((previous_move.name, previous_move.date))
+                        refs.append((previous_move.name, previous_move.invoice_date or previous_move.date))
                 if refs:
                     ref_id, ref_date = sorted(refs, key=lambda vals: (vals[1] or fields.Date.today(), vals[0]))[0]
                     res['ReferencedDocument'] = {

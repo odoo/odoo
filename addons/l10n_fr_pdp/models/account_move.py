@@ -397,6 +397,7 @@ class AccountMove(models.Model):
         'commercial_partner_id',
         'company_id',
         'date',
+        'invoice_date',
         'l10n_fr_pdp_flow_10_operation_type',
         'l10n_fr_pdp_flow_10_report_type',
         'l10n_fr_pdp_has_error',
@@ -495,6 +496,7 @@ class AccountMove(models.Model):
 
     @api.depends(
         'date',
+        'invoice_date',
         'company_id',
         'commercial_partner_id',
         'l10n_fr_pdp_flow_10_operation_type',
@@ -509,7 +511,7 @@ class AccountMove(models.Model):
                 move.state == 'draft'
                 or not move.company_id.l10n_fr_f10_enable_reporting
                 or not move.company_id._pdp_get_flow_10_start_date()
-                or move.date < move.company_id._pdp_get_flow_10_start_date()
+                or (move.invoice_date or move.date) < move.company_id._pdp_get_flow_10_start_date()
                 or not move._l10n_fr_pdp_get_transaction_type()  # is b2bi or b2c
             ):
                 move.l10n_fr_pdp_flow_10_report_type = None
