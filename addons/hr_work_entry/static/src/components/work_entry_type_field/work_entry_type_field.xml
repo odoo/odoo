@@ -38,9 +38,8 @@
         <div class="o_calendar_renderer o_radio_item position-relative cursor-pointer d-flex gap-1 align-items-center"
              t-att-class="className"
              style="background-color: inherit;">
-            <span class="o_work_entry_type_badge position-relative small rounded-3 d-flex flex-shrink-0 justify-content-center align-self-start"
-                  t-attf-class="o_calendar_color_#{data?.color || 0}"
-                  style="background-color: rgb(var(--o-calendar-event-bg-subtle-rgb)); min-width: 5ch; max-width: 10ch; height:23px; padding: 2px;">
+            <span class="o_work_entry_type_badge position-relative small rounded-3 d-flex flex-shrink-0 justify-content-center align-self-start o_calendar_color"
+                  t-attf-style="--o-calendar-color: var(--o-colors-#{data?.color || 0}); background-color: var(--o-calendar-event-bg-subtle); min-width: 5ch; max-width: 10ch; height:23px; padding: 2px;">
                 <span class="o_work_entry_type_code text-truncate" t-out="data?.display_code || ' '"/>
             </span>
             <t t-if="label">

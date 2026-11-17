@@ -7,6 +7,19 @@ import { calendarCommonRendererProps } from "@web/views/calendar/calendar_common
 
 const { DateTime } = luxon;
 
+/* The color of a work location, given to its stylesheet in a custom property, for the palette colors only */
+function workLocationColorClass(workLocation, outline = false) {
+    if (typeof workLocation.colorIndex !== "number") {
+        return "";
+    }
+    return outline ? "o_worklocation_color o_worklocation_outline" : "o_worklocation_color";
+}
+function workLocationColorStyle(workLocation) {
+    return typeof workLocation.colorIndex === "number"
+        ? `--WorkLocation-color: var(--o-colors-${workLocation.colorIndex});`
+        : "";
+}
+
 patch(AttendeeCalendarCommonRenderer.prototype, {
 	setup() {
 		super.setup(...arguments);
@@ -94,6 +107,8 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
                 "office": "business",
                 "home": "home",
             },
+            workLocationColorClass,
+            workLocationColorStyle,
         }
     }
 });

@@ -79,6 +79,11 @@ import {
     toggleSectionFilter,
 } from "./calendar_test_helpers";
 
+/** The inline style giving a calendar event the palette color `index` */
+const eventColor = (index) => ({ "--o-calendar-color": `var(--o-colors-${index})` });
+/** The inline style giving a calendar filter the palette color `index` */
+const filterColor = (index) => ({ "--o-calendar-filter-color": `var(--o-colors-${index})` });
+
 class Event extends models.Model {
     name = fields.Char();
     type_id = fields.Many2one({ string: "Event Type", relation: "event.type" });
@@ -2782,19 +2787,19 @@ test(`Colors: cycling through available colors`, async () => {
         `,
     });
     expect(`.o_event`).toHaveCount(56);
-    expect(`.o_event[data-event-id="1"]`).toHaveClass("o_calendar_color_1");
-    expect(`.o_event[data-event-id="55"]`).toHaveClass("o_calendar_color_55");
-    expect(`.o_event[data-event-id="56"]`).toHaveClass("o_calendar_color_1");
+    expect(`.o_event[data-event-id="1"]`).toHaveStyle(eventColor(1), { inline: true });
+    expect(`.o_event[data-event-id="55"]`).toHaveStyle(eventColor(55), { inline: true });
+    expect(`.o_event[data-event-id="56"]`).toHaveStyle(eventColor(1), { inline: true });
     await displayCalendarPanel();
     expect(
         `.o_calendar_filter[data-name="attendee_ids"] .o_calendar_filter_item[data-value="1"]`
-    ).toHaveClass("o_calendar_filter_color_1");
+    ).toHaveStyle(filterColor(1), { inline: true });
     expect(
         `.o_calendar_filter[data-name="attendee_ids"] .o_calendar_filter_item[data-value="55"]`
-    ).toHaveClass("o_calendar_filter_color_55");
+    ).toHaveStyle(filterColor(55), { inline: true });
     expect(
         `.o_calendar_filter[data-name="attendee_ids"] .o_calendar_filter_item[data-value="56"]`
-    ).toHaveClass("o_calendar_filter_color_1");
+    ).toHaveStyle(filterColor(1), { inline: true });
 });
 
 test.tags("desktop");
@@ -2808,13 +2813,13 @@ test(`Colors: use available colors when attr is not number on desktop`, async ()
             </calendar>
         `,
     });
-    const colorClass = Array.from(queryFirst`.o_event[data-event-id="1"]`.classList).find(
-        (className) => className.startsWith("o_calendar_color_")
+    const color = queryFirst`.o_event[data-event-id="1"]`.style.getPropertyValue(
+        "--o-calendar-color"
     );
-    expect(isNaN(Number(colorClass.split("_").at(-1)))).toBe(false);
+    expect(color).toMatch(/^var\(--o-colors-\d+\)$/);
 
     await clickEvent(1);
-    expect(`.o_calendar_popover`).toHaveClass(colorClass);
+    expect(`.o_calendar_popover`).toHaveStyle({ "--o-calendar-color": color }, { inline: true });
 });
 
 test.tags("mobile");
@@ -2828,10 +2833,10 @@ test(`Colors: use available colors when attr is not number on mobile`, async () 
             </calendar>
         `,
     });
-    const colorClass = Array.from(queryFirst`.o_event[data-event-id="1"]`.classList).find(
-        (className) => className.startsWith("o_calendar_color_")
+    const color = queryFirst`.o_event[data-event-id="1"]`.style.getPropertyValue(
+        "--o-calendar-color"
     );
-    expect(isNaN(Number(colorClass.split("_").at(-1)))).toBe(false);
+    expect(color).toMatch(/^var\(--o-colors-\d+\)$/);
 });
 
 test(`Add filters and specific color`, async () => {
@@ -2912,9 +2917,9 @@ test(`Add filters and specific color`, async () => {
         "search_read (event) [display_name, start, stop, is_all_day, color, attendee_ids, type_id]",
     ]);
 
-    expect(`.o_event[data-event-id="8"]`).toHaveClass("o_calendar_color_4");
-    expect(`.o_event[data-event-id="9"]`).toHaveClass("o_calendar_color_1");
-    expect(`.o_event[data-event-id="10"]`).toHaveClass("o_calendar_color_0");
+    expect(`.o_event[data-event-id="8"]`).toHaveStyle(eventColor(4), { inline: true });
+    expect(`.o_event[data-event-id="9"]`).toHaveStyle(eventColor(1), { inline: true });
+    expect(`.o_event[data-event-id="10"]`).toHaveStyle(eventColor(0), { inline: true });
 
     await displayCalendarPanel();
     expect(`.o_calendar_filter`).toHaveCount(2);
@@ -2924,7 +2929,7 @@ test(`Add filters and specific color`, async () => {
     expect(`.o_calendar_filter[data-name="type_id"] .o_calendar_filter_item`).toHaveCount(4);
     expect(
         `.o_calendar_filter[data-name="type_id"] .o_calendar_filter_item[data-value="3"]`
-    ).toHaveClass("o_calendar_filter_color_4");
+    ).toHaveStyle(filterColor(4), { inline: true });
 });
 
 test(`Colors: dynamic filters without any color attr`, async () => {
@@ -2937,15 +2942,13 @@ test(`Colors: dynamic filters without any color attr`, async () => {
             </calendar>
         `,
     });
-    expect(`.o_event[data-event-id="1"]`).toHaveClass("o_calendar_color_0");
-    expect(`.o_event[data-event-id="2"]`).toHaveClass("o_calendar_color_0");
-    expect(`.o_event[data-event-id="3"]`).toHaveClass("o_calendar_color_0");
-    expect(`.o_event[data-event-id="4"]`).toHaveClass("o_calendar_color_0");
+    expect(`.o_event[data-event-id="1"]`).toHaveStyle(eventColor(0), { inline: true });
+    expect(`.o_event[data-event-id="2"]`).toHaveStyle(eventColor(0), { inline: true });
+    expect(`.o_event[data-event-id="3"]`).toHaveStyle(eventColor(0), { inline: true });
+    expect(`.o_event[data-event-id="4"]`).toHaveStyle(eventColor(0), { inline: true });
     await displayCalendarPanel();
     expect(`.o_calendar_filter[data-name="user_id"]`).toHaveCount(1);
-    expect(
-        `.o_calendar_filter[data-name="user_id"] [class*='o_calendar_filter_color_']`
-    ).toHaveCount(0);
+    expect(`.o_calendar_filter[data-name="user_id"] .o_calendar_filter_color`).toHaveCount(0);
 });
 
 test(`Colors: dynamic filters without color attr (related)`, async () => {
@@ -2999,16 +3002,12 @@ test(`Colors: dynamic filters without color attr (related)`, async () => {
         `,
     });
     await toggleSectionFilter("attendee_ids");
-    expect(`.o_event[data-event-id="8"]`).toHaveClass("o_calendar_color_4");
-    expect(`.o_event[data-event-id="9"]`).toHaveClass("o_calendar_color_1");
-    expect(`.o_event[data-event-id="10"]`).toHaveClass("o_calendar_color_2");
+    expect(`.o_event[data-event-id="8"]`).toHaveStyle(eventColor(4), { inline: true });
+    expect(`.o_event[data-event-id="9"]`).toHaveStyle(eventColor(1), { inline: true });
+    expect(`.o_event[data-event-id="10"]`).toHaveStyle(eventColor(2), { inline: true });
     await displayCalendarPanel();
-    expect(
-        `.o_calendar_filter[data-name="attendee_ids"] [class*='o_calendar_filter_color_']`
-    ).toHaveCount(0);
-    expect(
-        `.o_calendar_filter[data-name="type_id"] [class*='o_calendar_filter_color_']`
-    ).toHaveCount(3);
+    expect(`.o_calendar_filter[data-name="attendee_ids"] .o_calendar_filter_color`).toHaveCount(0);
+    expect(`.o_calendar_filter[data-name="type_id"] .o_calendar_filter_color`).toHaveCount(3);
 });
 
 test(`Colors: dynamic filters without color attr (direct)`, async () => {
@@ -3025,17 +3024,13 @@ test(`Colors: dynamic filters without color attr (direct)`, async () => {
             </calendar>
         `,
     });
-    expect(`.o_event[data-event-id="1"]`).toHaveClass("o_calendar_color_7"); // uid = serverState.user_id
-    expect(`.o_event[data-event-id="2"]`).toHaveClass("o_calendar_color_7"); // uid = serverState.user_id
-    expect(`.o_event[data-event-id="3"]`).toHaveClass("o_calendar_color_4");
-    expect(`.o_event[data-event-id="4"]`).toHaveClass("o_calendar_color_7"); // uid = serverState.user_id
+    expect(`.o_event[data-event-id="1"]`).toHaveStyle(eventColor(7), { inline: true }); // uid = serverState.user_id
+    expect(`.o_event[data-event-id="2"]`).toHaveStyle(eventColor(7), { inline: true }); // uid = serverState.user_id
+    expect(`.o_event[data-event-id="3"]`).toHaveStyle(eventColor(4), { inline: true });
+    expect(`.o_event[data-event-id="4"]`).toHaveStyle(eventColor(7), { inline: true }); // uid = serverState.user_id
     await displayCalendarPanel();
-    expect(
-        `.o_calendar_filter[data-name="partner_id"] [class*='o_calendar_filter_color_']`
-    ).toHaveCount(0);
-    expect(
-        `.o_calendar_filter[data-name="user_id"] [class*='o_calendar_filter_color_']`
-    ).toHaveCount(2);
+    expect(`.o_calendar_filter[data-name="partner_id"] .o_calendar_filter_color`).toHaveCount(0);
+    expect(`.o_calendar_filter[data-name="user_id"] .o_calendar_filter_color`).toHaveCount(2);
 });
 
 test(`makeFilterUser: color for current user`, async () => {
@@ -3072,19 +3067,19 @@ test(`makeFilterUser: color for current user`, async () => {
 
     await displayCalendarPanel();
     const section = `.o_calendar_filter[data-name="attendee_ids"]`;
-    expect(`${section} [class*='o_calendar_filter_color_']`).toHaveCount(3);
+    expect(`${section} .o_calendar_filter_color`).toHaveCount(3);
     expect(`${section} .o_calendar_filter_label`).toHaveText("Attendees");
     expect(`${section} .o_calendar_filter_item`).toHaveCount(3);
     expect(`${section} .o_calendar_filter_item[data-value="17"]`).toHaveText("Mitchell Admin");
-    expect(`${section} .o_calendar_filter_item[data-value="17"]`).toHaveClass(
-        "o_calendar_filter_color_17"
-    );
-    expect(`${section} .o_calendar_filter_item[data-value="2"]`).toHaveClass(
-        "o_calendar_filter_color_2"
-    );
-    expect(`${section} .o_calendar_filter_item[data-value="1"]`).toHaveClass(
-        "o_calendar_filter_color_1"
-    );
+    expect(`${section} .o_calendar_filter_item[data-value="17"]`).toHaveStyle(filterColor(17), {
+        inline: true,
+    });
+    expect(`${section} .o_calendar_filter_item[data-value="2"]`).toHaveStyle(filterColor(2), {
+        inline: true,
+    });
+    expect(`${section} .o_calendar_filter_item[data-value="1"]`).toHaveStyle(filterColor(1), {
+        inline: true,
+    });
 });
 
 test(`Colors: dynamic filters with same color as events`, async () => {
@@ -3138,22 +3133,20 @@ test(`Colors: dynamic filters with same color as events`, async () => {
         `,
     });
     await toggleSectionFilter("attendee_ids");
-    expect(`.o_event[data-event-id="8"]`).toHaveClass("o_calendar_color_4");
-    expect(`.o_event[data-event-id="9"]`).toHaveClass("o_calendar_color_1");
-    expect(`.o_event[data-event-id="10"]`).toHaveClass("o_calendar_color_2");
+    expect(`.o_event[data-event-id="8"]`).toHaveStyle(eventColor(4), { inline: true });
+    expect(`.o_event[data-event-id="9"]`).toHaveStyle(eventColor(1), { inline: true });
+    expect(`.o_event[data-event-id="10"]`).toHaveStyle(eventColor(2), { inline: true });
     await displayCalendarPanel();
-    expect(
-        `.o_calendar_filter[data-name="type_id"] [class*='o_calendar_filter_color_']`
-    ).toHaveCount(3);
+    expect(`.o_calendar_filter[data-name="type_id"] .o_calendar_filter_color`).toHaveCount(3);
     expect(
         `.o_calendar_filter[data-name="type_id"] .o_calendar_filter_item[data-value="1"]`
-    ).toHaveClass("o_calendar_filter_color_1");
+    ).toHaveStyle(filterColor(1), { inline: true });
     expect(
         `.o_calendar_filter[data-name="type_id"] .o_calendar_filter_item[data-value="2"]`
-    ).toHaveClass("o_calendar_filter_color_2");
+    ).toHaveStyle(filterColor(2), { inline: true });
     expect(
         `.o_calendar_filter[data-name="type_id"] .o_calendar_filter_item[data-value="3"]`
-    ).toHaveClass("o_calendar_filter_color_4");
+    ).toHaveStyle(filterColor(4), { inline: true });
 });
 
 test(`Colors: dynamic filters with another color source`, async () => {
@@ -3207,19 +3200,19 @@ test(`Colors: dynamic filters with another color source`, async () => {
 
     await toggleSectionFilter("attendee_ids");
     expect.verifySteps(["fetching event.type filter colors"]);
-    expect(`.o_event[data-event-id="8"]`).toHaveClass("o_calendar_color_4");
-    expect(`.o_event[data-event-id="9"]`).toHaveClass("o_calendar_color_4");
-    expect(`.o_event[data-event-id="10"]`).toHaveClass("o_calendar_color_4");
+    expect(`.o_event[data-event-id="8"]`).toHaveStyle(eventColor(4), { inline: true });
+    expect(`.o_event[data-event-id="9"]`).toHaveStyle(eventColor(4), { inline: true });
+    expect(`.o_event[data-event-id="10"]`).toHaveStyle(eventColor(4), { inline: true });
     await displayCalendarPanel();
     expect(
         `.o_calendar_filter[data-name="type_id"] .o_calendar_filter_item[data-value="1"]`
-    ).toHaveClass("o_calendar_filter_color_1");
+    ).toHaveStyle(filterColor(1), { inline: true });
     expect(
         `.o_calendar_filter[data-name="type_id"] .o_calendar_filter_item[data-value="2"]`
-    ).toHaveClass("o_calendar_filter_color_2");
+    ).toHaveStyle(filterColor(2), { inline: true });
     expect(
         `.o_calendar_filter[data-name="type_id"] .o_calendar_filter_item[data-value="3"]`
-    ).toHaveClass("o_calendar_filter_color_4");
+    ).toHaveStyle(filterColor(4), { inline: true });
 });
 
 test(`Colors: dynamic filters with no color source`, async () => {
@@ -3276,13 +3269,13 @@ test(`Colors: dynamic filters with no color source`, async () => {
     await displayCalendarPanel();
     expect(
         `.o_calendar_filter[data-name="type_id"] .o_calendar_filter_item[data-value="1"]`
-    ).toHaveClass("o_calendar_filter_color_1");
+    ).toHaveStyle(filterColor(1), { inline: true });
     expect(
         `.o_calendar_filter[data-name="type_id"] .o_calendar_filter_item[data-value="2"]`
-    ).toHaveClass("o_calendar_filter_color_2");
+    ).toHaveStyle(filterColor(2), { inline: true });
     expect(
         `.o_calendar_filter[data-name="type_id"] .o_calendar_filter_item[data-value="3"]`
-    ).toHaveClass("o_calendar_filter_color_4");
+    ).toHaveStyle(filterColor(4), { inline: true });
 });
 
 test(`create event with filters`, async () => {

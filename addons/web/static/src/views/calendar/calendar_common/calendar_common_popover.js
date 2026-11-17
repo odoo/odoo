@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { is24HourFormat } from "@web/core/l10n/time";
 import { parseXML } from "@web/core/utils/xml";
-import { getColor, getFormattedDateSpan } from "@web/views/calendar/utils";
+import { getFormattedDateSpan, getPaletteColor } from "@web/views/calendar/utils";
 import { CARD_ATTRIBUTE } from "@web/views/card/card_arch_parser";
 import { CardPopover } from "@web/views/card/card_popover/card_popover";
 
@@ -52,7 +52,8 @@ export class CalendarCommonPopover extends Component {
 
     get cardPopoverProps() {
         const { meta } = this.props.model;
-        const color = getColor(this.props.record.colorIndex);
+        // the popover of an event in a CSS color takes the first color of the palette
+        const color = getPaletteColor(this.props.record.colorIndex) || "var(--o-colors-0)";
         return {
             close: this.props.close,
             fields: meta.fields,
@@ -60,9 +61,8 @@ export class CalendarCommonPopover extends Component {
             resId: this.resId,
             popoverNode: meta.popoverNode,
             readonly: this.readonly,
-            rootClass: `o_calendar_popover o_calendar_color_${
-                typeof color === "number" ? color : 0
-            }`,
+            rootClass: "o_calendar_popover o_calendar_color",
+            rootStyle: `--o-calendar-color: ${color};`,
             context: meta.context,
             reloadOnClose: () => this.props.model.load(),
             openRecord: this.props.openRecord,

@@ -9,6 +9,7 @@ import { CalendarCommonPopover } from "@web/views/calendar/calendar_common/calen
 import {
     convertRecordToEvent,
     getColor,
+    getPaletteColor,
     getFullCalendarTimeZone,
     joinClasses,
 } from "@web/views/calendar/utils";
@@ -343,11 +344,8 @@ export class CalendarCommonRenderer extends Component {
         const record = this.props.model.records[event.id];
 
         if (record) {
-            const color = getColor(record.colorIndex);
-            if (typeof color === "number") {
-                classesToAdd.push(`o_calendar_color_${color}`);
-            } else if (typeof color !== "string") {
-                classesToAdd.push("o_calendar_color_0");
+            if (typeof getColor(record.colorIndex) !== "string") {
+                classesToAdd.push("o_calendar_color");
             }
 
             if (record.isHatched) {
@@ -378,10 +376,12 @@ export class CalendarCommonRenderer extends Component {
     }
     onEventDidMount({ el, event }) {
         el.dataset.eventId = event.id;
-        if (this.props.model.records[event.id]) {
+        const record = this.props.model.records[event.id];
+        if (record) {
             const bg = document.createElement("div");
             bg.classList.add("o_calendar_event_bg");
             el.appendChild(bg);
+            el.style.setProperty("--o-calendar-color", getPaletteColor(record.colorIndex));
         }
     }
     async onSelect(info) {

@@ -65,7 +65,7 @@ test("dropdown selection shows display_code and color", async () => {
     });
 
     expect(AVATAR).toHaveText("A");
-    expect(AVATAR).toHaveClass("o_calendar_color_2");
+    expect(AVATAR).toHaveStyle({ "--o-calendar-color": "var(--o-colors-2)" }, { inline: true });
 
     await clickFieldDropdown("work_entry_type_id");
     await contains(
@@ -73,7 +73,7 @@ test("dropdown selection shows display_code and color", async () => {
     ).click();
 
     expect(AVATAR).toHaveText("T");
-    expect(AVATAR).toHaveClass("o_calendar_color_5");
+    expect(AVATAR).toHaveStyle({ "--o-calendar-color": "var(--o-colors-5)" }, { inline: true });
 });
 
 test.tags("desktop");
@@ -112,7 +112,7 @@ test("search more selection refetches display_code and color", async () => {
 
     expect.verifySteps(["web_read:200"]);
     expect(AVATAR).toHaveText("S");
-    expect(AVATAR).toHaveClass("o_calendar_color_7");
+    expect(AVATAR).toHaveStyle({ "--o-calendar-color": "var(--o-colors-7)" }, { inline: true });
 });
 
 test.tags("desktop");
@@ -156,5 +156,5 @@ test("search more 'Create New' refetches display_code and color of the new recor
 
     expect.verifySteps(["web_save", "web_read"]);
     expect(AVATAR).toHaveText("N");
-    expect(AVATAR).toHaveClass("o_calendar_color_3");
+    expect(AVATAR).toHaveStyle({ "--o-calendar-color": "var(--o-colors-3)" }, { inline: true });
 });

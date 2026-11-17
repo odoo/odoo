@@ -1,13 +1,13 @@
 .o_calendar_popover_link {
     margin-top: 6px;
 
-    &[class*="o_calendar_color_"] {
+    &.o_calendar_color {
         --o-calendar-bg-opacity: 1;
 
         border-radius: var(--border-radius);
         border-color: var(--o-calendar-popover-color, var(--info));
         padding: 0 var(--o-bs-spacer-1);
-        background: RGBA(var(--o-calendar-popover-color--subtle, var(--info-rgb)), var(--o-calendar-bg-opacity));
+        background: rgb(from var(--o-calendar-popover-color--subtle, var(--info)) r g b / var(--o-calendar-bg-opacity));
         font-weight: var(--o-bs-font-weight-normal);
 
         &:hover {
@@ -19,6 +19,7 @@
 
             &:before {
                 margin-right: var(--o-bs-spacer-1);
+                /* eslint-disable-next-line css/font-family-fallbacks -- icon font */
                 font-family: 'Material Symbols Outlined';
                 font-size: var(--o-font-size-base-smaller);
                 color: var(--o-calendar-popover-color, var(--info));
@@ -28,15 +29,10 @@
         }
     }
 
-    @for $i from 1 through length($o-colors-complete) {
-        $color: nth($o-colors-complete, $i);
-        $color-subtle: mix($o-white, $color, 55%);
+    &.o_calendar_color {
+        --o-calendar-popover-color: var(--o-calendar-color);
+        --o-calendar-popover-color--subtle: color-mix(in srgb, var(--o-white) 55%, var(--o-calendar-popover-color));
 
-        &.o_calendar_color_#{$i - 1} {
-            --o-calendar-popover-color: #{$color};
-            --o-calendar-popover-color--subtle: #{to-rgb($color-subtle)};
-
-            color: color-contrast($color-subtle);
-        }
+        color: var(--o-black);
     }
 }

@@ -3,7 +3,7 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { formatDate } from "@web/core/l10n/dates";
 import { useService } from "@web/core/utils/hooks";
 import { getFormattedDateSpan } from "@web/views/calendar/utils";
-import { getColor } from "../utils";
+import { getColor, getPaletteColor } from "../utils";
 
 export class CalendarYearPopover extends Component {
     static components = { Dialog };
@@ -67,18 +67,14 @@ export class CalendarYearPopover extends Component {
     getRecordClass(record) {
         const { colorIndex } = record;
         const color = getColor(colorIndex);
-        if (color && typeof color === "number") {
-            return `o_calendar_color_${color}`;
-        }
-        return "";
+        return color && typeof color === "number" ? "o_calendar_color" : "";
     }
     getRecordStyle(record) {
-        const { colorIndex } = record;
-        const color = getColor(colorIndex);
-        if (color && typeof color === "string") {
+        const color = getColor(record.colorIndex);
+        if (typeof color === "string") {
             return `background-color: ${color};`;
         }
-        return "";
+        return color ? `--o-calendar-color: ${getPaletteColor(record.colorIndex)};` : "";
     }
     getSortedRecordGroups(recordGroups) {
         return recordGroups.sort((a, b) => {
