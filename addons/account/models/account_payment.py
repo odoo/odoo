@@ -14,6 +14,7 @@ class AccountPayment(models.Model):
 
     # == Business fields ==
     name = fields.Char(string="Number", compute='_compute_name', store=True)
+    has_name = fields.Boolean(compute='_compute_has_name')
     date = fields.Date(default=fields.Date.context_today, required=True, tracking=True)
     move_id = fields.Many2one(
         comodel_name='account.move',
@@ -454,6 +455,11 @@ class AccountPayment(models.Model):
                         sequence_date=payment.date,
                     )
                 )
+
+    @api.depends('name')
+    def _compute_has_name(self):
+        for payment in self:
+            payment.has_name = payment.name and payment.name != '/'
 
     @api.depends('partner_id')
     def _compute_commercial_partner_id(self):
