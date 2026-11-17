@@ -6,7 +6,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
 
     def _can_export_selfbilling(self):
         # At the moment, self-billing is only supported for BIS3.
-        return self._name == 'account.edi.xml.ubl_bis3'
+        return self._name in ('account.edi.xml.ubl_bis3', 'account.edi.xml.ubl_nl')
 
     def _add_invoice_config_vals(self, vals):
         super()._add_invoice_config_vals(vals)

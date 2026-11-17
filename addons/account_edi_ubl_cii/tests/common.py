@@ -378,3 +378,20 @@ class TestCiiFacturXCommon(TestUblCiiCommon):
     def subfolders(cls):
         _subfolder_format, subfolder_document, subfolder_country = super().subfolders()
         return 'facturx', subfolder_document, subfolder_country
+
+class TestCiiNlciusCommon(TestUblCiiCommon):
+
+    @classmethod
+    def _create_partner_default_values(cls):
+        values = super()._create_partner_default_values()
+        values['invoice_edi_format'] = 'nlcius'
+        return values
+
+    # -------------------------------------------------------------------------
+    # EXPORT HELPERS
+    # -------------------------------------------------------------------------
+
+    @classmethod
+    def subfolders(cls):
+        _subfolder_format, subfolder_document, subfolder_country = super().subfolders()
+        return 'nlcius', subfolder_document, subfolder_country
