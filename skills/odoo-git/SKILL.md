@@ -114,7 +114,16 @@ a question; a missing section is a review round trip.
   have none.
 - Wrap at about 72 characters. Be complete rather than short: the message is
   the whole change for most readers, and a linked task or ticket is not
-  readable outside Odoo. Several paragraphs is normal.
+  readable outside Odoo. Complete means every part: what is wrong and for
+  whom, why it happens, what the change does and the constraint that
+  decides this approach (not the options it rules out), and the related
+  work it builds on. It never means every fact of the work.
+- Leave out what the diff already holds: a list of the edits, a line
+  removed on the way, the query-by-query breakdown of the change (a
+  `[PERF]` keeps its Benchmark). Leave out the alternatives that were not
+  chosen, tried or not: the message says what the change does and why.
+  Test each sentence: does it help the reader see the problem or the
+  need, why, what the change does, or why this way? If not, cut it.
 - ASCII punctuation only, header included: no em dash, curly quotes or
   ellipsis character. A message is searched for with what a reviewer can type;
   see [Plain ASCII punctuation in comments and messages](../odoo-guidelines/guidelines/comments.md#plain-ascii-punctuation-in-comments-and-messages).
