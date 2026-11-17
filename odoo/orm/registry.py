@@ -170,10 +170,32 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 # due to serialization errors from calling `reset_modules_state` while the first worker is
                 # actively upgrading modules.
                 from odoo.modules import db  # noqa: PLC0415
+                from odoo.modules.module import Manifest  # noqa: PLC0415
                 if db.is_initialized(cr):
                     cr.execute("DELETE FROM ir_config_parameter WHERE key='base.partially_updated_database'")
                     if cr.rowcount:
-                        update_module = True
+                        cr.execute("""
+                            SELECT name, state
+                            FROM ir_module_module
+                            WHERE state IN ('to upgrade', 'to install', 'to remove')
+                            ORDER BY state = 'to remove' DESC
+                        """)
+                        modules = cr.fetchall()
+                        # modules that cannot be loaded (missing or not installable) stay
+                        # in their transient state, an update would not change anything
+                        if not modules or any(
+                            state == 'to remove'
+                            or (Manifest.for_addon(name, display_warning=False) or {}).get('installable')
+                            for name, state in modules
+                        ):
+                            update_module = True
+                        else:
+                            # keep the marker to update them once they become available
+                            cr.execute("""
+                                INSERT INTO ir_config_parameter(key, value)
+                                VALUES ('base.partially_updated_database', '1')
+                                ON CONFLICT DO NOTHING
+                            """)
             from odoo.http import borrow_request  # noqa: PLC0415
             # This should be a method on Registry
             from odoo.modules.loading import load_modules, reset_modules_state  # noqa: PLC0415
