@@ -4,7 +4,7 @@
     'website': 'https://www.odoo.com/documentation/latest/applications/finance/fiscal_localizations.html',
     'icon': '/account/static/description/l10n.png',
     'countries': ['se'],
-    'version': '1.1',
+    'version': '1.3',
     'author': 'XCLUDE, Odoo S.A.',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
@@ -22,7 +22,7 @@ It also includes the invoice OCR payment reference handling.
     'data': [
         'data/account.account.tag.csv',
         'data/account_tax_report_data.xml',
-        "data/res_country_data.xml",
+        'data/res_country_data.xml',
         'views/partner_view.xml',
         'views/account_journal_view.xml',
     ],
