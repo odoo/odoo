@@ -1327,3 +1327,34 @@ class TestPoSBasicConfig(TestPoSCommon):
         })
 
         self.assertEqual(refund_order.refunded_order_id, orders[0])
+
+    def test_cash_move_on_closed_session(self):
+        """ A cash move sent for a closed session (e.g. by a PoS that missed the closing)
+        must be registered on the open session of the same PoS, so that its expected cash
+        matches the counted cash. Without open session, it is kept on the closed session.
+        """
+        self.open_new_session(0)
+        closed_session = self.pos_session
+        order_data = self.create_ui_order_data([(self.product3, 10)])
+        amount_paid = order_data['amount_paid']
+        self.env['pos.order'].sync_from_ui([order_data])
+        closed_session.post_closing_cash_details(amount_paid)
+        closed_session.close_session_from_ui()
+        self.assertEqual(closed_session.state, 'closed')
+
+        # Stale PoS sends a cash-out for the closed session while a new one is open
+        open_session = self.open_new_session(amount_paid)
+        closed_session_lines = closed_session.statement_line_ids
+        closed_session.try_cash_in_out('out', 100, 'withdrawal', {'translatedType': 'out'})
+        self.assertEqual(closed_session.statement_line_ids, closed_session_lines)
+        self.assertEqual(open_session.statement_line_ids.amount, -100)
+
+        # Closing with the real drawer count gives no false cash difference
+        open_session.post_closing_cash_details(amount_paid - 100)
+        open_session.close_session_from_ui()
+        self.assertEqual(open_session.cash_register_difference, 0)
+
+        # No open session: the cash move is kept on the session it was sent for
+        open_session_lines = open_session.statement_line_ids
+        open_session.try_cash_in_out('out', 50, 'withdrawal', {'translatedType': 'out'})
+        self.assertEqual((open_session.statement_line_ids - open_session_lines).amount, -50)
