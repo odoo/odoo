@@ -40,14 +40,13 @@ export class CollaborationPlugin extends Plugin {
         /** Handlers */
         on_will_reset_history_handlers: this.onWillResetHistory.bind(this),
         on_history_reset_handlers: this.onHistoryReset.bind(this),
+        on_will_collect_history_draft_handlers: () => {
+            this.dependencies.history.stage("peer_id", this.peerId);
+        },
 
         /** Overrides */
         set_attribute_overrides: this.setAttribute.bind(this),
 
-        pending_history_commit_metadata_processors: (metadata) => ({
-            ...metadata,
-            peer_id: this.peerId,
-        }),
         is_history_commit_reversible_predicates: (commit) => {
             if (commit.metadata.peer_id !== this.peerId) {
                 return false;
