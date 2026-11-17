@@ -207,30 +207,27 @@ const chatterPatch = {
         if ((!partnerIds.length && !email) || mode !== "message" || status(this) === "destroyed") {
             return;
         }
+        const thread = this.thread();
         const recipients = await this.keepLastSuggestedRecipientsUpdate.add(
             rpc("/mail/thread/recipients/get_suggested_recipients", {
-                thread_model: this.thread().model,
-                thread_id: this.thread().id,
+                thread_model: thread.model,
+                thread_id: thread.id,
                 partner_ids: partnerIds,
                 main_email: email,
             })
         );
-        if (status(this) === "destroyed" && !this.state.thread) {
-            return;
-        }
-        this.state.thread.suggestedRecipients = recipients.map((result) => ({
+        thread.suggestedRecipients = recipients.map((result) => ({
             display_name: result.display_name,
             email: result.email,
             partner_id: result.partner_id,
             name: result.name || result.email,
             recipient_type: result.recipient_type,
         }));
-        this.state.thread.additionalRecipients = this.state.thread.additionalRecipients.filter(
-            (additionalRecipient) =>
-                this.state.thread.suggestedRecipients.every(
-                    (suggestedRecipient) =>
-                        suggestedRecipient.partner_id !== additionalRecipient.partner_id
-                )
+        thread.additionalRecipients = thread.additionalRecipients.filter((additionalRecipient) =>
+            thread.suggestedRecipients.every(
+                (suggestedRecipient) =>
+                    suggestedRecipient.partner_id !== additionalRecipient.partner_id
+            )
         );
     },
 
