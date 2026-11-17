@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class ResPartnerGrade(models.Model):
@@ -14,7 +14,7 @@ class ResPartnerGrade(models.Model):
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
     default_pricelist_id = fields.Many2one('product.pricelist')
     partners_count = fields.Integer(compute='_compute_partners_count')
-    partners_label = fields.Char(related='company_id.partnership_label')
+    partners_label = fields.Char(compute='_compute_partners_label')
 
     def _compute_partners_count(self):
         partners_data = self.env['res.partner']._read_group(
@@ -25,3 +25,8 @@ class ResPartnerGrade(models.Model):
         mapped_data = {grade.id: count for grade, count in partners_data}
         for grade in self:
             grade.partners_count = mapped_data.get(grade.id, 0)
+
+    @api.depends('company_id.partnership_label')
+    def _compute_partners_label(self):
+        for grade in self:
+            grade.partners_label = grade.company_id.partnership_label or self.env.company.partnership_label
