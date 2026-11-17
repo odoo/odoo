@@ -83,8 +83,8 @@ SELECT
     event_registration.sale_status AS sale_status,
 
     event_event.event_type_id AS event_type_id,
-    event_event.date_begin AS event_date_begin,
-    event_event.date_end AS event_date_end,
+    (event_event.date_begin AT TIME ZONE 'UTC' AT TIME ZONE COALESCE(event_event.date_tz, 'UTC'))::date AS event_date_begin,
+    (event_event.date_end AT TIME ZONE 'UTC' AT TIME ZONE COALESCE(event_event.date_tz, 'UTC'))::date AS event_date_end,
 
     event_event_ticket.price AS event_ticket_price,
 
