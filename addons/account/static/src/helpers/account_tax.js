@@ -2670,6 +2670,7 @@ export const accountTaxHelpers = {
                             .filter((t) => this.is_price_included(t.tax, { document_tax_mode: base_line.document_tax_mode }))
                             .reduce((sum, t) => sum + t.raw_tax_amount_currency, 0)) /
                     (base_line.quantity || 1.0),
+                discount: 0.0,
                 tax_details: second_tax_details,
                 _removed_tax_data: tax_data_to_remove,
             });

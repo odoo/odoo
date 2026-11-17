@@ -4103,6 +4103,7 @@ class AccountTax(models.Model):
                         if sub_tax_data['tax']._is_price_included(base_line['document_tax_mode'])
                     )
                 ) / (base_line['quantity'] or 1.0),
+                discount=0.0,
                 tax_details=second_tax_details,
                 _removed_tax_data=tax_data_to_remove,
             )
