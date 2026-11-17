@@ -1,4 +1,3 @@
-import { isVisible } from "@html_builder/utils/utils";
 import { NATIVE_MUTATION_TYPES } from "@html_editor/core/dom_observer_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { isElement } from "@html_editor/utils/dom_info";
@@ -34,7 +33,7 @@ import { _t } from "@web/core/l10n/translation";
 
 export class DropZonePlugin extends Plugin {
     static id = "dropzone";
-    static dependencies = ["history", "setup_editor_plugin"];
+    static dependencies = ["history", "setup_editor_plugin", "visibility"];
     static shared = [
         "activateDropzones",
         "removeDropzones",
@@ -92,7 +91,7 @@ export class DropZonePlugin extends Plugin {
      */
     getDropRootElement() {
         const openModalEl = this.editable.querySelector(".modal.show");
-        if (openModalEl && isVisible(openModalEl)) {
+        if (openModalEl && !this.dependencies.visibility.isElementHidden(openModalEl)) {
             return openModalEl;
         }
         const openDropdownEl = this.editable.querySelector(
@@ -263,7 +262,7 @@ export class DropZonePlugin extends Plugin {
             return false;
         }
         // Drop only in visible elements.
-        if (!isVisible(el)) {
+        if (this.dependencies.visibility.isElementHidden(el)) {
             return false;
         }
         // Drop only in open dropdown and offcanvas elements.
@@ -488,7 +487,9 @@ export class DropZonePlugin extends Plugin {
         { selectorSiblings, selectorChildren, selectorSanitized, selectorGrids },
         { toInsertInline, isContentInIframe = true } = {}
     ) {
-        const isIgnored = (el) => el.matches(this.ignoredSiblingSelectors) || !isVisible(el);
+        const isIgnored = (el) =>
+            el.matches(this.ignoredSiblingSelectors) ||
+            this.dependencies.visibility.isElementHidden(el);
         let hookEls = [];
         for (const parentEl of selectorChildren) {
             const validChildrenEls = [...parentEl.children].filter((el) => !isIgnored(el));

@@ -140,7 +140,6 @@ export class BlockTabPlugin extends Plugin {
                 delete dragState.replacedSnippetEl;
             }
         }
-        this.config.updateInvisibleElementsPanel();
         this.dependencies.disableSnippets.disableUndroppableSnippets();
         this.dependencies.history.commit();
     }
