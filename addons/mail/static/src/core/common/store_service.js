@@ -682,11 +682,11 @@ export class Store extends BaseStore {
                 if (!isCcEnabled && recipient.recipient_type === "cc") {
                     continue;
                 }
-                if (recipient.persona) {
+                if (recipient.partner_id) {
                     if (recipient.recipient_type === "cc") {
-                        postData.partner_cc_ids.push(recipient.persona.id);
+                        postData.partner_cc_ids.push(recipient.partner_id);
                     } else {
-                        postData.partner_ids.push(recipient.persona.id);
+                        postData.partner_ids.push(recipient.partner_id);
                     }
                 } else {
                     if (recipient.recipient_type === "cc") {
