@@ -10,6 +10,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
+import { waitFor } from "@odoo/hoot-dom";
 import { Deferred, tick } from "@odoo/hoot-mock";
 import { asyncStep, mockService, waitForSteps } from "@web/../tests/web_test_helpers";
 
@@ -191,6 +192,28 @@ test("suggested recipients should not be notified when posting an internal note"
     await insertText(".o-mail-Composer-input", "Dummy Message");
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message");
+    await waitForSteps(["message_post"]);
+});
+
+test("suggested recipients are posted as the partner they stand for", async () => {
+    const pyEnv = await startServer();
+    const [, partnerId] = pyEnv["res.partner"].create([
+        { name: "Jane Office", email: "jane@example.com" },
+        { name: "Jane Home", email: "jane@example.com" },
+    ]);
+    const fakeId = pyEnv["res.fake"].create({ partner_ids: [partnerId] });
+    onRpcBefore("/mail/message/post", (args) => {
+        asyncStep("message_post");
+        expect(args.post_data.partner_ids).toEqual([partnerId]);
+        expect(args.post_data.partner_emails).toBe(undefined);
+    });
+    registerArchs(archs);
+    await start();
+    await openFormView("res.fake", fakeId);
+    await click("button", { text: "Send message" });
+    await waitFor(".o-mail-RecipientsInput .o_tag_badge_text:contains(Jane Home)");
+    await insertText(".o-mail-Composer-input", "Dummy Message");
+    await click(".o-mail-Composer-send:enabled");
     await waitForSteps(["message_post"]);
 });
 
