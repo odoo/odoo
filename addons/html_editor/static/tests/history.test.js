@@ -761,7 +761,7 @@ describe("custom operations", () => {
 
         let value = 0;
         // 0 -> 1.
-        editor.shared.domObserver.applyCustomMutation({
+        editor.shared.history.stageCustomOperation({
             apply: () => {
                 expect.step("apply");
                 value = 1;
@@ -803,7 +803,7 @@ describe("custom operations", () => {
         const { editor } = await setupEditor(`<p>[]</p>`);
         let value = 0;
         // 0 -> 1.
-        editor.shared.domObserver.applyCustomMutation({
+        editor.shared.history.stageCustomOperation({
             apply: () => {
                 expect.step("apply A");
                 value = 1;
@@ -817,7 +817,7 @@ describe("custom operations", () => {
         expect.verifySteps(["apply A"]);
 
         // 1 -> 2.
-        editor.shared.domObserver.applyCustomMutation({
+        editor.shared.history.stageCustomOperation({
             apply: () => {
                 expect.step("apply B");
                 value = 2;
@@ -850,7 +850,7 @@ describe("custom operations", () => {
         const { editor } = await setupEditor(`<p>[]</p>`);
         let value = 0;
         // 0 -> 1.
-        editor.shared.domObserver.applyCustomMutation({
+        editor.shared.history.stageCustomOperation({
             apply: () => {
                 expect.step("apply A");
                 value = 1;
@@ -864,7 +864,7 @@ describe("custom operations", () => {
         expect.verifySteps(["apply A"]);
 
         // 1 -> 2.
-        editor.shared.domObserver.applyCustomMutation({
+        editor.shared.history.stageCustomOperation({
             apply: () => {
                 expect.step("apply B");
                 value = 2;
@@ -921,7 +921,7 @@ describe("custom operations", () => {
         const { editor } = await setupEditor(`<p>[]</p>`);
         let value = 0;
         // 0 -> 1.
-        editor.shared.domObserver.applyCustomMutation({
+        editor.shared.history.stageCustomOperation({
             apply: () => {
                 expect.step("apply A");
                 value = 1;
@@ -936,7 +936,7 @@ describe("custom operations", () => {
         const restore = editor.shared.history.makeSavePoint();
 
         // 1 -> 2.
-        editor.shared.domObserver.applyCustomMutation({
+        editor.shared.history.stageCustomOperation({
             apply: () => {
                 expect.step("apply B");
                 value = 2;
@@ -973,11 +973,15 @@ describe("custom operations", () => {
     });
     test("staged callbacks run once per history operation", async () => {
         const { editor } = await setupEditor(`<p>[]</p>`);
-        editor.shared.domObserver.applyCustomMutation({
-            apply: () => expect.step("apply"),
+        const result = editor.shared.history.stageCustomOperation({
+            apply: () => {
+                expect.step("apply");
+                return "result";
+            },
             revert: () => expect.step("revert"),
         });
         // The original operation was applied.
+        expect(result).toBe("result");
         expect.verifySteps(["apply"]);
 
         // Stashing reverts it.
