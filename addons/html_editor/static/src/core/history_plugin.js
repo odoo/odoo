@@ -36,11 +36,9 @@ import { _t } from "@web/core/l10n/translation";
  * values are staged in the history draft, then collected into the next commit,
  * after which the draft is cleared. Undefined values are left out of the
  * commit. Staged values are immutable: replace them, don't mutate them. Values
- * that are computed when a commit is created are added by
- * `pending_history_commit_data_processors` and
- * `pending_history_commit_metadata_processors` instead, which run before the
- * properties are collected from the draft. Properties are applied and reverted
- * in resource order.
+ * that are computed when a commit is created are staged by
+ * `on_will_collect_history_draft_handlers`, which are triggered right before the
+ * draft is collected. Properties are applied and reverted in resource order.
  */
 /**
  * Plugins declare history properties in objects keyed by their ids. These ids
@@ -111,6 +109,7 @@ import { _t } from "@web/core/l10n/translation";
  * @typedef { ((newCommit: HistoryCommit) => void)[] } on_remote_history_commit_applied_handlers
  * @typedef { ((commit: HistoryCommit, options: { ensureNewMutations: boolean, restoreFocus: boolean }) => void)[] } on_revert_history_commit_handlers
  * @typedef { ((savePoint: HistoryCommit<"savePoint">) => void)[] } on_savepoint_restored_handlers
+ * @typedef { ((type: HistoryCommitType) => void)[] } on_will_collect_history_draft_handlers
  * @typedef { (() => void)[] } on_will_invalidate_pending_changes_handlers
  * @typedef { (() => void)[] } on_will_preview_handlers
  * @typedef { (() => void)[] } on_will_rebase_history_handlers
@@ -120,11 +119,8 @@ import { _t } from "@web/core/l10n/translation";
  * @typedef { ((commit: HistoryCommit) => boolean | undefined)[] } is_history_commit_reversible_predicates
  *
  * @typedef { ((data: HistoryCommitData, metadata: HistoryCommitMetadata) => HistoryCommitData)[] } pending_history_commit_data_processors
- * @typedef { ((metadata: HistoryCommitMetadata) => HistoryCommitMetadata)[] } pending_history_commit_metadata_processors
  * @typedef { ((data: HistoryCommitData<"savePoint">) => HistoryCommitData<"savePoint">)[] } save_point_history_commit_data_processors
- * @typedef { ((metadata: HistoryCommitMetadata<"savePoint">) => HistoryCommitMetadata<"savePoint">)[] } save_point_history_commit_metadata_processors
  * @typedef { ((data: HistoryCommitData<"standard">) => HistoryCommitData<"standard">)[] } snapshot_history_commit_data_processors
- * @typedef { ((metadata: HistoryCommitMetadata<"standard"> & { author_timestamp: number }) => HistoryCommitMetadata<"standard">)[] } snapshot_history_commit_metadata_processors
  */
 
 export const COMMIT_DEBOUNCE_DELAY = 250;
@@ -321,7 +317,7 @@ export class HistoryPlugin extends Plugin {
         // Set the type of the commit here. That way, the state of undo and redo
         // is truly accessible when executing the `onChange` callback. It is
         // useful for external components if they execute `can(Undo|Redo)`.
-        const { data, metadata } = this.processCommit({
+        const { data, metadata } = this.processCommit(HISTORY_COMMIT_TYPES.STANDARD, {
             batchable: false, // possibly overridden by `initialMetadata`
             ...initialMetadata,
             author_timestamp: this.authorTimestamp,
@@ -351,7 +347,7 @@ export class HistoryPlugin extends Plugin {
     stash() {
         const stashCommit = new HistoryCommit({
             type: HISTORY_COMMIT_TYPES.STASH,
-            ...this.processCommit(),
+            ...this.processCommit(HISTORY_COMMIT_TYPES.STASH),
         });
         this.currentStash.push(stashCommit);
         this.discardStagedChanges();
@@ -568,38 +564,39 @@ export class HistoryPlugin extends Plugin {
     // ====================
 
     /**
-     * Return the data and metadata of a new commit, made of any pending data
-     * and metadata in plugins that subscribe to
-     * `pending_history_commit_data_processors` and
-     * `pending_history_commit_metadata_processors`, which can stage their
-     * pending changes, then of the properties collected from the draft, as well
-     * as metadata provided by this plugin.
+     * Return the data and metadata of a new commit, made of any pending data in
+     * plugins that subscribe to `pending_history_commit_data_processors`, which
+     * can stage their pending changes, then of the properties collected from
+     * the draft, as well as metadata provided by this plugin.
      *
-     * @template { WritableHistoryCommitType } [T="standard"]
+     * @template { Exclude<HistoryCommitType, "savePoint"> } [T="standard"]
+     * @param { T } type The type of the commit.
      * @param { HistoryCommitMetadata<T> } [metadata = {}]
      * @returns { { data: HistoryCommitData<T>, metadata: HistoryCommitMetadata<T> } }
      */
-    processCommit(metadata = {}) {
+    processCommit(type, metadata = {}) {
         // Set the timestamp of the commit or keep the timestamp of the commit
         // it reverts:
         metadata.commit_timestamp ??= Date.now();
         metadata.author_timestamp ??= this.authorTimestamp;
         metadata.previous_commit_id = this.commits?.at(-1)?.id;
         const data = this.processThrough("pending_history_commit_data_processors", {}, metadata);
-        metadata = this.processThrough("pending_history_commit_metadata_processors", metadata);
-        this.collectStagedProperties(data, metadata);
+        this.collectStagedProperties(type, data, metadata);
         return { data, metadata };
     }
 
     /**
-     * Add the values of the properties staged in the draft to the given data
-     * and metadata.
+     * Let plugins stage the values they compute when the draft is collected,
+     * then add the values of the properties staged in the draft to the given
+     * data and metadata.
      *
+     * @param { HistoryCommitType } type The type of the commit or savepoint.
      * @param { HistoryCommitData } data
      * @param { HistoryCommitMetadata } metadata
      * @returns { void }
      */
-    collectStagedProperties(data, metadata) {
+    collectStagedProperties(type, data, metadata) {
+        this.trigger("on_will_collect_history_draft_handlers", type);
         for (const [properties, values] of [
             [this.dataProperties, data],
             [this.metadataProperties, metadata],
@@ -662,9 +659,7 @@ export class HistoryPlugin extends Plugin {
         /** @type { HistoryCommitData<"standard"> } */
         const data = this.processThrough("snapshot_history_commit_data_processors", {});
         /** @type { HistoryCommitMetadata<"standard"> } */
-        const metadata = this.processThrough("snapshot_history_commit_metadata_processors", {
-            author_timestamp: this.authorTimestamp,
-        });
+        const metadata = { author_timestamp: this.authorTimestamp };
         return new HistoryCommit({ id: this.commits?.at(-1)?.id, data, metadata });
     }
 
@@ -725,7 +720,7 @@ export class HistoryPlugin extends Plugin {
         for (reversedCommit of commitsToReverse) {
             this.revertCommit(reversedCommit, { ensureNewMutations: true });
             this.revertedCommits.add(reversedCommit.id);
-            const { data, metadata } = this.processCommit({
+            const { data, metadata } = this.processCommit(type, {
                 batchable: reversedCommit.metadata.batchable,
                 commit_timestamp: reversedCommit.metadata.commit_timestamp,
                 related_commit_id: reversedCommit.id,
@@ -904,13 +899,14 @@ export class HistoryPlugin extends Plugin {
         const savePoint = new HistoryCommit({
             type: HISTORY_COMMIT_TYPES.SAVEPOINT,
             data: this.processThrough("save_point_history_commit_data_processors", {}),
-            metadata: this.processThrough("save_point_history_commit_metadata_processors", {
-                related_commit_id: this.commits.at(-1).id,
-                has_been_restored: false,
-            }),
+            metadata: { related_commit_id: this.commits.at(-1).id, has_been_restored: false },
         });
         // Processors can stage pending changes: collect the draft after them.
-        this.collectStagedProperties(savePoint.data, savePoint.metadata);
+        this.collectStagedProperties(
+            HISTORY_COMMIT_TYPES.SAVEPOINT,
+            savePoint.data,
+            savePoint.metadata
+        );
         return () => {
             if (savePoint.metadata.has_been_restored) {
                 return;
@@ -952,7 +948,7 @@ export class HistoryPlugin extends Plugin {
                 /** @type { HistoryCommit<"restore"> } */
                 const restoreCommit = new HistoryCommit({
                     type: HISTORY_COMMIT_TYPES.RESTORE,
-                    ...this.processCommit({
+                    ...this.processCommit(HISTORY_COMMIT_TYPES.RESTORE, {
                         related_commit_id: relatedCommitId,
                         reverted_commit_ids: commitsToRestore.map(({ id }) => id),
                         reapplied_commit_ids: irreversibleCommits.map(({ id }) => id),
@@ -1136,8 +1132,7 @@ export class HistoryPlugin extends Plugin {
  */
 /**
  * The description of a commit: the values of its metadata properties, and the
- * history's own metadata. A savepoint can also hold metadata that plugins need
- * to restore it.
+ * history's own metadata.
  *
  * @template { HistoryCommitType } [T=WritableHistoryCommitType]
  * @typedef { {
@@ -1166,7 +1161,7 @@ export class HistoryPlugin extends Plugin {
  *     ? {
  *         related_commit_id: HistoryCommitId,
  *         has_been_restored: boolean,
- *       } & Record<string, any>
+ *       }
  *     : {}
  * ) } HistoryCommitMetadata<T>
  */

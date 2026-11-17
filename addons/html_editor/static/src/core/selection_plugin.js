@@ -35,6 +35,7 @@ import {
 } from "../utils/selection";
 import { closestScrollableY } from "@web/core/utils/scrolling";
 import { withSequence } from "@html_editor/utils/resource";
+import { HISTORY_COMMIT_TYPES } from "@html_editor/core/history_plugin";
 
 /**
  * @typedef { Object } EditorSelection
@@ -201,18 +202,12 @@ function scrollToSelection(selection) {
 
 /**
  * The ID of the active element and the selection before the changes of a
- * commit, and the selection after them.
+ * commit, and the selection after them. For a savepoint, the selection after is
+ * the one it restores, null if there was none when it was made.
  *
  * @typedef { import("@html_editor/core/dom_reference_map_plugin").NodeId | null } active_element_id
  * @typedef { SerializedSelection } selection
  * @typedef { SerializedSelection | null } selection_after
- */
-/**
- * The metadata of a savepoint, with the selection's own.
- *
- * @typedef { import("@html_editor/core/history_plugin").HistoryCommitMetadata<"savePoint"> & {
- *     serialized_selection?: SerializedSelection,
- * } } SelectionSavePointMetadata
  */
 
 export class SelectionPlugin extends Plugin {
@@ -285,37 +280,23 @@ export class SelectionPlugin extends Plugin {
             }
         },
         on_savepoint_restored_handlers: (savePoint) => {
-            /** @type { SelectionSavePointMetadata } */
-            const metadata = savePoint.metadata;
             // TODO ABD TODO @phoenix: evaluate if the selection is not restorable at the desired position
-            if (metadata.serialized_selection) {
-                this.setSerializedSelection(metadata.serialized_selection);
+            if (savePoint.metadata.selection_after) {
+                this.setSerializedSelection(savePoint.metadata.selection_after);
             }
         },
-        // Data is processed first: the pending mutations are registered, so the
-        // snapshot refers to the nodes that the savepoint restores. If there is
-        // no selection, restoring the savepoint sets none.
-        save_point_history_commit_metadata_processors: (metadata) =>
-            getSelection(this.editable)?.anchorNode
-                ? { ...metadata, serialized_selection: this.serializeEditableSelection() }
-                : metadata,
-        snapshot_history_commit_metadata_processors: (metadata) => ({
-            ...metadata,
-            active_element_id: null,
-            selection: {
-                anchorNode: undefined,
-                anchorOffset: undefined,
-                focusNode: undefined,
-                focusOffset: undefined,
-            },
-            selection_after: null,
-        }),
-        // Metadata is processed after data, which normalizes the DOM: its state
-        // doesn't change and invalidate the selection after setting it here.
-        pending_history_commit_metadata_processors: (metadata) => ({
-            ...metadata,
-            selection_after: this.serializeEditableSelection(),
-        }),
+        // The draft is collected after the data is processed, which normalizes
+        // the DOM and registers the pending mutations: the selection refers to
+        // the nodes of the commit or savepoint, and the DOM doesn't change and
+        // invalidate it after staging it here.
+        on_will_collect_history_draft_handlers: (type) => {
+            const isSavePointWithoutSelection =
+                type === HISTORY_COMMIT_TYPES.SAVEPOINT && !getSelection(this.editable)?.anchorNode;
+            this.dependencies.history.stage(
+                "selection_after",
+                isSavePointWithoutSelection ? null : this.serializeEditableSelection()
+            );
+        },
     };
 
     setup() {
