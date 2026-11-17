@@ -10,7 +10,11 @@ patch(PosStore.prototype, {
             if (payload.config_id === this.config.id) {
                 const pendingLine = this.getPendingPaymentLine("mercado_pago");
 
-                if (pendingLine) {
+                if (
+                    pendingLine &&
+                    pendingLine.payment_method_id.id === payload.payment_method_id &&
+                    pendingLine.pos_order_id.uuid === payload.pos_order_uuid
+                ) {
                     pendingLine.payment_method_id.payment_terminal.handleMercadoPagoWebhook();
                 }
             }
