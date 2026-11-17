@@ -11,6 +11,12 @@
             </xpath>
         </template>
 
+        <template id="document_header" inherit_id="web.external_layout_document_header">
+            <xpath expr="//t[@t-call='l10n_ar.custom_header']" position="after">
+                <t t-elif="custom_header == 'l10n_ar_stock.custom_header'" t-call="l10n_ar_stock.custom_header"/>
+            </xpath>
+        </template>
+
         <template id="report_delivery_document" inherit_id="stock.report_delivery_document" primary="True">
             <xpath expr="//t[@t-set='address']" position="after">
                 <t t-set="pre_printed_report" t-value="False"/>
@@ -23,7 +29,7 @@
                     <t t-set="report_name" t-value="stock_doc_type.report_name"/>
                 </t>
                 <t t-set="custom_header" t-value="'l10n_ar_stock.custom_header'"/>
-                <t t-set="custom_footer">
+                <t t-if="o.company_id.account_fiscal_country_id.code == 'AR'" t-set="custom_footer">
                     <div class="row">
                         <div name="footer_left_column" class="col-6 text-start">
                             <div name="pager" t-if="report_type == 'pdf'">

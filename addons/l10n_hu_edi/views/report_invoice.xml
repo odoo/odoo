@@ -133,4 +133,10 @@
             </div>
         </div>
     </template>
+
+    <template id="document_header" inherit_id="web.external_layout_document_header">
+        <xpath expr="." position="inside">
+            <t t-if="custom_header == 'l10n_hu_edi.custom_header'" t-call="l10n_hu_edi.custom_header"/>
+        </xpath>
+    </template>
 </odoo>

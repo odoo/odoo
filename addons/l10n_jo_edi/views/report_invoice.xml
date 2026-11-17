@@ -2,13 +2,18 @@
 <odoo>
     <template id="report_invoice_document_jo_header" inherit_id="account.report_invoice_document">
         <t t-call="web.external_layout" position="before">
-            <t t-if="o.country_code == 'JO' and o.is_sale_document()" t-set="custom_header_jo">
-                <div class="fw-bold text-center mt-2">
-                    <h5 t-if="o.l10n_jo_edi_state == 'demo'">THIS IS A DEMO INVOICE</h5>
-                    <h5 t-elif="not o._l10n_jo_edi_is_legal()">THIS IS NOT A LEGAL DOCUMENT</h5>
-                </div>
-            </t>
+            <t t-set="l10n_jo_edi_header" t-value="True"/>
         </t>
+    </template>
+
+    <template id="document_header_after_logo" inherit_id="web.external_layout_document_header_after_logo">
+        <xpath expr="." position="inside">
+            <div t-if="l10n_jo_edi_header and o._name == 'account.move' and o.country_code == 'JO' and o.is_sale_document()"
+                class="fw-bold text-center mt-2">
+                <h5 t-if="o.l10n_jo_edi_state == 'demo'">THIS IS A DEMO INVOICE</h5>
+                <h5 t-elif="not o._l10n_jo_edi_is_legal()">THIS IS NOT A LEGAL DOCUMENT</h5>
+            </div>
+        </xpath>
     </template>
 
     <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
