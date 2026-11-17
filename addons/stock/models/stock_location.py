@@ -101,17 +101,21 @@ class StockLocation(models.Model):
     )
     _parent_path_id_idx = models.Index("(parent_path, id)")
 
-    @api.depends('name', 'location_id.complete_name', 'usage')
-    @api.depends_context('formatted_display_name', 'show_empty')
+    @api.depends('name', 'location_id.complete_name')
+    @api.depends_context('formatted_display_name', 'show_empty', 'short_name')
     def _compute_display_name(self):
         super()._compute_display_name()
         formatted_display_name = self.env.context.get('formatted_display_name')
+        short_name = self.env.context.get('short_name')
+        if short_name and not formatted_display_name:
+            return  # Locations' `display_name` doesn't need further computation.
         for location in self:
-            has_parent = location.location_id and location.usage != 'view'
-            if formatted_display_name and has_parent:
-                location.display_name = f"--{location.location_id.complete_name}/--{location.name}"
-            elif has_parent:
-                location.display_name = f"{location.location_id.complete_name}/{location.name}"
+            has_parent = location.location_id
+            if not short_name and has_parent:
+                if formatted_display_name:
+                    location.display_name = f"--{location.location_id.complete_name}/--{location.name}"
+                else:
+                    location.display_name = f"{location.location_id.complete_name}/{location.name}"
             if formatted_display_name and self.env.context.get('show_empty') and location.is_empty:
                 location.display_name += self.env._("\t--Empty--")
 
@@ -544,6 +548,11 @@ class StockLocation(models.Model):
             result[dest_loc][product] += quantity_product_uom_sum
 
         return result
+
+    @api.model
+    def search_panel_select_range(self, field_name, **kwargs):
+        recordset = self.with_context(short_name=True) if field_name == 'location_id' else self
+        return super(StockLocation, recordset).search_panel_select_range(field_name, **kwargs)
 
 
 class StockRoute(models.Model):
