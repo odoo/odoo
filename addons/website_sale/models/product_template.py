@@ -29,7 +29,8 @@ def get_translated_field_gist_index(registry, column_name):
     if not registry.has_trigram:
         return ""
     if registry.has_unaccent == FunctionStatus.INDEXABLE:
-        return f"USING GIST(unaccent((JSONB_PATH_QUERY_ARRAY({column_name}, '$.*'::jsonpath))::text) gist_trgm_ops)"  # noqa: E501
+        expression = registry.unaccent(f"(JSONB_PATH_QUERY_ARRAY({column_name}, '$.*'::jsonpath))::text")
+        return f"USING GIST({expression} gist_trgm_ops)"
     return (
         f"USING GIST((JSONB_PATH_QUERY_ARRAY({column_name}, '$.*'::jsonpath)::text) gist_trgm_ops)"
     )
@@ -214,7 +215,7 @@ class ProductTemplate(models.Model):
     )
     _default_code_gist_idx = models.Index(
         lambda registry: (
-            "USING GIST(unaccent(default_code) gist_trgm_ops)"
+            f"USING GIST({registry.unaccent('default_code')} gist_trgm_ops)"
             if registry.has_trigram and registry.has_unaccent == FunctionStatus.INDEXABLE
             else ("USING GIST(default_code gist_trgm_ops)" if registry.has_trigram else "")
         )

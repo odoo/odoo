@@ -75,12 +75,12 @@ _CACHES_BY_KEY = {
 _REPLICA_RETRY_TIME = 20 * 60  # 20 minutes
 
 
-def _unaccent(x: SQL | str | psycopg2.sql.Composable) -> SQL | str | psycopg2.sql.Composed:
+def _unaccent(unaccent_name: str, x: SQL | str | psycopg2.sql.Composable) -> SQL | str | psycopg2.sql.Composed:
     if isinstance(x, SQL):
-        return SQL("unaccent(%s)", x)
+        return SQL("%s(%s)", SQL.identifier(unaccent_name), x)
     if isinstance(x, psycopg2.sql.Composable):
-        return psycopg2.sql.SQL('unaccent({})').format(x)
-    return f'unaccent({x})'
+        return psycopg2.sql.SQL('{}({})').format(psycopg2.sql.Identifier(unaccent_name), x)
+    return f'{unaccent_name}({x})'
 
 
 class Registry(Mapping[str, type["BaseModel"]]):
@@ -357,10 +357,18 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
         from odoo.modules import db  # noqa: PLC0415
         with closing(self.cursor()) as cr:
-            self.has_unaccent = db.has_unaccent(cr)
+            unaccent_name, status = db.get_unaccent(cr)
+            if config['unaccent'] and status == db.FunctionStatus.PRESENT:
+                # Fix the legacy setup where ALTER FUNCTION did not work
+                db.make_immutable_unaccent(cr)
+                cr.commit()  # Makes it visible to the other workers
+                # Read it again even if the creation failed: another worker
+                # may have created the wrapper at the same time.
+                unaccent_name, status = db.get_unaccent(cr)
+            self.has_unaccent = status
             self.has_trigram = db.has_trigram(cr)
 
-        self.unaccent = _unaccent if self.has_unaccent else lambda x: x  # type: ignore
+        self.unaccent = partial(_unaccent, unaccent_name) if self.has_unaccent else lambda x: x  # type: ignore
         self.unaccent_python = remove_accents if self.has_unaccent else lambda x: x
 
         self.new = self.init = self.registries = None  # type: ignore

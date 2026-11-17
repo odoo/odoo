@@ -200,28 +200,51 @@ class FunctionStatus(IntEnum):
     INDEXABLE = 2  # function is present and indexable (immutable)
 
 
-def has_unaccent(cr: BaseCursor) -> FunctionStatus:
-    """ Test whether the database has function 'unaccent' and return its status.
+UNACCENT_WRAPPER = 'immutable_unaccent'
 
-    The unaccent is supposed to be provided by the PostgreSQL unaccent contrib
-    module but any similar function will be picked by OpenERP.
 
-    :rtype: FunctionStatus
+def get_unaccent(cr: BaseCursor) -> tuple[str | None, FunctionStatus]:
     """
-    cr.execute("""
-        SELECT p.provolatile
-        FROM pg_proc p
-        WHERE p.proname = 'unaccent'
-              AND p.pronamespace = current_schema::regnamespace
-              AND p.pronargs = 1
-    """)
-    result = cr.fetchone()
-    if not result:
-        return FunctionStatus.MISSING
+    Return the unaccent function to use and its status.
+
+    The candidates are ``unaccent``, provided by the PostgreSQL unaccent contrib
+    module (any similar function is picked as well), and the immutable wrapper
+    :data:`UNACCENT_WRAPPER` created around it by :func:`make_immutable_unaccent`.
+    The indexable one is preferred.
+    In case of tie, ``unaccent`` has priority, so that the indexes created on it
+    keep matching. ``unaccent`` is indexable only if a superuser made it
+    immutable.
+
+    :return: ``(function name, status)``; the name is meaningless when the
+            status is ``MISSING``
+    """
     # The `provolatile` of unaccent allows to know whether the unaccent function
     # can be used to create index (it should be 'i' - means immutable), see
     # https://www.postgresql.org/docs/current/catalog-pg-proc.html.
-    return FunctionStatus.INDEXABLE if result[0] == 'i' else FunctionStatus.PRESENT
+    cr.execute(SQL("""
+        SELECT p.proname, p.provolatile = 'i'
+        FROM pg_proc p
+        WHERE p.proname IN ('unaccent', %s)
+            AND p.pronamespace = current_schema::regnamespace
+            AND p.pronargs = 1
+        ORDER BY p.provolatile = 'i' DESC, p.proname = 'unaccent' DESC
+        LIMIT 1
+    """, UNACCENT_WRAPPER))
+    row = cr.fetchone()
+    if not row:
+        return 'unaccent', FunctionStatus.MISSING
+    name, immutable = row
+    return name, FunctionStatus.INDEXABLE if immutable else FunctionStatus.PRESENT
+
+
+def has_unaccent(cr: BaseCursor) -> FunctionStatus:
+    """
+    Test whether the database has an unaccent function and return the
+    status of the one to use.
+
+    :rtype: FunctionStatus
+    """
+    return get_unaccent(cr)[1]
 
 
 def has_trigram(cr: BaseCursor) -> bool:
@@ -363,14 +386,12 @@ def _create_empty_database(db_name: str) -> None:
         db = odoo.sql_db.db_connect(db_name)
         with db.cursor() as cr:
             try_install_extension(cr, 'pg_trgm')
-            if odoo.tools.config['unaccent'] and try_install_extension(cr, 'unaccent'):
-                # From PostgreSQL's point of view, making 'unaccent' immutable is incorrect
-                # because it depends on external data - see
-                # https://www.postgresql.org/message-id/flat/201012021544.oB2FiTn1041521@wwwmaster.postgresql.org#201012021544.oB2FiTn1041521@wwwmaster.postgresql.org
-                # But in the case of Odoo, we consider that those data don't
-                # change in the lifetime of a database. If they do change, all
-                # indexes created with this function become corrupted!
-                cr.execute("ALTER FUNCTION unaccent(text) IMMUTABLE")
+            if (
+                odoo.tools.config['unaccent']
+                and has_unaccent(cr) != FunctionStatus.INDEXABLE
+                and try_install_extension(cr, 'unaccent')
+            ):
+                make_immutable_unaccent(cr)
     except psycopg2.Error as e:
         _logger.warning("Unable to create PostgreSQL extensions : %s", e)
     _check_faketime_mode(db_name)
@@ -432,6 +453,43 @@ def try_install_extension(cr: Cursor, extension_name: str) -> bool:
         "\n".join(f"sudo -u postgres psql -d {db} -c '{sql}'" for db, sql in cmds),
     )
     return False
+
+
+def make_immutable_unaccent(cr):
+    """
+    Create the immutable function :data:`UNACCENT_WRAPPER` around
+    ``unaccent``, so that it can be used in index expressions. The extension
+    ``unaccent`` must be installed. On failure, log a warning without
+    raising. :func:`get_unaccent` tells which function to use.
+
+    The function provided by the extension cannot be made immutable by Odoo:
+    ``unaccent`` is a trusted extension, its objects are owned by the
+    bootstrap superuser, and ``ALTER FUNCTION`` requires ownership. The
+    wrapper is owned by the database owner instead. Its ``BEGIN ATOMIC``
+    body binds both the function and the dictionary when the wrapper is
+    created, so they are not looked up through the search_path at runtime.
+
+    From PostgreSQL's point of view, making 'unaccent' immutable is incorrect
+    because it depends on external data (the dictionary's rules file:
+    https://www.postgresql.org/message-id/flat/201012021544.oB2FiTn1041521@wwwmaster.postgresql.org#201012021544.oB2FiTn1041521@wwwmaster.postgresql.org
+    ). But in the case of Odoo, we consider that those data don't change in the
+    lifetime of a database. If they do change, all indexes created with this
+    function become corrupted!
+    """
+    try:
+        with cr.savepoint(flush=False):
+            cr.execute(SQL("""
+                CREATE OR REPLACE FUNCTION %s(text) RETURNS text
+                LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
+                BEGIN ATOMIC
+                    SELECT unaccent($1);
+                END
+            """, SQL.identifier(UNACCENT_WRAPPER)), log_exceptions=False)
+    except psycopg2.Error as e:
+        _logger.warning(
+            "Unable to create the immutable function %s(text): %s",
+            UNACCENT_WRAPPER, str(e).strip()
+        )
 
 
 def _initialize_db(
