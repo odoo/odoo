@@ -73,22 +73,22 @@ export class MailComposerFormRenderer extends formView.Renderer {
             /** @param {Event} event */
             onDrop: async (event) => {
                 const uploadFiles = async () => {
-                    for (const thread of getActiveMailThreads()) {
-                        // Use an isolated composer object instead of thread.composer to
-                        // avoid pushing into the main thread's composer.attachments list,
-                        // which is observed by the chatter.
-                        const composer =
-                            this.props.record.resModel === "mail.scheduled.message"
-                                ? { attachments: [] }
-                                : thread.composer;
-                        for (const file of event.dataTransfer.files) {
-                            const attachment = await this.attachmentUploadService.upload(
-                                thread,
-                                composer,
-                                file
-                            );
-                            await this.operations.saveRecord([attachment.id]);
-                        }
+                    // attachments are copied to each record on send: upload them once
+                    const [thread] = getActiveMailThreads();
+                    // Use an isolated composer object instead of thread.composer to
+                    // avoid pushing into the main thread's composer.attachments list,
+                    // which is observed by the chatter.
+                    const composer =
+                        this.props.record.resModel === "mail.scheduled.message"
+                            ? { attachments: [] }
+                            : thread.composer;
+                    for (const file of event.dataTransfer.files) {
+                        const attachment = await this.attachmentUploadService.upload(
+                            thread,
+                            composer,
+                            file
+                        );
+                        await this.operations.saveRecord([attachment.id]);
                     }
                 };
                 await doUpload(uploadFiles());
