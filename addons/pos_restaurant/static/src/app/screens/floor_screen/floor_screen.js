@@ -1,5 +1,4 @@
 import { Component, onMounted, useEffect } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { FloorEditorToolBar } from "@pos_restaurant/app/screens/floor_screen/floor_plan_editor/toolbar/toolbar";
@@ -16,7 +15,7 @@ export class FloorScreen extends Component {
     setup() {
         this.pos = usePos();
         this.floorPlanStore = useFloorPlanStore();
-        this.ui = useService("ui");
+        this.ui = this.pos.ui;
 
         useEffect(() => {
             if (this.floorPlanStore.editMode) {

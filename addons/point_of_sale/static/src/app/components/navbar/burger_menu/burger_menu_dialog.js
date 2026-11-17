@@ -16,7 +16,7 @@ export class BurgerMenuDialog extends Component {
 
     setup() {
         this.pos = usePos();
-        this.ui = useService("ui");
+        this.ui = this.pos.ui;
         this.dialog = useService("dialog");
         this.isDisplayStandalone = isDisplayStandalone();
         this.isBarcodeScannerSupported = isBarcodeScannerSupported;

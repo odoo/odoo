@@ -119,14 +119,14 @@ patch(PosStore.prototype, {
             ) &&
             (this.pickingType.use_create_lots || this.pickingType.use_existing_lots)
         ) {
-            const confirmed = await ask(this.env.services.dialog, {
+            const confirmed = await ask(this.dialog, {
                 title: _t("Some Serial/Lot Numbers are missing"),
                 body: _t(
                     "You are trying to sell products with serial/lot numbers, but some of them are not set.\nWould you like to proceed anyway?"
                 ),
             });
             if (confirmed) {
-                this.mobile_pane = "right";
+                this.ui.productScreenMobileDisplayMode.set("product");
                 this.navigate("PaymentScreen", {
                     orderUuid: this.selectedOrderUuid,
                 });

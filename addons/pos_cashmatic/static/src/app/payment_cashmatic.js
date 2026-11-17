@@ -9,7 +9,6 @@ const CENTS_PER_UNIT = 100;
 export class PaymentCashmatic extends PaymentInterface {
     setup() {
         super.setup(...arguments);
-        this.dialog = this.env.services.dialog;
         this.cashmaticService = new CashmaticService();
         this.cashmaticService.connect(
             this.payment_method_id.cashmatic_ip,

@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.PaymentScreen">
-        <t t-if="this.ui.isSmall">
+        <t t-if="this.ui.isSmall()">
             <div class="payment-screen screen d-flex flex-column h-100 p-2 overflow-hidden gap-2">
                 <t t-call="point_of_sale.PaymentScreenDue" />
                 <div class="d-flex flex-column overflow-y-auto gap-1">
@@ -72,10 +72,10 @@
         <section class="paymentlines-container fw-bold"
             t-att-class="{
                 'paymentlines-empty': this.paymentLines.length === 0,
-                'fade-effect': this.pos.addAnimation and !this.ui.isSmall,
+                'fade-effect': this.pos.addAnimation and !this.ui.isSmall(),
             }">
             <div class="total text-center text-dark"
-                t-att-style="!this.ui.isSmall? 'font-size: 125px;' : ''" >
+                t-att-style="!this.ui.isSmall()? 'font-size: 125px;' : ''" >
                 <PriceFormatter price="this.orderTotalDue" />
             </div>
         </section>
@@ -86,7 +86,7 @@
             t-att-disabled="this.pos.accessRight.disableValidateOrder"
             t-on-click="() => this.onClickValidate()"
             t-attf-class="
-                {{ this.ui.isSmall ? 'btn-switchpane flex-fill' : 'button next w-50' }}
+                {{ this.ui.isSmall() ? 'btn-switchpane flex-fill' : 'button next w-50' }}
                 {{ this.currentOrder.canBeValidated() and !this.currentOrder.isRefundInProcess() ? 'highlight' : 'disabled' }}
             "
         >
@@ -100,7 +100,7 @@
     </t>
 
     <t t-name="point_of_sale.PaymentScreenBack">
-        <t t-if="this.ui.isSmall">
+        <t t-if="this.ui.isSmall()">
             <button class="btn-switchpane back-button validation-button btn btn-secondary btn-lg lh-lg "
                 t-on-click="() => this.pos.onClickBackButton()">
                 <i class="oi oi-fw" data-icon="chevron_backward" role="img" aria-label="Go Back" title="Go Back" />
@@ -155,9 +155,9 @@
     </t>
 
     <t t-name="point_of_sale.PaymentScreenMethods">
-        <div class="paymentmethods-container" t-att-class="this.ui.isSmall ? 'rounded-3' : 'flex-grow-1'">
+        <div class="paymentmethods-container" t-att-class="this.ui.isSmall() ? 'rounded-3' : 'flex-grow-1'">
         <!-- Add scrollbar if more than 4 payment methods are configured -->
-            <div class="paymentmethods gap-1 gap-lg-2" t-att-class="{ 'd-grid p-1 gap-1 overflow-y-auto rounded-3 bg-200': this.ui.isSmall, 'd-flex flex-column gap-lg-2': !this.ui.isSmall }" t-att-style="this.ui.isSmall ? 'max-height: 120px;' : ''">
+            <div class="paymentmethods gap-1 gap-lg-2" t-att-class="{ 'd-grid p-1 gap-1 overflow-y-auto rounded-3 bg-200': this.ui.isSmall(), 'd-flex flex-column gap-lg-2': !this.ui.isSmall() }" t-att-style="this.ui.isSmall() ? 'max-height: 120px;' : ''">
                 <t t-foreach="this.displayedPaymentMethods" t-as="paymentMethod" t-key="paymentMethod.id">
                     <div t-if="paymentMethod.isProvider">
                         <div class="d-flex paymentmethod justify-content-between align-items-center button btn btn-secondary btn-lg lh-lg flex-fill"

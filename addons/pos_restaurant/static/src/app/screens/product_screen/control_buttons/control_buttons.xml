@@ -39,8 +39,8 @@
                     class="control-button btn btn-lg btn-secondary d-inline-flex flex-md-column justify-content-md-center gap-1 overflow-hidden"
                     t-on-click.stop="() => this.clickTransferOrder()"
                     t-att-disabled="this.pos.disableForSelfOrder">
-                    <i t-attf-class="oi {{!this.ui.isSmall ? ' oi-2x oi-fw' : ''}} align-self-center opacity-50" role="img" aria-hidden="true" data-icon="east"/>
-                    <span t-attf-class="d-flex flex-md-column flex-grow-1 flex-md-grow-0 align-items-center align-self-md-stretch justify-content-md-center min-w-0 {{this.ui.isSmall ? ' lh-sm' : ''}} text-start text-md-center">
+                    <i t-attf-class="oi {{!this.ui.isSmall() ? ' oi-2x oi-fw' : ''}} align-self-center opacity-50" role="img" aria-hidden="true" data-icon="east"/>
+                    <span t-attf-class="d-flex flex-md-column flex-grow-1 flex-md-grow-0 align-items-center align-self-md-stretch justify-content-md-center min-w-0 {{this.ui.isSmall() ? ' lh-sm' : ''}} text-start text-md-center">
                         <span class="px-1">Transfer / Merge</span>
                     </span>
                 </button>
@@ -49,8 +49,8 @@
                     class="control-button btn btn-lg btn-secondary d-inline-flex flex-md-column justify-content-md-center gap-1 overflow-hidden"
                     t-on-click.stop="() => this.clickTransferCourse()"
                     t-att-disabled="!this.showTransferCourse() || this.pos.disableForSelfOrder">
-                    <i t-attf-class="oi {{!this.ui.isSmall ? ' oi-2x oi-fw' : ''}} align-self-center opacity-50" data-icon="south" role="img" aria-hidden="true"/>
-                    <span t-attf-class="d-flex flex-md-column flex-grow-1 flex-md-grow-0 align-items-center align-self-md-stretch justify-content-md-center min-w-0 {{this.ui.isSmall ? ' lh-sm' : ''}} text-start text-md-center">
+                    <i t-attf-class="oi {{!this.ui.isSmall() ? ' oi-2x oi-fw' : ''}} align-self-center opacity-50" data-icon="south" role="img" aria-hidden="true"/>
+                    <span t-attf-class="d-flex flex-md-column flex-grow-1 flex-md-grow-0 align-items-center align-self-md-stretch justify-content-md-center min-w-0 {{this.ui.isSmall() ? ' lh-sm' : ''}} text-start text-md-center">
                         <span class="px-1">Transfer Course</span>
                     </span>
                 </button>

@@ -20,7 +20,7 @@
             </div>
             <div class="opening-cash-section mb-3" t-if="this.cashMethodCount">
                 <label class="form-label">Opening cash</label>
-                <div t-att-class="{ 'w-50': !this.ui.isSmall }" class="cash-input-sub-section d-flex gap-1">
+                <div t-att-class="{ 'w-50': !this.ui.isSmall() }" class="cash-input-sub-section d-flex gap-1">
                     <CashInput
                         class="'flex-grow-1'"
                         tModel="[this.state, 'openingCash']"
@@ -41,24 +41,24 @@
             </div>
             <t t-set-slot="footer">
                 <div class="w-100 d-flex flex-wrap gap-2">
-                    <div class="d-flex gap-2" t-att-class="{'w-100': this.ui.isSmall}">
+                    <div class="d-flex gap-2" t-att-class="{'w-100': this.ui.isSmall()}">
                         <button class="button btn btn-primary"
                             t-if="this.pos.accessRight.canOpenRegister"
                             t-on-click="this.confirm"
-                            t-att-class="{'w-50': this.ui.isSmall}"
+                            t-att-class="{'w-50': this.ui.isSmall()}"
                             t-att-disabled="!this.pos.isValidFloat(this.state.openingCash)">
                             Open Register
                         </button>
                         <button class="backend-button button btn btn-secondary"
                             t-on-click="() => this.pos.showLoginScreen()"
-                            t-att-class="{'w-50': this.ui.isSmall}">
+                            t-att-class="{'w-50': this.ui.isSmall()}">
                             Discard
                         </button>
                     </div>
                     <button class="button btn btn-secondary ms-auto"
                         t-if="this.pos.canOpenCashdrawer"
                         t-on-click="() => this.pos.openCashboxManually()"
-                        t-att-class="{'w-100': this.ui.isSmall}">
+                        t-att-class="{'w-100': this.ui.isSmall()}">
                         <i class="oi me-2" data-icon="archive"/>Open Cashbox
                     </button>
                 </div>

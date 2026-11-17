@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.PrintPopup">
-        <Dialog title.translate="Print" footer="false" size="'md'" contentClass="`print-popup ${!this.ui.isSmall ? 'rounded-4' : ''}`">
+        <Dialog title.translate="Print" footer="false" size="'md'" contentClass="`print-popup ${!this.ui.isSmall() ? 'rounded-4' : ''}`">
             <div class="print-popup-modal py-3">
                 <button t-foreach="this.printList" t-as="item" t-key="item_index"
                     t-attf-class="print-button btn btn-lg {{item.isPrimary ? 'btn-primary' : 'btn-secondary'}} d-inline-flex flex-md-column align-items-center justify-content-md-center gap-2 p-3"

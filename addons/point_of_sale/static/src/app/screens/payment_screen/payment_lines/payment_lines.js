@@ -1,6 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
-import { useService } from "@web/core/utils/hooks";
 import { Component, useProps, t } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { enhancedButtons } from "@point_of_sale/app/components/numpad/numpad";
@@ -24,9 +23,9 @@ export class PaymentScreenPaymentLines extends Component {
     props = useProps(paymentScreenPaymentLinesProps);
 
     setup() {
-        this.ui = useService("ui");
         this.pos = usePos();
-        this.dialog = useService("dialog");
+        this.ui = this.pos.ui;
+        this.dialog = this.pos.dialog;
     }
 
     get paymentLines() {
@@ -40,7 +39,7 @@ export class PaymentScreenPaymentLines extends Component {
 
     async selectLine(paymentline) {
         this.props.selectLine(paymentline.uuid);
-        if (this.ui.isSmall) {
+        if (this.ui.isSmall()) {
             this.dialog.add(NumberPopup, {
                 title: _t("New amount"),
                 buttons: enhancedButtons(),

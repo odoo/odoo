@@ -51,7 +51,7 @@
     </t>
 
     <t t-name="point_of_sale.ClosePosPopup">
-        <Dialog contentClass="'close-pos-popup' + (!this.ui.isSmall ? ' p-2 rounded-4' : '')" bodyClass="'pt-2 pb-1'">
+        <Dialog contentClass="'close-pos-popup' + (!this.ui.isSmall() ? ' p-2 rounded-4' : '')" bodyClass="'pt-2 pb-1'">
             <t t-set-slot="header">
                 <div class="d-flex flex-grow-1 justify-content-between pb-2 border-bottom">
                     <h4 class="my-1 fs-2">Closing Register</h4>
@@ -83,20 +83,20 @@
                 </div>
             </div>
             <t t-set-slot="footer">
-                <div class="w-100 gap-2" t-att-class="this.ui.isSmall ? 'd-grid' : 'd-flex justify-content-between flex-wrap'"
-                    t-att-style="this.ui.isSmall ? 'grid-template-columns: repeat(2, minmax(0, 1fr));' : ''">
-                    <button class="button highlight btn btn-primary" t-att-disabled="!this.canConfirm()" t-on-click="this.confirm" t-att-class="{'btn-lg': !this.ui.isSmall}">
+                <div class="w-100 gap-2" t-att-class="this.ui.isSmall() ? 'd-grid' : 'd-flex justify-content-between flex-wrap'"
+                    t-att-style="this.ui.isSmall() ? 'grid-template-columns: repeat(2, minmax(0, 1fr));' : ''">
+                    <button class="button highlight btn btn-primary" t-att-disabled="!this.canConfirm()" t-on-click="this.confirm" t-att-class="{'btn-lg': !this.ui.isSmall()}">
                         Close Register
                     </button>
-                    <button class="button btn btn-secondary" t-att-disabled="!this.canCancel()" t-on-click="this.cancel" t-att-class="{'btn-lg me-auto': !this.ui.isSmall}">
+                    <button class="button btn btn-secondary" t-att-disabled="!this.canCancel()" t-on-click="this.cancel" t-att-class="{'btn-lg me-auto': !this.ui.isSmall()}">
                         Discard
                     </button>
-                    <button t-if="this.pos.showCashMoveButton" class="button btn btn-secondary" t-on-click="() => this.cashMove()" t-att-class="{'btn-lg' : !this.ui.isSmall}">
+                    <button t-if="this.pos.showCashMoveButton" class="button btn btn-secondary" t-on-click="() => this.cashMove()" t-att-class="{'btn-lg' : !this.ui.isSmall()}">
                         Cash In/Out
                     </button>
                     <div class="d-flex gap-2">
-                        <button class="button icon btn btn-secondary flex-grow-1" t-on-click="this.downloadSalesReport" t-att-class="{'btn-lg': !this.ui.isSmall}" title="Download Sales Report">
-                            <i t-if="!this.ui.isSmall" class="oi" data-icon="download" role="img"/>
+                        <button class="button icon btn btn-secondary flex-grow-1" t-on-click="this.downloadSalesReport" t-att-class="{'btn-lg': !this.ui.isSmall()}" title="Download Sales Report">
+                            <i t-if="!this.ui.isSmall()" class="oi" data-icon="download" role="img"/>
                             Daily Sale
                         </button>
                         <button t-if="this.pos.ticketPrinter.hasReceiptPrinters" class="button icon btn btn-secondary">

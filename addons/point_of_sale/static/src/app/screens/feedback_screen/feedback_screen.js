@@ -22,7 +22,7 @@ export class FeedbackScreen extends Component {
 
     setup() {
         this.pos = usePos();
-        this.ui = useService("ui");
+        this.ui = this.pos.ui;
         this.dialog = useService("dialog");
         if (new URLSearchParams(window.location.search).get("post_validate") == 1) {
             // This means we got here from a backend redirect, so waitFor is always undefined

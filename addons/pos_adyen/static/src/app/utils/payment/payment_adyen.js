@@ -421,7 +421,7 @@ export class PaymentAdyen extends PaymentInterface {
         if (!title) {
             title = _t("Adyen Error");
         }
-        this.env.services.dialog.add(AlertDialog, {
+        this.dialog.add(AlertDialog, {
             title: title,
             body: msg,
         });

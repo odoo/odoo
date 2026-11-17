@@ -257,7 +257,7 @@ export class PaymentMercadoPago extends PaymentInterface {
     }
 
     _showMsg(msg, title) {
-        this.env.services.dialog.add(AlertDialog, {
+        this.dialog.add(AlertDialog, {
             title: _t("Mercado Pago %s", title),
             body: msg,
         });

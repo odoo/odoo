@@ -209,7 +209,7 @@ test("check only matching categories product data printed and reprinted", async 
     await advanceTime(300);
     await Utils.clickTable("1");
     await Utils.checkNoOrderButton();
-    if (store.ui.isSmall) {
+    if (store.ui.isSmall()) {
         await Utils.clickBackButton();
     }
     await Utils.clickReprintButton();
