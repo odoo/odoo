@@ -100,8 +100,11 @@ test("can post a message on a record thread", async () => {
                 body: "hey",
                 email_add_signature: true,
                 message_type: "comment",
-                partner_emails: ["new-partner@ex.com"],
-                partner_cc_emails: ["new-cc-partner@ex.com"],
+                // the recipients created from their email are posted as partners
+                partner_ids: pyEnv["res.partner"].search([["email", "=", "new-partner@ex.com"]]),
+                partner_cc_ids: pyEnv["res.partner"].search([
+                    ["email", "=", "new-cc-partner@ex.com"],
+                ]),
                 subtype_xmlid: "mail.mt_comment",
             },
             thread_id: partnerId,
