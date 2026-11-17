@@ -165,7 +165,7 @@ class TestPeppolParticipant(TransactionCase):
             mock_can_connect(),
             mock_connect(peppol_state='rejected'),
             mock_lookup_not_found(peppol_identifier='0208:0239843188'),
-            self.assertRaisesRegex(UserError, "There was an issue with the Peppol Participant"),
+            self.assertRaisesRegex(UserError, "Unable to register, please contact our support team at peppol.support@odoo.com."),
         ):
             wizard = self.env['peppol.registration'].create({})
             self.assertRecordValues(wizard, [{'smp_registration': True}])
