@@ -170,14 +170,30 @@ class BusBus(models.Model):
                         )
 
     @api.model
-    def _poll(self, channels, last=0, ignore_ids=None):
-        notifications_by_channel = fetch_bus_notifications(
-            self.env.cr, {last: list(channels)}, ignore_ids
+    def _poll_batch(self, channels, last=0, ignore_ids=None):
+        """Return the first page of notifications of the given ``channels`` after
+        ``last``. See :func:`fetch_bus_notifications` for the caps of a page.
+
+        :return: A tuple where the first item is the notification list
+            and the second a boolean indicating whether there is more to fetch.
+        :rtype: tuple[list, bool]
+        """
+        notifications_by_channel, has_more = next(
+            fetch_bus_notifications(self.env.cr, {last: list(channels)}, ignore_ids),
         )
-        return sorted(
+        notifications = sorted(
             (notif for notifs in notifications_by_channel.values() for notif in notifs),
             key=lambda notif: notif["id"],
         )
+        return notifications, has_more
+
+    @api.model
+    def _poll(self, channels, last=0, ignore_ids=None):
+        notifications, has_more = self._poll_batch(channels, last, ignore_ids)
+        while has_more:
+            page, has_more = self._poll_batch(channels, notifications[-1]["id"], ignore_ids)
+            notifications += page
+        return notifications
 
     def _bus_last_id(self):
         last = self.env['bus.bus'].search([], order='id desc', limit=1)

@@ -37,11 +37,15 @@ class WebsocketController(Controller):
         elif 'is_websocket_session' not in request.session:
             raise SessionExpiredException()
         subscribe_data = request.env['ir.websocket']._prepare_subscribe_data(channels, last)
-        notifications = request.env['bus.bus']._poll(
+        notifications, has_more = request.env['bus.bus']._poll_batch(
             subscribe_data['channels'],
             subscribe_data['last'],
         )
-        return {'channels': list(subscribe_data['channels']), 'notifications': notifications}
+        return {
+            'channels': list(subscribe_data['channels']),
+            'notifications': notifications,
+            'has_more': has_more,
+        }
 
     @route("/websocket/on_closed", type="jsonrpc", auth="public", cors="*")
     def on_websocket_closed(self):

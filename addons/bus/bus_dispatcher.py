@@ -73,9 +73,9 @@ _logger = logging.getLogger(__name__)
 #   |      |   SET IN_FLIGHT, snapshot waiting room.     |
 #   |      | - Kill invalid sessions.                    |
 #   |      | - Fetch notifications (including catch-up   |
-#   |      |   for the waiting room).                    |
-#   |      | - Dispatch to subscribers and to the        |
-#   |      |   waiting room.                             |
+#   |      |   for the waiting room), page by page.      |
+#   |      | - Dispatch each page to subscribers and to  |
+#   |      |   the waiting room.                         |
 #   |      | - Promote waiting room to full subscribers. |
 #   |      +----+------------------------------+---------+
 #   |           |                              |
@@ -217,11 +217,13 @@ class ChannelTopic:
                 # Closed in the meantime: the state was changed to `CLOSING/CLOSED`.
                 pass
 
-    def dispatch_notifications(self, notifications: list):
+    def dispatch_notifications(self, notifications: list, catchup_by_websocket: dict):
         """Dispatch notifications to subscribers and update the notification history.
 
         :param list notifications: this channel's notifications, sorted by id, covering
             both the regular and the waiting room's range.
+        :param dict catchup_by_websocket: receives what each websocket of the waiting
+            room has to catch up. The caller sends it once all the topics are done.
         """
         if not notifications:
             return
@@ -231,10 +233,15 @@ class ChannelTopic:
             catchup_from_idx = bisect_right(notifications, last_id, key=itemgetter("id"))
             if catchup_from_idx == len(notifications):
                 continue  # Already up to date, nothing to catch up.
-            self._forward_notifications(notifications[catchup_from_idx:], (websocket,))
+            catchup_by_websocket[websocket] += notifications[catchup_from_idx:]
+            # Move forward with each page. A failure on a later page must not send this
+            # one again.
+            self._waiting_room_snapshot[websocket] = notifications[-1]["id"]
         new_from_idx = bisect_right(notifications, self._last_fetched_id, key=itemgetter("id"))
         new_notifications = notifications[new_from_idx:]
-        if excluded_ids := self.excluded_ids:
+        # The history is sorted by id. A page above its last id has nothing to exclude.
+        if new_notifications and self._history and new_notifications[0]["id"] <= self._history[-1][0]:
+            excluded_ids = self.excluded_ids
             new_notifications = [n for n in new_notifications if n["id"] not in excluded_ids]
         if new_notifications:
             self._forward_notifications(new_notifications, self._websockets)
@@ -369,8 +376,10 @@ class BusDispatcher(threading.Thread):
             try:
                 with acquire_cursor(dbname) as cr:
                     self._kick_invalid_sessions(cr, topics)
-                    notifications_by_channel = self._fetch(cr, topics)
-                self._dispatch(topics, notifications_by_channel)
+                    # Dispatch each page before fetching the next one. A large backlog
+                    # is never in memory as a whole.
+                    for notifications_by_channel, _has_more in self._fetch(cr, topics):
+                        self._dispatch(topics, notifications_by_channel)
                 success = True
             except psycopg2.Error:
                 # Temporary database failure: retry quickly instead of falling back to the
@@ -519,8 +528,8 @@ class BusDispatcher(threading.Thread):
         If ``rollback`` is False, waiting websockets are promoted to full subscribers and
         topics are re-queued only if ``DIRTY``.
 
-        If ``rollback`` is True, the waiting room snapshot is restored to its pre-claim
-        state and topics are re-queued for a retry.
+        If ``rollback`` is True, the waiting room snapshot goes back to the waiting room
+        and topics are re-queued for a retry.
         """
         with self._lock_for_db(dbname):
             for topic in topics:
@@ -544,7 +553,8 @@ class BusDispatcher(threading.Thread):
                     self._queue_topic(topic)
 
     def _fetch(self, cr, topics: set[ChannelTopic] | frozenset[ChannelTopic]):
-        """Fetch pending notifications for the given topics, grouped by channel."""
+        """Fetch pending notifications for the given topics, one page at a time. See
+        :func:`fetch_bus_notifications`."""
         channels_by_last_fetched_id = defaultdict(list)
         excluded_ids = set()
         for topic in topics:
@@ -566,8 +576,16 @@ class BusDispatcher(threading.Thread):
     ):
         if not notifications_by_channel:
             return
+        catchup_by_websocket = defaultdict(list)
         for topic in topics:
-            topic.dispatch_notifications(notifications_by_channel.get(topic._channel, []))
+            topic.dispatch_notifications(
+                notifications_by_channel.get(topic._channel, []), catchup_by_websocket,
+            )
+        # One frame for each websocket, whatever the number of its topics. A backlog of
+        # many pages must not fill its queue.
+        for websocket, notifications in catchup_by_websocket.items():
+            notifications.sort(key=itemgetter("id"))
+            ChannelTopic._forward_notifications(notifications, (websocket,))
 
     def _kick_invalid_sessions(self, cr, topics: set[ChannelTopic] | frozenset[ChannelTopic]):
         """Validate every websocket's session and close those that fail."""

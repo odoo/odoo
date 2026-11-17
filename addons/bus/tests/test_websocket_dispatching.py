@@ -79,6 +79,28 @@ class TestWebsocketDispatching(WebsocketCase):
         self.assertEqual(len(notifications), 1)
         self.assertEqual(notifications[0]["message"]["type"], "channel_b_notification_NEW")
 
+    def test_no_duplicate_for_subscriber_when_another_one_catches_up(self):
+        subscriber = self.websocket_connect()
+        self.env["bus.bus"]._sendone("dummy", "dummy_notification", None)  # Subscribing with 0 would fallback to last id.
+        self.trigger_notification_dispatching()
+        last = self.env["bus.bus"]._bus_last_id()
+        self.subscribe(subscriber, ["channel_A"], last=last)
+        self.env["bus.bus"]._sendone("channel_A", "channel_a_notification_1", None)
+        self.trigger_notification_dispatching()
+        notifications = json.loads(subscriber.recv())
+        self.assertEqual(notifications[0]["message"]["type"], "channel_a_notification_1")
+        # The catch-up of the late subscriber fetches the first notification again, while
+        # it is still in the history of the topic.
+        late_subscriber = self.websocket_connect()
+        self.subscribe(late_subscriber, ["channel_A"], last=last)
+        notifications = json.loads(late_subscriber.recv())
+        self.assertEqual(notifications[0]["message"]["type"], "channel_a_notification_1")
+        self.env["bus.bus"]._sendone("channel_A", "channel_a_notification_2", None)
+        self.trigger_notification_dispatching()
+        notifications = json.loads(subscriber.recv())
+        self.assertEqual(len(notifications), 1)
+        self.assertEqual(notifications[0]["message"]["type"], "channel_a_notification_2")
+
     def test_recv_notification_while_listener_is_down(self):
         channel = f"channel_{secrets.token_hex(4)}"
         websocket = self.websocket_connect()
