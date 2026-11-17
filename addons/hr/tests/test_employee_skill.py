@@ -641,3 +641,9 @@ class TestEmployeeSkills(TransactionCase):
         self.assertTrue(self.env['hr.employee.skill.report'].search(language_domain))
         self.assertTrue(self.env['hr.employee.skill.history.report'].search(language_domain))
         self.assertTrue(self.env['hr.employee.skill'].search(certification_domain))
+
+    def test_certifications_help_data(self):
+        EmployeeSkill = self.env['hr.employee.skill']
+        self.assertTrue(EmployeeSkill.get_help_data([])['has_certification_skill_type'])
+        self.env['hr.skill.type'].search([('is_certification', '=', True)]).is_certification = False
+        self.assertFalse(EmployeeSkill.get_help_data([])['has_certification_skill_type'])
