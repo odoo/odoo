@@ -5,12 +5,14 @@ from datetime import date, datetime, time
 from dateutil.relativedelta import relativedelta
 from babel.dates import format_date, get_date_format
 from zoneinfo import ZoneInfo
+from markupsafe import Markup
 
 from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import ValidationError
 from odoo.tools import SQL, get_lang, babel_locale_parse
+from odoo.tools.intervals import Intervals
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -338,6 +340,11 @@ class HrVersion(models.Model):
         once is refused. Pass ``sync_contract_dates=True`` in the context to
         bypass the propagation and write the values as is.
 
+        Changes of tracked fields are logged on the employees' chatter, one
+        message per interval of consecutive written versions (see
+        `_track_on_employees`). Pass ``skip_employee_tracking=True`` in
+        the context to skip it.
+
         Also notifies the employee when ``hr_responsible_id`` changes.
 
         :raise ValidationError: when unassigning or archiving all the versions
@@ -364,6 +371,16 @@ class HrVersion(models.Model):
             if self.filtered(lambda v: v.employee_id and v.employee_id.version_ids <= self):
                 raise ValidationError(self.env._("Cannot archive all the active versions of an employee."))
 
+        if not self.env.context.get('skip_employee_tracking') and not self._track_disabled():
+            tracked_fnames = self._track_get_fields() & vals.keys()
+            if tracked_fnames:
+                vals = {
+                    **vals,
+                    'last_modified_date': fields.Datetime.now(),
+                    'last_modified_uid': self.env.uid,
+                }
+                self._track_on_employees(tracked_fnames)
+
         if self.env.context.get('sync_contract_dates') or ("contract_date_start" not in vals and "contract_date_end" not in vals):
             return super().write(vals)
 
@@ -376,7 +393,7 @@ class HrVersion(models.Model):
             unique_versions = multiple_versions.filtered(lambda v: len(v.employee_id.version_ids) == 1)
             multiple_versions -= unique_versions
             if len(unique_versions):
-                unique_versions.with_context(sync_contract_dates=True).write({
+                unique_versions.with_context(sync_contract_dates=True, skip_employee_tracking=True).write({
                     **vals,
                     "date_version": vals["contract_date_start"]
                 })
@@ -413,12 +430,58 @@ class HrVersion(models.Model):
                     all_versions_to_sync |= next(iter(contract_versions.values()))
 
                 if all_versions_to_sync:
-                    all_versions_to_sync.with_context(sync_contract_dates=True).write(dates_vals)
+                    all_versions_to_sync.with_context(sync_contract_dates=True, skip_employee_tracking=True).write(dates_vals)
 
             else:
-                versions.with_context(sync_contract_dates=True).write(dates_vals)
+                versions.with_context(sync_contract_dates=True, skip_employee_tracking=True).write(dates_vals)
 
         return super(HrVersion, multiple_versions).write(new_vals)
+
+    @api.model
+    def _get_version_update_log_message(self, first_version, last_version):
+        start = format_date_abbr(self.env, first_version.date_start) if first_version.date_start else False
+        end = format_date_abbr(self.env, last_version.date_end) if last_version.date_end else False
+        if start and end:
+            msg = self.env._("As of %(start)s to %(end)s") % {'start': start, 'end': end}
+        elif start:
+            msg = self.env._("As of %s") % start
+        else:
+            msg = self.env._("As of")
+        return Markup("<b>%s</b>") % msg
+
+    def _track_on_employees(self, tracked_fnames):
+        """ Prepare the tracking of ``tracked_fnames`` on the employees' chatter: one
+        message per interval of consecutive written versions, computed on the first
+        version of the interval. Must be called before the values are written.
+
+        An interval is made of written versions whose periods are contiguous, i.e. each
+        one starts the day after the previous one ends. E.g. if self contains versions 1,
+        2 and 4 of an employee (ordered by date_version), two messages are logged: one
+        labelled from version1.date_start to version2.date_end showing the changes of
+        version 1, and one for version 4. """
+
+        for employee, versions in self.filtered('employee_id').grouped('employee_id').items():
+
+            intervals = Intervals(
+                (
+                    version.date_start,
+                    version.date_end + relativedelta(days=1) if version.date_end else date.max,
+                    version,
+                )
+                for version in versions.sudo()
+            )
+
+            for _start, _stop, interval_versions in intervals:
+                first_version = interval_versions[0]
+                last_version = interval_versions[-1]
+                employee._track_record(
+                    first_version.with_env(self.env),  # Keep sudo if it was sudo, take away sudo otherwise
+                    tracked_fnames,
+                    # Explicit initial values, so that the tracking is also done for a version
+                    # created in the same transaction (its tracking is discarded at creation).
+                    initial_values={first_version.id: {fname: first_version[fname] for fname in tracked_fnames}},
+                    body=self._get_version_update_log_message(first_version, last_version),
+                )
 
     def get_record_default_action(self, access_uid=None):
         """Return the action opening the version: the employee form for employee versions.
@@ -452,16 +515,19 @@ class HrVersion(models.Model):
         for version in self:
             version.display_name = version.name if not version.employee_id else format_date_abbr(version.env, version.date_version)
 
+    @api.depends('date_start', 'date_end')
     def _compute_is_current(self):
         today = fields.Date.context_today(self)
         for version in self:
             version.is_current = version.date_start <= today and (not version.date_end or version.date_end >= today)
 
+    @api.depends('date_start', 'date_end')
     def _compute_is_past(self):
         today = fields.Date.context_today(self)
         for version in self:
             version.is_past = version.date_end and version.date_end < today
 
+    @api.depends('date_start', 'date_end')
     def _compute_is_future(self):
         today = fields.Date.context_today(self)
         for version in self:
