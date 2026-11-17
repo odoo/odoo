@@ -1188,3 +1188,62 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         final_invoice = self.env["account.move"].browse(action["res_id"])
 
         self.assertEqual(final_invoice.amount_total, 50.0)
+
+    def _invoice_discounted_down_payment(self, discount):
+        """Post a 1000 down payment, discounted on its invoice line, on a 900 + 3100 order."""
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                # invoiced on order, so the final invoice bills it
+                Command.create({
+                    'product_id': self.company_data['product_order_no'].id,
+                    'product_uom_qty': 1,
+                    'price_unit': 900.0,
+                    'tax_id': False,
+                }),
+                # invoiced on delivery and nothing delivered, so it stays out of the final invoice
+                Command.create({
+                    'product_id': self.company_data['product_delivery_no'].id,
+                    'product_uom_qty': 1,
+                    'price_unit': 3100.0,
+                    'tax_id': False,
+                }),
+            ],
+        })
+        sale_order.action_confirm()
+
+        invoicing_wizard = self.env['sale.advance.payment.inv'].create({
+            'advance_payment_method': 'fixed',
+            'fixed_amount': 1000.0,
+            'sale_order_ids': [Command.link(sale_order.id)],
+        })
+        action = invoicing_wizard.create_invoices()
+        dp_invoice = self.env['account.move'].browse(action['res_id'])
+        dp_invoice.invoice_line_ids.filtered('is_downpayment').discount = discount
+        dp_invoice.action_post()
+
+        dp_line = sale_order.order_line.filtered(
+            lambda sol: sol.is_downpayment and not sol.display_type)
+        return sale_order, dp_invoice, dp_line
+
+    def test_discounted_down_payment_line(self):
+        _sale_order, dp_invoice, dp_line = self._invoice_discounted_down_payment(15.0)
+
+        self.assertEqual(dp_invoice.amount_untaxed, 850.0)
+        self.assertEqual(dp_line.price_unit, 1000.0)
+        self.assertEqual(dp_line.discount, 15.0)
+
+    def test_discounted_down_payment_final_invoice(self):
+        sale_order, _dp_invoice, _dp_line = self._invoice_discounted_down_payment(15.0)
+
+        final_invoice = sale_order._create_invoices(final=True)
+
+        self.assertEqual(final_invoice.move_type, 'out_invoice')
+        self.assertEqual(final_invoice.amount_untaxed, 50.0)
+
+    def test_down_payment_without_discount(self):
+        _sale_order, dp_invoice, dp_line = self._invoice_discounted_down_payment(0.0)
+
+        self.assertEqual(dp_invoice.amount_untaxed, 1000.0)
+        self.assertEqual(dp_line.price_unit, 1000.0)
+        self.assertEqual(dp_line.discount, 0.0)

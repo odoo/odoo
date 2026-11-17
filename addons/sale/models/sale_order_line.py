@@ -1506,11 +1506,19 @@ class SaleOrderLine(models.Model):
 
     def _get_downpayment_line_price_unit(self, invoices):
         return sum(
-            # the discount is part of what the down payment invoice charged
-            l.price_unit * (1 - l.discount / 100) * (1 if l.move_id.move_type == 'out_invoice' else -1)
+            l.price_unit if l.move_id.move_type == 'out_invoice' else -l.price_unit
             for l in self.invoice_lines
             if l.move_id.state == 'posted' and l.move_id not in invoices  # don't recompute with the final invoice
         )
+
+    def _get_downpayment_line_discount(self, invoices):
+        """Return the discount the down payment invoices charged, to mirror it on the order line."""
+        discounts = {
+            l.discount
+            for l in self.invoice_lines
+            if l.move_id.state == 'posted' and l.move_id not in invoices  # don't recompute with the final invoice
+        }
+        return discounts.pop() if len(discounts) == 1 else 0.0
 
     #=== CORE METHODS OVERRIDES ===#
 
