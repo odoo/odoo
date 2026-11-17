@@ -332,6 +332,20 @@ class TestResourceCalendarReference(TransactionCase):
         self.assertFalse(no_company.reference_calendar_id)
         self.assertRecordValues(no_company, [{'full_time_required_hours': 20, 'is_fulltime': True}])
 
+    def test_hours_per_day_not_rounded(self):
+        """ The average hours per day are not rounded: 38 hours over 6 days are worth exactly
+        38 hours again once multiplied back. """
+        calendar_38h = self.env['resource.calendar'].create({
+            'name': '38 hours over 6 days',
+            'attendance_ids': [(5, 0, 0)] + [
+                (0, 0, {'dayofweek': day, 'hour_from': hour_from, 'hour_to': hour_to})
+                for day in '01234'
+                for hour_from, hour_to in ((8, 12), (13, 16))
+            ] + [(0, 0, {'dayofweek': '5', 'hour_from': 8, 'hour_to': 11})],
+        })
+        self.assertEqual(calendar_38h.hours_per_day, 38 / 6)
+        self.assertEqual(calendar_38h.hours_per_day * 6, 38)
+
     def test_copy_calendar_rates(self):
         """ The rates of a fixed calendar are computed from the attendances of the copy, those of a
         variable calendar are kept. """
