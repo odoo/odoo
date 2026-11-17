@@ -330,6 +330,28 @@ class TestSaleOrder(SaleCommon):
         self.assertEqual(so.order_line.product_packaging_id, packaging_four)
         self.assertEqual(so.order_line.product_packaging_qty, 1.0)
 
+    def test_compute_packaging_empty_uom(self):
+        """Removing the UoM of a packaged SOL should not crash onchange."""
+        self.env.user.groups_id += self.env.ref('product.group_stock_packaging') | self.env.ref('uom.group_uom')
+        packaging = self.env['product.packaging'].create({
+            'name': "Pack of 5",
+            'product_id': self.product.id,
+            'qty': 5.0,
+        })
+
+        so = self.empty_order
+        so_form = Form(so)
+        with so_form.order_line.new() as line:
+            line.product_id = self.product
+            line.product_uom_qty = 5.0
+            line.product_packaging_id = packaging
+        so_form.save()
+        with so_form.order_line.edit(0) as line:
+            line.product_uom = self.env['uom.uom']
+            self.assertFalse(line.product_uom)
+            line.product_uom = self.product.uom_id
+        so_form.save()
+
     def _create_sale_order(self):
         """Create dummy sale order (without lines)"""
         return self.env['sale.order'].with_context(
