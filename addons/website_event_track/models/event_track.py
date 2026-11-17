@@ -44,7 +44,7 @@ class EventTrack(models.Model):
         return self.env['event.track.stage'].search([], limit=1).id
 
     # description
-    name = fields.Char('Title', required=True, translate=True)
+    name = fields.Char('Title', required=True, translate=True, tracking=True)
     event_id = fields.Many2one('event.event', 'Event', required=True, index=True)
     active = fields.Boolean(default=True)
     user_id = fields.Many2one('res.users', 'Responsible', tracking=True, default=lambda self: self.env.user)
