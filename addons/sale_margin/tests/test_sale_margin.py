@@ -337,3 +337,16 @@ class TestSaleMargin(SaleCommon):
                         msg=f"{k} doesn't match ({fname}: {values[fname]})",
                         delta=delta,
                     )
+
+    def test_margin_percent_rounding_keeps_price(self):
+        """The stored margin % is rounded to 4 digits: 2,700 / 77,200 = 3.4974% is stored as 3.50%.
+        Adding the product must not mistake that rounded value for a margin typed by the user
+        and recompute the price from it (74,500 / (1 - 0.035) = 77,202.07)."""
+        product = self._create_product(
+            list_price=77200.0, standard_price=74500.0, taxes_id=[Command.set([])]
+        )
+        with Form(self.so) as so_form, so_form.order_line.new() as sol_form:
+            sol_form.product_id = product
+            self.assertEqual(sol_form.price_unit, 77200.0)
+            self.assertEqual(sol_form.margin, 2700.0)
+            self.assertEqual(sol_form.margin_percent, 0.035)
