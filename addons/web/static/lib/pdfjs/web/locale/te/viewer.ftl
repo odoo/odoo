@@ -120,19 +120,6 @@ pdfjs-printing-not-ready = హెచ్చరిక: ముద్రణ కొ�
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = పక్కపట్టీ మార్చు
-pdfjs-toggle-sidebar-button-label = పక్కపట్టీ మార్చు
-pdfjs-document-outline-button =
-    .title = పత్రము రూపము చూపించు (డబుల్ క్లిక్ చేసి అన్ని అంశాలను విస్తరించు/కూల్చు)
-pdfjs-document-outline-button-label = పత్రము అవుట్‌లైన్
-pdfjs-attachments-button =
-    .title = అనుబంధాలు చూపు
-pdfjs-attachments-button-label = అనుబంధాలు
-pdfjs-layers-button-label = పొరలు
-pdfjs-thumbs-button =
-    .title = థంబ్‌నైల్స్ చూపు
-pdfjs-thumbs-button-label = థంబ్‌నైల్స్
 pdfjs-findbar-button =
     .title = పత్రములో కనుగొనుము
 pdfjs-findbar-button-label = కనుగొను
@@ -142,18 +129,14 @@ pdfjs-additional-layers = అదనపు పొరలు
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = పేజీ { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = { $page } పేజీ నఖచిత్రం
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = కనుగొను
     .placeholder = పత్రములో కనుగొను…
+    .title = కనుగొను
 pdfjs-find-previous-button =
     .title = పదం యొక్క ముందు సంభవాన్ని కనుగొను
 pdfjs-find-previous-button-label = మునుపటి

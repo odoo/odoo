@@ -150,23 +150,6 @@ pdfjs-printing-not-ready = Kemenn: N'hall ket bezañ moullet ar restr PDF rak n'
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Diskouez/kuzhat ar varrenn gostez
-pdfjs-toggle-sidebar-notification-button =
-    .title = Trec'haoliñ ar varrenn-gostez (ur steuñv pe stagadennoù a zo en teul)
-pdfjs-toggle-sidebar-button-label = Diskouez/kuzhat ar varrenn gostez
-pdfjs-document-outline-button =
-    .title = Diskouez steuñv an teul (daouglikit evit brasaat/bihanaat an holl elfennoù)
-pdfjs-document-outline-button-label = Sinedoù an teuliad
-pdfjs-attachments-button =
-    .title = Diskouez ar c'henstagadurioù
-pdfjs-attachments-button-label = Kenstagadurioù
-pdfjs-layers-button =
-    .title = Diskouez ar gwiskadoù (daou-glikañ evit adderaouekaat an holl gwiskadoù d'o stad dre ziouer)
-pdfjs-layers-button-label = Gwiskadoù
-pdfjs-thumbs-button =
-    .title = Diskouez ar melvennoù
-pdfjs-thumbs-button-label = Melvennoù
 pdfjs-findbar-button =
     .title = Klask e-barzh an teuliad
 pdfjs-findbar-button-label = Klask
@@ -176,18 +159,14 @@ pdfjs-additional-layers = Gwiskadoù ouzhpenn
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Pajenn { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Melvenn ar bajenn { $page }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Klask
     .placeholder = Klask e-barzh an teuliad
+    .title = Klask
 pdfjs-find-previous-button =
     .title = Kavout an tamm frazenn kent o klotañ ganti
 pdfjs-find-previous-button-label = Kent
@@ -260,8 +239,8 @@ pdfjs-editor-highlight-button =
     .title = Sklerijennañ
 pdfjs-editor-highlight-button-label = Sklerijennañ
 pdfjs-highlight-floating-button1 =
-    .title = Sklerijennañ
     .aria-label = Sklerijennañ
+    .title = Sklerijennañ
 pdfjs-highlight-floating-button-label = Sklerijennañ
 
 ##
@@ -317,7 +296,4 @@ pdfjs-editor-new-alt-text-error-close-button = Serriñ
 
 ## Image alt-text settings
 
-pdfjs-editor-alt-text-settings-delete-model-button = Dilemel
-pdfjs-editor-alt-text-settings-download-model-button = Pellgargañ
-pdfjs-editor-alt-text-settings-downloading-model-button = O pellgargañ…
 pdfjs-editor-alt-text-settings-close-button = Serriñ

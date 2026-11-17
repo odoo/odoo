@@ -140,18 +140,6 @@ pdfjs-printing-not-ready = Amaran: PDF tidak sepenuhnya dimuatkan untuk dicetak.
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Togol Bar Sisi
-pdfjs-toggle-sidebar-button-label = Togol Bar Sisi
-pdfjs-document-outline-button =
-    .title = Papar Rangka Dokumen (klik-dua-kali untuk kembangkan/kolaps semua item)
-pdfjs-document-outline-button-label = Rangka Dokumen
-pdfjs-attachments-button =
-    .title = Papar Lampiran
-pdfjs-attachments-button-label = Lampiran
-pdfjs-thumbs-button =
-    .title = Papar Thumbnails
-pdfjs-thumbs-button-label = Imej kecil
 pdfjs-findbar-button =
     .title = Cari didalam Dokumen
 pdfjs-findbar-button-label = Cari
@@ -160,18 +148,14 @@ pdfjs-findbar-button-label = Cari
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Halaman { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Halaman Imej kecil { $page }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Cari
     .placeholder = Cari dalam dokumen…
+    .title = Cari
 pdfjs-find-previous-button =
     .title = Cari teks frasa berkenaan yang terdahulu
 pdfjs-find-previous-button-label = Dahulu

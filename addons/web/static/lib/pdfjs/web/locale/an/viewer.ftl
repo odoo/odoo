@@ -140,23 +140,6 @@ pdfjs-printing-not-ready = Aviso: Encara no se ha cargau completament o PDF ta i
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Amostrar u amagar a barra lateral
-pdfjs-toggle-sidebar-notification-button =
-    .title = Cambiar barra lateral (lo documento contiene esquema/adchuntos/capas)
-pdfjs-toggle-sidebar-button-label = Amostrar a barra lateral
-pdfjs-document-outline-button =
-    .title = Amostrar esquema d'o documento (fer doble clic pa expandir/compactar totz los items)
-pdfjs-document-outline-button-label = Esquema d'o documento
-pdfjs-attachments-button =
-    .title = Amostrar os adchuntos
-pdfjs-attachments-button-label = Adchuntos
-pdfjs-layers-button =
-    .title = Amostrar capas (doble clic para reiniciar totas las capas a lo estau per defecto)
-pdfjs-layers-button-label = Capas
-pdfjs-thumbs-button =
-    .title = Amostrar as miniaturas
-pdfjs-thumbs-button-label = Miniaturas
 pdfjs-findbar-button =
     .title = Trobar en o documento
 pdfjs-findbar-button-label = Trobar
@@ -166,18 +149,14 @@ pdfjs-additional-layers = Capas adicionals
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Pachina { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Miniatura d'a pachina { $page }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Trobar
     .placeholder = Trobar en o documento…
+    .title = Trobar
 pdfjs-find-previous-button =
     .title = Trobar l'anterior coincidencia d'a frase
 pdfjs-find-previous-button-label = Anterior

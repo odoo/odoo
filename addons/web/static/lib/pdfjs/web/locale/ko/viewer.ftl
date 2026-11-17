@@ -49,7 +49,7 @@ pdfjs-download-button =
 # Length of the translation matters since we are in a mobile context, with limited screen estate.
 pdfjs-download-button-label = 다운로드
 pdfjs-bookmark-button =
-    .title = 현재 페이지 (현재 페이지에서 URL 보기)
+    .title = 현재 페이지 (URL 보기)
 pdfjs-bookmark-button-label = 현재 페이지
 
 ##  Secondary toolbar and context menu
@@ -85,8 +85,8 @@ pdfjs-scroll-horizontal-button =
     .title = 가로 스크롤 사용
 pdfjs-scroll-horizontal-button-label = 가로 스크롤
 pdfjs-scroll-wrapped-button =
-    .title = 래핑(자동 줄 바꿈) 스크롤 사용
-pdfjs-scroll-wrapped-button-label = 래핑 스크롤
+    .title = 자동 줄바꿈 스크롤 사용
+pdfjs-scroll-wrapped-button-label = 자동 줄바꿈 스크롤
 pdfjs-spread-none-button =
     .title = 한 페이지 보기
 pdfjs-spread-none-button-label = 펼침 없음
@@ -153,6 +153,23 @@ pdfjs-document-properties-linearized = 빠른 웹 보기:
 pdfjs-document-properties-linearized-yes = 예
 pdfjs-document-properties-linearized-no = 아니요
 pdfjs-document-properties-close-button = 닫기
+pdfjs-digital-signature-properties-view-certificate = 인증서 보기
+# Shown beneath an invalid signature card to explain why verification
+# failed. The text comes from NSS (e.g. "Signature integrity has been
+# compromised", "PKCS#7 signature could not be parsed") and is not
+# itself localized — it is the underlying error message produced by
+# the verification backend.
+# Variables:
+#   $reason (String) - error message describing why the signature
+#                      could not be verified.
+pdfjs-digital-signature-properties-reason = 이유: { $reason }
+# Variables:
+#   $dateObj (Date) - the signing time from the /Sig dict's /M entry.
+pdfjs-digital-signature-properties-timestamp = 타임스탬프: { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
+# Variables:
+#   $count (Number) - number of nested sub-signatures (one per earlier
+#                     incremental revision of the document).
+pdfjs-digital-signature-properties-sub-signatures = 하위 서명 ({ $count }개)
 
 ## Print
 
@@ -166,26 +183,9 @@ pdfjs-printing-not-ready = 경고: 이 PDF를 인쇄를 할 수 있을 정도로
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = 사이드바 표시/숨기기
-pdfjs-toggle-sidebar-notification-button =
-    .title = 사이드바 표시/숨기기 (문서에 아웃라인/첨부파일/레이어 포함됨)
-pdfjs-toggle-sidebar-button-label = 사이드바 표시/숨기기
-pdfjs-document-outline-button =
-    .title = 문서 아웃라인 보기 (더블 클릭해서 모든 항목 펼치기/접기)
-pdfjs-document-outline-button-label = 문서 아웃라인
-pdfjs-attachments-button =
-    .title = 첨부파일 보기
-pdfjs-attachments-button-label = 첨부파일
-pdfjs-layers-button =
-    .title = 레이어 보기 (더블 클릭해서 모든 레이어를 기본 상태로 재설정)
-pdfjs-layers-button-label = 레이어
-pdfjs-thumbs-button =
-    .title = 미리보기
-pdfjs-thumbs-button-label = 미리보기
 pdfjs-current-outline-item-button =
-    .title = 현재 아웃라인 항목 찾기
-pdfjs-current-outline-item-button-label = 현재 아웃라인 항목
+    .title = 현재 개요 항목 찾기
+pdfjs-current-outline-item-button-label = 현재 개요 항목
 pdfjs-findbar-button =
     .title = 검색
 pdfjs-findbar-button-label = 검색
@@ -195,18 +195,23 @@ pdfjs-additional-layers = 추가 레이어
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = { $page } 페이지
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = { $page } 페이지 미리보기
+# Variables:
+#   $page (Number) - the page number
+pdfjs-thumb-page-checkbox1 =
+    .title = { $page } 페이지 선택
+# Variables:
+#   $page (Number) - the page number
+#   $total (Number) - the number of pages
+pdfjs-thumb-page-title1 =
+    .title = { $page } / { $total } 페이지
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = 찾기
     .placeholder = 문서에서 찾기…
+    .title = 찾기
 pdfjs-find-previous-button =
     .title = 지정 문자열에 일치하는 1개 부분을 검색
 pdfjs-find-previous-button-label = 이전
@@ -293,16 +298,16 @@ pdfjs-editor-highlight-button =
     .title = 강조 표시
 pdfjs-editor-highlight-button-label = 강조 표시
 pdfjs-highlight-floating-button1 =
-    .title = 강조 표시
     .aria-label = 강조 표시
+    .title = 강조 표시
 pdfjs-highlight-floating-button-label = 강조 표시
 pdfjs-comment-floating-button =
-    .title = 주석
     .aria-label = 주석
+    .title = 주석
 pdfjs-comment-floating-button-label = 주석
 pdfjs-editor-comment-button =
-    .title = 주석
     .aria-label = 주석
+    .title = 주석
 pdfjs-editor-comment-button-label = 주석
 pdfjs-editor-signature-button =
     .title = 서명 추가
@@ -371,8 +376,8 @@ pdfjs-free-text2 =
 #   $count (Number) - the number of comments.
 pdfjs-editor-comments-sidebar-title = 주석
 pdfjs-editor-comments-sidebar-close-button =
-    .title = 사이드바 닫기
     .aria-label = 사이드바 닫기
+    .title = 사이드바 닫기
 pdfjs-editor-comments-sidebar-close-button-label = 사이드바 닫기
 # Instructional copy to add a comment by selecting text or an annotations.
 pdfjs-editor-comments-sidebar-no-comments1 = 눈에 띄는 내용이 있나요? 해당 부분을 강조 표시하고 주석을 남겨주세요.
@@ -441,9 +446,9 @@ pdfjs-editor-colorpicker-red =
 ## Show all highlights
 ## This is a toggle button to show/hide all the highlights.
 
-pdfjs-editor-highlight-show-all-button-label = 모두 보기
+pdfjs-editor-highlight-show-all-button-label = 모두 표시
 pdfjs-editor-highlight-show-all-button =
-    .title = 모두 보기
+    .title = 모두 표시
 
 ## New alt-text dialog
 ## Group note for entire feature: Alternative text (alt text) helps when people can't see the image. This feature includes a tool to create alt text automatically using an AI model that works locally on the user's device to preserve privacy.
@@ -495,13 +500,6 @@ pdfjs-editor-alt-text-settings-dialog-label = 이미지 대체 텍스트 설정
 pdfjs-editor-alt-text-settings-automatic-title = 자동 대체 텍스트
 pdfjs-editor-alt-text-settings-create-model-button-label = 자동으로 대체 텍스트 생성
 pdfjs-editor-alt-text-settings-create-model-description = 이미지가 보이지 않거나 이미지가 로딩되지 않을 때 도움이 되는 설명을 제안합니다.
-# Variables:
-#   $totalSize (Number) - the total size (in MB) of the AI model.
-pdfjs-editor-alt-text-settings-download-model-label = 대체 텍스트 AI 모델 ({ $totalSize } MB)
-pdfjs-editor-alt-text-settings-ai-model-description = 사용자의 장치에서 로컬로 실행되므로 데이터가 비공개로 유지됩니다. 자동 대체 텍스트에 필요합니다.
-pdfjs-editor-alt-text-settings-delete-model-button = 삭제
-pdfjs-editor-alt-text-settings-download-model-button = 다운로드
-pdfjs-editor-alt-text-settings-downloading-model-button = 다운로드 중…
 pdfjs-editor-alt-text-settings-editor-title = 대체 텍스트 편집기
 pdfjs-editor-alt-text-settings-show-dialog-button-label = 이미지 추가 시 바로 대체 텍스트 편집기 표시
 pdfjs-editor-alt-text-settings-show-dialog-description = 모든 이미지에 대체 텍스트가 있는지 확인하는 데 도움이 됩니다.
@@ -522,6 +520,7 @@ pdfjs-editor-undo-bar-message-freetext = 텍스트 제거됨
 pdfjs-editor-undo-bar-message-ink = 그리기 제거됨
 pdfjs-editor-undo-bar-message-stamp = 이미지 제거됨
 pdfjs-editor-undo-bar-message-signature = 서명 제거됨
+pdfjs-editor-undo-bar-message-comment = 주석 제거됨
 # Variables:
 #   $count (Number) - the number of removed annotations.
 pdfjs-editor-undo-bar-message-multiple = 주석 { $count }개 제거됨
@@ -559,7 +558,7 @@ pdfjs-editor-add-signature-draw-thickness-range-label = 두께
 #   $thickness (Number) - the thickness (in pixels) of the line used to draw a signature.
 pdfjs-editor-add-signature-draw-thickness-range =
     .title = 그리기 두께: { $thickness }
-pdfjs-editor-add-signature-image-placeholder = 이미지 파일을 여기에 끌어서 놓으세요
+pdfjs-editor-add-signature-image-placeholder = 이미지 파일을 여기에 끌어다 놓으세요
 pdfjs-editor-add-signature-image-browse-link =
     { PLATFORM() ->
         [macos] 또는 이미지 파일 찾아보기
@@ -602,18 +601,6 @@ pdfjs-show-comment-button =
 
 ##  Edit a comment dialog
 
-pdfjs-editor-edit-comment-actions-button-label = 동작
-pdfjs-editor-edit-comment-actions-button =
-    .title = 동작
-pdfjs-editor-edit-comment-close-button-label = 닫기
-pdfjs-editor-edit-comment-close-button =
-    .title = 닫기
-pdfjs-editor-edit-comment-actions-edit-button-label = 편집
-pdfjs-editor-edit-comment-actions-delete-button-label = 삭제
-pdfjs-editor-edit-comment-manager-text-input =
-    .placeholder = 주석을 입력하세요
-pdfjs-editor-edit-comment-manager-cancel-button = 취소
-pdfjs-editor-edit-comment-manager-save-button = 저장
 # An existing comment is edited
 pdfjs-editor-edit-comment-dialog-title-when-editing = 주석 편집
 pdfjs-editor-edit-comment-dialog-save-button-when-editing = 업데이트
@@ -626,10 +613,129 @@ pdfjs-editor-edit-comment-dialog-cancel-button = 취소
 
 ## Edit a comment button in the editor toolbar
 
-pdfjs-editor-edit-comment-button =
-    .title = 주석 편집
 pdfjs-editor-add-comment-button =
     .title = 주석 추가
+
+## The view manager is a sidebar displaying different views:
+##  - thumbnails;
+##  - outline;
+##  - attachments;
+##  - layers.
+## The thumbnails view is used to edit the pdf: remove/insert pages, ...
+
+pdfjs-toggle-views-manager-notification-button =
+    .title = 사이드바 표시/숨기기 (문서에 미리보기/개요/첨부파일/레이어 포함됨)
+pdfjs-toggle-views-manager-button1-label = 페이지 관리
+pdfjs-views-manager-sidebar =
+    .aria-label = 사이드바
+pdfjs-views-manager-sidebar-resizer =
+    .aria-label = 사이드바 크기 조정
+pdfjs-views-manager-view-selector-button =
+    .title = 보기
+pdfjs-views-manager-view-selector-button-label = 보기
+pdfjs-views-manager-pages-title = 페이지
+pdfjs-views-manager-outlines-title1 = 문서 개요
+    .title = 문서 개요 (더블 클릭해서 모든 항목 펼치기/접기)
+pdfjs-views-manager-attachments-title = 첨부파일
+pdfjs-views-manager-layers-title1 = 레이어
+    .title = 레이어 (더블 클릭해서 모든 레이어를 기본 상태로 재설정)
+pdfjs-views-manager-pages-option-label = 페이지
+pdfjs-views-manager-outlines-option-label = 문서 개요
+pdfjs-views-manager-attachments-option-label = 첨부파일
+pdfjs-views-manager-layers-option-label = 레이어
+pdfjs-views-manager-add-file-button =
+    .title = 파일 추가
+pdfjs-views-manager-add-file-button-label = 파일 추가
+# Variables:
+#   $count (Number) - the number of selected pages.
+pdfjs-views-manager-pages-status-action-label = { $count }개 선택됨
+pdfjs-views-manager-pages-status-none-action-label = 페이지 선택
+pdfjs-views-manager-pages-status-action-button-label = 관리
+pdfjs-views-manager-pages-status-copy-button-label = 복사
+pdfjs-views-manager-pages-status-cut-button-label = 잘라내기
+pdfjs-views-manager-pages-status-delete-button-label = 삭제
+pdfjs-views-manager-pages-status-export-selected-button-label = 선택한 페이지 내보내기…
+# Variables:
+#   $count (Number) - the number of selected pages to be cut.
+pdfjs-views-manager-status-undo-cut-label = { $count }개 페이지 잘림
+# Variables:
+#   $count (Number) - the number of selected pages to be copied.
+pdfjs-views-manager-pages-status-undo-copy-label = { $count }개 페이지 복사됨
+# Variables:
+#   $count (Number) - the number of selected pages to be deleted.
+pdfjs-views-manager-pages-status-undo-delete-label = { $count }개 페이지 삭제됨
+pdfjs-views-manager-pages-status-waiting-ready-label = 파일 준비 중…
+pdfjs-views-manager-pages-status-waiting-uploading-label = 파일 업로드 중…
+pdfjs-views-manager-status-warning-cut-label = 잘라낼 수 없습니다. 페이지를 새로 고침하고 다시 시도하세요.
+pdfjs-views-manager-status-warning-copy-label = 복사할 수 없습니다. 페이지를 새로 고침하고 다시 시도하세요.
+pdfjs-views-manager-status-warning-delete-label = 삭제할 수 없습니다. 페이지를 새로 고침하고 다시 시도하세요.
+pdfjs-views-manager-status-warning-save-label = 저장할 수 없습니다. 페이지를 새로 고침하고 다시 시도하세요.
+pdfjs-views-manager-status-undo-button-label = 실행 취소
+pdfjs-views-manager-status-done-button-label = 완료
+pdfjs-views-manager-status-close-button =
+    .title = 닫기
+pdfjs-views-manager-status-close-button-label = 닫기
+pdfjs-views-manager-paste-button-label = 붙여넣기
+pdfjs-views-manager-paste-button-before =
+    .title = 첫 페이지 앞에 붙여넣기
+# Variables:
+#   $page (Number) - the page number after which the paste button is.
+pdfjs-views-manager-paste-button-after =
+    .title = { $page } 페이지 뒤에 붙여넣기
+# Badge used to promote a new feature in the UI, keep it as short as possible.
+# It's spelled uppercase for English, but it can be translated as usual.
+pdfjs-new-badge-content = 신규
+pdfjs-views-manager-waiting-for-file = 파일 업로드 중…
+pdfjs-toggle-views-manager-button1 =
+    .title = 페이지 관리
+
+## Digital signature properties (signature verification panel)
+
+pdfjs-digital-signature-properties-button =
+    .aria-label = 디지털 서명 속성
+    .title = 디지털 서명 속성
+pdfjs-digital-signature-properties-button-label = 디지털 서명 속성
+
+## Banner shown above the signature list summarising the overall
+## verification state of the document. Each variant is selected by the
+## viewer based on the worst per-signature status; one signature is
+## enough to lower the banner.
+##
+## Variables:
+##   $count (Number) - number of signatures at the worst level.
+
+pdfjs-digital-signature-properties-banner-verified = 유효한 디지털 서명으로 문서에 서명되었습니다
+pdfjs-digital-signature-properties-banner-unknown = 문서에 서명되었지만 { $count }개의 디지털 서명을 확인할 수 없음
+pdfjs-digital-signature-properties-banner-untrusted = 신뢰할 수 없는 { $count }개의 인증서로 서명된 문서
+pdfjs-digital-signature-properties-banner-expired = { $count }개의 만료된 인증서로 서명된 문서
+pdfjs-digital-signature-properties-banner-invalid = 문서에 잘못된 { $count }개의 디지털 서명이 있음
+pdfjs-digital-signature-properties-banner-revoked = 폐기된 인증서 { $count }개로 서명된 문서
+
+## Per-signature status row. Only three distinct strings are needed:
+## the signature crypto either verified (the cert chain may still be
+## untrusted/expired/revoked, but that's surfaced on the cert row
+## below), or it failed, or its sub-format isn't supported.
+
+pdfjs-digital-signature-properties-status-verified = 상태: 서명 확인됨
+pdfjs-digital-signature-properties-status-invalid = 상태: 유효하지 않은 서명
+pdfjs-digital-signature-properties-status-unknown = 상태: 확인할 수 없음 (지원되지 않음)
+
+## Per-signature certificate row. The variants with an issuer / date in
+## parentheses embed fully-localized context — no English fall-through.
+##
+## Variables:
+##   $issuer (String) - issuer or subject common name from the cert.
+##   $dateObj (Date)  - notAfter date for the expired-with-date form.
+
+pdfjs-digital-signature-properties-certificate-trusted = 인증서: 신뢰할 수 있음 ({ $issuer })
+pdfjs-digital-signature-properties-certificate-unknown = 인증서: 사용할 수 없음
+pdfjs-digital-signature-properties-certificate-untrusted = 인증서: 신뢰할 수 없음
+pdfjs-digital-signature-properties-certificate-untrusted-unknown-issuer = 인증서: 알 수 없는 발급자 ({ $issuer })
+pdfjs-digital-signature-properties-certificate-untrusted-self-signed = 인증서: 자체 서명 ({ $issuer })
+pdfjs-digital-signature-properties-certificate-untrusted-untrusted-issuer = 인증서: 신뢰할 수 없는 발급자 ({ $issuer })
+pdfjs-digital-signature-properties-certificate-expired = 인증서: 만료됨
+pdfjs-digital-signature-properties-certificate-expired-with-date = 인증서: 만료됨 ({ DATETIME($dateObj, dateStyle: "medium") })
+pdfjs-digital-signature-properties-certificate-revoked = 인증서: 폐기됨
 
 ## Main menu for adding/removing signatures
 

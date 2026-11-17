@@ -117,18 +117,6 @@ pdfjs-printing-not-ready = எச்சரிக்கை: PDF அச்சி�
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = பக்கப் பட்டியை நிலைமாற்று
-pdfjs-toggle-sidebar-button-label = பக்கப் பட்டியை நிலைமாற்று
-pdfjs-document-outline-button =
-    .title = ஆவண அடக்கத்தைக் காட்டு (இருமுறைச் சொடுக்கி அனைத்து உறுப்பிடிகளையும் விரி/சேர்)
-pdfjs-document-outline-button-label = ஆவண வெளிவரை
-pdfjs-attachments-button =
-    .title = இணைப்புகளை காண்பி
-pdfjs-attachments-button-label = இணைப்புகள்
-pdfjs-thumbs-button =
-    .title = சிறுபடங்களைக் காண்பி
-pdfjs-thumbs-button-label = சிறுபடங்கள்
 pdfjs-findbar-button =
     .title = ஆவணத்தில் கண்டறி
 pdfjs-findbar-button-label = தேடு
@@ -137,18 +125,14 @@ pdfjs-findbar-button-label = தேடு
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = பக்கம் { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = பக்கத்தின் சிறுபடம் { $page }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = கண்டுபிடி
     .placeholder = ஆவணத்தில் கண்டறி…
+    .title = கண்டுபிடி
 pdfjs-find-previous-button =
     .title = இந்த சொற்றொடரின் முந்தைய நிகழ்வை தேடு
 pdfjs-find-previous-button-label = முந்தையது

@@ -87,6 +87,7 @@ pdfjs-scroll-horizontal-button-label = Iscurrimentu orizontale
 pdfjs-scroll-wrapped-button =
     .title = Imprea s'iscurrimentu continu
 pdfjs-scroll-wrapped-button-label = Iscurrimentu continu
+pdfjs-spread-none-button-label = Pàginas individuales
 
 ## Document properties dialog
 
@@ -133,6 +134,19 @@ pdfjs-document-properties-linearized = Visualizatzione web lestra:
 pdfjs-document-properties-linearized-yes = Eja
 pdfjs-document-properties-linearized-no = Nono
 pdfjs-document-properties-close-button = Serra
+pdfjs-digital-signature-properties-view-certificate = Ammustra su tzertificadu
+# Shown beneath an invalid signature card to explain why verification
+# failed. The text comes from NSS (e.g. "Signature integrity has been
+# compromised", "PKCS#7 signature could not be parsed") and is not
+# itself localized — it is the underlying error message produced by
+# the verification backend.
+# Variables:
+#   $reason (String) - error message describing why the signature
+#                      could not be verified.
+pdfjs-digital-signature-properties-reason = Resone: { $reason }
+# Variables:
+#   $dateObj (Date) - the signing time from the /Sig dict's /M entry.
+pdfjs-digital-signature-properties-timestamp = Data e ora: { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
 
 ## Print
 
@@ -146,21 +160,6 @@ pdfjs-printing-not-ready = Atentzione: su PDF no est istadu carrigadu de su totu
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Ativa/disativa sa barra laterale
-pdfjs-toggle-sidebar-notification-button =
-    .title = Ativa/disativa sa barra laterale (su documentu cuntenet un'ischema, alligongiados o livellos)
-pdfjs-toggle-sidebar-button-label = Ativa/disativa sa barra laterale
-pdfjs-document-outline-button-label = Ischema de su documentu
-pdfjs-attachments-button =
-    .title = Ammustra alligongiados
-pdfjs-attachments-button-label = Alliongiados
-pdfjs-layers-button =
-    .title = Ammustra livellos (clic dòpiu pro ripristinare totu is livellos a s'istadu predefinidu)
-pdfjs-layers-button-label = Livellos
-pdfjs-thumbs-button =
-    .title = Ammustra miniaturas
-pdfjs-thumbs-button-label = Miniaturas
 pdfjs-current-outline-item-button =
     .title = Agata s'elementu atuale de s'ischema
 pdfjs-current-outline-item-button-label = Elementu atuale de s'ischema
@@ -173,18 +172,23 @@ pdfjs-additional-layers = Livellos additzionales
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Pàgina { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Miniatura de sa pàgina { $page }
+# Variables:
+#   $page (Number) - the page number
+pdfjs-thumb-page-checkbox1 =
+    .title = Seletziona sa pàgina { $page }
+# Variables:
+#   $page (Number) - the page number
+#   $total (Number) - the number of pages
+pdfjs-thumb-page-title1 =
+    .title = Pàgina { $page } de { $total }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Agata
     .placeholder = Agata in su documentu…
+    .title = Agata
 pdfjs-find-previous-button =
     .title = Agata s'ocurrèntzia pretzedente de sa fràsia
 pdfjs-find-previous-button-label = S'ischeda chi b'est primu
@@ -197,10 +201,27 @@ pdfjs-find-match-diacritics-checkbox-label = Respeta is diacrìticos
 pdfjs-find-entire-word-checkbox-label = Faeddos intreos
 pdfjs-find-reached-top = S'est lòmpidu a su cumintzu de su documentu, si sighit dae su bàsciu
 pdfjs-find-reached-bottom = Acabbu de su documentu, si sighit dae s'artu
+# Variables:
+#   $current (Number) - the index of the currently active find result
+#   $total (Number) - the total number of matches in the document
+pdfjs-find-match-count =
+    { $total ->
+        [one] { $current } currispondèntzia de { $total }
+       *[other] { $current } currispondèntzias de { $total }
+    }
+# Variables:
+#   $limit (Number) - the maximum number of matches
+pdfjs-find-match-count-limit =
+    { $limit ->
+        [one] Prus de { $limit } currispondèntzia
+       *[other] Prus de { $limit } currispondèntzias
+    }
 pdfjs-find-not-found = Testu no agatadu
 
 ## Predefined zoom values
 
+pdfjs-page-scale-width = Larghesa de sa pàgina
+pdfjs-page-scale-fit = Pàgina intrea
 pdfjs-page-scale-auto = Ingrandimentu automàticu
 pdfjs-page-scale-actual = Mannària reale
 # Variables:
@@ -222,6 +243,12 @@ pdfjs-missing-file-error = Ammancat s'archìviu PDF.
 pdfjs-unexpected-response-error = Risposta imprevista de su serbidore.
 pdfjs-rendering-error = Faddina in sa visualizatzione de sa pàgina.
 
+## Annotations
+
+# Variables:
+#   $dateObj (Date) - the modification date and time of the annotation
+pdfjs-annotation-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
+
 ## Password
 
 pdfjs-password-label = Inserta sa crae pro abèrrere custu archìviu PDF.
@@ -234,9 +261,13 @@ pdfjs-web-fonts-disabled = Is tipografias web sunt disativadas: is tipografias i
 
 pdfjs-editor-free-text-button =
     .title = Testu
+pdfjs-editor-color-picker-free-text-input =
+    .title = Muda su colore de su testu
 pdfjs-editor-free-text-button-label = Testu
 pdfjs-editor-ink-button =
     .title = Disinnu
+pdfjs-editor-color-picker-ink-input =
+    .title = Muda su colore pro su disinnu
 pdfjs-editor-ink-button-label = Disinnu
 pdfjs-editor-stamp-button =
     .title = Agiunghe o modìfica immàgines
@@ -245,9 +276,36 @@ pdfjs-editor-highlight-button =
     .title = Evidèntzia
 pdfjs-editor-highlight-button-label = Evidèntzia
 pdfjs-highlight-floating-button1 =
-    .title = Evidèntzia
     .aria-label = Evidèntzia
+    .title = Evidèntzia
 pdfjs-highlight-floating-button-label = Evidèntzia
+pdfjs-comment-floating-button =
+    .aria-label = Cummenta
+    .title = Cummenta
+pdfjs-comment-floating-button-label = Cummenta
+pdfjs-editor-comment-button =
+    .aria-label = Cummenta
+    .title = Cummenta
+pdfjs-editor-comment-button-label = Cummenta
+pdfjs-editor-signature-button =
+    .title = Agiunghe una firma
+pdfjs-editor-signature-button-label = Agiunghe una firma
+
+## Default editor aria labels
+
+# “Highlight” is a noun, the string is used on the editor for highlights.
+pdfjs-editor-highlight-editor =
+    .aria-label = Editore de sutaliniadura
+# “Drawing” is a noun, the string is used on the editor for drawings.
+pdfjs-editor-ink-editor =
+    .aria-label = Editore de disinnos
+# Used when a signature editor is selected/hovered.
+# Variables:
+#   $description (String) - a string describing/labeling the signature.
+pdfjs-editor-signature-editor1 =
+    .aria-description = Editore de firmas: { $description }
+pdfjs-editor-stamp-editor =
+    .aria-label = Editore de immàgines
 
 ## Remove button for the various kind of editor.
 
@@ -259,6 +317,8 @@ pdfjs-editor-remove-stamp-button =
     .title = Boga s’immàgine
 pdfjs-editor-remove-highlight-button =
     .title = Boga s’evidèntzia
+pdfjs-editor-remove-signature-button =
+    .title = Boga·nche sa firma
 
 ##
 
@@ -272,19 +332,47 @@ pdfjs-editor-stamp-add-image-button =
 pdfjs-editor-stamp-add-image-button-label = Agiunghe un’immàgine
 # This refers to the thickness of the line used for free highlighting (not bound to text)
 pdfjs-editor-free-highlight-thickness-input = Grussària
+pdfjs-editor-add-signature-container =
+    .aria-label = Controllos de firma e firmas sarvadas
+pdfjs-editor-signature-add-signature-button =
+    .title = Agiunghe una firma noa
+pdfjs-editor-signature-add-signature-button-label = Agiunghe una firma noa
+# Used on the button to use an already saved signature.
+# Variables:
+#   $description (String) - a string describing/labeling the signature.
+pdfjs-editor-add-saved-signature-button =
+    .title = Firma sarvada: { $description }
 # .default-content is used as a placeholder in an empty text editor.
 pdfjs-free-text2 =
     .aria-label = Editore de testu
     .default-content = Cumintza a iscrìere…
+# Used to show how many comments are present in the pdf file.
+# Variables:
+#   $count (Number) - the number of comments.
+pdfjs-editor-comments-sidebar-title =
+    { $count ->
+        [one] Cummentu
+       *[other] Cummentos
+    }
+pdfjs-editor-comments-sidebar-close-button =
+    .aria-label = Serra sa barra laterale
+    .title = Serra sa barra laterale
+pdfjs-editor-comments-sidebar-close-button-label = Serra sa barra laterale
+# Instructional copy to add a comment by selecting text or an annotations.
+pdfjs-editor-comments-sidebar-no-comments1 = As rilevadu una cosa de interessu? Sinnala·dda e agiunghe unu cummentu.
 
 ## Alt-text dialog
 
 pdfjs-editor-alt-text-button-label = Testu alternativu
+pdfjs-editor-alt-text-edit-button =
+    .aria-label = Modifica su testu alternativu
 pdfjs-editor-alt-text-dialog-label = Sèbera un’optzione
 pdfjs-editor-alt-text-dialog-description = Su testu alternativu (“alt text”) est ùtile pro persones chi non podent bìdere s’immàgine o cando non benit carrigada.
 pdfjs-editor-alt-text-add-description-label = Agiunghe una descritzione
+pdfjs-editor-alt-text-mark-decorative-label = Sinnala comente decorativa
 pdfjs-editor-alt-text-cancel-button = Annulla
 pdfjs-editor-alt-text-save-button = Sarva
+pdfjs-editor-alt-text-decorative-tooltip = Sinnalada comente decorativu
 
 ## Color picker
 
@@ -304,7 +392,13 @@ pdfjs-editor-colorpicker-pink =
 ## New alt-text dialog
 ## Group note for entire feature: Alternative text (alt text) helps when people can't see the image. This feature includes a tool to create alt text automatically using an AI model that works locally on the user's device to preserve privacy.
 
+# This is a button that users can click to open the alt text editor and add alt text when it is not present.
+pdfjs-editor-new-alt-text-missing-button =
+    .aria-label = Mancat su testu alternativu
 pdfjs-editor-new-alt-text-missing-button-label = Mancat su testu alternativu
+# This is a button that opens up the alt text modal where users should review the alt text that was automatically generated.
+pdfjs-editor-new-alt-text-to-review-button =
+    .aria-label = Revisiona su testu alternativu
 pdfjs-editor-new-alt-text-to-review-button-label = Revisiona su testu alternativu
 # "Created automatically" is a prefix that will be added to the beginning of any alt text that has been automatically generated. After the colon, the user will see/hear the actual alt text description. If the alt text has been edited by a human, this prefix will not appear.
 # Variables:
@@ -320,17 +414,23 @@ pdfjs-editor-alt-text-settings-dialog-label = Cunfiguratzione de su testu altern
 pdfjs-editor-alt-text-settings-automatic-title = Testu alternativu automàticu
 pdfjs-editor-alt-text-settings-create-model-button-label = Crea testu alternativu in automàticu
 pdfjs-editor-alt-text-settings-create-model-description = Cussìgiat descritziones pro agiudare a gente chi non podet bìdere s’immàgine o cando non benit carrigada.
-# Variables:
-#   $totalSize (Number) - the total size (in MB) of the AI model.
-pdfjs-editor-alt-text-settings-download-model-label = Modellu de IA pro su testu alternativu ({ $totalSize } MB)
-pdfjs-editor-alt-text-settings-ai-model-description = Est esecutadu in locale in manera chi is datos tuos abarrent in privadu. Rechestu pro sa generatzione automàtica de testu alternativu.
-pdfjs-editor-alt-text-settings-delete-model-button = Cantzella
-pdfjs-editor-alt-text-settings-download-model-button = Iscàrriga
-pdfjs-editor-alt-text-settings-downloading-model-button = Iscarrighende…
 pdfjs-editor-alt-text-settings-editor-title = Editore de testu alternativu
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Mustra deretu s’editore de testu alternativu cando siat agiunta un’immàgine
 pdfjs-editor-alt-text-settings-show-dialog-description = T’agiudat a assegurare chi totu is immàgines tuas tèngiant unu testu alternativu.
 pdfjs-editor-alt-text-settings-close-button = Serra
+
+## "Annotations removed" bar
+
+pdfjs-editor-undo-bar-message-freetext = Testu cantzelladu
+pdfjs-editor-undo-bar-message-ink = Disinnu cantzelladu
+pdfjs-editor-undo-bar-message-stamp = Immàgine cantzellada
+pdfjs-editor-undo-bar-message-signature = Firma cantzellada
+pdfjs-editor-undo-bar-undo-button =
+    .title = Iscontza
+pdfjs-editor-undo-bar-undo-button-label = Iscontza
+pdfjs-editor-undo-bar-close-button =
+    .title = Serra
+pdfjs-editor-undo-bar-close-button-label = Serra
 
 ## Dialog buttons
 
@@ -338,6 +438,5 @@ pdfjs-editor-add-signature-cancel-button = Annulla
 
 ##  Edit a comment dialog
 
-pdfjs-editor-edit-comment-manager-cancel-button = Annulla
 pdfjs-editor-edit-comment-dialog-text-input =
     .placeholder = Cumintza a iscrìere…

@@ -140,18 +140,6 @@ pdfjs-printing-not-ready = Reentino: PDF oo loowaaki haa timmi ngam winnditagol.
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Toggilo Palal Sawndo
-pdfjs-toggle-sidebar-button-label = Toggilo Palal Sawndo
-pdfjs-document-outline-button =
-    .title = Hollu Ƴiyal Fiilannde (dobdobo ngam wertude/taggude teme fof)
-pdfjs-document-outline-button-label = Toɓɓe Fiilannde
-pdfjs-attachments-button =
-    .title = Hollu Ɗisanɗe
-pdfjs-attachments-button-label = Ɗisanɗe
-pdfjs-thumbs-button =
-    .title = Hollu Dooɓe
-pdfjs-thumbs-button-label = Dooɓe
 pdfjs-findbar-button =
     .title = Yiylo e fiilannde
 pdfjs-findbar-button-label = Yiytu
@@ -160,18 +148,14 @@ pdfjs-findbar-button-label = Yiytu
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Hello { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Dooɓre Hello { $page }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Yiytu
     .placeholder = Yiylo nder dokimaa
+    .title = Yiytu
 pdfjs-find-previous-button =
     .title = Yiylo cilol ɓennugol konngol ngol
 pdfjs-find-previous-button-label = Ɓennuɗo

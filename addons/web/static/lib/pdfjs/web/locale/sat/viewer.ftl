@@ -155,23 +155,6 @@ pdfjs-printing-not-ready = ᱦᱩᱥᱤᱭᱟᱹᱨ : ᱪᱷᱟᱯᱟ ᱞᱟᱹ�
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = ᱫᱷᱟᱨᱮᱵᱟᱨ ᱥᱮᱫ ᱩᱪᱟᱹᱲᱚᱜ ᱢᱮ
-pdfjs-toggle-sidebar-notification-button =
-    .title = ᱫᱷᱟᱨᱮᱵᱟᱨ ᱥᱮᱫ ᱩᱪᱟᱹᱲᱚᱜ ᱢᱮ  (ᱫᱚᱞᱤᱞ ᱨᱮ ᱟᱣᱴᱞᱟᱭᱤᱢ ᱢᱮᱱᱟᱜᱼᱟ/ᱞᱟᱪᱷᱟᱠᱚ/ᱯᱚᱨᱚᱛᱠᱚ)
-pdfjs-toggle-sidebar-button-label = ᱫᱷᱟᱨᱮᱵᱟᱨ ᱥᱮᱫ ᱩᱪᱟᱹᱲᱚᱜ ᱢᱮ
-pdfjs-document-outline-button =
-    .title = ᱫᱚᱞᱚᱞ ᱟᱣᱴᱞᱟᱭᱤᱱ ᱫᱮᱠᱷᱟᱣ ᱢᱮ (ᱡᱷᱚᱛᱚ ᱡᱤᱱᱤᱥᱠᱚ ᱵᱟᱨ ᱡᱮᱠᱷᱟ ᱚᱛᱟ ᱠᱮᱛᱮ ᱡᱷᱟᱹᱞ/ᱦᱩᱰᱤᱧ ᱪᱷᱚᱭ ᱢᱮ)
-pdfjs-document-outline-button-label = ᱫᱚᱞᱤᱞ ᱛᱮᱭᱟᱨ ᱛᱮᱫ
-pdfjs-attachments-button =
-    .title = ᱞᱟᱴᱷᱟ ᱥᱮᱞᱮᱫ ᱠᱚ ᱩᱫᱩᱜᱽ ᱢᱮ
-pdfjs-attachments-button-label = ᱞᱟᱴᱷᱟ ᱥᱮᱞᱮᱫ ᱠᱚ
-pdfjs-layers-button =
-    .title = ᱯᱚᱨᱚᱛ ᱫᱮᱠᱷᱟᱣ ᱢᱮ (ᱢᱩᱞ ᱡᱟᱭᱜᱟ ᱛᱮ ᱡᱷᱚᱛᱚ ᱯᱚᱨᱚᱛᱠᱚ ᱨᱤᱥᱮᱴ ᱞᱟᱹᱜᱤᱫ ᱵᱟᱨ ᱡᱮᱠᱷᱟ ᱚᱛᱚᱭ ᱢᱮ)
-pdfjs-layers-button-label = ᱯᱚᱨᱚᱛᱠᱚ
-pdfjs-thumbs-button =
-    .title = ᱪᱤᱛᱟᱹᱨ ᱟᱦᱞᱟ ᱠᱚ ᱩᱫᱩᱜᱽ ᱢᱮ
-pdfjs-thumbs-button-label = ᱪᱤᱛᱟᱹᱨ ᱟᱦᱞᱟ ᱠᱚ
 pdfjs-current-outline-item-button =
     .title = ᱱᱤᱛᱚᱜᱟᱜ ᱟᱣᱴᱞᱟᱭᱤᱱ ᱡᱟᱱᱤᱥ ᱯᱟᱱᱛᱮ ᱢᱮ
 pdfjs-current-outline-item-button-label = ᱱᱤᱛᱚᱜᱟᱜ ᱟᱣᱴᱞᱟᱭᱤᱱ ᱡᱟᱱᱤᱥ
@@ -184,18 +167,14 @@ pdfjs-additional-layers = ᱵᱟᱹᱲᱛᱤ ᱯᱚᱨᱚᱛᱠᱚ
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = { $page } ᱥᱟᱦᱴᱟ
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = { $page } ᱥᱟᱦᱴᱟ ᱨᱮᱭᱟᱜ ᱪᱤᱛᱟᱹᱨ ᱟᱦᱞᱟ
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = ᱥᱮᱸᱫᱽᱨᱟᱭ ᱢᱮ
     .placeholder = ᱫᱚᱞᱤᱞ ᱨᱮ ᱯᱟᱱᱛᱮ ᱢᱮ …
+    .title = ᱥᱮᱸᱫᱽᱨᱟᱭ ᱢᱮ
 pdfjs-find-previous-button =
     .title = ᱟᱭᱟᱛ ᱦᱤᱸᱥ ᱨᱮᱭᱟᱜ ᱯᱟᱹᱦᱤᱞ ᱥᱮᱫᱟᱜ ᱚᱰᱚᱠ ᱧᱟᱢ ᱢᱮ
 pdfjs-find-previous-button-label = ᱢᱟᱲᱟᱝᱟᱜ
