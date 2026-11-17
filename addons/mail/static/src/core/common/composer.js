@@ -998,6 +998,7 @@ export class Composer extends Component {
                 return;
             }
             this.state.active = false;
+<<<<<<< cb8cb6cab938adf94c3ccd2560a1130d3fc0a420
             await this.editor?.shared.mention.whenMentionsChecked();
             await this.editor?.shared.recordLink.whenRecordLinksRendered();
             // The type may have just been switched, before the layout effect.
@@ -1009,11 +1010,27 @@ export class Composer extends Component {
             }
             body = await this.recordLink.markRecordLinks(body);
             await cb(body);
+||||||| c1ef83e9c43760afd21db514e87568298a3a00b0
+            await cb(trimEmptyBlocksAround(this.props.composer.composerHtml));
+=======
+            try {
+                await cb(trimEmptyBlocksAround(this.props.composer.composerHtml));
+            } finally {
+                this.state.active = true;
+            }
+>>>>>>> 3ae4f3941013538e4fe2f1db411a32ffff171587
             if (this.props.onPostCallback) {
                 this.props.onPostCallback();
             }
             this.clear();
+<<<<<<< cb8cb6cab938adf94c3ccd2560a1130d3fc0a420
             this.state.active = true;
+||||||| c1ef83e9c43760afd21db514e87568298a3a00b0
+            this.state.active = true;
+            this.ref()?.focus();
+=======
+            this.ref()?.focus();
+>>>>>>> 3ae4f3941013538e4fe2f1db411a32ffff171587
         }
     }
 
