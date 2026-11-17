@@ -31,7 +31,7 @@ class EventTrackLiveController(EventTrackController):
             'suggestion': {
                 'id': track_suggestion.id,
                 'name': track_suggestion.name,
-                'speaker_name': track_suggestion.partner_name,
+                'speaker_name': ', '.join(name for name in track_suggestion.speaker_ids.mapped('name') if name),
                 'website_url': track_suggestion.website_url
             }
         }

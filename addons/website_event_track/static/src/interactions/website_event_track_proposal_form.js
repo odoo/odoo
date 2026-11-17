@@ -10,7 +10,7 @@ export class WebsiteEventTrackProposalForm extends Interaction {
 
     dynamicContent = {
         ".o_wetrack_add_contact_information_checkbox" : { "t-on-click" : this.onAdvancedContactToggle },
-        "input[name='partner_name']" : { "t-on-input" : this.onPartnerNameInput },
+        "input[name='speaker_name']" : { "t-on-input" : this.onSpeakerNameInput },
         ".o_wetrack_proposal_submit_button" : { "t-on-click.prevent.stop" : this.onProposalFormSubmit },
         ".o_wetrack_contact_information" : { "t-att-class": () => ({
             "d-none": !this.useAdvancedContact,
@@ -107,15 +107,15 @@ export class WebsiteEventTrackProposalForm extends Interaction {
 
     /**
      * Propagates the new input on speaker name to contact name, as long as the latter
-     * is the start of partner name. Otherwise, do not modify existing contact name.
+     * is the start of speaker name. Otherwise, do not modify existing contact name.
      *
      * @param {Event} ev
      */
-    onPartnerNameInput(ev) {
-        const partnerNameText = ev.currentTarget.value;
+    onSpeakerNameInput(ev) {
+        const speakerNameText = ev.currentTarget.value;
         const contactNameInput = this.el.querySelector(".o_wetrack_contact_name_input");
-        if (partnerNameText.startsWith(contactNameInput.value)) {
-            contactNameInput.value = partnerNameText;
+        if (speakerNameText.startsWith(contactNameInput.value)) {
+            contactNameInput.value = speakerNameText;
         }
     }
 

@@ -4,6 +4,7 @@
 from . import event_event
 from . import event_track
 from . import event_track_location
+from . import event_track_speaker
 from . import event_track_stage
 from . import event_track_tag
 from . import event_track_tag_category

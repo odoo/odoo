@@ -1,6 +1,7 @@
 from datetime import datetime
 from freezegun import freeze_time
 
+from odoo import Command
 from odoo.addons.website_event.tests.common import TestEventOnlineCommon
 from odoo.addons.website_event_track.controllers.location_display import EventTrackLocationDisplayController
 from odoo.tests.common import HttpCase, users
@@ -31,9 +32,10 @@ class TestLocationDisplay(TestEventOnlineCommon, HttpCase):
                 'date': datetime(2026, 3, 5, 10),
                 'duration': 1,
                 'is_published': True,
-                'partner_name': 'Test Speaker',
-                'partner_function': 'Engineer',
-                'partner_company_name': 'Example Company',
+                'speaker_ids': [
+                    Command.create({'name': 'Test Speaker', 'function': 'Engineer', 'company_name': 'Example Company'}),
+                    Command.create({'name': 'Second Speaker'}),
+                ],
             }, {
                 'name': 'Next',
                 'event_id': cls.event_0.id,
@@ -156,6 +158,7 @@ class TestLocationDisplay(TestEventOnlineCommon, HttpCase):
         self.assertIn(self.location.name, response.text, "Location name should be displayed on the page.")
         self.assertIn(live_track.name, response.text, "Live track name should be displayed on the page.")
         self.assertIn('Test Speaker', response.text, "Speaker name should be displayed on the page.")
+        self.assertIn('Second Speaker', response.text, "Every speaker should be displayed on the page.")
         self.assertIn(next_track.name, response.text, "Next track name should be displayed on the page.")
         self.assertIn(f'{display_url}/content', response.text, "Refresh content endpoint should be included in the page.")
         self.assertIn('o_wevent_location_display_refresh_status', response.text, "Refresh status should be included in the page.")

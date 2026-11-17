@@ -2,7 +2,7 @@
 
 from datetime import timedelta
 
-from odoo import fields
+from odoo import Command, fields
 from odoo.tests import Form, tagged
 
 from odoo.addons.website_event.tests.common import TestEventOnlineCommon
@@ -17,8 +17,8 @@ class TestTrackConflict(TestEventOnlineCommon):
         cls.location_a, cls.location_b, cls.location_c = cls.env['event.track.location'].create([
             {'name': 'Location A'}, {'name': 'Location B'}, {'name': 'Location C'},
         ])
-        cls.speaker_1, cls.speaker_2 = cls.env['res.partner'].create([
-            {'name': 'Speaker 1'}, {'name': 'Speaker 2'},
+        cls.speaker_1, cls.speaker_2, cls.speaker_3 = cls.env['res.partner'].create([
+            {'name': 'Speaker 1'}, {'name': 'Speaker 2'}, {'name': 'Speaker 3'},
         ])
         cls.cancel_stage = cls.env['event.track.stage'].create({
             'name': 'Cancelled (test)', 'is_cancel': True,
@@ -31,13 +31,13 @@ class TestTrackConflict(TestEventOnlineCommon):
         # in the future: tracks that are already over are ignored
         cls.start = fields.Datetime.now().replace(minute=0, second=0, microsecond=0) + timedelta(days=7)
 
-    def _track(self, name, hours_from_start, duration, speaker=None, **vals):
+    def _track(self, name, hours_from_start, duration, *speakers, **vals):
         return self.env['event.track'].create({
             'name': name,
             'event_id': self.event_0.id,
             'date': self.start + timedelta(hours=hours_from_start),
             'duration': duration,
-            'partner_id': speaker.id if speaker else False,
+            'speaker_ids': [Command.create({'partner_id': speaker.id}) for speaker in speakers],
             **vals,
         })
 
@@ -65,6 +65,23 @@ class TestTrackConflict(TestEventOnlineCommon):
         track_2 = self._track('T2', 1, 1, self.speaker_1, location_id=self.location_a.id)
         self._check(track_1, track_2, location=True, speaker=True)
         self._check(track_2, track_1, location=True, speaker=True)
+
+    def test_speaker_conflict_one_shared_speaker(self):
+        # a panel shares only one of its speakers with the other track
+        track_1 = self._track('T1', 0, 1, self.speaker_1, self.speaker_2, location_id=self.location_a.id)
+        track_2 = self._track('T2', 0.5, 1, self.speaker_2, location_id=self.location_b.id)
+        track_3 = self._track('T3', 0.5, 1, self.speaker_3, location_id=self.location_c.id)
+        self._check(track_1, track_2, speaker=True)
+        self._check(track_2, track_1, speaker=True)
+        self._check(track_3, self.env['event.track'])
+
+    def test_speaker_without_contact_ignored(self):
+        # a speaker only typed as a name cannot be told apart from a namesake
+        vals = {'speaker_ids': [Command.create({'name': 'Jane Doe'})]}
+        track_1 = self._track('T1', 0, 1, location_id=self.location_a.id, **vals)
+        track_2 = self._track('T2', 0.5, 1, location_id=self.location_b.id, **vals)
+        self._check(track_1, self.env['event.track'])
+        self._check(track_2, self.env['event.track'])
 
     def test_no_conflict(self):
         # back-to-back in the same location: end == start is not an overlap
@@ -138,6 +155,23 @@ class TestTrackConflict(TestEventOnlineCommon):
             self.assertTrue(form.has_location_conflict)
             # warning only: saving is not blocked
         self.assertTrue(self.env['event.track'].search_count([('name', '=', 'New talk')]))
+
+    def test_form_warning_speaker(self):
+        self._track('T1', 0, 1, self.speaker_1, location_id=self.location_a.id)
+        with Form(self.env['event.track']) as form:
+            form.name = 'New panel'
+            form.event_id = self.event_0
+            form.date = self.start + timedelta(minutes=30)
+            form.duration = 1
+            form.location_id = self.location_b
+            with form.speaker_ids.new() as speaker:
+                speaker.partner_id = self.speaker_2
+            self.assertFalse(form.has_conflict)
+            with form.speaker_ids.new() as speaker:
+                speaker.partner_id = self.speaker_1
+            self.assertTrue(form.has_conflict)
+            self.assertTrue(form.has_speaker_conflict)
+            self.assertFalse(form.has_location_conflict)
 
     def test_action_view_conflicting_tracks(self):
         track_1 = self._track('T1', 0, 1, location_id=self.location_a.id)
