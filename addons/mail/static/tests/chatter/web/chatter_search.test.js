@@ -4,12 +4,14 @@ import {
     contains,
     defineMailModels,
     insertText,
+    listenStoreFetch,
     openFormView,
     patchUiSize,
     scroll,
     start,
     startServer,
     triggerHotkey,
+    waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { serverState } from "@web/../tests/web_test_helpers";
@@ -95,6 +97,37 @@ test("Search icon should close and reset the search", async () => {
     await click(".o-mail-Chatter-topbar button[title='Search Messages']");
     await contains(".o_searchview_input", { count: 0 });
     await contains(".o-mail-SearchMessageResult .o-mail-Message", { count: 0 });
+});
+
+test("Closing search while pending should ignore its results", async () => {
+    patchUiSize({ size: SIZES.XXL });
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
+    pyEnv["mail.message"].create({
+        body: "not empty",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    let searchDeferred;
+    listenStoreFetch("/mail/thread/messages", {
+        async onRpc() {
+            await searchDeferred?.promise;
+        },
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await waitStoreFetch("/mail/thread/messages");
+    searchDeferred = Promise.withResolvers();
+    await click(".o-mail-Chatter-topbar button[title='Search Messages']");
+    await insertText(".o_searchview_input", "empty");
+    triggerHotkey("Enter");
+    await contains(".o-mail-SearchMessageResult"); // panel shows while searching
+    await click(".o-mail-SearchMessageInput [title='Close']");
+    searchDeferred.resolve();
+    await waitStoreFetch("/mail/thread/messages");
+    await click(".o-mail-Chatter-topbar button[title='Search Messages']");
+    await contains(".o_searchview_input");
+    await contains(".o-mail-SearchMessageResult", { count: 0 });
 });
 
 test("opening search in chatter hides files and pinned messages panels", async () => {
