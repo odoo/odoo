@@ -1008,12 +1008,15 @@ export class Composer extends Component {
                 body = parseAndTransform(body, addLink);
             }
             body = await this.recordLink.markRecordLinks(body);
-            await cb(body);
+            try {
+                await cb(body);
+            } finally {
+                this.state.active = true;
+            }
             if (this.props.onPostCallback) {
                 this.props.onPostCallback();
             }
             this.clear();
-            this.state.active = true;
         }
     }
 
