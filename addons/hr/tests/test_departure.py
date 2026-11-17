@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
 from odoo import Command
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.hr.tests.common import TestHrCommon
 from odoo.addons.mail.tests.common import MailCase
@@ -147,6 +147,29 @@ class TestDeparture(MailCase, TestHrCommon):
         })
 
         self.assertEqual(self.emp_D.contract_date_end, departure.departure_date)
+
+    @freeze_time('2025-11-17')
+    def test_departure_of_an_ended_contract(self):
+        # The end date was set on the contract to bound the last payslip, before ending the collaboration
+        employee = self.env['hr.employee'].create({
+            'name': 'Ended Contract Employee',
+            'date_version': date(2025, 2, 1),
+            'contract_date_start': date(2025, 2, 1),
+            'contract_date_end': date(2025, 10, 31),
+        })
+        self.assertFalse(employee.is_in_contract)
+        action = employee.action_new_departure()
+        self.assertEqual(action['context']['default_dismissal_date'], date(2025, 10, 31))
+        departure = self.env['hr.employee.departure'].with_context(**action['context']).create({
+            'departure_reason_id': self.env.ref('hr.departure_fired').id,
+        })
+        self.assertEqual(departure.departure_date, date(2025, 10, 31))
+        self.assertEqual(employee.contract_date_end, date(2025, 10, 31))
+
+        # Without any contract, the employee is archived instead
+        employee_without_contract = self.env['hr.employee'].create({'name': 'No Contract Employee'})
+        with self.assertRaises(UserError):
+            employee_without_contract.action_new_departure()
 
     @freeze_time('2025-06-01')
     def test_cancel_departure_restores_contract_end_date(self):
