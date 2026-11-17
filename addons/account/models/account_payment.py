@@ -2,6 +2,7 @@ from itertools import zip_longest
 from odoo import models, fields, api, _, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import SQL
+from odoo.tools.float_utils import float_compare
 
 
 class AccountPayment(models.Model):
@@ -135,6 +136,17 @@ class AccountPayment(models.Model):
         string='Currency',
         compute='_compute_currency_id', store=True, readonly=False, precompute=True,
         help="The payment's currency.")
+    has_custom_currency_rate = fields.Boolean(
+        compute='_compute_has_custom_currency_rate',
+    )
+    currency_rate = fields.Float(
+        string='Currency Rate',
+        compute='_compute_currency_rate', store=True,
+        readonly=False,
+        copy=False,
+        digits=0,
+        help="Currency rate from company currency to payment currency.",
+    )
     company_currency_id = fields.Many2one(string="Company Currency", related='company_id.currency_id')
     partner_id = fields.Many2one(
         comodel_name='res.partner',
@@ -387,18 +399,14 @@ class AccountPayment(models.Model):
         else:
             liquidity_amount_currency = 0.0
 
-        if not write_off_line_vals and force_balance is not None:
-            sign = 1 if liquidity_amount_currency > 0 else -1
-            liquidity_balance = sign * abs(force_balance)
-        else:
-            liquidity_balance = self.currency_id._convert(
-                liquidity_amount_currency,
-                self.company_id.currency_id,
-                self.company_id,
-                self.date,
-            )
+        sign = 1 if liquidity_amount_currency > 0 else -1
         liquidity_amount_currency -= withholding_amount_currency
-        liquidity_balance -= withholding_balance
+        if not write_off_line_vals and force_balance is not None:
+            liquidity_balance = sign * abs(force_balance) - withholding_balance
+        else:
+            # The withholding lines may use another rate (e.g. the invoice one): convert the net amount at the payment rate
+            # so that the difference goes to the counterpart line instead of the liquidity line.
+            liquidity_balance = self._get_company_currency_amount(liquidity_amount_currency)
 
         liquidity_lines = self._prepare_move_liquidity_lines({
             'name': line_name,
@@ -574,19 +582,14 @@ class AccountPayment(models.Model):
                 payment.show_partner_bank_account = payment.payment_method_code in self._get_method_codes_using_bank_account()
             payment.require_partner_bank_account = payment.state == 'draft' and payment.payment_method_code in self._get_method_codes_needing_bank_account()
 
-    @api.depends('move_id.amount_total_signed', 'amount', 'payment_type', 'currency_id', 'date', 'company_id', 'company_currency_id')
+    @api.depends('move_id.amount_total_signed', 'amount', 'payment_type', 'currency_id', 'date', 'company_id', 'company_currency_id', 'currency_rate')
     def _compute_amount_company_currency_signed(self):
         for payment in self:
             if payment.move_id:
                 liquidity_lines = payment._seek_for_lines()[0]
                 payment.amount_company_currency_signed = sum(liquidity_lines.mapped('balance'))
             else:
-                payment.amount_company_currency_signed = payment.currency_id._convert(
-                    from_amount=payment.amount_signed,
-                    to_currency=payment.company_currency_id,
-                    company=payment.company_id,
-                    date=payment.date,
-                )
+                payment.amount_company_currency_signed = payment._get_company_currency_amount(payment.amount_signed)
 
     @api.depends('amount', 'payment_type')
     def _compute_amount_signed(self):
@@ -673,10 +676,55 @@ class AccountPayment(models.Model):
         self.ensure_one()
         return []
 
+    def _get_payment_currency_rate(self):
+        self.ensure_one()
+        return self.env['res.currency']._get_conversion_rate(
+            from_currency=self.company_currency_id,
+            to_currency=self.currency_id,
+            company=self.company_id,
+            date=self.date,
+        )
+
     @api.depends('journal_id')
     def _compute_currency_id(self):
         for pay in self:
             pay.currency_id = pay.journal_id.currency_id or pay.journal_id.company_id.currency_id
+
+    @api.depends('currency_id', 'company_currency_id', 'company_id', 'date', 'currency_rate')
+    def _compute_has_custom_currency_rate(self):
+        for pay in self:
+            system_rate = pay._get_payment_currency_rate()
+            pay.has_custom_currency_rate = float_compare(pay.currency_rate, system_rate, precision_digits=12) != 0
+
+    @api.depends('currency_id', 'company_id', 'date', 'company_currency_id', 'currency_rate')
+    def _compute_currency_rate(self):
+        for payment in self:
+            payment.currency_rate = payment._get_payment_currency_rate()
+
+    def refresh_currency_rate(self):
+        draft_payments, other_payments = self.partitioned(lambda p: p.state == 'draft')
+        if other_payments:
+            raise UserError(self.env._(
+                "The currency rate can only be reset on draft payments. Reset these payments to draft first: %s",
+                other_payments.mapped('display_name'),
+            ))
+        for pay in draft_payments:
+            pay.currency_rate = pay._get_payment_currency_rate()
+
+    def _get_company_currency_amount(self, amount_currency):
+        """Convert an amount in payment currency to company currency.
+        Uses the user-defined currency_rate when available (foreign currency with a non-zero rate),
+        otherwise falls back to the standard conversion based on the payment date.
+        """
+        self.ensure_one()
+        if self.currency_id != self.company_currency_id and self.currency_rate:
+            return self.company_currency_id.round(amount_currency / self.currency_rate)
+        return self.currency_id._convert(
+            from_amount=amount_currency,
+            to_currency=self.company_currency_id,
+            company=self.company_id,
+            date=self.date,
+        )
 
     @api.depends('payment_method_line_id')
     def _compute_outstanding_account_id(self):
@@ -1134,7 +1182,7 @@ class AccountPayment(models.Model):
     def _get_trigger_fields_to_synchronize(self):
         return (
             'date', 'amount', 'payment_type', 'partner_type', 'payment_reference',
-            'currency_id', 'partner_id', 'destination_account_id', 'partner_bank_id', 'journal_id'
+            'currency_id', 'currency_rate', 'partner_id', 'destination_account_id', 'partner_bank_id', 'journal_id'
         )
 
     def _generate_journal_entry(self, write_off_line_vals=None, force_balance=None, line_ids=None):

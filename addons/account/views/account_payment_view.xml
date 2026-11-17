@@ -178,6 +178,9 @@
                         <field name="company_id" invisible="1"/> <!-- company context feeding related fields (company_currency_id) and journal domain -->
                         <field name="paired_internal_transfer_payment_id" invisible="1"/> <!-- technical pointer to the paired transfer payment, kept for localization/onchange -->
                         <field name="currency_id" invisible="1"/> <!-- currency for the amount monetary field; also shown under group_multi_currency -->
+                        <field name="company_currency_id" invisible="1"/> <!-- company currency, used by the exchange rate widget visibility -->
+                        <field name="currency_rate" invisible="1"/> <!-- exchange rate field read by the account_currency_exchange_rate widget -->
+                        <field name="has_custom_currency_rate" invisible="1"/> <!-- drives the invisible on the currency-rate refresh button -->
 
                         <div class="oe_button_box" name="button_box">
                             <!-- Invoice stat button -->
@@ -251,14 +254,26 @@
                                        invisible="partner_type != 'supplier'"
                                        readonly="state != 'draft'"/>
                                 <label for="amount"/>
-                                <div name="amount_div" class="o_row">
-                                    <field name="amount"
-                                           readonly="state != 'draft'"/>
-                                    <field name="currency_id"
-                                           options="{'no_create': True, 'no_open': True}"
-                                           required="1"
-                                           readonly="state != 'draft'"
-                                           groups="base.group_multi_currency"/>
+                                <div name="amount_div" class="d-flex flex-column align-items-start">
+                                    <div class="d-flex align-items-center gap-1">
+                                        <field name="amount"
+                                               readonly="state != 'draft'"/>
+                                        <field name="currency_id"
+                                               options="{'no_create': True, 'no_open': True}"
+                                               required="1"
+                                               readonly="state != 'draft'"
+                                               groups="base.group_multi_currency"/>
+                                    </div>
+                                    <div name="currency_rate_div" invisible="currency_id == company_currency_id" class="d-flex gap-1">
+                                        <widget name="account_currency_exchange_rate" options="{'rate_field': 'currency_rate'}" readonly="state != 'draft' or currency_id == company_currency_id"/>
+                                        <div invisible="state != 'draft' or not has_custom_currency_rate">
+                                            <button type="object"
+                                                    name="refresh_currency_rate"
+                                                    icon="refresh"
+                                                    title="Reset the currency rate to the default accordingly to the payment date"
+                                                    class="btn btn-link p-0"/>
+                                        </div>
+                                    </div>
                                 </div>
                                 <field name="date"
                                        readonly="state != 'draft'"/>

@@ -21,6 +21,7 @@
                     <field name="source_amount_currency" invisible="1" force_save="1"/> <!-- source residual in currency, persisted for amount/currency computes -->
                     <field name="source_currency_id" invisible="1" force_save="1"/> <!-- drives the currency_conversion_div visibility and currency_id compute -->
                     <field name="company_id" invisible="1" force_save="1"/> <!-- company context persisted for created payments and related company_currency_id -->
+                    <field name="company_currency_id" invisible="1"/> <!-- company currency, used by the exchange rate widget visibility -->
                     <field name="partner_id" invisible="1" force_save="1"/> <!-- persisted for created payments; used by partner_bank_id context default_partner_id -->
                     <field name="country_code" invisible="1" force_save="1"/> <!-- related company fiscal country code, used by localization overrides of this view -->
                     <field name="currency_id" invisible="1" /> <!-- also shown in amount block under group_multi_currency; drives currency_conversion_div and monetary widgets -->
@@ -113,7 +114,7 @@
                                 </div>
                                 <div name="currency_conversion_div" class="d-flex gap-1 text-muted" invisible="company_currency_id == (currency_id if currency_id != company_currency_id else (source_currency_id or company_currency_id))">
                                     <field name="exchange_rate" invisible="1"/> <!-- rate_field feeding the account_currency_exchange_rate widget below -->
-                                    <widget name="account_currency_exchange_rate" readonly="1" options="{'rate_field': 'exchange_rate', 'currency_field': 'exchange_rate_currency_id'}"/>
+                                    <widget name="account_currency_exchange_rate" options="{'rate_field': 'exchange_rate', 'currency_field': 'exchange_rate_currency_id'}"/>
                                 </div>
                             </div>
                             <field

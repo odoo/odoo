@@ -26,9 +26,9 @@ class AccountPaymentWithholdingLine(models.Model):
     # Compute, inverse, search methods
     # --------------------------------
 
-    @api.depends('payment_id.amount')
+    @api.depends('payment_id.amount', 'payment_id.currency_rate')
     def _compute_original_amounts(self):
-        """ Adds a dependency to the payment amount to ensure recomputation when necessary. """
+        """ Adds a dependency to the payment amount and rate to ensure recomputation when necessary. """
         super()._compute_original_amounts()
 
     @api.depends('payment_id.payment_type')
@@ -113,3 +113,8 @@ class AccountPaymentWithholdingLine(models.Model):
 
     def _get_comodel_partner(self):
         return self.payment_id.partner_id
+
+    def _get_comodel_currency_rate(self):
+        # EXTENDS 'l10n_account_withholding_tax'
+        # Without an invoice in the same currency (e.g. advance payments), use the rate of the payment, possibly edited by the user.
+        return self.payment_id.currency_rate or super()._get_comodel_currency_rate()
