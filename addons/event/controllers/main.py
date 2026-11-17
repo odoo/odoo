@@ -22,7 +22,12 @@ class EventController(Controller):
             Domain('event_id', '=', event.id) & Domain('id', '=', slot_id)) if slot_id else False
         if slot_id and not slot:
             raise NotFound()
-        files = event._get_ics_file(slot=slot)
+        ticket_id = int(kwargs['ticket_id']) if kwargs.get('ticket_id') else False
+        ticket = request.env['event.event.ticket'].sudo().search(
+            Domain('event_id', '=', event.id) & Domain('id', '=', ticket_id)) if ticket_id else False
+        if ticket_id and not ticket:
+            raise NotFound()
+        files = event._get_ics_file(slot=slot, ticket=ticket)
         if event.id not in files:
             raise NotFound()
         content = files[event.id]

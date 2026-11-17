@@ -25,7 +25,10 @@ class WebsiteEventSale(WebsiteSale):
             event.id: {
                 slot.id: event._get_event_resource_urls(slot=slot)
                 for slot in value.grouped('event_slot_id')
-            } if event.is_multi_slots else event._get_event_resource_urls()
+            } if event.is_multi_slots else event._get_event_resource_urls(
+                # calendar links follow the ticket dates only when all attendees share it
+                ticket=value.event_ticket_id if len(value.event_ticket_id) == 1 else False,
+            )
             for event, value in attendee_per_event_read_group
         }
 

@@ -62,6 +62,7 @@ class EventRegistration(models.Model):
     event_begin_date = fields.Datetime(
         "Event Start Date", compute="_compute_event_begin_date", store=True)  # Stored for the cohort view and portal 'order_by'
     event_end_date = fields.Datetime("Event End Date", compute="_compute_event_end_date", search="_search_event_end_date")
+    is_one_day = fields.Boolean("Is One Day", compute="_compute_is_one_day")
     event_date_range = fields.Char("Date Range", compute="_compute_date_range")
     event_organizer_id = fields.Many2one(string='Event Organizer', related='event_id.organizer_id', readonly=True)
     event_user_id = fields.Many2one(string='Event Responsible', related='event_id.user_id', readonly=True)
@@ -110,6 +111,23 @@ class EventRegistration(models.Model):
                     ['event_slot_id', 'event_ticket_id']
                 )
             ])
+
+    @api.constrains('event_slot_id', 'event_ticket_id', 'state', 'active')
+    def _check_ticket_valid_for_slot(self):
+        # seats check refuses "available < 0" only, a 0 availability does not
+        # block an existing registration: an explicit constraint is needed.
+        for registration in self:
+            if not registration.active or registration.state == 'cancel':
+                continue
+            ticket, slot = registration.event_ticket_id, registration.event_slot_id
+            if ticket and slot and not ticket._is_valid_for_slot(slot):
+                raise ValidationError(self.env._(
+                    "Ticket \"%(ticket)s\" is not valid on %(slot)s.\n"
+                    "It can only be used on: %(slots)s",
+                    ticket=ticket.name,
+                    slot=slot.display_name,
+                    slots=ticket.event_slot_ids.mapped('display_name'),
+                ))
 
     @api.model
     def default_get(self, fields):
@@ -170,23 +188,51 @@ class EventRegistration(models.Model):
                 else:
                     registration.date_closed = False
 
-    @api.depends("event_id", "event_slot_id", "partner_id")
+    @api.depends("event_id", "event_slot_id", "event_ticket_id", "event_begin_date", "partner_id")
     def _compute_date_range(self):
         for registration in self:
             registration.event_date_range = registration.event_id._get_date_range_str(
-                start_datetime=registration.event_slot_id.start_datetime,
+                start_datetime=registration.event_begin_date,
                 lang_code=registration.partner_id.lang,
             )
 
-    @api.depends("event_id", "event_slot_id", "event_id.date_begin", "event_slot_id.start_datetime")
+    # Dates priority: slot, then ticket validity, then event. A slot is always
+    # the most precise (tickets restrict slots, they do not override them).
+    @api.depends(
+        "event_id", "event_slot_id", "event_ticket_id",
+        "event_id.date_begin", "event_slot_id.start_datetime", "event_ticket_id.date_begin",
+    )
     def _compute_event_begin_date(self):
         for registration in self:
-            registration.event_begin_date = registration.event_slot_id.start_datetime or registration.event_id.date_begin
+            registration.event_begin_date = (
+                registration.event_slot_id.start_datetime
+                or registration.event_ticket_id.date_begin
+                or registration.event_id.date_begin
+            )
 
-    @api.depends("event_id", "event_slot_id")
+    @api.depends(
+        "event_id", "event_slot_id", "event_ticket_id",
+        "event_id.date_end", "event_slot_id.end_datetime", "event_ticket_id.date_end",
+    )
     def _compute_event_end_date(self):
         for registration in self:
-            registration.event_end_date = registration.event_slot_id.end_datetime or registration.event_id.date_end
+            registration.event_end_date = (
+                registration.event_slot_id.end_datetime
+                or registration.event_ticket_id.date_end
+                or registration.event_id.date_end
+            )
+
+    @api.depends("event_begin_date", "event_end_date", "event_id.date_tz")
+    def _compute_is_one_day(self):
+        for registration in self:
+            if not (registration.event_begin_date and registration.event_end_date):
+                registration.is_one_day = registration.event_id.is_one_day
+                continue
+            # localize: a day may start late and end early in another timezone
+            tz = ZoneInfo(registration.event_id.date_tz or "UTC")
+            begin_tz = registration.event_begin_date.replace(tzinfo=UTC).astimezone(tz)
+            end_tz = registration.event_end_date.replace(tzinfo=UTC).astimezone(tz)
+            registration.is_one_day = begin_tz.date() == end_tz.date()
 
     @api.depends("ticket_entry_limit")
     def _compute_remaining_entries(self):
@@ -205,7 +251,15 @@ class EventRegistration(models.Model):
     def _search_event_end_date(self, operator, value):
         return Domain.OR([
             ["&", ("event_slot_id", "!=", False), ("event_slot_id.end_datetime", operator, value)],
-            ["&", ("event_slot_id", "=", False), ("event_id.date_end", operator, value)],
+            [
+                "&", ("event_slot_id", "=", False),
+                ("event_ticket_id", "any", ["&", ("date_end", "!=", False), ("date_end", operator, value)]),
+            ],
+            [
+                "&", "&", ("event_slot_id", "=", False),
+                ("event_ticket_id", "not any", [("date_end", "!=", False)]),
+                ("event_id.date_end", operator, value),
+            ],
         ])
 
     @api.constrains('event_id', 'event_slot_id')
