@@ -656,15 +656,13 @@ export class Store extends BaseStore {
         const recipientEmails = [];
         if (!isNote) {
             const allRecipients = [...thread.suggestedRecipients, ...thread.additionalRecipients];
-            const recipientIds = allRecipients
-                .filter((recipient) => recipient.persona)
-                .map((recipient) => recipient.persona.id);
-            allRecipients
-                .filter((recipient) => !recipient.persona)
-                .forEach((recipient) => {
+            for (const recipient of allRecipients) {
+                if (recipient.partner_id) {
+                    partner_ids.push(recipient.partner_id);
+                } else {
                     recipientEmails.push(recipient.email);
-                });
-            partner_ids.push(...recipientIds);
+                }
+            }
         }
         postData = {
             body: await generateEmojisOnHtml(body),
