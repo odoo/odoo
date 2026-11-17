@@ -20,11 +20,8 @@ class HrEmployeeSkillReport(models.BaseModel):
     level_progress = fields.Float(readonly=True, aggregator='avg')
     active = fields.Boolean(related='employee_id.active')
 
-    def init(self):
-        tools.drop_view_if_exists(self.env.cr, self._table)
-
-        self.env.cr.execute("""
-        CREATE OR REPLACE VIEW %s AS (
+    def _select(self):
+        return """
             SELECT
                 row_number() OVER () AS id,
                 e.id AS employee_id,
@@ -34,10 +31,33 @@ class HrEmployeeSkillReport(models.BaseModel):
                 s.skill_type_id AS skill_type_id,
                 sl.level_progress / 100.0 AS level_progress,
                 sl.name AS skill_level
+        """
+
+    def _from(self):
+        return """
             FROM hr_employee e
+        """
+
+    def _join(self):
+        return """
             LEFT OUTER JOIN hr_employee_skill s ON e.id = s.employee_id
             LEFT OUTER JOIN hr_skill_level sl ON sl.id = s.skill_level_id
             LEFT OUTER JOIN hr_skill_type st ON st.id = sl.skill_type_id
+        """
+
+    def _where(self):
+        return """
             WHERE st.active IS True
-        )
-        """ % (self._table, ))
+        """
+
+    def init(self):
+        tools.drop_view_if_exists(self.env.cr, self._table)
+
+        self.env.cr.execute("""
+        CREATE OR REPLACE VIEW %s AS (
+                %s
+                %s
+                %s
+                %s
+            )
+        """ % (self._table, self._select(), self._from(), self._join(), self._where()))
