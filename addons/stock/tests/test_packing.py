@@ -2252,3 +2252,13 @@ class TestPackagePropagation(TestPackingCommon):
             {'result_package_id': package.id},
             {'result_package_id': package.id},
         ])
+
+    def test_create_package_type_as_stock_manager(self):
+        """Check that a stock manager without settings rights can create a package type and change its prefix."""
+        package_type = self.env['stock.package.type'].with_user(self.user_stock_manager).create({
+            'name': 'Custom Box',
+            'sequence_code': 'CBOX',
+        })
+        self.assertRecordValues(package_type.sequence_id, [{'code': 'CBOX', 'prefix': 'CBOX'}])
+        package_type.sequence_code = 'CUSTBOX'
+        self.assertRecordValues(package_type.sequence_id, [{'code': 'CUSTBOX', 'prefix': 'CUSTBOX'}])

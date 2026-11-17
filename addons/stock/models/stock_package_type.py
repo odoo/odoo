@@ -94,9 +94,11 @@ class StockPackageType(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             if not vals.get('sequence_id') and vals.get('sequence_code'):
+                sequence_code = vals.pop('sequence_code')
                 vals['sequence_id'] = self.env['ir.sequence'].sudo().create({
-                    'name': self.env._('Package Type Sequence %(code)s', code=vals['sequence_code']),
-                    'prefix': vals['sequence_code'],
+                    'name': self.env._('Package Type Sequence %(code)s', code=sequence_code),
+                    'code': sequence_code,
+                    'prefix': sequence_code,
                     'padding': 7,
                     'company_id': vals.get('company_id'),
                 }).id
@@ -105,8 +107,9 @@ class StockPackageType(models.Model):
     def write(self, vals):
         seq_vals = {}
         if 'sequence_code' in vals:
-            seq_vals['name'] = self.env._('Package Type Sequence %(code)s', code=vals['sequence_code'])
-            seq_vals['prefix'] = vals['sequence_code']
+            sequence_code = seq_vals['code'] = vals.pop('sequence_code')
+            seq_vals['name'] = self.env._('Package Type Sequence %(code)s', code=sequence_code)
+            seq_vals['prefix'] = sequence_code
         if 'company_id' in vals:
             seq_vals['company_id'] = vals['company_id']
         if seq_vals:
