@@ -51,14 +51,9 @@
         content: "";
     }
 
-    @for $size from 2 through length($o-colors) {
-        /* Note: the first color is not defined as it is the 'no color' for kanban */
-        &.o_kanban_color_#{$size - 1}::after {
-            $-color: nth($o-colors, $size);
-
-            border-left: var(--border-width) solid rgba($-color, 0.5);
-            border-right: calc(var(--o-bs-border-width) * 2) solid $-color;
-        }
+    &.o_kanban_record_colored:not(.o_colorlist_color_0)::after {
+        border-left: var(--border-width) solid rgb(from var(--o-colorlist-color) r g b / 0.5);
+        border-right: calc(var(--o-bs-border-width) * 2) solid var(--o-colorlist-color);
     }
 }
 

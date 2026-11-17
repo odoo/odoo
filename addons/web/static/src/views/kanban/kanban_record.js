@@ -77,7 +77,7 @@ export class KanbanRecord extends CardRenderer {
     static MENU_ATTRIBUTE = MENU_ATTRIBUTE;
     static CANCEL_GLOBAL_CLICK = CANCEL_GLOBAL_CLICK;
     static PROGRESS_COLOR_PREFIX = "oe_kanban_card_";
-    static HIGHLIGHT_COLOR_PREFIX = "o_kanban_color_";
+    static HIGHLIGHT_COLOR_PREFIX = "o_colorlist_color_";
     static CoverImageDialog = KanbanCoverImageDialog;
 
     setup() {
