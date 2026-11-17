@@ -29,7 +29,7 @@ class IrAttachment(models.Model):
 
         allowed_keys = {'query', 'page', 'per_page', 'orientation'}
         payload = {key: value for key, value in post.items() if key in allowed_keys}
-        headers = {'Authorization': f'Client-ID {access_key}'}
+        headers = {'Authorization': f'Client-ID {access_key}'} 
 
         response = requests.get(
             'https://api.unsplash.com/search/photos/',
