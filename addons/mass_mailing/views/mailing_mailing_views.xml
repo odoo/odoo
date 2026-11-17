@@ -149,6 +149,7 @@
                                 type="object"
                                 invisible="state in ('draft', 'test')"
                                 class="oe_stat_button">
+                                <field name="delivered" invisible="1"/> <!-- Field is needed for the widget on the field below: DON'T TOUCH! -->
                                 <field name="received_ratio" widget="deliverance_percentpie"
                                     top_field="delivered" bottom_field="failed"/>
                             </button>
