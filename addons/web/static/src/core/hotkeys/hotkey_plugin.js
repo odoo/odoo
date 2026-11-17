@@ -293,8 +293,16 @@ export class HotkeyPlugin extends Plugin {
             // btn-group up to 2, which would hide the overlay behind them.
             overlay.style.zIndex = 3;
             const overlayKbd = document.createElement("kbd");
-            overlayKbd.className = "small";
-            overlayKbd.appendChild(document.createTextNode(hotkey.toUpperCase()));
+            overlayKbd.className = "small text-nowrap";
+            const keys = hotkey.toLowerCase().split("+");
+            if (keys.includes("shift")) {
+                const shiftIcon = document.createElement("i");
+                shiftIcon.className = "oi oi-filled";
+                shiftIcon.dataset.icon = "shift";
+                overlayKbd.appendChild(shiftIcon);
+            }
+            const otherKeys = keys.filter((key) => key !== "shift").join("+");
+            overlayKbd.appendChild(document.createTextNode(otherKeys.toUpperCase()));
             overlay.appendChild(overlayKbd);
 
             let overlayParent;
