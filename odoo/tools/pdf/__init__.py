@@ -603,7 +603,7 @@ class OdooPdfFileWriter(PdfFileWriter):
             # First browse through all the pages of the pdf file, to get a reference to all the fonts used in the PDF.
             for page in pages:
                 for font in page.getObject()['/Resources']['/Font'].values():
-                    for descendant in font.getObject()['/DescendantFonts']:
+                    for descendant in font.getObject().get('/DescendantFonts', []):
                         fonts[descendant.idnum] = descendant.getObject()
 
             # Then for each font, rewrite the width array with the information taken directly from the font file.
