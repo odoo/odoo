@@ -1866,11 +1866,21 @@ class PosSession(models.Model):
             raise UserError(_("There is no cash payment method for this PoS Session"))
 
         vals_list = [
-            self._prepare_account_bank_statement_line_vals(session, sign, amount, reason, extras)
+            self._prepare_account_bank_statement_line_vals(session._get_cash_move_session(), sign, amount, reason, extras)
             for session in sessions
         ]
 
         self.env['account.bank.statement.line'].create(vals_list)
+
+    def _get_cash_move_session(self):
+        self.ensure_one()
+        if self.state not in ('closing_control', 'closed'):
+            return self
+        open_session = self.search([
+            ('state', '=', 'opened'),
+            ('config_id', '=', self.config_id.id),
+        ], limit=1)
+        return open_session or self
 
     def _get_attributes_by_ptal_id(self):
         # performance trick: prefetch fields with search_fetch() and fetch()
