@@ -1,0 +1,14 @@
+<odoo>
+    <record model="ir.ui.view" id="view_mail_mass_mailing_form">
+        <field name="name">mailing.mailing.form.inherit.mass.mailing.euro.compliance</field>
+        <field name="model">mailing.mailing</field>
+        <field name="inherit_id" ref="mass_mailing.view_mail_mass_mailing_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='settings']//field[@name='user_id']" position="after">
+                <field name="disable_open_tracking"/>
+                <field name="disable_click_tracking"/>
+                <field name="blacklisted_country_ids" widget="many2many_tags" placeholder="All countries, including blank"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
