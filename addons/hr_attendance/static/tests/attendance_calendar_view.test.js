@@ -89,6 +89,7 @@ const calendarArch = (mode) => `
 
 beforeEach(() => {
     mockDate("2019-03-13 08:00:00", +1);
+    onRpc("hr.attendance", "get_attendance_dashboard_data", () => ({}));
     onRpc("res.users", "read", ({ args }) => [{ id: args[0][0], employee_id: [1, "Employee"] }]);
     // the working hours of the schedule, shaded by the calendar (see the tests below)
     onRpc("hr.attendance", "get_working_hours_for_calendar", () => []);

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_attendance.AttendanceControlPanel" t-inherit="web.ControlPanel" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_control_panel_main')]" position="after">
+            <t t-call-slot="attendance-dashboard"/>
+        </xpath>
+    </t>
+</templates>

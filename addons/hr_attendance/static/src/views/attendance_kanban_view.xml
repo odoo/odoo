@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <t t-name="hr_attendance.AttendanceKanbanController" t-inherit="web.KanbanView" t-inherit-mode="primary">
+        <Layout position="inside">
+            <t t-set-slot="attendance-dashboard">
+                <AttendanceDashboard t-if="this.model.isReady()" list="this.model.root"/>
+            </t>
+        </Layout>
+    </t>
+</odoo>

@@ -2,9 +2,12 @@ import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { CalendarController } from "@web/views/calendar/calendar_controller";
+import { AttendanceDashboard } from "@hr_attendance/components/attendance_dashboard/attendance_dashboard";
 import { onWillStart } from "@odoo/owl";
 
 export class AttendanceCalendarController extends CalendarController {
+    static template = "hr_attendance.AttendanceCalendarController";
+    static components = { ...CalendarController.components, AttendanceDashboard };
 
     setup() {
         super.setup();

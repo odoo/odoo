@@ -9,12 +9,34 @@
             <xpath expr="//form" position="inside">
                 <app data-string="Attendances" string="Attendances" name="hr_attendance" groups="hr_attendance.group_hr_attendance_manager">
                     <block title="Attendance Rules &amp; Enforcement" name="attendance_settings">
-                        <setting string="Attendance Validation" company_dependent="1" help="When enabled, attendance records must be validated by an officer before they count toward work entries and time rules.">
+                        <setting string="Attendance Validation" company_dependent="1" help="Exceptions are attendances modified by hand (not from the kiosk or the systray), late check-ins, early check-outs, overtime, undertime, missing check-outs and conflicts with time off.">
                             <field name="attendance_validation" widget="radio"/>
-                            <div invisible="attendance_validation != 'tolerance_validation'" class="mt-2">
-                                <span class="me-2">Tolerance</span>
+                            <div invisible="attendance_validation != 'exception_validation'" class="mt-2">
+                                <label for="attendance_validation_tolerance" string="Exception Tolerance" class="me-2 o_light_label"/>
                                 <field name="attendance_validation_tolerance" class="text-center w-25"/>
-                                <span class="ms-2">Hours</span>
+                                <span class="ms-2">Minutes</span>
+                                <div class="text-muted">Late check-ins, early check-outs, overtime and undertime within this margin are not exceptions. The recorded times are not changed.</div>
+                            </div>
+                        </setting>
+                        <setting string="Attendance Rounding" company_dependent="1" help="When registering time from the kiosk or the systray, a check-in or a check-out within these margins is recorded at the planned time: the planning shift if any, else the working schedule. It changes the recorded times, unlike the exception tolerance.">
+                            <field name="attendance_tolerance"/>
+                            <div invisible="not attendance_tolerance" class="mt-2">
+                                <div class="row">
+                                    <label for="attendance_tolerance_early_check_in" string="Early Arrivals" class="col-lg-5 o_light_label"/>
+                                    <div class="col-lg-7"><field name="attendance_tolerance_early_check_in" class="text-center w-25"/> <span>minutes</span></div>
+                                </div>
+                                <div class="row">
+                                    <label for="attendance_tolerance_late_check_in" string="Late Arrivals" class="col-lg-5 o_light_label"/>
+                                    <div class="col-lg-7"><field name="attendance_tolerance_late_check_in" class="text-center w-25"/> <span>minutes</span></div>
+                                </div>
+                                <div class="row">
+                                    <label for="attendance_tolerance_early_check_out" string="Early Departures" class="col-lg-5 o_light_label"/>
+                                    <div class="col-lg-7"><field name="attendance_tolerance_early_check_out" class="text-center w-25"/> <span>minutes</span></div>
+                                </div>
+                                <div class="row">
+                                    <label for="attendance_tolerance_late_check_out" string="Late Departures" class="col-lg-5 o_light_label"/>
+                                    <div class="col-lg-7"><field name="attendance_tolerance_late_check_out" class="text-center w-25"/> <span>minutes</span></div>
+                                </div>
                             </div>
                         </setting>
                         <setting string="Automatic Check-Out" company_dependent="1" help="Automatically check out employees based on their working schedule with an additional tolerance, or at a specific time each day. Does not apply to employees with a flexible working schedule.">
@@ -42,34 +64,13 @@
                                 </div>
                             </div>
                         </setting>
-                        <setting string="Check-In/Out Tolerance" company_dependent="1" help="When registering time from the kiosk or the systray, a check-in or a check-out within the tolerance is recorded at the planned time: the planning shift if any, else the working schedule.">
-                            <field name="attendance_tolerance"/>
-                            <div invisible="not attendance_tolerance" class="mt-2">
-                                <div class="row">
-                                    <label for="attendance_tolerance_early_check_in" string="Early Arrivals" class="col-lg-5 o_light_label"/>
-                                    <div class="col-lg-7"><field name="attendance_tolerance_early_check_in" class="text-center w-25"/> <span>minutes</span></div>
-                                </div>
-                                <div class="row">
-                                    <label for="attendance_tolerance_late_check_in" string="Late Arrivals" class="col-lg-5 o_light_label"/>
-                                    <div class="col-lg-7"><field name="attendance_tolerance_late_check_in" class="text-center w-25"/> <span>minutes</span></div>
-                                </div>
-                                <div class="row">
-                                    <label for="attendance_tolerance_early_check_out" string="Early Departures" class="col-lg-5 o_light_label"/>
-                                    <div class="col-lg-7"><field name="attendance_tolerance_early_check_out" class="text-center w-25"/> <span>minutes</span></div>
-                                </div>
-                                <div class="row">
-                                    <label for="attendance_tolerance_late_check_out" string="Late Departures" class="col-lg-5 o_light_label"/>
-                                    <div class="col-lg-7"><field name="attendance_tolerance_late_check_out" class="text-center w-25"/> <span>minutes</span></div>
-                                </div>
-                            </div>
-                        </setting>
                         <setting string="Absence Management" company_dependent="1" help="If checked, days not covered by an attendance will be visible in the Report. Does not apply to employees with a flexible working schedule.">
                             <field name="absence_management"/>
                         </setting>
                         <setting string="Attendances from Backend" company_dependent="1" help="Allow Users to Check in/out from Odoo.">
                             <field name="attendance_from_systray" required="1"/>
                         </setting>
-                        <setting string="Device &amp; Location Tracking" company_dependent="1" help="Allow the collection of GPS location, IP address, and browser/device details used to track employee access and attendance">
+                        <setting string="Precise Location Tracking" company_dependent="1" help="Ask the device for its precise position. The IP address, browser and approximate location are recorded either way.">
                             <field name="attendance_device_tracking"/>
                         </setting>
                         <setting string="Take Pictures on Check-In" company_dependent="1" help="Capture a photo at the time of check-in using the device camera (if available). Images are automatically optimized for performance and storage.">
