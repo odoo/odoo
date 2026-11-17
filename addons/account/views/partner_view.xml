@@ -322,7 +322,8 @@
                         domain="[('invoice_ids', 'any', [
                             ('invoice_date_due', '&lt;', 'today'),
                             ('state', '=', 'posted'),
-                            ('payment_state', 'in', ('not_paid', 'partial'))
+                            ('payment_state', 'in', ('not_paid', 'partial')),
+                            ('move_type', '!=', 'entry')
                         ])]" />
                    <separator/>
                 </xpath>
