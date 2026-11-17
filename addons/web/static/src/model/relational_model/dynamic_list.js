@@ -90,8 +90,13 @@ export class DynamicList extends DataPoint {
         return !!this.handleField;
     }
 
-    deleteRecords(records = []) {
-        return this.model.mutex.exec(() => this._deleteRecords(records));
+    /**
+     * @param {Record[]} [records] records to delete, defaults to the selection
+     * @param {Object} [options]
+     * @param {Object} [options.context] additional context for this deletion only
+     */
+    deleteRecords(records = [], { context } = {}) {
+        return this.model.mutex.exec(() => this._deleteRecords(records, { context }));
     }
 
     duplicateRecords(records = []) {
@@ -270,7 +275,8 @@ export class DynamicList extends DataPoint {
         }
     }
 
-    async _deleteRecords(records) {
+    async _deleteRecords(records, { context } = {}) {
+        context = { ...this.context, ...context };
         let resIds;
         if (records.length) {
             resIds = unique(records.map((r) => r.resId));
@@ -280,16 +286,14 @@ export class DynamicList extends DataPoint {
         }
         let unlinked = false;
         try {
-            unlinked = await this.model.orm.webUnlink(this.resModel, resIds, {
-                context: this.context,
-            });
+            unlinked = await this.model.orm.webUnlink(this.resModel, resIds, { context });
         } catch (e) {
             if (e instanceof ConnectionLostError) {
                 this.model.offlinePlugin.scheduleORM(
                     this.resModel,
                     "web_unlink",
                     [resIds],
-                    { context: this.context },
+                    { context },
                     {
                         extras: getScheduleORMExtras(this.model, records),
                     }
