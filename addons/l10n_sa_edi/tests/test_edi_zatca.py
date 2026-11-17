@@ -684,3 +684,33 @@ class TestEdiZatca(TestSaEdiCommon):
             namespaces=self.env['account.edi.xml.ubl_21.zatca']._l10n_sa_get_namespaces()
         )[0].text.strip()
         self.assertEqual(payable_amount, '115.00')
+
+    def test_vat_group_invoice_party_identification(self):
+        """Test that invoice XML uses actual TIN for VAT Group members, not VAT[:10]."""
+        self.company.partner_id.write({
+            'vat': '311111111111113',  # 15 digits, 11th digit = '1' (VAT Group)
+            'l10n_sa_additional_identification_scheme': 'TIN',
+            'l10n_sa_additional_identification_number': '9876543210',
+        })
+        invoice = self._create_invoice(
+            name='INV/2022/00015',
+            invoice_date='2022-09-05',
+            invoice_date_due='2022-09-22',
+            partner_id=self.partner_sa,
+            invoice_line_ids=[{
+                'product_id': self.product_a.id,
+                'price_unit': 100.0,
+                'tax_ids': self.tax_15.ids,
+            }]
+        )
+        invoice.action_post()
+        xml_content = self.env['account.edi.format']._l10n_sa_generate_zatca_template(invoice)
+        xml_root = etree.fromstring(xml_content)
+        namespaces = self.env['account.edi.xml.ubl_21.zatca']._l10n_sa_get_namespaces()
+
+        supplier_id = xml_root.xpath(
+            "//cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID",
+            namespaces=namespaces
+        )[0].text.strip()
+        # VAT Group member should use actual TIN (9876543210), not VAT[:10] (3111111111)
+        self.assertEqual(supplier_id, '9876543210')

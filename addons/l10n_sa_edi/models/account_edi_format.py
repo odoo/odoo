@@ -278,12 +278,12 @@ class AccountEdiFormat(models.Model):
             ('l10n_sa_edi_building_number', _('Building Number for the Buyer is required on Standard Invoices')),
             ('street2', _('Neighborhood for the Seller is required on Standard Invoices')),
             ('l10n_sa_additional_identification_scheme',
-             _('Additional Identification Scheme is required for the Seller, and must be one of CRN, MOM, MLS, SAG or OTH'),
-             lambda p, v: v in ('CRN', 'MOM', 'MLS', 'SAG', 'OTH')
+             _('Additional Identification Scheme is required for the Seller, and must be one of CRN, MOM, MLS, SAG, OTH or TIN for VAT Group members'),
+             lambda p, v: v in ('CRN', 'MOM', 'MLS', 'SAG', 'OTH') or (p.l10n_sa_is_vat_group_member and v == 'TIN')
              ),
             ('vat',
              _('VAT is required when Identification Scheme is set to Tax Identification Number'),
-             lambda p, v: p.l10n_sa_additional_identification_scheme != 'TIN'
+             lambda p, v: p.l10n_sa_additional_identification_scheme != 'TIN' or p.l10n_sa_is_vat_group_member
              ),
             ('state_id', _('State / Country subdivision'))
         ]
