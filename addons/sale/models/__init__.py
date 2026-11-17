@@ -5,6 +5,7 @@ from . import (
     account_analytic_line,
     account_move,
     account_move_line,
+    account_payment,
     crm_team,
     ir_actions_report,
     ir_config_parameter,

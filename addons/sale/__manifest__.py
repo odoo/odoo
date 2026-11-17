@@ -59,6 +59,7 @@ This module contains all the common features of Sales Management and eCommerce.
             "sale/static/src/scss/sale_onboarding.css",
             "sale/static/src/scss/services_and_material.css",
             "sale/static/src/js/badge_extra_price/*",
+            "sale/static/src/js/collect_payment_cog_menu/*",
             "sale/static/src/js/sale_action_helper/*",
             "sale/static/src/js/combo_configurator_dialog/*",
             "sale/static/src/scss/sale_order_line_kanban.css",
