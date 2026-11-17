@@ -91,6 +91,11 @@ class MrpAccountWipAccounting(models.TransientModel):
         overhead_value = productions.workorder_ids._cal_cost(date)
         if not compo_value_by_account:
             compo_value_by_account[company_valuation_account] = 0.0
+        extra_cost_value = sum(
+            mo.uom_id._compute_quantity(mo.qty_producing, mo.bom_id.uom_id, round=False) * mo.extra_cost
+            for mo in productions
+            if mo.qty_producing and mo.extra_cost
+        )
         return [
             *[Command.create({
                 'label': self.env._("WIP - Component Value"),
@@ -99,12 +104,12 @@ class MrpAccountWipAccounting(models.TransientModel):
             }) for account, value in compo_value_by_account.items()],
             Command.create({
                 'label': _("WIP - Overhead"),
-                'credit': overhead_value,
+                'credit': overhead_value + extra_cost_value,
                 'account_id': self._get_overhead_account(),
             }),
             Command.create({
                 'label': _("Manufacturing WIP - %(orders_list)s", orders_list=productions.mapped('name') or _("Manual Entry")),
-                'debit': sum_compo_value + overhead_value,
+                'debit': sum_compo_value + overhead_value + extra_cost_value,
                 'account_id': self.env.company.account_production_wip_account_id.id,
             })
         ]
