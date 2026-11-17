@@ -4,7 +4,7 @@
         <div t-attf-class="product-list category-list p-2 gap-2 {{ this.pos.isSmallProductScreen ? 'd-flex flex-nowrap overflow-x-auto' : 'd-grid' }}" t-att-style="this.pos.isSmallProductScreen and 'width: 100vw'">
             <t t-foreach="this.getCategoriesAndSub()" t-as="category" t-key="category.id">
                 <button t-on-click="() => this.pos.setSelectedCategory(category.id)"
-                    t-attf-class="o_colorlist_item_color_{{category.color or 'none'}}"
+                    t-attf-class="{{ category.color ? 'o_colorlist_color o_colorlist_color_' + category.color : '' }}"
                     t-att-style="this.pos.isSmallProductScreen ? 'width: 115px; min-width: 100px; height: 3rem;' : 'height: 4rem;'"
                     t-att-class="{
                         'border-0': category.isChildren and !this.isAncestorOrSelected(category), 

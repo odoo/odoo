@@ -19,12 +19,12 @@ export const DECIMAL = {
     get value() {
         return localization.decimalPoint;
     },
-    class: "o_colorlist_item_numpad_color_6",
+    class: "o_colorlist_numpad o_colorlist_color_6",
 };
 export const BACKSPACE = {
     value: "Backspace",
     text: "⌫",
-    class: "o_colorlist_item_numpad_color_1",
+    class: "o_colorlist_numpad o_colorlist_color_1",
 };
 export const ZERO = { value: "0" };
 export const SWITCHSIGN = { value: "-", text: "+/-" };

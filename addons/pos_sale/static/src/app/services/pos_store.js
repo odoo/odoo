@@ -282,12 +282,12 @@ patch(PosStore.prototype, {
 
     async downPaymentSO(saleOrder, isPercentage) {
         const colorClassMap = {
-            [DECIMAL.value]: "o_colorlist_item_numpad_color_6",
-            Backspace: "o_colorlist_item_numpad_color_1",
-            "+10": "o_colorlist_item_numpad_color_10",
-            "+20": "o_colorlist_item_numpad_color_10",
-            "+50": "o_colorlist_item_numpad_color_10",
-            "-": "o_colorlist_item_numpad_color_3",
+            [DECIMAL.value]: "o_colorlist_numpad o_colorlist_color_6",
+            Backspace: "o_colorlist_numpad o_colorlist_color_1",
+            "+10": "o_colorlist_numpad o_colorlist_color_10",
+            "+20": "o_colorlist_numpad o_colorlist_color_10",
+            "+50": "o_colorlist_numpad o_colorlist_color_10",
+            "-": "o_colorlist_numpad o_colorlist_color_3",
         };
 
         const baseAmount = isPercentage

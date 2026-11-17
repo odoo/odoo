@@ -62,7 +62,7 @@ export class NoteButton extends Component {
         if (this.type === "internal" || !selectedLine) {
             buttons = this.pos.models["pos.note"].readAll().map((note) => ({
                 label: note.name,
-                class: note.color ? `o_colorlist_item_color_${note.color}` : "",
+                class: note.color ? `o_colorlist_color o_colorlist_color_${note.color}` : "",
             }));
         }
 

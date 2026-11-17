@@ -34,17 +34,7 @@ export class NumpadDropdown extends Component {
     }
 
     get numpadButtons() {
-        const colorClassMap = {
-            [BACKSPACE.value]: "o_colorlist_item_numpad_color_1",
-        };
-
-        return getButtons([{ ...EMPTY, disabled: true }, ZERO, BACKSPACE]).map((button, index) => ({
-            ...button,
-            class: `
-                ${button.class}
-                ${colorClassMap[button.value] || ""}
-            `,
-        }));
+        return getButtons([{ ...EMPTY, disabled: true }, ZERO, BACKSPACE]);
     }
 
     searchOrder() {

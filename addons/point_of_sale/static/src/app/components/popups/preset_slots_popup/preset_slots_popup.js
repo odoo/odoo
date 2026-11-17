@@ -37,9 +37,9 @@ export class PresetSlotsPopup extends Component {
         const isFull = slot.isFull;
 
         if (!isSelected && isFull) {
-            return "o_colorlist_item_numpad_color_1"; // Red
+            return "o_colorlist_numpad o_colorlist_color_1"; // Red
         }
-        return isSelected ? "btn-primary" : "o_colorlist_item_numpad_color_10"; // Green
+        return isSelected ? "btn-primary" : "o_colorlist_numpad o_colorlist_color_10"; // Green
     }
 
     isSelected(slot, preset) {

@@ -217,9 +217,9 @@ export class ProductScreen extends Component {
 
     getNumpadButtons() {
         const colorClassMap = {
-            [this.env.services.localization.decimalPoint]: "o_colorlist_item_numpad_color_6",
-            Backspace: "o_colorlist_item_numpad_color_1",
-            "-": "o_colorlist_item_numpad_color_3",
+            [this.env.services.localization.decimalPoint]: "o_colorlist_numpad o_colorlist_color_6",
+            Backspace: "o_colorlist_numpad o_colorlist_color_1",
+            "-": "o_colorlist_numpad o_colorlist_color_3",
         };
 
         const order = this.currentOrder;
