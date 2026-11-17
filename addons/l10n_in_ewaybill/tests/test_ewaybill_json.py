@@ -1,9 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from unittest.mock import patch
+
 from freezegun import freeze_time
 
 from odoo import Command, _
 from odoo.addons.l10n_in.tests.common import L10nInTestInvoicingCommon
+from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 
@@ -224,6 +227,87 @@ class TestEwaybillJson(L10nInTestInvoicingCommon):
             expected,
             "Ewaybill with global discount failed"
         )
+
+    def test_ewaybill_summarised_items(self):
+        AccountChartTemplate = self.env['account.chart.template']
+        uom_dozen = self.env.ref('uom.product_uom_dozen')
+
+        def line_vals(product, quantity, price_unit, taxes, **vals):
+            return Command.create({
+                'product_id': product.id,
+                'name': "Chair",
+                'quantity': quantity,
+                'price_unit': price_unit,
+                'tax_ids': [Command.set(taxes.ids)],
+                **vals,
+            })
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-01-01',
+            'invoice_line_ids': [
+                # Same HSN, UoM and taxes: combined, the product names differ but not the description
+                line_vals(self.product_a, 2, 100, self.sgst_sale_5),
+                line_vals(self.product_b, 3, 200, self.sgst_sale_5),
+                # Different tax rate
+                line_vals(self.product_a, 1, 100, self.sgst_sale_18),
+                # Different unit of measure
+                line_vals(self.product_a, 1, 100, self.sgst_sale_5, product_uom_id=uom_dozen.id),
+                # Combined, with cess
+                line_vals(self.product_with_cess, 1, 1000, self.gst_with_cess),
+                line_vals(self.product_with_cess, 2, 1000, self.gst_with_cess),
+                # Same (zero) rates but different tax treatment
+                line_vals(self.product_a, 1, 50, self.exempt),
+                line_vals(self.product_a, 1, 50, AccountChartTemplate.ref('nil_rated_sale')),
+                # No valid HSN code: never combined
+                line_vals(self.product_a, 1, 10, self.sgst_sale_5, l10n_in_hsn_code="NA"),
+                line_vals(self.product_a, 1, 10, self.sgst_sale_5, l10n_in_hsn_code="NA"),
+            ],
+        })
+        invoice.action_post()
+        lines_snapshot = invoice.invoice_line_ids.read(['quantity', 'balance', 'name', 'product_uom_id', 'tax_ids'])
+
+        ewaybill = self.env['l10n.in.ewaybill'].create({
+            'account_move_id': invoice.id,
+            'type_id': self.env.ref("l10n_in_ewaybill.type_tax_invoice_sub_type_supply").id,
+            'distance': 20,
+            'mode': "1",
+            'vehicle_no': "GJ11AA1234",
+            'vehicle_type': "R",
+        })
+        self.assertEqual(ewaybill.item_representation, 'detailed')
+        detailed_json = ewaybill._ewaybill_generate_direct_json()
+        self.assertEqual(len(detailed_json['itemList']), 10)
+
+        ewaybill.item_representation = 'summarised'
+        summarised_json = ewaybill._ewaybill_generate_direct_json()
+        gst_5 = {'cgstRate': 2.5, 'sgstRate': 2.5}
+        zero_rates = {'cgstRate': 0.0, 'sgstRate': 0.0, 'igstRate': 0.0}
+        self.assertListEqual(summarised_json['itemList'], [
+            {'productName': "", 'hsnCode': "111111", 'productDesc': "Chair", 'quantity': 5.0, 'qtyUnit': "UNT", 'taxableAmount': 800.0, **gst_5},
+            {'productName': "product_a", 'hsnCode': "111111", 'productDesc': "Chair", 'quantity': 1.0, 'qtyUnit': "UNT", 'taxableAmount': 100.0, 'cgstRate': 9.0, 'sgstRate': 9.0},
+            {'productName': "product_a", 'hsnCode': "111111", 'productDesc': "Chair", 'quantity': 1.0, 'qtyUnit': "DOZ", 'taxableAmount': 100.0, **gst_5},
+            {'productName': "product_with_cess", 'hsnCode': "333333", 'productDesc': "Chair", 'quantity': 3.0, 'qtyUnit': "UNT", 'taxableAmount': 3000.0, 'cgstRate': 6.0, 'sgstRate': 6.0, 'cessRate': 5.0},
+            {'productName': "product_a", 'hsnCode': "111111", 'productDesc': "Chair", 'quantity': 1.0, 'qtyUnit': "UNT", 'taxableAmount': 50.0, **zero_rates},
+            {'productName': "product_a", 'hsnCode': "111111", 'productDesc': "Chair", 'quantity': 1.0, 'qtyUnit': "UNT", 'taxableAmount': 50.0, **zero_rates},
+            {'productName': "product_a", 'hsnCode': "", 'productDesc': "Chair", 'quantity': 1.0, 'qtyUnit': "UNT", 'taxableAmount': 10.0, **gst_5},
+            {'productName': "product_a", 'hsnCode': "", 'productDesc': "Chair", 'quantity': 1.0, 'qtyUnit': "UNT", 'taxableAmount': 10.0, **gst_5},
+        ])
+        # Only the item list is affected, neither the document-level values nor the invoice
+        summarised_json.pop('itemList')
+        detailed_json.pop('itemList')
+        self.assertDictEqual(summarised_json, detailed_json)
+        self.assertEqual(invoice.invoice_line_ids.read(['quantity', 'balance', 'name', 'product_uom_id', 'tax_ids']), lines_snapshot)
+
+        # Item limit, checked on the final item list before sending it
+        with patch('odoo.addons.l10n_in_ewaybill.models.l10n_in_ewaybill.EWAYBILL_MAX_ITEMS', 7):
+            with self.assertRaisesRegex(UserError, "still results in 8 items after summarisation"):
+                ewaybill._generate_ewaybill()
+            ewaybill.item_representation = 'detailed'
+            with self.assertRaisesRegex(UserError, "(?s)results in 10 items.*'Summarised'"):
+                ewaybill._generate_ewaybill()
+        self.assertEqual(ewaybill.state, 'pending')
 
     def test_ewaybill_zero_distance(self):
         """

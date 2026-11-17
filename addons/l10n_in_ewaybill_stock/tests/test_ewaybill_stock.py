@@ -103,6 +103,42 @@ class TestStockEwaybill(L10nInTestInvoicingCommon):
         self.assertDictEqual(ewaybill._ewaybill_generate_direct_json(), expected_json)
 
     @freeze_time('2024-04-26')
+    def test_ewaybill_stock_summarised_items(self):
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)])
+        delivery_picking = self.env['stock.picking'].create({
+            'partner_id': self.partner_a.id,
+            'picking_type_id': warehouse.out_type_id.id,
+            'move_ids': [
+                Command.create({
+                    'product_id': product.id,
+                    'product_uom_qty': quantity,
+                    'quantity': quantity,
+                    'location_id': warehouse.lot_stock_id.id,
+                    'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+                })
+                # Same HSN code, unit of measure and taxes
+                for product, quantity in ((self.product_a, 5), (self.product_b, 3))
+            ],
+        })
+        delivery_picking.button_validate()
+        ewaybill = self.env['l10n.in.ewaybill'].create({
+            'picking_id': delivery_picking.id,
+            'mode': False,
+            'type_id': self.env.ref('l10n_in_ewaybill_stock.type_delivery_challan_sub_line_sales').id,
+        })
+        detailed_items = ewaybill._ewaybill_generate_direct_json()['itemList']
+        self.assertEqual(len(detailed_items), 2)
+
+        ewaybill.item_representation = 'summarised'
+        self.assertListEqual(ewaybill._ewaybill_generate_direct_json()['itemList'], [{
+            **detailed_items[0],
+            'productName': "",
+            'productDesc': "",
+            'quantity': 8.0,
+            'taxableAmount': detailed_items[0]['taxableAmount'] + detailed_items[1]['taxableAmount'],
+        }])
+
+    @freeze_time('2024-04-26')
     def test_ewaybill_stock_test_2(self):
         """
         Ewaybill challan type other test with description
