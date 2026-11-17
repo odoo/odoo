@@ -169,7 +169,7 @@ class TestLintOverrideSignatures(RegistryLintCase):
                     continue
 
                 # Find the original function definition
-                reverse_mro = reversed(model_cls.mro()[1:-1])
+                reverse_mro = reversed(model_cls.__mro__[1:-1])
                 for parent_class in reverse_mro:
                     method = getattr(parent_class, method_name, None)
                     if callable(method):

@@ -19,7 +19,7 @@ class DataSet(http.Controller):
         except KeyError as e:
             raise NotFound() from e
         method_name = params['method']
-        for cls in model_class.mro():
+        for cls in model_class.__mro__:
             method = getattr(cls, method_name, None)
             if method is not None and hasattr(method, '_readonly'):
                 return method._readonly

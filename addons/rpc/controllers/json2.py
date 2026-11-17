@@ -27,7 +27,7 @@ class WebJson2Controller(http.Controller):
         except KeyError:
             # no need of a read/write cursor to send a 404 http error
             return True
-        for cls in Model.mro():
+        for cls in Model.__mro__:
             method = getattr(cls, method_name, None)
             if method is not None and hasattr(method, '_readonly'):
                 return method._readonly

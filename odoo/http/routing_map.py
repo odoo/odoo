@@ -302,7 +302,7 @@ def _generate_routing_rules(modules: Collection[str], nodb_only: bool, converter
             # the hierarchy
             def is_method_a_route(cls):
                 return getattr(getattr(cls, method_name, None), 'original_routing', None) is not None
-            if not any(map(is_method_a_route, type(ctrl).mro())):
+            if not any(map(is_method_a_route, type(ctrl).__mro__)):
                 continue
 
             merged_routing: RoutingOpts = {
@@ -312,7 +312,7 @@ def _generate_routing_rules(modules: Collection[str], nodb_only: bool, converter
                 'routes': [],
             }
 
-            for cls in unique(reversed(type(ctrl).mro()[:-2])):  # ancestors first
+            for cls in unique(reversed(type(ctrl).__mro__[:-2])):  # ancestors first
                 if method_name not in cls.__dict__:
                     continue
                 submethod = getattr(cls, method_name)

@@ -275,7 +275,7 @@ class TestDocstring(BaseCase):
 
                 # We don't care of the docstring in overrides, find the
                 # class that introduced the method.
-                reverse_mro = reversed(model_cls.mro()[1:-1])
+                reverse_mro = reversed(model_cls.__mro__[1:-1])
                 for parent_class in reverse_mro:
                     method = getattr(parent_class, method_name, None)
                     if callable(method):
