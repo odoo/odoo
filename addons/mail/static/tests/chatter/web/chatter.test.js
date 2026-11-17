@@ -28,6 +28,7 @@ import {
     clickSave,
     defineActions,
     getService,
+    makeServerError,
     mockService,
     onRpc,
     patchWithCleanup,
@@ -133,6 +134,29 @@ test("can post a message on a record thread", async () => {
 
     await click("button:text('Send message')");
     await expect.waitForSteps(["/mail/message/post"]);
+});
+
+test("composer stays usable when posting a message fails", async () => {
+    expect.errors(1);
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
+    const postDef = Promise.withResolvers();
+    onRpc("/mail/message/post", async () => {
+        expect.step("/mail/message/post");
+        await postDef.promise;
+        throw makeServerError({ description: "Posting failed" });
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await click("button", { text: "Send message" });
+    await insertText(".o-mail-Composer-input", "hey");
+    await click(".o-mail-Composer button[aria-label='Send']:enabled");
+    await contains(".o-mail-Composer-input[readonly]", { value: "hey" });
+    await expect.waitForSteps(["/mail/message/post"]);
+    postDef.resolve();
+    await contains(".o-mail-Composer-input:not([readonly])", { value: "hey" });
+    await contains(".o-mail-Composer button[aria-label='Send']:enabled");
+    await expect.waitForErrors(["RPC_ERROR"]);
 });
 
 test("can post a note on a record thread", async () => {
