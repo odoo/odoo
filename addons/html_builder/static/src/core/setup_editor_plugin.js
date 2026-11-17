@@ -49,6 +49,7 @@ export class SetupEditorPlugin extends Plugin {
         for (const savableEl of savableEls) {
             savableEl.classList.add("o_savable");
         }
+        this.handleDraggableLink(savableEls);
         if (this.delegateTo("after_setup_editor_overrides")) {
             return;
         }
@@ -68,10 +69,25 @@ export class SetupEditorPlugin extends Plugin {
         }
     }
 
+    handleDraggableLink(editableEls) {
+        // On Firefox, the caret cannot be placed inside the editable content
+        // of a non-editable link, as the browser waits for a possible drag of
+        // the link instead.
+        for (const editableEl of editableEls) {
+            const linkEl = editableEl.parentElement.closest("a[href]");
+            if (linkEl && !linkEl.hasAttribute("draggable")) {
+                linkEl.setAttribute("draggable", "false");
+            }
+        }
+    }
+
     cleanForSave(root) {
         for (const savableEl of selectElements(root, ".o_savable")) {
             savableEl.classList.remove("o_savable");
         }
+        root.querySelectorAll("a[href][draggable='false']:has(.o_savable)").forEach((el) => {
+            el.removeAttribute("draggable");
+        });
     }
 
     /**
