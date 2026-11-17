@@ -287,16 +287,25 @@ class MassMailingList(models.Model):
           contact instead of generated update message. Give False to entirely
           skip the note step;
         """
-        email_normalized = tools.email_normalize(email)
-        if not self or not email_normalized:
+        if not self:
             return
+        if email_normalized := tools.email_normalize(email):
+            contacts = self.env['mailing.contact'].with_context(active_test=False).search(
+                [('email_normalized', '=', email_normalized),
+            ])
+            if contacts:
+                self._update_subscription_from_contacts(contacts, opt_out, force_message)
 
-        contacts = self.env['mailing.contact'].with_context(active_test=False).search(
-            [('email_normalized', '=', email_normalized)]
-        )
-        if not contacts:
+    def _update_subscription_from_contacts(self, contacts, opt_out=True, force_message=None):
+        """ Opt-in or opt-out the given contacts from the lists given by self.
+        :param <mailing.contact> contacts: contacts to (un)subscribe; when
+          opting-in, missing subscriptions are created for the first one only;
+        :param boolean opt_out: see :meth:`_update_subscription_from_email`;
+        :param str force_message: see :meth:`_update_subscription_from_email`;
+        :return: the given contacts
+        """
+        if not self or not contacts:
             return
-
         # switch opted-in subscriptions
         if opt_out:
             current_opt_in = contacts.subscription_ids.filtered(

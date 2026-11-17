@@ -188,3 +188,14 @@ class MassMailingContact(models.Model):
         """ Return whether the contact names are populated as first and last name or as a single field (name). """
         view = self.env.ref("mass_mailing.mailing_contact_view_tree_split_name", raise_if_not_found=False)
         return view and view.sudo().active
+
+    @api.model
+    def _from_partners_get_create_vals(self, partner):
+        return {
+            'company_name': partner.parent_id.name,
+            'country_id': partner.country_id.id or partner.parent_id.country_id.id,
+            'email': partner.email,
+            'email_normalized': partner.email_normalized,
+            'name': partner.name,
+            'tag_ids': partner.category_id,
+        }
