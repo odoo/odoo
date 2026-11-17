@@ -187,6 +187,36 @@ registry.category("web_tour.tours").add("FiscalPositionNoTaxRefund", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("FiscalPositionPartnerRefund", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Partner Test 1"),
+            ProductScreen.clickDisplayedProduct("Product Test"),
+            ProductScreen.totalAmountIs("115.00"),
+            ProductScreen.clickFiscalPosition("No Tax"),
+            ProductScreen.totalAmountIs("100.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+            ReceiptScreen.clickNextOrder(),
+            ...ProductScreen.clickRefund(),
+            TicketScreen.selectOrder("-0001"),
+            ProductScreen.clickNumpad("1"),
+            TicketScreen.confirmRefund(),
+            ProductScreen.isShown(),
+            { ...ProductScreen.back(), isActive: ["mobile"] },
+            ProductScreen.totalAmountIs("100.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("LotRefundTour", {
     steps: () =>
         [
