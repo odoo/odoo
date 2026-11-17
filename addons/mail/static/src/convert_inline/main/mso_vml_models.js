@@ -11,7 +11,7 @@ export function wrapIfMso(content) {
  * @param {number} percent
  * @returns {number} vml position
  */
-function cssBackgroundPositionToVml(percent) {
+export function cssBackgroundPositionToVml(percent) {
     return percent / 100 - 0.5;
 }
 
@@ -20,7 +20,7 @@ function cssBackgroundPositionToVml(percent) {
  * @param {number} height (in pixels)
  * @returns {number} vml arcsize (%)
  */
-function cssBorderRadiusToVml({ radius, height }) {
+export function cssBorderRadiusToVml({ radius, height }) {
     if (!radius || !height) {
         return 0;
     }
@@ -33,23 +33,65 @@ export function buildHideIfNotMsoNodes() {
     return { prefix, suffix };
 }
 
+function escapeHtmlAttribute(value) {
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;");
+}
+
+/**
+{
+    fill: {
+        color: "#ff8800",
+        opacity: 1,
+    },
+    stroke: {
+        color: "#cc6600",
+        width: 1,
+        opacity: 1,
+    },
+    arcSize: 50,
+    padding: {
+        top: 6,
+        right: 12,
+        bottom: 6,
+        left: 12,
+    },
+    href: "https://example.com",
+    horizontalAlignment: "center",
+}
+ */
+/**
+ * TODO EGGMAIL: link tracking might not work with
+ * VML href (not using an anchor) -> to investigate
+ */
 export function buildInlineShapeVmlContent(
-    { backgroundColor, borderRadius, height, horizontalAlignment, href, padding },
+    { fill, stroke, arcSize, padding, href, horizontalAlignment },
     htmlContent
 ) {
-    const arcSize = cssBorderRadiusToVml({ borderRadius, height });
+    const shapeStyles = [
+        horizontalAlignment && `mso-position-horizontal:${horizontalAlignment}`,
+        "mso-position-vertical:top",
+        "mso-wrap-style:none",
+    ].filter(Boolean);
+
+    const shapeAttributes = [
+        'xmlns:v="urn:schemas-microsoft-com:vml"',
+        `arcsize="${arcSize}%"`,
+        `filled="${Boolean(fill)}"`,
+        fill && `fillcolor="${fill.color}"`,
+        `stroked="${Boolean(stroke)}"`,
+        stroke && `strokecolor="${stroke.color}"`,
+        stroke && `strokeweight="${stroke.width}px"`,
+        href && `href="${escapeHtmlAttribute(href)}"`,
+        `style="${shapeStyles.join(";")}"`,
+    ].filter(Boolean);
+
     const { top, right, bottom, left } = padding;
     const prefixContent = `
-        <v:roundrect
-            xmlns:v="urn:schemas-microsoft-com:vml"
-            arcsize="${arcSize}%"
-            fillcolor="${backgroundColor}"
-            ${href ? `href="${href}"` : ""}
-            mso-position-horizontal:${horizontalAlignment};
-            mso-position-vertical:top;
-            mso-wrap-style:none;
-            stroked="false"
-        >
+        <v:roundrect ${shapeAttributes.join(" ")}>
             <v:textbox
                 inset="${left}px,${top}px,${right}px,${bottom}px"
                 style="mso-fit-shape-to-text:true;"
@@ -63,8 +105,7 @@ export function buildInlineShapeVmlContent(
 }
 
 export function buildBackgroundImageVmlNodes({ position, src, width }) {
-    const x = cssBackgroundPositionToVml(position.x);
-    const y = cssBackgroundPositionToVml(position.y);
+    const { x, y } = position;
     const prefixContent = `
         <v:rect
             xmlns:v="urn:schemas-microsoft-com:vml"

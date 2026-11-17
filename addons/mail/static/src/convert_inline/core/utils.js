@@ -141,3 +141,41 @@ export function areCSSColorEqual(cssColor1, cssColor2) {
         c1.opacity === c2.opacity
     );
 }
+
+/**
+ * @param {Array} bgColors front to back collection of colors in the composition
+ * @returns {Object}
+ *          - red [0, 255] (integer)
+ *          - green [0, 255] (integer)
+ *          - blue [0, 255] (integer)
+ *          - opacity [0, 100.0] (float)
+ */
+export function computeCompositeColor(bgColors) {
+    const rgbaColors = bgColors.map((bgColor) => convertCSSColorToRgba(bgColor));
+    const composite = { red: 0, green: 0, blue: 0 };
+    let transmittance = 1;
+    for (const { red, green, blue, opacity } of rgbaColors) {
+        const alpha = Math.max(0, Math.min(100, opacity)) / 100;
+        composite.red += transmittance * alpha * red;
+        composite.green += transmittance * alpha * green;
+        composite.blue += transmittance * alpha * blue;
+        transmittance *= 1 - alpha;
+        if (alpha === 1) {
+            break;
+        }
+    }
+    const alpha = 1 - Math.max(0, Math.min(1, transmittance));
+    if (alpha > 0) {
+        composite.red = Math.max(0, Math.min(255, composite.red / alpha));
+        composite.green = Math.max(0, Math.min(255, composite.green / alpha));
+        composite.blue = Math.max(0, Math.min(255, composite.blue / alpha));
+    }
+    composite.opacity = Math.max(0, Math.min(100, 100 * alpha));
+    const { red, green, blue, opacity } = composite;
+    return {
+        red: Math.round(red),
+        green: Math.round(green),
+        blue: Math.round(blue),
+        opacity,
+    };
+}

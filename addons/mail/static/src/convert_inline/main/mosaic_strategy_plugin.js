@@ -3,9 +3,14 @@ import { Plugin } from "../plugin";
 import { CellLayout, EmptyCellLayout, RowLayout, TableLayout } from "./table_models";
 import { Analysis, assignDefaultElementOptions, EmailNode } from "../core/render_models";
 import { StyleInfo } from "../core/style_models";
-import { CONTOUR_VARIANTS, DIRECTION_VARIANTS, OPPOSITE_DIRECTION } from "../core/utils";
+import {
+    computeCompositeColor,
+    CONTOUR_VARIANTS,
+    DIRECTION_VARIANTS,
+    OPPOSITE_DIRECTION,
+} from "../core/utils";
 import { parseCssValue } from "../css_parsers";
-import { convertCSSColorToRgba, convertRgbaToCSSColor } from "@web/core/utils/colors";
+import { convertRgbaToCSSColor } from "@web/core/utils/colors";
 
 export class MosaicStrategyPlugin extends Plugin {
     static id = "mosaicStrategy";
@@ -428,33 +433,6 @@ export class MosaicStrategyPlugin extends Plugin {
         }
     }
 
-    // TODO EGGMAIL: move into a color plugin to handle alpha colors more
-    // broadly?
-    computeCompositeCellColor(bgColors) {
-        const rgbaColors = bgColors.map((bgColor) => convertCSSColorToRgba(bgColor));
-        const composite = { red: 0, green: 0, blue: 0 };
-        let transmittance = 1;
-        for (const { red, green, blue, opacity } of rgbaColors) {
-            const alpha = Math.max(0, Math.min(100, opacity)) / 100;
-            composite.red += transmittance * alpha * red;
-            composite.green += transmittance * alpha * green;
-            composite.blue += transmittance * alpha * blue;
-            transmittance *= 1 - alpha;
-            if (alpha === 1) {
-                break;
-            }
-        }
-        const alpha = 1 - Math.max(0, Math.min(1, transmittance));
-        if (alpha > 0) {
-            composite.red = Math.max(0, Math.min(255, composite.red / alpha));
-            composite.green = Math.max(0, Math.min(255, composite.green / alpha));
-            composite.blue = Math.max(0, Math.min(255, composite.blue / alpha));
-        }
-        composite.opacity = Math.max(0, Math.min(100, 100 * alpha));
-        const { red, green, blue, opacity } = composite;
-        return convertRgbaToCSSColor(Math.round(red), Math.round(green), Math.round(blue), opacity);
-    }
-
     processCellAncestors(tableMeasures) {
         const { cells, emailNode } = tableMeasures;
         const containerNode = emailNode.lastReferenceNode;
@@ -624,7 +602,10 @@ export class MosaicStrategyPlugin extends Plugin {
         );
         Object.assign(refs.root, assignDefaultElementOptions(options, defaultOptions));
         if (cellMeasure.backgroundColors?.length > 0) {
-            const bgColor = this.computeCompositeCellColor(cellMeasure.backgroundColors);
+            const { red, green, blue, opacity } = computeCompositeColor(
+                cellMeasure.backgroundColors
+            );
+            const bgColor = convertRgbaToCSSColor(red, green, blue, opacity);
             refs.root.style.setProperty("background-color", bgColor);
         }
         const analysis = new Analysis({ parsingFacts: { canMerge: true, attemptCellMerge: true } });

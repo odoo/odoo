@@ -6,13 +6,16 @@ import {
     buildInlineShapeVmlContent,
     buildHideIfNotMsoNodes,
     wrapIfMso,
+    cssBackgroundPositionToVml,
 } from "./mso_vml_models";
-import { DIMENSIONS } from "../core/utils";
+import { computeCompositeColor, DIMENSIONS, DIRECTION_VARIANTS } from "../core/utils";
 import { withSequence } from "@html_editor/utils/resource";
 import { DEFAULT_SPACING_SEQUENCE } from "./spacing_plugin";
 import { CommentNodeLayout, ElementLayout } from "../core/render_models";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { isAllowedContent } from "@html_editor/utils/dom_info";
+import { StyleInfo } from "../core/style_models";
+import { convertCSSColorToRgba, convertRgbaToCSSColor, rgbaToHex } from "@web/core/utils/colors";
 
 export class MsoPlugin extends Plugin {
     static id = "mso";
@@ -56,25 +59,56 @@ export class MsoPlugin extends Plugin {
             shouldPropagate: true,
             facts: { isVmlWrapperForbidden: true },
         }));
-        let href;
-        if (variant === "msoButton") {
-            href = referenceNode.href;
-        }
-        analysis.vmlArguments = {
-            href,
-            backgroundColor: null,
-            borderRadius: null,
-            height: null,
-            horizontalAlignment: null,
-            padding: null,
-        };
-        // TODO EGGMAIL: working HERE
-        // here, whatever the actual node is, it should be converted to a
-        // span without any spacing, but we still want to keep style rules
-        // that could affect what is below (font-size, ...)
-        // the tree builder will handle the link/background/border/spacing parts
+        // WORKING HERE
+        analysis.facts.vmlArguments = this.extractInlineShapeVmlProps(referenceNode);
+        analysis.facts.vmlContextStyleInfo = new StyleInfo(); // specific style that should be inherited by html inside the VML
+        // TODO EGGMAIL: find an alternative strategy without using VML?
         return defaultEmailNodeArguments;
     }
+
+    extractInlineShapeVmlProps(referenceNode) {
+        return {
+            fill: this.extractVmlFill(referenceNode),
+            stroke: this.extractVmlStroke(referenceNode),
+            arcSize: this.extractVmlArcSize(referenceNode),
+            padding: this.extractVmlPadding(referenceNode),
+            href: referenceNode.getAttribute("href"),
+            horizontalAlignment: this.extractHorizontalAlignment(style),
+        };
+    }
+
+    extractVmlFill(referenceNode) {
+        const color = this.getStylePropertyValue(referenceNode, "background-color");
+        if (color === "transparent") {
+            return null;
+        }
+        // TODO EGGMAIL: handle more ancestors for transparency composition?
+        const { red, green, blue, opacity } = computeCompositeColor([color, "rgb(255, 255, 255)"]);
+        return convertRgbaToCSSColor(red, green, blue, opacity).substring(0, 7);
+    }
+
+    extractVmlStroke(referenceNode) {
+        if (!this.hasVisibleBorder(referenceNode)) {
+            return null;
+        }
+        // TODO EGGMAIL: evaluate if this very simplified extraction is adequate
+        const computedStyle = this.getComputedStyle(referenceNode);
+        let width, color;
+        for (const side of DIRECTION_VARIANTS) {
+            width = parseFloat(computedStyle.getPropertyValue(`border-${side}-width`));
+            if (width > 0) {
+                color = computedStyle.getPropertyValue(`border-${side}-color`);
+                break;
+            }
+        }
+        color = rgbaToHex(color).substring(0, 7);
+        return {
+            width,
+            color,
+        };
+    }
+
+    
 
     // TODO EGGMAIL: replace background images with VML output
     // handle image borders (as they are now allowed (radius for normal images and width for icons))
@@ -162,18 +196,15 @@ export class MsoPlugin extends Plugin {
         const span = this.config.referenceDocument.createElement("SPAN");
         const wrapperTag = isAllowedContent(span, childrenAncestorTagElements) ? "SPAN" : "DIV";
         if (!analysis.facts.isVmlWrapperForbidden) {
-            layout = new ElementLayout({
+            emailNode.layout = new ElementLayout({
                 refs: {
                     root: {
                         tag: wrapperTag,
-                        // TODO EGGMAIL: get font size and color (and other relevant style)
+                        style: analysis.facts.vmlContextStyleInfo,
                     },
                 },
             });
         }
-        // TODO EGGMAIL: apply required transformations for vmlArguments
-        // here, so that we also have access to raw info necessary
-        // to create the link/span above
         const originalRender = emailNode.render.bind(emailNode);
         emailNode.render = (context = {}) => {
             this.marginNode = undefined;
@@ -275,8 +306,12 @@ export class MsoPlugin extends Plugin {
             this.getBoundingClientRect(referenceNode, DIMENSIONS.DESKTOP).width
         );
         const position = {
-            x: parseFloat(this.getStylePropertyValue(referenceNode, "background-position-x")) || 0,
-            y: parseFloat(this.getStylePropertyValue(referenceNode, "background-position-y")) || 0,
+            x: cssBackgroundPositionToVml(
+                parseFloat(this.getStylePropertyValue(referenceNode, "background-position-x")) || 0
+            ),
+            y: cssBackgroundPositionToVml(
+                parseFloat(this.getStylePropertyValue(referenceNode, "background-position-y")) || 0
+            ),
         };
         return buildBackgroundImageVmlNodes({ position, src, width });
     }
