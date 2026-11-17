@@ -9,7 +9,7 @@ import { user } from "@web/core/user";
 /**
  * @typedef SuggestedRecipient
  * @property {string} email
- * @property {import("models").Persona|false} persona
+ * @property {number|false} partner_id
  * @property {string} lang
  * @property {string} reason
  */
