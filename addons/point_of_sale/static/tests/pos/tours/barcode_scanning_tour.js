@@ -36,6 +36,14 @@ registry.category("web_tour.tours").add("GS1BarcodeScanningTour", {
             ProductScreen.selectedOrderlineHas("Product 3"),
             scan_barcode("3760171283370"),
             ProductScreen.selectedOrderlineHas("Product 3", 2),
+
+            // Scanning a packaging barcode to give the packaging's uom converted
+            scan_barcode("0112345678901200"),
+            ProductScreen.selectedOrderlineHas("Product 1", 23),
+
+            // Scanning a packaging barcode to give the packaging's uom converted when stored without leading 0
+            scan_barcode("0109999999999987"),
+            ProductScreen.selectedOrderlineHas("Product 1", 35),
             Chrome.endTour(),
         ].flat(),
 });
