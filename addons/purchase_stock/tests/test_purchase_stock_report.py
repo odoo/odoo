@@ -10,6 +10,31 @@ from odoo.addons.stock.tests.test_report import TestReportsCommon
 
 
 class TestPurchaseStockReports(TestReportsCommon):
+    def _create_po(self, qty, *, product=None, uom=None, partner=None):
+        product = product or self.product
+        po = self.env['purchase.order'].create({
+            'partner_id': (partner or self.partner).id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_qty': qty,
+                'product_uom': (uom or product.uom_id).id,
+            })],
+        })
+        po.button_confirm()
+        return po
+
+    def _return_picking(self, picking, qty, location=None):
+        wizard = Form(self.env['stock.return.picking'].with_context(
+            active_ids=picking.ids,
+            active_id=picking.id,
+            active_model='stock.picking',
+        )).save()
+        wizard.product_return_moves.quantity = qty
+        return_picking = self.env['stock.picking'].browse(wizard.action_create_returns()['res_id'])
+        if location:
+            return_picking.location_dest_id = location
+        return return_picking.button_validate()
+
     def test_report_forecast_1_purchase_order_multi_receipt(self):
         """ Create a PO for 5 product, receive them then increase the quantity to 10.
         """
@@ -265,6 +290,7 @@ class TestPurchaseStockReports(TestReportsCommon):
         self.assertEqual(data['qty_on_time'], 12)
         self.assertEqual(data['qty_total'], 12)
         self.assertEqual(data['on_time_rate'], 100)
+        self.assertEqual(self.partner.on_time_rate, 100)
 
     def test_vendor_delay_report_with_multi_location(self):
         """
@@ -322,6 +348,7 @@ class TestPurchaseStockReports(TestReportsCommon):
         self.assertEqual(data['qty_on_time'], 10)
         self.assertEqual(data['qty_total'], 10)
         self.assertEqual(data['on_time_rate'], 100)
+        self.assertEqual(self.partner.on_time_rate, 100)
 
     def test_vendor_delay_report_with_backorder(self):
         """
@@ -352,6 +379,7 @@ class TestPurchaseStockReports(TestReportsCommon):
         self.assertEqual(data['qty_on_time'], 6)
         self.assertEqual(data['qty_total'], 10)
         self.assertEqual(data['on_time_rate'], 60)
+        self.assertEqual(self.partner.on_time_rate, 60)
 
         receipt02 = receipt01.backorder_ids
         receipt02.move_ids.quantity = 4
@@ -367,6 +395,8 @@ class TestPurchaseStockReports(TestReportsCommon):
         self.assertEqual(data['qty_on_time'], 10)
         self.assertEqual(data['qty_total'], 10)
         self.assertEqual(data['on_time_rate'], 100)
+        self.partner.invalidate_recordset(fnames=['on_time_rate'])
+        self.assertEqual(self.partner.on_time_rate, 100)
 
     def test_vendor_delay_report_without_backorder(self):
         """
@@ -396,6 +426,7 @@ class TestPurchaseStockReports(TestReportsCommon):
         self.assertEqual(data['qty_on_time'], 6)
         self.assertEqual(data['qty_total'], 10)
         self.assertEqual(data['on_time_rate'], 60)
+        self.assertEqual(self.partner.on_time_rate, 60)
 
     def test_vendor_delay_report_with_duplicate_receipt_without_backorder(self):
         """
@@ -429,3 +460,106 @@ class TestPurchaseStockReports(TestReportsCommon):
         self.assertEqual(data['qty_total'], 10)
         self.assertEqual(data['qty_on_time'], 10)
         self.assertEqual(data['on_time_rate'], 100)
+        self.assertEqual(self.partner.on_time_rate, 100)
+
+    def test_vendor_delay_report_capped_returns(self):
+        """The on-time rate mustn't exceed 100% per line. It must ignore returns (wherever they go)
+        and only count received lines of confirmed POs. The rates on the vendor and in the report
+        must always agree."""
+
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        uom_dozen = self.env.ref('uom.product_uom_dozen')
+        self.env['ir.config_parameter'].sudo().set_param('stock.propagate_uom', '1')
+
+        # A regular delivery. 100% expected.
+        receipt = self._create_po(1, uom=uom_dozen).picking_ids
+        self.assertEqual(receipt.move_ids.product_uom, uom_dozen)
+        receipt.button_validate()
+        self.assertAlmostEqual(self.partner.on_time_rate, 100, places=2,
+            msg="1 dozen received for 1 dozen ordered: 12 of 12 on time.")
+
+        # An overdelivery. The excess dozen is ignored.
+        receipt = self._create_po(1, uom=uom_dozen).picking_ids
+        receipt.move_ids.quantity = 2
+        receipt.button_validate()
+        self.assertAlmostEqual(self.partner.on_time_rate, 100, places=2,
+            msg="2 dozens received for 1 dozen ordered: 24 of 24 on time.")
+
+        # An overdelivery in the product UoM. It must correctly add up dozens with units.
+        receipt = self._create_po(10).picking_ids
+        receipt.move_ids.quantity = 15
+        receipt.button_validate()
+        self.assertAlmostEqual(self.partner.on_time_rate, 100, places=2,
+            msg="15 received for 10 ordered: 34 of 34 on time.")
+
+        # An overdelivery through a backorder. We still expect to receive the original quantity.
+        receipt = self._create_po(10).picking_ids
+        receipt.move_ids.quantity = 6
+        Form.from_action(self.env, receipt.button_validate()).save().process()
+        receipt.backorder_ids.move_ids.quantity = 8
+        receipt.backorder_ids.button_validate()
+        self.assertAlmostEqual(self.partner.on_time_rate, 100, places=2,
+            msg="6 (+ backorder) of 8 received for 10 ordered: 44 of 44 on time.")
+
+        report_rate = self.env['vendor.delay.report']._read_group(
+            [('partner_id', '=', self.partner.id)], [], ['on_time_rate:sum'])
+        self.assertAlmostEqual(report_rate[0][0], 100, places=2, msg="44/44 on-time rate")
+
+        po = self._create_po(10)
+        po.picking_ids.button_validate()
+        # Unreceived and underdue means it doesn't count as late yet.
+        unreceived_po = po.copy()
+        unreceived_po.button_confirm()
+        # Cancelled means it doesn't count as late either.
+        cancelled_po = po.copy()
+        cancelled_po.button_confirm()
+        cancelled_po.button_cancel()
+        self.assertAlmostEqual(self.partner.on_time_rate, 100, places=2,
+            msg="10 unreceived and 10 cancelled for 10 ordered: 54 of 54 on time.")
+
+        internal_location = self.env['stock.location'].create({
+            'name': 'Rejected',
+            'usage': 'internal',
+            'location_id': self.stock_location.location_id.id,
+        })
+        # Partial reception means part of the delivery wasn't received on time.
+        receipt = self._create_po(10).picking_ids
+        receipt.move_ids.quantity = 8
+        Form.from_action(self.env, receipt.button_validate()).save().process_cancel_backorder()
+        # Returns and internal transfers are ignored.
+        self._return_picking(receipt, 2)
+        self._return_picking(receipt, 2, internal_location)
+        self.assertAlmostEqual(self.partner.on_time_rate, 62 / 64 * 100, places=2,
+            msg="8 received without backorder, 2 returned to the vendor, and "
+                "2 went to an internal location: 62 of 64 on time.")
+
+        report_rate = self.env['vendor.delay.report']._read_group(
+            [('partner_id', '=', self.partner.id)], [], ['on_time_rate:sum'])
+        self.assertAlmostEqual(report_rate[0][0], 62 / 64 * 100, places=2, msg="62/64 on-time rate")
+
+        # Partial delivery in different UoM.
+        partner = self.env['res.partner'].create({'name': 'Other Vendor'})
+        uom_triple = self.env['uom.uom'].create({
+            'name': 'Three-pack',
+            'category_id': uom_unit.category_id.id,
+            'uom_type': 'bigger',
+            'factor_inv': 3,
+            'rounding': 0.01,
+        })
+        product_triple = self.env['product.product'].create({
+            'name': 'Three-piece set',
+            'is_storable': True,
+            'uom_id': uom_triple.id,
+            'uom_po_id': uom_triple.id,
+        })
+        po = self._create_po(2, product=product_triple, uom=uom_unit, partner=partner)
+        receipt = po.picking_ids
+        receipt.move_ids.quantity = 1
+        Form.from_action(self.env, receipt.button_validate()).save().process_cancel_backorder()
+        rate = 1 / 3 / po.order_line.product_uom_qty * 100
+        self.assertAlmostEqual(partner.on_time_rate, rate, places=2,
+            msg="1 received for 2 ordered: 1 of 2 on time.")
+
+        report_rate = self.env['vendor.delay.report']._read_group(
+            [('partner_id', '=', partner.id)], [], ['on_time_rate:sum'])
+        self.assertAlmostEqual(report_rate[0][0], rate, places=2, msg="1/2 on-time rate")

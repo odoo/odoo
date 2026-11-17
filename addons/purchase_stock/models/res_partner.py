@@ -24,28 +24,38 @@ class ResPartner(models.Model):
             domain=[
                 ('partner_id', 'in', self.ids),
                 ('date_order', '>', fields.Date.today() - timedelta(date_order_days_delta)),
-                ('qty_received', '!=', 0),
+                ('move_ids', 'any', [
+                    ('state', '=', 'done'),
+                    ('location_dest_id.usage', '!=', 'supplier'),
+                    ('origin_returned_move_id', '=', False),
+                ]),
                 ('order_id.state', 'in', ['done', 'purchase']),
                 ('product_id', 'in', self.env['product.product'].sudo()._search([('type', '!=', 'service')])),
             ],
             field_names=['date_planned', 'partner_id', 'product_uom_qty'],
         )
         lines_quantity = defaultdict(lambda: 0)
+        # Caveat: If you're going to edit the following lines, make sure the business logic in the vendor delay report
+        # matches it and produces identical results. (eg filtering, UoM conversions, rounding logic)
         moves = self.env['stock.move'].search_fetch(
             domain=[
                 ('purchase_line_id', 'in', order_lines.ids),
                 ('state', '=', 'done'),
+                ('location_dest_id.usage', '!=', 'supplier'),
+                ('origin_returned_move_id', '=', False),
             ],
-            field_names=['purchase_line_id', 'date', 'quantity'],
+            # `product_id` is needed because kits' component moves all have that kit's POL.
+            field_names=['purchase_line_id', 'date', 'quantity', 'product_uom', 'product_id'],
         )
         moves = moves.filtered(lambda m: m.date.date() <= m.purchase_line_id.date_planned.date())
         for move in moves:
-            lines_quantity[move.purchase_line_id.id] += move.quantity
+            lines_quantity[move.purchase_line_id.id] += move.product_uom._compute_quantity(
+                move.quantity, move.product_id.uom_id, round=False)
         partner_dict = {}
         for line in order_lines:
             on_time, ordered = partner_dict.get(line.partner_id, (0, 0))
             ordered += line.product_uom_qty
-            on_time += lines_quantity[line.id]
+            on_time += min(lines_quantity[line.id], line.product_uom_qty)
             partner_dict[line.partner_id] = (on_time, ordered)
         seen_partner = self.env['res.partner']
         for partner, numbers in partner_dict.items():
