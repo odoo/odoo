@@ -1648,6 +1648,29 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                 )
 
     @users('employee')
+    def test_post_no_ooo_for_parent_author(self):
+        """ On flat threads, the parent of a posted message is the last message:
+        its author, without being notified should not send an OOO reply. """
+        test_record = self.env['mail.test.simple'].browse(self.test_record.ids)
+        with self.mock_mail_gateway():
+            parent = test_record.with_user(self.user_admin).message_post(
+                body='Leaving on holidays',
+                message_type='comment',
+                subtype_xmlid='mail.mt_note',
+            )
+        self._setup_out_of_office(self.user_admin)
+
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            message = test_record.message_post(
+                body='An unrelated message',
+                message_type='comment',
+                subtype_xmlid='mail.mt_note',
+            )
+
+        self.assertEqual(message.parent_id, parent)
+        self.assertEqual(self._new_msgs, message, 'A non mentioned parent author should not send an OOO reply')
+
+    @users('employee')
     def test_post_with_out_of_office(self):
         """ Test out of office support. Test setup :
          * record followers: user_employee_c2
