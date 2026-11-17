@@ -45,6 +45,8 @@ export class AutoresizeInput extends Component {
 
     onBlurInput() {
         this.isFocused.set(false);
+        // Firefox keeps the caret's scroll after blur; scroll back to the start.
+        this.inputRef().scrollLeft = 0;
         this.props.onValidate(this.value());
     }
 

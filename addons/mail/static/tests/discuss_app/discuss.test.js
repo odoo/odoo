@@ -37,6 +37,7 @@ import { Store } from "@mail/../tests/mock_server/store";
 import { describe, expect, test } from "@odoo/hoot";
 import {
     animationFrame,
+    manuallyDispatchProgrammaticEvent,
     press,
     queryOne,
     rightClick,
@@ -2583,6 +2584,25 @@ test("parent channel chevron does not cover the sub-channel name in a narrow hea
     expect(
         await getVisibleWidth(".o-mail-DiscussContent-header [data-icon='chevron_forward']")
     ).toBe(0);
+});
+
+test("leaving a truncated thread name shows its start again", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "Troubleshooting of the warehouse scanners and of the label printers",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await waitFor(`${actionPanel("Members")}:count(1)`); // wait for auto-open of this panel
+    await patchUiSize({ width: 900 });
+    await animationFrame();
+    await contains(".o-mail-DiscussContent-threadName").click();
+    await press("ArrowDown"); // caret at the end
+    const input = queryOne(".o-mail-DiscussContent-threadName");
+    expect(input.scrollLeft).toBeGreaterThan(0);
+    // The event alone: a real blur resets the scroll in Chrome, not in Firefox.
+    await manuallyDispatchProgrammaticEvent(input, "blur");
+    expect(input.scrollLeft).toBe(0);
 });
 
 test("Notification settings: basic rendering", async () => {
