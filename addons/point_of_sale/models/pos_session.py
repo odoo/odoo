@@ -1040,7 +1040,10 @@ class PosSession(models.Model):
                         signed_product_qty = move.product_qty
                         if move._is_in():
                             signed_product_qty *= -1
-                        amount = signed_product_qty * move.product_id._compute_average_price(0, move.quantity, move)
+                        uom_qty = move.quantity
+                        if move.product_uom.id != move.product_id.uom_id.id:
+                            uom_qty = move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id)
+                        amount = signed_product_qty * move.product_id._compute_average_price(0, uom_qty, move)
                         stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
                         if move._is_in():
                             stock_return[out_key] = self._update_amounts(stock_return[out_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
@@ -1740,7 +1743,7 @@ class PosSession(models.Model):
             'domain': self._get_captured_payments_domain(),
             'context': {'search_default_group_by_payment_method': 1}
         }
-    
+
     def _get_captured_payments_domain(self):
         return [('session_id', 'in', self.ids), ('pos_order_id.state', 'in', ['paid', 'invoiced', 'done'])]
 
