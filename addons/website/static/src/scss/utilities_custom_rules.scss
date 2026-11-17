@@ -1,0 +1,24 @@
+// See BORDER_VARIABLES_RULES_EXTENSION
+// The `rounded` utilities only set `--box-border-radius` (see
+// html_builder/static/src/scss/utilities_custom.scss). The rules consuming it are defined in
+// html_editor.frontend.scss, which is not part of the bundles that only include
+// `web._assets_bootstrap_frontend` (e.g. standalone kiosks): apply the radius
+// here so that those classes keep working everywhere. Same as
+// `%box-border-radius-rules`, which cannot be shared across bundles.
+@each $size, $value in map-get(map-get($utilities, 'rounded'), 'values') {
+    $class-suffix: if($size == null, "", "-#{$size}");
+    .rounded#{$class-suffix} {
+        // Reset the variables so that values set on an ancestor are not inherited
+        --box-border-radius: var(--border-radius);
+        --box-border-top-left-radius: var(--box-border-radius);
+        --box-border-top-right-radius: var(--box-border-radius);
+        --box-border-bottom-right-radius: var(--box-border-radius);
+        --box-border-bottom-left-radius: var(--box-border-radius);
+
+        border-radius:
+            var(--box-border-top-left-radius)
+            var(--box-border-top-right-radius)
+            var(--box-border-bottom-right-radius)
+            var(--box-border-bottom-left-radius) !important;
+    }
+}
