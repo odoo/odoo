@@ -36,7 +36,7 @@ class IrMail_Server(models.Model):
     def _onchange_smtp_authentication_gmail(self):
         if self.smtp_authentication == 'gmail':
             self.smtp_host = 'smtp.gmail.com'
-            self.smtp_encryption = 'starttls'
+            self.smtp_encryption = 'starttls_strict'
             self.smtp_port = 587
         else:
             self.google_gmail_refresh_token = False
@@ -58,7 +58,7 @@ class IrMail_Server(models.Model):
                     'Please leave the password field empty for Gmail mail server “%s”. '
                     'The OAuth process does not require it', server.name))
 
-            if server.smtp_encryption != 'starttls':
+            if server.smtp_encryption not in ('starttls', 'starttls_strict'):
                 raise UserError(_(
                     'Incorrect Connection Security for Gmail mail server “%s”. '
                     'Please set it to "TLS (STARTTLS)".', server.name))
