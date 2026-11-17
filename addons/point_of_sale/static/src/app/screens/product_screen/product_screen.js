@@ -337,6 +337,11 @@ export class ProductScreen extends Component {
             product.uom_id.id == qty.rule.associated_uom_id[0]
         ) {
             vals.qty = qty.value;
+        } else {
+            const packaging = this.pos.models["product.uom"].getBy("barcode", productBarcode.code);
+            if (packaging) {
+                vals.qty = packaging.uom_id.factor / product.product_tmpl_id.uom_id.factor;
+            }
         }
 
         const line = await this.pos.addLineToCurrentOrder(
