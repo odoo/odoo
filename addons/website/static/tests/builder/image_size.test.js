@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { animationFrame, clear, edit, press, queryOne } from "@odoo/hoot-dom";
+import { animationFrame, clear, edit, press, queryOne, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
 import { testImg, testImgSrc, testGifImg, testGifImgSrc } from "./image_test_helpers";
@@ -15,7 +15,7 @@ test("the image should show its size", async () => {
     await contains(":iframe .test-options-target img").click();
     await waitSidebarUpdated();
     const selector = `[data-container-title="Image"] [title="Size"]`;
-    const size = parseFloat(document.querySelector(selector).innerHTML);
+    const size = parseFloat((await waitFor(selector)).innerHTML);
     expectAround(size, 22.8);
 });
 
@@ -28,7 +28,7 @@ test("the background image should show its size", async () => {
     await contains(":iframe .test-options-target section").click();
     await waitSidebarUpdated();
     const selector = `[data-label="Image"] [title="Size"]`;
-    const size = parseFloat(document.querySelector(selector).innerHTML);
+    const size = parseFloat((await waitFor(selector)).innerHTML);
     expectAround(size, 22.8);
 });
 
@@ -46,7 +46,7 @@ test("the GIF image should show its size", async () => {
     await contains(":iframe .test-options-target img").click();
     await waitSidebarUpdated();
     const selector = `[data-container-title="Image"] [title="Size"]`;
-    const size = parseFloat(document.querySelector(selector).innerHTML);
+    const size = parseFloat((await waitFor(selector)).innerHTML);
     expectAround(size, 325.2);
 });
 
@@ -59,7 +59,7 @@ test("the GIF background image should show its size", async () => {
     await contains(":iframe .test-options-target section").click();
     await waitSidebarUpdated();
     const selector = `[data-label="Image"] [title="Size"]`;
-    const size = parseFloat(document.querySelector(selector).innerHTML);
+    const size = parseFloat((await waitFor(selector)).innerHTML);
     expectAround(size, 325.2);
 });
 
