@@ -3,7 +3,7 @@ import { BoundedSet, debounce, Logger } from "@bus/workers/bus_worker_utils";
 /**
  * Type of events that can be sent from the worker to its clients.
  *
- * @typedef { 'BUS:CONNECT' | 'BUS:RECONNECT' | 'BUS:DISCONNECT' | 'BUS:RECONNECTING' | 'BUS:NOTIFICATION' | 'BUS:INITIALIZED' | 'BUS:OUTDATED'| BUS:LAST_ID_RESET | 'BUS:WORKER_STATE_UPDATED' | 'BUS:PROVIDE_LOGS' } WorkerEvent
+ * @typedef { 'BUS:CONNECT' | 'BUS:RECONNECT' | 'BUS:DISCONNECT' | 'BUS:RECONNECTING' | 'BUS:NOTIFICATION' | 'BUS:INITIALIZED' | 'BUS:OUTDATED' | 'BUS:SUBSCRIPTION_OUTDATED' | BUS:LAST_ID_RESET | 'BUS:WORKER_STATE_UPDATED' | 'BUS:PROVIDE_LOGS' } WorkerEvent
  */
 
 /**
@@ -236,7 +236,7 @@ export class WebsocketWorker {
     _onServerMessage({ type, payload }) {
         switch (type) {
             case "bus/subscription_outdated":
-                this.broadcast("BUS:OUTDATED", { unregisterMultiTab: false });
+                this.broadcast("BUS:SUBSCRIPTION_OUTDATED");
                 return;
             case "bus/last_id_reset": {
                 const newLastSeenId = payload;
@@ -333,7 +333,7 @@ export class WebsocketWorker {
         this.sendToClient(client, "BUS:WORKER_STATE_UPDATED", this.state);
         this.sendToClient(client, "BUS:INITIALIZED");
         if (!this.active) {
-            this.sendToClient(client, "BUS:OUTDATED", { unregisterMultiTab: true });
+            this.sendToClient(client, "BUS:OUTDATED");
         }
     }
 
@@ -374,7 +374,7 @@ export class WebsocketWorker {
             if (reason === "OUTDATED_VERSION") {
                 console.warn("Worker deactivated due to an outdated version.");
                 this.active = false;
-                this.broadcast("BUS:OUTDATED", { unregisterMultiTab: true });
+                this.broadcast("BUS:OUTDATED");
             }
             // WebSocket was closed on purpose, do not try to reconnect.
             return;

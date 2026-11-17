@@ -7,17 +7,23 @@ import { services } from "@web/core/services";
 
 /**
  * Detect lost connections to the bus. A connection is considered as lost if it
- * couldn't be established after a reconnect attempt.
+ * couldn't be established after a reconnect attempt, or if the worker is
+ * outdated and the page must be reloaded.
  */
 export class BusMonitoringPlugin extends Plugin {
     #busService = usePlugin(BusPlugin);
     isConnectionLost = signal(false);
+    isOutdated = signal(false);
     #isReconnecting = signal(false);
 
     setup() {
         useListener(this.#busService, "BUS:WORKER_STATE_UPDATED", ({ detail }) =>
             this.#workerStateOnChange(detail)
         );
+        useListener(this.#busService, "BUS:OUTDATED", () => {
+            this.isOutdated.set(true);
+            this.isConnectionLost.set(true);
+        });
         useListener(browser, "offline", () => this.#isReconnecting.set(false));
     }
 

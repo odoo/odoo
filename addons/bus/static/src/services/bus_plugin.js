@@ -25,6 +25,7 @@ export const BACK_ONLINE_RECONNECT_DELAY = 5000;
  *  @emits BUS:RECONNECTING
  *  @emits BUS:WORKER_STATE_UPDATED
  *  @emits BUS:OUTDATED
+ *  @emits BUS:SUBSCRIPTION_OUTDATED
  */
 export class BusPlugin extends Plugin {
     #multiTab = usePlugin(MultiTabPlugin);
@@ -118,12 +119,9 @@ export class BusPlugin extends Plugin {
             case "BUS:WORKER_STATE_UPDATED":
                 this.workerState.set(data);
                 break;
-            case "BUS:OUTDATED": {
-                if (data.unregisterMultiTab) {
-                    this.#multiTab.unregister();
-                }
+            case "BUS:OUTDATED":
+                this.#multiTab.unregister();
                 break;
-            }
         }
         if (!INTERNAL_EVENTS.has(type)) {
             this.#bus.trigger(type, data);
