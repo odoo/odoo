@@ -67,6 +67,7 @@
                     ]"
                     required="service_tracking == 'event' and event_id"
                     options="{'no_open': True, 'no_create': True}"/> <!-- used by event_booth_sale.sale_order_view_form -->
+                <field name="is_event_ticket_option" column_invisible="True"/> <!-- set by the event configurator on the option lines it adds -->
             </xpath>
         </field>
     </record>

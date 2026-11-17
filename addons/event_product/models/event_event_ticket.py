@@ -6,6 +6,9 @@ class EventEventTicket(models.Model):
     _inherit = 'event.event.ticket'
     _order = "event_id, sequence, price, name, id"
 
+    # a distinct table from the one of event.type.ticket, which this model inherits from
+    optional_product_ids = fields.Many2many(
+        'product.product', 'event_event_ticket_optional_product_rel', 'ticket_id', 'product_id')
     total_price_reduce_taxinc = fields.Float(
         string='Total Price Reduce Tax inc', compute='_compute_total_price_reduce_taxinc',
         min_display_digits='Product Price', compute_sudo=True)

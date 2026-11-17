@@ -4,6 +4,11 @@
 from odoo import _, api, fields, models
 from odoo.tools import float_is_zero
 
+# fields of a registration whose change can alter the option lines of its sales order
+TICKET_OPTION_SYNC_FIELDS = {
+    'ticket_option_product_ids', 'state', 'active', 'event_ticket_id', 'sale_order_line_id',
+}
+
 
 class EventRegistration(models.Model):
     _inherit = 'event.registration'
@@ -92,6 +97,7 @@ class EventRegistration(models.Model):
                     render_values={'self': registration, 'origin': registration.sale_order_id},
                     subtype_xmlid='mail.mt_note',
                 )
+        registrations._sync_sale_order_ticket_options()
         return registrations
 
     def write(self, vals):
@@ -111,7 +117,38 @@ class EventRegistration(models.Model):
                 lambda registration: registration[field] and registration[field].id != vals[field]
             )._sale_order_registration_data_change_notify(field, self.env[model].browse(vals[field]))
 
-        return super(EventRegistration, self).write(vals)
+        sync_options = bool(vals.keys() & TICKET_OPTION_SYNC_FIELDS) and not self.env.context.get('event_ticket_option_sync')
+        if sync_options:
+            old_lines = self.sale_order_line_id
+            old_options = {registration: registration.ticket_option_product_ids for registration in self}
+
+        res = super(EventRegistration, self).write(vals)
+
+        if sync_options:
+            self._sync_sale_order_ticket_options(old_lines=old_lines, old_options=old_options)
+        return res
+
+    def _sync_sale_order_ticket_options(self, old_lines=None, old_options=None):
+        """ Make the option lines of the sales orders follow the options chosen by these
+        attendees (one batched sync per order).
+
+        Orders that are cancelled or locked are not edited: their salesperson is notified instead
+        of the changed options.
+
+        :param old_lines: ticket lines the attendees had before a change, to be synchronized too
+        :param old_options: ``{registration: options before the change}``, to notify the changes
+        """
+        if self.env.context.get('event_ticket_option_sync'):
+            return
+        ticket_lines = (self.sudo().sale_order_line_id | (old_lines or self.env['sale.order.line']).sudo()).filtered('event_ticket_id')
+        for order, lines in ticket_lines.grouped('order_id').items():
+            if order.state == 'cancel' or order.locked:
+                for registration, options in (old_options or {}).items():
+                    if registration.sale_order_id == order and options != registration.ticket_option_product_ids:
+                        registration.sudo()._sale_order_registration_data_change_notify(
+                            'ticket_option_product_ids', registration.ticket_option_product_ids, old_record=options)
+                continue
+            order._sync_event_ticket_option_lines(lines)
 
     def _synchronize_so_line_values(self, so_line):
         if so_line:
@@ -126,14 +163,19 @@ class EventRegistration(models.Model):
             }
         return {}
 
-    def _sale_order_registration_data_change_notify(self, new_record_field, new_record):
+    def _sale_order_registration_data_change_notify(self, new_record_field, new_record, old_record=None):
         fallback_user_id = self.env.user.id if not self.env.user._is_public() else self.env.ref("base.user_admin").id
         for registration in self:
+            previous_record = registration[new_record_field] if old_record is None else old_record
+            record_type = {
+                'event_ticket_id': _('Ticket'),
+                'ticket_option_product_ids': _('Optional Products'),
+            }.get(new_record_field, _('Slot'))
             render_context = {
                 'registration': registration,
-                'record_type': _('Ticket') if new_record_field == 'event_ticket_id' else _('Slot'),
-                'old_name': registration[new_record_field].display_name,
-                'new_name': new_record.display_name,
+                'record_type': record_type,
+                'old_name': ', '.join(previous_record.mapped('display_name')),
+                'new_name': ', '.join(new_record.mapped('display_name')),
             }
             user_id = registration.event_id.user_id.id or registration.sale_order_id.user_id.id or fallback_user_id
             registration.sale_order_id._activity_schedule_with_view(
