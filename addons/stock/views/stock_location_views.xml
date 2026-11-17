@@ -99,6 +99,9 @@
                     <filter string="Warehouse" name="warehouse" domain="[]" context="{'group_by': 'warehouse_id'}"/>
                     <filter string="Location Type" name="usage" domain="[]" context="{'group_by': 'usage'}"/>
                 </group>
+                <searchpanel class="w-auto">
+                    <field name="location_id" string="Location Tree" icon="filter_alt" icon_class="oi-filled" limit="false"/>
+                </searchpanel>
             </search>
         </field>
     </record>
