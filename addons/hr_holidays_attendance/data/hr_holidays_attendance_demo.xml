@@ -4,4 +4,36 @@
         <value model="hr.version" search="[('employee_id', '=', ref('hr.employee_hne'))]"/>
         <value eval="{'attendance_based': True}"/>
     </function>
+
+    <data noupdate="1">
+        <!-- Monica was sick last Friday, but her morning was scanned at the kiosk: an attendance on time off, to review -->
+        <record id="hr_leave_light_sick" model="hr.leave">
+            <field name="name">Sick day</field>
+            <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_sick_leave"/>
+            <field name="request_date_from" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=4)).date()"/>
+            <field name="request_date_to" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=4)).date()"/>
+            <field name="employee_id" ref="hr.employee_light"/>
+            <field name="state">confirm</field>
+        </record>
+        <function model="hr.leave" name="action_approve">
+            <value eval="ref('hr_leave_light_sick')"/>
+        </function>
+        <record id="attendance_week_light_friday_am" model="hr.attendance">
+            <field name="employee_id" ref="hr.employee_light"/>
+            <field name="check_in" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=4, hour=8, minute=0, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="check_out" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=4, hour=12, minute=0, second=0, microsecond=0)).astimezone(pytz.utc).replace(tzinfo=None)"/>
+            <field name="in_mode">kiosk</field>
+            <field name="in_location">1000 Brussels, Belgium</field>
+            <field name="in_latitude">50.8465573</field>
+            <field name="in_longitude">4.3517210</field>
+            <field name="in_ip_address">203.0.113.10</field>
+            <field name="in_browser">chrome</field>
+            <field name="out_mode">kiosk</field>
+            <field name="out_location">1000 Brussels, Belgium</field>
+            <field name="out_latitude">50.8465573</field>
+            <field name="out_longitude">4.3517210</field>
+            <field name="out_ip_address">203.0.113.10</field>
+            <field name="out_browser">chrome</field>
+        </record>
+    </data>
 </odoo>
