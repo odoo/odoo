@@ -1,3 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import link_tracker
+from . import mailing
+from . import survey_user_input

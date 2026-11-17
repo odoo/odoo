@@ -8,6 +8,10 @@
         'mass_mailing',
         'survey',
     ],
+    'data': [
+        'views/mailing_mailing_views.xml',
+        'views/survey_user_input_views.xml',
+    ],
     'assets': {
         'mass_mailing.assets_builder': [
             'mass_mailing_survey/static/src/builder/**/*',

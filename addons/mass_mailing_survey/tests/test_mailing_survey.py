@@ -64,10 +64,11 @@ class TestMailingSurvey(MassMailCommon, HttpCase):
                 self.assertEqual(self.env['link.tracker']._get_title_from_url(url), title)
 
     def test_click_public(self):
-        """A public click passes the recipient's email to the survey controller,
-        which creates the answer with it. No answer token is given."""
+        """A public click passes the recipient's email and the mailing to the survey
+        controller, which creates the answer with them. No answer token is given."""
         query = self._click(self.survey_code)
         self.assertEqual(query.get('email'), self.mailing_trace.email)
+        self.assertEqual(query.get('mass_mailing_id'), str(self.test_mailing.id))
         self.assertNotIn('answer_token', query)
         self.assertFalse(self._get_answers(), 'The answer is created by the survey controller')
 
@@ -75,6 +76,7 @@ class TestMailingSurvey(MassMailCommon, HttpCase):
         answer = self._get_answers()
         self.assertEqual(len(answer), 1)
         self.assertEqual(answer.email, self.mailing_trace.email)
+        self.assertEqual(answer.mass_mailing_id, self.test_mailing)
         self.assertFalse(answer.partner_id)
 
     def test_click_ignored(self):
@@ -91,6 +93,7 @@ class TestMailingSurvey(MassMailCommon, HttpCase):
             with self.subTest(description):
                 query = self._click(code, trace_id)
                 self.assertNotIn('email', query)
+                self.assertNotIn('mass_mailing_id', query)
 
     def test_click_archived_survey(self):
         """Archived surveys are left to the survey controller."""
@@ -99,8 +102,22 @@ class TestMailingSurvey(MassMailCommon, HttpCase):
         self.assertNotIn('email', query)
 
     def test_click_logged_user(self):
-        """Logged users are left to the survey controller, which creates the
+        """Logged users only get the mailing: the survey controller creates the
         answer for their own partner."""
         self.authenticate('user_marketing', 'user_marketing')
         query = self._click(self.survey_code)
+        self.assertEqual(query.get('mass_mailing_id'), str(self.test_mailing.id))
         self.assertNotIn('email', query)
+
+    def test_start_invalid_mailing(self):
+        """An invalid mass_mailing_id is ignored when creating the answer."""
+        for mass_mailing_id in ('abc', str(self.test_mailing.id + 1000)):
+            with self.subTest(mass_mailing_id=mass_mailing_id):
+                response = self.url_open(
+                    f'{self.test_survey.get_start_url()}?{urlencode({"mass_mailing_id": mass_mailing_id})}',
+                    allow_redirects=False,
+                )
+                self.assertLess(response.status_code, 400)
+        answers = self._get_answers()
+        self.assertTrue(answers)
+        self.assertFalse(answers.mass_mailing_id)
