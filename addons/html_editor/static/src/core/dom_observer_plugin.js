@@ -29,7 +29,6 @@ export const EDITOR_MUTATION_TYPES = /** @type {const} */ ({
     CLASS_LIST: "classList",
     ADD: "add",
     REMOVE: "remove",
-    CUSTOM: "custom",
 });
 
 /**
@@ -71,7 +70,6 @@ export const EDITOR_MUTATION_TYPES = /** @type {const} */ ({
  *    | (NativeMutation<"characterData"> | { value: string })
  *    | (Pick<NativeMutation<"childList">, "previousSibling" | "nextSibling"> | { tree: Tree, parent: Node } & { type: "add" })
  *    | (Pick<NativeMutation<"childList">, "previousSibling" | "nextSibling"> | { tree: Tree, parent: Node } & { type: "remove" })
- *    | { apply: Function, revert: Function } & { type: "custom" },
  * { type: T }
  * > } EditorMutation
  */
@@ -105,8 +103,6 @@ export const EDITOR_MUTATION_TYPES = /** @type {const} */ ({
  * @typedef { Object } DomObserverShared
  * @property { DomObserverPlugin['ignore'] } ignore
  * @property { DomObserverPlugin['hasStagedMutations'] } hasStagedMutations
- * @property { DomObserverPlugin['stageCustomMutation'] } stageCustomMutation
- * @property { DomObserverPlugin['applyCustomMutation'] } applyCustomMutation
  * @property { DomObserverPlugin['getMutationsCommonAncestor'] } getMutationsCommonAncestor
  * @property { DomObserverPlugin['getClassChanges'] } getClassChanges
  */
@@ -131,8 +127,6 @@ export class DomObserverPlugin extends Plugin {
     static shared = [
         "ignore",
         "hasStagedMutations",
-        "stageCustomMutation",
-        "applyCustomMutation",
         "getMutationsCommonAncestor",
         "getClassChanges",
     ];
@@ -250,8 +244,8 @@ export class DomObserverPlugin extends Plugin {
         // ----------
 
         has_history_commit_changes_predicates: (commit) => {
-            if ("mutations" in commit.data) {
-                return !!commit.data.mutations.length;
+            if (commit.data.mutations?.length) {
+                return true;
             }
         },
     };
@@ -455,34 +449,6 @@ export class DomObserverPlugin extends Plugin {
         this.revertMutations([...this.mutations]);
         this.observer.takeRecords();
         this.clearStage();
-    }
-
-    /**
-     * @deprecated Use special commit data and apply/revert resource subscribers
-     * instead of this.
-     *
-     * @todo This mutation type definitely fails in collaborative since it's not
-     * serializable. If we ever use it in a context that uses collaboration,
-     * we'll need to adapt it.
-     *
-     * @param { Object } spec
-     * @param { Function } spec.apply
-     * @param { Function } spec.revert
-     */
-    stageCustomMutation({ apply, revert }) {
-        /** @type { EditorMutation<"custom"> } */
-        const customMutation = {
-            type: EDITOR_MUTATION_TYPES.CUSTOM,
-            apply: () => {
-                apply();
-                this.stageCustomMutation({ apply, revert });
-            },
-            revert: () => {
-                revert();
-                this.stageCustomMutation({ apply: revert, revert: apply });
-            },
-        };
-        this.stage(customMutation);
     }
 
     /**
@@ -996,10 +962,6 @@ export class DomObserverPlugin extends Plugin {
         }
         for (const mutation of mutations) {
             switch (mutation.type) {
-                case EDITOR_MUTATION_TYPES.CUSTOM: {
-                    mutation.apply();
-                    break;
-                }
                 case EDITOR_MUTATION_TYPES.CHARACTER_DATA: {
                     const node = this.dependencies.domReferenceMap.getNodeById(mutation.nodeId);
                     if (node) {
@@ -1124,16 +1086,6 @@ export class DomObserverPlugin extends Plugin {
     }
 
     /**
-     * Take a "custom" mutation and apply it in the DOM.
-     *
-     * @param { EditorMutation<"custom"> } mutation
-     */
-    applyCustomMutation(mutation) {
-        mutation.apply();
-        this.stageCustomMutation({ apply: mutation.apply, revert: mutation.revert });
-    }
-
-    /**
      * Take a batch of serialized mutations, reverse both their effect and their
      * order, then apply that.
      *
@@ -1153,8 +1105,6 @@ export class DomObserverPlugin extends Plugin {
                     return { ...mutation, type: EDITOR_MUTATION_TYPES.ADD };
                 case EDITOR_MUTATION_TYPES.ADD:
                     return { ...mutation, type: EDITOR_MUTATION_TYPES.REMOVE };
-                case EDITOR_MUTATION_TYPES.CUSTOM:
-                    return { ...mutation, apply: mutation.revert, revert: mutation.apply };
                 default:
                     throw new Error(`Unknown mutation type: ${mutation.type}`);
             }
