@@ -335,8 +335,17 @@ class AccountEdiFormat(models.Model):
                 'response': None,
             }}
 
+        # An invoice that still holds a chain index while its document is not sent yet was already submitted,
+        # without ZATCA ever telling us the outcome. It keeps its index and is resubmitted as it was sent.
+        # Invoices that timed out before that XML started being saved have none, and are rendered again.
+        timed_out = invoice.l10n_sa_chain_index
+        signed_xml = None
+        if timed_out:
+            document = invoice.edi_document_ids.filtered(lambda d: d.edi_format_id == self and d.state == 'to_send')
+            signed_xml = document.sudo().attachment_id.raw
+
         xml_content = None
-        if not invoice.l10n_sa_chain_index:
+        if not timed_out:
             # If the Invoice doesn't have a chain index, it means it either has not been submitted before,
             # or it was submitted and rejected. Either way, we need to assign it a new Chain Index and regenerate
             # the data that depends on it before submitting (UUID, XML content, signature)
@@ -346,8 +355,24 @@ class AccountEdiFormat(models.Model):
         # Generate Invoice name for attachment
         attachment_name = self.env['account.edi.xml.ubl_21.zatca']._export_invoice_filename(invoice)
 
-        # Generate XML, sign it, then submit it to ZATCA
-        response_data, submitted_xml = self._l10n_sa_export_zatca_invoice(invoice, xml_content)
+        if signed_xml:
+            # Resubmit the exact document that was sent, without rendering or signing anything: signing it anew
+            # would give it a new SigningTime, hence a new signature and a new hash, and ZATCA would end up
+            # holding two different versions of the same invoice
+            submitted_xml = signed_xml
+            try:
+                PCSID_data = invoice.journal_id._l10n_sa_api_get_pcsid()
+            except UserError as e:
+                response_data = {
+                    'error': _("Could not generate PCSID values: \n%s", e.args[0]),
+                    'blocking_level': 'error',
+                    'response': signed_xml
+                }
+            else:
+                response_data = self._l10n_sa_submit_einvoice(invoice, signed_xml, PCSID_data)
+        else:
+            # Generate XML, sign it, then submit it to ZATCA
+            response_data, submitted_xml = self._l10n_sa_export_zatca_invoice(invoice, xml_content)
 
         # Check for submission errors
         if response_data.get('error'):
@@ -356,18 +381,25 @@ class AccountEdiFormat(models.Model):
             # If request timedout, just log note a warning message
             invoice._l10n_sa_log_results(submitted_xml, response_data, error=response_data.get('rejected'))
 
+            result = {**response_data, 'response': submitted_xml}
+
             # If the request returned an exception (Timeout, ValueError... etc.) it means we're not sure if the
-            # invoice was successfully cleared/reported, and thus we keep the Index Chain.
-            # Else, we recalculate the submission Index (ICV), UUID, XML content and Signature
-            if not response_data.get('excepted'):
+            # invoice was successfully cleared/reported, and thus we keep the Index Chain, along with the exact
+            # bytes we sent, so that the next attempt resubmits that very document
+            if response_data.get('excepted'):
+                if not signed_xml:
+                    result['attachment'] = self.env['ir.attachment'].create({
+                        'name': attachment_name,
+                        'raw': submitted_xml,
+                        'mimetype': 'application/xml',
+                    })
+            # Else, we recalculate the submission Index (ICV), UUID, XML content and Signature. Only a rejection
+            # does so for an invoice already waiting on a timed out submission: an error raised before ZATCA could
+            # answer (expired PCSID, signing failure...) says nothing about what that invoice is waiting on
+            elif response_data.get('rejected') or not timed_out:
                 invoice.l10n_sa_chain_index = False
 
-            return {
-                invoice: {
-                    **response_data,
-                    'response': submitted_xml
-                }
-            }
+            return {invoice: result}
 
         # Once submission is done with no errors, check submission status
         cleared_xml = self._l10n_sa_postprocess_einvoice_submission(invoice, submitted_xml, response_data)
@@ -493,6 +525,10 @@ class AccountEdiFormat(models.Model):
         self.ensure_one()
         super()._prepare_invoice_report(pdf_writer, edi_document)
         if self.code != 'sa_zatca' or edi_document.move_id.country_code != 'SA':
+            return
+
+        if edi_document.state != 'sent':
+            # The document only holds the XML of a submission ZATCA has not answered yet
             return
 
         attachment = edi_document.sudo().attachment_id
