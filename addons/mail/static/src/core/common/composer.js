@@ -679,12 +679,15 @@ export class Composer extends Component {
                 return;
             }
             this.state.active = false;
-            await cb(this.props.composer.text);
+            try {
+                await cb(this.props.composer.text);
+            } finally {
+                this.state.active = true;
+            }
             if (this.props.onPostCallback) {
                 this.props.onPostCallback();
             }
             this.clear();
-            this.state.active = true;
             el.focus();
         }
     }

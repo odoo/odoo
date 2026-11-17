@@ -21,6 +21,7 @@ import { Deferred, advanceTime } from "@odoo/hoot-mock";
 import {
     defineActions,
     getService,
+    makeServerError,
     mockService,
     onRpc,
     serverState,
@@ -87,6 +88,29 @@ test("can post a message on a record thread", async () => {
     await click(".o-mail-Composer button[aria-label='Send']:enabled");
     await contains(".o-mail-Message");
     await assertSteps(["/mail/message/post"]);
+});
+
+test("composer stays usable when posting a message fails", async () => {
+    expect.errors(1);
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
+    const postDef = new Deferred();
+    onRpc("/mail/message/post", async () => {
+        step("/mail/message/post");
+        await postDef;
+        throw makeServerError({ description: "Posting failed" });
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await click("button", { text: "Send message" });
+    await insertText(".o-mail-Composer-input", "hey");
+    await click(".o-mail-Composer button[aria-label='Send']:enabled");
+    await contains(".o-mail-Composer-input[readonly]", { value: "hey" });
+    await assertSteps(["/mail/message/post"]);
+    postDef.resolve();
+    await contains(".o-mail-Composer-input:not([readonly])", { value: "hey" });
+    await contains(".o-mail-Composer button[aria-label='Send']:enabled");
+    await expect.waitForErrors(["RPC_ERROR"]);
 });
 
 test("can post a note on a record thread", async () => {
