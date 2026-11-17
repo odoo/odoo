@@ -85,20 +85,22 @@
         <value eval="[ref('hr_holidays_allocation_cl'), ref('hr_holidays_int_tour'), ref('hr_holidays_cl_allocation')]"/>
     </function>
 
+    <!-- Keep demo requests outside the current week and within the allocation year.
+         In January and December, shift the reference week four weeks into the year. -->
     <!-- leave request -->
     <record id="hr_holidays_cl" model="hr.leave">
         <field name="name">Trip with Family</field>
         <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_compensatory"/>
-        <field name="request_date_from" eval="(datetime.today().date() + relativedelta(days=-12, weekday=0))"/>
-        <field name="request_date_to" eval="(datetime.today().date() + relativedelta(days=-12, weekday=0) + relativedelta(days=+2))"/>
+        <field name="request_date_from" eval="(datetime.today().date() + relativedelta(days=-14 - datetime.today().weekday(), weeks=4 if datetime.today().month == 1 else -4 if datetime.today().month == 12 else 0))"/>
+        <field name="request_date_to" eval="(datetime.today().date() + relativedelta(days=-12 - datetime.today().weekday(), weeks=4 if datetime.today().month == 1 else -4 if datetime.today().month == 12 else 0))"/>
         <field name="employee_id" ref="hr.employee_admin"/>
     </record>
 
     <record id="hr_holidays_sl" model="hr.leave">
         <field name="name">Doctor Appointment</field>
         <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_sick_leave"/>
-        <field name="request_date_from" eval="(datetime.today().date() + relativedelta(days=+2, weekday=0))"/>
-        <field name="request_date_to" eval="(datetime.today().date() + relativedelta(days=+2, weekday=0) + relativedelta(days=+2))"/>
+        <field name="request_date_from" eval="(datetime.today().date() + relativedelta(days=7 - datetime.today().weekday(), weeks=4 if datetime.today().month == 1 else -4 if datetime.today().month == 12 else 0))"/>
+        <field name="request_date_to" eval="(datetime.today().date() + relativedelta(days=9 - datetime.today().weekday(), weeks=4 if datetime.today().month == 1 else -4 if datetime.today().month == 12 else 0))"/>
         <field name="employee_id" ref="hr.employee_admin"/>
         <field name="state">confirm</field>
     </record>
@@ -165,8 +167,8 @@
     <record id="hr_holidays_cl_al" model="hr.leave">
         <field name="name">Trip with Friends</field>
         <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_legal_leave"/>
-        <field name="request_date_from" eval="(datetime.today().date() + relativedelta(days=+4, weekday=2))"/>
-        <field name="request_date_to" eval="(datetime.today().date() + relativedelta(days=+4, weekday=2) + relativedelta(days=+2))"/>
+        <field name="request_date_from" eval="(datetime.today().date() + relativedelta(days=9 - datetime.today().weekday(), weeks=4 if datetime.today().month == 1 else -4 if datetime.today().month == 12 else 0))"/>
+        <field name="request_date_to" eval="(datetime.today().date() + relativedelta(days=11 - datetime.today().weekday(), weeks=4 if datetime.today().month == 1 else -4 if datetime.today().month == 12 else 0))"/>
         <field name="employee_id" ref="hr.employee_al"/>
     </record>
     <function model="hr.leave" name="action_approve">
@@ -176,8 +178,8 @@
     <record id="hr_holidays_sl_al" model="hr.leave">
         <field name="name">Dentist appointment</field>
         <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_sick_leave"/>
-        <field name="request_date_from" eval="(datetime.today().date() + relativedelta(days=-8, weekday=4))"/>
-        <field name="request_date_to" eval="(datetime.today().date() + relativedelta(days=-8, weekday=4))"/>
+        <field name="request_date_from" eval="(datetime.today().date() + relativedelta(days=-3 - datetime.today().weekday(), weeks=4 if datetime.today().month == 1 else -4 if datetime.today().month == 12 else 0))"/>
+        <field name="request_date_to" eval="(datetime.today().date() + relativedelta(days=-3 - datetime.today().weekday(), weeks=4 if datetime.today().month == 1 else -4 if datetime.today().month == 12 else 0))"/>
         <field name="employee_id" ref="hr.employee_al"/>
         <field name="state">confirm</field>
     </record>
@@ -214,8 +216,8 @@
     <record id="hr_holidays_cl_mit" model="hr.leave">
         <field name="name">Trip to Paris</field>
         <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_legal_leave"/>
-        <field name="request_date_from" eval="(datetime.today().date() + relativedelta(days=-12, weekday=0))"/>
-        <field name="request_date_to" eval="(datetime.today().date() + relativedelta(days=-12, weekday=0) + relativedelta(days=+3))"/>
+        <field name="request_date_from" eval="(datetime.today().date() + relativedelta(days=-14 - datetime.today().weekday(), weeks=4 if datetime.today().month == 1 else -4 if datetime.today().month == 12 else 0))"/>
+        <field name="request_date_to" eval="(datetime.today().date() + relativedelta(days=-11 - datetime.today().weekday(), weeks=4 if datetime.today().month == 1 else -4 if datetime.today().month == 12 else 0))"/>
         <field name="employee_id" ref="hr.employee_mit"/>
     </record>
     <function model="hr.leave" name="action_approve">
@@ -225,8 +227,8 @@
     <record id="hr_holidays_cl_mit_2" model="hr.leave">
         <field name="name">Trip</field>
         <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_legal_leave"/>
-        <field name="request_date_from" eval="(datetime.today().date() + relativedelta(days=+9, weekday=0))"/>
-        <field name="request_date_to" eval="(datetime.today().date() + relativedelta(days=+9, weekday=0) + relativedelta(days=+7))"/>
+        <field name="request_date_from" eval="(datetime.today().date() + relativedelta(days=14 - datetime.today().weekday(), weeks=4 if datetime.today().month == 1 else -4 if datetime.today().month == 12 else 0))"/>
+        <field name="request_date_to" eval="(datetime.today().date() + relativedelta(days=21 - datetime.today().weekday(), weeks=4 if datetime.today().month == 1 else -4 if datetime.today().month == 12 else 0))"/>
         <field name="employee_id" ref="hr.employee_mit"/>
         <field name="state">confirm</field>
     </record>
@@ -237,8 +239,8 @@
     <record id="hr_holidays_cl_mit_1" model="hr.leave">
         <field name="name">Trip</field>
         <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_legal_leave"/>
-        <field name="request_date_from" eval="(datetime.today().date() + relativedelta(days=+4, weekday=2))"/>
-        <field name="request_date_to" eval="(datetime.today().date() + relativedelta(days=+4, weekday=2))"/>
+        <field name="request_date_from" eval="(datetime.today().date() + relativedelta(days=9 - datetime.today().weekday(), weeks=4 if datetime.today().month == 1 else -4 if datetime.today().month == 12 else 0))"/>
+        <field name="request_date_to" eval="(datetime.today().date() + relativedelta(days=9 - datetime.today().weekday(), weeks=4 if datetime.today().month == 1 else -4 if datetime.today().month == 12 else 0))"/>
         <field name="employee_id" ref="hr.employee_mit"/>
         <field name="state">confirm</field>
     </record>
@@ -271,8 +273,8 @@
     <record id="hr_holidays_cl_qdp" model="hr.leave">
         <field name="name">Sick day</field>
         <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_sick_leave"/>
-        <field name="request_date_from" eval="(datetime.today().date() + relativedelta(days=-11, weekday=1))"/>
-        <field name="request_date_to" eval="(datetime.today().date() + relativedelta(days=-11, weekday=1))"/>
+        <field name="request_date_from" eval="(datetime.today().date() + relativedelta(days=-13 - datetime.today().weekday(), weeks=4 if datetime.today().month == 1 else -4 if datetime.today().month == 12 else 0))"/>
+        <field name="request_date_to" eval="(datetime.today().date() + relativedelta(days=-13 - datetime.today().weekday(), weeks=4 if datetime.today().month == 1 else -4 if datetime.today().month == 12 else 0))"/>
         <field name="employee_id" ref="hr.employee_qdp"/>
         <field name="state">confirm</field>
     </record>
@@ -283,8 +285,8 @@
     <record id="hr_holidays_sl_qdp" model="hr.leave">
         <field name="name">Sick day</field>
         <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_sick_leave"/>
-        <field name="request_date_from" eval="(datetime.today().date() + relativedelta(days=-10, weekday=2))"/>
-        <field name="request_date_to" eval="(datetime.today().date() + relativedelta(days=-10, weekday=2) + relativedelta(days=+1))"/>
+        <field name="request_date_from" eval="(datetime.today().date() + relativedelta(days=-12 - datetime.today().weekday(), weeks=4 if datetime.today().month == 1 else -4 if datetime.today().month == 12 else 0))"/>
+        <field name="request_date_to" eval="(datetime.today().date() + relativedelta(days=-11 - datetime.today().weekday(), weeks=4 if datetime.today().month == 1 else -4 if datetime.today().month == 12 else 0))"/>
         <field name="employee_id" ref="hr.employee_qdp"/>
         <field name="state">confirm</field>
     </record>
@@ -345,8 +347,8 @@
     <record id="hr_holidays_cl_vad" model="hr.leave">
         <field name="name">Trip to London</field>
         <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_legal_leave"/>
-        <field name="request_date_from" eval="(datetime.today().date() + relativedelta(days=-19, weekday=0))"/>
-        <field name="request_date_to" eval="(datetime.today().date() + relativedelta(days=-19, weekday=0) + relativedelta(days=+5))"/>
+        <field name="request_date_from" eval="(datetime.today().date() + relativedelta(days=-21 - datetime.today().weekday(), weeks=4 if datetime.today().month == 1 else -4 if datetime.today().month == 12 else 0))"/>
+        <field name="request_date_to" eval="(datetime.today().date() + relativedelta(days=-16 - datetime.today().weekday(), weeks=4 if datetime.today().month == 1 else -4 if datetime.today().month == 12 else 0))"/>
         <field name="employee_id" ref="hr.employee_niv"/>
         <field name="state">confirm</field>
     </record>
@@ -357,8 +359,8 @@
     <record id="hr_holidays_sl_vad" model="hr.leave">
         <field name="name">Doctor Appointment</field>
         <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_sick_leave"/>
-        <field name="request_date_from" eval="(datetime.today().date() + relativedelta(days=-12, weekday=0))"/>
-        <field name="request_date_to" eval="(datetime.today().date() + relativedelta(days=-12, weekday=0))"/>
+        <field name="request_date_from" eval="(datetime.today().date() + relativedelta(days=-14 - datetime.today().weekday(), weeks=4 if datetime.today().month == 1 else -4 if datetime.today().month == 12 else 0))"/>
+        <field name="request_date_to" eval="(datetime.today().date() + relativedelta(days=-14 - datetime.today().weekday(), weeks=4 if datetime.today().month == 1 else -4 if datetime.today().month == 12 else 0))"/>
         <field name="employee_id" ref="hr.employee_niv"/>
         <field name="state">confirm</field>
     </record>
@@ -392,8 +394,8 @@
     <record id="hr_holidays_sl_kim" model="hr.leave">
         <field name="name">Dentist appointment</field>
         <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_sick_leave"/>
-        <field name="request_date_from" eval="(datetime.today().date() + relativedelta(days=+9, weekday=0))"/>
-        <field name="request_date_to" eval="(datetime.today().date() + relativedelta(days=+9, weekday=0))"/>
+        <field name="request_date_from" eval="(datetime.today().date() + relativedelta(days=14 - datetime.today().weekday(), weeks=4 if datetime.today().month == 1 else -4 if datetime.today().month == 12 else 0))"/>
+        <field name="request_date_to" eval="(datetime.today().date() + relativedelta(days=14 - datetime.today().weekday(), weeks=4 if datetime.today().month == 1 else -4 if datetime.today().month == 12 else 0))"/>
         <field name="employee_id" ref="hr.employee_jve"/>
         <field name="state">confirm</field>
     </record>
@@ -404,8 +406,8 @@
     <record id="hr_holidays_sl_kim_2" model="hr.leave">
         <field name="name">Second dentist appointment</field>
         <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_sick_leave"/>
-        <field name="request_date_from" eval="(datetime.today().date()+relativedelta(days=+11, weekday=2))"/>
-        <field name="request_date_to" eval="(datetime.today().date()+relativedelta(days=+11, weekday=2))"/>
+        <field name="request_date_from" eval="(datetime.today().date() + relativedelta(days=16 - datetime.today().weekday(), weeks=4 if datetime.today().month == 1 else -4 if datetime.today().month == 12 else 0))"/>
+        <field name="request_date_to" eval="(datetime.today().date() + relativedelta(days=16 - datetime.today().weekday(), weeks=4 if datetime.today().month == 1 else -4 if datetime.today().month == 12 else 0))"/>
         <field name="employee_id" ref="hr.employee_jve"/>
         <field name="state">confirm</field>
     </record>
