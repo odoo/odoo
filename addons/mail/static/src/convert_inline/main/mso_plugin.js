@@ -111,19 +111,16 @@ export class MsoPlugin extends Plugin {
         return defaultEmailNodeArguments;
     }
 
-    detectMsoInlineShapeSubtreeLayout(
-        defaultEmailNodeArguments,
-        { referenceNode, parentEmailNode }
-    ) {
+    detectMsoInlineShapeSubtreeLayout(defaultEmailNodeArguments, { referenceNode }) {
         const { layout, analysis } = defaultEmailNodeArguments;
         const computedStyle = this.getComputedStyle(referenceNode);
         const display = computedStyle.getPropertyValue("display");
         const backgroundColor = computedStyle.getPropertyValue("background-color");
         if (
+            this.getSubtreeVariant(analysis, "msoInlineShapeSubtree") ||
             !display.includes("inline") ||
             (!this.hasVisibleBorder(referenceNode) && !backgroundColor) ||
             selectElements(referenceNode, "img").length > 0 ||
-            !parentEmailNode ||
             this.getSubtreeVariant(analysis, "responsiveSubtree") === "mobile"
         ) {
             return defaultEmailNodeArguments;

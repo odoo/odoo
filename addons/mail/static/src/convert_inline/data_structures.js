@@ -4,9 +4,12 @@ export class UniqueArray {
 
     constructor(iterable) {
         for (const item of iterable ?? []) {
+            if (this.set.has(item)) {
+                continue;
+            }
             this.set.add(item);
+            this.array.push(item);
         }
-        this.array.push(...this.set);
     }
 
     get length() {
@@ -25,6 +28,9 @@ export class UniqueArray {
         const newItemSet = new Set();
         const newItemArray = [];
         for (const item of items) {
+            if (newItemSet.has(item)) {
+                continue;
+            }
             newItemSet.add(item);
             newItemArray.push(item);
             this.set.add(item);
@@ -42,10 +48,25 @@ export class UniqueArray {
         return deleted;
     }
 
-    splice(start, deleteCount, ...items) {
-        const deleted = this.array.splice(start, deleteCount, ...items);
+    splice(...args) {
+        const length = this.array.length;
+        const start = Math.trunc(args[0]) || 0;
+        const index = start < 0 ? Math.max(length + start, 0) : Math.min(start, length);
+        const deleteCount =
+            args.length === 1
+                ? length - index
+                : Math.min(Math.max(Math.trunc(args[1]) || 0, 0), length - index);
+        const items = new Set(args.slice(2));
+        const deleted = this.array.slice(index, index + deleteCount);
+        this.array = [
+            ...this.array.slice(0, index).filter((item) => !items.has(item)),
+            ...items,
+            ...this.array.slice(index + deleteCount).filter((item) => !items.has(item)),
+        ];
         for (const item of deleted) {
-            this.set.delete(item);
+            if (!items.has(item)) {
+                this.set.delete(item);
+            }
         }
         for (const item of items) {
             this.set.add(item);
@@ -57,6 +78,9 @@ export class UniqueArray {
         const newItemSet = new Set();
         const newItemArray = [];
         for (const item of items) {
+            if (newItemSet.has(item)) {
+                continue;
+            }
             newItemSet.add(item);
             newItemArray.push(item);
             this.set.add(item);
@@ -137,7 +161,7 @@ export class ObjectMap extends Map {
 }
 
 export class SetMap extends Map {
-    stringSeparator = " ";
+    stringSeparator = /\s+/;
     get(key, insert = true) {
         if (insert && !this.has(key)) {
             this.set(key, new Set());

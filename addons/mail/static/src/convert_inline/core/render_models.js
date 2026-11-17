@@ -314,6 +314,14 @@ export class Analysis {
     }
 }
 
+export class EmailTree {
+    roots = new UniqueArray();
+
+    constructor({ roots = [] } = {}) {
+        this.roots.push(...roots);
+    }
+}
+
 export class EmailNode {
     referenceNodes = new UniqueArray();
     children = new UniqueArray();
@@ -396,17 +404,18 @@ export class EmailNode {
         return this.referenceNodes.push(...referenceNodes);
     }
 
-    setParent(parentEmailNode) {
-        parentEmailNode.appendChild(this);
-        return true;
-    }
-
     appendChild(emailNode) {
         if (emailNode.parent && emailNode.parent !== this) {
             emailNode.parent.removeChild(emailNode);
         }
         emailNode.parent = this;
         return this.children.push(emailNode);
+    }
+
+    appendSubtree(emailTree) {
+        for (const emailNode of emailTree.roots) {
+            this.appendChild(emailNode);
+        }
     }
 
     removeChild(emailNode) {

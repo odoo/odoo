@@ -219,7 +219,7 @@ export class TableStrategyPlugin extends Plugin {
     }
 
     addTableOuterSpacingFacts(layout, { emailNode }) {
-        const nonEmptyCells = emailNode.children.array.filter(
+        const nonEmptyCells = emailNode.children.filter(
             (child) => !child.analysis.facts.isEmptyCell
         );
         const cellMargins = nonEmptyCells

@@ -1,6 +1,13 @@
 import { Plugin } from "../plugin";
 import { registry } from "@web/core/registry";
-import { Analysis, ElementLayout, EmailNode, LayoutModel, TextNodeLayout } from "./render_models";
+import {
+    Analysis,
+    ElementLayout,
+    EmailNode,
+    EmailTree,
+    LayoutModel,
+    TextNodeLayout,
+} from "./render_models";
 import { withSequence } from "@html_editor/utils/resource";
 
 /**
@@ -49,27 +56,31 @@ export class RenderPlugin extends Plugin {
         if (!this.isAllowedReferenceNode(reference) || this.isDiscarded(reference)) {
             return;
         }
-        this.renderTree = this.buildTree();
+        this.renderTree = this.buildEmailTree();
         this.handleTreeConstraints(this.renderTree);
     }
 
-    buildTree(rootReferenceNode = this.config.reference, subtreeContext = {}) {
+    buildEmailTree(rootReferenceNode = this.config.reference, subtreeContext = {}) {
         const context = {
             syntheticEmailNodeContainers: new Set(),
             syntheticEmailNodeContainersPile: [],
         };
         this.treeContexts.push(context);
-        let treeRoot;
+        let emailRoots;
         try {
-            treeRoot = this.createEmailNodes(rootReferenceNode, subtreeContext);
+            emailRoots = this.createEmailNodes(rootReferenceNode, subtreeContext);
             this.addSyntheticEmailNodes();
-            while (treeRoot.parent) {
-                treeRoot = treeRoot.parent;
+            for (let i = 0; i < emailRoots.length; i++) {
+                let emailRoot = emailRoots[i];
+                while (emailRoot.parent) {
+                    emailRoot = emailRoot.parent;
+                }
+                emailRoots[i] = emailRoot;
             }
         } finally {
             this.treeContexts.pop();
         }
-        return treeRoot;
+        return new EmailTree({ roots: emailRoots });
     }
 
     getSubtreeVariant(analysis, name) {
@@ -80,10 +91,12 @@ export class RenderPlugin extends Plugin {
         return analysis.parsingFacts.subtreeContext?.[name]?.referenceNode;
     }
 
-    handleTreeConstraints(tree) {
-        this.addBottomUpConstraints(tree);
-        this.addTopDownConstraints(tree);
-        this.enforceConstraints(tree);
+    handleTreeConstraints(emailTree) {
+        for (const emailNode of emailTree.roots) {
+            this.addBottomUpConstraints(emailNode);
+            this.addTopDownConstraints(emailNode);
+            this.enforceConstraints(emailNode);
+        }
     }
 
     /**
@@ -166,6 +179,7 @@ export class RenderPlugin extends Plugin {
             }
             return NodeFilter.FILTER_ACCEPT;
         };
+        const emailRoots = [];
         const treeWalker = this.createReferenceTreeWalker({ filter, root: rootReferenceNode });
         let node = treeWalker.root;
         do {
@@ -201,31 +215,39 @@ export class RenderPlugin extends Plugin {
                 },
                 subtreeContext
             );
-            if (parentEmailNode && args.analysis?.parsingFacts.subtree) {
+            const { subtree } = args.analysis?.parsingFacts ?? {};
+            if (subtree && subtreeContext[subtree.type]?.referenceNode !== node) {
                 // prevent descendants from being parsed in this treeWalk,
                 // they are handled in each subtree variant.
                 contexts.push(createContext(node));
                 const { type, variants } = args.analysis.parsingFacts.subtree;
                 for (const variant of variants) {
-                    const subtree = this.buildTree(node, {
+                    const subtree = this.buildEmailTree(node, {
                         ...subtreeContext,
                         [type]: {
                             variant,
                             referenceNode: node,
                         },
                     });
-                    parentEmailNode.appendChild(subtree);
+                    if (parentEmailNode) {
+                        parentEmailNode.appendSubtree(subtree);
+                    } else {
+                        emailRoots.push(...subtree.roots);
+                    }
                 }
             } else {
                 let emailNode = new EmailNode(args);
-                parentEmailNode?.appendChild(emailNode);
-                if (
-                    node.nodeType !== Node.TEXT_NODE &&
-                    parentEmailNode &&
-                    isOnlyChild &&
-                    this.attemptMerge(parentEmailNode, emailNode)
-                ) {
-                    emailNode = parentEmailNode;
+                if (parentEmailNode) {
+                    parentEmailNode.appendChild(emailNode);
+                    if (
+                        node.nodeType !== Node.TEXT_NODE &&
+                        isOnlyChild &&
+                        this.attemptMerge(parentEmailNode, emailNode)
+                    ) {
+                        emailNode = parentEmailNode;
+                    }
+                } else {
+                    emailRoots.push(emailNode);
                 }
                 nodeToEmailNode.set(node, emailNode);
                 if (emailNode.analysis.parsingFacts.needSyntheticEmailNode) {
@@ -237,43 +259,8 @@ export class RenderPlugin extends Plugin {
                     contexts.push(createContext(node, providers));
                 }
             }
-
-            // How subtrees should work:
-            // they have a custom context map (subtreeTypes)
-            // eg responsive -> mobile/desktop
-            // if no subtree type => can create one, but if the context already
-            // has that type
-            // TODO EGGMAIL: a desktop subtree also has to prevent
-            // mobile subtree from spawning
-            // IMPORTANT: a layout strategy which "needMobileSubtree" should
-            // not be spawned in a mobile subtree ("isMobileSubtree")
-            // => mobilesubtree should be renamed in context with the
-            // mosaic strategy plugin
-            // => mosaicSubtree; mobile|desktop
-            // ideally subtrees should be independent from each other
-            // will cause an issue with MSO
-            // what if multiple subtrees have to start from the
-            // same node? unsupported
-            // issue if MSO background is created above 2 subtrees
-            // not really an issue if we build the tree from the DOM node;
-
-            // -> common stack of subtrees on every node (false is empty)
-            // -> creating a subtree branch pops one subtree reference
-
-            // TODO EGGMAIL WORKING HERE:
-            // considerations: currently a node is created and added to its
-            // parent, and potentially merged with it in createEmailNode
-            // ??? don't care though?
-            // don't do the "merge with parent part", don't attach
-            // to the parent part either, don't decide on needSyntheticNode
-            // either. If the analysis says "subtree" => re-create the node
-            // config is only used to get permanent parsingFacts
-            // it should be called "context" instead
-            // also, context could be a fact or part of the analysis.
-            // it could work like an "env" (but env seemed like a mistake from JS framework)
-            // => let's call it context, and publish permanent parsingFacts for now
         } while ((node = treeWalker.nextNode()));
-        return nodeToEmailNode.get(rootReferenceNode);
+        return emailRoots;
     }
 
     /**
@@ -610,9 +597,11 @@ export class RenderPlugin extends Plugin {
     }
 
     renderEmailHtml(template) {
-        let fragments = [];
+        const fragments = [];
         if (this.renderTree) {
-            fragments = this.renderTree.render();
+            for (const emailNode of this.renderTree.roots) {
+                fragments.push(...emailNode.render());
+            }
         }
         template.content.append(...fragments);
         this.ensureTemplateContent(template);
