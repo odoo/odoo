@@ -46,7 +46,7 @@ export class ActivityMenu extends Component {
     }
 
     _searchReadEmployeeFill() {
-        if (!this.employee?.id) {
+        if (!this.employee?.id && !this.employee?.display_systray) {
             this.state.isDisplayed = false;
             return;
         }
