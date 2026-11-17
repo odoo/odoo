@@ -1621,6 +1621,8 @@ class Website(models.Model):
             - fuzzy_term: similar word against which results were obtained, indicates there were
                 no results for the initially requested search
         """
+        if search:
+            search = search.replace("-", " ")
         fuzzy_term = False
         search_details = self._search_get_details(search_type, order, options)
         count, results = self._search_exact(search_details, search, limit, order)
