@@ -1,5 +1,7 @@
+import base64
 import json
 import logging
+import re
 import requests
 import time
 import urllib.parse
@@ -11,6 +13,8 @@ from odoo.addons.iot_drivers.tools import communication, helpers, system
 from odoo.addons.iot_drivers.tools.system import IOT_IDENTIFIER
 
 _logger = logging.getLogger(__name__)
+DOCUMENT_URL_FIELDS = {"document_url": "document", "receipt_url": "receipt"}
+DOCUMENT_URL_RE = re.compile(r"/web/content/\d+\?access_token=[\w-]+")
 websocket.enableTrace(True, level=logging.getLevelName(_logger.getEffectiveLevel()))
 
 
@@ -61,9 +65,48 @@ class WebsocketClient(Thread):
             if payload.get('iot_identifier') != IOT_IDENTIFIER:
                 continue
 
+            url_field = next((field for field in DOCUMENT_URL_FIELDS if field in payload), None)
+            if url_field:
+                try:
+                    payload[DOCUMENT_URL_FIELDS[url_field]] = self._fetch_document(
+                        payload.pop(url_field),
+                    )
+                except (requests.exceptions.RequestException, ValueError):
+                    _logger.exception(
+                        'Could not fetch the IoT document for device %s (operation %s)',
+                        payload.get('device_identifier'),
+                        payload.get('session_id'),
+                    )
+                    send_to_controller(
+                        {
+                            'session_id': payload.get('session_id', '0'),
+                            'iot_box_identifier': IOT_IDENTIFIER,
+                            'device_identifier': payload.get('device_identifier', IOT_IDENTIFIER),
+                            'status': 'error',
+                            'message': 'ERROR_FETCH_PAYLOAD',
+                        }
+                    )
+                    continue
+
             result = communication.handle_message(message_type, 'ws', **payload)
             if result:
                 send_to_controller(result)
+
+    def _fetch_document(self, url):
+        """Fetch a large document that the server sent as a URL, in base64."""
+        # Any user can send this URL: keep the request on the paired database.
+        if not DOCUMENT_URL_RE.fullmatch(url):
+            msg = f"Invalid document URL: {url}"
+            raise ValueError(msg)
+        response = requests.get(
+            f'{self.server_url}{url}',
+            timeout=10,
+            allow_redirects=False,
+        )
+        if response.status_code != 200:
+            msg = f"Unexpected status: {response.status_code}"
+            raise requests.exceptions.HTTPError(msg, response=response)
+        return base64.b64encode(response.content).decode()
 
     def on_close(self, ws, close_status_code, close_msg):
         _logger.warning("websocket closed with status code %s (%s)", close_status_code, close_msg)

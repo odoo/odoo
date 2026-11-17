@@ -99,6 +99,7 @@ class Manager(Thread):
             "ip": self.domain,
             "token": helpers.get_token(),
             "version": self.version,
+            "fetch_payload": True,
             "name": socket.gethostname(),  # TODO: remove when v18.0 is deprecated (backward compatibility)
             "l10n_eg_proxy_token": system.get_conf("proxy_access_token", "options"),
         }
