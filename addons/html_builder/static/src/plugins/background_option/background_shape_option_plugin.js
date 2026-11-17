@@ -102,9 +102,16 @@ export class BackgroundShapeOptionPlugin extends Plugin {
         "getShapeSrc",
         "getShapeStylePosition",
     ];
-    setup() {
+    /**
+     * Reads the shapes style from the stylesheets. This goes through all the
+     * CSS rules of the page, so it is only done when a shape style is needed.
+     */
+    get shapeStyles() {
+        if (this.cachedShapeStyles) {
+            return this.cachedShapeStyles;
+        }
         // TODO: update shapeStyles if a stylesheet value changes.
-        this.shapeStyles = {};
+        const shapeStyles = {};
         const keywordMap = { top: 0, left: 0, center: 50, bottom: 100, right: 100 };
         for (const styleSheet of this.document.styleSheets) {
             if (styleSheet.href && new URL(styleSheet.href).host !== location.host) {
@@ -112,16 +119,20 @@ export class BackgroundShapeOptionPlugin extends Plugin {
                 // domain accessing cssRules results in a SecurityError.
                 continue;
             }
-            for (const rule of [...styleSheet.cssRules]) {
+            for (const rule of styleSheet.cssRules) {
                 if (rule.selectorText && rule.selectorText.startsWith(".o_we_shape.")) {
                     const bgPositions = rule.style.backgroundPosition.split(" ");
-                    this.shapeStyles[rule.selectorText] = {
+                    shapeStyles[rule.selectorText] = {
                         bgImage: rule.style.backgroundImage,
                         bgPosition: bgPositions.map((bgPosition) => keywordMap[bgPosition]),
                     };
                 }
             }
         }
+        this.cachedShapeStyles = shapeStyles;
+        return shapeStyles;
+    }
+    setup() {
         // Flip classes should no longer be used but are still present in some
         // theme snippets.
         const flipEls = [...this.editable.querySelectorAll(".o_we_flip_x, .o_we_flip_y")];
