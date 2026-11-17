@@ -100,6 +100,9 @@ class TestAccountPartner(AccountTestInvoicingCommon):
         self.partner_b.vat = 'DIFFERENT'
         with self.assertRaisesRegex(UserError, "different Tax ID"):
             self.partner_a.parent_id = self.partner_b
+        partners = self.partner_a + self.env['res.partner'].create({'name': 'partner_c'})
+        with self.assertRaisesRegex(UserError, "different Tax ID"):
+            partners.parent_id = self.partner_b
 
     def test_manually_write_partner_id_empty_string_vs_False(self):
         move = self.env['account.move'].create({
