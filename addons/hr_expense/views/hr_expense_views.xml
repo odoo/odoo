@@ -114,11 +114,11 @@
 
                     <button name="action_refuse" string="Refuse" invisible="state not in ('submitted', 'approved') or account_move_state == 'posted'" type="object"
                             groups="hr_expense.group_hr_expense_team_approver" class="o_expense_refuse" data-hotkey="x"/>
-                    <button name="action_reset" string="Reset" type="object" data-hotkey="r" invisible="not can_reset or state in 'draft'"
+                    <button name="action_reset" string="Reset" type="object" data-hotkey="r" invisible="not active or not can_reset or state in 'draft'"
                             groups="account.group_account_invoice"/>
                     <!-- v In the case where the user has no accounting rights, we don't show the button in the post & done states  -->
                     <button name="action_reset" string="Reset" type="object" data-hotkey="r"
-                            invisible="not can_reset or state in ('draft', 'posted', 'in_payment','paid') or account_move_state == 'posted'" groups="!account.group_account_invoice"/>
+                            invisible="not active or not can_reset or state in ('draft', 'posted', 'in_payment','paid') or account_move_state == 'posted'" groups="!account.group_account_invoice"/>
                     <button name="action_split_wizard" string="Split" type="object" invisible="state != 'draft' or product_has_cost"
                             groups="!hr_expense.group_hr_expense_team_approver,!account.group_account_invoice" class="o_expense_split_user"/>
                     <button name="action_split_wizard" string="Split" type="object" class="o_expense_split_manager"
@@ -207,6 +207,7 @@
                             </div>
                         </button>
                     </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <div class="oe_title">
                         <label for="name"/>
                         <h1>
@@ -215,6 +216,7 @@
                     </div>
                     <group>
                         <group>
+                            <field name="active" invisible="1"/> <!-- drives invisible of the web_ribbon widget and the action_reset buttons -->
                             <field name="product_has_cost" invisible="1"/> <!-- drives invisible of the action_split_wizard button, price_unit and 4 more and readonly of total_amount -->
                             <field name="is_multiple_currency" invisible="1"/> <!-- drives invisible of the text, the total_amount_product_cost_label label and 2 more -->
                             <field name="is_editable" invisible="1"/> <!-- drives invisible of the fst-italic block and readonly of name, product_id and 16 more -->
@@ -495,7 +497,7 @@
                     <filter string="My Team" name="my_team_expenses" domain="[('employee_id.parent_id.user_id', '=', uid)]"
                             groups="hr_expense.group_hr_expense_team_approver" help="Expenses of Your Team Member"/>
                     <separator />
-                    <filter string="Action Required" name="action_required" domain="[('state', 'not in', ['paid', 'refused'])]"/>
+                    <filter string="Action Required" name="action_required" domain="[('is_action_required', '=', True)]"/>
                     <separator />
                     <filter string="Paid by Company card" name="by_company" domain="[('payment_mode', '=', 'company_account')]"/>
                     <filter string="Paid by Employee" name="by_employee" domain="[('payment_mode', '=', 'own_account')]"/>
@@ -506,6 +508,8 @@
                     <filter string="Waiting Reimbursement" name="to_pay" domain="[('state', 'in', ('approved', 'posted')), ('payment_mode', '=', 'own_account')]"/>
                     <separator />
                     <filter string="Expense Date" name="date" date="date"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <separator/>
                     <!-- Invisible filters -->
                     <filter string="All to Post" name="all_approved" domain="[('state', '=', 'approved'), '|', ('account_move_id', '=', False), ('account_move_id.state', '=', 'draft')]" invisible="True"/>
