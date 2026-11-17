@@ -1,9 +1,10 @@
 import json
+import re
 
 from werkzeug.urls import url_encode
 from odoo import api, models, fields
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import BinaryBytes, float_is_zero, float_compare
+from odoo.tools import BinaryBytes, float_is_zero, float_compare, formatLang
 from odoo.tools.float_utils import json_float_round
 from odoo.addons.l10n_eg_edi_eta.lib.eta_client import ETAClient
 from odoo.addons.l10n_eg_edi_eta.models.eta_submission import ETA_SUBMISSION_STATES
@@ -286,13 +287,50 @@ class AccountMove(models.Model):
                 },
             })
 
-        if missing_partner_address := self.partner_id.filtered(lambda p: p._check_l10n_eg_missing_address_data()):
+        if missing_partner_address := self.filtered(
+            lambda move: move.partner_id._check_l10n_eg_missing_address_data(invoice=move),
+        ).partner_id:
             alerts.update({
                 'eg_eta_edi_missing_partner_address': {
                     'level': 'danger',
                     'message': self.env._("Please fill in the address details for the following partners."),
                     'action_text': self.env._("View Partners"),
                     'action': missing_partner_address._get_records_action(),
+                },
+            })
+
+        individuals_above_threshold = self.filtered(
+            lambda move: not move.commercial_partner_id.vat and move._l10n_eg_edi_is_above_invoicing_threshold(),
+        ).partner_id
+        if partners_without_identifier := individuals_above_threshold.filtered(
+            lambda p: not p._l10n_eg_get_partner_identifier(),
+        ):
+            alerts.update({
+                'eg_eta_edi_missing_partner_identifier': {
+                    'level': 'danger',
+                    'message': self.env._(
+                        "As the invoice value is equal to or above %s LE, depending on the nature of the buyer, please "
+                        "either select an Individual Egypt Customer and fill in National ID or Foreign ID for an "
+                        "Individual non-Egypt Customer.",
+                        formatLang(self.env, self.company_id[:1]._get_invoicing_threshold()),
+                    ),
+                    'action_text': self.env._("View Partners"),
+                    'action': partners_without_identifier._get_records_action(),
+                },
+            })
+
+        if partners_with_invalid_national_id := (individuals_above_threshold - partners_without_identifier).filtered(
+            lambda p: (
+                p._l10n_eg_get_partner_tax_type() == 'P'
+                and not re.fullmatch(r'[0-9]{14}', p._l10n_eg_get_partner_identifier())
+            ),
+        ):
+            alerts.update({
+                'eg_eta_edi_invalid_national_id': {
+                    'level': 'danger',
+                    'message': self.env._("The National ID of the following partners must be 14 digits."),
+                    'action_text': self.env._("View Partners"),
+                    'action': partners_with_invalid_national_id._get_records_action(),
                 },
             })
 
@@ -403,6 +441,30 @@ class AccountMove(models.Model):
                 # directly using invoice_currency_rate.
                 return abs(first_product_line.balance / amount_currency)
         return 1.0
+
+    def _l10n_eg_edi_is_above_invoicing_threshold(self):
+        self.ensure_one()
+        return self.company_currency_id.compare_amounts(
+            abs(self.amount_total_signed),
+            self.company_id._get_invoicing_threshold(),
+        ) >= 0
+
+    def _l10n_eg_get_invoice_title(self):
+        self.ensure_one()
+        if (
+            self.country_code != 'EG'
+            # debit_origin_id comes from account_debit_note, which l10n_eg_edi_eta does not depend on
+            or ('debit_origin_id' in self._fields and self.debit_origin_id)  # noqa: OLS03028
+        ):
+            return False
+        if self.commercial_partner_id.vat:
+            return self.env._("Tax Invoice")
+        return self.env._("Simplified Tax Invoice")
+
+    def _l10n_eg_edi_is_receiver_exempt(self):
+        """An individual buyer (no VAT) below the invoicing threshold does not need to be identified."""
+        self.ensure_one()
+        return not self.commercial_partner_id.vat and not self._l10n_eg_edi_is_above_invoicing_threshold()
 
     @api.model
     def _l10n_eg_edi_round(self, amount, precision_digits=5):
@@ -584,14 +646,20 @@ class AccountMove(models.Model):
                 'buildingNumber': partner.l10n_eg_building_no or '',
                 'postalCode': partner.zip or '',
             },
-            'name': partner.name,
+            'name': partner.name or partner.commercial_partner_id.name,
         }
         if issuer:
             address['address']['branchID'] = self.journal_id.l10n_eg_branch_identifier or ''
         individual_type = partner._l10n_eg_get_partner_tax_type(issuer)
         address['type'] = individual_type or ''
-        if individual_type != 'P':
-            address['id'] = partner.vat or ''
+        if not issuer and self._l10n_eg_edi_is_receiver_exempt():
+            # ETA makes the id, name and address of an individual buyer below the invoicing threshold optional
+            del address['name']
+            mandatory_address_keys = ('country', 'governate', 'regionCity', 'street', 'buildingNumber')
+            if not all(address['address'][key] for key in mandatory_address_keys):
+                del address['address']
+        else:
+            address['id'] = partner._l10n_eg_get_partner_identifier(issuer) or ''
         return address
 
     def _l10n_eg_edi_send_invoices_in_batch(self, notify=False):

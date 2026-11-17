@@ -1,6 +1,30 @@
 <odoo>
     <data>
         <template id="egyptian_invoice" inherit_id="account.report_invoice_document">
+            <xpath expr="//t[@t-set='layout_document_title']" position="before">
+                <t t-if="lang != 'ar_001'" t-set="l10n_eg_lang_sec" t-value="o.env['res.lang']._get_code('ar_001')"/>
+                <t t-else="" t-set="l10n_eg_lang_sec" t-value="o.env['res.lang']._get_code('en_US')"/>
+                <t t-set="l10n_eg_invoice_title" t-value="o.with_context(lang=lang)._l10n_eg_get_invoice_title()"/>
+                <t t-if="o.country_code == 'EG' and o.company_id.l10n_eg_edi_api_mode and o.is_sale_document() and o.l10n_eg_edi_submission_state != 'accepted'"
+                   t-set="custom_header_eg">
+                    <div class="fw-bold text-center mt-2">
+                        <h5 class="mb-0">THIS IS NOT A LEGAL DOCUMENT</h5>
+                        <h5 t-if="lang != 'ar_001'" class="mb-0" t-translation="off">هذا المستند ليس مستندا قانونيا</h5>
+                        <h5 t-else="" class="mb-0" t-translation="off">THIS IS NOT A LEGAL DOCUMENT</h5>
+                    </div>
+                    <!-- To help with centering the previous div in flex justify between-->
+                    <div t-if="is_html_empty(o.company_id.report_header)" class="col-1"/>
+                </t>
+            </xpath>
+            <!-- Arabic & English titles: the span keeps its content as default when there is no EG title -->
+            <xpath expr="//t[@name='invoice_title']/.." position="attributes">
+                <attribute name="t-out">l10n_eg_invoice_title</attribute>
+            </xpath>
+            <span t-field="o.name" position="after">
+                <span t-if="l10n_eg_invoice_title and l10n_eg_lang_sec and o.move_type == 'out_invoice' and o.state == 'posted' and not proforma"
+                      name="l10n_eg_invoice_title_sec"
+                      t-out="o.with_context(lang=l10n_eg_lang_sec)._l10n_eg_get_invoice_title()"/>
+            </span>
             <xpath expr="//div[@id='qrcode']" position="after">
                 <t t-set="eg_qrcode" t-value="o._l10n_eg_eta_qr_code()"/>
                 <div id="qrcode_eg" t-if="eg_qrcode">
