@@ -11,6 +11,7 @@ import {
     hover,
     insertText,
     listenStoreFetch,
+    onRpcAfter,
     onRpcBefore,
     openFormView,
     openMessagingMenu,
@@ -30,7 +31,7 @@ import {
 import { Message } from "@mail/core/common/message";
 import { HIGHLIGHT_CLASS } from "@mail/core/common/message_search_plugin";
 import { describe, expect, mockUserAgent, rightClick, test } from "@odoo/hoot";
-import { advanceTime } from "@odoo/hoot-mock";
+import { advanceTime, animationFrame } from "@odoo/hoot-mock";
 
 import { range } from "@web/core/utils/numbers";
 import {
@@ -41,6 +42,7 @@ import {
     makeServerError,
     mockService,
     onRpc,
+    pagerNext,
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
@@ -1287,4 +1289,39 @@ test("fetching new messages after posting in an empty chatter loads them from th
             },
         ],
     ]);
+});
+
+test("late suggested recipients don't overwrite the next record's recipients", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.partner"].write([serverState.partnerId], { email: "mitchell@odoo.com" });
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+        { name: "John Doe", email: "john@doe.be" },
+        { name: "Jane Doe", email: "jane@doe.be" },
+    ]);
+    const [fakeId_1, fakeId_2] = pyEnv["res.fake"].create([
+        { name: "Fake 1", partner_id: partnerId_1 },
+        { name: "Fake 2", partner_id: partnerId_2 },
+    ]);
+    const suggestions = Promise.withResolvers();
+    onRpcBefore("/mail/thread/recipients/get_suggested_recipients", async () => {
+        expect.step("suggestions requested");
+        await suggestions.promise;
+    });
+    onRpcAfter("/mail/thread/recipients/get_suggested_recipients", () =>
+        expect.step("suggestions returned")
+    );
+    await start();
+    await openFormView("res.fake", fakeId_1, { resIds: [fakeId_1, fakeId_2] });
+    await click("button:text('Send message')");
+    await waitFor(".o-mail-RecipientsInput .o_tag_badge_text:text('John Doe'):count(1)");
+    await click(".o_field_many2one_selection input");
+    await click(".o-autocomplete--dropdown-item:text('Mitchell Admin')");
+    await expect.waitForSteps(["suggestions requested"]);
+    await pagerNext();
+    await waitFor(".o-mail-RecipientsInput .o_tag_badge_text:text('Jane Doe'):count(1)");
+    suggestions.resolve();
+    await expect.waitForSteps(["suggestions returned"]);
+    await animationFrame();
+    expect(".o-mail-RecipientsInput .o_tag_badge_text:text('Jane Doe')").toHaveCount(1);
+    expect(".o-mail-RecipientsInput .o_tag_badge_text:text('Mitchell Admin')").toHaveCount(0);
 });
