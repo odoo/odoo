@@ -93,7 +93,8 @@
     }
 }
 
-:root {
+/* :where() reduces the specificity, so that the grays the page declares win */
+:where(:root) {
     @each $color, $value in $grays {
         @include print-variable($color, $value);
     }
