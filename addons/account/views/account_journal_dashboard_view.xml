@@ -317,7 +317,7 @@
                                 <button type="object" name="action_create_new" class="btn btn-primary" groups="account.group_account_invoice">
                                     New
                                 </button>
-                                <div t-if="journal_is_empty">
+                                <div t-if="dashboard.show_invoice_guide">
                                     <widget name="invoice_upload_guide"/>
                                 </div>
                             </t>
