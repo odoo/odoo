@@ -57,6 +57,17 @@ export class Vimeo extends AbstractThirdPartyVideo {
     }
 
     /**
+     * Returns the oEmbed url of a vimeo video, used to fetch its title.
+     *
+     * @param {string} videoId
+     * @return {string} url
+     */
+    static getTitleApiUrl(videoId) {
+        const videoUrl = `https://vimeo.com/${encodeURIComponent(videoId)}`;
+        return `https://vimeo.com/api/oembed.json?url=${videoUrl}`;
+    }
+
+    /**
      * Example urls are used to test that the urlMatcher regular expression
      * correctly identifies valid video urls and extracts the video ID.
      * Every urls in this object should be parsable by the urlMatcher.

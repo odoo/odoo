@@ -75,6 +75,11 @@ export class WebsiteSlidesFullscreenYoutubePlayer extends Interaction {
                 origin: window.location.origin,
             },
             events: {
+                // The API replaces the iframe title with the YouTube video
+                // title, put the (translated) slide name back.
+                onReady: (event) => {
+                    event.target.getIframe().title = this.slide.name;
+                },
                 onStateChange: this.onPlayerStateChange.bind(this),
             },
         });
