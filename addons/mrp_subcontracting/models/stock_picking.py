@@ -5,7 +5,7 @@ from datetime import timedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools.float_utils import float_compare
+from odoo.tools.float_utils import float_compare, float_is_zero
 from dateutil.relativedelta import relativedelta
 
 
@@ -46,12 +46,12 @@ class StockPicking(models.Model):
             # manually (if the flexible + record_component or has tracked component)
             productions = move._get_subcontract_production()
             recorded_productions = productions.filtered(lambda p: p._has_been_recorded())
-            recorded_qty = sum(recorded_productions.mapped('qty_producing'))
-            sm_done_qty = sum(productions._get_subcontract_move().filtered(lambda m: m.picked).mapped('quantity'))
+            current_recorded_productions = recorded_productions.filtered(lambda p: p.state not in ('done', 'cancel') and move in p._get_subcontract_move())
+            recorded_qty = sum(current_recorded_productions.mapped('qty_producing'))
             rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             if float_compare(move.product_uom_qty, move.quantity, precision_digits=rounding) > 0 and self._context.get('cancel_backorder'):
                 move._update_subcontract_order_qty(move.quantity)
-            if float_compare(recorded_qty, sm_done_qty, precision_digits=rounding) >= 0:
+            if float_compare(recorded_qty, move.quantity, precision_digits=rounding) >= 0:
                 continue
             production = productions - recorded_productions
             if not production:
@@ -60,18 +60,41 @@ class StockPicking(models.Model):
                 raise UserError(_("There shouldn't be multiple productions to record for the same subcontracted move."))
             # Manage additional quantities
             quantity_done_move = move.product_uom._compute_quantity(move.quantity, production.product_uom_id)
-            if float_compare(production.product_qty, quantity_done_move, precision_rounding=production.product_uom_id.rounding) == -1:
+            qty_to_record = quantity_done_move - recorded_qty
+            if float_compare(qty_to_record, 0, precision_rounding=production.product_uom_id.rounding) <= 0:
+                continue
+            if float_compare(production.product_qty, qty_to_record, precision_rounding=production.product_uom_id.rounding) == -1:
                 change_qty = self.env['change.production.qty'].create({
                     'mo_id': production.id,
-                    'product_qty': quantity_done_move
+                    'product_qty': qty_to_record
                 })
                 change_qty.with_context(skip_activity=True).change_prod_qty()
             # Create backorder MO for each move lines
-            amounts = [move_line.quantity for move_line in move.move_line_ids]
+            remaining_recorded_qty = recorded_qty
+            amounts = []
+            move_lines_to_record = self.env['stock.move.line']
+            for move_line in move.move_line_ids:
+                move_line_qty = move_line.product_uom_id._compute_quantity(
+                    move_line.quantity,
+                    production.product_uom_id,
+                    rounding_method='HALF-UP',
+                )
+                if float_compare(move_line_qty, 0, precision_rounding=production.product_uom_id.rounding) <= 0:
+                    continue
+                if float_compare(remaining_recorded_qty, 0, precision_rounding=production.product_uom_id.rounding) > 0:
+                    qty_to_skip = min(remaining_recorded_qty, move_line_qty)
+                    move_line_qty -= qty_to_skip
+                    remaining_recorded_qty -= qty_to_skip
+                if float_compare(move_line_qty, 0, precision_rounding=production.product_uom_id.rounding) <= 0:
+                    continue
+                amounts.append(move_line_qty)
+                move_lines_to_record |= move_line
+            if not amounts:
+                continue
             len_amounts = len(amounts)
             productions = production._split_productions({production: amounts}, set_consumed_qty=True)
             productions.move_finished_ids.move_line_ids.write({'quantity': 0})
-            for production, move_line in zip(productions, move.move_line_ids):
+            for production, move_line in zip(productions, move_lines_to_record):
                 if move_line.lot_id:
                     production.lot_producing_id = move_line.lot_id
                 production.qty_producing = production.product_qty
@@ -80,13 +103,20 @@ class StockPicking(models.Model):
 
         for picking in self:
             productions_to_done = picking._get_subcontract_production()._subcontracting_filter_to_done()
+            production_ids_backorder = []
+            if not self.env.context.get('cancel_backorder'):
+                production_ids_backorder = productions_to_done.filtered(lambda mo: (
+                    mo.state == "progress"
+                    and not float_is_zero(mo._get_quantity_to_backorder(), precision_rounding=mo.product_uom_id.rounding)
+                )).ids
+            productions_to_done = picking._limit_subcontract_productions_to_done_qty(
+                productions_to_done,
+                self.env['mrp.production'].browse(production_ids_backorder),
+            )
             productions_to_done._subcontract_sanity_check()
             if not productions_to_done:
                 continue
             productions_to_done = productions_to_done.sudo()
-            production_ids_backorder = []
-            if not self.env.context.get('cancel_backorder'):
-                production_ids_backorder = productions_to_done.filtered(lambda mo: mo.state == "progress").ids
             productions_to_done.with_context(mo_ids_to_backorder=production_ids_backorder).button_mark_done()
             # For concistency, set the date on production move before the date
             # on picking. (Traceability report + Product Moves menu item)
@@ -109,6 +139,74 @@ class StockPicking(models.Model):
             if production:
                 return move._action_record_components()
         raise UserError(_("Nothing to record"))
+
+    def _limit_subcontract_productions_to_done_qty(self, productions_to_done, productions_to_backorder=False):
+        """Keep recorded subcontract MOs within the validated receipt quantity."""
+        productions_to_backorder = productions_to_backorder or self.env['mrp.production']
+        productions_to_keep = self.env['mrp.production']
+        ChangeProductionQty = self.env['change.production.qty'].with_context(skip_activity=True)
+        for move in self.move_ids.filtered(lambda move: move.is_subcontract):
+            move_productions = productions_to_done & move._get_subcontract_production()
+            if not move_productions:
+                continue
+            remaining_qty = move.product_uom._compute_quantity(
+                move.quantity,
+                move_productions[:1].product_uom_id,
+                rounding_method='HALF-UP',
+            )
+            for production in move_productions:
+                rounding = production.product_uom_id.rounding
+                if production in productions_to_backorder:
+                    productions_to_keep |= production
+                    remaining_qty -= production.qty_producing
+                    continue
+                if float_compare(remaining_qty, 0, precision_rounding=rounding) <= 0:
+                    production.qty_producing = 0
+                    production.subcontracting_has_been_recorded = False
+                    production.with_context(skip_activity=True).action_cancel()
+                    continue
+
+                if float_compare(production.product_qty, remaining_qty, precision_rounding=rounding) > 0:
+                    ChangeProductionQty.create({
+                        'mo_id': production.id,
+                        'product_qty': remaining_qty,
+                    }).change_prod_qty()
+                    production.qty_producing = remaining_qty
+                    production._set_qty_producing()
+                productions_to_keep |= production
+                remaining_qty -= production.product_qty
+        return productions_to_keep
+
+    def _pre_action_done_hook(self):
+        res = super()._pre_action_done_hook()
+        if res is not True:
+            return res
+
+        subcontract_moves = self.move_ids.filtered(lambda move: (
+            move.is_subcontract and move.state not in ("done", "cancel") and move.quantity > 0
+        ))
+        if subcontract_moves:
+            subcontract_moves.picked = True
+
+            if not self.env.context.get('barcode_trigger'):
+                # If only subcontract moves were manually edited, keep normal lines with quantities in the receipt.
+                for picking in self:
+                    has_quantity = False
+                    has_pick = False
+                    other_moves = picking.move_ids - subcontract_moves
+                    for move in other_moves:
+                        if move.scrapped:
+                            continue
+                        if move.picked:
+                            has_pick = True
+                        if move.quantity:
+                            has_quantity = True
+                        if has_quantity and has_pick:
+                            break
+                    if has_quantity and not has_pick:
+                        other_moves.picked = True
+
+        return True
 
     # -------------------------------------------------------------------------
     # Subcontract helpers
