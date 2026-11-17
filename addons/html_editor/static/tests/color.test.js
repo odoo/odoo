@@ -7,6 +7,7 @@ import { getContent } from "./_helpers/selection";
 import { animationFrame, press } from "@odoo/hoot-dom";
 import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { Plugin } from "../src/plugin";
 
 const redToBlueGradient = "linear-gradient(rgb(255, 0, 0), rgb(0, 0, 255))";
 const greenToBlueGradient = "linear-gradient(rgb(0, 255, 0), rgb(0, 0, 255))";
@@ -34,6 +35,42 @@ test("should apply a color to the qweb tag (2)", async () => {
         contentBefore: `<div><p t-field="record.display_name" contenteditable="false">[Test]</p></div>`,
         stepFunction: setColor("rgb(255, 0, 0)", "color"),
         contentAfter: `<div>[<p t-field="record.display_name" style="color: rgb(255, 0, 0);">Test</p>]</div>`,
+        config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
+    });
+});
+
+test("should wrap a qweb `t` node in a `font` element", async () => {
+    await testEditor({
+        contentBefore: `<p>[<t t-out="'Test'">Test</t>]</p>`,
+        stepFunction: setColor("rgb(255, 0, 0)", "color"),
+        contentAfter: `<p><font style="color: rgb(255, 0, 0);">[<t t-out="'Test'">Test</t></font>]</p>`,
+        config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
+    });
+});
+
+test("should wrap a qweb `t` node and the text around it in a `font` element", async () => {
+    await testEditor({
+        contentBefore: `<p>[a<t t-out="'Test'">Test</t>b]</p>`,
+        stepFunction: setColor("rgb(255, 0, 0)", "color"),
+        contentAfter: `<p><font style="color: rgb(255, 0, 0);">[a<t t-out="'Test'">Test</t>b]</font></p>`,
+        config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
+    });
+});
+
+test("should apply a color to an inline qweb field", async () => {
+    await testEditor({
+        contentBefore: `<p>[<span t-field="record.display_name">Test</span>]</p>`,
+        stepFunction: setColor("rgb(255, 0, 0)", "color"),
+        contentAfter: `<p>[<span t-field="record.display_name" style="color: rgb(255, 0, 0);">Test</span>]</p>`,
+        config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
+    });
+});
+
+test("should apply a background color to an inline qweb field", async () => {
+    await testEditor({
+        contentBefore: `<p>[<span t-field="record.display_name">Test</span>]</p>`,
+        stepFunction: setColor("rgb(255, 0, 0)", "backgroundColor"),
+        contentAfter: `<p>[<span t-field="record.display_name" style="background-color: rgb(255, 0, 0);">Test</span>]</p>`,
         config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
     });
 });
@@ -239,19 +276,21 @@ test("should not apply font tag to t nodes (protects if else nodes separation)",
         stepFunction: setColor("red", "color"),
         contentAfter: unformat(`[
             <p>
-                <t t-if="object.partner_id.parent_id">
-                    <t t-out="object.partner_id.parent_id.name or ''" style="color: red;">
-                        Azure Interior
+                <font style="color: red;">
+                    <t t-if="object.partner_id.parent_id">
+                        <t t-out="object.partner_id.parent_id.name or ''">
+                            Azure Interior
+                        </t>
                     </t>
-                </t>
-                <t t-else="">
-                    <t t-out="object.partner_id.name or ''" style="color: red;">
-                        Brandon Freeman
+                    <t t-else="">
+                        <t t-out="object.partner_id.name or ''">
+                            Brandon Freeman
+                        </t>
                     </t>
-                </t>
+                </font>
             </p>
         ]`),
-        config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
+        config: { includePlugins: [QWebPlugin] },
     });
 });
 
@@ -1389,5 +1428,39 @@ test("should only target fully selected nodes when applying color", async () => 
         stepFunction: setColor("red", "color"),
         contentAfter:
             '<p><b>a<font style="color: red;">[b</font></b><font style="color: red;">c]</font>d</p>',
+    });
+});
+
+describe("Format non editable", () => {
+    class TestPlugin extends Plugin {
+        static id = "test";
+        resources = {
+            is_formattable_node_predicates: (node) => {
+                if (node.matches?.(".target")) {
+                    return true;
+                }
+            },
+            is_node_editable_predicates: (node) => {
+                if (node?.matches?.(".target")) {
+                    return false;
+                }
+            },
+        };
+    }
+    test("should wrap non editable in `font` element (1)", async () => {
+        await testEditor({
+            contentBefore: `<p>[<span contenteditable="false" class="target">b</span>]</p>`,
+            stepFunction: setColor("red", "color"),
+            contentAfter: `<p><font style="color: red;">[<span contenteditable="false" class="target">b</span></font>]</p>`,
+            config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
+        });
+    });
+    test("should wrap non editable in `font` element (2)", async () => {
+        await testEditor({
+            contentBefore: `<p>[a<span contenteditable="false" class="target">b</span>c]</p>`,
+            stepFunction: setColor("red", "color"),
+            contentAfter: `<p><font style="color: red;">[a<span contenteditable="false" class="target">b</span>c]</font></p>`,
+            config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
+        });
     });
 });

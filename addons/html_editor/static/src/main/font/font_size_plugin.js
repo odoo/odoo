@@ -64,7 +64,7 @@ export class FontSizePlugin extends Plugin {
                 id: "font-size",
                 commandId: "formatFontSize",
                 groupId: "font",
-                namespaces: ["compact", "expanded"],
+                namespaces: ["compact", "expanded", "text"],
                 description: _t("Select font size"),
                 Component: FontSizeSelector,
                 props: {
