@@ -166,12 +166,23 @@ export class BuilderRow extends Component {
     }
 }
 
+const containersToAlign = new Set();
+
+// Each row asks for a refresh when OWL mounts or patches it. One alignment
+// covers all the rows of the container, so queue a single one per container
+// and run it after the rows are rendered.
 function refreshSublevelLines(rowEl) {
     const optionsContainerEl = rowEl?.closest(".o_hb_options_container");
-    if (!optionsContainerEl) {
+    if (!optionsContainerEl || containersToAlign.has(optionsContainerEl)) {
         return;
     }
-    alignSublevelLines(optionsContainerEl);
+    containersToAlign.add(optionsContainerEl);
+    queueMicrotask(() => {
+        containersToAlign.delete(optionsContainerEl);
+        if (optionsContainerEl.isConnected) {
+            alignSublevelLines(optionsContainerEl);
+        }
+    });
 }
 
 // Recompute the vertical connector line for nested rows:
@@ -184,16 +195,15 @@ function alignSublevelLines(optionsContainerEl) {
     if (!rowEls.length) {
         return;
     }
-    const visibleRowEls = [];
+    // Write the styles and read the layout in separate passes. Alternating
+    // them makes the browser compute the layout again for each row.
     for (const rowEl of rowEls) {
-        const labelEl = rowEl.querySelector(":scope > .o_hb_row_label");
-        if (labelEl) {
-            labelEl.style.removeProperty("--o-hb-row-sublevel-top");
-        }
-        if (getComputedStyle(rowEl).display !== "none") {
-            visibleRowEls.push(rowEl);
-        }
+        rowEl
+            .querySelector(":scope > .o_hb_row_label")
+            ?.style.removeProperty("--o-hb-row-sublevel-top");
     }
+    const visibleRowEls = rowEls.filter((rowEl) => getComputedStyle(rowEl).display !== "none");
+    const lineOffsets = [];
     for (let index = 0; index < visibleRowEls.length; index++) {
         const rowEl = visibleRowEls[index];
         const level = getRowLevel(rowEl);
@@ -207,24 +217,29 @@ function alignSublevelLines(optionsContainerEl) {
         for (let previousIndex = index - 1; previousIndex >= 0; previousIndex--) {
             if (getRowLevel(visibleRowEls[previousIndex]) === level) {
                 // Stretch the line up to the previous sibling of the same level.
-                applyLineOffset(rowEl, visibleRowEls[previousIndex]);
+                lineOffsets.push(getLineOffset(rowEl, visibleRowEls[previousIndex]));
                 break;
             }
         }
     }
+    for (const { labelEl, offset } of lineOffsets) {
+        if (offset < 0) {
+            labelEl.style.setProperty("--o-hb-row-sublevel-top", `${offset}px`);
+        }
+    }
 }
 
-function applyLineOffset(rowEl, previousRowEl) {
+function getLineOffset(rowEl, previousRowEl) {
     const labelEl = rowEl.querySelector(":scope > .o_hb_row_label");
     const previousLabelEl = previousRowEl.querySelector(":scope > .o_hb_row_label");
     if (!labelEl || !previousLabelEl) {
-        return;
+        return {};
     }
-    const offset =
-        previousLabelEl.getBoundingClientRect().bottom - labelEl.getBoundingClientRect().top;
-    if (offset < 0) {
-        labelEl.style.setProperty("--o-hb-row-sublevel-top", `${offset}px`);
-    }
+    return {
+        labelEl,
+        offset:
+            previousLabelEl.getBoundingClientRect().bottom - labelEl.getBoundingClientRect().top,
+    };
 }
 
 function getRowLevel(rowEl) {
