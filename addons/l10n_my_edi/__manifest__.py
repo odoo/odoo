@@ -33,6 +33,9 @@
         'wizard/myinvois_document_sync_wizard.xml',
         'security/ir.access.csv',
     ],
+    'demo': [
+        'demo/myinvois_received_document_demo.xml',
+    ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3'
 }
