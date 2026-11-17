@@ -11,7 +11,7 @@ import werkzeug.urls
 from markupsafe import Markup
 
 from odoo import api, fields, models, tools
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools.mail import email_normalize, html_to_inner_content, is_html_empty
 from odoo.tools.translate import _, html_translate
@@ -117,6 +117,15 @@ class EventTrack(models.Model):
         string='Contact Phone', compute='_compute_contact_phone',
         readonly=False, store=True, tracking=30)
     location_id = fields.Many2one('event.track.location', 'Location')
+    extra_location_ids = fields.Many2many(
+        'event.track.location', 'event_track_extra_location_rel', 'track_id', 'location_id',
+        string='Other Locations',
+        help="Other locations where the track is also shown, e.g. retransmitted. "
+             "It appears in each of them in the website agenda and on their location displays.")
+    all_location_ids = fields.Many2many(
+        'event.track.location', string='All Locations',
+        compute='_compute_all_location_ids', search='_search_all_location_ids',
+        help="Main location and other locations of the track")
     # time information
     date = fields.Datetime('Track Date', compute='_compute_date', inverse="_inverse_date", store=True)
     date_end = fields.Datetime('Track End Date', compute='_compute_end_date', inverse="_inverse_end_date", store=True)
@@ -320,7 +329,34 @@ class EventTrack(models.Model):
             if track.date and track.date_end:
                 track.duration = (track.date_end - track.date).total_seconds() / 3600
 
-    @api.depends('date', 'date_end', 'active', 'stage_id.is_cancel', 'location_id', 'partner_id')
+    @api.depends('location_id', 'extra_location_ids')
+    def _compute_all_location_ids(self):
+        for track in self:
+            track.all_location_ids = track.location_id | track.extra_location_ids
+
+    def _search_all_location_ids(self, operator, value):
+        if operator not in ('in', 'any'):
+            # negative operators: the ORM negates the positive result itself
+            return NotImplemented
+        return Domain.OR([
+            [('location_id', operator, value)],
+            [('extra_location_ids', operator, value)],
+        ])
+
+    @api.constrains('location_id', 'extra_location_ids')
+    def _check_extra_location_ids(self):
+        for track in self:
+            if track.extra_location_ids and not track.location_id:
+                raise ValidationError(self.env._(
+                    "Set the main location of \"%(track)s\" before adding other locations.",
+                    track=track.name))
+            if track.location_id in track.extra_location_ids:
+                raise ValidationError(self.env._(
+                    "\"%(location)s\" is already the main location of \"%(track)s\".",
+                    location=track.location_id.name, track=track.name))
+
+    @api.depends(
+        'date', 'date_end', 'active', 'stage_id.is_cancel', 'location_id', 'extra_location_ids', 'partner_id')
     def _compute_conflicts(self):
         conflicts = self._get_conflict_data()
         for track in self:
@@ -360,8 +396,10 @@ class EventTrack(models.Model):
         per event, a speaker across all events. """
         bookings = defaultdict(list)  # resource -> [track]
         for track in tracks:
-            if track.location_id:
-                bookings['location', track.event_id.id, track.location_id.id].append(track)
+            # a track shown in several locations keeps each of them busy; _origin:
+            # in a form, the computed locations of the new record are new records
+            for location in track.all_location_ids._origin:
+                bookings['location', track.event_id.id, location.id].append(track)
             if track.partner_id:
                 bookings['speaker', track.partner_id.id].append(track)
 
@@ -385,7 +423,7 @@ class EventTrack(models.Model):
         if not candidates or not (candidates.location_id or candidates.partner_id):
             return {}
         same_location = (
-            Domain('location_id', 'in', candidates.location_id.ids)
+            Domain('all_location_ids', 'in', candidates.all_location_ids._origin.ids)
             & Domain('event_id', 'in', candidates.event_id.ids)
         )
         others = self.env['event.track'].search(

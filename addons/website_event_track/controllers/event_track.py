@@ -275,6 +275,9 @@ class EventTrackController(http.Controller):
             if track.location_id not in locations_by_days[track_day]:
                 locations_by_days[track_day].append(track.location_id)
 
+        locations = self._agenda_add_extra_locations(
+            tracks_sudo, global_time_slots_by_day, locations_by_days, locations)
+
         for used_locations in locations_by_days.values():
             used_locations.sort(key=operator.itemgetter('sequence', 'id'))
 
@@ -285,6 +288,37 @@ class EventTrackController(http.Controller):
             'time_slots': global_time_slots_by_day,
             'locations': locations  # TODO: clean me in master, kept for retro-compatibility
         }
+
+    def _agenda_add_extra_locations(self, tracks, time_slots, locations_by_days, locations):
+        """ Show each track in the column of its other locations, in the cells
+        of its main location, and add those columns to the days it takes place.
+
+        :return: the sorted locations, with the other locations of the tracks
+        """
+        extra_locations = tracks.extra_location_ids
+        if not extra_locations:
+            return locations
+        for day, day_slots in time_slots.items():
+            for cells in day_slots.values():
+                # snapshot: new location keys are added while iterating
+                for location, tracks_info in list(cells.items()):
+                    if not isinstance(tracks_info, dict):  # 'formatted_time' entry
+                        continue
+                    for track, info in list(tracks_info.items()):
+                        if not track.location_id or track.location_id != location:
+                            continue
+                        main_slots = [
+                            time_slot for time_slot, cell_location in info['occupied_cells']
+                            if cell_location == location
+                        ]
+                        for extra_location in track.extra_location_ids:
+                            cells.setdefault(extra_location, {})[track] = info
+                            info['occupied_cells'] += [(time_slot, extra_location) for time_slot in main_slots]
+                            if extra_location not in locations_by_days[day]:
+                                locations_by_days[day].append(extra_location)
+        return sorted(
+            set(locations) | set(extra_locations),
+            key=operator.itemgetter('sequence', 'id'))
 
     def _get_locale_time(self, dt_time, lang_code):
         """ Get locale time from datetime object

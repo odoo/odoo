@@ -90,6 +90,38 @@ class TestTrackConflict(TestEventOnlineCommon):
         self._check(same_speaker, track_1, speaker=True)
         self._check(track_1, same_speaker, speaker=True)
 
+    def test_extra_location_conflict(self):
+        """ A track shown in several locations keeps each of them busy. """
+        keynote = self._track(
+            'Keynote', 0, 1, location_id=self.location_a.id, extra_location_ids=[(6, 0, self.location_b.ids)])
+        overflow_talk = self._track('Overflow talk', 0.5, 1, location_id=self.location_b.id)
+        other_room = self._track('Other room', 0, 1, location_id=self.location_c.id)
+        self._check(keynote, overflow_talk, location=True)
+        self._check(overflow_talk, keynote, location=True)
+        self._check(other_room, self.env['event.track'])
+        self.assertEqual(
+            self.env['event.track'].search([
+                ('id', 'in', (keynote | overflow_talk | other_room).ids), ('has_conflict', '=', True),
+            ]),
+            keynote | overflow_talk)
+
+    def test_shared_extra_location_conflict(self):
+        """ Two tracks retransmitted into the same location at the same time. """
+        track_1 = self._track(
+            'T1', 0, 1, location_id=self.location_a.id, extra_location_ids=[(6, 0, self.location_c.ids)])
+        track_2 = self._track(
+            'T2', 0.5, 1, location_id=self.location_b.id, extra_location_ids=[(6, 0, self.location_c.ids)])
+        self._check(track_1, track_2, location=True)
+        self._check(track_2, track_1, location=True)
+
+    def test_extra_location_scoped_to_event(self):
+        keynote = self._track(
+            'Keynote', 0, 1, location_id=self.location_a.id, extra_location_ids=[(6, 0, self.location_b.ids)])
+        other_event_talk = self._track(
+            'Other event', 0, 1, location_id=self.location_b.id, event_id=self.other_event.id)
+        self._check(keynote, self.env['event.track'])
+        self._check(other_event_talk, self.env['event.track'])
+
     def test_finished_tracks_ignored(self):
         past_start = -24 * 30  # hours: 23 days ago
         track_1 = self._track('Past 1', past_start, 1, self.speaker_1, location_id=self.location_a.id)

@@ -79,6 +79,7 @@
         <field name="arch" type="xml">
             <calendar date_start="date" date_stop="date_end" string="Event Tracks" color="location_id" event_limit="5">
                 <field name="location_id" filters="1"/>
+                <field name="extra_location_ids" widget="many2many_tags" invisible="not extra_location_ids"/>
                 <field name="event_id"/>
                 <field name="partner_id" avatar_field="avatar_128"/>
                 <field name="user_id" avatar_field="avatar_128"/>
@@ -98,11 +99,13 @@
                     '|', '|', '|', '|',
                     ('partner_id', 'ilike', self), ('partner_name', 'ilike', self),
                     ('contact_email', 'ilike', self), ('partner_email', 'ilike', self), ('partner_company_name', 'ilike', self)]"/>
-                <field name="location_id"/>
+                <field name="location_id" filter_domain="['|', ('location_id', 'ilike', self), ('extra_location_ids', 'ilike', self)]"/>
                 <field name="event_id"/>
                 <field name="stage_id"/>
                 <filter string="My Tracks" name="my_tracks" domain="[('user_id', '=', uid)]"/>
                 <filter string="Conflicts" name="conflicts" domain="[('has_conflict', '=', True)]"/>
+                <separator/>
+                <filter string="Several Locations" name="filter_extra_locations" domain="[('extra_location_ids', '!=', False)]"/>
                 <separator/>
                 <filter string="Published" name="filter_published" domain="[('website_published', '=', True)]"/>
                 <separator/>
@@ -179,6 +182,9 @@
                         <group>
                             <field name="date"/>
                             <field name="location_id"/>
+                            <field name="extra_location_ids" widget="many2many_tags"
+                                invisible="not location_id"
+                                placeholder="Locations where the track is also shown"/>
                             <field name="duration" widget="float_time"/>
                             <field name="wishlisted_by_default"/>
                         </group>
