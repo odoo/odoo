@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models, fields, api, _
+from collections import defaultdict
+
+from odoo import models, fields, api, Command, _
 from odoo.exceptions import UserError, RedirectWarning, ValidationError
 from odoo.fields import Domain
 from odoo.tools import SQL, float_round, formatLang
@@ -31,6 +33,11 @@ class AccountMove(models.Model):
         help="A concept is suggested regarding the type of the products on the invoice.")
     l10n_ar_afip_service_start = fields.Date(string='ARCA Service Start Date')
     l10n_ar_afip_service_end = fields.Date(string='ARCA Service End Date')
+    l10n_ar_fx_note_id = fields.Many2one(
+        'account.move', string="FX Note", readonly=True, copy=False, ondelete='set null', index='btree_not_null')
+    l10n_ar_fx_note_pending = fields.Boolean(
+        string="FX Note Pending", compute='_compute_l10n_ar_fx_note_pending',
+        compute_sql='_compute_sql_l10n_ar_fx_note_pending', compute_sudo=True)
 
     def _is_manual_document_number(self):
         """ Document number should be manual input by user when the journal use documents and
@@ -86,6 +93,39 @@ class AccountMove(models.Model):
         for rec in recs_afip:
             rec.l10n_ar_afip_concept = rec._get_concept()
         remaining.l10n_ar_afip_concept = ''
+
+    @api.depends(
+        'state',
+        'line_ids.matched_debit_ids.exchange_move_id.state',
+        'line_ids.matched_credit_ids.exchange_move_id.state',
+        'line_ids.matched_debit_ids.exchange_move_id.l10n_ar_fx_note_id.state',
+        'line_ids.matched_credit_ids.exchange_move_id.l10n_ar_fx_note_id.state',
+        'line_ids.matched_debit_ids.exchange_move_id.reversal_move_ids.state',
+        'line_ids.matched_credit_ids.exchange_move_id.reversal_move_ids.state',
+    )
+    def _compute_l10n_ar_fx_note_pending(self):
+        pending_ids = set(self._search(Domain('id', 'in', self._origin.ids) & Domain('l10n_ar_fx_note_pending', '=', True)))
+        for move in self:
+            move.l10n_ar_fx_note_pending = move._origin.id in pending_ids
+
+    def _compute_sql_l10n_ar_fx_note_pending(self, table):
+        free_exchange_moves = Domain('state', '=', 'posted') & (
+            Domain('l10n_ar_fx_note_id', '=', False) | Domain('l10n_ar_fx_note_id.state', '=', 'cancel')
+        ) & Domain('reversal_move_ids', 'not any', Domain('state', '=', 'posted'))
+        AccountMoveLine = self.env['account.move.line']
+        invoice_lines = AccountMoveLine._search(Domain('account_type', '=', 'asset_receivable'))
+        invoice_lines.add_where(SQL("%s = %s", invoice_lines.table.move_id, table.id))
+        invoice_partials = Domain('debit_move_id', 'in', invoice_lines) | Domain('credit_move_id', 'in', invoice_lines)
+        query = AccountMoveLine._search(Domain('account_type', '=', 'asset_receivable') & Domain(
+            'move_id', 'any', free_exchange_moves & Domain('exchange_diff_partial_ids', 'any', invoice_partials)))
+        return SQL(
+            "COALESCE(%s = 'out_invoice' AND %s = 'posted' AND %s AND %s = 'AR' AND %s != 0, FALSE)",
+            table.move_type,
+            table.state,
+            table.journal_id.l10n_latam_use_documents,
+            table.company_id.account_fiscal_country_id.code,
+            query.subselect(SQL("SUM(%s)", query.table.balance)),
+        )
 
     def _get_concept(self):
         """ Method to get the concept of the invoice considering the type of the products on the invoice """
@@ -228,6 +268,7 @@ class AccountMove(models.Model):
         posted_ar_invoices = posted & ar_invoices
         posted_ar_invoices._set_afip_responsibility()
         posted_ar_invoices._set_afip_service_dates()
+        posted_ar_invoices._l10n_ar_reverse_fx_note_exchange_moves()
         return posted
 
     def _reverse_moves(self, default_values_list=None, cancel=False):
@@ -239,6 +280,81 @@ class AccountMove(models.Model):
                 'l10n_ar_afip_service_end': move.l10n_ar_afip_service_end,
             })
         return super()._reverse_moves(default_values_list=default_values_list, cancel=cancel)
+
+    def action_l10n_ar_generate_fx_note(self):
+        AccountMove = self.env['account.move']
+        net_per_invoice = {}
+        for invoice in self.filtered('l10n_ar_fx_note_pending'):
+            exchange_moves = invoice.line_ids.filtered(lambda line: line.account_type == 'asset_receivable').exchange_move_ids
+            exchange_moves = exchange_moves.filtered(
+                lambda move: move.state == 'posted' and move.l10n_ar_fx_note_id.state in (False, 'cancel')
+                and 'posted' not in move.reversal_move_ids.mapped('state'))
+            receivables = exchange_moves.line_ids.filtered(lambda line: line.account_type == 'asset_receivable')
+            net = invoice.company_currency_id.round(sum(receivables.mapped('balance')))
+            if net:
+                net_per_invoice[invoice] = (net, exchange_moves)
+        if not net_per_invoice:
+            raise UserError(self.env._("None of the selected invoices have an exchange difference pending an FX Note."))
+
+        notes = AccountMove
+        for invoice, (net, exchange_moves) in net_per_invoice.items():
+            note = AccountMove.create(invoice._l10n_ar_prepare_fx_note_vals(net))
+            difference = abs(net) - note.amount_total
+            if not note.currency_id.is_zero(difference):
+                line = note.invoice_line_ids.sorted('price_unit')[-1]
+                line.price_unit += difference * line.price_subtotal / line.price_total
+            exchange_moves.l10n_ar_fx_note_id = note
+            notes |= note
+        return notes._get_records_action(name=self.env._("FX Notes"), context={})
+
+    def _l10n_ar_prepare_fx_note_vals(self, net):
+        """Return the create values of the FX Note of this invoice, one line per VAT tax."""
+        self.ensure_one()
+        currency = self.company_currency_id
+        base_per_vat = defaultdict(float)
+        for line in self.invoice_line_ids.filtered(lambda line: line.display_type == 'product'):
+            base_per_vat[line.tax_ids.filtered(lambda tax: tax.tax_group_id.l10n_ar_vat_afip_code)] -= line.balance
+        vat_lines = self.line_ids.filtered(lambda line: line.tax_line_id.tax_group_id.l10n_ar_vat_afip_code)
+        ratio = abs(net) / (sum(base_per_vat.values()) - sum(vat_lines.mapped('balance')))
+        account = self.env['account.move.line']._get_exchange_account(self.company_id, -net)
+        return {
+            'move_type': 'out_invoice' if net > 0 else 'out_refund',
+            'debit_origin_id': self.id if net > 0 else False,
+            'reversed_entry_id': self.id if net < 0 else False,
+            'partner_id': self.partner_id.id,
+            'journal_id': self.journal_id.id,
+            'currency_id': currency.id,
+            'invoice_payment_term_id': False,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': self.env._("FX difference - %(invoice)s", invoice=self.name),
+                    'account_id': account.id,
+                    'price_unit': base * ratio,
+                    'tax_ids': [Command.set(taxes.ids)],
+                })
+                for taxes, base in base_per_vat.items()
+            ],
+        }
+
+    def _l10n_ar_reverse_fx_note_exchange_moves(self):
+        """Reverse the exchange moves of each posted FX Note and reconcile the reversals with it."""
+        exchange_moves = self.search([('l10n_ar_fx_note_id', 'in', self.ids)])
+        for note in exchange_moves.l10n_ar_fx_note_id:
+            note_exchange_moves = exchange_moves.filtered(lambda move: move.l10n_ar_fx_note_id == note)
+            reversals = note_exchange_moves.reversal_move_ids.filtered(lambda move: move.state == 'posted')
+            to_reverse = note_exchange_moves - reversals.reversed_entry_id
+            if to_reverse:
+                new_reversals = to_reverse._reverse_moves([{'date': note.date, 'ref': note.name} for _move in to_reverse])
+                new_reversals._post(soft=False)
+                reversals |= new_reversals
+                invoice = note.debit_origin_id or note.reversed_entry_id
+                invoice.message_post(body=self.env._(
+                    "FX Note %(note)s generated for exchange difference %(entries)s.",
+                    note=note._get_html_link(),
+                    entries=to_reverse.mapped('name'),
+                ))
+            (note.line_ids | reversals.line_ids).filtered(
+                lambda line: line.account_type == 'asset_receivable' and not line.reconciled).reconcile()
 
     @api.onchange('l10n_latam_document_type_id', 'l10n_latam_document_number', 'partner_id')
     def _inverse_l10n_latam_document_number(self):
