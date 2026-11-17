@@ -281,32 +281,33 @@ class TestWebsocketCaryall(WebsocketCase):
         self.assertEqual(opcode, Opcode.BINARY)
         self.assertEqual(frame.data, PING_PONG_MESSAGE)
 
+    @patch.object(WebsocketConnectionHandler, "_VERSION", "17.0-1.1")
     def test_disconnect_when_version_outdated(self):
-        # Outdated version, connection should be closed immediately
-        with patch.object(WebsocketConnectionHandler, "_VERSION", "17.0-1"), patch.object(
-            self, "_WEBSOCKET_URL", f"{self._BASE_WEBSOCKET_URL}?version=17.0-0",
-        ):
-            websocket = self.websocket_connect(
-                ping_after_connect=False, header={"User-Agent": "Chrome/126.0.0.0"},
-            )
-            self.assert_close_with_code(websocket, CloseCode.CLEAN, "OUTDATED_VERSION")
-
-        # Version not passed, User-Agent present, should be considered as outdated
-        with patch.object(WebsocketConnectionHandler, "_VERSION", "17.0-1"), patch.object(
-            self, "_WEBSOCKET_URL", self._BASE_WEBSOCKET_URL,
-        ):
-            websocket = self.websocket_connect(
-                ping_after_connect=False, header={"User-Agent": "Chrome/126.0.0.0"},
-            )
-            self.assert_close_with_code(websocket, CloseCode.CLEAN, "OUTDATED_VERSION")
-        # Version not passed, User-Agent not present, should not be considered
-        # as outdated
-        with patch.object(WebsocketConnectionHandler, "_VERSION", "17.0-1"), patch.object(
-            self, "_WEBSOCKET_URL", self._BASE_WEBSOCKET_URL,
-        ):
-            websocket = self.websocket_connect()
-            websocket.ping()
-            websocket.recv_data_frame(control_frame=True)  # pong
+        browser = {"User-Agent": "Chrome/126.0.0.0"}
+        for client_version, header, close_reason in [
+            ("17.0-0.0", browser, "OUTDATED_VERSION"),
+            ("17.0-1.0", browser, "WORKER_UPGRADE:17.0-1.1"),
+            ("17.0-1.2", browser, None),  # Minor rollback: stay connected.
+            (None, browser, "OUTDATED_VERSION"),
+            (None, None, None),  # IoT: stay connected.
+        ]:
+            url = self._BASE_WEBSOCKET_URL
+            if client_version:
+                url += f"?version={client_version}"
+            with (
+                self.subTest(client_version=client_version, header=header),
+                patch.object(self, "_WEBSOCKET_URL", url),
+            ):
+                websocket = self.websocket_connect(
+                    ping_after_connect=False,
+                    header=header,
+                )
+                if close_reason:
+                    self.assert_close_with_code(websocket, CloseCode.CLEAN, close_reason)
+                else:
+                    websocket.ping()
+                    opcode, _frame = websocket.recv_data_frame(control_frame=True)
+                    self.assertEqual(opcode, ws.ABNF.OPCODE_PONG)
 
     def test_websocket_check_outdated_subscription(self):
         self.env['bus.bus']._sendone('channel_A', 'some_notification', None)

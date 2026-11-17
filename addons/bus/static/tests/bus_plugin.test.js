@@ -12,7 +12,7 @@ import {
     WORKER_STATE,
 } from "@bus/workers/websocket_worker";
 import { advanceTime, describe, expect, test } from "@odoo/hoot";
-import { manuallyDispatchProgrammaticEvent, runAllTimers } from "@odoo/hoot-dom";
+import { manuallyDispatchProgrammaticEvent, runAllTimers, waitUntil } from "@odoo/hoot-dom";
 import { mockWebSocket } from "@odoo/hoot-mock";
 import {
     getMockEnv,
@@ -24,7 +24,7 @@ import {
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
-import { getWebSocketWorker, onWebsocketEvent } from "./mock_websocket";
+import { getWebSocketWorker, onWebsocketEvent, simulateWorkerUpgrade } from "./mock_websocket";
 
 import { browser } from "@web/core/browser/browser";
 import { user } from "@web/core/user";
@@ -32,6 +32,8 @@ import { session } from "@web/session";
 import { BusPlugin } from "@bus/services/bus_plugin";
 import { MultiTabPlugin } from "@bus/multi_tab_plugin";
 import { BusParametersPlugin } from "@bus/bus_parameters_plugin";
+import { WorkerPlugin } from "@bus/services/worker_plugin";
+import { BusLogsPlugin } from "@bus/debug/bus_logs_plugin";
 
 defineBusModels();
 describe.current.tags("desktop");
@@ -110,11 +112,11 @@ test("second tab still receives notifications after main pagehide", async () => 
     });
     const worker = getWebSocketWorker();
     patchWithCleanup(worker, {
-        _unregisterClient(client) {
+        _leave(client) {
             // Ensure that the worker does not receive any messages from the main tab
             // after pagehide, mimicking real-world behavior.
             client.onmessage = null;
-            super._unregisterClient(client);
+            super._leave(client);
         },
     });
     await makeTestApp({ forceNew: true });
@@ -479,6 +481,76 @@ test("remove from main tab candidates when version is outdated", async () => {
         "BUS:DISCONNECT",
         "no_longer_main_tab",
     ]);
+});
+
+async function startConnectedBus(channel) {
+    await makeTestApp();
+    getService(BusPlugin).addChannel(channel);
+    await waitForChannels([channel]);
+    const worker = getWebSocketWorker();
+    await waitUntil(() => worker.state === WORKER_STATE.CONNECTED);
+    return worker;
+}
+
+test("switch to the new worker when only the worker is outdated", async () => {
+    const oldWorker = await startConnectedBus("lambda");
+    getService(BusLogsPlugin).enableLogging();
+    const lastId = MockServer.env["bus.bus"]._sendone("lambda", "notifType", "alpha");
+    patchWithCleanup(WebsocketWorker.prototype, {
+        _sendToServer({ event_name, data }) {
+            if (event_name === "subscribe" && this !== oldWorker) {
+                expect.step(`new worker subscribes ${data.channels} from ${data.last}`);
+            }
+            return super._sendToServer(...arguments);
+        },
+    });
+    simulateWorkerUpgrade();
+    await expect.waitForSteps([`new worker subscribes lambda from ${lastId}`]);
+    const newWorker = getWebSocketWorker();
+    expect(newWorker).not.toBe(oldWorker);
+    expect(newWorker.websocketURL).toInclude("version=test.1");
+    await waitUntil(() => newWorker.loggingEnabled);
+    MockServer.env["bus.bus"]._sendone("lambda", "notifType", "beta");
+    await waitNotifications([getMockEnv(), "notifType", "beta"]);
+});
+
+test("channel changes during the worker switch reach the new worker", async () => {
+    await startConnectedBus("lambda");
+    const busService = getService(BusPlugin);
+    stepWorkerActions(["BUS:ADD_CHANNEL", "BUS:DELETE_CHANNEL"], { withData: true });
+    patchWithCleanup(getService(WorkerPlugin), {
+        upgrade() {
+            const result = super.upgrade(...arguments);
+            busService.deleteChannel("lambda");
+            busService.addChannel("gamma");
+            return result;
+        },
+    });
+    simulateWorkerUpgrade();
+    await expect.waitForSteps([
+        // Replay old worker channel
+        "BUS:ADD_CHANNEL lambda",
+        // Then pending updates
+        "BUS:DELETE_CHANNEL lambda",
+        "BUS:ADD_CHANNEL gamma",
+    ]);
+    await waitForChannels(["gamma"]);
+    await waitForChannels(["lambda"], { operation: "delete" });
+});
+
+test("a page joining a replaced worker switches to the new worker", async () => {
+    await makeMockServer();
+    const oldWorker = getWebSocketWorker();
+    // Simulate that the page we're about to open is older than the worker's newest page.
+    oldWorker.newestStartTs = Date.now() + 60_000;
+    oldWorker._onWebsocketClose({
+        code: WEBSOCKET_CLOSE_CODES.CLEAN,
+        reason: "WORKER_UPGRADE:test.1",
+    });
+    await makeTestApp();
+    getService(BusPlugin).addChannel("lambda");
+    await waitForChannels(["lambda"]);
+    expect(getWebSocketWorker().websocketURL).toInclude("version=test.1");
 });
 
 test("subscribe message is sent first", async () => {

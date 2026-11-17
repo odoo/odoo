@@ -1,7 +1,7 @@
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
-import { Plugin, signal, usePlugin } from "@odoo/owl";
+import { EventBus, Plugin, signal, usePlugin } from "@odoo/owl";
 import { BusParametersPlugin } from "@bus/bus_parameters_plugin";
 import { services } from "@web/core/services";
 
@@ -12,7 +12,13 @@ export const WORKER_STATE = Object.freeze({
     FAILED: "FAILED",
 });
 
+/**
+ * @emits upgraded when the worker is replaced after a bump of the minor part
+ * of the server `WebsocketConnectionHandler._VERSION`.
+ */
 export class WorkerPlugin extends Plugin {
+    bus = new EventBus();
+    #handlers = [];
     #params = usePlugin(BusParametersPlugin);
     #worker = null;
     #isUsingSharedWorker = Boolean(browser.SharedWorker);
@@ -121,7 +127,12 @@ export class WorkerPlugin extends Plugin {
         if (this.#state() === WORKER_STATE.UNINITIALIZED) {
             return;
         }
-        await this.workerInitPromise;
+        // Wait for the new worker when the worker is replaced meanwhile.
+        let initPromise;
+        while (initPromise !== this.workerInitPromise) {
+            initPromise = this.workerInitPromise;
+            await initPromise;
+        }
         if (this.#state() === WORKER_STATE.FAILED) {
             console.warn("Worker service failed to initialize, cannot send message.");
             return;
@@ -144,6 +155,44 @@ export class WorkerPlugin extends Plugin {
             return;
         }
         this.#registerHandler(handler);
+        this.#handlers.push(handler);
+    }
+
+    /**
+     * Replace the worker by the one of the given version. Return the reply
+     * of the old worker to `leaveAction`: the state to keep.
+     *
+     * @param {string} version
+     * @param {string} leaveAction
+     * @param {string} responseType
+     * @returns {Promise<{started: boolean, response: any}>}
+     */
+    async upgrade(version, leaveAction, responseType) {
+        ({ promise: this.workerInitPromise, resolve: this.#resolveWorkerInit } =
+            Promise.withResolvers());
+        const { promise: responsePromise, resolve: resolveResponse } = Promise.withResolvers();
+        this.#registerHandler(({ data }) => {
+            if (data.type === responseType) {
+                resolveResponse(data.data);
+            }
+        });
+        this.#send(leaveAction);
+        const response = await responsePromise;
+        session.bus_info.worker_version = version;
+        if (this.#isUsingSharedWorker) {
+            this.#worker.port.close();
+        } else {
+            this.#worker.terminate();
+        }
+        this.#startWorker();
+        if (!(await this.workerInitPromise)) {
+            return { started: false, response };
+        }
+        for (const handler of this.#handlers) {
+            this.#registerHandler(handler);
+        }
+        this.bus.trigger("upgraded");
+        return { started: true, response };
     }
 
     get state() {
