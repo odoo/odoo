@@ -186,7 +186,10 @@ class PaymentProvider(models.Model):
 
     def _get_apple_pay_domain_association_file_path(self):
         """Override of `payment` to return PayPal's Apple Pay domain association file path."""
-        if self.code != "paypal":
+        is_apple_pay_enabled = self.payment_method_ids.filtered(
+            lambda pm: pm.active and pm.code == "apple_pay"
+        )
+        if self.code != "paypal" or not is_apple_pay_enabled:
             return super()._get_apple_pay_domain_association_file_path()
         live_mode = "live" if self.is_live else "sandbox"
         return (

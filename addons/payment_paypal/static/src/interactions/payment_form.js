@@ -1,4 +1,4 @@
-/* global google, paypal */
+/* global ApplePaySession, google, paypal */
 
 import { loadJS } from '@web/core/assets';
 import { _t } from '@web/core/l10n/translation';
@@ -126,31 +126,27 @@ patch(PaymentForm.prototype, {
             this._paypalToggleLoading(true);
         }
 
-        // Check if instantiation of the component is needed.
+        // Hide the buttons of the previously selected payment option.
         if (this.selectedOptionId && this.selectedOptionId !== paymentOptionId) {
-            Object.entries(this.paypalData).forEach(([_key, value]) => {
-                value.enabledButtons?.forEach(btn => btn.hide());
-                value.disabledButtons?.forEach(btn => btn.hide());
-            });
+            Object.keys(this.paypalData).forEach(
+                id => this._paypalToggleButtonsVisibility(id, false)
+            );
         }
         const currentPayPalData = this.paypalData[paymentOptionId];
         if (currentPayPalData && this.selectedOptionId !== paymentOptionId) {
             const paypalSDKURL = this.paypalData[paymentOptionId]['sdkURL'];
             await this.waitFor(this._paypalLoadSDK(paypalSDKURL));
-            this.paypalData[paymentOptionId]['enabledButtons']?.forEach(btn => btn.show());
-            this.paypalData[paymentOptionId]['disabledButtons']?.forEach(btn => btn.show());
+            this._paypalToggleButtonsVisibility(paymentOptionId, true);
         }
         else if (!currentPayPalData) {
             this.paypalData[paymentOptionId] = {};
             const radio = document.querySelector('input[name="o_payment_radio"]:checked');
-            let inlineFormValues;
-            if (radio) {
-                inlineFormValues = JSON.parse(radio.dataset['paypalInlineFormValues']);
-            }
             this.providerIsLive = this._getProviderIsLive(radio);
 
             // https://developer.paypal.com/sdk/js/configuration/#link-queryparameters
-            const { client_id, merchant_id, currency_code, country_code } = inlineFormValues;
+            const {
+                client_id, merchant_id, currency_code, country_code
+            } = this._paypalGetInlineFormValues();
             const paypalSDKParams = new URLSearchParams({
                 "client-id": client_id,
                 "merchant-id": merchant_id,
@@ -178,6 +174,12 @@ patch(PaymentForm.prototype, {
                     this._paypalRenderButtons(paymentOptionId, paymentMethodCode);
             }
         }
+        // Hide buttons of non selected payment methods
+        const checkedRadio = this.el.querySelector('input[name="o_payment_radio"]:checked');
+        if (this._getPaymentOptionId(checkedRadio) !== paymentOptionId) {
+            this._paypalToggleButtonsVisibility(paymentOptionId, false);
+            return;
+        }
         if (isCard) {
             this._paypalHideButtonContainers();
         } else {
@@ -203,6 +205,17 @@ patch(PaymentForm.prototype, {
     },
 
     /**
+     * Return the PayPal inline form values of the selected payment option.
+     *
+     * @private
+     * @return {object} The inline form values.
+     */
+    _paypalGetInlineFormValues() {
+        const radio = document.querySelector('input[name="o_payment_radio"]:checked');
+        return JSON.parse(radio.dataset["paypalInlineFormValues"]);
+    },
+
+    /**
      * Hide both the PayPal button containers, or show them back.
      *
      * @private
@@ -213,6 +226,21 @@ patch(PaymentForm.prototype, {
         for (const container of document.querySelectorAll("#o_paypal_button_container")) {
             container.classList.toggle("d-none", hide);
         }
+    },
+
+    /**
+     * Show or hide all the buttons rendered for a payment option.
+     *
+     * @private
+     * @param {number} paymentOptionId - The id of the payment option whose buttons to toggle.
+     * @param {boolean} show - Whether the buttons should be shown.
+     * @return {void}
+     */
+    _paypalToggleButtonsVisibility(paymentOptionId, show) {
+        const paypalData = this.paypalData[paymentOptionId];
+        paypalData.enabledButtons?.forEach(btn => show ? btn.show() : btn.hide());
+        paypalData.disabledButtons?.forEach(btn => show ? btn.show() : btn.hide());
+        paypalData.walletButtons?.forEach(btn => btn.classList.toggle("d-none", !show));
     },
 
     /**
@@ -296,13 +324,15 @@ patch(PaymentForm.prototype, {
             this._paypalDisplayNotAvailablePMDialog();
             return;
         }
+        this.paypalData[paymentOptionId].walletButtons = [];
         for (const container of document.querySelectorAll('#o_paypal_button_container')) {
             const button = paymentsClient.createButton({
                 onClick: () => this._paypalOnGooglePayButtonClicked(paymentOptionId),
                 allowedPaymentMethods: googlePayConfig.allowedPaymentMethods,
                 buttonSizeMode: 'fill',
             });
-            container.replaceChildren(button);
+            container.append(button);
+            this.paypalData[paymentOptionId].walletButtons.push(button);
         }
     },
 
@@ -328,13 +358,15 @@ patch(PaymentForm.prototype, {
             return;
         }
         this.paypalData[paymentOptionId].applePayConfig = applePayConfig;
+        this.paypalData[paymentOptionId].walletButtons = [];
         for (const container of document.querySelectorAll("#o_paypal_button_container")) {
             const button = document.createElement("apple-pay-button");
             button.setAttribute("type", "plain");
             this.addListener(button, "click", () =>
                 this._paypalOnApplePayButtonClicked(paymentOptionId)
             );
-            container.replaceChildren(button);
+            container.append(button);
+            this.paypalData[paymentOptionId].walletButtons.push(button);
         }
     },
 
@@ -407,10 +439,16 @@ patch(PaymentForm.prototype, {
         }
     },
 
-    _paypalDisplayNotAvailablePMDialog(){
+    /**
+     * Display an error dialog informing that the selected payment method is not available.
+     *
+     * @private
+     * @return {void}
+     */
+    _paypalDisplayNotAvailablePMDialog() {
         this._displayErrorDialog(
             _t("Cannot display the payment form"),
-            "This payment method is not available.",
+            _t("This payment method is not available."),
         );
     },
 
@@ -532,8 +570,7 @@ patch(PaymentForm.prototype, {
     async _paypalOnGooglePayButtonClicked(paymentOptionId) {
         const paymentsClient = this._paypalGetGooglePaymentsClient(paymentOptionId);
         const googlePayConfig = this.paypalData[paymentOptionId].googlePayConfig;
-        const radio = document.querySelector('input[name="o_payment_radio"]:checked');
-        const { currency_code } = JSON.parse(radio.dataset["paypalInlineFormValues"]);
+        const { currency_code } = this._paypalGetInlineFormValues();
         const paymentDataRequest = {
             apiVersion: 2,
             apiVersionMinor: 0,
@@ -646,6 +683,13 @@ patch(PaymentForm.prototype, {
         }
     },
 
+    /**
+     * Return the Google Pay transaction state to report a failed payment authorization.
+     *
+     * @private
+     * @param {string} message - The error message to display on the Google Pay sheet, if any.
+     * @return {object} The Google Pay error transaction state.
+     */
     _paypalGetGoogleErrorResponse(message) {
         const errorResponse = { transactionState: "ERROR" };
         if (message) {
@@ -668,20 +712,20 @@ patch(PaymentForm.prototype, {
      */
     _paypalOnApplePayButtonClicked(paymentOptionId) {
         const applePayConfig = this.paypalData[paymentOptionId].applePayConfig;
-        const radio = document.querySelector('input[name="o_payment_radio"]:checked');
-        const { currency_code, merchant_name } = JSON.parse(
-            radio.dataset["paypalInlineFormValues"]
-        );
-        const session = new ApplePaySession(4, {
+        const { currency_code, merchant_name } = this._paypalGetInlineFormValues();
+        const paymentRequest = {
             countryCode: applePayConfig.countryCode,
             currencyCode: currency_code,
             merchantCapabilities: applePayConfig.merchantCapabilities,
             supportedNetworks: applePayConfig.supportedNetworks,
+            requiredBillingContactFields: ["name", "phone", "email", "postalAddress"],
             total: {
                 label: merchant_name,
-                amount: this.paymentContext["amount"],
+                amount: String(this.paymentContext["amount"]),
+                type: "final",
             },
-        });
+        };
+        const session = new ApplePaySession(4, paymentRequest);
         session.onvalidatemerchant = (event) =>
             this._paypalOnApplePayValidateMerchant(session, event);
         session.onpaymentauthorized = (event) =>
@@ -749,7 +793,15 @@ patch(PaymentForm.prototype, {
         }
     },
 
-    _paypalDisplayErrorDialog(message, title=_t("Payment processing failed")){
+    /**
+     * Display an error dialog and re-enable the payment button.
+     *
+     * @private
+     * @param {string} message - The error message.
+     * @param {string} title - The title of the dialog.
+     * @return {void}
+     */
+    _paypalDisplayErrorDialog(message, title = _t("Payment processing failed")) {
         this._displayErrorDialog(title, message);
         this._enableButton();  // The button has been disabled before initiating the flow.
     }

@@ -277,7 +277,10 @@ class PaymentProvider(models.Model):
 
     def _get_apple_pay_domain_association_file_path(self):
         """Override of `payment` to return Stripe's Apple Pay domain association file path."""
-        if self.code != "stripe":
+        is_apple_pay_enabled = self.payment_method_ids.filtered(
+            lambda pm: pm.active and pm.code == "apple_pay"
+        )
+        if self.code != "stripe" or not is_apple_pay_enabled:
             return super()._get_apple_pay_domain_association_file_path()
         return "payment_stripe/static/files/apple-developer-merchantid-domain-association"
 
@@ -464,7 +467,7 @@ class PaymentProvider(models.Model):
         base_url = self.company_id.get_base_url()
         return_url = OnboardingController._onboarding_return_url
         refresh_url = OnboardingController._onboarding_refresh_url
-        return_params = dict(provider_id=self.id, menu_id=menu_id)
+        return_params = {"provider_id": self.id, "menu_id": menu_id}
         refresh_params = dict(**return_params, account_id=connected_account_id)
 
         payload = {
