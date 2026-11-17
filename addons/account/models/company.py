@@ -269,6 +269,7 @@ class ResCompany(models.Model):
         use batch_payment_sequence_id to get it (eventually create it first): e.g BATCH/2024/00001
         '''
         self.ensure_one()
+        self.sudo()._create_batch_payment_sequence()
         return self.sudo().batch_payment_sequence_id.next_by_id()
 
     def _get_company_root_delegated_field_names(self):
