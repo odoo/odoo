@@ -105,6 +105,16 @@ class SaleOrder(models.Model):
         for order in self:
             order.delivery_date = order.effective_date or order.delivery_date
 
+    @api.depends("partner_id")
+    def _compute_partner_shipping_id(self):
+        for order in self:
+            if not order.partner_id:
+                order.partner_shipping_id = False
+                return
+            partner = order.partner_id.with_context(custom_order_prefix='sequence')
+            partner.invalidate_recordset(['child_ids'])
+            order.partner_shipping_id = partner.address_get(["delivery"])["delivery"]
+
     def _search_late_availability(self, operator, value):
         if operator not in ('=', '!=') or not isinstance(value, bool):
             return NotImplemented

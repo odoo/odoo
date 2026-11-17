@@ -16,6 +16,14 @@
                     <field name="property_stock_supplier" />
                 </group>
             </xpath>
+
+            <xpath expr="//t[hasclass('o_res_partner_kanban_card')]//field[@name='name']" position="replace">
+                <div class="d-inline-flex">
+                    <field name="sequence" widget="handle" class="me-2"/>
+                    <field name="name" invisible="not name" class="fw-bold"/>
+                </div>
+            </xpath>
+
         </field>
     </record>
 
