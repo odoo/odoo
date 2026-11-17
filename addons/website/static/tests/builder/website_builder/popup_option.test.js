@@ -38,20 +38,54 @@ async function expectToTriggerEvent(target, type, callback) {
 }
 
 describe("Popup options: empty page before edit", () => {
+    let builder;
     // Note: for some reason, `before()` doesn't work.
     // Done in `beforeEach` because frontend JS takes too much time to load.
     beforeEach(async () => {
-        await setupWebsiteBuilder("", {
+        builder = await setupWebsiteBuilder("", {
             loadIframeBundles: true,
             loadAssetsFrontendJS: true,
         });
     });
-    test("dropping the popup snippet automatically displays it", async () => {
-        await insertCategorySnippet({ group: "content", snippet: "s_popup" });
-        expect(".o_add_snippet_dialog").toHaveCount(0);
-        // Check if the popup is visible.
+
+    const expectVisiblePopup = () => {
+        expect(":iframe .s_popup").toHaveCount(1);
         expect(":iframe .s_popup .modal").toHaveClass("show");
         expect(":iframe .s_popup .modal").toHaveStyle({ display: "block" });
+    };
+    const expectNoPopup = () => expect(":iframe .s_popup").toHaveCount(0);
+
+    test("dropping the popup snippet automatically displays it", async () => {
+        await insertCategorySnippet({ group: "content", snippet: "s_popup" });
+        const editor = builder.getEditor();
+        expect(".o_add_snippet_dialog").toHaveCount(0);
+        expectVisiblePopup();
+
+        undo(editor);
+        await builder.waitSidebarUpdated();
+        expectNoPopup();
+
+        redo(editor);
+        await builder.waitSidebarUpdated();
+        expectVisiblePopup();
+    });
+
+    test("deleting a popup restores its visibility on undo", async () => {
+        await insertCategorySnippet({ group: "content", snippet: "s_popup" });
+        const editor = builder.getEditor();
+        await contains(":iframe .s_popup .modal").click();
+        await contains(
+            ".o_hb_options_container[data-container-title='Popup'] button[data-icon='delete']"
+        ).click();
+        expectNoPopup();
+
+        undo(editor);
+        await builder.waitSidebarUpdated();
+        expectVisiblePopup();
+
+        redo(editor);
+        await builder.waitSidebarUpdated();
+        expectNoPopup();
     });
 
     test("dropping the popup snippet then previewing background colors keep it visible", async () => {
