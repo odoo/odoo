@@ -736,6 +736,9 @@ class ProductTemplate(models.Model):
                     related_vals[field_name] = vals[field_name]
             if related_vals:
                 template.write(related_vals)
+            # force update of `qty_available` after variants are created
+            if 'qty_available' in vals and template.product_variant_count == 1:
+                template.qty_available = vals['qty_available']
 
         return templates
 
