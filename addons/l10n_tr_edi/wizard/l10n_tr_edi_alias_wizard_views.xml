@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_tr_edi_alias_wizard_form" model="ir.ui.view">
+        <field name="name">l10n_tr_edi.alias.wizard.form</field>
+        <field name="model">l10n_tr_edi.alias.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <div class="alert alert-info" role="status">
+                    The aliases the GİB lists for this partner now. The documents are sent to the one picked.
+                </div>
+                <group>
+                    <field name="selected_alias_id" required="True" options="{'no_create': True, 'no_open': True}"/>
+                </group>
+                <footer>
+                    <button name="action_validate" type="object" string="Confirm" class="btn-primary" data-hotkey="q"/>
+                    <button class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

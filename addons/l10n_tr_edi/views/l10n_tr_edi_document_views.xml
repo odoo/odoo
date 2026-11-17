@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_tr_edi_document_view_list" model="ir.ui.view">
+        <field name="name">l10n_tr_edi.document.list</field>
+        <field name="model">l10n_tr_edi.document</field>
+        <field name="arch" type="xml">
+            <list create="false" delete="false" edit="false"
+                  decoration-danger="state in ('error', 'rejected')"
+                  decoration-success="state in ('accepted', 'accepted_automatically')">
+                <header>
+                    <button name="action_fetch_status" type="object" string="Update Status"/>
+                </header>
+                <field name="message" column_invisible="1"/>  <!-- read by the account_document_state widget -->
+                <field name="datetime"/>
+                <field name="document_type"/>
+                <field name="name"/>
+                <field name="move_id"/>
+                <field name="provider" optional="show"/>
+                <field name="uuid" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                <field name="state" widget="account_document_state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="l10n_tr_edi_document_view_form" model="ir.ui.view">
+        <field name="name">l10n_tr_edi.document.form</field>
+        <field name="model">l10n_tr_edi.document</field>
+        <field name="arch" type="xml">
+            <form create="false" delete="false" edit="false">
+                <header>
+                    <button name="action_fetch_status" type="object" string="Update Status"/>
+                    <button name="action_download"
+                            type="object"
+                            string="Download XML"
+                            invisible="not attachment_id"/>
+                    <field name="state" widget="account_document_state"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_move"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="edit_square"
+                                invisible="not move_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Invoice</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="No number yet"/></h1>
+                    </div>
+                    <group>
+                        <group name="document">
+                            <field name="document_type"/>
+                            <field name="uuid"/>
+                            <field name="move_id"/>
+                        </group>
+                        <group name="exchange">
+                            <field name="provider"/>
+                            <field name="datetime"/>
+                            <field name="attachment_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <group name="message" string="Message" invisible="not message">
+                        <field name="message" nolabel="1" colspan="2"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_tr_edi_document_view_search" model="ir.ui.view">
+        <field name="name">l10n_tr_edi.document.search</field>
+        <field name="model">l10n_tr_edi.document</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="uuid"/>
+                <field name="move_id"/>
+                <filter name="invoices"
+                        string="Invoices"
+                        domain="[('document_type', 'in', ('einvoice', 'earchive', 'commercial_response'))]"/>
+                <separator/>
+                <filter name="errors" string="Errors" domain="[('state', 'in', ('error', 'rejected'))]"/>
+                <group>
+                    <filter name="group_by_document_type" string="Document Type" context="{'group_by': 'document_type'}"/>
+                    <filter name="group_by_state" string="State" context="{'group_by': 'state'}"/>
+                    <filter name="group_by_provider" string="Provider" context="{'group_by': 'provider'}"/>
+                    <filter name="group_by_company" string="Company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="l10n_tr_edi_document_action" model="ir.actions.act_window">
+        <field name="name">e-Documents</field>
+        <field name="res_model">l10n_tr_edi.document</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_invoices': 1}</field>
+    </record>
+
+    <menuitem
+        id="l10n_tr_edi_document_menu"
+        action="l10n_tr_edi_document_action"
+        parent="account.account_account_menu"
+        sequence="9"
+        groups="base.group_no_one"/>
+</odoo>
