@@ -1,3 +1,14 @@
+label:is(.css_attribute_color, .css_attribute_image, .css_attribute_thumbnail) {
+    vertical-align: top;
+}
+
+:is(.css_attribute_color, .css_attribute_image, .css_attribute_thumbnail, .o_variant_pills) > input:is([type="radio"], [type="checkbox"]) {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    appearance: none;
+}
+
 .css_attribute_color {
     --o-wsale-css-attribute-color__size: 1.6rem;
 
@@ -12,10 +23,6 @@
     border: var(--o-bs-border-width) solid var(--o-wsale-attribute-color-border-color, var(--o-border-color));
     border-radius: 50%;
     transition: var(--o-bs-transition-base);
-
-    input {
-        opacity: 0;
-    }
 
     &:hover, &.active, &.active:hover {
         box-shadow: inset 0 0 0 calc(var(--o-bs-border-width) * 2) var(--body-bg);
@@ -33,24 +40,20 @@
         --o-wsale-attribute-color-border-color: var(--primary);
     }
 
-    &:has(input:focus-visible)::before {
-        content:"";
-        position: absolute;
-        inset: 0;
-        border-radius: 100%;
-        box-shadow: var(--o-focus-ring-inset);
-        /* Hide the rounded border rendering bug on all browsers. */
-        outline: var(--o-focus-ring-outline);
-        outline-width: 3px;
-        outline-offset: -1px;
-    }
-
     &.custom_value {
         background-image: linear-gradient(to bottom right, #FF0000, #FFF200, #1E9600);
     }
 
     &.transparent {
         background-image: url(/web/static/img/transparent.png);
+    }
+
+    > input:focus-visible {
+        --o-focus-ring: var(--o-focus-ring-inset);
+
+        /* Hide the rounded border rendering bug on all browsers. */
+        outline-width: 3px;
+        outline-offset: -1px;
     }
 }
 
@@ -68,12 +71,13 @@
         outline-color: var(--primary);
     }
 
-    &:where(:has(input:focus-visible)) {
-        box-shadow: var(--o-focus-ring-inset);
-        /* Hide the rounded border rendering bug on all browsers. */
-        outline: var(--o-focus-ring-outline);
-        outline-width: 3px;
-        outline-offset: -1px;
+    > input[type] {
+        border-radius: calc(var(--o-bs-border-radius-lg) - var(--o-bs-border-width) * 5);
+
+        &:focus-visible {
+            outline-width: 3px;
+            outline-offset: -2px;
+        }
     }
 
     &.custom_value {
@@ -101,12 +105,10 @@
     &:hover, &.active {
         outline-color: var(--primary);
     }
+}
 
-    &:has(input:focus-visible) {
-        box-shadow: var(--o-focus-ring-inset);
-        outline: var(--o-focus-ring-outline);
-        outline-offset: -2px;
-    }
+.o_variant_pills {
+    position: relative;
 }
 
 .o_wsale_product_page_opt_image_ratio_auto label.css_attribute_thumbnail {
@@ -206,14 +208,6 @@ select.form-select.css_attribute_select {
 .variant_attribute {
     .o_variant_pills {
         border: var(--o-bs-border-width) solid var(--o-border-color);
-
-        &:has(input:focus-visible) {
-            box-shadow: var(--o-focus-ring-inset);
-            /* Hide the rounded border rendering bug on all browsers. */
-            outline: var(--o-focus-ring-outline);
-            outline-width: 3px;
-            outline-offset: -1px;
-        }
     }
 
     label, .o_variant_pills {

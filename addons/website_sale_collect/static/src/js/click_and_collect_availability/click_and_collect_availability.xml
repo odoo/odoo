@@ -15,7 +15,6 @@
             >
                 <input
                     type="radio"
-                    class="visually-hidden"
                     name="o_wsale_collect_mode"
                     t-att-checked="!this.state.isInStoreSelected"
                     t-on-click="() => this.state.deliveryData.stock_data.in_stock ? this.selectStandardDelivery() : null"
@@ -49,7 +48,6 @@
             >
                 <input
                     type="radio"
-                    class="visually-hidden"
                     name="o_wsale_collect_mode"
                     t-att-checked="this.state.isInStoreSelected"
                     t-on-click="() => inStoreAvailable ? this.selectPickup() : null"/>
