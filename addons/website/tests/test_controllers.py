@@ -325,3 +325,18 @@ class TestControllers(tests.HttpCase):
             self.assertNotIn('/broken', value, f"The link should be fixed in {lang}")
         self.assertIn('Lien', view.with_context(lang='fr_FR').arch)
 
+    def test_update_broken_links_with_anchor(self):
+        view = self.env['ir.ui.view'].create({
+            'name': 'Broken Link Test View',
+            'type': 'qweb',
+            'website_id': self.env.ref('base.default_website').id,
+            'arch': '<div><a href="/broken#section">Link</a><a href="/broken#other">Other</a></div>',
+        })
+        # The dialog sends the link without its anchor.
+        self._update_broken_links(res_id=view.id, oldLink='/broken', newLink='/fixed')
+        self.assertIn('href="/fixed#section"', view.arch)
+        self.assertIn('href="/fixed#other"', view.arch)
+
+        # The anchor of the new link replaces the stored one.
+        self._update_broken_links(res_id=view.id, oldLink='/fixed', newLink='/new#top')
+        self.assertEqual(view.arch.count('href="/new#top"'), 2)

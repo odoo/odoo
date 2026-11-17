@@ -1754,12 +1754,15 @@ class Website(Home):
         tree = html.fromstring(str(value))
         modified = False
         for element in tree.xpath('//a'):
-            href = element.get('href')
+            href, _sep, fragment = (element.get('href') or '').partition('#')
             if href and (link['oldLink'] == href or link['oldLink'] == href + '/'):
                 if link['remove']:
                     element.drop_tag()
                 else:
-                    element.set('href', link['newLink'])
+                    new_link = link['newLink']
+                    if fragment and '#' not in new_link:
+                        new_link = f'{new_link}#{fragment}'
+                    element.set('href', new_link)
                 modified = True
         return html.tostring(tree, encoding='unicode', method='html') if modified else None
 
