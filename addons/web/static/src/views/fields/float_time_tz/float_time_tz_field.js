@@ -1,6 +1,9 @@
+import { parseTime, is24HourFormat } from "@web/core/l10n/time";
 import { registry } from "@web/core/registry";
 import { FloatTimeField, floatTimeField } from "@web/views/fields/float_time/float_time_field";
 import { user } from "@web/core/user";
+import { useInputPreview } from "../input_preview_hook";
+import { InvalidNumberError } from "../parsers";
 
 const { DateTime } = luxon;
 
@@ -12,7 +15,7 @@ const DAY = {
 
 /**
  * Same as `float_time`, but the stored value is a UTC time of day while the
- * displayed one is expressed in the user's timezone.
+ * displayed one is expressed in the user's timezone and time format.
  */
 export class FloatTimeTzField extends FloatTimeField {
     /**
@@ -28,12 +31,35 @@ export class FloatTimeTzField extends FloatTimeField {
         return ((value % day) + day) % day;
     }
 
+    setupInputPreview() {
+        useInputPreview({
+            ref: this.numpadDecimalRef,
+            getValue: () => this.value,
+            parse: (v) => this.parseValue(v),
+            format: (v) => this.formatValue(v),
+            onlyFormula: true,
+        });
+    }
+
     parseValue(value) {
-        return this.wrap(super.parseValue(value) - this.offset);
+        if (value.trim().startsWith("=")) {
+            return this.wrap(super.parseValue(value) - this.offset);
+        }
+        const time = parseTime(value);
+        if (!time) {
+            throw new InvalidNumberError(`"${value}" is not a correct time`);
+        }
+        const localValue = ((time.hour * 60 + time.minute) * DAY[this.props.unit]) / DAY.minutes;
+        return this.wrap(localValue - this.offset);
     }
 
     formatValue(value) {
-        return super.formatValue(this.wrap(value + this.offset));
+        const minutes = Math.round(
+            (this.wrap(value + this.offset) * DAY.minutes) / DAY[this.props.unit]
+        );
+        return DateTime.fromObject({ hour: 0 }, { zone: "utc" })
+            .plus({ minutes })
+            .toFormat(is24HourFormat() ? "HH:mm" : "hh:mm a");
     }
 
     get formattedValue() {
