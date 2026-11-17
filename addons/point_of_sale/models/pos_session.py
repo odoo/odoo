@@ -1890,7 +1890,13 @@ class PosSession(models.Model):
             raise UserError(_("There is no cash payment method for this PoS Session"))
 
         vals_list = [
+<<<<<<< b2319924a35b575981ecc885acc1a44641470b41
             self._prepare_account_bank_statement_line_vals(session, sign, amount, reason, partner_id, extras)
+||||||| 1c13d8d1cb9845613bb9bd02adfaa83b5c146e8d
+            self._prepare_account_bank_statement_line_vals(session, sign, amount, reason, extras)
+=======
+            self._prepare_account_bank_statement_line_vals(session._get_cash_move_session(), sign, amount, reason, extras)
+>>>>>>> 928d5e447c2cff3b61f62fe8d208574bdb95c0da
             for session in sessions
         ]
 
@@ -1907,6 +1913,16 @@ class PosSession(models.Model):
         action = (cashier_name + ': ' if cashier_name else '') + str(amount)
         absl.unlink()
         self.log_partner_message(partner_id, action, "CASH_IN_OUT_UNLINK")
+
+    def _get_cash_move_session(self):
+        self.ensure_one()
+        if self.state not in ('closing_control', 'closed'):
+            return self
+        open_session = self.search([
+            ('state', '=', 'opened'),
+            ('config_id', '=', self.config_id.id),
+        ], limit=1)
+        return open_session or self
 
     def _get_attributes_by_ptal_id(self):
         # performance trick: prefetch fields with search_fetch() and fetch()
