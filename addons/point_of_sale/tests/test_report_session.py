@@ -486,6 +486,62 @@ class TestReportSession(TestPoSCommon):
             "A fully refunded discounted line must net its discount to zero",
         )
 
+    def test_session_report_refund_amounts_sign(self):
+        """Refund amounts must have the same sign in the products and taxes sections."""
+        tax = self.env['account.tax'].create({'name': 'Tax 25', 'amount': 25})
+        taxed_product = self.create_product('Taxed Product', self.categ_basic, 100, tax_ids=tax.ids)
+        untaxed_product = self.create_product('Untaxed Product', self.categ_basic, 50)
+        self.config.open_ui()
+        session = self.config.current_session_id
+
+        order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': session.id,
+            'partner_id': self.partner_a.id,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': taxed_product.id,
+                'price_unit': 100,
+                'qty': 1,
+                'tax_ids': [(6, 0, tax.ids)],
+                'price_subtotal': 100,
+                'price_subtotal_incl': 125,
+            }), (0, 0, {
+                'name': "OL/0002",
+                'product_id': untaxed_product.id,
+                'price_unit': 50,
+                'qty': 1,
+                'tax_ids': [],
+                'price_subtotal': 50,
+                'price_subtotal_incl': 50,
+            })],
+            'amount_paid': 175.0,
+            'amount_total': 175.0,
+            'amount_tax': 25.0,
+            'amount_return': 0.0,
+            'last_order_preparation_change': '{}',
+            'to_invoice': False,
+        })
+        self.make_payment(order, self.bank_pm1, 175.0)
+
+        order.refund()
+        refund = session.order_ids.filtered(lambda o: o.state == 'draft')
+        self.make_payment(refund, self.bank_pm1, -175.0)
+
+        session.action_pos_session_closing_control()
+        report = self.env['report.point_of_sale.report_saledetails'].get_sale_details(session_ids=session.ids)
+
+        refund_base_amounts = {
+            product['product_name']: product['base_amount']
+            for category in report['refund_products']
+            for product in category['products']
+        }
+        self.assertEqual(refund_base_amounts, {'Taxed Product': -100.0, 'Untaxed Product': -50.0})
+        self.assertEqual(report['refund_info']['total'], -150.0)
+        refund_taxes = {tax_data['name']: (tax_data['base_amount'], tax_data['tax_amount']) for tax_data in report['refund_taxes']}
+        self.assertEqual(refund_taxes, {'Tax 25': (-100.0, -25.0), 'No Taxes': (-50.0, 0.0)})
+        self.assertEqual(report['refund_taxes_info']['base_amount'], -150.0)
+
     def test_report_header_reflects_actual_order_sessions(self):
         """A date-range report whose orders span multiple sessions (e.g. one
         closed and one still open) must show state='multiple' rather than
