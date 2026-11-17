@@ -377,9 +377,9 @@ def _setup(model_cls: type[BaseModel], env: Environment):
 
     # the classes that define this model, i.e., the ones that are not
     # registry classes; the purpose of this attribute is to behave as a
-    # cache of [c for c in model_cls.mro() if not is_model_class(c))], which
+    # cache of [c for c in model_cls.__mro__ if not is_model_class(c))], which
     # is heavily used in function fields.resolve_mro()
-    model_cls._model_classes__ = tuple(c for c in model_cls.mro() if getattr(c, 'pool', None) is None)
+    model_cls._model_classes__ = tuple(c for c in model_cls.__mro__ if getattr(c, 'pool', None) is None)
 
     # 1. determine the proper fields of the model: the fields defined on the
     # class and magic fields, not the inherited or custom ones

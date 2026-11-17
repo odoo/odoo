@@ -215,7 +215,7 @@ def get_public_method(model: BaseModel, name: str) -> callable:
         e = f"The method '{model._name}.{name}' cannot be called remotely."
         raise AccessError(e)
 
-    for mro_cls in cls.mro():
+    for mro_cls in cls.__mro__:
         if not (cla_method := getattr(mro_cls, name, None)):
             continue
         if getattr(cla_method, '_api_private', False):

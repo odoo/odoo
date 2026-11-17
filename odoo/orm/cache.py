@@ -373,7 +373,7 @@ def get_cache_size(
             if attributes is None:
                 class_slots[id(cur_obj_cls)] = attributes = tuple({
                     f'_{cls.__name__}{attr}' if attr.startswith('__') else attr
-                    for cls in cur_obj_cls.mro()
+                    for cls in cur_obj_cls.__mro__
                     for attr in getattr(cls, '__slots__', ())
                 })
             objects.extend(getattr(cur_obj, attr, None) for attr in attributes)

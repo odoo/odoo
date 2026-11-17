@@ -491,7 +491,7 @@ class IrModel(models.Model):
     def _reflect_model_params(self, model):
         """ Return the values to write to the database for the given model. """
         explanations = []
-        for cls in reversed(type(model).mro()):
+        for cls in reversed(type(model).__mro__):
             # Use __dict__ to only capture explanations explicitly defined on this class.
             explanation = cls.__dict__.get('_explanation')
             # Only include if it matches the target model's name (ignores mixins).
@@ -503,7 +503,7 @@ class IrModel(models.Model):
             'name': model._description,
             'explanation': "\n\n".join(explanations) if explanations else None,
             'order': model._order,
-            'info': next(cls.__doc__ for cls in self.env.registry[model._name].mro() if cls.__doc__),
+            'info': next(cls.__doc__ for cls in self.env.registry[model._name].__mro__ if cls.__doc__),
             'state': 'manual' if model._custom else 'base',
             'abstract': model._abstract,
             'transient': model._transient,
@@ -1686,7 +1686,7 @@ class IrModelInherit(models.Model):
             model_id = get_model_id(model_name)
             model = self.env[model_name]
 
-            for cls in reversed(type(model).mro()):
+            for cls in reversed(type(model).__mro__):
                 if not models.is_model_definition(cls):
                     continue
 
