@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.fields import Domain
 from odoo.addons.mail.tests.common import MailCase
 from odoo.tests import tagged, TransactionCase, Form
@@ -96,6 +96,31 @@ class TestRecruitment(MailCase, TransactionCase):
         self.assertEqual(D.application_count, 3)  # D, A, B
         self.assertEqual(E.application_count, 0)  # Should not match with E and G as there is no data to use for matching.
         self.assertEqual(F.application_count, 1)  # F
+
+    def test_parallel_applications(self):
+        """Only the ongoing applications to a job position flag each other as parallel applications: not the talents,
+        nor the hired, refused or archived applications."""
+        job_1, job_2 = self.env['hr.job'].create([{'name': 'Parallel Job 1'}, {'name': 'Parallel Job 2'}])
+        parallel_1, parallel_2, ongoing, archived, talent, with_talent, hired, after_hired = self.env['hr.applicant'].create([
+            {'partner_name': 'Parallel 1', 'email_from': 'parallel@odoo.com', 'job_id': job_1.id},
+            {'partner_name': 'Parallel 2', 'email_from': 'PARALLEL@odoo.com', 'job_id': job_2.id},
+            {'partner_name': 'Ongoing', 'partner_phone': '+32 470 00 00 01', 'job_id': job_1.id},
+            {'partner_name': 'Archived', 'partner_phone': '+32 470 00 00 01', 'job_id': job_2.id, 'active': False},
+            {'partner_name': 'Talent', 'email_from': 'talent@odoo.com'},
+            {'partner_name': 'With Talent', 'email_from': 'talent@odoo.com', 'job_id': job_1.id},
+            {'partner_name': 'Hired', 'linkedin_profile': 'linkedin.com/in/hired', 'job_id': job_1.id,
+             'date_closed': fields.Datetime.now()},
+            {'partner_name': 'After Hired', 'linkedin_profile': 'linkedin.com/in/hired', 'job_id': job_2.id},
+        ])
+        self.assertTrue(parallel_1.has_parallel_applications)
+        self.assertTrue(parallel_2.has_parallel_applications)
+        for applicant in ongoing | archived | talent | with_talent | hired | after_hired:
+            self.assertFalse(applicant.has_parallel_applications, applicant.partner_name)
+
+        # Refusing the parallel application removes the flag of the other one
+        parallel_2.action_archive()
+        parallel_1.invalidate_recordset(['has_parallel_applications'])
+        self.assertFalse(parallel_1.has_parallel_applications)
 
     def test_talent_pool_count(self):
         tp_A, tp_B = self.env["hr.talent.pool"].create([{"name": "Cool Pool"}, {"name": "Other Pool"}])
