@@ -158,9 +158,9 @@ class PortalAccount(CustomerPortal):
         except (AccessError, MissingError):
             return request.redirect('/my')
 
-        if report_type == 'pdf' and download and invoice_sudo.state == 'posted':
-            # Download the official attachment(s) or a Pro Forma invoice
-            docs_data = invoice_sudo._get_invoice_legal_documents_all(allow_fallback=True)
+        if report_type == 'pdf' and download and invoice_sudo.state == 'posted' and invoice_sudo.invoice_pdf_report_id:
+            # Download the official attachment(s)
+            docs_data = invoice_sudo._get_invoice_legal_documents_all()
             if len(docs_data) == 1:
                 headers = self._get_http_headers(invoice_sudo, report_type, docs_data[0]['content'], download)
                 return request.make_response(docs_data[0]['content'], list(headers.items()))
@@ -171,8 +171,6 @@ class PortalAccount(CustomerPortal):
                 return request.make_response(zip_content, headers)
 
         elif report_type in ('html', 'pdf', 'text'):
-            has_generated_invoice = bool(invoice_sudo.invoice_pdf_report_id)
-            request.update_context(proforma_invoice=not has_generated_invoice)
             # Use the template set on the related partner if there is.
             # This is not perfect as the invoice can still have been computed with another template, but it's a slight fix/imp for stable.
             pdf_report_name = invoice_sudo.partner_id.invoice_template_pdf_report_id.report_name or 'account.account_invoices'
