@@ -600,7 +600,7 @@ class Message(models.Model):
                 FROM "%s" m
                 LEFT JOIN "mail_message_res_partner_rel" partner_rel
                 ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = (%%s)
-                WHERE m.id = ANY (%%s)""" % self._table, (self.env.user.partner_id.id, parent_ids,))
+                WHERE m.id = ANY (%%s) AND m.message_type != 'user_notification'""" % self._table, (self.env.user.partner_id.id, parent_ids))
             notified_parents = {
                 mid: (rmod, rid) for mid, rmod, rid, partner_id in self._cr.fetchall() if partner_id
             }
