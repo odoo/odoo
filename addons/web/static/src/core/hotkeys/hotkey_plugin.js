@@ -294,7 +294,15 @@ export class HotkeyPlugin extends Plugin {
             overlay.style.zIndex = 3;
             const overlayKbd = document.createElement("kbd");
             overlayKbd.className = "small";
-            overlayKbd.appendChild(document.createTextNode(hotkey.toUpperCase()));
+            const keys = hotkey.split("+");
+            if (keys.includes("shift")) {
+                const shiftIcon = document.createElement("i");
+                shiftIcon.className = "oi oi-filled";
+                shiftIcon.dataset.icon = "shift";
+                overlayKbd.appendChild(shiftIcon);
+            }
+            const otherKeys = keys.filter((key) => key !== "shift").join("+");
+            overlayKbd.appendChild(document.createTextNode(otherKeys.toUpperCase()));
             overlay.appendChild(overlayKbd);
 
             let overlayParent;
