@@ -610,7 +610,7 @@ class MailMessage(models.Model):
                         FROM "mail_message" m
                         JOIN "mail_message_res_partner_rel" partner_rel
                             ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = %s
-                        WHERE m.id = ANY(%s) """,
+                        WHERE m.id = ANY(%s) AND m.message_type != 'user_notification' """,
                     self.env.user.partner_id.id, list(parent_ids_msg_ids),
                 )
                 for parent_id, parent_model, parent_res_id in self.env.execute_query(query):
