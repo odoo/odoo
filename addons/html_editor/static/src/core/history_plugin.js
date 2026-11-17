@@ -64,11 +64,15 @@ import { _t } from "@web/core/l10n/translation";
  * replay creates a commit, its `apply` and `revert` receive `ensureNewMutations`
  * and stage what they do.
  *
+ * A data property can declare `takeSnapshot`, which returns the data that
+ * recreates its current state from an empty one, for snapshot commits.
+ *
  * @template { HistoryDataPropertyId } Id
  * @typedef {Object} HistoryDataProperty
  * @property {import("plugins").HistoryDataProperties[Id]} apply
  * @property {(data: HistoryData<Id>, options: { ensureNewMutations: boolean }) => void} revert
  * @property {boolean} [shouldRecordReplays]
+ * @property {() => HistoryData<Id>[]} [takeSnapshot]
  */
 /**
  * The data that the handlers of a data property receive.
@@ -125,8 +129,6 @@ import { _t } from "@web/core/l10n/translation";
  *
  * @typedef { ((commit: HistoryCommit) => boolean | undefined)[] } has_history_commit_changes_predicates
  * @typedef { ((commit: HistoryCommit) => boolean | undefined)[] } is_history_commit_reversible_predicates
- *
- * @typedef { ((data: HistoryCommitData<"standard">) => HistoryCommitData<"standard">)[] } snapshot_history_commit_data_processors
  */
 
 export const COMMIT_DEBOUNCE_DELAY = 250;
@@ -698,13 +700,19 @@ export class HistoryPlugin extends Plugin {
     }
 
     /**
-     * Create and return a "snapshot" commit.
+     * Create and return a "snapshot" commit, which recreates the current state
+     * from an empty one with the snapshots of the data properties.
      *
      * @returns { HistoryCommit<"standard"> }
      */
     createSnapshotCommit() {
         /** @type { HistoryCommitData<"standard"> } */
-        const data = this.processThrough("snapshot_history_commit_data_processors", {});
+        const data = {};
+        for (const [id, { takeSnapshot }] of this.dataProperties) {
+            if (takeSnapshot) {
+                data[id] = takeSnapshot();
+            }
+        }
         /** @type { HistoryCommitMetadata<"standard"> } */
         const metadata = { author_timestamp: this.authorTimestamp };
         return new HistoryCommit({ id: this.commits?.at(-1)?.id, data, metadata });
