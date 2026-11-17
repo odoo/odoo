@@ -2,11 +2,11 @@
 <odoo>
     <template id="report_shipping2" inherit_id="stock.report_picking">
         <xpath expr="//div[@name='div_picking_date']" position="after">
-            <div t-if="o.carrier_id">
+            <div t-if="o.carrier_id" class="col col-3 mw-100 mb-2">
                 <strong>Carrier:</strong>
                 <p t-field="o.carrier_id"/>
             </div>
-            <div t-if="o.shipping_weight">
+            <div t-if="o.shipping_weight" class="col col-3 mw-100 mb-2">
                 <strong>Weight:</strong>
                 <br/>
                 <span t-field="o.shipping_weight"/>

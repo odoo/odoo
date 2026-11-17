@@ -21,7 +21,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row mb-4">
                                 <div class="col-6" name="div_outgoing_address">
                                     <div t-if="o.should_print_delivery_address()">
                                         <strong>Delivery Address:</strong>
@@ -50,12 +50,12 @@
                                 </div>
                             </div>
                             <div class="oe_structure"></div>
-                            <div class="mt32 mb32 o_stock_report_header_row">
-                                <div t-if="o.origin" name="div_origin">
+                            <div class="report-wrapping-flexbox clearfix row mb-4">
+                                <div t-if="o.origin" name="div_origin" class="col col-3 mw-100">
                                     <strong>Order:</strong>
                                     <p t-field="o.origin">S0001</p>
                                 </div>
-                                <div name="div_warehouse">
+                                <div name="div_warehouse" class="col col-3 mw-100">
                                     <strong>Warehouse:</strong>
                                     <div t-if="o.picking_type_id.warehouse_id.partner_id"
                                         t-field="o.picking_type_id.warehouse_id.partner_id"
@@ -63,19 +63,19 @@
                                     <div t-else=""
                                         t-field="o.picking_type_id.warehouse_id.name"/>
                                     </div>
-                                <div t-if="o.picking_type_id.code == 'internal' and o.partner_id" class="col" name="div_contact">
+                                <div t-if="o.picking_type_id.code == 'internal' and o.partner_id" class="col col-3 mw-100" name="div_contact">
                                     <strong>Contact</strong>
                                     <div t-field="o.partner_id" class="m-0"/>
                                 </div>
-                                <div name="div_state">
+                                <div name="div_state" class="col col-3 mw-100">
                                     <strong>Status:</strong>
                                     <p t-field="o.state">Draft</p>
                                 </div>
-                                <div t-if="o.user_id" name="div_operator">
+                                <div t-if="o.user_id" name="div_operator" class="col col-3 mw-100">
                                     <strong>Operator:</strong>
                                     <p t-field="o.user_id">Mitchel Admin</p>
                                 </div>
-                                <div name="div_picking_date">
+                                <div name="div_picking_date" class="col col-3 mw-100">
                                     <t t-if="o.state == 'done' and o.date_done">
                                         <strong>Done Date:</strong>
                                         <p t-field="o.date_done" t-options='{"widget": "date"}'>2023-09-24</p>
@@ -85,15 +85,15 @@
                                         <p t-field="o.scheduled_date" t-options='{"widget": "date"}'>2023-09-24</p>
                                     </t>
                                 </div>
-                                <div name="div_warn" t-if="o.picking_warning_text">
-                                    <strong>Instructions:</strong>
-                                    <div t-field="o.picking_warning_text"/>
-                                </div>
-                                <div name="div_vendor" t-if="o.picking_type_id.code=='incoming' and o.partner_id">
+                                <div name="div_vendor" t-if="o.picking_type_id.code=='incoming' and o.partner_id" class="col col-3 mw-100">
                                     <strong>From:</strong>
                                     <div t-field="o.partner_id.commercial_partner_id"
                                         t-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": True, "phone_icons": True}'>
                                     </div>
+                                </div>
+                                <div name="div_warn" t-if="o.picking_warning_text" class="col col-auto mw-100">
+                                    <strong>Instructions:</strong>
+                                    <div t-field="o.picking_warning_text"/>
                                 </div>
                             </div>
                             <t t-set="format_number" t-value="lambda x: int(x) if x == int(x) else x"/>
