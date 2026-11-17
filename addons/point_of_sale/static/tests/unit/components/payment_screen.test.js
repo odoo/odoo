@@ -1,5 +1,7 @@
 import { test, animationFrame, expect } from "@odoo/hoot";
-import { mountWithCleanup, mockService } from "@web/../tests/web_test_helpers";
+import { advanceTime } from "@odoo/hoot-mock";
+import { mountWithCleanup, mockService, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { session } from "@web/session";
 import { setupPosEnv, getFilledOrder, expectFormattedPrice } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
 import { queryOne } from "@odoo/hoot-dom";
@@ -186,4 +188,46 @@ test("invoice button is enabled for normal orders", async () => {
 
     const invoiceBtn = queryOne(".js_invoice");
     expect(invoiceBtn.disabled).toBe(false);
+});
+
+test("validating during a barcode scan does not use the scanned digits as amount", async () => {
+    // The buffer only filters fast key sequences outside of test mode.
+    patchWithCleanup(session, { test_mode: false });
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const cardPm = store.models["pos.payment.method"].get(2);
+    const comp = await mountWithCleanup(PaymentScreen, {
+        props: { orderUuid: order.uuid },
+    });
+    await comp.addNewPaymentLine(cardPm);
+    const amountDue = order.totalDue;
+
+    // Validate is clicked while the scanner is still typing the barcode.
+    for (const key of "6224") {
+        window.dispatchEvent(new KeyboardEvent("keyup", { key }));
+        await advanceTime(3);
+    }
+    await comp.validateOrder();
+
+    expect(order.payment_ids).toHaveLength(1);
+    expect(order.payment_ids[0].getAmount()).toBe(amountDue);
+});
+
+test("fast numpad clicks are kept when validating", async () => {
+    patchWithCleanup(session, { test_mode: false });
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const cashPm = store.models["pos.payment.method"].get(1);
+    const comp = await mountWithCleanup(PaymentScreen, {
+        props: { orderUuid: order.uuid },
+    });
+    await comp.addNewPaymentLine(cashPm);
+
+    for (const key of "500") {
+        comp.numberBuffer.sendKey(key);
+        await advanceTime(3);
+    }
+    await comp.validateOrder();
+
+    expect(order.payment_ids[0].getAmount()).toBe(500);
 });
