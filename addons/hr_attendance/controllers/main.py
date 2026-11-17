@@ -49,7 +49,7 @@ class HrAttendance(http.Controller):
         """
         response = {}
         if employee:
-            attendance_fields = ['check_in', 'check_out', 'worked_hours', 'work_entry_type_id', 'wet_color', 'wet_display_code']
+            attendance_fields = ['check_in', 'check_out', 'worked_hours', 'work_entry_type_id', 'wet_display_code']
             if include_attendance_details:
                 attendance_fields += [
                     'break_duration',
@@ -62,7 +62,10 @@ class HrAttendance(http.Controller):
                 'name': employee.name,
                 'hours_today': float_round(employee.hours_today, precision_digits=3),
                 'hours_previously_today': float_round(employee.hours_previously_today, precision_digits=2),
-                'today_attendance_ids': employee.today_attendance_ids.read(attendance_fields),
+                'today_attendance_ids': [
+                    dict(values, wet_color=attendance.work_entry_type_id.sudo().color)
+                    for attendance, values in zip(employee.today_attendance_ids, employee.today_attendance_ids.read(attendance_fields))
+                ],
                 'last_attendance_worked_hours': float_round(employee.last_attendance_worked_hours, precision_digits=2),
                 'last_check_in': employee.last_check_in,
                 'attendance_state': employee.attendance_state,
@@ -142,18 +145,19 @@ class HrAttendance(http.Controller):
         :param str mode: ``in_mode``/``out_mode`` value (``'kiosk'``, ``'systray'``)
         :param latitude: GPS latitude sent by the browser, else the GeoIP one
         :param longitude: GPS longitude sent by the browser, else the GeoIP one
-        :param bool device_tracking_enabled: when ``False``, only the mode is returned
+        :param bool device_tracking_enabled: when ``False``, the GPS position sent by the browser
+            is ignored: the location, IP address and browser only come from the request (GeoIP)
         :return: ``{'mode', 'location', 'latitude', 'longitude', 'ip_address', 'browser'}``
         :rtype: dict
         """
         response = {'mode': mode}
 
         if not device_tracking_enabled:
-            return response
+            latitude = longitude = False
         try:
             location = request.env['base.geocoder']._get_localisation(latitude, longitude)
         except (UserError, RequestException):
-            location = _("Unknown")
+            location = request.env._("Unknown")
 
         response.update({
             'location': location,
@@ -409,7 +413,8 @@ class HrAttendance(http.Controller):
         """Kiosk: set the break duration of the employee's last attendance, after check-out.
 
         The employee is identified by badge or by id (and PIN). Only for companies with
-        ``attendance_break_management``, on a closed, non validated last attendance.
+        ``attendance_break_management``, on a closed, non refused last attendance. The attendance goes back to To
+        Review, and may be reviewed again at once, see ``hr.attendance._auto_review``.
 
         :return: :meth:`_get_attendance_action_response`, or ``{}`` if refused
         """
@@ -438,10 +443,13 @@ class HrAttendance(http.Controller):
             or attendance.employee_id != employee
             or attendance != employee.last_attendance_id
             or not attendance.check_out
-            or attendance.state == 'validated'
+            or attendance.state == 'refused'
         ):
             return {}
-        attendance.write({'break_duration': break_duration})
+        # The break is the employee's own change, asked right after the check-out: the attendance is reviewed again,
+        # as at the check-out.
+        attendance.write({'break_duration': break_duration, 'state': 'draft'})
+        attendance._auto_review()
         return self._get_attendance_action_response(employee)
 
     @http.route('/hr_attendance/employees_infos', type="jsonrpc", auth="public")
@@ -496,7 +504,9 @@ class HrAttendance(http.Controller):
                                                   longitude=longitude,
                                                   device_tracking_enabled=employee.company_id.attendance_device_tracking)
         check_in_image_data = self._get_validated_check_in_image_and_type(check_in_image, employee.company_id.attendance_capture_check_in)
-        notification = employee.with_context({'is_from_systray_check_in_out': True})._attendance_action_change(geo_ip_response, check_in_image_data)
+        # As superuser, like the kiosk: only the attendance managers may set a device mode such as "systray" on an
+        # attendance, see hr.attendance._requires_attendance_manager.
+        notification = employee.sudo().with_context({'is_from_systray_check_in_out': True})._attendance_action_change(geo_ip_response, check_in_image_data)
         response = self._get_attendance_action_response(employee, notification)
         response.update(self._get_user_attendance_data(employee, include_attendance_details=True))
         split_summary = response.get('split_summary')

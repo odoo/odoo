@@ -563,7 +563,6 @@ class TestAttendanceSplitPreview(TransactionCase):
             'date_version': date(2026, 1, 1),
             'contract_date_start': date(2026, 1, 1),
         })
-        cls.env.company.attendance_validation = 'no_validation'
 
     def _new(self, check_in, check_out, break_duration=0.0):
         return self.env['hr.attendance'].new({
@@ -663,13 +662,11 @@ class TestAttendanceSplitPreview(TransactionCase):
             form.check_out = datetime(2026, 6, 8, 15, 0)
             self.assertFalse(form.time_rule_split_preview)
             form.check_out = datetime(2026, 6, 8, 20, 0)
+        self.assertEqual(form.record.state, 'validated', "an attendance of a manager is reviewed at once")
 
+        # an attendance of a manager is reviewed at once, one from the kiosk waits for a review
         self.env.company.attendance_validation = 'manual_validation'
-        with Form(self.env['hr.attendance']) as form:
-            form.employee_id = self.employee
-            form.check_in = datetime(2026, 6, 9, 7, 0)
-            form.check_out = datetime(2026, 6, 9, 20, 0)
-            self.assertIn('will be split into 2 attendances', form.time_rule_split_preview)
+        self._create(datetime(2026, 6, 9, 7, 0), datetime(2026, 6, 9, 20, 0), in_mode='kiosk', out_mode='kiosk')
         draft = self._employee_attendances().filtered(lambda a: a.state == 'draft')
         self.assertEqual(len(draft), 1, "the draft attendance must not be split before validation")
         self.assertFalse(draft.overtime_attendance_ids)
@@ -715,7 +712,7 @@ class TestAttendanceSplitPreview(TransactionCase):
 
     def test_chatter_logged_on_validation(self):
         self.env.company.attendance_validation = 'manual_validation'
-        source = self._create(datetime(2026, 6, 8, 7, 0), datetime(2026, 6, 8, 20, 0))
+        source = self._create(datetime(2026, 6, 8, 7, 0), datetime(2026, 6, 8, 20, 0), in_mode='kiosk', out_mode='kiosk')
         self.assertEqual(source.state, 'draft')
         self.assertFalse(self._split_messages(source), "a draft attendance is not split yet")
         source.action_validate()
@@ -774,9 +771,11 @@ class TestAttendanceSplitCheckOut(HttpCase):
     def _check_in(self, check_in):
         # from the employee's company, as the systray and the kiosk: the default time type of an
         # attendance is the current company's, which the rule of this company must match
+        # a check-in from a device: a manual one waits for a manager at check-out
         self.env['hr.attendance'].with_company(self.company).create({
             'employee_id': self.employee.id,
             'check_in': check_in,
+            'in_mode': 'systray',
         })
 
     def _systray_check_out(self):
@@ -786,19 +785,21 @@ class TestAttendanceSplitCheckOut(HttpCase):
     def _parts(self, summary):
         return [(part['work_entry_type'], round(part['hours'], 4)) for part in summary['parts']]
 
-    @freeze_time('2026-06-08 20:00:00')  # Monday
+    @freeze_time('2026-06-08 17:00:00')  # Monday
     def test_systray_check_out_split(self):
-        self._check_in(datetime(2026, 6, 8, 7, 0))
+        # within the tolerance, the day has no issue: it is reviewed, so split, at check-out
+        self.company.attendance_validation_tolerance = 60
+        self._check_in(datetime(2026, 6, 8, 8, 0))
         result = self._systray_check_out()
         summary = result['split_summary']
         self.assertFalse(summary['pending'])
         self.assertEqual(self._parts(summary), [
             (self.att_type.name, 8.0),
-            (self.ot_type.name, 5.0),
+            (self.ot_type.name, 1.0),
         ])
         self.assertEqual(result['notification']['type'], 'info')
         self.assertIn('was split into 2 attendances', result['notification']['message'])
-        self.assertIn(f'{self.ot_type.name}: 05:00', result['notification']['message'])
+        self.assertIn(f'{self.ot_type.name}: 01:00', result['notification']['message'])
 
     @freeze_time('2026-06-08 20:00:00')
     def test_systray_check_out_split_pending_validation(self):
@@ -822,16 +823,17 @@ class TestAttendanceSplitCheckOut(HttpCase):
         self.assertEqual(self.employee.attendance_state, 'checked_in')
         self.assertNotIn('split_summary', result)
 
-    @freeze_time('2026-06-08 20:00:00')
+    @freeze_time('2026-06-08 17:00:00')
     def test_kiosk_check_out_split(self):
-        self._check_in(datetime(2026, 6, 8, 7, 0))
+        self.company.attendance_validation_tolerance = 60
+        self._check_in(datetime(2026, 6, 8, 8, 0))
         result = self.make_jsonrpc_request('/hr_attendance/attendance_barcode_scanned', {
             'token': self.company.attendance_kiosk_key,
             'barcode': 'SPLIT123',
         })
         self.assertEqual(self._parts(result['split_summary']), [
             (self.att_type.name, 8.0),
-            (self.ot_type.name, 5.0),
+            (self.ot_type.name, 1.0),
         ])
         self.assertIn('was split into 2 attendances', result['split_summary']['title'])
         # the kiosk shows the split in its greetings, not as a notification

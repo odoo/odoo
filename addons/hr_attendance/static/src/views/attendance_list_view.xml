@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+    <t t-name="hr_attendance.AttendanceListController" t-inherit="web.ListView" t-inherit-mode="primary">
+        <Layout position="inside">
+            <t t-set-slot="attendance-dashboard">
+                <AttendanceDashboard t-if="this.model.isReady()" list="this.model.root"/>
+            </t>
+        </Layout>
+    </t>
     <t t-name="hr_attendance.AttendanceListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary">
         <ActionHelper position="replace"/>
         <table position="after">

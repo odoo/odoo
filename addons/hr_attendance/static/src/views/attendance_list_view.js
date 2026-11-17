@@ -1,8 +1,16 @@
 import { registry } from "@web/core/registry";
 
 import { listView } from "@web/views/list/list_view";
+import { ListController } from "@web/views/list/list_controller";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { AttendanceActionHelper } from "@hr_attendance/views/attendance_helper_view";
+import { AttendanceControlPanel } from "@hr_attendance/components/attendance_dashboard/attendance_control_panel";
+import { AttendanceDashboard } from "@hr_attendance/components/attendance_dashboard/attendance_dashboard";
+
+export class AttendanceListController extends ListController {
+    static template = "hr_attendance.AttendanceListController";
+    static components = { ...ListController.components, AttendanceDashboard };
+}
 
 export class AttendanceListRenderer extends ListRenderer {
     static template = "hr_attendance.AttendanceListRenderer";
@@ -18,23 +26,11 @@ export class AttendanceListRenderer extends ListRenderer {
     }
 }
 
-export class AttendanceListModel extends listView.Model {
-    /** @override **/
-    async load(params = {}) {
-        const activeDomainParam = params.domain?.some(
-            (index) => Array.isArray(index) && index[0] == "employee_id.active"
-        );
-        if (!activeDomainParam) {
-            params.domain?.push(["employee_id.active", "=", true]);
-        }
-        return super.load(params);
-    }
-}
-
 export const attendanceListView = {
     ...listView,
+    Controller: AttendanceListController,
+    ControlPanel: AttendanceControlPanel,
     Renderer: AttendanceListRenderer,
-    Model: AttendanceListModel,
 };
 
 registry.category("views").add("attendance_list_view", attendanceListView);
