@@ -127,6 +127,8 @@ class EventTrack(models.Model):
     conflict_count = fields.Integer('# Conflicts', compute='_compute_conflicts')
     has_conflict = fields.Boolean(
         'Has Conflict', compute='_compute_conflicts', search='_search_has_conflict')
+    has_location_conflict = fields.Boolean('Location Double-Booked', compute='_compute_conflicts')
+    has_speaker_conflict = fields.Boolean('Speaker Double-Booked', compute='_compute_conflicts')
     is_track_live = fields.Boolean(
         'Is Track Live', compute='_compute_track_time_data')
     is_track_soon = fields.Boolean(
@@ -318,14 +320,17 @@ class EventTrack(models.Model):
             if track.date and track.date_end:
                 track.duration = (track.date_end - track.date).total_seconds() / 3600
 
-    @api.depends('date', 'date_end', 'active', 'stage_id.is_cancel', 'location_id')
+    @api.depends('date', 'date_end', 'active', 'stage_id.is_cancel', 'location_id', 'partner_id')
     def _compute_conflicts(self):
         conflicts = self._get_conflict_data()
         for track in self:
-            others = self.env['event.track'].browse(sorted(conflicts.get(track, ())))
+            other_ids, same_location, same_speaker = conflicts.get(track, (set(), False, False))
+            others = self.env['event.track'].browse(sorted(other_ids))
             track.conflicting_track_ids = others
             track.conflict_count = len(others)
             track.has_conflict = bool(others)
+            track.has_location_conflict = same_location
+            track.has_speaker_conflict = same_speaker
 
     def _search_has_conflict(self, operator, value):
         if operator != 'in' or list(value) != [True]:
@@ -334,10 +339,10 @@ class EventTrack(models.Model):
             Domain('date', '!=', False)
             & Domain('date_end', '>', fields.Datetime.now())
             & Domain('stage_id.is_cancel', '=', False)
-            & Domain('location_id', '!=', False),
+            & (Domain('location_id', '!=', False) | Domain('partner_id', '!=', False)),
         )
         conflicts = self._conflict_sweep(tracks.filtered(lambda track: track._is_conflict_candidate()))
-        return Domain('id', 'in', [track.id for track in conflicts])
+        return Domain('id', 'in', [track.id for track, data in conflicts.items() if data[0]])
 
     def _is_conflict_candidate(self):
         self.ensure_one()
@@ -350,37 +355,45 @@ class EventTrack(models.Model):
 
     @api.model
     def _conflict_sweep(self, tracks):
-        """ Return {track: set(conflicting ids)} for the given tracks, compared
-        with each other. A location is booked per event. """
-        bookings = defaultdict(list)  # (event, location) -> [track]
+        """ Return {track: [set(conflicting ids), same_location, same_speaker]}
+        for the given tracks, compared with each other. A location is booked
+        per event, a speaker across all events. """
+        bookings = defaultdict(list)  # resource -> [track]
         for track in tracks:
             if track.location_id:
-                bookings[track.event_id.id, track.location_id.id].append(track)
+                bookings['location', track.event_id.id, track.location_id.id].append(track)
+            if track.partner_id:
+                bookings['speaker', track.partner_id.id].append(track)
 
-        result = defaultdict(set)
-        for booked_tracks in bookings.values():
+        result = defaultdict(lambda: [set(), False, False])
+        for (kind, *_res_ids), booked_tracks in bookings.items():
             booked_tracks.sort(key=lambda track: track.date)
             running = []  # tracks still going on while sweeping in start order
             for track in booked_tracks:
                 running = [other for other in running if other.date_end > track.date]
                 for other in running:
                     for first, second in ((track, other), (other, track)):
+                        data = result[first]
                         # for an unsaved record, report the stored id of the other one
-                        result[first].add(second._origin.id or second.id)
+                        data[0].add(second._origin.id or second.id)
+                        data[1 if kind == 'location' else 2] = True
                 running.append(track)
         return result
 
     def _get_conflict_data(self):
         candidates = self.filtered(lambda track: track._is_conflict_candidate())
-        if not candidates.location_id:
+        if not candidates or not (candidates.location_id or candidates.partner_id):
             return {}
+        same_location = (
+            Domain('location_id', 'in', candidates.location_id.ids)
+            & Domain('event_id', 'in', candidates.event_id.ids)
+        )
         others = self.env['event.track'].search(
             Domain('date', '<', max(candidates.mapped('date_end')))
             & Domain('date_end', '>', max(min(candidates.mapped('date')), fields.Datetime.now()))
             & Domain('stage_id.is_cancel', '=', False)
             & Domain('id', 'not in', candidates._origin.ids)
-            & Domain('location_id', 'in', candidates.location_id.ids)
-            & Domain('event_id', 'in', candidates.event_id.ids),
+            & (same_location | Domain('partner_id', 'in', candidates.partner_id.ids)),
         )
         pool = candidates | others.filtered(lambda track: track._is_conflict_candidate())
         return self._conflict_sweep(pool)
