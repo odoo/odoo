@@ -13,12 +13,12 @@ test("popover should only show the label and url inputs", async () => {
         anchorOffset: 1,
     });
     await contains(".o-we-linkpopover .o_we_edit_link").click();
-    expect(".o-we-linkpopover .input-group").toHaveCount(2, {
+    expect(".o-we-linkpopover .o_we_link_field").toHaveCount(2, {
         message: "Only the label and url inputs should be present",
     });
     expect(".o-we-linkpopover .o_we_label_link").toHaveValue("Link label");
     expect(".o-we-linkpopover .o_we_href_input_link").toHaveValue("https://test.com/");
-    expect(".o-we-linkpopover [name='link_type']").toHaveCount(0);
+    expect(".o-we-linkpopover .o_we_link_type").toHaveCount(0);
     expect(".o-we-linkpopover [name='link_style_size']").toHaveCount(0);
     expect(".o-we-linkpopover [name='link_style_shape']").toHaveCount(0);
 });

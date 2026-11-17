@@ -2,6 +2,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { testEditor, setupEditor } from "../_helpers/editor";
 import { unlinkFromPopover, unlinkByCommand, unlinkFromToolbar } from "../_helpers/user_actions";
 import { getContent, setSelection } from "../_helpers/selection";
+import { waitFor } from "@odoo/hoot-dom";
 
 describe("range collapsed, remove by popover unlink button", () => {
     test("should remove the link if collapsed range at the end of a link (1)", async () => {
@@ -164,21 +165,12 @@ describe("range collapsed, remove by popover unlink button", () => {
 
 describe("range not collapsed", () => {
     describe("remove by toolbar unlink button", () => {
-        test("should remove the link in the selected range at the end of a link", async () => {
-            // FORWARD
-            await testEditor({
-                contentBefore: '<p>a<a href="exist">bc[d]</a>e</p>',
-                stepFunction: unlinkFromToolbar,
-                contentAfter: '<p>a<a href="exist">bc</a>[d]e</p>',
-            });
-        });
-        test("should remove fully selected link by toolbar unlink button", async () => {
-            await testEditor({
-                contentBefore: '<p>a<a href="exist">[bcd]</a>e</p>',
-                stepFunction: unlinkFromToolbar,
-                contentAfterEdit: "<p>a[bcd]e</p>",
-                contentAfter: "<p>a[bcd]e</p>",
-            });
+        test("should not show the toolbar unlink button within one link", async () => {
+            // The link button opens the popover of the link, which removes it.
+            await setupEditor('<p>a<a href="exist">bc[d]</a>e</p>');
+            await waitFor(".o-we-toolbar");
+            expect(".btn[name='link']").toHaveClass("active");
+            expect(".btn[name='unlink']").toHaveCount(0);
         });
         test("should remove fully selected link along with text by toolbar unlink button", async () => {
             await testEditor({
@@ -196,16 +188,24 @@ describe("range not collapsed", () => {
                 contentAfter: "<p>a[bcdef]g</p>",
             });
         });
-        test("should remove fully selected formatted link by toolbar unlink button", async () => {
+    });
+    describe("remove by command", () => {
+        test("should remove fully selected link", async () => {
+            await testEditor({
+                contentBefore: '<p>a<a href="exist">[bcd]</a>e</p>',
+                stepFunction: unlinkByCommand,
+                contentAfterEdit: "<p>a[bcd]e</p>",
+                contentAfter: "<p>a[bcd]e</p>",
+            });
+        });
+        test("should remove fully selected formatted link", async () => {
             await testEditor({
                 contentBefore: '<p>a<a href="exist"><i>[bcd]</i></a>e</p>',
-                stepFunction: unlinkFromToolbar,
+                stepFunction: unlinkByCommand,
                 contentAfterEdit: "<p>a<i>[bcd]</i>e</p>",
                 contentAfter: "<p>a<i>[bcd]</i>e</p>",
             });
         });
-    });
-    describe("remove by command", () => {
         test("should remove the link in the selected range at the end of a link", async () => {
             await testEditor({
                 contentBefore: '<p>a<a href="exist">bc[d]</a>e</p>',
@@ -351,7 +351,7 @@ describe("range not collapsed", () => {
         });
     });
     test("should be able to remove link if selection has FEFF character", async () => {
-        const { el } = await setupEditor(
+        const { el, editor } = await setupEditor(
             '<p><a href="google.com" class="btn btn-primary">[test]</a></p>'
         );
         const link = el.querySelector("a");
@@ -363,11 +363,11 @@ describe("range not collapsed", () => {
             focusNode: secondFeffChar,
             focusOffset: 1,
         });
-        await unlinkFromToolbar();
+        unlinkByCommand(editor);
         expect(getContent(el)).toBe("<p>[test]</p>");
     });
     test("should be able to remove link if selection has FEFF character (2)", async () => {
-        const { el } = await setupEditor(
+        const { el, editor } = await setupEditor(
             '<p><a href="http://test.test/" class="btn btn-primary">[]test</a></p>'
         );
         const link = el.querySelector("a");
@@ -380,7 +380,7 @@ describe("range not collapsed", () => {
             focusNode: textNode,
             focusOffset: 0,
         });
-        await unlinkFromToolbar();
+        unlinkByCommand(editor);
         expect(getContent(el)).toBe("<p>]test[</p>");
     });
 });

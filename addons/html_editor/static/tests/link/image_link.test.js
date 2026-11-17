@@ -52,31 +52,31 @@ test("can remove link from an inline image", async () => {
     await expectElementCount(".o-we-linkpopover", 0);
 });
 test("can remove link from a selection of an inline image + text", async () => {
-    const { el } = await setupEditor(
+    const { el, editor } = await setupEditor(
         `<p>ab<a href="http://test.test/">c[d<img src="${base64Img}">e]f</a>g</p>`
     );
-    await waitFor(".o-we-toolbar");
-    await click(".o-we-toolbar [data-icon='link_off']");
+    // Within one link: no unlink button on the toolbar (see the link popover).
+    execCommand(editor, "removeLinkFromSelection");
     expect(cleanLinkArtifacts(getContent(el))).toBe(
         `<p>ab<a href="http://test.test/">c</a>[d<img src="${base64Img}">e]<a href="http://test.test/">f</a>g</p>`
     );
 });
 test("can remove link from a selection (ltr) with multiple inline images", async () => {
-    const { el } = await setupEditor(
+    const { el, editor } = await setupEditor(
         `<p>ab<a href="http://test.test/">c[d<img src="${base64Img}">e<img src="${base64Img}">f]g</a>h</p>`
     );
-    await waitFor(".o-we-toolbar");
-    await click(".o-we-toolbar [data-icon='link_off']");
+    // Within one link: no unlink button on the toolbar (see the link popover).
+    execCommand(editor, "removeLinkFromSelection");
     expect(cleanLinkArtifacts(getContent(el))).toBe(
         `<p>ab<a href="http://test.test/">c</a>[d<img src="${base64Img}">e<img src="${base64Img}">f]<a href="http://test.test/">g</a>h</p>`
     );
 });
 test("can remove link from a selection (rtl) with multiple inline images", async () => {
-    const { el } = await setupEditor(
+    const { el, editor } = await setupEditor(
         `<p>ab<a href="http://test.test/">c]d<img src="${base64Img}">e<img src="${base64Img}">f[g</a>h</p>`
     );
-    await waitFor(".o-we-toolbar");
-    await click(".o-we-toolbar [data-icon='link_off']");
+    // Within one link: no unlink button on the toolbar (see the link popover).
+    execCommand(editor, "removeLinkFromSelection");
     expect(cleanLinkArtifacts(getContent(el))).toBe(
         `<p>ab<a href="http://test.test/">c</a>]d<img src="${base64Img}">e<img src="${base64Img}">f[<a href="http://test.test/">g</a>h</p>`
     );
