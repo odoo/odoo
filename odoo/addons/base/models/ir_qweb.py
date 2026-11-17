@@ -1049,7 +1049,9 @@ class IrQweb(models.AbstractModel):
         ]
 
     def _get_template_cache_version_data(self, views):
-        return {'view_ids': views._get_inheriting_views().ids}
+        """ Return the ``version_data`` of the `ir.cache` entry of a template,
+        given ``views``, the views combined in it. """
+        return {'view_ids': views.ids}
 
     def _get_template_info(self, template):
         return self.env['ir.ui.view']._get_cached_template_info(template)
@@ -1172,10 +1174,8 @@ class IrQweb(models.AbstractModel):
         ])
         compiled = compile(wrap_code, f"<{ref}>", 'exec')
         if store and ref:
-            view = self.env['ir.ui.view'].sudo().browse(ref)
-            views = view
-            while view := view.inherit_id:
-                views += view
+            # the views combined in the template, loaded in batch with its tree
+            views = self.env['ir.ui.view'].sudo().browse(self._preload_trees([ref])[ref]['view_ids'])
             self.env['ir.cache']._set__('qweb', repr(self._get_cache_key(ref)),
                     marshal.dumps((code, options, def_name, compiled)),
                     self._get_template_cache_version_data(views), self._get_template_cache_version_sql(),
@@ -1413,14 +1413,15 @@ class IrQweb(models.AbstractModel):
         missing_refs_values = list(missing_refs.values())
         views = self.env['ir.ui.view'].sudo().union(data['view'] for data in missing_refs_values)
 
-        trees = views._get_view_etrees()
+        trees = views._get_view_etrees_and_views()
 
         # add in cache
-        for xmlid, view, tree in zip(xmlids, views, trees):
+        for xmlid, view, (tree, combined_views) in zip(xmlids, views, trees):
             data = {
                 'tree': tree,
                 'template': etree.tostring(tree, encoding='unicode'),
                 'calls': self._get_called_templates(tree),
+                'view_ids': combined_views.ids,
             }
             compile_batch[view.id].update(data)
             compile_batch[xmlid].update(data)

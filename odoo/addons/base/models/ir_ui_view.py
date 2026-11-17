@@ -1068,6 +1068,12 @@ actual arch.
 
     def _get_combined_archs(self):
         """ Return the arch of ``self`` (as an etree) combined with its inherited views. """
+        return [arch for arch, _views in self._get_combined_archs_and_views()]
+
+    def _get_combined_archs_and_views(self):
+        """ Return the arch of ``self`` (as an etree) combined with its inherited
+        views, with the views it depends on: its ancestors and the views
+        combined in it (like ``_get_inheriting_views`` on its ancestors). """
         parented = []
         roots = self.env['ir.ui.view']
         for root in self:
@@ -1113,10 +1119,15 @@ actual arch.
 
         roots = roots.with_prefetch(all_tree_views._prefetch_ids)
 
-        return [
-            root._combine(get_hierarchy(root, parented_ids))
-            for root, parented_ids in zip(roots, parented)
-        ]
+        result = []
+        for root, parented_ids in zip(roots, parented):
+            hierarchy = get_hierarchy(root, parented_ids)
+            combined_views = self.browse(sorted({
+                *parented_ids,
+                *(view.id for children in hierarchy.values() for view in children),
+            }))
+            result.append((root._combine(hierarchy), combined_views))
+        return result
 
     def _get_view_refs(self, node):
         """ Extract the `[view_type]_view_ref` keys and values from the node context attribute,
@@ -2648,12 +2659,16 @@ actual arch.
         return ['lang', 'inherit_branding', 'edit_translations']
 
     def _get_view_etrees(self):
+        return [arch_tree for arch_tree, _views in self._get_view_etrees_and_views()]
+
+    def _get_view_etrees_and_views(self):
+        """ Like ``_get_view_etrees``, with the views combined in each tree. """
         if not self:
             return []
-        arch_trees = self._get_combined_archs()
-        for arch_tree in arch_trees:
+        result = self._get_combined_archs_and_views()
+        for arch_tree, _views in result:
             self.distribute_branding(arch_tree)
-        return arch_trees
+        return result
 
     def _contains_branded(self, node):
         return node.tag == 't'\
