@@ -87,7 +87,7 @@ export class Meeting extends Component {
     get showInviteBanner() {
         return Boolean(
             this.channel &&
-                !this.rtc.isPipMode &&
+                !this.props.isPip &&
                 this.channel.channel_type !== "chat" &&
                 !this.rtc.isMeetingReadyBannerDismissed &&
                 this.channel.rtc_session_ids.length <= 1
@@ -97,18 +97,18 @@ export class Meeting extends Component {
     /** Handed to the call bar's "More" when this bar has no room for a cluster of its own. */
     get sideActionGroups() {
         // PiP has its own, much shorter list ({@link pipExtraActions}).
-        if (this.hasSideActions || this.rtc.isPipMode) {
+        if (this.hasSideActions || this.props.isPip) {
             return [];
         }
         return meetingMoreActionGroups(this.threadActions);
     }
 
     get hasSideActions() {
-        return !this.rtc.isPipMode && !this.ui.isSmall();
+        return !this.props.isPip && !this.ui.isSmall();
     }
 
     get pipExtraActions() {
-        if (!this.rtc.isPipMode) {
+        if (!this.props.isPip) {
             return [];
         }
         return this.threadActions.actions.filter((a) => PIP_EXTRA_ACTION_IDS.includes(a.id));
