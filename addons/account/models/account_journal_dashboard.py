@@ -799,6 +799,15 @@ class AccountJournal(models.Model):
         ))
         is_sample_data_by_journal_id = {row[0]: not row[1] for row in self.env.cr.fetchall()}
 
+        all_sale_journals = self.env['account.journal'].search([
+            *self.env['account.journal']._check_company_domain(sale_purchase_journals.company_id),
+            ('type', '=', 'sale'),
+        ])
+        default_sale_journal_ids = {
+            company_journals[0].id
+            for company_journals in all_sale_journals.grouped('company_id').values()
+        }
+
         for journal in sale_purchase_journals:
             # User may have read access on the journal but not on the company
             currency = journal.currency_id or self.env['res.currency'].browse(journal.company_id.sudo().currency_id.id)
@@ -807,6 +816,7 @@ class AccountJournal(models.Model):
             (number_late, sum_late) = self._count_results_and_sum_amounts(late_query_results[journal.id], currency)
             (number_to_check, sum_to_check) = self._count_results_and_sum_amounts(to_check_vals[journal.id], currency)
 
+            show_invoice_guide = False
             if journal.type == 'purchase':
                 title_has_sequence_holes = _("Irregularities due to draft, cancelled or deleted bills with a sequence number since last lock date.")
                 drag_drop_settings = {
@@ -820,7 +830,8 @@ class AccountJournal(models.Model):
                     'image': '/web/static/img/quotation.svg',
                     'text': _('Drop to import your invoices.'),
                 }
-                onboarding_action_data = journal._get_onboarding_action_data()
+                show_invoice_guide = journal.id in default_sale_journal_ids and is_sample_data_by_journal_id[journal.id]
+                onboarding_action_data = journal._get_onboarding_action_data() if show_invoice_guide else {}
 
             dashboard_data[journal.id].update({
                 'number_to_check': number_to_check,
@@ -839,6 +850,7 @@ class AccountJournal(models.Model):
                 'has_entries': not is_sample_data_by_journal_id[journal.id],
                 'drag_drop_settings': drag_drop_settings,
                 'onboarding_action_data': onboarding_action_data,
+                'show_invoice_guide': show_invoice_guide,
             })
 
     def _fill_general_dashboard_data(self, dashboard_data):
