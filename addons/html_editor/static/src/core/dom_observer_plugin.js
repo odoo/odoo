@@ -150,6 +150,19 @@ export class DomObserverPlugin extends Plugin {
                 revert: (mutation, { ensureNewMutations } = {}) =>
                     this.revertMutations([mutation], { ensureNewMutations }),
                 shouldRecordReplays: true,
+                // Add the observed nodes of the editable to an empty one.
+                takeSnapshot: () =>
+                    childNodes(this.editable)
+                        .filter((node) => this.dependencies.domReferenceMap.hasNode(node))
+                        .map((node) => ({
+                            type: EDITOR_MUTATION_TYPES.ADD,
+                            parentNodeId: "root",
+                            nodeId: this.dependencies.domReferenceMap.getNodeId(node),
+                            serializedNode: this.dependencies.domReferenceMap.serializeTree(
+                                nodeToTree(node)
+                            ),
+                            nextNodeId: null,
+                        })),
             },
         }),
 
@@ -218,24 +231,6 @@ export class DomObserverPlugin extends Plugin {
         on_will_collect_history_draft_handlers: withSequence(0, (type) =>
             this.stageMutationsForCollection(type)
         ),
-
-        // Processors
-        // ----------
-
-        snapshot_history_commit_data_processors: (data) => {
-            data.mutations = childNodes(this.editable)
-                .filter((node) => this.dependencies.domReferenceMap.hasNode(node))
-                .map((node) => ({
-                    type: EDITOR_MUTATION_TYPES.ADD,
-                    parentNodeId: "root",
-                    nodeId: this.dependencies.domReferenceMap.getNodeId(node),
-                    serializedNode: this.dependencies.domReferenceMap.serializeTree(
-                        nodeToTree(node)
-                    ),
-                    nextNodeId: null,
-                }));
-            return data;
-        },
     };
 
     setup() {
