@@ -102,7 +102,7 @@
                     btnText.translate="Cancel Order"
                     btnClasses="'btn-danger '"
                     onClick="() => this.pos.onDeleteOrder(this.pos.getOrder())"
-                    disabled="!this.pos.getOrder()?.getOrderlines()?.length">
+                    disabled="!this.pos.getOrder()?.getOrderlines()?.length or this.pos.isOrderDeleting(this.pos.getOrder(), false)">
                 </t>
             </div>
         </t>

@@ -228,6 +228,7 @@
                                 <BackButton t-if="this.ui.isSmall" onClick="() => this.pos.onClickBackButton()"/>
                                 <button class="button btn btn-secondary btn-lg d-flex flex-row align-items-center justify-content-center"
                                     t-on-click="() => this.onClickReprintAll(_selectedSyncedOrder)"
+                                    t-att-disabled="this.pos.isOrderDeleting(_selectedSyncedOrder, false)"
                                     t-if="this.pos.ticketPrinter.hasPreparationPrinters and _selectedSyncedOrder.lastPrints.length">
                                     <i class="oi" data-icon="restaurant" aria-hidden="true"/>
                                 </button>

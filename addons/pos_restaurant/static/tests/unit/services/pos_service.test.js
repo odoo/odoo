@@ -6,6 +6,7 @@ import { getFilledOrder, setupPosEnv } from "@point_of_sale/../tests/unit/utils"
 import { MockServer, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { waitUntil } from "@odoo/hoot-dom";
 import { FloorPlan } from "@pos_restaurant/app/screens/floor_screen/floor_plan/floor_plan";
+import { patch } from "@web/core/utils/patch";
 
 const { DateTime } = luxon;
 
@@ -655,6 +656,40 @@ describe("restaurant pos_store.js", () => {
         expect(secondTry).toBe(true);
         expect(store.models["pos.order"].getBy("uuid", order.uuid)).toBeEmpty();
         expect(table.getOrders().length).toBe(0);
+    });
+
+    test("order cannot be cancelled while it is sent in preparation", async () => {
+        const store = await setupPosEnv();
+        store.config.preparation_printer_ids = store.models["pos.printer"].filter(
+            (printer) => printer.use_type === "preparation"
+        );
+        let resolvePrint;
+        patch(store.ticketPrinter, {
+            printOrderChanges: () => new Promise((resolve) => (resolvePrint = resolve)),
+        });
+        const table = store.models["restaurant.table"].get(2);
+        const order = store.addNewOrder({ table_id: table });
+        const cola = store.models["product.template"].get(5);
+        await store.addLineToOrder({ product_tmpl_id: cola, qty: 1 }, order);
+        store.beforeDeleteOrder = async () => true;
+        let deleteCount = 0;
+        patch(store, {
+            async deleteOrders() {
+                deleteCount++;
+                return true;
+            },
+        });
+
+        // Kitchen ticket still printing
+        const sending = store.sendOrderInPreparation(order);
+        await tick();
+        expect(await store.onDeleteOrder(order)).toBe(false);
+        expect(deleteCount).toBe(0);
+
+        resolvePrint(true);
+        await sending;
+        expect(await store.onDeleteOrder(order)).toBe(true);
+        expect(deleteCount).toBe(1);
     });
 
     test("order has no pending line changes after sending", async () => {

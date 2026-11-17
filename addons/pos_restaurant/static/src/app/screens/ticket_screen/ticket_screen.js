@@ -27,6 +27,9 @@ patch(TicketScreen.prototype, {
         return res;
     },
     async setOrder(order) {
+        if (this.pos.isOrderSyncing(order)) {
+            return;
+        }
         const shouldBeOverridden = this.pos.config.module_pos_restaurant && order.table_id;
         if (shouldBeOverridden) {
             const orderTable = order.getTable();

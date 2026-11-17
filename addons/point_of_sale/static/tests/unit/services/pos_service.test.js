@@ -9,6 +9,7 @@ import {
 import { prepareRoundingVals } from "../accounting/utils";
 import { getService, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { localization } from "@web/core/l10n/localization";
+import { patch } from "@web/core/utils/patch";
 import { PosNumberBufferPlugin } from "@point_of_sale/app/plugins/pos_number_buffer_plugin";
 
 const { DateTime } = luxon;
@@ -771,6 +772,40 @@ describe("pos_store.js", () => {
         const newOrder = store.getOrder();
         expect(newOrder.uuid).not.toBe(order.uuid);
         expect(store.router.currentScreenParams().orderUuid).toBe(newOrder.uuid);
+    });
+
+    test("onDeleteOrder ignores a second deletion of the same order", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+        let deleteCount = 0;
+        patch(store, {
+            async deleteOrders() {
+                deleteCount++;
+                return super.deleteOrders(...arguments);
+            },
+        });
+
+        const [firstDeletion, secondDeletion] = await Promise.all([
+            store.onDeleteOrder(order),
+            store.onDeleteOrder(order),
+        ]);
+        expect(firstDeletion).toBe(true);
+        expect(secondDeletion).toBe(false);
+        expect(deleteCount).toBe(1);
+        expect(store.isOrderDeleting(order, false)).toBe(false);
+    });
+
+    test("syncAllOrders skips an order being deleted", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+
+        store.deletingOrders.add(order.uuid);
+        await store.syncAllOrders();
+        expect(order.isSynced).toBe(false);
+
+        // An explicit sync of the order still goes through (e.g. sending the cancellation in preparation)
+        await store.syncAllOrders({ orders: [order] });
+        expect(order.isSynced).toBe(true);
     });
 
     test("setNextOrderRefs", async () => {
