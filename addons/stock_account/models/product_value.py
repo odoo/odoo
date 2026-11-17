@@ -111,7 +111,7 @@ class ProductValue(models.Model):
             if pv.move_id:
                 move_ids.add(pv.move_id.id)
             else:
-                moves, _first_move_remaining_qty = pv.product_id._get_fifo_stack(pv.lot_id, pv.date)
+                moves, _first_move_remaining_qty = pv.product_id.with_company(pv.company_id).with_context(allowed_company_ids=pv.company_id.ids)._get_fifo_stack(pv.lot_id, pv.date)
                 if moves:
                     move_ids.update(self.env['stock.move'].concat(moves).ids)
 
