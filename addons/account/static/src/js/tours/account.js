@@ -129,9 +129,11 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "click",
     },
     {
-        isActive: ["auto"],
+        // let the send wizard settle before setting the recipient email
+        isActive: ["robot"],
         content: "Wait for animation frame",
         trigger: `body${accountTourSteps.postedInvoiceSelector} .o-mail-RecipientsInputTagsListPopover input`,
+        run: "animationFrame",
     },
     {
         // RecipientsInputTagsListPopover will not display if the customer already has an email address
