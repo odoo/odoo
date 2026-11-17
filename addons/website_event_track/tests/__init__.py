@@ -4,6 +4,7 @@
 from . import test_event_menus
 from . import test_location_display
 from . import test_mail_features
+from . import test_track_conflict
 from . import test_track_internals
 from . import test_website_event
 from . import test_website_event_track
