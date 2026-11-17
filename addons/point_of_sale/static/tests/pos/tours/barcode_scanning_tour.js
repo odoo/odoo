@@ -98,6 +98,14 @@ registry.category("web_tour.tours").add("GS1BarcodeScanningTour", {
             // Scanning lot number of product temoplate and variant have GS1 barcode should add the product to the order.
             scan_barcode("010512364869541610784512"),
             ProductScreen.selectedOrderlineHas("GS1 Variant Product", 1),
+
+            // Scanning a packaging barcode to give the packaging's uom converted
+            scan_barcode("0112345678901200"),
+            ProductScreen.selectedOrderlineHas("Product 1", 23),
+
+            // Scanning a packaging barcode to give the packaging's uom converted when stored without leading 0
+            scan_barcode("0109999999999987"),
+            ProductScreen.selectedOrderlineHas("Product 1", 35),
             Chrome.endTour(),
         ].flat(),
 });
