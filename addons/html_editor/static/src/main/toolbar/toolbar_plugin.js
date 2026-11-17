@@ -1,7 +1,7 @@
 import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { isEmptyTextNode, isVisible, isZWS } from "@html_editor/utils/dom_info";
-import { composeToolbarButton, Toolbar } from "./toolbar";
+import { composeToolbarButton, getShortcutTooltip, Toolbar } from "./toolbar";
 import { hasTouch, isMacOS, isIOS } from "@web/core/browser/feature_detection";
 import { registry } from "@web/core/registry";
 import { ToolbarMobile } from "./mobile_toolbar";
@@ -39,6 +39,7 @@ import { removeStyle } from "@html_editor/utils/dom";
  * @property {string[]} [namespaces]
  * @property {Object} [commandParams] Passed to the command's `run` function
  * @property {TranslatedString | TranslatedStringGetter} [description] * - becomes the button's title (and tooltip content)
+ * @property {string} [hotkey] Shown after the description unless the button is disabled, e.g. "control+b"
  * @property {string} [icon] *
  * @property {string} [iconClass] *
  * @property {string} [text] Can be used with (or instead of) `icon`
@@ -68,6 +69,7 @@ import { removeStyle } from "@html_editor/utils/dom";
  * @property {string} id
  * @property {string} groupId
  * @property {TranslatedStringGetter} description
+ * @property {string} [hotkey]
  * @property {Function} run
  * @property {string} [icon]
  * @property {string} [iconClass]
@@ -549,17 +551,31 @@ export class ToolbarPlugin extends Plugin {
                 id: group.id,
                 buttons: group.buttons
                     .filter((button) => availableButtons.has(button))
-                    .map((button) => ({
-                        id: button.id,
-                        description: button.description(selection, targetedNodes),
-                        isDisabled: !!button.isDisabled?.(selection, targetedNodes),
-                        ...(button.Component
-                            ? pick(button, "Component", "props")
-                            : {
-                                  ...pick(button, "run", "icon", "iconClass", "text", "opensUi"),
-                                  isActive: !!button.isActive?.(selection, targetedNodes),
-                              }),
-                    })),
+                    .map((button) => {
+                        const description = button.description(selection, targetedNodes);
+                        const isDisabled = !!button.isDisabled?.(selection, targetedNodes);
+                        return {
+                            id: button.id,
+                            // A disabled button can't be used, so its shortcut is not shown.
+                            description: isDisabled
+                                ? description
+                                : getShortcutTooltip(description, button.hotkey),
+                            isDisabled,
+                            ...(button.Component
+                                ? pick(button, "Component", "props")
+                                : {
+                                      ...pick(
+                                          button,
+                                          "run",
+                                          "icon",
+                                          "iconClass",
+                                          "text",
+                                          "opensUi"
+                                      ),
+                                      isActive: !!button.isActive?.(selection, targetedNodes),
+                                  }),
+                        };
+                    }),
             }))
             // Filter out groups left empty
             .filter((group) => group.buttons.length > 0);

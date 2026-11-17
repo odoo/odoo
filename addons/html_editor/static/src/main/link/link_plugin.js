@@ -265,7 +265,8 @@ export class LinkPlugin extends Plugin {
         toolbar_items: [
             {
                 id: "link",
-                description: _t("Insert link (Ctrl + K)"),
+                description: _t("Insert link"),
+                hotkey: "control+k",
                 groupId: "link",
                 commandId: "openLinkPopover",
                 opensUi: true,

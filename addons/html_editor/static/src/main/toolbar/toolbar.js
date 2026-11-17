@@ -1,7 +1,9 @@
 import { Component, onPatched, proxy, signal, t, useProps } from "@odoo/owl";
 import { omit, pick } from "@web/core/utils/objects";
 import { trapFocus } from "@html_editor/utils/dom_traversal";
+import { isMacOS, isMobileOS } from "@web/core/browser/feature_detection";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { _t } from "@web/core/l10n/translation";
 
 const componentButtonSchema = {
     Component: t.component(),
@@ -112,6 +114,28 @@ export const toolbarButtonProps = {
 /** @typedef {import("@html_editor/core/user_command_plugin").UserCommand} UserCommand */
 /** @typedef {import("./toolbar_plugin").ToolbarCommandItem} ToolbarCommandItem */
 /** @typedef {import("./toolbar_plugin").ToolbarCommandButton} ToolbarCommandButton */
+
+/**
+ * Returns the description followed by the hotkey, with the key names of the
+ * user's OS. Mobile devices have no keyboard shortcuts, so they get the
+ * description alone.
+ *
+ * @param {string} description
+ * @param {string} [hotkey] e.g. "control+b"
+ * @returns {string}
+ */
+export function getShortcutTooltip(description, hotkey) {
+    if (!hotkey || isMobileOS()) {
+        return description;
+    }
+    const keyNames = {
+        control: isMacOS() ? "⌘" : _t("Ctrl"),
+        shift: _t("Shift"),
+        space: _t("Space"),
+    };
+    const keys = hotkey.split("+").map((key) => keyNames[key] || key.toUpperCase());
+    return `${description} (${keys.join(" + ")})`;
+}
 
 /**
  * @param {UserCommand} userCommand
