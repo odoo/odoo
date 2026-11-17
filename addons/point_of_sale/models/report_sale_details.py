@@ -422,7 +422,9 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
         }
 
     def _get_product_total_amount(self, line):
-        return line.currency_id.round(line.price_unit * line.qty * (100 - line.discount) / 100.0)
+        # Lines of refund orders store their subtotals with the sign inverted: use the same sign
+        refund_sign = -1 if line.order_id.is_refund else 1
+        return line.currency_id.round(line.price_unit * line.qty * (100 - line.discount) / 100.0) * refund_sign
 
     def _is_refund_order_line(self, line):
         return line.order_id.is_refund
