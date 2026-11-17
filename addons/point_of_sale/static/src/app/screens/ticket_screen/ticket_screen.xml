@@ -66,7 +66,7 @@
                                             </td>
                                             <td class="align-middle">
                                                 <div class="fw-bolder"><t t-out="order.partner_id?.name"></t></div>
-                                                <div id="order-tags" t-if="usePreset" t-attf-class="badge rounded o_colorlist_item_color_{{order.preset_id?.color}}" style="font-size: 0.75rem !important;">
+                                                <div id="order-tags" t-if="usePreset" class="badge rounded" t-attf-class="{{ order.preset_id?.color === undefined ? '' : 'o_colorlist_color o_colorlist_color_' + order.preset_id?.color }}" style="font-size: 0.75rem !important;">
                                                     <t t-out="order.preset_id?.name"></t>
                                                 </div>
                                             </td>
