@@ -87,7 +87,7 @@ registry.category("web_tour.tours").add('test_generate_serial_1', {  steps: () =
         }
     },
     {
-        trigger: ".btn-primary[name=button_validate]",
+        trigger: "[name=button_validate]",
         run: "click",
     },
     {
@@ -231,7 +231,7 @@ registry.category("web_tour.tours").add('test_generate_serial_2', {  steps: () =
         }
     },
     {
-        trigger: ".btn-primary[name=button_validate]",
+        trigger: "[name=button_validate]",
         run: "click",
     },
     {
