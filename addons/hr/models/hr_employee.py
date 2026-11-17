@@ -2323,7 +2323,7 @@ class HrEmployee(models.Model):
         if version_vals:
             version_vals['last_modified_date'] = fields.Datetime.now()
             version_vals['last_modified_uid'] = self.env.uid
-            self.version_id.write(version_vals)
+            self.version_id.with_context(skip_employee_tracking=True).write(version_vals)
 
             for employee in self:
                 multi_update_version_ids = self.env.context.get('multi_update_version_ids')
