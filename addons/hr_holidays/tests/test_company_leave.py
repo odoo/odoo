@@ -512,3 +512,81 @@ class TestCompanyLeave(TransactionCase):
             ('name', '=', 'Holiday (8 Hours)'),
             ('employee_id', 'in', [employee_0_test_10.id, employee_1_test_10.id, employee_2_test_10.id])])
         self.assertEqual(len(employee_leaves), 2)
+
+    def test_leave_whole_company_tz_behind_utc(self):
+        # Employees whose working hours end after 18:00 in a timezone behind UTC (UTC-6)
+        # have the end of their workday on the next day in UTC.
+        # A company leave must not use the UTC date of the leave end to compute the
+        # leave of each employee, otherwise it overlaps the following days.
+        company = self.env['res.company'].create({'name': 'Late company'})
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Late schedule',
+            'tz': 'America/Mexico_City',
+            'attendance_ids': [(5, 0, 0)] + [(0, 0, {
+                'name': 'Day %s' % day,
+                'dayofweek': str(day),
+                'hour_from': 8,
+                'hour_to': 20,
+            }) for day in range(5)],
+        })
+        company.resource_calendar_id = calendar
+        Leave = self.env['hr.leave'].with_company(company)
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Late leave type',
+            'company_id': company.id,
+            'requires_allocation': 'no',
+        })
+        employee = self.env['hr.employee'].create({
+            'name': 'Late employee',
+            'company_id': company.id,
+            'tz': 'America/Mexico_City',
+            'resource_calendar_id': calendar.id,
+        })
+        other_tz_employee = self.env['hr.employee'].create({
+            'name': 'Employee in another timezone',
+            'company_id': company.id,
+            'tz': 'Europe/Brussels',
+            'resource_calendar_id': calendar.id,
+        })
+        # Tuesday to Friday
+        leave = Leave.create({
+            'name': 'Existing leave',
+            'employee_id': employee.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': date(2025, 2, 18),
+            'date_from': date(2025, 2, 18),
+            'request_date_to': date(2025, 2, 21),
+            'date_to': date(2025, 2, 21),
+        })
+        leave._compute_date_from_to()
+        leave.action_validate()
+        self.assertEqual(leave.date_to, datetime(2025, 2, 22, 2, 0))
+
+        # Monday
+        company_leave = Leave.create({
+            'name': 'Company leave',
+            'holiday_type': 'company',
+            'mode_company_id': company.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': date(2025, 2, 17),
+            'date_from': date(2025, 2, 17),
+            'request_date_to': date(2025, 2, 17),
+            'date_to': date(2025, 2, 17),
+        })
+        company_leave._compute_date_from_to()
+        company_leave.action_validate()
+
+        employee_leaves = self.env['hr.leave'].search([
+            ('employee_id', '=', employee.id),
+            ('state', '=', 'validate'),
+        ], order='date_from')
+        self.assertEqual(len(employee_leaves), 2)
+        self.assertEqual(employee_leaves[0].date_from, datetime(2025, 2, 17, 14, 0))
+        self.assertEqual(employee_leaves[0].date_to, datetime(2025, 2, 18, 2, 0))
+        self.assertEqual(employee_leaves[1], leave)
+
+        # The days are the ones requested, whatever the timezone of the employee is
+        other_tz_leaves = self.env['hr.leave'].search([('employee_id', '=', other_tz_employee.id)])
+        self.assertEqual(len(other_tz_leaves), 1)
+        self.assertEqual(other_tz_leaves.date_from, datetime(2025, 2, 17, 7, 0))
+        self.assertEqual(other_tz_leaves.date_to, datetime(2025, 2, 17, 19, 0))
