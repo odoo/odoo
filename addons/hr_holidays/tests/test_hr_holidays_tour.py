@@ -51,3 +51,81 @@ class TestHrHolidaysTour(HttpCase):
         })
 
         self.start_tour('/odoo', 'hr_holidays_tour', login="admin")
+<<<<<<< 243f8d9763ead73a7cfebb7221ec19b2466733bd
+||||||| 21095adfd083e573ec08d65c903b261e52ef108a
+
+    def test_time_off_card_new_request(self):
+        """
+        Ensures that the `new request` link from the Time Off cards in the dashboard
+        only appears when the related time off allows allocation requests from employees
+        """
+        user = mail_new_test_user(self.env, login='test', groups='hr_holidays.group_hr_holidays_employee')
+        employee = self.env['hr.employee'].create({'name': 'No Time Off Rights', 'user_id': user.id})
+        work_entry_types = self.env['hr.work.entry.type'].create([
+            {
+                'name': 'Allocation Requests Allowed',
+                'code': 'AllocationRequestsAllowed',
+                'requires_allocation': True,
+                'employee_requests': True,
+                'request_unit': 'day',
+                'unit_of_measure': 'day',
+                'count_as': 'absence',
+            }, {
+                'name': 'Allocation Requests Forbidden',
+                'code': 'AllocationRequestsForbidden',
+                'requires_allocation': True,
+                'employee_requests': False,
+                'request_unit': 'day',
+                'unit_of_measure': 'day',
+                'count_as': 'absence',
+            },
+        ])
+        self.env['hr.leave.allocation'].create([{
+            'name': f'Allocation {work_entry_type.name}',
+            'employee_id': employee.id,
+            'work_entry_type_id': work_entry_type.id,
+            'number_of_days': 1,
+            'state': 'confirm',
+        } for work_entry_type in work_entry_types])._action_validate()
+
+        self.start_tour('/odoo', 'time_off_card_new_request', login="test")
+=======
+
+    def test_time_off_card_new_request(self):
+        """
+        Ensures that the `new request` link from the Time Off cards in the dashboard
+        only appears when the related time off allows allocation requests from employees
+        """
+        user = mail_new_test_user(self.env, login='test', groups='hr_holidays.group_hr_holidays_employee')
+        employee = self.env['hr.employee'].create({'name': 'No Time Off Rights', 'user_id': user.id})
+        work_entry_types = self.env['hr.work.entry.type'].create([
+            {
+                'name': 'Allocation Requests Allowed',
+                'code': 'AllocationRequestsAllowed',
+                'requires_allocation': True,
+                'employee_requests': True,
+                'request_unit': 'day',
+                'unit_of_measure': 'day',
+                'count_as': 'absence',
+            }, {
+                'name': 'Allocation Requests Forbidden',
+                'code': 'AllocationRequestsForbidden',
+                'requires_allocation': True,
+                'employee_requests': False,
+                'request_unit': 'day',
+                'unit_of_measure': 'day',
+                'count_as': 'absence',
+            },
+        ])
+        self.env['hr.leave.allocation'].create([{
+            'name': f'Allocation {work_entry_type.name}',
+            'employee_id': employee.id,
+            'work_entry_type_id': work_entry_type.id,
+            'number_of_days': 1,
+            'state': 'confirm',
+            # Start in the past so the dashboard date (from the browser) never precedes it
+            'date_from': '2022-01-01',
+        } for work_entry_type in work_entry_types])._action_validate()
+
+        self.start_tour('/odoo', 'time_off_card_new_request', login="test")
+>>>>>>> 57ca363a9dad1b8886103da7301e2dabf0aaf48a
