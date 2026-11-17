@@ -609,6 +609,14 @@ class IrAttachment(models.Model):
 
     def write(self, vals):
         self.check('write', values=vals)
+        if ("res_model" in vals) != ("res_id" in vals):
+            Attachments = self.browse()
+            targets = {
+                (vals.get("res_model", record.res_model), vals.get("res_id", record.res_id))
+                for record in self
+            }
+            for res_model, res_id in targets:
+                Attachments.check("write", values={"res_model": res_model, "res_id": res_id})
         # remove computed field depending of datas
         for field in ('file_size', 'checksum', 'store_fname'):
             vals.pop(field, False)
