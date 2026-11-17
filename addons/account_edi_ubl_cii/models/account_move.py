@@ -342,25 +342,32 @@ class AccountMove(models.Model):
         # fall back on the contents of EmbeddedDocumentBinaryObject.
         return content_1, None
 
-    def _get_ubl_cii_importable_models(self):
-        """ The EDI models whose files are imported with _import_invoice_ubl_cii. """
+    def _get_edi_decoder(self, file_data, new=False):
         def _get_child_models(model):
             child_models = {model}
             for child in self.env.registry[model]._inherit_children:
                 child_models.update(_get_child_models(child))
             return child_models
 
-        return [
+        # Old implem
+        importable_models = [
             *_get_child_models('account.edi.xml.ubl_20'),
             *_get_child_models('account.edi.xml.cii'),
         ]
-
-    def _get_edi_decoder(self, file_data, new=False):
-        if file_data['import_file_type'] in self._get_ubl_cii_importable_models():
+        if file_data['import_file_type'] in importable_models:
             return {
                 'priority': 20,
                 'decoder': self.env[file_data['import_file_type']]._import_invoice_ubl_cii,
             }
+
+        # New implem
+        importable_models = _get_child_models('account.edi.ubl')
+        if file_data['import_file_type'] in importable_models:
+            return {
+                'priority': 20,
+                'decoder': self.env[file_data['import_file_type']]._ubl_import_invoice,
+            }
+
         return super()._get_edi_decoder(file_data, new)
 
     def _need_ubl_cii_xml(self, ubl_cii_format):

@@ -5,15 +5,24 @@ from odoo.tools import html2plaintext
 from odoo.tools.float_utils import float_is_zero, float_round
 from odoo.addons.account.tools import dict_to_xml
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPING, FloatFmt
-from odoo.addons.account_edi_ubl_cii.models.account_edi_ubl import UBL_NAMESPACES  # noqa: F401 (other modules still import it from ubl_20)
 from odoo.addons.account_edi_ubl_cii.tools import Invoice, CreditNote, DebitNote
 from odoo.addons.account_edi_ubl_cii.tools.ubl_20_optional_fields import PEPPOL_INVOICE_OPTIONAL_FIELDS, PEPPOL_INVOICE_OPTIONAL_LINE_FIELDS, PEPPOL_CREDIT_NOTE_OPTIONAL_FIELDS, PEPPOL_CREDIT_NOTE_OPTIONAL_LINE_FIELDS
+
+
+UBL_NAMESPACES = {
+    'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
+    'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2",
+}
 
 
 class AccountEdiXmlUBL20(models.AbstractModel):
     _name = "account.edi.xml.ubl_20"
     _inherit = 'account.edi.ubl'
     _description = "UBL 2.0"
+
+    def _find_value(self, xpath, tree, nsmap=False):
+        # EXTENDS account.edi.common
+        return super()._find_value(xpath, tree, UBL_NAMESPACES)
 
     # -------------------------------------------------------------------------
     # EXPORT

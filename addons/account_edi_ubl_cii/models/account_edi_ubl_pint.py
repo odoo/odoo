@@ -148,26 +148,6 @@ class AccountEdiUBLPint(models.AbstractModel):
                     }
                 })
 
-    def _ubl_should_export_early_payment_discount_as_line(self, vals):
-        # Early payment discount lines should not appear as lines but as allowances/charges.
-        return False
-
-    def _ubl_should_export_global_discount_as_line(self, vals):
-        # Global discount lines should not appear as lines but as allowances/charges ([ibr-027] no negative net price).
-        return False
-
-    def _ubl_should_export_cash_rounding_as_line(self, vals):
-        # Cash rounding lines should not appear as lines but in PayableRoundingAmount.
-        return False
-
-    def _ubl_default_tax_category_grouping_key(self, base_line, tax_data, vals, currency):
-        # Cash rounding lines should not appear as lines but in PayableRoundingAmount.
-        # Since this method produces a default 0% tax automatically when no tax is set on the line by default,
-        # we have to do something here to avoid it.
-        if self._ubl_is_cash_rounding_base_line(base_line):
-            return
-        return super()._ubl_default_tax_category_grouping_key(base_line, tax_data, vals, currency)
-
     def _ubl_get_partner_address_node(self, vals, partner):
         node = super()._ubl_get_partner_address_node(vals, partner)
         node['cbc:CountrySubentityCode'] = None
@@ -307,6 +287,14 @@ class AccountEdiUBLPint(models.AbstractModel):
 
         if self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note'):
             self._ubl_add_payment_means_nodes_all_invoices(vals)
+
+    def _ubl_default_tax_category_grouping_key(self, base_line, tax_data, vals, currency):
+        # Cash rounding lines should not appear as lines but in PayableRoundingAmount.
+        # Since this method produces a default 0% tax automatically when no tax is set on the line by default,
+        # we have to do something here to avoid it.
+        if self._ubl_is_cash_rounding_base_line(base_line):
+            return
+        return super()._ubl_default_tax_category_grouping_key(base_line, tax_data, vals, currency)
 
     def _ubl_get_tax_subtotal_node(self, vals, tax_subtotal):
         # This override is a fix for the taxes engine.
@@ -635,11 +623,6 @@ class AccountEdiUBLPint(models.AbstractModel):
     # -------------------------------------------------------------------------
     # IMPORT
     # -------------------------------------------------------------------------
-
-    def _import_invoice_ubl_cii(self, invoice, file_data, new=False):
-        if invoice.invoice_line_ids:
-            return invoice._reason_cannot_decode_has_invoice_lines()
-        return self._ubl_import_invoice(invoice, file_data, new=new)
 
     def _import_prepare_missing_customer_create_values(self, collected_values):
         partner_create_values = super()._import_prepare_missing_customer_create_values(collected_values)
