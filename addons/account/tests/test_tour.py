@@ -116,3 +116,19 @@ class TestUi(AccountTestInvoicingHttpCommon):
             'test_add_section_from_product_catalog_on_invoice',
             login='admin',
         )
+
+    def test_accounting_dashboard_purchase_journal_with_alias(self):
+        alias = self.env['mail.alias.domain'].create({'name': "test.com"})
+        self.env.company.write({'alias_domain_id': alias.id})
+        self.env["account.journal"].create({
+            'name': "Test Alias",
+            'type': "purchase",
+            'code': "TES",
+            'alias_name': "purchase",
+            'show_on_dashboard': True,
+        })
+        self.env.ref('base.user_admin').write({
+            'company_id': self.env.company.id,
+            'company_ids': [(4, self.env.company.id)],
+        })
+        self.start_tour('/odoo', 'test_accounting_dashboard_purchase_journal_with_alias', login="admin")
