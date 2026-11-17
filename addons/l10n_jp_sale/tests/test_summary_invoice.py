@@ -62,6 +62,11 @@ class TestJPSummaryInvoice(AccountTestInvoicingCommon):
         }])
         self.assertEqual(invoice.line_ids.sale_line_ids.order_id, orders)
 
+    def test_order_missed_its_closing_once_a_later_closing_date_has_passed(self):
+        orders = self._create_order('2026-10-15 03:00:00') + self._create_order('2026-10-16 03:00:00')
+
+        self.assertEqual(orders.mapped('l10n_jp_missed_closing'), [True, False])
+
     def test_order_billed_before_its_closing_date_keeps_the_invoice_date_empty(self):
         order = self._create_order('2026-11-16 03:00:00')
 

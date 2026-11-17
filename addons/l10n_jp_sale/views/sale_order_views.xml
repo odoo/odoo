@@ -5,6 +5,10 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.sale_order_tree"/>
         <field name="arch" type="xml">
+            <list position="attributes">
+                <attribute name="decoration-danger">l10n_jp_missed_closing</attribute>
+                <attribute name="decoration-warning">l10n_jp_closing_date and invoice_status == 'to invoice' and (delivery_status in ['pending', 'started', 'partial'] or amount_invoiced)</attribute>
+            </list>
             <field name="date_order" position="after">
                 <field name="l10n_jp_closing_date" optional="hide"/>
             </field>
