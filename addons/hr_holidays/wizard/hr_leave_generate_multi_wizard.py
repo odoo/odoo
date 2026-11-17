@@ -63,29 +63,35 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
         self.ensure_one()
         employees = self._get_employees_from_allocation_mode()
 
-        tz = timezone(self.company_id.resource_calendar_id.tz or self.env.user.tz or 'UTC')
-        date_from_tz = tz.localize(datetime.combine(self.date_from, datetime.min.time())).astimezone(UTC).replace(tzinfo=None)
-        date_to_tz = tz.localize(datetime.combine(self.date_to, datetime.max.time())).astimezone(UTC).replace(tzinfo=None)
+        default_tz = self.company_id.resource_calendar_id.tz or self.env.user.tz or 'UTC'
+        employees_by_tz = {}
+        for employee in employees:
+            employees_by_tz.setdefault(employee.tz or default_tz, self.env['hr.employee'])
+            employees_by_tz[employee.tz or default_tz] |= employee
 
-        conflicting_leaves = self.env['hr.leave'].with_context(
-            tracking_disable=True,
-            mail_activity_automation_skip=True,
-            leave_fast_create=True
-        ).search([
-            ('date_from', '<=', date_to_tz),
-            ('date_to', '>', date_from_tz),
-            ('state', 'not in', ['cancel', 'refuse']),
-            ('employee_id', 'in', employees.ids)])
+        vals_list = []
+        for tz_name, tz_employees in employees_by_tz.items():
+            tz = timezone(tz_name)
+            date_from_tz = tz.localize(datetime.combine(self.date_from, datetime.min.time())).astimezone(UTC).replace(tzinfo=None)
+            date_to_tz = tz.localize(datetime.combine(self.date_to, datetime.max.time())).astimezone(UTC).replace(tzinfo=None)
 
-        if conflicting_leaves:
-            # YTI: More complex use cases could be managed later
-            invalid_time_off = conflicting_leaves.filtered(lambda l: l.leave_type_request_unit == 'hour')
-            if invalid_time_off:
-                raise UserError(_('Automatic time off spliting during batch generation is not managed for ovelapping time off declared in hours. Conflicting time off:\n%s', '\n'.join(f"- {l.display_name}" for l in invalid_time_off)))
+            conflicting_leaves = self.env['hr.leave'].with_context(
+                tracking_disable=True,
+                mail_activity_automation_skip=True,
+                leave_fast_create=True
+            ).search([
+                ('date_from', '<=', date_to_tz),
+                ('date_to', '>', date_from_tz),
+                ('state', 'not in', ['cancel', 'refuse']),
+                ('employee_id', 'in', tz_employees.ids)])
 
-            conflicting_leaves._split_leaves(self.date_from, self.date_to + timedelta(days=1))
+            if conflicting_leaves:
+                invalid_time_off = conflicting_leaves.filtered(lambda l: l.leave_type_request_unit == 'hour')
+                if invalid_time_off:
+                    raise UserError(_('Automatic time off spliting during batch generation is not managed for ovelapping time off declared in hours. Conflicting time off:\n%s', '\n'.join(f"- {l.display_name}" for l in invalid_time_off)))
+                conflicting_leaves._split_leaves(self.date_from, self.date_to + timedelta(days=1))
 
-        vals_list = self._prepare_employees_holiday_values(employees, date_from_tz, date_to_tz)
+            vals_list += self._prepare_employees_holiday_values(tz_employees, date_from_tz, date_to_tz)
         leaves = self.env['hr.leave'].with_context(
             tracking_disable=True,
             mail_activity_automation_skip=True,
