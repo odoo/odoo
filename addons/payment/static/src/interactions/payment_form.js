@@ -718,10 +718,10 @@ export class PaymentForm extends Interaction {
      *
      * @private
      * @param {HTMLElement} radio - The radio button linked to the payment option.
-     * @return {string} Whether the provider of the selected payment option is in live mode.
+     * @return {boolean} Whether the provider of the selected payment option is in live mode.
      */
     _getProviderIsLive(radio) {
-        return radio.dataset['providerIsLive'];
+        return radio.dataset['providerIsLive'] === 'True';
     }
 
 }
