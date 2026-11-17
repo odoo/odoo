@@ -740,7 +740,8 @@ class MailMessage(models.Model):
                                   FROM mail_message_res_partner_cc_rel
                                  WHERE res_partner_id = %s
                                    AND mail_message_id = ANY (%s)
-                               ) notified ON notified.mail_message_id = m.id """,
+                               ) notified ON notified.mail_message_id = m.id
+                         WHERE m.message_type != 'user_notification' """,
                     pid, list(parent_ids_msg_ids), pid, list(parent_ids_msg_ids),
                 )
                 for parent_id, parent_model, parent_res_id in self.env.execute_query(query):
