@@ -23,18 +23,20 @@ class HrAttendance(http.Controller):
     @staticmethod
     def _get_user_attendance_data(employee):
         response = {}
-        if employee:
+        # without any employee in the database, the first check in creates the employee of the user
+        if employee or not employee.search_count([], limit=1):
+            company = employee.company_id or employee.env.company
             response = {
                 'id': employee.id,
-                'name': employee.name,
+                'name': employee.name or employee.env.user.name,
                 'hours_today': float_round(employee.hours_today, precision_digits=3),
                 'hours_previously_today': float_round(employee.hours_previously_today, precision_digits=2),
                 'today_attendance_ids': employee.today_attendance_ids.read(['check_in', 'check_out', 'worked_hours']),
                 'last_attendance_worked_hours': float_round(employee.last_attendance_worked_hours, precision_digits=2),
                 'last_check_in': employee.last_check_in,
                 'attendance_state': employee.attendance_state,
-                'display_systray': employee.company_id.attendance_from_systray,
-                'device_tracking_enabled': employee.company_id.attendance_device_tracking,
+                'display_systray': company.attendance_from_systray,
+                'device_tracking_enabled': company.attendance_device_tracking,
             }
         return response
 
@@ -272,9 +274,12 @@ class HrAttendance(http.Controller):
 
     @http.route('/hr_attendance/systray_check_in_out', type="jsonrpc", auth="user")
     def systray_attendance(self, latitude=False, longitude=False):
-        employee = request.env.user.with_company(self._get_active_company(request)).employee_id
+        user = request.env.user.with_company(self._get_active_company(request))
+        employee = user.employee_id
         if not employee:
-            return self._get_employee_info_response(employee)
+            if not user._is_internal() or employee.search_count([], limit=1):
+                return self._get_employee_info_response(employee)
+            employee = user.action_create_employee()
         geo_ip_response = self._get_geoip_response(mode='systray',
                                                   latitude=latitude,
                                                   longitude=longitude,
