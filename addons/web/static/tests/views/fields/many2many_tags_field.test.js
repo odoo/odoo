@@ -708,12 +708,12 @@ test("Many2ManyTagsField: update color", async () => {
 
     // Update the color in readonly => write automatically
     await contains(badgeNode).click();
-    await contains('.o_colorlist button[data-color="1"]').click();
+    await contains(".o_colorlist button.o_colorlist_color_1").click();
     expect(badgeNode).toHaveAttribute("data-color", "1");
 
     // Update the color in edit => write automatically too
     await contains(badgeNode).click();
-    await contains('.o_colorlist button[data-color="6"]').click();
+    await contains(".o_colorlist button.o_colorlist_color_6").click();
     await animationFrame();
     expect(badgeNode).toHaveAttribute("data-color", "6");
 
@@ -944,7 +944,7 @@ test("Many2ManyTagsField: toggle colorpicker multiple times", async () => {
     expect(".o_field_many2many_tags .badge").toHaveAttribute("data-color", "0");
     expect(".o_colorlist").toHaveCount(1);
 
-    await contains('.o_colorlist button[data-color="2"]').click();
+    await contains(".o_colorlist button.o_colorlist_color_2").click();
 
     expect(".o_field_many2many_tags .badge").toHaveAttribute("data-color", "2");
     expect(".o_colorlist").toHaveCount(0);
