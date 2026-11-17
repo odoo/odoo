@@ -3,6 +3,7 @@ import { localization } from "@web/core/l10n/localization";
 import {
     convertRecordToEvent,
     getColor,
+    getPaletteColor,
     getFullCalendarTimeZone,
     joinClasses,
 } from "@web/views/calendar/utils";
@@ -202,11 +203,8 @@ export class CalendarYearRenderer extends Component {
         }
         const record = this.props.model.records[event.id];
         if (record) {
-            const color = getColor(record.colorIndex);
-            if (typeof color === "number") {
-                classesToAdd.push(`o_calendar_color_${color}`);
-            } else if (typeof color !== "string") {
-                classesToAdd.push("o_calendar_color_0");
+            if (typeof getColor(record.colorIndex) !== "string") {
+                classesToAdd.push("o_calendar_color");
             }
 
             if (record.isHatched) {
@@ -220,6 +218,10 @@ export class CalendarYearRenderer extends Component {
     }
     onEventDidMount({ el, event }) {
         el.dataset.eventId = event.id;
+        const record = this.props.model.records[event.id];
+        if (record) {
+            el.style.setProperty("--o-calendar-color", getPaletteColor(record.colorIndex));
+        }
     }
     async onEventScheduled(info) {
         const original = info.event;

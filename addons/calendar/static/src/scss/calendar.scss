@@ -88,11 +88,8 @@
         /* For the user activity events, use the user color with */
         /* a slight change so that activities can be spotted */
         /* more easily in the calendar view. */
-        @for $i from 1 through length($o-colors-complete) {
-            $color: nth($o-colors-complete, $i);
-            &.o_calendar_color_#{$i - 1} {
-                --fc-event-color: #{mix($o-white, $color, 80%)};
-            }
+        &.o_calendar_color {
+            --fc-event-color: color-mix(in srgb, var(--o-white) 80%, var(--o-colorlist-color));
         }
     }
 
@@ -107,12 +104,13 @@
 }
 
 /* Color the attendee tags in the "Meet with" calendar filters to match their event color. */
-@for $i from 1 through length($o-colors-complete) {
-    $color: nth($o-colors-complete, $i);
-    $color-subtle: mix($o-white, $color, 55%);
-    .o_calendar_filter[data-name="partner_ids"] .o_tag_color_#{$i - 1} {
-        color: color-contrast($color-subtle) !important;
-        background-color: $color-subtle !important;
+.o_calendar_filter[data-name="partner_ids"] {
+
+    .o_tag {
+        --o-calendar-attendee-color-subtle: color-mix(in srgb, var(--o-white) 55%, var(--o-tag-color));
+
+        color: var(--o-black) !important;
+        background-color: var(--o-calendar-attendee-color-subtle) !important;
         font-weight: normal !important;
         border: 0;
     }

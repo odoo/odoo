@@ -112,7 +112,7 @@ test(`test basic rendering`, async () => {
     expect(`.o_calendar_filter:contains("Legend")`).toHaveCount(1);
     expect(`.o_calendar_filter:contains("To Approve")`).toHaveCount(1);
     expect(`.o_calendar_filter:contains("Mar 17, 2025 : Test Mandatory Day")`).toHaveCount(1);
-    expect(`.o_calendar_day.hr_mandatory_day_5[data-date="2025-03-17"]`).toHaveCount(1);
+    expect(`.o_calendar_day.o_colorlist_color_5[data-date="2025-03-17"]`).toHaveCount(1);
 });
 
 test(`Company Holidays should be limited to the current month and upcoming`, async () => {

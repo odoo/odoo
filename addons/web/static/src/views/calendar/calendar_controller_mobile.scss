@@ -19,13 +19,6 @@
                         font-size: xx-small;
                     }
                 }
-                @for $i from 1 through length($o-colors-complete) {
-                    $color: nth($o-colors-complete, $i);
-
-                    .o_color_#{$i - 1} {
-                        color: $color;
-                    }
-                }
             }
         }
 

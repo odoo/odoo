@@ -33,7 +33,7 @@
                             t-att-class="mandatoryDay.end &lt; this.currentDateTime ? 'text-muted' : 'fw-bold'">
                             <span
                                     t-out="this.getFormattedDateSpan(mandatoryDay.start, mandatoryDay.end)"
-                                    t-attf-class="hr_mandatory_day_{{ mandatoryDay.colorIndex }}"
+                                    t-attf-class="hr_mandatory_day o_colorlist_color_{{ mandatoryDay.colorIndex }}"
                                     t-att-class="{ 'opacity-50': mandatoryDay.end &lt; this.currentDateTime }"/>
                             : <t t-out="mandatoryDay.title"/>
                         </li>
