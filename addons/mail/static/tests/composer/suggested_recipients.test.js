@@ -199,6 +199,28 @@ test("suggested recipients should not be notified when posting an internal note"
     await expect.waitForSteps(["message_post"]);
 });
 
+test("suggested recipients are posted as the partner they stand for", async () => {
+    const pyEnv = await startServer();
+    const [, partnerId] = pyEnv["res.partner"].create([
+        { name: "Jane Office", email: "jane@example.com" },
+        { name: "Jane Home", email: "jane@example.com" },
+    ]);
+    const fakeId = pyEnv["res.fake"].create({ partner_ids: [partnerId] });
+    onRpcBefore("/mail/message/post", (args) => {
+        expect.step("message_post");
+        expect(args.post_data.partner_ids).toEqual([partnerId]);
+        expect(args.post_data.partner_emails).toBe(undefined);
+    });
+    registerArchs(archs);
+    await start();
+    await openFormView("res.fake", fakeId);
+    await click("button", { text: "Send message" });
+    await waitFor(".o-mail-RecipientsInput .o_tag_badge_text:contains(Jane Home)");
+    await insertTextInComposer(".o-mail-Composer", "Dummy Message");
+    await click(".o-mail-Composer-send:enabled");
+    await expect.waitForSteps(["message_post"]);
+});
+
 test("suggested recipients without name should show display_name instead", async () => {
     const pyEnv = await startServer();
     const [partner1, partner2] = pyEnv["res.partner"].create([
