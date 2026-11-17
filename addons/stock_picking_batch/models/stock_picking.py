@@ -199,6 +199,10 @@ class StockPicking(models.Model):
             return False
         return super()._should_show_transfers()
 
+    def _filter_pickings_for_new_moves(self):
+        # New moves must not be added to a wave picking
+        return super()._filter_pickings_for_new_moves().filtered(lambda p: not p.batch_id.is_wave)
+
     def _find_auto_batch(self):
         self.ensure_one()
         # Check if auto_batch is enabled for this picking.
