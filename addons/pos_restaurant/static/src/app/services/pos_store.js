@@ -411,6 +411,18 @@ patch(PosStore.prototype, {
         }
         return orderRemoved;
     },
+    onDeleteOrderConfirmed(order) {
+        super.onDeleteOrderConfirmed(...arguments);
+        // Don't wait for the preparation tickets to be printed to navigate to floor screen (like when sending to the kitchen)
+        if (
+            this.config.module_pos_restaurant &&
+            this.selectedOrderUuid === order.uuid &&
+            this.router.currentScreen() === "ProductScreen"
+        ) {
+            this.navigate("FloorScreen");
+            this.setOrder(null);
+        }
+    },
     removeOrderShouldRedirect(order, hasBeenRemoved) {
         const wasCurrentOrder = this.selectedOrderUuid === order?.uuid;
         return (
@@ -762,8 +774,11 @@ patch(PosStore.prototype, {
 
                 try {
                     this.ui.block();
-                    this.isOrderTransferMode = false;
                     const table = this.getTableFromElement(tableElement);
+                    if (this.isOrderDeleting(table?.getOrder())) {
+                        return;
+                    }
+                    this.isOrderTransferMode = false;
                     if (table) {
                         const order = table.getOrder();
 
@@ -787,8 +802,11 @@ patch(PosStore.prototype, {
 
                 try {
                     this.ui.block();
-                    this.isOrderTransferMode = false;
                     const order = this.getOrderFromElement(orderElement);
+                    if (this.isOrderDeleting(order)) {
+                        return;
+                    }
+                    this.isOrderTransferMode = false;
                     if (order) {
                         if (order.uuid === orderUuid) {
                             return transferToItselfNotif();
