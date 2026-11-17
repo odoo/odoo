@@ -450,6 +450,9 @@ class StockPickingBatch(models.Model):
     def _is_picking_auto_mergeable(self, picking):
         """ Verifies if a picking can be safely inserted into the batch without violating auto_batch_constrains.
         """
+        # A picking done through `_action_done` (e.g. PoS closing) stays in its batch, `_sanity_check` rejects it
+        if any(p.state == 'done' for p in self.picking_ids) and picking.state != 'done':
+            return False
         res = True
         if self.picking_type_id.batch_max_lines:
             res = res and (len(self.move_ids) + len(picking.move_ids) <= self.picking_type_id.batch_max_lines)
