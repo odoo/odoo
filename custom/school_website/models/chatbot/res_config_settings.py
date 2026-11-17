@@ -1,6 +1,15 @@
 # -*- coding: utf-8 -*-
 
-from odoo import fields, models
+from odoo import api, fields, models
+
+
+_DEFAULT_CHATBOT_AI_SYSTEM_PROMPT = (
+    "You are Harvard University's official conversational AI assistant. "
+    "Help prospective students, applicants, and visitors with inquiries regarding undergraduate "
+    "and graduate academic programs, admission requirements, deadlines, tuition, scholarships, "
+    "campus life, and upcoming campus events. Answer concisely, politely, and authoritatively. "
+    "Keep replies brief (2-4 sentences or compact bullet points) so they fit nicely into live chat."
+)
 
 
 class ResConfigSettings(models.TransientModel):
@@ -36,13 +45,24 @@ class ResConfigSettings(models.TransientModel):
     )
     chatbot_ai_system_prompt = fields.Text(
         string="Default System Prompt",
-        config_parameter="school_website.chatbot_ai_system_prompt",
-        default=(
-            "You are Harvard University's official conversational AI assistant. "
-            "Help prospective students, applicants, and visitors with inquiries regarding undergraduate "
-            "and graduate academic programs, admission requirements, deadlines, tuition, scholarships, "
-            "campus life, and upcoming campus events. Answer concisely, politely, and authoritatively. "
-            "Keep replies brief (2-4 sentences or compact bullet points) so they fit nicely into live chat."
-        ),
+        default=_DEFAULT_CHATBOT_AI_SYSTEM_PROMPT,
         help="Default persona and knowledge prompt for AI chatbots.",
     )
+
+    @api.model
+    def get_values(self):
+        values = super().get_values()
+        values["chatbot_ai_system_prompt"] = self.env[
+            "ir.config_parameter"
+        ].sudo().get_param(
+            "school_website.chatbot_ai_system_prompt",
+            _DEFAULT_CHATBOT_AI_SYSTEM_PROMPT,
+        )
+        return values
+
+    def set_values(self):
+        super().set_values()
+        self.env["ir.config_parameter"].sudo().set_param(
+            "school_website.chatbot_ai_system_prompt",
+            self.chatbot_ai_system_prompt or "",
+        )
