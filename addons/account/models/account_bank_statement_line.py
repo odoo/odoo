@@ -351,7 +351,7 @@ class AccountBankStatementLine(models.Model):
                 ('journal_id', '=', defaults['journal_id']),
                 ('state', '=', 'posted'),
             ], limit=1)
-            statement = last_line.statement_id
+            statement = last_line.statement_id._filtered_access('read')
             if statement:
                 defaults.setdefault('date', statement.date)
             elif last_line:
