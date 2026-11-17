@@ -5,7 +5,6 @@ import { useDebounced } from "@web/core/utils/timing";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { setElementTransform } from "@pos_restaurant/app/services/floor_plan/utils/utils";
 import { calculateBoundsFromTransform } from "@pos_restaurant/app/services/floor_plan/utils/bounds_calculator";
-import { useService } from "@web/core/utils/hooks";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { _t } from "@web/core/l10n/translation";
 
@@ -20,8 +19,8 @@ export class FloorPlan extends FloorPlanBase {
         super.setup();
         this.pos = usePos();
         this.alert = this.pos.alert;
-        this.ui = useService("ui");
-        this.notification = useService("notification");
+        this.ui = this.pos.ui;
+        this.notification = this.pos.notification;
         useListener(window, "resize", useDebounced(this.handleWindowResize.bind(this), 100));
         this.scrollFloorId = null;
 

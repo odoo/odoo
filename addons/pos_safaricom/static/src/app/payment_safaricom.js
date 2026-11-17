@@ -23,7 +23,7 @@ export class PaymentSafaricom extends PaymentInterface {
 
     _call_safaricom(data, action) {
         if (data) {
-            return this.env.services.orm.silent.call("pos.payment.method", action, [
+            return this.orm.silent.call("pos.payment.method", action, [
                 [this.payment_method_id.id],
                 data,
             ]);
@@ -59,7 +59,7 @@ export class PaymentSafaricom extends PaymentInterface {
         const defaultPhone = order.partner?.phone || "";
 
         // Prompt user to enter phone number
-        const phoneNumber = await makeAwaitable(this.env.services.dialog, TextInputPopup, {
+        const phoneNumber = await makeAwaitable(this.dialog, TextInputPopup, {
             title: _t("M-Pesa Phone Number"),
             placeholder: "254712345678",
             startingValue: defaultPhone,
@@ -122,7 +122,7 @@ export class PaymentSafaricom extends PaymentInterface {
         if (!title) {
             title = _t("Safaricom M-Pesa Error");
         }
-        this.env.services.dialog.add(AlertDialog, {
+        this.dialog.add(AlertDialog, {
             title: title,
             body: msg,
         });
@@ -176,13 +176,9 @@ export class PaymentSafaricom extends PaymentInterface {
         line.qr_code = "data:image/png;base64," + qrCode;
 
         try {
-            const transaction = await makeAwaitable(
-                this.env.services.dialog,
-                MpesaTransactionPopup,
-                {
-                    qrCode: qrCode,
-                }
-            );
+            const transaction = await makeAwaitable(this.dialog, MpesaTransactionPopup, {
+                qrCode: qrCode,
+            });
 
             if (!transaction) {
                 line.setPaymentStatus("retry");

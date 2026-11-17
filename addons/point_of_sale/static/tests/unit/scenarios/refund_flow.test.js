@@ -21,7 +21,7 @@ test("test_refund_line_keep_attributes: refund keeps variant attributes", async 
             price: "10.00",
         })
     ).toBe(true);
-    await Utils.ensurePane("left");
+    await Utils.ensurePane("cart");
     await Utils.clickPayButton();
     await waitFor(".payment-screen");
     await Utils.clickPaymentMethod("Card");
@@ -134,7 +134,7 @@ test("test_combo_refund_different_qty: refund combo with different quantities", 
     await Utils.sendBufferKeys("1");
     await animationFrame();
 
-    await Utils.ensureTicketPane("right");
+    await Utils.ensureTicketPane("cart");
     const findRefundText = (productName) => {
         const lines = [...document.querySelectorAll(".ticket-screen .orderline")];
         const line = lines.find((el) => el.textContent.includes(productName));
@@ -185,7 +185,7 @@ test("RefundFewQuantities: refund with quantities less than 0.5", async () => {
     await Utils.sendBufferKeys("0", ".", "0", "2");
     await animationFrame();
 
-    await Utils.ensureTicketPane("right");
+    await Utils.ensureTicketPane("cart");
     const refundEl = document.querySelector(".ticket-screen .refund");
     expect(refundEl).not.toBe(null);
     expect(refundEl.textContent).toInclude("0.02");

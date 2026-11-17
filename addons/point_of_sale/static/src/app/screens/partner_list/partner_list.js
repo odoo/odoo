@@ -8,7 +8,6 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { _t } from "@web/core/l10n/translation";
 import { localeCompare, normalize } from "@web/core/l10n/utils";
-import { useService } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
 
 export class PartnerList extends Component {
@@ -23,9 +22,9 @@ export class PartnerList extends Component {
 
     setup() {
         this.pos = usePos();
-        this.ui = useService("ui");
-        this.notification = useService("notification");
-        this.dialog = useService("dialog");
+        this.ui = this.pos.ui;
+        this.notification = this.pos.notification;
+        this.dialog = this.pos.dialog;
         this.modalRef = signal.ref();
         this.modalContent = computed(() => this.modalRef()?.querySelector(".modal-body") ?? null);
         this.searchInputRef = signal.ref();

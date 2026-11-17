@@ -50,7 +50,6 @@ import { GeneratePrinterData } from "../utils/printer/generate_printer_data";
 import { ComboSuggestion } from "../models/utils/combo_suggestion";
 import { PosRouterPlugin } from "@point_of_sale/app/plugins/pos_router_plugin";
 import { CustomerDisplayTerminalPlugin } from "@point_of_sale/app/plugins/customer_display_terminal_plugin";
-import { SIZES } from "@web/core/ui/ui_utils";
 import { PosAccessRightPlugin } from "@point_of_sale/app/plugins/access_right_plugin";
 import { SnoozeDialog } from "@point_of_sale/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog";
 import { formatCurrency } from "@web/core/currency";
@@ -59,9 +58,11 @@ import { localization } from "@web/core/l10n/localization";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { formatFloat } from "@web/core/utils/numbers";
 import { PosDataPlugin } from "../plugins/pos_data_plugin";
+import { PosUiPlugin } from "@point_of_sale/app/plugins/pos_ui_plugin";
 import { PosTicketPrinterPlugin } from "../plugins/pos_ticket_printer_plugin";
 import { PosPaymentMethodPlugin } from "../plugins/pos_payment_method_plugin";
 import { PosAlertPlugin } from "../plugins/pos_alert_plugin";
+import { DialogPlugin } from "@web/core/dialog/dialog_plugin";
 import { PosNumberBufferPlugin } from "@point_of_sale/app/plugins/pos_number_buffer_plugin";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { clearLocalStorage } from "../utils/devices_identifier_sequence";
@@ -75,6 +76,8 @@ export class PosStore extends WithLazyGetterTrap {
     router = usePlugin(PosRouterPlugin);
     customerDisplay = usePlugin(CustomerDisplayTerminalPlugin);
     accessRight = usePlugin(PosAccessRightPlugin);
+    ui = usePlugin(PosUiPlugin);
+    dialog = usePlugin(DialogPlugin);
 
     static excludedLazyGetters = [
         "defaultPage",
@@ -88,14 +91,7 @@ export class PosStore extends WithLazyGetterTrap {
         "showSaveOrderButton",
     ];
 
-    static serviceDependencies = [
-        "bus_service",
-        "barcode_reader",
-        "ui",
-        "dialog",
-        "notification",
-        "action",
-    ];
+    static serviceDependencies = ["bus_service", "barcode_reader", "notification", "action"];
 
     constructor() {
         super({});
@@ -106,10 +102,7 @@ export class PosStore extends WithLazyGetterTrap {
      * @param {import("@web/env").OdooEnv} env
      * @param {import("services").ServiceFactories} services
      */
-    async setup(
-        env,
-        { number_buffer, barcode_reader, ui, dialog, notification, bus_service, action }
-    ) {
+    async setup(env, { barcode_reader, notification, bus_service, action }) {
         this.data = usePlugin(PosDataPlugin);
         this.alert = usePlugin(PosAlertPlugin);
         this.ticketPrinter = usePlugin(PosTicketPrinterPlugin);
@@ -120,8 +113,6 @@ export class PosStore extends WithLazyGetterTrap {
         this.env = env;
         this.numberBuffer = usePlugin(PosNumberBufferPlugin);
         this.barcodeReader = barcode_reader;
-        this.ui = ui;
-        this.dialog = dialog;
         this.bus = bus_service;
         this.action = action;
         this.soundEffects = usePlugin(SoundEffectsPlugin);
@@ -134,8 +125,6 @@ export class PosStore extends WithLazyGetterTrap {
         // validation (order paid then sent to the backend).
         this.validated_orders_name_server_id_map = {};
         this.numpadMode = "quantity";
-        this.mobile_pane = "right";
-        this.ticket_screen_mobile_pane = "left";
 
         this.loadingOrderState = false; // used to prevent orders fetched to be put in the update set during the reactive change
         this.screenState = {
@@ -379,7 +368,7 @@ export class PosStore extends WithLazyGetterTrap {
         const params = orderPage?.props || {
             orderUuid: order.uuid,
         };
-        this.ticket_screen_mobile_pane = "left";
+        this.ui.setTicketScreenMobileDisplayMode("order");
         this.navigate(page, params);
     }
 
@@ -939,7 +928,7 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     get productViewMode() {
-        const viewMode = this.productListView && this.ui.isSmall ? this.productListView : "grid";
+        const viewMode = this.productListView && this.ui.isSmall() ? this.productListView : "grid";
         if (viewMode === "grid") {
             return "flex-column";
         } else {
@@ -1220,7 +1209,7 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     weighProduct() {
-        return makeAwaitable(this.env.services.dialog, ScaleScreen);
+        return makeAwaitable(this.dialog, ScaleScreen);
     }
 
     async handleWeighableProduct(values, order, configure) {
@@ -1587,7 +1576,7 @@ export class PosStore extends WithLazyGetterTrap {
         const order = this.createOrderIfNeeded(data);
         this.selectedOrderUuid = order.uuid;
         this.searchProductWord = "";
-        this.mobile_pane = "right";
+        this.ui.setProductScreenMobileDisplayMode("product");
         return order;
     }
     createOrderIfNeeded(data = {}) {
@@ -1826,7 +1815,7 @@ export class PosStore extends WithLazyGetterTrap {
         if (!currentOrder.canPay()) {
             return;
         }
-        this.mobile_pane = "right";
+        this.ui.setProductScreenMobileDisplayMode("product");
         this.navigate("PaymentScreen", {
             orderUuid: this.selectedOrderUuid,
         });
@@ -2028,13 +2017,6 @@ export class PosStore extends WithLazyGetterTrap {
         return false;
     }
 
-    switchPane() {
-        this.mobile_pane = this.mobile_pane === "left" ? "right" : "left";
-    }
-    switchPaneTicketScreen() {
-        this.ticket_screen_mobile_pane =
-            this.ticket_screen_mobile_pane === "left" ? "right" : "left";
-    }
     async logEmployeeMessage(action, message) {
         await this.data.call(
             "pos.session",
@@ -2463,28 +2445,29 @@ export class PosStore extends WithLazyGetterTrap {
 
     showBackButton() {
         return (
-            this.ui.isSmall &&
+            this.ui.isSmall() &&
             this.numpadMode !== "table" &&
-            (this.router.currentScreen() !== "ProductScreen" || this.mobile_pane === "left")
+            (this.router.currentScreen() !== "ProductScreen" || this.ui.isProductScreenOnCart)
         );
     }
     async onClickBackButton() {
         if (this.router.currentScreen() === "TicketScreen") {
-            if (this.ticket_screen_mobile_pane == "left") {
+            if (this.ui.isTicketScreenOnOrder) {
                 const next = this.defaultPage;
                 this.navigate(next.page, next.params);
             } else {
-                this.ticket_screen_mobile_pane = "left";
+                this.ui.setTicketScreenMobileDisplayMode("order");
             }
         } else if (
-            this.mobile_pane == "left" ||
+            this.ui.isProductScreenOnCart ||
             ["PaymentScreen", "ActionScreen"].includes(this.router.currentScreen())
         ) {
             if (this.router.currentScreen() === "ProductScreen") {
                 this.getOrder().deselectOrderline();
             }
 
-            this.mobile_pane = this.router.currentScreen() === "PaymentScreen" ? "left" : "right";
+            const newState = this.router.currentScreen() === "PaymentScreen" ? "cart" : "product";
+            this.ui.setProductScreenMobileDisplayMode(newState);
             this.navigate("ProductScreen", {
                 orderUuid: this.getOrder().uuid,
             });
@@ -2493,7 +2476,7 @@ export class PosStore extends WithLazyGetterTrap {
 
     showSearchButton() {
         if (this.router.currentScreen() === "ProductScreen") {
-            return this.ui.isSmall ? this.mobile_pane === "right" : true;
+            return this.ui.isSmall() ? this.ui.isProductScreenOnProduct : true;
         }
         return false;
     }
@@ -2525,7 +2508,7 @@ export class PosStore extends WithLazyGetterTrap {
                 } else {
                     message = error.data.message;
                 }
-                this.env.services.dialog.add(AlertDialog, {
+                this.dialog.add(AlertDialog, {
                     title: _t("Failure to generate Payment QR Code"),
                     body: message,
                 });
@@ -2533,12 +2516,10 @@ export class PosStore extends WithLazyGetterTrap {
             }
         }
         payment.qr_code = generateQRCodeDataUrl(qrCodeValue, { useThemeQr: true });
-        return await ask(this.env.services.dialog, payment.getQrPopupProps(), {}, QRPopup).then(
-            (result) => {
-                payment.qr_code = false;
-                return result;
-            }
-        );
+        return await ask(this.dialog, payment.getQrPopupProps(), {}, QRPopup).then((result) => {
+            payment.qr_code = false;
+            return result;
+        });
     }
 
     displayQrCode(paymentline) {
@@ -2865,11 +2846,7 @@ export class PosStore extends WithLazyGetterTrap {
         const newOrder = this.getEmptyOrder();
         this.setOrder(newOrder);
         this.navigate("ProductScreen", { orderUuid: newOrder.uuid });
-        this.mobile_pane = "right";
-    }
-
-    get isSmallProductScreen() {
-        return this.ui.size < SIZES.MD;
+        this.ui.setProductScreenMobileDisplayMode("product");
     }
 
     getAvailableCategories() {
@@ -3262,7 +3239,7 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     toggleScanning() {
-        if (!this.scanning) {
+        if (!this.ui.isCameraScanActive()) {
             const screenName = this.router.currentScreen();
             if (["ProductScreen", "TicketScreen"].includes(screenName)) {
                 const params =
@@ -3270,9 +3247,9 @@ export class PosStore extends WithLazyGetterTrap {
                 this.navigate(screenName, params);
             }
         }
-        this.ticket_screen_mobile_pane = this.scanning ? "left" : "right";
-        this.mobile_pane = "right";
-        this.scanning = !this.scanning;
+        this.ui.setTicketScreenMobileDisplayMode(this.ui.isCameraScanActive() ? "order" : "cart");
+        this.ui.setProductScreenMobileDisplayMode("product");
+        this.ui.toggleCameraScan();
     }
 }
 

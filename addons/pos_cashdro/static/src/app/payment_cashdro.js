@@ -8,7 +8,6 @@ import { _t } from "@web/core/l10n/translation";
 export class PaymentCashdro extends PaymentInterface {
     setup() {
         super.setup(...arguments);
-        this.dialog = this.env.services.dialog;
         this.cashdroService = new CashdroService();
         this.cashdroService.connect(
             this.payment_method_id.cashdro_ip,

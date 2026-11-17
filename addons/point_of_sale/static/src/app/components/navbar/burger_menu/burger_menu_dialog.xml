@@ -63,9 +63,9 @@
                    btnLabel.translate="Payment Methods"
                 />
                 <t t-set="barcodeLabel">
-                    <t t-if="this.pos.scanning">Stop</t> Barcode Scanner
+                    <t t-if="this.pos.ui.isCameraScanActive()">Stop</t> Barcode Scanner
                 </t>
-                <t t-if="this.isBarcodeScannerSupported() and this.pos.router.currentScreen() == 'ProductScreen' and this.ui.isSmall and !this.pos.config.module_pos_restaurant"
+                <t t-if="this.isBarcodeScannerSupported() and this.pos.router.currentScreen() == 'ProductScreen' and this.ui.isSmall() and !this.pos.config.module_pos_restaurant"
                    t-call="point_of_sale.BurgerDialogMenuButton"
                    dataIcon="'barcode'"
                    onClick="() => this.onClickScan()"

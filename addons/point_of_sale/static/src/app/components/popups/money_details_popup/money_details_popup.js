@@ -3,7 +3,6 @@ import { Component, useProps, proxy, t } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { NumericInput } from "@point_of_sale/app/components/inputs/numeric_input/numeric_input";
 import { _t } from "@web/core/l10n/translation";
-import { useService } from "@web/core/utils/hooks";
 
 export class MoneyDetailsPopup extends Component {
     static template = "point_of_sale.MoneyDetailsPopup";
@@ -19,7 +18,7 @@ export class MoneyDetailsPopup extends Component {
     setup() {
         super.setup();
         this.pos = usePos();
-        this.ui = useService("ui");
+        this.ui = this.pos.ui;
         this.currency = this.pos.currency;
         this.state = proxy({
             moneyDetails: this.props.moneyDetails

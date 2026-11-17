@@ -32,6 +32,8 @@ export class FloorPlanStore {
 
     init(pos) {
         this.pos = pos;
+        this.ui = this.pos.ui;
+        this.dialog = this.pos.dialog;
         const selectedFloorUuid = this.selectedFloor?.uuid;
         const { floor_plan: plan } = this.pos.config;
         const settings = plan.settings || {};
@@ -159,7 +161,7 @@ export class FloorPlanStore {
 
     isKanban() {
         return !this.storedFloorPlanStyle
-            ? !!this.ui.isSmall
+            ? !!this.ui.isSmall()
             : this.storedFloorPlanStyle === "kanban";
     }
 
@@ -932,7 +934,7 @@ export class FloorPlanStore {
     }
 
     isContentEditableTextEnabled() {
-        return this.ui.size > SIZES.XS;
+        return this.ui.size() > SIZES.XS;
     }
 
     restoreFloor(data) {
@@ -1009,12 +1011,9 @@ export class FloorPlanStore {
 }
 
 export const floorPlanStoreService = {
-    dependencies: ["ui", "dialog"],
-    async start(env, { ui, dialog }) {
-        const store = new FloorPlanStore();
-        store.ui = ui;
-        store.dialog = dialog;
-        return store;
+    dependencies: [],
+    async start() {
+        return new FloorPlanStore();
     },
 };
 

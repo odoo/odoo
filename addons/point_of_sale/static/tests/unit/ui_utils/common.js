@@ -14,8 +14,8 @@ export async function ensurePane(targetPane) {
         return;
     }
     const pos = getService("pos");
-    if (pos.mobile_pane !== targetPane) {
-        pos.switchPane();
+    if (pos.ui.productScreenMobileDisplayMode() !== targetPane) {
+        pos.ui.toggleProductMobileScreenDisplayMode();
         await animationFrame();
     }
 }
@@ -25,8 +25,8 @@ export async function ensureTicketPane(targetPane) {
         return;
     }
     const pos = getService("pos");
-    if (pos.ticket_screen_mobile_pane !== targetPane) {
-        pos.switchPaneTicketScreen();
+    if (pos.ui.ticketScreenMobileDisplayMode() !== targetPane) {
+        pos.ui.toggleTicketScreenMobileDisplayMode();
         await animationFrame();
     }
 }

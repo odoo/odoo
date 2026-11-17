@@ -167,7 +167,7 @@ test("test_convert_orderlines_to_combo: convert orderlines to combo and break", 
     expect(order.lines).toHaveLength(3);
     expect(order.priceIncl).toBe(61);
 
-    await Utils.ensurePane("left");
+    await Utils.ensurePane("cart");
     await waitFor(".combo-proposition");
     await contains(".combo-proposition button.btn").click();
     await animationFrame();
@@ -251,7 +251,7 @@ test("test_convert_orderlines_to_combo: convert orderlines to combo and break", 
     await Utils.pickColor("Blue");
     await Utils.confirmConfigurator();
 
-    await Utils.ensurePane("left");
+    await Utils.ensurePane("cart");
     await waitFor(".combo-proposition");
     await contains(".combo-proposition button.btn").click();
     await animationFrame();
@@ -327,7 +327,7 @@ test("test_convert_orderlines_to_combo_with_upsell: combo suggestion shows price
     order = store.getOrder();
     expect(order.lines).toHaveLength(6);
 
-    await Utils.ensurePane("left");
+    await Utils.ensurePane("cart");
     await waitFor(".combo-proposition");
     await contains(".combo-proposition button.btn").click();
     await animationFrame();
@@ -863,7 +863,7 @@ test("test_convert_orderlines_to_combo_with_same_product: same product with diff
     await Utils.clickDisplayedProduct("Combo Product 4");
     await Utils.clickDisplayedProduct("Combo Product 6");
 
-    await Utils.ensurePane("left");
+    await Utils.ensurePane("cart");
     await waitFor(".combo-proposition");
     await contains(".combo-proposition button.btn").click();
     await animationFrame();
@@ -902,7 +902,7 @@ test("ProductComboPriceButtonDisabled: price numpad button is disabled for combo
     const order = store.getOrder();
 
     await Utils.clickDisplayedProduct("TEST");
-    await Utils.ensurePane("left");
+    await Utils.ensurePane("cart");
     expect(order.getSelectedOrderline().isPartOfCombo()).toBe(false);
     expect(queryOne('.numpad button:contains("Price")').disabled).toBe(false);
 

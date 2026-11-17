@@ -33,7 +33,7 @@ export class CashMovePopup extends Component {
             cashMoves: [],
         });
         this.confirm = useAsyncLockedMethod(this.confirm.bind(this));
-        this.ui = useService("ui");
+        this.ui = this.pos.ui;
         onWillStart(() => {
             this.loadCashMoves();
         });
@@ -132,7 +132,7 @@ export class CashMovePopup extends Component {
         });
     }
     async openNumpadDialog() {
-        if (!this.ui.isSmall) {
+        if (!this.ui.isSmall()) {
             return;
         }
 

@@ -3,13 +3,13 @@ import { contains } from "@web/../tests/web_test_helpers";
 import { ensurePane, longPress } from "./common";
 
 export async function clickOrderline(productName) {
-    await ensurePane("left");
+    await ensurePane("cart");
     await contains(`.orderline .product-name:contains("${productName}")`).click();
     await animationFrame();
 }
 
 export async function longPressOrderline(productName) {
-    await ensurePane("left");
+    await ensurePane("cart");
     await longPress(productName, ".order-container .orderline");
 }
 
@@ -121,12 +121,12 @@ export function hasOrderline({
 }
 
 export async function clickBackButton() {
-    await ensurePane("left");
+    await ensurePane("cart");
     await contains(".actionpad .back-button").click();
 }
 
 export async function checkNoOrderButton() {
-    await ensurePane("left");
+    await ensurePane("cart");
     await waitFor(".actionpad:not(:has(.submit-order))");
     await animationFrame();
 }

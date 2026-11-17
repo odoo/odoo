@@ -10,14 +10,14 @@ export async function selectTicketFilter(filterName) {
 }
 
 export async function selectTicketOrder(reference) {
-    await ensureTicketPane("left");
+    await ensureTicketPane("order");
     await contains(`.ticket-screen .order-row:contains("${reference}")`).click();
     await animationFrame();
 }
 
 export async function loadSelectedOrder() {
     if (isMobile()) {
-        await ensureTicketPane("left");
+        await ensureTicketPane("order");
         await contains(".ticket-screen .load-order-button").click();
     } else {
         await contains(".ticket-screen .pads .btn-primary").click();
@@ -26,20 +26,20 @@ export async function loadSelectedOrder() {
 }
 
 export async function clickTicketReviewButton() {
-    await ensureTicketPane("left");
+    await ensureTicketPane("order");
     await contains(".ticket-screen .review-button").click();
     await animationFrame();
 }
 
 export async function clickTicketAction(buttonText) {
-    await ensureTicketPane("right");
+    await ensureTicketPane("cart");
     await contains(`.ticket-screen .pads button:contains("${buttonText}")`).click();
     await animationFrame();
 }
 
 export async function clickTicketNumpad(key) {
     if (isMobile()) {
-        await ensureTicketPane("right");
+        await ensureTicketPane("cart");
     }
     const label = key === "backspace" ? "⌫" : key;
     await contains(`.ticket-screen .numpad button:contains("${label}")`).click();
@@ -47,7 +47,7 @@ export async function clickTicketNumpad(key) {
 }
 
 export async function clickDeleteOrderOnTicket(orderRef) {
-    await ensureTicketPane("left");
+    await ensureTicketPane("order");
     if (orderRef) {
         await selectTicketOrder(orderRef);
     }

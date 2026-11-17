@@ -3,7 +3,7 @@
     <t t-name="pos_restaurant.ProductScreen" t-inherit="point_of_sale.ProductScreen" t-inherit-mode="extension">
         <!-- add a showOrderButton here (using the computeOrderChange method) -->
         <xpath expr="//button[hasclass('pay-button')]" position="replace">
-            <t t-if="!this.pos.scanning">
+            <t t-if="!this.pos.ui.isCameraScanActive()">
                 <t t-if="this.swapButton">
                     <button
                         t-if="!this.currentOrder.isDirectSale and this.nbrOfChanges"
@@ -50,7 +50,9 @@
             </t>
         </xpath>
         <xpath expr="//button[hasclass('review-button')]" position="replace">
-            <button class="btn-switchpane btn btn-lg flex-grow-1 review-button lh-sm" t-attf-class="{{ this.primaryReviewButton ? 'btn-primary' : 'btn-secondary' }}" t-on-click="this.switchPane">
+            <button class="btn-switchpane btn btn-lg flex-grow-1 review-button lh-sm"
+                t-attf-class="{{ this.primaryReviewButton ? 'btn-primary' : 'btn-secondary' }}"
+                t-on-click="this.toggleProductMobileScreenDisplayMode">
                 <span class="d-block">Cart</span>
                 <small t-if="this.swapButton"><t t-out="this.total" /></small>
                 <small t-else=""><t t-out="this.items"/> items</small>

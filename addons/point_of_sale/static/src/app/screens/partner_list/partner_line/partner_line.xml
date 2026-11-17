@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.PartnerLine">
-        <t t-if="this.ui.isSmall">
+        <t t-if="this.ui.isSmall()">
             <div class="partner-info d-flex flex-column p-1 border-bottom" role="button" t-att-class="{'selected': this.props.isSelected}" t-att-data-id="this.props.partner.id"
                 t-on-click="() => this.props.onClickPartner(this.props.partner)">
                 <div class="d-flex justify-content-between align-items-center p-1">

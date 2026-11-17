@@ -33,7 +33,7 @@ export class PaymentRazorpay extends PaymentInterface {
     }
 
     _callRazorpay(data, action) {
-        return this.env.services.orm.silent
+        return this.orm.silent
             .call("pos.payment.method", action, [[this.payment_method_id.id], data])
             .catch(this._handleOdooConnectionFailure.bind(this));
     }
@@ -304,7 +304,7 @@ export class PaymentRazorpay extends PaymentInterface {
     }
 
     _showError(error_msg, title) {
-        this.env.services.dialog.add(AlertDialog, {
+        this.dialog.add(AlertDialog, {
             title: title || _t("Razorpay Error"),
             body: error_msg,
         });

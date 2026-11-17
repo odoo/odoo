@@ -5,7 +5,7 @@
         t-attf-class="control-button btn btn-lg {{btnClasses ? btnClasses : ''}} d-inline-flex flex-md-column justify-content-md-center gap-1 overflow-hidden"
         t-on-click="onClick"
         t-att-disabled="disabled ? 'disabled' : ''">
-            <i t-if="icon" t-attf-class="oi {{iconClasses ? iconClasses : ''}} {{this.pos.isSmallProductScreen ? ' oi-fw' : ''}} align-self-center opacity-50" t-att-data-icon="icon" role="img" aria-hidden="true"/>
+            <i t-if="icon" t-attf-class="oi {{iconClasses ? iconClasses : ''}} {{this.pos.ui.isMedium() ? ' oi-fw' : ''}} align-self-center opacity-50" t-att-data-icon="icon" role="img" aria-hidden="true"/>
             <t t-if="badge" t-out="badge"/>
             <span t-attf-class="d-flex flex-md-column flex-grow-1 flex-md-grow-0 align-items-center align-self-md-stretch justify-content-md-center min-w-0 text-start text-md-center">
                 <span class="px-1" t-out="btnText"/>
@@ -17,7 +17,7 @@
         <!-- All buttons always displayed -->
         <t t-if="!this.props.showRemainingButtons">
             <SelectPartnerButton partner="this.partner"/>
-            <InternalNoteButton label.translate="Note" class="'btn-secondary '" icon="this.pos.isSmallProductScreen ? 'edit' : ''"/>
+            <InternalNoteButton label.translate="Note" class="'btn-secondary '" icon="this.pos.ui.isMedium() ? 'edit' : ''"/>
             <button
                 t-if="this.pos.config.use_presets"
                 class="btn btn-secondary btn-lg border-0 lh-lg text-truncate"
@@ -26,17 +26,17 @@
                 <span t-if="this.currentOrder.preset_id?.name" t-out="this.currentOrder.preset_id?.name" />
                 <span t-else="">Preset</span>
             </button>
-            <button aria-label="Save order" t-if="!this.pos.isSmallProductScreen" t-att-disabled="this.pos.getOrder().isEmpty()" t-attf-class="{{ this.buttonClass }} ms-auto" t-on-click="() => this.pos.clickSaveOrder()">
+            <button aria-label="Save order" t-if="!this.pos.ui.isMedium()" t-att-disabled="this.pos.getOrder().isEmpty()" t-attf-class="{{ this.buttonClass }} ms-auto" t-on-click="() => this.pos.clickSaveOrder()">
                 <i class="oi" data-icon="upload" aria-hidden="true"/>
             </button>
-            <button aria-label="More options" t-if="!this.pos.isSmallProductScreen and this.props.onClickMore" class="more-btn btn btn-secondary btn-lg flex-shrink-0 lh-lg" t-on-click="this.props.onClickMore">
+            <button aria-label="More options" t-if="!this.pos.ui.isMedium() and this.props.onClickMore" class="more-btn btn btn-secondary btn-lg flex-shrink-0 lh-lg" t-on-click="this.props.onClickMore">
                 <i class="oi oi-fw" data-icon="more_vert" aria-hidden="true" />
             </button>
         </t>
         <!-- All these buttons will only be displayed in a dialog -->
         <t t-if="this.props.showRemainingButtons">
             <div class="control-buttons control-buttons-modal d-grid grid-auto-flow-columns gap-2">
-                <t t-if="(this.pos.isSmallProductScreen and this.props.showRemainingButtons)">
+                <t t-if="(this.pos.ui.isMedium() and this.props.showRemainingButtons)">
                     <InternalNoteButton label.translate="Note" class="'btn-secondary '" icon="'edit'"/>
                 </t>
                 <NoteButton

@@ -18,7 +18,7 @@ export class ProductInfoPopup extends Component {
 
     setup() {
         this.pos = usePos();
-        this.ui = useService("ui");
+        this.ui = this.pos.ui;
         this.dialog = useService("dialog");
         this.state = proxy({
             countdown: "",
@@ -45,7 +45,7 @@ export class ProductInfoPopup extends Component {
         [this.state.countdown, this.state.activeSnooze] = this.pos.getSnoozeCountdown(
             this.state.activeSnooze
         );
-        if (!this.ui.isSmall) {
+        if (!this.ui.isSmall()) {
             this.state.countdown = _t("%s left", this.state.countdown);
         }
     }
