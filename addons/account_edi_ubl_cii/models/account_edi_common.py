@@ -450,9 +450,14 @@ class AccountEdiCommon(models.AbstractModel):
             domain = [('peppol_eas', '=', peppol_eas), ('peppol_endpoint', '=', peppol_endpoint)]
         else:
             domain = False
-        invoice.partner_id = self.env['res.partner'] \
-            .with_company(invoice.company_id) \
-            ._retrieve_partner(name=name, phone=phone, mail=mail, vat=vat, domain=domain)
+        ResPartner = self.env['res.partner'].with_company(invoice.company_id)
+        partner = ResPartner._retrieve_partner(vat=vat, domain=domain)
+        if not partner:
+            partner = ResPartner._retrieve_partner(name=name, phone=phone, mail=mail)
+            # another Peppol participant than the sender may share its phone, mail or name
+            if self.env.context.get('_from_peppol_get_new_documents') and domain and partner.peppol_eas and partner.peppol_endpoint:
+                partner = ResPartner
+        invoice.partner_id = partner
         if not invoice.partner_id and name and vat:
             partner_vals = {'name': name, 'email': mail, 'phone': phone, 'street': street, 'street2': street2,
                             'zip': zip_code, 'city': city, 'is_company': True}
