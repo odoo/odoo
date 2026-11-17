@@ -3,7 +3,7 @@ import { contains } from "@web/../tests/web_test_helpers";
 import { ensurePane, isMobile, queryEl } from "./common";
 
 export async function clickPartnerButton() {
-    await ensurePane("left");
+    await ensurePane("cart");
     await contains(".product-screen .set-partner").click();
     await animationFrame();
     await waitFor(".partner-list");

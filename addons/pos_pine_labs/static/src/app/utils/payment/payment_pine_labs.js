@@ -43,7 +43,7 @@ export class PaymentPineLabs extends PaymentInterface {
                 if (error instanceof ConnectionLostError) {
                     offlineErrorHandler(this.env, error, error);
                 } else if (error instanceof RPCError) {
-                    handleRPCError(error, this.env.services.dialog);
+                    handleRPCError(error, this.dialog);
                 } else {
                     throw error;
                 }
@@ -259,7 +259,7 @@ export class PaymentPineLabs extends PaymentInterface {
     }
 
     _showError(error_msg) {
-        this.env.services.dialog.add(AlertDialog, {
+        this.dialog.add(AlertDialog, {
             title: _t("Pine Labs Error"),
             body: error_msg,
         });

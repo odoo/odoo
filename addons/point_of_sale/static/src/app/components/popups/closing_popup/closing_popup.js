@@ -30,7 +30,7 @@ export class ClosePosPopup extends Component {
         this.pos = usePos();
         this.report = useService("report");
         this.dialog = useService("dialog");
-        this.ui = useService("ui");
+        this.ui = this.pos.ui;
         this.state = proxy(this.getInitialState());
         this.confirm = useAsyncLockedMethod(this.confirm.bind(this));
     }
@@ -65,7 +65,7 @@ export class ClosePosPopup extends Component {
         }
 
         // To ensure the cash payment info is always on the left side of the bottom row
-        if (paymentMethods.length % 2 === 0 || this.ui.isSmall) {
+        if (paymentMethods.length % 2 === 0 || this.ui.isSmall()) {
             paymentMethods.push(cashDetails);
         } else {
             paymentMethods.splice(-1, 0, cashDetails);

@@ -42,7 +42,7 @@ patch(PosStore.prototype, {
                     paymentInterface.completePayment(paymentLine, false);
                 }
 
-                this.env.services.dialog.add(AlertDialog, {
+                this.dialog.add(AlertDialog, {
                     title: _t("Payment Failed"),
                     body: payload.result_desc || _t("Payment was not completed"),
                 });

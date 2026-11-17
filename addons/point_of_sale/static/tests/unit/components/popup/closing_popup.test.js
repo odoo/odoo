@@ -55,7 +55,7 @@ test("cash payment info are at always on right side of bottom row", async () => 
     popup.props = getProps({ non_cash_payment_methods: paymentMethods });
 
     expect(popup.paymentMethods).toHaveLength(4);
-    const result = store.ui.isSmall ? [10, 11, 12, 1] : [10, 11, 1, 12];
+    const result = store.ui.isSmall() ? [10, 11, 12, 1] : [10, 11, 1, 12];
     expect(popup.paymentMethods.map((pm) => pm.id)).toMatchObject(result);
 });
 
@@ -123,7 +123,7 @@ test("Closing Popup Ui", async () => {
     ["Cash", "Card", "Later"].forEach((name) => expectPaymentCard(name).toBeDisplayed());
 
     // Cash card
-    if (!store.ui.isSmall) {
+    if (!store.ui.isSmall()) {
         expectPaymentCard("Cash", "input").toBeFocused();
     }
     expectPaymentCard("Cash", "input").toHaveValue(50);

@@ -25,13 +25,13 @@ export async function clickPlanButton() {
 }
 
 export async function clickCourseButton() {
-    await ensurePane("left");
+    await ensurePane("cart");
     await clickControlButton("Course");
     await animationFrame();
 }
 
 export async function clickFireCourseButton() {
-    await ensurePane("left");
+    await ensurePane("cart");
     await contains(".actionpad .fire-btn").click();
     await animationFrame();
 }

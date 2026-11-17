@@ -1,5 +1,4 @@
 import { Component, useProps, t } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
 import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_popup/selection_popup";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
@@ -25,9 +24,9 @@ export class ControlButtons extends Component {
     });
     setup() {
         this.pos = usePos();
-        this.ui = useService("ui");
-        this.dialog = useService("dialog");
-        this.notification = useService("notification");
+        this.ui = this.pos.ui;
+        this.dialog = this.pos.dialog;
+        this.notification = this.pos.notification;
         this.clickPrintBill = useAsyncLockedMethod(this.clickPrintBill.bind(this));
     }
     async clickPrintBill() {
@@ -126,7 +125,7 @@ export class ControlButtons extends Component {
 
     get buttonClass() {
         return this.props.showRemainingButtons
-            ? this.ui.isSmall
+            ? this.ui.isSmall()
                 ? "btn bg-100 btn-md py-2 text-start"
                 : "btn btn-secondary btn-lg py-5"
             : "btn btn-secondary btn-lg lh-lg";

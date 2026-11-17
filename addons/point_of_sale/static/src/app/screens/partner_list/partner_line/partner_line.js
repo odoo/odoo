@@ -1,5 +1,4 @@
 import { Component, useProps, t } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -22,7 +21,7 @@ export class PartnerLine extends Component {
 
     setup() {
         this.pos = usePos();
-        this.ui = useService("ui");
+        this.ui = this.pos.ui;
         // A Dropdown is expensive to set up: only mount it once the menu is opened.
         this.dropdown = useDropdownState();
     }

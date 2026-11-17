@@ -10,8 +10,6 @@ const { DateTime } = luxon;
 export class PaymentQFpay extends PaymentInterface {
     setup() {
         super.setup(...arguments);
-        this.orm = this.env.services.orm;
-        this.dialog = this.env.services.dialog;
         this.paymentLineResolvers = {};
         this.qfpay = new QFPay(this.env, this.payment_method_id, this._showError.bind(this));
     }

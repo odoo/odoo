@@ -40,7 +40,7 @@ test("test_line_configurators_product: line configurators product", async () => 
     expect(order.lines).toHaveLength(1);
     expectConfiguredChairLine(order.lines[0]);
 
-    await Utils.ensurePane("left");
+    await Utils.ensurePane("cart");
     await Utils.longPressOrderline("Configurable Chair");
     await waitFor(".modal");
     await contains(".modal .btn-secondary").click();
@@ -105,7 +105,7 @@ test("test_line_configurators_combo: line configurators combo", async () => {
     const configuredLine = childLines.find((l) => l.product_id.name === "Configurable Chair");
     expectConfiguredChairLine(configuredLine);
 
-    await Utils.ensurePane("left");
+    await Utils.ensurePane("cart");
     await Utils.longPressOrderline("Office Combo");
     await waitFor(".modal");
 
@@ -312,7 +312,7 @@ test("ProductConfiguratorTour: full product configurator flow", async () => {
         })
     ).toBe(true);
 
-    await Utils.ensurePane("left");
+    await Utils.ensurePane("cart");
     await Utils.longPressOrderline("Configurable Chair");
     await waitFor(".modal");
 

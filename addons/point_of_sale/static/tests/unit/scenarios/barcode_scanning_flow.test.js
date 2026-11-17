@@ -126,7 +126,7 @@ test("BarcodeScanPartnerTour: scan customer barcode sets partner", async () => {
     store.models["res.partner"].get(3).barcode = "0241234567890";
 
     await Utils.scanBarcode("0421234567890");
-    await Utils.ensurePane("left");
+    await Utils.ensurePane("cart");
     await Utils.checkSelectedCustomer("Administrator");
     await Utils.scanBarcode("0241234567890");
 

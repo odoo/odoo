@@ -312,7 +312,7 @@ test("test_show_default_with_register_screen: showDefault syncs selectedOrderUui
     await contains(`.modal .selection-item:contains("In")`).click();
     await animationFrame();
     await Utils.clickDisplayedProduct("Accounting Test Product 1");
-    await Utils.ensurePane("left");
+    await Utils.ensurePane("cart");
     await contains(".product-screen .actionpad .set-table").click();
     await animationFrame();
     await Utils.sendBufferKeys("1");
@@ -328,7 +328,7 @@ test("test_show_default_with_register_screen: showDefault syncs selectedOrderUui
     expect(store.getOrder().lines.length).toBe(1);
     expect(store.getOrder().lines[0].product_id.display_name).toBe("Accounting Test Product 1");
 
-    await Utils.ensurePane("left");
+    await Utils.ensurePane("cart");
     await contains('.product-screen .actionpad button:contains("New")').click();
     await animationFrame();
 
@@ -364,7 +364,7 @@ test("test_transfering_orders: create floating and table orders, verify 4 orders
     await Utils.clickDisplayedProduct("TEST");
     await Utils.clickDisplayedProduct("TEST");
     await Utils.clickDisplayedProduct("TEST");
-    await Utils.ensurePane("left");
+    await Utils.ensurePane("cart");
     await contains(".product-screen .new-tab").click();
     await waitFor(".modal");
     await contains(".modal textarea").edit("Cola");
@@ -377,7 +377,7 @@ test("test_transfering_orders: create floating and table orders, verify 4 orders
     await Utils.clickDisplayedProduct("TEST 2");
     await Utils.clickDisplayedProduct("TEST 2");
     await Utils.clickDisplayedProduct("TEST 2");
-    await Utils.ensurePane("left");
+    await Utils.ensurePane("cart");
     await contains(".product-screen .new-tab").click();
     await waitFor(".modal");
     await contains(".modal textarea").edit("Water");
@@ -974,7 +974,7 @@ test("test_combo_apply_after_preparation: apply combo groups standalone lines, p
     await Utils.clickDisplayedProduct("Wood desk");
     await Utils.clickPlanButton();
     await Utils.clickTable("1");
-    await Utils.ensurePane("left");
+    await Utils.ensurePane("cart");
     await contains('.combo-proposition button:contains("Apply")').click();
     await animationFrame();
     await Utils.confirmDialog();
@@ -1161,11 +1161,11 @@ test("SplitBillScreenTour4ProductCombo: split combos as group, pay, verify remai
     await contains(".modal footer button.confirm").click();
     await animationFrame();
 
-    await Utils.ensurePane("left");
+    await Utils.ensurePane("cart");
     await contains('.orderline .product-name:contains("Steel chair")').click();
     await animationFrame();
     await Utils.clickNumpad("2");
-    await Utils.ensurePane("right");
+    await Utils.ensurePane("product");
     await Utils.clickDisplayedProduct("TEST");
     await Utils.clickDisplayedProduct("TEST 2");
     await Utils.clickControlButton("Split");

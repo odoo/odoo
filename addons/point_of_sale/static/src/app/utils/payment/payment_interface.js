@@ -104,7 +104,7 @@ export class PaymentInterface {
      * @param {Record<string, any>} [kwargs] - The action kwargs to send
      */
     async callPaymentMethod(method, args, kwargs = {}) {
-        return await this.env.services.orm.silent.call("pos.payment.method", method, args, kwargs);
+        return await this.orm.silent.call("pos.payment.method", method, args, kwargs);
     }
 
     /**

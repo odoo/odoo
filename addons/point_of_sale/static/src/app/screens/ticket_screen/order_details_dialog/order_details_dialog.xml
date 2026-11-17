@@ -62,7 +62,7 @@
                             </div>
                             <button t-if="this.pos.canEditPayment(order)" t-on-click="this.props.editPayment" class="btn btn-secondary d-flex align-items-center justify-content-center position-absolute top-0 end-0 bg-100">
                                 <i class="oi oi-filled me-1" data-icon="edit" aria-hidden="true"/>
-                                <span t-if="!this.ui.isSmall">Edit Payment</span>
+                                <span t-if="!this.ui.isSmall()">Edit Payment</span>
                             </button>
                         </div>
                     </div>

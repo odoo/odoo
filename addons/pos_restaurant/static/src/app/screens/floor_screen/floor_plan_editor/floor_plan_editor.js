@@ -1,5 +1,5 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { onMounted, onWillUnmount, useListener, signal, useProps, t } from "@odoo/owl";
+import { onMounted, onWillUnmount, useListener, signal, useProps, t, usePlugin } from "@odoo/owl";
 import { EditDecorProperties } from "./edit_decor/edit_decor";
 import { EditTableProperties } from "./edit_table/edit_table";
 import { EditFloorProperties } from "./edit_floor/edit_floor";
@@ -18,7 +18,6 @@ import { useActionMenu } from "@pos_restaurant/app/screens/floor_screen/floor_pl
 import { isClickOnBorder } from "@pos_restaurant/app/screens/floor_screen/floor_plan_editor/utils/border_detection";
 import { selectImage } from "@pos_restaurant/app/screens/floor_screen/floor_plan_editor/utils/image";
 import { Snapping } from "@pos_restaurant/app/screens/floor_screen/floor_plan_editor/utils/snapping";
-import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 import { TextInputPopup } from "@point_of_sale/app/components/popups/text_input_popup/text_input_popup";
 import { FloorPlanBase } from "@pos_restaurant/app/screens/floor_screen/floor_plan_base";
@@ -28,6 +27,8 @@ import {
     STATIC_IMG_BASE_URL,
 } from "@pos_restaurant/app/services/floor_plan/utils/utils";
 import { SIZES } from "@web/core/ui/ui_utils";
+import { DialogPlugin } from "@web/core/dialog/dialog_plugin";
+import { PosUiPlugin } from "@point_of_sale/app/plugins/pos_ui_plugin";
 
 const SETTING_MENU_SPACE = 320;
 const TABLE_SPACING = 20;
@@ -48,8 +49,8 @@ export class FloorPlanEditor extends FloorPlanBase {
 
     setup() {
         super.setup();
-        this.dialog = useService("dialog");
-        this.ui = useService("ui");
+        this.dialog = usePlugin(DialogPlugin);
+        this.ui = usePlugin(PosUiPlugin);
 
         this.state.actionMenuPosition = null;
         this.state.canvasTranslateX = 0;
@@ -615,7 +616,7 @@ export class FloorPlanEditor extends FloorPlanBase {
             return;
         }
 
-        if (this.ui.size > SIZES.XS) {
+        if (this.ui.size() > SIZES.XS) {
             const bounds = this.selectedElement.getBounds();
             const containerRect = this.containerRef().getBoundingClientRect();
             const scrollLeft = this.containerRef().scrollLeft;

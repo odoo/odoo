@@ -1,7 +1,6 @@
 import { registry } from "@web/core/registry";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Component, useProps, t } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
 import { useTime } from "@point_of_sale/app/hooks/time_hook";
 import { _t } from "@web/core/l10n/translation";
 
@@ -13,8 +12,9 @@ export class LoginScreen extends Component {
     static storeOnOrder = false;
     setup() {
         this.pos = usePos();
-        this.dialog = useService("dialog");
-        this.ui = useService("ui");
+        this.notification = this.pos.notification;
+        this.dialog = this.pos.dialog;
+        this.ui = this.pos.ui;
         this.time = useTime();
     }
 

@@ -2,11 +2,12 @@ import {
     QRPopup,
     qrPopupProps,
 } from "@point_of_sale/app/components/popups/qr_code_popup/qr_code_popup";
-import { t } from "@odoo/owl";
+import { t, usePlugin } from "@odoo/owl";
 import { patch } from "@web/core/utils/patch";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
+import { DialogPlugin } from "@web/core/dialog/dialog_plugin";
 
 Object.assign(qrPopupProps, {
     paymentMethod: t.object().optional(),
@@ -17,11 +18,12 @@ patch(QRPopup.prototype, {
     setup() {
         super.setup(...arguments);
         this.orm = useService("orm");
+        this.dialog = usePlugin(DialogPlugin);
     },
 
     async confirm() {
         if (!this.props.paymentMethod?.id || !this.props.order?.uuid) {
-            this.env.services.dialog.add(AlertDialog, {
+            this.dialog.add(AlertDialog, {
                 title: _t("Verification Error"),
                 body: _t("We couldn't verify the QRIS payment. Please try again."),
             });
@@ -39,7 +41,7 @@ patch(QRPopup.prototype, {
                 this.props.order.uuid,
             ]);
         } catch {
-            this.env.services.dialog.add(AlertDialog, {
+            this.dialog.add(AlertDialog, {
                 title: _t("Failure"),
                 body: _t("Failure to verify QRIS payment status"),
             });
@@ -48,7 +50,7 @@ patch(QRPopup.prototype, {
         }
 
         if (!result) {
-            this.env.services.dialog.add(AlertDialog, {
+            this.dialog.add(AlertDialog, {
                 title: _t("Payment Status Update"),
                 body: _t("Payment Status returns unpaid"),
             });
