@@ -249,6 +249,15 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
             f"./{{*}}{party_tag}/{{*}}Party/{{*}}PartyIdentification/{{*}}ID[@schemeID='0009']"
         )
 
+        # The address of the seller may be the one of its platform (XP Z12-014, annexe A, 1.4.2), not the actual legal entity.
+        customer_values = collected_values['customer_values']
+        endpoint = customer_values.get('peppol_endpoint')
+        siren = (collected_values['tree'].findtext(
+            f"./{{*}}{party_tag}/{{*}}Party/{{*}}PartyLegalEntity/{{*}}CompanyID[@schemeID='0002']"
+        ) or '').strip()
+        if siren and endpoint and customer_values.get('peppol_eas') == '0225' and not endpoint.startswith(siren):
+            customer_values['peppol_endpoint'] = siren
+
     def _import_ubl_retrieve_customer_search_plan(self, collected_values):
         return [
             self.env['res.partner']._import_retrieve_customer_from_siret,
