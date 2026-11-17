@@ -190,6 +190,54 @@ class TestDateRangeFunction(BaseCase):
 
         self.assertEqual(dates, expected)
 
+    def test_step_stops_advancing(self):
+        starts = [
+            datetime.date(2024, 1, 1),
+            datetime.datetime(2024, 1, 1),
+            pytz.utc.localize(datetime.datetime(2024, 1, 1)),
+        ]
+        for start in starts:
+            for step, advances in ((relativedelta(day=15), 1), (relativedelta(month=2, days=-1), 2)):
+                with self.subTest(start=start, step=step):
+                    dates = date_utils.date_range(start, start + relativedelta(months=2), step)
+                    self.assertEqual(next(dates), start)
+                    current = start
+                    for _ in range(advances):
+                        current += step
+                        self.assertEqual(next(dates), current)
+                    with self.assertRaisesRegex(ValueError, "step is null or negative"):
+                        next(dates)
+
+    def test_step_is_null_or_negative(self):
+        start = datetime.date(2024, 1, 1)
+        for step, message in (
+            (relativedelta(), "^Looks like step is null$"),
+            (relativedelta(days=-1), "^Looks like step is null or negative$"),
+        ):
+            with self.subTest(step=step):
+                dates = date_utils.date_range(start, start + relativedelta(months=1), step)
+                with self.assertRaisesRegex(ValueError, message):
+                    next(dates)
+
+    def test_absolute_step_reaches_end(self):
+        start = datetime.date(2024, 1, 1)
+        end = datetime.date(2024, 1, 15)
+        dates = date_utils.date_range(start, end, relativedelta(day=15))
+        self.assertEqual(next(dates), start)
+        self.assertEqual(next(dates), end)
+        with self.assertRaises(StopIteration):
+            next(dates)
+
+    def test_advancing_step_with_absolute_day(self):
+        self.assertEqual(
+            list(date_utils.date_range(
+                datetime.date(2024, 1, 31),
+                datetime.date(2024, 4, 30),
+                relativedelta(months=1, day=31),
+            )),
+            [datetime.date(2024, month, day) for month, day in ((1, 31), (2, 29), (3, 31), (4, 30))],
+        )
+
 
 class TestFormatLangDate(TransactionCase):
     def test_00_accepted_types(self):

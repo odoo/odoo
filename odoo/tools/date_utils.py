@@ -246,9 +246,17 @@ def date_range(start: D, end: D, step: relativedelta = relativedelta(months=1)) 
     if start == start + step:
         raise ValueError("Looks like step is null")
 
+    if start + step < start:
+        raise ValueError("Looks like step is null or negative")
+
     while dt <= end_dt:
         yield post_process(dt)
-        dt = dt + step
+        if dt == end_dt:
+            break
+        next_dt = dt + step
+        if next_dt <= dt:
+            raise ValueError("Looks like step is null or negative")
+        dt = next_dt
 
 
 def weeknumber(locale: babel.Locale, date: date) -> Tuple[int, int]:
