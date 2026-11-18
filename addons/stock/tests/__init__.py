@@ -10,6 +10,7 @@ from . import test_multicompany
 from . import test_old_rules
 from . import test_overview_graph
 from . import test_packing
+from . import test_put_in_pack_capacity
 from . import test_packing_neg
 from . import test_picking_tours
 from . import test_proc_rule

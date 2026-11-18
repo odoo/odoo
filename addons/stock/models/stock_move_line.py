@@ -1173,10 +1173,17 @@ class StockMoveLine(models.Model):
                     return action
         return packages
 
-    def action_put_in_pack(self, *, package_id=False, package_type_id=False, package_name=False, package_capacity=None):
+    def action_put_in_pack(self, *, package_id=False, package_type_id=False, package_name=False, package_capacity=None, split_by_capacity=False):
         if self.env.context.get('sml_specific_default'):
             self = self.with_context(clean_context(self.env.context))  # noqa: PLW0642
         move_lines = self
+        if split_by_capacity and package_type_id and not package_id:
+            move_lines_to_pack = move_lines._get_lines_and_packages_to_pack(picked_first=not self.env.context.get('force_move_lines'))[0]
+            action = move_lines_to_pack._pre_put_in_pack_hook(move_lines, package_id, package_type_id, package_name, self.env.context.get('from_package_wizard'))
+            if action:
+                return action
+            packages = move_lines_to_pack._put_in_pack_by_capacity(self.env['stock.package.type'].browse(package_type_id))
+            return move_lines_to_pack._post_put_in_pack_hook(packages)
         if package_capacity and package_capacity != self.quantity:
             # Split the move line if `package_capacity` is not equal to its quantity.
             splitted_lines = move_lines._split_in_chunk(package_capacity, package_type_id, package_id=package_id)
@@ -1379,6 +1386,81 @@ class StockMoveLine(models.Model):
             remaining_quantity -= quantity_to_split
 
         return splitted_move_lines
+
+    def _get_packing_unit(self):
+        """ Smallest quantity of the line, in its unit, that can go to a package: one packaging when the packaging of
+        the move has a package type (a bag is not opened to fill a pallet), otherwise the precision of the quantities. """
+        self.ensure_one()
+        packaging = self.move_id.packaging_uom_id
+        if packaging.package_type_id and packaging != self.uom_id:
+            return packaging._compute_quantity(1.0, self.uom_id, round=False)
+        return 10 ** -self.env['decimal.precision'].precision_get('Product Unit')
+
+    def _get_packed_weight_and_volume(self, quantity):
+        self.ensure_one()
+        shipping_args = (quantity, self.uom_id, self.move_id.packaging_uom_id)
+        return self.product_id._get_shipping_weight(*shipping_args), self.product_id._get_shipping_volume(*shipping_args)
+
+    def _put_in_pack_by_capacity(self, package_type):
+        """ Put the move lines in as many packages of `package_type` as its max weight and max volume require.
+
+        A line is kept whole in a package with enough room, and only split when it does not fit in an empty package,
+        by whole packagings. The packages are named by the sequence of the package type.
+
+        :return: the packages
+        """
+        max_weight, max_volume = package_type.max_weight, package_type.max_volume
+        if not (max_weight or max_volume):
+            raise UserError(_("Set a max weight or a max volume on the package type %s to split by capacity.", package_type.display_name))
+        free_space = {}  # package: [free weight, free volume]
+
+        def fits(weight, volume, free):
+            return (not max_weight or float_compare(weight, free[0], precision_digits=6) <= 0) and \
+                (not max_volume or float_compare(volume, free[1], precision_digits=6) <= 0)
+
+        def new_package():
+            package = self.env['stock.package'].create({'package_type_id': package_type.id})
+            free_space[package] = [max_weight, max_volume]
+            return package
+
+        lines_by_package = defaultdict(lambda: self.env['stock.move.line'])
+        # Biggest lines first, so that smaller ones fill the remaining room; products and lots stay together.
+        lines = self.sorted(lambda ml: (-ml._get_packed_weight_and_volume(ml.quantity)[1], ml.product_id.id, ml.lot_id.id or 0))
+        for line in lines:
+            unit = line._get_packing_unit()
+            unit_weight, unit_volume = line._get_packed_weight_and_volume(unit)
+            while line and line.uom_id.compare(line.quantity, 0) > 0:
+                weight, volume = line._get_packed_weight_and_volume(line.quantity)
+                package = next((p for p, free in free_space.items() if fits(weight, volume, free)), None)
+                if not package and fits(weight, volume, [max_weight, max_volume]):
+                    package = new_package()
+                if package:
+                    free_space[package][0] -= weight
+                    free_space[package][1] -= volume
+                    lines_by_package[package] |= line
+                    break
+                # The line does not fit in an empty package: fill a new one with as many units as possible.
+                package = new_package()
+                units = min(
+                    int(max_weight / unit_weight) if max_weight and unit_weight else float('inf'),
+                    int(max_volume / unit_volume) if max_volume and unit_volume else float('inf'),
+                )
+                if not units:
+                    raise UserError(_("One unit of %(product)s does not fit in a package of type %(package_type)s.",
+                                      product=line.product_id.display_name, package_type=package_type.display_name))
+                quantity = line.uom_id.round(units * unit)
+                weight, volume = line._get_packed_weight_and_volume(quantity)
+                free_space[package][0] -= weight
+                free_space[package][1] -= volume
+                remaining_line = line._split(quantity, package.id)
+                lines_by_package[package] |= line
+                line = remaining_line
+
+        packages = self.env['stock.package']
+        for package, package_lines in lines_by_package.items():
+            package_lines._put_in_pack(package_id=package.id)
+            packages |= package
+        return packages
 
     # ===== Batch business methods =====
 

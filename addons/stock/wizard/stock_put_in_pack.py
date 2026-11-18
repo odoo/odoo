@@ -16,6 +16,10 @@ class StockPutInPack(models.TransientModel):
     package_capacity = fields.Float('Package Size', compute='_compute_package_capacity', store=True, readonly=False)
     package_uom = fields.Char('Unit', compute='_compute_package_uom')
     show_package_capacity = fields.Boolean(compute='_compute_show_package_capacity')
+    split_by_capacity = fields.Boolean(
+        'Split by Capacity',
+        help="Put the products in as many new packages of this type as its max weight and max volume require.")
+    package_type_has_capacity = fields.Boolean(compute='_compute_package_type_has_capacity')
 
     @api.depends('move_line_ids')
     def _compute_package_type_id(self):
@@ -66,6 +70,16 @@ class StockPutInPack(models.TransientModel):
                     # Set capacity as relative factor.
                     wizard.package_capacity = uom_id._compute_quantity(1, move_line.uom_id, round=False)
 
+    @api.depends('package_type_id.max_weight', 'package_type_id.max_volume')
+    def _compute_package_type_has_capacity(self):
+        for wizard in self:
+            wizard.package_type_has_capacity = bool(wizard.package_type_id.max_weight or wizard.package_type_id.max_volume)
+
+    @api.onchange('package_type_id', 'result_package_id')
+    def _onchange_split_by_capacity(self):
+        # Packages of a type with a capacity are filled up to it, unless an existing package is chosen.
+        self.split_by_capacity = self.package_type_has_capacity and not self.result_package_id and not self.package_ids
+
     @api.depends('move_line_ids')
     def _compute_show_package_capacity(self):
         for wizard in self:
@@ -75,6 +89,11 @@ class StockPutInPack(models.TransientModel):
         context = self._get_put_in_pack_context()
         if self.package_ids:
             return self.package_ids.with_context(**context).action_put_in_pack(package_id=self.result_package_id.id, package_type_id=self.package_type_id.id)
+        if self.split_by_capacity and self.package_type_has_capacity and not self.result_package_id and not self.package_ids:
+            return self.move_line_ids.with_context(**context).action_put_in_pack(
+                package_type_id=self.package_type_id.id,
+                split_by_capacity=True,
+            )
         return self.move_line_ids.with_context(**context).action_put_in_pack(
             package_id=self.result_package_id.id,
             package_type_id=self.package_type_id.id,
