@@ -2611,9 +2611,15 @@ Please change the quantity done or the rounding precision in your settings.""",
                     ('location_dest_id', '=', move.location_dest_id.id),
                     ('action', '!=', 'push')
                 ]
+                warehouse = move.warehouse_id or move.picking_type_id.warehouse_id
+                rule = self.env['stock.rule']
                 if picking_type_code:
                     domain.append(('picking_type_id.code', '=', picking_type_code))
-                rule = self.env['stock.rule']._search_rule(False, move.packaging_uom_id, product_id, move.warehouse_id or move.picking_type_id.warehouse_id, domain)
+                elif move.picking_type_id:
+                    # Several rules can match, prefer one of the same operation type as the move.
+                    rule = self.env['stock.rule']._search_rule(False, move.packaging_uom_id, product_id, warehouse, domain + [('picking_type_id.code', '=', move.picking_type_id.code)])
+                if not rule:
+                    rule = self.env['stock.rule']._search_rule(False, move.packaging_uom_id, product_id, warehouse, domain)
                 if rule:
                     break
                 location = location.location_id
