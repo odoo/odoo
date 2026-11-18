@@ -200,8 +200,9 @@
                         <iframe id="invoice_html" class="position-relative d-block" width="100%" height="100%" frameborder="0" scrolling="no" t-att-src="invoice.get_portal_url(report_type='html')"/>
                     </div>
                     <!-- chatter -->
-                    <div id="invoice_communication" class="mt-4">
-                        <t t-call="portal.message_thread"/>
+                    <div id="invoice_communication" class="mt-4 p-3 p-lg-4 rounded-3 border">
+                        <h4 class="pb-1">Communication History</h4>
+                        <t t-call="portal.message_thread" hide_header="True"/>
                     </div>
                 </div>
             </div>
