@@ -108,8 +108,6 @@ class ResUsers(models.Model):
 
             events, default_reminders, full_sync = self._sync_request(calendar_service, calendar)
             events = self._sync_google_calendar_filter_remote_events(events)
-            if not events:
-                continue
 
             events.clear_type_ambiguity(self.env)
             recurrences = events.filter(lambda e: e.is_recurrence())
@@ -167,7 +165,7 @@ class ResUsers(models.Model):
         for calendar in self.env.user.calendar_ids:
             if calendar.user_access_role not in ['owner', 'writer'] or not calendar.google_sync_enabled:
                 continue
-            full_sync = events_by_calendar.get(calendar.id, {}).get('full_sync', False)
+            full_sync = events_by_calendar.get(calendar, {}).get('full_sync', False)
             send_updates = not full_sync
             recurrences = self.env['calendar.recurrence']._get_records_to_sync(calendar, full_sync=full_sync)
             recurrences -= synced_recurrences
