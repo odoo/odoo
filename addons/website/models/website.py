@@ -327,32 +327,38 @@ class Website(models.CachedModel):
                 company = self.env['res.company'].browse(values['company_id'])
                 super(Website, public_user_to_change_websites).write(dict(values, user_id=company and company._get_public_user().id))
 
-        default_policy_page_to_unlink = self.env['website.page']
+        default_policy_pages_to_unlink = self.env['website.page']
+        websites_to_write = self - public_user_to_change_websites
+        result = True
         if 'cookies_bar' in values or ('cookie_policy_id' in values and not values['cookie_policy_id']):
-            default_policy_page = self.env['website.page'].search([
-                ('website_id', '=', self.id),
+            default_policy_pages = self.env['website.page'].search([
+                ('website_id', 'in', self.ids),
                 ('url', '=', '/cookie-policy'),
             ])
-            if not values.get('cookies_bar', self.cookies_bar):
-                default_policy_page_to_unlink = default_policy_page
-                values['cookie_policy_id'] = False
-            elif not values.get('cookie_policy_id', self.cookie_policy_id):
-                cookies_view = self.env.ref('website.cookie_policy', raise_if_not_found=False)
-                if cookies_view:
-                    cookies_view.with_context(website_id=self.id).write({'website_id': self.id})
-                    specific_cook_view = self.with_context(website_id=self.id).viewref('website.cookie_policy')
-                    if not default_policy_page:
-                        default_policy_page = self.env['website.page'].create({
-                            'is_published': True,
-                            'website_indexed': False,
-                            'url': '/cookie-policy',
-                            'website_id': self.id,
-                            'view_id': specific_cook_view.id,
-                        })
-                    values["cookie_policy_id"] = default_policy_page
+            for website in self:
+                default_policy_page = default_policy_pages.filtered(lambda page: page.website_id == website)
+                if not values.get('cookies_bar', website.cookies_bar):
+                    default_policy_pages_to_unlink |= default_policy_page
+                    values['cookie_policy_id'] = False
+                elif not values.get('cookie_policy_id', website.cookie_policy_id):
+                    cookies_view = self.env.ref('website.cookie_policy', raise_if_not_found=False)
+                    if cookies_view:
+                        cookies_view.with_context(website_id=website.id).write({'website_id': website.id})
+                        specific_cook_view = website.with_context(website_id=website.id).viewref('website.cookie_policy')
+                        if not default_policy_page:
+                            default_policy_page = self.env['website.page'].create({
+                                'is_published': True,
+                                'website_indexed': False,
+                                'url': '/cookie-policy',
+                                'website_id': website.id,
+                                'view_id': specific_cook_view.id,
+                            })
+                        super(Website, website).write({**values, 'cookie_policy_id': default_policy_page.id})
+                        websites_to_write -= website
 
-        result = super(Website, self - public_user_to_change_websites).write(values)
-        default_policy_page_to_unlink.unlink()
+        if websites_to_write:
+            result = super(Website, websites_to_write).write(values)
+        default_policy_pages_to_unlink.unlink()
 
         if 'logo' in values:
             self._ensure_logo_media_attachment()

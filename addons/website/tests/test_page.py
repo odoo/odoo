@@ -309,6 +309,22 @@ class TestPage(common.TransactionCase):
             with self.assertRaises(werkzeug.exceptions.Forbidden):
                 empty_password_view._handle_visibility(do_raise=True)
 
+    def test_cookies_bar_on_multiple_websites(self):
+        websites = self.env.ref('base.default_website') + self.env['website'].create({'name': 'Website 2'})
+        domain = [('website_id', 'in', websites.ids), ('url', '=', '/cookie-policy')]
+        self.assertFalse(self.env['website.page'].search(domain))
+
+        websites.write({'cookies_bar': True})
+        pages = self.env['website.page'].search(domain)
+        self.assertEqual(len(pages), 2)
+        self.assertEqual(pages.website_id, websites)
+        for website in websites:
+            self.assertEqual(website.cookie_policy_id.website_id, website)
+
+        websites.write({'cookies_bar': False})
+        self.assertFalse(self.env['website.page'].search(domain))
+        self.assertFalse(websites.cookie_policy_id)
+
 
 @tagged('-at_install', 'post_install')
 class WithContext(HttpCase):
