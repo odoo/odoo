@@ -7,21 +7,30 @@ import {
     buildHideIfNotMsoNodes,
     wrapIfMso,
     cssBackgroundPositionToVml,
+    cssBorderRadiusToVml,
 } from "./mso_vml_models";
-import { computeCompositeColor, DIMENSIONS, DIRECTION_VARIANTS } from "../core/utils";
+import {
+    computeCompositeColor,
+    DIMENSIONS,
+    DIRECTION_VARIANTS,
+    VERTICAL_DIRECTION_VARIANTS,
+} from "../core/utils";
 import { withSequence } from "@html_editor/utils/resource";
 import { DEFAULT_SPACING_SEQUENCE } from "./spacing_plugin";
 import { CommentNodeLayout, ElementLayout } from "../core/render_models";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { isAllowedContent } from "@html_editor/utils/dom_info";
-import { StyleInfo } from "../core/style_models";
-import { convertCSSColorToRgba, convertRgbaToCSSColor, rgbaToHex } from "@web/core/utils/colors";
+import { convertRgbaToCSSColor, rgbaToHex } from "@web/core/utils/colors";
+import { parseCssValue } from "../css_parsers";
+import { Rules } from "../core/rules_models";
 
 export class MsoPlugin extends Plugin {
     static id = "mso";
     static dependencies = [
         "border",
         "measurementSnapshot",
+        "filterContent",
+        "referenceNode",
         "render",
         "responsive",
         "rules",
@@ -41,6 +50,21 @@ export class MsoPlugin extends Plugin {
         ],
     };
 
+    setup() {
+        this.vmlInnerWrapperStyleRules = new Rules();
+        this.provideVmlRules();
+    }
+
+    provideVmlRules() {
+        const rules = this.vmlInnerWrapperStyleRules.forPlugin(MsoPlugin.id);
+        this.genericTextAndFontStyleRules(rules);
+        rules.allow("direction");
+    }
+
+    getVmlStyleInfo(styleInfo, referenceNode) {
+        return this.filterStyleInfo(styleInfo, referenceNode, this.vmlInnerWrapperStyleRules);
+    }
+
     analyzeMsoInlineShapeSubtree(defaultEmailNodeArguments, { referenceNode }) {
         const { analysis, layout } = defaultEmailNodeArguments;
         if (this.getSubtreeReferenceNode(analysis, "msoInlineShapeSubtree") !== referenceNode) {
@@ -59,9 +83,10 @@ export class MsoPlugin extends Plugin {
             shouldPropagate: true,
             facts: { isVmlWrapperForbidden: true },
         }));
-        // WORKING HERE
         analysis.facts.vmlArguments = this.extractInlineShapeVmlProps(referenceNode);
-        analysis.facts.vmlContextStyleInfo = new StyleInfo(); // specific style that should be inherited by html inside the VML
+        const styleInfo = layout.getRef().styleInfo;
+        // specific style that should be inherited by html inside the VML
+        analysis.facts.vmlContextStyleInfo = this.getVmlStyleInfo(styleInfo, referenceNode);
         // TODO EGGMAIL: find an alternative strategy without using VML?
         return defaultEmailNodeArguments;
     }
@@ -72,8 +97,8 @@ export class MsoPlugin extends Plugin {
             stroke: this.extractVmlStroke(referenceNode),
             arcSize: this.extractVmlArcSize(referenceNode),
             padding: this.extractVmlPadding(referenceNode),
-            href: referenceNode.getAttribute("href"),
-            horizontalAlignment: this.extractHorizontalAlignment(style),
+            href: this.extractVmlHref(referenceNode),
+            horizontalAlignment: this.extractHorizontalAlignment(referenceNode),
         };
     }
 
@@ -108,7 +133,74 @@ export class MsoPlugin extends Plugin {
         };
     }
 
-    
+    extractVmlArcSize(referenceNode) {
+        const [horizontal, vertical = horizontal] = this.getStylePropertyValue(
+            referenceNode,
+            "border-top-left-radius"
+        ).split(/\s"/);
+        const resolveRadius = (value, dimension) => {
+            value = parseCssValue(value);
+            if (value.unit === "px") {
+                return value.number;
+            } else if (value.unit === "%") {
+                return (value.number * dimension) / 100;
+            } else {
+                return 0;
+            }
+        };
+        const { height, width } = this.getBoundingClientRect(referenceNode);
+        const radius = Math.min(resolveRadius(horizontal, width), resolveRadius(vertical, height));
+        return cssBorderRadiusToVml({ radius, height, width });
+    }
+
+    extractVmlPadding(referenceNode) {
+        const computedStyle = this.getComputedStyle(referenceNode);
+        const getPadding = (side) => {
+            const value = parseCssValue(computedStyle.getPropertyValue(`padding-${side}`));
+            if (value.unit !== "px") {
+                // default spacing values for button/badge
+                return VERTICAL_DIRECTION_VARIANTS.includes(side) ? 5 : 10;
+            }
+            return value.number;
+        };
+        return {
+            top: getPadding("top"),
+            right: getPadding("right"),
+            bottom: getPadding("bottom"),
+            left: getPadding("left"),
+        };
+    }
+
+    extractVmlHref(referenceNode) {
+        return referenceNode.getAttribute("href");
+    }
+
+    extractHorizontalAlignment(referenceNode) {
+        const parent = referenceNode.parentElement;
+        if (!parent) {
+            return null;
+        }
+        const isOnlyChild =
+            this.processChildNodes(parent, (node) => !this.isDiscarded(node)).length === 1;
+        if (!isOnlyChild) {
+            return null;
+        }
+        const computedStyle = this.getComputedStyle(referenceNode);
+        const textAlign = computedStyle.getPropertyValue("text-align");
+        const direction = computedStyle.getPropertyValue("direction");
+        switch (textAlign) {
+            case "left":
+            case "center":
+            case "right":
+                return textAlign;
+            case "start":
+                return direction === "rtl" ? "right" : "left";
+            case "end":
+                return direction === "rtl" ? "left" : "right";
+            default:
+                return null;
+        }
+    }
 
     // TODO EGGMAIL: replace background images with VML output
     // handle image borders (as they are now allowed (radius for normal images and width for icons))

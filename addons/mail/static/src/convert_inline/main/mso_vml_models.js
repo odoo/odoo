@@ -18,13 +18,15 @@ export function cssBackgroundPositionToVml(percent) {
 /**
  * @param {number} radius (in pixels)
  * @param {number} height (in pixels)
+ * @param {number} width (in pixels)
  * @returns {number} vml arcsize (%)
  */
-export function cssBorderRadiusToVml({ radius, height }) {
-    if (!radius || !height) {
+export function cssBorderRadiusToVml({ radius, height, width }) {
+    const minSize = Math.min(height, width);
+    if (!radius || !minSize) {
         return 0;
     }
-    return Math.round((100 * radius) / height);
+    return Math.round(Math.max(0, Math.min(100, (200 * radius) / minSize)));
 }
 
 export function buildHideIfNotMsoNodes() {

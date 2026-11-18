@@ -27,7 +27,7 @@ export class FilterContentPlugin extends Plugin {
         "style",
         "referenceNode",
     ];
-    static shared = ["isInvisible"];
+    static shared = ["genericTextAndFontStyleRules", "isInvisible"];
     resources = {
         attribute_rules_processors: [
             [this.provideAttributeRules.bind(this), FilterContentPlugin.id],
@@ -121,6 +121,7 @@ export class FilterContentPlugin extends Plugin {
     provideStyleRules(rules) {
         this.genericMiscStyleRules(rules);
         this.genericTextAndFontStyleRules(rules);
+        this.linkStyleRules(rules);
         this.genericBackgroundStyleRules(rules);
         this.genericLayoutStyleRules(rules);
         this.genericTableStyleRules(rules);
@@ -149,24 +150,27 @@ export class FilterContentPlugin extends Plugin {
     }
 
     genericTextAndFontStyleRules(rules) {
-        const isLink = ({ referenceNode }) => referenceNode.nodeName === "A";
         // TODO EGGMAIL: replace regexes by exhaustive string lists? (rules optimization)
         // Avoid text-shadow (poor support)
         rules.allow(/^font(-.*)?$/);
         // TODO EGGMAIL: text-decoration is safe but limited (underline mostly) -> to sanitize
         // TODO EGGMAIL: text-align values should be fixed to not include "start" or "end" (converted with rtl to left or right)
         rules.allow(/^text-(align|decoration|transform|indent)$/);
+        rules.allow("line-height");
+        rules.allow("letter-spacing");
+        rules.allow("word-spacing");
+        rules.allow("white-space");
+        rules.allow("color");
+    }
+
+    linkStyleRules(rules) {
+        const isLink = ({ referenceNode }) => referenceNode.nodeName === "A";
         rules.require("text-decoration", {
             // TODO EGGMAIL: attempt to limit mail client styles forcing an underline
             // evaluate through testing if more drastic measures have to be put in place.
             when: isLink,
             how: () => ({ propertyValue: "none", propertyPriority: "important" }),
         });
-        rules.allow("line-height");
-        rules.allow("letter-spacing");
-        rules.allow("word-spacing");
-        rules.allow("white-space");
-        rules.allow("color");
         rules.fix("font-family", {
             when: isLink,
             how: () => ({ propertyPriority: "important" }),
