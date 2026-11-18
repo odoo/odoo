@@ -29,6 +29,14 @@ records numbers. """,
         'base',
         'mail',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'phone_validation/static/src/**/*',
+        ],
+        'web.assets_unit_tests': [
+            'phone_validation/static/tests/**/*',
+        ],
+    },
     'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
