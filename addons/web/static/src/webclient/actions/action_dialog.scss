@@ -3,10 +3,18 @@
         .modal-body.o_act_window {
 
             @include media-breakpoint-down(md) {
+                display: flex;
+                flex-direction: column;
+
                 .o_action {
                     display: flex;
                     flex-direction: column;
                     height: 100%;
+                }
+
+                > .o_calendar_view {
+                    flex-basis: 100vh;
+                    min-height: 0;
                 }
             }
         }
