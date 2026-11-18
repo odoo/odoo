@@ -192,6 +192,8 @@ class Device(typing.TypedDict):
     last_activity: int | None
     country: str
     city: str
+    auth_method: str | None
+    mfa_method: str | None
     trusted: typing.NotRequired[bool]
 
 
@@ -249,11 +251,12 @@ def authenticate(session: Session, env: Environment, credential: dict) -> dict:
     session.uid = None
     session['pre_login'] = credential['login']
     session['pre_uid'] = pre_uid
+    session['auth_method'] = auth_info.get('auth_method')
 
     # if 2FA is disabled we finalize immediately
     user = env['res.users'].browse(pre_uid)
     if auth_info.get('mfa') == 'skip' or not user._mfa_url():
-        finalize(session, env)
+        finalize(session, env, mfa_verified=False)
 
     if request and request.session is session and request.db == env.registry.db_name:
         request.env = env(user=session.uid, context=session.context)
@@ -266,10 +269,13 @@ def authenticate(session: Session, env: Environment, credential: dict) -> dict:
     return auth_info
 
 
-def finalize(session: Session, env: Environment) -> None:
+def finalize(session: Session, env: Environment, *, mfa_verified: bool) -> None:
     """
     Finalizes a partial session, should be called on MFA validation
     to convert a partial / pre-session into a logged-in one.
+
+    :param bool mfa_verified: whether the finalization is completed after a
+                              second authentication factor has been verified
     """
     login = session.pop('pre_login')
     uid = session.pop('pre_uid')
@@ -284,6 +290,7 @@ def finalize(session: Session, env: Environment) -> None:
         'uid': uid,
         'context': user_context,
         'session_token': env.user._compute_session_token(session.sid),
+        'mfa_method': env.user._mfa_type() if mfa_verified else None,
     })
     env.user._after_session_login()
 
@@ -345,6 +352,8 @@ def get_device(session: Session, request: Request) -> Device:
         'last_activity': None,
         'country': geoip.country.name,
         'city': geoip.city.name,
+        'auth_method': session.get('auth_method'),
+        'mfa_method': session.get('mfa_method'),
         'trusted': not session['_devices'],  # First device in a session is always trusted
     }
     session.is_dirty = True
