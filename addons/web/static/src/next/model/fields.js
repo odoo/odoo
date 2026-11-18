@@ -136,28 +136,50 @@ function declare(type, options = {}) {
 }
 
 /**
- * Turns a field definition, either declared in JS or received from the
- * server (`/web/model/get_definitions` or `fields_get`), into a store field.
+ * The declaration of a field described by the server: by `fields_get`, by the
+ * fields of a view, or by `/web/model/get_definitions`. It is meant for models
+ * whose fields are not known when the code is written, such as the ones of a
+ * view:
+ *
+ *     static fields = { name: fieldFromDefinition(viewFields.name) };
+ *
+ * Only what a store needs is kept: the type, and for a relation its comodel
+ * and inverse.
+ *
+ * @param {Record<string, any>} definition
+ * @returns {any}
+ */
+export function fieldFromDefinition(definition) {
+    /** @type {Record<string, any>} */
+    const options = {};
+    if (definition.relation) {
+        options.relation = definition.relation;
+        const inverse =
+            definition.inverse_fname_by_model_name?.[definition.relation] ||
+            definition.relation_field;
+        if (inverse) {
+            options.inverse = inverse;
+        }
+    }
+    return declare(definition.type, options);
+}
+
+/**
+ * Turns a field declaration into a store field.
  *
  * @param {string} name
- * @param {Record<string, any>} def
+ * @param {Record<string, any>} declaration
  * @param {number} index
  * @returns {StoreField}
  */
-export function normalizeField(name, def, index) {
-    const relation = def.relation || null;
-    const inverse =
-        def.inverse ||
-        (relation && def.inverse_fname_by_model_name?.[relation]) ||
-        def.relation_field ||
-        null;
+export function normalizeField(name, declaration, index) {
     return {
         name,
         index,
-        type: def.type,
-        relation,
-        inverse,
-        default: def.default,
+        type: declaration.type,
+        relation: declaration.relation || null,
+        inverse: declaration.inverse || null,
+        default: declaration.default,
         comodel: null,
         inverseField: null,
         indexed: false,

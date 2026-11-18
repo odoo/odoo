@@ -19,7 +19,6 @@ import {
     getDeclaredFields,
     getDeclaredIndexes,
     getModelName,
-    makeGenericClass,
 } from "./model";
 
 /** @import { ModelClass } from "./model" */
@@ -31,7 +30,6 @@ import {
  *  name: string;
  *  store: Store;
  *  Record: ModelClass;
- *  generic: boolean;
  *  checked: boolean;
  *  fields: StoreField[];
  *  fieldsByName: Record<string, StoreField>;
@@ -487,31 +485,6 @@ function construct(RecordClass, owner, id, flags, parent) {
 }
 
 /**
- * A relation declared in JS has to match the server: a wrong comodel would
- * load records into the wrong model. Other fields are not compared, the store
- * treats them all the same.
- *
- * @param {string} modelName
- * @param {string} fieldName
- * @param {{ type: string; relation?: string }} declared
- * @param {{ type: string; relation?: string }} server
- */
-function checkDeclaration(modelName, fieldName, declared, server) {
-    if (!isRelational(declared) && !isRelational(server)) {
-        return;
-    }
-    if (declared.type !== server.type || declared.relation !== server.relation) {
-        const describe = (/** @type {{ type: string; relation?: string }} */ def) =>
-            def.relation ? `${def.type} to "${def.relation}"` : def.type;
-        throw new Error(
-            `Field "${modelName}.${fieldName}" is declared as ${describe(
-                declared
-            )}, but the server defines it as ${describe(server)}`
-        );
-    }
-}
-
-/**
  * One object per (model, id), relations as record objects, local changes kept
  * apart from the last server values, drafts as overlays.
  */
@@ -530,28 +503,15 @@ export class Store {
     scope = getScope();
 
     /**
-     * A model comes from a class, from server definitions, or from both
-     * merged. A model that only has server definitions gets a generic class.
+     * The models of a store are the ones of the given classes, with the fields
+     * they declare: a store knows nothing else. A relation has to target one
+     * of these models.
      *
-     * @param {{
-     *  models?: ModelClass[];
-     *  definitions?: Record<string, { fields: Record<string, object> }>;
-     * }} [params] `definitions` has the shape returned by `/web/model/get_definitions`
+     * @param {{ models?: ModelClass[] }} [params]
      */
-    constructor({ models = [], definitions = {} } = {}) {
-        const classes = composeClasses(models);
-        const names = new Set([...Object.keys(definitions), ...classes.keys()]);
-        for (const name of names) {
-            const ModelClass = classes.get(name);
-            this.models.set(
-                name,
-                this._setupModel(
-                    name,
-                    ModelClass || makeGenericClass(name),
-                    definitions[name]?.fields,
-                    !ModelClass
-                )
-            );
+    constructor({ models = [] } = {}) {
+        for (const [name, ModelClass] of composeClasses(models)) {
+            this.models.set(name, this._setupModel(name, ModelClass));
         }
         for (const model of this.models.values()) {
             this._resolveRelations(model);
@@ -925,9 +885,8 @@ export class Store {
      */
     _build(model, owner, id, flags, parent) {
         const scope = this.scope;
-        // a generic class has no class field that could need the scope
         const rec =
-            !model.generic && scope && scope.status < SCOPE_DESTROYED
+            scope && scope.status < SCOPE_DESTROYED
                 ? scope.run(construct, model.Record, owner, id, flags, parent)
                 : new model.Record(BUILD, owner, id, flags, parent);
         if (!model.checked) {
@@ -1049,27 +1008,11 @@ export class Store {
     /**
      * @param {string} name
      * @param {ModelClass} ModelClass
-     * @param {Record<string, object>} [serverFields]
-     * @param {boolean} [generic] the class was made by the store, from server fields
      * @returns {ModelMeta}
      */
-    _setupModel(name, ModelClass, serverFields = {}, generic = false) {
-        // server definitions first, JS declarations win
-        /** @type {Record<string, any>} */
-        const definitions = {};
-        for (const [fieldName, def] of Object.entries(serverFields)) {
-            if (fieldName !== "id") {
-                definitions[fieldName] = def;
-            }
-        }
-        for (const [fieldName, def] of Object.entries(getDeclaredFields(ModelClass))) {
-            if (definitions[fieldName]) {
-                checkDeclaration(name, fieldName, def, definitions[fieldName]);
-            }
-            definitions[fieldName] = { ...definitions[fieldName], ...def };
-        }
-        const fields = Object.entries(definitions).map(([fieldName, def], index) =>
-            normalizeField(fieldName, def, index)
+    _setupModel(name, ModelClass) {
+        const fields = Object.entries(getDeclaredFields(ModelClass)).map(
+            ([fieldName, declaration], index) => normalizeField(fieldName, declaration, index)
         );
 
         if (!["field", "model"].includes(ModelClass._reactivity)) {
@@ -1083,8 +1026,7 @@ export class Store {
             name,
             store: this,
             Record: RecordClass,
-            generic,
-            checked: generic,
+            checked: false,
             fields,
             fieldsByName: Object.fromEntries(fields.map((f) => [f.name, f])),
             editable: ModelClass._editable,
