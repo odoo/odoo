@@ -12,11 +12,28 @@ from odoo.api import Environment
 from odoo.exceptions import AccessDenied
 from odoo.modules import db
 from odoo.modules.registry import Registry
+from odoo.service.server import cron_database_list
 from odoo.tests.common import BaseCase, tagged
 from odoo.tools import config, mute_logger
 
 
 class TestModulesDb(BaseCase):
+    def test_cron_database_list_respects_dbfilter(self):
+        databases = ['allowed_db', 'blocked_db']
+        with (
+            patch.dict(config.options, {'db_name': [], 'dbfilter': '^allowed_'}),
+            patch.object(db, 'list_dbs', return_value=databases),
+        ):
+            self.assertEqual(cron_database_list(), ['allowed_db'])
+
+    def test_cron_database_list_dbfilter_host_placeholders(self):
+        databases = ['acme_prod', 'acme_test', 'other']
+        with patch.object(db, 'list_dbs', return_value=databases):
+            with patch.dict(config.options, {'db_name': [], 'dbfilter': '^%d$'}):
+                self.assertEqual(cron_database_list(), databases)
+            with patch.dict(config.options, {'db_name': [], 'dbfilter': '^%h_prod$'}):
+                self.assertEqual(cron_database_list(), ['acme_prod'])
+
     def test_verify_admin_password(self):
         password = secrets.token_hex()
         self.startPatcher(patch.object(
