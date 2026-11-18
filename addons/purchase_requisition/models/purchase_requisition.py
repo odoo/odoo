@@ -241,12 +241,12 @@ class PurchaseRequisitionLine(models.Model):
                 requisition.state not in ['draft', 'cancel', 'done'] for requisition in self.mapped('requisition_id')):
             raise UserError(_("You cannot have a negative or unit price of 0 for an already confirmed blanket order."))
         # If the price is updated, we have to update the related SupplierInfo
-        self.supplier_info_ids.write({'price': vals['price_unit']})
+        self.supplier_info_ids.sudo().write({'price': vals['price_unit']})
         return res
 
     def unlink(self):
         to_unlink = self.filtered(lambda r: r.requisition_id.state not in ['draft', 'cancel', 'done'])
-        to_unlink.supplier_info_ids.unlink()
+        to_unlink.supplier_info_ids.sudo().unlink()
         return super().unlink()
 
     def _create_supplier_info(self):
