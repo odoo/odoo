@@ -730,24 +730,28 @@ class IrFieldsConverter(models.AbstractModel):
         ).for_model(self.env[field.comodel_name], savepoint=savepoint)
 
         for record in records:
-            id = None
+            record_id = None
             refs = only_ref_fields(record)
             writable = convert(exclude_ref_fields(record), log)
+            import_records = self.env.context.get('_import_records')
+            import_key = id(record) if import_records is not None and id(record) in import_records else 0
             if refs:
                 subfield, w1 = self._referencing_subfield(refs)
                 warnings.extend(w1)
                 try:
-                    id, w2 = self.db_id_for(model, field, subfield, record[subfield], savepoint)
+                    record_id, w2 = self.db_id_for(model, field, subfield, record[subfield], savepoint)
                     warnings.extend(w2)
                 except ValueError:
                     if subfield != 'id':
                         raise
                     writable['id'] = record['id']
 
-            if id:
-                commands.append(Command.link(id))
-                commands.append(Command.update(id, writable))
+            if record_id:
+                if import_key:
+                    import_records[import_key]['id'] = record_id
+                commands.append(Command.link(record_id))
+                commands.append(Command.update(record_id, writable))
             else:
-                commands.append(Command.create(writable))
+                commands.append((Command.CREATE, import_key, writable))
 
         return commands, warnings
