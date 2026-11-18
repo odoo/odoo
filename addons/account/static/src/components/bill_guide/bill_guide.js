@@ -31,7 +31,7 @@ export class BillGuide extends Component {
                 active_model: rec.resModel,
                 active_ids: [rec.resId],
             }
-            this.alias = rec.data.alias_domain_id && rec.data.alias_id[1] || false;
+            this.alias = rec.data.alias_domain_id && rec.data.alias_id.display_name || false;
         } else if (!ctx?.default_journal_id && ctx?.active_id) {
             this.context = {
                 default_journal_id: ctx.active_id,

@@ -286,7 +286,7 @@ export class AnalyticDistribution extends Component {
         // Analytic Account fields
         line.analyticAccounts.map((account) => {
             const fieldName = this.planIdToColumn[account.planId];
-            const companyId = this.props.record.data.company_id && this.props.record.data.company_id[0];
+            const companyId = this.props.record.data.company_id?.id;
             const domain = companyId
                 ? [
                     "&",

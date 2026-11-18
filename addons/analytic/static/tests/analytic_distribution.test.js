@@ -363,3 +363,35 @@ test("Rounding, value suggestions, keyboard only", async () => {
     await animationFrame();
     expect(".badge:contains('99.99% Time Off | 0.01% Operating Costs')").toHaveCount(1);
 });
+
+test.tags("desktop");
+test("analytic accounts are restricted to the company of the record", async () => {
+    onRpc("account.analytic.plan", "get_relevant_plans", function ({ model }) {
+        return this.env[model].filter((r) => !r.parent_id && r.applicability !== "unavailable");
+    });
+    onRpc("account.analytic.account", "web_name_search", ({ kwargs }) => {
+        expect.step(kwargs.domain);
+    });
+    await mountView({
+        type: "form",
+        resModel: "aml",
+        resId: 2,
+        arch: `
+            <form>
+                <field name="company_id" invisible="1"/>
+                <field name="analytic_distribution" widget="analytic_distribution"/>
+            </form>`,
+    });
+    await contains(".o_field_analytic_distribution .o_input_dropdown").click();
+    await contains(".analytic_distribution_popup .o_field_x2many_list_row_add a").click();
+    await contains(".analytic_distribution_popup #x_plan2_id").click();
+    expect.verifySteps([
+        [
+            "&",
+            ["root_plan_id", "=", 2],
+            "|",
+            ["company_id", "parent_of", 1],
+            ["company_id", "=", false],
+        ],
+    ]);
+});
