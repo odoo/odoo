@@ -543,12 +543,45 @@ class IrAttachment(models.Model):
 
         # collect the records to check (by model)
         model_ids = defaultdict(set)            # {model_name: set(ids)}
+<<<<<<< 24b5967f8558dc933c93166450dfb4957bf054c1
         att_model_ids = []                      # [(att_id, (res_model, res_id))]
         # DLE P173: `test_01_portal_attachment`
         remaining = remaining.sudo()
         remaining.fetch(SECURITY_FIELDS)  # fetch only these fields
         # computed once per call and per field, not once per attachment
         is_system = self.env.is_system()
+||||||| bb365ff1cefa0502cf3a1afff0fa0618c94cb837
+        if self:
+            # DLE P173: `test_01_portal_attachment`
+            self.env['ir.attachment'].flush_model(['res_model', 'res_id', 'create_uid', 'public', 'res_field'])
+            self._cr.execute('SELECT res_model, res_id, create_uid, public, res_field FROM ir_attachment WHERE id IN %s', [tuple(self.ids)])
+            for res_model, res_id, create_uid, public, res_field in self._cr.fetchall():
+                if public and mode == 'read':
+                    continue
+                if not self.env.is_system() and (res_field or (not res_id and create_uid != self.env.uid)):
+                    raise AccessError(_("Sorry, you are not allowed to access this document."))
+                if not (res_model and res_id):
+                    continue
+                model_ids[res_model].add(res_id)
+        if values and values.get('res_model') and values.get('res_id'):
+            model_ids[values['res_model']].add(values['res_id'])
+=======
+        if self:
+            # DLE P173: `test_01_portal_attachment`
+            self.env['ir.attachment'].flush_model(['res_model', 'res_id', 'create_uid', 'public', 'res_field'])
+            self._cr.execute('SELECT res_model, res_id, create_uid, public, res_field FROM ir_attachment WHERE id IN %s', [tuple(self.ids)])
+            for res_model, res_id, create_uid, public, res_field in self._cr.fetchall():
+                if public and mode == 'read':
+                    continue
+                if not self.env.is_system() and (res_field or (not res_id and create_uid != self.env.uid)):
+                    raise AccessError(_("Sorry, you are not allowed to access this document."))
+                if not (res_model and res_id):
+                    continue
+                model_ids[res_model].add(res_id)
+        if values and values.get('res_model') and values.get('res_id'):
+            res_id = self._fields["res_id"].convert_to_cache(values["res_id"], self)
+            model_ids[values["res_model"]].add(res_id)
+>>>>>>> 1bffeb4a56075a8e20b7d3e3ac427d594f0653bd
 
         @functools.cache
         def has_field_access(res_model, res_field):
