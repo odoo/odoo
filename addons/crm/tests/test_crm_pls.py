@@ -562,17 +562,21 @@ class TestCRMPLS(TransactionCase):
             str_date_8_days_ago, "If config param is not a valid date, date in settings should be set to 8 days before today")
 
     def test_pls_no_share_stage(self):
-        """ We test here the situation where all stages are team specific, as there is
-            a current limitation (can be seen in _pls_get_won_lost_total_count) regarding
-            the first stage (used to know how many lost and won there is) that requires
-            to have no team assigned to it."""
         Lead = self.env['crm.lead']
         team_id = self.env['crm.team'].create([{'name': 'Team Test'}]).id
+        country_id = self.env['res.country'].search([], limit=1).id
+        stage_id = self.env['crm.stage'].search([], order='sequence, id', limit=1).id
+        leads = Lead.create([
+            self._get_lead_values(team_id, name, country_id, False, False, False, False, stage_id)
+            for name in ('pending', 'lost', 'won')
+        ])
+        self.env['ir.config_parameter'].sudo().set_param("crm.pls_start_date", "2000-01-01")
+        self.env['ir.config_parameter'].sudo().set_param("crm.pls_fields", "country_id")
+        leads[1].action_set_lost()
+        leads[2].action_set_won()
         self.env['crm.stage'].search([('team_id', '=', False)]).write({'team_id': team_id})
-        lead = Lead.create({'name': 'team', 'team_id': team_id, 'probability': 41.23})
         Lead._cron_update_automated_probabilities()
-        self.assertEqual(tools.float_compare(lead.probability, 41.23, 2), 0)
-        self.assertEqual(tools.float_compare(lead.automated_probability, 0, 2), 0)
+        self.assertEqual(tools.float_compare(leads[0].automated_probability, 50, 2), 0)
 
     @users('user_sales_manager')
     def test_team_unlink(self):
