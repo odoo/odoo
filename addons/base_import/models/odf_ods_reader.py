@@ -40,9 +40,13 @@ class ODSReader(object):
         name = sheet.getAttribute("name")
         rows = sheet.getElementsByType(TableRow)
         arrRows = []
+        # empty rows are only added before a row holding something, as a sheet
+        # usually ends with a row repeated up to its maximum size
+        emptyRows = 0
 
         # for each row
         for row in rows:
+            rowsRepeated = int(row.getAttribute("numberrowsrepeated") or 1)
             arrCells = []
             cells = row.getElementsByType(TableCell)
 
@@ -77,11 +81,12 @@ class ODSReader(object):
                     arrCells.extend([textContent] * int(repeat))
 
             # if row contained something
-            if arrCells:
-                arrRows.append(arrCells)
-
-            #else:
-            #    print ("Empty or commented row (", row_comment, ")")
+            if any(cell.strip() for cell in arrCells):
+                arrRows.extend([] for _ in range(emptyRows))
+                emptyRows = 0
+                arrRows.extend(list(arrCells) for _ in range(rowsRepeated))
+            else:
+                emptyRows += rowsRepeated
 
         self.SHEETS[name] = arrRows
 
