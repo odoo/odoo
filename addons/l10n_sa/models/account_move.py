@@ -13,28 +13,42 @@ class AccountMove(models.Model):
     _inherit = ['account.move', 'zatca.mixin']
 
     l10n_sa_invoice_type = fields.Selection(
-        selection=[("tax", "Tax"), ("simplified", "Simplified")],
+        selection=[("tax", "Tax"), ("simplified", "Simplified"), ("commercial", "Commercial")],
         string="Invoice type",
         compute="_compute_l10n_sa_invoice_type",
         store=True,
         readonly=False,
         copy=False,
+        help="Defines the nature of the Invoice:\n"
+             "a. Tax: B2B/B2G sales; to be cleared by ZATCA.\n"
+             "b. Simplified: B2C sales, or B2B under SAR 1,000; to be reported to ZATCA within 24h.\n"
+             "c. Commercial: no VAT charged; not reported to ZATCA.",
     )
 
-    @api.depends('commercial_partner_id.is_company')
+    @api.depends('commercial_partner_id.is_company', 'company_id.vat')
     def _compute_l10n_sa_invoice_type(self):
         for move in self:
             if move.country_code != 'SA' or not move.is_sale_document():
                 move.l10n_sa_invoice_type = False
             elif move.state == 'draft' or not move.l10n_sa_invoice_type:
-                move.l10n_sa_invoice_type = 'tax' if move.commercial_partner_id.is_company else 'simplified'
+                if not move.company_id.vat:
+                    move.l10n_sa_invoice_type = 'commercial'
+                else:
+                    move.l10n_sa_invoice_type = 'tax' if move.commercial_partner_id.is_company else 'simplified'
 
     def _get_name_invoice_report(self):
         # EXTENDS account
         self.ensure_one()
-        if self.company_id.country_code == 'SA':
+        if self.company_id.country_code == 'SA' and not self._l10n_gcc_is_commercial_invoice():
             return 'l10n_sa.l10n_sa_report_invoice_document'
         return super()._get_name_invoice_report()
+
+    def _l10n_gcc_is_commercial_invoice(self):
+        # EXTENDS l10n_gcc_invoice
+        self.ensure_one()
+        if self.country_code == 'SA' and self.l10n_sa_invoice_type:
+            return self.l10n_sa_invoice_type == 'commercial'
+        return super()._l10n_gcc_is_commercial_invoice()
 
     def _l10n_gcc_get_invoice_title(self):
         # EXTENDS l10n_gcc_invoice
@@ -49,7 +63,7 @@ class AccountMove(models.Model):
 
     def _l10n_sa_is_phase_1_applicable(self):
         # EXTENDS zatca_mixin
-        return super()._l10n_sa_is_phase_1_applicable() and self.state == 'posted'
+        return super()._l10n_sa_is_phase_1_applicable() and self.state == 'posted' and not self._l10n_gcc_is_commercial_invoice()
 
     @api.depends('country_code', 'move_type')
     def _compute_show_delivery_date(self):
@@ -59,18 +73,22 @@ class AccountMove(models.Model):
             if move.country_code == 'SA':
                 move.show_delivery_date = move.is_sale_document()
 
-    @api.depends('move_type', 'debit_origin_id')
+    @api.depends('move_type', 'debit_origin_id', 'l10n_sa_invoice_type')
     def _compute_show_l10n_sa_reason(self):
         # EXTENDS zatca_mixin
         for record in self:
-            record.l10n_sa_show_reason = record.country_code == 'SA' and (record.move_type == 'out_refund' or (record.move_type == 'out_invoice' and record.debit_origin_id))
+            record.l10n_sa_show_reason = (
+                record.country_code == 'SA'
+                and not record._l10n_gcc_is_commercial_invoice()
+                and (record.move_type == 'out_refund' or (record.move_type == 'out_invoice' and record.debit_origin_id))
+            )
 
     def _post(self, soft=True):
         res = super()._post(soft)
         for move in self:
             if move.country_code == 'SA' and move.is_sale_document():
                 vals = {}
-                if not move.l10n_sa_confirmation_datetime:
+                if not move.l10n_sa_confirmation_datetime and not move._l10n_gcc_is_commercial_invoice():
                     vals['l10n_sa_confirmation_datetime'] = self._get_normalized_l10n_sa_confirmation_datetime(move.invoice_date)
                 if not move.delivery_date:
                     vals['delivery_date'] = move.invoice_date

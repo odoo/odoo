@@ -64,6 +64,7 @@ class AccountMove(models.Model):
 
         if invalid_companies := self.filtered(
             lambda move: move.country_code == 'SA' and move.state == 'posted' and move.is_sale_document()
+            and not move._l10n_gcc_is_commercial_invoice(),
         ).company_id.filtered(
             lambda company: not company._l10n_sa_check_organization_unit()
         ):
@@ -233,7 +234,7 @@ class AccountMove(models.Model):
 
     def _is_l10n_sa_eligibile_invoice(self):
         self.ensure_one()
-        return self.is_invoice() and self.l10n_sa_confirmation_datetime and self.country_code == 'SA'
+        return self.is_invoice() and self.l10n_sa_confirmation_datetime and self.country_code == 'SA' and not self._l10n_gcc_is_commercial_invoice()
 
     def _l10n_sa_is_legal(self):
         # Extends l10n_sa
