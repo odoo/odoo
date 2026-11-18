@@ -23,7 +23,7 @@ export class Chrome extends Component {
 
     setup() {
         this.pos = usePos();
-        useIdleTimer(this.pos.idleTimeout, (ev) => {
+        this.pos.idleTimer = useIdleTimer(this.pos.idleTimeout, (ev) => {
             const stopEventPropagation = ["mousedown", "click", "keypress"];
             if (stopEventPropagation.includes(ev.type)) {
                 ev.stopPropagation();
