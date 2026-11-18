@@ -286,7 +286,7 @@
                     <field name="department_id" />
                     <templates>
                         <t t-name="hierarchy-box">
-                            <div t-attf-class="o_hierarchy_node_header d-flex justify-content-center pb-4 o_hierarchy_node_color_{{ record.department_color.raw_value }}"
+                            <div t-attf-class="o_hierarchy_node_header d-flex justify-content-center pb-4 o_hierarchy_node_color o_colorlist_color_{{ record.department_color.raw_value }}"
                                 t-att-title="record.department_id.value"
                             >
                                 <field name="image_1024" preview_image="image_128" options="{'zoom': true, 'zoom_delay': 1000}" widget="background_image" />
