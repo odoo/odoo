@@ -89,12 +89,10 @@
             "hr/static/src/core/common/**/*",
             "hr/static/src/core/web/**/*",
             'hr/static/src/**/*',
-            ('remove', 'hr/static/src/views/hr_employee_hierarchy/*'),
             ('remove', 'hr/static/src/views/skills_graph.js'),
             ('remove', 'hr/static/src/scss/report_employee_cv.scss'),
         ],
         'web.assets_backend_lazy': [
-            'hr/static/src/views/hr_employee_hierarchy/*',
             'hr/static/src/views/skills_graph.js',
         ],
         'im_livechat.assets_embed_core': [

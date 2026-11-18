@@ -635,6 +635,120 @@ class TestWebReadGroup(common.TransactionCase):
                 },
             )
 
+    def test_unfold_default_group(self):
+        """Test that `unfold_default_group` opens the empty relational group (False),
+        which is folded by default."""
+        Model = self.env["test_read_group.aggregate"]
+        partner_1, partner_2 = self.env["test_read_group.partner"].create(
+            [
+                {"name": "P1"},
+                {"name": "P2"},
+            ],
+        )
+        records = Model.create(
+            [
+                {"partner_id": partner_1.id, "key": 1, "value": 1},
+                {"partner_id": partner_1.id, "key": 1, "value": 2},
+                {"partner_id": partner_1.id, "key": 1, "value": 3},
+                {"partner_id": partner_2.id, "key": 1, "value": 4},
+                {"partner_id": partner_2.id, "key": 2},
+                {"partner_id": partner_2.id, "value": 5},
+                {},
+                {"value": 6},
+            ],
+        )
+
+        read_spec = {
+            "key": {},
+            "value": {},
+            "partner_id": {"fields": {"display_name": {}}},
+        }
+
+        # Warmup ormcache
+        Model.web_read_group(
+            domain=[],
+            groupby=["partner_id"],
+            aggregates=["value:sum"],
+            auto_unfold=True,
+            unfold_default_group=True,
+            unfold_read_specification=read_spec,
+        )
+        self.env.invalidate_all()
+
+        # Scenario: auto unfold with unfold_default_group, the False group is opened too
+
+        # One query for the _read_group
+        # One query to read the display_name of partner_id
+        # One query per opened group to get its records (3)
+        # One query to read all records opened
+        with self.assertQueryCount(6):
+            self.assertEqual(
+                Model.web_read_group(
+                    domain=[],
+                    groupby=["partner_id"],
+                    aggregates=["value:sum"],
+                    auto_unfold=True,
+                    unfold_default_group=True,
+                    unfold_read_specification=read_spec,
+                ),
+                {
+                    "groups": [
+                        {
+                            "__extra_domain": [("partner_id", "=", partner_1.id)],
+                            "partner_id": (partner_1.id, "P1"),
+                            "__count": 3,
+                            "value:sum": 1 + 2 + 3,
+                            "__records": records[:3].web_read(read_spec),
+                        },
+                        {
+                            "__extra_domain": [("partner_id", "=", partner_2.id)],
+                            "partner_id": (partner_2.id, "P2"),
+                            "__count": 3,
+                            "value:sum": 4 + 5,
+                            "__records": records[3:6].web_read(read_spec),
+                        },
+                        {
+                            "__extra_domain": [("partner_id", "=", False)],
+                            "partner_id": False,
+                            "__count": 2,
+                            "value:sum": 6,
+                            "__records": records[6:].web_read(read_spec),
+                        },
+                    ],
+                    "length": 3,
+                },
+            )
+
+        # Scenario: unfold_default_group only lifts the "empty relational group" rule,
+        # it does not open anything by itself without auto_unfold
+        result = Model.web_read_group(
+            domain=[],
+            groupby=["partner_id"],
+            aggregates=["value:sum"],
+            unfold_default_group=True,
+            unfold_read_specification=read_spec,
+        )
+        self.assertFalse(
+            [group for group in result["groups"] if "__records" in group],
+            "No group should be opened without auto_unfold",
+        )
+
+        # Scenario: opening_info has priority, a False group explicitly folded by
+        # the client stays folded
+        result = Model.web_read_group(
+            domain=[],
+            groupby=["partner_id"],
+            aggregates=["value:sum"],
+            auto_unfold=True,
+            unfold_default_group=True,
+            opening_info=[
+                {"value": False, "folded": True, "limit": 80, "offset": 0, "progressbar_domain": []},
+            ],
+            unfold_read_specification=read_spec,
+        )
+        false_group = next(group for group in result["groups"] if group["partner_id"] is False)
+        self.assertNotIn("__records", false_group, "opening_info folded=True should win")
+
     def test_extra_domain_records(self):
         # Scenario: Open a kanban view, select an part of the records with the progress bar.
 

@@ -575,6 +575,7 @@ class Base(models.AbstractModel):
         *,
         auto_unfold: bool = False,
         opening_info: list[dict] | None = None,
+        unfold_default_group: bool = False,
         unfold_read_specification: dict[str, dict] | None = None,
         unfold_read_default_limit: int | None = 80,  # Limit of record by unfolded group by default
         groupby_read_specification: dict[str, dict] | None = None,
@@ -682,6 +683,7 @@ class Base(models.AbstractModel):
             dict_order=dict_order,
             auto_unfold=auto_unfold,
             opening_info=opening_info,
+            unfold_default_group=unfold_default_group,
             unfold_read_default_limit=unfold_read_default_limit,
             parent_opening_info=opening_info,
             parent_group_domain=Domain.TRUE,
@@ -812,6 +814,7 @@ class Base(models.AbstractModel):
         dict_order: dict[str, str],
         auto_unfold: bool,
         opening_info: list[dict] | None,
+        unfold_default_group: bool,
         unfold_read_default_limit: int | None,
         parent_opening_info: list[dict] | None,
         parent_group_domain: Domain,
@@ -858,7 +861,7 @@ class Base(models.AbstractModel):
                 or nb_opened_group >= max_number_opened_group
                 or fold
                 # Empty recordset is folded by default
-                or (field.relational and not group[groupby_spec])
+                or (field.relational and not group[groupby_spec] and not unfold_default_group)
             ):
                 continue
 
@@ -912,6 +915,7 @@ class Base(models.AbstractModel):
                     dict_order=dict_order,
                     auto_unfold=False,
                     opening_info=opening_info,
+                    unfold_default_group=False,
                     unfold_read_default_limit=unfold_read_default_limit,
                     parent_opening_info=subgroup_opening_info,
                     parent_group_domain=subgroup_domain,

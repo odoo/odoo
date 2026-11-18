@@ -4,18 +4,6 @@
     .o_hierarchy_container {
         gap: 25px;
 
-        .o_hierarchy_row {
-            &.o_hierarchy_hover {
-                background-color: var(--hierarchy_element_hover-background);
-                box-shadow: -1px -1px 0px 0px var(--hierarchy_element_hover-border) inset,
-                    1px 1px 0px 0px var(--hierarchy_element_hover-border) inset;
-            }
-
-            &:has(.o_hierarchy_node_unfolded) .o_hierarchy_node_container:not(.o_hierarchy_node_unfolded) {
-                opacity: 50%;
-            }
-        }
-
         .o_hierarchy_separator {
             position: relative;
             width: 100%;
@@ -68,6 +56,24 @@
                 height: 12px;
                 position: absolute;
                 display: block;
+            }
+        }
+    }
+
+    .o_hierarchy_pager {
+        position: absolute;
+        right: 8px;
+        bottom: 8px;
+        height: 20px;
+
+        .o_pager_previous, .o_pager_next {
+            display: flex;
+            align-items: center;
+            padding: 0 5px !important;
+
+            i {
+                font-size: 10px;
+                font-weight: 500 !important;
             }
         }
     }
