@@ -8,6 +8,7 @@ import {
     markup,
     onMounted,
     onWillStart,
+    onWillDestroy,
     onWillUnmount,
     proxy,
     signal,
@@ -38,6 +39,8 @@ export class HtmlViewer extends Component {
 
     setup() {
         this._cleanups = [];
+        this.fileViewer = this.env.services.fileViewer();
+        onWillDestroy(() => this.fileViewer.close());
         this.htmlUpgradeManager = new HtmlUpgradeManager();
 
         this.state = proxy({
@@ -151,6 +154,17 @@ export class HtmlViewer extends Component {
         this.applyAccessibilityAttributes(container);
         this.wrapTables(container);
         this.addDomListener(container, "copy", fillClipboardWithSelection);
+        this.addDomListener(container, "dblclick", ({ target }) => {
+            if (target.tagName === "IMG") {
+                this.fileViewer.open({
+                    isImage: true,
+                    isViewable: true,
+                    name: target.src,
+                    defaultSource: target.src,
+                    downloadUrl: target.src,
+                });
+            }
+        });
     }
 
     /**

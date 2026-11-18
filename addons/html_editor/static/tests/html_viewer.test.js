@@ -1,6 +1,7 @@
+import { base64Img } from "./_helpers/editor";
 import { HtmlViewer } from "@html_editor/components/html_viewer/html_viewer";
 import { expect, test } from "@odoo/hoot";
-import { waitFor } from "@odoo/hoot-dom";
+import { click, dblclick, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { markup } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
@@ -120,4 +121,46 @@ test(`copy from HtmlViewer should copy all the selection`, async () => {
     expect(clipboardData.getData("application/vnd.odoo.odoo-editor")).toBe(
         clipboardData.getData("text/html")
     );
+});
+
+test.tags("desktop");
+test("double-clicking a readonly image opens its preview", async () => {
+    await mountWithCleanup(WebClient);
+    registry.category("main_components").add("mycomponent", {
+        Component: HtmlViewer,
+        props: {
+            config: {
+                value: markup(`<img src="${base64Img}">`),
+            },
+        },
+    });
+    const image = await waitFor(".o_readonly img");
+    await dblclick(image);
+    await waitFor(".o-FileViewer-viewImage");
+    expect(".o-FileViewer-viewImage").toHaveAttribute("data-src", image.src);
+    await click(".o-FileViewer [aria-label='Close']");
+    await animationFrame();
+    expect(".o-FileViewer").toHaveCount(0);
+});
+
+test.tags("desktop");
+test("destroying HtmlViewer closes its image preview", async () => {
+    await mountWithCleanup(WebClient);
+    registry.category("main_components").add("mycomponent", {
+        Component: HtmlViewer,
+        props: {
+            config: {
+                value: markup(`<img src="${base64Img}">`),
+            },
+        },
+    });
+    await waitFor(".o_readonly img");
+    await dblclick(".o_readonly img");
+    await waitFor(".o-FileViewer-viewImage");
+    expect(".o-FileViewer").toHaveCount(1);
+
+    registry.category("main_components").remove("mycomponent");
+    await waitForNone(".o-FileViewer");
+    expect(".o_readonly").toHaveCount(0);
+    expect(".o-FileViewer").toHaveCount(0);
 });
