@@ -2,7 +2,7 @@
 <odoo>
     <!-- Reset cached printers submenu -->
     <menuitem id="cached_printers_section" name="Reporting" parent="stock.menu_stock_config_settings" sequence="50"/>
-    <menuitem id="manage_printers_action" name="Manage Printers" sequence="1" parent="cached_printers_section" action="printer.manage_printers_action"/>
+    <menuitem id="manage_printers_action" name="Manage Printers" sequence="1" parent="cached_printers_section" action="printer.manage_printers_action" groups="stock.group_stock_manager"/>
     <menuitem id="cached_printers_action" name="Reset Linked Printers" sequence="2" parent="cached_printers_section" action="printer.action_reset_linked_printers"/>
 
     <!-- Grant "Configuration" tab access to every user -->
