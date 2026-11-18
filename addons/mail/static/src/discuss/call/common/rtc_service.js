@@ -464,6 +464,7 @@ export class Rtc extends Record {
     _remotelyHostedChannelId;
     _crossTabTimeoutId;
     crossTabInitDeferred = Promise.withResolvers();
+    isStarted = false;
     /** @type {number} count of how many times the p2p service attempted a connection recovery */
     _p2pRecoveryCount = 0;
 
@@ -574,6 +575,10 @@ export class Rtc extends Record {
     }
 
     start() {
+        if (this.isStarted) {
+            return;
+        }
+        this.isStarted = true;
         this.notification = this.store.notification;
         this.soundEffects = this.store.soundEffects;
         if (this._broadcastChannel) {
