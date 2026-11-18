@@ -103,7 +103,7 @@ class PurchaseReport(models.Model):
         ]
 
     def _groupby_list(self, table: TableSQL):
-        return [
+        groupby_list = [
             table.price_unit,
             table.date_planned,
             table.order_id.id,
@@ -114,6 +114,9 @@ class PurchaseReport(models.Model):
             table.product_id.product_tmpl_id.uom_id.id,
             table.uom_id.id,
         ]
+        if table.consolidation_rate != SQL('1'):
+            groupby_list.append(table.consolidation_rate)
+        return groupby_list
 
     def _read_group_select(self, table, aggregate_spec: str) -> SQL:
         """ This override allows us to correctly calculate the average price of products. """
