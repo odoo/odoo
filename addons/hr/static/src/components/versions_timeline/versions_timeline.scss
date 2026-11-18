@@ -15,5 +15,13 @@
                 margin-left: calc(-1 * #{map-get($spacers, 1)});
             }
         }
+
+        // Align the line with the version button, adjusting first and last one to not go outside the box
+        .o_arrow_button:not(.o_last) + .o_contract_line {
+            margin-left: calc(-1 * var(--o-statusbar-caret-width) - var(--o-statusbar-border-width) * sqrt(3));
+        }
+        .o_arrow_button:not(.o_first) + .o_contract_line {
+            margin-right: calc(var(--o-statusbar-caret-width) + var(--o-statusbar-caret-gap));
+        }
     }
 }
