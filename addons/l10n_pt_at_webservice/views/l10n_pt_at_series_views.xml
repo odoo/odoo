@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_l10n_pt_at_series_tree" model="ir.ui.view">
+        <field name="name">l10n_pt.at.series.list.inherit.l10n_pt_at_webservice</field>
+        <field name="model">l10n_pt.at.series</field>
+        <field name="inherit_id" ref="l10n_pt_certification.view_l10n_pt_at_series_tree"/>
+        <field name="arch" type="xml">
+            <field name="at_code" position="after">
+                <button name="action_register_at_series" type="object"
+                        string="Register" class="btn-link"
+                        groups="account.group_account_manager"
+                        invisible="at_code or l10n_pt_at_ws_offline or l10n_pt_at_ws_annulment_date"
+                        icon="fa-refresh"
+                        help="Communicate this series to the Autoridade Tributária and retrieve the validation code."/>
+                <field name="l10n_pt_at_ws_error" optional="show" invisible="at_code" decoration-warning="1"/>
+                <field name="l10n_pt_at_ws_registration_date" optional="hide"/>
+                <field name="l10n_pt_at_ws_annulment_date" optional="hide"/>
+                <button name="action_l10n_pt_at_ws_annul" type="object"
+                        string="Annul" class="btn-link text-danger"
+                        groups="account.group_account_manager"
+                        invisible="not l10n_pt_at_ws_can_annul"
+                        icon="fa-ban"
+                        confirm="Annul this series at the AT? The AT will never accept its name again for this document type, and no document can be numbered in it. This cannot be undone."
+                        help="Annul at the AT a series registered by mistake, today or yesterday, in which no document was numbered."/>
+                <field name="l10n_pt_at_ws_finalization_date" optional="hide"/>
+                <button name="action_l10n_pt_at_ws_finalize" type="object"
+                        string="Finalise" class="btn-link"
+                        groups="account.group_account_manager"
+                        invisible="not l10n_pt_at_ws_can_finalize"
+                        icon="fa-flag-checkered"
+                        confirm="Finalise this series at the AT with the number of its last issued document? No document can be issued in it afterwards."
+                        help="Tell the AT that this ended series is finished, with the number of its last issued document."/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_l10n_pt_at_series_form" model="ir.ui.view">
+        <field name="name">l10n_pt.at.series.form.inherit.l10n_pt_at_webservice</field>
+        <field name="model">l10n_pt.at.series</field>
+        <field name="inherit_id" ref="l10n_pt_certification.view_l10n_pt_at_series_form"/>
+        <field name="arch" type="xml">
+            <field name="at_code" position="after">
+                <button name="action_register_at_series" type="object"
+                        string="Register" class="btn-link"
+                        groups="account.group_account_manager"
+                        invisible="at_code or l10n_pt_at_ws_offline or l10n_pt_at_ws_annulment_date"
+                        icon="fa-refresh"
+                        help="Communicate this series to the Autoridade Tributária and retrieve the validation code."/>
+                <field name="l10n_pt_at_ws_error" invisible="at_code or not l10n_pt_at_ws_error" decoration-warning="1"/>
+                <field name="l10n_pt_at_ws_registration_date" invisible="not l10n_pt_at_ws_registration_date"/>
+                <field name="l10n_pt_at_ws_annulment_date" invisible="not l10n_pt_at_ws_annulment_date"/>
+                <field name="l10n_pt_at_ws_finalization_date" invisible="not l10n_pt_at_ws_finalization_date"/>
+            </field>
+        </field>
+    </record>
+</odoo>
