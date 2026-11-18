@@ -23,6 +23,9 @@
 //
 // The `@import` is type-only (erased), so two models can reference each other
 // without creating an import cycle.
+//
+// The declarations of a model can be generated from its Python fields, in a
+// file of their own: see `odoo-bin js_fields --help`.
 
 export const FIELD = Symbol("field");
 
