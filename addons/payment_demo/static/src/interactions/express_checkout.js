@@ -19,6 +19,29 @@ patch(ExpressCheckout.prototype, {
         document.querySelector('[name="o_payment_submit_button"]')?.removeAttribute('disabled');
     },
 
+    _updatePaymentContext(providerData) {
+        super._updatePaymentContext(...arguments);
+        if (providerData.providerCode === 'demo') {
+            this.paymentContext.paymentMethodId = providerData.paymentMethodId;
+        }
+    },
+
+    /**
+     * Add the real 'demo' payment method to the transaction route params, if known.
+     *
+     * @override method from payment.express_form
+     * @private
+     * @returns {object} - The transaction route params.
+     */
+    _prepareTransactionRouteParams() {
+        const transactionRouteParams = super._prepareTransactionRouteParams(...arguments);
+        if (this.paymentContext['paymentMethodId']) {
+            transactionRouteParams['payment_method_id'] =
+                parseInt(this.paymentContext['paymentMethodId']);
+        }
+        return transactionRouteParams;
+    },
+
     /**
      * Process the payment.
      *

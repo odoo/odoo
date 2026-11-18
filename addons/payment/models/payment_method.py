@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 
 from odoo.addons.payment import utils as payment_utils
@@ -201,11 +201,6 @@ class PaymentMethod(models.Model):
             linked_tokens.active = False
 
         return super().write(vals)
-
-    @api.ondelete(at_uninstall=False)
-    def _unlink_if_not_default_payment_method(self):
-        if any(pm.code == "unknown" for pm in self):
-            raise UserError(self.env._("You cannot delete the default payment method."))
 
     def _can_return_content(self, field_name=None, access_token=None):
         """Override of `BaseModel` to allow showing payment method images to public users.

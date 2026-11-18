@@ -44,6 +44,7 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
         """Test that the real payment method is set on the transaction created in express
         checkout based on its Stripe-specific type, without ever relying on a generic
         placeholder."""
+        self.provider.is_published = True
         visa_pm = self.env.ref("payment_stripe.payment_method_visa")
         reference = "test_express_checkout_resolves_real_payment_method"
         route_values = self._prepare_transaction_values(None, None, "direct")
