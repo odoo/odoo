@@ -4246,6 +4246,26 @@ class TestHelpViews(ViewCase):
         arch = etree.fromstring(self.env['res.partner'].with_user(self.user_demo).get_view(list_view.id)['arch'])
         self.assertEqual([p.text for p in arch.find('help')], ['Everyone'])
 
+    def test_help_id_t_groups_text(self):
+        # the text of <t groups> nodes is kept when they are unwrapped
+        help_view = self._create_view("""
+            <help>
+                <p>Hello <t groups="base.group_system">admin, <b>welcome</b> back</t>!</p>
+                <p>Hello <t groups="base.group_system">admin</t>!</p>
+                <p><t groups="base.group_system">Admins only</t></p>
+            </help>
+        """)
+        list_view = self._create_view(f'<list help_id="{help_view.id}"><field name="name"/></list>')
+
+        arch = etree.fromstring(self.env['res.partner'].get_view(list_view.id)['arch'])
+        self.assertEqual(
+            [''.join(p.itertext()) for p in arch.find('help')],
+            ['Hello admin, welcome back!', 'Hello admin!', 'Admins only'],
+        )
+
+        arch = etree.fromstring(self.env['res.partner'].with_user(self.user_demo).get_view(list_view.id)['arch'])
+        self.assertEqual([''.join(p.itertext()) for p in arch.find('help')], ['Hello !', 'Hello !', ''])
+
     def test_help_view_data(self):
         # help views are qweb-based, and may use the values returned by their data_method
         help_view = self._create_view("""
