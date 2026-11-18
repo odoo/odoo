@@ -12,12 +12,8 @@ HIERARCHY_VALID_ATTRIBUTES = {
     'create',
     'edit',
     'delete',
-    'parent_field',
     'child_field',
-    'draggable',
     'default_order',
-    'avatar_field',
-    'label',
 }
 
 

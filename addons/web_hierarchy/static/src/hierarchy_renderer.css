@@ -1,74 +1,69 @@
 .o_hierarchy_renderer {
-    --o-chart-line-color: var(--o-gray-300);
+    --o-hierarchy-edge-width: calc(var(--o-bs-border-width) * 2);
 
-    .o_hierarchy_container {
-        gap: 25px;
+    min-height: 300px;
+    user-select: none;
+    touch-action: none;
+    background-image: radial-gradient(var(--border-color) 1px, transparent 1px);
 
-        .o_hierarchy_row {
-            &.o_hierarchy_hover {
-                background-color: var(--hierarchy_element_hover-background);
-                box-shadow: -1px -1px 0px 0px var(--hierarchy_element_hover-border) inset,
-                    1px 1px 0px 0px var(--hierarchy_element_hover-border) inset;
-            }
+    .o_hierarchy_edges,
+    .o_hierarchy_node_container {
+        opacity: var(--o-hierarchy-opacity, 1);
+    }
 
-            &:has(.o_hierarchy_node_unfolded) .o_hierarchy_node_container:not(.o_hierarchy_node_unfolded) {
-                opacity: 50%;
-            }
+    .o_hierarchy_edges {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .o_hierarchy_edge {
+        stroke: var(--border-color);
+    }
+
+    .o_hierarchy_node_container {
+        position: absolute;
+        top: 0;
+        /*rtl:ignore*/
+        left: 0;
+        /*rtl:ignore*/
+        transform-origin: top left;
+        z-index: 1;
+        cursor: default;
+        /* let the card fill the min-height of its container */
+        display: flex;
+        flex-direction: column;
+
+        > * {
+            flex-grow: 1;
         }
+    }
 
-        .o_hierarchy_separator {
-            position: relative;
-            width: 100%;
+    .o_hierarchy_node_dragged {
+        z-index: 2;
+        cursor: grabbing;
 
-            .o_hierarchy_line_left {
-                &:before {
-                    border-top: 2px solid var(--o-chart-line-color);
-                    border-left: 2px solid var(--o-chart-line-color);
-                    border-top-left-radius: 8px;
-                    margin-left: -10%;
-                    margin-top: -2px;
-                }
-
-                &:after {
-                    border-bottom: 2px solid var(--o-chart-line-color);
-                    border-right: 2px solid var(--o-chart-line-color);
-                    border-bottom-right-radius: 6px;
-                    margin-left: 30%;
-                    margin-top: -12px;
-                }
-            }
-
-            .o_hierarchy_line_right {
-                &:before {
-                    border-bottom: 2px solid var(--o-chart-line-color);
-                    border-left: 2px solid var(--o-chart-line-color);
-                    border-bottom-left-radius: 6px;
-                    margin-left: calc(-10% - 1px);
-                    margin-top: -12px;
-                }
-
-                &:after {
-                    border-top: 2px solid var(--o-chart-line-color);
-                    border-right: 2px solid var(--o-chart-line-color);
-                    border-top-right-radius: 8px;
-                    margin-left: 30%;
-                    margin-top: -2px;
-                }
-            }
-
-            .o_hierarchy_line_part {
-                border-top: 2px solid var(--o-chart-line-color);
-                margin: 0 10%;
-                width: 30%;
-            }
-
-            .o_hierarchy_line_part:before, .o_hierarchy_line_part:after {
-                content: "";
-                width: calc(10% + 1px);
-                height: 12px;
-                position: absolute;
-                display: block;
-            }
+        .o_hierarchy_node {
+            box-shadow: var(--box-shadow);
+            cursor: grabbing !important;
         }
+    }
+
+    .o_hierarchy_controls {
+        position: absolute;
+        inset: auto 0 0;
+        z-index: 3;
+        pointer-events: none;
+
+        > * {
+            pointer-events: auto;
+        }
+    }
+
+    .o_hierarchy_zoom_level {
+        width: 3.75rem;
     }
 }
