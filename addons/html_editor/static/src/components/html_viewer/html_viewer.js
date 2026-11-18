@@ -76,10 +76,13 @@ export class HtmlViewer extends Component {
                 iframe.after(iframe);
             });
         } else {
-            // onPatched re-applies only the idempotent attributes; the copy listener is
+            // onPatched re-applies only the idempotent processing, the copy listener is
             // attached once (onMounted) so it does not pile up on every patch.
             onMounted(() => this.processReadonlyContent(this.readonlyElementRef()));
-            onPatched(() => this.applyReadonlyAttributes(this.readonlyElementRef()));
+            onPatched(() => {
+                this.applyReadonlyAttributes(this.readonlyElementRef());
+                wrapReadonlyTables(this.readonlyElementRef());
+            });
         }
 
         if (this.props.config.cssAssetId) {
