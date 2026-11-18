@@ -1313,7 +1313,7 @@ class AccountAccount(models.Model):
                 query = Query(self.env[model])
                 return query.select(
                     SQL('%s AS id', query.table.id),
-                    SQL('%s AS company_id', query.table[company_id_field]),
+                    SQL('%s AS company_id', query.table._sudo()[company_id_field]),
                 )
 
         # Step 1: Check access rights.
@@ -1346,7 +1346,9 @@ class AccountAccount(models.Model):
         (self | new_accounts).invalidate_recordset()
 
         # 3.1: Update fields on other models that reference account.account
-        many2x_fields = self.env['ir.model.fields'].search([
+        # The field lookups of steps 3.1 to 3.3 run as sudo: reading field definitions
+        # requires the Access Rights group, and the user's access was checked in step 1.
+        many2x_fields = self.env['ir.model.fields'].sudo().search([
             ('ttype', 'in', ('many2one', 'many2many')),
             ('relation', '=', 'account.account'),
             ('store', '=', True),
@@ -1409,7 +1411,7 @@ class AccountAccount(models.Model):
             ))
 
         # 3.2: Update Reference fields that reference account.account
-        reference_fields = self.env['ir.model.fields'].search([('ttype', '=', 'reference'), ('store', '=', True)])
+        reference_fields = self.env['ir.model.fields'].sudo().search([('ttype', '=', 'reference'), ('store', '=', True)])
         for field_to_update in reference_fields:
             model = field_to_update.model
             if not self.env[model]._auto:
@@ -1434,7 +1436,7 @@ class AccountAccount(models.Model):
             ))
 
         # 3.3: Update Many2OneReference fields that reference account.account
-        many2one_reference_fields = self.env['ir.model.fields'].search([
+        many2one_reference_fields = self.env['ir.model.fields'].sudo().search([
             ('ttype', '=', 'many2one_reference'),
             ('store', '=', True),
         ])
