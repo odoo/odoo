@@ -574,8 +574,6 @@ export class Rtc extends Record {
     }
 
     start() {
-        this.notification = this.store.notification;
-        this.soundEffects = this.store.soundEffects;
         if (this._broadcastChannel) {
             this._broadcastChannel.onmessage = this._onBroadcastChannelMessage.bind(this);
             this._postToTabs({ type: CROSS_TAB_CLIENT_MESSAGE.INIT });
@@ -2991,6 +2989,8 @@ export const rtcService = {
     start(env, services) {
         const store = services["mail.store"];
         const rtc = store.rtc;
+        rtc.notification = store.notification;
+        rtc.soundEffects = store.soundEffects;
         rtc.pttExtService = usePlugin(PttExtensionPlugin);
         usePlugin(CallInvitationsPlugin);
         rtc.pip = usePlugin(PipPlugin);
