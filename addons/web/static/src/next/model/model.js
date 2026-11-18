@@ -1,60 +1,26 @@
 import { FIELD } from "./fields";
 
 /**
- * @template T
- * @template [W=T]
- * @typedef {import("./fields").FieldSignal<T, W>} FieldSignal
+ * A record of any model.
+ *
+ * @typedef {_Model} Model
  */
 
 /**
- * What `extend` takes: the description of a model, or of what an extension
- * adds to one.
+ * A model class: `Model`, or any class that derives from it.
  *
- * - `name`: name of the model, to declare one. An extension has no name.
- * - `fields`: field declarations, see `fields.js`.
- * - `editable`: records are edited locally and saved back. A local write is
- *   then kept as a change, apart from the last server value: that is what
- *   `isDirty`, `discard`, `ack` and `toCommands` work on. When false, the
- *   default, a write replaces the value: for data the client only mirrors.
- * - `reactivity`: how reads subscribe. `"field"`, the default, to each field
- *   of each record. `"model"` to the whole model: one subscription for all its
- *   records, for large read-mostly data.
- * - `indexes`: names of non-relational fields with a unique index, see
- *   `store.getBy`.
+ * @typedef {typeof _Model} ModelClass
+ */
+
+/**
+ * The class an extension of the model class `C` derives from: its records have
+ * the fields `F` on top of the ones of `C`. It only exists for types: at
+ * runtime, it is `C` itself. See the example on `Model`.
  *
- * An extension can give `editable` and `reactivity` too, and the last one
- * wins. Its `indexes` are added to the ones of the model.
- *
+ * @template {abstract new (...args: any) => any} C
  * @template F
- * @typedef {{
- *  name?: string;
- *  fields?: F;
- *  editable?: boolean;
- *  reactivity?: "field" | "model";
- *  indexes?: string[];
- * }} ModelParams
- */
-
-/**
- * A record class whose records are of type `I`: what `extend` returns. It is
- * spelled out, rather than derived from `typeof Model`, so that two models
- * that reference each other are not circular for TypeScript.
- *
- * @template I
- * @typedef {{
- *  new (...args: any[]): I;
- *  prototype: I;
- *  _name: string;
- *  _fields: Record<string, object>;
- *  _extension: boolean;
- *  _editable: boolean;
- *  _reactivity: "field" | "model";
- *  _indexes: string[];
- *  extend<C extends ModelClass<any>, F extends Record<string, any> = {}>(
- *      this: C,
- *      params?: ModelParams<F>
- *  ): ModelClass<InstanceType<C> & F>;
- * }} ModelClass
+ * @typedef {Omit<C, "fields"> & { fields: any }
+ *  & (new (...args: any[]) => InstanceType<C> & FieldsOf<F>)} Extension
  */
 
 // Record slots. Symbols keep them out of the way of field names, which live on
@@ -76,106 +42,90 @@ export const STUB = 4; // referenced by id, nothing loaded yet
 /** What a store passes to the constructor: records are only built by a store. */
 export const BUILD = Symbol("build");
 
+// Declaring a model:
+//
+//     /** @extends {Model<typeof Partner.fields>} */
+//     export class Partner extends Model {
+//         static _name = "res.partner";
+//         static fields = {
+//             name: fields.Char(),
+//         };
+//
+//         label = computed(() => `[${this.id}] ${this.name()}`);
+//     }
+//
+// Extending it, in another addon:
+//
+//     /** @import { Extension } from "@web/next/model/model" */
+//
+//     const mailPartnerFields = {
+//         im_status: fields.Char(),
+//     };
+//
+//     export class MailPartner extends /** @type {Extension<typeof Partner, typeof mailPartnerFields>} */ (
+//         Partner
+//     ) {
+//         static _inherit = "res.partner";
+//         static fields = mailPartnerFields;
+//     }
+
 /**
  * Base class of all store records.
  *
- * A model is declared with `Model.extend({ name, fields })`, which returns the
- * record class of that model. It can be used as is, or subclassed to add
- * per-record state and methods:
- *
- *     class Partner extends Model.extend({
- *         name: "res.partner",
- *         fields: { name: fields.Char() },
- *     }) {
- *         label = computed(() => `[${this.id}] ${this.name()}`);
- *     }
+ * A model is declared by a class with a `_name` and `fields`. The class can
+ * have per-record state and methods. Its `@extends` tag types the fields on
+ * the records: without it, they are all `any`. See the examples above.
  *
  * Fields are read by calling them and written with `set`: `partner.name()`,
  * `partner.name.set("Bob")`. `partner.name` is a stable per-record function,
  * so it can be passed around like a signal (e.g. to `t-model`).
  *
- * Another addon adds fields to a model by calling `extend` on its class,
- * without a name: `class MailPartner extends Partner.extend({ fields })`. All
- * the classes of a model are chained in registration order, like the Python
- * registry does with `_inherit`, and `super` follows the chain.
+ * Another addon extends a model with a class that has an `_inherit`, like in
+ * Python. To type the fields it adds, the class derives from the class it
+ * extends, cast to `Extension`. Otherwise, it can simply derive from `Model`.
+ *
+ * All the classes of a model are chained in registration order, like the
+ * Python registry does, and `super` follows the chain.
  *
  * Records are built by a store, never with `new` in application code. Class
  * fields run when the record is built, before its values are set: code that
  * needs the values right away goes in `setup()`.
  */
-export class Model {
-    /** @type {string} name of the model, set by `extend` */
+class _Model {
+    /** @type {string} name of the model this class declares */
     static _name = "";
-    /** @type {Record<string, object>} own on each class returned by `extend` */
-    static _fields = {};
-    /** own and true on a class returned by `extend` without a name */
-    static _extension = false;
-    // set by `extend`, from the parameters of the same name
-    static _editable = false;
-    /** @type {"field" | "model"} */
-    static _reactivity = "field";
-    /** @type {string[]} own on each class that declares indexes */
-    static _indexes = [];
-
+    /** @type {string} name of the model this class extends */
+    static _inherit = "";
     /**
-     * With a name, declares a model and returns its record class. Without one,
-     * returns a class that adds fields to the model of this class.
+     * Field declarations, see `fields.js`: the fields of the model, or the
+     * ones an extension adds to it.
      *
-     * The parameters are described on {@link ModelParams}.
-     *
-     * The fields of the returned class are typed from `fields`. A relational
-     * field has to be cast to the field signal of its comodel class: see the
-     * example in `fields.js`.
-     *
-     * `F` is not constrained to field signals on purpose: checking the
-     * constraint would resolve the comodel classes, which is circular when two
-     * models reference each other. Declarations are checked at runtime.
-     *
-     * @template {ModelClass<any>} C
-     * @template {Record<string, any>} [F={}]
-     * @this {C}
-     * @param {ModelParams<F>} [params]
-     * @returns {ModelClass<InstanceType<C> & F>}
+     * @type {Record<string, any>}
      */
-    static extend({ name, fields, editable, reactivity, indexes } = {}) {
-        if (name && this._name) {
-            throw new Error(
-                `Cannot declare model "${name}" from a class of model "${this._name}": omit the name to add fields to "${this._name}"`
-            );
-        }
-        if (!name && !this._name) {
-            throw new Error(`Model.extend() needs the name of the model to declare`);
-        }
-        const modelName = name || this._name;
-        for (const [fieldName, declaration] of Object.entries(fields || {})) {
-            if (!(/** @type {any} */ (declaration)?.[FIELD])) {
-                throw new Error(`"${modelName}.${fieldName}" is not a field declaration`);
-            }
-        }
-        const Base = /** @type {typeof Model} */ (this);
-        const Extended = class extends Base {};
-        Object.defineProperty(Extended, "name", { value: modelName });
-        Extended._fields = /** @type {Record<string, object>} */ (fields || {});
-        if (editable !== undefined) {
-            Extended._editable = editable;
-        }
-        if (reactivity !== undefined) {
-            if (!["field", "model"].includes(reactivity)) {
-                throw new Error(`Invalid reactivity "${reactivity}" on model "${modelName}"`);
-            }
-            Extended._reactivity = reactivity;
-        }
-        if (indexes) {
-            Extended._indexes = indexes;
-        }
-        if (name) {
-            Extended._name = name;
-            Extended._extension = false;
-        } else {
-            Extended._extension = true;
-        }
-        return /** @type {any} */ (Extended);
-    }
+    static fields = {};
+    /**
+     * Records are edited locally and saved back. A local write is then kept
+     * as a change, apart from the last server value: that is what `isDirty`,
+     * `discard`, `ack` and `toCommands` work on. When false, a write replaces
+     * the value: for data the client only mirrors. An extension can set it
+     * too: the last class of the model wins.
+     */
+    static _editable = false;
+    /**
+     * How reads subscribe: to each field of each record, or to the whole model
+     * (one subscription for all its records, for large read-mostly data). The
+     * last class of the model wins.
+     *
+     * @type {string} "field" or "model"
+     */
+    static _reactivity = "field";
+    /**
+     * Names of non-relational fields with a unique index, see `store.getBy`.
+     * The indexes of an extension are added to the ones of the model.
+     *
+     * @type {string[]}
+     */
+    static _indexes = [];
 
     /**
      * @param {symbol} key the store's `BUILD` token
@@ -187,7 +137,10 @@ export class Model {
     constructor(key, owner, id, flags, parent) {
         if (key !== BUILD) {
             throw new Error(
-                `Records are built by a store: use store.create() or store.load(), not new ${this.constructor.name}()`
+                `Records are built by a store: use store.create() or store.load(), not new ${
+                    this.constructor.name ||
+                    getModelName(/** @type {ModelClass} */ (this.constructor))
+                }()`
             );
         }
         this[ID] = id;
@@ -230,16 +183,111 @@ export class Model {
 }
 
 /**
- * The class returned by `extend` without a name that `ModelClass` derives
- * from, if any: the link that gets rewired when extensions are chained.
+ * The fields `F` as record members. It is a mapped type on purpose: without
+ * type argument, `F` is `any` in JS, and the members are then all `any`
+ * instead of making the whole record `any`.
  *
- * @param {typeof Model} ModelClass
- * @returns {typeof Model | null}
+ * @template F
+ * @typedef {{ [K in keyof F]: F[K] }} FieldsOf
+ */
+
+/**
+ * `Model<F>` types the fields `F` on the records, see the example above.
+ *
+ * It is `_Model`, with a generic constructor instead of its own: a class can
+ * only take type arguments in `@extends` when its base constructor is generic.
+ *
+ * @type {{ [K in keyof typeof _Model]: (typeof _Model)[K] }
+ *  & (new <F = {}>(...args: any[]) => _Model & FieldsOf<F>)}
+ */
+export const Model = /** @type {any} */ (_Model);
+
+/**
+ * The class of a model that no class declares, e.g. one that is only known
+ * from server definitions.
+ *
+ * @param {string} name
+ * @returns {ModelClass}
+ */
+export function makeGenericClass(name) {
+    const Generic = class extends _Model {
+        static _name = name;
+    };
+    Object.defineProperty(Generic, "name", { value: name });
+    return Generic;
+}
+
+/**
+ * The name of the model of a class: the one it declares or extends, or the
+ * one of the class it derives from.
+ *
+ * @param {ModelClass} ModelClass
+ * @returns {string}
+ */
+export function getModelName(ModelClass) {
+    for (let cls = ModelClass; cls !== _Model; cls = Object.getPrototypeOf(cls)) {
+        if (Object.hasOwn(cls, "_inherit")) {
+            return cls._inherit;
+        }
+        if (Object.hasOwn(cls, "_name")) {
+            return cls._name;
+        }
+    }
+    return "";
+}
+
+/**
+ * @param {ModelClass} ModelClass
+ * @returns {boolean} whether a class of the chain declares the model
+ */
+function isDeclared(ModelClass) {
+    for (let cls = ModelClass; cls !== _Model; cls = Object.getPrototypeOf(cls)) {
+        if (Object.hasOwn(cls, "_name") && !Object.hasOwn(cls, "_inherit")) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
+ * A class declares or extends one model: it cannot derive from a class of
+ * another one.
+ *
+ * @param {ModelClass} ModelClass
+ */
+function checkClass(ModelClass) {
+    const name = getModelName(ModelClass);
+    for (let cls = ModelClass; cls !== _Model; cls = Object.getPrototypeOf(cls)) {
+        const names = [];
+        if (Object.hasOwn(cls, "_inherit")) {
+            names.push(cls._inherit);
+        }
+        if (Object.hasOwn(cls, "_name")) {
+            names.push(cls._name);
+        }
+        const other = names.find((n) => n !== name);
+        if (other !== undefined) {
+            throw new Error(
+                `Class "${ModelClass.name}" of model "${name}" cannot derive from a class of model "${other}"`
+            );
+        }
+    }
+}
+
+/**
+ * The class with an `_inherit` that `ModelClass` is or derives from, if any:
+ * the link that gets rewired when extensions are chained.
+ *
+ * @param {ModelClass} ModelClass
+ * @returns {ModelClass | null}
  */
 function getExtensionRoot(ModelClass) {
-    for (let cls = ModelClass; cls !== Model; cls = Object.getPrototypeOf(cls)) {
-        if (Object.hasOwn(cls, "_extension")) {
-            return cls._extension ? cls : null;
+    for (let cls = ModelClass; cls !== _Model; cls = Object.getPrototypeOf(cls)) {
+        if (Object.hasOwn(cls, "_inherit")) {
+            return cls;
+        }
+        if (Object.hasOwn(cls, "_name")) {
+            return null;
         }
     }
     return null;
@@ -253,19 +301,20 @@ function getExtensionRoot(ModelClass) {
  * global. Two stores composing different sets of extensions for the same model
  * would see the last composition.
  *
- * @param {(typeof Model)[]} classes
- * @returns {Map<string, typeof Model>}
+ * @param {ModelClass[]} classes
+ * @returns {Map<string, ModelClass>}
  */
 export function composeClasses(classes) {
-    /** @type {Map<string, typeof Model>} */
+    /** @type {Map<string, ModelClass>} */
     const finalClasses = new Map();
     for (const ModelClass of classes) {
-        const name = ModelClass._name;
+        const name = getModelName(ModelClass);
         if (!name) {
             throw new Error(
-                `Class "${ModelClass.name}" has no model: declare one with Model.extend({ name, fields })`
+                `Class "${ModelClass.name}" has no model: give it a static _name, or an _inherit`
             );
         }
+        checkClass(ModelClass);
         const previous = finalClasses.get(name);
         if (!previous) {
             finalClasses.set(name, ModelClass);
@@ -279,12 +328,23 @@ export function composeClasses(classes) {
             // insert the previous classes of the model below this extension
             const root = getExtensionRoot(ModelClass);
             if (!root) {
-                throw new Error(`Model "${name}" is declared twice`);
+                throw new Error(
+                    isDeclared(previous)
+                        ? `Model "${name}" is declared twice`
+                        : `Model "${name}" is extended before it is declared: list class "${ModelClass.name}" first`
+                );
             }
             Object.setPrototypeOf(root.prototype, previous.prototype);
             Object.setPrototypeOf(root, previous);
         }
         finalClasses.set(name, ModelClass);
+    }
+    for (const [name, ModelClass] of finalClasses) {
+        if (!isDeclared(ModelClass)) {
+            throw new Error(
+                `Model "${name}" is extended by class "${ModelClass.name}", but no class declares it`
+            );
+        }
     }
     return finalClasses;
 }
@@ -292,15 +352,21 @@ export function composeClasses(classes) {
 /**
  * The fields declared along the class chain of a model, base class first.
  *
- * @param {typeof Model} ModelClass
+ * @param {ModelClass} ModelClass
  * @returns {Record<string, object>}
  */
 export function getDeclaredFields(ModelClass) {
     const chain = [];
-    for (let cls = ModelClass; cls !== Model; cls = Object.getPrototypeOf(cls)) {
-        if (Object.hasOwn(cls, "_fields")) {
-            chain.unshift(cls._fields);
+    for (let cls = ModelClass; cls !== _Model; cls = Object.getPrototypeOf(cls)) {
+        if (!Object.hasOwn(cls, "fields")) {
+            continue;
         }
+        for (const [fieldName, declaration] of Object.entries(cls.fields)) {
+            if (!declaration?.[FIELD]) {
+                throw new Error(`"${getModelName(cls)}.${fieldName}" is not a field declaration`);
+            }
+        }
+        chain.unshift(cls.fields);
     }
     return Object.assign({}, ...chain);
 }
@@ -308,12 +374,12 @@ export function getDeclaredFields(ModelClass) {
 /**
  * The indexes declared along the class chain of a model.
  *
- * @param {typeof Model} ModelClass
+ * @param {ModelClass} ModelClass
  * @returns {string[]}
  */
 export function getDeclaredIndexes(ModelClass) {
     const indexes = new Set();
-    for (let cls = ModelClass; cls !== Model; cls = Object.getPrototypeOf(cls)) {
+    for (let cls = ModelClass; cls !== _Model; cls = Object.getPrototypeOf(cls)) {
         if (Object.hasOwn(cls, "_indexes")) {
             cls._indexes.forEach((fieldName) => indexes.add(fieldName));
         }

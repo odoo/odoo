@@ -8,12 +8,14 @@ import { Model } from "@web/next/model/model";
 import { Store } from "@web/next/model/store";
 
 /** @import { Many2many, Many2one, One2many } from "@web/next/model/fields" */
+/** @import { Extension } from "@web/next/model/model" */
 
 describe.current.tags("headless");
 
-class Partner extends Model.extend({
-    name: "res.partner",
-    fields: {
+/** @extends {Model<typeof Partner.fields>} */
+class Partner extends Model {
+    static _name = "res.partner";
+    static fields = {
         name: fields.Char(),
         order_ids: /** @type {One2many<Order>} */ (
             fields.One2many("sale.order", { inverse: "partner_id" })
@@ -21,46 +23,49 @@ class Partner extends Model.extend({
         tag_ids: /** @type {Many2many<Tag>} */ (
             fields.Many2many("res.partner.tag", { inverse: "partner_ids" })
         ),
-    },
-}) {
+    };
+
     label = computed(() => `[${this.id}] ${this.name()}`);
 }
 
-class Tag extends Model.extend({
-    name: "res.partner.tag",
-    fields: {
+/** @extends {Model<typeof Tag.fields>} */
+class Tag extends Model {
+    static _name = "res.partner.tag";
+    static fields = {
         name: fields.Char(),
         partner_ids: /** @type {Many2many<Partner>} */ (fields.Many2many("res.partner")),
-    },
-}) {}
+    };
+}
 
-class Order extends Model.extend({
-    name: "sale.order",
-    editable: true,
-    fields: {
+/** @extends {Model<typeof Order.fields>} */
+class Order extends Model {
+    static _name = "sale.order";
+    static _editable = true;
+    static fields = {
         name: fields.Char(),
         partner_id: /** @type {Many2one<Partner>} */ (fields.Many2one("res.partner")),
         line_ids: /** @type {One2many<Line>} */ (
             fields.One2many("sale.order.line", { inverse: "order_id" })
         ),
         tag_ids: /** @type {Many2many<Tag>} */ (fields.Many2many("res.partner.tag")),
-    },
-}) {
+    };
+
     get total() {
         return this.line_ids().reduce((sum, line) => sum + line.qty() * line.price(), 0);
     }
 }
 
-class Line extends Model.extend({
-    name: "sale.order.line",
-    editable: true,
-    fields: {
+/** @extends {Model<typeof Line.fields>} */
+class Line extends Model {
+    static _name = "sale.order.line";
+    static _editable = true;
+    static fields = {
         order_id: /** @type {Many2one<Order>} */ (fields.Many2one("sale.order")),
         product: fields.Char(),
         qty: fields.Integer({ default: 1 }),
         price: fields.Float(),
-    },
-}) {}
+    };
+}
 
 function makeStore(definitions) {
     return new Store({ models: [Partner, Tag, Order, Line], definitions });
@@ -161,52 +166,124 @@ describe("declarations", () => {
     });
 
     test("extensions are chained in registration order", () => {
-        class Thing extends Model.extend({
-            name: "x.thing",
-            fields: { name: fields.Char() },
-        }) {
+        /** @extends {Model<typeof Thing.fields>} */
+        class Thing extends Model {
+            static _name = "x.thing";
+            static fields = { name: fields.Char() };
+
             get label() {
                 return this.name();
             }
         }
         // two addons extend the same model, without knowing each other
-        class ThingA extends Thing.extend({ fields: { color: fields.Char() } }) {
+        const thingAFields = { color: fields.Char() };
+        class ThingA extends /** @type {Extension<typeof Thing, typeof thingAFields>} */ (Thing) {
+            static _inherit = "x.thing";
+            static fields = thingAFields;
+
             get label() {
                 return super.label + "+a";
             }
         }
-        class ThingB extends Thing.extend({ fields: { size: fields.Integer() } }) {
+        const thingBFields = { size: fields.Integer() };
+        class ThingB extends /** @type {Extension<typeof Thing, typeof thingBFields>} */ (Thing) {
+            static _inherit = "x.thing";
+            static fields = thingBFields;
+
             get label() {
                 return super.label + "+b";
             }
         }
         const store = new Store({ models: [Thing, ThingA, ThingB] });
-        const thing = store.create(Thing, { name: "t", color: "red", size: 3 });
+        const thing = /** @type {ThingA & ThingB} */ (
+            store.create("x.thing", { name: "t", color: "red", size: 3 })
+        );
         expect(thing.label).toBe("t+a+b");
         expect(thing).toBeInstanceOf(ThingA);
         expect(thing).toBeInstanceOf(ThingB);
         expect([thing.color(), thing.size()]).toEqual(["red", 3]);
+        // any class of the model refers to it
+        expect(store.get(Thing, thing.id)).toBe(thing);
         // the base class does not have to be listed
         const store2 = new Store({ models: [ThingB] });
         expect(store2.create("x.thing", { name: "u" }).label).toBe("u+a+b");
     });
 
-    test("a model is declared once, with field declarations", () => {
-        expect(() => Model.extend({ fields: {} })).toThrow(/needs the name/);
-        expect(() => Partner.extend({ name: "res.partner2" })).toThrow(/Cannot declare model/);
-        expect(() => Model.extend({ name: "x.bad", fields: { count: 0 } })).toThrow(
-            /not a field declaration/
+    test("an extension does not have to derive from the class it extends", () => {
+        class Thing extends Model {
+            static _name = "x.thing";
+            static fields = { name: fields.Char() };
+
+            get label() {
+                return this.name();
+            }
+        }
+        class ThingExtension extends Model {
+            static _inherit = "x.thing";
+            static fields = { color: fields.Char() };
+
+            get label() {
+                return `${super.label} (${this.color()})`;
+            }
+        }
+        const store = new Store({ models: [Thing, ThingExtension] });
+        const thing = store.create("x.thing", { name: "t", color: "red" });
+        expect(thing).toBeInstanceOf(Thing);
+        expect(thing).toBeInstanceOf(ThingExtension);
+        expect(thing.label).toBe("t (red)");
+    });
+
+    test("the classes of a store are checked", () => {
+        class NoModel extends Model {}
+        expect(() => new Store({ models: [NoModel] })).toThrow(/has no model/);
+
+        class Partner2 extends Partner {
+            static _name = "res.partner2";
+        }
+        expect(() => new Store({ models: [Partner2] })).toThrow(
+            /cannot derive from a class of model "res.partner"/
         );
-        expect(() => Model.extend({ name: "x.bad", reactivity: "record" })).toThrow(
-            /Invalid reactivity "record"/
+
+        class BadField extends Model {
+            static _name = "x.bad";
+            static fields = { count: 0 };
+        }
+        expect(() => new Store({ models: [BadField] })).toThrow(
+            /"x.bad.count" is not a field declaration/
         );
-        const Other = Model.extend({ name: "res.partner", fields: {} });
+
+        class BadReactivity extends Model {
+            static _name = "x.bad";
+            static _reactivity = "record";
+        }
+        expect(() => new Store({ models: [BadReactivity] })).toThrow(/Invalid reactivity "record"/);
+
+        class Other extends Model {
+            static _name = "res.partner";
+        }
         expect(() => new Store({ models: [Partner, Other] })).toThrow(/declared twice/);
+
+        class Extension extends Model {
+            static _inherit = "x.thing";
+        }
+        class Thing extends Model {
+            static _name = "x.thing";
+        }
+        expect(() => new Store({ models: [Extension] })).toThrow(/no class declares it/);
+        expect(() => new Store({ models: [Extension, Thing] })).toThrow(
+            /extended before it is declared/
+        );
     });
 
     test("an extension can make a model editable", () => {
-        const Thing = Model.extend({ name: "x.thing", fields: { name: fields.Char() } });
-        const EditableThing = Thing.extend({ editable: true });
+        class Thing extends Model {
+            static _name = "x.thing";
+            static fields = { name: fields.Char() };
+        }
+        class EditableThing extends Thing {
+            static _inherit = "x.thing";
+            static _editable = true;
+        }
         const plain = new Store({ models: [Thing] });
         const editable = new Store({ models: [Thing, EditableThing] });
         const [a, b] = [plain, editable].map((store) => store.load("x.thing", { id: 1 }));
@@ -216,8 +293,12 @@ describe("declarations", () => {
         expect(editable.isDirty(b)).toBe(true);
     });
 
-    test("a model without subclass is a generic record class", () => {
-        const Country = Model.extend({ name: "res.country", fields: { code: fields.Char() } });
+    test("a model class refers to its model", () => {
+        /** @extends {Model<typeof Country.fields>} */
+        class Country extends Model {
+            static _name = "res.country";
+            static fields = { code: fields.Char() };
+        }
         const store = new Store({ models: [Country] });
         const country = store.create(Country, { code: "BE" });
         expect(country.code()).toBe("BE");
@@ -225,10 +306,11 @@ describe("declarations", () => {
     });
 
     test("class fields hold per-record state", () => {
-        class Counter extends Model.extend({
-            name: "x.counter",
-            fields: { step: fields.Integer({ default: 2 }) },
-        }) {
+        /** @extends {Model<typeof Counter.fields>} */
+        class Counter extends Model {
+            static _name = "x.counter";
+            static fields = { step: fields.Integer({ default: 2 }) };
+
             clicks = signal(0);
             total = computed(() => this.clicks() * this.step());
         }
@@ -242,7 +324,10 @@ describe("declarations", () => {
     });
 
     test("a class field cannot hide a field", () => {
-        class Bad extends Model.extend({ name: "x.bad", fields: { name: fields.Char() } }) {
+        class Bad extends Model {
+            static _name = "x.bad";
+            static fields = { name: fields.Char() };
+
             name = signal("");
         }
         const store = new Store({ models: [Bad] });
@@ -362,7 +447,11 @@ describe("relations", () => {
 describe("reactivity", () => {
     test("per field: a computation only depends on the fields it reads", () => {
         const store = makeStore();
-        const order = store.load("sale.order", { id: 1, name: "SO1", partner_id: 5 });
+        const order = store.load("sale.order", {
+            id: 1,
+            name: "SO1",
+            partner_id: 5,
+        });
         let runs = 0;
         const name = computed(() => {
             runs++;
@@ -378,11 +467,11 @@ describe("reactivity", () => {
     });
 
     test("per model: one subscription for all records of the model", () => {
-        const Product = Model.extend({
-            name: "product.product",
-            reactivity: "model",
-            fields: { name: fields.Char() },
-        });
+        class Product extends Model {
+            static _name = "product.product";
+            static _reactivity = "model";
+            static fields = { name: fields.Char() };
+        }
         const store = new Store({ models: [Product] });
         const [desk, chair] = store.load("product.product", [
             { id: 1, name: "Desk" },
@@ -457,7 +546,10 @@ describe("change tracking", () => {
         const [desk, chair] = order.line_ids();
         desk.qty.set(10);
         store.delete(chair);
-        const lamp = store.create("sale.order.line", { order_id: order, product: "Lamp" });
+        const lamp = store.create("sale.order.line", {
+            order_id: order,
+            product: "Lamp",
+        });
         expect(order.line_ids()).toEqual([desk, lamp]);
 
         store.discard(order);
@@ -518,7 +610,11 @@ describe("commands", () => {
                 [2, 12],
             ],
         });
-        const untouched = store.load("sale.order", { id: 2, name: "SO2", line_ids: [] });
+        const untouched = store.load("sale.order", {
+            id: 2,
+            name: "SO2",
+            line_ids: [],
+        });
         expect(toCommands(untouched).vals).toEqual({});
     });
 
@@ -545,13 +641,19 @@ describe("commands", () => {
         desk.qty.set(2);
         store.ack(order, version);
         expect(store.isDirty(order)).toBe(true);
-        expect(toCommands(order).vals).toEqual({ name: "B", line_ids: [[1, 11, { qty: 2 }]] });
+        expect(toCommands(order).vals).toEqual({
+            name: "B",
+            line_ids: [[1, 11, { qty: 2 }]],
+        });
     });
 
     test("saving a new record: ack, then swap virtual ids for server ids", () => {
         const store = makeStore();
         const order = store.create("sale.order", { name: "SO" });
-        const line = store.create("sale.order.line", { order_id: order, product: "Desk" });
+        const line = store.create("sale.order.line", {
+            order_id: order,
+            product: "Desk",
+        });
         const { version } = toCommands(order);
         // server answered: order 42 with line 101
         store.ack(order, version);
@@ -678,15 +780,16 @@ describe("drafts", () => {
 
 describe("indexes", () => {
     test("an extension adds its indexes to the ones of the model", () => {
-        const Product = Model.extend({
-            name: "product.product",
-            indexes: ["barcode"],
-            fields: { barcode: fields.Char() },
-        });
-        const StockProduct = Product.extend({
-            indexes: ["lot"],
-            fields: { lot: fields.Char() },
-        });
+        class Product extends Model {
+            static _name = "product.product";
+            static _indexes = ["barcode"];
+            static fields = { barcode: fields.Char() };
+        }
+        class StockProduct extends Model {
+            static _inherit = "product.product";
+            static _indexes = ["lot"];
+            static fields = { lot: fields.Char() };
+        }
         const store = new Store({ models: [Product, StockProduct] });
         const desk = store.load(Product, { id: 1, barcode: "111", lot: "A" });
         expect(store.getBy(Product, "barcode", "111")).toBe(desk);
@@ -694,11 +797,11 @@ describe("indexes", () => {
     });
 
     test("unique indexes follow writes and deletions", () => {
-        const Product = Model.extend({
-            name: "product.product",
-            indexes: ["barcode"],
-            fields: { name: fields.Char(), barcode: fields.Char() },
-        });
+        class Product extends Model {
+            static _name = "product.product";
+            static _indexes = ["barcode"];
+            static fields = { name: fields.Char(), barcode: fields.Char() };
+        }
         const store = new Store({ models: [Product] });
         store.load("product.product", [{ id: 1, name: "Desk", barcode: "111" }]);
         const desk = store.getBy("product.product", "barcode", "111");
@@ -713,7 +816,10 @@ describe("indexes", () => {
 
 describe("components", () => {
     test("records are built in the scope the store was created in", async () => {
-        class Thing extends Model.extend({ name: "x.thing", fields: { name: fields.Char() } }) {
+        class Thing extends Model {
+            static _name = "x.thing";
+            static fields = { name: fields.Char() };
+
             // a hook, as `usePlugin` would be
             scope = useScope();
         }
@@ -734,7 +840,11 @@ describe("components", () => {
 
     test("a component re-renders when a field it read changes, not for other fields", async () => {
         const store = makeStore();
-        const partner = store.load("res.partner", { id: 1, name: "Alice", tag_ids: [] });
+        const partner = store.load("res.partner", {
+            id: 1,
+            name: "Alice",
+            tag_ids: [],
+        });
         class PartnerCard extends Component {
             static template = xml`<div class="name" t-out="this.partner.name()"/>`;
             partner = partner;
@@ -757,7 +867,11 @@ describe("components", () => {
 
     test("useEffect re-runs when a field it read changes", async () => {
         const store = makeStore();
-        const partner = store.load("res.partner", { id: 1, name: "Alice", tag_ids: [] });
+        const partner = store.load("res.partner", {
+            id: 1,
+            name: "Alice",
+            tag_ids: [],
+        });
         class Watcher extends Component {
             static template = xml`<div/>`;
             setup() {
