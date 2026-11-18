@@ -1,8 +1,6 @@
 from collections import defaultdict
 from datetime import timedelta
 
-from markupsafe import Markup
-
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
@@ -1820,7 +1818,12 @@ class SaleOrderLine(models.Model):
             if self.env.context.get("import_file"):
                 combo_item_ids.append(vals.pop("combo_item_id", False))
 
-        lines = super().create(vals_list)
+        orders = self.env["sale.order"]
+        if not self.env.context.get("sale_no_log_for_new_lines"):
+            order_ids = {vals["order_id"] for vals in vals_list if vals.get("order_id")}
+            orders = orders.browse(order_ids)
+        with orders._log_line_changes():
+            lines = super().create(vals_list)
 
         if self.env.context.get("import_file"):
             for line, combo_item_id in zip(lines, combo_item_ids):
@@ -1831,18 +1834,6 @@ class SaleOrderLine(models.Model):
             linked_line = line._get_linked_line()
             if linked_line:
                 line.linked_line_id = linked_line
-        if self.env.context.get("sale_no_log_for_new_lines"):
-            return lines
-
-        for line in lines:
-            if (
-                not line.display_type
-                and line.state == "sale"
-                and not self.env.context.get("skip_intercompany_sync")
-            ):
-                msg = self.env._("Extra line with %s", line.product_id.display_name or line.name)
-                line.order_id.message_post(body=msg)
-
         return lines
 
     def _add_precomputed_values(self, vals_list):
@@ -1918,7 +1909,19 @@ class SaleOrderLine(models.Model):
                     )
                 )
 
-        return super().write(values)
+        # The fields changing the line, or the order totals
+        logged_fields = {
+            "product_id",
+            "product_uom_id",
+            "product_uom_qty",
+            "price_unit",
+            "discount",
+            "tax_ids",
+        }
+        if logged_fields.isdisjoint(values):
+            return super().write(values)
+        with self._filter_logged_lines().order_id._log_line_changes():
+            return super().write(values)
 
     def _get_protected_fields(self):
         """Give the fields that should not be modified on a locked SO.
@@ -1938,28 +1941,17 @@ class SaleOrderLine(models.Model):
             "order_id",
         ]
 
+    def _filter_logged_lines(self):
+        """Return the lines whose changes are logged on their order."""
+        return self.filtered(lambda line: not line.display_type and not line.is_downpayment)
+
     def _update_line_quantity(self, values):
-        orders = self.mapped("order_id")
-        for order in orders:
-            order_lines = self.filtered(lambda x: x.order_id == order)
-            msg = Markup("<b>%s</b><ul>") % self.env._("The ordered quantity has been updated.")
-            for line in order_lines:
-                if "product_id" in values and values["product_id"] != line.product_id.id:
-                    # tracking is meaningless if the product is changed as well.
-                    continue
-                msg += Markup("<li> %s: <br/>") % line.product_id.display_name
-                msg += self.env._(
-                    "Ordered Quantity: %(old_qty)s -> %(new_qty)s",
-                    old_qty=line.product_uom_qty,
-                    new_qty=values["product_uom_qty"],
-                ) + Markup("<br/>")
-                if line.product_id.type == "consu":
-                    msg += self.env._("Delivered Quantity: %s", line.qty_delivered) + Markup(
-                        "<br/>"
-                    )
-                msg += self.env._("Invoiced Quantity: %s", line.qty_invoiced) + Markup("<br/>")
-            msg += Markup("</ul>")
-            order.message_post(body=msg)
+        """Check the new ordered quantity of confirmed lines before it is written.
+
+        This is a hook, overridden to add constraints on the quantity.
+
+        :param dict values: The values written on the lines, including ``product_uom_qty``.
+        """
 
     def _check_line_unlink(self):
         """Check whether given lines can be deleted or not.

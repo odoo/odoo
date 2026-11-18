@@ -140,6 +140,34 @@ class TestLoyalty(TestSaleCouponCommon):
             "Now that the ewallet has some points they should both be applicable.",
         )
 
+    def test_reward_line_updates_are_not_logged(self):
+        program = self.env["loyalty.program"].create({
+            "name": "10% Discount",
+            "program_type": "promotion",
+            "applies_on": "current",
+            "trigger": "auto",
+            "rule_ids": [Command.create({})],
+            "reward_ids": [
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 10,
+                    "discount_mode": "percent",
+                    "discount_applicability": "order",
+                })
+            ],
+        })
+        order = self._create_so(order_line=[Command.create({"product_id": self.product_C.id})])
+        self._auto_rewards(order, program)
+        order.action_quotation_sent()
+
+        order.order_line.filtered(lambda line: not line.is_reward_line).product_uom_qty = 2
+        order._update_programs_and_rewards()  # Updates the price of the reward line
+        self.assertEqual(
+            len(order.message_ids.filtered(lambda m: "Order lines updated" in m.body)),
+            1,
+            "Only the quantity change should be logged, not the update of the reward line",
+        )
+
     def test_cancel_order_with_coupons(self):
         """This test ensure that creating an order with coupons will not
         raise an access error on POS line modele when canceling the order.
