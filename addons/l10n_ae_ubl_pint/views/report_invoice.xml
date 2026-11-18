@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_principal_id">
+        <div name="l10n_ae_principal_id">
+            <strong name="l10n_ae_principal_id_ar" t-if="display_in_ar" t-translation="off">معرف الموكل<br/></strong>
+            <strong name="l10n_ae_principal_id_en" t-if="display_in_en" t-translation="off">Principal ID<br/></strong>
+            <strong>Principal ID</strong>
+            <div t-field="o.l10n_ae_principal_id"/>
+        </div>
+    </template>
+
+    <template id="report_invoice_transaction_types">
+        <div name="l10n_ae_transaction_types">
+            <strong name="l10n_ae_transaction_types_ar" t-if="display_in_ar" t-translation="off">نوع المعاملة<br/></strong>
+            <strong name="l10n_ae_transaction_types_en" t-if="display_in_en" t-translation="off">Transaction Type<br/></strong>
+            <strong>Transaction Type</strong>
+            <div t-foreach="o.l10n_ae_transaction_type_ids" t-as="transaction_type">
+                <span t-field="transaction_type.name"/>: <span t-out="transaction_type.code"/>
+            </div>
+        </div>
+    </template>
+
+    <template id="l10n_ae_ubl_pint_report_invoice_document" inherit_id="l10n_ae.l10n_ae_report_invoice_document">
+        <t t-call="web.external_layout" position="before">
+            <!-- Documents the company issues; a self-billed one has no invoice type: it is always a tax invoice -->
+            <t t-set="l10n_ae_show_pint_fields"
+               t-value="(o.is_sale_document() and o.l10n_ae_invoice_type in {'tax', 'commercial'}) or (o.journal_id.is_self_billing and o.is_purchase_document())"/>
+            <!-- Set before the layout, which prints them under the company's TRN -->
+            <t t-if="l10n_ae_show_pint_fields and o.company_id.partner_id.l10n_ae_registration_identifier">
+                <t t-set="company_partner" t-value="o.company_id.partner_id.with_context(lang=lang)"/>
+                <t t-set="additional_address_ae">
+                    <li>
+                        <t t-if="company_partner.l10n_ae_registration_identifier_type"><span t-field="company_partner.l10n_ae_registration_identifier_type"/>: </t><span t-field="company_partner.l10n_ae_registration_identifier"/>
+                    </li>
+                    <!-- Like the XML: the authority name of a trade license, the issuing country of a passport -->
+                    <li t-if="company_partner.l10n_ae_registration_identifier_type == 'TL' and company_partner.l10n_ae_authority_name">
+                        Authority Name: <span t-field="company_partner.l10n_ae_authority_name"/>
+                    </li>
+                    <li t-if="company_partner.l10n_ae_registration_identifier_type == 'PAS' and company_partner.l10n_ae_passport_issuing_country_id">
+                        Passport Country: <span t-field="company_partner.l10n_ae_passport_issuing_country_id.name"/>
+                    </li>
+                </t>
+            </t>
+        </t>
+        <t name="l10n_gcc_settings" position="inside">
+            <t t-set="l10n_ae_show_vat_amount_curr" t-value="l10n_ae_show_pint_fields and o.currency_id != o.company_currency_id"/>
+            <!-- The Transaction Type gets its own column when no other optional information column prints -->
+            <t t-set="l10n_ae_transaction_types_inline"
+               t-value="not (o.delivery_date or o.invoice_origin or o.partner_id.ref or o.ref or o.invoice_incoterm_id or (o.taxable_supply_date and o.show_taxable_supply_date))"/>
+        </t>
+        <!-- Titles: a commercial credit note isn't a tax credit note -->
+        <t name="credit_note_title" position="attributes">
+            <attribute name="t-if">o.l10n_ae_invoice_type != 'commercial'</attribute>
+        </t>
+        <t name="credit_note_title" position="after">
+            <t t-else="" name="l10n_ae_commercial_credit_note_title">Credit Note</t>
+        </t>
+        <t name="credit_note_title_ar" position="attributes">
+            <attribute name="t-if">o.l10n_ae_invoice_type != 'commercial'</attribute>
+        </t>
+        <t name="credit_note_title_ar" position="after">
+            <t t-else="" name="l10n_ae_commercial_credit_note_title_ar" t-translation="off">إشعار دائن</t>
+        </t>
+        <t name="credit_note_title_en" position="attributes">
+            <attribute name="t-if">o.l10n_ae_invoice_type != 'commercial'</attribute>
+        </t>
+        <t name="credit_note_title_en" position="after">
+            <t t-else="" name="l10n_ae_commercial_credit_note_title_en" t-translation="off">Credit Note</t>
+        </t>
+        <!-- End Titles -->
+        <!-- Address format -->
+        <xpath expr="//div[hasclass('invoice_main')]" position="before">
+            <t t-if="l10n_ae_show_pint_fields and o.commercial_partner_id.l10n_ae_registration_identifier">
+                <t t-set="customer" t-value="o.commercial_partner_id"/>
+                <t t-set="address">
+                    <t t-out="address"/>
+                    <div>
+                        <t t-if="customer.l10n_ae_registration_identifier_type"><span t-field="customer.l10n_ae_registration_identifier_type"/>: </t><span t-field="customer.l10n_ae_registration_identifier"/>
+                    </div>
+                    <div t-if="customer.l10n_ae_registration_identifier_type == 'TL' and customer.l10n_ae_authority_name">
+                        Authority Name: <span t-field="customer.l10n_ae_authority_name"/>
+                    </div>
+                    <div t-if="customer.l10n_ae_registration_identifier_type == 'PAS' and customer.l10n_ae_passport_issuing_country_id">
+                        Passport Country: <span t-field="customer.l10n_ae_passport_issuing_country_id.name"/>
+                    </div>
+                </t>
+            </t>
+        </xpath>
+        <!-- End Address format -->
+        <!-- Information div: the Principal ID under the date, the Transaction Type in its own column or under the next one -->
+        <div name="invoice_date" position="inside">
+            <div class="mt-2" t-if="l10n_ae_show_pint_fields and o.l10n_ae_principal_id">
+                <t t-call="l10n_ae_ubl_pint.report_invoice_principal_id"/>
+            </div>
+        </div>
+        <div name="due_date" position="inside">
+            <div class="mt-2" t-if="l10n_ae_show_pint_fields and o.l10n_ae_transaction_type_ids and not l10n_ae_transaction_types_inline">
+                <t t-set="l10n_ae_transaction_types_shown" t-value="True"/>
+                <t t-call="l10n_ae_ubl_pint.report_invoice_transaction_types"/>
+            </div>
+        </div>
+        <div name="reference" position="inside">
+            <div class="mt-2"
+                 t-if="l10n_ae_show_pint_fields and o.l10n_ae_transaction_type_ids and not l10n_ae_transaction_types_inline and not l10n_ae_transaction_types_shown">
+                <t t-set="l10n_ae_transaction_types_shown" t-value="True"/>
+                <t t-call="l10n_ae_ubl_pint.report_invoice_transaction_types"/>
+            </div>
+        </div>
+        <div name="incoterm_id" position="after">
+            <div class="col" t-if="l10n_ae_show_pint_fields and o.l10n_ae_transaction_type_ids and l10n_ae_transaction_types_inline">
+                <t t-set="l10n_ae_transaction_types_shown" t-value="True"/>
+                <t t-call="l10n_ae_ubl_pint.report_invoice_transaction_types"/>
+            </div>
+        </div>
+        <div id="informations" position="after">
+            <!-- Their column isn't printed: no invoice date (a draft, which can hide the whole row), no due date nor reference -->
+            <div id="l10n_ae_informations"
+                 class="row mb-4"
+                 t-if="l10n_ae_show_pint_fields and (
+                     (o.l10n_ae_principal_id and not o.invoice_date)
+                     or (o.l10n_ae_transaction_type_ids and not l10n_ae_transaction_types_shown))">
+                <div class="col" t-if="o.l10n_ae_principal_id and not o.invoice_date">
+                    <t t-call="l10n_ae_ubl_pint.report_invoice_principal_id"/>
+                </div>
+                <div class="col" t-if="o.l10n_ae_transaction_type_ids and not l10n_ae_transaction_types_shown">
+                    <t t-call="l10n_ae_ubl_pint.report_invoice_transaction_types"/>
+                </div>
+            </div>
+        </div>
+        <!-- End Information div -->
+        <!-- Invoice table -->
+        <th name="th_vat_amount" position="after">
+            <th name="th_vat_amount_curr" class="text-end" t-if="l10n_ae_show_vat_amount_curr">
+                <span name="th_vat_amount_curr_span_ar" t-if="display_in_ar" t-translation="off">(<span t-field="o.company_currency_id"/>) مبلغ الضريبة<br/></span>
+                <span name="th_vat_amount_curr_span_en" t-if="display_in_en" t-translation="off" dir="ltr">VAT Amount (<span t-field="o.company_currency_id"/>)<br/></span>
+                <span name="th_vat_amount_curr_span">VAT Amount (<span t-field="o.company_currency_id"/>)</span>
+            </th>
+        </th>
+        <td name="account_invoice_line_name" position="inside">
+            <t t-set="l10n_ae_line_details" t-value="l10n_ae_show_pint_fields and line._l10n_ae_get_report_details()"/>
+            <div name="l10n_ae_line_details" t-if="l10n_ae_line_details">[<t t-out="', '.join(l10n_ae_line_details)"/>]</div>
+        </td>
+        <td name="td_vat_amount" position="after">
+            <td name="td_vat_amount_curr" class="text-end" t-if="l10n_ae_show_vat_amount_curr">
+                <span t-if="not hide_prices" name="td_vat_amount_curr_span" class="text-nowrap"
+                      t-out="line.l10n_gcc_invoice_tax_amount / o.invoice_currency_rate"
+                      t-options="{'widget': 'monetary', 'display_currency': o.company_currency_id}"/>
+            </td>
+        </td>
+        <td name="td_vat_amount_grouped" position="after">
+            <td name="td_vat_amount_curr_grouped" class="text-end" t-if="display_taxes and l10n_ae_show_vat_amount_curr">
+                <span t-if="grouped_line.get('display_type') in {'line_section', 'line_subsection'} or hide_details" class="text-nowrap"
+                      t-out="grouped_line['l10n_gcc_invoice_tax_amount'] / o.invoice_currency_rate"
+                      t-options="{'widget': 'monetary', 'display_currency': o.company_currency_id}"/>
+            </td>
+        </td>
+        <!-- The section subtotal spans the Amount column and the VAT Amount ones that are printed -->
+        <xpath expr="//span[@t-out='section_subtotal']/.." position="attributes">
+            <attribute name="colspan"/>
+            <attribute name="t-att-colspan">1 + (1 if display_taxes else 0) + (1 if display_taxes and l10n_ae_show_vat_amount_curr else 0)</attribute>
+        </xpath>
+        <!-- End Invoice table -->
+        <!-- Credit note reason: reversing a credit note copies it onto the new invoice -->
+        <div id="qrcode" position="after">
+            <div name="l10n_ae_credit_note_reason"
+                 class="avoid-page-break-inside col-6"
+                 t-if="l10n_ae_show_pint_fields and o.l10n_ae_credit_note_reason and o._l10n_ae_is_credit_note()">
+                <span t-if="display_in_ar" t-translation="off">:سبب إصدار الإشعار<br/></span>
+                <span t-if="display_in_en" t-translation="off">Reason:<br/></span>
+                <span>Reason:</span><br/>
+                <span t-out="o.l10n_ae_credit_note_reason"/>-<span t-field="o.l10n_ae_credit_note_reason"/>
+            </div>
+        </div>
+        <!-- End Credit note reason -->
+    </template>
+</odoo>

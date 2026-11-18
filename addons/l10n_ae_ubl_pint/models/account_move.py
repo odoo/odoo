@@ -153,6 +153,30 @@ class AccountMove(models.Model):
         # EXTENDS 'account_edi_ubl_cii'
         return [*super()._get_ubl_cii_importable_models(), 'account.edi.xml.pint_ae']
 
+    def _get_name_invoice_report(self):
+        """ A commercial invoice shows the PINT AE fields, also from a company without a TRN (not registered for VAT). """
+        # EXTENDS 'l10n_ae'
+        self.ensure_one()
+        if self.company_id.country_code == 'AE' and self.is_sale_document() and self.l10n_ae_invoice_type == 'commercial':
+            return 'l10n_ae.l10n_ae_report_invoice_document'
+        return super()._get_name_invoice_report()
+
+    def _l10n_gcc_get_invoice_title(self):
+        """ A commercial invoice isn't a tax invoice: it keeps the standard title. """
+        # EXTENDS 'l10n_ae'
+        self.ensure_one()
+        if self.l10n_ae_invoice_type == 'commercial':
+            return False
+        return super()._l10n_gcc_get_invoice_title()
+
+    def _l10n_ae_is_simplified(self):
+        """ The invoice type decides once set, otherwise l10n_ae's rule on the customer. """
+        # EXTENDS 'l10n_ae'
+        self.ensure_one()
+        if self.l10n_ae_invoice_type:
+            return self.l10n_ae_invoice_type == 'simplified'
+        return super()._l10n_ae_is_simplified()
+
     def _l10n_ae_pint_get_errors(self):
         """ The PINT AE rules on the invoice's own data.
 
