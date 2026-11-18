@@ -247,6 +247,10 @@ export class ImageSavePlugin extends Plugin {
             srcset.push(`${newAttachmentUrls["original"]} ${maxSize}w`);
         }
 
+        this.services["pending_attachment_service"]?.queueAttachmentToRemap(newAttachmentUrls.id, {
+            resModel,
+            resId,
+        });
         el.classList.remove("o_modified_image_to_save");
         let targetEl = el;
         if (isBackground) {
