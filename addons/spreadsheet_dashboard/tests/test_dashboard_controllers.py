@@ -1,4 +1,5 @@
 
+from odoo import Command
 from odoo.tests.common import tagged, HttpCase
 
 from .common import DashboardTestCommon
@@ -27,14 +28,26 @@ class TestDashboardController(DashboardTestCommon, HttpCase):
         self.assertEqual(len(data['revisions']), 0)
 
     def test_load_with_company_currency(self):
+        eur_company, usd_company = self.env['res.company'].create([
+            {'name': 'Company with EUR', 'currency_id': self.env.ref('base.EUR').id},
+            {'name': 'Company with USD', 'currency_id': self.env.ref('base.USD').id},
+        ])
+        self.user.write({
+            'company_ids': [Command.set((eur_company + usd_company).ids)],
+            'company_id': eur_company.id,
+        })
+
         self.authenticate(self.user.login, self.user.password)
-        dashboard = self.create_dashboard().with_user(self.user)
-        response = self.url_open(f'/spreadsheet/dashboard/data/{dashboard.id}')
-        data = response.json()
-        self.assertEqual(
-            data['default_currency'],
-            self.env['res.currency'].get_company_currency_for_spreadsheet()
-        )
+        dashboard = self.create_dashboard()
+        url = f'/spreadsheet/dashboard/data/{dashboard.id}'
+
+        # no active company selected: default company of the user
+        data = self.url_open(url).json()
+        self.assertEqual(data['default_currency']['code'], 'EUR')
+
+        # active company selected in the company switcher
+        data = self.url_open(url, cookies={'cids': f'{usd_company.id}-{eur_company.id}'}).json()
+        self.assertEqual(data['default_currency']['code'], 'USD')
 
     def test_translation_namespace(self):
         dashboard = self.create_dashboard()
