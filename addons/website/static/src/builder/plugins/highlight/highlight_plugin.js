@@ -53,7 +53,9 @@ export class HighlightPlugin extends Plugin {
                 },
             },
         ],
-        toolbar_groups: [withSequence(50, { id: "websiteDecoration" })],
+        toolbar_groups: [
+            withSequence(50, { id: "websiteDecoration", description: _t("Text effects") }),
+        ],
         toolbar_items: [
             {
                 id: "highlight",
@@ -292,7 +294,8 @@ class HighlightToolbarButton extends Component {
         getSelection: t.function(),
     });
     static template = xml`
-        <button t-ref="this.root" t-attf-class="btn btn-light o_hb_select_highlight {{this.highlightState.highlightId ? 'active' : ''}}" t-on-click="this.openHighlightConfigurator" t-att-title="this.props.title">
+        <button type="button" t-ref="this.root" t-attf-class="btn btn-light o_hb_select_highlight {{this.highlightState.highlightId ? 'active' : ''}}" t-on-click="this.openHighlightConfigurator" t-att-title="this.props.title" t-att-aria-label="this.props.title"
+                aria-haspopup="dialog" t-att-aria-expanded="this.state.isOpen ? 'true' : 'false'">
             <i class="oi oi-fw py-1" data-icon="stylus_laser_pointer" role="img" aria-hidden="true"/>
         </button>
     `;
@@ -300,6 +303,7 @@ class HighlightToolbarButton extends Component {
 
     setup() {
         this.highlightState = proxy(this.props.highlightConfiguratorProps.getHighlightState());
+        this.state = proxy({ isOpen: false });
         this.componentStack = useStackingComponentState();
         this.componentStack.push(HighlightConfigurator, {
             componentStack: this.componentStack,
@@ -307,6 +311,7 @@ class HighlightToolbarButton extends Component {
         });
         this.configuratorPopover = usePopover(StackingComponent, {
             onClose: () => {
+                this.state.isOpen = false;
                 while (this.componentStack.stack.length > 1) {
                     this.componentStack.pop();
                 }
@@ -321,5 +326,6 @@ class HighlightToolbarButton extends Component {
             style: "max-height: 320px; width: 250px",
             class: "d-flex flex-column p-2",
         });
+        this.state.isOpen = true;
     }
 }

@@ -1,7 +1,8 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="html_editor.TextFieldsIcon">
-        <svg xmlns="http://www.w3.org/2000/svg" class="oe_link_label_icon" height="18px" width="18px" viewBox="0 -960 960 960">
+        <svg xmlns="http://www.w3.org/2000/svg" class="oe_link_label_icon" role="img" height="18px" width="18px" viewBox="0 -960 960 960">
+            <title>Label</title>
             <path d="M280-160v-520H80v-120h520v120H400v520H280Zm360 0v-320H520v-120h360v120H760v320H640Z"/>
         </svg>
     </t>
@@ -51,7 +52,7 @@
                         </div>
                         <div class="input-group mb-2">
                             <label for="o_linkpopover_url" class="o_we_input_label">
-                                <span class="oi" data-icon="link"></span>
+                                <span class="oi" data-icon="link" role="img" aria-label="URL"></span>
                             </label>
                             <input t-ref="this.urlRef"
                                 id="o_linkpopover_url"
@@ -63,7 +64,7 @@
                                 t-on-keydown="this.onKeydownEnter"
                                 t-on-input="this.onChange"/>
                             <span class="ms-1" t-if="this.props.canUpload">
-                                or <button class="btn btn-light btn-sm" t-on-click="this.uploadFile"><i class="oi" data-icon="upload"/></button>
+                                or <button class="btn btn-light btn-sm" title="Upload a file" aria-label="Upload a file" t-on-click="this.uploadFile"><i class="oi" data-icon="upload" aria-hidden="true"/></button>
                             </span>
 
                         </div>

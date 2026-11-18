@@ -1,15 +1,15 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.ImageAlignSelector">
         <Dropdown state="this.dropdown" menuClass="'o-we-toolbar-dropdown'" menuRef="this.menuRef" focusToggleOnClosed="false">
-            <button t-ref="this.imageAlignSelector" class="btn btn-light" t-att-title="this.props.title" name="image_align">
-                <span class="oi" t-att-data-icon="this.state.displayIcon"/>
+            <button type="button" t-ref="this.imageAlignSelector" class="btn btn-light" t-att-title="this.props.title" t-att-aria-label="this.ariaLabel" name="image_align">
+                <span class="oi" t-att-data-icon="this.state.displayIcon" aria-hidden="true"/>
             </button>
             <t t-set-slot="content">
                 <div data-prevent-closing-overlay="true">
                     <t t-foreach="this.props.items" t-as="item" t-key="item_index">
                         <DropdownItem
                             tag="'button'"
-                            attrs="{ title: item.title, 'data-icon': item.icon }"
+                            attrs="{ type: 'button', title: item.title, 'aria-label': item.title, 'data-icon': item.icon }"
                             class="{
                                 'dropdown-item_active_noarrow btn btn-light oi': true,
                                 active: item.icon === this.state.displayIcon

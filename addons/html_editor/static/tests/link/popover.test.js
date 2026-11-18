@@ -58,6 +58,19 @@ describe("should open a popover", () => {
         expect(".o_we_label_link").toHaveValue("link");
         expect(".o_we_href_input_link").toHaveValue("");
     });
+    test("link popover inputs and upload button should have an accessible name", async () => {
+        await setupEditor("<p>this is a <a>li[]nk</a></p>");
+        await expectElementCount(".o-we-linkpopover", 1);
+        expect("label[for='o_we_label_link'] svg").toHaveAttribute("role", "img");
+        expect("label[for='o_we_label_link'] svg title").toHaveText("Label");
+        expect("label[for='o_linkpopover_url'] .oi").toHaveAttribute("role", "img");
+        expect("label[for='o_linkpopover_url'] .oi").toHaveAttribute("aria-label", "URL");
+        expect(".o-we-linkpopover button:has(.oi[data-icon='upload'])").toHaveAttribute(
+            "aria-label",
+            "Upload a file"
+        );
+        expect(".o-we-linkpopover .oi[data-icon='upload']").toHaveAttribute("aria-hidden", "true");
+    });
     test("link popover should have buttons for link operation when the link has href", async () => {
         await setupEditor('<p>this is a <a href="http://test.test/">li[]nk</a></p>');
         await expectElementCount(".o-we-linkpopover", 1);

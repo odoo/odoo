@@ -105,6 +105,7 @@ export class FontTypePlugin extends Plugin {
         toolbar_groups: [
             withSequence(10, {
                 id: "font",
+                description: _t("Font"),
             }),
         ],
         toolbar_items: [

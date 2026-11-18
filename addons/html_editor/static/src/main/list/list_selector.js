@@ -4,6 +4,7 @@ import { toolbarButtonProps } from "../toolbar/toolbar";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import {
     useDropdownAutoVisibility,
+    useFocusTooltip,
     useToolbarDropdownFocus,
 } from "@html_editor/toolbar_dropdown_hook";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -25,6 +26,7 @@ export class ListSelector extends Component {
         this.dropdown = useDropdownState();
         useToolbarDropdownFocus(this.dropdown, this.listSelector);
         useDropdownAutoVisibility(this.env.overlayState, this.menuRef);
+        useFocusTooltip(this.menuRef);
     }
     getActiveMode() {
         const { editableSelection: selection } = this.props.getSelection();

@@ -13,15 +13,19 @@ import { isTableCell } from "@html_editor/utils/dom_info";
 const borderStyleItems = [
     {
         value: "solid",
+        title: _t("Solid"),
     },
     {
         value: "dashed",
+        title: _t("Dashed"),
     },
     {
         value: "dotted",
+        title: _t("Dotted"),
     },
     {
         value: "double",
+        title: _t("Double"),
     },
 ];
 
@@ -54,7 +58,11 @@ export class TableBorderPlugin extends Plugin {
 
     /** @type {import("plugins").EditorResources} */
     resources = {
-        toolbar_groups: withSequence(25, { id: "table_border", namespaces: ["expanded", "table"] }),
+        toolbar_groups: withSequence(25, {
+            id: "table_border",
+            description: _t("Table border"),
+            namespaces: ["expanded", "table"],
+        }),
         toolbar_items: [
             withSequence(10, {
                 id: "table_border_color",
