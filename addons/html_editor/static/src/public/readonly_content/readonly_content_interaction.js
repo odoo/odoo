@@ -1,5 +1,5 @@
 import { fillClipboardWithSelection } from "@html_editor/utils/clipboard";
-import { wrapReadonlyTables } from "@html_editor/utils/table";
+import { wrapTables } from "@html_editor/utils/table";
 import { getLinksToRetarget, retargetLinkToNewTab } from "@html_editor/utils/url";
 import { registry } from "@web/core/registry";
 import { Interaction } from "@web/public/interaction";
@@ -28,7 +28,7 @@ export class ReadonlyContentInteraction extends Interaction {
         for (const link of getLinksToRetarget(this.el)) {
             retargetLinkToNewTab(link);
         }
-        wrapReadonlyTables(this.el);
+        wrapTables(this.el);
     }
 }
 

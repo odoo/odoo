@@ -1,5 +1,6 @@
+import { unwrapContents } from "./dom";
 import { isTableCell } from "./dom_info";
-import { closestElement } from "./dom_traversal";
+import { closestElement, selectElements } from "./dom_traversal";
 
 /**
  * Get the index of the given table row/cell.
@@ -158,17 +159,32 @@ export function wrapTableInScrollContainer(table) {
 }
 
 /**
- * Put the tables of the given readonly content in scroll containers, as they
- * are not saved with it.
+ * Put the tables of `root` accepted by `filter` in scroll containers. The
+ * default filter is for readonly content: `.o_table` not already in one.
  *
- * @param {HTMLElement} container
+ * @param {HTMLElement | DocumentFragment} root
+ * @param {(table: HTMLTableElement) => boolean} [filter]
  */
-export function wrapReadonlyTables(container) {
-    for (const table of container.querySelectorAll(".o_table")) {
-        // Checked as we go, so a table nested in one just wrapped is skipped.
-        if (!table.closest(TABLE_WRAPPER_SELECTOR)) {
+export function wrapTables(
+    root,
+    filter = (table) =>
+        table.classList.contains("o_table") && !table.closest(TABLE_WRAPPER_SELECTOR)
+) {
+    for (const table of selectElements(root, "table")) {
+        if (!isTableWrapper(table.parentElement) && filter(table)) {
             wrapTableInScrollContainer(table);
         }
+    }
+}
+
+/**
+ * Remove the scroll containers of the tables of `root`.
+ *
+ * @param {HTMLElement | DocumentFragment} root
+ */
+export function unwrapTables(root) {
+    for (const wrapper of root.querySelectorAll(TABLE_WRAPPER_SELECTOR)) {
+        unwrapContents(wrapper);
     }
 }
 
