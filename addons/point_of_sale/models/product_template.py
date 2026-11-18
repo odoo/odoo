@@ -217,6 +217,13 @@ class ProductTemplate(models.Model):
             domain = self._load_pos_data_domain(data, config)
             products = self._load_product_with_domain(domain)
 
+        # A cached product modified out of the domain (removed from the PoS, other category...) must still
+        # be re-sent, otherwise the client keeps displaying its stale copy
+        local_ids = self.env.context.get('pos_local_product_tmpl_ids')
+        if local_ids and self._last_server_date_to_load():
+            if missing_ids := set(local_ids) - set(products.ids):
+                products |= self._load_product_with_domain([('id', 'in', list(missing_ids))])
+
         product_combo = products.filtered(lambda p: p['type'] == 'combo')
         products += product_combo.combo_ids.combo_item_ids.product_id.product_tmpl_id
 
