@@ -525,9 +525,21 @@ class IrModuleModule(models.Model):
             return []
 
     def button_immediate_install_app(self):
-        if not (self.env.su or self.env.user._is_admin()):
-            raise AccessDenied()
         module_name = self.env.context.get('module_name')
+        import_module = self._prepare_data_module_import(module_name)
+        return {
+            'name': _("Install an Industry"),
+            'view_mode': 'form',
+            'target': 'new',
+            'res_id': import_module.id,
+            'res_model': 'base.import.module',
+            'type': 'ir.actions.act_window',
+            'context': {'data_module': True}
+        }
+
+    @api.model
+    def _download_data_module_zip(self, module_name):
+        """Download the zip of the given industry module from the Odoo appstore."""
         import requests  # noqa: PLC0415
         try:
             resp = requests.get(
@@ -535,27 +547,27 @@ class IrModuleModule(models.Model):
                 timeout=5.0,
             )
             resp.raise_for_status()
-            missing_dependencies_description, unavailable_modules = self._get_missing_dependencies(resp.content)
-            if unavailable_modules:
-                raise UserError(missing_dependencies_description)
-            import_module = self.env['base.import.module'].create({
-                'module_file': BinaryBytes(resp.content),
-                'state': 'init',
-                'modules_dependencies': missing_dependencies_description,
-            })
-            return {
-                'name': _("Install an Industry"),
-                'view_mode': 'form',
-                'target': 'new',
-                'res_id': import_module.id,
-                'res_model': 'base.import.module',
-                'type': 'ir.actions.act_window',
-                'context': {'data_module': True}
-            }
+            return resp.content
         except requests.exceptions.HTTPError:
             raise UserError(_('The module %s cannot be downloaded') % module_name)
         except requests.exceptions.ConnectionError:
             raise UserError(_('Connection to %(url)s failed, the module %(module)s cannot be downloaded.', url=APPS_URL, module=module_name))
+
+    @api.model
+    def _prepare_data_module_import(self, module_name):
+        """Download the given data (industry) module from the Odoo appstore,
+        check its dependencies, and create the (not yet run) import wizard for it."""
+        if not (self.env.su or self.env.user._is_admin()):
+            raise AccessDenied()
+        zip_data = self._download_data_module_zip(module_name)
+        missing_dependencies_description, unavailable_modules = self._get_missing_dependencies(zip_data)
+        if unavailable_modules:
+            raise UserError(missing_dependencies_description)
+        return self.env['base.import.module'].create({
+            'module_file': BinaryBytes(zip_data),
+            'state': 'init',
+            'modules_dependencies': missing_dependencies_description,
+        })
 
     @api.model
     def _get_missing_dependencies(self, zip_data):

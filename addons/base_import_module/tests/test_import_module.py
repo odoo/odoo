@@ -1,9 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import json
 import os
 
 from io import BytesIO
-from zipfile import ZipFile
+from zipfile import ZIP_DEFLATED, ZipFile
 
 import odoo.tests
 from odoo.tests import new_test_user
@@ -17,32 +16,19 @@ from odoo.exceptions import UserError
 from odoo.tools import BinaryBytes, file_open, file_open_temporary_directory, mute_logger
 from odoo.tools.translate import TranslationModuleReader
 
+from odoo.addons.base_import_module.tests.common import archive, manifest_content
+
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestImportModule(odoo.tests.TransactionCase):
 
-    def manifest_content(self, manifest={}, /, **values):
-        return json.dumps({
-            'author': 'Odoo S.A.',
-            'license': 'LGPL-3',
-            **manifest,
-            **values,
-        }).encode()
-
-    def archive(self, files):
-        archive = BytesIO()
-        with ZipFile(archive, 'w') as zipf:
-            for path, data in files:
-                zipf.writestr(path, data)
-        return archive
-
     def import_zipfile(self, files):
-        return self.env['ir.module.module']._import_zipfile(self.archive(files))
+        return self.env['ir.module.module']._import_zipfile(archive(files))
 
     def test_import_zip(self):
         """Assert the behaviors expected by the module import feature using a ZIP archive"""
         files = [
-            ('foo/__manifest__.py', self.manifest_content(data=['data.xml', 'res.partner.csv', 'data.sql'])),
+            ('foo/__manifest__.py', manifest_content(data=['data.xml', 'res.partner.csv', 'data.sql'])),
             ('foo/data.xml', b"""
                 <data>
                     <record id="foo" model="res.partner">
@@ -57,7 +43,7 @@ class TestImportModule(odoo.tests.TransactionCase):
             ('foo/data.sql', b"INSERT INTO res_currency (name, symbol, active) VALUES ('New Currency', 'NCU', TRUE);"),
             ('foo/static/src/css/style.css', b".foo{color: black;}"),
             ('foo/static/src/js/foo.js', b"console.log('foo')"),
-            ('bar/__manifest__.py', self.manifest_content(data=['data.xml'])),
+            ('bar/__manifest__.py', manifest_content(data=['data.xml'])),
             ('bar/static/src/js/bar.js', b"console.log(_t('baz')"),
             ('bar/data.xml', b"""
                 <data>
@@ -155,7 +141,7 @@ class TestImportModule(odoo.tests.TransactionCase):
     def test_import_zip_wildcard_assets(self):
         """Assert the expected behavior when import a ZIP module with assets using glob wildcard"""
         files = [
-            ('foo/__manifest__.py', self.manifest_content(assets={
+            ('foo/__manifest__.py', manifest_content(assets={
                 'web.assets_backend': [
                     'test_module/static/src/js/*'
                 ]
@@ -171,7 +157,7 @@ class TestImportModule(odoo.tests.TransactionCase):
     def test_import_zip_invalid_data(self):
         """Assert no data remains in the db if module import fails"""
         files = [
-            ('foo/__manifest__.py', self.manifest_content(data=['foo.xml', 'bar.xml'])),
+            ('foo/__manifest__.py', manifest_content(data=['foo.xml', 'bar.xml'])),
             ('foo/foo.xml', b"""
                 <data>
                     <record id="foo" model="res.partner">
@@ -198,7 +184,7 @@ class TestImportModule(odoo.tests.TransactionCase):
     def test_import_zip_data_not_in_manifest(self):
         """Assert a data file not mentioned in the manifest is not imported"""
         files = [
-            ('foo/__manifest__.py', self.manifest_content(data=['foo.xml'])),
+            ('foo/__manifest__.py', manifest_content(data=['foo.xml'])),
             ('foo/foo.xml', b"""
                 <data>
                     <record id="foo" model="res.partner">
@@ -221,7 +207,7 @@ class TestImportModule(odoo.tests.TransactionCase):
     def test_import_zip_ignore_unexpected_data_extension(self):
         """Assert data files using an unexpected extensions are correctly ignored"""
         files = [
-            ('foo/__manifest__.py', self.manifest_content(data=['res.partner.xls'])),
+            ('foo/__manifest__.py', manifest_content(data=['res.partner.xls'])),
             ('foo/res.partner.xls',
                 b'"id","name"\n' \
                 b'foo,foo'
@@ -236,7 +222,7 @@ class TestImportModule(odoo.tests.TransactionCase):
     def test_import_zip_extract_only_useful(self):
         """Assert only the data and static files are extracted of the ZIP archive during the module import"""
         files = [
-            ('foo/__manifest__.py', self.manifest_content(data=['data.xml', 'res.partner.xls'])),
+            ('foo/__manifest__.py', manifest_content(data=['data.xml', 'res.partner.xls'])),
             ('foo/data.xml', b"""
                 <data>
                     <record id="foo" model="res.partner">
@@ -285,7 +271,7 @@ class TestImportModule(odoo.tests.TransactionCase):
     def test_import_and_uninstall_module(self):
         bundle = 'web.assets_backend'
         path = '/test_module/static/src/js/test.js'
-        manifest_content = self.manifest_content({
+        manifest = manifest_content({
             'name': 'Test Module',
             'description': 'Test',
             'assets': {
@@ -298,9 +284,9 @@ class TestImportModule(odoo.tests.TransactionCase):
         })
 
         stream = BytesIO()
-        with ZipFile(stream, 'w') as archive:
-            archive.writestr('test_module/__manifest__.py', manifest_content)
-            archive.writestr('test_module/static/src/js/test.js', "console.log('AAA');")
+        with ZipFile(stream, 'w', compression=ZIP_DEFLATED) as zipf:
+            zipf.writestr('test_module/__manifest__.py', manifest)
+            zipf.writestr('test_module/static/src/js/test.js', "console.log('AAA');")
 
         # Import test module
         self.env['ir.module.module']._import_zipfile(stream)
@@ -344,7 +330,7 @@ class TestImportModule(odoo.tests.TransactionCase):
         )
         bundle = 'web.assets_backend'
         path = 'test_module/static/src/js/test.js'
-        manifest_content = self.manifest_content({
+        manifest = manifest_content({
             'name': 'Test Module',
             'description': 'Test',
             'assets': {
@@ -355,9 +341,9 @@ class TestImportModule(odoo.tests.TransactionCase):
             'version': '1.0',
         })
         stream = BytesIO()
-        with ZipFile(stream, 'w') as archive:
-            archive.writestr('test_module/__manifest__.py', manifest_content)
-            archive.writestr(path, "console.log('AAA');")
+        with ZipFile(stream, 'w', compression=ZIP_DEFLATED) as zipf:
+            zipf.writestr('test_module/__manifest__.py', manifest)
+            zipf.writestr(path, "console.log('AAA');")
 
         # Import test module
         self.env['ir.module.module'].with_user(self.test_user)._import_zipfile(stream)
@@ -382,9 +368,9 @@ class TestImportModule(odoo.tests.TransactionCase):
 
         # Update test module
         stream = BytesIO()
-        with ZipFile(stream, 'w') as archive:
-            archive.writestr('test_module/__manifest__.py', manifest_content)
-            archive.writestr(path, "console.log('BBB');")
+        with ZipFile(stream, 'w', compression=ZIP_DEFLATED) as zipf:
+            zipf.writestr('test_module/__manifest__.py', manifest)
+            zipf.writestr(path, "console.log('BBB');")
 
         # Import test module
         self.env['ir.module.module'].with_user(self.test_user)._import_zipfile(stream)
@@ -406,7 +392,7 @@ class TestImportModule(odoo.tests.TransactionCase):
 
     def test_import_wrong_dependencies(self):
         files = [
-            ('foo/__manifest__.py', self.manifest_content(data=['foo.xml'], depends=['base', 'bar', 'baz'])),
+            ('foo/__manifest__.py', manifest_content(data=['foo.xml'], depends=['base', 'bar', 'baz'])),
             ('foo/foo.xml', b"""
                 <data>
                     <record id="foo" model="res.partner">
@@ -426,7 +412,7 @@ class TestImportModule(odoo.tests.TransactionCase):
 
     def test_import_modules_with_dependencies(self):
         files = [
-            ('baz/__manifest__.py', self.manifest_content(data=['partner.xml'], depends=['base', 'bar', 'foo'])),
+            ('baz/__manifest__.py', manifest_content(data=['partner.xml'], depends=['base', 'bar', 'foo'])),
             ('baz/partner.xml', b"""
                 <data>
                     <record id="foo.baz" model="res.partner">
@@ -434,7 +420,7 @@ class TestImportModule(odoo.tests.TransactionCase):
                     </record>
                 </data>
             """),
-            ('foo/__manifest__.py', self.manifest_content(data=['partner.xml'], depends=['base'])),
+            ('foo/__manifest__.py', manifest_content(data=['partner.xml'], depends=['base'])),
             ('foo/partner.xml', b"""
                 <data>
                     <record id="baz" model="res.partner">
@@ -442,16 +428,16 @@ class TestImportModule(odoo.tests.TransactionCase):
                     </record>
                 </data>
             """),
-            ('bar/__manifest__.py', self.manifest_content(depends=['base', 'foo'])),
+            ('bar/__manifest__.py', manifest_content(depends=['base', 'foo'])),
         ]
         self.import_zipfile(files)
         module = self.env['ir.module.module'].search([('name', '=', 'baz')])
         self.assertEqual(set(module.dependencies_id.mapped('name')), {'bar', 'base', 'foo'})
 
     def test_multiple_file_open_temporary_directory(self):
-        files = [('foo/__manifest__.py', self.manifest_content(name='foo'))]
+        files = [('foo/__manifest__.py', manifest_content(name='foo'))]
         with (
-            ZipFile(self.archive(files), 'r') as zip_files,
+            ZipFile(archive(files), 'r') as zip_files,
             file_open_temporary_directory(self.env) as tmp_dir,
             file_open_temporary_directory(self.env) as other_tmp_dir
         ):
@@ -470,9 +456,9 @@ class TestImportModuleHttp(TestImportModule, odoo.tests.HttpCase):
         """Assert import a module with an icon result in the module displaying the icon in the apps menu,
         and with the base module icon if module without icon"""
         files = [
-            ('foo/__manifest__.py', self.manifest_content(name='foo')),
+            ('foo/__manifest__.py', manifest_content(name='foo')),
             ('foo/static/description/icon.png', b"foo_icon"),
-            ('bar/__manifest__.py', self.manifest_content(name='bar')),
+            ('bar/__manifest__.py', manifest_content(name='bar')),
         ]
         self.import_zipfile(files)
         foo_icon_path, foo_icon_data = files[1]
@@ -483,7 +469,7 @@ class TestImportModuleHttp(TestImportModule, odoo.tests.HttpCase):
 
     def test_import_module_field_file(self):
         files = [
-            ('foo/__manifest__.py', self.manifest_content(data=['data.xml'])),
+            ('foo/__manifest__.py', manifest_content(data=['data.xml'])),
             ('foo/data.xml', b"""
                 <data>
                     <record id="logo" model="ir.attachment">
@@ -505,7 +491,7 @@ class TestImportModuleHttp(TestImportModule, odoo.tests.HttpCase):
         asset_bundle = 'web_assets_backend'
         asset_path = '/foo/static/src/js/test.js'
         files = [
-            ('foo/__manifest__.py', self.manifest_content(
+            ('foo/__manifest__.py', manifest_content(
                 assets={asset_bundle: [asset_path]},
             )),
             ('foo/static/src/js/test.js', b"foo_assets_backend"),
@@ -519,15 +505,12 @@ class TestImportModuleHttp(TestImportModule, odoo.tests.HttpCase):
 
     def test_check_zip_dependencies(self):
         files = [
-            ('foo/__manifest__.py', self.manifest_content(data=['data.xml']))
+            ('foo/__manifest__.py', manifest_content(data=['data.xml']))
         ]
-        archive = BytesIO()
-        with ZipFile(archive, 'w') as zipf:
-            for path, data in files:
-                zipf.writestr(path, data)
-        modules_dependencies, _not_found = self.env['ir.module.module']._get_missing_dependencies(archive.getvalue())
+        zip_data = archive(files).getvalue()
+        modules_dependencies, _not_found = self.env['ir.module.module']._get_missing_dependencies(zip_data)
         import_module = self.env['base.import.module'].create({
-                'module_file': BinaryBytes(archive.getvalue()),
+                'module_file': BinaryBytes(zip_data),
                 'state': 'init',
                 'modules_dependencies': modules_dependencies,
             })
