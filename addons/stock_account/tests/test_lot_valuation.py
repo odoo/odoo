@@ -734,19 +734,67 @@ class TestLotValuation(TestStockValuationCommon):
         product = self.product
         lot1, lot2 = self.lot1, self.lot2
 
+        (pvs_data, lots_data, moves_data) = self.get_interesting_data()
         self._make_in_move(product, 10, 10, lot_ids=[lot1])
+        (pvs_data, lots_data, moves_data) = self.get_interesting_data()
         self._make_in_move(product, 10, 100, lot_ids=[lot2])
+        (pvs_data, lots_data, moves_data) = self.get_interesting_data()
         out = self._make_out_move(product, 5, lot_ids=[lot2])
+        (pvs_data, lots_data, moves_data) = self.get_interesting_data()
         move_in_2 = self._make_in_move(product, 10, 200, lot_ids=[lot2])
+        (pvs_data, lots_data, moves_data) = self.get_interesting_data()
 
         self.assertEqual(out.value, -500)
+        (pvs_data, lots_data, moves_data) = self.get_interesting_data()
 
         move_in_2.date = now - timedelta(days=15)
+        (pvs_data, lots_data, moves_data) = self.get_interesting_data()
         self.assertEqual(out.value, -750)
+        (pvs_data, lots_data, moves_data) = self.get_interesting_data()
         self.assertEqual(lot2.product_qty, 15)
+        (pvs_data, lots_data, moves_data) = self.get_interesting_data()
+        self.env.invalidate_all()
+        myvalue = lot2.total_value
+        (pvs_data, lots_data, moves_data) = self.get_interesting_data()
         self.assertEqual(lot2.total_value, 2250)
         self.assertEqual(lot2.standard_price, 150)
         self.assertEqual(lot1.total_value, 100)
+
+    def get_interesting_data(self):
+        target_lots = self.lot1 | self.lot2
+
+        # 1. Product values (date, value, lot)
+        pv_domain = [('product_id', '=', self.product.id)]
+        if 'lot_id' in self.env['product.value']._fields:
+            pv_domain += ['|', ('lot_id', 'in', target_lots.ids), ('lot_id', '=', False)]
+
+        pvs = self.env['product.value'].sudo().search(pv_domain, order='date, id')
+        pvs_data = pvs.read(['date', 'value', 'lot_id'])
+
+        # 2. Lots state (qty, standard_price, total_value)
+        lots_data = target_lots.read(['name', 'product_qty', 'standard_price', 'total_value'])
+
+        # 3. Moves touching this product and these lots
+        moves = self.env['stock.move'].sudo().search([
+            ('product_id', '=', self.product.id),
+            ('move_line_ids.lot_id', 'in', target_lots.ids),
+        ], order='date, id')
+
+        moves_data = [
+            {
+                'id': m.id,
+                'date': m.date,
+                'is_in': m.is_in,
+                'is_out': m.is_out,
+                'qty': m.product_qty,
+                'valued_qty': m._get_valued_qty(),
+                'value': m.value,
+                'lots': m.move_line_ids.lot_id.mapped('name'),
+            }
+            for m in moves
+        ]
+
+        return pvs_data, lots_data, moves_data
 
     def test_fifo_lot_multi_in_out(self):
         """FIFO consumes each lot's own layers, oldest first."""

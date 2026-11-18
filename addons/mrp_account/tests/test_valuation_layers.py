@@ -293,20 +293,63 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         self.glass.sudo().categ_id = self.category_avco  # setup master-data
         self.dining_table.sudo().categ_id = self.category_avco  # setup master-data
 
+        pvs_data, moves_data = self.get_interesting_data()
         self._make_in_move(self.glass, 1, 10)
+        pvs_data, moves_data = self.get_interesting_data()
         self._make_in_move(self.glass, 1, 20)
+        pvs_data, moves_data = self.get_interesting_data()
         mo = self._create_mo(self.bom_1, 2)
+        pvs_data, moves_data = self.get_interesting_data()
         self._produce(mo, 1)
+        pvs_data, moves_data = self.get_interesting_data()
         action = mo.button_mark_done()
+        pvs_data, moves_data = self.get_interesting_data()
         backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
+        pvs_data, moves_data = self.get_interesting_data()
         backorder.save().action_backorder()
+        pvs_data, moves_data = self.get_interesting_data()
         mo = mo.production_group_id.production_ids[-1]
+        pvs_data, moves_data = self.get_interesting_data()
         self.assertEqual(self.glass.total_value, 15)
+        pvs_data, moves_data = self.get_interesting_data()
         self.assertEqual(self.dining_table.total_value, PRICE + 15)
+        pvs_data, moves_data = self.get_interesting_data()
         self._produce(mo)
+        pvs_data, moves_data = self.get_interesting_data()
         mo.button_mark_done()
+        pvs_data, moves_data = self.get_interesting_data()
         self.assertEqual(self.glass.total_value, 0)
         self.assertEqual(self.dining_table.total_value, 2 * PRICE + 30)
+
+    def get_interesting_data(self):
+
+        # 1. Product values (date, value, lot)
+        pv_domain = [('product_id', '=', [self.glass.id, self.dining_table.id])]
+
+        pvs = self.env['product.value'].sudo().search(pv_domain, order='date, id')
+        pvs_data = pvs.read(['date', 'value', 'lot_id'])
+
+        # 3. Moves touching this product and these lots
+        moves = self.env['stock.move'].sudo().search([
+            ('product_id', '=', [self.glass.id, self.dining_table.id]),
+        ], order='date, id')
+
+        moves_data = [
+            {
+                'id': m.id,
+                'date': m.date,
+                'is_in': m.is_in,
+                'is_out': m.is_out,
+                'qty': m.product_qty,
+                'valued_qty': m._get_valued_qty(),
+                'value': m.value,
+                'lots': m.move_line_ids.lot_id.mapped('name'),
+            }
+            for m in moves
+        ]
+
+        return pvs_data, moves_data
+
 
     def test_avco_avco_2(self):
         self.glass.sudo().categ_id = self.category_avco  # setup master-data
