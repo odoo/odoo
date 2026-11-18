@@ -133,6 +133,10 @@ class ResConfigSettings(models.TransientModel):
             ``execute`` triggers the immediate installation of the module named 'XXX'
             if the field has the value ``'1'``.
 
+        *   A boolean field like 'x_module_XXX' behaves like 'module_XXX'.  As custom fields
+            must have a name starting with 'x_', this lets a field defined in data
+            rather than in Python code install the module named 'XXX'.
+
         *   For a field with no specific prefix BUT an attribute 'config_parameter',
             ``execute``` will save its value in an ir.config.parameter (global setting for the
             database).
@@ -173,25 +177,43 @@ class ResConfigSettings(models.TransientModel):
 
         return result
 
+    @api.model
+    def _get_module_fields(self, classified):
+        """ Return the (field_name, module) pairs of the `module_` and
+        `x_module_` fields.
+
+        :param classified: the dict returned by `_get_classified_fields`
+        """
+        return [
+            *((f'module_{module.name}', module) for module in classified['module']),
+            *((f'x_module_{module.name}', module) for module in classified['x_module']),
+        ]
+
     def _get_modules_to_install(self, classified):
         """ Return the modules that must be installed because their `module_`
-        field was checked.
+        or `x_module_` field was checked.
 
         :param classified: the dict returned by `_get_classified_fields`
         :return: a recordset of ir.module.module records
         """
-        return classified['module'].filtered(
-            lambda m: self[f'module_{m.name}'] and m.state != 'installed')
+        to_install = self.env['ir.module.module']
+        for name, module in self._get_module_fields(classified):
+            if self[name] and module.state != 'installed':
+                to_install |= module
+        return to_install
 
     def _get_modules_to_uninstall(self, classified):
         """ Return the modules that must be uninstalled because their `module_`
-        field was unchecked.
+        or `x_module_` field was unchecked.
 
         :param classified: the dict returned by `_get_classified_fields`
         :return: a recordset of ir.module.module records
         """
-        return classified['module'].filtered(
-            lambda m: not self[f'module_{m.name}'] and m.state in ('installed', 'to upgrade'))
+        to_uninstall = self.env['ir.module.module']
+        for name, module in self._get_module_fields(classified):
+            if not self[name] and module.state in ('installed', 'to upgrade'):
+                to_uninstall |= module
+        return to_uninstall
 
     @api.model
     def _get_classified_fields(self, fnames=None):
@@ -202,6 +224,7 @@ class ResConfigSettings(models.TransientModel):
                 {   'default': [('default_foo', 'model', 'foo'), ...],
                     'group':   [('group_bar', [browse_group], browse_implied_group), ...],
                     'module':  ir.module.module(...),  # modules of the module_baz fields
+                    'x_module': ir.module.module(...),  # modules of the x_module_baz fields
                     'config':  [('config_qux', 'my.parameter'), ...],
                     'other':   ['other_field', ...],
                 }
@@ -218,7 +241,7 @@ class ResConfigSettings(models.TransientModel):
             fnames = self._fields.keys()
 
         defaults, groups, configs, others = [], [], [], []
-        modules = IrModule
+        modules = x_modules = IrModule
         for name in fnames:
             field = self._fields[name]
             if name.startswith('default_'):
@@ -237,6 +260,10 @@ class ResConfigSettings(models.TransientModel):
                 if field.type not in ('boolean', 'selection'):
                     raise Exception("Field %s must have type 'boolean' or 'selection'" % field)
                 modules += IrModule._get(name[7:])
+            elif name.startswith('x_module_'):
+                if field.type != 'boolean':
+                    raise Exception("Field %s must have type 'boolean'" % field)
+                x_modules += IrModule._get(name[9:])
             elif hasattr(field, 'config_parameter') and field.config_parameter:
                 if field.type not in ('boolean', 'integer', 'float', 'char', 'selection', 'many2one', 'datetime'):
                     raise Exception("Field %s must have type 'boolean', 'integer', 'float', 'char', 'selection', 'many2one' or 'datetime'" % field)
@@ -244,7 +271,14 @@ class ResConfigSettings(models.TransientModel):
             else:
                 others.append(name)
 
-        return {'default': defaults, 'group': groups, 'module': modules, 'config': configs, 'other': others}
+        return {
+            'default': defaults,
+            'group': groups,
+            'module': modules,
+            'x_module': x_modules,
+            'config': configs,
+            'other': others,
+        }
 
     @api.model
     def get_values(self):
@@ -277,8 +311,8 @@ class ResConfigSettings(models.TransientModel):
                 res[name] = str(int(res[name]))     # True, False -> '1', '0'
 
         # modules: which modules are installed/to install
-        for module in classified['module']:
-            res[f'module_{module.name}'] = module.state in ('installed', 'to install', 'to upgrade')
+        for name, module in self._get_module_fields(classified):
+            res[name] = module.state in ('installed', 'to install', 'to upgrade')
 
         # config: get & convert stored ir.config_parameter (or default)
         for name, icp in classified['config']:
