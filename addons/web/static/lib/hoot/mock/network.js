@@ -9,6 +9,7 @@ import { isInstanceOf } from "../../hoot-dom/hoot_dom_utils";
 import { makeNetworkLogger } from "../core/logger";
 import {
     ensureArray,
+    generateSeed,
     getSyncValue,
     isNil,
     MIME_TYPE,
@@ -278,6 +279,11 @@ const requestResponseMixin = {
 
 /** @type {Set<NetworkInstance>} */
 const openNetworkInstances = new Set();
+/**
+ * Suffix of the actual names of the broadcast channels: native ones are shared
+ * with all same-origin pages, i.e. with other test runners in different tabs.
+ */
+const pageChannelSuffix = `:hoot-${generateSeed()}`;
 
 /** @type {ReturnType<parseNetworkDelay>} */
 let getNetworkDelay = null;
@@ -564,10 +570,23 @@ export class MockBlob extends Blob {
 }
 
 export class MockBroadcastChannel extends BroadcastChannel {
-    constructor() {
-        super(...arguments);
+    /**
+     * @private
+     */
+    _name;
 
+    /**
+     * @param {string} name
+     */
+    constructor(name) {
+        super(name + pageChannelSuffix);
+
+        this._name = String(name);
         markOpen(this);
+    }
+
+    get name() {
+        return this._name;
     }
 }
 
