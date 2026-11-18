@@ -52,6 +52,7 @@ class ResPartner(models.Model):
         help="The value set in this field will be used as TIN for the customer/supplier.\n"
              "If left empty, the TIN field will be used.",
     )
+    l10n_my_edi_show_search_tin = fields.Boolean(compute='_compute_l10n_my_edi_show_search_tin')
 
     # --------------------------------
     # Compute, inverse, search methods
@@ -59,7 +60,7 @@ class ResPartner(models.Model):
 
     @api.depends('l10n_my_identification_type', 'l10n_my_identification_number', 'vat', 'l10n_my_edi_malaysian_tin')
     def _compute_l10n_my_tin_validation_state(self):
-        """ The three @depends are used for the validation. If they change, we will invalidate it and expect the user to revalidate. """
+        """ The four @depends are used for the validation. If they change, we will invalidate it and expect the user to revalidate. """
         self.l10n_my_tin_validation_state = False
 
     @api.depends_context('company', 'l10n_my_identification_number')
@@ -92,6 +93,17 @@ class ResPartner(models.Model):
     def _compute_l10n_my_edi_industrial_classification(self):
         default_classification = self.env.ref('l10n_my_edi.class_00000', raise_if_not_found=False)
         self.filtered(lambda p: not p.l10n_my_edi_industrial_classification).l10n_my_edi_industrial_classification = default_classification
+
+    @api.depends('country_code', 'vat', 'l10n_my_edi_malaysian_tin')
+    def _compute_l10n_my_edi_show_search_tin(self):
+        """ Compute whether the search button should be displayed or not. """
+        for partner in self:
+            if partner.country_code == 'MY':
+                partner.l10n_my_edi_show_search_tin = not partner.vat and not partner.l10n_my_edi_malaysian_tin
+            elif partner.country_code:  # Foreign partners
+                partner.l10n_my_edi_show_search_tin = not partner.l10n_my_edi_malaysian_tin
+            else:  # Partners without a country
+                partner.l10n_my_edi_show_search_tin = not partner.vat or not partner.l10n_my_edi_malaysian_tin
 
     # --------------
     # Action methods
@@ -126,6 +138,49 @@ class ResPartner(models.Model):
                 self._message_log(body=self.env._('An unexpected error occurred while validating the TIN. Please try again later.'))
         else:
             self.l10n_my_tin_validation_state = 'valid' if response.get('success') else 'invalid'
+
+    def action_search_tin(self):
+        """ Fetch and store the TIN for the provided identification. """
+        self.ensure_one()
+        if not self.l10n_my_identification_type or not self.l10n_my_identification_number:
+            raise UserError(self.env._('In order to search for the TIN, you must provide the ID Number and Type.'))
+
+        # Sudo to allow a user without access to the proxy user to search the TIN if needed.
+        proxy_user = self.env.company.sudo().l10n_my_edi_proxy_user_id
+        if not proxy_user:
+            raise UserError(self.env._("Please register for the E-Invoicing service in the settings first."))
+
+        response = proxy_user._l10n_my_edi_contact_proxy('api/l10n_my_edi/1/search_tin', params={
+            'identification_values': {
+                'id_type': self.l10n_my_identification_type,
+                'id_val': self.l10n_my_identification_number,
+            },
+        })
+
+        if response.get('success') and response.get('tin'):
+            fetched_tin = response['tin']
+            if self.country_code != 'MY':
+                # For foreign partners, always set the Malaysian TIN field instead of the `vat` field to avoid issues with standard VAT validation.
+                self.l10n_my_edi_malaysian_tin = fetched_tin
+                self._message_log(body=self.env._("TIN search successful! Found TIN: %s set to Malaysian TIN", fetched_tin))
+            else:
+                # For Malaysian partners or partners without a country, set the TIN to the `vat` so it appears on invoices.
+                self.vat = fetched_tin
+                self._message_log(body=self.env._("TIN search successful! Found TIN: %s set to TIN", fetched_tin))
+            self.l10n_my_tin_validation_state = 'valid'
+        elif 'error' in response:
+            # No need to rollback, we don't want to be blocking on that.
+            ref = response['error']['reference']
+            if ref == 'multiple_tin_found':
+                self._message_log(body=self.env._("For the given ID Number and ID Type, multiple TINs were found.\nPlease check the identification information."))
+            elif ref == 'invalid_search_parameters':  # This should not happen, as we check for the parameters before calling the API.
+                self._message_log(body=self.env._("Either ID Number or ID Type is missing.\nPlease check the identification information and try again."))
+            elif ref == 'tin_not_found':
+                self._message_log(body=self.env._("No TIN found for the ID Number and ID Type.\nPlease check the identification information."))
+            else:
+                self._message_log(body=self.env._("An unexpected error occurred while searching for the TIN.\nPlease try again later."))
+        else:
+            self._message_log(body=self.env._("TIN search did not return a valid result."))
 
     def _l10n_my_edi_get_tin_for_myinvois(self):
         """ Helper to return the VAT number relevant to the situation. """
