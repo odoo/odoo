@@ -709,8 +709,6 @@ class IrUiView(models.Model):
             return
 
         for el in view.extract_embedded_fields(arch_section):
-            view.save_embedded_field(el)
-
             # transform embedded field back to t-field
             el.getparent().replace(el, view.to_field_ref(el))
 
