@@ -127,3 +127,15 @@ test("should move selection inside link", async () => {
         contentAfter: '<p>a<a href="#" class="btn">[]hello</a>b</p>',
     });
 });
+
+test("should keep the selection before the zwnbsp preceding a link after deleting backward", async () => {
+    await testEditor({
+        contentBefore: '<div>a[]<a href="#">hello</a></div>',
+        contentBeforeEdit:
+            '<div class="o-paragraph">a[]\ufeff<a href="#">\ufeffhello\ufeff</a>\ufeff</div>',
+        stepFunction: deleteBackward,
+        contentAfterEdit:
+            '<div class="o-paragraph">[]\ufeff<a href="#">\ufeffhello\ufeff</a>\ufeff</div>',
+        contentAfter: '<div>[]<a href="#">hello</a></div>',
+    });
+});

@@ -3,7 +3,7 @@ import { cleanEmptyAncestors, cleanTextNode } from "@html_editor/utils/dom";
 import { isTextNode, isZwnbsp } from "@html_editor/utils/dom_info";
 import { prepareUpdate } from "@html_editor/utils/dom_state";
 import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
-import { leftPos, rightPos } from "@html_editor/utils/position";
+import { childNodeIndex, leftPos, rightPos } from "@html_editor/utils/position";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { withSequence } from "../utils/resource";
 
@@ -121,6 +121,18 @@ export class FeffPlugin extends Plugin {
 
     surroundWithFeffs(node, cursors) {
         const addFeff = (position) => {
+            if (position === "before") {
+                // A cursor right before `node` must stay before the added
+                // FEFF, so that it is not left between the outer and inner
+                // FEFFs (keyboard navigation would then skip the inner edge).
+                // Only shift the cursors that are after it.
+                cursors?.update((cursor) => {
+                    if (cursor.node === node.parentNode && cursor.offset > childNodeIndex(node)) {
+                        cursor.offset += 1;
+                    }
+                });
+                return this.addFeff(node, position);
+            }
             // skip cursor update for append, we want to keep it before
             // the added FEFF
             const c = position === "append" ? null : cursors;
