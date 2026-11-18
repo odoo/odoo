@@ -3,7 +3,6 @@
 import base64
 import functools
 import logging
-import os
 import re
 
 from datetime import datetime, timedelta
@@ -15,7 +14,7 @@ from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import sql, SQL
 
-from odoo.addons.auth_totp.models.totp import TOTP, TOTP_SECRET_SIZE
+from odoo.addons.auth_totp.models.totp import TOTP, generate_secret
 
 _logger = logging.getLogger(__name__)
 
@@ -51,8 +50,14 @@ class ResUsers(models.Model):
         r = super()._mfa_url()
         if r is not None:
             return r
-        if self._mfa_type() == 'totp':
+        mfa_type = self._mfa_type()
+        if mfa_type == 'totp' or (not mfa_type and self._mfa_required()):
             return '/web/login/totp'
+
+    def _mfa_required(self):
+        """ Whether the user must use two-factor authentication. """
+        policy = self.env['ir.config_parameter'].sudo().get_str('auth_totp.policy')
+        return policy == 'all_required' or (policy == 'employee_required' and self._is_internal())
 
     @api.depends('totp_secret')
     @api.depends_context('uid')
@@ -64,9 +69,9 @@ class ResUsers(models.Model):
             r.totp_enabled = bool(v.totp_secret)
 
     def _rpc_api_keys_only(self):
-        # 2FA enabled means we can't allow password-based RPC
+        # 2FA enabled or required means we can't allow password-based RPC
         self.ensure_one()
-        return self.totp_enabled or super()._rpc_api_keys_only()
+        return self.totp_enabled or self._mfa_required() or super()._rpc_api_keys_only()
 
     def _get_session_token_fields(self):
         return super()._get_session_token_fields() | {'totp_secret'}
@@ -95,16 +100,19 @@ class ResUsers(models.Model):
             }
         return super()._check_credentials(credentials, env)
 
-    def _totp_try_setting(self, secret, code):
-        if self.totp_enabled or self != self.env.user:
+    def _totp_enable(self, secret, code):
+        if self != self.env.user:
             _logger.info("2FA enable: REJECT for %s %r", self, self.login)
-            return False
+            raise UserError(self.env._("Two-factor authentication can only be enabled for yourself"))
+        if self.totp_enabled:
+            _logger.info("2FA enable: REJECT for %s %r", self, self.login)
+            raise UserError(self.env._("Two-factor authentication already enabled"))
 
         secret = compress(secret).upper()
         match = TOTP(base64.b32decode(secret)).match(code)
         if match is None:
             _logger.info("2FA enable: REJECT CODE for %s %r", self, self.login)
-            return False
+            raise UserError(self.env._("Verification failed, please double-check the 6-digit code"))
 
         self.sudo().totp_secret = secret
         self.sudo().totp_last_counter = match
@@ -115,7 +123,6 @@ class ResUsers(models.Model):
             request.session.session_token = new_token
 
         _logger.info("2FA enable: SUCCESS for %s %r", self, self.login)
-        return True
 
     def _totp_rate_limit(self, limit_type):
         self.ensure_one()
@@ -186,13 +193,9 @@ class ResUsers(models.Model):
         if self.totp_enabled:
             raise UserError(_("Two-factor authentication already enabled"))
 
-        secret_bytes_count = TOTP_SECRET_SIZE // 8
-        secret = base64.b32encode(os.urandom(secret_bytes_count)).decode()
-        # format secret in groups of 4 characters for readability
-        secret = ' '.join(map(''.join, zip(*[iter(secret)]*4)))
         w = self.env['auth_totp.wizard'].create({
             'user_id': self.id,
-            'secret': secret,
+            'secret': generate_secret(),
         })
         return {
             'type': 'ir.actions.act_window',

@@ -117,12 +117,7 @@ class ResUsers(models.Model):
         r = super()._mfa_type()
         if r is not None:
             return r
-        ICP = self.env['ir.config_parameter'].sudo()
-        otp_required = False
-        if ICP.get_str('auth_totp.policy') == 'all_required' or \
-                (ICP.get_str('auth_totp.policy') == 'employee_required' and self._is_internal()):
-            otp_required = True
-        if otp_required:
+        if self._mfa_required() and self.sudo().email:
             return 'totp_mail'
 
     def _mfa_url(self):
@@ -131,9 +126,6 @@ class ResUsers(models.Model):
             return r
         if self._mfa_type() == 'totp_mail':
             return '/web/login/totp'
-
-    def _rpc_api_keys_only(self):
-        return self._mfa_type() == 'totp_mail' or super()._rpc_api_keys_only()
 
     def _check_credentials(self, credentials, env):
         if credentials['type'] == 'totp_mail':

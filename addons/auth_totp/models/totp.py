@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import hmac
+import secrets
 import struct
 import time
 
@@ -15,6 +17,13 @@ TOTP_SECRET_SIZE = 160
 ALGORITHM = 'sha1'
 DIGITS = 6
 TIMESTEP = 30
+
+
+def generate_secret():
+    secret = base64.b32encode(secrets.token_bytes(TOTP_SECRET_SIZE // 8)).decode()
+    # format secret in groups of 4 characters for readability
+    return ' '.join(map(''.join, zip(*[iter(secret)]*4)))
+
 
 class TOTP:
     def __init__(self, key):

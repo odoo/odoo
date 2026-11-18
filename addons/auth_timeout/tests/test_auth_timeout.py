@@ -24,14 +24,7 @@ class TestAuthTimeout(TransactionCase):
         # By default the only authentication method of the user is the password
         self.assertEqual(self.user._get_auth_methods(), ["password"])
 
-        # Enforce TOTP by mail, it adds TOTP by email as possible authentication method
-        config = self.env["res.config.settings"].create({})
-        config.auth_totp_enforce = True
-        config.auth_totp_policy = "employee_required"
-        config.execute()
-        self.assertEqual(self.user._get_auth_methods(), ["totp_mail", "password"])
-
-        # Set a TOTP secret, it replaces TOTP by email to TOTP by app
+        # Set a TOTP secret, it adds TOTP by app as possible authentication method
         self.user.totp_secret = "foo"
         self.assertEqual(self.user._get_auth_methods(), ["totp", "password"])
 
@@ -196,7 +189,7 @@ class TestAuthTimeoutHttp(HttpCase):
         )
 
         # Mock TOTP.match to make the code 111111 always valid.
-        # It will be used during the tour for authentication using TOTP by email and TOTP by app.
+        # It will be used during the tour for authentication using TOTP by app.
         cls.totp_code = 111111
         cls.totp_counter = 0
         origin_totp_match = TOTP.match
@@ -254,12 +247,6 @@ class TestAuthTimeoutHttp(HttpCase):
         session = session_store().get(session_id)
         session["identity-check-next"] = timestamp
         session_store().save(session)
-
-    def set_auth_totp_mail(self):
-        config = self.env["res.config.settings"].create({})
-        config.auth_totp_enforce = True
-        config.auth_totp_policy = "employee_required"
-        config.execute()
 
     def set_auth_totp(self):
         action = self.rpc("res.users", "action_totp_enable_wizard", [self.user.id])["result"]
@@ -325,28 +312,20 @@ class TestAuthTimeoutHttp(HttpCase):
         self.check_identity({"type": "password", "password": self.user.login})
         self.assertMustNotCheckIdentity()
 
-        # 2. TOTP by email
-        # 2.1 Enable TOTP by mail
-        self.set_auth_totp_mail()
-        # 2.2 Identify using TOTP by email
-        self.set_session_next_check_identity(session_id, time.time() - 16 * 60)
-        self.assertMustCheckIdentity()
-        self.check_identity({"type": "totp_mail", "token": str(self.totp_code)})
-        self.assertMustNotCheckIdentity()
-
-        # 3. TOTP by app
+        # 2. TOTP by app
+        # 2.1 Enable TOTP by app
         self.set_auth_totp()
-        # 3.2 Identify using TOTP by code
+        # 2.2 Identify using TOTP by code
         self.set_session_next_check_identity(session_id, time.time() - 16 * 60)
         self.assertMustCheckIdentity()
         self.check_identity({"type": "totp", "token": str(self.totp_code)})
         self.assertMustNotCheckIdentity()
 
-        # 4. Passkey
-        # 4.1 Registration of the passkey
+        # 3. Passkey
+        # 3.1 Registration of the passkey
         self.set_auth_passkey()
 
-        # 4.2 Identify using a passkey
+        # 3.2 Identify using a passkey
         self.set_session_next_check_identity(session_id, time.time() - 16 * 60)
         self.assertMustCheckIdentity()
         self.check_identity(
@@ -363,11 +342,8 @@ class TestAuthTimeoutHttp(HttpCase):
         group2.lock_timeout_inactivity = 30
         group2.lock_timeout_inactivity_mfa = True
 
-        # Enforce TOTP by mail so the user has a 2FA
-        config = self.env["res.config.settings"].create({})
-        config.auth_totp_enforce = True
-        config.auth_totp_policy = "employee_required"
-        config.execute()
+        # Set a TOTP secret so the user has a 2FA
+        self.user.totp_secret = "JBSWY3DPEHPK3PXP"
 
         session_id = self.authenticate(self.user.login, self.user.login).sid
 
@@ -408,7 +384,7 @@ class TestAuthTimeoutHttp(HttpCase):
         self.assertMustCheckIdentity()
 
         # Check the identity with TOTP code as 2FA
-        self.check_identity({"type": "totp_mail", "token": self.user._get_totp_mail_code()[0]})
+        self.check_identity({"type": "totp", "token": str(self.totp_code)})
 
         # Check identity must no longer be checked
         self.assertMustNotCheckIdentity()
@@ -422,11 +398,8 @@ class TestAuthTimeoutHttp(HttpCase):
         group2.lock_timeout_inactivity = 30  # 30 mins
         group2.lock_timeout_inactivity_mfa = True
 
-        # Enforce TOTP by mail so the user has a 2FA
-        config = self.env["res.config.settings"].create({})
-        config.auth_totp_enforce = True
-        config.auth_totp_policy = "employee_required"
-        config.execute()
+        # Set a TOTP secret so the user has a 2FA
+        self.user.totp_secret = "JBSWY3DPEHPK3PXP"
 
         session_id = self.authenticate(self.user.login, self.user.login).sid
 
@@ -471,7 +444,7 @@ class TestAuthTimeoutHttp(HttpCase):
         self.assertMustCheckIdentity()
 
         # Check the identity with TOTP code as 2FA
-        self.check_identity({"type": "totp_mail", "token": self.user._get_totp_mail_code()[0]})
+        self.check_identity({"type": "totp", "token": str(self.totp_code)})
 
         # Check identity must no longer be checked
         self.assertMustNotCheckIdentity()
@@ -533,7 +506,6 @@ class TestAuthTimeoutHttp(HttpCase):
         session_id = self.authenticate(self.user.login, self.user.login).sid
         # To avoid the check identity wizard during the configuration of TOTP, ...
         self.set_session_last_check_identity(session_id, time.time())
-        self.set_auth_totp_mail()
         self.set_auth_totp()
         self.set_auth_passkey()
 
