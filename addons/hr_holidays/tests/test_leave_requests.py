@@ -3111,3 +3111,25 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
         self.assertEqual(leave.number_of_days, 5)
         self.assertEqual(leave.number_of_hours, 40)
+
+    def test_hourly_leave_days_on_schedule_with_work_times(self):
+        """Check that a time off in hours counts the matching part of a day on a schedule with set work times."""
+        self.employee_emp.resource_calendar_id = self.env['resource.calendar'].create({
+            'name': '40h with work times',
+            'attendance_ids': [
+                Command.create({'dayofweek': str(day), 'hour_from': 8, 'hour_to': 16})
+                for day in range(5)
+            ],
+        })
+
+        leave = self.env['hr.leave'].create({
+            'name': 'Late arrival',
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': self.holidays_type_hours.id,
+            'request_date_from': '2026-11-16',
+            'request_date_to': '2026-11-16',
+            'request_hour_from': 8,
+            'request_hour_to': 10,
+        })
+
+        self.assertRecordValues(leave, [{'number_of_hours': 2, 'number_of_days': 0.25}])
