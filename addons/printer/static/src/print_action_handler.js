@@ -11,13 +11,18 @@ const base64Decode = (base64) => {
 }
 
 
-const baseRequestParams = (report) => {
-    return {
+const printerFetch = (address, path, report, extraParams = {}) => {
+    const host = new URL(`http://${address}`).hostname;
+    const isIp = /^\d{1,3}(\.\d{1,3}){3}$/.test(host);
+    const protocol = isIp || host === "localhost" ? "http" : "https";
+    return fetch(`${protocol}://${address}${path}`, {
         method: "POST",
         body: report,
         signal: AbortSignal.timeout(15000),
-    }
-}
+        targetAddressSpace: isIp ? "local" : undefined,
+        ...extraParams,
+    });
+};
 
 
 /**
@@ -26,17 +31,14 @@ const baseRequestParams = (report) => {
  * so we have to use "no-cors" mode and can't check the response status.
  */
 async function zplPrint(ip, report) {
-    const params = {
-        ...baseRequestParams(report),
-        headers: {
-            "Content-Length": report.length,
-            "Content-Type": "text/plain; charset=utf-8",
-        },
-        mode: "no-cors",
-    };
-
     try {
-        await fetch(`http://${ip}/pstprnt`, params);
+        await printerFetch(ip, "/pstprnt", report, {
+            headers: {
+                "Content-Length": report.length,
+                "Content-Type": "text/plain; charset=utf-8",
+            },
+            mode: "no-cors",
+        });
         return { result: true };
     } catch {
         return { result: false };
@@ -45,10 +47,7 @@ async function zplPrint(ip, report) {
 
 async function ePosPrint(ip, report) {
     try {
-        const res = await fetch(
-            `http://${ip}/cgi-bin/epos/service.cgi?devid=local_printer`,
-            baseRequestParams(report),
-        );
+        const res = await printerFetch(ip, "/cgi-bin/epos/service.cgi?devid=local_printer", report);
         const body = await res.text();
         const parser = new DOMParser();
         const parsedBody = parser.parseFromString(body, "application/xml");
