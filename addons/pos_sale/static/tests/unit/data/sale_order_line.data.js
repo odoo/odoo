@@ -139,6 +139,27 @@ export class SaleOrderLine extends models.ServerModel {
             extra_tax_data: {},
             write_date: "2025-07-03 17:04:14",
         },
+        {
+            // Line whose tax (id 1) is tax-excluded, while its order (id 5) is in
+            // tax-included document mode. Used to check the POS keeps the SO total.
+            id: 8,
+            display_name: "Tax Incl Document Product",
+            product_id: 5,
+            product_uom_qty: 1,
+            price_unit: 320,
+            price_total: 256,
+            discount: 20,
+            order_id: 5,
+            qty_delivered: 0,
+            qty_invoiced: 0,
+            qty_to_invoice: 1,
+            display_type: false,
+            name: "Tax Incl Document Product",
+            tax_ids: [1],
+            is_downpayment: false,
+            extra_tax_data: {},
+            write_date: "2025-07-03 17:04:14",
+        },
     ];
 
     async read_converted(ids) {

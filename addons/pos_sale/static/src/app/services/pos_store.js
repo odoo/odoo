@@ -247,6 +247,7 @@ patch(PosStore.prototype, {
             extra_tax_data: soLine.is_downpayment
                 ? accountTaxHelpers.reverse_quantity_base_line_extra_tax_data(soLine.extra_tax_data)
                 : soLine.extra_tax_data,
+            document_tax_mode: so.document_tax_mode,
         };
     },
     getSaleOrderBaseLines(saleOrder) {
@@ -384,6 +385,7 @@ patch(PosStore.prototype, {
                 price_unit: baseLine.price_unit,
                 price_type: "automatic",
                 sale_order_origin_id: saleOrder,
+                document_tax_mode: saleOrder.document_tax_mode,
                 down_payment_details: matchedSaleOrderLines.map((saleOrderLine) => ({
                     product_name: saleOrderLine.product_id.display_name,
                     product_uom_qty: saleOrderLine.product_uom_qty,
