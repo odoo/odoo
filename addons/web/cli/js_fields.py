@@ -5,7 +5,6 @@ from pathlib import Path
 
 from odoo import api
 from odoo.cli import Command
-from odoo.modules.module import Manifest
 from odoo.modules.registry import Registry
 from odoo.tools import config
 
@@ -67,12 +66,7 @@ class JsFields(Command):
             from odoo.addons.web.tools import js_fields  # noqa: PLC0415
 
             env = api.Environment(cr, api.SUPERUSER_ID, {})
-            addons = {
-                manifest.name: js_fields.Addon(
-                    manifest.name, Path(manifest.path).resolve(), tuple(manifest['depends']))
-                for manifest in Manifest.all_addon_manifests()
-            }
-            generator = js_fields.FieldsGenerator(env, addons)
+            generator = js_fields.FieldsGenerator(env, js_fields.get_addons())
             for warning in generator.warnings:
                 _logger.warning("%s", warning)
             results = js_fields.run(generator, parsed_args.paths or None, check=parsed_args.check)
