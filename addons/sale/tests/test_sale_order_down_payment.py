@@ -1247,3 +1247,24 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         self.assertEqual(dp_invoice.amount_untaxed, 1000.0)
         self.assertEqual(dp_line.price_unit, 1000.0)
         self.assertEqual(dp_line.discount, 0.0)
+
+    def test_discounted_down_payment_partial_refund(self):
+        sale_order, dp_invoice, dp_line = self._invoice_discounted_down_payment(15.0)
+
+        # give back 500 of the down payment, without the discount of the original line
+        refund = dp_invoice._reverse_moves()
+        refund.invoice_line_ids.filtered('is_downpayment').write({
+            'price_unit': 500.0,
+            'discount': 0.0,
+        })
+        refund.action_post()
+
+        self.assertEqual(refund.amount_untaxed, 500.0)
+        # the two lines no longer share a discount, so the order line carries the net amount
+        self.assertEqual(dp_line.price_unit, 350.0)
+        self.assertEqual(dp_line.discount, 0.0)
+
+        final_invoice = sale_order._create_invoices(final=True)
+
+        self.assertEqual(final_invoice.move_type, 'out_invoice')
+        self.assertEqual(final_invoice.amount_untaxed, 550.0)
