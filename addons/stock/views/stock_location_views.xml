@@ -111,14 +111,19 @@
         <field name="model">stock.location</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
-            <list string="Stock Location" decoration-info="usage=='view'" multi_edit="1">
+            <list string="Stock Location" js_class="stock_location_hierarchy_list" decoration-info="usage=='view'" multi_edit="1">
+                <!-- Following invisible fields are needed by `stock_location_hierarchy_list` JS class -->
+                <field name="id" column_invisible="True"/> <!-- needed to know if parent locations are visible -->
+                <field name="name" column_invisible="True"/> <!-- needed to replace the `complete_name` is use indent -->
+                <field name="parent_path" column_invisible="True"/> <!-- needed to compute the hierarchy indent depth -->
+
                 <field name="company_id" column_invisible="True"/> <!-- kept to feed the visible company_id column's groups toggle -->
                 <field name="active" column_invisible="True"/> <!-- used to allow displaying archived locations in this editable list -->
                 <field name="complete_name" string="Location"/>
                 <field name="usage"/>
                 <field name="is_empty" optional="hide" invisible="usage not in ['internal', 'transit']"/>
-                <field name="storage_category_id" readonly="usage != 'internal'" groups="stock.group_stock_multi_locations"/>
-                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="storage_category_id" readonly="usage != 'internal'" optional="show" groups="stock.group_stock_multi_locations"/>
+                <field name="company_id" optional="hide" groups="base.group_multi_company"/>
             </list>
         </field>
     </record>
@@ -147,7 +152,10 @@
         <field name="view_mode">list,form</field>
         <field name="view_id" ref="view_location_tree2"/>
         <field name="search_view_id" ref="view_location_search"/>
-        <field name="context">{'search_default_in_location':1}</field>
+        <field name="context">{
+            'search_default_in_location':1,
+            'search_default_view': 1,
+        }</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             Add a new location
@@ -167,6 +175,7 @@
           </p>
         </field>
     </record>
+
     <record id="action_prod_inv_location_form" model="ir.actions.act_window">
         <field name="name">Locations</field>
         <field name="res_model">stock.location</field>
