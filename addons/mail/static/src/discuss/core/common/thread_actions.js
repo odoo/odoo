@@ -163,6 +163,7 @@ registerThreadAction("invite-people", {
         if (owner.isDiscussSidebarChannelActions) {
             store.env.services.dialog?.add(ChannelActionDialog, {
                 title: channel.displayName,
+                contentClass: "o-discuss-ChannelInvitation",
                 contentComponent: ChannelInvitation,
                 contentProps: {
                     channel,
