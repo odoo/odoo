@@ -206,6 +206,13 @@ export class DomainField extends Component {
                 // we don't want to support invalid models
                 throw new Error(`Invalid model: ${resModel}`);
             }
+            if (error.data?.name === "odoo.exceptions.AccessError") {
+                // The user cannot read the model, so the records cannot be
+                // counted, but the domain can still be valid.
+                const isValid = await this.quickValidityCheck(props);
+                this.updateState({ isValid, recordCount: isValid ? null : 0 });
+                return;
+            }
             this.updateState({ isValid: false, recordCount: 0 });
             return;
         }
