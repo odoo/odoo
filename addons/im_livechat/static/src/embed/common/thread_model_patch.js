@@ -1,5 +1,5 @@
+import "@im_livechat/core/common/thread_model_patch";
 import { Thread } from "@mail/core/common/thread_model";
-import "@mail/discuss/core/common/thread_model_patch";
 import { generateEmojisOnHtml } from "@mail/utils/common/format";
 
 import { patch } from "@web/core/utils/patch";
