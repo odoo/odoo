@@ -24,7 +24,12 @@ import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
 import { location } from "@web/core/browser/browser";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { rpc } from "@web/core/network/rpc";
+<<<<<<< 7037f1c7fac6381b7365d6e86552a2378fc232b9
 import { patch } from "@web/core/utils/patch";
+||||||| c5ce0305ec9355a10c681f0965ff64be3378ccb3
+=======
+import { registry } from "@web/core/registry";
+>>>>>>> 4ddce2adc4c1f37d6b7447f50af7f7e19d97f931
 import { getOrigin } from "@web/core/utils/urls";
 import { session } from "@web/session";
 
@@ -133,6 +138,36 @@ test("Portal users should not be able to start a call", async () => {
     await waitFor(".o-mail-ChatWindow-header .o-mail-ActionList-button:count(2)");
     await waitFor(".o-mail-ChatWindow-header .o-mail-ActionList-button[title='Fold']:count(1)");
     await waitFor(".o-mail-ChatWindow-header .o-mail-ActionList-button[title*='Close']:count(1)");
+});
+
+test("Logged-in visitor can join a call before the store is initialized", async () => {
+    mockGetMedia();
+    const pyEnv = await startServer();
+    const livechatChannelId = await loadDefaultEmbedConfig();
+    const joelUid = pyEnv["res.users"].create({
+        name: "Joel",
+        share: true,
+        login: "joel",
+        password: "joel",
+    });
+    const joelPid = pyEnv["res.partner"].create({ name: "Joel", user_ids: [joelUid] });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: joelPid }),
+        ],
+        channel_type: "livechat",
+        livechat_channel_id: livechatChannelId,
+    });
+    setupChatHub({ opened: [channelId] });
+    registry.category("services").remove("mail.core.public.web");
+    await start({ authenticateAs: { login: "joel", password: "joel" }, waitUntilSubscribe: false });
+    await contains(".o-mail-ChatWindow");
+    await withUser(serverState.userId, () =>
+        rpc("/mail/rtc/channel/join_call", { channel_id: channelId }, { silent: true })
+    );
+    await click(".o-discuss-Call button[title='Join Call']");
+    await contains(".o-discuss-CallActionList button[title='Disconnect']");
 });
 
 test("avatar url contains access token for non-internal users", async () => {

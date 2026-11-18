@@ -464,6 +464,7 @@ export class Rtc extends Record {
     _remotelyHostedChannelId;
     _crossTabTimeoutId;
     crossTabInitDeferred = Promise.withResolvers();
+    isStarted = false;
     /** @type {number} count of how many times the p2p service attempted a connection recovery */
     _p2pRecoveryCount = 0;
 
@@ -574,8 +575,26 @@ export class Rtc extends Record {
     }
 
     start() {
+<<<<<<< 7037f1c7fac6381b7365d6e86552a2378fc232b9
         this.notification = this.store.notification;
         this.soundEffects = this.store.soundEffects;
+||||||| c5ce0305ec9355a10c681f0965ff64be3378ccb3
+        const services = this.store.env.services;
+        this.notification = services.notification;
+        this.dialog = services.dialog;
+        this.soundEffectsService = services["mail.sound_effects"];
+        this.pttExtService = services["discuss.ptt_extension"];
+=======
+        if (this.isStarted) {
+            return;
+        }
+        this.isStarted = true;
+        const services = this.store.env.services;
+        this.notification = services.notification;
+        this.dialog = services.dialog;
+        this.soundEffectsService = services["mail.sound_effects"];
+        this.pttExtService = services["discuss.ptt_extension"];
+>>>>>>> 4ddce2adc4c1f37d6b7447f50af7f7e19d97f931
         if (this._broadcastChannel) {
             this._broadcastChannel.onmessage = this._onBroadcastChannelMessage.bind(this);
             this._postToTabs({ type: CROSS_TAB_CLIENT_MESSAGE.INIT });
