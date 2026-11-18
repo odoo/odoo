@@ -6,6 +6,7 @@ import {
     contains,
     defineActions,
     defineModels,
+    editSearch,
     fields,
     getService,
     MockServer,
@@ -16,6 +17,7 @@ import {
     patchWithCleanup,
     toggleMenuItem,
     toggleSearchBarMenu,
+    validateSearch,
 } from "@web/../tests/web_test_helpers";
 
 import { range } from "@web/core/utils/numbers";
@@ -1392,6 +1394,44 @@ test("concurrency: delayed get_filter", async () => {
     await animationFrame();
 
     expect(".o_search_panel_filter_value").toHaveCount(1);
+});
+
+test("concurrency: view waits for the search panel before reloading", async () => {
+    // Without expand, the panel sections depend on the search domain, so a
+    // search must reload them before the view reloads.
+    Partner._views = {
+        ...Partner._views,
+        search: /* xml */ `
+            <search>
+                <field name="foo"/>
+                <searchpanel>
+                    <field name="company_id" select="multi" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        `,
+    };
+
+    let sectionsLoaded;
+    onRpc("search_panel_select_multi_range", async () => {
+        await sectionsLoaded?.promise;
+        expect.step("panel loaded");
+    });
+    onRpc("web_search_read", () => expect.step("view loaded"));
+    onRpc("has_group", () => true);
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    expect.verifySteps(["panel loaded", "view loaded"]);
+
+    sectionsLoaded = Promise.withResolvers();
+    await editSearch("blip");
+    await validateSearch();
+    await animationFrame();
+    expect.verifySteps([]);
+
+    sectionsLoaded.resolve();
+    await animationFrame();
+    expect.verifySteps(["panel loaded", "view loaded"]);
+    expect(`.o_kanban_record:not(.o_kanban_ghost)`).toHaveCount(2);
 });
 
 test("use filter (on many2one) to refine search", async () => {
