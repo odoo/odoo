@@ -520,3 +520,75 @@ class TestAccessRightsInvitedUsers(TestAccessRights):
             self.assertEqual(self.task.with_user(self.env.user).name, 'Make the world a better place')
         self.task.message_subscribe(partner_ids=[self.env.user.partner_id.id])
         self.assertEqual(self.task.with_user(self.env.user).name, 'Make the world a better place', "The user was set as a follower of the project, he's supposed to have access to the project.")
+
+
+class TestProjectManagerStageAccess(TestProjectCommon):
+    """ A Project User designated as manager of a project (project.user_id) may edit a stage
+        that belongs exclusively to that project, even though stages are typically created by
+        someone else (and project stages have no owner).
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.project_manager = cls.user_projectuser
+        cls.other_manager = mail_new_test_user(cls.env, 'Other PM', groups='project.group_project_user')
+        cls.my_project, cls.my_other_project = cls.env['project.project'].create([
+            {'name': 'Managed project', 'user_id': cls.project_manager.id},
+            {'name': 'Other managed project', 'user_id': cls.project_manager.id},
+        ])
+        cls.foreign_project = cls.env['project.project'].create({'name': 'Foreign project', 'user_id': cls.other_manager.id})
+
+    def _create_stage(self, projects):
+        # Stages are created by an admin, not by the project manager
+        stage = self.env['project.task.type'].create({'name': 'Stage', 'project_ids': [Command.set(projects.ids)]})
+        self.assertFalse(stage.user_id, "Project stages should not have an owner")
+        return stage
+
+    def test_manager_can_edit_exclusive_stage(self):
+        stage = self._create_stage(self.my_project)
+        stage.with_user(self.project_manager).write({'name': 'Renamed', 'fold': True, 'sequence': 42})
+        self.assertEqual(stage.name, 'Renamed')
+        self.assertTrue(stage.fold)
+        self.assertEqual(stage.sequence, 42)
+
+    def test_manager_cannot_resequence_all_project_stages(self):
+        """ Dragging and dropping stages in the kanban view resequences every stage of the
+            project, including the ones shared with other projects, so it must be refused.
+        """
+        exclusive_stage = self._create_stage(self.my_project)
+        shared_stage = self._create_stage(self.my_project | self.foreign_project)
+        stages = (exclusive_stage | shared_stage).sorted('id')
+        stages.write({'sequence': 1})
+        with self.assertRaises(AccessError):
+            stages[::-1].with_user(self.project_manager).web_resequence({'sequence': {}})
+        self.assertEqual(stages.mapped('sequence'), [1, 1], "No stage should have been resequenced")
+
+    @mute_logger('odoo.addons.base.models.ir_rule')
+    def test_manager_cannot_edit_stage_shared_with_foreign_project(self):
+        stage = self._create_stage(self.my_project | self.foreign_project)
+        with self.assertRaises(AccessError):
+            stage.with_user(self.project_manager).write({'name': 'Renamed'})
+
+    def test_manager_cannot_edit_stage_shared_between_own_projects(self):
+        stage = self._create_stage(self.my_project | self.my_other_project)
+        with self.assertRaises(AccessError):
+            stage.with_user(self.project_manager).write({'name': 'Renamed'})
+
+    @mute_logger('odoo.addons.base.models.ir_rule')
+    def test_manager_cannot_edit_foreign_exclusive_stage(self):
+        stage = self._create_stage(self.foreign_project)
+        with self.assertRaises(AccessError):
+            stage.with_user(self.project_manager).write({'name': 'Renamed'})
+
+    def test_manager_cannot_change_projects_of_exclusive_stage(self):
+        stage = self._create_stage(self.my_project)
+        with self.assertRaises(AccessError):
+            stage.with_user(self.project_manager).write({'project_ids': [Command.link(self.my_other_project.id)]})
+
+    def test_batch_write_checks_each_stage(self):
+        personal_stage = self.env['project.task.type'].with_user(self.project_manager).create({'name': 'Personal'})
+        self.assertEqual(personal_stage.user_id, self.project_manager)
+        shared_stage = self._create_stage(self.my_project | self.my_other_project)
+        with self.assertRaises(AccessError):
+            (personal_stage | shared_stage).with_user(self.project_manager).write({'name': 'Renamed'})

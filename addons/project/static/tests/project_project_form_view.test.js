@@ -1,5 +1,5 @@
 import { expect, test, beforeEach } from "@odoo/hoot";
-import { click, queryAllTexts, waitFor } from "@odoo/hoot-dom";
+import { click, queryAllTexts, queryFirst, waitFor } from "@odoo/hoot-dom";
 import {
     mountView,
     contains,
@@ -74,6 +74,7 @@ const formViewParams = {
             <field name="allow_task_dependencies"/>
             <field name="allow_milestones"/>
             <field name="allow_recurring_tasks"/>
+            <field name="is_user_project_manager"/>
         </form>
     `,
 };
@@ -85,8 +86,19 @@ onRpc("web_save", ({ method }) => expect.step(method));
 test("project.project (form) hide archive action for project user", async () => {
     onRpc("has_group", ({ args }) => args[1] === "project.group_project_user");
     await mountView(formViewParams);
-    await toggleActionMenu();
-    expect(`.o-dropdown--menu span:contains(Archive)`).toHaveCount(0, { message: "Archive action should not be visible" });
+    // The action menu should be hidden for a "Project: User" user who's not designated as manager of that project;
+    // however, that menu will be displayed if the user has Timesheets rights for printing own/all timesheets.
+    // So we also test that, if the menu shows, the Archive action isn't displayed.
+    if (queryFirst(".o_cp_action_menus .dropdown-toggle")) {
+        await toggleActionMenu();
+        expect(`.o-dropdown--menu span:contains(Archive)`).toHaveCount(0, {
+            message: "Archive action should not be visible",
+        });
+    } else {
+        expect(".o_cp_action_menus .dropdown-toggle").toHaveCount(0, {
+            message: "Action menu should not be visible",
+        });
+    }
     expect.verifySteps(["check_features_enabled"]);
 });
 
@@ -94,12 +106,31 @@ test("project.project (form) show archive action for project manager", async () 
     onRpc("has_group", () => true);
     await mountView(formViewParams);
     await toggleActionMenu();
-    expect(`.o-dropdown--menu span:contains(Archive)`).toHaveCount(1, { message: "Arhive action should be visible" });
+    expect(`.o-dropdown--menu span:contains(Archive)`).toHaveCount(1, { message: "Archive action should be visible" });
     await toggleMenuItem("Archive");
     await contains(`.modal-footer .btn-primary`).click();
     await toggleActionMenu();
     expect(`.o-dropdown--menu span:contains(Unarchive)`).toHaveCount(1, { message: "Unarchive action should be visible" });
-    await toggleMenuItem("UnArchive");
+    await toggleMenuItem("Unarchive");
+    expect.verifySteps(["check_features_enabled"]);
+});
+
+test("project.project (form) show archive/unarchive action for user managing the current project", async () => {
+    onRpc("has_group", ({ args }) => args[1] === "project.group_project_user");
+    ProjectProject._records[0].is_user_project_manager = true;
+
+    await mountView(formViewParams);
+    await toggleActionMenu();
+    expect(`.o-dropdown--menu span:contains(Archive)`).toHaveCount(1, { message: "Archive action should be visible" });
+    await toggleMenuItem("Archive");
+    await contains(`.modal-footer .btn-primary`).click();
+    await toggleActionMenu();
+    expect(`.o-dropdown--menu span:contains(Unarchive)`).toHaveCount(1, { message: "Unarchive action should be visible" });
+    await toggleMenuItem("Unarchive");
+    await toggleActionMenu();
+    expect(`.o-dropdown--menu span:contains(Unarchive)`).toHaveCount(0, {
+        message: "Unarchive action should no longer be visible after unarchiving",
+    });
     expect.verifySteps(["check_features_enabled"]);
 });
 

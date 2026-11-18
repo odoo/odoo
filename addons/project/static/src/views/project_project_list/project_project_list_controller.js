@@ -17,10 +17,27 @@ export class ProjectListController extends ListController {
         });
     }
 
+    get isManagerForSelection() {
+        if (this.isProjectManager) {
+            return true;
+        }
+        const selectedRecords = this.model.root.selection;
+        return (
+            selectedRecords.length > 0 &&
+            selectedRecords.every((record) => record.data.is_user_project_manager)
+        );
+    }
+
     getStaticActionMenuItems() {
         const actionMenuItems = super.getStaticActionMenuItems(...arguments);
         if (!this.isProjectManager) {
-            ['duplicate', 'archive', 'unarchive'].forEach(item => delete actionMenuItems[item]);
+            delete actionMenuItems.duplicate;
+            if (actionMenuItems.archive.isAvailable) {
+                actionMenuItems.archive.isAvailable = () => this.isManagerForSelection;
+            }
+            if (actionMenuItems.unarchive.isAvailable) {
+                actionMenuItems.unarchive.isAvailable = () => this.isManagerForSelection;
+            }
         }
         return actionMenuItems;
     }

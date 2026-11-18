@@ -5,7 +5,7 @@ from collections import defaultdict
 from datetime import timedelta
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 
 
 class ProjectTaskType(models.Model):
@@ -107,6 +107,18 @@ class ProjectTaskType(models.Model):
         }
 
     def write(self, vals):
+        # This initial check will allow additional edition options to the User designated as Project Manager,
+        # as well as the stage owner.
+        if not self.env.user.has_group('project.group_project_manager'):
+            if 'project_ids' in vals:
+                raise AccessError(_("You cannot modify which projects this stage is assigned to."))
+            for stage in self:
+                user_is_project_manager = stage.project_ids.user_id == self.env.user
+                can_edit_exclusive_stage = len(stage.project_ids) == 1 and user_is_project_manager
+                user_owns_stage = stage.user_id == self.env.user
+                if not (can_edit_exclusive_stage or user_owns_stage):
+                    raise AccessError(_("You can only edit stages you own, or stages that belong exclusively to a project you manage."))
+
         if 'active' in vals and not vals['active']:
             self.env['project.task'].search([('stage_id', 'in', self.ids)]).write({'active': False})
         # Hide/Show task rating template when customer rating feature is disabled/enabled
