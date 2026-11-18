@@ -437,7 +437,13 @@ class CiiExportFacturXFR(TestCiiFacturXCommon, TestUblCiiFRCommon):
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_cash_rounding_biggest_tax')
 
+    def _skip_if_no_deferred_dates(self):
+        # deferred_start_date / deferred_end_date are defined in Enterprise (account_accountant)
+        if 'deferred_start_date' not in self.env['account.move.line']._fields:
+            self.skipTest("The deferred dates fields of account.move.line are not available")
+
     def test_invoice_deferred_dates(self):
+        self._skip_if_no_deferred_dates()
         invoice = self._create_invoice(
             partner_id=self.partner_fr,
             partner_bank_id=self.recipient_bank,
@@ -468,6 +474,7 @@ class CiiExportFacturXFR(TestCiiFacturXCommon, TestUblCiiFRCommon):
         ActualDeliverySupplyChainEvent, so the delivery date is not exported and the XML is the same as in
         test_invoice_deferred_dates.
         """
+        self._skip_if_no_deferred_dates()
         invoice = self._create_invoice(
             partner_id=self.partner_fr,
             partner_bank_id=self.recipient_bank,
@@ -498,6 +505,7 @@ class CiiExportFacturXFR(TestCiiFacturXCommon, TestUblCiiFRCommon):
         """ Only the first line has a start and an end date: the header has no BillingSpecifiedPeriod, and
         ActualDeliverySupplyChainEvent holds the invoice date (20260101). The first line keeps its own period.
         """
+        self._skip_if_no_deferred_dates()
         invoice = self._create_invoice(
             partner_id=self.partner_fr,
             partner_bank_id=self.recipient_bank,
@@ -521,6 +529,7 @@ class CiiExportFacturXFR(TestCiiFacturXCommon, TestUblCiiFRCommon):
         """ Only the first line has a start and an end date: the header has no BillingSpecifiedPeriod, and
         ActualDeliverySupplyChainEvent holds the delivery date (20260115). The first line keeps its own period.
         """
+        self._skip_if_no_deferred_dates()
         invoice = self._create_invoice(
             partner_id=self.partner_fr,
             partner_bank_id=self.recipient_bank,
