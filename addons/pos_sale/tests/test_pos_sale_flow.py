@@ -1453,6 +1453,92 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         self.start_pos_tour('test_full_down_payment_so_still_listed', login="accountman")
 
+    def test_full_down_payment_so_listed_with_draft_deduction(self):
+        """
+        Tests that a draft PoS order deducting the down payment does not hide the Sale Order
+        """
+        product_a = self.env['product.product'].create({
+            'name': 'Product A',
+            'lst_price': 10.0,
+        })
+        so = self.env['sale.order'].sudo().create({
+            'name': 'Full Down Payment SO',
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
+            'order_line': [(0, 0, {
+                'product_id': product_a.id,
+                'product_uom_qty': 1,
+                'price_unit': product_a.lst_price,
+            })]
+        })
+        so.action_confirm()
+        down_payment_product = self.env.ref("pos_sale.default_downpayment_product")
+        self.main_pos_config.down_payment_product_id = down_payment_product
+        self.main_pos_config.open_ui()
+        self.start_pos_tour('test_full_down_payment_so_still_listed', login="accountman")
+        down_payment_line = so.order_line.filtered(lambda l: l.is_downpayment and not l.display_type)
+        self.env['pos.order'].create({
+            'session_id': self.main_pos_config.current_session_id.id,
+            'pos_reference': 'Order 00001-001-0001',
+            'lines': [(0, 0, {
+                'product_id': product_a.id,
+                'price_unit': 10.0,
+                'qty': 1.0,
+                'price_subtotal': 10.0,
+                'price_subtotal_incl': 10.0,
+                'sale_order_origin_id': so.id,
+                'sale_order_line_id': so.order_line.filtered(lambda l: l.product_id == product_a).id,
+            }), (0, 0, {
+                'product_id': down_payment_product.id,
+                'price_unit': 10.0,
+                'qty': -1.0,
+                'price_subtotal': -10.0,
+                'price_subtotal_incl': -10.0,
+                'sale_order_origin_id': so.id,
+                'sale_order_line_id': down_payment_line.id,
+            })],
+            'amount_total': 0.0,
+            'amount_tax': 0.0,
+            'amount_paid': 0.0,
+            'amount_return': 0.0,
+        })
+        self.assertEqual(so.amount_unpaid, 0)
+        self.start_pos_tour('test_full_down_payment_so_listed_with_draft_deduction', login="accountman")
+
+    def test_settled_full_down_payment_so_not_listed(self):
+        """
+        Tests that a Sale Order fully paid by a down payment is no longer listed once settled in the PoS,
+        even when an already delivered line keeps it not fully invoiced
+        """
+        product_a, free_product = self.env['product.product'].create([{
+            'name': 'Product A',
+            'type': 'service',
+            'lst_price': 10.0,
+        }, {
+            'name': 'Free Product',
+            'lst_price': 0.0,
+        }])
+        so = self.env['sale.order'].sudo().create({
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
+            'order_line': [(0, 0, {
+                'product_id': product_a.id,
+                'product_uom_qty': 1,
+                'price_unit': product_a.lst_price,
+            }), (0, 0, {
+                'product_id': free_product.id,
+                'product_uom_qty': 1,
+                'price_unit': 0.0,
+            })]
+        })
+        so.action_confirm()
+        picking = self.env['stock.picking'].search([('origin', '=', so.name)])
+        picking.move_ids.quantity = 1
+        picking.button_validate()
+        self.main_pos_config.down_payment_product_id = self.env.ref("pos_sale.default_downpayment_product")
+        self.main_pos_config.open_ui()
+        self.start_pos_tour('test_settled_full_down_payment_so_not_listed', login="accountman")
+        self.assertEqual(so.amount_unpaid, 0)
+        self.assertEqual(so.invoice_status, 'to invoice')
+
     def test_amount_to_invoice(self):
         """
         Checks that the amount to invoice is updated correctly when paying an order in the PoS

@@ -694,3 +694,40 @@ registry.category("web_tour.tours").add("test_full_down_payment_so_still_listed"
             },
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_settled_full_down_payment_so_not_listed", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.selectNthOrder(1),
+            {
+                content: "Apply a down payment (percentage)",
+                trigger: ".selection-item:contains('Apply a down payment (percentage)')",
+                run: "click",
+            },
+            Numpad.enterValue("100"),
+            Dialog.confirm("Ok"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+            PosSale.settleNthOrder(1),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+            PosSale.checkOrdersListEmpty(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_full_down_payment_so_listed_with_draft_deduction", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            ProductScreen.clickControlButton("Quotation/Order"),
+            {
+                content: "The sale order is still listed",
+                trigger: ".modal .o_data_row td:contains('Full Down Payment SO')",
+            },
+        ].flat(),
+});
