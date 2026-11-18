@@ -8,6 +8,7 @@ from odoo.fields import Domain
 from odoo.tools import OrderedSet
 from odoo.tools.sql import SQL
 from odoo.exceptions import UserError, ValidationError
+from datetime import datetime
 
 VALUATION_DICT = {
     'value': 0,
@@ -178,6 +179,47 @@ class StockMove(models.Model):
         for move in self:
             move.display_name = move.reference
 
+    def _get_first_product_value(self, product_ids, lot=False):
+        # the first manually entered product value is created wihen the product is created
+        domain = Domain([
+            ('product_id', 'in', product_ids),
+            ('move_id', '=', False),
+            ('company_id', '=', self.env.company.id),
+        ])
+        if lot:
+            domain &= Domain(['|', ('lot_id', '=', lot.id), ('lot_id', '=', False)])
+        else:
+            domain &= Domain([('lot_id', '=', False)])
+
+        query = self.env['product.value'].sudo()._search(domain)
+        query_select = SQL('distinct ON (product_value.product_id) product_value.id')
+        query.order = SQL('product_value.product_id, product_value.date ASC, product_value.id ASC')
+        query._ids = tuple(id_ for id_, in self.env.execute_query(query.select(query_select)))
+        product_values = self.env['product.value'].browse(query._ids)
+        product_values.sudo().fetch(['product_id', 'value', 'date'])
+        return {pv.product_id: pv for pv in product_values}
+
+    def _get_first_move(self, product_ids, lot=False):
+        if not self:
+            return {}
+
+        domain = Domain([
+            ('product_id', 'in', product_ids),
+            ('company_id', '=', self.env.company.id),
+            '|', ('is_in', '=', True), ('is_out', '=', True),
+        ])
+        if lot:
+            domain &= Domain([('move_line_ids.lot_id', '=', lot.id)])
+
+        query = self.env['stock.move'].sudo()._search(domain)
+        query_select = SQL('DISTINCT ON (stock_move.product_id) stock_move.id')
+        query.order = SQL('stock_move.product_id, stock_move.date ASC, stock_move.id ASC')
+        query._ids = tuple(id_ for id_, in self.env.execute_query(query.select(query_select)))
+
+        moves = self.env['stock.move'].browse(query._ids)
+        moves.sudo().fetch(['product_id', 'date'])
+        return {move.product_id: move for move in moves}
+
     def write(self, vals):
         """ Editing the done date of a valued move (to the past or the future) shifts the
         on-hand context of every move in between, so the valuation has to be replayed
@@ -188,6 +230,17 @@ class StockMove(models.Model):
             new_date = fields.Datetime.to_datetime(vals['date'])
             impacted_moves = self.filtered(lambda m: (m.is_in or m.is_out) and m.date != new_date)
             recompute_date = min([*impacted_moves.mapped('date'), new_date]) if impacted_moves else False
+
+            product_ids = self.product_id.mapped("id")
+            first_values = self._get_first_product_value(product_ids)
+            first_moves = self._get_first_move(product_ids)
+            for product in self.product_id:
+                # date of the first product.value is allowed to move up to prevent accidentally setting
+                # it too low and then it's stuck at the low date causing perf issues
+                min_date = min(new_date, first_moves[product].date) if first_moves.get(product) else new_date
+                if first_values.get(product):
+                    first_values[product].sudo().date = min_date - timedelta(seconds=1)
+
         res = super().write(vals)
         if recompute_date:
             impacted_moves._set_value(recompute_date=recompute_date)
