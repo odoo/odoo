@@ -64,7 +64,12 @@
                                 <div class="o_address_format">
                                     <field name="street" placeholder="Street..." class="o_address_street"/>
                                     <field name="street2" placeholder="Street 2..." class="o_address_street"/>
-                                    <field name="city" placeholder="City" class="o_address_city"/>
+                                    <field name="city_id" placeholder="City" class="o_address_city"
+                                        domain="[('country_id', '=', country_id)]"
+                                        invisible="not country_enforce_cities"
+                                        context="{'default_country_id': country_id, 'default_state_id': state_id, 'default_zipcode': zip}"/>
+                                    <field name="city" placeholder="City" class="o_address_city"
+                                        invisible="country_enforce_cities and (city_id or city in ('', False))"/>
                                     <field name="state_id" placeholder="State" class="o_address_state"
                                         options="{'no_open': True, 'no_quick_create': True}"
                                         context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}"/>
