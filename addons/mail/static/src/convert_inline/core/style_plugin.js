@@ -7,7 +7,7 @@ import { DYNAMIC_CSS_EVAL_EXPRESSIONS } from "./utils";
 
 export class StylePlugin extends Plugin {
     static id = "style";
-    static dependencies = ["measurementSnapshot", "responsive", "referenceNode"];
+    static dependencies = ["measurementSnapshot", "dimension", "referenceNode"];
     static shared = ["getRawStyleInfo"];
     resources = {
         on_load_reference_content_handlers: this.loadAllFonts.bind(this),

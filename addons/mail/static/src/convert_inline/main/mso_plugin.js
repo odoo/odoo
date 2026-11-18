@@ -32,7 +32,7 @@ export class MsoPlugin extends Plugin {
         "filterContent",
         "referenceNode",
         "render",
-        "responsive",
+        "dimension",
         "rules",
         "spacing",
     ];
@@ -307,9 +307,9 @@ export class MsoPlugin extends Plugin {
                 this.removeComments(fragment);
             }
             const getIfMsoContent = analysis.facts.isVmlWrapperForbidden
-                ? () => fragments.map((fragment) => fragment.outerHTML).join("")
+                ? () => fragments.map((fragment) => fragment.innerHTML).join("")
                 : () => {
-                      const htmlContent = fragments.map((fragment) => fragment.outerHTML).join("");
+                      const htmlContent = fragments.map((fragment) => fragment.innerHTML).join("");
                       return buildInlineShapeVmlContent(analysis.facts.vmlArguments, htmlContent);
                   };
             const msoContent = getIfMsoContent(fragments);

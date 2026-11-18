@@ -13,7 +13,7 @@ import { blockTagNames } from "@html_editor/utils/blocks";
 
 export class MeasurementSnapshotPlugin extends Plugin {
     static id = "measurementSnapshot";
-    static dependencies = ["responsive"];
+    static dependencies = ["dimension"];
     static shared = [
         "getBoundingClientRect",
         "getComputedStyle",

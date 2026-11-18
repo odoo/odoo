@@ -17,7 +17,7 @@ export class HybridFluidStrategyPlugin extends Plugin {
         "measurementSnapshot",
         "math",
         "render",
-        "responsive",
+        "dimension",
         "responsiveBlock",
         "rules",
         "referenceNode",
