@@ -450,6 +450,26 @@ class TestSaleOrder(SaleCommon):
             msg="The email should be sent synchronously when requested by the cron.",
         )
 
+    def test_async_emails_do_not_drop_the_pending_email(self):
+        """ Test that deferring a second email does not drop the email that still waits. """
+        self.env['ir.config_parameter'].set_param('sale.async_emails', 'True')
+        payment_email_template = self.env.ref('sale.mail_template_sale_payment_executed')
+        self.sale_order._send_order_notification_mail(self.confirmation_email_template)
+
+        with patch.object(
+            self.registry['sale.order'], 'message_post_with_source', autospec=True,
+        ) as message_post_mock:
+            self.sale_order._send_order_notification_mail(payment_email_template)
+        message_post_mock.assert_called_once()
+        self.assertEqual(
+            message_post_mock.call_args.args[1], self.confirmation_email_template,
+            msg="The waiting email should be sent when another email takes its place.",
+        )
+        self.assertEqual(
+            self.sale_order.pending_email_template_id, payment_email_template,
+            msg="The new email should wait for the cron.",
+        )
+
     def test_scheduled_mark_so_as_sent(self):
         """Check that a order gets marked as sent after a scheduled message was sent."""
         order = self.sale_order
