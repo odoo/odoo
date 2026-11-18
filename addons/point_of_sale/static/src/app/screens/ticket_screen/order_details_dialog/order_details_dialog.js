@@ -5,7 +5,6 @@ import { formatDateTime } from "@web/core/l10n/dates";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { formatCurrency } from "@point_of_sale/app/models/utils/currency";
-import { useService } from "@web/core/utils/hooks";
 import { PosOrder } from "@point_of_sale/app/models/pos_order";
 
 const STATES = {
@@ -27,7 +26,7 @@ export class OrderDetailsDialog extends Component {
     setup() {
         this.pos = usePos();
         this.states = STATES;
-        this.ui = useService("ui");
+        this.ui = this.pos.ui;
     }
 
     get title() {

@@ -49,7 +49,7 @@ test("more button catches attention when rewards are available", async () => {
     await mountWithCleanup(ProductScreen, { props: { orderUuid: order.uuid } });
     const moreButtonSelector = PosUiUtils.isMobile() ? ".mobile-more-button" : ".more-btn";
     if (PosUiUtils.isMobile()) {
-        PosUiUtils.ensurePane("left");
+        PosUiUtils.ensurePane("cart");
     }
     expect(moreButtonSelector).toHaveClass("o_catch_attention_reward");
     expect(`${moreButtonSelector} .o_reward-star`).toHaveCount(1);

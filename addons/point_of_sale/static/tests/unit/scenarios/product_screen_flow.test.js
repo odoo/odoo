@@ -373,7 +373,7 @@ test("test_delete_line: delete line through popup when disallowLineQuantityChang
     expect(order.lines).toHaveLength(1);
     store.disallowLineQuantityChange = () => true;
 
-    await Utils.ensurePane("left");
+    await Utils.ensurePane("cart");
     await Utils.sendBufferKeys("Backspace");
     await waitFor(".modal");
     await contains('.modal .numpad button:contains("0")').click();

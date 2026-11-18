@@ -5,7 +5,7 @@
             onClickPlus="() => this.newFloatingOrder()"
             t-slot-scope="scope"
             class="this.props.class"
-            forceSmall="this.ui.isSmall and !this.env.inDialog"
+            forceSmall="this.ui.isSmall() and !this.env.inDialog"
         >
             <t t-set="order" t-value="scope.item" />
             <div class="floating-order-container position-relative">

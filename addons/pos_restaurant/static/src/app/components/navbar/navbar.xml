@@ -12,7 +12,7 @@
         </xpath>
         <xpath expr="//button[hasclass('register-label')]" position="before">
             <button t-if="this.pos.config.module_pos_restaurant" class="table-button btn btn-outline-secondary btn-lg lh-lg" t-att-class="{'active': this.mainButton === 'table', 'text-muted': this.pos.getOrder()?.isFilledDirectSale}" t-on-click="() => this.onClickPlanButton()">
-                <span t-if="!this.ui.isSmall">Tables</span>
+                <span t-if="!this.ui.isSmall()">Tables</span>
                 <img t-else="" src="/pos_restaurant/static/img/plan.svg" class="navbar-icon" t-att-class="{'opacity-50': this.pos.getOrder()?.isFilledDirectSale}" alt="Floor Plan"/>
             </button>
         </xpath>
@@ -30,7 +30,7 @@
     <t t-name="pos_restaurant.BurgerMenuDialog" t-inherit="point_of_sale.BurgerMenuDialog" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('o_pos_burger_menu_buttons')]/t[@t-name='backend']" position="before">
             <t t-call="point_of_sale.BurgerDialogMenuButton"
-                t-if="this.pos.router.currentScreen() == 'FloorScreen' and this.ui.isSmall and this.pos.accessRight.showEditPlanButton and this.pos.config.floor_ids.length"
+                t-if="this.pos.router.currentScreen() == 'FloorScreen' and this.ui.isSmall() and this.pos.accessRight.showEditPlanButton and this.pos.config.floor_ids.length"
                 dataIcon="'edit_square'"
                 onClick="() => this.floorPlanStore.startEditMode()"
                 btnLabel.translate="Edit Plan"

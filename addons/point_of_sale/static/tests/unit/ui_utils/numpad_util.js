@@ -4,7 +4,7 @@ import { PosNumberBufferPlugin } from "@point_of_sale/app/plugins/pos_number_buf
 import { ensurePane } from "./common";
 
 export async function clickNumpadButtons(...keys) {
-    await ensurePane("left");
+    await ensurePane("cart");
     const normalizedKeys = keys
         .flatMap((key) => {
             const value = key.toString();
@@ -19,7 +19,7 @@ export async function clickNumpadButtons(...keys) {
 }
 
 export async function clickNumpad(key) {
-    await ensurePane("left");
+    await ensurePane("cart");
     const label = key === "backspace" ? "⌫" : key;
     await contains(`.numpad button:contains("${label}")`).click();
     await animationFrame();

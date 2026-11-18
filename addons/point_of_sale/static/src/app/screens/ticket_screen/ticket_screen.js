@@ -1,6 +1,5 @@
 import { useLayoutEffect } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
 import { parseDate, parseDateTime, serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { parseFloat } from "@web/views/fields/parsers";
 import { _t } from "@web/core/l10n/translation";
@@ -82,8 +81,9 @@ export class TicketScreen extends Component {
 
     setup() {
         this.pos = usePos();
-        this.ui = useService("ui");
-        this.dialog = useService("dialog");
+        this.ui = this.pos.ui;
+        this.dialog = this.pos.dialog;
+        this.notification = this.pos.notification;
         this.numberBuffer = usePlugin(PosNumberBufferPlugin);
         this.doPrint = useTrackedAsync((_selectedSyncedOrder) => this.print(_selectedSyncedOrder));
         this.numberBuffer.use({
@@ -228,14 +228,14 @@ export class TicketScreen extends Component {
             if (order) {
                 this.state.filter = "SYNCED";
                 this.setSelectedOrder(order);
-                this.pos.scanning = !this.pos.scanning;
+                this.pos.ui.toggleCameraScan();
             } else {
-                this.env.services.notification.add(_t("Invalid QR Code! Please, Scan again!"), {
+                this.notification.add(_t("Invalid QR Code! Please, Scan again!"), {
                     type: "warning",
                 });
             }
         } else {
-            this.env.services.notification.add(_t("Please, Scan again!"), {
+            this.notification.add(_t("Please, Scan again!"), {
                 type: "warning",
             });
         }
@@ -469,7 +469,7 @@ export class TicketScreen extends Component {
         await this.addAdditionalRefundInfo(order, destinationOrder);
 
         this.postRefund(destinationOrder);
-        this.pos.ticket_screen_mobile_pane = "left";
+        this.pos.ui.ticketScreenMobileDisplayMode.set("order");
         destinationOrder.setScreenData({ name: "PaymentScreen" });
         this.pos.navigate("PaymentScreen", { orderUuid: destinationOrder.uuid });
     }
@@ -677,7 +677,7 @@ export class TicketScreen extends Component {
         const orders = this.pos.models["pos.order"].filter((o) => !o.finalized);
         return (
             (orders.length === 1 && orders[0].lines.length === 0) ||
-            (this.ui.isSmall && order != this.getSelectedOrder()) ||
+            (this.ui.isSmall() && order != this.getSelectedOrder()) ||
             this.isDefaultOrderEmpty(order) ||
             order.finalized ||
             order.payment_ids.some(
@@ -737,9 +737,6 @@ export class TicketScreen extends Component {
         }, 0);
 
         return !this.pos.isProductQtyZero(total);
-    }
-    switchPane() {
-        this.pos.switchPaneTicketScreen();
     }
     /**
      * Find the empty order with the following priority:

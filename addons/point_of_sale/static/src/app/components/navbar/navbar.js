@@ -30,7 +30,7 @@ export class Navbar extends Component {
     inputRef = signal.ref();
     setup() {
         this.pos = usePos();
-        this.ui = useService("ui");
+        this.ui = this.pos.ui;
         this.state = proxy({ searchBarOpen: false });
         this.dialog = useService("dialog");
         this.notification = useService("notification");
@@ -121,7 +121,7 @@ export class Navbar extends Component {
 
     checkInput(event) {
         if (
-            !this.ui.isSmall &&
+            !this.ui.isSmall() &&
             this.inputRef() &&
             document.activeElement !== this.inputRef() &&
             !this.pos.getOrder()?.getSelectedOrderline() &&

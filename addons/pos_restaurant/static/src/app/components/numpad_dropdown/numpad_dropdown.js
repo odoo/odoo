@@ -1,7 +1,6 @@
 import { Component, proxy, t, usePlugin, useProps } from "@odoo/owl";
 import { PosNumberBufferPlugin } from "@point_of_sale/app/plugins/pos_number_buffer_plugin";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { useService } from "@web/core/utils/hooks";
 import { SIZES, utils } from "@web/core/ui/ui_utils";
 import {
     getButtons,
@@ -21,7 +20,7 @@ export class NumpadDropdown extends Component {
 
     setup() {
         this.pos = usePos();
-        this.ui = useService("ui");
+        this.ui = this.pos.ui;
         this.numberBuffer = usePlugin(PosNumberBufferPlugin);
         this.numberBuffer.use({
             triggerAtEnter: () => this.pos.searchOrder(this.state.buffer),

@@ -2,7 +2,6 @@ import { _t } from "@web/core/l10n/translation";
 import { Component, useProps, t } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { TextInputPopup } from "@point_of_sale/app/components/popups/text_input_popup/text_input_popup";
-import { useService } from "@web/core/utils/hooks";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 
 export class NoteButton extends Component {
@@ -16,8 +15,8 @@ export class NoteButton extends Component {
 
     setup() {
         this.pos = usePos();
-        this.ui = useService("ui");
-        this.dialog = useService("dialog");
+        this.ui = this.pos.ui;
+        this.dialog = this.pos.dialog;
     }
 
     async onClick() {

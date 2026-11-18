@@ -4,7 +4,7 @@ import { ensurePane, isMobile } from "./common";
 import { clickNumpadButtons } from "./numpad_util";
 
 export async function clickDisplayedProduct(name) {
-    await ensurePane("right");
+    await ensurePane("product");
     await contains(`article.product .product-name:contains("${name}")`).click();
     await animationFrame();
 }
@@ -21,7 +21,7 @@ export async function addOrderlineFromProductScreen(productName, { quantity = 1,
 }
 
 export async function clickControlButton(label) {
-    await ensurePane("left");
+    await ensurePane("cart");
     const btn = [
         ...document.querySelectorAll(".control-buttons button, .control-button, .actionpad button"),
     ].find((el) => el.textContent.includes(label));
@@ -40,19 +40,19 @@ export async function clickControlButton(label) {
 }
 
 export async function selectPreset(presetName) {
-    await ensurePane("left");
+    await ensurePane("cart");
     await contains(`.selection-item:contains("${presetName}")`).click();
     await animationFrame();
 }
 
 export async function clickOrderButton() {
-    await ensurePane("left");
+    await ensurePane("cart");
     await contains(".actionpad .submit-order").click();
     await animationFrame();
 }
 
 export async function clickPayButton() {
-    await ensurePane("left");
+    await ensurePane("cart");
     await contains(".actionpad .pay-order-button").click();
     await animationFrame();
 }
@@ -84,7 +84,7 @@ export async function scanBarcode(barcode) {
 }
 
 export async function clickFastPaymentMethod(name) {
-    await ensurePane("left");
+    await ensurePane("cart");
     await contains(`.fast-pay-button:contains("${name}")`).click();
     await animationFrame();
 }
@@ -95,7 +95,7 @@ export function setFlatProductPrice(store, price) {
 }
 
 export async function clickPricelist(name) {
-    await ensurePane("left");
+    await ensurePane("cart");
     let button = document.querySelector(".o_pricelist_button");
     if (!button) {
         await contains(

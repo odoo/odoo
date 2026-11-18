@@ -52,7 +52,7 @@ test("FloatingOrderTour: floating orders preserve product quantities", async () 
     await animationFrame();
     expect(store.getOrder()).toBe(order2);
     expect(order2.lines[0].qty).toBe(2);
-    await Utils.ensurePane("left");
+    await Utils.ensurePane("cart");
     if (Utils.isMobile()) {
         await contains(".product-screen .mobile-more-button").click();
     } else {

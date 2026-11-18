@@ -4,7 +4,7 @@
     <t t-name="point_of_sale.PartnerList">
         <Dialog bodyClass="'partner-list'" modalRef="this.modalRef" contentClass="'h-100'">
             <t t-set-slot="header">
-                <button t-if="!this.ui.isSmall and this.pos.accessRight.canEditDetails" class="btn btn-primary btn-lg lh-lg me-2" role="img" aria-label="Add a customer"
+                <button t-if="!this.ui.isSmall() and this.pos.accessRight.canEditDetails" class="btn btn-primary btn-lg lh-lg me-2" role="img" aria-label="Add a customer"
                         t-on-click="() => this.editPartner()"
                         title="Add a customer">
                 Create 
@@ -12,7 +12,7 @@
                 <h4 class="modal-title fs-4">Choose Customer</h4>
                 <Input tModel="[this.state, 'query']"
                     class="'ms-auto'"
-                    isSmall="this.ui.isSmall"
+                    isSmall="this.ui.isSmall()"
                     placeholder.translate="Search Customers..."
                     icon="'search'"
                     t-on-enter="() => this.searchPartner()"
@@ -50,7 +50,7 @@
                         </t>
                     </tbody>
                 </table>
-                <div t-else="" t-att-class="{'p-4': this.ui.isSmall}">
+                <div t-else="" t-att-class="{'p-4': this.ui.isSmall()}">
                     <div class="text-muted">
                         <i class="oi oi-filled oi-3x" data-icon="group"></i>
                         <p class="mt-3 fs-4 text-dark">No customers found, press <strong>Enter</strong> to load more.</p>
@@ -59,7 +59,7 @@
             </div>
             <t t-set-slot="footer">
                 <div class="d-flex flex-row gap-2 w-100">
-                    <button t-if="this.ui.isSmall and this.pos.accessRight.canEditDetails" class="btn btn-primary flex-fill" role="img" aria-label="Add a customer"
+                    <button t-if="this.ui.isSmall() and this.pos.accessRight.canEditDetails" class="btn btn-primary flex-fill" role="img" aria-label="Add a customer"
                         t-on-click="() => this.editPartner()"
                         title="Add a customer">
                     New 

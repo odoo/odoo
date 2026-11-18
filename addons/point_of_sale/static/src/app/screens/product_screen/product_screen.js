@@ -1,6 +1,5 @@
 import { onWillRender } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
 import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
 import { useLongPress } from "@point_of_sale/app/hooks/long_press_hook";
 import { useBarcodeReader } from "@point_of_sale/app/hooks/barcode_reader_hook";
@@ -42,6 +41,7 @@ import { OptionalProductPopup } from "@point_of_sale/app/components/popups/optio
 import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
 import { debounce } from "@web/core/utils/timing";
 import { useSortable } from "@web/core/utils/sortable_owl";
+import { localization } from "@web/core/l10n/localization";
 
 const { DateTime } = luxon;
 
@@ -67,9 +67,9 @@ export class ProductScreen extends Component {
 
     setup() {
         this.pos = usePos();
-        this.ui = useService("ui");
-        this.dialog = useService("dialog");
-        this.notification = useService("notification");
+        this.ui = this.pos.ui;
+        this.dialog = this.pos.dialog;
+        this.notification = this.pos.notification;
         this.numberBuffer = usePlugin(PosNumberBufferPlugin);
         this.state = proxy({
             quantityByProductTmplId: {},
@@ -108,7 +108,7 @@ export class ProductScreen extends Component {
             this.pos.searchProductDBState = null;
         });
 
-        this.barcodeReader = useService("barcode_reader");
+        this.barcodeReader = this.pos.barcodeReader;
         this.soundEffects = usePlugin(SoundEffectsPlugin);
 
         useBarcodeReader({
@@ -217,7 +217,7 @@ export class ProductScreen extends Component {
 
     getNumpadButtons() {
         const colorClassMap = {
-            [this.env.services.localization.decimalPoint]: "o_colorlist_item_numpad_color_6",
+            [localization.decimalPoint]: "o_colorlist_item_numpad_color_6",
             Backspace: "o_colorlist_item_numpad_color_1",
             "-": "o_colorlist_item_numpad_color_3",
         };
@@ -458,9 +458,9 @@ export class ProductScreen extends Component {
         this.dialog.add(ControlButtonsPopup);
     }
 
-    switchPane() {
-        this.pos.scanning = false;
-        this.pos.switchPane();
+    toggleProductMobileScreenDisplayMode() {
+        this.pos.ui.stopCameraScan();
+        this.pos.ui.toggleProductMobileScreenDisplayMode();
     }
 
     getProductImage(product) {

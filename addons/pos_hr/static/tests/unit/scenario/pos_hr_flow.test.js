@@ -156,7 +156,7 @@ test("test_cashier_user_can_change_price: unrestricted price control lets a cash
     await waitFor(".product-screen");
 
     await Utils.clickDisplayedProduct("Untaxed Product");
-    await Utils.ensurePane("left");
+    await Utils.ensurePane("cart");
     expect('.numpad button:contains("Price")').not.toHaveAttribute("disabled");
     await Utils.clickNumpadButtons("Price", 10, "Qty");
     expect(store.getOrder().lines[0].price_unit).toBe(10);
@@ -171,7 +171,7 @@ test("a restrictive employee gets no Price numpad button", async () => {
     await Utils.login("Administrator", "1234");
     await waitFor(".product-screen");
     await Utils.clickDisplayedProduct("Untaxed Product");
-    await Utils.ensurePane("left");
+    await Utils.ensurePane("cart");
     expect('.numpad button:contains("Price")').not.toHaveAttribute("disabled");
 
     await Utils.switchCashier("A Little Guy");
@@ -206,7 +206,7 @@ test("test_restrictive_employee_refund: refund pads are hidden for a restrictive
     await waitFor(".ticket-screen");
     await Utils.selectTicketFilter("Paid");
     await Utils.selectTicketOrder("001");
-    await Utils.ensureTicketPane("right");
+    await Utils.ensureTicketPane("cart");
     expect(".ticket-screen .subpads").toHaveCount(0);
 
     await Utils.clickRegister();
@@ -216,7 +216,7 @@ test("test_restrictive_employee_refund: refund pads are hidden for a restrictive
     await waitFor(".ticket-screen");
     await Utils.selectTicketFilter("Paid");
     await Utils.selectTicketOrder("001");
-    await Utils.ensureTicketPane("right");
+    await Utils.ensureTicketPane("cart");
     expect(".ticket-screen .subpads").toHaveCount(1);
 });
 

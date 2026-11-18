@@ -7,7 +7,6 @@ import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook
 import { _t } from "@web/core/l10n/translation";
 import { localeCompare } from "@web/core/l10n/utils";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
 
 export class SplitBillScreen extends Component {
     static template = "pos_restaurant.SplitBillScreen";
@@ -20,7 +19,7 @@ export class SplitBillScreen extends Component {
 
     setup() {
         this.pos = usePos();
-        this.ui = useService("ui");
+        this.ui = this.pos.ui;
         this.qtyTracker = proxy({});
         this.priceTracker = proxy({});
         this.isTransferred = false;
