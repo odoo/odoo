@@ -14,7 +14,7 @@ import { QuickVideoSettings } from "@mail/discuss/call/common/quick_video_settin
 import { RecordingDialog } from "@mail/discuss/call/common/recording_dialog";
 import { MicrophoneWarning } from "@mail/discuss/call/common/microphone_warning";
 import { TalkingAudioBars } from "@mail/discuss/call/common/talking_audio_bars";
-import { Component, useEffect } from "@odoo/owl";
+import { useEffect } from "@odoo/owl";
 import { usePopover } from "@web/core/popover/popover_hook";
 
 export const callActionsRegistry = registry.category("discuss.call/actions");
@@ -23,7 +23,16 @@ export const CALL_ICON_MUTED = "mic_off";
 
 /** @typedef {import("models").DiscussChannel} DiscussChannel */
 /**
+ * Ancestors read by the call actions. They describe the surface showing the actions rather than
+ * the component using them, @see useAncestors
+ *
+ * @typedef {Object} CallActionAncestors
+ * @property {boolean} [inCallMenu] shown in the call menu, @see CallMenu
+ * @property {Window} [pipWindow] the picture-in-picture window showing the actions, @see Meeting
+ */
+/**
  * @typedef {Object} CallActionSpecificParams
+ * @property {Readonly<CallActionAncestors>} ancestors
  * @property {DiscussChannel} channel
  */
 /** @typedef {import("@mail/core/common/action").ActionParams<CallAction, UseCallActions_Def> & CallActionSpecificParams} CallActionParams */
@@ -57,24 +66,21 @@ export const muteAction = {
     onSelected: ({ action, store }) => store.rtc.toggleMicrophone({ rootRef: action.actionRef }),
     sequence: 10,
     sequenceGroup: 100,
-    setup({ action, owner, store }) {
-        if (owner instanceof Component) {
-            const popover = usePopover(MicrophoneWarning, {
-                closeOnClickAway: false,
-                closeOnEscape: false,
-                position: "top-middle",
-            });
-            useEffect(() => {
-                const hasWarning =
-                    store.rtc.showMicrophonePermissionWarning ||
-                    store.rtc.showMicrophoneSilentWarning;
-                if (!popover.isOpen && action.actionRef() && hasWarning) {
-                    popover.open(action.actionRef(), {});
-                } else {
-                    popover.close();
-                }
-            });
-        }
+    setup({ action, store }) {
+        const popover = usePopover(MicrophoneWarning, {
+            closeOnClickAway: false,
+            closeOnEscape: false,
+            position: "top-middle",
+        });
+        useEffect(() => {
+            const hasWarning =
+                store.rtc.showMicrophonePermissionWarning || store.rtc.showMicrophoneSilentWarning;
+            if (!popover.isOpen && action.actionRef() && hasWarning) {
+                popover.open(action.actionRef(), {});
+            } else {
+                popover.close();
+            }
+        });
     },
     tags: ({ action, store }) => {
         const tags = [ACTION_TAGS.CALL_ACTION_TRACKED];
@@ -136,8 +142,11 @@ export const cameraOnAction = {
             : _t("Turn camera on"),
     isActive: ({ store }) => store.rtc.selfSession?.is_camera_on,
     icon: "videocam",
-    onSelected: ({ action, owner, store }) =>
-        store.rtc.toggleVideo("camera", { env: owner.env, rootRef: action.actionRef }),
+    onSelected: ({ action, ancestors, store }) =>
+        store.rtc.toggleVideo("camera", {
+            rootRef: action.actionRef,
+            sourceWindow: ancestors.pipWindow,
+        }),
     sequence: 10,
     sequenceGroup: 120,
     tags: ({ action, store, channel }) => {
@@ -210,7 +219,8 @@ registerCallAction("share-screen", {
             : _t("Share Screen"),
     isActive: ({ store }) => store.rtc.selfSession?.is_screen_sharing_on,
     icon: "desktop_windows",
-    onSelected: ({ owner, store }) => store.rtc.toggleVideo("screen", { env: owner.env }),
+    onSelected: ({ ancestors, store }) =>
+        store.rtc.toggleVideo("screen", { sourceWindow: ancestors.pipWindow }),
     sequence: 40,
     sequenceGroup: 200,
     tags: ({ action }) => [
@@ -235,8 +245,8 @@ registerCallAction("record-call", {
 
 registerCallAction("fullscreen", {
     availableOffline: true,
-    condition: ({ channel, owner, store }) =>
-        channel?.isSelfInCall && !owner.env.pipWindow && !store.rtc.isBrowserFullscreen,
+    condition: ({ ancestors, channel, store }) =>
+        channel?.isSelfInCall && !ancestors.pipWindow && !store.rtc.isBrowserFullscreen,
     name: _t("Fullscreen"),
     icon: "expand_content",
     onSelected: ({ channel, store }) => {
@@ -247,9 +257,9 @@ registerCallAction("fullscreen", {
     tags: ACTION_TAGS.CALL_LAYOUT,
 });
 registerCallAction("wide-view", {
-    condition: ({ channel, owner, store }) =>
+    condition: ({ ancestors, channel, store }) =>
         channel?.isSelfInCall &&
-        !owner.env.pipWindow &&
+        !ancestors.pipWindow &&
         (!store.rtc.isFullscreen || store.rtc.isBrowserFullscreen),
     name: _t("Wide View"),
     icon: "fullscreen",
@@ -261,8 +271,8 @@ registerCallAction("wide-view", {
     tags: ACTION_TAGS.CALL_LAYOUT,
 });
 registerCallAction("minimize", {
-    condition: ({ channel, owner, store }) =>
-        channel?.isSelfInCall && store.rtc.isFullscreen && !owner.env.pipWindow,
+    condition: ({ ancestors, channel, store }) =>
+        channel?.isSelfInCall && store.rtc.isFullscreen && !ancestors.pipWindow,
     name: _t("Minimize"),
     icon: "minimize",
     onSelected: ({ store }) => store.rtc.minimize(),
@@ -270,27 +280,26 @@ registerCallAction("minimize", {
     tags: ACTION_TAGS.CALL_LAYOUT,
 });
 registerCallAction("picture-in-picture", {
-    condition: ({ owner, channel, store }) =>
-        channel?.isSelfInCall && !store.ui.isSmall() && !owner.env.pipWindow,
+    condition: ({ ancestors, channel, store }) =>
+        channel?.isSelfInCall && !store.ui.isSmall() && !ancestors.pipWindow,
     disabledCondition: ({ store }) => store.rtc?.isRemote,
     name: ({ store }) =>
         store.rtc?.isPipMode ? _t("Exit Picture in Picture") : _t("Picture in Picture"),
     isActive: ({ store }) => store.rtc?.isPipMode,
     icon: "open_in_browser",
-    onSelected: ({ owner, channel, store }) => {
-        const isPipMode = store.rtc?.isPipMode;
-        if (isPipMode) {
+    onSelected: ({ action, store }) => {
+        if (store.rtc?.isPipMode) {
             store.rtc.closePip();
         } else {
-            store.rtc.openPip({ context: owner });
+            store.rtc.openPip({ rootEl: action.actionRef() });
         }
     },
     sequence: 90,
     tags: ACTION_TAGS.CALL_LAYOUT,
 });
 registerCallAction("change-layout", {
-    condition: ({ ancestors, channel, owner }) =>
-        channel?.isSelfInCall && !ancestors.inCallMenu && !owner.env.pipWindow,
+    condition: ({ ancestors, channel }) =>
+        channel?.isSelfInCall && !ancestors.inCallMenu && !ancestors.pipWindow,
     name: _t("Change Layout"),
     icon: "view_module",
     onSelected: ({ channel, store }) =>
@@ -386,6 +395,10 @@ registerCallAction("disconnect", {
     tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.DANGER],
 });
 
+/**
+ * Call actions only use their params. The `setup` of a definition runs in the component using the
+ * actions (@see useCallActions), so it may use hooks.
+ */
 export class CallAction extends Action {
     /** @type {() => import("models").DiscussChannel} */
     channelFn;
