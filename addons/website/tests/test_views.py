@@ -505,6 +505,39 @@ class TestViewSaving(TestViewSavingCommon):
             )
         )
 
+    def test_save_t_field_default_value(self):
+        """ A t-field with a default value must keep it after a render / save
+        round trip, and the default value must not be written on the empty
+        field. """
+        partner = self.env['res.partner'].create({'name': 'Test Partner'})
+        self.assertFalse(partner.phone)
+        default = 'Default phone'
+        view = self.env['ir.ui.view'].create({
+            'name': 'Test t-field default',
+            'type': 'qweb',
+            'arch': f'<div><span t-field="partner.phone">{default}</span></div>',
+        })
+
+        rendered = self.env['ir.qweb'].with_context(inherit_branding=True)._render(view.id, {'partner': partner})
+        [field_el] = html.fromstring(str(rendered)).xpath('//span[@data-oe-field="phone"]')
+        self.assertEqual(field_el.get('data-oe-default'), default)
+        self.assertEqual(field_el.text, default)
+
+        view.save(value=html.tostring(field_el.getparent(), encoding='unicode'), xpath='/div')
+
+        self.assertFalse(partner.phone, "the default value should not be written on the empty field")
+
+        # an edited value is written on the record, the default value is kept in the view
+        nbr = '+32 123 45 67'
+        field_el.text = nbr
+        view.save(value=html.tostring(field_el.getparent(), encoding='unicode'), xpath='/div')
+
+        self.assertEqual(partner.phone, nbr)
+        rendered = self.env['ir.qweb'].with_context(inherit_branding=True)._render(view.id, {'partner': partner})
+        [field_el] = html.fromstring(str(rendered)).xpath('//span[@data-oe-field="phone"]')
+        self.assertEqual(field_el.get('data-oe-default'), default)
+        self.assertEqual(field_el.text, nbr)
+
     def test_save_view_delay_translations(self):
         self.env['res.lang']._activate_lang('fr_FR')
         view = self.env['ir.ui.view'].create({
