@@ -66,7 +66,7 @@
                                         <span>View</span>
                                     </h5>
                                     <div role="menuitem" name="menu_view_matching_applicants">
-                                        <a name="action_job_add_applicants" type="object" context="{'default_job_id': id}">Matching Talents</a>
+                                        <a name="action_job_add_applicants" type="object" context="{'default_job_id': id}">Matching Candidates</a>
                                     </div>
                                     <div role="menuitem" name="menu_view_job_posts">
                                         <a name="%(action_hr_job_sources)d" type="action" context="{'default_job_id': id}">Trackers</a>
@@ -314,7 +314,7 @@
         <field name="inherit_id" ref="hr.view_hr_job_form"/>
         <field name="arch" type="xml">
             <header position="inside">
-                <button string="Matching Talents"
+                <button string="Matching Cadidates"
                         name="action_job_add_applicants"
                         type="object"
                         groups="hr_recruitment.group_hr_recruitment_user"
