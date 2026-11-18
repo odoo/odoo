@@ -40,6 +40,17 @@ class WebsiteAccount(CustomerPortal):
             return 'crm.lead', self.get_domain_my_opp(request.env.user), 'read'
         return super()._prepare_portal_counter_values(counter)
 
+    def _get_crm_lead_pager_values(self, lead, session_history, url):
+        """Previous and next records of the last list seen, for portal.record_pager."""
+        history = request.session.get(session_history, [])
+        if lead.id not in history:
+            return {}
+        index = history.index(lead.id)
+        return {
+            'prev_record': index > 0 and f'{url}/{history[index - 1]}',
+            'next_record': index < len(history) - 1 and f'{url}/{history[index + 1]}',
+        }
+
     @http.route(['/my/leads', '/my/leads/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_leads(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
         values = self._prepare_portal_layout_values()
@@ -71,6 +82,7 @@ class WebsiteAccount(CustomerPortal):
         )
         # content according to pager and archive selected
         leads = CrmLead.search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
+        request.session['my_leads_history'] = leads.ids[:100]
 
         values.update({
             'date': date_begin,
@@ -138,6 +150,7 @@ class WebsiteAccount(CustomerPortal):
         )
         # content according to pager
         opportunities = CrmLead.search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
+        request.session['my_opportunities_history'] = opportunities.ids[:100]
 
         values.update({
             'date': date_begin,
@@ -156,7 +169,10 @@ class WebsiteAccount(CustomerPortal):
     def portal_my_lead(self, lead, **kw):
         if lead.type != 'lead':
             raise NotFound()
-        return request.render("website_crm_partner_assign.portal_my_lead", {'lead': lead})
+        return request.render("website_crm_partner_assign.portal_my_lead", {
+            'lead': lead,
+            **self._get_crm_lead_pager_values(lead, 'my_leads_history', '/my/lead'),
+        })
 
     @http.route(['''/my/opportunity/<model('crm.lead', "[('type','=', 'opportunity')]"):opp>'''], type='http', auth="user", website=True)
     def portal_my_opportunity(self, opp, **kw):
@@ -173,6 +189,7 @@ class WebsiteAccount(CustomerPortal):
                 'activity_types': request.env['mail.activity.type'].sudo().search(['|', ('res_model', '=', opp._name), ('res_model', '=', False)]),
                 'states': request.env['res.country.state'].sudo().search([]),
                 'countries': request.env['res.country'].sudo().search([]),
+                **self._get_crm_lead_pager_values(opp, 'my_opportunities_history', '/my/opportunity'),
             })
 
 
