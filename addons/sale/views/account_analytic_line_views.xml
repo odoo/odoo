@@ -87,6 +87,8 @@
             'from_services_and_material': 1,
             'default_unit_amount': 1,
         }</field>
+        <!-- Any changes in this domain should be adapted in
+            `addons/sale_timesheet/views/account_analytic_line_views.xml` too -->
         <field name="domain">[('product_id.reinvoice_policy', '!=', 'no'), ('order_id', '!=', False)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_services_and_material mb-1">
