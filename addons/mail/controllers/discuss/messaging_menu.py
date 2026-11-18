@@ -9,6 +9,29 @@ from odoo.addons.mail.tools.store_handler import store_handler
 
 
 class DiscussMessagingMenuController(WebclientController):
+    def _get_needaction_channel_ids(self):
+        """Ids of the channels with a message waiting for an action of the user."""
+        # Read the unread notifications of the user first, then their channel messages by id.
+        # Through `needaction`, Postgres expects most notifications of the user to be unread,
+        # so it reads every channel message.
+        # sudo: mail.notification - only the user's own notifications, the messages are then
+        # searched with their access rules.
+        message_ids = self.env["mail.notification"].sudo().search_fetch(
+            [("res_partner_id", "=", self.env.user.partner_id.id), ("is_read", "=", False)],
+            ["mail_message_id"],
+        ).mail_message_id.ids
+        if not message_ids:
+            return []
+        groups = self.env["mail.message"]._read_group(
+            [
+                ("id", "in", message_ids),
+                ("model", "=", "discuss.channel"),
+                ("message_type", "!=", "user_notification"),
+            ],
+            ["res_id"],
+        )
+        return [res_id for [res_id] in groups]
+
     def _get_menu_tab_domain(self, tab_id):
         match tab_id:
             case "notification":
@@ -37,15 +60,7 @@ class DiscussMessagingMenuController(WebclientController):
                     [("is_self", "=", True), ("is_pinned", "=", True)],
                 ).channel_id.ids
                 if self.env.user._is_internal():
-                    groups = self.env["mail.message"]._read_group(
-                        [
-                            ("model", "=", "discuss.channel"),
-                            ("message_type", "!=", "user_notification"),
-                            ("needaction", "=", True),
-                        ],
-                        ["res_id"],
-                    )
-                    channel_ids += [res_id for [res_id] in groups]
+                    channel_ids += self._get_needaction_channel_ids()
                 return Domain("channel_type", "=", "channel") & Domain("id", "in", channel_ids)
             case "meeting":
                 # sudo: discuss.channel.member - only the user's own members, for performance:
@@ -115,15 +130,7 @@ class DiscussMessagingMenuController(WebclientController):
         ).channel_id.ids
         important_domain = Domain("id", "in", unread_channel_ids)
         if self.env.user._is_internal():
-            groups = self.env["mail.message"]._read_group(
-                [
-                    ("model", "=", "discuss.channel"),
-                    ("message_type", "!=", "user_notification"),
-                    ("needaction", "=", True),
-                ],
-                ["res_id"],
-            )
-            important_domain |= Domain("id", "in", [res_id for [res_id] in groups])
+            important_domain |= Domain("id", "in", self._get_needaction_channel_ids())
         important_channels = self.env["discuss.channel"].search_fetch(
             Domain("active", "=", True) & important_domain,
         )

@@ -88,8 +88,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search discuss_channel JOIN member (is_member, first occurrence)
     #       2: load more (the priority domain first, then the rest):
     #           - search_fetch discuss_channel
-    #   4: channel tab:
+    #   5: channel tab:
     #       - search_fetch discuss_channel_member (pinned channel ids)
+    #       - search mail_notification (unread notifications of the user)
     #       - read group mail_message (needaction channel ids)
     #       2: load more:
     #           - search_fetch discuss_channel
@@ -177,7 +178,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search mail_message_schedule (last message of the needaction message)
     #       - search discuss_channel (linkedSubChannel of the needaction message)
     #   1: select the current db snapshot
-    _query_count_messaging_menu_channels = 81
+    _query_count_messaging_menu_channels = 82
     # Queries for _query_count_init_messaging_with_chat_hub (in order):
     #   2: _search_is_member (for current user, first occurrence)
     #       - fetch res_users
@@ -268,7 +269,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch mail_message
     #       - search mail_notification (notification tab)
     #       - fetch mail_notification
-    #   7: initialize_counters, discuss.channel tabs:
+    #   9: initialize_counters, discuss.channel tabs:
+    #       - search mail_notification (unread notifications of the user, important channels and
+    #         channel tab, 2 queries)
     #       - search mail_message (needaction channel ids, once per tab, 4 queries)
     #       - search_fetch discuss_channel (important channels)
     #       - read group member (prefetch _compute_self_member_id)
@@ -328,7 +331,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch discuss_call_history
     #       - search mail_call_artifact
     #   1: select the current db snapshot
-    _query_count_page_load = 75
+    _query_count_page_load = 77
     # Queries for _query_count_open_channel (in order):
     #   1: fetch res_users (current user)
     #   1: search discuss_channel JOIN member (_search_is_member, first occurrence)
