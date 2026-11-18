@@ -24,6 +24,15 @@ class LoyaltyRule(models.Model):
         return [('program_id', 'in', config._get_program_ids().ids)]
 
     @api.model
+    def _server_date_to_domain(self, domain):
+        if domain is not False and (last_server_date := self._last_server_date_to_load()):
+            if self.env['product.product'].with_context(active_test=False).search_count([
+                '|', ('write_date', '>', last_server_date), ('product_tmpl_id.write_date', '>', last_server_date),
+            ], limit=1):
+                return domain
+        return super()._server_date_to_domain(domain)
+
+    @api.model
     def _load_pos_data_fields(self, config):
         return ['program_id', 'valid_product_ids', 'any_product', 'currency_id',
             'reward_point_amount', 'reward_point_split', 'reward_point_mode',
