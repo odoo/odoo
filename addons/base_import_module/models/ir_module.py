@@ -570,6 +570,16 @@ class IrModuleModule(models.Model):
         })
 
     @api.model
+    def _install_data_module(self, module_name):
+        """ Download and install the given data (industry) module from the Odoo
+        appstore directly, without going through the confirmation wizard. Used by
+        `res.config.settings` `x_industry_` fields, which install silently like
+        regular `module_` fields do.
+        """
+        import_module = self._prepare_data_module_import(module_name)
+        return import_module.with_context(data_module=True).import_module()
+
+    @api.model
     def _get_missing_dependencies(self, zip_data):
         _modules, unavailable_modules = self._get_missing_dependencies_modules(zip_data)
         description = ''
