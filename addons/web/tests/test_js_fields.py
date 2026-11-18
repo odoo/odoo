@@ -3,7 +3,7 @@ import tempfile
 from pathlib import Path
 from textwrap import dedent
 
-from odoo.tests.common import BaseCase, TransactionCase
+from odoo.tests.common import BaseCase, TransactionCase, tagged
 
 from odoo.addons.web.tools import js_fields
 from odoo.addons.web.tools.js_fields import (
@@ -276,6 +276,9 @@ class TestJsFieldsGenerate(TransactionCase):
             "web", f"{model}\n// addons: base\n// fields: primary_color",
             "field 'primary_color' comes from addon\\(s\\) web, not from: base")
         self.assertGenerateError(
+            "base", f"{model}\n// exclude: primary_color",
+            "field 'primary_color' comes from addon\\(s\\) web, not from: base")
+        self.assertGenerateError(
             "base", f"{model}\n// addons: web",
             "addon 'web' is not 'base' or one of its dependencies")
 
@@ -381,3 +384,25 @@ class TestJsFieldsGenerate(TransactionCase):
         misnamed = self.write("base", "misnamed.js", header("// model: res.partner"))
         self.assertEqual(statuses(roots=[misnamed]), {misnamed: 'error'})
         self.assertNotIn(misnamed, statuses())
+
+
+@tagged('post_install', '-at_install')
+class TestJsFieldsUpToDate(TransactionCase):
+
+    def test_generated_files(self):
+        """ The generated files of the installed addons are what `odoo-bin js_fields` writes. """
+        generator = FieldsGenerator(self.env, js_fields.get_addons())
+        roots = [
+            root
+            for addon in generator.addons.values()
+            if addon.name in generator.installed and (root := addon.path / "static" / "src").is_dir()
+        ]
+        problems = [
+            f"{result.status}: {result.path}" + "".join(f"\n    {message}" for message in result.messages)
+            for result in js_fields.run(generator, roots, check=True)
+            if result.status in ('outdated', 'error')
+        ]
+        self.assertFalse(problems, (
+            "Some generated files are not up to date. Run `odoo-bin js_fields -d <database>` and "
+            "commit the result.\n" + "\n".join(problems)
+        ))
