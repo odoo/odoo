@@ -347,24 +347,27 @@ class Website(models.Model):
             (original_company | self.company_id)._compute_website_id()
 
         if 'cookies_bar' in values:
-            existing_policy_page = self.env['website.page'].search([
-                ('website_id', '=', self.id),
+            existing_policy_pages = self.env['website.page'].search([
+                ('website_id', 'in', self.ids),
                 ('url', '=', '/cookie-policy'),
             ])
             if not values['cookies_bar']:
-                existing_policy_page.unlink()
-            elif not existing_policy_page:
+                existing_policy_pages.unlink()
+            else:
                 cookies_view = self.env.ref('website.cookie_policy', raise_if_not_found=False)
                 if cookies_view:
-                    cookies_view.with_context(website_id=self.id).write({'website_id': self.id})
-                    specific_cook_view = self.with_context(website_id=self.id).viewref('website.cookie_policy')
-                    self.env['website.page'].create({
-                        'is_published': True,
-                        'website_indexed': False,
-                        'url': '/cookie-policy',
-                        'website_id': self.id,
-                        'view_id': specific_cook_view.id,
-                    })
+                    page_vals_list = []
+                    for website in self - existing_policy_pages.website_id:
+                        cookies_view.with_context(website_id=website.id).write({'website_id': website.id})
+                        specific_cook_view = website.with_context(website_id=website.id).viewref('website.cookie_policy')
+                        page_vals_list.append({
+                            'is_published': True,
+                            'website_indexed': False,
+                            'url': '/cookie-policy',
+                            'website_id': website.id,
+                            'view_id': specific_cook_view.id,
+                        })
+                    self.env['website.page'].create(page_vals_list)
 
         return result
 
