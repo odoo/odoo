@@ -173,6 +173,26 @@ class ResConfigSettings(models.TransientModel):
 
         return result
 
+    def _get_modules_to_install(self, classified):
+        """ Return the modules that must be installed because their `module_`
+        field was checked.
+
+        :param classified: the dict returned by `_get_classified_fields`
+        :return: a recordset of ir.module.module records
+        """
+        return classified['module'].filtered(
+            lambda m: self[f'module_{m.name}'] and m.state != 'installed')
+
+    def _get_modules_to_uninstall(self, classified):
+        """ Return the modules that must be uninstalled because their `module_`
+        field was unchecked.
+
+        :param classified: the dict returned by `_get_classified_fields`
+        :return: a recordset of ir.module.module records
+        """
+        return classified['module'].filtered(
+            lambda m: not self[f'module_{m.name}'] and m.state in ('installed', 'to upgrade'))
+
     @api.model
     def _get_classified_fields(self, fnames=None):
         """ return a dictionary with the fields classified by category:
@@ -369,10 +389,8 @@ class ResConfigSettings(models.TransientModel):
         self.set_values()
 
         # module fields: install/uninstall the selected modules
-        to_install = classified['module'].filtered(
-            lambda m: self[f'module_{m.name}'] and m.state != 'installed')
-        to_uninstall = classified['module'].filtered(
-            lambda m: not self[f'module_{m.name}'] and m.state in ('installed', 'to upgrade'))
+        to_install = self._get_modules_to_install(classified)
+        to_uninstall = self._get_modules_to_uninstall(classified)
 
         if to_install or to_uninstall:
             self.env.flush_all()
