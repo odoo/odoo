@@ -8,4 +8,27 @@ export class MailPartner
 {
     static _inherit = "res.partner";
     static fields = mailPartnerFields;
+
+    /** A blacklisted partner has an email, but does not want any. */
+    get canBeEmailed() {
+        return super.canBeEmailed && !this.is_blacklisted();
+    }
+
+    get overdueActivities() {
+        return this.activity_ids().filter((activity) => activity.isOverdue);
+    }
+
+    /** The most recent message posted on the partner, if any. */
+    get lastMessage() {
+        return this.message_ids().reduce(
+            (last, message) =>
+                !last || String(message.date()) > String(last.date()) ? message : last,
+            /** @type {import("./message").Message | null} */ (null)
+        );
+    }
+
+    /** The other partners who follow this one. */
+    get followers() {
+        return this.message_partner_ids().filter((partner) => partner !== this);
+    }
 }
