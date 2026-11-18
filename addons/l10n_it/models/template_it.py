@@ -32,6 +32,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'receivable_account_id': '1501',
                 'payable_account_id': '2501',
                 'account_stock_valuation_id': '1404',
+                'cash_rounding_profit_account_id': '3210',
+                'cash_rounding_loss_account_id': '4910',
             },
         }
 
