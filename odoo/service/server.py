@@ -10,6 +10,7 @@ import os
 import os.path
 import platform
 import random
+import re
 import select
 import signal
 import socket
@@ -110,8 +111,19 @@ def empty_pipe(fd):
 
 
 def cron_database_list():
+    if dbs := config['db_name']:
+        # run cron only on the selected databases
+        return dbs
+
     from odoo.modules.db import list_dbs  # noqa: PLC0415
-    return config['db_name'] or list_dbs(force=True)
+    dbs = list_dbs(force=True)
+    if config['dbfilter']:
+        # cron run outside any request: there is no host to substitute
+        # %h and %d with, let them match any database name instead.
+        dbfilter_re = re.compile(config['dbfilter'].replace('%h', '.*').replace('%d', '.*'))
+        return [db for db in dbs if dbfilter_re.match(db)]
+
+    return dbs
 
 
 # ----------------------------------------------------------
