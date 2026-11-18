@@ -330,7 +330,7 @@ export class HtmlField extends Component {
             direction: localization.direction || "ltr",
             getRecordInfo: () => {
                 const { resModel, resId, data, fields, id } = this.props.record;
-                return { resModel, resId, data, fields, id };
+                return { resModel, resId, data, fields, id, fieldName: this.props.name };
             },
             resources: {},
             getPendingAttachmentsIds: () =>
@@ -499,12 +499,23 @@ const pendingAttachmentsService = {
     dependencies: ["orm"],
     start(env, { orm }) {
         const pendingAttachmentIds = {};
-        function addPendingAttachments(attachmentId, { id, resId } = {}) {
+        const pendingAttachmentFields = {};
+        function addPendingAttachments(attachmentId, { id, resId, fieldName } = {}) {
             if (attachmentId && id && !resId) {
+                attachmentId = parseInt(attachmentId);
                 if (!pendingAttachmentIds[id]) {
                     pendingAttachmentIds[id] = [];
                 }
-                pendingAttachmentIds[id].push(parseInt(attachmentId));
+                pendingAttachmentIds[id].push(attachmentId);
+                if (fieldName) {
+                    if (!pendingAttachmentFields[id]) {
+                        pendingAttachmentFields[id] = {};
+                    }
+                    if (!pendingAttachmentFields[id][fieldName]) {
+                        pendingAttachmentFields[id][fieldName] = [];
+                    }
+                    pendingAttachmentFields[id][fieldName].push(attachmentId);
+                }
             }
         }
         function removePendingAttachments(attachmentId, { id } = {}) {
@@ -513,9 +524,15 @@ const pendingAttachmentsService = {
                     (pendingId) => pendingId !== attachmentId
                 );
             }
+            for (const fieldName in pendingAttachmentFields[id]) {
+                pendingAttachmentFields[id][fieldName] = pendingAttachmentFields[id][
+                    fieldName
+                ].filter((pendingId) => pendingId !== attachmentId);
+            }
         }
         function clearPendingAttachments(record) {
             delete pendingAttachmentIds[record.id];
+            delete pendingAttachmentFields[record.id];
         }
         async function unlinkPendingAttachments(record) {
             const ids = pendingAttachmentIds[record.id];
@@ -530,11 +547,14 @@ const pendingAttachmentsService = {
                     ...new Set(pendingAttachmentIds[record.id]),
                 ];
                 record.context["pending_attachment_res_model"] = record.resModel;
+                record.context["pending_attachment_fields"] =
+                    pendingAttachmentFields[record.id] || {};
             }
         }
         function clearAttachmentsIdsFromContext(record) {
             delete record.context["pending_attachment_ids"];
             delete record.context["pending_attachment_res_model"];
+            delete record.context["pending_attachment_fields"];
         }
         return {
             pendingAttachmentIds,
