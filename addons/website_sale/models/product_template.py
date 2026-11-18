@@ -983,10 +983,13 @@ class ProductTemplate(models.Model):
 
     def _get_google_analytics_data(self, product, combination_info):
         self.ensure_one()
-        return {
-            'item_id': product.default_code or product.id,
+        item = product._get_google_analytics_item() if product else {
+            'item_id': False,
             'item_name': combination_info['display_name'],
             'item_category': self.categ_id.name,
+        }
+        return {
+            **item,
             'currency': combination_info['currency'].name,
             'price': combination_info['list_price'],
         }

@@ -15,6 +15,7 @@ from odoo.addons.website_sale.controllers.combo_configurator import (
 )
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website_sale.controllers.payment import PaymentPortal
+from odoo.addons.website_sale.controllers.variant import WebsiteSaleVariantController
 from odoo.addons.website_sale.models.product_template import ProductTemplate
 from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 
@@ -773,3 +774,34 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
             *(group['lines'] for group in order_history['order_history']),
         )
         self.assertEqual(history_lines, order.order_line)
+
+    def test_google_analytics_items_consistent_across_events(self):
+        """`view_item`, `add_to_cart` and `purchase` must send the same `item_id` and
+        `item_name` for a variant, otherwise GA4 reports split one product into several rows."""
+        variant = self.product_sofa_red
+        variant.default_code = 'SOFA-RED'
+        variant.product_tmpl_id.website_published = True
+        self.website.google_analytics_key = 'G-TEST'
+
+        website = self.website.with_user(self.public_user)
+        with MockRequest(website.env, website=website) as request:
+            view_item = WebsiteSaleVariantController().get_combination_info_website(
+                product_template_id=variant.product_tmpl_id.id,
+                product_id=variant.id,
+                combination=variant.product_template_attribute_value_ids.ids,
+                add_qty=1,
+            )['product_tracking_info']
+            add_to_cart = self.WebsiteSaleCartController.add_to_cart(
+                product_template_id=variant.product_tmpl_id.id,
+                product_id=variant.id,
+            )['tracking_info'][0]
+            purchase = self.WebsiteSaleController._prepare_shop_payment_confirmation_values(
+                request.cart,
+            )['order_tracking_info']['items'][0]
+
+        for event in (view_item, add_to_cart, purchase):
+            self.assertEqual(event['item_id'], 'SOFA-RED')
+            self.assertEqual(
+                event['item_name'], 'Sofa (red)',
+                "The variant attributes must be in the name",
+            )

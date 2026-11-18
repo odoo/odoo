@@ -250,3 +250,19 @@ class ProductProduct(models.Model):
         ):
             return dict.fromkeys(self, 'write')
         return super()._mail_get_operation_for_mail_message_operation(message_operation)
+
+    def _get_google_analytics_item(self):
+        """Return the product identity sent in every Google Analytics ecommerce event.
+
+        All events (`view_item`, `add_to_cart`, `purchase`, ...) must use these values, otherwise
+        GA4 reports split a single product into several rows.
+
+        :return: The `item_id`, `item_name` and `item_category` of the product.
+        :rtype: dict
+        """
+        self.ensure_one()
+        return {
+            'item_id': self.default_code or self.id,
+            'item_name': self.with_context(display_default_code=False).display_name,
+            'item_category': self.categ_id.name,
+        }
