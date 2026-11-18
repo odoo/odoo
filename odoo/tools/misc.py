@@ -1516,10 +1516,9 @@ def format_time(
             from odoo.fields import Datetime  # noqa: PLC0415
             value = Datetime.from_string(value)
         assert isinstance(value, datetime.datetime)
-        tz_name = tz or env.user.tz or 'UTC'
         utc_datetime = value.replace(tzinfo=datetime.UTC)
         try:
-            context_tz = ZoneInfo(tz_name)
+            context_tz = ZoneInfo(tz) if tz else env.tz
             localized_time = utc_datetime.astimezone(context_tz).timetz()
         except Exception:
             localized_time = utc_datetime.timetz()
