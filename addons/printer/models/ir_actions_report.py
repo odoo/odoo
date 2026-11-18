@@ -4,11 +4,14 @@ from PIL import Image, ImageOps
 
 from odoo import api, fields, models, _
 
-epos_template = """
+EPOS_PAPER_WIDTH_DOTS = 576
+EPOS_PAPER_WIDTH_CSS_PX = 272
+
+epos_template = f"""
 <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
     <s:Body>
         <epos-print xmlns="http://www.epson-pos.com/schemas/2011/03/epos-print">
-            <image width="576" height="%s" align="center">%s</image>
+            <image width="{EPOS_PAPER_WIDTH_DOTS}" height="%s" align="center">%s</image>
             <cut type="feed" />
         </epos-print>
     </s:Body>
@@ -16,20 +19,19 @@ epos_template = """
 """
 
 
-def thermal_printer_format(data) -> bytes:
+def thermal_printer_format(data, rotate_landscape=True) -> bytes:
     """Render the report and convert it to a black and white image
     with a width of 576px to fit the ePOS printer paper width"""
     img = Image.open(BytesIO(data)).convert("L")  # convert to grayscale
 
-    if img.width > img.height:
+    if rotate_landscape and img.width > img.height:
         img = img.rotate(90, expand=True)  # ensure portrait mode
 
-    target_width = 576
-    ratio = target_width / img.width
+    ratio = EPOS_PAPER_WIDTH_DOTS / img.width
     target_height = int(img.height * ratio)  # Preserve aspect ratio
     img = (
         ImageOps.invert(img)
-        .resize((target_width, target_height), Image.Resampling.LANCZOS)
+        .resize((EPOS_PAPER_WIDTH_DOTS, target_height), Image.Resampling.LANCZOS)
         .convert("1", dither=Image.Dither.FLOYDSTEINBERG)
     )
     base64_image = base64.b64encode(img.tobytes()).decode()
@@ -66,10 +68,11 @@ class IrActionsReport(models.Model):
             # Reports reference relative URLs (e.g. the barcode widget's <img src="/report/barcode/...">),
             # which wkhtmltoimage can't resolve without a <base href> since it renders a standalone local file.
             base_url = self._get_report_url()
-            html = html.replace("<head>", f'<head><base href="{base_url}"/>', 1)
-            image = self._run_image_engine("wkhtmltopdf", [html], 576, 0)[0]
+            zoom = EPOS_PAPER_WIDTH_DOTS / EPOS_PAPER_WIDTH_CSS_PX
+            html = html.replace("<head>", f'<head><base href="{base_url}"/><style>html {{ zoom: {zoom} }}</style>', 1)
+            image = self._run_image_engine("wkhtmltopdf", [html], EPOS_PAPER_WIDTH_DOTS, 0)[0]
             if image:
-                jobs.append({"type": "epos", "report": base64.b64encode(thermal_printer_format(image))})
+                jobs.append({"type": "epos", "report": base64.b64encode(thermal_printer_format(image, rotate_landscape=False))})
 
         return jobs
 
