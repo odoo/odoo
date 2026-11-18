@@ -99,13 +99,19 @@ class ReportCmr(models.AbstractModel):
                                 package.package_type_id.height *\
                                 packages_volume_factor if package.package_type_id else 0.0
                     else:
-                        volume = (sum(mls.mapped('quantity_product_uom')) * product.volume)
+                        if unit:
+                            shipping_args = (sum(mls.mapped('quantity')), unit, mls.move_id.packaging_uom_id[:1])
+                        else:
+                            shipping_args = (sum(mls.mapped('quantity_product_uom')), product.uom_id, mls.move_id.packaging_uom_id[:1])
+                        weight = product._get_shipping_weight(*shipping_args)
+                        volume = product._get_shipping_volume(*shipping_args)
             else:
                 product_processed_details = _get_processed_product_details(move.product_id, move.never_product_template_attribute_value_ids, move.uom_id, move.quantity)
                 products = [product_processed_details]
                 hs_codes = [move.product_id.hs_code if 'hs_code' in move.product_id._fields else False]
-                weight = move.quantity_product_uom * move.product_id.weight
-                volume = move.quantity_product_uom * move.product_id.volume
+                shipping_args = (move.quantity, move.uom_id, move.packaging_uom_id)
+                weight = move.product_id._get_shipping_weight(*shipping_args)
+                volume = move.product_id._get_shipping_volume(*shipping_args)
 
             return {
                 'package_name': package.name if package else False,

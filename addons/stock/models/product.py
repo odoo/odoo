@@ -9,7 +9,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
-from odoo.tools import SQL
+from odoo.tools import SQL, float_round
 from odoo.tools.barcode import check_barcode_encoding
 
 PY_OPERATORS = {
@@ -698,6 +698,47 @@ class ProductProduct(models.Model):
 
     def _get_quantity_in_progress(self, location_ids=False, warehouse_ids=False):
         return defaultdict(float), defaultdict(float)
+
+    def _get_shipping_packages(self, quantity, uom, packaging_uom=False):
+        """ Package type and number of started packages of `quantity` `uom` of the product, as shipped.
+
+        :param packaging_uom: the packaging of the quantity, by default `uom`
+        :return: (package type of the packaging, number of started packages), or an empty package
+                 type and 0 when the packaging has no package type
+        """
+        self.ensure_one()
+        packaging_uom = packaging_uom or uom
+        package_type = packaging_uom.sudo().package_type_id
+        if not package_type:
+            return package_type, 0
+        package_count = float_round(
+            uom._compute_quantity(quantity, packaging_uom, round=False),
+            precision_rounding=1.0, rounding_method='UP',
+        )
+        return package_type, package_count
+
+    def _get_shipping_weight(self, quantity, uom, packaging_uom=False):
+        """ Weight of `quantity` `uom` of the product, as shipped: the weight of the product, plus
+        the weight of the package type of the packaging for every started package.
+
+        :return: the weight, in the unit of the product weights
+        """
+        self.ensure_one()
+        weight = self.weight * uom._compute_quantity(quantity, self.uom_id)
+        package_type, package_count = self._get_shipping_packages(quantity, uom, packaging_uom)
+        return weight + package_count * package_type.base_weight
+
+    def _get_shipping_volume(self, quantity, uom, packaging_uom=False):
+        """ Volume of `quantity` `uom` of the product, as shipped: the volume of the started packages
+        when the package type of the packaging has dimensions, otherwise the volume of the product.
+
+        :return: the volume, in the unit of the product volumes
+        """
+        self.ensure_one()
+        package_type, package_count = self._get_shipping_packages(quantity, uom, packaging_uom)
+        if package_type and (package_volume := package_type._get_volume()):
+            return package_count * package_volume
+        return self.volume * uom._compute_quantity(quantity, self.uom_id)
 
     def _get_rules_from_location(self, location, route_ids=False, seen_rules=False):
         if not seen_rules:

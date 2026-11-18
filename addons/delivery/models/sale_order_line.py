@@ -41,6 +41,16 @@ class SaleOrderLine(models.Model):
         domain = Domain.AND([domain, [('is_delivery', '=', False)]])
         return domain
 
+    def _get_shipping_weight(self):
+        """ Weight of the line as shipped, from the weight of the product. """
+        self.ensure_one()
+        return self.product_id.weight * self.product_qty
+
+    def _get_shipping_volume(self):
+        """ Volume of the line as shipped, from the volume of the product. """
+        self.ensure_one()
+        return self.product_id.volume * self.product_qty
+
     def _get_invalid_delivery_weight_lines(self):
         """Retrieve lines containing physical products with no weight defined."""
         return self.filtered(
