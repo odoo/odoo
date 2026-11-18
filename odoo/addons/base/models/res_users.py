@@ -577,8 +577,8 @@ class Users(models.Model):
     @api.constrains('email', 'share')
     def _check_email(self):
         for user in self:
-            if user.share and user.email and not tools.single_email_re.match(user.email):
-                raise ValidationError(_('Invalid Email! Please enter a valid email address.'))
+            if user.share and len(tools.email_normalize_all(user.email)) > 1:
+                raise ValidationError(_('The user cannot have more than one email address.'))
 
 
     @api.constrains('groups_id')
