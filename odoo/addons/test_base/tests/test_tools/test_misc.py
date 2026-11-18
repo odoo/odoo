@@ -134,6 +134,14 @@ class TestFormatLangDate(TransactionCase):
         self.assertEqual(misc.format_time(self.env, None, time_format=t_medium), '')
 
     @freeze_time('2017-01-31')
+    def test_format_time_context_tz(self):
+        """ Like format_date, format_time localizes a datetime in the timezone of the context. """
+        self.env.user.tz = 'Europe/Brussels'
+        env = self.env(context=dict(self.env.context, tz='America/New_York'))
+        value = datetime.datetime(2017, 1, 31, 23, 30)
+        self.assertEqual(misc.format_date(env, value), '01/31/2017')
+        self.assertEqual(misc.format_time(env, value, time_format='HH:mm'), '18:30')
+
     def test_01_code_and_format(self):
         date_str = '2017-01-31'
         lang = self.env['res.lang']
