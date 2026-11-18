@@ -92,7 +92,7 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
                     "subtype_xmlid": "mail.mt_comment",
                 },
             )
-            return self.env['mail.message'].search([
+            return self.env['mail.message'].sudo().search([
                 ('model', '=', 'blog.post'),
                 ('res_id', '=', self.test_blog_post.id),
                 ('body', "=", f'<p>{body}</p>'),

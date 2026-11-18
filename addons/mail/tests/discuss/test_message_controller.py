@@ -343,7 +343,6 @@ class TestMessageController(HttpCase, MailCommon):
 
 
 @tagged("mail_message")
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMessageLinks(MailCommon, HttpCase):
 
     @classmethod
@@ -375,7 +374,11 @@ class TestMessageLinks(MailCommon, HttpCase):
         message = self.public_channel.message_post(
             body='Public Channel Message',
             message_type='comment',
-            subtype_xmlid='mail.mt_comment'
+            subtype_xmlid='mail.mt_comment',
         )
         res = self.url_open(f'/mail/message/{message.id}')
         self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.url, self.base_url() + f'/discuss/channel/{self.public_channel.id}?highlight_message_id={message.id}')
+        note = self.public_channel.message_post(body='Public Channel Note', subtype_xmlid='mail.mt_note')
+        res = self.url_open(f'/mail/message/{note.id}')
+        self.assertEqual(res.url, self.base_url() + f'/web/login?redirect=/mail/message/{note.id}')

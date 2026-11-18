@@ -204,7 +204,8 @@ class WebclientController(ThreadController):
                 domain=domain,
                 thread=thread,
                 fetch_params=fetch_params,
-                sudo=thread.env.su,
+                # sudo: public has no access on messages, thread access is checked and domain restricted to shared messages
+                sudo=thread.env.su or request.env.user._is_public(),
             )
             if not request.env.user._is_public():
                 messages.set_message_done()
