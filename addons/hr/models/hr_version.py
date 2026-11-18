@@ -32,7 +32,7 @@ class HrVersion(models.Model):
     _rec_name = 'name'
 
     def _get_default_address_id(self):
-        address = self.env.company.partner_id.address_get(['default'])
+        address = (self.company_id or self.env.company).partner_id.address_get(['default'])
         return address['default'] if address else False
 
     def _default_salary_structure(self):
@@ -120,15 +120,14 @@ class HrVersion(models.Model):
     address_id = fields.Many2one(
         'res.partner',
         string='Work Address',
-        default=_get_default_address_id,
+        compute='_compute_address_id',
         store=True,
         index='btree_not_null',
         readonly=False,
         check_company=True,
         tracking=1)
     work_location_id = fields.Many2one('hr.work.location', 'Work Location', compute='_compute_work_location_id',
-                                       store=True, readonly=False,
-                                       domain="[('address_id', '=', address_id)]", index=True, tracking=1)
+                                       store=True, readonly=False, index=True, tracking=1)
 
     departure_id = fields.Many2one('hr.employee.departure', string="Departure", copy=False, index='btree_not_null')
     departure_reason_id = fields.Many2one(related='departure_id.departure_reason_id', readonly=False, groups="hr.group_hr_user", tracking=1)
@@ -202,6 +201,17 @@ class HrVersion(models.Model):
         for version in self:
             if version.employee_id:
                 version.company_id = version.employee_id.company_id
+
+    @api.depends('work_location_id')
+    def _compute_address_id(self):
+        # the work address is the address of the work location, the company's address without one. Taken when the
+        # work location is set: a later change of the address of the location does not rewrite the versions (nor the
+        # periods already declared with them)
+        for version in self:
+            if version.work_location_id.address_id:
+                version.address_id = version.work_location_id.address_id
+            elif not version.address_id:
+                version.address_id = version._get_default_address_id()
 
     @api.depends('company_id')
     def _compute_work_location_id(self):
