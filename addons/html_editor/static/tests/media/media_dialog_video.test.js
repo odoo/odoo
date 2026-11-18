@@ -209,6 +209,33 @@ describe("media dialog video", () => {
             });
         }
 
+        test("should accept a YouTube playlist URL", async () => {
+            const { editor } = await setupEditor("<p>ab[]cd</p>", {
+                config: EMBEDDED_COMPONENTS_CONFIG,
+            });
+            mockFetch(() => '{"data": "mockFetch api result data"}');
+            await insertText(editor, "/video");
+            await animationFrame();
+            await press("Enter");
+
+            const list = "playlistId";
+            await waitFor(`div.modal`);
+            await click("#o_video_text");
+            await edit(`https://www.youtube.com/playlist?list=${list}`);
+            await advanceTime(100);
+            await click(`div.modal .modal-footer button.btn-primary`);
+            await animationFrame();
+            await waitForNone(`div.modal`);
+
+            const iframe = await waitFor(`[data-embedded="video"] iframe`);
+            expect(iframe.dataset.src).toBe(
+                `https://www.youtube.com/embed/videoseries?enablejsapi=1&list=${list}&rel=0`
+            );
+            // The video overlay only exists if the component has been set up.
+            await hover('div[data-embedded="video"]');
+            await expectElementCount("button.video-options-button", 1);
+        });
+
         const mediaReplaceRegex = /<div.*data-embedded="video".*><iframe.*src="([^"]*)".*<\/div>/gi;
         test("Should insert a video", async () => {
             const { el, editor } = await setupEditor("<p>ab[]cd</p>", {

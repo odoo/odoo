@@ -37,7 +37,7 @@ export class EmbeddedVideoComponent extends ReadonlyEmbeddedVideoComponent {
         this.videoBlock = this.videoEmbedProps.host;
         this.state = useEmbeddedState(this.videoBlock);
 
-        if (!this.state.platform || !this.state.videoId) {
+        if (!this.state.platform) {
             if (!this.props.src) {
                 console.error("Video data missing to mount video embedded Component");
                 return;
