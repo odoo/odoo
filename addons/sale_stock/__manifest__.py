@@ -51,7 +51,10 @@ Preferences
         ],
         'web.assets_tests': [
             'sale_stock/static/tests/tours/*.js',
-        ]
+        ],
+        'web.assets_unit_tests': [
+            'sale_stock/static/tests/**/*.test.js',
+        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
