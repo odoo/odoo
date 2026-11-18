@@ -80,7 +80,7 @@ class Http(models.AbstractModel):
             }, timeout=3.05)
             result = r.json()
             res_success = result['success']
-            res_action = res_success and action and result['action']
+            res_action = res_success and action and result.get('action')
         except requests.exceptions.Timeout:
             logger.error("Turnstile verification timeout for ip address %s", ip_addr)
             return 'timeout'
