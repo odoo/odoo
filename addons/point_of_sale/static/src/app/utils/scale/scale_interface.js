@@ -98,6 +98,7 @@ export class ScaleInterface {
             decimalAccuracy,
             unitPrice,
         };
+        this.weight = 0;
     }
 
     /** @param {number} newWeight */
