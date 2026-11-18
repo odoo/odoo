@@ -1,5 +1,6 @@
 import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
+import { deserializeDateTime } from "@web/core/l10n/dates";
 
 const { DateTime } = luxon;
 
@@ -10,6 +11,7 @@ export class PosPreset extends Base {
         super.initState();
         this.uiState = {
             availabilities: {},
+            leaves: [],
         };
 
         // This will compute availabilities locally
@@ -45,6 +47,22 @@ export class PosPreset extends Base {
         return this.uiState.availabilities;
     }
 
+    getAvailableDates(order) {
+        return Object.keys(this.availabilities).filter((date) =>
+            this.hasAvailableSlot(date, order)
+        );
+    }
+
+    hasAvailableSlot(date, order) {
+        return Object.values(this.availabilities[date] || {}).some((slot) =>
+            this.isSlotAvailable(slot, order)
+        );
+    }
+
+    isSlotAvailable(slot, order) {
+        return !slot.isFull || slot.order_ids.has(order?.id);
+    }
+
     get slotsUsage() {
         return (
             this.orders.reduce((acc, order) => {
@@ -58,7 +76,13 @@ export class PosPreset extends Base {
         );
     }
 
-    computeAvailabilities(usages = {}) {
+    computeAvailabilities(usages = {}, leaves) {
+        if (leaves) {
+            this.uiState.leaves = leaves.map(([from, to]) => [
+                deserializeDateTime(from),
+                deserializeDateTime(to),
+            ]);
+        }
         this.generateSlots();
 
         const allSlots = Object.values(this.uiState.availabilities).reduce(
@@ -92,6 +116,10 @@ export class PosPreset extends Base {
         const usage = this.slotsUsage;
         const interval = this.interval_time;
         const slots = {};
+        const isOnLeave = (start) => {
+            const end = start.plus({ minutes: interval });
+            return this.uiState.leaves.some(([from, to]) => start < to && end > from);
+        };
 
         // Compute slots for next 7 days
         for (const i of [...Array(7).keys()]) {
@@ -115,7 +143,7 @@ export class PosPreset extends Base {
 
                 let start = dateOpening;
                 while (start >= dateOpening && start <= dateClosing && interval > 0) {
-                    if (start >= now) {
+                    if (start >= now && !isOnLeave(start)) {
                         const sqlDatetime = start.toFormat("yyyy-MM-dd HH:mm:ss");
 
                         if (slots[date][sqlDatetime]) {

@@ -103,9 +103,9 @@ export class PresetInfoPopup extends Component {
     }
 
     get slots() {
-        return Object.entries(this.preset.uiState.availabilities).filter(
-            (s) => Object.keys(s[1]).length > 0
-        );
+        return this.preset
+            .getAvailableDates()
+            .map((date) => [date, this.preset.availabilities[date]]);
     }
 
     get countries() {

@@ -24,10 +24,27 @@ export class PresetSlotsPopup extends Component {
         });
 
         onWillStart(async () => {
-            for (const preset of this.timedPresets) {
-                await this.pos.syncPresetSlotAvaibility(preset);
-            }
+            await Promise.all(
+                this.timedPresets.map((preset) => this.pos.syncPresetSlotAvaibility(preset))
+            );
+            this.selectPreset(this.state.selectedPresetId, false);
         });
+    }
+
+    selectPreset(presetId, forceFirstAvail = true) {
+        this.state.selectedPresetId = presetId;
+        const preset = this.pos.models["pos.preset"].get(presetId);
+        const order = this.pos.getOrder();
+        if (
+            !preset ||
+            (!forceFirstAvail && preset.hasAvailableSlot(this.state.selectedDate, order))
+        ) {
+            return;
+        }
+        const [firstAvailDate] = preset.getAvailableDates(order);
+        if (firstAvailDate) {
+            this.state.selectedDate = firstAvailDate;
+        }
     }
 
     get timedPresets() {
