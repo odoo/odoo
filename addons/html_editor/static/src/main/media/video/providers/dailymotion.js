@@ -9,6 +9,7 @@ export class Dailymotion extends AbstractThirdPartyVideo {
 
     static optionsConfig = {
         startFrom: { default: 0, type: Number, params: ["startTime"] },
+        isVertical: { default: false, type: Boolean },
         playlist: { default: "", type: String, params: ["playlist"] },
     };
     /**

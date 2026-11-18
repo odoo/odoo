@@ -13,6 +13,7 @@ export class Twitch extends AbstractThirdPartyVideo {
         autoplay: { default: true, type: Boolean, params: ["autoplay"] },
         muted: { default: false, type: Boolean, params: ["muted"] },
         isClip: { default: false, type: Boolean },
+        isVertical: { default: false, type: Boolean },
         collection: { default: "", type: String, params: ["collection"] },
     };
 
