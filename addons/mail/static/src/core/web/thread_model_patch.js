@@ -35,6 +35,19 @@ const threadPatch = {
     computeIsDisplayed() {
         return this.isDisplayedInDiscussAppDesktop || super.computeIsDisplayed();
     },
+    /**
+     * Props of the `ConfirmationDialog` to show before removing the given follower, or nothing
+     * to remove them without confirmation.
+     *
+     * @param {import("models").Follower} _follower
+     * @returns {{
+     *     title: string,
+     *     body: string,
+     *     confirmLabel?: string,
+     *     cancelLabel?: string,
+     * }|undefined}
+     */
+    getFollowerRemovalDialogProps(_follower) {},
     async loadMoreFollowers() {
         const data = await this.store.env.services.orm.call(this.model, "message_get_followers", [
             [this.id],
