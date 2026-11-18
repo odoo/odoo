@@ -1,4 +1,5 @@
 import { localization } from "@web/core/l10n/localization";
+import { is24HourFormat } from "@web/core/l10n/time";
 import { _t } from "@web/core/l10n/translation";
 import { memoize } from "@web/core/utils/functions";
 import { ensureArray } from "../utils/arrays";
@@ -469,7 +470,8 @@ export function toLocaleDateTimeString(
     if (!value) {
         return "";
     }
-    const format = { ...DateTime.DATETIME_MED_WITH_SECONDS };
+    const hourCycle = is24HourFormat(localization.timeFormat) ? "h23" : "h12";
+    const format = { ...DateTime.DATETIME_MED_WITH_SECONDS, hourCycle };
     if (!options.showSeconds) {
         delete format.second;
     }

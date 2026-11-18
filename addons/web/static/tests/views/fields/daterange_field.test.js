@@ -19,6 +19,7 @@ import {
     clickSave,
     contains,
     defineModels,
+    defineParams,
     fields,
     models,
     mountView,
@@ -1344,6 +1345,8 @@ test("updating time keeps selected dates", async () => {
 });
 
 test("daterange in readonly with same dates but different hours", async () => {
+    defineParams({ lang_parameters: { time_format: "%I:%M:%S %p" } });
+
     Partner._records[0].datetime_end = "2017-02-08 17:00:00";
     await mountView({
         type: "form",
@@ -1360,6 +1363,8 @@ test("daterange in readonly with same dates but different hours", async () => {
 });
 
 test("daterange in list view with missing first date", async () => {
+    defineParams({ lang_parameters: { time_format: "%I:%M:%S %p" } });
+
     Partner._records[0].datetime_end = Partner._records[0].datetime;
     Partner._records[0].datetime = false;
 

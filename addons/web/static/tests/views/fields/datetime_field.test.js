@@ -227,6 +227,7 @@ test("DatetimeField with datetime formatted without second", async () => {
 });
 
 test("DatetimeField in editable list view", async () => {
+    defineParams({ lang_parameters: { time_format: "%I:%M:%S %p" } });
     mockTimeZone(+2);
     onRpc("has_group", () => true);
 
@@ -254,7 +255,7 @@ test("DatetimeField in editable list view", async () => {
         message: "date input should have the focus",
     });
 
-    expect(".o_field_datetime button").toHaveValue("02/08/2017 12:00:00", {
+    expect(".o_field_datetime button").toHaveValue("02/08/2017 12:00:00 PM", {
         message: "the date should be correct in edit mode",
     });
 
@@ -277,7 +278,7 @@ test("DatetimeField in editable list view", async () => {
     await editTime("8:25");
     await animationFrame();
 
-    expect(".o_field_datetime input").toHaveValue("04/22/2018 08:25:00", {
+    expect(".o_field_datetime input").toHaveValue("04/22/2018 08:25:00 AM", {
         message: "the date should be correct in edit mode",
     });
     // save
@@ -305,6 +306,7 @@ test("DatetimeField input in editable list view keeps its parent's width when em
 
 test.tags("desktop");
 test("multi edition of DatetimeField in list view: edit date in input", async () => {
+    defineParams({ lang_parameters: { time_format: "%I:%M:%S %p" } });
     mockTimeZone(0);
     onRpc("has_group", () => true);
 
@@ -496,8 +498,8 @@ test("datetime field in list view with show_seconds option", async () => {
     });
 
     expect(queryAllTexts(".o_data_row:first .o_field_datetime")).toEqual([
-        "Feb 8, 2017, 12:00 PM",
-        "Feb 8, 2017, 12:00:00 PM",
+        "Feb 8, 2017, 12:00",
+        "Feb 8, 2017, 12:00:00",
     ]);
 });
 
@@ -575,7 +577,7 @@ test("datetime field in list with show_time option", async () => {
     expect(dates[0]).toHaveText("Feb 8, 2017", {
         message: "for date field only date should be visible with date widget",
     });
-    expect(dates[1]).toHaveText("Feb 8, 2017, 12:00 PM", {
+    expect(dates[1]).toHaveText("Feb 8, 2017, 12:00", {
         message: "for datetime field only date should be visible with date widget",
     });
     await contains(dates[0]).click();
@@ -612,7 +614,7 @@ test("placeholder_field shows as placeholder (datetime)", async () => {
     defineParams({
         lang_parameters: {
             date_format: "%d/%m/%Y",
-            time_format: "%H:%M",
+            time_format: "%I:%M %p",
         },
     });
 

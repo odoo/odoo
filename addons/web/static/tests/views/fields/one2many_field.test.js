@@ -24,6 +24,7 @@ import {
     clickSave,
     contains,
     defineModels,
+    defineParams,
     fields,
     getService,
     makeServerError,
@@ -231,6 +232,12 @@ class Users extends models.Model {
 }
 
 defineModels([Partner, PartnerType, Product, Turtle, Users]);
+
+defineParams({
+    lang_parameters: {
+        time_format: "%I:%M:%S %p",
+    },
+});
 
 test("New record with a o2m also with 2 new records, ordered, and resequenced", async () => {
     // Needed to have two new records in a single stroke
