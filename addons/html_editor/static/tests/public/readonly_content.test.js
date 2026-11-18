@@ -1,7 +1,12 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { queryOne } from "@odoo/hoot-dom";
+import { dblclick, queryOne } from "@odoo/hoot-dom";
 import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
+import { animationFrame } from "@odoo/hoot-mock";
+import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { MainComponentsContainer } from "@web/core/main_components_container";
 import { location } from "@web/core/browser/browser";
+import { base64Img } from "../_helpers/editor";
+import { expectElementCount } from "../_helpers/ui_expectations";
 
 setupInteractionWhiteList("html_editor.readonly_content");
 
@@ -75,5 +80,47 @@ describe("copy", () => {
         expect(clipboardData.getData("application/vnd.odoo.odoo-editor")).toBe(
             clipboardData.getData("text/html")
         );
+    });
+});
+
+describe("image preview", () => {
+    test.tags("desktop");
+    test("double-clicking a readonly image opens its preview", async () => {
+        await startInteractions(`<div class="o_readonly"><img src="${base64Img}"></div>`);
+        await mountWithCleanup(MainComponentsContainer);
+        const image = queryOne(".o_readonly img");
+        await dblclick(image);
+        await expectElementCount(".o-FileViewer-viewImage", 1);
+        expect(".o-FileViewer-viewImage").toHaveAttribute("data-src", image.src);
+    });
+
+    test.tags("desktop");
+    test("double-clicking an image of an embedded component only opens its preview in an editable part", async () => {
+        await startInteractions(
+            `<div class="o_readonly"><div data-embedded="toggle"><img src="${base64Img}"><div data-embedded-editable="content"><img src="${base64Img}"></div></div></div>`
+        );
+        await mountWithCleanup(MainComponentsContainer);
+        await expectElementCount(".o_readonly img", 2);
+        await dblclick(queryOne("[data-embedded] > img"));
+        await animationFrame();
+        expect(".o-FileViewer").toHaveCount(0);
+
+        const image = queryOne("[data-embedded-editable] img");
+        await dblclick(image);
+        await expectElementCount(".o-FileViewer-viewImage", 1);
+        expect(".o-FileViewer-viewImage").toHaveAttribute("data-src", image.src);
+    });
+
+    test.tags("desktop");
+    test("closes the preview when interactions stop", async () => {
+        const { core } = await startInteractions(
+            `<div class="o_readonly"><img src="${base64Img}"></div>`
+        );
+        await mountWithCleanup(MainComponentsContainer);
+        await dblclick(".o_readonly img");
+        await expectElementCount(".o-FileViewer-viewImage", 1);
+        core.stopInteractions();
+        await animationFrame();
+        expect(".o-FileViewer").toHaveCount(0);
     });
 });

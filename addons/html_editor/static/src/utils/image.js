@@ -19,6 +19,22 @@ const headResponseCache = new Cache(async (src) => {
 }, JSON.stringify);
 
 /**
+ * Returns the file model used to preview an image in the file viewer.
+ *
+ * @param {HTMLImageElement} img
+ * @param {string} [name]
+ */
+export function getImageFileModel(img, name = img.src) {
+    return {
+        isImage: true,
+        isViewable: true,
+        name,
+        defaultSource: img.src,
+        downloadUrl: img.src,
+    };
+}
+
+/**
  * Extracts url and gradient parts from the background-image CSS property.
  *
  * @param {string} CSS 'background-image' property value
