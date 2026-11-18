@@ -6,6 +6,10 @@ export class Facebook extends AbstractThirdPartyVideo {
     static urlMatcher =
         /^(?:https?:\/\/)?(?:www\.)?facebook\.com(?:\/(?:[^/]+\/)?videos\/|\/watch\/?\?v=|(?:\/username)?\/reel\/|\/plugins\/video\.php\?[^ ]*?href=.*?(?:videos|reel)%2f)(?<id>\d+)(\/|%2f)?$/i;
 
+    static optionsConfig = {
+        isVertical: { default: false, type: Boolean },
+    };
+
     /**
      * Returns the embed url for a facebook video.
      *

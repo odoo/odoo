@@ -25,6 +25,7 @@ export class Loom extends AbstractThirdPartyVideo {
             params: ["fullscreen"],
             reversed: true,
         },
+        isVertical: { default: false, type: Boolean },
     };
     /**
      * Returns the embed url for a loom video.

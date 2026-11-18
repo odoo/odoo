@@ -20,6 +20,7 @@ export class Vimeo extends AbstractThirdPartyVideo {
             params: ["fullscreen"],
             reversed: true,
         },
+        isVertical: { default: false, type: Boolean },
         privacyHash: { default: "", type: String, params: ["h"] },
     };
     /**
