@@ -29,7 +29,7 @@ export function cssBorderRadiusToVml({ radius, height, width }) {
     return Math.round(Math.max(0, Math.min(100, (200 * radius) / minSize)));
 }
 
-export function buildHideIfNotMsoNodes() {
+export function buildHideFromMsoNodes() {
     const prefix = new CommentNodeLayout({ content: IF_NOT_MSO });
     const suffix = new CommentNodeLayout({ content: END_IF });
     return { prefix, suffix };
@@ -44,38 +44,15 @@ function escapeHtmlAttribute(value) {
 }
 
 /**
-{
-    fill: {
-        color: "#ff8800",
-        opacity: 1,
-    },
-    stroke: {
-        color: "#cc6600",
-        width: 1,
-        opacity: 1,
-    },
-    arcSize: 50,
-    padding: {
-        top: 6,
-        right: 12,
-        bottom: 6,
-        left: 12,
-    },
-    href: "https://example.com",
-    horizontalAlignment: "center",
-}
- */
-/**
  * TODO EGGMAIL: link tracking might not work with
  * VML href (not using an anchor) -> to investigate
  */
 export function buildInlineShapeVmlContent(
-    { fill, stroke, arcSize, padding, href, horizontalAlignment },
+    { fill, stroke, arcSize, margin, padding, href },
     htmlContent
 ) {
     const shapeStyles = [
-        horizontalAlignment && `mso-position-horizontal:${horizontalAlignment}`,
-        "mso-position-vertical:top",
+        ...Object.entries(margin).map(([side, value]) => `margin-${side}:${value}px`),
         "mso-wrap-style:none",
     ].filter(Boolean);
 
@@ -91,11 +68,10 @@ export function buildInlineShapeVmlContent(
         `style="${shapeStyles.join(";")}"`,
     ].filter(Boolean);
 
-    const { top, right, bottom, left } = padding;
     const prefixContent = `
         <v:roundrect ${shapeAttributes.join(" ")}>
             <v:textbox
-                inset="${left}px,${top}px,${right}px,${bottom}px"
+                inset="${padding.left}px,${padding.top}px,${padding.right}px,${padding.bottom}px"
                 style="mso-fit-shape-to-text:true;"
             >
     `;
@@ -117,7 +93,7 @@ export function buildBackgroundImageVmlNodes({ position, src, width }) {
         >
             <v:fill
                 type="frame"
-                src="${src}"
+                src="${escapeHtmlAttribute(src)}"
                 aspect="atleast"
                 origin="${x},${y}"
                 position="${x},${y}"

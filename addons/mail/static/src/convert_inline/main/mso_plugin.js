@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 import {
     buildBackgroundImageVmlNodes,
     buildInlineShapeVmlContent,
-    buildHideIfNotMsoNodes,
+    buildHideFromMsoNodes,
     wrapIfMso,
     cssBackgroundPositionToVml,
     cssBorderRadiusToVml,
@@ -13,6 +13,7 @@ import {
     computeCompositeColor,
     DIMENSIONS,
     DIRECTION_VARIANTS,
+    isCSSColorTransparent,
     VERTICAL_DIRECTION_VARIANTS,
 } from "../core/utils";
 import { withSequence } from "@html_editor/utils/resource";
@@ -32,7 +33,6 @@ export class MsoPlugin extends Plugin {
         "filterContent",
         "referenceNode",
         "render",
-        "dimension",
         "rules",
         "spacing",
     ];
@@ -45,7 +45,7 @@ export class MsoPlugin extends Plugin {
         refine_layout_processors: [
             this.addVmlWrapper.bind(this),
             withSequence(DEFAULT_SPACING_SEQUENCE + 1, this.addTableWrapper.bind(this)),
-            this.refineVmlShapes.bind(this),
+            withSequence(DEFAULT_SPACING_SEQUENCE - 1, this.refineVmlShapes.bind(this)),
             this.hideMobileSubtree.bind(this),
         ],
     };
@@ -73,7 +73,6 @@ export class MsoPlugin extends Plugin {
         analysis.facts.isMsoInlineShapeSubtreeRoot = true;
         const variant = this.getSubtreeVariant(analysis, "msoInlineShapeSubtree");
         if (variant === "notMso") {
-            this.addVmlLayouts(layout, buildHideIfNotMsoNodes());
             return defaultEmailNodeArguments;
         }
         analysis.topDownConstraints.push(() => ({
@@ -87,7 +86,9 @@ export class MsoPlugin extends Plugin {
         const styleInfo = layout.getRef().styleInfo;
         // specific style that should be inherited by html inside the VML
         analysis.facts.vmlContextStyleInfo = this.getVmlStyleInfo(styleInfo, referenceNode);
-        // TODO EGGMAIL: find an alternative strategy without using VML?
+        // TODO EGGMAIL: find an alternative strategy that does not use VML, eg
+        // discard the button shape and display it as a link, or prevent such
+        // configurations in the editor
         return defaultEmailNodeArguments;
     }
 
@@ -96,20 +97,22 @@ export class MsoPlugin extends Plugin {
             fill: this.extractVmlFill(referenceNode),
             stroke: this.extractVmlStroke(referenceNode),
             arcSize: this.extractVmlArcSize(referenceNode),
+            margin: this.extractVmlMargin(referenceNode),
             padding: this.extractVmlPadding(referenceNode),
             href: this.extractVmlHref(referenceNode),
-            horizontalAlignment: this.extractHorizontalAlignment(referenceNode),
         };
     }
 
     extractVmlFill(referenceNode) {
         const color = this.getStylePropertyValue(referenceNode, "background-color");
-        if (color === "transparent") {
+        if (isCSSColorTransparent(color)) {
             return null;
         }
         // TODO EGGMAIL: handle more ancestors for transparency composition?
         const { red, green, blue, opacity } = computeCompositeColor([color, "rgb(255, 255, 255)"]);
-        return convertRgbaToCSSColor(red, green, blue, opacity).substring(0, 7);
+        return {
+            color: convertRgbaToCSSColor(red, green, blue, opacity).substring(0, 7),
+        };
     }
 
     extractVmlStroke(referenceNode) {
@@ -137,7 +140,7 @@ export class MsoPlugin extends Plugin {
         const [horizontal, vertical = horizontal] = this.getStylePropertyValue(
             referenceNode,
             "border-top-left-radius"
-        ).split(/\s"/);
+        ).split(/\s+/);
         const resolveRadius = (value, dimension) => {
             value = parseCssValue(value);
             if (value.unit === "px") {
@@ -151,6 +154,24 @@ export class MsoPlugin extends Plugin {
         const { height, width } = this.getBoundingClientRect(referenceNode);
         const radius = Math.min(resolveRadius(horizontal, width), resolveRadius(vertical, height));
         return cssBorderRadiusToVml({ radius, height, width });
+    }
+
+    extractVmlMargin(referenceNode) {
+        const computedStyle = this.getComputedStyle(referenceNode);
+        const getMargin = (side) => {
+            const value = parseCssValue(computedStyle.getPropertyValue(`margin-${side}`));
+            if (value.unit !== "px") {
+                // unsupported margin value
+                return 0;
+            }
+            return value.number;
+        };
+        return {
+            top: getMargin("top"),
+            right: getMargin("right"),
+            bottom: getMargin("bottom"),
+            left: getMargin("left"),
+        };
     }
 
     extractVmlPadding(referenceNode) {
@@ -173,33 +194,6 @@ export class MsoPlugin extends Plugin {
 
     extractVmlHref(referenceNode) {
         return referenceNode.getAttribute("href");
-    }
-
-    extractHorizontalAlignment(referenceNode) {
-        const parent = referenceNode.parentElement;
-        if (!parent) {
-            return null;
-        }
-        const isOnlyChild =
-            this.processChildNodes(parent, (node) => !this.isDiscarded(node)).length === 1;
-        if (!isOnlyChild) {
-            return null;
-        }
-        const computedStyle = this.getComputedStyle(referenceNode);
-        const textAlign = computedStyle.getPropertyValue("text-align");
-        const direction = computedStyle.getPropertyValue("direction");
-        switch (textAlign) {
-            case "left":
-            case "center":
-            case "right":
-                return textAlign;
-            case "start":
-                return direction === "rtl" ? "right" : "left";
-            case "end":
-                return direction === "rtl" ? "left" : "right";
-            default:
-                return null;
-        }
     }
 
     // TODO EGGMAIL: replace background images with VML output
@@ -240,12 +234,13 @@ export class MsoPlugin extends Plugin {
     detectMsoInlineShapeSubtreeLayout(defaultEmailNodeArguments, { referenceNode }) {
         const { layout, analysis } = defaultEmailNodeArguments;
         const computedStyle = this.getComputedStyle(referenceNode);
-        const display = computedStyle.getPropertyValue("display");
         const backgroundColor = computedStyle.getPropertyValue("background-color");
+        // if is A OR is badge
         if (
             this.getSubtreeVariant(analysis, "msoInlineShapeSubtree") ||
-            !display.includes("inline") ||
-            (!this.hasVisibleBorder(referenceNode) && !backgroundColor) ||
+            (referenceNode.nodeName !== "A" && !referenceNode.matches(".badge")) ||
+            (!this.hasVisibleBorder(referenceNode) &&
+                (!backgroundColor || isCSSColorTransparent(backgroundColor))) ||
             selectElements(referenceNode, "img").length > 0 ||
             this.getSubtreeVariant(analysis, "responsiveSubtree") === "mobile"
         ) {
@@ -269,17 +264,18 @@ export class MsoPlugin extends Plugin {
         ) {
             return layout;
         }
-        this.addVmlLayouts(layout, buildHideIfNotMsoNodes());
+        this.addVmlLayouts(layout, buildHideFromMsoNodes());
         return layout;
     }
 
     refineVmlShapes(layout, { emailNode }) {
         const { analysis } = emailNode;
         const variant = this.getSubtreeVariant(analysis, "msoInlineShapeSubtree");
-        if (
-            !analysis.facts.isMsoInlineShapeSubtreeRoot ||
-            (variant !== "msoButton" && variant !== "msoBadge")
-        ) {
+        if (!analysis.facts.isMsoInlineShapeSubtreeRoot) {
+            return layout;
+        }
+        if (variant === "notMso") {
+            this.addVmlLayouts(layout, buildHideFromMsoNodes());
             return layout;
         }
         const childrenAncestorTagElements = emailNode.children.map((child) =>
@@ -288,7 +284,7 @@ export class MsoPlugin extends Plugin {
         const span = this.config.referenceDocument.createElement("SPAN");
         const wrapperTag = isAllowedContent(span, childrenAncestorTagElements) ? "SPAN" : "DIV";
         if (!analysis.facts.isVmlWrapperForbidden) {
-            emailNode.layout = new ElementLayout({
+            layout = new ElementLayout({
                 refs: {
                     root: {
                         tag: wrapperTag,
@@ -297,22 +293,29 @@ export class MsoPlugin extends Plugin {
                 },
             });
         }
+        // TODO EGGMAIL: verify if margin handling is adequate
+        // Margin is already included in the VML shape
+        emailNode.analysis.facts.desktopMarginStyleInfo = undefined;
+        // Padding is already included in the VML shape
+        emailNode.analysis.facts.desktopPaddingStyleInfo = undefined;
         const originalRender = emailNode.render.bind(emailNode);
+        // TODO EGGMAIL: use a dedicated Layout class for MSO wrapping
         emailNode.render = (context = {}) => {
-            this.marginNode = undefined;
             const fragments = originalRender(context);
             for (const fragment of fragments) {
                 // neutralize all comment nodes in the intermediate output
                 // because the entire html will be put inside a MSO comment
                 this.removeComments(fragment);
             }
-            const getIfMsoContent = analysis.facts.isVmlWrapperForbidden
-                ? () => fragments.map((fragment) => fragment.innerHTML).join("")
-                : () => {
-                      const htmlContent = fragments.map((fragment) => fragment.innerHTML).join("");
-                      return buildInlineShapeVmlContent(analysis.facts.vmlArguments, htmlContent);
-                  };
-            const msoContent = getIfMsoContent(fragments);
+            const fragmentToInnerHTML = (fragment) => {
+                const container = this.referenceDocument.createElement("DIV");
+                container.append(fragment);
+                return container.innerHTML;
+            };
+            const htmlContent = fragments.map((fragment) => fragmentToInnerHTML(fragment)).join("");
+            const msoContent = analysis.facts.isVmlWrapperForbidden
+                ? htmlContent
+                : buildInlineShapeVmlContent(analysis.facts.vmlArguments, htmlContent);
             const commentNodeLayout = new CommentNodeLayout({
                 content: wrapIfMso(msoContent),
             });
@@ -328,7 +331,7 @@ export class MsoPlugin extends Plugin {
         );
         let comment = treeWalker.nextNode();
         while (comment) {
-            const next = comment.nextNode();
+            const next = treeWalker.nextNode();
             comment.remove();
             comment = next;
         }

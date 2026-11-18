@@ -642,6 +642,7 @@ const allowedContent = {
     UL: listItem,
     P: phrasingContent,
     PRE: phrasingContent,
+    SPAN: phrasingContent,
     TABLE: tableContent,
     TBODY: tableContainerContent,
     THEAD: tableContainerContent,
