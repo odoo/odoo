@@ -135,6 +135,25 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_negative_price_unit')
 
+    def test_invoice_price_unit_precision(self):
+        """ Ensure the price_unit is not rounded during the generation of the
+        xml as this will cause validation errors when comparing the computed
+        versus actual invoice line subtotal.
+        """
+        tax_21 = self.percent_tax(21.0)
+        product = self._create_product(taxes_id=tax_21)
+        invoice = self._create_invoice(
+            partner_id=self.partner_be,
+            invoice_line_ids=[
+                self._prepare_invoice_line(product_id=product, price_unit=100.0),
+                self._prepare_invoice_line(product_id=product, price_unit=10.005),
+            ],
+            post=True,
+        )
+
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_price_unit_precision')
+
     def test_invoice_price_unit_more_decimals(self):
         tax_21 = self.percent_tax(21.0)
         product = self._create_product(lst_price=0.4567, taxes_id=tax_21)

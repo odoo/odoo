@@ -2022,14 +2022,10 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
     def _add_document_line_price_nodes(self, line_node, vals):
         currency_suffix = vals['currency_suffix']
-        product_price_dp = self.env['decimal.precision'].precision_get('Product Price')
 
         line_node['cac:Price'] = {
             'cbc:PriceAmount': {
-                '_text': float_round(
-                    vals[f'gross_price_unit{currency_suffix}'],
-                    precision_digits=product_price_dp,
-                ),
+                '_text': vals[f'gross_price_unit{currency_suffix}'],
                 'currencyID': vals['currency_name'],
             },
         }
