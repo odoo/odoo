@@ -13,7 +13,7 @@
       </attribute>
     </xpath>
     <xpath expr="//t[@t-call-slot='default']" position="replace">
-      <t t-if="this.actionProps.ActionComponent" t-component="this.actionProps.ActionComponent" t-props="this.actionProps.actionProps"/>
+      <t t-if="this.actionProps.ActionComponent" t-component="this.actionProps.ActionComponent" className="'o_action'" t-props="this.actionProps.actionProps"/>
     </xpath>
     <xpath expr="//t[@t-call-slot='header']" position="replace">
       <t t-call="web.ActionDialog.header" fullscreen="this.props.isFullscreen"/>
