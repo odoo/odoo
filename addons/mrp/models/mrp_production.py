@@ -1832,9 +1832,12 @@ class MrpProduction(models.Model):
         ])
         for order in self:
             finish_moves = order.move_finished_ids.filtered(lambda m: m.product_id == order.product_id and m.state not in ('done', 'cancel'))
+            # Only the done finished moves are already produced: `qty_produced` also counts the moves to finish
+            # once they are picked, which would set their quantity to 0 and cancel them.
+            produced_qty = sum(order.move_finished_ids.filtered(lambda m: m.product_id == order.product_id and m.state == 'done').mapped('quantity'))
             # the finish move can already be completed by the workorder.
             for move in finish_moves:
-                move.quantity = float_round(order.qty_producing - order.qty_produced, precision_rounding=order.product_uom_id.rounding, rounding_method='HALF-UP')
+                move.quantity = float_round(order.qty_producing - produced_qty, precision_rounding=order.product_uom_id.rounding, rounding_method='HALF-UP')
                 extra_vals = order._prepare_finished_extra_vals()
                 if extra_vals:
                     move.move_line_ids.write(extra_vals)

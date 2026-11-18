@@ -5552,6 +5552,22 @@ class TestMrpOrder(TestMrpCommon):
             mo_form.bom_id = self.env['mrp.bom']
             self.assertEqual(len(mo_form.workorder_ids), 0)
 
+    def test_mark_done_with_picked_finished_move(self):
+        """ Marking the finished move as picked before closing the MO must not cancel it. """
+        mo, _bom, product_to_build, product_to_use_1, product_to_use_2 = self.generate_mo(qty_final=5)
+        self.env['stock.quant']._update_available_quantity(product_to_use_1, mo.location_src_id, 20)
+        self.env['stock.quant']._update_available_quantity(product_to_use_2, mo.location_src_id, 5)
+        mo.action_assign()
+        with Form(mo) as mo_form:
+            mo_form.qty_producing = 5
+        mo.move_finished_ids.picked = True
+        mo.button_mark_done()
+
+        self.assertEqual(mo.state, 'done')
+        self.assertRecordValues(mo.move_finished_ids, [{'state': 'done', 'quantity': 5}])
+        self.assertEqual(mo.qty_produced, 5)
+        self.assertEqual(product_to_build.qty_available, 5)
+
 
 @tagged('-at_install', 'post_install')
 class TestTourMrpOrder(HttpCase):
