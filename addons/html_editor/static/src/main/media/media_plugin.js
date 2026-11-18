@@ -19,18 +19,6 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { FORMATTABLE_TAGS } from "@html_editor/utils/formatting";
 
-export const ATTACHMENT_PENDING_RECORD_ID = "o_attachment_pending_record_id";
-
-export function extractUnmappedAttachmentsIds(content) {
-    return [...content.getElementsByClassName(ATTACHMENT_PENDING_RECORD_ID)]
-        .map((attachment) => {
-            attachment.classList.remove(ATTACHMENT_PENDING_RECORD_ID);
-            return attachment.dataset?.attachmentId;
-        })
-        .filter(Boolean)
-        .map((id) => parseInt(id));
-}
-
 /**
  * @typedef { Object } MediaShared
  * @property { MediaPlugin['openMediaDialog'] } openMediaDialog
@@ -53,7 +41,7 @@ export function extractUnmappedAttachmentsIds(content) {
 export class MediaPlugin extends Plugin {
     static id = "media";
     static dependencies = ["selection", "history", "dom", "dialog"];
-    static shared = ["openMediaDialog", "extractUnmappedAttachmentsIds"];
+    static shared = ["openMediaDialog"];
     static defaultConfig = {
         allowImage: true,
         allowMediaDocuments: true,
@@ -210,9 +198,6 @@ export class MediaPlugin extends Plugin {
             throw new Error("Element is required: onSaveMediaDialog");
             // return;
         }
-        if (element.dataset?.attachmentId) {
-            element.classList.add(ATTACHMENT_PENDING_RECORD_ID);
-        }
         if (node) {
             const changedIcon = isIconElement(node) && isIconElement(element);
             if (changedIcon) {
@@ -239,10 +224,6 @@ export class MediaPlugin extends Plugin {
     async addMedia(element) {
         this.dependencies.dom.insert(element);
         this.trigger("on_media_added_handlers", { newMediaEl: element });
-    }
-
-    extractUnmappedAttachmentsIds(content = this.editable) {
-        return extractUnmappedAttachmentsIds(content);
     }
 
     openMediaDialog(params = {}, editableEl = null) {
@@ -277,7 +258,13 @@ export class MediaPlugin extends Plugin {
                 ((resModel === "ir.ui.view" && field === "arch") || type === "html")
             ), // @todo @phoenix: should be removed and moved to config.mediaModalParams
             media: params.node,
-            onAttachmentChange: this.config.onAttachmentChange || (() => {}),
+            onAttachmentChange: (attachment) => {
+                this.services["pending_attachment_service"]?.queueAttachmentToRemap(attachment.id, {
+                    resModel,
+                    resId,
+                });
+                this.config.onAttachmentChange?.(attachment);
+            },
             noImages: !this.config.allowImage,
             extraTabs: this.getResource("media_dialog_extra_tabs"),
             pendingAttachments: this.config.getPendingAttachmentsIds

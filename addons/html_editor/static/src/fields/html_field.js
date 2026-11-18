@@ -29,7 +29,6 @@ import { EditorVersionPlugin } from "@html_editor/core/editor_version_plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { canRenderAsHTML, fixInvalidHTML, instanceofMarkup } from "@html_editor/utils/sanitize";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
-import { extractUnmappedAttachmentsIds } from "@html_editor/main/media/media_plugin";
 
 const HTML_FIELD_METADATA_ATTRIBUTES = ["data-last-history-commits"];
 
@@ -248,12 +247,7 @@ export class HtmlField extends Component {
                 await this.updateValue(this.editor.getContent());
             }
             const changeId = this.lastChangeId;
-            const editable = this.editor.editable;
             const el = await this.getEditorContent();
-            this.pendingAttachmentsService.addPendingAttachments(
-                this.props.record,
-                extractUnmappedAttachmentsIds(editable)
-            );
             const content = el.innerHTML;
             this.clearElementToCompare(el);
             const comparisonValue = el.innerHTML;
@@ -331,17 +325,9 @@ export class HtmlField extends Component {
                 return { resModel, resId, data, fields, id };
             },
             resources: {},
-            getPendingAttachmentsIds: () => {
-                this.pendingAttachmentsService.addPendingAttachments(
-                    this.props.record,
-                    extractUnmappedAttachmentsIds(this.editor.editable)
-                );
-                return (
-                    this.pendingAttachmentsService.pendingAttachmentIds[
-                        this.props.record.resModel
-                    ] || []
-                );
-            },
+            getPendingAttachmentsIds: () =>
+                this.pendingAttachmentsService.pendingAttachmentIds[this.props.record.resModel] ||
+                [],
             ...this.props.editorConfig,
         };
 
@@ -506,12 +492,12 @@ const pendingAttachmentsService = {
     dependencies: ["orm"],
     start(env, { orm }) {
         const pendingAttachmentIds = {};
-        function addPendingAttachments(record, ids) {
-            if (ids.length && !record.resId) {
-                if (!pendingAttachmentIds[record.resModel]) {
-                    pendingAttachmentIds[record.resModel] = [];
+        function queueAttachmentToRemap(attachmentId, { resModel, resId } = {}) {
+            if (attachmentId && resModel && !resId) {
+                if (!pendingAttachmentIds[resModel]) {
+                    pendingAttachmentIds[resModel] = [];
                 }
-                pendingAttachmentIds[record.resModel].push(...ids);
+                pendingAttachmentIds[resModel].push(parseInt(attachmentId));
             }
         }
         function clearPendingAttachments(record) {
@@ -538,7 +524,7 @@ const pendingAttachmentsService = {
         }
         return {
             pendingAttachmentIds,
-            addPendingAttachments,
+            queueAttachmentToRemap,
             clearPendingAttachments,
             unlinkPendingAttachments,
             addAttachmentsIdsToContext,
