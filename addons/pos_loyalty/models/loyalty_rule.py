@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime
+
 from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.tools import float_round
@@ -22,6 +24,21 @@ class LoyaltyRule(models.Model):
     @api.model
     def _load_pos_data_domain(self, data):
         return [('program_id', 'in', data['pos.config']._get_program_ids().ids)]
+
+    @api.model
+    def _read_pos_data_from_metadata(self, server_data, local_data, config_id):
+        # valid_product_ids is computed: products entering or leaving a rule do not change its write_date
+        cached_dates = [
+            date
+            for model in ('product.product', 'product.template')
+            for date in local_data['records'].get(model, {}).values()
+        ]
+        last_cached = cached_dates and datetime.fromtimestamp(max(cached_dates))
+        if not last_cached or self.env['product.product'].with_context(active_test=False).search_count([
+            '|', ('write_date', '>', last_cached), ('product_tmpl_id.write_date', '>', last_cached),
+        ], limit=1):
+            local_data = {**local_data, 'records': {**local_data['records'], self._name: {}}}
+        return super()._read_pos_data_from_metadata(server_data, local_data, config_id)
 
     @api.model
     def _load_pos_data_fields(self, config):
