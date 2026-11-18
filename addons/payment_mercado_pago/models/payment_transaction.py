@@ -59,12 +59,8 @@ class PaymentTransaction(models.Model):
             "auto_return": "all",
             "back_urls": {"success": return_url, "pending": return_url, "failure": return_url},
             "items": [
-                {
-                    "title": self.reference,
-                    "quantity": 1,
-                    "currency_id": self.currency_id.name,
-                    "unit_price": self._mercado_pago_convert_amount(),
-                }
+                {**item, "currency_id": self.currency_id.name}
+                for item in self._mercado_pago_prepare_items_payload()
             ],
             "payer": {
                 "name": self.partner_name,
@@ -84,15 +80,7 @@ class PaymentTransaction(models.Model):
         payload = self._mercado_pago_prepare_base_request_payload()
         first_name, last_name = payment_utils.split_partner_name(self.partner_name)
         payload.update({
-            "additional_info": {
-                "items": [
-                    {
-                        "title": self.reference,
-                        "quantity": 1,
-                        "unit_price": self._mercado_pago_convert_amount(),
-                    }
-                ]
-            },
+            "additional_info": {"items": self._mercado_pago_prepare_items_payload()},
             "payer": {
                 "first_name": first_name,
                 "last_name": last_name,
@@ -100,6 +88,57 @@ class PaymentTransaction(models.Model):
             },
         })
         return payload
+
+    def _mercado_pago_prepare_items_payload(self):
+        """Prepare the items of the request payload.
+
+        :return: The Mercado Pago-formatted items payload.
+        :rtype: list
+        """
+        converted_amount = self._mercado_pago_convert_amount()
+        # Send a single item covering the whole amount if the items cannot be sent.
+        default_items = [{"title": self.reference, "quantity": 1, "unit_price": converted_amount}]
+        line_items = self._get_line_items().values()
+        if any(line_item["total"] < 0 for line_item in line_items) or any(
+            not line_item["name"] for line_item in line_items
+        ):
+            return default_items
+
+        decimal_places = const.CURRENCY_DECIMALS.get(
+            self.currency_id.name,
+            CURRENCY_MINOR_UNITS.get(self.currency_id.name, self.currency_id.decimal_places),
+        )
+        items = []
+        total_amount = 0
+        for line_item in line_items:
+            line_amount = payment_utils.to_minor_currency_units(
+                line_item["total"], self.currency_id, arbitrary_decimal_number=decimal_places
+            )
+            quantity = line_item["quantity"]
+            unit_amount = round(line_amount / quantity) if quantity else 0
+            if quantity < 1 or quantity != int(quantity) or unit_amount * quantity != line_amount:
+                # Force the quantity to 1, priced at the line total, for non-whole quantities
+                # or when the rounded unit amount does not add up to the total.
+                quantity, unit_amount = 1, line_amount
+            total_amount += line_amount
+            item = {
+                "title": line_item["name"],
+                "quantity": int(quantity),
+                "unit_price": unit_amount / 10**decimal_places,
+            }
+            if description := line_item["description"]:
+                item["description"] = description
+            # Images not served over HTTPS are discarded by Mercado Pago.
+            if (image_url := line_item.get("image_url")) and image_url.startswith("https://"):
+                item["picture_url"] = image_url
+            items.append(item)
+
+        amount = payment_utils.to_minor_currency_units(
+            converted_amount, self.currency_id, arbitrary_decimal_number=decimal_places
+        )
+        if not items or total_amount != amount:  # Partial payment or rounding mismatch.
+            return default_items
+        return items
 
     def _mercado_pago_prepare_base_request_payload(self):
         """Create the base payload for requests based on the transaction values.
@@ -135,15 +174,7 @@ class PaymentTransaction(models.Model):
         data = self._mercado_pago_prepare_base_request_payload()
         # Send the payment request to Mercado Pago.
         data.update({
-            "additional_info": {
-                "items": [
-                    {
-                        "title": self.reference,
-                        "quantity": 1,
-                        "unit_price": self._mercado_pago_convert_amount(),
-                    }
-                ]
-            },
+            "additional_info": {"items": self._mercado_pago_prepare_items_payload()},
             "transaction_amount": self._mercado_pago_convert_amount(),
             "token": response_content["id"],
             "installments": 1,
@@ -246,7 +277,10 @@ class PaymentTransaction(models.Model):
             return super()._extract_amount_data(payment_data)
 
         if self.operation in ("online_redirect", "online_direct"):
-            amount = payment_data.get("additional_info", {}).get("items", [{}])[0].get("unit_price")
+            items = payment_data.get("additional_info", {}).get("items", [])
+            amount = sum(
+                float(item.get("unit_price", 0)) * float(item.get("quantity", 1)) for item in items
+            )
         else:  # 'online_token', 'offline'
             amount = payment_data.get("transaction_amount")
         currency_code = payment_data.get("currency_id")

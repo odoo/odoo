@@ -171,3 +171,96 @@ class TestPaymentTransaction(NuveiCommon):
         ):
             processing_values = tx._get_specific_rendering_values(None)
         self.assertEqual(processing_values.get("url_params").get("total_amount"), 1000)
+
+    def test_items_payload_with_taxes_included_unit_amounts(self):
+        """Test that the items are sent with their taxes included unit amounts."""
+        PaymentTransaction = self.env.registry["payment.transaction"]
+        tx = self._create_transaction(flow="redirect", amount=43.0)
+        line_items = {
+            "chair": {
+                "name": "Chair",
+                "description": "",
+                "quantity": 2,
+                "total": 23.0,
+                "url": "https://example.com/shop/chair",
+                "image_url": "https://example.com/chair.png",
+            },
+            "desk": {"name": "Desk", "description": "", "quantity": 1, "total": 20.0},
+        }
+        with patch.object(PaymentTransaction, "_get_line_items", return_value=line_items):
+            payload = tx._nuvei_prepare_items_payload(43.0, 2)
+        self.assertDictEqual(
+            payload,
+            {
+                "numberofitems": 2,
+                "item_name_1": "Chair",
+                "item_amount_1": "11.50",
+                "item_quantity_1": 2,
+                "item_description_url_1": "https://example.com/shop/chair",
+                "item_image_url_1": "https://example.com/chair.png",
+                "item_name_2": "Desk",
+                "item_amount_2": "20.00",
+                "item_quantity_2": 1,
+            },
+        )
+
+    def test_items_payload_falls_back_to_single_quantity(self):
+        """Test that an item with a fractional quantity is sent with a quantity of 1."""
+        PaymentTransaction = self.env.registry["payment.transaction"]
+        tx = self._create_transaction(flow="redirect", amount=10.0)
+        line_items = {"line": {"name": "Desk", "description": "", "quantity": 1.5, "total": 10.0}}
+        with patch.object(PaymentTransaction, "_get_line_items", return_value=line_items):
+            payload = tx._nuvei_prepare_items_payload(10.0, 2)
+        self.assertEqual((payload["item_amount_1"], payload["item_quantity_1"]), ("10.00", 1))
+
+    def test_items_payload_with_free_item(self):
+        """Test that a free item is sent with a non-empty amount, as zero values are dropped from
+        the redirect form."""
+        PaymentTransaction = self.env.registry["payment.transaction"]
+        tx = self._create_transaction(flow="redirect", amount=10.0)
+        line_items = {
+            "desk": {"name": "Desk", "description": "", "quantity": 1, "total": 10.0},
+            "delivery": {"name": "Free delivery", "description": "", "quantity": 1, "total": 0.0},
+        }
+        with patch.object(PaymentTransaction, "_get_line_items", return_value=line_items):
+            payload = tx._nuvei_prepare_items_payload(10.0, 2)
+        self.assertEqual(payload["item_amount_2"], "0.00")
+
+    def _assert_default_items(self, tx, line_items):
+        PaymentTransaction = self.env.registry["payment.transaction"]
+        with patch.object(PaymentTransaction, "_get_line_items", return_value=line_items):
+            payload = tx._nuvei_prepare_items_payload(tx.amount, 2)
+        self.assertDictEqual(
+            payload, {"item_amount_1": tx.amount, "item_name_1": tx.reference, "item_quantity_1": 1}
+        )
+
+    def test_default_items_with_negative_line(self):
+        """Test that a single item is sent for the whole amount when a line item is negative."""
+        tx = self._create_transaction(flow="redirect", amount=15.0)
+        self._assert_default_items(
+            tx,
+            {
+                "line": {"name": "Desk", "description": "", "quantity": 1, "total": 20.0},
+                "discount": {"name": "Promo", "description": "", "quantity": 1, "total": -5.0},
+            },
+        )
+
+    def test_default_items_with_nameless_line(self):
+        """Test that a single item is sent for the whole amount when a line item has no name."""
+        tx = self._create_transaction(flow="redirect", amount=15.0)
+        self._assert_default_items(
+            tx, {"line": {"name": "", "description": "", "quantity": 1, "total": 15.0}}
+        )
+
+    def test_default_items_for_partial_payment(self):
+        """Test that a single item is sent for the whole amount when the line items do not add up
+        to the transaction amount."""
+        tx = self._create_transaction(flow="redirect", amount=15.0)
+        self._assert_default_items(
+            tx, {"line": {"name": "Desk", "description": "", "quantity": 1, "total": 20.0}}
+        )
+
+    def test_default_items_without_line_items(self):
+        """Test that a single item is sent for the whole amount when there are no line items."""
+        tx = self._create_transaction(flow="redirect", amount=15.0)
+        self._assert_default_items(tx, {})

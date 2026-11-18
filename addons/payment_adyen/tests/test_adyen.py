@@ -574,3 +574,83 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         test_address = adyen_utils.format_partner_address(test_partner)
         for key in ("city", "country", "stateOrProvince", "street"):
             self.assertTrue(test_address.get(key))
+
+    def test_line_items_payload_with_taxes_included_unit_amounts(self):
+        """Test that the line items are sent with their taxes included unit amounts."""
+        PaymentTransaction = self.env.registry["payment.transaction"]
+        tx = self._create_transaction(flow="direct", amount=23.0)
+        line_items = {
+            "line": {
+                "name": "Chair",
+                "description": "",
+                "sku": "CHAIR",
+                "quantity": 2,
+                "total": 23.0,
+                "url": "https://example.com/shop/chair",
+                "image_url": "https://example.com/chair.png",
+            }
+        }
+        with patch.object(PaymentTransaction, "_get_line_items", return_value=line_items):
+            payload = tx._adyen_prepare_line_items_payload()
+        self.assertListEqual(
+            payload,
+            [
+                {
+                    "id": "1",
+                    "description": "Chair",
+                    "quantity": 2,
+                    "amountIncludingTax": 1150,
+                    "sku": "CHAIR",
+                    "productUrl": "https://example.com/shop/chair",
+                    "imageUrl": "https://example.com/chair.png",
+                }
+            ],
+        )
+
+    def test_line_items_payload_falls_back_to_single_quantity(self):
+        """Test that a line item with a fractional quantity is sent with a quantity of 1."""
+        PaymentTransaction = self.env.registry["payment.transaction"]
+        tx = self._create_transaction(flow="direct", amount=10.0)
+        line_items = {"line": {"name": "Desk", "description": "", "quantity": 1.5, "total": 10.0}}
+        with patch.object(PaymentTransaction, "_get_line_items", return_value=line_items):
+            item = tx._adyen_prepare_line_items_payload()[0]
+        self.assertEqual((item["id"], item["quantity"], item["amountIncludingTax"]), ("1", 1, 1000))
+
+    def _assert_default_line_items(self, tx, line_items):
+        PaymentTransaction = self.env.registry["payment.transaction"]
+        with patch.object(PaymentTransaction, "_get_line_items", return_value=line_items):
+            payload = tx._adyen_prepare_line_items_payload()
+        self.assertListEqual(
+            payload, [{"amountIncludingTax": 1500, "quantity": "1", "description": tx.reference}]
+        )
+
+    def test_default_line_items_with_negative_line(self):
+        """Test that a single line is sent for the whole amount when a line item is negative."""
+        tx = self._create_transaction(flow="direct", amount=15.0)
+        self._assert_default_line_items(
+            tx,
+            {
+                "line": {"name": "Desk", "description": "", "quantity": 1, "total": 20.0},
+                "discount": {"name": "Promo", "description": "", "quantity": 1, "total": -5.0},
+            },
+        )
+
+    def test_default_line_items_with_nameless_line(self):
+        """Test that a single line is sent for the whole amount when a line item has no name."""
+        tx = self._create_transaction(flow="direct", amount=15.0)
+        self._assert_default_line_items(
+            tx, {"line": {"name": "", "description": "", "quantity": 1, "total": 15.0}}
+        )
+
+    def test_default_line_items_for_partial_payment(self):
+        """Test that a single line is sent for the whole amount when the line items do not add up
+        to the transaction amount."""
+        tx = self._create_transaction(flow="direct", amount=15.0)
+        self._assert_default_line_items(
+            tx, {"line": {"name": "Desk", "description": "", "quantity": 1, "total": 20.0}}
+        )
+
+    def test_default_line_items_without_line_items(self):
+        """Test that a single line is sent for the whole amount when there are no line items."""
+        tx = self._create_transaction(flow="direct", amount=15.0)
+        self._assert_default_line_items(tx, {})

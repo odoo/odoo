@@ -69,9 +69,7 @@ class PaymentTransaction(models.Model):
             "email": self.partner_email or "",
             "encoding": "UTF-8",
             "first_name": first_name[:30],
-            "item_amount_1": rounded_amount,
-            "item_name_1": self.reference,
-            "item_quantity_1": 1,
+            **self._nuvei_prepare_items_payload(rounded_amount, rounding),
             "productId": self.reference,
             "last_name": last_name[:40],
             "merchantLocale": self.partner_lang,
@@ -97,6 +95,57 @@ class PaymentTransaction(models.Model):
         checksum = self.provider_id._nuvei_calculate_signature(url_params, incoming=False)
         url_params["checksum"] = checksum
         return {"api_url": self.provider_id._nuvei_get_api_url(), "url_params": url_params}
+
+    def _nuvei_prepare_items_payload(self, rounded_amount, decimal_places):
+        """Prepare the items of the payment request payload.
+
+        :param float rounded_amount: The amount of the transaction, rounded for the payment method.
+        :param int decimal_places: The number of decimal places to which amounts are rounded.
+        :return: The Nuvei-formatted items payload.
+        :rtype: dict
+        """
+        # Send a single item covering the whole amount if the items cannot be sent.
+        default_items = {
+            "item_amount_1": rounded_amount,
+            "item_name_1": self.reference,
+            "item_quantity_1": 1,
+        }
+        line_items = self._get_line_items().values()
+        if any(line_item["total"] < 0 for line_item in line_items) or any(
+            not line_item["name"] for line_item in line_items
+        ):
+            return default_items
+
+        items = {}
+        total_amount = 0
+        for index, line_item in enumerate(line_items, start=1):
+            line_amount = payment_utils.to_minor_currency_units(
+                line_item["total"], self.currency_id, arbitrary_decimal_number=decimal_places
+            )
+            quantity = line_item["quantity"]
+            unit_amount = round(line_amount / quantity) if quantity else 0
+            if quantity < 1 or quantity != int(quantity) or unit_amount * quantity != line_amount:
+                # Force the quantity to 1, priced at the line total, for non-whole quantities or when
+                # the rounded unit amount does not add up to the total.
+                quantity, unit_amount = 1, line_amount
+            total_amount += line_amount
+            items.update({
+                f"item_name_{index}": line_item["name"][:400],
+                f"item_amount_{index}": f"{unit_amount / 10**decimal_places:.{decimal_places}f}",
+                f"item_quantity_{index}": int(quantity),
+            })
+            if url := line_item.get("url"):
+                items[f"item_description_url_{index}"] = url
+            if image_url := line_item.get("image_url"):
+                items[f"item_image_url_{index}"] = image_url
+
+        amount = payment_utils.to_minor_currency_units(
+            rounded_amount, self.currency_id, arbitrary_decimal_number=decimal_places
+        )
+        if not items or total_amount != amount:  # Partial payment or rounding mismatch.
+            return default_items
+        # The number of items is required when there are several items.
+        return {"numberofitems": len(line_items), **items}
 
     @api.model
     def _extract_reference(self, provider_code, payment_data):

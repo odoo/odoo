@@ -118,3 +118,80 @@ class TestPaymentTransaction(IyzicoCommon, PaymentHttpCommon):
         tx = self._create_transaction(flow="redirect")
         tx.with_context(payment_safe_write=True)._apply_updates({"paymentStatus": "FAILURE"})
         self.assertEqual(tx.state, "error")
+
+    def test_basket_items_payload_with_quantities_in_names(self):
+        """Test that the basket items are sent with their line totals, and their quantity in their
+        name."""
+        PaymentTransaction = self.env.registry["payment.transaction"]
+        tx = self._create_transaction(flow="redirect", amount=38.5)
+        line_items = {
+            "chair": {"name": "Chair", "description": "", "quantity": 2, "total": 23.0},
+            "desk": {"name": "Desk", "description": "", "quantity": 1, "total": 10.0},
+            "fabric": {"name": "Fabric", "description": "", "quantity": 1.5, "total": 5.5},
+        }
+        with patch.object(PaymentTransaction, "_get_line_items", return_value=line_items):
+            basket_items = tx._iyzico_prepare_basket_items_payload()
+        self.assertListEqual(
+            [(item["id"], item["name"], item["price"]) for item in basket_items],
+            [("1", "2 x Chair", 23.0), ("2", "Desk", 10.0), ("3", "1.5 x Fabric", 5.5)],
+        )
+
+    def test_basket_items_payload_skips_free_items(self):
+        """Test that free items are not sent, as Iyzico rejects them."""
+        PaymentTransaction = self.env.registry["payment.transaction"]
+        tx = self._create_transaction(flow="redirect", amount=10.0)
+        line_items = {
+            "desk": {"name": "Desk", "description": "", "quantity": 1, "total": 10.0},
+            "delivery": {"name": "Free delivery", "description": "", "quantity": 1, "total": 0.0},
+        }
+        with patch.object(PaymentTransaction, "_get_line_items", return_value=line_items):
+            basket_items = tx._iyzico_prepare_basket_items_payload()
+        self.assertListEqual([item["name"] for item in basket_items], ["Desk"])
+
+    def _assert_default_basket_items(self, tx, line_items):
+        PaymentTransaction = self.env.registry["payment.transaction"]
+        with patch.object(PaymentTransaction, "_get_line_items", return_value=line_items):
+            basket_items = tx._iyzico_prepare_basket_items_payload()
+        self.assertListEqual(
+            basket_items,
+            [
+                {
+                    "id": tx.id,
+                    "price": tx.amount,
+                    "name": "Odoo purchase",
+                    "category1": "Service",
+                    "itemType": "VIRTUAL",
+                }
+            ],
+        )
+
+    def test_default_basket_items_with_negative_line(self):
+        """Test that a single item is sent for the whole amount when a line item is negative."""
+        tx = self._create_transaction(flow="redirect", amount=15.0)
+        self._assert_default_basket_items(
+            tx,
+            {
+                "line": {"name": "Desk", "description": "", "quantity": 1, "total": 20.0},
+                "discount": {"name": "Promo", "description": "", "quantity": 1, "total": -5.0},
+            },
+        )
+
+    def test_default_basket_items_with_nameless_line(self):
+        """Test that a single item is sent for the whole amount when a line item has no name."""
+        tx = self._create_transaction(flow="redirect", amount=15.0)
+        self._assert_default_basket_items(
+            tx, {"line": {"name": "", "description": "", "quantity": 1, "total": 15.0}}
+        )
+
+    def test_default_basket_items_for_partial_payment(self):
+        """Test that a single item is sent for the whole amount when the line items do not add up
+        to the transaction amount."""
+        tx = self._create_transaction(flow="redirect", amount=15.0)
+        self._assert_default_basket_items(
+            tx, {"line": {"name": "Desk", "description": "", "quantity": 1, "total": 20.0}}
+        )
+
+    def test_default_basket_items_without_line_items(self):
+        """Test that a single item is sent for the whole amount when there are no line items."""
+        tx = self._create_transaction(flow="redirect", amount=15.0)
+        self._assert_default_basket_items(tx, {})

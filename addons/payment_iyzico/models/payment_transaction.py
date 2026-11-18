@@ -58,16 +58,7 @@ class PaymentTransaction(models.Model):
         query_string_params = urls.url_encode({"tx_ref": self.reference})
         return_url = f"{urljoin(base_url, const.PAYMENT_RETURN_ROUTE)}?{query_string_params}"
         return {
-            # Dummy basket item as it is required in Iyzico.
-            "basketItems": [
-                {
-                    "id": self.id,
-                    "price": self.amount,
-                    "name": "Odoo purchase",
-                    "category1": "Service",
-                    "itemType": "VIRTUAL",
-                }
-            ],
+            "basketItems": self._iyzico_prepare_basket_items_payload(),
             "billingAddress": {
                 "address": self.partner_address,
                 "contactName": self.partner_name,
@@ -93,6 +84,58 @@ class PaymentTransaction(models.Model):
             "paymentSource": "ODOO",
             "price": self.amount,
         }
+
+    def _iyzico_prepare_basket_items_payload(self):
+        """Prepare the basket items of the CF-initialize request payload.
+
+        :return: The Iyzico-formatted basket items payload.
+        :rtype: list
+        """
+        # Dummy basket item as it is required in Iyzico, sent if the items cannot be sent.
+        default_basket_items = [
+            {
+                "id": self.id,
+                "price": self.amount,
+                "name": "Odoo purchase",
+                "category1": "Service",
+                "itemType": "VIRTUAL",
+            }
+        ]
+        # Iyzico rejects free items, which do not change the total anyway.
+        line_items = [
+            line_item for line_item in self._get_line_items().values() if line_item["total"]
+        ]
+        if any(line_item["total"] < 0 for line_item in line_items) or any(
+            not line_item["name"] for line_item in line_items
+        ):
+            return default_basket_items
+
+        decimal_places = self.currency_id.decimal_places
+        basket_items = []
+        total_amount = 0
+        for index, line_item in enumerate(line_items, start=1):
+            line_amount = payment_utils.to_minor_currency_units(
+                line_item["total"], self.currency_id, arbitrary_decimal_number=decimal_places
+            )
+            total_amount += line_amount
+            # Iyzico has no quantity field, so it is included in the name.
+            name = line_item["name"]
+            if (quantity := line_item["quantity"]) != 1:
+                name = f"{quantity:g} x {name}"
+            basket_items.append({
+                "id": str(index),
+                "price": line_amount / 10**decimal_places,
+                "name": name[:255],
+                "category1": "Service",
+                "itemType": "VIRTUAL",
+            })
+
+        amount = payment_utils.to_minor_currency_units(
+            self.amount, self.currency_id, arbitrary_decimal_number=decimal_places
+        )
+        if not basket_items or total_amount != amount:  # Partial payment or rounding mismatch.
+            return default_basket_items
+        return basket_items
 
     # === BUSINESS METHODS - PROCESSING === #
 
