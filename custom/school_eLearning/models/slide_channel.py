@@ -1,10 +1,28 @@
 # custom/school_eLearning/models/slide_channel.py
-from odoo import _, api, models
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
 class SlideChannel(models.Model):
     _inherit = 'slide.channel'
+
+    subject_id = fields.Many2one(
+        "university.subject",
+        string="University Subject",
+        index=True,
+        help="Academic subject this eLearning course is associated with.",
+    )
+    teacher_id = fields.Many2one(
+        "university.teacher",
+        string="Instructor / Teacher",
+        domain="[('active', '=', True)]",
+        help="University teacher responsible for this course content.",
+    )
+    class_section_id = fields.Many2one(
+        "university.class.section",
+        string="Class Section",
+        help="Specific class section enrolled in this course channel.",
+    )
 
     @api.onchange('class_section_id')
     def _onchange_class_section_id(self):

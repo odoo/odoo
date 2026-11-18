@@ -236,7 +236,9 @@ class StudentDashboardShell extends Component {
             }
         } catch (error) {
             console.error("Failed to load student dashboard payload", error);
-            this.state.error = error.message || "Failed to retrieve student portal analytics.";
+            const message = error.data?.message || error.message || "Failed to retrieve student portal analytics.";
+            this.notification.add(message, { type: "danger" });
+            this.state.error = message;
         }
     }
 

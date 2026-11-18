@@ -157,7 +157,9 @@ export class TeacherDashboardShell extends Component {
             }
         } catch (error) {
             console.error("Failed to load teacher dashboard payload", error);
-            this.state.error = error.message || "Failed to retrieve teacher portal analytics.";
+            const message = error.data?.message || error.message || "Failed to retrieve teacher portal analytics.";
+            this.notification.add(message, { type: "danger" });
+            this.state.error = message;
         }
     }
 

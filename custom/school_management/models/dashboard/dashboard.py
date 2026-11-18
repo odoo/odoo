@@ -1214,21 +1214,81 @@ class UniversityDashboard(models.Model):
 
         return self.get_dashboard_data(year_id=year_id, semester_id=semester_id)
 
+    def _resolve_student(self, requested_id=False):
+        student_model = self.env["university.student"]
+        user = self.env.user
+        is_admin = (
+            self.env.is_superuser()
+            or user.has_group("base.group_system")
+            or user.has_group("school_management.group_school_admin")
+        )
+
+        if requested_id:
+            try:
+                requested_id = int(requested_id)
+            except (TypeError, ValueError):
+                requested_id = False
+
+            if requested_id:
+                if is_admin:
+                    student = student_model.sudo().browse(requested_id).exists()
+                else:
+                    try:
+                        student = student_model.search([("id", "=", requested_id)], limit=1)
+                    except AccessError:
+                        student = student_model.browse()
+                if student:
+                    return student
+            raise AccessError(_("You are not allowed to view this dashboard."))
+
+        try:
+            student = student_model.search([("user_id", "=", user.id)], limit=1)
+        except AccessError:
+            student = student_model.browse()
+        if not student:
+            raise AccessError(_("No student profile is linked to your user."))
+        return student
+
+    def _resolve_teacher(self, requested_id=False):
+        teacher_model = self.env["university.teacher"]
+        user = self.env.user
+        is_admin = (
+            self.env.is_superuser()
+            or user.has_group("base.group_system")
+            or user.has_group("school_management.group_school_admin")
+        )
+
+        if requested_id:
+            try:
+                requested_id = int(requested_id)
+            except (TypeError, ValueError):
+                requested_id = False
+
+            if requested_id:
+                if is_admin:
+                    teacher = teacher_model.sudo().browse(requested_id).exists()
+                else:
+                    try:
+                        teacher = teacher_model.search([("id", "=", requested_id)], limit=1)
+                    except AccessError:
+                        teacher = teacher_model.browse()
+                if teacher:
+                    return teacher
+            raise AccessError(_("You are not allowed to view this dashboard."))
+
+        try:
+            teacher = teacher_model.search([("user_id", "=", user.id)], limit=1)
+        except AccessError:
+            teacher = teacher_model.browse()
+        if not teacher:
+            raise AccessError(_("No teacher profile is linked to your user."))
+        return teacher
+
     @api.model
     def get_teacher_dashboard_data(self, year_id=False, semester_id=False, teacher_id=False):
-        user = self.env.user
-        teacher = False
-        if teacher_id:
-            try:
-                teacher = self.env["university.teacher"].sudo().browse(int(teacher_id)).exists()
-            except Exception:
-                teacher = False
-
-        if not teacher:
-            teacher = self.env["university.teacher"].sudo().search([("user_id", "=", user.id)], limit=1)
-
-        t_id = teacher.id if teacher else False
-        display_teacher_name = teacher.name if teacher else user.name
+        teacher = self._resolve_teacher(teacher_id)
+        t_id = teacher.id
+        display_teacher_name = teacher.name
         year_id, semester_id = self._selected_period(year_id, semester_id)
         today_date = fields.Date.context_today(self)
 
@@ -1244,50 +1304,6 @@ class UniversityDashboard(models.Model):
             time_greeting = "Good afternoon"
         else:
             time_greeting = "Good evening"
-
-        if not t_id:
-            # Current user is not a teacher and has no teacher profile linked.
-            # Do NOT preview another teacher's portal. Return neutral data.
-            return {
-                "dashboard": {
-                    "user_greeting": f"{time_greeting}, {display_teacher_name}",
-                    "user_name": display_teacher_name,
-                    "subtitle": "Teacher Portal · Overview",
-                    "user_role": "teacher",
-                    "teacher_id": False,
-                    "has_teacher_profile": False,
-                    "kpi_five": [
-                        {"id": "my_students", "category": "My Students", "value": "0", "growth": "No classes", "growth_type": "neutral", "icon": "fa-users", "color": "indigo", "action": "openMyStudents"},
-                        {"id": "my_classes", "category": "My Classes", "value": "0", "growth": "No active sections", "growth_type": "neutral", "icon": "fa-graduation-cap", "color": "teal", "action": "openMyClasses"},
-                        {"id": "classes_today", "category": "Classes Today", "value": "0", "growth": "0 remaining", "growth_type": "neutral", "icon": "fa-calendar-check-o", "color": "purple", "action": "openTodayClasses"},
-                        {"id": "pending_grading", "category": "Pending Grading", "value": "0", "growth": "None", "growth_type": "neutral", "icon": "fa-clock-o", "color": "amber", "action": "openPendingGrading"},
-                        {"id": "attendance_rate", "category": "Attendance Rate", "value": "0.0%", "growth": "No records", "growth_type": "neutral", "icon": "fa-check-circle", "color": "emerald", "action": "openAttendance"},
-                    ],
-                    "today_schedule": [],
-                    "my_courses": [],
-                    "students_at_risk": {"title": "Students at risk", "count": 0, "description": "No students at risk", "btn_label": "Review", "action": "openReviewAtRisk"},
-                    "upcoming_exams": [],
-                    "pending_grades": {"title": "Pending Grades", "count": 0, "description": "0 submissions waiting for grade entry", "btn_label": "Grade Now", "action": "openPendingGrading"},
-                },
-                "chart_data": {
-                    "attendance_trend": {"labels": ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5", "Week 6"], "data": [0, 0, 0, 0, 0, 0], "average_badge": "0% Avg"},
-                    "attendance_status": {
-                        "labels": ["Present", "Late", "Absent", "Excused"],
-                        "data": [0, 0, 0, 0],
-                        "colors": ["#10b981", "#f59e0b", "#ef4444", "#3b82f6"],
-                        "center_text": "0% Present",
-                        "breakdown": [
-                            {"name": "Present", "count": 0, "percentage": 0, "color": "#10b981"},
-                            {"name": "Late", "count": 0, "percentage": 0, "color": "#f59e0b"},
-                            {"name": "Absent", "count": 0, "percentage": 0, "color": "#ef4444"},
-                            {"name": "Excused", "count": 0, "percentage": 0, "color": "#3b82f6"},
-                        ],
-                    },
-                },
-                "selected_year_id": year_id,
-                "selected_semester_id": semester_id,
-                "filter_options": self.get_filter_options(year_id=year_id),
-            }
 
         # 1. Teacher Sections Domain with Year / Semester scoping
         sec_domain = [("teacher_id", "=", t_id)] if t_id else []
@@ -1604,23 +1620,10 @@ class UniversityDashboard(models.Model):
 
     @api.model
     def get_student_dashboard_data(self, year_id=False, semester_id=False, student_id=False):
-        user = self.env.user
-        student = False
-        if student_id:
-            try:
-                student = self.env["university.student"].sudo().browse(int(student_id)).exists()
-            except Exception:
-                student = False
+        student = self._resolve_student(student_id)
 
-        if not student:
-            student = self.env["university.student"].sudo().search([("user_id", "=", user.id)], limit=1)
-        if not student:
-            student = self.env["university.student"].sudo().search([("status", "in", ("active", "graduated"))], order="id asc", limit=1)
-        if not student:
-            student = self.env["university.student"].sudo().search([], order="id asc", limit=1)
-
-        s_id = student.id if student else False
-        display_student_name = student.name if student else user.name
+        s_id = student.id
+        display_student_name = student.name
         year_id, semester_id = self._selected_period(year_id, semester_id)
         today_date = fields.Date.context_today(self)
 
