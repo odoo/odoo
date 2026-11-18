@@ -139,6 +139,29 @@
         </field>
     </record>
 
+    <record id="stock_location_view_hierarchy" model="ir.ui.view">
+        <field name="name">stock.location.view.hierarchy</field>
+        <field name="model">stock.location</field>
+        <field name="arch" type="xml">
+            <hierarchy parent_field="location_id" child_field="child_ids" label="Locations">
+                <field name="name"/>
+                <templates>
+                    <t t-name="hierarchy-box">
+                        <div t-attf-class="o_hierarchy_node_header m-2 mb-0 rounded-3 o_hierarchy_node_color o_colorlist_color_{{record.location_id.raw_value ? ((record.location_id.raw_value - 1) % 11) + 1 : 0}}" t-att-title="record.name.value"/>
+                        <div class="o_contact_hierarchy_card d-flex flex-column p-2">
+                            <div class="mb-1">
+                                <p class="mb-0">
+                                    <field name="name" class="fw-bold"/>
+                                </p>
+                            </div>
+                            <field name="usage" class="m-0"/>
+                        </div>
+                    </t>
+                </templates>
+            </hierarchy>
+        </field>
+    </record>
+
     <record model="ir.actions.act_window" id="action_storage_category_locations">
         <field name="name">Locations</field>
         <field name="res_model">stock.location</field>
@@ -149,7 +172,7 @@
     <record id="action_location_form" model="ir.actions.act_window">
         <field name="name">Locations</field>
         <field name="res_model">stock.location</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">list,form,hierarchy</field>
         <field name="view_id" ref="view_location_tree2"/>
         <field name="search_view_id" ref="view_location_search"/>
         <field name="context">{
