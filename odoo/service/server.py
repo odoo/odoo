@@ -768,7 +768,13 @@ class ThreadedServer(CommonServer):
         self.stop()
 
     def reload(self):
-        os.kill(self.pid, signal.SIGHUP)
+        if os.name == 'nt':
+            # Windows has no SIGHUP (signal.SIGHUP is the -1 shim above), and
+            # os.kill() with any other value terminates the process instead of
+            # signaling it: call the SIGHUP handler directly.
+            self.signal_handler(signal.SIGHUP, None)
+        else:
+            os.kill(self.pid, signal.SIGHUP)
 
 class GeventServer(CommonServer):
     def __init__(self, app):
