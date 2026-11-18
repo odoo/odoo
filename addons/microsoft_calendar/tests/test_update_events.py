@@ -54,6 +54,27 @@ class TestUpdateEvents(TestCommon):
         mock_patch.assert_not_called()
         self.assertEqual(self.simple_event.need_sync_m, False)
 
+    @patch.object(MicrosoftCalendarService, 'insert')
+    @patch.object(MicrosoftCalendarService, 'patch')
+    def test_sync_event_without_microsoft_id(self, mock_patch, mock_insert):
+        """A known Outlook event without its calendar ID must not be patched or inserted."""
+        event = self.simple_event.with_user(self.organizer_user)
+        event.write({'microsoft_id': False, 'need_sync_m': True})
+        self.assertTrue(event.active)
+        universal_id = event.ms_universal_event_id
+        self.assertTrue(universal_id)
+        self.env.cr.postcommit.clear()
+
+        event._sync_odoo2microsoft()
+        self.call_post_commit_hooks()
+
+        mock_insert.assert_not_called()
+        mock_patch.assert_not_called()
+        event.invalidate_recordset()
+        self.assertFalse(event.microsoft_id)
+        self.assertEqual(event.ms_universal_event_id, universal_id)
+        self.assertTrue(event.need_sync_m)
+
     @patch.object(MicrosoftCalendarService, 'patch')
     def test_update_simple_event_from_odoo(self, mock_patch):
         """
