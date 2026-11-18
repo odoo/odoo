@@ -168,8 +168,9 @@ export class PortalAdditionalIdentifiers extends Interaction {
         input.className = 'form-control';
         input.id = `o_additional_identifier_${key}`;
         input.name = key;
-        // A placeholder is what lets CSS tell an empty field from a filled one
-        input.placeholder = meta.placeholder || ' ';
+        // `:placeholder-shown` only matches with a placeholder set, and that is how the
+        // floating label tells an empty field from a filled one
+        input.placeholder = meta.placeholder || " ";
         if (meta.help) {
             input.setAttribute('aria-describedby', `o_additional_identifier_${key}_help`);
         }

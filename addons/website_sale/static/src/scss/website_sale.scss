@@ -1853,8 +1853,8 @@ $-product-radius-map: (
         &:not(:is(.o_mark_none, .o_mark_optional)) .col-form-label:not(.label-optional),
         &.o_mark_optional .col-form-label.label-optional {
             &::after {
-                content: " " var(--form-mark);
-                color: var(--form-mark-color);
+                content: " " var(--form-mark, "*");
+                color: var(--form-mark-color, inherit);
                 font-weight: normal;
             }
         }
@@ -1896,7 +1896,7 @@ $-product-radius-map: (
             column-gap: map-get($spacers, 3);
 
             > label {
-                flex: 0 0 var(--form-label-width);
+                flex: 0 0 var(--form-label-width, 200px);
                 text-align: var(--form-label-align, start);
             }
 
@@ -1911,7 +1911,7 @@ $-product-radius-map: (
             > .invalid-feedback,
             > .dropdown-menu {
                 flex: 0 0 100%;
-                padding-left: calc(var(--form-label-width) + #{map-get($spacers, 3)});
+                padding-left: calc(var(--form-label-width, 200px) + #{map-get($spacers, 3)});
             }
         }
 

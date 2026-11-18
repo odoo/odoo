@@ -62,9 +62,7 @@
                               target="_self"
                               action="/shop/payment/validate"
                               method="post">
-                            <input type="hidden"
-                                   name="csrf_token"
-                                   t-att-value="request.csrf_token()"/>
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <t t-if="not hide_payment_button" t-call="payment.submit_button"/>
                         </form>
                     </div>

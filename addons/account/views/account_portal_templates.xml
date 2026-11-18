@@ -236,33 +236,13 @@
                 <t t-set="default_value" t-value="extra_field_values.get(field_prefix + required_field.name) or field_info.default and field_info.default(required_field.model)"/>
                 <t t-if="required_field.ttype == 'selection'">
                     <div class="form-floating">
-                        <select
-                            class="form-select"
-                            t-att-name="field_prefix + required_field.name"
-                            required="required"
-                        >
-                            <option
-                                t-att-selected="not default_value"
-                                disabled="disabled"
-                                value=""
-                            >
-                                <t t-out="'Select the %s ...' % required_field.field_description.lower()"/>
-                            </option>
+                        <select class="form-select" t-att-name="field_prefix + required_field.name" required="required">
+                            <option t-att-selected="not default_value" disabled="disabled" value=""><t t-out="'Select the %s ...' % required_field.field_description.lower()"/></option>
                             <t t-foreach="required_field.selection_ids" t-as="selection">
-                                <option
-                                    t-att-selected="default_value and default_value == selection.value"
-                                    t-att-value="selection.value"
-                                >
-                                    <t t-out="selection.name"/>
-                                </option>
+                                <option t-att-selected="default_value and default_value == selection.value" t-att-value="selection.value"><t t-out="selection.name"/></option>
                             </t>
                         </select>
-                        <label
-                            class="col-form-label"
-                            t-att-for="field_prefix + required_field.name"
-                        >
-                            <t t-out="required_field.field_description"/>
-                        </label>
+                        <label class="col-form-label" t-att-for="field_prefix + required_field.name"><t t-out="required_field.field_description"/></label>
                     </div>
                 </t>
             </div>
@@ -297,11 +277,8 @@
                                     t-att-placeholder="meta.get('placeholder') or ' '"
                                     t-att-aria-describedby="('o_additional_identifier_%s_help' % identifier_key) if meta.get('help') else None"
                                 />
-                                <label
-                                    class="col-form-label fw-normal label-optional"
-                                    t-attf-for="o_additional_identifier_{{identifier_key}}"
-                                    t-out="meta['label']"
-                                />
+                                <label class="col-form-label fw-normal label-optional" t-attf-for="o_additional_identifier_{{identifier_key}}"
+                                       t-out="meta['label']"/>
                             </div>
                             <button type="button" class="btn btn-outline-secondary o_remove_identifier"
                                     title="Remove" aria-label="Remove">

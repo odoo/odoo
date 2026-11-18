@@ -43,6 +43,8 @@ export function getCustomField(type, name) {
 }
 
 export const getMark = (el) => el.dataset.mark;
+// a floating label carries no inline width, it keeps the value in a data attribute
+export const getLabelWidth = (labelEl) => labelEl?.style.width || labelEl?.dataset.labelWidth;
 export const isOptionalMark = (el) => el.classList.contains("o_mark_optional");
 export const isRequiredMark = (el) => el.classList.contains("o_mark_required");
 /**
@@ -54,7 +56,7 @@ export const isRequiredMark = (el) => el.classList.contains("o_mark_required");
 export function getDefaultFormat(el) {
     const fieldEl = el.querySelector(".s_website_form_field:not(.s_website_form_dnone)");
     return {
-        labelWidth: el.querySelector(".s_website_form_label")?.style.width,
+        labelWidth: getLabelWidth(el.querySelector(".s_website_form_label")),
         labelPosition: fieldEl ? getLabelPosition(fieldEl) : "left",
         multiPosition: "horizontal",
         requiredMark: isRequiredMark(el),
@@ -191,7 +193,7 @@ export function getFieldFormat(fieldEl) {
     const multipleInputEl = getMultipleInputs(fieldEl);
     const format = {
         labelPosition: getLabelPosition(fieldEl),
-        labelWidth: fieldEl.querySelector(".s_website_form_label").style.width,
+        labelWidth: getLabelWidth(fieldEl.querySelector(".s_website_form_label")),
         multiPosition: (multipleInputEl && multipleInputEl.dataset.display) || "horizontal",
         col: [...fieldEl.classList].filter((el) => el.match(/^col-/g)).join(" "),
         offset: [...fieldEl.classList].filter((el) => el.match(/^offset-/g)).join(" "),

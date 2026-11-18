@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="website_sale.AddressFormOption">
+    <t t-name="website_sale.AddressFormOptions">
         <BuilderRow
             label.translate="Marked Fields"
             tooltip.translate="Add an icon to the labels of required or optional fields"
@@ -13,14 +13,18 @@
                         previewClass: 'o_mark_none',
                         views: ['website_sale.address_mark_none'],
                     }"
-                >None</BuilderSelectItem>
+                >
+                    None
+                </BuilderSelectItem>
                 <BuilderSelectItem actionParam="{views: []}">Required</BuilderSelectItem>
                 <BuilderSelectItem
                     actionParam="{
                         previewClass: 'o_mark_optional',
                         views: ['website_sale.address_mark_optional'],
                     }"
-                >Optional</BuilderSelectItem>
+                >
+                    Optional
+                </BuilderSelectItem>
             </BuilderSelect>
         </BuilderRow>
         <BuilderRow
@@ -28,11 +32,22 @@
             label.translate="Marker"
             level="1"
         >
-            <BuilderTextInput action="'setFormMark'" actionParam="'form-mark'"/>
+            <BuilderTextInput
+                action="'setAddressFormValue'"
+                actionParam="{
+                    property: '--form-mark',
+                    field: 'address_form_mark',
+                    text: true,
+                }"
+            />
             <BuilderColorPicker
                 enabledTabs="['solid', 'custom']"
-                action="'customizeWebsiteVariable'"
-                actionParam="'form-mark-color'"
+                action="'setAddressFormValue'"
+                actionParam="{
+                    property: '--form-mark-color',
+                    field: 'address_form_mark_color',
+                    fallback: 'color',
+                }"
             />
         </BuilderRow>
         <BuilderRow label.translate="Labels Position">
@@ -77,10 +92,13 @@
             level="1"
         >
             <BuilderNumberInput
-                action="'customizeWebsiteVariable'"
-                actionParam="'form-label-width'"
+                action="'setAddressFormValue'"
+                actionParam="{
+                    property: '--form-label-width',
+                    field: 'address_form_label_width',
+                }"
                 unit="'px'"
-                saveUnit="'rem'"
+                default="200"
             />
         </BuilderRow>
     </t>
