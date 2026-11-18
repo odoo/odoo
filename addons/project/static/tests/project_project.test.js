@@ -7,7 +7,7 @@ import {
     toggleKanbanColumnActions
 } from "@web/../tests/web_test_helpers";
 
-import { defineProjectModels } from "./project_models";
+import { defineProjectModels, ProjectProject } from "./project_models";
 
 defineProjectModels();
 describe.current.tags("desktop");
@@ -19,6 +19,7 @@ const listViewParams = {
     arch: `
         <list multi_edit="1" js_class="project_project_list">
             <field name="name"/>
+            <field name="is_user_project_manager"/>
         </list>
     `,
 }
@@ -39,6 +40,20 @@ test("project.project (list) hide archive/unarchive action for project user", as
     await contains(`.o_cp_action_menus .dropdown-toggle`).click();
     expect(`.o-dropdown--menu span:contains(Archive)`).toHaveCount(0, { message: "Archive action should not be visible" });
     expect(`.o-dropdown--menu span:contains(Unarchive)`).toHaveCount(0, { message: "Unarchive action should not be visible" });
+});
+
+test("project.project (list) show archive/unarchive action for project user managing selection", async () => {
+    onRpc("has_group", ({ args }) => args === "project.group_project_user");
+    ProjectProject.create({
+        name: "User-managed project",
+        is_user_project_manager: true,
+    });
+
+    await mountView(listViewParams);
+    await contains(".o_data_row:contains('User-managed project') input.form-check-input").click();
+    await contains(`.o_cp_action_menus .dropdown-toggle`).click();
+    expect("[data-icon='archive']").toHaveCount(1, { message: "Archive action should be visible" });
+    expect("[data-icon='unarchive']").toHaveCount(1, { message: "Unarchive action should be visible" });
 });
 
 test("project.project (kanban) hide archive/unarchive action for project user", async () => {

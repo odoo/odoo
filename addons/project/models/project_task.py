@@ -62,7 +62,8 @@ PROJECT_TASK_READABLE_FIELDS = {
     'date_deadline',
     'partner_id',
     'parent_id',
-    'project_sharing_portal_user_ids'
+    'project_sharing_portal_user_ids',
+    'is_user_project_manager',
 }
 
 PROJECT_TASK_WRITABLE_FIELDS = {
@@ -285,6 +286,8 @@ class ProjectTask(models.Model):
                                      ui_domain="[('project_id', '!=', False), ('id', '!=', id), ('is_template', '=', False)]", export_string_translation=False)
     dependent_tasks_count = fields.Integer(string="Dependent Tasks", compute='_compute_dependent_tasks_count', export_string_translation=False)
 
+    # Project permission field for the user managing the project
+    is_user_project_manager = fields.Boolean(related='project_id.is_user_project_manager', readonly=True)
     # Project sharing fields
     display_parent_task_button = fields.Boolean(compute='_compute_display_parent_task_button', compute_sudo=True, export_string_translation=False)
     display_follow_button = fields.Boolean(compute='_compute_display_follow_button', compute_sudo=True, export_string_translation=False)

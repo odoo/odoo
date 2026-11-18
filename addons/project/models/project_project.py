@@ -131,6 +131,7 @@ class ProjectProject(models.Model):
     color = fields.Integer(string='Color Index', export_string_translation=False)
     user_id = fields.Many2one('res.users', string='Project Manager', default=lambda self: self.env.user, tracking=True, falsy_value_label=_lt("👤 Unassigned"),
         ui_domain="[('share', '=', False), '|', ('company_id', '=?', company_id), ('company_ids', 'in', company_id)]")
+    is_user_project_manager = fields.Boolean(compute='_compute_is_user_project_manager', export_string_translation=False)
     alias_id = fields.Many2one(help="Internal email associated with this project. Incoming emails are automatically synchronized "
                                     "with Tasks (or optionally Issues if the Issue Tracker module is installed).")
     privacy_visibility = fields.Selection([
@@ -524,6 +525,19 @@ class ProjectProject(models.Model):
 
     def _inverse_allow_recurring_tasks(self):
         self._check_project_group_with_field('allow_recurring_tasks', 'project.group_project_recurring_tasks')
+
+    @api.depends('user_id')
+    def _compute_is_user_project_manager(self):
+        """
+        Necessary to allow a User who manages a Project to validate Timesheets from other Users within that Project.
+        First condition exists so that managers do not lose visibility rights.
+        """
+        for project in self:
+            project.is_user_project_manager = self.env.user.has_group('project.group_project_manager') or (project.user_id == self.env.user)
+
+    @api.depends('user_id')
+    def _onchange_user_id(self):
+        self._compute_is_user_project_manager()
 
     @api.model
     def _map_tasks_default_values(self, project):

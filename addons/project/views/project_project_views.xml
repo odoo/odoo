@@ -36,6 +36,7 @@
                     <field name="company_id" invisible="1"/> <!-- used in the python-declared domain of account_id, allowed_internal_user_ids, documents_folder_id -->
                     <field name="is_rotting" groups="project.group_project_stages" invisible="1"/> <!-- read by the rotting_statusbar_duration widget of stage_id -->
                     <field name="rotting_days" groups="project.group_project_stages" invisible="1"/> <!-- read by the rotting_statusbar_duration widget of stage_id -->
+                    <field name="is_user_project_manager" invisible="1"/> <!-- Necessary to give the project's manager additional rights -->
                     <header>
                         <field name="stage_id" widget="rotting_statusbar_duration" options="{'clickable': '1', 'fold_field': 'fold'}" groups="project.group_project_stages" domain="[('company_id', 'in', (company_id, False))]"/>
                     </header>
@@ -287,6 +288,7 @@
                     <field name="can_mark_milestone_as_done" column_invisible="True"/> <!-- drives decoration-success of next_milestone_id -->
                     <field name="is_milestone_deadline_exceeded" column_invisible="1"/> <!-- drives decoration-danger of next_milestone_id -->
                     <field name="allow_milestones" column_invisible="True"/> <!-- drives invisible of milestone_progress, next_milestone_id -->
+                    <field name="is_user_project_manager" column_invisible="True"/> <!-- Necessary to give the project's manager additional rights -->
                     <field name="is_favorite" string="Favorite" nolabel="1" widget="project_is_favorite" optional="hide"/>
                     <field name="name" class="fw-bold"/>
                     <field name="partner_id" optional="show" string="Customer" invisible="is_template"/>
@@ -935,7 +937,7 @@
             <field name="model_id" ref="project.model_project_project"/>
             <field name="binding_model_id" ref="project.model_project_project"/>
             <field name="binding_view_types">form</field>
-            <field name="group_ids" eval="[Command.link(ref('project.group_project_manager'))]"/>
+            <field name="group_ids" eval="[Command.link(ref('project.group_project_user'))]"/>
             <field name="state">code</field>
             <field name="code">
                 action = record.action_open_share_project_wizard()
