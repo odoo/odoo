@@ -277,4 +277,13 @@
         </field>
     </record>
 
+    <!-- Timesheets get their product from their sales order item: keep them out of Services & Material. -->
+    <record id="sale.action_service_material" model="ir.actions.act_window">
+        <field name="domain">[
+            ('product_id.reinvoice_policy', '!=', 'no'),
+            ('order_id', '!=', False),
+            ('project_id', '=', False)
+        ]</field>
+    </record>
+
 </odoo>
