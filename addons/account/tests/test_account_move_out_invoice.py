@@ -3370,7 +3370,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         })
 
         product.with_company(self.company_data_2['company']).write({
-            'lst_price': 1000.0,
             'property_account_income_id': self.company_data_2['default_account_revenue'].id,
         })
 
@@ -5336,6 +5335,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.cr.precommit.run()  # load the CoA
 
         branch_a, _branch_b = self.env.company.child_ids  # invoice on the branch
+        self.product_a.with_company(branch_a).lst_price = 1100.0
 
         # Create invoice - product will auto-apply price_unit from product with tax
         move_form = Form(self.env['account.move'].with_company(branch_a).with_context(default_move_type='out_invoice'))

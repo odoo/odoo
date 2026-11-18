@@ -123,16 +123,12 @@ class ProductTemplate(models.Model):
     # list_price: catalog price, user defined
     list_price = fields.Float(
         'Sales Price', default=1.0,
-        compute='_compute_list_price',
-        compute_sql='_compute_sql_list_price',
-        compute_sudo=True,
-        inverse='_inverse_list_price',
         min_display_digits='Product Price',
         copy=True,
         tracking=True,
+        company_dependent=True,
         help="Price at which the product is sold to customers.",
     )
-    specific_list_price = fields.Float(company_dependent=True)
     standard_price = fields.Float(
         'Cost', compute='_compute_standard_price',
         inverse='_set_standard_price', search='_search_standard_price',
@@ -430,32 +426,6 @@ class ProductTemplate(models.Model):
 
     def _compute_sql_cost_currency_id(self, table):
         return SQL("COALESCE(%s, %s)", table.company_id.currency_id, self.env.company.currency_id.id)
-
-    def _get_list_price_companies(self):
-        """Return the companies to take the sales price from: the company, its parents, then the
-        main company."""
-        return self.env.company.parent_ids[::-1] | self.env['res.company']._get_main_company()
-
-    @api.depends('specific_list_price')
-    @api.depends_context('company')
-    def _compute_list_price(self):
-        companies = self._get_list_price_companies()
-        for template in self:
-            prices = (template.with_company(company).specific_list_price for company in companies)
-            template.list_price = next((price for price in prices if price), 0.0)
-
-    def _compute_sql_list_price(self, table):
-        prices = SQL(", ").join(
-            SQL("NULLIF(%s, 0)", table._with_model(self.with_company(company)).specific_list_price)
-            for company in self._get_list_price_companies()
-        )
-        return SQL("COALESCE(%s, 0)", prices)
-
-    def _inverse_list_price(self):
-        for template in self:
-            template.specific_list_price = template.list_price
-        # other companies may use this price
-        self.invalidate_recordset(['list_price'], flush=False)
 
     def _compute_template_field_from_variant_field(self, fname, default=False, multi_variant=False):
         """Set the value of the given field based on the template variant values.
@@ -862,9 +832,8 @@ class ProductTemplate(models.Model):
     def create(self, vals_list):
         ''' Store the initial standard price in order to be able to retrieve the cost of a product template for a given date'''
         templates = super().create(vals_list)
-        # writes made during the create may have cached the price as 0
-        templates.invalidate_recordset(['list_price'], flush=False)
         if self.env.context.get("create_product_product", True):
+            templates._set_list_price_in_all_companies()
             templates._create_variant_ids()
 
         # This is needed to set given values to first variant after creation
@@ -881,11 +850,23 @@ class ProductTemplate(models.Model):
 
         return templates
 
+    def _set_list_price_in_all_companies(self):
+        """Set the sales price of the current company in the other companies, which can then
+        change their own."""
+        self.product_variant_ids.flush_recordset(['lst_price'])  # compute it in this company first
+        companies = self.env['res.company'].sudo().search([('id', '!=', self.env.company.id)])
+        for template in self.sudo().with_context(mail_notrack=True):
+            for company in companies:
+                template.with_company(company).list_price = template.list_price
+
     def write(self, vals):
         if 'uom_id' in vals:
             products = self.filtered(lambda template: template.uom_id.id != vals['uom_id']).product_variant_ids
             products.sudo().with_context(skip_uom_conversion=True)._update_uom(vals['uom_id'])
         res = super().write(vals)
+        if 'list_price' in vals:
+            # recompute the variant sales price in the company of the written sales price
+            self.with_context(active_test=False).product_variant_ids.flush_recordset(['lst_price'])
         if (self.env.context.get("create_product_product", True) and 'attribute_line_ids' in vals) or (vals.get('active') and len(self.product_variant_ids) == 0):
             self._create_variant_ids()
         if 'active' in vals and not vals.get('active'):
@@ -1161,17 +1142,28 @@ class ProductTemplate(models.Model):
             # write this attribute on every product to make sure we don't lose them
             single_value_lines = lines_without_no_variants.filtered(lambda ptal: len(ptal.product_template_value_ids._only_active()) == 1)
             if single_value_lines:
-                for variant in all_variants:
-                    combination = variant.product_template_attribute_value_ids | single_value_lines.product_template_value_ids._only_active()
-                    # Do not add single value if the resulting combination would
-                    # be invalid anyway.
-                    if (
-                        len(combination) == len(lines_without_no_variants)
-                        and combination.attribute_line_id == lines_without_no_variants
-                        # Update only if necessary to prevent a cache invalidation
-                        and variant.product_template_attribute_value_ids != combination
-                    ):
-                        variant.product_template_attribute_value_ids = combination
+                # Writing product_template_attribute_value_ids below invalidates
+                # price_extra, which triggers recompute of the stored lst_price
+                # and wipes user-set overrides. Protect lst_price on variants
+                # whose value diverges from the computed one (= manual override);
+                # non-overridden variants are left to the recompute so they
+                # correctly pick up the new ptav's price_extra.
+                overridden = all_variants.filtered(
+                    lambda v: v.lst_price != v.list_price + v.price_extra,
+                )
+                lst_price_field = self.env['product.product']._fields['lst_price']
+                with self.env.protecting([lst_price_field], overridden):
+                    for variant in all_variants:
+                        combination = variant.product_template_attribute_value_ids | single_value_lines.product_template_value_ids._only_active()
+                        # Do not add single value if the resulting combination would
+                        # be invalid anyway.
+                        if (
+                            len(combination) == len(lines_without_no_variants)
+                            and combination.attribute_line_id == lines_without_no_variants
+                            # Update only if necessary to prevent a cache invalidation
+                            and variant.product_template_attribute_value_ids != combination
+                        ):
+                            variant.product_template_attribute_value_ids = combination
 
             # Set containing existing `product.template.attribute.value` combination
             existing_variants = {

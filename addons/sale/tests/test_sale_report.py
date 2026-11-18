@@ -36,6 +36,8 @@ class TestSaleReportCurrencyRate(SaleCommon):
             .sudo()
             .create({"name": "EUR Company", "currency_id": cls.env.ref("base.EUR").id})
         )
+        for company in cls.usd_cmp + cls.eur_cmp:
+            cls.product.with_company(company).list_price = cls.product.list_price
 
     def test_sale_report_discount_amount(self):
         "The Sales report must convert the line discount percentage to an amount."

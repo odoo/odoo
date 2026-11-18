@@ -13,18 +13,16 @@ class TestSalesPriceMultiCompany(ProductVariantsCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.main_company = cls.env['res.company']._get_main_company()
+        cls.company_a = cls.env['res.company']._get_main_company()
         cls.company_b, cls.company_c = cls.env['res.company'].sudo().create([
             {'name': "Company B"},
             {'name': "Company C"},
         ])
-        cls.branch_b = cls.env['res.company'].sudo().create({
-            'name': "Branch B", 'parent_id': cls.company_b.id,
-        })
-        companies = cls.main_company + cls.company_b + cls.company_c + cls.branch_b
-        cls._test_user.sudo().company_ids = [Command.link(company.id) for company in companies]
+        cls._test_user.sudo().company_ids = [
+            Command.link(company.id) for company in cls.company_b + cls.company_c
+        ]
 
-        cls.template = cls.env['product.template'].with_company(cls.main_company).create({
+        cls.template = cls.env['product.template'].with_company(cls.company_a).create({
             'name': "Chair",
             'list_price': 100.0,
             'attribute_line_ids': [Command.create({
@@ -34,37 +32,28 @@ class TestSalesPriceMultiCompany(ProductVariantsCommon):
         })
         cls.variant_s, cls.variant_m, cls.variant_l = cls.template.product_variant_ids
 
-    def test_company_price_applies_to_that_company_and_its_branches_only(self):
+    def test_new_product_price_is_set_in_all_companies(self):
+        for company in self.company_b + self.company_c:
+            self.assertEqual(self.variant_s.with_company(company).lst_price, 100.0)
+
+    def test_company_price_does_not_change_other_companies(self):
         self.template.with_company(self.company_b).list_price = 140.0
         for company, price in (
-            (self.main_company, 100.0),
+            (self.company_a, 100.0),
             (self.company_b, 140.0),
-            (self.branch_b, 140.0),
             (self.company_c, 100.0),
         ):
-            self.assertEqual(self.template.with_company(company).list_price, price)
+            self.assertEqual(self.variant_s.with_company(company).lst_price, price)
 
-    def test_reset_company_price_falls_back_to_main_company(self):
-        self.template.with_company(self.company_b).list_price = 140.0
-        self.template.with_company(self.company_b).list_price = 0.0
-        self.assertEqual(self.template.with_company(self.company_b).list_price, 100.0)
-
-    def test_main_company_variant_price_applies_to_companies_without_price(self):
-        self.variant_s.with_company(self.main_company).lst_price = 150.0
-        self.assertEqual(self.variant_s.with_company(self.company_c).lst_price, 150.0)
-
-    def test_variant_set_back_to_computed_price_follows_template(self):
-        self.variant_s.lst_price = 150.0
-        self.variant_s.lst_price = 100.0
-        self.template.list_price = 120.0
-        self.assertEqual(self.variant_s.lst_price, 120.0)
-
-    def test_extra_price_change_resets_variant_prices_in_all_companies(self):
-        self.variant_m.with_company(self.main_company).lst_price = 300.0
-        self.variant_m.with_company(self.company_b).lst_price = 310.0
-        self.variant_m.product_template_attribute_value_ids.price_extra = 5.0
-        for company in self.main_company + self.company_b:
-            self.assertEqual(self.variant_m.with_company(company).lst_price, 105.0)
+    def test_variant_prices_are_kept_per_company(self):
+        self.variant_m.with_company(self.company_a).lst_price = 200.0
+        self.variant_m.with_company(self.company_b).lst_price = 250.0
+        for company, price in (
+            (self.company_a, 200.0),
+            (self.company_b, 250.0),
+            (self.company_c, 100.0),
+        ):
+            self.assertEqual(self.variant_m.with_company(company).lst_price, price)
 
     def test_search_uses_company_price(self):
         self.template.with_company(self.company_b).list_price = 140.0
