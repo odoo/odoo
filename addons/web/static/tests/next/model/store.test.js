@@ -3,7 +3,7 @@ import { Component, computed, onPatched, signal, useEffect, useScope, xml } from
 import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { toCommands } from "@web/next/model/commands";
-import { fields } from "@web/next/model/fields";
+import { fieldFromDefinition, fields } from "@web/next/model/fields";
 import { Model } from "@web/next/model/model";
 import { Store } from "@web/next/model/store";
 
@@ -67,8 +67,8 @@ class Line extends Model {
     };
 }
 
-function makeStore(definitions) {
-    return new Store({ models: [Partner, Tag, Order, Line], definitions });
+function makeStore() {
+    return new Store({ models: [Partner, Tag, Order, Line] });
 }
 
 /**
@@ -119,50 +119,34 @@ describe("declarations", () => {
         expect(upper()).toBe("ALICE B.");
     });
 
-    test("server definitions are merged under JS declarations", () => {
-        const store = makeStore({
-            "res.partner": {
-                fields: {
-                    name: { type: "char", string: "Name", required: true },
-                    email: { type: "char", string: "Email" },
-                },
+    test("fields can be declared from server definitions", () => {
+        // e.g. the fields of a view, or the result of /web/model/get_definitions
+        const definitions = {
+            name: { type: "char", string: "Name", required: true },
+            parent_id: {
+                type: "many2one",
+                relation: "res.partner",
+                inverse_fname_by_model_name: { "res.partner": "child_ids" },
             },
-            "res.country": { fields: { code: { type: "char" } } },
-        });
-        const partnerFields = store.model("res.partner").fieldsByName;
-        expect(partnerFields.email.type).toBe("char");
-        // the store only keeps what it needs to hold records
-        expect("required" in partnerFields.name).toBe(false);
-        // models known only from the server get a generic class
-        const country = store.create("res.country", { code: "BE" });
-        expect(country.code()).toBe("BE");
-    });
-
-    test("inverses come from the get_definitions format", () => {
-        const store = new Store({
-            definitions: {
-                "res.partner": {
-                    fields: {
-                        name: { type: "char" },
-                        parent_id: {
-                            type: "many2one",
-                            relation: "res.partner",
-                            inverse_fname_by_model_name: { "res.partner": "child_ids" },
-                        },
-                        child_ids: {
-                            type: "one2many",
-                            relation: "res.partner",
-                            inverse_fname_by_model_name: { "res.partner": "parent_id" },
-                        },
-                    },
-                },
-            },
-        });
+            child_ids: { type: "one2many", relation: "res.partner", relation_field: "parent_id" },
+        };
+        class ViewPartner extends Model {
+            static _name = "res.partner";
+            static fields = Object.fromEntries(
+                Object.entries(definitions).map(([name, definition]) => [
+                    name,
+                    fieldFromDefinition(definition),
+                ])
+            );
+        }
+        const store = new Store({ models: [ViewPartner] });
         const [parent, child] = store.load("res.partner", [
             { id: 1, name: "Parent", child_ids: [] },
             { id: 2, name: "Child", parent_id: 1 },
         ]);
         expect(parent.child_ids()).toEqual([child]);
+        // the store only keeps what it needs to hold records
+        expect("required" in store.model("res.partner").fieldsByName.name).toBe(false);
     });
 
     test("extensions are chained in registration order", () => {
@@ -273,6 +257,14 @@ describe("declarations", () => {
         expect(() => new Store({ models: [Extension, Thing] })).toThrow(
             /extended before it is declared/
         );
+
+        class Orphan extends Model {
+            static _name = "x.orphan";
+            static fields = { partner_id: fields.Many2one("res.partner") };
+        }
+        expect(() => new Store({ models: [Orphan] })).toThrow(
+            /"x.orphan.partner_id" targets unknown model "res.partner"/
+        );
     });
 
     test("an extension can make a model editable", () => {
@@ -350,17 +342,6 @@ describe("declarations", () => {
         expect(store.get("res.partner", 1)).toBe(partner);
         expect(store.records(Partner)).toEqual([partner]);
         expect(store.model(Partner)).toBe(store.model("res.partner"));
-    });
-
-    test("a relation declared in JS has to match the server", () => {
-        const definitions = (relation) => ({
-            "sale.order": { fields: { partner_id: { type: "many2one", relation } } },
-            "res.users": { fields: {} },
-        });
-        expect(() => makeStore(definitions("res.partner"))).not.toThrow();
-        expect(() => makeStore(definitions("res.users"))).toThrow(
-            /"sale.order.partner_id" is declared as many2one to "res.partner", but the server defines it as many2one to "res.users"/
-        );
     });
 });
 

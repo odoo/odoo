@@ -203,21 +203,6 @@ class _Model {
 export const Model = /** @type {any} */ (_Model);
 
 /**
- * The class of a model that no class declares, e.g. one that is only known
- * from server definitions.
- *
- * @param {string} name
- * @returns {ModelClass}
- */
-export function makeGenericClass(name) {
-    const Generic = class extends _Model {
-        static _name = name;
-    };
-    Object.defineProperty(Generic, "name", { value: name });
-    return Generic;
-}
-
-/**
  * The name of the model of a class: the one it declares or extends, or the
  * one of the class it derives from.
  *

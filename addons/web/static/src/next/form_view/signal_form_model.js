@@ -1,6 +1,7 @@
 import { signal } from "@odoo/owl";
 import { Model } from "@web/model/model";
 import { toCommands } from "../model/commands";
+import { fieldFromDefinition, fields as storeFields } from "../model/fields";
 import { Model as RecordModel } from "../model/model";
 import { Store } from "../model/store";
 
@@ -31,7 +32,7 @@ export class SignalFormModel extends Model {
         // binary fields come as their size, not as their content
         this.context = { ...context, bin_size: true };
         this.specification = buildSpecification(fields, fieldNames);
-        this.store = new Store(buildStoreParams(resModel, fields, fieldNames));
+        this.store = new Store({ models: buildModels(resModel, fields, fieldNames) });
         /** the displayed record, a record of the store */
         this.record = signal(null);
     }
@@ -99,33 +100,36 @@ function buildSpecification(fields, fieldNames) {
 }
 
 /**
- * The store knows the main model with the fields of the arch, and each
- * comodel with its display name. The fields come from the view, as
- * definitions: no class declares them. The models are editable, so that local
- * changes are kept apart from the server values (that is what `toCommands`
- * sends).
+ * The models of the store: the main one with the fields of the arch, and each
+ * comodel with its display name. No class declares them in advance: their
+ * fields are the ones of the view. They are editable, so that local changes
+ * are kept apart from the server values (that is what `toCommands` sends).
  *
  * @param {string} resModel
  * @param {Record<string, any>} fields description of the fields, from the view
  * @param {string[]} fieldNames
  */
-function buildStoreParams(resModel, fields, fieldNames) {
-    /** @type {Record<string, { fields: Record<string, any> }>} */
-    const definitions = { [resModel]: { fields: {} } };
+function buildModels(resModel, fields, fieldNames) {
+    /** @type {Record<string, Record<string, any>>} */
+    const fieldsByModel = { [resModel]: {} };
     for (const name of fieldNames) {
+        if (name === "id") {
+            // records always have an id
+            continue;
+        }
         const { type, relation } = fields[name];
-        definitions[resModel].fields[name] = { type, relation };
+        fieldsByModel[resModel][name] = fieldFromDefinition({ type, relation });
         if (relation) {
-            definitions[relation] ||= { fields: {} };
-            definitions[relation].fields.display_name ||= { type: "char" };
+            fieldsByModel[relation] ||= {};
+            fieldsByModel[relation].display_name ||= storeFields.Char();
         }
     }
-    const models = Object.keys(definitions).map(
-        (name) =>
+    return Object.entries(fieldsByModel).map(
+        ([name, modelFields]) =>
             class extends RecordModel {
                 static _name = name;
                 static _editable = true;
+                static fields = modelFields;
             }
     );
-    return { models, definitions };
 }
