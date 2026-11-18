@@ -50,3 +50,56 @@ registerWebsitePreviewTour('snippet_newsletter_block_with_edit', {
     },
     ...clickOnSave(),
 ]);
+
+registerWebsitePreviewTour("snippet_newsletter_block_switch_template", {
+    url: "/",
+    edition: true,
+}, () => [
+    ...insertSnippet({
+        id: "s_newsletter_block",
+        name: "Newsletter Block",
+        groupName: "Contact & Forms",
+    }),
+    {
+        content: "Click on the Subscribe form",
+        trigger: ":iframe .s_newsletter_block .s_newsletter_subscribe_form",
+        run: "click",
+    },
+    {
+        content: "Toggle the option to display the Thanks message",
+        trigger: "we-button[data-toggle-thanks-message] we-checkbox",
+        run: "click",
+    },
+    {
+        content: "Edit the Thanks message",
+        trigger: ":iframe .s_newsletter_block .js_subscribed_wrap p",
+        run: "editor Thanks a lot!",
+    },
+    {
+        content: "Open the template selector",
+        trigger: "we-select[data-name='newsletter_template_opt'] we-toggler",
+        run: "click",
+    },
+    {
+        content: "Switch to the Form Subscription template",
+        trigger: "we-button[data-name='form_opt']",
+        run: "click",
+    },
+    {
+        trigger: ":iframe .s_newsletter_block .s_website_form",
+    },
+    {
+        content: "Open the template selector",
+        trigger: "we-select[data-name='newsletter_template_opt'] we-toggler",
+        run: "click",
+    },
+    {
+        content: "Switch back to the Email Subscription template",
+        trigger: "we-button[data-name='email_opt']",
+        run: "click",
+    },
+    {
+        content: "Check that the edited Thanks message is kept",
+        trigger: ":iframe .s_newsletter_block .js_subscribed_wrap p:contains('Thanks a lot!')",
+    },
+]);
