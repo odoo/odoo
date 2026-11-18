@@ -278,3 +278,102 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
             call_args = mock.call_args.kwargs["json"]["payload"].keys()
             for payload_param in ("account", "return_url", "refresh_url", "type"):
                 self.assertIn(payload_param, call_args)
+
+    def test_line_items_payload_with_taxes_included_unit_costs(self):
+        """Test that line items are sent with their taxes included unit costs in minor units."""
+        PaymentTransaction = self.env.registry["payment.transaction"]
+        tx = self._create_transaction(flow="direct", amount=23.0)
+        line_items = {
+            "line": {"name": "Chair", "description": "Oak chair", "quantity": 2, "total": 23.0}
+        }
+        with patch.object(PaymentTransaction, "_get_line_items", return_value=line_items):
+            payload = tx._stripe_prepare_line_items_payload()
+        prefix = "amount_details[line_items][0]"
+        self.assertDictEqual(
+            payload,
+            {
+                f"{prefix}[product_name]": "Chair",
+                f"{prefix}[quantity]": 2,
+                f"{prefix}[unit_cost]": 1150,
+                f"{prefix}[payment_method_options][paypal][description]": "Oak chair",
+            },
+        )
+
+    def test_line_items_payload_falls_back_to_single_quantity(self):
+        """Test that a line item with a fractional quantity is sent with a quantity of 1."""
+        PaymentTransaction = self.env.registry["payment.transaction"]
+        tx = self._create_transaction(flow="direct", amount=10.0)
+        line_items = {"line": {"name": "Desk", "description": "", "quantity": 1.5, "total": 10.0}}
+        with patch.object(PaymentTransaction, "_get_line_items", return_value=line_items):
+            payload = tx._stripe_prepare_line_items_payload()
+        prefix = "amount_details[line_items][0]"
+        self.assertEqual(
+            (payload[f"{prefix}[quantity]"], payload[f"{prefix}[unit_cost]"]), (1, 1000)
+        )
+
+    def test_line_items_payload_skips_too_long_product_code(self):
+        """Test that the SKU is only sent as product code if Stripe accepts its length, but always
+        as Klarna reference."""
+        PaymentTransaction = self.env.registry["payment.transaction"]
+        tx = self._create_transaction(flow="direct", amount=20.0)
+        line_items = {
+            "short": {"name": "A", "description": "", "sku": "SHORT", "quantity": 1, "total": 10.0},
+            "long": {"name": "B", "description": "", "sku": "A" * 13, "quantity": 1, "total": 10.0},
+        }
+        with patch.object(PaymentTransaction, "_get_line_items", return_value=line_items):
+            payload = tx._stripe_prepare_line_items_payload()
+        prefix = "amount_details[line_items]"
+        self.assertEqual(payload[f"{prefix}[0][product_code]"], "SHORT")
+        self.assertNotIn(f"{prefix}[1][product_code]", payload)
+        self.assertEqual(
+            payload[f"{prefix}[1][payment_method_options][klarna][reference]"], "A" * 13
+        )
+
+    def test_payment_intent_payload_includes_order_reference(self):
+        """Test that the transaction reference is sent as order reference."""
+        tx = self._create_transaction(flow="direct")
+        with patch.object(
+            self.env.registry["payment.transaction"],
+            "_stripe_create_customer",
+            return_value={"id": "cus_1234567890ABCDE"},
+        ):
+            payload = tx._stripe_prepare_payment_intent_payload()
+        self.assertEqual(payload["payment_details[order_reference]"], tx.reference)
+
+    def test_no_line_items_with_negative_line(self):
+        """Test that no line items are sent when a line item is negative."""
+        PaymentTransaction = self.env.registry["payment.transaction"]
+        tx = self._create_transaction(flow="direct", amount=15.0)
+        line_items = {
+            "line": {"name": "Desk", "description": "", "quantity": 1, "total": 20.0},
+            "discount": {"name": "Promo", "description": "", "quantity": 1, "total": -5.0},
+        }
+        with patch.object(PaymentTransaction, "_get_line_items", return_value=line_items):
+            self.assertDictEqual(tx._stripe_prepare_line_items_payload(), {})
+
+    def test_no_line_items_with_nameless_line(self):
+        """Test that no line items are sent when a line item has no name."""
+        PaymentTransaction = self.env.registry["payment.transaction"]
+        tx = self._create_transaction(flow="direct", amount=10.0)
+        line_items = {"line": {"name": "", "description": "", "quantity": 1, "total": 10.0}}
+        with patch.object(PaymentTransaction, "_get_line_items", return_value=line_items):
+            self.assertDictEqual(tx._stripe_prepare_line_items_payload(), {})
+
+    def test_no_line_items_for_partial_payment(self):
+        """Test that no line items are sent when they do not add up to the transaction amount."""
+        PaymentTransaction = self.env.registry["payment.transaction"]
+        tx = self._create_transaction(flow="direct", amount=10.0)
+        line_items = {"line": {"name": "Desk", "description": "", "quantity": 1, "total": 20.0}}
+        with patch.object(PaymentTransaction, "_get_line_items", return_value=line_items):
+            self.assertDictEqual(tx._stripe_prepare_line_items_payload(), {})
+
+    def test_no_line_items_above_maximum(self):
+        """Test that no line items are sent when there are more than Stripe accepts."""
+        PaymentTransaction = self.env.registry["payment.transaction"]
+        tx = self._create_transaction(flow="direct", amount=const.MAX_LINE_ITEMS + 1)
+        line_items = {
+            i: {"name": "Pen", "description": "", "quantity": 1, "total": 1.0}
+            for i in range(const.MAX_LINE_ITEMS + 1)
+        }
+        with patch.object(PaymentTransaction, "_get_line_items", return_value=line_items):
+            self.assertDictEqual(tx._stripe_prepare_line_items_payload(), {})
