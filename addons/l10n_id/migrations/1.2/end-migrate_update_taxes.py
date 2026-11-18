@@ -3,7 +3,7 @@ from odoo import api, SUPERUSER_ID
 
 
 def migrate(cr, version):
-    env = api.Environment(cr, SUPERUSER_ID, {})
+    env = api.Environment(cr, SUPERUSER_ID, {"lang": "en_US"})
 
     # Load the new tax groups if it doesn't exist yet
     ChartTemplate = env["account.chart.template"]
