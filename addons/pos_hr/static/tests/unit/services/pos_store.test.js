@@ -91,6 +91,23 @@ test("handleUrlParams prevents unauthorized access when POS is locked with pos_h
     await store.handleUrlParams();
     expect(navigateCalledWithLoginScreen).toBe(true);
 });
+test("navigate shows the login screen while no cashier is logged in", async () => {
+    const store = await setupPosEnv();
+    store.config.module_pos_hr = true;
+    const order = store.addNewOrder();
+
+    store.resetCashier();
+    store.navigate("TicketScreen");
+    expect(store.router.state.current).toBe("LoginScreen");
+    store.navigate("ProductScreen", { orderUuid: order.uuid });
+    expect(store.router.state.current).toBe("LoginScreen");
+    store.navigate("SaverScreen");
+    expect(store.router.state.current).toBe("SaverScreen");
+
+    store.setCashier(store.models["hr.employee"].get(2));
+    store.navigate("TicketScreen");
+    expect(store.router.state.current).toBe("TicketScreen");
+});
 test("keybordInputRights", async () => {
     const store = await setupPosEnv();
     const order = store.addNewOrder();

@@ -1,6 +1,7 @@
 import { patch } from "@web/core/utils/patch";
 import { PosStore } from "@point_of_sale/app/services/pos_store";
 import { browser } from "@web/core/browser/browser";
+import { registry } from "@web/core/registry";
 
 patch(PosStore.prototype, {
     async setup() {
@@ -163,6 +164,13 @@ patch(PosStore.prototype, {
     },
     canEditPayment(order) {
         return super.canEditPayment(order) && (!this.config.module_pos_hr || this.employeeIsAdmin);
+    },
+    navigate(routeName) {
+        const { component } = registry.category("pos_pages").get(routeName);
+        if (this.config.module_pos_hr && !this.cashier && !component.coversApp) {
+            return super.navigate("LoginScreen");
+        }
+        return super.navigate(...arguments);
     },
     async handleUrlParams() {
         if (this.config.module_pos_hr && !this.cashier) {
