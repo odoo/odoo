@@ -271,24 +271,19 @@ class TestHrVersion(TestHrCommon):
         self.assertEqual(version.contract_date_start, date(2020, 1, 1))
         self.assertEqual(version.contract_date_end, date(2021, 12, 31))
 
-        # Create a new version on any contract interval regardless of the version valid at that date
+        # A new contract cannot start before the first version carrying it
         employee = self.env['hr.employee'].create({
             'name': 'John Doe',
             'contract_date_start': '2020-01-01',
             'contract_date_end': '2020-12-31'
         })
 
-        employee.create_version({
-            'date_version': '2022-01-01',
-            'contract_date_start': '2021-01-01',
-            'contract_date_end': '2022-12-31'
-        })
-
-        version = employee.create_version({
-            'date_version': '2021-01-01',
-        })
-        self.assertEqual(version.contract_date_start, date(2021, 1, 1))
-        self.assertEqual(version.contract_date_end, date(2022, 12, 31))
+        with self.assertRaises(ValidationError):
+            employee.create_version({
+                'date_version': '2022-01-01',
+                'contract_date_start': '2021-01-01',
+                'contract_date_end': '2022-12-31'
+            })
 
     def test_dates_synchronisation(self):
         """
@@ -634,6 +629,235 @@ class TestHrVersion(TestHrCommon):
         self.assertEqual(employee.current_version_id, v2)
         with self.assertRaises(ValidationError):
             v2.unlink()
+
+    def test_contract_start_before_version_date(self):
+        """
+        Adding a contract start date earlier than the date of the first version
+        carrying it is refused, from hr.version as well as from hr.employee.
+        """
+        employee = self.env['hr.employee'].create({
+            'name': 'John Doe',
+            'date_version': '2020-01-01',
+        })
+        v1 = employee.version_id
+        v2 = employee.create_version({'date_version': '2020-09-01'})
+        self.assertFalse(v2.contract_date_start)
+
+        with self.assertRaises(ValidationError):
+            v2.contract_date_start = '2020-08-01'
+
+        with self.assertRaises(ValidationError):
+            v2.with_context(multi_update_version_ids=v2.ids).write({'contract_date_start': '2020-08-01'})
+
+        with self.assertRaises(ValidationError):
+            employee.contract_date_start = '2020-08-01'
+
+        with self.assertRaises(ValidationError):
+            employee.create_version({
+                'date_version': '2020-10-01',
+                'contract_date_start': '2020-09-15',
+            })
+
+        v2.contract_date_start = '2020-09-01'
+        self.assertEqual(v2.contract_date_start, date(2020, 9, 1))
+        self.assertFalse(v1.contract_date_start)
+
+        v3 = employee.create_version({'date_version': '2020-11-01'})
+        self.assertEqual(v3.contract_date_start, date(2020, 9, 1))
+
+    def test_contract_start_before_version_date_single_version(self):
+        """
+        With a single version, the version date follows the contract start date.
+        """
+        employee = self.env['hr.employee'].create({
+            'name': 'John Doe',
+            'date_version': '2020-09-01',
+        })
+        employee.version_id.contract_date_start = '2020-08-01'
+        self.assertEqual(employee.version_id.date_version, date(2020, 8, 1))
+
+    def test_contract_start_with_version_date_same_write(self):
+        """
+        Moving the version date and the contract start date earlier in the same
+        write is allowed: the contract start is checked against the new version date.
+        """
+        employee = self.env['hr.employee'].create({
+            'name': 'John Doe',
+            'date_version': '2025-01-01',
+            'contract_date_start': '2025-01-01',
+            'contract_date_end': '2025-03-31',
+        })
+        version = employee.create_version({
+            'date_version': '2025-07-01',
+            'contract_date_start': '2025-07-01',
+            'contract_date_end': '2025-09-30',
+        })
+        version.write({
+            'date_version': '2025-05-01',
+            'contract_date_start': '2025-05-01',
+            'contract_date_end': '2025-09-30',
+        })
+        self.assertEqual(version.date_version, date(2025, 5, 1))
+        self.assertEqual(version.contract_date_start, date(2025, 5, 1))
+
+        with self.assertRaises(ValidationError):
+            version.write({
+                'date_version': '2025-06-01',
+                'contract_date_start': '2025-04-01',
+            })
+
+        # moving both dates later in the same write is allowed as well
+        version.write({
+            'date_version': '2025-06-01',
+            'contract_date_start': '2025-06-01',
+        })
+        self.assertEqual(version.date_version, date(2025, 6, 1))
+        self.assertEqual(version.contract_date_start, date(2025, 6, 1))
+
+    def test_contract_start_in_version_employee_create(self):
+        """
+        When an employee is created with a contract, the date of its version is
+        synchronized with the contract start.
+        """
+        employee, employee_no_date, employee_before = self.env['hr.employee'].create([
+            {
+                'name': 'John Doe',
+                'date_version': '2020-09-01',
+                'contract_date_start': '2020-08-01',
+            },
+            {
+                'name': 'Jane Doe',
+                'contract_date_start': '2020-08-01',
+            },
+            {
+                'name': 'Before Doe',
+                'date_version': '2020-01-01',
+                'contract_date_start': '2020-08-01',
+            },
+        ])
+        self.assertEqual(employee.version_id.date_version, date(2020, 8, 1))
+        self.assertEqual(employee_no_date.version_id.date_version, date(2020, 8, 1))
+        self.assertEqual(employee_before.version_id.date_version, date(2020, 8, 1))
+
+    def test_contract_start_in_version_move_version_date(self):
+        """
+        The version date of the first version of a contract cannot be moved
+        after the contract start.
+        """
+        employee = self.env['hr.employee'].create({
+            'name': 'John Doe',
+            'date_version': '2020-01-01',
+        })
+        version = employee.create_version({
+            'date_version': '2020-09-01',
+            'contract_date_start': '2020-09-01',
+        })
+        with self.assertRaises(ValidationError):
+            version.date_version = '2020-10-01'
+        # same with a single version
+        single_employee = self.env['hr.employee'].create({
+            'name': 'Jane Doe',
+            'date_version': '2020-09-01',
+            'contract_date_start': '2020-09-01',
+        })
+        with self.assertRaises(ValidationError):
+            single_employee.version_id.date_version = '2020-10-01'
+        # moving it earlier is fine
+        version.date_version = '2020-08-01'
+        self.assertEqual(version.date_version, date(2020, 8, 1))
+
+    def test_contract_start_in_version_of_another_contract(self):
+        """
+        The contract cannot start on a day covered by a version without that
+        contract, even if an earlier version carries the contract.
+        """
+        employee = self.env['hr.employee'].create({
+            'name': 'John Doe',
+            'date_version': '2020-01-01',
+        })
+        v1 = employee.version_id
+        employee.create_version({'date_version': '2020-02-01'})
+        employee.create_version({'date_version': '2020-06-01'})
+        # on Mar 1, the Feb 1 version (without contract) is in effect
+        with self.assertRaises(ValidationError):
+            v1.contract_date_start = '2020-03-01'
+        # on Jan 15, the Jan 1 version is in effect
+        v1.contract_date_start = '2020-01-15'
+        self.assertEqual(v1.contract_date_start, date(2020, 1, 15))
+
+    def test_contract_start_in_version_archive_unlink_reassign(self):
+        """
+        Archiving, deleting or reassigning the first version of a contract is
+        refused when the contract start is no longer covered by its versions.
+        """
+        employee = self.env['hr.employee'].create({
+            'name': 'John Doe',
+            'date_version': '2020-01-01',
+        })
+        other_employee = self.env['hr.employee'].create({
+            'name': 'Jane Doe',
+            'date_version': '2019-01-01',
+        })
+        v_contract = employee.create_version({
+            'date_version': '2020-09-01',
+            'contract_date_start': '2020-09-01',
+        })
+        employee.create_version({'date_version': '2020-11-01'})
+        self.assertEqual(employee.version_ids[-1].contract_date_start, date(2020, 9, 1))
+
+        error = "You cannot archive, delete or reassign this version of a contract"
+        with self.assertRaisesRegex(ValidationError, error):
+            v_contract.action_archive()
+        with self.assertRaisesRegex(ValidationError, error):
+            v_contract.unlink()
+        with self.assertRaisesRegex(ValidationError, error):
+            v_contract.employee_id = other_employee
+
+    def test_contract_start_in_version_multiple_versions_same_contract(self):
+        """
+        When a contract has several versions, only its earliest version has to
+        cover the contract start: the later versions of the same contract can be
+        added, moved, archived or deleted freely.
+
+            A: Jan 1 → no contract
+            B: Sep 1 → contract Sep 1  ← earliest version: must cover Sep 1
+            C: Nov 1 → contract Sep 1  ← free
+            D: Jan 1 → contract Sep 1  ← free
+        """
+        employee = self.env['hr.employee'].create({
+            'name': 'John Doe',
+            'date_version': '2020-01-01',
+        })
+        v_b = employee.create_version({
+            'date_version': '2020-09-01',
+            'contract_date_start': '2020-09-01',
+        })
+        v_c = employee.create_version({'date_version': '2020-11-01'})
+        v_d = employee.create_version({'date_version': '2021-01-01'})
+        self.assertEqual(v_c.contract_date_start, date(2020, 9, 1))
+        self.assertEqual(v_d.contract_date_start, date(2020, 9, 1))
+
+        # the later versions of the contract are free
+        v_e = employee.create_version({'date_version': '2020-12-01'})
+        self.assertEqual(v_e.contract_date_start, date(2020, 9, 1))
+        v_c.date_version = '2020-10-01'
+        self.assertEqual(v_c.date_version, date(2020, 10, 1))
+        v_d.action_archive()
+        self.assertFalse(v_d.active)
+        v_e.unlink()
+        self.assertFalse(v_e.exists())
+
+        # the earliest version may start before the contract: it is in effect on Sep 1
+        v_b.date_version = '2020-08-15'
+        self.assertEqual(v_b.date_version, date(2020, 8, 15))
+
+        # but it cannot start after the contract, nor be removed
+        with self.assertRaises(ValidationError):
+            v_b.date_version = '2020-09-15'
+        with self.assertRaises(ValidationError):
+            v_b.action_archive()
+        with self.assertRaises(ValidationError):
+            v_b.unlink()
 
     def test_multi_edit_multi_employees_no_contract(self):
         """

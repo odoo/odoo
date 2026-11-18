@@ -103,7 +103,8 @@ class TestHrContractVersions(TransactionCase):
         unique_version = self.employee.version_id
         unique_version.contract_date_start = date(2025, 4, 1)
         unique_version.contract_date_end = date(2025, 7, 31)
-        for date_version in ['2025-01-01', '2025-06-01', '2025-12-31']:
+        # the contract must start within its version: the version date cannot be after the contract start
+        for date_version in ['2025-01-01', '2025-03-01', '2025-04-01']:
             unique_version.date_version = date_version
             for date_start in (None, date(2025, 3, 1), date(2025, 4, 1)):
                 for date_end in (None, date(2025, 4, 1), date(2025, 6, 15), date(2025, 7, 31)):
