@@ -336,6 +336,10 @@ class TestJsFieldsGenerate(TransactionCase):
             with self.subTest(options=options):
                 self.assertGenerateError(addon, options, message)
 
+        path = self.write("base", "partner_fields.js", header("// model: res.partner"))
+        with self.assertRaisesRegex(JsFieldsError, r"a generated file has to be named \*.generated.js"):
+            FieldsGenerator(self.env, self.addons).generate(path)
+
         path = self.root / "elsewhere.generated.js"
         path.write_text(header("// model: res.partner"), encoding="utf-8")
         with self.assertRaisesRegex(JsFieldsError, "not in an addon of the addons path"):
@@ -372,3 +376,8 @@ class TestJsFieldsGenerate(TransactionCase):
 
         results = js_fields.run(generator, roots=[other])
         self.assertEqual([result.status for result in results], ['error'])
+
+        # a file with the header, but not named as a generated file
+        misnamed = self.write("base", "misnamed.js", header("// model: res.partner"))
+        self.assertEqual(statuses(roots=[misnamed]), {misnamed: 'error'})
+        self.assertNotIn(misnamed, statuses())
