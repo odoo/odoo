@@ -18,9 +18,9 @@ import {
 } from "../core/utils";
 import { withSequence } from "@html_editor/utils/resource";
 import { DEFAULT_SPACING_SEQUENCE } from "./spacing_plugin";
-import { CommentNodeLayout, ElementLayout } from "../core/render_models";
+import { CommentNodeLayout, ElementLayout, TextNodeLayout } from "../core/render_models";
 import { selectElements } from "@html_editor/utils/dom_traversal";
-import { isAllowedContent } from "@html_editor/utils/dom_info";
+import { isPhrasingContent } from "@html_editor/utils/dom_info";
 import { convertRgbaToCSSColor, rgbaToHex } from "@web/core/utils/colors";
 import { parseCssValue } from "../css_parsers";
 import { Rules } from "../core/rules_models";
@@ -97,7 +97,6 @@ export class MsoPlugin extends Plugin {
             fill: this.extractVmlFill(referenceNode),
             stroke: this.extractVmlStroke(referenceNode),
             arcSize: this.extractVmlArcSize(referenceNode),
-            margin: this.extractVmlMargin(referenceNode),
             padding: this.extractVmlPadding(referenceNode),
             href: this.extractVmlHref(referenceNode),
         };
@@ -154,24 +153,6 @@ export class MsoPlugin extends Plugin {
         const { height, width } = this.getBoundingClientRect(referenceNode);
         const radius = Math.min(resolveRadius(horizontal, width), resolveRadius(vertical, height));
         return cssBorderRadiusToVml({ radius, height, width });
-    }
-
-    extractVmlMargin(referenceNode) {
-        const computedStyle = this.getComputedStyle(referenceNode);
-        const getMargin = (side) => {
-            const value = parseCssValue(computedStyle.getPropertyValue(`margin-${side}`));
-            if (value.unit !== "px") {
-                // unsupported margin value
-                return 0;
-            }
-            return value.number;
-        };
-        return {
-            top: getMargin("top"),
-            right: getMargin("right"),
-            bottom: getMargin("bottom"),
-            left: getMargin("left"),
-        };
     }
 
     extractVmlPadding(referenceNode) {
@@ -234,13 +215,13 @@ export class MsoPlugin extends Plugin {
     detectMsoInlineShapeSubtreeLayout(defaultEmailNodeArguments, { referenceNode }) {
         const { layout, analysis } = defaultEmailNodeArguments;
         const computedStyle = this.getComputedStyle(referenceNode);
+        const display = computedStyle.getPropertyValue("display");
         const backgroundColor = computedStyle.getPropertyValue("background-color");
-        // if is A OR is badge
         if (
             this.getSubtreeVariant(analysis, "msoInlineShapeSubtree") ||
-            (referenceNode.nodeName !== "A" && !referenceNode.matches(".badge")) ||
-            (!this.hasVisibleBorder(referenceNode) &&
-                (!backgroundColor || isCSSColorTransparent(backgroundColor))) ||
+            !display.includes("inline") ||
+            !referenceNode.matches(".badge, a.btn") ||
+            (!this.hasVisibleBorder(referenceNode) && isCSSColorTransparent(backgroundColor)) ||
             selectElements(referenceNode, "img").length > 0 ||
             this.getSubtreeVariant(analysis, "responsiveSubtree") === "mobile"
         ) {
@@ -278,11 +259,15 @@ export class MsoPlugin extends Plugin {
             this.addVmlLayouts(layout, buildHideFromMsoNodes());
             return layout;
         }
-        const childrenAncestorTagElements = emailNode.children.map((child) =>
-            this.config.referenceDocument.createElement(child.layout.ancestorTag || "DIV")
-        );
-        const span = this.config.referenceDocument.createElement("SPAN");
-        const wrapperTag = isAllowedContent(span, childrenAncestorTagElements) ? "SPAN" : "DIV";
+        const isWrapperPhrasingContent = emailNode.children.every((child) => {
+            if (child instanceof TextNodeLayout) {
+                return true;
+            }
+            return isPhrasingContent(
+                this.config.referenceDocument.createElement(child.layout.ancestorTag || "DIV")
+            );
+        });
+        const wrapperTag = isWrapperPhrasingContent ? "SPAN" : "DIV";
         if (!analysis.facts.isVmlWrapperForbidden) {
             layout = new ElementLayout({
                 refs: {
@@ -293,8 +278,8 @@ export class MsoPlugin extends Plugin {
                 },
             });
         }
-        // TODO EGGMAIL: verify if margin handling is adequate
-        // Margin is already included in the VML shape
+        // TODO EGGMAIL: margin is currently lost, it should be handled around
+        // the VML shape
         emailNode.analysis.facts.desktopMarginStyleInfo = undefined;
         // Padding is already included in the VML shape
         emailNode.analysis.facts.desktopPaddingStyleInfo = undefined;
@@ -308,7 +293,7 @@ export class MsoPlugin extends Plugin {
                 this.removeComments(fragment);
             }
             const fragmentToInnerHTML = (fragment) => {
-                const container = this.referenceDocument.createElement("DIV");
+                const container = this.config.referenceDocument.createElement("DIV");
                 container.append(fragment);
                 return container.innerHTML;
             };

@@ -47,14 +47,8 @@ function escapeHtmlAttribute(value) {
  * TODO EGGMAIL: link tracking might not work with
  * VML href (not using an anchor) -> to investigate
  */
-export function buildInlineShapeVmlContent(
-    { fill, stroke, arcSize, margin, padding, href },
-    htmlContent
-) {
-    const shapeStyles = [
-        ...Object.entries(margin).map(([side, value]) => `margin-${side}:${value}px`),
-        "mso-wrap-style:none",
-    ].filter(Boolean);
+export function buildInlineShapeVmlContent({ fill, stroke, arcSize, padding, href }, htmlContent) {
+    const shapeStyles = ["mso-wrap-style:none"].filter(Boolean);
 
     const shapeAttributes = [
         'xmlns:v="urn:schemas-microsoft-com:vml"',

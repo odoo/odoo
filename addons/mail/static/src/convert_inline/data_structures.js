@@ -24,6 +24,14 @@ export class UniqueArray {
         return this.array.filter(callbackFn, thisArg);
     }
 
+    every(callbackFn, thisArg) {
+        return this.array.every(callbackFn, thisArg);
+    }
+
+    some(callbackFn, thisArg) {
+        return this.array.some(callbackFn, thisArg);
+    }
+
     push(...items) {
         const newItemSet = new Set();
         const newItemArray = [];

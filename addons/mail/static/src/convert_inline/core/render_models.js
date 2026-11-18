@@ -257,7 +257,6 @@ export class MobileOnlyLayout extends ElementLayout {
     }
 }
 
-// TODO EGGMAIL: remove?
 export class TextNodeLayout {
     content = "";
 
