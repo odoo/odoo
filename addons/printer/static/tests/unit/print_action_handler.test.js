@@ -81,7 +81,42 @@ describe("printJobs", () => {
 
         expect(fetchCalls).toHaveLength(1);
         expect(fetchCalls[0].url).toMatch(/epos\/service\.cgi/);
+        expect(fetchCalls[0].params.targetAddressSpace).toBe("local");
         expect(notificationsReceived).toHaveLength(0);
+    });
+
+    test("sends an epos job to a hostname over https without local address space", async () => {
+        const fetchCalls = [];
+        patchWithCleanup(window, {
+            fetch: async (url, params) => {
+                fetchCalls.push({ url, params });
+                return { text: async () => `<response success="true" code=""/>`, ok: true };
+            },
+        });
+
+        const printer = makeEposPrinter({ ip_address: "epos.example.com/label" });
+        await printJobs(printer, [makeEposJob()], makeMockServices());
+
+        expect(fetchCalls[0].url).toBe(
+            "https://epos.example.com/label/cgi-bin/epos/service.cgi?devid=local_printer"
+        );
+        expect(fetchCalls[0].params.targetAddressSpace).toBe(undefined);
+    });
+
+    test("sends a zpl job to localhost over http without local address space", async () => {
+        const fetchCalls = [];
+        patchWithCleanup(window, {
+            fetch: async (url, params) => {
+                fetchCalls.push({ url, params });
+                return {};
+            },
+        });
+
+        const printer = makeZplPrinter({ ip_address: "localhost:8080" });
+        await printJobs(printer, [makeZplJob()], makeMockServices());
+
+        expect(fetchCalls[0].url).toBe("http://localhost:8080/pstprnt");
+        expect(fetchCalls[0].params.targetAddressSpace).toBe(undefined);
     });
 
     test("sends a zpl job to /pstprnt in no-cors mode", async () => {
