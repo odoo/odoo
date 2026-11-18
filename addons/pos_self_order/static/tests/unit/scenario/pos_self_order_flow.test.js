@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
-import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { defineParams, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupSelfPosEnv } from "@pos_self_order/../tests/unit/utils";
 import { definePosSelfModels } from "@pos_self_order/../tests/unit/data/generate_model_definitions";
 import { SelfOrderRouter } from "@pos_self_order/app/services/self_order_router_service";
@@ -1448,6 +1448,29 @@ test("test_slot_limit_orders: slot limit order test", async () => {
     await Utils.clickBtn("Checkout");
     await Utils.clickBtn("Order");
     await Utils.checkSlotDisabled("12:00");
+});
+
+test("test_slot_selection_arabic: slot selection works in Arabic", async () => {
+    await mockDate("2023-07-30 00:00:00");
+    defineParams({ lang: "ar_001" });
+    const store = await setupSelfPosEnv("kiosk", "counter", "each", {}, true);
+    const preset = store.models["pos.preset"].get(2);
+    preset.identification = "name";
+    await Utils.clickOrderNow();
+    await Utils.selectLocation("Out");
+    await Utils.clickCategory("Miscellaneous");
+    await Utils.clickProduct("Free");
+    await Utils.clickBtn("Checkout");
+    await Utils.clickBtn("Order");
+    // Slot labels are shown with Arabic digits
+    await Utils.selectSpecificSlot("١٢:٠٠");
+    const presetTime = store.currentOrder.preset_time;
+    expect(presetTime.isValid).toBe(true);
+    expect(presetTime.toFormat("HH:mm", { numberingSystem: "latn" })).toBe("12:00");
+    await Utils.fillInput("Name", "Dr Dre");
+    await Utils.fillInput("Phone", "490904390");
+    await Utils.clickBtn("Continue");
+    await Utils.clickBtn("Close");
 });
 
 test("test_self_order_preset_btn: check preset button displays correct preset", async () => {

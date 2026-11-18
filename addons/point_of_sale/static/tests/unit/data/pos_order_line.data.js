@@ -9,7 +9,7 @@ export class PosOrderLine extends models.ServerModel {
     create() {
         const orderLine = super.create(...arguments);
         this.write(isIterable(orderLine) ? orderLine : [orderLine], {
-            write_date: DateTime.now().toFormat("yyyy-MM-dd HH:mm:ss"),
+            write_date: DateTime.now().toFormat("yyyy-MM-dd HH:mm:ss", { numberingSystem: "latn" }),
         });
         return orderLine;
     }

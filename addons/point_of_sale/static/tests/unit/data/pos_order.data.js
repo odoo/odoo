@@ -41,7 +41,9 @@ export class PosOrder extends models.ServerModel {
     sync_from_ui(data) {
         const orderIds = [];
         for (const record of data) {
-            record.write_date = DateTime.now().toFormat("yyyy-MM-dd HH:mm:ss");
+            record.write_date = DateTime.now().toFormat("yyyy-MM-dd HH:mm:ss", {
+                numberingSystem: "latn",
+            });
             const record_uuid_mapping = record.relations_uuid_mapping || {};
             delete record.relations_uuid_mapping;
             if (record.id) {

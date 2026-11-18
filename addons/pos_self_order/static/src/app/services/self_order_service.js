@@ -368,7 +368,7 @@ export class SelfOrder {
                     };
                 }
                 options.categories[date].subCategories[slot.periode].options.push({
-                    id: slot.datetime.toFormat("yyyy-MM-dd HH:mm:ss"),
+                    id: slot.time,
                     name: this.getTime(slot.datetime),
                     disabled: slot.isFull,
                 });

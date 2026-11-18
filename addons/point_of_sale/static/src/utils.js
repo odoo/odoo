@@ -168,11 +168,21 @@ export function isPrivateIp(ip) {
 export const LONG_PRESS_DURATION = session.test_mode ? 100 : 500;
 export const TOUCH_DELAY = session.test_mode ? 50 : 300;
 
+/**
+ * Formats a DateTime as "yyyy-MM-dd HH:mm:ss" in its own zone, with Latin digits
+ * whatever the user's language. Unlike `serializeDateTime`, it does not convert to UTC.
+ *
+ * @param {DateTime} value
+ * @returns {string}
+ */
+export function serializeLocalDateTime(value) {
+    return value.toFormat("yyyy-MM-dd HH:mm:ss", { numberingSystem: "latn" });
+}
+
 export function orderUsageUTCtoLocalUtil(data) {
     const result = {};
     for (const [datetime, usage] of Object.entries(data)) {
-        const dt = deserializeDateTime(datetime);
-        const formattedDt = dt.toFormat("yyyy-MM-dd HH:mm:ss");
+        const formattedDt = serializeLocalDateTime(deserializeDateTime(datetime));
         result[formattedDt] = usage;
     }
     return result;
