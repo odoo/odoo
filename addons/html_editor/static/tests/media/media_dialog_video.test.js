@@ -196,7 +196,7 @@ describe("media dialog video", () => {
             const optionsByPlatform = {
                 youtube: [...playerOptions, "Vertical", "Start at"],
                 instagram: ["Vertical"],
-                facebook: ["Vertical"],
+                facebook: ["Autoplay", "Hide fullscreen button", "Vertical", "Start at"],
                 gDrive: ["Vertical"],
                 dailymotion: ["Vertical", "Start at"],
                 vimeo: [...playerOptions, "Vertical", "Start at"],
