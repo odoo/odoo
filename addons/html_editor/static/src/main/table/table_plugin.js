@@ -1292,59 +1292,17 @@ export class TablePlugin extends Plugin {
     // }
 
     /**
-     * Removes fully selected rows or columns, clears the content of selected
-     * cells otherwise.
+     * Clears the content of the selected cells, keeping the cells themselves.
      *
      * @param {NodeListOf<HTMLTableCellElement>} selectedTds - Non-empty
      * NodeList of selected table cells.
      */
     deleteTableCells(selectedTds) {
-        const firstCell = selectedTds[0];
-        const lastCell = selectedTds[selectedTds.length - 1];
-        const rows = [...closestElement(firstCell, "tr").parentElement.children].filter(
-            (child) => child.nodeName === "TR"
-        );
-        const table = closestElement(firstCell, "table");
-        const tableGrid = this.tableGridMap.get(table);
-        const firstCellRowIndex = getRowIndex(firstCell);
-        const firstCellColumnIndex = tableGrid[firstCellRowIndex].indexOf(firstCell);
-        const lastCellRowIndex = getRowIndex(lastCell);
-        const lastCellColumnIndex = tableGrid[lastCellRowIndex].findLastIndex(
-            (td) => td === lastCell
-        );
-        const selectedSet = new Set(selectedTds);
-        // Removes all rows that are fully selected.
-        const removeFullySelectedRows = () => {
-            let removed = false;
-            for (let i = lastCellRowIndex; i >= firstCellRowIndex; i--) {
-                if (tableGrid[i].every((td) => selectedSet.has(td))) {
-                    this.removeRow(rows[i]);
-                    removed = true;
-                }
-            }
-            return removed;
-        };
-        // Removes all columns that are fully selected.
-        const removeFullySelectedColumns = () => {
-            let removed = false;
-            for (let i = lastCellColumnIndex; i >= firstCellColumnIndex; i--) {
-                if (tableGrid.every((row) => selectedSet.has(row[i]))) {
-                    this.removeColumn(tableGrid[0][i]);
-                    removed = true;
-                }
-            }
-            return removed;
-        };
-        // remove rows and columns, return early if anything removed
-        if (removeFullySelectedRows() || removeFullySelectedColumns()) {
-            return;
-        }
-
         for (const td of selectedTds) {
             const baseContainer = this.dependencies.baseContainer.createBaseContainer();
             td.replaceChildren(baseContainer);
         }
-        this.dependencies.selection.setCursorStart(firstCell.firstChild);
+        this.dependencies.selection.setCursorStart(selectedTds[0].firstChild);
     }
 
     /**

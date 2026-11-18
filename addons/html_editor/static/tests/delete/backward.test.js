@@ -2056,7 +2056,7 @@ describe("Selection not collapsed", () => {
         });
     });
 
-    test("should remove a row in a partly selected table", async () => {
+    test("should only clear the content of a fully selected row", async () => {
         await testEditor({
             contentBefore: unformat(
                 `<table><tbody>
@@ -2067,25 +2067,26 @@ describe("Selection not collapsed", () => {
             stepFunction: deleteBackward,
             contentAfter: unformat(
                 `<table><tbody>
-                    <tr><td>ef[]</td><td>gh</td></tr>
+                    <tr><td><p>[]<br></p></td><td><p><br></p></td></tr>
+                    <tr><td>ef</td><td>gh</td></tr>
                 </tbody></table>`
             ),
         });
     });
 
-    test("should remove a column in a partly selected table", async () => {
+    test("should only clear the content of a fully selected column", async () => {
         await testEditor({
             contentBefore: unformat(
                 `<table><tbody>
-                    <tr><td class="o_selected_td">[ab</td> <td>cd</td></tr>
-                    <tr><td class="o_selected_td">ef]</td> <td>gh</td></tr>
+                    <tr><td class="o_selected_td">[ab</td><td>cd</td></tr>
+                    <tr><td class="o_selected_td">ef]</td><td>gh</td></tr>
                 </tbody></table>`
             ),
             stepFunction: deleteBackward,
             contentAfter: unformat(
                 `<table><tbody>
-                    <tr><td>cd[]</td></tr>
-                    <tr><td>gh</td></tr>
+                    <tr><td><p>[]<br></p></td><td>cd</td></tr>
+                    <tr><td><p><br></p></td><td>gh</td></tr>
                 </tbody></table>`
             ),
         });
