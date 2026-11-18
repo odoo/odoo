@@ -270,10 +270,13 @@ class ResourceResource(models.Model):
         leave_end_day = leave[1].date()
         tz = timezone(self.tz or self.env.user.tz)
         week_start_day = int(get_lang(self.env).week_start) - 1
+        # a day off is worth a day of the calendar the leave falls in, not of the current one
+        day_calendar = self._get_calendar_at(tz.localize(datetime.combine(leave_start_day, time.min)), tz)[self]
+        leave_calendar = day_calendar if day_calendar.flexible_hours else self.calendar_id
 
         while leave_start_day <= leave_end_day:
             if not self._is_fully_flexible():
-                hours = self.calendar_id.hours_per_day
+                hours = leave_calendar.hours_per_day
                 # only days inside the original period
                 if leave_start_day >= start_day and leave_start_day <= end_day:
                     resource_hours_per_day[self.id][leave_start_day] -= hours
@@ -289,7 +292,6 @@ class ResourceResource(models.Model):
         if not self:
             return {}, {}, {}
 
-        assert all(record._is_flexible() for record in self)
         assert start.tzinfo and end.tzinfo
 
         locale = babel_locale_parse(get_lang(self.env).code)
@@ -308,6 +310,10 @@ class ResourceResource(models.Model):
         calendar_resources = defaultdict(lambda: self.env['resource.resource'])
 
         resource_calendar_validity_intervals = self._get_flexible_resources_calendars_validity_within_period(min_start_date, max_end_date)
+        # the resource is flexible today, or was on one of the calendars of the period
+        assert all(resource._is_flexible() or any(
+            calendar and calendar.flexible_hours for calendar in resource_calendar_validity_intervals[resource.id]
+        ) for resource in self)
         for resource in self:
             # For each resource, retrieve their calendars validity intervals
             for calendar, work_intervals in resource_calendar_validity_intervals[resource.id].items():
@@ -328,6 +334,12 @@ class ResourceResource(models.Model):
         for resource in self:
             if resource._is_fully_flexible():
                 continue
+            # the calendar of a day caps its hours, as the resource may change calendar within the period
+            calendar_per_day = {
+                interval_start.date(): calendar
+                for calendar, intervals in resource_calendar_validity_intervals[resource.id].items() if calendar
+                for interval_start, _interval_end, _dummy in intervals
+            }
             duration_per_day = defaultdict(float)
             resource_intervals = resource_work_intervals.get(resource.id, Intervals())
             for interval_start, interval_end, _dummy in resource_intervals:
@@ -338,7 +350,8 @@ class ResourceResource(models.Model):
 
             start_day, end_day = period_days_per_resource[resource.id]
             for day, hours in duration_per_day.items():
-                day_working_hours = min(hours, resource.calendar_id.hours_per_day)
+                calendar = calendar_per_day.get(day, resource.calendar_id)
+                day_working_hours = min(hours, calendar.hours_per_day)
                 # only days inside the original period
                 if day >= start_day and day <= end_day:
                     resource_hours_per_day[resource.id][day] = day_working_hours
@@ -349,7 +362,7 @@ class ResourceResource(models.Model):
                     # cap weekly hours to the calendar's configured hours_per_week (not the
                     # company default full_time_required_hours which does not respect
                     # part-time schedules).
-                    cap = resource.calendar_id.hours_per_week or resource.calendar_id.full_time_required_hours
+                    cap = calendar.hours_per_week or calendar.full_time_required_hours
                     resource_hours_per_week[resource.id][year_week] = min(cap, day_working_hours + resource_hours_per_week[resource.id][year_week])
 
         for calendar, resources in calendar_resources.items():
@@ -373,8 +386,6 @@ class ResourceResource(models.Model):
         return resource_work_intervals, resource_hours_per_day, resource_hours_per_week
 
     def _get_flexible_resource_work_hours(self, intervals, flexible_resources_hours_per_day, flexible_resources_hours_per_week, work_hours_per_day=None):
-        assert self._is_flexible()
-
         if self._is_fully_flexible():
             return round(sum_intervals(intervals), 2)
 
