@@ -1,5 +1,6 @@
 /**
- * Field declarations for store models, given to `Model.extend({ fields })`.
+ * Field declarations for store models, given as the static `fields` of a
+ * model class.
  *
  * A field factory returns a plain descriptor tagged with {@link FIELD}. It is
  * typed as the field signal records expose, so that `name: fields.Char()`
@@ -16,9 +17,9 @@
 //     /** @import { Many2one } from "@web/next/model/fields" */
 //     /** @import { Partner } from "./partner" */
 //
-//     fields: {
+//     static fields = {
 //         partner_id: /** @type {Many2one<Partner>} */ (fields.Many2one("res.partner")),
-//     }
+//     };
 //
 // The `@import` is type-only (erased), so two models can reference each other
 // without creating an import cycle.

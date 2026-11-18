@@ -18,7 +18,11 @@ import {
     composeClasses,
     getDeclaredFields,
     getDeclaredIndexes,
+    getModelName,
+    makeGenericClass,
 } from "./model";
+
+/** @import { ModelClass } from "./model" */
 
 /**
  * @typedef {import("./fields").StoreField} StoreField
@@ -26,7 +30,7 @@ import {
  * @typedef {{
  *  name: string;
  *  store: Store;
- *  Record: typeof Model;
+ *  Record: ModelClass;
  *  generic: boolean;
  *  checked: boolean;
  *  fields: StoreField[];
@@ -42,7 +46,7 @@ import {
  *
  * @typedef {Store | Draft} Owner
  *
- * @typedef {typeof Model | string} ModelRef a model, as its class or its name
+ * @typedef {ModelClass | string} ModelRef a model, as its class or its name
  */
 
 /**
@@ -472,7 +476,7 @@ function reindex(rec, field, previous) {
 const SCOPE_DESTROYED = 2;
 
 /**
- * @param {typeof Model} RecordClass
+ * @param {ModelClass} RecordClass
  * @param {Owner} owner
  * @param {number | string} id
  * @param {number} flags
@@ -530,7 +534,7 @@ export class Store {
      * merged. A model that only has server definitions gets a generic class.
      *
      * @param {{
-     *  models?: (typeof Model)[];
+     *  models?: ModelClass[];
      *  definitions?: Record<string, { fields: Record<string, object> }>;
      * }} [params] `definitions` has the shape returned by `/web/model/get_definitions`
      */
@@ -543,7 +547,7 @@ export class Store {
                 name,
                 this._setupModel(
                     name,
-                    ModelClass || Model.extend({ name }),
+                    ModelClass || makeGenericClass(name),
                     definitions[name]?.fields,
                     !ModelClass
                 )
@@ -568,7 +572,7 @@ export class Store {
     /**
      * Creates a record, with a temporary id unless `values` has one.
      *
-     * @template {typeof Model} C
+     * @template {ModelClass} C
      * @overload
      * @param {C} model
      * @param {RecordValues<InstanceType<C>>} [values]
@@ -629,7 +633,7 @@ export class Store {
     }
 
     /**
-     * @template {typeof Model} C
+     * @template {ModelClass} C
      * @overload
      * @param {C} model
      * @param {number | string} id
@@ -667,7 +671,7 @@ export class Store {
     /**
      * Lookup through a unique index, declared with the `indexes` of a model.
      *
-     * @template {typeof Model} C
+     * @template {ModelClass} C
      * @overload
      * @param {C} model
      * @param {string} fieldName
@@ -739,7 +743,7 @@ export class Store {
      * @returns {ModelMeta}
      */
     model(modelRef) {
-        const name = typeof modelRef === "string" ? modelRef : modelRef._name;
+        const name = typeof modelRef === "string" ? modelRef : getModelName(modelRef);
         const model = this.models.get(name);
         if (!model) {
             throw new Error(`Unknown model "${name}"`);
@@ -765,7 +769,7 @@ export class Store {
      * Live records of a model: loaded or created, not deleted. Reactive to
      * creations and deletions, not to field changes.
      *
-     * @template {typeof Model} C
+     * @template {ModelClass} C
      * @overload
      * @param {C} model
      * @returns {InstanceType<C>[]}
@@ -1044,7 +1048,7 @@ export class Store {
 
     /**
      * @param {string} name
-     * @param {typeof Model} ModelClass
+     * @param {ModelClass} ModelClass
      * @param {Record<string, object>} [serverFields]
      * @param {boolean} [generic] the class was made by the store, from server fields
      * @returns {ModelMeta}
@@ -1068,6 +1072,10 @@ export class Store {
             normalizeField(fieldName, def, index)
         );
 
+        if (!["field", "model"].includes(ModelClass._reactivity)) {
+            throw new Error(`Invalid reactivity "${ModelClass._reactivity}" on model "${name}"`);
+        }
+
         // per-store subclass: holds the field getters, so that stores don't share state
         const RecordClass = class extends ModelClass {};
         /** @type {ModelMeta} */
@@ -1080,7 +1088,7 @@ export class Store {
             fields,
             fieldsByName: Object.fromEntries(fields.map((f) => [f.name, f])),
             editable: ModelClass._editable,
-            reactivity: ModelClass._reactivity,
+            reactivity: /** @type {"field" | "model"} */ (ModelClass._reactivity),
             records: new Map(),
             indexes: new Map(),
             atom: signal(0),
@@ -1211,7 +1219,7 @@ export class Draft {
     }
 
     /**
-     * @template {typeof Model} C
+     * @template {ModelClass} C
      * @overload
      * @param {C} model
      * @param {RecordValues<InstanceType<C>>} [values]
@@ -1272,7 +1280,7 @@ export class Draft {
     }
 
     /**
-     * @template {typeof Model} C
+     * @template {ModelClass} C
      * @overload
      * @param {C} model
      * @param {number | string} id
@@ -1343,7 +1351,7 @@ export class Draft {
     }
 
     /**
-     * @template {typeof Model} C
+     * @template {ModelClass} C
      * @overload
      * @param {C} model
      * @returns {InstanceType<C>[]}
