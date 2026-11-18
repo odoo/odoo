@@ -190,6 +190,12 @@ test("options are embedded in the url of each platform", () => {
             "https://geo.dailymotion.com/player.html?video=x7svr6t&startTime=62",
         ],
         [
+            "facebook",
+            "https://www.facebook.com/username/videos/2206239373151307/",
+            { autoplay: true, hideFullscreen: true, startFrom: 62 },
+            "https://facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Fusername%2Fvideos%2F2206239373151307%2F&autoplay=true&allowfullscreen=false&t=62",
+        ],
+        [
             "twitch",
             "https://www.twitch.tv/videos/1064007405",
             { autoplay: true, startFrom: 62 },
