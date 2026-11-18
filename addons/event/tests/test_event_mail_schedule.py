@@ -743,6 +743,51 @@ class TestMailSchedule(EventMailCommon):
         self.assertEqual(self.env["event.mail.registration"].search_count([("scheduler_id", "=", scheduler.id)]), 4)
         self.assertEqual(len(self._new_mails), 4)
 
+    @users('user_eventmanager')
+    def test_event_mail_schedule_on_slot_later_registration(self):
+        """ Sending the reminder of a first slot must not end the scheduler: next
+        slots still have to be contacted, including attendees registering after
+        the first slot reminder was sent. """
+        test_event = self.test_event.with_env(self.env)
+        event_prev_scheduler = test_event.event_mail_ids.filtered(lambda s: s.interval_type == 'before_event')
+        (test_event.event_mail_ids - event_prev_scheduler).unlink()
+
+        with self.mock_datetime_and_now(self.reference_now):
+            test_event.write({
+                'is_multi_slots': True,
+                'event_slot_ids': [
+                    (0, 0, {'date': self.event_date_end.date() - relativedelta(days=1), 'start_hour': 8, 'end_hour': 18}),
+                    (0, 0, {'date': self.event_date_end.date(), 'start_hour': 8, 'end_hour': 18}),
+                ],
+            })
+            slot_1, slot_2 = test_event.event_slot_ids
+            reg_slot_1 = self.env['event.registration'].with_user(self.user_eventuser).create({
+                'email': 'reg.slot1@test.example.com',
+                'event_id': test_event.id,
+                'event_slot_id': slot_1.id,
+                'name': 'Reg Slot 1',
+            })
+
+        # one day before slot 1: only slot 1 attendees are reminded
+        self.execute_event_cron(freeze_date=slot_1.start_datetime - relativedelta(days=1))
+        self.assertEqual(len(self._new_mails), 1)
+        self.assertMailMailWEmails([formataddr((reg_slot_1.name, reg_slot_1.email))], 'outgoing')
+        self.assertFalse(event_prev_scheduler.mail_done, 'Slot 2 reminder is still to be sent')
+
+        # a new attendee registers for slot 2, then gets its reminder one day before slot 2
+        with self.mock_datetime_and_now(slot_1.start_datetime - relativedelta(hours=12)):
+            reg_slot_2 = self.env['event.registration'].with_user(self.user_eventuser).create({
+                'email': 'reg.slot2@test.example.com',
+                'event_id': test_event.id,
+                'event_slot_id': slot_2.id,
+                'name': 'Reg Slot 2',
+            })
+        self.execute_event_cron(freeze_date=slot_2.start_datetime - relativedelta(days=1))
+        self.assertEqual(len(self._new_mails), 1)
+        self.assertMailMailWEmails([formataddr((reg_slot_2.name, reg_slot_2.email))], 'outgoing')
+        self.assertTrue(all(event_prev_scheduler.mail_slot_ids.mapped('mail_done')))
+        self.assertTrue(event_prev_scheduler.mail_done)
+
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     @users('user_eventmanager')
     @warmup
