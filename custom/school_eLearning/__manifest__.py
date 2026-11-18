@@ -19,6 +19,7 @@ Inherits and extends Odoo's core eLearning (website_slides) to link:
         "school_management",
     ],
     "data": [
+        "security/ir.model.access.csv",
         "views/slide_channel_views.xml",
         "views/subject_views.xml",
         "views/class_section_views.xml",

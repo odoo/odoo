@@ -606,6 +606,16 @@ class UniversityExam(models.Model):
             ("start_time", "<=", window_end),
             ("status", "in", ["upcoming", "ongoing"]),
         ])
+        if not slots:
+            return
+
+        # Resolve already-generated quizzes in a single query instead of one
+        # search per slot (the job runs every 5 minutes and the window overlaps).
+        handled_slot_ids = set(
+            self.search([("timetable_slot_id", "in", slots.ids)])
+            .mapped("timetable_slot_id")
+            .ids
+        )
 
         for slot in slots:
             # Check semester active date (Exam BRD/SRS §2.1a / Rule 16)
@@ -614,15 +624,18 @@ class UniversityExam(models.Model):
 
             # Check if section or subject requires a per-session quiz
             requires_quiz = (
-                getattr(slot.section_id, "auto_quiz_per_session", False) or
-                getattr(slot.subject_id, "auto_quiz_per_session", False)
+                slot.section_id.auto_quiz_per_session or
+                slot.subject_id.auto_quiz_per_session
             )
             if not requires_quiz:
                 continue
 
+            # Required fields for the generated exam must be available
+            if not (slot.subject_id and slot.section_id):
+                continue
+
             # Ensure we haven't already created an exam for this timetable slot
-            existing = self.search([("timetable_slot_id", "=", slot.id)], limit=1)
-            if existing:
+            if slot.id in handled_slot_ids:
                 continue
 
             exam = self.create({
@@ -640,7 +653,12 @@ class UniversityExam(models.Model):
                 "state": "open",
                 "max_score": 100.0,
             })
-            exam.action_populate_students()
+            try:
+                exam.action_populate_students()
+            except UserError:
+                # No actively enrolled students yet: keep the quiz so it can
+                # be populated once enrollment happens, and let the cron go on.
+                pass
 
 
 class UniversityExamScore(models.Model):

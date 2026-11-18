@@ -27,6 +27,5 @@ class UniversitySubject(models.Model):
         action["domain"] = [("subject_id", "=", self.id)]
         action["context"] = {
             "default_subject_id": self.id,
-            "default_name": self.name,
         }
         return action

@@ -33,3 +33,9 @@
 
 2. **Manifest Loading Order**:
    - When defining models, views, and reports, ensure XML manifest loading order respects dependencies (e.g., reports and actions must be loaded before email templates or views that reference their XML IDs).
+
+3. **School eLearning Integration**:
+   - Keep school/eLearning integration changes in `custom/school_eLearning`; extend `website_slides` and `school_management` models through `_inherit` rather than modifying core addons.
+   - `slide.channel.class_section_id` is the relation to `university.class.section`; keep the inverse course list, course count/action, and the class-section stat button consistent when changing this integration.
+   - Update the module manifest whenever adding data or views, and preserve dependency order for XML references.
+   - Keep `custom/school_eLearning/document/update_auid.md` in sync when changing the class-section course relation or action.

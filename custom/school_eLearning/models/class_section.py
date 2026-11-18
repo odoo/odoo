@@ -28,6 +28,6 @@ class UniversityClassSection(models.Model):
         action["context"] = {
             "default_class_section_id": self.id,
             "default_subject_id": self.subject_id.id if self.subject_id else False,
-            "default_teacher_id": self.primary_teacher_id.id if hasattr(self, "primary_teacher_id") and self.primary_teacher_id else False,
+            "default_teacher_id": self.teacher_id.id if self.teacher_id else False,
         }
         return action

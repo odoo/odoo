@@ -392,7 +392,7 @@ order.write({'line_ids': [
 
 ## Custom Addons
 
-Custom addons live in `C:\Odoo\odoo\custom\`. The working module there is `school_management` ("University Management System").
+Custom addons live in `C:\Odoo\odoo\custom\`. The university system is split between `school_management` ("University Management System") and `school_eLearning` (the `website_slides` integration).
 
 ### `school_management` structure
 
@@ -450,6 +450,15 @@ school_management/
 └── document/                # project_overview, project_structure, agent_guide,
                              # local_configuration_guide, login_guide, architecture, QNA review
 ```
+
+### `school_eLearning` integration
+
+- Addon path: `custom/school_eLearning`; its manifest depends on both `website_slides` and `school_management`.
+- Extend existing models with `_inherit`; do not modify Odoo core addons. `models/slide_channel.py` adds `subject_id`, `teacher_id`, and `class_section_id` to `slide.channel`.
+- `models/class_section.py` adds the inverse `slide_channel_ids`, computed course count, and `action_view_slide_channels()` to `university.class.section`. Keep the action's domain/default context and the stat button in `views/class_section_views.xml` aligned with these fields.
+- `models/subject.py` adds a subject's course list, count, and action. The course form and search additions are in `views/slide_channel_views.xml`.
+- When adding XML files, list them in `custom/school_eLearning/__manifest__.py` in dependency order, and keep referenced model fields and view XML IDs consistent.
+- Update [`school_eLearning/document/update_auid.md`](../../school_eLearning/document/update_auid.md) when changing the class-section eLearning behavior.
 
 ### Financial & Analytic Accounting Architecture Notes
 
