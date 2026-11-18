@@ -152,7 +152,7 @@ class EventMail(models.Model):
         if mail_slot:
             registration_domain += [('event_slot_id', '=', mail_slot.event_slot_id.id)]
         if scheduler_record.last_registration_id:
-            registration_domain += [('id', '>', self.last_registration_id.id)]
+            registration_domain += [('id', '>', scheduler_record.last_registration_id.id)]
         registrations = self.env["event.registration"].search(registration_domain, limit=(cron_limit + 1), order="id ASC")
 
         # no registrations -> done
