@@ -491,7 +491,8 @@ class IrAttachment(models.Model):
                     continue
                 model_ids[res_model].add(res_id)
         if values and values.get('res_model') and values.get('res_id'):
-            model_ids[values['res_model']].add(values['res_id'])
+            res_id = self._fields["res_id"].convert_to_cache(values["res_id"], self)
+            model_ids[values["res_model"]].add(res_id)
 
         # check access rights on the records
         for res_model, res_ids in model_ids.items():
