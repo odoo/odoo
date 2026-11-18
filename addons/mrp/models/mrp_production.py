@@ -3275,6 +3275,38 @@ class MrpProduction(models.Model):
         self.qty_producing = 0
         self._set_qty_producing(False)
 
+    def get_forecast_infos(self):
+        self.ensure_one()
+        warehouse = self.location_dest_id.warehouse_id
+        uom = self.product_id.uom_id
+        digits = self.env['decimal.precision'].precision_get('Product Unit')
+        result_base = {
+            "warehouse_id": warehouse.id,
+            "uom": uom.display_name,
+            "digits": digits,
+        }
+        if self.state == 'draft':
+            virtual_available = self.product_id.with_context(warehouse_id=warehouse.id).virtual_available
+            report_values = self.env['report.mrp.report_mo_overview']._get_report_data(self.id)
+            producible_qty = report_values['summary']['producible_qty']
+            return {**result_base,
+                "forecasted": virtual_available,
+                "max_producible": producible_qty,
+            }
+        if self.state in ['confirmed', 'progress']:
+            report_values = self.env['report.mrp.report_mo_overview']._get_report_data(self.id)
+            producible_qty = report_values['summary']['producible_qty']
+            return {**result_base,
+                "ready_to_produce": producible_qty,
+                "quantity": self.product_uom_qty,
+            }
+        if self.state in ['to_close', 'done']:
+            virtual_available = self.product_id.with_context(warehouse_id=warehouse.id).virtual_available
+            return {**result_base,
+                "forecasted": virtual_available,
+            }
+        return {}
+
     def _track_execute(self, track_init_values, trackings, track_records=None):
         """
            Extend tracking behavior to manage the `previous_date_start` field
