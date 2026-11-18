@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import Command
-from odoo.tests import new_test_user, tagged
+from odoo.tests import Form, new_test_user, tagged
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
@@ -487,3 +487,27 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
             with self.subTest(user=user.login):
                 widget_vals = invoice.with_user(user).invoice_payments_widget
                 self.assertEqual({vals['move_id']: vals['can_open_move'] for vals in widget_vals['content']}, expected)
+
+    def test_outstanding_payments_draft_partner_change(self):
+        ''' Test the outstanding widget follows the partner of a draft invoice. '''
+        refund = self._create_invoice_one_line(move_type='out_refund', partner_id=self.partner_b, price_unit=1000.0, post=True)
+
+        # Unsaved invoice: no widget yet.
+        with Form(self.env['account.move'].with_context(default_move_type='out_invoice')) as invoice_form:
+            with invoice_form.invoice_line_ids.new() as line_form:
+                line_form.price_unit = 1000.0
+            invoice_form.partner_id = self.partner_b
+            self.assertFalse(invoice_form.invoice_outstanding_credits_debits_widget)
+        invoice = invoice_form.record
+
+        # Saved draft invoice: the widget follows the partner and refers to the real invoice id.
+        with Form(invoice) as invoice_form:
+            invoice_form.partner_id = self.partner_a
+            # partner_a already has outstanding payments in the setup, so the widget exists.
+            widget = invoice_form.invoice_outstanding_credits_debits_widget
+            self.assertNotIn(refund.id, {vals['move_id'] for vals in widget['content']})
+            invoice_form.partner_id = self.partner_b
+            widget = invoice_form.invoice_outstanding_credits_debits_widget
+            self.assertTrue(widget)
+            self.assertEqual(widget['move_id'], invoice.id)
+            self.assertEqual({vals['move_id'] for vals in widget['content']}, {refund.id})
