@@ -613,6 +613,28 @@ test("parseDate (various entries)", async () => {
     }
 });
 
+test("parseDate(Time) rejects malformed smart date offsets", async () => {
+    await makeTestApp();
+    mockDate("2026-11-13 12:00:00", 0);
+
+    patchWithCleanup(localization, {
+        dateFormat: "MM/dd/yyyy",
+        dateTimeFormat: "MM/dd/yyyy HH:mm:ss",
+    });
+
+    const format = "yyyy-MM-dd HH:mm";
+
+    // Valid offsets must continue to work.
+    expect(parseDate("+2d").toFormat(format)).toBe("2026-11-15 00:00");
+    expect(parseDateTime("+2d").toFormat(format)).toBe("2026-11-15 12:00");
+
+    // Malformed offsets must be rejected.
+    for (const input of ["+2oopsd", "+1.5d"]) {
+        expect(() => parseDate(input)).toThrow(/is not a correct/);
+        expect(() => parseDateTime(input)).toThrow(/is not a correct/);
+    }
+});
+
 test("parseDateTime (various entries)", async () => {
     mockDate("2020-07-15 11:30:00", 0);
     patchWithCleanup(localization, {
