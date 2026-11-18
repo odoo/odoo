@@ -60,6 +60,10 @@
                             <field name="first_activity"/>
                             <field name="last_activity"/>
                         </group>
+                        <group>
+                            <field name="auth_method"/>
+                            <field name="mfa_method"/>
+                        </group>
                         <field name="device_ids" mode="list">
                             <list decoration-success="is_current">
                                 <field name="platform"/>
@@ -88,6 +92,8 @@
                     <field name="session_identifier"/>
                     <field name="user_id"/>
                     <field name="ip_address"/>
+                    <field name="auth_method"/>
+                    <field name="mfa_method"/>
                     <field name="first_activity"/>
                     <field name="last_activity"/>
                     <field name="country" optional="hidden"/>

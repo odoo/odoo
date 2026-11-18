@@ -47,6 +47,9 @@ class ResDeviceLog(models.Model):
     revoked = fields.Boolean('Revoked',
                             help="""If True, the session file corresponding to this device
                                     no longer exists on the filesystem.""")
+    # Fields that describe how the user logged in for this session
+    auth_method = fields.Char('Login Method')
+    mfa_method = fields.Char('Second Factor')
 
     _composite_idx = models.Index('(session_identifier, ip_address, user_agent, id) WHERE revoked IS NOT TRUE')
     _revoked_idx = models.Index('(revoked) WHERE revoked IS NOT TRUE')
@@ -74,13 +77,19 @@ class ResDeviceLog(models.Model):
                 'user_agent': device['user_agent'][:1024],  # Truncate very long user-agent
                 'country': device.get('country'),  # TODO (v20): remove backward compatibility by forcing the key
                 'city': device.get('city'),  # TODO (v20): remove backward compatibility by forcing the key
+                'auth_method': device.get('auth_method'),
+                'mfa_method': device.get('mfa_method'),
                 'first_activity': datetime.fromtimestamp(device['first_activity']),
                 'last_activity': datetime.fromtimestamp(device['last_activity']),
                 'revoked': False,
             }
             cr.execute(SQL("""
-                INSERT INTO res_device_log (session_identifier, user_id, ip_address, user_agent, country, city, first_activity, last_activity, revoked)
-                VALUES (%(session_identifier)s, %(user_id)s, %(ip_address)s, %(user_agent)s, %(country)s, %(city)s, %(first_activity)s, %(last_activity)s, %(revoked)s)
+                INSERT INTO res_device_log (
+                    session_identifier, user_id, ip_address, user_agent, country, city, auth_method, mfa_method, first_activity, last_activity, revoked
+                )
+                VALUES (
+                    %(session_identifier)s, %(user_id)s, %(ip_address)s, %(user_agent)s, %(country)s, %(city)s, %(auth_method)s, %(mfa_method)s, %(first_activity)s, %(last_activity)s, %(revoked)s
+                )
             """, **info))
             _logger.info('User %(user_id)d inserts device log: %(session_identifier)s - %(ip_address)s - %(user_agent)s', info)
 
@@ -187,6 +196,8 @@ class ResDevice(models.Model):
     first_activity = fields.Datetime('First Activity', readonly=True)
     last_activity = fields.Datetime('Last Activity', readonly=True)
     revoked = fields.Boolean('Revoked', readonly=True)
+    auth_method = fields.Char('Login Method', readonly=True)
+    mfa_method = fields.Char('Second Factor', readonly=True)
 
     platform = fields.Char('Platform', compute='_compute_device_info', readonly=True)
     browser = fields.Char('Browser', compute='_compute_device_info', readonly=True)
@@ -237,6 +248,8 @@ class ResDevice(models.Model):
                 L1.user_agent,
                 L1.country,
                 L1.city,
+                L1.auth_method,
+                L1.mfa_method,
                 L1.first_activity,
                 L1.last_activity,
                 L1.revoked
@@ -275,6 +288,8 @@ class ResSession(models.Model):
     country = fields.Char('Country', compute='_compute_session_info', readonly=True)
     city = fields.Char('City', compute='_compute_session_info', readonly=True)
     first_activity = fields.Datetime('First Activity', compute='_compute_session_info', readonly=True)
+    auth_method = fields.Selection([('password', 'Password')], validate=False, string='Login Method', readonly=True)
+    mfa_method = fields.Selection([], validate=False, string='Second Factor', readonly=True)
 
     is_current = fields.Boolean('Current', compute='_compute_is_current', readonly=True)
 
@@ -341,6 +356,8 @@ class ResSession(models.Model):
                 D1.id,
                 D1.session_identifier,
                 D1.user_id,
+                D1.auth_method,
+                D1.mfa_method,
                 D1.last_activity,
                 D1.revoked
             FROM res_device D1

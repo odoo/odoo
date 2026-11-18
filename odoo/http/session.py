@@ -192,6 +192,8 @@ class Device(typing.TypedDict):
     last_activity: int | None
     country: str
     city: str
+    auth_method: str | None
+    mfa_method: str | None
     trusted: typing.NotRequired[bool]
 
 
@@ -249,11 +251,15 @@ def authenticate(session: Session, env: Environment, credential: dict) -> dict:
     session.uid = None
     session['pre_login'] = credential['login']
     session['pre_uid'] = pre_uid
+    session['_track_auth_method'] = auth_info.get('auth_method')
 
     # if 2FA is disabled we finalize immediately
     user = env['res.users'].browse(pre_uid)
     if auth_info.get('mfa') == 'skip' or not user._mfa_url():
+        session['_track_mfa_method'] = None
         finalize(session, env)
+    else:
+        session['_track_mfa_method'] = user._mfa_type()
 
     if request and request.session is session and request.db == env.registry.db_name:
         request.env = env(user=session.uid, context=session.context)
@@ -345,6 +351,8 @@ def get_device(session: Session, request: Request) -> Device:
         'last_activity': None,
         'country': geoip.country.name,
         'city': geoip.city.name,
+        'auth_method': session.get('_track_auth_method'),
+        'mfa_method': session.get('_track_mfa_method'),
         'trusted': not session['_devices'],  # First device in a session is always trusted
     }
     session.is_dirty = True
