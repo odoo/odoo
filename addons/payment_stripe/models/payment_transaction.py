@@ -144,7 +144,9 @@ class PaymentTransaction(models.Model):
                 payment_method_type, payment_method_type
             ),
             "expand[]": "payment_method",
+            "payment_details[order_reference]": self.reference,
             **stripe_utils.include_shipping_address(self),
+            **self._stripe_prepare_line_items_payload(),
         }
 
         if self.payment_method_code == "acss_direct_debit" and self.operation not in (
@@ -177,6 +179,60 @@ class PaymentTransaction(models.Model):
                 if self.currency_id.name in const.INDIAN_MANDATES_SUPPORTED_CURRENCIES:
                     payment_intent_payload.update(**self._stripe_prepare_mandate_options())
         return payment_intent_payload
+
+    def _stripe_prepare_line_items_payload(self):
+        """Prepare the line items of the PaymentIntent payload.
+
+        :return: The Stripe-formatted line items payload.
+        :rtype: dict
+        """
+        currency = self.currency_id
+        decimal_number = const.CURRENCY_DECIMALS.get(currency.name)
+        line_items = self._get_line_items().values()
+        if (
+            len(line_items) > const.MAX_LINE_ITEMS
+            or any(line_item["total"] < 0 for line_item in line_items)
+            or any(not line_item["name"] for line_item in line_items)
+        ):
+            return {}
+
+        payload = {}
+        total_cost = 0
+        for index, line_item in enumerate(line_items):
+            line_cost = payment_utils.to_minor_currency_units(
+                line_item["total"], currency, arbitrary_decimal_number=decimal_number
+            )
+            quantity = line_item["quantity"]
+            unit_cost = round(line_cost / quantity) if quantity else 0
+            if quantity < 1 or quantity != int(quantity) or unit_cost * quantity != line_cost:
+                # Force the quantity to 1, priced at the line total, for non-whole quantities or when
+                # the rounded unit cost does not add up to the total.
+                quantity, unit_cost = 1, line_cost
+            total_cost += unit_cost * int(quantity)
+            prefix = f"amount_details[line_items][{index}]"
+            payload.update({
+                f"{prefix}[product_name]": line_item["name"][:1024],
+                f"{prefix}[quantity]": int(quantity),
+                f"{prefix}[unit_cost]": unit_cost,
+            })
+            options_prefix = f"{prefix}[payment_method_options]"
+            if sku := line_item.get("sku"):
+                if len(sku) <= 12:
+                    payload[f"{prefix}[product_code]"] = sku
+                payload[f"{options_prefix}[klarna][reference]"] = sku[:255]
+            if description := line_item["description"]:
+                payload[f"{options_prefix}[paypal][description]"] = description[:127]
+            if (url := line_item.get("url")) and len(url) <= 4096:
+                payload[f"{options_prefix}[klarna][product_url]"] = url
+            if (image_url := line_item.get("image_url")) and len(image_url) <= 4096:
+                payload[f"{options_prefix}[klarna][image_url]"] = image_url
+
+        amount = payment_utils.to_minor_currency_units(
+            self.amount, currency, arbitrary_decimal_number=decimal_number
+        )
+        if total_cost != amount:  # Partial payment or rounding mismatch.
+            return {}
+        return payload
 
     def _stripe_create_customer(self):
         """Create and return a Customer.

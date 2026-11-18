@@ -29,6 +29,9 @@ PAYMENT_METHODS_MAPPING = {
     "mobile_pay": "mobilepay",
 }
 
+# The maximum number of line items accepted on a PaymentIntent.
+MAX_LINE_ITEMS = 200
+
 INDIAN_MANDATES_SUPPORTED_CURRENCIES = [
     "USD",
     "EUR",

@@ -146,3 +146,100 @@ class MollieTest(MollieCommon, PaymentHttpCommon):
         ):
             response = self._make_http_post_request(url, data=self.payment_data)
         self.assertEqual(response.status_code, 503)
+
+    def test_lines_payload_with_taxes_included_unit_prices(self):
+        """Test that the lines are sent with their taxes included unit prices."""
+        PaymentTransaction = self.env.registry["payment.transaction"]
+        tx = self._create_transaction(flow="redirect", amount=23.0)
+        line_items = {
+            "line": {
+                "name": "Chair",
+                "description": "",
+                "sku": "CHAIR",
+                "quantity": 2,
+                "total": 23.0,
+                "url": "https://example.com/shop/chair",
+                "image_url": "https://example.com/chair.png",
+            }
+        }
+        with patch.object(PaymentTransaction, "_get_line_items", return_value=line_items):
+            lines = tx._mollie_prepare_lines_payload(2)
+        self.assertListEqual(
+            lines,
+            [
+                {
+                    "description": "Chair",
+                    "quantity": 2,
+                    "unitPrice": {"currency": "EUR", "value": "11.50"},
+                    "totalAmount": {"currency": "EUR", "value": "23.00"},
+                    "sku": "CHAIR",
+                    "productUrl": "https://example.com/shop/chair",
+                    "imageUrl": "https://example.com/chair.png",
+                }
+            ],
+        )
+
+    def test_lines_payload_falls_back_to_single_quantity(self):
+        """Test that a line with a fractional quantity is sent with a quantity of 1."""
+        PaymentTransaction = self.env.registry["payment.transaction"]
+        tx = self._create_transaction(flow="redirect", amount=10.0)
+        line_items = {"line": {"name": "Desk", "description": "", "quantity": 1.5, "total": 10.0}}
+        with patch.object(PaymentTransaction, "_get_line_items", return_value=line_items):
+            line = tx._mollie_prepare_lines_payload(2)[0]
+        self.assertEqual((line["quantity"], line["unitPrice"]["value"]), (1, "10.00"))
+
+    def test_lines_payload_skips_too_long_sku(self):
+        """Test that the SKU is only sent if Mollie accepts its length."""
+        PaymentTransaction = self.env.registry["payment.transaction"]
+        tx = self._create_transaction(flow="redirect", amount=10.0)
+        line_items = {
+            "line": {
+                "name": "Desk",
+                "description": "",
+                "sku": "A" * 65,
+                "quantity": 1,
+                "total": 10.0,
+            }
+        }
+        with patch.object(PaymentTransaction, "_get_line_items", return_value=line_items):
+            line = tx._mollie_prepare_lines_payload(2)[0]
+        self.assertNotIn("sku", line)
+
+    def _assert_default_lines(self, tx, line_items):
+        PaymentTransaction = self.env.registry["payment.transaction"]
+        with patch.object(PaymentTransaction, "_get_line_items", return_value=line_items):
+            lines = tx._mollie_prepare_lines_payload(2)
+        self.assertEqual(len(lines), 1)
+        self.assertEqual(lines[0]["description"], "Odoo purchase")
+        self.assertEqual(lines[0]["totalAmount"]["value"], f"{tx.amount:.2f}")
+
+    def test_default_lines_with_negative_line(self):
+        """Test that a single line is sent for the whole amount when a line item is negative."""
+        tx = self._create_transaction(flow="redirect", amount=15.0)
+        self._assert_default_lines(
+            tx,
+            {
+                "line": {"name": "Desk", "description": "", "quantity": 1, "total": 20.0},
+                "discount": {"name": "Promo", "description": "", "quantity": 1, "total": -5.0},
+            },
+        )
+
+    def test_default_lines_with_nameless_line(self):
+        """Test that a single line is sent for the whole amount when a line item has no name."""
+        tx = self._create_transaction(flow="redirect", amount=10.0)
+        self._assert_default_lines(
+            tx, {"line": {"name": "", "description": "", "quantity": 1, "total": 10.0}}
+        )
+
+    def test_default_lines_for_partial_payment(self):
+        """Test that a single line is sent for the whole amount when the line items do not add up
+        to the transaction amount."""
+        tx = self._create_transaction(flow="redirect", amount=10.0)
+        self._assert_default_lines(
+            tx, {"line": {"name": "Desk", "description": "", "quantity": 1, "total": 20.0}}
+        )
+
+    def test_default_lines_without_line_items(self):
+        """Test that a single line is sent for the whole amount when there are no line items."""
+        tx = self._create_transaction(flow="redirect", amount=10.0)
+        self._assert_default_lines(tx, {})
