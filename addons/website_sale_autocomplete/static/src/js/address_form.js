@@ -81,6 +81,9 @@ publicWidget.registry.AddressForm = publicWidget.Widget.extend({
             google_place_id: ev.currentTarget.dataset.googlePlaceId,
             session_id: this.sessionId || null
         });
+        if (address.session_id) {
+            this.sessionId = address.session_id;
+        }
         if (address.formatted_street_number) {
             this.streetAndNumberInput.value = address.formatted_street_number;
         }
