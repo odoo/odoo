@@ -12,7 +12,7 @@
                         <label class="col-4" for="google_places_api_key" string="API Key"/>
                         <field class="col-6" name="google_places_api_key"/>
                     </div>
-                    <div class="mt8">
+                    <div class="mt8" invisible="google_places_use_api_new">
                         <a target="_blank" href="https://console.cloud.google.com/getting-started">
                             <i class="oi oi-arrow-right"/>
                             Create a Google Project and get a key
@@ -22,6 +22,33 @@
                             <i class="oi oi-arrow-right"/>
                             Enable billing on your Google Project
                         </a>
+                    </div>
+                    <div class="mt8" invisible="not google_places_use_api_new">
+                        <a target="_blank" href="https://developers.google.com/maps/documentation/places/web-service/cloud-setup">
+                            <i class="oi oi-arrow-right"/>
+                            Set up a Google Project for the Places API (New)
+                        </a>
+                        <br/>
+                        <a target="_blank" href="https://console.cloud.google.com/apis/library/places.googleapis.com">
+                            <i class="oi oi-arrow-right"/>
+                            Enable the Places API (New) on your Google Project
+                        </a>
+                        <br/>
+                        <a target="_blank" href="https://developers.google.com/maps/documentation/places/web-service/get-api-key">
+                            <i class="oi oi-arrow-right"/>
+                            Get an API key
+                        </a>
+                        <br/>
+                        <a target="_blank" href="https://console.cloud.google.com/billing">
+                            <i class="oi oi-arrow-right"/>
+                            Enable billing on your Google Project
+                        </a>
+                    </div>
+                    <div class="alert alert-warning mt16 mb-0" role="alert" invisible="google_places_use_api_new or not website_id" groups="base.group_system">
+                        This API is deprecated.
+                        <button name="action_google_places_switch_to_api_new" type="object"
+                                class="btn btn-link p-0 align-baseline" string="Switch to the new one"/>
+                        (irreversible, change the API key afterwards to the new one)
                     </div>
                 </div>
             </xpath>
