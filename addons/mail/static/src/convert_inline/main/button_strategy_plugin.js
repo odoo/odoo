@@ -17,16 +17,6 @@ export class ButtonStrategyPlugin extends Plugin {
     // handle conflict with image_strategy_plugin => can not be an imageLink?
 
     provideStyleRules(rules) {
-        // TODO EGGMAIL: maybe fine tune and only accept some values
-        // check similar rule in spacing_plugin (more restrictive for inline elements)
-
-        // some button may have width: 100%:
-        // need to be alone in a paragraph
-        // replace the paragraph + the link with width 100% by the link as a display block
-        // inside a spacing table => sets the padding and the border, then put the link
-        // inside? ...
-        // rules.allow("width", { when: this.isBtn.bind(this) });
-        // rules.allow("max-width", { when: this.isBtn.bind(this) });
         rules.allow(/^padding(-(top|right|bottom|left))?$/, {
             when: [this.isBtn.bind(this), this.validateSpacingValue.bind(this)],
         });
@@ -38,9 +28,6 @@ export class ButtonStrategyPlugin extends Plugin {
     ) {
         // TODO EGGMAIL FOR MSO: rename the function and handle more than the constraints:
         // -> specify the padding dimensions in a structured format (for MSO) => maybe already done by spacing_plugin?
-        // -> identify if the button has rounded corners and no siblings => if not, MSO can use a VML representation
-        // -> is it worth it to implement the VML representation for the button? maybe not if everything can already be done
-        // with mso-padding-alt => to test
         const { layout, analysis } = defaultEmailNodeArguments;
         if (!this.isBtn({ referenceNode })) {
             return defaultEmailNodeArguments;

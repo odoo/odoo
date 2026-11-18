@@ -31,7 +31,6 @@ export class MsoPlugin extends Plugin {
         "border",
         "measurementSnapshot",
         "filterContent",
-        "referenceNode",
         "render",
         "rules",
         "spacing",
@@ -260,7 +259,7 @@ export class MsoPlugin extends Plugin {
             return layout;
         }
         const isWrapperPhrasingContent = emailNode.children.every((child) => {
-            if (child instanceof TextNodeLayout) {
+            if (child.layout instanceof TextNodeLayout) {
                 return true;
             }
             return isPhrasingContent(

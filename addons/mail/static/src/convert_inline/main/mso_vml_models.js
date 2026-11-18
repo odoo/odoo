@@ -4,7 +4,7 @@ const IF_NOT_MSO = `[if !mso]><!`;
 const END_IF = `<![endif]`;
 
 export function wrapIfMso(content) {
-    return `[if mso]>${content}<![endif]`.replace(/\s+/g, " ").trim();
+    return `[if mso]>${content}<![endif]`;
 }
 
 /**
@@ -48,7 +48,7 @@ function escapeHtmlAttribute(value) {
  * VML href (not using an anchor) -> to investigate
  */
 export function buildInlineShapeVmlContent({ fill, stroke, arcSize, padding, href }, htmlContent) {
-    const shapeStyles = ["mso-wrap-style:none"].filter(Boolean);
+    const shapeStyles = ["mso-wrap-style:none"];
 
     const shapeAttributes = [
         'xmlns:v="urn:schemas-microsoft-com:vml"',
