@@ -502,7 +502,11 @@ class Base_ImportImport(models.TransientModel):
                     else:
                         values.append(str(cell.value))
                 elif cell.is_date:
-                    d_fmt = styles.is_datetime(cell.number_format)
+                    # Excel number format codes are case insensitive, and openpyxl's
+                    # is_date_format() (hence cell.is_date) accepts both cases, but
+                    # is_datetime() only looks for the lowercase date/time tokens and
+                    # reports e.g. DD/MM/YYYY as a time format, which rejects the file.
+                    d_fmt = styles.is_datetime(cell.number_format.lower())
                     if d_fmt == "datetime":
                         values.append(cell.value)
                     elif d_fmt == "date":
