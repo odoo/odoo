@@ -516,6 +516,33 @@ class TestWorkingHoursWithVersion(TestHrContractCalendarCommon):
             expected_hours,
         )
 
+    def test_flexible_employee_with_variable_hours_is_unavailable_during_leave(self):
+        self.env.user.company_id = self.company_A
+        self.contractD.resource_calendar_id = False
+        self.contractD.hours_per_week = 35
+        self.contractD.hours_per_day = False
+        self.env["resource.calendar.leaves"].create({
+            "name": "Wednesday off",
+            "resource_id": self.employeeD.resource_id.id,
+            "calendar_id": False,
+            "date_from": datetime(2026, 11, 10, 23, 0),
+            "date_to": datetime(2026, 11, 11, 22, 59, 59),
+        })
+        work_hours = self.env["res.partner"].get_working_hours_for_all_attendees(
+            [self.partnerD.id],
+            datetime(2026, 11, 9).isoformat(),
+            datetime(2026, 11, 15).isoformat(),
+        )
+        expected_hours = [
+            {"daysOfWeek": [1], "startTime": "00:00", "endTime": "23:59"},  # Monday
+            {"daysOfWeek": [2], "startTime": "00:00", "endTime": "23:59"},  # Tuesday
+            {"daysOfWeek": [4], "startTime": "00:00", "endTime": "23:59"},  # Thursday
+            {"daysOfWeek": [5], "startTime": "00:00", "endTime": "23:59"},  # Friday
+            {"daysOfWeek": [6], "startTime": "00:00", "endTime": "23:59"},  # Saturday
+            {"daysOfWeek": [0], "startTime": "00:00", "endTime": "23:59"},  # Sunday
+        ]
+        self.assertEqual(work_hours, expected_hours)
+
     def test_fully_flexible_employee_is_always_available(self):
         self.env.user.company_id = self.company_A
         self.contractD.resource_calendar_id = False
