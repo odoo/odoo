@@ -389,6 +389,10 @@ class SmsComposer(models.TransientModel):
     def _action_send_sms_comment_prepare_values(self):
         return {
             'number_field': self.number_field_name,
+            # posting in batch (res_ids, e.g. server actions) uses the queue unless
+            # asked to send directly, so that the SMS are only sent once the
+            # transaction is committed
+            'put_in_queue': not self.comment_single_recipient and not self.mass_force_send,
             'sms_numbers': self.sanitized_numbers.split(',') if self.sanitized_numbers else None,
             'sms_type': self.sms_type,
             'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),

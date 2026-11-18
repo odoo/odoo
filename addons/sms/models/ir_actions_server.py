@@ -85,6 +85,8 @@ class IrActionsServer(models.Model):
             default_template_id=self.sms_template_id.id,
             default_mass_keep_log=True,
         )
-        composer = self.env['sms.composer'].with_context(**ctx_defaults).create({})
+        # post in batch on res_ids, as the res_id deduced from an active_id (e.g.
+        # automation rules) would send the SMS within the running transaction
+        composer = self.env['sms.composer'].with_context(**ctx_defaults).create({'res_id': False})
         composer.action_send_sms()
         return False
