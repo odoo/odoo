@@ -107,3 +107,57 @@ class TestMrpRepairFlow(TestMrpCommon):
         self.assertEqual(repair.production_count, 1)
         self.assertEqual(repair.action_view_mrp_productions()['res_id'], production.id)
         self.assertEqual(production.action_view_repair_orders()['res_id'], repair.id)
+
+    def test_mo_mto_component_uses_manufacture_mto_rule(self):
+        """ With mrp and repair installed, the MTO route holds two pull rules going
+        from the stock location to the production location: one for manufacturing
+        and one for repair. Both match the domain of `_adjust_procure_method` and
+        usually share the same route_sequence and sequence, so the rule picked for
+        the raw moves of a MO was not deterministic. The rule of the MO operation
+        type must be selected. The repair rule is given a lower sequence to make
+        the wrong pick reproducible.
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        mto_route = self.env.ref('stock.route_warehouse0_mto')
+        mto_route.active = True
+        manufacture_route = self.env['stock.rule'].search([('action', '=', 'manufacture')]).route_id
+        manufacture_mto_rule = warehouse.manufacture_mto_pull_id
+        repair_mto_rule = warehouse.repair_mto_pull_id
+        self.assertEqual(
+            (repair_mto_rule.location_src_id, repair_mto_rule.location_dest_id),
+            (manufacture_mto_rule.location_src_id, manufacture_mto_rule.location_dest_id),
+        )
+        repair_mto_rule.sequence = manufacture_mto_rule.sequence - 1
+
+        component = self.env['product.product'].create({
+            'name': 'MTO Component',
+            'is_storable': True,
+            'route_ids': [Command.set([mto_route.id, manufacture_route.id])],
+        })
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': component.product_tmpl_id.id,
+            'product_qty': 1,
+            'bom_line_ids': [Command.create({'product_id': self.product_1.id, 'product_qty': 1})],
+        })
+        finished = self.env['product.product'].create({
+            'name': 'Finished Product',
+            'is_storable': True,
+        })
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': finished.product_tmpl_id.id,
+            'product_qty': 1,
+            'bom_line_ids': [Command.create({'product_id': component.id, 'product_qty': 1})],
+        })
+
+        other_manu_type = warehouse.manu_type_id.copy({'sequence_code': 'MO2'})
+        for picking_type in (warehouse.manu_type_id, other_manu_type):
+            production = self.env['mrp.production'].create({
+                'product_id': finished.id,
+                'bom_id': bom.id,
+                'product_qty': 1,
+                'picking_type_id': picking_type.id,
+            })
+            production.action_confirm()
+
+            self.assertEqual(production.move_raw_ids.procure_method, 'make_to_order')
+            self.assertEqual(production.move_raw_ids.rule_id, manufacture_mto_rule)
