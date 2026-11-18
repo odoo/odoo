@@ -18,8 +18,7 @@ import {
 } from "@odoo/owl";
 import { getBundle } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
-import { TABLE_WRAPPER_SELECTOR, wrapReadonlyTables } from "@html_editor/utils/table";
-import { unwrapContents } from "@html_editor/utils/dom";
+import { unwrapTables, wrapReadonlyTables } from "@html_editor/utils/table";
 import { getLinksToRetarget, retargetLinkToNewTab } from "@html_editor/utils/url";
 
 export class HtmlViewer extends Component {
@@ -49,7 +48,10 @@ export class HtmlViewer extends Component {
             if (newValue.toString() !== this.state.value.toString()) {
                 // Owl removes the nodes it rendered from '.o_readonly' when the
                 // value changes, so the tables have to be back there first.
-                this.unwrapTables();
+                const readonlyEl = this.readonlyElementRef();
+                if (readonlyEl) {
+                    unwrapTables(readonlyEl);
+                }
                 this.state.value = newValue;
                 if (this.props.config.embeddedComponents) {
                     this.destroyComponents();
@@ -154,14 +156,6 @@ export class HtmlViewer extends Component {
         this.applyReadonlyAttributes(container);
         wrapReadonlyTables(container);
         this.addDomListener(container, "copy", fillClipboardWithSelection);
-    }
-
-    /**
-     * Remove the scroll containers added by 'wrapTables', putting the tables
-     * back where they were rendered.
-     */
-    unwrapTables() {
-        this.readonlyElementRef()?.querySelectorAll(TABLE_WRAPPER_SELECTOR).forEach(unwrapContents);
     }
 
     /**
