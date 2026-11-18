@@ -574,12 +574,10 @@ class Cart(PaymentPortal):
         """
         lines = order_sudo.order_line.filtered(
             lambda line: line.id in line_ids
-        ).with_context(display_default_code=False)
+        )
         return [
             {
-                'item_id': line.product_id.barcode or line.product_id.id,
-                'item_name': line.product_id.display_name,
-                'item_category': line.product_id.categ_id.name,
+                **line.product_id._get_google_analytics_item(),
                 'currency': line.currency_id.name,
                 'price': line.price_reduce_taxexcl,
                 'discount': line.price_unit - line.price_reduce_taxexcl,

@@ -1893,11 +1893,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         """ Transforms a list of order lines into a dict for google analytics """
         ret = []
         for line in order_lines.filtered(lambda line: not line.is_delivery):
-            product = line.product_id
             ret.append({
-                'item_id': product.default_code or product.id,
-                'item_name': product.name or '-',
-                'item_category': product.categ_id.name or '-',
+                **line.product_id._get_google_analytics_item(),
                 'price': line.price_unit,
                 'quantity': line.product_uom_qty,
             })
