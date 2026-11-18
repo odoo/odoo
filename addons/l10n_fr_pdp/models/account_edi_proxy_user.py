@@ -656,7 +656,18 @@ class AccountEdiProxyClientUser(models.Model):
             'pdp_flow_number': flow_number,
             'pdp_payment_info': [payment_info for status in status_infos for payment_info in status.get('payment_infos', [])],
         })
-        if content['state'] == 'done':
+
+        # It can happen that we get both a 500 (admissible / 'AB') and 501 (inadmissible 'RE').
+        # In that case we "choose" the 500 and ignore the 501 (see `_pdp_get_tax_extract_state`)
+        ignore_response = (
+            flow_number == '1'
+            and response_code == 'RE'
+            and origin_move.peppol_response_ids.filtered(
+                lambda l: l.pdp_flow_number == '1' and l.peppol_state == 'done' and l.response_code == 'AB'
+            )
+        )
+
+        if content['state'] == 'done' and not ignore_response:
             self._pdp_log_einvoicing_chatter(
                 origin_move,
                 details=status_details if response_code != 'RE' else None,
