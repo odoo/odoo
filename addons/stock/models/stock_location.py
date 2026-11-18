@@ -438,7 +438,7 @@ class StockLocation(models.Model):
             if package and package.package_type_id:
                 # check weight
                 package_smls = self.env['stock.move.line'].search([('result_package_id', '=', package.id), ('state', 'not in', ['done', 'cancel'])])
-                if self.storage_category_id.max_weight < forecast_weight + sum(package_smls.mapped(lambda sml: sml.quantity_product_uom * sml.product_id.weight)):
+                if self.storage_category_id.max_weight and self.storage_category_id.max_weight < forecast_weight + sum(package_smls.mapped(lambda sml: sml.quantity_product_uom * sml.product_id.weight)):
                     return False
                 # check if enough space
                 package_capacity = self.storage_category_id.package_capacity_ids.filtered(lambda pc: pc.package_type_id == package.package_type_id)
@@ -446,7 +446,7 @@ class StockLocation(models.Model):
                     return False
             else:
                 # check weight
-                if self.storage_category_id.max_weight < forecast_weight + product.weight * quantity:
+                if self.storage_category_id.max_weight and self.storage_category_id.max_weight < forecast_weight + product.weight * quantity:
                     return False
                 product_capacity = self.storage_category_id.product_capacity_ids.filtered(lambda pc: pc.product_id == product)
                 # To handle new line without quantity in order to avoid suggesting a location already full
