@@ -469,7 +469,8 @@ class MailMessage(models.Model):
                 # There are no more records
                 break
             looping_offset += IN_MAX
-        return self.browse(result[offset:limit])._as_query(ordered)
+        query = self.browse(result[offset:limit])._as_query(ordered)
+        return self.env.execute_query(query.select())
 
     def _compute_res_access(self, operation: str):
         assert self.env.su
