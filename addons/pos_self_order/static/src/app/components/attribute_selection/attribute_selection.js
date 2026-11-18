@@ -32,7 +32,26 @@ export class AttributeSelection extends Component {
     }
 
     selectAttribute(attribute, value) {
-        this.selectedValues.selectAttribute(attribute, value, this.props.onSelection);
+        this.selectedValues.selectAttribute(attribute, value, (singleSelection, ...args) => {
+            this.props.onSelection?.(singleSelection, ...args);
+            if (!singleSelection) {
+                return;
+            }
+            const nextAttribute = this.selectedValues.getMissingAttributeValue(
+                this.attributesToDisplay
+            );
+            if (nextAttribute) {
+                document
+                    .getElementById(nextAttribute.attribute_id.id)
+                    ?.scrollIntoView({ behavior: "smooth" });
+            } else {
+                const scrollContainerEl = document.getElementById("o-self-scroll-container");
+                scrollContainerEl?.scrollTo({
+                    top: scrollContainerEl.scrollHeight,
+                    behavior: "smooth",
+                });
+            }
+        });
     }
 
     availableAttributeValue(attribute) {
