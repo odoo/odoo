@@ -8,7 +8,8 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
+import { queryOne } from "@odoo/hoot-dom";
 import { Deferred, mockDate, animationFrame } from "@odoo/hoot-mock";
 import {
     asyncStep,
@@ -536,4 +537,24 @@ test("can mention all group chat members inside its sub-thread", async () => {
     await openDiscuss(groupSubChannelId);
     await insertText(".o-mail-Composer-input", "@");
     await contains(".o-mail-Composer-suggestion", { count: 2 });
+});
+
+test("avoid channel name overflow in threads message header", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "A".repeat(200) });
+    pyEnv["mail.message"].create({
+        model: "discuss.channel",
+        res_id: channelId,
+        body: "<p>Hello world</p>",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-Message-actions [title='Expand']");
+    await click(".o-dropdown-item:contains('Create Thread')");
+    await contains(".o-mail-DiscussContent-threadName", { value: "Hello world" });
+    await contains(".o-mail-Message-header small:contains('(from')");
+    const thread = queryOne(".o-mail-Thread");
+    expect(thread.scrollWidth).toBe(thread.clientWidth);
+    const from = queryOne(".o-mail-Message-header small .text-truncate");
+    expect(from.scrollWidth).toBeGreaterThan(from.clientWidth);
 });
