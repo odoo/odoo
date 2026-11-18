@@ -544,7 +544,7 @@ class MrpWorkorder(models.Model):
         if values.get('qty_produced'):
             for workorder in self:
                 if workorder.state == 'done' and not workorder.time_ids:
-                    ratio = workorder.qty_produced / workorder.qty_to_produce
+                    ratio = workorder.qty_produced / (workorder.qty_to_produce or workorder.qty_production)
                     workorder.duration = workorder._get_duration_expected(ratio=ratio)
             productions_to_update = self.production_id.filtered(lambda p: p.state != 'done' and not p.bom_id.continuous)
             productions_to_update.qty_producing = values['qty_produced']
