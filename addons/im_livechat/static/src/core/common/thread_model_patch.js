@@ -1,4 +1,5 @@
 import { Thread } from "@mail/core/common/thread_model";
+import "@mail/discuss/core/common/thread_model_patch";
 
 import { patch } from "@web/core/utils/patch";
 
