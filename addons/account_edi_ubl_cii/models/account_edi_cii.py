@@ -207,7 +207,34 @@ class AccountEdiCii(models.AbstractModel):
                 'ram:Content': {'_text': content},
                 'ram:SubjectCode': {'_text': code},
             })
+
+        # Add a separate note for payment reduction agreements (BT-22).
+        if self._include_reduction_in_payment_note(vals):
+            contentcode, content, code = self._cii_add_reduction_in_payment_note(vals)
+            nodes.append({
+                'ram:ContentCode': {'_text': contentcode},
+                'ram:Content': {'_text': content},
+                'ram:SubjectCode': {'_text': code},
+            })
+
         return nodes
+
+    # TO OVERRIDE
+    def _include_reduction_in_payment_note(self, vals):
+        """Whether a note about payment reduction agreements should be included.
+
+        TODO: Determine whether such agreements exist based on the relevant
+        business data, e.g. discount agreements, pricelists or loyalty programs.
+        """
+        return False
+
+    def _cii_add_reduction_in_payment_note(self, vals):
+        """Return the CII note describing payment reduction agreements."""
+        return (
+            'ST3',
+            self.env._("Discount or bonus agreements are in place."),
+            'AAK',
+        )
 
     def _cii_get_included_note(self, vals):
         invoice = vals['invoice']
