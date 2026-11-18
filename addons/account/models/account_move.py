@@ -1465,6 +1465,7 @@ class AccountMove(models.Model):
                 or move.journal_id and move.journal_id not in move.suitable_journal_ids._origin
             )
 
+    @api.depends('commercial_partner_id')
     def _compute_payments_widget_to_reconcile_info(self):
 
         for move in self:
@@ -1472,7 +1473,8 @@ class AccountMove(models.Model):
 
             if move.state not in {'draft', 'posted'} \
                     or move.payment_state not in ('not_paid', 'partial') \
-                    or not move.is_invoice(include_receipts=True):
+                    or not move.is_invoice(include_receipts=True) \
+                    or not move._origin:  # unsaved record: no move id to reconcile with
                 continue
 
             pay_term_lines = move.line_ids\
@@ -1491,7 +1493,7 @@ class AccountMove(models.Model):
             payments_widget_vals = {
                 'outstanding': True,
                 'content': [],
-                'move_id': move.id,
+                'move_id': move._origin.id,
                 'title': _('Outstanding credits') if move.is_inbound() else _('Outstanding debits')
             }
 
