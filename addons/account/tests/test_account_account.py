@@ -818,8 +818,16 @@ class TestAccountAccount(TestAccountMergeCommon):
                 expected_field_value = account_to_unmerge.ids if referencing_record._fields[fname].type == 'many2many' else account_to_unmerge.id
                 self.assertRecordValues(referencing_record, [{fname: expected_field_value}])
 
-        # Step 2: Unmerge the account
-        new_account = account_to_unmerge.with_context({
+        # Step 2: Unmerge the account, as an accounting administrator without the Access Rights group
+        account_manager = new_test_user(
+            self.env,
+            login='account_manager_without_access_rights',
+            groups='base.group_user,account.group_account_manager',
+            company_id=company_1.id,
+            company_ids=[Command.set([company_1.id, company_2.id])],
+        )
+        self.assertFalse(account_manager.has_group('base.group_erp_manager'))
+        new_account = account_to_unmerge.with_user(account_manager).with_context({
             'account_unmerge_confirm': True,
             'allowed_company_ids': [company_1.id, company_2.id],
         })._action_unmerge()
