@@ -183,9 +183,13 @@ export class BottomSheet extends Component {
     applyDimensions() {
         const rail = this.scrollRailRef();
 
-        // Convert heights to dvh percentages for CSS variables
+        // Convert heights to dvh percentages for CSS variables. The visual
+        // viewport used for measurements shrinks when a virtual keyboard
+        // appears, but dvh does not on most mobile browsers: convert against
+        // the container, which is 100dvh high, to keep the sheet height right.
+        const dvhHeight = this.containerRef().clientHeight || this.measurements.viewportHeight;
         const heightPercent = Math.min(
-            (this.measurements.initialHeight / this.measurements.viewportHeight) * 100,
+            (this.measurements.initialHeight / dvhHeight) * 100,
             this.maxHeightPercent
         );
 
