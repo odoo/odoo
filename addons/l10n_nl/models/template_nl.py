@@ -50,3 +50,15 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_stock_variation_id': '7090',
             },
         }
+
+    def _setup_utility_bank_accounts(self, template_code, company, template_data):
+        # EXTENDS account
+        had_transfer_account = bool(company.transfer_account_id)
+        super()._setup_utility_bank_accounts(template_code, company, template_data)
+        if template_code == 'nl':
+            # Note: when a transfer account has just been created by the super call,
+            # it will inherit a wrong rgs tag according to the closest code-rule.
+            # In this case we want to replace the inherited tag.
+            self.env['account.account']._l10n_nl_apply_default_rgs_tags(
+                company, replace_existing_rgs_tags=not had_transfer_account,
+            )
