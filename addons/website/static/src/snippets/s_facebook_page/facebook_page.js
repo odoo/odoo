@@ -49,7 +49,7 @@ export class FacebookPage extends Interaction {
             this.previousWidth = params.width;
             const searchParams = new URLSearchParams(params);
 
-            const iframeEl = document.createElement("iframe");
+            const iframeEl = this.document.createElement("iframe");
             iframeEl.setAttribute("style", "border: none; overflow: hidden;");
             iframeEl.setAttribute("aria-label", _t("Facebook"));
             iframeEl.height = params.height;

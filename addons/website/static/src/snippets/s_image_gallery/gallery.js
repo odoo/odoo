@@ -56,12 +56,12 @@ export class Gallery extends Interaction {
 
         const size = 0.8;
         const dimensions = {
-            min_width: Math.round(window.innerWidth * size * 0.9),
-            min_height: Math.round(window.innerHeight * size),
-            max_width: Math.round(window.innerWidth * size * 0.9),
-            max_height: Math.round(window.innerHeight * size),
-            width: Math.round(window.innerWidth * size * 0.9),
-            height: Math.round(window.innerHeight * size),
+            min_width: Math.round(this.window.innerWidth * size * 0.9),
+            min_height: Math.round(this.window.innerHeight * size),
+            max_width: Math.round(this.window.innerWidth * size * 0.9),
+            max_height: Math.round(this.window.innerHeight * size),
+            width: Math.round(this.window.innerWidth * size * 0.9),
+            height: Math.round(this.window.innerHeight * size),
         };
 
         const milliseconds = this.el.dataset.interval || false;
@@ -78,7 +78,7 @@ export class Gallery extends Interaction {
             getIndicatorLabel: (itemPosition, total) =>
                 _t("Slide %(itemPosition)s of %(total)s", { itemPosition, total }),
         })[0];
-        this.insert(this.modalEl, document.body);
+        this.insert(this.modalEl, this.document.body);
         const modal = this.bootstrap.getOrCreateInstance(Modal, this.modalEl, {
             keyboard: true,
         });

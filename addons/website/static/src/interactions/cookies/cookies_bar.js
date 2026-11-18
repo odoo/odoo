@@ -68,9 +68,9 @@ export class CookiesBar extends Popup {
         const isFullConsent = ev.currentTarget.id === "cookies-consent-all";
         this.cookieValue = `{"required": true, "optional": ${isFullConsent}, "ts": ${Date.now()}}`;
         if (isFullConsent) {
-            document.dispatchEvent(new Event("optionalCookiesAccepted"));
+            this.document.dispatchEvent(new Event("optionalCookiesAccepted"));
         } else {
-            document.dispatchEvent(new Event("optionalCookiesDenied"));
+            this.document.dispatchEvent(new Event("optionalCookiesDenied"));
         }
         this.bootstrap.getOrCreateInstance(window.Modal, this.modalEl).hide();
     }

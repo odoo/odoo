@@ -45,7 +45,7 @@ export class SearchMore extends Interaction {
                 },
             })
         );
-        const doc = parseHTML(document, html);
+        const doc = parseHTML(this.document, html);
         const ulEl = buttonEl.parentNode.previousElementSibling;
         ulEl.appendChild(doc);
         const hasMore = results_count > offset + this.limit;

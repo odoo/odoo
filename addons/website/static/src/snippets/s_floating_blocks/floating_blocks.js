@@ -117,7 +117,7 @@ export class FloatingBlocks extends Interaction {
      * Adapts the zoom animation values.
      */
     updateZoom() {
-        const scrollTop = window.scrollY;
+        const scrollTop = this.window.scrollY;
         this.boxesToAnimate.forEach((blockEl, i) => {
             const blockGap = scrollTop - this.snippetOffset - this.snippetHeight * i;
             const transformValue = this.computeTransform(blockGap, i);
@@ -158,12 +158,12 @@ export class FloatingBlocks extends Interaction {
      * On page resize, updates the animation.
      */
     onResize() {
-        this.viewportHeight = window.innerHeight;
+        this.viewportHeight = this.window.innerHeight;
         this.snippetHeight = Math.min(
             this.boxesEls[0]?.offsetHeight || 0,
-            window.innerHeight - 100
+            this.window.innerHeight - 100
         );
-        this.snippetOffset = this.el.getBoundingClientRect().y + window.scrollY;
+        this.snippetOffset = this.el.getBoundingClientRect().y + this.window.scrollY;
         this.snippetScaleFactor = 1 / (this.snippetHeight * 12);
 
         this.updateZoom();
@@ -196,8 +196,8 @@ export class FloatingBlocks extends Interaction {
             return;
         }
         // Account for `.gap-5` on the container.
-        const gap = convertNumericToUnit(3, "rem", "px", getHtmlStyle(document));
-        scrollTo(0, window.scrollY - (this.snippetHeight + gap));
+        const gap = convertNumericToUnit(3, "rem", "px", getHtmlStyle(this.document));
+        this.window.scrollTo(0, this.window.scrollY - (this.snippetHeight + gap));
     }
 }
 

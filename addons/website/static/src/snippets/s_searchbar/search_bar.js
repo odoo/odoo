@@ -92,7 +92,7 @@ export class SearchBar extends Interaction {
 
     start() {
         if (this.inputEl.dataset.noFuzzy && JSON.parse(this.inputEl.dataset.noFuzzy)) {
-            const noFuzzyEl = document.createElement("input");
+            const noFuzzyEl = this.document.createElement("input");
             noFuzzyEl.setAttribute("type", "hidden");
             noFuzzyEl.setAttribute("name", "noFuzzy");
             noFuzzyEl.setAttribute("value", "true");
@@ -205,7 +205,7 @@ export class SearchBar extends Interaction {
     onFocusOut() {
         if (
             !this.linkHasFocus &&
-            document.activeElement?.closest(".o_searchbar_form") !== this.el
+            this.document.activeElement?.closest(".o_searchbar_form") !== this.el
         ) {
             this.render();
         }
@@ -224,7 +224,7 @@ export class SearchBar extends Interaction {
                 ev.preventDefault();
                 if (this.menuEl) {
                     const focusableEls = [this.inputEl, ...this.menuEl.querySelectorAll("li > a")];
-                    const focusedEl = document.activeElement;
+                    const focusedEl = this.document.activeElement;
                     const currentIndex = focusableEls.indexOf(focusedEl) || 0;
                     const delta = ev.key === "ArrowUp" ? focusableEls.length - 1 : 1;
                     const nextIndex = (currentIndex + delta) % focusableEls.length;
@@ -273,7 +273,7 @@ export class SearchBar extends Interaction {
             const clone = el.cloneNode(true);
             wrapperEl.querySelector(".o_searchbar_form").appendChild(clone);
         });
-        this.insert(wrapperEl, document.body);
+        this.insert(wrapperEl, this.document.body);
         const modal = this.bootstrap.getOrCreateInstance(Modal, wrapperEl);
         this.addListener(
             wrapperEl,

@@ -14,8 +14,8 @@ export class Chart extends Interaction {
     setup() {
         this.chart = null;
         this.noAnimation = false;
-        this.style = window.getComputedStyle(document.documentElement);
-        this.chartBlockStyle = window.getComputedStyle(this.el);
+        this.style = this.window.getComputedStyle(this.document.documentElement);
+        this.chartBlockStyle = this.window.getComputedStyle(this.el);
         this.type = this.el.dataset.type;
 
         this.htmlStyle = getHtmlStyle(this.el.ownerDocument);

@@ -20,7 +20,7 @@ export class BottomFixedElement extends Interaction {
         // Note: check in the whole DOM instead of #wrapwrap as unfortunately
         // some things are still put outside of the #wrapwrap (like the livechat
         // button which is the main reason of this code).
-        const bottomFixedEls = document.querySelectorAll(".o_bottom_fixed_element");
+        const bottomFixedEls = this.document.querySelectorAll(".o_bottom_fixed_element");
         if (!bottomFixedEls.length) {
             return;
         }
@@ -42,8 +42,8 @@ export class BottomFixedElement extends Interaction {
         this.restoreBottomFixedElements();
 
         if (
-            document.scrollingElement.offsetHeight + document.scrollingElement.scrollTop >=
-            document.scrollingElement.scrollHeight - 2
+            this.document.scrollingElement.offsetHeight + this.document.scrollingElement.scrollTop >=
+            this.document.scrollingElement.scrollHeight - 2
         ) {
             const buttonEls = [...this.el.querySelectorAll("a, .btn")].filter(isVisible);
             for (const bottomFixedEl of bottomFixedEls) {
@@ -61,7 +61,7 @@ export class BottomFixedElement extends Interaction {
                 if (touchingButtonEl.length) {
                     if (bottomFixedEl.classList.contains("o_bottom_fixed_element_move_up")) {
                         bottomFixedEl.style.marginBottom =
-                            window.innerHeight -
+                            this.window.innerHeight -
                             touchingButtonEl.getBoundingClientRect().top +
                             5 +
                             "px";

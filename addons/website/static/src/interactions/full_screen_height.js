@@ -53,8 +53,8 @@ export class FullScreenHeight extends Interaction {
         // TODO: should try to use svh directly, combined with `calc` and
         // CSS variables to avoid this JS as much as possible... but see below:
         // can't because of Arc browser).
-        const viewportWidth = window.innerWidth;
-        const viewportHeight = window.innerHeight;
+        const viewportWidth = this.window.innerWidth;
+        const viewportHeight = this.window.innerHeight;
         if (
             !this.smallestViewportHeight ||
             // Update svh definition only if the viewport resize seems to
@@ -65,16 +65,16 @@ export class FullScreenHeight extends Interaction {
         ) {
             this.previousViewportWidth = viewportWidth;
             this.previousViewportHeight = viewportHeight;
-            const el = document.createElement("div");
+            const el = this.document.createElement("div");
             el.classList.add("vh-100");
             el.style.position = "fixed";
             el.style.top = "0";
             el.style.pointerEvents = "none";
             el.style.visibility = "hidden";
             el.style.setProperty("height", "100svh", "important");
-            document.body.appendChild(el);
+            this.document.body.appendChild(el);
             this.smallestViewportHeight = parseFloat(el.getBoundingClientRect().height);
-            document.body.removeChild(el);
+            this.document.body.removeChild(el);
         }
 
         if (this.inModal) {

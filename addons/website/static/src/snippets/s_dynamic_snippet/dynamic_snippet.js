@@ -38,7 +38,7 @@ export class DynamicSnippet extends Interaction {
          * @type {*|HTMLElement}
          */
         this.data = [];
-        this.renderedContentNode = document.createDocumentFragment();
+        this.renderedContentNode = this.document.createDocumentFragment();
         this.uniqueId = uniqueId("s_dynamic_snippet_");
         this.templateKey = "website.s_dynamic_snippet.grid";
         this.withSample = false;
@@ -168,7 +168,7 @@ export class DynamicSnippet extends Interaction {
         if (this.data.length > 0 || this.withSample) {
             this.prepareContent();
         } else {
-            this.renderedContentNode = document.createDocumentFragment();
+            this.renderedContentNode = this.document.createDocumentFragment();
         }
         this.renderContent();
         // TODO What was this about ? Rendered content is already started.

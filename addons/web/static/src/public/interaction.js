@@ -71,9 +71,9 @@ export class Interaction {
      */
     dynamicSelectors = {
         _root: () => this.el,
-        _body: () => this.el.ownerDocument.body,
-        _window: () => window,
-        _document: () => this.el.ownerDocument,
+        _body: () => this.document.body,
+        _window: () => this.window,
+        _document: () => this.document,
     };
 
     /**
@@ -152,6 +152,27 @@ export class Interaction {
 
     get isDestroyed() {
         return this.__colibri__.isDestroyed;
+    }
+
+    /**
+     * Document of the interaction element, which may differ from the global
+     * `document` (e.g. when the interaction code runs outside of its iframe).
+     * Timers, location, storage, ... should still use the global `window` or
+     * `browser`.
+     *
+     * @type {Document}
+     */
+    get document() {
+        return this.el.ownerDocument;
+    }
+
+    /**
+     * Window of the interaction element (see `document`).
+     *
+     * @type {Window}
+     */
+    get window() {
+        return this.document.defaultView;
     }
 
     // -------------------------------------------------------------------------

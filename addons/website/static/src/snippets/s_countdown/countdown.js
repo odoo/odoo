@@ -68,7 +68,7 @@ export class Countdown extends Interaction {
         // The optional chaining is required because the queried element may not
         // exist anymore if the interaction target has just been deleted
         this.wrapperEl?.classList.remove("d-none");
-        window.removeEventListener("resize", this.onResize);
+        this.window.removeEventListener("resize", this.onResize);
     }
 
     /**
@@ -103,7 +103,7 @@ export class Countdown extends Interaction {
         if (isCSSColor(color)) {
             return color;
         }
-        return getCSSVariableValue(color, getHtmlStyle(document)) || this.defaultColor;
+        return getCSSVariableValue(color, getHtmlStyle(this.document)) || this.defaultColor;
     }
 
     /**
@@ -143,9 +143,9 @@ export class Countdown extends Interaction {
     }
 
     createCanvasWrapper() {
-        const divEl = document.createElement("div");
+        const divEl = this.document.createElement("div");
         divEl.classList.add("s_countdown_canvas_flex");
-        const canvasEl = document.createElement("canvas");
+        const canvasEl = this.document.createElement("canvas");
         canvasEl.classList.add("w-100");
         divEl.appendChild(canvasEl);
         return divEl;
@@ -320,7 +320,7 @@ export class Countdown extends Interaction {
             for (const val of this.timeDiff) {
                 const canvas = val.canvas.querySelector("canvas");
                 const ctx = canvas.getContext("2d");
-                const dpr = window.devicePixelRatio || 1;
+                const dpr = this.window.devicePixelRatio || 1;
                 ctx.canvas.width = this.width * dpr;
                 ctx.canvas.height = this.size * dpr;
                 ctx.scale(dpr, dpr);
@@ -352,7 +352,7 @@ export class Countdown extends Interaction {
             // Re-render on resize when the countdown is finished.
             if (!this.onResize) {
                 this.onResize = () => this.render();
-                window.addEventListener("resize", this.onResize);
+                this.window.addEventListener("resize", this.onResize);
             }
         }
     }
@@ -428,7 +428,7 @@ export class Countdown extends Interaction {
      */
     drawText(canvas, textNb, textUnit, full = false) {
         const ctx = canvas.getContext("2d");
-        const dpr = window.devicePixelRatio || 1;
+        const dpr = this.window.devicePixelRatio || 1;
         const nbSize = this.size / 4;
         ctx.font = `${nbSize}px Arial`;
         ctx.fillStyle = this.textColor;

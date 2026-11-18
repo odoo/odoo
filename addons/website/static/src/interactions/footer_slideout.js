@@ -27,7 +27,7 @@ export class FooterSlideout extends Interaction {
         // TODO check if the hack is still needed (might have been fixed when
         // the scrollbar was restored to its natural position).
         if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
-            const pixelEl = document.createElement("div");
+            const pixelEl = this.document.createElement("div");
             pixelEl.style.width = "1px";
             pixelEl.style.height = "1px";
             pixelEl.style.marginTop = "-1px";
@@ -42,7 +42,7 @@ export class FooterSlideout extends Interaction {
      * Slideout effect is disabled if the viewport is too short
      */
     updateSlideoutEffect() {
-        this.slideoutEffect = this.mainEl.offsetHeight >= window.innerHeight;
+        this.slideoutEffect = this.mainEl.offsetHeight >= this.window.innerHeight;
     }
 }
 

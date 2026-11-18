@@ -47,7 +47,7 @@ export class Popup extends Interaction {
 
         this.modalShownOnClickEl = this.el.querySelector(".modal[data-display='onClick']");
         if (this.modalShownOnClickEl) {
-            this.showModalBtnEl = document.querySelector(
+            this.showModalBtnEl = this.document.querySelector(
                 `[href="#${this.modalShownOnClickEl.id}"]`
             );
             // Check if a hash exists and if the modal needs to be opened when
@@ -94,7 +94,7 @@ export class Popup extends Interaction {
         if (display === "afterDelay") {
             this.waitForTimeout(this.showPopup, delay);
         } else if (display === "mouseExit") {
-            this.addListener(document.body, "mouseleave", this.showPopup);
+            this.addListener(this.document.body, "mouseleave", this.showPopup);
         }
     }
 
@@ -162,7 +162,7 @@ export class Popup extends Interaction {
         if (this.showModalBtnEl) {
             previouslyFocusedEl = this.showModalBtnEl;
         } else {
-            previouslyFocusedEl = document.activeElement || document.body;
+            previouslyFocusedEl = this.document.activeElement || this.document.body;
         }
         if (tabableEls.length) {
             // If the popup contains two or more focusable elements, the first
