@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 from datetime import timedelta
 from unittest.mock import patch
 
@@ -9,6 +10,7 @@ from odoo import fields
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command
 from odoo.tests import Form, HttpCase, tagged
+from odoo.tools import html2plaintext
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.mail.tests.common import MailCommon
@@ -766,6 +768,200 @@ class TestSaleOrder(SaleCommon):
         self.assertRecordValues(sol, [{"price_unit": 20.0, "technical_price_unit": 20.0}])
         sol.product_uom_qty = 7
         self.assertRecordValues(sol, [{"price_unit": 18.0, "technical_price_unit": 18.0}])
+
+    def _get_line_changes_message(self, order):
+        self.env.cr.flush()  # Posts the tracking of the order
+        return order.message_ids.filtered(
+            lambda m: "Order lines updated" in m.body or "Prices updated" in m.body
+        )
+
+    def _get_last_message(self, order):
+        self.env.cr.flush()  # Posts the tracking of the order
+        return order.message_ids[0]
+
+    def _get_text(self, message):
+        return " ".join(html2plaintext(message.body).split())
+
+    def _update_confirmed_order_lines(self):
+        """Confirm the order, then change a unit price and a quantity and add a line at once."""
+        order = self.sale_order
+        order.action_confirm()
+        product_line, service_line = order.order_line
+        order.write({
+            "order_line": [
+                Command.update(product_line.id, {"price_unit": 15.0}),
+                Command.update(service_line.id, {"product_uom_qty": 10.0}),
+                Command.create({"product_id": self.product.id, "product_uom_qty": 1.0}),
+            ]
+        })
+        return order
+
+    def test_line_changes_are_logged_in_one_message(self):
+        order = self._update_confirmed_order_lines()
+        self.assertEqual(len(self._get_line_changes_message(order)), 1)
+
+    def test_line_changes_message_lists_each_change_and_the_totals(self):
+        order = self._update_confirmed_order_lines()
+        text = self._get_text(self._get_line_changes_message(order))
+        for expected_log in (
+            "Test Product: Unit Price: $ 20.00 -> $ 15.00",
+            "Test Service Product: Quantity: 12.5 -> 10 Units Invoiced Quantity: 0 Units",
+            "Added: Test Product (Quantity: 1 Units, Unit Price: $ 20.00)",
+            "$ 725.00 → *$ 595.00* (Total) $ 725.00 → *$ 595.00* (Untaxed Amount)",
+        ):
+            with self.subTest(expected_log=expected_log):
+                self.assertIn(expected_log, text)
+
+    def _update_order_from_catalog(self):
+        """Send the quotation, then change a quantity and remove a line from the product catalog."""
+        order = self.sale_order
+        order.action_quotation_sent()
+        # Serialized in JSON, as sent back by the catalog
+        old_values = json.loads(json.dumps(order.get_catalog_line_changes_values()))
+        catalog_order = order.with_context(catalog_update=True)
+        for product, quantity in ((self.product, 7.0), (self.service_product, 0.0)):
+            catalog_order._update_order_line_info(
+                product, quantity, product.uom_id, child_field="order_line"
+            )
+        order.log_catalog_line_changes(old_values)
+        return order
+
+    def test_catalog_changes_are_logged_in_one_message(self):
+        order = self._update_order_from_catalog()
+        self.assertEqual(len(self._get_line_changes_message(order)), 1)
+
+    def test_catalog_changes_message_lists_removed_line(self):
+        order = self._update_order_from_catalog()
+        self.assertIn(
+            "Removed: Test Service Product (Quantity: 12.5 Units, Unit Price: $ 50.00)",
+            self._get_text(self._get_line_changes_message(order)),
+        )
+
+    def test_line_changes_beyond_the_limit_are_summed_up(self):
+        order = self.sale_order
+        order.action_quotation_sent()
+        order.order_line = [Command.create({"product_id": self.product.id}) for _i in range(12)]
+        self.assertIn(
+            "Added: Test Product (Quantity: 1 Units, Unit Price: $ 20.00) ... and 2 more changes",
+            self._get_text(self._get_line_changes_message(order)),
+        )
+
+    def test_no_log_line_changes_on_order_creation(self):
+        order = self._create_so(state="sale")
+        self.assertFalse(self._get_line_changes_message(order))
+
+    def test_line_set_to_zero_quantity_is_logged_as_removed(self):
+        order = self.sale_order
+        order.action_quotation_sent()
+        order.order_line[0].product_uom_qty = 0.0
+        self.assertIn(
+            "Removed: Test Product (Quantity: 5 Units, Unit Price: $ 20.00)",
+            self._get_text(self._get_line_changes_message(order)),
+        )
+
+    def test_line_set_from_zero_quantity_is_logged_as_added(self):
+        order = self._create_so(
+            order_line=[Command.create({"product_id": self.product.id, "product_uom_qty": 0.0})]
+        )
+        order.action_quotation_sent()
+        order.order_line.product_uom_qty = 1.0
+        self.assertIn(
+            "Added: Test Product (Quantity: 1 Units, Unit Price: $ 20.00)",
+            self._get_text(self._get_line_changes_message(order)),
+        )
+
+    def test_no_log_line_changes_on_draft_order(self):
+        self.sale_order.order_line[0].write({"product_uom_qty": 2.0, "price_unit": 1.0})
+        self.assertFalse(self._get_line_changes_message(self.sale_order))
+
+    def test_draft_order_logs_only_the_totals(self):
+        self.sale_order.order_line[0].product_uom_qty = 2.0
+        self.assertEqual(
+            self._get_text(self._get_last_message(self.sale_order)),
+            "$ 725.00 → *$ 665.00* (Total) $ 725.00 → *$ 665.00* (Untaxed Amount)",
+        )
+
+    def test_draft_order_tracks_pricelist_change(self):
+        pricelist = self._enable_pricelists()
+        with Form(self.sale_order) as order_form:
+            order_form.pricelist_id = pricelist
+        self.assertIn(
+            f"*{pricelist.display_name}* (Pricelist)",
+            self._get_text(self._get_last_message(self.sale_order)),
+        )
+
+    def test_pricelist_change_logs_single_prices_updated_line(self):
+        pricelist = self._enable_pricelists()
+        pricelist.item_ids = [Command.create({"product_id": self.product.id, "fixed_price": 18.0})]
+        order = self.sale_order
+        order.action_quotation_sent()
+        self.env.cr.flush()  # Posts the status change, as in a separate request
+        with Form(order) as order_form:
+            order_form.pricelist_id = pricelist
+
+        self.assertEqual(
+            self._get_text(self._get_line_changes_message(order)),
+            f"Prices updated (Pricelist: {pricelist.display_name}) "
+            "$ 725.00 → *$ 715.00* (Total) $ 725.00 → *$ 715.00* (Untaxed Amount)",
+        )
+
+    def _assert_reaching_pricelist_item_logs_only_quantity(self, item_vals):
+        """Raise the quantity of a sent quotation to the minimum of a pricelist item that lowers the
+        price to 18 (fixed price or discount), and check that only the quantity is logged."""
+        pricelist = self._enable_pricelists()
+        pricelist.item_ids = [
+            Command.create({"product_id": self.product.id, "min_quantity": 10.0, **item_vals})
+        ]
+        order = self._create_so(pricelist_id=pricelist.id)
+        order.action_quotation_sent()
+        order.order_line.product_uom_qty = 10.0
+        self.assertEqual(
+            self._get_text(self._get_line_changes_message(order)),
+            "*Order lines updated:* Test Product: Quantity: 1 -> 10 Units "
+            "$ 20.00 → *$ 180.00* (Total) $ 20.00 → *$ 180.00* (Untaxed Amount)",
+        )
+
+    def test_price_set_by_pricelist_is_not_logged(self):
+        self._assert_reaching_pricelist_item_logs_only_quantity({"fixed_price": 18.0})
+
+    def test_manual_discount_is_logged(self):
+        order = self.sale_order
+        order.action_quotation_sent()
+        order.order_line[0].discount = 10.0
+        self.assertIn(
+            "Test Product: Discount: 0.0% -> 10.0%",
+            self._get_text(self._get_line_changes_message(order)),
+        )
+
+    def test_manual_price_set_back_to_product_price_is_logged(self):
+        order = self.sale_order
+        order.action_quotation_sent()
+        product_line = order.order_line[0]
+        product_line.price_unit = 15.0
+        self.env.cr.flush()  # Logs the change, as in a separate request
+        product_line.price_unit = 20.0
+        self.assertIn(
+            "Test Product: Unit Price: $ 15.00 -> $ 20.00",
+            self._get_text(self._get_line_changes_message(order)[0]),
+        )
+
+    def test_discount_set_by_pricelist_is_not_logged(self):
+        self._assert_reaching_pricelist_item_logs_only_quantity({
+            "compute_price": "discount",
+            "price_discount": 10.0,
+        })
+
+    def test_manual_discount_removed_is_logged(self):
+        order = self.sale_order
+        order.action_quotation_sent()
+        product_line = order.order_line[0]
+        product_line.discount = 10.0
+        self.env.cr.flush()  # Logs the change, as in a separate request
+        product_line.discount = 0.0
+        self.assertIn(
+            "Test Product: Discount: 10.0% -> 0.0%",
+            self._get_text(self._get_line_changes_message(order)[0]),
+        )
 
     def test_sale_warnings(self):
         """Test warnings when partner/products with sale warnings are used."""
