@@ -23,6 +23,7 @@ import { Command, patchWithCleanup, serverState, withUser } from "@web/../tests/
 import { location } from "@web/core/browser/browser";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { rpc } from "@web/core/network/rpc";
+import { registry } from "@web/core/registry";
 import { getOrigin } from "@web/core/utils/urls";
 import { session } from "@web/session";
 
@@ -131,6 +132,36 @@ test("Portal users should not be able to start a call", async () => {
     await contains(".o-mail-ChatWindow-header .o-mail-ActionList-button", { count: 2 });
     await contains(".o-mail-ChatWindow-header .o-mail-ActionList-button[title='Fold']");
     await contains(".o-mail-ChatWindow-header .o-mail-ActionList-button[title*='Close']");
+});
+
+test("Logged-in visitor can join a call before the store is initialized", async () => {
+    mockGetMedia();
+    const pyEnv = await startServer();
+    const livechatChannelId = await loadDefaultEmbedConfig();
+    const joelUid = pyEnv["res.users"].create({
+        name: "Joel",
+        share: true,
+        login: "joel",
+        password: "joel",
+    });
+    const joelPid = pyEnv["res.partner"].create({ name: "Joel", user_ids: [joelUid] });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: joelPid }),
+        ],
+        channel_type: "livechat",
+        livechat_channel_id: livechatChannelId,
+    });
+    setupChatHub({ opened: [channelId] });
+    registry.category("services").remove("mail.core.public.web");
+    await start({ authenticateAs: { login: "joel", password: "joel" }, waitUntilSubscribe: false });
+    await contains(".o-mail-ChatWindow");
+    await withUser(serverState.userId, () =>
+        rpc("/mail/rtc/channel/join_call", { channel_id: channelId }, { silent: true })
+    );
+    await click(".o-discuss-Call button[title='Join Call']");
+    await contains(".o-discuss-CallActionList button[title='Disconnect']");
 });
 
 test("avatar url contains access token for non-internal users", async () => {

@@ -43,6 +43,7 @@ export class LivechatService {
 
     async initialize() {
         this.store.fetchStoreData("init_livechat", this.options.channel_id).then(() => {
+            this.store.rtc.start();
             this._resolveInitializedPromise();
         });
         if (this.options.chatbot_test_store) {
