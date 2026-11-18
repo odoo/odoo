@@ -695,6 +695,41 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(mo.product_qty, 1)
         self.assertEqual(mo.move_raw_ids.mapped('product_uom_qty'), [0.5, 1])
 
+    def test_split_mo_batch_size_in_bom_uom(self):
+        finished = self.env['product.product'].create({'name': 'Finished', 'uom_id': self.uom_unit.id})
+        cases = [
+            (self.uom_dozen, 2, self.uom_unit, 48, 24, 2),
+            (self.uom_unit, 24, self.uom_dozen, 4, 2, 2),
+            (self.uom_unit, 1, self.uom_dozen, 1, 0.08, 13),
+        ]
+        for bom_uom, batch_size, mo_uom, mo_qty, expected_batch_size, expected_splits in cases:
+            with self.subTest(bom_uom=bom_uom.name, mo_uom=mo_uom.name):
+                bom = self.env['mrp.bom'].create({
+                    'product_tmpl_id': finished.product_tmpl_id.id,
+                    'product_uom_id': bom_uom.id,
+                    'enable_batch_size': True,
+                    'batch_size': batch_size,
+                    'bom_line_ids': [Command.create({'product_id': self.product_2.id})],
+                })
+                mo = self.env['mrp.production'].create({
+                    'product_id': finished.id,
+                    'bom_id': bom.id,
+                    'product_uom_id': mo_uom.id,
+                    'product_qty': mo_qty,
+                })
+                wizard = Form.from_action(self.env, mo.action_split()).save()
+                self.assertAlmostEqual(wizard.max_batch_size, expected_batch_size, places=2)
+                self.assertEqual(wizard.num_splits, expected_splits)
+                self.assertAlmostEqual(sum(wizard.production_detailed_vals_ids.mapped('quantity')), mo_qty, places=2)
+                self.assertTrue(wizard.valid_details)
+                wizard.action_split()
+                productions = mo.production_group_id.production_ids
+                self.assertEqual(len(productions), expected_splits)
+                self.assertAlmostEqual(sum(productions.mapped('product_qty')), mo_qty, places=2)
+                for production in productions:
+                    qty_in_bom_uom = mo_uom._compute_quantity(production.product_qty, bom_uom, round=False)
+                    self.assertLessEqual(bom_uom.compare(qty_in_bom_uom, batch_size), 0)
+
     def test_split_multiple_MOs(self):
         """
         Test that when multiple MOs are selected and the split
