@@ -10,6 +10,7 @@ class ResUsersSettings(models.Model):
     microsoft_calendar_sync_token = fields.Char('Microsoft Next Sync Token', copy=False, groups='base.group_system')
     microsoft_synchronization_stopped = fields.Boolean('Outlook Synchronization stopped', copy=False, groups='base.group_system')
     microsoft_last_sync_date = fields.Datetime('Last Sync Date', copy=False, help='Last synchronization date with Outlook Calendar', groups='base.group_system')
+    microsoft_synchronization_needs_reset = fields.Boolean('Microsoft synchronization needs reset', copy=False)
 
     @api.model
     def _get_fields_blacklist(self):
@@ -18,5 +19,6 @@ class ResUsersSettings(models.Model):
             'microsoft_calendar_sync_token',
             'microsoft_synchronization_stopped',
             'microsoft_last_sync_date',
+            'microsoft_synchronization_needs_reset',
         ]
         return super()._get_fields_blacklist() + microsoft_fields_blacklist
