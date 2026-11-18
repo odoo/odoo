@@ -54,7 +54,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='date']" position="after">
                     <field name="allow_timesheets" column_invisible="1"/> <!-- drives invisible of allocated_hours, effective_hours and 1 more -->
-                    <field name="allocated_hours" widget="timesheet_uom_no_toggle" optional="hide" invisible="allocated_hours == 0 or not allow_timesheets" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="allocated_hours" widget="timesheet_uom_no_toggle" optional="hide" invisible="not allow_timesheets" groups="hr_timesheet.group_hr_timesheet_user"/>
                     <field name="effective_hours" widget="timesheet_uom_no_toggle" optional="hide" invisible="effective_hours == 0 or not allow_timesheets" groups="hr_timesheet.group_hr_timesheet_user"/>
                     <field name="remaining_hours" widget="timesheet_uom_no_toggle"
                         decoration-danger="remaining_hours &lt; 0"
