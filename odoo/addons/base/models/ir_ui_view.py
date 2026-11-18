@@ -1395,9 +1395,21 @@ actual arch.
                 #     <field name="bar" groups="bar"/>
                 #   </t>
                 # </list>
+                parent = node.getparent()
+                previous = node.getprevious()
+                text = node.text or ''
+                if len(node):
+                    node[-1].tail = (node[-1].tail or '') + (node.tail or '')
+                else:
+                    text += node.tail or ''
+                if text:
+                    if previous is not None:
+                        previous.tail = (previous.tail or '') + text
+                    else:
+                        parent.text = (parent.text or '') + text
                 for child in reversed(node):
                     node.addnext(child)
-                node.getparent().remove(node)
+                parent.remove(node)
 
         # check the create and write access
         for node in tree.xpath('//*[@model_access_rights]'):
