@@ -797,7 +797,7 @@ class AccountMove(models.Model):
     # used in <account.journal>._query_has_sequence_holes
     _made_gaps = models.Index('(journal_id, state, payment_state, move_type, date) WHERE (made_sequence_gap IS TRUE)')
     _duplicate_bills_idx = models.Index("(ref) WHERE (move_type IN ('in_invoice', 'in_refund'))")
-    _account_move_sanitize_payment_ref_idx = models.Index("(regexp_replace(COALESCE(payment_reference, ref, ''), '[^a-zA-Z0-9]', '', 'g'))")
+    _account_move_sanitize_payment_ref_idx = models.Index("USING hash (regexp_replace(COALESCE(payment_reference, ref, ''), '[^a-zA-Z0-9]', '', 'g'))")
 
     def _auto_init(self):
         super()._auto_init()
