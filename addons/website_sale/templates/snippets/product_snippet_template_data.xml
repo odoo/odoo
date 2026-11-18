@@ -100,7 +100,22 @@
                             <!-- Actions -->
                             <div class="oe_website_sale o_wsale_product_btn">
                                 <div class="o_wsale_product_action_row">
-                                    <t t-if="(product_variant if not data.get('hide_variants') else product)._website_show_quick_add()">
+                                    <t t-if="data.get('prevent_sale')">
+                                        <a
+                                            title="Contact us"
+                                            aria-label="Contact us"
+                                            t-att-href="website._get_contact_us_url(product.display_name)"
+                                            class="o_wsale_product_btn_primary btn btn-outline-primary"
+                                        >
+                                            <i class="oi oi-fw oi-filled"  data-icon="mail" role="img" aria-hidden="true"/>
+                                            <span class="o_label small ms-1">Contact Us</span>
+                                        </a>
+                                    </t>
+                                    <t
+                                        t-elif="(
+                                            product_variant if not data.get('hide_variants') else product
+                                        )._website_show_quick_add(price=data.get('price'))"
+                                    >
                                         <button
                                             name="add_to_cart"
                                             class="o_wsale_product_btn_primary btn"
@@ -114,17 +129,6 @@
                                             <!-- Avoid whitespaces undesired gaps -->
                                             <i class="oi oi-fw" data-icon="shopping_cart" role="img" aria-hidden="true"/><span class="o_label small ms-1">Add to Cart</span>
                                         </button>
-                                    </t>
-                                    <t t-elif="data.get('prevent_sale')">
-                                        <a
-                                            title="Contact us"
-                                            aria-label="Contact us"
-                                            t-att-href="website._get_contact_us_url(product.display_name)"
-                                            class="o_wsale_product_btn_primary btn btn-outline-primary"
-                                        >
-                                            <i class="oi oi-fw oi-filled"  data-icon="mail" role="img" aria-hidden="true"/>
-                                            <span class="o_label small ms-1">Contact Us</span>
-                                        </a>
                                     </t>
                                     <t
                                         t-call="website_sale.comparison_button"
