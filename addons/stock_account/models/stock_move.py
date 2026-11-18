@@ -57,10 +57,19 @@ class StockMove(models.Model):
         if not products:
             products = self.env['product.product'].search([('is_storable', '=', True), ('qty_available', '>', 0)])
         move_ids = []
-        for company in self.env.companies:
-            for qty_by_move in products.with_company(company)._get_remaining_moves().values():
-                for move in qty_by_move:
-                    move_ids.append(move.id)
+        # `_compute_remaining_qty` values a move under its own company, so the stacks are built
+        # company per company and only the moves of that company are kept, otherwise the filter
+        # returns moves whose remaining quantity displays 0.
+        for company, company_products in self.env['stock.move']._read_group(
+            [('is_in', '=', True), ('product_id', 'in', products.ids)],
+            ['company_id'], ['product_id:recordset'],
+        ):
+            qty_by_move = company_products.with_company(company)._get_remaining_moves()
+            move_ids += [
+                move.id
+                for move, qty in qty_by_move.items()
+                if move.company_id == company and move.product_id.uom_id.compare(qty, 0) > 0
+            ]
         return [('id', 'in', move_ids)]
 
     @api.depends('product_id.standard_price')
@@ -120,11 +129,9 @@ class StockMove(models.Model):
     @api.depends('quantity', 'product_id.stock_move_ids.value')
     def _compute_remaining_qty(self):
         for company, moves in self.grouped('company_id').items():
-            products = moves.product_id
-            remaining_by_product = products.with_company(company)._get_remaining_moves()
-
+            qty_by_move = moves.product_id.with_company(company)._get_remaining_moves()
             for move in moves:
-                move.remaining_qty = remaining_by_product.get(move.product_id, {}).get(move, 0)
+                move.remaining_qty = qty_by_move.get(move, 0)
 
     @api.depends('value', 'remaining_qty', 'product_id.standard_price')
     def _compute_remaining_value(self):
