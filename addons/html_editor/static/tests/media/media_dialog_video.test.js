@@ -201,13 +201,7 @@ describe("media dialog video", () => {
                 dailymotion: ["Vertical", "Start at"],
                 vimeo: [...playerOptions, "Vertical", "Start at"],
                 twitch: ["Autoplay", "Vertical", "Start at"],
-                loom: [
-                    "Autoplay",
-                    "Hide player controls",
-                    "Hide fullscreen button",
-                    "Vertical",
-                    "Start at",
-                ],
+                loom: ["Autoplay", "Hide player controls", "Vertical", "Start at"],
             };
             const { editor } = await setupEditor("<p>ab[]cd</p>", {
                 config: NO_EMBEDDED_COMPONENTS_CONFIG,
