@@ -2,10 +2,11 @@ import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { UploadProgressToast } from "./upload_progress_toast";
 import { _t } from "@web/core/l10n/translation";
-import { checkFileSize } from "@web/core/utils/files";
+import { checkFileSize, DEFAULT_MAX_FILE_SIZE } from "@web/core/utils/files";
 import { humanNumber } from "@web/core/utils/numbers";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 import { sprintf } from "@web/core/utils/strings";
+import { session } from "@web/session";
 import { reactive } from "@odoo/owl";
 
 export const AUTOCLOSE_DELAY = 3000;
@@ -107,6 +108,9 @@ export const uploadService = {
             ) => {
                 // Upload the smallest file first to block the user the least possible.
                 const sortedFiles = Array.from(files).sort((a, b) => a.size - b.size);
+                // Files are sent in base64, which is 4/3 of their size.
+                const maxUploadSize =
+                    ((session.max_file_upload_size || DEFAULT_MAX_FILE_SIZE) * 3) / 4;
 
                 const controller = new AbortController();
                 const { signal } = controller;
@@ -126,7 +130,7 @@ export const uploadService = {
                     }
 
                     let fileSize = file.size;
-                    if (!checkFileSize(fileSize, notification)) {
+                    if (!checkFileSize(fileSize, notification, maxUploadSize)) {
                         return null;
                     }
                     if (!fileSize) {
