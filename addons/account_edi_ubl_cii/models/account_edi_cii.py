@@ -587,8 +587,12 @@ class AccountEdiCii(models.AbstractModel):
             siret = commercial_partner.siret[:9]
             scheme_id = "0002"
         buyer_vat = customer.vat if not self._cii_is_vat_void(customer.vat) else None
+        buyer_gln = commercial_partner if (
+                commercial_partner.peppol_eas == '0088'
+                and commercial_partner.peppol_endpoint
+        ) else customer
         return self._cii_get_partner_trade_party_node(vals, {
-            'gln': customer.peppol_endpoint if customer.peppol_eas == '0088' else None,
+            'gln': buyer_gln.peppol_endpoint if buyer_gln.peppol_eas == '0088' else None,
             'name': name,
             'partner_specified_legal_organization': siret,
             'partner_specified_legal_organization_scheme': scheme_id,
@@ -604,8 +608,8 @@ class AccountEdiCii(models.AbstractModel):
                 'city': customer.city,
                 'country_code': customer.country_id.code,
             },
-            'peppol_eas': customer.peppol_eas,
-            'peppol_endpoint': customer.peppol_endpoint,
+            'peppol_eas': buyer_gln.peppol_eas,
+            'peppol_endpoint': buyer_gln.peppol_endpoint,
             'partner_tax_registration': buyer_vat,
         })
 
