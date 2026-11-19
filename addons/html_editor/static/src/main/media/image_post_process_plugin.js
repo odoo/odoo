@@ -256,8 +256,9 @@ export class ImagePostProcessPlugin extends Plugin {
         return { url, newDataset };
     }
     async processImage(params) {
+        const urlBeforeProcess = await loadImageDataURL(params.img.getAttribute("src"));
         const processed = await this._processImage(params);
-        if (!processed) {
+        if (!processed || urlBeforeProcess == processed.url) {
             return () => {};
         }
         return () => this.updateImageAttributes(params.img, processed.url, processed.newDataset);

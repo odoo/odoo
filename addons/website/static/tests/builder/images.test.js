@@ -66,6 +66,28 @@ test("Double click on image and replace it", async () => {
     expect(".options-container[data-container-title='Image']").toHaveCount(1);
 });
 
+test("Do not save modified attachment for unprocessed images", async () => {
+    onRpc("ir.attachment", "search_read", () => [
+        {
+            id: 1,
+            name: "test",
+            mimetype: "image/svg+xml",
+            image_src: "/website/static/src/img/website_logo.svg",
+            access_token: false,
+            public: true,
+        },
+    ]);
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(
+        `<div><img class=a_nice_img src='${dummyBase64Img}'></div>`
+    );
+    await dblclick(":iframe img.a_nice_img");
+    await animationFrame();
+    await contains(".o_select_media_dialog .o_button_area[aria-label='test']").click();
+    await waitSidebarUpdated();
+    await waitForNone(".o_select_media_dialog");
+    expect(":iframe img").not.toHaveClass("o_modified_image_to_save");
+})
+
 test("simple click on Image", async () => {
     await setupWebsiteBuilder(`<div><img class=a_nice_img src='${dummyBase64Img}'></div>`);
     await click(":iframe img.a_nice_img");
@@ -247,7 +269,7 @@ test("pasted/dropped images are converted to attachments on snippet save", async
 });
 
 describe("Image format/optimize", () => {
-    test("Should format an image to be 800px", async () => {
+    test("Should format an image to be 512px", async () => {
         const { getEditor, waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
             ${testImg}
@@ -259,7 +281,7 @@ describe("Image format/optimize", () => {
         await contains("[data-label='Format'] .dropdown").click();
         await waitFor('[data-action-id="setImageFormat"]');
         queryAll(`[data-action-id="setImageFormat"]`)
-            .find((el) => el.textContent.includes("800px"))
+            .find((el) => el.textContent.includes("512px"))
             .click();
         // ensure the shape action has been applied
         await editor.shared.operation.next(() => {});
@@ -270,7 +292,7 @@ describe("Image format/optimize", () => {
         expect(":iframe .test-options-target img").toHaveAttribute("data-mimetype", "image/webp");
         expect(img.src.startsWith("data:image/webp;base64,")).toBe(true);
         await waitFor("[data-label='Format']");
-        expect(queryFirst("[data-label='Format'] .dropdown").textContent).toMatch(/800px/);
+        expect(queryFirst("[data-label='Format'] .dropdown").textContent).toMatch(/512px/);
     });
     test("should set the quality of an image to 50", async () => {
         const { getEditor, waitSidebarUpdated } = await setupWebsiteBuilder(`
