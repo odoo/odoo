@@ -129,6 +129,20 @@ test("forceDone", async () => {
 
     paymentline.forceDone();
     expect(paymentline.payment_status).toBe("done");
+    expect(paymentline.card_no).toBe("forced");
+});
+
+test("force actions do nothing once the payment is done", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const card = store.models["pos.payment.method"].get(2);
+    const data = { payment_status: "done", card_no: "1234" };
+    const paymentline = createPaymentLine(store, order, card, data);
+
+    paymentline.forceDone();
+    paymentline.forceCancel();
+    expect(paymentline.payment_status).toBe("done");
+    expect(paymentline.card_no).toBe("1234");
 });
 
 test("forceCancel", async () => {
