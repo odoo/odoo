@@ -146,6 +146,7 @@
             'web/static/src/core/dialog/dialog.css',
             'point_of_sale/static/src/backend/views/**/*',
             'point_of_sale/static/src/backend/print_receipt/**/*',
+            'point_of_sale/static/src/backend/pos_kanban_view/pos_dashboard_graph_field.js',
 
             'point_of_sale/static/src/customer_display/**/*',
             ('remove', 'point_of_sale/static/src/customer_display/root.js'),
