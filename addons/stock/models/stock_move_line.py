@@ -3,6 +3,7 @@
 from collections import Counter, defaultdict
 from ast import literal_eval
 from operator import itemgetter
+from markupsafe import Markup
 
 from odoo import _, api, fields, models
 from odoo.addons.web.controllers.utils import clean_action
@@ -830,25 +831,26 @@ class StockMoveLine(models.Model):
             lot = lots[key_to_index[key]].with_prefetch(lots._ids)   # With prefetch to reconstruct the ones broke by accessing by index
             mls.with_prefetch(self._prefetch_ids).write({'lot_id': lot.id})
 
-    def _log_message(self, record, move, template, vals):
-        data = vals.copy()
-        if 'lot_id' in vals and vals['lot_id'] != move.lot_id.id:
-            data['lot_name'] = self.env['stock.lot'].browse(vals.get('lot_id')).name
-        if 'location_id' in vals:
-            data['location_name'] = self.env['stock.location'].browse(vals.get('location_id')).name
-        if 'location_dest_id' in vals:
-            data['location_dest_name'] = self.env['stock.location'].browse(vals.get('location_dest_id')).name
-        if 'package_id' in vals and vals['package_id'] != move.package_id.id:
-            data['package_name'] = self.env['stock.package'].browse(vals.get('package_id')).name
-        if 'package_result_id' in vals and vals['package_result_id'] != move.package_result_id.id:
-            data['result_package_dest_name'] = self.env['stock.package'].browse(vals.get('result_package_id')).name
-        if 'owner_id' in vals and vals['owner_id'] != move.owner_id.id:
-            data['owner_name'] = self.env['res.partner'].browse(vals.get('owner_id')).name
-        record.message_post_with_source(
-            template,
-            render_values={'move': move, 'vals': dict(vals, **data)},
-            subtype_xmlid='mail.mt_note',
-        )
+    def _log_message(self, record, moves, template, vals):
+        """ Post a single message on `record` logging the changes of `vals` for each of `moves`. """
+        bodies = []
+        for move in moves:
+            data = vals.copy()
+            if 'lot_id' in vals and vals['lot_id'] != move.lot_id.id:
+                data['lot_name'] = self.env['stock.lot'].browse(vals.get('lot_id')).name
+            if 'location_id' in vals:
+                data['location_name'] = self.env['stock.location'].browse(vals.get('location_id')).name
+            if 'location_dest_id' in vals:
+                data['location_dest_name'] = self.env['stock.location'].browse(vals.get('location_dest_id')).name
+            if 'package_id' in vals and vals['package_id'] != move.package_id.id:
+                data['package_name'] = self.env['stock.package'].browse(vals.get('package_id')).name
+            if 'package_result_id' in vals and vals['package_result_id'] != move.package_result_id.id:
+                data['result_package_dest_name'] = self.env['stock.package'].browse(vals.get('result_package_id')).name
+            if 'owner_id' in vals and vals['owner_id'] != move.owner_id.id:
+                data['owner_name'] = self.env['res.partner'].browse(vals.get('owner_id')).name
+            bodies.append(self.env['ir.qweb']._render(
+                template, {'move': move, 'vals': dict(vals, **data)}, minimal_qcontext=True))
+        record.message_post(body=Markup().join(bodies), subtype_xmlid='mail.mt_note')
 
     def _get_outdated_candidate_sort_key(self, candidate):
         """ Prioritise the current picking first, followed by pickings with the latest scheduled date"""
