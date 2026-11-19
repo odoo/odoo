@@ -172,18 +172,21 @@ class PosOrderReceipt(models.AbstractModel):
         for line in self._get_receipt_lines():
             data = line.read(lines_fields, load=False)[0]
             display_price_incl = line.order_id.config_id.iface_tax_included == 'total'
+            price_field = 'price_subtotal_incl' if display_price_incl else 'price_subtotal'
 
             data['qty'] = int(line.qty) if float(line.qty).is_integer() else line.qty
             data['product_data'] = {**product_by_id[data['product_id']]}
             data['product_data']['display_name'] = line.full_product_name or data['product_data']['display_name']
             data['product_uom_name'] = line.product_id.uom_id.name
-            display_price = data['price_subtotal_incl'] if display_price_incl else data['price_subtotal']
+            display_price = data[price_field]
             data['price_subtotal_incl'] = self._order_receipt_format_currency(display_price)
             data['no_discount_price'] = self._order_receipt_format_currency(line._get_price_no_discount(self.config_id))
 
             # Compute line unit price
-            taxes = line._compute_amount_line_all(1)
-            line_unit_price = taxes['price_subtotal_incl'] if display_price_incl else taxes['price_subtotal']
+            if line.combo_line_ids and line.qty:
+                line_unit_price = sum(line.combo_line_ids.mapped(price_field)) / line.qty
+            else:
+                line_unit_price = line._compute_amount_line_all(1)[price_field]
             data['unit_price'] = self._order_receipt_format_currency(line_unit_price)
 
             # Compute product unit price
@@ -191,20 +194,13 @@ class PosOrderReceipt(models.AbstractModel):
             product_unit_price = taxes['total_included'] if display_price_incl else taxes['total_excluded']
             data['product_unit_price'] = self._order_receipt_format_currency(product_unit_price)
 
-            if service_fee_product and line.product_id.id == service_fee_product.id:
-                is_percent = preset_id.service_fee_type == 'percent'
-                # `based on` says which total the percentage is taken from: it has
-                # nothing to qualify on a flat amount.
-                description = ''
-                if is_percent:
-                    description = _(" (before discount)") if preset_id.service_fee_based_on == 'pre_discount' else _(" (after discount)")
-                data['is_service_fee_line'] = True
+            # A fixed fee is shown like any other line, a percentage needs its rate
+            data['is_percent_service_fee_line'] = bool(service_fee_product and line.product_id.id == service_fee_product.id and preset_id.service_fee_type == 'percent')
+            if data['is_percent_service_fee_line']:
                 data['service_fee_display_info'] = {
-                    'amount': (is_percent and f"{preset_id.service_fee_amount * 100}%") or self._order_receipt_format_currency(line.price_subtotal_incl),
-                    'description': description,
+                    'amount': f"{preset_id.service_fee_amount * 100}%",
+                    'description': _(" (before discount)") if preset_id.service_fee_based_on == 'pre_discount' else _(" (after discount)"),
                 }
-            else:
-                data['is_service_fee_line'] = False
 
             lines.append(data)
 
