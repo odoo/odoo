@@ -3,6 +3,7 @@ import { PartnerSuggestionPlugin } from "@mail/core/common/plugin/suggestion/par
 
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
+import { registry } from "@web/core/registry";
 
 patch(Composer.prototype, {
     get placeholder() {
@@ -24,3 +25,5 @@ patch(Composer.prototype, {
         return { ...config, Plugins: config.Plugins.filter((P) => P !== PartnerSuggestionPlugin) };
     },
 });
+
+registry.category("lazy_components").add("mail.Composer", Composer);

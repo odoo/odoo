@@ -1,7 +1,8 @@
 import { MailPopoutPlugin } from "@mail/core/common/mail_popout_plugin";
-import { Meeting } from "@mail/discuss/call/common/meeting";
 
 import { Plugin, signal, usePlugin } from "@odoo/owl";
+
+import { registry } from "@web/core/registry";
 
 /** Shows the meeting of the call of `discuss.rtc` in a picture-in-picture window. */
 export class PipPlugin extends Plugin {
@@ -26,6 +27,7 @@ export class PipPlugin extends Plugin {
     async open({ context } = {}) {
         this.isActive.set(true);
         const isShadowRoot = context?.root?.el?.getRootNode() instanceof ShadowRoot;
+        const Meeting = registry.category("discuss.call/components").get("Meeting");
         const pipWindow = await this.#popout.pip(Meeting, {
             props: { isPip: true },
             options: { useAlternativeAssets: isShadowRoot },
