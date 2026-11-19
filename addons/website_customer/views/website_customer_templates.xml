@@ -256,7 +256,10 @@
             data-editor-message.translate="Drag blocks here to add them on all customers"/>
         <div class="container mb-3">
             <div class="row">
-                <div class="mt-4 mb-3" t-if="not edit_page">
+                <div class="mt-4 mb-3" t-if="not edit_page and back_url">
+                    <a t-att-href="back_url" aria-label="Back to partner"><i class="oi me-2" data-icon="chevron_backward" role="img" aria-hidden="true"/>Back</a>
+                </div>
+                <div class="mt-4 mb-3" t-elif="not edit_page">
                     <a t-attf-href="/customers" aria-label="Back to references list"><i class="oi me-2" data-icon="chevron_backward" role="img" aria-hidden="true"/>Back to references</a>
                 </div>
                 <t t-set="right_column">
