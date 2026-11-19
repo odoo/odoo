@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_time_rule_view_form_inherit_hr_attendance" model="ir.ui.view">
+        <field name="name">hr.time.rule.form.inherit.hr.attendance</field>
+        <field name="model">hr.time.rule</field>
+        <field name="inherit_id" ref="hr_work_entry.hr_time_rule_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='work_entry_type_id']/.." position="after">
+                <span class="o_form_label" invisible="not can_use_automatic_break">Automatic Break <sup class="d-print-none text-info p-1 ms-1" data-tooltip="Break deducted once per day when the rule applies. The rules are checked in sequence, on the worked time minus the breaks of the previous rules applied, and their breaks add up. It is also added to the automatic check-out time.">?</sup></span>
+                <div class="d-flex align-items-baseline" invisible="not can_use_automatic_break">
+                    <field name="can_use_automatic_break" invisible="1"/> <!-- drives the visibility of the automatic break -->
+                    <field name="automatic_break_duration" nolabel="1" style="width:8ch" placeholder="0"/>
+                    <span class="text-muted ms-1">Mins</span>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

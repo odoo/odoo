@@ -87,7 +87,7 @@
                                                     onKeydown="this.onFormKeydown.bind(this)"
                                                     onSave="this.saveReviewedAttendance.bind(this)"
                                                     onDiscard="this.discardReviewedAttendance.bind(this)"
-                                                    showBreak="this.state.breakManagementEnabled"
+                                                    showBreak="this.state.breakManagementEnabled or !!attendanceReviewDetails.breakDurationLabel"
                                                 />
                                             </Record>
                                         </t>
@@ -120,7 +120,8 @@
                                                         <t t-out="attendanceReviewDetails.outLocation"/>
                                                     </div>
                                                 </div>
-                                                <div t-if="this.state.breakManagementEnabled" class="col-12">
+                                                <div t-if="this.state.breakManagementEnabled or attendanceReviewDetails.breakDurationLabel"
+                                                    class="col-12">
                                                     <label class="small fw-semibold text-muted mb-1">
                                                         Break
                                                     </label>
@@ -146,7 +147,7 @@
                             <i class="oi ms-1" t-attf-data-icon="{{ this.state.checkedIn ? 'logout' : 'login' }}"/>
                         </button>
                         <t t-set="attendanceTotals"
-                            t-value="this.state.attendances.length > 1 and attendanceReviewDetails"/>
+                            t-value="attendanceReviewDetails and (this.state.attendances.length > 1 or attendanceReviewDetails.breakDisplay) and attendanceReviewDetails"/>
                         <div t-if="attendanceTotals" name="attendance_totals" class="text-end text-nowrap ms-auto">
                             <div class="d-flex align-items-baseline justify-content-end gap-2">
                                 <span class="small text-muted">Worked</span>
@@ -154,8 +155,7 @@
                                     <t t-out="attendanceTotals.totalDisplay"/>
                                 </strong>
                             </div>
-                            <div t-if="this.state.breakManagementEnabled and attendanceTotals.breakDisplay"
-                                class="small text-muted">
+                            <div t-if="attendanceTotals.breakDisplay" class="small text-muted">
                                 Break: <t t-out="attendanceTotals.breakDisplay"/>
                             </div>
                         </div>
