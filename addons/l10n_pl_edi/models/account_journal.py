@@ -13,4 +13,5 @@ class AccountJournal(models.Model):
     def button_fetch_in_einvoices(self):
         # EXTENDS 'account'
         super().button_fetch_in_einvoices()
-        self.env['account.move'].with_company(self.company_id)._l10n_pl_edi_download_bills_from_ksef()
+        for company in self.company_id.filtered(lambda c: c.sudo().l10n_pl_edi_access_token):
+            self.env['account.move'].with_company(company)._l10n_pl_edi_download_bills_from_ksef()
