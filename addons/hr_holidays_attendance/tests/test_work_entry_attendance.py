@@ -239,6 +239,33 @@ class TestWorkentryAttendance(HrWorkEntryAttendanceCommon):
             datetime(2025, 6, 29).date()
         )
 
+    def test_working_time_leave_keeps_attendances_of_its_type_on_other_days(self):
+        homework_type = self.env['hr.work.entry.type'].create({
+            'name': 'Homework',
+            'code': 'TEST_HOMEWORK',
+            'count_as': 'working_time',
+            'requires_allocation': False,
+        })
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2021, 9, 13, 8, 0, 0),
+            'check_out': datetime(2021, 9, 13, 12, 0, 0),
+            'work_entry_type_id': homework_type.id,
+        })
+        leave = self.env['hr.leave'].create({
+            'name': 'Homework',
+            'employee_id': self.employee.id,
+            'work_entry_type_id': homework_type.id,
+            'request_date_from': '2021-09-14',
+            'request_date_to': '2021-09-14',
+        })
+        self.assertEqual(leave.state, 'validate')
+        work_entries_vals = self.version._get_work_entries_values(date(2021, 9, 13), date(2021, 9, 14))
+        self.assertEqual(
+            [(vals['date_start'], vals['date_stop']) for vals in work_entries_vals if vals.get('attendance_ids') == attendance],
+            [(datetime(2021, 9, 13, 8, 0, 0), datetime(2021, 9, 13, 12, 0, 0))],
+        )
+
     def test_allowed_work_entry_types_exclude_allocation_types(self):
         """ Time types that require an allocation are time off types: they cannot be chosen
             as the time type of an attendance. """
