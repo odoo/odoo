@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--  Kanban view for partners   -->
+    <record id="res_partner_view_kanban" model="ir.ui.view">
+        <field name="name">res.partner.kanban</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state">
+                <field name="state"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_image me-1">
+                                <field name="image_1920" widget="image"/>
+                            </div>
+                            <div class="oe_kanban_details">
+                                <div class="o_kanban_record_top mb-0">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <field name="name"/>
+                                        </strong>
+                                    </div>
+                                </div>
+                                State:
+                                <field name="state"/>
+                                <div>
+                                    Email:
+                                    <field name="email"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <!--    Action for res.partner-->
+    <record id="res_partner_action" model="ir.actions.act_window">
+        <field name="name">My Profile</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,form,tree</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'kanban', 'view_id': ref('res_partner_view_kanban')})]"
+        />
+    </record>
+    <!--    Server action for partners-->
+    <record model="ir.actions.server" id="action_res_partner">
+        <field name="name">My Profile</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="type">ir.actions.server</field>
+        <field name="state">code</field>
+        <field name="code">action = model.user_my_profile()</field>
+    </record>
+    <!--    Server action for new partners-->
+    <record model="ir.actions.server" id="action_new_res_partner">
+        <field name="name">My Profile</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="type">ir.actions.server</field>
+        <field name="state">code</field>
+        <field name="code">action = model.new_user_my_profile()</field>
+    </record>
+    <!--    Seller dashboard's client action-->
+    <record id="seller_dashboard_action" model="ir.actions.client">
+        <field name="name">Seller Dashboard</field>
+        <field name="tag">seller_dashboard_tag</field>
+    </record>
+    <!--    Partner form view inherited-->
+    <record id="res_partner_field_view" model="ir.ui.view">
+        <field name="name">res.partner.field.view</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vat']"
+                   position="replace">
+                <field name="profile_url" string="Profile Url"/>
+                <field name="profile_url_value" invisible="1"/>
+            </xpath>
+            <xpath expr="//notebook/page[5]"
+                   position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//notebook/page[2]"
+                   position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//notebook/page[1]"
+                   position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//notebook/page[3]"
+                   position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//notebook/page[4]"
+                   position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page name="general_information" string="General">
+                    <div class="text-muted">
+                        <div
+                                style="background-color:rgb(208,208,208);border:medium none;clear:both;display:block;font-size:20px;min-height:45px;line-height:2; margin:4px 2px 32px 2px;">
+                            <h1>
+                                Default Settings
+                            </h1>
+                        </div>
+                        <br/>
+                        <div
+                                style="background-color:rgb(245,245,245);border:medium none;clear:both;display:block;font-size:20px;min-height:45px;line-height:2; margin:4px 2px 32px 2px;">
+                            <h3>Default configuration settings can be found
+                                here
+                                <button type="object" name="view_settings"
+                                        string="-> Click to View"/>
+                            </h3>
+                        </div>
+                    </div>
+                </page>
+                <page name="payment" string="Payment">
+                    <group>
+                        <group>
+                            <field name="payment_method_ids"
+                                   widget="many2many_tags"/>
+                            <field name="total_amount"/>
+                            <field name="balance_amount"/>
+                        </group>
+                        <group>
+                            <field name="paid_amount"/>
+                            <field name="currency_id"/>
+                        </group>
+                    </group>
+                </page>
+                <page name="policy" string="Shops &amp; Policies">
+                    <group>
+                        <group>
+                            <field name="seller_shop_id"/>
+                            <field name="return_policy"/>
+                            <field name="shipping_policy"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='function']"
+                   position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='category_id']"
+                   position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_view_partner_invoices']"
+                   position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_view_sale_order']"
+                   position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//div[@name='button_box']"
+                   position="inside">
+                <button type="object" name="view_sale_order"
+                        class="oe_stat_button"
+                        icon="fa-dollar">
+                    <field name="sale_count" widget="statinfo"
+                           string="Sale"/>
+                </button>
+                <button string="available_amount" class="oe_stat_button"
+                        icon="fa-money">
+                    <field name="amount_available" widget="statinfo"
+                           string="Amount Available"/>
+                </button>
+                <button type="object" name="view_rating"
+                        class="oe_stat_button"
+                        icon="fa-star-o">
+                    <field type="object" name="avg_rating"
+                           widget="statinfo"
+                           string="Avg Rating"/>
+                </button>
+                <button type="object" name="view_recommend"
+                        class="oe_stat_button"
+                        icon="fa-thumbs-o-up">
+                    <field name="recommend_count" widget="statinfo"
+                           string="Recommendation"/>
+                </button>
+            </xpath>
+            <xpath expr="//form//sheet" position="before">
+                <header>
+                    <button type="object" name="register_payment"
+                            class="oe_highlight"
+                            string="Register for Payment"
+                            groups="multi_vendor_marketplace.multi_vendor_marketplace_seller"/>
+                    <button type="object" name="approve_seller"
+                            class="oe_highlight"
+                            string="Approve"
+                            states="Pending for Approval"
+                            groups="multi_vendor_marketplace.multi_vendor_marketplace_admin"/>
+                    <button type="object" name="req_approve"
+                            class="oe_highlight"
+                            string="Request For Approve"
+                            groups="multi_vendor_marketplace.multi_vendor_marketplace_req_seller,multi_vendor_marketplace.multi_vendor_marketplace_admin"
+                            states="new"/>
+                    <button type="object" name="reject_seller"
+                            class="oe_highlight"
+                            string="Reject"
+                            states="Pending for Approval"
+                            groups="multi_vendor_marketplace.multi_vendor_marketplace_admin"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="Pending for Approval,Approved,Denied"/>
+                </header>
+            </xpath>
+        </field>
+    </record>
+    <!--    Partner kanban view inherited-->
+    <record id="multi_vendor_sellers_view_kanban" model="ir.ui.view">
+        <field name="name">multi.vendor.sellers.view.kanban</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state">
+                <field name="state" readonly="1"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_image me-1">
+                                <field name="image_1920" widget="image"/>
+                            </div>
+                            <div class="oe_kanban_details">
+                                <div name="product_lst_price" class="mt-1">
+                                    <div class="o_kanban_record_top mb-0">
+                                        <div class="o_kanban_record_headings">
+                                            <strong class="o_kanban_record_title">
+                                                <field name="name"/>
+                                            </strong>
+                                        </div>
+                                    </div>
+                                    Commission:
+                                    <field name="total_commission"/>
+                                </div>
+                                Status:
+                                <field name="state"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <!--    My Profile menu-->
+    <menuitem id="seller_roott" name="My Profile" sequence="1"
+              action="action_new_res_partner"
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_req_seller"
+              web_icon="multi_vendor_marketplace,static/description/icon.png"/>
+    <!--    Seller Dashboard menu-->
+    <menuitem id="seller_root" name="Seller Dashboard" sequence="1"
+              action="seller_dashboard_action"
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_admin,multi_vendor_marketplace.multi_vendor_marketplace_seller"
+              web_icon="multi_vendor_marketplace,static/description/icon.png"/>
+    <!--    Sales menu-->
+    <menuitem id="sales" parent="seller_root"
+              name="Sales" sequence="21"
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_admin,multi_vendor_marketplace.multi_vendor_marketplace_seller"
+              action="vendor_dashboard_action"/>
+    <!--    Dashboard menu-->
+    <menuitem id="dashboard" parent="seller_root"
+              name="Dashboard" sequence="3"
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_admin,multi_vendor_marketplace.multi_vendor_marketplace_seller"
+              action="seller_dashboard_action"/>
+    <!--    Seller menu-->
+    <menuitem id="seller" parent="seller_root"
+              name="Seller" sequence="10"
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_admin,multi_vendor_marketplace.multi_vendor_marketplace_seller"
+              action="multi_vendor_marketplace.res_partner_action"/>
+    <!--    Sellers menu-->
+    <menuitem id="seller_ecom" parent="seller"
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_admin"
+              name="Sellers" sequence="13"
+              action="res_partner_action"/>
+    <!--    My Profile menu-->
+    <menuitem id="my_profile" parent="seller"
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_seller"
+              name="My Profile" sequence="14"
+              action="action_res_partner"/>
+    <!--    Seller Bill menu-->
+    <menuitem id="seller_bill" parent="sales"
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_admin"
+              name="Seller Bill1" sequence="29"
+              action="vendor_dashboard_action"/>
+    <!--    Invoice menu-->
+    <menuitem id="invoice" parent="seller_root" name="Invoice"
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_admin"
+              sequence="40"
+              action="vendor_dashboard_action"/>
+    <!--    Bill menu-->
+    <menuitem id="seller_bill" parent="invoice"
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_admin"
+              name="Seller Bill" sequence="41"
+              action="account.action_move_in_invoice_type"/>
+    <!--    Payment menu-->
+    <menuitem id="payment" parent="invoice"
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_admin"
+              name="Payment" sequence="42"
+              action="account.action_account_payments_payable"/>
+</odoo>
