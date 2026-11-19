@@ -375,6 +375,7 @@ class HrAttendance(models.Model):
                 for val in ruleset.rule_ids._generate_overtime_vals_v2(min(attendances_dates), max(attendances_dates), ruleset_attendances, schedules_intervals_by_employee)
             ])
         self.env['hr.attendance.overtime.line'].create(overtime_vals_list)
+        all_attendances.invalidate_recordset(['linked_overtime_ids'])
         self.env.add_to_compute(self._fields['overtime_hours'], all_attendances)
         self.env.add_to_compute(self._fields['expected_hours'], all_attendances)
         self.env.add_to_compute(self._fields['validated_overtime_hours'], all_attendances)
