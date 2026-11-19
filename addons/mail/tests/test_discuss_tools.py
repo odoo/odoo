@@ -1,11 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
+from unittest.mock import patch
 
 from odoo import fields
 from odoo.tests.common import new_test_user
 
 from odoo.addons.bus.tests.common import BusResult, pop_store_version
+from odoo.addons.mail.models.discuss.discuss_channel import DiscussChannel
 from odoo.addons.mail.tests.common import MailCase, mail_new_test_user
 from odoo.addons.mail.tools.discuss import Store
 
@@ -283,7 +285,7 @@ class TestDiscussTools(MailCase):
 
         def _get_fields(res):
             res.attr("name")
-            res.attr("description", internal=True)
+            res.for_internal_users(["description"])
             res.many(
                 "channel_member_ids",
                 lambda res: (
@@ -291,18 +293,18 @@ class TestDiscussTools(MailCase):
                         "partner_id",
                         lambda res: (
                             res.attr("name"),
-                            res.extend(["email", "phone"], internal=True),
+                            res.for_internal_users(["email", "phone"]),
                         ),
                     ),
                     res.attr("seen_message_id"),
                 ),
             )
-            res.many("message_ids", ["author_id"], internal=True)
+            res.for_internal_users(lambda res: res.many("message_ids", ["author_id"]))
             res.one(
                 "discuss_category_id",
                 lambda res: (
                     res.attr("id"),
-                    res.from_method("_store_category_fields", internal=True),
+                    res.for_internal_users("_store_category_fields"),
                 ),
             )
 
@@ -364,6 +366,109 @@ class TestDiscussTools(MailCase):
         with self.assertBus([BusResult(portal_user, "mail.record/insert", non_internal_payload)]):
             store = Store(bus_channel=portal_user)
             store.add(public_channel, _get_fields)
+
+    def test_363_clear_fields_for_internal_users(self):
+        """Test that clear() removes the fields for internal users, for the internal store of a
+        channel target as for a store that is for internal users."""
+        public_channel = self.env["discuss.channel"].create(
+            {"name": "Public Channel", "group_public_id": False},
+        )
+        bob_user = new_test_user(self.env, "bob_user", name="Bob", email="bob@secret.com")
+
+        def _get_fields(res):
+            res.attr("name")
+            res.for_internal_users(["email"])
+            res.clear()
+            res.attr("phone")
+
+        with self.assertBus(
+            [
+                BusResult(
+                    public_channel,
+                    "mail.record/insert",
+                    {"res.partner": [{"id": bob_user.partner_id.id, "phone": False}]},
+                ),
+            ],
+        ):
+            Store(bus_channel=public_channel).add(bob_user.partner_id, _get_fields)
+        with self.assertBus(
+            [
+                BusResult(
+                    bob_user,
+                    "mail.record/insert",
+                    {"res.partner": [{"id": bob_user.partner_id.id, "phone": False}]},
+                ),
+            ],
+        ):
+            Store(bus_channel=bob_user).add(bob_user.partner_id, _get_fields)
+
+    def test_365_target_blocks(self):
+        """Test that the target blocks of a field list are evaluated for the target of each store
+        the field list is added to."""
+        bob_user = new_test_user(self.env, "bob_user", name="Bob", email="bob@secret.com")
+        portal_user = new_test_user(self.env, login="portal_user", groups="base.group_portal")
+        field_list = Store._format_fields(
+            lambda res: (res.attr("name"), res.for_internal_users(["email"])),
+            bob_user.partner_id,
+        )
+        result = Store(bus_channel=bob_user).add(bob_user.partner_id, field_list)._build_result()
+        self.assertEqual(
+            pop_store_version(result),
+            {
+                "res.partner": [
+                    {"email": "bob@secret.com", "id": bob_user.partner_id.id, "name": "Bob"},
+                ],
+            },
+        )
+        result = Store(bus_channel=portal_user).add(bob_user.partner_id, field_list)._build_result()
+        self.assertEqual(
+            pop_store_version(result),
+            {"res.partner": [{"id": bob_user.partner_id.id, "name": "Bob"}]},
+        )
+
+    def test_368_sync_target_blocks(self):
+        """Test that the target blocks of the fields to sync are evaluated for each store, the
+        fields for internal users going to the internal store of a channel."""
+        channel = self.env["discuss.channel"].create({
+            "group_public_id": False,
+            "name": "Channel 368",
+        })
+
+        def _sync_field_names(self, res):
+            res[None].from_method("_store_sync_368_fields")
+
+        def _store_sync_368_fields(self, res):
+            res.attr("default_display_mode")
+            res.for_internal_users(["description"])
+
+        with (
+            patch.object(DiscussChannel, "_sync_field_names", _sync_field_names),
+            patch.object(
+                DiscussChannel,
+                "_store_sync_368_fields",
+                _store_sync_368_fields,
+                create=True,
+            ),
+            self.assertBus(
+                [
+                    BusResult(
+                        channel,
+                        "mail.record/insert",
+                        {
+                            "discuss.channel": [
+                                {"default_display_mode": "video_full_screen", "id": channel.id},
+                            ],
+                        },
+                    ),
+                    BusResult(
+                        (channel, "internal_users"),
+                        "mail.record/insert",
+                        {"discuss.channel": [{"description": "Text 368", "id": channel.id}]},
+                    ),
+                ],
+            ),
+        ):
+            channel.write({"default_display_mode": "video_full_screen", "description": "Text 368"})
 
     def test_390_add_no_loop(self):
         """Test that store.add() does not loop indefinitely but it is still allowed to process
