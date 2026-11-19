@@ -1362,3 +1362,242 @@ class TestSalePrices(SaleCommon):
         order.pricelist_id = eur_pricelist
         order.action_update_prices()
         self.assertAlmostEqual(order.amount_total, (100 + 50 + 10) * eur_curr.rate, 2)
+
+    def test_combo_item_display_price_prorated_by_base_price(self):
+        """The combo product's price must be prorated among its combos proportionally to each
+        combo's base price (i.e. the lowest list price among that combo's items)."""
+        order = self.empty_order
+        product_a = self._create_product(name="A", list_price=4.0)
+        product_b = self._create_product(name="B", list_price=6.0)
+        combos = self.env["product.combo"].create([
+            {"name": "Choice A", "combo_item_ids": [Command.create({"product_id": product_a.id})]},
+            {"name": "Choice B", "combo_item_ids": [Command.create({"product_id": product_b.id})]},
+        ])
+        product_combo = self._create_product(
+            name="Combo", list_price=100.0, type="combo", combo_ids=[Command.set(combos.ids)]
+        )
+
+        combo_line = self.env["sale.order.line"].create({
+            "order_id": order.id,
+            "product_id": product_combo.id,
+        })
+        item_lines = self.env["sale.order.line"].create([
+            {
+                "order_id": order.id,
+                "product_id": combo.combo_item_ids[0].product_id.id,
+                "combo_item_id": combo.combo_item_ids.id,
+                "linked_line_id": combo_line.id,
+            }
+            for combo in combos
+        ])
+
+        self.assertEqual(
+            [line._get_combo_item_display_price() for line in item_lines],
+            [40.0, 60.0],
+            "Combo item prices must be prorated proportionally to each combo's base price",
+        )
+
+    def test_combo_item_display_price_independent_of_selected_item(self):
+        """Within a single combo, the display price must only depend on the combo's prorated
+        share of the combo product's price, not on the selected item's own list price."""
+        product_a = self._create_product(name="A", list_price=4.0)
+        product_b = self._create_product(name="B", list_price=6.0)
+        combo = self.env["product.combo"].create({
+            "name": "Choice",
+            "combo_item_ids": [
+                Command.create({"product_id": product_a.id}),
+                Command.create({"product_id": product_b.id}),
+            ],
+        })
+        product_combo = self._create_product(
+            name="Combo", list_price=50.0, type="combo", combo_ids=[Command.link(combo.id)]
+        )
+
+        prices = []
+        for combo_item in combo.combo_item_ids:
+            order = self.env["sale.order"].create({"partner_id": self.partner.id})
+            combo_line = self.env["sale.order.line"].create({
+                "order_id": order.id,
+                "product_id": product_combo.id,
+            })
+            item_line = self.env["sale.order.line"].create({
+                "order_id": order.id,
+                "product_id": combo_item.product_id.id,
+                "combo_item_id": combo_item.id,
+                "linked_line_id": combo_line.id,
+            })
+            prices.append(item_line._get_combo_item_display_price())
+
+        self.assertEqual(
+            prices, [50.0, 50.0], "All items of a combo must share the same display price"
+        )
+
+    def test_combo_item_display_price_extra_price_distributed_per_combo(self):
+        """Each combo's extra price must be distributed among its own combo items, i.e. a combo
+        item's extra price must not leak into another combo's price."""
+        order = self.empty_order
+        no_variant_attribute = self.env["product.attribute"].create({
+            "name": "No Variant Attribute",
+            "create_variant": "no_variant",
+            "value_ids": [Command.create({"name": "A", "default_extra_price": 2.0})],
+        })
+        product_template_a = self.env["product.template"].create({
+            "name": "A",
+            "attribute_line_ids": [
+                Command.create({
+                    "attribute_id": no_variant_attribute.id,
+                    "value_ids": [Command.set(no_variant_attribute.value_ids.ids)],
+                })
+            ],
+            "list_price": 4.0,
+        })
+        product_a = product_template_a.product_variant_id
+        product_b = self._create_product(name="B", list_price=6.0)
+        combos = self.env["product.combo"].create([
+            {
+                "name": "Choice A",
+                "combo_item_ids": [
+                    Command.create({"product_id": product_a.id, "extra_price": 5.0})
+                ],
+            },
+            {
+                "name": "Choice B",
+                "combo_item_ids": [
+                    Command.create({"product_id": product_b.id, "extra_price": 15.0})
+                ],
+            },
+        ])
+        product_combo = self._create_product(
+            name="Combo", list_price=100.0, type="combo", combo_ids=[Command.set(combos.ids)]
+        )
+        ptav_a = product_template_a.attribute_line_ids.product_template_value_ids
+
+        combo_line = self.env["sale.order.line"].create({
+            "order_id": order.id,
+            "product_id": product_combo.id,
+        })
+        item_lines = self.env["sale.order.line"].create([
+            {
+                "order_id": order.id,
+                "product_id": combo.combo_item_ids[0].product_id.id,
+                "combo_item_id": combo.combo_item_ids.id,
+                "linked_line_id": combo_line.id,
+                "product_no_variant_attribute_value_ids": (
+                    [Command.link(ptav_a.id)]
+                    if combo.combo_item_ids[0].product_id == product_a
+                    else []
+                ),
+            }
+            for combo in combos
+        ])
+
+        self.assertEqual(
+            [line._get_combo_item_display_price() for line in item_lines],
+            [40.0 + 2.0 + 5.0, 60.0 + 15.0],
+            "Each combo's extra price must stay within that combo's own display price",
+        )
+
+    def test_combo_item_display_price_applies_pricelist(self):
+        """The display price must take the pricelist into account."""
+        order = self.empty_order
+        order.pricelist_id = self.env["product.pricelist"].create({
+            "name": "Pricelist",
+            "item_ids": [Command.create({"compute_price": "formula", "price_discount": 50})],
+        })
+        no_variant_attribute = self.env["product.attribute"].create({
+            "name": "No Variant Attribute",
+            "create_variant": "no_variant",
+            "value_ids": [Command.create({"name": "A", "default_extra_price": 2.0})],
+        })
+        product_template_a = self.env["product.template"].create({
+            "name": "A",
+            "attribute_line_ids": [
+                Command.create({
+                    "attribute_id": no_variant_attribute.id,
+                    "value_ids": [Command.set(no_variant_attribute.value_ids.ids)],
+                })
+            ],
+            "list_price": 4.0,
+        })
+        product_a = product_template_a.product_variant_id
+        product_b = self._create_product(name="B", list_price=6.0)
+        combos = self.env["product.combo"].create([
+            {
+                "name": "Choice A",
+                "combo_item_ids": [
+                    Command.create({"product_id": product_a.id, "extra_price": 5.0})
+                ],
+            },
+            {
+                "name": "Choice B",
+                "combo_item_ids": [
+                    Command.create({"product_id": product_b.id, "extra_price": 15.0})
+                ],
+            },
+        ])
+        product_combo = self._create_product(
+            name="Combo", list_price=100.0, type="combo", combo_ids=[Command.set(combos.ids)]
+        )
+        ptav_a = product_template_a.attribute_line_ids.product_template_value_ids
+
+        combo_line = self.env["sale.order.line"].create({
+            "order_id": order.id,
+            "product_id": product_combo.id,
+        })
+        item_lines = self.env["sale.order.line"].create([
+            {
+                "order_id": order.id,
+                "product_id": combo.combo_item_ids[0].product_id.id,
+                "combo_item_id": combo.combo_item_ids.id,
+                "linked_line_id": combo_line.id,
+                "product_no_variant_attribute_value_ids": (
+                    [Command.link(ptav_a.id)]
+                    if combo.combo_item_ids[0].product_id == product_a
+                    else []
+                ),
+            }
+            for combo in combos
+        ])
+
+        self.assertEqual(
+            [line._get_combo_item_display_price() for line in item_lines],
+            [20.0 + 1.0 + 2.5, 30.0 + 7.5],
+            "The pricelist must be applied to the display price and its extra price",
+        )
+
+    def test_combo_item_display_price_rounding_delta_added_to_last_combo(self):
+        """When prorating by base price leaves a rounding remainder, the remainder must be added
+        to the last combo's price instead of being lost."""
+        order = self.empty_order
+        products = [self._create_product(name=name, list_price=1.0) for name in ("A", "B", "C")]
+        combos = self.env["product.combo"].create([
+            {
+                "name": "Choice %s" % product.name,
+                "combo_item_ids": [Command.create({"product_id": product.id})],
+            }
+            for product in products
+        ])
+        product_combo = self._create_product(
+            name="Combo", list_price=10.0, type="combo", combo_ids=[Command.set(combos.ids)]
+        )
+
+        combo_line = self.env["sale.order.line"].create({
+            "order_id": order.id,
+            "product_id": product_combo.id,
+        })
+        item_lines = self.env["sale.order.line"].create([
+            {
+                "order_id": order.id,
+                "product_id": product.id,
+                "combo_item_id": combo.combo_item_ids.id,
+                "linked_line_id": combo_line.id,
+            }
+            for product, combo in zip(products, combos)
+        ])
+
+        prices = [line._get_combo_item_display_price() for line in item_lines]
+        self.assertEqual(
+            [round(price, 2) for price in prices],
+            [3.33, 3.33, 3.34],
+            "The rounding remainder must be added to the last combo's price",
+        )

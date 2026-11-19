@@ -704,63 +704,97 @@ class SaleOrderLine(models.Model):
         )
 
     def _get_combo_item_display_price(self):
-        """ Compute the display price of this SOL's combo item.
+        """Compute the display price of this SOL's combo item.
 
-        A combo item's price is a fraction of its combo product's price (i.e. the product of type
-        `combo` which is referenced in this SOL's linked line). It is independent of the combo
-        item's product (i.e. the product referenced in this SOL). The combo's `base_price` will be
-        used to prorate the price of this combo with respect to the other combos in the combo
-        product.
+        Invariants:
+        - The sum of the combo choices' prices must be equal to the combo product's price.
+        - Each combo item within a combo choice must have the same price (except when the combo item
+          has an extra price).
+        Heuristic: prorate the combo product's price among its combo choices by using each combo
+        choice's `base_price` (i.e. the lowest list price among the products in the combo choice)
+        in combination with each selected combo item's extra price.
 
-        Note: this method will throw if this SOL has no combo item or no linked combo product.
+        Note: this method should only be called on combo item SOLs.
         """
         self.ensure_one()
 
-        # Compute the combo product's price.
         combo_line = self._get_linked_line()
-        combo_product_price = combo_line._get_display_price_ignore_combo()
+        # TODO(loti): some selected combo items might not exist yet, so we can't really do this.
+        # It might be possible to retrigger the display price computation once all items exist.
+        selected_combo_item_lines = combo_line._get_linked_lines().filtered(
+            lambda line: line.combo_item_id
+        )
+        # Compute the total extra price of each selected combo item, i.e. the sum of the combo
+        # item's extra price and the selected `no_variant` PTAVs' extra price.
+        # This is expressed in the combo product's own currency (not the order's), since it will be
+        # injected below as a `no_variant_attributes_price_extra`, which is added to the combo
+        # product's price *before* that price gets converted to the order's currency. Converting it
+        # to the order's currency here would cause it to be converted a second time below.
+        selected_combo_items_extra_price = {
+            line.combo_item_id.combo_id: line.combo_item_id.currency_id._convert(
+                from_amount=line.combo_item_id.extra_price
+                + line.product_id._get_no_variant_attributes_price_extra(
+                    line.product_no_variant_attribute_value_ids
+                ),
+                to_currency=combo_line.product_template_id.currency_id,
+                company=self.company_id,
+                date=self.order_id.date_order,
+                round=False,
+            )
+            for line in selected_combo_item_lines
+        }
+        total_extra_price = sum(selected_combo_items_extra_price.values())
+        # Compute the combo product's price, both without and with extra price.
+        combo_product_price_without_extra_price = combo_line._get_display_price_ignore_combo()
+        # Use the `no_variant_attributes_price_extra` context key to include the extra price in the
+        # computation. This key is usually reserved for adding the extra price of the selected
+        # `no_variant` PTAVs of the product, but since combo products can't have any PTAVs, the key
+        # won't be overridden, and we can safely use it.
+        combo_product_price = combo_line.with_context(
+            no_variant_attributes_price_extra=total_extra_price
+        )._get_display_price_ignore_combo()
         # Compute the combos' base prices.
+        combos = combo_line.product_template_id.sudo().combo_ids
         combo_base_prices = {
-            combo_id: combo_id.currency_id._convert(
-                from_amount=combo_id.base_price,
+            combo: combo.currency_id._convert(
+                from_amount=combo.base_price,
                 to_currency=self.currency_id,
                 company=self.company_id,
                 date=self.order_id.date_order,
-            ) for combo_id in combo_line.product_template_id.combo_ids
+                round=False,
+            )
+            for combo in combos
         }
         total_combo_base_price = sum(combo_base_prices.values())
-        # Compute the prorated combo prices. When all combos have a zero base price, prorating by
-        # base price would assign the whole combo product's price to a single combo (via
-        # combo_price_delta below), making one combo item show the full price while the others
-        # show 0. Distribute the price evenly instead.
+        # Compute the prorated combo choice prices.
+        # When all combos have a zero base price, prorating by base price would assign the whole
+        # combo product's price to a single combo choice. Distribute the price evenly instead.
         if total_combo_base_price:
             combo_prices = {
-                combo_id: self.currency_id.round(
-                    base_price * combo_product_price / total_combo_base_price
+                combo: self.currency_id.round(
+                    combo_product_price_without_extra_price * base_price / total_combo_base_price
                 )
-                for (combo_id, base_price) in combo_base_prices.items()
+                for (combo, base_price) in combo_base_prices.items()
             }
         else:
-            even_share = self.currency_id.round(combo_product_price / len(combo_base_prices))
-            combo_prices = {combo_id: even_share for combo_id in combo_base_prices}
+            even_share = self.currency_id.round(
+                combo_product_price_without_extra_price / len(combo_base_prices)
+            )
+            combo_prices = dict.fromkeys(combo_base_prices, even_share)
+        # Distribute the combo's extra price among the selected combo items.
+        combo_extra_price = combo_product_price - combo_product_price_without_extra_price
+        if not self.currency_id.is_zero(combo_extra_price) and combo_prices:
+            for combo in combo_prices:
+                combo_prices[combo] += self.currency_id.round(
+                    combo_extra_price * selected_combo_items_extra_price[combo] / total_extra_price
+                )
         # Compute the delta between the combo product's price and the sum of its combo prices.
         # Ideally, this should be 0, but division in python isn't perfect, so we may need to adjust
         # the combo prices to make the delta 0.
         combo_price_delta = combo_product_price - sum(combo_prices.values())
         if combo_price_delta:
-            combo_prices[combo_line.product_template_id.combo_ids[-1]] += combo_price_delta
-        # Add the extra price of this combo item, as well as the extra prices of any `no_variant`
-        # attributes to the combo price.
-        extra_price = self.combo_item_id.currency_id._convert(
-            from_amount=self.combo_item_id.extra_price
-                        + self.product_id._get_no_variant_attributes_price_extra(
-                            self.product_no_variant_attribute_value_ids
-                        ),
-            to_currency=self.currency_id,
-            company=self.company_id,
-            date=self.order_id.date_order,
-        )
-        return (combo_prices[self.combo_item_id.combo_id] + extra_price)
+            combo_prices[combos[-1]] += combo_price_delta
+        return combo_prices[self.combo_item_id.combo_id]
 
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
     def _compute_discount(self):
