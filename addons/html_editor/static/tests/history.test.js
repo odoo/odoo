@@ -882,6 +882,26 @@ describe("history properties", () => {
         expect(history.getStaged("meta1")).toBe(undefined);
     });
 
+    test("plugins stage values when the draft is collected", async () => {
+        let history;
+        const { editor, el } = await setupEditor(`<p>[]x</p>`, {
+            config: {
+                resources: {
+                    history_metadata_properties: { label: {} },
+                    on_will_collect_history_draft_handlers: (type) => {
+                        history.stage("label", `${type} commit`);
+                    },
+                },
+            },
+        });
+        history = editor.shared.history;
+        el.querySelector("p").dataset.test = "1";
+        const commit = history.commit();
+        expect(commit.metadata.label).toBe("standard commit");
+        history.undo();
+        expect(history.getCommits().at(-1).metadata.label).toBe("undo commit");
+    });
+
     test("discarding changes reverts them but preserves metadata", async () => {
         const { history } = await setupEditorWithHistoryProperties({
             data: makeBasicProperties("data1"),

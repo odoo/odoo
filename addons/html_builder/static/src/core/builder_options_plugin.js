@@ -191,19 +191,12 @@ export class BuilderOptionsPlugin extends Plugin {
         // commit. Every commit has targets, if only empty ones.
         history_metadata_properties: {
             targets: {
-                apply: (targets, { ensureNewMutations }) => {
-                    if (ensureNewMutations) {
-                        this.dependencies.history.stage("targets", targets);
-                    }
-                },
-                revert: (targets, { ensureNewMutations }) => {
-                    if (ensureNewMutations) {
-                        this.dependencies.history.stage("targets", {
-                            current: targets.next,
-                            next: targets.current,
-                        });
-                    }
-                },
+                apply: (targets) => this.dependencies.history.stage("targets", targets),
+                revert: (targets) =>
+                    this.dependencies.history.stage("targets", {
+                        current: targets.next,
+                        next: targets.current,
+                    }),
             },
         },
     };

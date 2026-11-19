@@ -283,7 +283,7 @@ test("preview shouldn't let o_dirty", async () => {
     class TestPlugin extends Plugin {
         static id = "TestPlugin";
         resources = {
-            on_history_commit_restored_handlers: () => {
+            on_revert_history_commit_handlers: () => {
                 const el = this.editable.querySelector(".test-option");
                 if (editorIsStart && el.dataset.applied !== "true") {
                     // apply a mutation when we remove the preview
