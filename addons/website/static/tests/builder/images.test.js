@@ -49,6 +49,14 @@ test("Double click on image and replace it", async () => {
             access_token: false,
             public: true,
         },
+        {
+            id: 2,
+            name: "test",
+            mimetype: "image/svg+xml",
+            image_src: "/web/image/457-test/test.svg",
+            access_token: false,
+            public: true,
+        },
     ]);
     const { waitSidebarUpdated } = await setupWebsiteBuilder(
         `<div><img class=a_nice_img src='${dummyBase64Img}'></div>`
@@ -64,6 +72,17 @@ test("Double click on image and replace it", async () => {
     expect(".o_select_media_dialog").toHaveCount(0);
     expect(":iframe img").toHaveClass("o_modified_image_to_save");
     expect(".options-container[data-container-title='Image']").toHaveCount(1);
+
+    // Make sure that svg do not receive "o_modified_image_to_save" since they are not processed
+    await dblclick(":iframe img.a_nice_img");
+    await animationFrame();
+    expect(".modal-content:contains(Select a media) .o_upload_media_button").toHaveCount(1);
+    expect("div.o-tooltip").toHaveCount(0);
+    await contains(".o_select_media_dialog .o_button_area[aria-label='test']").click();
+    await waitSidebarUpdated();
+    await waitForNone(".o_select_media_dialog");
+    expect(".o_select_media_dialog").toHaveCount(0);
+    expect(":iframe img").not.toHaveClass("o_modified_image_to_save");
 });
 
 test("simple click on Image", async () => {

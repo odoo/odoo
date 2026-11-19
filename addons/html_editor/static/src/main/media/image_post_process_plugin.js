@@ -101,12 +101,13 @@ export class ImagePostProcessPlugin extends Plugin {
         if (
             !(await isImageSupportedForProcessing(img, formatMimetype || mimetypeBeforeConversion))
         ) {
+            const dataUrl = await loadImageDataURL(originalSrc);
             const [postUrl, postDataset] = await this.postProcessImage(
-                await loadImageDataURL(originalSrc),
+                dataUrl,
                 newDataset,
                 processContext
             );
-            return { url: postUrl, newDataset: postDataset };
+            return { url: postUrl, newDataset: postDataset, notModified: dataUrl === postUrl };
         }
         // Crop
         const container = document.createElement("div");
@@ -257,7 +258,7 @@ export class ImagePostProcessPlugin extends Plugin {
     }
     async processImage(params) {
         const processed = await this._processImage(params);
-        if (!processed) {
+        if (!processed || processed.notModified) {
             return () => {};
         }
         return () => this.updateImageAttributes(params.img, processed.url, processed.newDataset);
