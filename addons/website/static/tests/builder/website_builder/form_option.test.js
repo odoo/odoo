@@ -965,6 +965,21 @@ test("Checkbox default value option stays visible when changing label position",
     expect("[data-attribute-action='checked']").toHaveCount(1);
 });
 
+test("Hidden description stays unchecked after reselecting the field", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    await setupWebsiteBuilderWithSnippet("s_website_form", { loadIframeBuilderTemplates: true });
+    const descriptionCheckbox = "[data-action-id='setDescription'] input";
+
+    await contains(":iframe span:contains('Your Name')").click();
+    await contains(descriptionCheckbox).click();
+    await contains(descriptionCheckbox).click();
+    expect(":iframe .s_website_form_field_description").toHaveClass("d-none");
+
+    await contains(":iframe span:contains('Phone Number')").click();
+    await contains(":iframe span:contains('Your Name')").click();
+    expect(descriptionCheckbox).not.toBeChecked();
+});
+
 test("Checkbox description position none persists after multiple clicks", async () => {
     onRpc("get_authorized_fields", () => ({}));
     await setupWebsiteBuilder(
