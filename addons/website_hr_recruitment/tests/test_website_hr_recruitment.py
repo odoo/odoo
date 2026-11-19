@@ -146,6 +146,34 @@ class TestWebsiteHrRecruitmentForm(odoo.tests.HttpCase):
         self.assertEqual(applicant.partner_name, 'Impersonated User')
         self.assertEqual(internal_user.name, 'Internal User')
 
+    def test_apply_job_first_stage_of_job_company(self):
+        company_b = self.env['res.company'].create({'name': 'Company B'})
+        stage_b = self.env['hr.recruitment.stage'].create([{
+            'name': 'Other Company First Stage',
+            'sequence': -2,
+            'company_id': self.env.company.id,
+        }, {
+            'name': 'Company B First Stage',
+            'sequence': -1,
+            'company_id': company_b.id,
+        }])[1]
+        job_b = self.env['hr.job'].create({
+            'name': 'Developer B',
+            'is_published': True,
+            'company_id': company_b.id,
+        })
+
+        self.authenticate(None, None)
+        response = self.url_open('/website/form/hr.applicant', data={
+            'partner_name': 'Georges',
+            'email_from': 'georges.b@test.com',
+            'job_id': job_b.id,
+        })
+
+        applicant = self.env['hr.applicant'].browse(response.json().get('id'))
+        self.assertEqual(applicant.company_id, company_b)
+        self.assertEqual(applicant.stage_id, stage_b)
+
     @odoo.tests.users('admin')
     def test_interview_invite_url_with_multi_website(self):
         if self.env['ir.module.module']._get('appointment_hr_recruitment').state != 'installed':
