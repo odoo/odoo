@@ -593,7 +593,10 @@
                 <t name="Debug" t-name="website.snippets_debug_page_view">
                     <t t-call="website.layout">
                         <style>
-                            #snippets_menu, #o_scroll > .o_panel > .o_panel_header {
+                            #snippets_menu, #o_scroll > .o_panel > .o_panel_header,
+                            [data-o-snippet-group],
+                            [data-oe-type="snippet"]:has(.dynamic_snippet_template:empty),
+                            [data-oe-type="snippet"]:has(.s_popup, .s_whatsapp)::before {
                                 display: none !important;
                             }
                             [data-oe-type="snippet"]:not([data-module-id])::before {
@@ -610,7 +613,7 @@
                                 clear: both;
                             }
                         </style>
-                        <div id="wrap" class="oe_structure">
+                        <div id="wrap" class="oe_structure o_snippets_debug_page">
                             <t t-call="website.snippets"/>
                         </div>
                     </t>
