@@ -1,4 +1,4 @@
-from odoo import Command
+from odoo import Command, fields
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 from odoo.tools import SQL
@@ -23,7 +23,7 @@ class TestAccountMoveSyncTaxLines(AccountTestInvoicingCommon):
 
     @freeze_time('2024-01-31')
     def test_delivery_date_currency_rate_sync(self):
-        """ Test that changing the delivery_date (the exchange rate date in Hungary)
+        """ Test that changing the delivery_date (which sets the taxable supply date, the exchange rate date in Hungary)
         correctly triggers a recomputation of the currency rate and
         synchronizes the journal items' balances.
         """
@@ -64,6 +64,12 @@ class TestAccountMoveSyncTaxLines(AccountTestInvoicingCommon):
             {'amount_currency': 12700.0, 'balance': 3333.33 + 900.0},
         ])
 
+        # The taxable supply date, not the delivery date, defines the currency rate
+        out_invoice.taxable_supply_date = '2024-01-30'
+        self.assertRecordValues(out_invoice, [
+            {'delivery_date': fields.Date.from_string('2024-01-31'), 'invoice_currency_rate': 2.0, 'expected_currency_rate': 2.0},
+        ])
+
     @freeze_time('2026-06-02')
     def test_currency_rate_manual_change(self):
         """
@@ -96,4 +102,53 @@ class TestAccountMoveSyncTaxLines(AccountTestInvoicingCommon):
         self.assertRecordValues(invoice1.line_ids, [
             {'amount_currency':   -60.0, 'balance':   -30.0},  # Product line
             {'amount_currency':    60.0, 'balance':    30.0},  # Receivable line
+        ])
+
+    @freeze_time('2026-06-03')
+    def test_taxable_supply_date_at_post(self):
+        """ At posting, the taxable supply date is set from the delivery date, or the invoice date, and it defines the
+        accounting date.
+        """
+        invoices = self.env['account.move'].create([{
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({'quantity': 1, 'price_unit': 60})],
+            **dates,
+        } for dates in ({'invoice_date': '2026-06-02', 'delivery_date': '2026-06-01'}, {'invoice_date': '2026-06-02'}, {}, {'invoice_date': '2026-05-15'})])
+        self.assertRecordValues(invoices, [
+            {'taxable_supply_date': fields.Date.from_string('2026-06-01'), 'date': fields.Date.from_string('2026-06-01')},
+            {'taxable_supply_date': False, 'date': fields.Date.from_string('2026-06-02')},
+            {'taxable_supply_date': False, 'date': fields.Date.from_string('2026-06-03')},
+            {'taxable_supply_date': False, 'date': fields.Date.from_string('2026-05-15')},
+        ])
+
+        self.env.company.fiscalyear_lock_date = '2026-05-31'
+        invoices.action_post()
+        self.assertRecordValues(invoices, [
+            {'taxable_supply_date': fields.Date.from_string('2026-06-01'), 'date': fields.Date.from_string('2026-06-01')},
+            {'taxable_supply_date': fields.Date.from_string('2026-06-02'), 'date': fields.Date.from_string('2026-06-02')},
+            {'taxable_supply_date': fields.Date.from_string('2026-06-03'), 'date': fields.Date.from_string('2026-06-03')},
+            # The accounting date of a locked period is moved to the first open date
+            {'taxable_supply_date': fields.Date.from_string('2026-05-15'), 'date': fields.Date.from_string('2026-06-03')},
+        ])
+
+    @freeze_time('2026-06-03')
+    def test_taxable_supply_date_at_post_currency_rate(self):
+        """ Setting the taxable supply date at posting keeps a manually changed currency rate, otherwise it uses the
+        currency rate of the taxable supply date.
+        """
+        invoices = self.env['account.move'].create([{
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({'quantity': 1, 'price_unit': 60})],
+            'currency_id': self.other_currency.id,
+        } for _i in range(2)])
+        self.env.execute_query(SQL("UPDATE account_move SET create_date = '2026-06-03' WHERE id IN %s", tuple(invoices.ids)))
+        invoices.invalidate_recordset(['create_date'])
+        invoices[0].invoice_currency_rate = 5
+        with freeze_time('2026-06-04'):
+            invoices.action_post()
+        self.assertRecordValues(invoices, [
+            {'taxable_supply_date': fields.Date.from_string('2026-06-04'), 'invoice_currency_rate': 5.0},
+            {'taxable_supply_date': fields.Date.from_string('2026-06-04'), 'invoice_currency_rate': 3.0},
         ])

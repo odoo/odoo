@@ -8,6 +8,6 @@ class AccountDebitNote(models.TransientModel):
         default_values = super()._prepare_default_values(move)
         if move.company_id.account_fiscal_country_id.code == "HU":
             default_values.update({
-                'delivery_date': move.delivery_date
+                'taxable_supply_date': move.taxable_supply_date,
             })
         return default_values
