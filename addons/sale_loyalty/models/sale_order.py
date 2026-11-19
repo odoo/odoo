@@ -273,6 +273,7 @@ class SaleOrder(models.Model):
         ])
         if order_history_lines:
             order_history_lines.sudo().unlink()
+        previously_confirmed._remove_users_from_single_use_programs()
 
         # Remove any rewards
         self.order_line.filtered(lambda line: line.is_reward_line).unlink()
@@ -314,6 +315,13 @@ class SaleOrder(models.Model):
             order.code_enabled_rule_ids.program_id.filtered("once_per_user").sudo().write(
                 {"partner_ids": [Command.link(order.partner_id.id)]}
             )
+
+    def _remove_users_from_single_use_programs(self):
+        """Let the customers of the given (cancelled) orders use their single-use codes again."""
+        for order in self:
+            order.code_enabled_rule_ids.program_id.filtered("once_per_user").sudo().write({
+                "partner_ids": [Command.unlink(order.partner_id.id)],
+            })
 
     def _send_reward_coupon_mail(self):
         coupons = self.env["loyalty.card"]
