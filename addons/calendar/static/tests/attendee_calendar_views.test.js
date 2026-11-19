@@ -1,6 +1,6 @@
 import { defineCalendarModels, togglePartnerFilter } from "@calendar/../tests/calendar_test_helpers";
 import { beforeEach, expect, queryAllTexts, test } from "@odoo/hoot";
-import { waitFor, waitForNone } from "@odoo/hoot-dom";
+import { queryRect, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 import {
     contains,
@@ -312,6 +312,34 @@ test("Activity events rendering and popover", async () => {
     expect(a2.state).toBe("done");
     const a3 = pyEnv["mail.activity"].browse(3)[0];
     expect(a3.date_deadline).toBe("2016-12-13");
+});
+
+test.tags("mobile");
+test("Activity popover is displayed in a bottom sheet on mobile", async () => {
+    onRpc("res.partner", "get_attendee_detail", () => []);
+    onRpc("res.users", "get_calendar_model_data", () => ({
+        credential_status: {},
+        sync_status: {},
+        sync_email: false,
+        default_duration: 1,
+    }));
+    await mountView({ type: "calendar", resModel: "calendar.event", arch });
+    await clickEvent("activity-event-2016-12-12");
+    await waitFor(".o_bottom_sheet .o-mail-ActivityListPopoverItem");
+    // The bottom sheet already acts as the mobile container: no nested dialog,
+    // otherwise its fixed modal collapses the sheet and hides the activities.
+    expect(".o_bottom_sheet .modal").toHaveCount(0);
+    expect(queryRect(".o_bottom_sheet_body").height).toBeGreaterThan(0);
+    expect(queryAllTexts(".o_bottom_sheet .o-mail-ActivityListPopoverItem-name")).toEqual([
+        "Activity 2",
+        "Activity 3",
+    ]);
+    const a2_selector = ".o-mail-ActivityListPopoverItem:contains(Activity 2) ";
+    await contains(a2_selector + ".o-mail-ActivityListPopoverItem-markAsDone").click();
+    await contains(a2_selector + "button:text(Done)").click();
+    expect(queryAllTexts(".o_bottom_sheet .o-mail-ActivityListPopoverItem-name")).toEqual([
+        "Activity 3",
+    ]);
 });
 
 test.tags("desktop");

@@ -1,17 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="calendar.AttendeeCalendarActivityListPopover">
-        <t t-if="this.uiService.isSmall">
-            <Dialog title.translate="Activities" withBodyPadding="false">
-                <t t-call="calendar.AttendeeCalendarActivityListPopover.popover"/>
-            </Dialog>
-        </t>
-        <t t-else="">
-            <t t-call="calendar.AttendeeCalendarActivityListPopover.popover"/>
-        </t>
-    </t>
-
-    <t t-name="calendar.AttendeeCalendarActivityListPopover.popover">
         <!-- tabindex="0" needed to prevent having a weird auto-focus style
             on the first button/link of the popover while still auto-focusing the popover. -->
         <div tabindex="0" class="d-flex flex-column h-100">
