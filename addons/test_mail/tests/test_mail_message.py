@@ -1,7 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import contextlib
+from datetime import datetime
+from unittest.mock import patch
 
+from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
 from odoo import Command
@@ -504,3 +507,65 @@ class TestMessageValues(MailCommon):
         msg = self.env['mail.message'].create({'model': self.alias_record._name, 'res_id': self.alias_record.id})
         self.assertEqual(msg.message_type, 'comment', 'Message should be comments by default')
 
+
+@tagged("mail_message", "mail_gc")
+class TestMailNotification(MailCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._create_portal_user()
+
+    def test_gc_notifications(self):
+        """ Read notifications of internal users with a final status are removed
+        'max_age_days' after being read, by batches. Read dates come from the
+        transaction (cr.now), hence the use of mock_datetime_and_now. """
+        now = datetime(2025, 6, 1, 10, 0, 0)
+        old_dt, recent_dt = now - relativedelta(days=120), now - relativedelta(days=30)
+        record = self.env['mail.test.simple'].create({'name': 'Test'})
+        notifications = {}
+        # (date, mark as done by employee, [(name, partner, type, status)])
+        for msg_dt, mark_done, cases in [
+            (old_dt, True, [
+                ('old_inbox_read', self.partner_employee, 'inbox', 'sent'),
+                ('old_email', self.partner_admin, 'email', 'sent'),
+                ('old_email_portal', self.partner_portal, 'email', 'sent'),
+            ]),
+            (old_dt, False, [
+                ('old_inbox_unread', self.partner_employee, 'inbox', 'sent'),
+                ('old_email_exception', self.partner_admin, 'email', 'exception'),
+            ]),
+            (recent_dt, True, [
+                ('recent_inbox_read', self.partner_employee, 'inbox', 'sent'),
+                ('recent_email', self.partner_admin, 'email', 'sent'),
+            ]),
+        ]:
+            with self.mock_datetime_and_now(msg_dt):
+                message = self.env['mail.message'].create({
+                    'body': 'Test', 'model': record._name, 'res_id': record.id,
+                })
+                for name, partner, notification_type, status in cases:
+                    notifications[name] = self.env['mail.notification'].create({
+                        'mail_message_id': message.id,
+                        'notification_status': status,
+                        'notification_type': notification_type,
+                        'res_partner_id': partner.id,
+                    })
+                if mark_done:
+                    message.with_user(self.user_employee).set_message_done()
+
+        # email notifications are read at creation, inbox ones when marked as done
+        for name, notification in notifications.items():
+            with self.subTest(notification=name):
+                if name == 'old_inbox_unread':
+                    self.assertFalse(notification.read_date)
+                else:
+                    self.assertEqual(notification.read_date, recent_dt if name.startswith('recent') else old_dt)
+
+        # not the default 180 days, as nothing would be removed; limit to check batches
+        with self.mock_datetime_and_now(now), \
+             patch('odoo.addons.mail.models.mail_notification.GC_UNLINK_LIMIT', 1):
+            results = [self.env['mail.notification']._gc_notifications(max_age_days=90) for _i in range(3)]
+        self.assertEqual(results, [(1, True), (1, True), (0, False)])
+        removed = {name for name, notification in notifications.items() if not notification.exists()}
+        self.assertEqual(removed, {'old_inbox_read', 'old_email'})
