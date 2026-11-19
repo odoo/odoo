@@ -49,7 +49,7 @@ class TestOutOfOffice(TestHrHolidaysCommon):
         })
         second_leave.action_approve()
         # missing dependencies on compute functions
-        self.employee_hruser.invalidate_recordset(["leave_date_to"])
+        self.employee_hruser.invalidate_recordset(["leave_back_datetime", "leave_date_to"])
 
         partner = self.employee_hruser.user_id.partner_id
         partner2 = self.user_employee.partner_id
@@ -74,10 +74,46 @@ class TestOutOfOffice(TestHrHolidaysCommon):
         self.assertEqual(
             employee_info["leave_date_to"], "2024-06-12", "correspondent should be out of office"
         )
+        # 8:00 in Brussels
+        self.assertEqual(employee_info["leave_back_datetime"], "2024-06-12 06:00:00")
         self.assertEqual(
             self.employee_hruser.user_id.with_context(formatted_display_name=True).display_name,
             'armande (base.group_user,hr_holidays.group_hr_holidays_user) !!✈ Back on Jun 12, 2024!!',
             'formatted display name should show the "Back on" formatted date'
+        )
+
+    @freeze_time('2024-06-06 08:00:00')
+    def test_leave_ooo_half_day(self):
+        half_day_type = self.env['hr.work.entry.type'].create({
+            'name': 'Half Day Leaves',
+            'code': 'Half Day Leaves',
+            'count_as': 'absence',
+            'requires_allocation': False,
+            'request_unit': 'half_day',
+        })
+        # validate the morning of 2024-06-06 (Thursday), the employee is back after the lunch
+        leave = self.env['hr.leave'].create({
+            'employee_id': self.employee_hruser.id,
+            'work_entry_type_id': half_day_type.id,
+            'request_date_from': "2024-06-06",
+            'request_date_to': "2024-06-06",
+            'request_date_from_period': 'am',
+            'request_date_to_period': 'am',
+        })
+        leave.action_approve()
+        self.employee_hruser.invalidate_recordset(["leave_back_datetime", "leave_date_to"])
+        self.assertEqual(self.employee_hruser.leave_date_to, date(2024, 6, 6))
+        # 13:00 in Brussels
+        self.assertEqual(self.employee_hruser.leave_back_datetime, datetime(2024, 6, 6, 11, 0))
+        user = self.employee_hruser.user_id
+        self.assertEqual(
+            user.with_context(formatted_display_name=True, tz='Europe/Brussels').display_name,
+            'armande (base.group_user,hr_holidays.group_hr_holidays_user) !!✈ Back at 01:00 PM!!',
+        )
+        self.assertEqual(
+            user.with_context(formatted_display_name=True, tz='Asia/Kolkata').display_name,
+            'armande (base.group_user,hr_holidays.group_hr_holidays_user) !!✈ Back at 04:30 PM!!',
+            'the return time is shown in the timezone of the reader',
         )
 
     @freeze_time('2024-06-06 08:00:00')
@@ -105,9 +141,11 @@ class TestOutOfOffice(TestHrHolidaysCommon):
             'request_date_to_period': 'am',
         })
         leave.action_approve()
-        self.employee_hruser.invalidate_recordset(["leave_date_to"])
+        self.employee_hruser.invalidate_recordset(["leave_back_datetime", "leave_date_to"])
         # the rest of the day is still worked
         self.assertEqual(self.employee_hruser.leave_date_to, date(2024, 6, 6))
+        # 12:00 in Brussels
+        self.assertEqual(self.employee_hruser.leave_back_datetime, datetime(2024, 6, 6, 10, 0))
 
     @freeze_time('2024-06-06 12:00:00')
     def test_leave_ooo_custom_hours(self):
@@ -128,9 +166,11 @@ class TestOutOfOffice(TestHrHolidaysCommon):
             'request_hour_to': 15,
         })
         leave.action_approve()
-        self.employee_hruser.invalidate_recordset(["leave_date_to"])
+        self.employee_hruser.invalidate_recordset(["leave_back_datetime", "leave_date_to"])
         # the rest of the afternoon is still worked
         self.assertEqual(self.employee_hruser.leave_date_to, date(2024, 6, 6))
+        # 15:00 in Brussels, in the middle of the afternoon attendance
+        self.assertEqual(self.employee_hruser.leave_back_datetime, datetime(2024, 6, 6, 13, 0))
 
     def test_first_working_interval_independent_of_batch(self):
         # 09:00 and 08:30 in Brussels, both during the morning attendance
