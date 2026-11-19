@@ -1,9 +1,9 @@
-import { reactive } from "@odoo/owl";
+import { proxy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 export const websiteOfflineService = {
     start() {
-        return reactive({
+        return proxy({
             offline: false,
             checkConnection() {},
         });
