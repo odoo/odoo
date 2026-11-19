@@ -241,6 +241,10 @@ class HrVersion(models.Model):
         :rtype: list
         """
         self.ensure_one()
+        payload = interval[2]
+        # undefined schedule: no expected working days, so global leaves (public/company holidays) do not apply
+        if payload and self._is_flexible() and not payload.resource_id:
+            return []
         return [interval]
 
     def _get_no_wet_or_wet_match(self, leave, leave_entry_type):

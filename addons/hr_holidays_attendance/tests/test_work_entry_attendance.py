@@ -150,8 +150,8 @@ class TestWorkentryAttendance(HrWorkEntryAttendanceCommon):
     def test_gto_flexible_calendar(self):
         """
         Test when having a public time off and a flexible user has two
-        separate attendances in this day what will be the duration of the
-        holiday work entries.
+        separate attendances in this day: a flexible schedule has no expected
+        working days, the public time off gives no work entry.
         """
         start = datetime(2018, 1, 1, 6, 0, 0)
         end = datetime(2018, 1, 1, 18, 0, 0)
@@ -190,10 +190,7 @@ class TestWorkentryAttendance(HrWorkEntryAttendanceCommon):
         work_entries_vals = self.richard_emp.version_ids.generate_work_entries(start.date(), end.date())
         time_off_entries = [vals for vals in work_entries_vals if vals['work_entry_type_id'].code == 'LEAVETEST100']
         other_entries = [vals for vals in work_entries_vals if vals['work_entry_type_id'].code != 'LEAVETEST100']
-        # Since we are now merging similar work entries on the same day
-        # we are going to have only one leave entry
-        self.assertEqual(len(time_off_entries), 1)
-        self.assertEqual(sum(vals['duration'] for vals in time_off_entries), 8)
+        self.assertFalse(time_off_entries)
         self.assertEqual(sum(vals['duration'] for vals in other_entries), 4)
 
     def test_fully_flexible_employee_overlapping_leaves(self):

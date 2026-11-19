@@ -206,6 +206,9 @@ class HrVersion(models.Model):
         if not payload:
             return [interval]
 
+        if not super()._get_valid_leave_intervals(attendances, interval):
+            return []
+
         count_as = self._get_interval_work_entry_type(interval).count_as
 
         if count_as == 'absence':

@@ -425,7 +425,8 @@ class TestTimeRulePipeline(TransactionCase):
         )
 
     def test_flex_public_holiday_trimmed_by_attendance(self):
-        """PH (06:00-18:00, 12h) trimmed by 4h attendance -> 8h PH + 4h att."""
+        """PH (06:00-18:00, 12h) and 4h attendance -> 4h att: a flexible schedule has no
+        expected working days, the public holiday gives nothing."""
         public_type = self.env['hr.work.entry.type'].create({
             'name': 'Public Holiday', 'code': 'PUBTESTFLEX', 'count_as': 'absence',
         })
@@ -456,8 +457,7 @@ class TestTimeRulePipeline(TransactionCase):
         vals = flex_brussels.version_id.generate_work_entries(date(2018, 1, 1), date(2018, 1, 1))
         time_off_entries = [v for v in vals if v['work_entry_type_id'] == public_type]
         other_entries = [v for v in vals if v['work_entry_type_id'] != public_type]
-        self.assertEqual(len(time_off_entries), 1)
-        self.assertAlmostEqual(sum(v['duration'] for v in time_off_entries), 8, places=5)
+        self.assertFalse(time_off_entries)
         self.assertAlmostEqual(sum(v['duration'] for v in other_entries), 4, places=5)
 
     def test_flex_absence_leave_and_attendance(self):
