@@ -372,3 +372,80 @@ class TestSaleMrpFlow(test_sale_mrp_flow.TestSaleMrpFlowCommon):
             picking = self.env['stock.picking'].browse(return_wizard.action_create_returns()['res_id'])
             picking.button_validate()
         self.assertRecordValues(so.order_line, [{'qty_delivered': 1.0, 'purchase_price': 2.0}])
+
+    def test_kit_with_dropshipped_component_purchase_price(self):
+        """ A FIFO kit of 1 dropshipped component bought at 10 and 2 components from stock at 20
+        is delivered. The cost of the kit is 1 x 10 + 2 x 20 = 50.
+        """
+        try:
+            dropship_route = self.env.ref('stock_dropshipping.route_drop_shipping')
+        except ValueError:
+            self.skipTest('This test requires the following module: stock_dropshipping')
+
+        kit = self._cls_create_product('Kit', self.uom_unit)
+        (kit + self.component_a + self.component_b).categ_id = self.stock_account_product_categ
+        self.component_a.write({
+            'route_ids': [Command.link(dropship_route.id)],
+            'seller_ids': [Command.create({'partner_id': self.partner_b.id, 'price': 10})],
+        })
+        self.component_b.standard_price = 20
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': self.component_b.id,
+            'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
+            'inventory_quantity': 2,
+        }).action_apply_inventory()
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({'product_id': self.component_a.id, 'product_qty': 1}),
+                Command.create({'product_id': self.component_b.id, 'product_qty': 2}),
+            ],
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({'product_id': kit.id})],
+        })
+        so.action_confirm()
+
+        self.env['purchase.order'].search([('origin', '=', so.name)]).button_confirm()  # noqa: OLS03001
+        so.picking_ids.button_validate()
+        self.assertRecordValues(so.order_line, [{'qty_delivered': 1, 'purchase_price': 50}])
+
+    def test_avco_kit_partial_exchange_purchase_price(self):
+        """ An AVCO kit of 1 component A at 300 and 1 component B at 600 is delivered, then only A
+        is returned for exchange and delivered again. The cost of the kit stays 300 + 600 = 900.
+        """
+        self.product_category.property_cost_method = 'average'
+        kit = self._cls_create_product('Kit', self.uom_unit)
+        (kit + self.component_a + self.component_b).categ_id = self.product_category
+        self.component_a.standard_price = 300
+        self.component_b.standard_price = 600
+        self.env['stock.quant'].with_context(inventory_mode=True).create([{
+            'product_id': component.id,
+            'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
+            'inventory_quantity': 1,
+        } for component in (self.component_a, self.component_b)]).action_apply_inventory()
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({'product_id': self.component_a.id, 'product_qty': 1}),
+                Command.create({'product_id': self.component_b.id, 'product_qty': 1}),
+            ],
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({'product_id': kit.id})],
+        })
+        so.action_confirm()
+        delivery = so.picking_ids
+        delivery.button_validate()
+
+        return_wizard = Form(self.env['stock.return.picking']
+            .with_context(active_id=delivery.id, active_model='stock.picking')).save()
+        return_wizard.product_return_moves.filtered(lambda line: line.product_id == self.component_a).quantity = 1
+        return_picking = self.env['stock.picking'].browse(return_wizard.action_create_exchanges()['res_id'])
+        return_picking.button_validate()
+        (so.picking_ids - delivery - return_picking).button_validate()
+        self.assertRecordValues(so.order_line, [{'qty_delivered': 1, 'purchase_price': 900}])
