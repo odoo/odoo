@@ -37,7 +37,10 @@ export class BillGuide extends Component {
                 default_journal_id: ctx.active_id,
             }
         }
-        this.showSampleAction = await this.orm.call("account.journal", "is_sample_action_available");
+        // Same answer for every journal card: share one request instead of one per card
+        this.showSampleAction = await this.orm
+            .cache({ type: "ram" })
+            .call("account.journal", "is_sample_action_available");
     }
 
     handleButtonClick(action, model="account.journal") {
