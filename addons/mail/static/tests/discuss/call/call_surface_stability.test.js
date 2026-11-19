@@ -642,7 +642,7 @@ test("recent speakers share the spotlight", async () => {
     getService("mail.store").settings.callLayout = "spotlight";
     await animationFrame();
 
-    getService("discuss.rtc").updateSessionInfo({
+    getService("mail.store").rtc.updateSessionInfo({
         [remotes.Alice.sessionId]: { isTalking: true },
     });
     await animationFrame();
@@ -658,7 +658,9 @@ test("recent speakers share the spotlight", async () => {
 
     // Bob answering joins Alice on the stage rather than taking it from her: a conversation
     // between the two would otherwise trade the main window on every sentence.
-    getService("discuss.rtc").updateSessionInfo({ [remotes.Bob.sessionId]: { isTalking: true } });
+    getService("mail.store").rtc.updateSessionInfo({
+        [remotes.Bob.sessionId]: { isTalking: true },
+    });
     await animationFrame();
     expect(
         queryAll(".o-discuss-Call-mainCards .o-discuss-CallParticipantCard").map((el) =>
@@ -672,7 +674,7 @@ test("recent speakers share the spotlight", async () => {
         ".o-discuss-CallParticipantCard[aria-label='Bob'] video[type='camera']"
     );
 
-    getService("discuss.rtc").updateSessionInfo({
+    getService("mail.store").rtc.updateSessionInfo({
         [remotes.Charlie.sessionId]: { isTalking: true },
         [remotes.Dave.sessionId]: { isTalking: true },
     });
@@ -684,7 +686,9 @@ test("recent speakers share the spotlight", async () => {
     ).toEqual(["Alice", "Bob", "Charlie", "Dave"]);
 
     // The stage is full: Eve waits for a place rather than pushing anyone out.
-    getService("discuss.rtc").updateSessionInfo({ [remotes.Eve.sessionId]: { isTalking: true } });
+    getService("mail.store").rtc.updateSessionInfo({
+        [remotes.Eve.sessionId]: { isTalking: true },
+    });
     await animationFrame();
     expect(
         queryAll(".o-discuss-Call-mainCards .o-discuss-CallParticipantCard").map((el) =>
@@ -698,7 +702,7 @@ test("recent speakers share the spotlight", async () => {
     freezeTime();
 
     // Alice going quiet does not free her place until her SPEAKER_WINDOW has lapsed.
-    getService("discuss.rtc").updateSessionInfo({
+    getService("mail.store").rtc.updateSessionInfo({
         [remotes.Alice.sessionId]: { isTalking: false },
     });
     await advanceFrame(1);
@@ -730,12 +734,12 @@ for (const layout of ["spotlight", "sidebar"]) {
         await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
         await contains("[name='fullscreen']:count(1)").click();
         await waitFor(".o-mail-Meeting:count(1)");
-        const channel = getService("discuss.rtc").channel;
+        const channel = getService("mail.store").rtc.channel;
         expect(channel.activeRtcSession).toBe(
             channel.rtc_session_ids.find((session) => session.id === remotes.Alice.sessionId)
         );
 
-        getService("discuss.rtc").updateSessionInfo({
+        getService("mail.store").rtc.updateSessionInfo({
             [remotes.Bob.sessionId]: { isTalking: true },
         });
         await animationFrame();
@@ -761,11 +765,11 @@ for (const layout of ["spotlight", "sidebar"]) {
             ".o-discuss-CallParticipantCard[aria-label='Alice'] video[type='screen']"
         );
 
-        getService("discuss.rtc").updateSessionInfo({
+        getService("mail.store").rtc.updateSessionInfo({
             [remotes.Bob.sessionId]: { isTalking: true },
         });
         await animationFrame();
-        const channel = getService("discuss.rtc").channel;
+        const channel = getService("mail.store").rtc.channel;
         expect(channel.activeRtcSession).toBe(
             channel.rtc_session_ids.find((session) => session.id === remotes.Alice.sessionId)
         );
@@ -786,7 +790,7 @@ test("a split spotlight follows its last remaining speaker", async () => {
     await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
     await contains("[name='fullscreen']:count(1)").click();
     await waitFor(".o-mail-Meeting:count(1)");
-    getService("discuss.rtc").updateSessionInfo({
+    getService("mail.store").rtc.updateSessionInfo({
         [remotes.Alice.sessionId]: { isTalking: true },
         [remotes.Bob.sessionId]: { isTalking: true },
     });
@@ -800,7 +804,7 @@ test("a split spotlight follows its last remaining speaker", async () => {
     // Frozen so the SPEAKER_WINDOW boundary below does not depend on how long the test took; a
     // frozen `requestAnimationFrame` then needs the `advanceFrame` calls to fire.
     freezeTime();
-    getService("discuss.rtc").updateSessionInfo({
+    getService("mail.store").rtc.updateSessionInfo({
         [remotes.Alice.sessionId]: { isTalking: false },
     });
     await advanceFrame(1);
@@ -817,13 +821,15 @@ test("a split spotlight follows its last remaining speaker", async () => {
             el.getAttribute("aria-label")
         )
     ).toEqual(["Bob"]);
-    const channel = getService("discuss.rtc").channel;
+    const channel = getService("mail.store").rtc.channel;
     expect(channel.activeRtcSession).toBe(
         channel.rtc_session_ids.find((session) => session.id === remotes.Bob.sessionId)
     );
 
     // Once everyone is quiet, keep the last speaker on stage.
-    getService("discuss.rtc").updateSessionInfo({ [remotes.Bob.sessionId]: { isTalking: false } });
+    getService("mail.store").rtc.updateSessionInfo({
+        [remotes.Bob.sessionId]: { isTalking: false },
+    });
     await advanceFrame(1);
     await advanceTime(SPEAKER_WINDOW);
     await advanceFrame(1);
@@ -847,7 +853,7 @@ test("a pinned participant keeps the whole stage until unpinned", async () => {
     await click(".o-discuss-CallContextMenu button:text('Pin')");
     await waitFor(".o-discuss-CallParticipantCard[aria-label='Alice'] [title='Pinned']:count(1)");
 
-    getService("discuss.rtc").updateSessionInfo({
+    getService("mail.store").rtc.updateSessionInfo({
         [remotes.Bob.sessionId]: { isTalking: true },
         [remotes.Charlie.sessionId]: { isTalking: true },
     });
@@ -869,7 +875,7 @@ test("a pinned participant keeps the whole stage until unpinned", async () => {
             el.getAttribute("aria-label")
         )
     ).toEqual(["Bob", "Charlie"]);
-    const channel = getService("discuss.rtc").channel;
+    const channel = getService("mail.store").rtc.channel;
     expect(channel.activeRtcSession).toBe(
         channel.rtc_session_ids.find((session) => session.id === remotes.Bob.sessionId)
     );
@@ -912,7 +918,9 @@ test("the card cap never hides whoever is talking", async () => {
 
     // Ivy is last in the participant order, so the cap cut her: speaking has to bring her back,
     // ahead of everyone, and Eve is the one that leaves for her.
-    getService("discuss.rtc").updateSessionInfo({ [remotes.Ivy.sessionId]: { isTalking: true } });
+    getService("mail.store").rtc.updateSessionInfo({
+        [remotes.Ivy.sessionId]: { isTalking: true },
+    });
     await animationFrame();
     expect(
         queryAll(".o-discuss-Call-mainCards .o-discuss-CallParticipantCard").map((el) =>

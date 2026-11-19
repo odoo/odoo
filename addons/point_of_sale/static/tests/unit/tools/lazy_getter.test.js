@@ -20,6 +20,7 @@ import { PosTicketPrinterPlugin } from "@point_of_sale/app/plugins/pos_ticket_pr
 import { RecordLinkPlugin } from "@mail/core/common/record_link_plugin";
 import { StorePlugin } from "@mail/core/common/store_plugin";
 import { CameraPreviewPlugin } from "@mail/discuss/call/common/camera_preview_plugin";
+import { RtcPlugin } from "@mail/discuss/call/common/rtc_plugin";
 
 /**
  * @param {string} value
@@ -151,10 +152,12 @@ test("each getter should only be called once and only when needed", async () => 
     // these plugins need the legacy services that were just cleared
     services.delete(CameraPreviewPlugin);
     services.delete(RecordLinkPlugin);
+    services.delete(RtcPlugin);
     services.delete(StorePlugin);
     after(() => {
         services.add(CameraPreviewPlugin);
         services.add(RecordLinkPlugin);
+        services.add(RtcPlugin);
         services.add(StorePlugin);
     });
 
@@ -231,10 +234,12 @@ test("only dependent components rerender", async () => {
     // these plugins need the legacy services that were just cleared
     services.delete(CameraPreviewPlugin);
     services.delete(RecordLinkPlugin);
+    services.delete(RtcPlugin);
     services.delete(StorePlugin);
     after(() => {
         services.add(CameraPreviewPlugin);
         services.add(RecordLinkPlugin);
+        services.add(RtcPlugin);
         services.add(StorePlugin);
     });
 

@@ -112,7 +112,8 @@ export class Call extends Component {
                 dropInset: (surfaceKey) => this.dropInset(surfaceKey),
             },
         });
-        this.rtc = useService("discuss.rtc");
+        this.store = useService("mail.store");
+        this.rtc = this.store.rtc;
         this.isMobileOs = isMobileOS();
         this.ui = usePlugin(UIPlugin);
         this.state = proxy({
@@ -125,7 +126,6 @@ export class Call extends Component {
             /** The call controls and their backdrop are shown over the stage. */
             overlay: false,
         });
-        this.store = useService("mail.store");
         this.props = useProps({
             channel: t.instanceOf(this.store["discuss.channel"]).optional(),
             compact: t.boolean().optional(),

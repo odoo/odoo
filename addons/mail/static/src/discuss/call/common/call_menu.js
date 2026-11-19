@@ -1,4 +1,5 @@
-import { Component, signal } from "@odoo/owl";
+import { StorePlugin } from "@mail/core/common/store_plugin";
+import { Component, signal, usePlugin } from "@odoo/owl";
 
 import { ActionList } from "@mail/core/common/action_list";
 import { useCallActions } from "@mail/discuss/call/common/call_actions";
@@ -7,7 +8,6 @@ import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 
 export class CallMenu extends Component {
@@ -18,7 +18,7 @@ export class CallMenu extends Component {
 
     setup() {
         super.setup();
-        this.rtc = useService("discuss.rtc");
+        this.rtc = usePlugin(StorePlugin).rtc;
         useAncestors({ inCallMenu: true });
         this.callActions = useCallActions({ channel: () => this.rtc.channel });
         this.dropdownState = useDropdownState();

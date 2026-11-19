@@ -56,7 +56,7 @@ import { MailPopoutPlugin } from "@mail/core/common/mail_popout_plugin";
 import { SoundEffectsPlugin } from "@mail/core/common/sound_effects_plugin";
 import { Store as StoreService } from "@mail/core/common/store_plugin";
 import { UPDATE_EVENT } from "@mail/discuss/call/common/peer_to_peer";
-import { Network, Rtc } from "@mail/discuss/call/common/rtc_service";
+import { Network, Rtc } from "@mail/discuss/call/common/rtc_model";
 import { authenticateGuest, DISCUSS_ACTION_ID } from "./mock_server/mail_mock_server";
 import { Base } from "./mock_server/mock_models/base";
 import { DiscussCallHistory } from "./mock_server/mock_models/discuss_call_history";
@@ -706,12 +706,12 @@ export function mockPipWindow() {
 
 /**
  * A MockRemote represents the network API of a remote user, for example calling remote.updateUpload() behaves as if that remote user
- * had called this function on their own rtc_service.network
+ * had called this function on their own rtc.network
  *
  * @typedef {Object} MockRemote
  * @property {number} sessionId
  * @property {function(string):Promise} updateConnectionState (emits "update" event)
- * @property {function(import("@mail/discuss/call/common/rtc_service").streamType,MediaStreamTrack):Promise} updateUpload (emits "update" event)
+ * @property {function(import("@mail/discuss/call/common/rtc_model").streamType,MediaStreamTrack):Promise} updateUpload (emits "update" event)
  * @property {function(import("@mail/discuss/call/common/rtc_session_model").SessionInfo):Promise} updateInfo (emits "update" event)
  */
 
@@ -721,7 +721,7 @@ export function mockPipWindow() {
  */
 
 /**
- * Mocks {import("@mail/discuss/call/common/rtc_service").Network} and allows testing of features that rely on network behavior, such
+ * Mocks {import("@mail/discuss/call/common/rtc_model").Network} and allows testing of features that rely on network behavior, such
  * as other participants changing the state of their microphone, sharing screen,...
  *
  * @param {Object} param0
@@ -732,16 +732,15 @@ export function mockPipWindow() {
 export async function makeMockRtcNetwork({ env, channelId }) {
     const mockNetwork = new EventTarget();
     const pyEnv = MockServer.current.env;
-    const rtc = env.services["discuss.rtc"];
+    const rtc = env.services["mail.store"].rtc;
     const dispatchUpdate = (payload) => {
         mockNetwork.dispatchEvent(new CustomEvent("update", { detail: payload }));
     };
-    const { promise: rtcServiceIsListening, resolve: resolveRtcServiceIsListening } =
-        Promise.withResolvers();
+    const { promise: rtcIsListening, resolve: resolveRtcIsListening } = Promise.withResolvers();
     patch(Network.prototype, {
         addEventListener(name, f) {
             if (name === "update") {
-                resolveRtcServiceIsListening();
+                resolveRtcIsListening();
                 // disabling the p2p network so that it does not try to send webRTC events like candidates and offers.
                 rtc.network.p2p.disconnect();
             }
@@ -759,7 +758,7 @@ export async function makeMockRtcNetwork({ env, channelId }) {
             return {
                 sessionId,
                 async updateConnectionState(state) {
-                    await rtcServiceIsListening;
+                    await rtcIsListening;
                     dispatchUpdate({
                         name: UPDATE_EVENT.CONNECTION_CHANGE,
                         payload: {
@@ -769,7 +768,7 @@ export async function makeMockRtcNetwork({ env, channelId }) {
                     });
                 },
                 async updateInfo(info) {
-                    await rtcServiceIsListening;
+                    await rtcIsListening;
                     // This helper calls the remote update functions directly, so it bypasses
                     // the updateAndBroadcastDebounce() that a real participant goes through.
                     // Write the values it would have stored, otherwise a store fetch brings the
@@ -790,7 +789,7 @@ export async function makeMockRtcNetwork({ env, channelId }) {
                     });
                 },
                 async updateUpload(type, track) {
-                    await rtcServiceIsListening;
+                    await rtcIsListening;
                     dispatchUpdate({
                         name: UPDATE_EVENT.TRACK,
                         payload: {
