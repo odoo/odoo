@@ -1,6 +1,7 @@
+import { addBuilderAction, addBuilderOption } from "@html_builder/../tests/helpers";
+import { BuilderAction } from "@html_builder/core/builder_action";
 import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
-import { addBuilderOption } from "@html_builder/../tests/helpers";
-import { expect, test } from "@odoo/hoot";
+import { advanceTime, expect, test } from "@odoo/hoot";
 import { waitFor, waitForNone, click, queryOne } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
@@ -122,4 +123,60 @@ test("Elements with withBSClass = false don't reset their style when width is ch
     expect(":iframe .s_hr hr").toHaveStyle({
         "border-top": "10px dotted rgb(255, 255, 255)",
     });
+});
+test("Up and down arrows update the radius when withRadiusPresets=false", async () => {
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BorderConfigurator label="'Border'" withRoundCorner="true" withRadiusPresets="false"/>`,
+    });
+    await setupWebsiteBuilder(`<section class="test-options-target">Bordered block</section>`);
+    await contains(":iframe section").click();
+    await waitFor(".o_hb_options_container [data-label='Round Corners']");
+    expect(".o_hb_options_container [data-label='Round Corners'] input").toHaveValue("0");
+    function expectRadiusValue(value) {
+        expect(".o_hb_options_container [data-label='Round Corners'] input").toHaveValue(value);
+        expect(":iframe section").toHaveStyle({
+            "--box-border-top-left-radius": `${value}px`,
+            "--box-border-top-right-radius": `${value}px`,
+            "--box-border-bottom-left-radius": `${value}px`,
+            "--box-border-bottom-right-radius": `${value}px`,
+        });
+    }
+    await contains(".o_hb_options_container [data-label='Round Corners'] input").press("ArrowUp");
+    await advanceTime(750);
+    expectRadiusValue("1");
+    await contains(".o_hb_options_container [data-label='Round Corners'] input").press("ArrowDown");
+    await advanceTime(750);
+    expectRadiusValue("0");
+});
+test("Up and down arrows update the radius with a custom action", async () => {
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BorderConfigurator label="'Border'" action="'customStyleAction'" withRoundCorner="true"/>`,
+    });
+    addBuilderAction({
+        CustomStyleAction: class extends BuilderAction {
+            static id = "customStyleAction";
+            getValue({ editingElement }) {
+                return editingElement.dataset.value;
+            }
+            apply({ editingElement, value }) {
+                editingElement.dataset.value = value;
+            }
+        },
+    });
+    await setupWebsiteBuilder(`<section class="test-options-target">Bordered block</section>`);
+    await contains(":iframe section").click();
+    await waitFor(".o_hb_options_container [data-label='Round Corners']");
+    expect(".o_hb_options_container [data-label='Round Corners'] input").toHaveValue("0");
+    function expectRadiusValue(value) {
+        expect(".o_hb_options_container [data-label='Round Corners'] input").toHaveValue(value);
+        expect(":iframe section").toHaveAttribute("data-value", `${value}px`);
+    }
+    await contains(".o_hb_options_container [data-label='Round Corners'] input").press("ArrowUp");
+    await advanceTime(750);
+    expectRadiusValue("1");
+    await contains(".o_hb_options_container [data-label='Round Corners'] input").press("ArrowDown");
+    await advanceTime(750);
+    expectRadiusValue("0");
 });
