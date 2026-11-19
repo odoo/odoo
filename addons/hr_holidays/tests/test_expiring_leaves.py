@@ -5,6 +5,7 @@ from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
 from odoo.addons.base.tests.common import HttpCase
+from odoo.fields import Command
 from odoo.tests.common import tagged
 from odoo.tests.common import users
 
@@ -810,3 +811,112 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
 
         # Assert the number of expiring leaves
         self.assertEqual(allocation_data[logged_in_emp][0][1]['closest_allocation_remaining'], 1)
+
+    @users('enguerran')
+    def test_carried_over_hours_expiration(self):
+        """Check that the carried over time expiring on a time off type in hours is shown in hours."""
+        leave_type = self.env['hr.leave.type'].sudo().create({
+            'name': 'Hourly Test',
+            'time_type': 'leave',
+            'requires_allocation': True,
+            'allocation_validation_type': 'no_validation',
+            'request_unit': 'hour',
+        })
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).sudo().create({
+            'name': 'Test Accrual Plan In Hours',
+            'carryover_date': 'other',
+            'carryover_day': 1,
+            'carryover_month': '4',
+            'level_ids': [Command.create({
+                'start_count': 0,
+                'start_type': 'day',
+                'added_value': 24,
+                'added_value_type': 'hour',
+                'frequency': 'yearly',
+                'yearly_day': 1,
+                'yearly_month': '1',
+                'cap_accrued_time': False,
+                'action_with_unused_accruals': 'all',
+                'carryover_options': 'limited',
+                'postpone_max_days': 16,
+                'accrual_validity': True,
+                'accrual_validity_count': 3,
+                'accrual_validity_type': 'month',
+            })],
+        })
+        logged_in_emp = self.env.user.employee_id
+        with freeze_time("2023-01-01"):
+            self.env['hr.leave.allocation'].sudo().create({
+                'date_from': '2023-01-01',
+                'allocation_type': 'accrual',
+                'accrual_plan_id': accrual_plan.id,
+                'holiday_status_id': leave_type.id,
+                'employee_id': logged_in_emp.id,
+                'number_of_days': 0,
+            })
+
+        with freeze_time("2024-04-01"):
+            self.env['hr.leave.allocation'].with_user(self.user_hruser)._update_accrual()
+            leave = self.env['hr.leave'].create({
+                'name': 'leave',
+                'employee_id': logged_in_emp.id,
+                'holiday_status_id': leave_type.id,
+                'request_date_from': '2024-04-03',
+                'request_date_to': '2024-04-03',
+            })
+            leave.sudo().action_approve()
+
+        allocation_data = leave_type.get_allocation_data(logged_in_emp, date(2024, 5, 1))
+        self.assertEqual(allocation_data[logged_in_emp][0][1]['closest_allocation_expire'], '07/01/2024')
+        self.assertEqual(allocation_data[logged_in_emp][0][1]['closest_allocation_remaining'], 8)
+
+    @users('enguerran')
+    def test_carryover_expiration_milestone_in_days_on_type_in_hours(self):
+        """Check that the time lost on the carry-over date is shown in hours on a time off type in hours,
+        even when the milestone of the accrual plan is in days."""
+        leave_type = self.env['hr.leave.type'].sudo().create({
+            'name': 'Hourly Test',
+            'time_type': 'leave',
+            'requires_allocation': True,
+            'allocation_validation_type': 'no_validation',
+            'request_unit': 'hour',
+        })
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).sudo().create({
+            'name': 'Test Accrual Plan In Days',
+            'carryover_date': 'other',
+            'carryover_day': 1,
+            'carryover_month': '6',
+            'level_ids': [Command.create({
+                'start_count': 0,
+                'start_type': 'day',
+                'added_value': 3,
+                'added_value_type': 'day',
+                'frequency': 'yearly',
+                'yearly_day': 1,
+                'yearly_month': '1',
+                'cap_accrued_time': False,
+                'action_with_unused_accruals': 'all',
+                'carryover_options': 'limited',
+                'postpone_max_days': 2,
+            })],
+        })
+        logged_in_emp = self.env.user.employee_id
+        with freeze_time("2023-01-01"):
+            self.env['hr.leave.allocation'].sudo().create({
+                'date_from': '2023-01-01',
+                'allocation_type': 'accrual',
+                'accrual_plan_id': accrual_plan.id,
+                'holiday_status_id': leave_type.id,
+                'employee_id': logged_in_emp.id,
+                'number_of_days': 0,
+            })
+
+        with freeze_time("2024-03-01"):
+            self.env['hr.leave.allocation'].with_user(self.user_hruser)._update_accrual()
+
+        hours_per_day = logged_in_emp._get_hours_per_day(date(2023, 1, 1))
+        allocation_data = leave_type.get_allocation_data(logged_in_emp, date(2024, 3, 1))
+        self.assertEqual(allocation_data[logged_in_emp][0][1]['virtual_remaining_leaves'], 3 * hours_per_day)
+        self.assertEqual(allocation_data[logged_in_emp][0][1]['closest_allocation_expire'], '06/01/2024')
+        # 3 days accrued, 2 days carried over: 1 day expires on the carry-over date, shown in hours
+        self.assertEqual(allocation_data[logged_in_emp][0][1]['closest_allocation_remaining'], hours_per_day)

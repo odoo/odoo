@@ -666,7 +666,12 @@ class HrLeaveType(models.Model):
                     expiring_leaves_count += remaining_leaves[allocation]['virtual_remaining_leaves']
                 elif carryover_date and carryover_date == closest_expiration_date:
                     accrual_plan_level = allocation.sudo()._get_current_accrual_plan_level_id(target_date)[0]
-                    expiring_leaves_count += max(0, remaining_leaves[allocation]['virtual_remaining_leaves'] - accrual_plan_level.postpone_max_days)
+                    postpone_max_duration = accrual_plan_level.postpone_max_days
+                    type_in_hours = allocation.holiday_status_id.request_unit == 'hour'
+                    if type_in_hours != (accrual_plan_level.added_value_type == 'hour'):
+                        hours_per_day = allocation.employee_id._get_hours_per_day(allocation.date_from)
+                        postpone_max_duration = postpone_max_duration * hours_per_day if type_in_hours else postpone_max_duration / hours_per_day
+                    expiring_leaves_count += max(0, remaining_leaves[allocation]['virtual_remaining_leaves'] - postpone_max_duration)
                 elif carried_over_days_expiration_date and carried_over_days_expiration_date == closest_expiration_date:
                     expiring_leaves_count += carried_over_days_expiration_data[allocation]['no_expiring_days']
 
@@ -681,13 +686,14 @@ class HrLeaveType(models.Model):
         for allocation in allocations:
             fake_allocations |= self.env['hr.leave.allocation'].new(origin=allocation)
         fake_allocations.sudo()._process_accrual_plans(target_date, log=False)
-        carried_over_days_expiration_data = {
-            fake_allocation._origin:
-            {
+        carried_over_days_expiration_data = {}
+        for fake_allocation in fake_allocations:
+            expiring_carryover = fake_allocation.expiring_carryover_days
+            if fake_allocation.holiday_status_id.request_unit == 'hour':
+                expiring_carryover *= fake_allocation.employee_id._get_hours_per_day(fake_allocation.date_from)
+            carried_over_days_expiration_data[fake_allocation._origin] = {
                 'expiration_date': fake_allocation.carried_over_days_expiration_date,
-                'no_expiring_days': max(0, fake_allocation.expiring_carryover_days - fake_allocation.leaves_taken)
+                'no_expiring_days': max(0, expiring_carryover - fake_allocation.leaves_taken),
             }
-            for fake_allocation in fake_allocations
-        }
         fake_allocations.invalidate_recordset()
         return carried_over_days_expiration_data
