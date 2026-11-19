@@ -21,6 +21,10 @@ patch(LoginScreen.prototype, {
 
             useAutofocus();
             useExternalListener(window, "keypress", async (ev) => {
+                // An Enter typed in a dialog (e.g. picking a cashier) is not a PIN submission.
+                if (ev.target.closest?.(".modal")) {
+                    return;
+                }
                 if (this.pos.login && ev.key === "Enter" && this.state.pin) {
                     await this.selectCashier(this.state.pin, true);
                 }
