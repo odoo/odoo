@@ -10,7 +10,7 @@ from lxml import etree
 from stdnum.pl.nip import compact
 from decimal import Decimal
 
-from odoo import Command, api, fields, models
+from odoo import Command, api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_is_zero, float_repr, mute_logger, OrderedSet
 
@@ -226,6 +226,8 @@ class AccountMove(models.Model):
             {tag_name for tag_name in get_tag_names(line) if tag_name}
             for line in self.invoice_line_ids
         ]
+        if not all(invoice_lines_tag_names):
+            raise UserError(_("Set an appropriate tax for each line (if it's zero rated or nil rated then select it also)"))
         invoice_tag_names = set().union(*invoice_lines_tag_names)
 
         invoice_lines_vals = [

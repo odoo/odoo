@@ -311,7 +311,7 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
                 'product_id': self.product_a.id,
                 'quantity': 1,
                 'price_unit': 1000.0,
-                'tax_ids': [],
+                'tax_ids': [self.env['account.chart.template'].ref('vs_kraj_0').id],
             })],
         })
         invoice.action_post()
@@ -1171,3 +1171,28 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         self.assertEqual(self._get_xml_value(xml, "//ns:DaneFaKorygowanej/ns:NrKSeF"), '1')
         self.assertEqual(self._get_xml_value(xml, "//ns:DaneFaKorygowanej/ns:NrKSeFFaKorygowanej"), fake_ksef_number)
         self.assertFalse(self._get_xml_nodes(xml, "//ns:DaneFaKorygowanej/ns:NrKSeFN"))
+
+    def test_export_error_with_no_tax(self):
+        """
+        Test that the export raises an error if an invoice line does not have a tax.
+        """
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_pl.id,
+            'invoice_date': fields.Date.today(),
+            'currency_id': self.env.ref('base.PLN').id,
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'quantity': 1,
+                'price_unit': 1000.0,
+                'tax_ids': [],
+            })],
+        })
+        invoice.action_post()
+        self.env['account.payment.register'].create({
+            'journal_id': self.cash_journal.id,
+            'line_ids': invoice.line_ids.filtered(lambda line: line.display_type == 'payment_term'),
+        })._create_payments()
+
+        with self.assertRaises(UserError):
+            invoice._l10n_pl_edi_render_xml()
