@@ -247,9 +247,11 @@ class BaseGeocoder(models.AbstractModel):
         city = request.geoip.city.name
         country_code = request.geoip.country_code
         postcode = False
+        # without a position, the address comes from the IP address alone
+        has_position = latitude and longitude
 
         # Try Google Maps if API key exists
-        if gmaps_address_components := self._call_googlemap_reverse(latitude, longitude):
+        if has_position and (gmaps_address_components := self._call_googlemap_reverse(latitude, longitude)):
             for component in gmaps_address_components:
                 types = component.get('types', [])
                 if 'locality' in types or 'sublocality' in types:
@@ -260,7 +262,7 @@ class BaseGeocoder(models.AbstractModel):
                     postcode = component.get('long_name')
 
         # Fallback to OpenStreetMap
-        if not (city and country_code):
+        if has_position and not (city and country_code):
             # for now, we use openstreetmap, if needed, we will add a setting like "partner geolocation" that let the
             # user decide wich provider to use to localise the partner.
             result = self._call_openstreetmap_reverse(latitude, longitude)

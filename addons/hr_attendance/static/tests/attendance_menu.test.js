@@ -4,15 +4,19 @@ import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import {
     allowTranslations,
     contains,
+    defineActions,
     defineModels,
     fields,
+    getService,
     models,
     mountWithCleanup,
     onRpc,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import { localization } from "@web/core/l10n/localization";
+import { utils as uiUtils } from "@web/core/ui/ui_utils";
 import { LazySessionPlugin } from "@web/webclient/lazy_session_plugin";
+import { WebClient } from "@web/webclient/webclient";
 import { ActivityMenu } from "@hr_attendance/components/attendance_menu/attendance_menu";
 
 class HrAttendance extends models.Model {
@@ -24,10 +28,24 @@ class HrAttendance extends models.Model {
     can_edit = fields.Boolean();
     in_location = fields.Char();
     out_location = fields.Char();
+
+    _views = {
+        list: `<list><field name="check_in"/></list>`,
+    };
 }
 
 defineModels([HrAttendance]);
 defineMailModels();
+defineActions([
+    {
+        id: 1,
+        xml_id: "hr_attendance.hr_attendance_my_action",
+        name: "My Attendances",
+        res_model: "hr.attendance",
+        type: "ir.actions.act_window",
+        views: [[false, "list"]],
+    },
+]);
 
 beforeEach(() => {
     allowTranslations();
@@ -110,6 +128,38 @@ function mockCheckedOutEmployee(todayAttendances) {
         today_attendance_ids: todayAttendances,
     }));
 }
+
+test.tags("desktop");
+test("on desktop, the Attendances app of a user opens their attendances", async () => {
+    mockCheckedOutEmployee([]);
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        type: "ir.actions.client",
+        tag: "hr_attendance_my_attendance",
+    });
+    await waitFor(".o_list_view");
+    expect(".o_breadcrumb").toHaveText("My Attendances");
+    expect(".att_container").toHaveCount(0, { message: "the check in panel stays closed" });
+});
+
+test.tags("desktop");
+test("on small screens, the Attendances app of a user opens the check in panel over the current screen", async () => {
+    // a small window without touch: the panel opens as a dropdown rather than a bottom sheet
+    patchWithCleanup(uiUtils, { isSmall: () => true });
+    mockCheckedOutEmployee([]);
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction("hr_attendance.hr_attendance_my_action");
+    expect(".att_container").toHaveCount(0);
+
+    await getService("action").doAction({
+        type: "ir.actions.client",
+        tag: "hr_attendance_my_attendance",
+    });
+    await waitFor(".att_container button[name='my_attendances']");
+    expect(".o_breadcrumb").toHaveText("My Attendances", {
+        message: "no screen is opened behind the panel",
+    });
+});
 
 const morningAttendance = {
     id: 42,
