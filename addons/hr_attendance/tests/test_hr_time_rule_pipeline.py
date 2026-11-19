@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import datetime, date, time
 
-from odoo.tests import Form, tagged
+from odoo.tests import Form, new_test_user, tagged
 from odoo.tests.common import HttpCase, TransactionCase, freeze_time
 
 
@@ -564,6 +564,9 @@ class TestAttendanceSplitPreview(TransactionCase):
             'contract_date_start': date(2026, 1, 1),
         })
         cls.env.company.attendance_validation = 'no_validation'
+        cls.self_edit_user = new_test_user(
+            cls.env, login='preview_employee_self_edit', groups='hr_attendance.group_hr_attendance_own')
+        cls.employee.user_id = cls.self_edit_user
 
     def _new(self, check_in, check_out, break_duration=0.0):
         return self.env['hr.attendance'].new({
@@ -665,8 +668,7 @@ class TestAttendanceSplitPreview(TransactionCase):
             form.check_out = datetime(2026, 6, 8, 20, 0)
 
         self.env.company.attendance_validation = 'manual_validation'
-        with Form(self.env['hr.attendance']) as form:
-            form.employee_id = self.employee
+        with Form(self.env['hr.attendance'].with_user(self.self_edit_user)) as form:
             form.check_in = datetime(2026, 6, 9, 7, 0)
             form.check_out = datetime(2026, 6, 9, 20, 0)
             self.assertIn('will be split into 2 attendances', form.time_rule_split_preview)
@@ -715,10 +717,15 @@ class TestAttendanceSplitPreview(TransactionCase):
 
     def test_chatter_logged_on_validation(self):
         self.env.company.attendance_validation = 'manual_validation'
-        source = self._create(datetime(2026, 6, 8, 7, 0), datetime(2026, 6, 8, 20, 0))
+        source = self.env['hr.attendance'].with_user(self.self_edit_user).create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2026, 6, 8, 7, 0),
+            'check_out': datetime(2026, 6, 8, 20, 0),
+        })
         self.assertEqual(source.state, 'draft')
         self.assertFalse(self._split_messages(source), "a draft attendance is not split yet")
-        source.action_validate()
+        # validated by a reviewer, since the self-edit creator cannot review their own record
+        source.with_env(self.env).action_validate()
         self.assertTrue(source.overtime_attendance_ids)
         self.assertEqual(len(self._split_messages(source)), 1)
 
@@ -758,7 +765,10 @@ class TestAttendanceSplitCheckOut(HttpCase):
             'password': 'split_user',
             'company_id': cls.company.id,
             'company_ids': [(6, 0, cls.company.ids)],
-            'group_ids': [(6, 0, [cls.env.ref('base.group_user').id])],
+            'group_ids': [(6, 0, [
+                cls.env.ref('base.group_user').id,
+                cls.env.ref('hr_attendance.group_hr_attendance_own').id,
+            ])],
         })
         # company calendar: Mon-Fri, 8h a day
         cls.employee = cls.env['hr.employee'].create({
@@ -772,9 +782,7 @@ class TestAttendanceSplitCheckOut(HttpCase):
         })
 
     def _check_in(self, check_in):
-        # from the employee's company, as the systray and the kiosk: the default time type of an
-        # attendance is the current company's, which the rule of this company must match
-        self.env['hr.attendance'].with_company(self.company).create({
+        self.env['hr.attendance'].with_user(self.user).with_company(self.company).create({
             'employee_id': self.employee.id,
             'check_in': check_in,
         })

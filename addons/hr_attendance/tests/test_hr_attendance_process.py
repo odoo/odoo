@@ -460,6 +460,64 @@ class TestHrAttendance(HttpCase, TransactionCase):
             self.assertEqual(att.worked_hours, 8)
             self.assertEqual(att.check_out, datetime(2025, 3, 12, 16, 0))
 
+    def _set_standard_8h_calendar(self):
+        self.employee.resource_calendar_id.write({
+            'attendance_ids': [(5, 0, 0)] + [
+                (0, 0, {'dayofweek': wd, 'hour_from': h, 'hour_to': h + 4})
+                for wd in ['0', '1', '2', '3', '4']
+                for h in [8, 13]
+            ],
+        })
+
+    def _self_edit_user_for(self, employee):
+        user = new_test_user(
+            self.env,
+            login=f'self_edit_{employee.id}',
+            groups='hr_attendance.group_hr_attendance_own',
+        )
+        employee.user_id = user
+        return user
+
+    def test_tolerance_validation_aggregates_whole_day_and_backfills_earlier_draft(self):
+        self._set_standard_8h_calendar()
+        self.company.write({
+            'attendance_validation': 'tolerance_validation',
+            'attendance_validation_tolerance': 0.5,
+        })
+        self_edit_user = self._self_edit_user_for(self.employee)
+
+        # Monday: morning shift alone (4h) is 4h short of the 8h expected day
+        morning = self.env['hr.attendance'].with_user(self_edit_user).create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2026, 1, 5, 8, 0),
+            'check_out': datetime(2026, 1, 5, 12, 0),
+        })
+        self.assertEqual(morning.state, 'draft')
+
+        # Afternoon shift brings the day's total to 8h
+        afternoon = self.env['hr.attendance'].with_user(self_edit_user).create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2026, 1, 5, 13, 0),
+            'check_out': datetime(2026, 1, 5, 17, 0),
+        })
+        self.assertEqual(afternoon.state, 'validated')
+        self.assertEqual(morning.state, 'validated')
+
+    def test_tolerance_validation_accounts_for_break_duration(self):
+        self._set_standard_8h_calendar()
+        self.company.write({
+            'attendance_validation': 'tolerance_validation',
+            'attendance_validation_tolerance': 0.5,
+        })
+        self_edit_user = self._self_edit_user_for(self.employee)
+        attendance = self.env['hr.attendance'].with_user(self_edit_user).create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2026, 1, 5, 8, 0),
+            'check_out': datetime(2026, 1, 5, 17, 0),
+            'break_duration': 1.0,
+        })
+        self.assertEqual(attendance.state, 'validated')
+
 
 @tagged('attendance_process')
 class TestAbsenceDetectionCron(TransactionCase):
@@ -673,6 +731,9 @@ class TestAttendanceValidationTimeRules(TransactionCase):
             'contract_date_start': '2020-01-01',
             'wage': 3000,
         })
+        cls.self_edit_user = new_test_user(
+            cls.env, login='validated_employee_self_edit', groups='hr_attendance.group_hr_attendance_own')
+        cls.employee.user_id = cls.self_edit_user
 
     def _get_overtime_hours(self):
         outputs = self.env['hr.attendance'].search([
@@ -683,7 +744,7 @@ class TestAttendanceValidationTimeRules(TransactionCase):
         return sum(outputs.mapped('worked_hours'))
 
     def _create_9h_attendance(self):
-        return self.env['hr.attendance'].create({
+        return self.env['hr.attendance'].with_user(self.self_edit_user).create({
             'employee_id': self.employee.id,
             'check_in': datetime(2024, 1, 1, 8, 0),  # Monday, 8h expected
             'check_out': datetime(2024, 1, 1, 17, 0),
@@ -707,12 +768,12 @@ class TestAttendanceValidationTimeRules(TransactionCase):
     def test_tolerance_validation_on_check_out_runs_time_rules(self):
         self.env.company.attendance_validation = 'tolerance_validation'
         self.env.company.attendance_validation_tolerance = 1.0
-        attendance = self.env['hr.attendance'].create({
+        attendance = self.env['hr.attendance'].with_user(self.self_edit_user).create({
             'employee_id': self.employee.id,
             'check_in': datetime(2024, 1, 1, 8, 0),
         })
         self.assertEqual(attendance.state, 'draft')
-        attendance.check_out = datetime(2024, 1, 1, 17, 0)
+        attendance.with_user(self.self_edit_user).check_out = datetime(2024, 1, 1, 17, 0)
         self.assertEqual(attendance.state, 'validated')
         self.assertAlmostEqual(self._get_overtime_hours(), 1.0)
 
