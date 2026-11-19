@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
 import werkzeug.urls
 
 from odoo import http
@@ -173,5 +174,8 @@ class WebsiteCustomer(GoogleMap):
                     return request.redirect('/customers/%s' % request.env['ir.http']._slug(partner))
                 values = {}
                 values['main_object'] = values['partner'] = partner
+                if (referrer := request.httprequest.referrer) and request.httprequest.host in referrer:
+                    res = re.compile(r"\/partners\/[\w-]+").findall(referrer)
+                    values['back_url'] = res[0] if res else False
                 return request.render("website_customer.details", values)
         raise request.not_found()
