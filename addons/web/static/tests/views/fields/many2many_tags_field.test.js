@@ -711,42 +711,13 @@ test("Many2ManyTagsField: update color", async () => {
     await contains('.o_colorlist button[data-color="1"]').click();
     expect(badgeNode).toHaveAttribute("data-color", "1");
 
-    // Update the color in edit => write on save with rest of the record
+    // Update the color in edit => write automatically too
     await contains(badgeNode).click();
     await contains('.o_colorlist button[data-color="6"]').click();
     await animationFrame();
     expect(badgeNode).toHaveAttribute("data-color", "6");
 
-    // TODO POST WOWL GES: commented code below is to make the m2mtags more.
-    // consistent. No color change if edit => discard.
-    // await clickSave();
-
-    expect.verifySteps([
-        { color: 1 },
-        { color: 6 },
-        // { timmy: [[1, 12, { color: 6 }]] },
-    ]);
-
-    /*
-    badgeNode = queryOne(".o_tag.badge"); // need to refresh the reference
-
-    // Update the color in edit without save => we don't go through RPC
-    // so it's not saved and it is lost on discard.
-    await clickEdit();
-    await contains(badgeNode).click();
-    await contains('.o_colorlist button[data-color="8"]').click();
-    await animationFrame();
-    expect(badgeNode).toHaveAttribute("data-color",
-        "8"
-    );
-
-    await clickDiscard();
-
-    expect(badgeNode).toHaveAttribute("data-color",
-        "6"
-    );
-
-    */
+    expect.verifySteps([{ color: 1 }, { color: 6 }]);
 });
 
 test("Many2ManyTagsField without on_tag_click option", async () => {
