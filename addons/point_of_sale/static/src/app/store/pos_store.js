@@ -368,6 +368,11 @@ export class PosStore extends Reactive {
         return makeAwaitable(this.dialog, CashMovePopup);
     }
     async closeSession() {
+        const syncSuccess = await this.push_orders_with_closing_popup();
+        if (!syncSuccess) {
+            return;
+        }
+
         const info = await this.getClosePosInfo();
 
         if (info) {
@@ -521,7 +526,7 @@ export class PosStore extends Reactive {
                 }
 
                 const cancelled = this.removeOrder(order, false);
-                this.removePendingOrder(order);
+                this.removePendingOrder(order.id);
                 if (!cancelled) {
                     return false;
                 } else if (typeof order.id === "number") {
@@ -1246,10 +1251,10 @@ export class PosStore extends Reactive {
         return [...this.pendingOrder.delete];
     }
 
-    removePendingOrder(order) {
-        this.pendingOrder["create"].delete(order.id);
-        this.pendingOrder["write"].delete(order.id);
-        this.pendingOrder["delete"].delete(order.id);
+    removePendingOrder(orderId) {
+        this.pendingOrder["create"].delete(orderId);
+        this.pendingOrder["write"].delete(orderId);
+        this.pendingOrder["delete"].delete(orderId);
         return true;
     }
 
@@ -1307,6 +1312,7 @@ export class PosStore extends Reactive {
 
             const serialized = order.serialize({ orm: true });
             try {
+                const orderTemporaryId = order.id;
                 const data = await this.data.call("pos.order", "sync_from_ui", [[serialized]], {
                     context,
                 });
@@ -1330,7 +1336,7 @@ export class PosStore extends Reactive {
                 }
 
                 await this.postSyncAllOrders(newData["pos.order"]);
-                this.removePendingOrder(order);
+                this.removePendingOrder(orderTemporaryId);
                 syncedOrders.push(...newData["pos.order"]);
                 order.clearCommands();
                 newSession = newSession || data["pos.session"].length > 0;
@@ -2419,6 +2425,14 @@ export class PosStore extends Reactive {
 
     weighProduct() {
         return makeAwaitable(this.env.services.dialog, ScaleScreen);
+    }
+
+    get unsyncedOrderCount() {
+        return (
+            this.pendingOrder.create.size +
+            this.pendingOrder.delete.size +
+            this.pendingOrder.write.size
+        );
     }
 }
 
