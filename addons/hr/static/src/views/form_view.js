@@ -5,7 +5,7 @@ import { formView } from "@web/views/form/form_view";
 import { FormController } from "@web/views/form/form_controller";
 import { FormRenderer } from "@web/views/form/form_renderer";
 import { ContractEndDialog } from "@hr/components/contract_end_dialog/contract_end_dialog";
-import { MultiVersionUpdateConfirmationDialog } from "./form/multi_version_update_confirmation_dialog";
+import { VersionUpdateDialog } from "@hr/components/version_update_dialog/version_update_dialog";
 
 export class EmployeeFormController extends FormController {
     setup() {
@@ -15,8 +15,11 @@ export class EmployeeFormController extends FormController {
         this.pendingNewContract = null;
     }
 
+    /**
+     * Return a dialog asking how the version updates are applied
+     */
     _getVersionUpdateDialogClass(_record) {
-        return MultiVersionUpdateConfirmationDialog;
+        return VersionUpdateDialog;
     }
 
     async onRecordChanged(record, changes) {
@@ -48,74 +51,81 @@ export class EmployeeFormController extends FormController {
     }
 
     async onWillSaveRecord(record, changes) {
-        // Only run the logic if it's not an employee creation but an update
-        // and if it's only directly on the employee form not in a popup for another model
-        if (Boolean(record._config.resId) && record._config.resModel == "hr.employee") {
-            // We extract the versions of the employee so that we can check if we're on the last one chronologically
-            let ver_ids = await this.orm.read("hr.employee", [record.resId], ["version_ids"]);
-            ver_ids = ver_ids[0].version_ids;
+        const versionId = record._values.version_id?.id;
+        if (!record.resId || record.resModel !== "hr.employee" || !versionId) {
+            return true;
+        }
+        const versionChanges = Object.fromEntries(
+            Object.entries(changes).filter(([fieldName]) =>
+                record.fields[fieldName]?.related?.startsWith("version_id.")
+            )
+        );
+        if (!Object.keys(versionChanges).length) {
+            return true;
+        }
 
-            // We need to differentiate the fields that are related to the version from those that are only related to the employee, also the contract date limits and the yearly cost should never be copied to different versions
-            const version_changes = Object.fromEntries(
-                Object.entries(changes).filter(
-                    ([key]) =>
-                        record.fields[key].related?.includes("version_id") &&
-                        ![
-                            "contract_date_start",
-                            "contract_date_end",
-                            "final_yearly_costs",
-                        ].includes(record.fields[key].name)
-                )
-            );
+        const update_info = await this.orm.call("hr.version", "get_version_update_info", [
+            [versionId],
+            versionChanges,
+        ]);
+        if (!update_info) {
+            return true;
+        }
 
-            // If we have version-related changes and we are not on the last version
-            if (
-                Object.keys(version_changes).length > 0 &&
-                record._values.version_id.id !== ver_ids.at(-1)
-            ) {
-                const version_changes_to_display = await this.orm.call(
-                    "hr.employee",
-                    "get_multi_version_changes",
-                    [record.resId],
-                    {
-                        version_changes: version_changes,
-                    }
+        let choice = null;
+        while (true) {
+            choice = await new Promise((resolve) => {
+                this.dialogService.add(
+                    this._getVersionUpdateDialogClass(record),
+                    { info: update_info, record, changes, defaultChoice: choice, confirm: resolve },
+                    { onClose: () => resolve(null) }
                 );
-                const proceed = await new Promise((resolve) => {
-                    this.dialogService.add(
-                        this._getVersionUpdateDialogClass(record),
-                        {
-                            title: "Apply changes to next versions?",
-                            version_changes: version_changes_to_display,
-                            record,
-                            changes,
-                            cancel: () => resolve(false),
-                            change_current: () => resolve(true),
-                            change_multi: async () => {
-                                const versions_to_update = ver_ids.slice(
-                                    ver_ids.indexOf(record._values.version_id.id)
-                                );
-                                await this.orm.write(
-                                    "hr.version",
-                                    versions_to_update,
-                                    version_changes
-                                );
-                                // Already written and tracked on all the versions, don't write them again on save
-                                for (const fieldName of Object.keys(version_changes)) {
-                                    delete changes[fieldName];
-                                }
-                                resolve(true);
-                            },
-                        },
-                        {
-                            onClose: () => resolve(false),
-                        }
-                    );
-                });
-                if (!proceed) {
-                    return false;
-                }
+            });
+            if (!choice) {
+                return false;
             }
+            const canSave = await this._applyVersionUpdateChoice(
+                record,
+                changes,
+                versionId,
+                update_info,
+                choice
+            );
+            // null: the choice was cancelled, ask again
+            if (canSave !== null) {
+                return canSave;
+            }
+        }
+    }
+
+    async _applyVersionUpdateChoice(record, changes, versionId, updateInfo, choice) {
+        switch (choice.mode) {
+            // write the updates on the current version only
+            case "current":
+                return true;
+
+            // write the updates on the current version & the next versions also
+            case "next_versions":
+                await this.orm.write(
+                    "hr.version",
+                    [versionId, ...updateInfo.next_version_ids],
+                    updateInfo.version_changes
+                );
+                // already written: the save must not write them again
+                for (const fieldName of Object.keys(updateInfo.version_changes)) {
+                    delete changes[fieldName];
+                }
+                return true;
+
+            // create new version with the updates
+            case "new_version":
+                await this.orm.call("hr.version", "action_create_version_from_update", [
+                    [versionId],
+                    choice.date,
+                    updateInfo.version_changes,
+                ]);
+                await this.model.load();
+                return false;
         }
         return true;
     }

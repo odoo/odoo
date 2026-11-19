@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr.VersionUpdateDialog">
+        <Dialog size="'md'" title.translate="How do you want to apply these changes?">
+            <div class="alert alert-info">
+                <table>
+                    <tbody>
+                        <tr t-foreach="Object.entries(this.props.info.changes_display)" t-as="change" t-key="change[0]">
+                            <td class="ps-3 pe-3" t-out="change[1][0]"/>
+                            <td><i class="oi" data-icon="east"/></td>
+                            <td class="ps-3 pe-3" t-out="change[1][1]"/>
+                            <td>(<t t-out="this.getFieldLabel(change[0])"/>)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="d-flex flex-column gap-2">
+                <div t-foreach="this.props.info.selections" t-as="selection" t-key="selection" class="form-check d-flex align-items-center gap-3">
+                    <div>
+                        <input class="form-check-input" type="radio" name="version_update_choice"
+                            t-att-id="'version_update_' + selection" t-att-value="selection"
+                            t-att-checked="this.choice() === selection"
+                            t-on-change="(ev) => { this.choice.set(ev.currentTarget.value); this.updateWarnings(); }"/>
+                        <label class="form-check-label" t-att-for="'version_update_' + selection">
+                            <t t-if="selection === 'current'">Only this version</t>
+                            <t t-elif="selection === 'next_versions'">This version and the next ones</t>
+                            <t t-elif="selection === 'new_version'">A new version starting from</t>
+                        </label>
+                    </div>
+                    <DateTimeInput t-if="selection === 'new_version' and this.choice() === 'new_version'"
+                        id="'version_update_new_version_date'" type="'date'" value="this.newVersionDate()"
+                        onChange="(date) => { this.newVersionDate.set(date or this.newVersionDate()); this.updateWarnings(); }"/>
+                </div>
+            </div>
+            <div t-foreach="this.warnings()" t-as="warning" t-key="warning_index" class="alert alert-warning mt-3 mb-0" role="alert">
+                <t t-out="warning"/>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="() => this.onApply()">Apply</button>
+                <button class="btn btn-secondary" t-on-click="() => this.props.close()">Discard</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>
