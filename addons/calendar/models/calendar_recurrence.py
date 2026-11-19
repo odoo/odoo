@@ -294,17 +294,33 @@ class RecurrenceRule(models.Model):
         """
         now = self.env.context.get('date') or fields.Datetime.now()
         # get next events
-        self.env['calendar.event'].flush_model(fnames=['recurrence_id', 'start'])
+        self.env['calendar.event'].flush_model(fnames=['recurrence_id', 'start', 'alarm_ids'])
+        self.env['calendar.alarm'].flush_model(fnames=['alarm_type'])
         if not self.calendar_event_ids.ids:
             return
 
+        # The next event may have no alarm creating a trigger. Also set up the first following
+        # event with such an alarm, otherwise no trigger is left to send the next reminders.
         self.env.cr.execute("""
-            SELECT DISTINCT ON (recurrence_id) id event_id, recurrence_id
-                    FROM calendar_event 
-                   WHERE start > %s
-                     AND id IN %s
-                ORDER BY recurrence_id,start ASC;
-        """, (now, tuple(self.calendar_event_ids.ids)))
+            (SELECT DISTINCT ON (recurrence_id) id event_id, recurrence_id
+                    FROM calendar_event
+                   WHERE start > %(now)s
+                     AND id IN %(event_ids)s
+                ORDER BY recurrence_id,start ASC)
+            UNION
+            (SELECT DISTINCT ON (event.recurrence_id) event.id event_id, event.recurrence_id
+                    FROM calendar_event event
+                    JOIN calendar_alarm_calendar_event_rel rel ON rel.calendar_event_id = event.id
+                    JOIN calendar_alarm alarm ON alarm.id = rel.calendar_alarm_id
+                   WHERE event.start > %(now)s
+                     AND event.id IN %(event_ids)s
+                     AND alarm.alarm_type IN %(alarm_types)s
+                ORDER BY event.recurrence_id, event.start ASC);
+        """, {
+            'now': now,
+            'event_ids': tuple(self.calendar_event_ids.ids),
+            'alarm_types': tuple(self.env['calendar.event']._get_trigger_alarm_types()),
+        })
         result = self.env.cr.dictfetchall()
         if not result:
             return
