@@ -2,6 +2,7 @@
 
 from odoo import Command
 from odoo.addons.digest.tests.common import TestDigestCommon
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tools import mute_logger
 from odoo.tests import tagged
 
@@ -13,8 +14,15 @@ class TestAccountDigest(TestDigestCommon):
     @mute_logger('odoo.models.unlink')
     def setUpClass(cls):
         super().setUpClass()
-        account1 = cls.env['account.account'].search([('internal_group', '=', 'income'), ('company_ids', '=', cls.company_1.id)], limit=1)
-        account2 = cls.env['account.account'].search([('internal_group', '=', 'expense'), ('company_ids', '=', cls.company_1.id)], limit=1)
+        account1, account2 = cls.env['account.account'].with_company(cls.company_1).create([{
+            'name': 'Account 1 Company 1',
+            'account_type': 'income_other',
+            'code': 'aaaaaa',
+        }, {
+            'name': 'Account 2 Company 1',
+            'account_type': 'expense_depreciation',
+            'code': 'bbbbbb',
+        }])
         cls.env['account.journal'].with_company(cls.company_2).create({
             'name': 'Test Journal',
             'code': 'code',
