@@ -229,7 +229,7 @@ class HrVersion(models.Model):
             for version in versions_without_countries:
                 version.allowed_country_state_ids = states
 
-    @api.constrains('employee_id', 'contract_date_start', 'contract_date_end')
+    @api.constrains('employee_id', 'contract_date_start', 'contract_date_end', 'date_version')
     def _check_dates(self):
         version_read_group = self.env['hr.version'].sudo()._read_group(
             [
@@ -251,6 +251,17 @@ class HrVersion(models.Model):
                     'Start date (%(start)s) must be earlier than contract end date (%(end)s).',
                     start=version.contract_date_start, end=version.contract_date_end,
                 ))
+            if version.contract_date_start < version.date_version:
+                matching_versions = version.employee_id.version_ids.filtered(
+                    lambda v: v.contract_date_start == version.contract_date_start
+                )
+                if matching_versions:
+                    earliest_version_date = min(matching_versions.mapped('date_version'))
+                    if version.date_version == earliest_version_date:
+                        raise ValidationError(self.env._(
+                            "You're trying to start a new contract before the start of the version, "
+                            "Modify the start of the version first then add a new contract date."
+                        ))
             if not version.active:
                 continue
             contract_date_end = version.contract_date_end or date.max
@@ -507,10 +518,22 @@ class HrVersion(models.Model):
                     all_versions_to_sync |= next(iter(contract_versions.values()))
 
                 if all_versions_to_sync:
-                    all_versions_to_sync.with_context(sync_contract_dates=True).write(dates_vals)
+                    if 'date_version' in vals and len(versions) == 1 and versions in all_versions_to_sync:
+                        (all_versions_to_sync - versions).with_context(sync_contract_dates=True).write(dates_vals)
+                        versions.with_context(sync_contract_dates=True).write({
+                            **dates_vals,
+                            'date_version': vals['date_version'],
+                        })
+                    else:
+                        all_versions_to_sync.with_context(sync_contract_dates=True).write(dates_vals)
 
             else:
-                versions.with_context(sync_contract_dates=True).write(dates_vals)
+                versions_dates_vals = (
+                    {**dates_vals, 'date_version': vals['date_version']}
+                    if 'date_version' in vals and len(versions) == 1
+                    else dates_vals
+                )
+                versions.with_context(sync_contract_dates=True).write(versions_dates_vals)
 
         res = super(HrVersion, multiple_versions).write(new_vals)
         self._track_log_employee_changes(tracked_employees)

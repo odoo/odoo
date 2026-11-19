@@ -166,6 +166,7 @@ class TestHrVersion(TestHrCommon):
         # Forcing the contract_date_start and or contract_date_end in the 'create' should override False
         employee = self.env['hr.employee'].create({
             'name': 'John Doe',
+            'date_version': '2020-01-01',
             'contract_date_start': '2020-01-01',
             'contract_date_end': '2020-12-31',
         })
@@ -181,6 +182,7 @@ class TestHrVersion(TestHrCommon):
         # Create a new version before the start of the current contract
         employee = self.env['hr.employee'].create({
             'name': 'John Doe',
+            'date_version': '2020-01-01',
             'contract_date_start': '2020-01-01',
             'contract_date_end': '2020-12-31',
         })
@@ -192,6 +194,7 @@ class TestHrVersion(TestHrCommon):
         # Create a new version between two contracts
         employee = self.env['hr.employee'].create({
             'name': 'John Doe',
+            'date_version': '2020-01-01',
             'contract_date_start': '2020-01-01',
             'contract_date_end': '2020-12-31'
         })
@@ -228,6 +231,7 @@ class TestHrVersion(TestHrCommon):
         # Create a new version on a fixed term contract
         employee = self.env['hr.employee'].create({
             'name': 'John Doe',
+            'date_version': '2020-01-01',
             'contract_date_start': '2020-01-01',
             'contract_date_end': '2021-12-31'
         })
@@ -239,6 +243,7 @@ class TestHrVersion(TestHrCommon):
         # Create a new version on any contract interval regardless of the version valid at that date
         employee = self.env['hr.employee'].create({
             'name': 'John Doe',
+            'date_version': '2020-01-01',
             'contract_date_start': '2020-01-01',
             'contract_date_end': '2020-12-31'
         })
@@ -771,6 +776,7 @@ class TestHrVersion(TestHrCommon):
         })
         employee1, employee2 = employees = self.env['hr.employee'].create([
             {
+                'date_version': '2020-10-10',
                 'contract_date_start': '2020-10-10',
                 'wage': 3000,
                 'name': 'Employee1',
@@ -778,6 +784,7 @@ class TestHrVersion(TestHrCommon):
                 'department_id': rd_dep.id,
             },
             {
+                'date_version': '2020-10-10',
                 'contract_date_start': '2022-10-10',
                 'wage': 2000,
                 'name': 'Employee2',
