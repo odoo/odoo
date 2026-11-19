@@ -345,7 +345,7 @@ test("spilled pivot table", async function () {
     expect(cells.B12).toBe("131");
     expect(data.formats[sheet.formats.B12]).toBe("#,##0.00");
     expect(data.pivots).toEqual({});
-    expect(data.styles[sheet.styles["B12"]]).toEqual(
+    expect(data.styles[sheet.styles["A12:B12"]]).toEqual(
         { bold: true, hideGridLines: true },
         { message: "style is preserved" }
     );
