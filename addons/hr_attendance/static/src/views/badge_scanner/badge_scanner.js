@@ -1,8 +1,9 @@
-import { Component, onWillStart, useProps } from "@odoo/owl";
+import { Component, onWillStart, usePlugin, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
-import { useService } from "@web/core/utils/hooks";
-import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
+import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
+import { ORM } from "@web/core/orm_plugin";
+import { ActionPlugin, standardActionServiceProps } from "@web/webclient/actions/action_plugin";
 import { BarcodeScanner } from "@barcodes/components/barcode_scanner";
 
 export class BadgeScanner extends Component {
@@ -12,9 +13,9 @@ export class BadgeScanner extends Component {
     props = useProps(standardActionServiceProps);
     setup() {
         this.employeeId = this.props.action?.context?.active_id;
-        this.notification = useService("notification");
-        this.actionService = useService("action");
-        this.orm = useService("orm");
+        this.notification = usePlugin(NotificationPlugin);
+        this.actionService = usePlugin(ActionPlugin);
+        this.orm = usePlugin(ORM);
         onWillStart(async () => {
             this.employee = await this.orm.read("hr.employee", [this.employeeId], ["name"]);
         });
@@ -34,7 +35,7 @@ export class BadgeScanner extends Component {
         }
         try {
             await this.orm.write("hr.employee", [this.employee[0].id], { barcode: barcode });
-            this.env.config.historyBack();
+            this.historyBack();
             this.notification.add(_t("Badge updated: ") + barcode, { type: "success" });
         } catch (error) {
             this.notification.add(_t("Failed to update badge: ") + error?.data?.message, {
@@ -44,7 +45,11 @@ export class BadgeScanner extends Component {
     }
 
     onClickBack() {
-        this.env.config.historyBack();
+        this.historyBack();
+    }
+
+    historyBack() {
+        this.actionService.currentController.config.historyBack();
     }
 }
 

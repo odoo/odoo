@@ -2,23 +2,31 @@ import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { CalendarController } from "@web/views/calendar/calendar_controller";
-import { onWillStart } from "@odoo/owl";
+import { onWillStart, usePlugin } from "@odoo/owl";
+import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
 
 export class AttendanceCalendarController extends CalendarController {
-
     setup() {
         super.setup();
+        this.notification = usePlugin(NotificationPlugin);
         this.hasEmployee = false;
         onWillStart(async () => {
             const [readUser] = await this.orm.read("res.users", [user.userId], ["employee_id"]);
             this.hasEmployee = Boolean(readUser.employee_id);
             if (!this.hasEmployee) {
-                this.env.services.notification.add(
+                this.notification.add(
                     _t("You are not linked to an employee in the current company, so you cannot view your own attendances."),
                     { type: "warning" }
                 );
             }
         });
+    }
+
+    get rendererProps() {
+        return {
+            ...super.rendererProps,
+            employeeId: this.props.context.active_id,
+        };
     }
 
     createRecord(record) {

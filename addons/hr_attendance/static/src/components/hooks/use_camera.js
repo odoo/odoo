@@ -1,9 +1,10 @@
+import { usePlugin } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
-import { useService } from "@web/core/utils/hooks";
+import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
 
 export function useCamera({ width = 480, height = 480 } = {}) {
-    const notification = useService("notification");
+    const notification = usePlugin(NotificationPlugin);
     let stream = null;
     let videoEl = null;
 

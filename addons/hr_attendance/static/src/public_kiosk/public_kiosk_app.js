@@ -8,11 +8,14 @@ import { NewEmployeeDialog } from "@hr_attendance/components/new_employee_dialog
 import { KioskPinCode } from "@hr_attendance/components/pin_code/pin_code";
 import { Component, proxy, t, usePlugin, useProps, whenReady } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
+import { DialogPlugin } from "@web/core/dialog/dialog_plugin";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { rpc } from "@web/core/network/rpc";
-import { useBus, useService } from "@web/core/utils/hooks";
+import { useBus } from "@web/core/utils/hooks";
+import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
+import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { url } from "@web/core/utils/urls";
 import { mountComponent } from "@web/env";
 import { session } from "@web/session";
@@ -46,10 +49,10 @@ class kioskAttendanceApp extends Component {
     };
 
     setup() {
-        this.dialogService = useService("dialog");
+        this.dialogService = usePlugin(DialogPlugin);
         this.barcode = usePlugin(BarcodePlugin);
-        this.notification = useService("notification");
-        this.ui = useService("ui");
+        this.notification = usePlugin(NotificationPlugin);
+        this.ui = usePlugin(UIPlugin);
         this.companyImageUrl = url("/web/binary/company_logo", {
             company: this.props.companyId,
         });
