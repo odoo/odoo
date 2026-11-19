@@ -1,6 +1,7 @@
 import { useService } from "@web/core/utils/hooks";
 import { FormRenderer } from "@web/views/form/form_renderer";
 import { useRef, useEffect } from "@odoo/owl";
+import { SIZES } from "@web/core/ui/ui_service";
 
 export class FormRendererWithHtmlExpander extends FormRenderer {
     static props = {
@@ -59,6 +60,6 @@ export class FormRendererWithHtmlExpander extends FormRenderer {
     }
 
     _canExpandHTMLField(size) {
-        return size === 6;
+        return size === SIZES.XXL;
     }
 }
