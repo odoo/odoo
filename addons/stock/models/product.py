@@ -9,7 +9,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
-from odoo.tools import SQL
+from odoo.tools import SQL, float_round
 from odoo.tools.barcode import check_barcode_encoding
 
 PY_OPERATORS = {
@@ -325,6 +325,38 @@ class ProductProduct(models.Model):
         """
         self.ensure_one()
         return []
+
+    def _get_whole_serial_quantity(self, quantity, uom):
+        """Return `quantity` rounded to a whole number expressed in `uom` for reserving quantities
+        of products tracked with serial numbers, so that the product is neither reserved in
+        fractional amounts, nor underreserved, nor overshot to a backorder. Returns `False` if the
+        quantity correction is inapplicable.
+
+        :param float quantity: Quantity to check
+        :param uom.uom uom: UoM of the resulting value
+        :return: Rounded result or False
+        :rtype: int | Literal[False]
+        """
+        if self.tracking != 'serial':
+            return False
+        product_uom = self.uom_id
+        # Although we can't provide fractional amounts, we opt to round up the quantities to make
+        # sure the minimum required amount is provided.
+        whole_quantity = float_round(uom._compute_quantity(quantity, product_uom),
+                                     precision_digits=0, rounding_method='UP')
+        # There's a chance a whole number of serials lands on a round number in a coarser UoM, and
+        # and rounding it up would yield one SN too many, potentially triggering consumption warnings
+        # and backorders, so we do a round trip conversion.
+        # 0,13 six-packs demanded -> 0,78 units -> 1 unit -> 0,16 six-packs supplied
+        rounded_quantity = product_uom._compute_quantity(whole_quantity, uom, rounding_method='DOWN')
+        rounded_whole_quantity = float_round(uom._compute_quantity(rounded_quantity, product_uom),
+                                             precision_digits=0, rounding_method='UP')
+        # The provided quantity is safely whole. We don't have anything to return.
+        if product_uom.compare(whole_quantity, rounded_whole_quantity) \
+           or not uom.compare(rounded_quantity, quantity):
+            return False
+        # The quantity needs to be reset to the rounded value.
+        return rounded_quantity
 
     def _get_description(self, picking_type_id):
         """ Hook function meant to be overridden. """

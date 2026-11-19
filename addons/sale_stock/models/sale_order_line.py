@@ -262,6 +262,18 @@ class SaleOrderLine(models.Model):
             if line.move_ids.filtered(lambda m: m.state != 'cancel'):
                 line.product_updatable = False
 
+    @api.onchange('product_uom_qty', 'product_uom_id')
+    def _onchange_product_uom_qty_warning(self):
+        if whole_qty := self.product_id._get_whole_serial_quantity(self.product_uom_qty, self.product_uom_id):
+            self.product_uom_qty = whole_qty
+            return {
+                'warning': {
+                    'title': self.env._("Fractional quantity"),
+                    'message': self.env._("Products tracked by serial numbers cannot be sold in fractional amounts."
+                                          " The quantity has been rounded up."),
+                }
+            }
+
     def _inverse_customer_lead(self):
         for line in self:
             if line.state == 'sale' and not line.order_id.commitment_date:
