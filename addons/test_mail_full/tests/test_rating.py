@@ -5,6 +5,7 @@ import lxml
 from datetime import datetime
 
 from odoo import http
+from odoo.addons.mail.models import mail_message as mail_message_module
 from odoo.addons.test_mail_full.tests.common import TestMailFullCommon
 from odoo.addons.test_mail_sms.tests.common import TestSMSRecipients
 from odoo.tests import tagged
@@ -121,6 +122,19 @@ class TestRatingFlow(TestRatingCommon):
                 self.assertEqual(new_rating.rating, 1)
                 if is_rating_mixin_test:
                     self.assertEqual(record_rating.rating_last_value, 1)
+
+    @users("admin")
+    def test_rating_unlink(self):
+        record_rating = self.record_rating.with_env(self.env)
+        access_token = record_rating._rating_get_access_token()
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            record_rating.rating_apply(5, token=access_token, feedback="Top Feedback")
+        rating = record_rating.rating_ids
+        message = rating.message_id
+        self.assertTrue(message)
+        self.patch(mail_message_module, "MAX_SEARCH_LIMIT", 2)
+        rating.unlink()
+        self.assertFalse(message.exists())
 
 
 @tagged('rating')
