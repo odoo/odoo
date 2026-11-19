@@ -849,3 +849,42 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
             {'account_id': self.company_data['default_account_stock_valuation'].id,   'debit': 0,     'credit': 30},
             {'account_id': self.company_data['default_account_expense'].id,           'debit': 30,    'credit': 0},
         ])
+
+    def test_kit_fifo_component_cost_after_return_for_exchange(self):
+        """ Sell a kit made of 2 FIFO components without stock, deliver it, return one
+        component for exchange and deliver the exchange. The component cost and its
+        inventory value at date are based on the component unit cost.
+        """
+        component = self._create_product(name='Component', is_storable=True, standard_price=10)
+        kit = self._create_product(name='Kit', is_storable=True)
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [Command.create({'product_id': component.id, 'product_qty': 2})],
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({'product_id': kit.id})],
+        })
+        so.action_confirm()
+
+        delivery = so.picking_ids
+        with Form(delivery) as delivery_form:
+            with delivery_form.move_ids.edit(0) as move:
+                move.quantity = 2
+        delivery.button_validate()
+        return_wizard_form = Form(self.env['stock.return.picking'].with_context(active_id=delivery.id, active_model='stock.picking'))
+        with return_wizard_form.product_return_moves.edit(0) as return_line:
+            return_line.quantity = 1
+        return_picking = self.env['stock.picking'].browse(return_wizard_form.save().action_create_exchanges()['res_id'])
+        return_picking.button_validate()
+        exchange = so.picking_ids - delivery - return_picking
+        with Form(exchange) as exchange_form:
+            with exchange_form.move_ids.edit(0) as move:
+                move.quantity = 1
+        exchange.button_validate()
+
+        inventory_at_date = self.env['stock.quantity.history'].create({}).open_at_date()
+        self.assertRecordValues(component.with_context(inventory_at_date['context']), [
+            {'standard_price': 10, 'total_value': -20},
+        ])
