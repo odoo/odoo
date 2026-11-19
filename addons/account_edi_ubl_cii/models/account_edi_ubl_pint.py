@@ -160,6 +160,14 @@ class AccountEdiUBLPint(models.AbstractModel):
         # Cash rounding lines should not appear as lines but in PayableRoundingAmount.
         return False
 
+    def _ubl_default_tax_category_grouping_key(self, base_line, tax_data, vals, currency):
+        # Cash rounding lines should not appear as lines but in PayableRoundingAmount.
+        # Since this method produces a default 0% tax automatically when no tax is set on the line by default,
+        # we have to do something here to avoid it.
+        if self._ubl_is_cash_rounding_base_line(base_line):
+            return
+        return super()._ubl_default_tax_category_grouping_key(base_line, tax_data, vals, currency)
+
     def _ubl_get_partner_address_node(self, vals, partner):
         node = super()._ubl_get_partner_address_node(vals, partner)
         node['cbc:CountrySubentityCode'] = None
