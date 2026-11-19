@@ -567,7 +567,7 @@ test(`editable list with edit="0"`, async () => {
 test.tags("desktop");
 test(`[Offline] editable list (create)`, async () => {
     expect.errors(2); // 2x ConnectionLostError
-    onRpc("web_save", () => expect.step(`web_save`));
+    onRpc("web_save_offline", () => expect.step(`web_save_offline`));
     Foo._views = {
         "list,false": `<list editable="top"><field name="foo"/></list>`,
         "search,false": `<search/>`,
@@ -622,12 +622,12 @@ test(`[Offline] editable list (create)`, async () => {
     await setOffline(false);
 
     expect(getService(OfflinePlugin).isOffline()).toBe(false);
-    await expect.waitForSteps(["web_save"]);
+    await expect.waitForSteps(["web_save_offline"]);
 });
 
 test.tags("desktop");
 test(`[Offline] editable list (edit)`, async () => {
-    onRpc("web_save", () => expect.step(`web_save`));
+    onRpc("web_save_offline", () => expect.step(`web_save_offline`));
     Foo._views = {
         "list,false": `<list editable="top"><field name="foo"/></list>`,
         "search,false": `<search/>`,
@@ -674,7 +674,49 @@ test(`[Offline] editable list (edit)`, async () => {
     await setOffline(false);
 
     expect(getService(OfflinePlugin).isOffline()).toBe(false);
-    await expect.waitForSteps(["web_save"]);
+    await expect.waitForSteps(["web_save_offline"]);
+});
+
+test.tags("desktop");
+test(`[Offline] editable list (edit): the skipped onchange is made when replaying the save`, async () => {
+    onRpc("web_save_offline", ({ kwargs }) => {
+        expect.step(`web_save_offline ${kwargs.onchange_fields}`);
+    });
+    Foo._onChanges = {
+        foo(record) {
+            if (record.foo === "Offline") {
+                record.int_field = 7;
+            }
+        },
+    };
+    Foo._views = {
+        "list,false": `<list editable="top"><field name="foo" on_change="1"/><field name="int_field"/></list>`,
+        "search,false": `<search/>`,
+    };
+    defineActions([
+        {
+            id: 1,
+            name: "Action 1",
+            res_model: "foo",
+            views: [[false, "list"]],
+            search_view_id: [false, "search"],
+        },
+    ]);
+
+    const setOffline = mockOffline();
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+
+    await contains(`.o_data_cell`).click();
+    await setOffline(true);
+    await contains(`.o_field_widget[name='foo'] input`).edit("Offline");
+    await contains(`.o_control_panel`).click();
+    expect.verifySteps([]);
+
+    await setOffline(false);
+    await expect.waitForSteps(["web_save_offline foo"]);
+    await animationFrame();
+    expect(MockServer.env["foo"].find((record) => record.foo === "Offline").int_field).toBe(7);
 });
 
 test(`[Offline] disable new button if not previously visited`, async () => {
@@ -707,7 +749,7 @@ test(`[Offline] disable new button if not previously visited`, async () => {
 
 test(`[Offline] create record when offline`, async () => {
     expect.errors(4); // 4x ConnectionLostError
-    onRpc("web_save", () => expect.step(`web_save`));
+    onRpc("web_save_offline", () => expect.step(`web_save_offline`));
     Foo._views = {
         "list,false": `<list><field name="foo"/></list>`,
         "form,false": `<form><field name="foo"/></form>`,
@@ -775,7 +817,7 @@ test(`[Offline] create record when offline`, async () => {
     await setOffline(false);
 
     expect(getService(OfflinePlugin).isOffline()).toBe(false);
-    await expect.waitForSteps(["web_save"]); // We sync when the connection returns
+    await expect.waitForSteps(["web_save_offline"]); // We sync when the connection returns
     //The current view is not updated when the offline is sync.
     //In this case we don't see the newly created record, until the view is reloaded.
     expect(`tbody tr`).toHaveCount(4, { message: "The new record is not showed in the list." });
@@ -788,7 +830,7 @@ test(`[Offline] create record when offline`, async () => {
 
 test(`[Offline] edit record when offline`, async () => {
     expect.errors(6); // 6x ConnectionLostError
-    onRpc("web_save", () => expect.step(`web_save`));
+    onRpc("web_save_offline", () => expect.step(`web_save_offline`));
     Foo._views = {
         "list,false": `<list><field name="foo"/></list>`,
         "form,false": `<form><field name="foo"/></form>`,
@@ -864,7 +906,7 @@ test(`[Offline] edit record when offline`, async () => {
     await setOffline(false);
 
     expect(getService(OfflinePlugin).isOffline()).toBe(false);
-    await expect.waitForSteps(["web_save"]); // We sync when the connection returns
+    await expect.waitForSteps(["web_save_offline"]); // We sync when the connection returns
     //The current view is not updated when the offline is sync.
     //In this case we don't see the newly created record, until the view is reloaded.
     expect(queryAllTexts(`.o_data_cell`)).toEqual(["yop", "blip", "gnap", "blip"]);
