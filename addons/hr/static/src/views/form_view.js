@@ -36,9 +36,9 @@ export class EmployeeFormController extends FormController {
             let ver_ids = await this.orm.read('hr.employee', [record.resId], ['version_ids']);
             ver_ids = ver_ids[0].version_ids;
 
-            // We need to differentiate the fields that are related to the version from those that are only related to the employee, also the contract date limits should never be copied to different versions
+            // We need to differentiate the fields that are related to the version from those that are only related to the employee, also the contract date limits and the yearly cost should never be copied to different versions
             const version_changes = Object.fromEntries(
-                Object.entries(changes).filter(([key]) => (record.fields[key].related?.includes('version_id') && !(['contract_date_start', 'contract_date_end'].includes(record.fields[key].name))))
+                Object.entries(changes).filter(([key]) => (record.fields[key].related?.includes('version_id') && !(['contract_date_start', 'contract_date_end', 'final_yearly_costs'].includes(record.fields[key].name))))
             );
 
             // If we have version-related changes and we are not on the last version
