@@ -85,6 +85,7 @@ class AccountMoveLine(models.Model):
         copy=False,
         aggregator='min',
     )
+    taxable_supply_date = fields.Date(related='move_id.taxable_supply_date')
     ref = fields.Char(
         related='move_id.ref', store=True,
         copy=False,
@@ -1903,22 +1904,52 @@ class AccountMoveLine(models.Model):
         self.ensure_one()
         return self.tax_ids or self.tax_line_id or self.tax_tag_ids.filtered(lambda x: x.applicability == "taxes")
 
+    def _check_tax_lock_dates(self, date=False, taxable_date=False):
+        """ Check the tax lock date against the date placing the posted lines affecting the tax report in a tax period:
+        the taxable supply date of their move when it has one, else its accounting date.
+
+        :param date: check the lines, against their accounting date.
+        :param taxable_date: check the lines, against their taxable supply date.
+        """
+        if not date and not taxable_date:
+            return True
+        if date:
+            self._check_tax_lock_date()
+        if taxable_date:
+            self._check_tax_lock_taxable_date()
+        return True
+
     def _check_tax_lock_date(self):
-        for line in self:
-            move = line.move_id
-            if move.state != 'posted':
-                continue
-            violated_lock_dates = move.company_id._get_lock_date_violations(
-                move.date,
+        """ Check the tax lock date against the accounting date of the posted lines affecting the tax report. """
+        for line in self.filtered(lambda line: line.parent_state == 'posted' and line._affect_tax_report()):
+            violated_lock_dates = line.company_id._get_lock_date_violations(
+                line.date,
                 fiscalyear=False,
                 sale=False,
                 purchase=False,
                 tax=True,
                 hard=True,
             )
-            if violated_lock_dates and line._affect_tax_report():
+            if violated_lock_dates:
                 raise UserError(_("The operation is refused as it would impact an already issued tax statement. "
                                   "Please change the journal entry date or the following lock dates to proceed: %(lock_date_info)s.",
+                                  lock_date_info=self.env['res.company']._format_lock_dates(violated_lock_dates)))
+        return True
+
+    def _check_tax_lock_taxable_date(self):
+        """ Check the tax lock date against the taxable supply date of the posted lines affecting the tax report. """
+        for line in self.filtered(lambda line: line.parent_state == 'posted' and line.taxable_supply_date and line._affect_tax_report()):
+            violated_lock_dates = line.company_id._get_lock_date_violations(
+                line.taxable_supply_date,
+                fiscalyear=False,
+                sale=False,
+                purchase=False,
+                tax=True,
+                hard=True,
+            )
+            if violated_lock_dates:
+                raise UserError(_("The operation is refused as it would impact an already issued tax statement. "
+                                  "Please verify the dates, namely the taxable supply one, or the following lock dates to proceed: %(lock_date_info)s.",
                                   lock_date_info=self.env['res.company']._format_lock_dates(violated_lock_dates)))
         return True
 
@@ -2188,7 +2219,7 @@ class AccountMoveLine(models.Model):
             container['records'] = lines
 
         if self.env.context.get('ignore_tax_lock_date') is not _ignore_tax_lock_date:
-            lines._check_tax_lock_date()
+            lines._check_tax_lock_dates(date=True, taxable_date=True)
 
         # Log changes to move lines on each move
         if not self._track_disabled():
@@ -2279,13 +2310,13 @@ class AccountMoveLine(models.Model):
         for st_line in st_lines_to_unreconcile:
             try:
                 st_line.move_id._check_fiscal_lock_dates()
-                st_line.move_id.line_ids._check_tax_lock_date()
+                st_line.move_id.line_ids._check_tax_lock_dates(date=True, taxable_date=True)
             except UserError:
                 st_lines_to_unreconcile -= st_line
         if st_lines_to_unreconcile:
             st_lines_to_unreconcile.action_undo_reconciliation()
 
-        self.browse(tax_lock_check_ids)._check_tax_lock_date()
+        self.browse(tax_lock_check_ids)._check_tax_lock_dates(date=True, taxable_date=True)
 
         move_container = {'records': self.move_id}
         with self.move_id._check_balanced(move_container),\
@@ -2309,7 +2340,7 @@ class AccountMoveLine(models.Model):
                 self._check_constrains_account_id_journal_id()
 
             # double check modified lines in case a tax field was changed on a line that didn't previously affect tax
-            self.browse(tax_lock_check_ids)._check_tax_lock_date()
+            self.browse(tax_lock_check_ids)._check_tax_lock_dates(date=True, taxable_date=True)
 
             if 'analytic_line_ids' in vals:
                 self.filtered(lambda l: l.parent_state == 'draft').analytic_line_ids.with_context(skip_analytic_sync=True).unlink()
@@ -2381,7 +2412,7 @@ class AccountMoveLine(models.Model):
         if self.env.context.get('ignore_tax_lock_date') is not _ignore_tax_lock_date:
             moves_to_check = non_zero_lines.move_id.filtered(lambda m: m.state == 'posted')
             moves_to_check._check_fiscal_lock_dates()
-            self._check_tax_lock_date()
+            self._check_tax_lock_dates(date=True, taxable_date=True)
 
         if not self._track_disabled():
             # Log changes to move lines on each move

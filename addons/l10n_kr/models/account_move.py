@@ -56,7 +56,7 @@ class AccountMove(models.Model):
             # The proof of issuance dispatches the move into the VAT report boxes.
             self.filtered(
                 lambda m: m.l10n_kr_issuance_type != vals['l10n_kr_issuance_type']
-            ).line_ids._check_tax_lock_date()
+            ).line_ids._check_tax_lock_dates(date=True, taxable_date=True)
         return super().write(vals)
 
     @api.depends('l10n_kr_issuance_type', 'invoice_line_ids.tax_ids')

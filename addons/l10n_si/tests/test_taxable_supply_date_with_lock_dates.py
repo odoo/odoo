@@ -1,4 +1,5 @@
 from odoo import Command, fields
+from odoo.exceptions import UserError
 from odoo.tests import Form, freeze_time, tagged
 from odoo.tools import SQL
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
@@ -57,14 +58,16 @@ class TestTaxableSupplyDateWithLockDates(AccountTestInvoicingCommon):
                 is_banner_expected=True,
             )
 
-            self.check_invoice_dates(
-                move_type=move_type,
-                post=True,
-                invoice_date='2025-05-05',
-                taxable_supply_date='2025-03-20',
-                expected_accounting_date='2025-06-23',
-                is_banner_expected=False,
-            )
+            # The taxable supply date is in a locked tax period: the invoice can't be posted.
+            with self.assertRaisesRegex(UserError, "namely the taxable supply one"):
+                self.check_invoice_dates(
+                    move_type=move_type,
+                    post=True,
+                    invoice_date='2025-05-05',
+                    taxable_supply_date='2025-03-20',
+                    expected_accounting_date='2025-03-20',
+                    is_banner_expected=False,
+                )
 
             self.check_invoice_dates(
                 move_type=move_type,
@@ -75,14 +78,16 @@ class TestTaxableSupplyDateWithLockDates(AccountTestInvoicingCommon):
                 is_banner_expected=True,
             )
 
-            self.check_invoice_dates(
-                move_type=move_type,
-                post=True,
-                invoice_date='2025-03-03',
-                taxable_supply_date='2025-03-20',
-                expected_accounting_date='2025-06-23',
-                is_banner_expected=False,
-            )
+            # The taxable supply date is in a locked tax period: the invoice can't be posted.
+            with self.assertRaisesRegex(UserError, "namely the taxable supply one"):
+                self.check_invoice_dates(
+                    move_type=move_type,
+                    post=True,
+                    invoice_date='2025-03-03',
+                    taxable_supply_date='2025-03-20',
+                    expected_accounting_date='2025-03-20',
+                    is_banner_expected=False,
+                )
 
             self.check_invoice_dates(
                 move_type=move_type,

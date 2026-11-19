@@ -366,6 +366,7 @@
                     <separator/>
                     <filter string="Date" name="date" date="date"/>
                     <filter string="Invoice Date" name="invoice_date" date="invoice_date"/>
+                    <filter string="Taxable Supply Date" name="taxable_supply_date" date="taxable_supply_date"/>
                     <filter string="Report Dates" name="date_between" domain="[('date', '&gt;=', context.get('date_from')), ('date', '&lt;=', context.get('date_to'))]" invisible="1"/>
                     <filter string="Report Dates" name="date_before" domain="[('date', '&lt;=', context.get('date_to'))]" invisible="1"/>
                     <separator/>
@@ -375,11 +376,13 @@
                         <filter string="Account" name="group_by_account" domain="[]" context="{'group_by': 'account_id'}"/>
                         <filter string="Partner" name="group_by_partner" domain="[]" context="{'group_by': 'partner_id'}"/>
                         <filter string="Journal" name="journal" domain="[]" context="{'group_by': 'journal_id'}"/>
-                        <filter string="Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}"/>
-                        <filter string="Invoice Date" name="groupby_invoice_date" domain="[]" context="{'group_by': 'invoice_date'}"/>
                         <filter string="Taxes" name="group_by_taxes" domain="[]" context="{'group_by': 'tax_ids'}"/>
                         <filter string="Tax Grid" name="group_by_tax_tags" domain="[]" context="{'group_by': 'tax_tag_ids'}"/>
                         <filter string="Matching" name="group_by_matching" domain="[]" context="{'group_by': 'matching_number'}"/>
+                        <separator/>
+                        <filter string="Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}"/>
+                        <filter string="Invoice Date" name="groupby_invoice_date" domain="[]" context="{'group_by': 'invoice_date'}"/>
+                        <filter string="Taxable Supply Date" name="groupby_taxable_supply_date" domain="[]" context="{'group_by': 'taxable_supply_date'}"/>
                     </group>
                     <searchpanel class="account_root w-auto scrollbar-width-thin">
                         <field name="account_root_id" icon="filter_alt" icon_class="oi-filled" groupby="account_id" limit="false"/>

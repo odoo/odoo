@@ -495,7 +495,7 @@ class AccountBankStatementLine(models.Model):
             ('tax_cash_basis_rec_id', 'in', partials.ids),
             *self.env['account.move']._check_company_domain(self.line_ids.company_id)
         ])
-        caba_moves.line_ids._check_tax_lock_date()
+        caba_moves.line_ids._check_tax_lock_dates(date=True, taxable_date=True)
 
         # Here we clear the linked reco model on the reconciled lines to remove them from the smart button
         # in the reco model view, since new 'matching_rules' can match directly aml.
