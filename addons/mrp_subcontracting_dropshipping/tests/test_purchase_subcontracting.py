@@ -559,6 +559,44 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon, TestStock
         self.assertEqual(len(dropship_po), 1, 'A single PO should be created for the dropshipped component')
         self.assertEqual(dropship_po.order_line.product_id, (self.comp1 | self.comp2comp))
 
+    def test_dropship_po_with_several_subcontracted_products(self):
+        """ Confirm a dropship PO with two subcontracted products whose component
+        is dropshipped to the subcontractor: the dropship picking must keep the
+        subcontractor, so that the MOs and the component RFQ know it too. """
+        self.bom.bom_line_ids[1].unlink()
+        self.comp1.route_ids = [Command.link(self.env.ref('stock_dropshipping.route_drop_shipping').id)]
+        finished2 = self.env['product.product'].create({'name': 'finished2', 'is_storable': True})
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': finished2.product_tmpl_id.id,
+            'type': 'subcontract',
+            'subcontractor_ids': [Command.link(self.subcontractor_partner1.id)],
+            'bom_line_ids': [Command.create({'product_id': self.comp1.id, 'product_qty': 1})],
+        })
+        dropship_picking_type = self.env['stock.picking.type'].search([
+            ('company_id', '=', self.env.company.id),
+            ('default_location_src_id.usage', '=', 'supplier'),
+            ('default_location_dest_id.usage', '=', 'customer'),
+        ], order='sequence', limit=1)
+        po = self.env['purchase.order'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'picking_type_id': dropship_picking_type.id,
+            'dest_address_id': self.env['res.partner'].create({'name': 'customer'}).id,
+            'order_line': [
+                Command.create({'product_id': product.id, 'product_qty': 1.0})
+                for product in self.finished | finished2
+            ],
+        })
+        po.button_confirm()
+
+        subcontractor = self.subcontractor_partner1.commercial_partner_id
+        self.assertRecordValues(po.picking_ids, [{'partner_id': self.subcontractor_partner1.id}])
+        self.assertRecordValues(po.picking_ids._get_subcontract_production(), [
+            {'subcontractor_id': subcontractor.id},
+            {'subcontractor_id': subcontractor.id},
+        ])
+        dropship_po = self.env['purchase.order'].search([('partner_id', '=', self.vendor.id)])
+        self.assertEqual(dropship_po.dest_address_id, subcontractor)
+
     def test_avco_dropship_subcontracting_bill_price_difference(self):
         """
         Check that posting a vendor bill after a dropship subcontracting delivery updates the
