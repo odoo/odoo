@@ -1571,7 +1571,7 @@ export class SetDescriptionAction extends BuilderAction {
     isApplied({ editingElement: fieldEl, value }) {
         const description = fieldEl.querySelector(".s_website_form_field_description");
         if (getFieldType(fieldEl) !== "boolean") {
-            return !!description;
+            return !!description && !description.classList.contains("d-none");
         } else {
             return getDescriptionPosition(fieldEl) === value;
         }
