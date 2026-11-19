@@ -78,7 +78,7 @@
         <field name="number_of_days">12</field>
         <field name="employee_id" ref="hr.employee_admin"/>
         <field name="state">confirm</field>
-        <field name="date_from" eval="time.strftime('%Y-01-01')"/>
+        <field name="date_from" eval="(datetime.today() - relativedelta(months=1)).strftime('%Y-01-01')"/>
         <field name="date_to" eval="time.strftime('%Y-12-31')"/>
     </record>
     <function model="hr.leave.allocation" name="action_approve">
@@ -135,7 +135,7 @@
         <field name="employee_id" ref="hr.employee_al"/>
         <field name="state">confirm</field>
         <field name="date_from" eval="time.strftime('%Y-01-01')"/>
-        <field name="date_to" eval="time.strftime('%Y-12-31')"/>
+        <field name="date_to" eval="(datetime.today() + relativedelta(months=1)).strftime('%Y-12-31')"/>
     </record>
 
     <record id="hr_holidays_allocation_pl_al" model="hr.leave.allocation">
@@ -193,8 +193,8 @@
         <field name="number_of_days">20</field>
         <field name="employee_id" ref="hr.employee_mit"/>
         <field name="state">confirm</field>
-        <field name="date_from" eval="time.strftime('%Y-01-01')"/>
-        <field name="date_to" eval="time.strftime('%Y-12-31')"/>
+        <field name="date_from" eval="(datetime.today() - relativedelta(months=1)).strftime('%Y-01-01')"/>
+        <field name="date_to" eval="(datetime.today() + relativedelta(months=1)).strftime('%Y-12-31')"/>
     </record>
     <function model="hr.leave.allocation" name="action_approve">
         <value eval="[ref('hr_holidays_allocation_cl_mit')]"/>
@@ -325,7 +325,7 @@
         <field name="number_of_days">20</field>
         <field name="employee_id" ref="hr.employee_niv"/>
         <field name="state">confirm</field>
-        <field name="date_from" eval="time.strftime('%Y-01-01')"/>
+        <field name="date_from" eval="(datetime.today() - relativedelta(months=1)).strftime('%Y-01-01')"/>
         <field name="date_to" eval="time.strftime('%Y-12-31')"/>
     </record>
 
