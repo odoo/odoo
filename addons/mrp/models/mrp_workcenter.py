@@ -142,7 +142,7 @@ class MrpWorkcenter(models.Model):
             return load_data
 
         result = self.env['mrp.workorder']._read_group(
-            [('workcenter_id', 'in', self.ids), ('state', 'in', ('pending', 'waiting', 'ready', 'progress')),
+            [('workcenter_id', 'in', self.ids), ('state', 'in', ('blocked', 'ready', 'progress')),
              ('production_date', '>=', date_start), ('production_date', '<=', date_stop)],
             ['workcenter_id', 'production_date:week'], ['duration_expected:sum'])
         for r in result:
