@@ -1058,7 +1058,7 @@ class SaleOrder(models.Model):
             "state",
         ])
 
-        accessible_orders = self.env['sale.order']._search([])
+        accessible_orders = self.env["sale.order"]._search([])
 
         result = self.env.execute_query(
             SQL(
@@ -1388,15 +1388,27 @@ class SaleOrder(models.Model):
                     ]
             elif line.selected_combo_items:
                 selected_combo_items = json.loads(line.selected_combo_items)
-                if selected_combo_items and len(selected_combo_items) != len(
-                    line.product_template_id.sudo().combo_ids
-                ):
-                    raise ValidationError(
-                        line.env._(
-                            "The number of selected combo items must match the number of available"
-                            " combo choices."
+                if selected_combo_items:
+                    for combo in line.product_template_id.sudo().combo_ids:
+                        combo_item_ids = combo.combo_item_ids.ids
+                        selected_qty = sum(
+                            item["selected_combo_item_qty"]
+                            for item in selected_combo_items
+                            if item["combo_item_id"] in combo_item_ids
                         )
-                    )
+                        # `included_qty` is 0 for POS upsell combos; require 1 item in Sales instead.
+                        included_qty = combo.included_qty or 1
+                        if selected_qty != included_qty:
+                            raise ValidationError(
+                                self.env._(
+                                    "The number of selected items for combo '%(combo)s' "
+                                    "(%(selected_qty)s) must match the included quantity "
+                                    "(%(included_qty)s).",
+                                    combo=combo.name,
+                                    selected_qty=selected_qty,
+                                    included_qty=included_qty,
+                                )
+                            )
 
                 # Delete any existing combo item lines.
                 delete_commands = [
@@ -1406,8 +1418,10 @@ class SaleOrder(models.Model):
                 create_commands = [
                     Command.create({
                         "product_id": combo_item["product_id"],
-                        "product_uom_qty": line.product_uom_qty,
+                        "product_uom_qty": line.product_uom_qty
+                        * combo_item["selected_combo_item_qty"],
                         "combo_item_id": combo_item["combo_item_id"],
+                        "selected_combo_item_qty": combo_item["selected_combo_item_qty"],
                         "product_no_variant_attribute_value_ids": [
                             Command.set(combo_item["no_variant_attribute_value_ids"])
                         ],
@@ -1445,14 +1459,17 @@ class SaleOrder(models.Model):
             ):
                 lines_to_sync = combo_item_lines.filtered(
                     lambda cil: (
-                        cil.product_uom_qty != line.product_uom_qty or cil.discount != line.discount
+                        cil.product_uom_qty != line.product_uom_qty * cil.selected_combo_item_qty
+                        or cil.discount != line.discount
                     )
                 )
                 if lines_to_sync:
-                    lines_to_sync.update({
-                        "product_uom_qty": line.product_uom_qty,
-                        "discount": line.discount,
-                    })
+                    for combo_item_line in lines_to_sync.sudo():
+                        combo_item_line.update({
+                            "product_uom_qty": line.product_uom_qty
+                            * combo_item_line.selected_combo_item_qty,
+                            "discount": line.discount,
+                        })
 
     # === CRUD METHODS ===#
 

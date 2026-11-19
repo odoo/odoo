@@ -97,7 +97,7 @@ class SaleOrder(models.Model):
     def _cart_update_order_line(self, order_line, quantity, **kwargs):
         old_qty = order_line.product_uom_qty
 
-        updated_line = super()._cart_update_order_line(order_line, quantity, **kwargs)
+        updated_line, warning = super()._cart_update_order_line(order_line, quantity, **kwargs)
 
         # Remove event registrations on quantity decrease.
         if (
@@ -118,7 +118,7 @@ class SaleOrder(models.Model):
             )
             attendees.action_cancel()
 
-        return updated_line
+        return updated_line, warning
 
     def _filter_can_send_abandoned_cart_followup(self):
         # Prevent carts with expired/sold out tickets from being subject of reminder emails

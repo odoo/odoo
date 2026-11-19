@@ -9,7 +9,6 @@ class ProductCombo(models.Model):
     _inherit = ['product.combo', 'pos.load.mixin']
 
     qty_max = fields.Integer(string="Maximum quantity", default=1, help="Maximum number of items to select in the combo.")
-    included_qty = fields.Integer(string="Included", default=1, help="Number of free items included in the combo.")
     is_upsell = fields.Boolean(string="Is Upsell", default=False, help="Indicates if the combo is an upsell to the customer. This can be compared to a minimum quantity of 0.")
 
     @api.model
@@ -38,17 +37,23 @@ class ProductCombo(models.Model):
         if not self.is_upsell and self.included_qty == 0:
             self.included_qty = 1
 
+    @api.onchange('qty_max', 'included_qty')
+    def _onchange_included_qty_adjust_qty_max(self):
+        for combo in self:
+            if combo.included_qty > combo.qty_max:
+                combo.qty_max = combo.included_qty
+
     @api.constrains('qty_max')
     def _check_qty_max(self):
         if any(combo.qty_max < 1 for combo in self):
             raise ValidationError(_("The maximum quantity of a combo must be greater or equal to 1."))
 
-    @api.constrains('included_qty')
+    @api.constrains('included_qty', 'is_upsell')
     def _check_included_qty(self):
-        if any(combo.included_qty < 1 and not combo.is_upsell for combo in self):
-            raise ValidationError(_("The included quantity of a combo must be greater or equal to 1."))
-        if any(combo.is_upsell and combo.included_qty != 0 for combo in self):
-            raise ValidationError(_("The included quantity of an upsell combo must be equal to 0."))
+        upsell_combos = self.filtered(lambda combo: combo.is_upsell)
+        if any(combo.included_qty != 0 for combo in upsell_combos):
+            raise ValidationError(_("The free quantity of an upsell combo must be equal to 0."))
+        super(ProductCombo, self - upsell_combos)._check_included_qty()
 
     @api.constrains('qty_max', 'included_qty')
     def _check_qty_max_greater_than_included_qty(self):

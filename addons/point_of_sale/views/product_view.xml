@@ -40,6 +40,7 @@
         <field name="name">Combo Choices</field>
         <field name="res_model">product.combo</field>
         <field name="view_id" ref="product.product_combo_view_tree"/>
+        <field name="context">{'is_from_pos': True}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Add combo choices

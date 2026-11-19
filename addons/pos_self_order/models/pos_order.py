@@ -550,8 +550,8 @@ class PosOrder(models.Model):
 
             for line in child_lines:
                 qty_per_line = line.qty / line.combo_parent_id.qty if line.combo_parent_id.qty else line.qty
-                qty_free = max(0, max_free - free_count)
-                free_qty = min(qty_per_line, qty_free)
+                included_qty = max(0, max_free - free_count)
+                free_qty = min(qty_per_line, included_qty)
                 extra_qty = qty_per_line - free_qty
 
                 if free_qty > 0:

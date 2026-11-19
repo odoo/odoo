@@ -61,6 +61,8 @@ class SaleComboConfiguratorController(Controller):
                 {
                     "id": combo.id,
                     "name": combo.name,
+                    # `included_qty` is 0 for POS upsell combos; treat them as regular combos.
+                    "included_qty": combo.included_qty or 1,
                     "combo_items": [
                         self._get_combo_item_data(
                             combo,
@@ -158,6 +160,8 @@ class SaleComboConfiguratorController(Controller):
             "is_preselected": is_preselected,
             "is_selected": bool(selected_combo_item) or is_preselected,
             "is_configurable": is_configurable,
+            # Default quantity for a pre-selected item; fall back to 1 for upsell combos.
+            "quantity": selected_combo_item.get("quantity", combo.included_qty or 1),
             "product": {
                 "id": combo_item.product_id.id,
                 "product_tmpl_id": combo_item.product_id.product_tmpl_id.id,
