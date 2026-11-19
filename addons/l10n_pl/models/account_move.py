@@ -89,9 +89,6 @@ class AccountMove(models.Model):
         for move in self:
             move.l10n_pl_show_mpp_warning = move._l10n_pl_is_mpp_mandatory() and move.l10n_pl_mpp == 'no_mpp'
 
-    def _get_accounting_date_source(self):
-        return (self.country_code == 'PL' and self.taxable_supply_date) or super()._get_accounting_date_source()
-
     def _get_invoice_currency_rate_date(self):
         return (self.country_code == 'PL' and self.taxable_supply_date) or super()._get_invoice_currency_rate_date()
 

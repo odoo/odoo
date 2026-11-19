@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
+from babel.dates import get_month_names
 import calendar
 from collections import Counter, defaultdict
 from collections.abc import Mapping
@@ -6257,6 +6258,17 @@ class AccountMove(models.Model):
                     "The entry is using taxes (%(tax_names)s) from a different company.",
                     tax_names=format_list(self.env, mismatched_taxes.mapped('display_name'))
                 ))
+
+            if move.taxable_supply_date and move.company_id.tax_lock_date:
+                tax_lock_violated = move.company_id._get_lock_date_violations(
+                    move.taxable_supply_date, fiscalyear=False, sale=False, purchase=False, tax=True, hard=False
+                )
+                if tax_lock_violated:
+                    locale = self.env.context.get('lang') or 'en_US'
+                    validation_msgs.add(self.env._(
+                        "This invoice covers the %(month)s VAT period, which has already been closed. Check its Taxable Supply Date or set an exception to the tax lock date.",
+                        month=get_month_names(width='wide', locale=locale).get(move.taxable_supply_date.month)
+                    ))
 
         if validation_msgs:
             msg = "\n".join([line for line in validation_msgs])
