@@ -97,7 +97,7 @@ export class LoyaltyReward extends Base {
         let pointsCost = this.clear_wallet ? points : this.required_points;
         if (this.discount_mode === "per_point") {
             if (this.clear_wallet) {
-                maxDiscount = Math.min(maxDiscount, this.discount * this.required_points);
+                maxDiscount = Math.min(maxDiscount, this.discount * points);
             } else {
                 const affordablePoints =
                     Math.floor(points / this.required_points) * this.required_points;
