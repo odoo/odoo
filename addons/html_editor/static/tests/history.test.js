@@ -1388,6 +1388,18 @@ describe("history properties", () => {
             expect.verifySteps(["apply A", "apply B", "revert B", "revert A"]);
             expect(value.get()).toBe(0);
         });
+        test("restore commits replay the commits they revert in the direction of their type", async () => {
+            const { editor, value } = await setupEditorWithValueHistoryTesting();
+            const history = editor.shared.history;
+            const restore = history.makeSavePoint();
+            value.set(1, "A");
+            history.commit();
+            undo(editor);
+            restore();
+            // Reverting the undo commit reapplies A.
+            expect.verifySteps(["apply A", "revert A", "apply A", "revert A"]);
+            expect(value.get()).toBe(0);
+        });
     });
 });
 
