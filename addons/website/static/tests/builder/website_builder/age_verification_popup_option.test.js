@@ -1,4 +1,5 @@
 import { expect, test } from "@odoo/hoot";
+import { animationFrame, queryOne, setInputRange } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
@@ -12,8 +13,10 @@ test("Age verification popup options works correctly", async () => {
         loadIframeBundles: true,
         loadAssetsFrontendJS: true,
         loadIframeBuilderTemplates: true,
+        interactions: ["website.age_verification_popup_blur"],
     });
-    await contains(":iframe .s_age_verification_popup .modal").click();
+    const modalSelector = ":iframe .s_age_verification_popup .modal";
+    await contains(modalSelector).click();
     expect("[data-label='Display']").toHaveCount(0);
     expect("[data-label='Delay']").toHaveCount(0);
     expect("[data-label='Confirmation'] .dropdown-toggle").toHaveText("Yes or No");
@@ -40,4 +43,26 @@ test("Age verification popup options works correctly", async () => {
     expect(":iframe #verification_error").not.toBeVisible();
     await contains("[data-class-action='d-none'] [data-icon='visibility_off']").click();
     expect(":iframe #verification_error").toBeVisible();
+
+    const backgroundBlurSelector = "[data-label='Background blur'] input[type='range']";
+    const getBlurVariable = () =>
+        queryOne(":iframe body").style.getPropertyValue("--o-age-popup-background-blur");
+    expect(modalSelector).toHaveAttribute("data-blur-background", "true");
+    expect(backgroundBlurSelector).toHaveValue(16);
+    await setInputRange(backgroundBlurSelector, 24);
+    await animationFrame();
+    expect(modalSelector).toHaveAttribute("data-blur-background", "24");
+    expect(getBlurVariable()).toBe("24px");
+
+    await contains(".o_website_builder_sidebar [data-icon='undo']").click();
+    expect(modalSelector).toHaveAttribute("data-blur-background", "true");
+    expect(getBlurVariable()).toBe("");
+    await contains(".o_website_builder_sidebar [data-icon='redo']").click();
+    expect(modalSelector).toHaveAttribute("data-blur-background", "24");
+    expect(getBlurVariable()).toBe("24px");
+
+    await setInputRange(backgroundBlurSelector, 0);
+    await animationFrame();
+    expect(modalSelector).not.toHaveAttribute("data-blur-background");
+    expect(getBlurVariable()).toBe("");
 });
