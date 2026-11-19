@@ -275,3 +275,26 @@ class TestTRNilveraMockedRequests(TestUBLTRCommon):
                 invoice.attachment_ids.raw.startswith(b'%PDF-'),
                 "PDF attachment must contain decoded PDF bytes, not base64 text",
             )
+
+    def test_missing_mersis_and_trade_registry_blocks_send(self):
+        Category = self.env['res.partner.category']
+        mersis_code = Category.create({'name': '0-123456780100019', 'parent_id': self.env.ref('l10n_tr_nilvera_einvoice.res_partner_category_mersisno').id})
+        trade_registry_code = Category.create({'name': '12345', 'parent_id': self.env.ref('l10n_tr_nilvera_einvoice.res_partner_category_ticaretsicilno').id})
+        other_code = Category.create({'name': '123', 'parent_id': Category.create({'name': 'Other'}).id})
+        invoice = self.init_invoice('out_invoice', partner=self.einvoice_partner, amounts=[100], post=True)
+
+        for status, tags, expected_codes_level, expected_verify_level in [
+            ('einvoice', Category, 'danger', None),
+            ('einvoice', other_code, 'danger', None),
+            ('einvoice', mersis_code, None, None),
+            ('einvoice', trade_registry_code, None, None),
+            ('earchive', Category, None, None),
+            ('earchive', other_code, None, None),
+            ('not_checked', Category, None, 'danger'),
+        ]:
+            with self.subTest(status=status, tags=tags.mapped('display_name')):
+                self.company_data['company'].partner_id.l10n_tr_nilvera_customer_status = status
+                self.company_data['company'].partner_id.category_id = tags
+                alerts = self.env['account.move.send.wizard'].with_context(active_model='account.move', active_ids=invoice.ids).create({}).alerts
+                self.assertEqual((alerts.get('tr_companies_missing_required_codes') or {}).get('level'), expected_codes_level)
+                self.assertEqual((alerts.get('tr_companies_not_verified') or {}).get('level'), expected_verify_level)
