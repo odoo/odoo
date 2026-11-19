@@ -70,7 +70,7 @@ export class ClonePlugin extends Plugin {
      *     the viewport), false otherwise
      *   - `activateClone`: true if the option containers of the clone should be
      *     the active ones, false otherwise
-     * @returns {HTMLElement}
+     * @returns {Promise<HTMLElement>}
      */
     async cloneElement(
         el,
