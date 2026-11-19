@@ -2,7 +2,7 @@ import { AWAY_DELAY } from "@mail/core/common/im_status_service";
 import { defineMailModels, start, startServer } from "@mail/../tests/mail_test_helpers";
 
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { advanceTime, freezeTime } from "@odoo/hoot-dom";
+import { advanceTime, click, freezeTime } from "@odoo/hoot-dom";
 
 import { registry } from "@web/core/registry";
 import {
@@ -142,4 +142,23 @@ test("new tab update presence when user comes back from away", async () => {
     await expect.waitForSteps([]);
     localStorage.setItem("presence.lastPresence", Date.now()); // Simulate user presence.
     await expect.waitForSteps(["update_presence", "update_presence"]);
+});
+
+test("im status service doesn't confuse unset inactivity with 0", async () => {
+    mockService("bus_service", {
+        send: (type, payload) => {
+            if (type === "update_presence") {
+                asyncStep(payload.inactivity_period);
+            }
+        },
+    });
+    localStorage.setItem("presence.lastPresence", Date.now() - AWAY_DELAY);
+    const pyEnv = await startServer();
+    pyEnv["res.partner"].write(serverState.partnerId, { im_status: "away" });
+    await start();
+    await waitForSteps([AWAY_DELAY]);
+    await click(document.body);
+    await waitForSteps([0]);
+    await click(document.body);
+    await waitForSteps([]);
 });
