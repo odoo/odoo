@@ -189,7 +189,7 @@ def _mock_deregister_participant(func, self, *args, **kwargs):
     self.env['account.move'].search([
         ('company_id', '=', self.company_id.id),
         ('peppol_message_uuid', '=', f'{self.company_id.id}_demo_vendor_bill'),
-    ]).unlink()
+    ]).with_context(force_delete=True).unlink()
 
     mode_constraint = self.env['ir.config_parameter'].get_param('account_peppol.mode_constraint')
     if 'account_peppol_edi_user' in self._fields:
