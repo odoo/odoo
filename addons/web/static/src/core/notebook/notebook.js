@@ -1,5 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, computed, proxy, signal, t, useOnChange, useProps } from "@odoo/owl";
+import { Component, computed, onMounted, proxy, signal, t, useOnChange, useProps } from "@odoo/owl";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useTabsKeyboardNavigation } from "@web/core/navigation/navigation";
 
@@ -68,7 +67,6 @@ export class Notebook extends Component {
     static template = "web.Notebook";
     props = useProps(notebookProps);
 
-    activePane = signal.ref();
     tabListRef = signal.ref();
 
     setup() {
@@ -89,12 +87,14 @@ export class Notebook extends Component {
                     )
                 ),
         });
-        useLayoutEffect(
-            () => {
-                this.props.onPageUpdate(this.state.currentPage);
-                this.activePane()?.classList.add("show");
-            },
-            () => [this.state.currentPage]
+        // notify the parent of the active page: once when mounted, then on every
+        // change. `useOnChange` untracks the callback, so the signals the parent
+        // happens to read in it don't become dependencies of this notebook.
+        onMounted(() => this.props.onPageUpdate(this.state.currentPage));
+        useOnChange(
+            () => [this.state.currentPage],
+            (currentPage) => this.props.onPageUpdate(currentPage),
+            { initialRun: false }
         );
         // the default page changed: always activate it
         useOnChange(
@@ -131,7 +131,6 @@ export class Notebook extends Component {
             const prom = (async () => this.props.onWillActivatePage(pageIndex))();
             const canProceed = await this.keepLastPageTransition.add(prom);
             if (canProceed !== false) {
-                this.activePane()?.classList.remove("show");
                 this.state.currentPage = pageIndex;
             }
         }
