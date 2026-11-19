@@ -1489,6 +1489,34 @@ class TestLoyalty(TestSaleCouponCommon):
         claimable_rewards = sale_order._get_claimable_rewards()
         self.assertFalse(claimable_rewards.get(self.ewallet))
 
+    def test_once_per_user_code_freed_on_cancel(self):
+        """Cancelling the order that used a once per user code must let the customer use it
+        again, starting with the cancelled order itself once it is reset to quotation."""
+        program = self.env["loyalty.program"].create({
+            "name": "Welcome code",
+            "program_type": "promo_code",
+            "once_per_user": True,
+            "rule_ids": [Command.create({"mode": "with_code", "code": "WELCOME"})],
+            "reward_ids": [Command.create({"discount": 10, "discount_mode": "percent"})],
+        })
+        order = self._create_so(order_line=[Command.create({"product_id": self.product_a.id})])
+        self._apply_promo_code(order, "WELCOME")
+        order.action_confirm()
+        self.assertEqual(program.partner_ids, self.partner)
+
+        order.action_cancel()
+        order.action_draft()
+        self._apply_promo_code(order, "WELCOME")
+        order.action_confirm()
+        self.assertEqual(order.state, "sale")
+        self.assertEqual(program.partner_ids, self.partner)
+
+        other_order = self._create_so(
+            order_line=[Command.create({"product_id": self.product_a.id})],
+        )
+        with self.assertRaises(ValidationError):
+            self._apply_promo_code(other_order, "WELCOME")
+
     @staticmethod
     def _get_reward_amount_tax_included(order):
         return sum(line.price_total for line in order.order_line if line.reward_id)
