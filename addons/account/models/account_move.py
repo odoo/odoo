@@ -6986,6 +6986,11 @@ class AccountMove(models.Model):
             attachments = attachments.filtered(
                 lambda att: not (att.mimetype == 'text/plain' and guess_mimetype(att.raw or b'').endswith('/xml'))
             )
+        main_attachment = self.message_main_attachment_id
+        if not force and main_attachment and not main_attachment.sudo().res_model:
+            # If main attachment was detached from the move (e.g. an image from mail alias): replace it with valid one.
+            force = True
+            attachments = attachments.filtered(lambda att: att.res_model)
         super()._message_set_main_attachment_id(attachments, force=force, filter_xml=filter_xml)
 
     def _get_invoice_report_filename(self, extension='pdf', report=None):
