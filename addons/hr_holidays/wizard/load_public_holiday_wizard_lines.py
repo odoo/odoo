@@ -1,6 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from datetime import UTC, datetime, time
+from zoneinfo import ZoneInfo
+from odoo.tools.date_utils import convert_timezone
 
 
 class ResourceCalendarPublicHolidayWizardLine(models.TransientModel):
@@ -33,3 +36,22 @@ class ResourceCalendarPublicHolidayWizardLine(models.TransientModel):
                 domain = [('country_id', '=', country.id)]
             line.allowed_work_entry_type_ids = allowed_work_entry_types.filtered_domain(domain)
             line.work_entry_type_id = public_holiday_work_entry_types.filtered_domain(domain)
+
+    def _prepare_leave_values(self):
+        self.ensure_one()
+        company = self.company_id
+        company_tz = ZoneInfo(company.tz or 'UTC')
+        create_values = {
+            'name': self.name,
+            'date_from': convert_timezone(datetime.combine(self.start_date, time.min), UTC, company_tz),
+            'date_to': convert_timezone(datetime.combine(self.start_date, time.max), UTC, company_tz),
+            'company_id': company.id,
+        }
+        work_entry_type = self.work_entry_type_id
+        if work_entry_type:
+            create_values.update({
+                'work_entry_type_id': work_entry_type.id,
+                'count_as': work_entry_type.count_as,
+                'elligible_for_accrual_rate': work_entry_type.elligible_for_accrual_rate,
+            })
+        return create_values
