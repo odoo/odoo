@@ -788,7 +788,6 @@ test("Can right-click on message to opens message actions dropdown", async () =>
     expect.verifySteps([]);
     expect(lastOnContextMenuEv.defaultPrevented).toBe(false);
     // Test Pinned Panel right-click doesn't show message actions
-    await contains(".o-mail-MessagingMenu-tab[data-id='channel']:count(1)").click();
     await contains(".o-mail-NotificationItem:has(:text('General')):count(1)").click();
     await waitFor(".o-mail-DiscussContent-threadName:value('General'):count(1)");
     await contains("button[title='Pinned Messages']:count(1)").click();
@@ -2527,6 +2526,23 @@ test("header fits a narrow content area", async () => {
     await animationFrame();
     const content = queryOne(".o-mail-DiscussContent");
     expect(content.scrollWidth).toBe(content.clientWidth);
+});
+
+test("side panel keeps its width next to a long message", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create({
+        body: "A message too long for a single line of the conversation. ".repeat(20),
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await waitFor(`${actionPanel("Members")}:count(1)`); // wait for auto-open of this panel
+    await waitFor(".o-mail-Message:count(1)");
+    expect(queryOne(".o-mail-DiscussContent-panelContainer").offsetWidth).toBe(
+        queryOne(".o-mail-ActionPanel-resizable").offsetWidth
+    );
 });
 
 test("long description does not truncate the parent channel name", async () => {

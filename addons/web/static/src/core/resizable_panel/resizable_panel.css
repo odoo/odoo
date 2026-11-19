@@ -1,28 +1,88 @@
 .o_resizable_panel {
     max-width: 100vw;
-    flex-grow: 0;
 }
 
+/* On the resized edge, without width: it takes no room in the layout. */
 .o_resizable_panel_handle {
-    cursor: col-resize;
+    --o-resizable-panel-grip-outset: 0.125rem;
     z-index: 10;
-    width: 5px;
-}
+    width: 0;
 
-/* Fits a gap-2 next to the panel, to stay clear of a neighbouring scrollbar. */
-.o_resizable_panel_outer_handle {
-    width: 0.5rem;
-
-    /* Only shown when the pointer rests on it, not when it crosses it. */
-    &:hover {
-        transition: opacity 0s 0.25s;
+    /* Leaving most of the scrollbar there free to grab. */
+    &.o_resizable_panel_over_scrollbar {
+        --o-resizable-panel-grip-outset: 0.75rem;
     }
 }
 
-.o_resizable_panel_outer_handle_end {
-    left: 100%;
+/* Next to the side panel, in the flow of its neighbours. */
+.o_resizable_panel_edge {
+    position: relative;
+    flex-shrink: 0;
 }
 
-.o_resizable_panel_outer_handle_start {
-    right: 100%;
+/* Mostly inside the panel, a bit over the separation next to it. */
+.o_resizable_panel_grip {
+    width: 1rem;
+    cursor: col-resize;
+
+    &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        width: 0.25rem;
+        height: 3rem;
+        margin: auto;
+        border-radius: var(--border-radius-pill);
+        background-color: var(--gray-400);
+        opacity: 0;
+    }
+
+    &:hover::after,
+    .o_resizable_panel_resizing > &::after {
+        opacity: 1;
+    }
+}
+
+.o_resizable_panel_grip_start {
+    inset-inline-start: calc(-1 * var(--o-resizable-panel-grip-outset));
+}
+
+.o_resizable_panel_grip_end {
+    inset-inline-end: calc(-1 * var(--o-resizable-panel-grip-outset));
+}
+
+.o_resizable_panel_folded {
+    writing-mode: vertical-rl;
+}
+
+.o_side_panel_toggle {
+    --SidePanelToggle-size: 2.25rem;
+    /* Centered on the line of the folded strip, which starts one spacer away from the outer edge. */
+    --SidePanelToggle-offset: calc(
+        var(--o-bs-spacer-3) + var(--body-line-height) * var(--body-font-size) / 2 -
+            var(--SidePanelToggle-size) / 2
+    );
+
+    width: var(--SidePanelToggle-size);
+    height: var(--SidePanelToggle-size);
+
+    &.o_side_panel_toggle_start {
+        inset-inline-start: var(--SidePanelToggle-offset);
+    }
+
+    &.o_side_panel_toggle_end {
+        inset-inline-end: var(--SidePanelToggle-offset);
+    }
+
+    .oi {
+        transition: rotate 0.2s ease-out;
+
+        &.o_side_panel_toggle_folded {
+            rotate: 180deg;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            transition: none;
+        }
+    }
 }

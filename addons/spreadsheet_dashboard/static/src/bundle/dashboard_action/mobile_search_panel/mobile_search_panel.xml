@@ -13,7 +13,7 @@
                     <div class="o_mobile_search_content">
                         <div class="o_search_panel flex-grow-0 flex-shrink-0 border-end pe-2 pb-5 ps-4 h-100 bg-view overflow-auto">
                             <section t-foreach="this.props.groups" t-as="group" t-key="group.id" class="o_search_panel_section o_search_panel_category">
-                                <header class="o_search_panel_section_header pt-4 pb-2 text-uppercase cursor-default">
+                                <header class="o_search_panel_section_header pt-4 pb-2 text-uppercase text-truncate cursor-default">
                                     <b t-out="group.name"/>
                                 </header>
                                 <ul class="list-group d-block o_search_panel_field">

@@ -4,7 +4,6 @@ import {
     computed,
     onWillStart,
     providePlugins,
-    proxy,
     useEffect,
     useListener,
     useProps,
@@ -13,6 +12,7 @@ import { SpreadsheetComponent } from "@spreadsheet/actions/spreadsheet_component
 import { DashboardShareButton } from "@spreadsheet_dashboard/bundle/dashboard_share_button/dashboard_share_button";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
 import { useService } from "@web/core/utils/hooks";
 import { render } from "@web/owl2/utils";
 import { useSetupAction } from "@web/search/action_hook";
@@ -37,6 +37,7 @@ export class SpreadsheetDashboardAction extends Component {
         MobileFigureContainer,
         DashboardShareButton,
         DashboardSearchBar,
+        ResizablePanel,
     };
     static displayName = _t("Dashboards");
 
@@ -83,8 +84,6 @@ export class SpreadsheetDashboardAction extends Component {
                 dashboardLoader: this.loader.getState(),
             }),
         });
-        /** @type {{ sidebarExpanded: boolean}} */
-        this.state = proxy({ sidebarExpanded: true });
         this.searchBarToggler = useSearchBarToggler();
     }
 
@@ -155,10 +154,6 @@ export class SpreadsheetDashboardAction extends Component {
         const { id, is_favorite } = dashboard.data;
         await this.orm.call("spreadsheet.dashboard", "action_toggle_favorite", [id]);
         dashboard.data.is_favorite = !is_favorite;
-    }
-
-    toggleSidebar() {
-        this.state.sidebarExpanded = !this.state.sidebarExpanded;
     }
 
     get activeDashboardGroupName() {

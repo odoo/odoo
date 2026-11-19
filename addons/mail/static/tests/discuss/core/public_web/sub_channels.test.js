@@ -466,7 +466,6 @@ test("sub thread is available for channel and group, not for chat", async () => 
         "Sub thread for group"
     );
     await contains(".o-mail-ActionPanel button:text('Create'):count(1)").click();
-    await contains(".o-mail-MessagingMenu-tab[data-id='channel']:count(1)").click();
     await contains(".o-mail-NotificationItem:has(:text('Sub thread for group')):count(1)").click();
     await contains(".o-mail-MessagingMenu-tab[data-id='chat']:count(1)").click();
     await contains(".o-mail-NotificationItem:has(:text('Demo')):count(1)").click();
