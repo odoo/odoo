@@ -44,10 +44,12 @@ class AccountEdiXmlPint_My(models.AbstractModel):
         if not supplier.sst_registration_number:
             grouping_key['tax_category_code'] = 'O'
         elif tax_data['tax'].amount != 0:
-            grouping_key['tax_category_code'] = 'T'
+            grouping_key['tax_category_code'] = 'SE' if tax_data['tax'].tax_scope == 'service' else 'SA'
         else:
             grouping_key['tax_category_code'] = 'E'
 
+        # [aligned-ibrp-047] Malaysian tax categories belong to the VAT scheme.
+        grouping_key['scheme_id'] = 'VAT'
         return grouping_key
 
     def _ubl_add_tax_totals_nodes(self, vals):
