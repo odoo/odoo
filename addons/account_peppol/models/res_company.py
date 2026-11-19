@@ -8,7 +8,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import hash_sign, verify_hash_signed
 
 from odoo.addons.account.models.company import PEPPOL_LIST
-from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPING
+from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPING, EXCLUSIVE_PEPPOL_EAS_BY_COUNTRY
 from ..tools.peppol_iap_connector import PeppolIAPConnector
 from ..tools.demo_utils import handle_demo
 
@@ -479,3 +479,16 @@ class ResCompany(models.Model):
         if not tools.config['test_enable'] and not modules.module.current_test:
             self.env.cr.commit()  # the user creation is not idempotent, it now exists and is commited on IAP
         return edi_user
+
+    def _get_peppol_registration_eas(self):
+        """Return the set of EAS codes allowed for Peppol registration of this company."""
+        country_code = self.country_code
+
+        if country_code in EXCLUSIVE_PEPPOL_EAS_BY_COUNTRY:
+            allowed = set(EXCLUSIVE_PEPPOL_EAS_BY_COUNTRY[country_code])
+        else:
+            allowed = self.env['res.partner']._get_available_peppol_eas(country_code) - {'0225'}
+
+        if self._get_peppol_edi_mode() == 'demo':
+            allowed.add('odemo')
+        return allowed

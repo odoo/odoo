@@ -167,3 +167,6 @@ class PeppolConnectorCommon(AccountTestInvoicingCommon):
             yield mock_results
 
         self.assertFalse([url for url in mocks if url not in called_urls], "Some mocks defined are not called at all.")
+
+    def _get_wizard_eas_codes(self):
+        return {eas for eas, _label in self.env['peppol.registration']._get_peppol_eas_selection()}

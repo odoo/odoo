@@ -4,7 +4,7 @@ from stdnum.fr import siret
 
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
-from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPING, DEPRECATED_PEPPOL_EAS
+from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPING, DEPRECATED_PEPPOL_EAS, GENERIC_PEPPOL_EAS
 from odoo.addons.account.models.company import PEPPOL_DEFAULT_COUNTRIES
 
 
@@ -286,15 +286,21 @@ class ResPartner(models.Model):
                                 break
                     partner.peppol_eas = new_eas
 
+    @api.model
+    def _get_available_peppol_eas(self, country_code):
+        """Return the EAS codes selectable for a country, including the generic ones."""
+        available_eas = set(EAS_MAPPING.get(country_code, ())) - DEPRECATED_PEPPOL_EAS
+        return available_eas | GENERIC_PEPPOL_EAS
+
     @api.depends_context('company')
-    @api.depends('company_id', 'peppol_eas')
+    @api.depends('country_code', 'company_id', 'peppol_eas')
     def _compute_available_peppol_eas(self):
         # TO OVERRIDE
         for partner in self:
-            partner.available_peppol_eas = [
-                eas for eas in dict(partner._fields['peppol_eas'].selection)
-                if eas not in DEPRECATED_PEPPOL_EAS or eas == partner.peppol_eas
-            ]
+            available_eas = self._get_available_peppol_eas(partner.country_code)
+            if partner.peppol_eas:
+                available_eas.add(partner.peppol_eas)
+            partner.available_peppol_eas = list(available_eas)
 
     def _build_error_peppol_endpoint(self, eas, endpoint):
         """ This function contains all the rules regarding the peppol_endpoint."""
