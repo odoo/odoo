@@ -66,6 +66,7 @@
                         <i class="oi" data-icon="undo" role="img" aria-hidden="true"/>
                         Reset
                     </button>
+                    <button type="button" class="btn btn-sm btn-link" t-on-click="this.openSearch">Search</button>
                     <button t-if="this.state.type === 'xml'" type="button" class="btn btn-sm btn-link" t-on-click="this.onFormat">Format</button>
                 </div>
                 <span class="o_resource_editor_resource_info" t-out="this.resourceInfo"/>
@@ -112,7 +113,8 @@
                     onChange.bind="this.onEditorChange"
                     markers="this.codeEditorMarkers()"
                     onMarkerClick.bind="this.onMarkerClick"
-                    revealRow="this.revealRow()"/>
+                    revealRow="this.revealRow()"
+                    onEditorReady.bind="this.onEditorReady"/>
             </div>
         </div>
         <ResourceEditorWarningOverlay/>

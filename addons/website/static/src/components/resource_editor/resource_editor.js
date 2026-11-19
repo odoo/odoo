@@ -123,6 +123,7 @@ export class ResourceEditor extends Component {
         this.codeEditorMarkers = computed(() => this.computeCodeEditorMarkers());
         // the row to reveal in the code editor (see `CodeEditorWithGutterMarkers`).
         this.revealRow = signal(null);
+        this.aceEditor = null;
 
         this.viewKey =
             this.website.pageDocument &&
@@ -863,6 +864,17 @@ export class ResourceEditor extends Component {
             this.state.xmlFilter = filter;
         }
         this.loadResources();
+    }
+
+    /**
+     * @param {Object|null} aceEditor
+     */
+    onEditorReady(aceEditor) {
+        this.aceEditor = aceEditor;
+    }
+
+    openSearch() {
+        this.aceEditor?.execCommand("find");
     }
 
     onFormat() {
