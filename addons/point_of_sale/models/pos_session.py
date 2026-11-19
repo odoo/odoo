@@ -1404,8 +1404,13 @@ class PosSession(models.Model):
                 lines = combine_inv_payment_receivable_lines[payment_method] | combine_invoice_receivable_lines.get(payment_method, self.env['account.move.line'])
                 reconciliation_plan.append(lines.filtered(lambda line: not line.reconciled))
 
-            for payment in split_inv_payment_receivable_lines:
-                lines = split_inv_payment_receivable_lines[payment] | split_invoice_receivable_lines.get(payment, self.env['account.move.line'])
+            lines_to_payments = defaultdict(lambda: self.env['pos.payment'])
+            for payment, payment_line in split_inv_payment_receivable_lines.items():
+                lines_to_payments[payment_line] |= payment
+            for payment_line, payments in lines_to_payments.items():
+                lines = payment_line
+                for payment in payments:
+                    lines |= split_invoice_receivable_lines.get(payment, self.env['account.move.line'])
                 reconciliation_plan.append(lines.filtered(lambda line: not line.reconciled))
 
         if reconciliation_plan:
