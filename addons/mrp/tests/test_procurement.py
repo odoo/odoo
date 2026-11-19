@@ -1688,3 +1688,42 @@ class TestProcurement(TestMrpCommon):
         self.assertEqual(child_mo.product_id, self.productB)
         self.assertEqual(mo.picking_ids.move_ids.product_id, self.productB | self.productC)
         self.assertEqual(child_mo.picking_ids.move_ids.product_id, self.productD)
+
+    def test_merge_mo_no_extra_replenishment_from_orderpoint(self):
+        """ Merging confirmed MOs should not trigger the reordering rule of
+        their components for the quantity that is still reserved by the MOs
+        being merged (they are cancelled by the merge). """
+        finished, component = self.productA, self.productB
+        component.route_ids = [Command.set(self.route_manufacture.ids)]
+        bom_finished = self.env['mrp.bom'].create({
+            'product_tmpl_id': finished.product_tmpl_id.id,
+            'bom_line_ids': [Command.create({'product_id': component.id, 'product_qty': 1})],
+        })
+        self.env['stock.warehouse.orderpoint'].create({
+            'location_id': self.stock_location.id,
+            'product_id': component.id,
+            'product_min_qty': 0,
+            'product_max_qty': 0,
+        })
+
+        mos = self.env['mrp.production'].create([
+            {'bom_id': bom_finished.id, 'product_qty': 20},
+            {'bom_id': bom_finished.id, 'product_qty': 10},
+        ])
+        for mo in mos:
+            mo.action_confirm()
+        component_mos = self.env['mrp.production'].search([('product_id', '=', component.id)], order='id')
+        self.assertRecordValues(component_mos, [
+            {'product_qty': 20, 'state': 'confirmed'},
+            {'product_qty': 10, 'state': 'confirmed'},
+        ])
+
+        merged_mo = self.env['mrp.production'].browse(mos.action_merge()['res_id'])
+        self.assertRecordValues(merged_mo, [{'product_qty': 30, 'state': 'confirmed'}])
+        self.assertRecordValues(mos, [{'state': 'cancel'}, {'state': 'cancel'}])
+        # The merge must not replenish the component a second time
+        self.assertEqual(self.env['mrp.production'].search([('product_id', '=', component.id)]), component_mos)
+        self.assertRecordValues(component_mos, [
+            {'product_qty': 20, 'state': 'confirmed'},
+            {'product_qty': 10, 'state': 'confirmed'},
+        ])
