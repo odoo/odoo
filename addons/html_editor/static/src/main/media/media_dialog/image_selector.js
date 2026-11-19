@@ -45,6 +45,14 @@ const newLocal = "img-fluid";
 export class ImageSelector extends FileSelector {
     static mediaSpecificClasses = ["img", newLocal, "o_we_custom_image"];
     static mediaSpecificStyles = ["transform", "width"];
+    static mediaResetStyles = [
+        "width",
+        "transform",
+        "transform-box",
+        "transform-origin",
+        "transform-style",
+        "height",
+    ];
     static mediaExtraClasses = [
         "rounded-circle",
         "rounded",

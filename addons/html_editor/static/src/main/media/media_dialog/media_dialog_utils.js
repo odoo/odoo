@@ -46,6 +46,9 @@ export async function renderMedia({
             const style = oldMediaNode.getAttribute("style");
             if (style) {
                 element.setAttribute("style", style);
+                for (const property of activeTabComponent.mediaResetStyles || []) {
+                    element.style.removeProperty(property);
+                }
             }
         }
         for (const otherTab of Object.keys(availableTabs).filter((key) => key !== activeTab)) {
