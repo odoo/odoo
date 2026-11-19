@@ -182,24 +182,25 @@ For more information, please visit: https://developer.mozilla.org/en-US/docs/Web
                     </div>
                 </div>
 
-                <div class="mb-3 field-login">
-                    <label for="login" class="form-label d-flex justify-content-between">Email</label>
-                    <input type="text" placeholder="Enter your email" name="login" t-att-value="login" id="login" class="form-control" required="required" autocapitalize="off" autocomplete="username"/>
+                <div class="mb-3 field-login d-flex flex-wrap align-items-baseline">
+                    <label for="login" class="form-label order-first flex-grow-1">Email</label>
+                    <input type="text" placeholder="Enter your email" name="login" t-att-value="login" id="login" class="form-control w-100" required="required" autocapitalize="off" autocomplete="username" t-att-autofocus="'' if not login else None" t-att-aria-invalid="'true' if error else None" t-att-aria-describedby="'login-error-message' if error else None"/>
                 </div>
 
-                <div class="o_caps_lock_warning">
-                    <div class="d-flex justify-content-between align-items-start">
+                <div class="o_caps_lock_warning d-flex flex-wrap align-items-baseline">
+                    <div class="order-first flex-grow-1">
                         <label for="password" class="form-label">Password</label>
                     </div>
-                    <div class="input-group mb-1">
+                    <div class="input-group mb-1 w-100">
                         <input type="password" placeholder="Enter your password" name="password" id="password" class="form-control" required="required" autocomplete="current-password" t-att-autofocus="'autofocus' if login else None" maxlength="4096"/>
-                        <button type="button" class="btn btn-sm border border-start-0 o_show_password" aria-label="Show password">
-                            <i class="oi" data-icon="visibility" aria-hidden="true"/>
+                        <div class="o_show_password_status visually-hidden" aria-live="polite"></div>
+                        <button type="button" class="btn btn-sm border border-start-0 o_show_password" aria-controls="password" aria-label="Show password">
+                            <i class="oi" data-icon="visibility" role="img" aria-hidden="true" />
                         </button>
                     </div>
                 </div>
 
-                <p class="alert alert-danger" t-if="error" role="alert">
+                <p id="login-error-message" class="alert alert-danger" t-if="error" role="alert">
                     <t t-out="error"/>
                 </p>
                 <p class="alert alert-success" t-if="message" role="status">
