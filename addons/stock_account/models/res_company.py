@@ -1,7 +1,7 @@
 from collections import defaultdict
 from datetime import datetime
 
-from odoo import _, fields, models
+from odoo import _, fields, models, api
 from odoo.fields import Domain
 
 
@@ -14,6 +14,18 @@ class ResCompany(models.Model):
         selection_add=[('fifo', "First In First Out (FIFO)")],
         ondelete={'fifo': 'set default'},
     )
+    valuation_account_id = fields.Many2one(
+        'account.account',
+        string='Cost of Production',
+        domain=[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'asset_cash', 'liability_credit_card'))],
+        help="Expense account used to re-qualify products removed from stock and sent to this location",
+    )
+
+    def _get_default_valuation_account(self):
+        return self.env['account.account'].search([
+            *self.env['account.account']._check_company_domain(self),
+            ('code', '=like', '110400%'),
+        ], limit=1)
 
     def write(self, vals):
         companies = self.filtered(lambda c: c.cost_method != vals['cost_method']) if 'cost_method' in vals else []
