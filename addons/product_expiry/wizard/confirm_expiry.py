@@ -42,12 +42,16 @@ class ConfirmExpiry(models.TransientModel):
         return True
 
     def process_no_expired(self):
-        """ Don't process for concerned pickings (ones with expired lots), but
-        process for all other pickings (in case of multi). """
-        # Remove `self.pick_ids` from `button_validate_picking_ids` and call
-        # `button_validate` with the subset (if any).
-        pickings_to_validate = self.env['stock.picking'].browse(self.env.context.get('button_validate_picking_ids'))
-        pickings_to_validate = pickings_to_validate - self.picking_ids
+        """ Remove the expired move lines and confirm the picking. """
+        self.env['stock.move.line'].search([
+            ('picking_id', 'in', self.picking_ids.ids),
+            ('lot_id', 'in', self.lot_ids.ids),
+        ]).unlink()
+        pickings_to_validate = self.env['stock.picking'].browse(
+            self.env.context.get('button_validate_picking_ids')
+        ) or self.picking_ids
         if pickings_to_validate:
-            return pickings_to_validate.with_context(skip_expired=True).button_validate()
+            ctx = dict(self.env.context, skip_expired=True)
+            ctx.pop('default_lot_ids', None)
+            return pickings_to_validate.with_context(ctx).button_validate()
         return True

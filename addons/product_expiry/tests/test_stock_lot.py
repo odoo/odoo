@@ -760,3 +760,73 @@ class TestStockLot(TestStockCommon):
         ])
         self.assertEqual(len(mail_activity), 1, 'No activity created or more than one activity created when there should be one')
         self.assertEqual(mail_activity.user_id, default_user, "Activity was not assigned to the Default User.")
+
+    def test_process_no_expired_delivery(self):
+        """ Test clicking 'Proceed except for expired one' on the expiry wizard
+        removes the expired move lines and continues validation.
+        """
+        good_lot = self.LotObj.create({
+            'name': 'good-lot',
+            'product_id': self.apple_product.id,
+        })
+        expired_lot = self.LotObj.create({
+            'name': 'expired-lot',
+            'product_id': self.apple_product.id,
+            'expiration_date': datetime.today() - timedelta(days=10),
+        })
+
+        picking_out = self.PickingObj.create({
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+        })
+        move = self.MoveObj.create({
+            'name': self.apple_product.name,
+            'product_id': self.apple_product.id,
+            'product_uom_qty': 8,
+            'product_uom': self.apple_product.uom_id.id,
+            'picking_id': picking_out.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+        })
+        picking_out.action_confirm()
+
+        self.StockPackObj.create([{
+            'picking_id': picking_out.id,
+            'move_id': move.id,
+            'product_id': self.apple_product.id,
+            'product_uom_id': self.apple_product.uom_id.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'quantity': 4,
+            'lot_id': good_lot.id,
+        }, {
+            'picking_id': picking_out.id,
+            'move_id': move.id,
+            'product_id': self.apple_product.id,
+            'product_uom_id': self.apple_product.uom_id.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'quantity': 4,
+            'lot_id': expired_lot.id,
+        }])
+        move.picked = True
+
+        res = picking_out.button_validate()
+        self.assertEqual(res.get('res_model'), 'expiry.picking.confirmation')
+
+        wizard = self.env['expiry.picking.confirmation'].with_context(
+            res['context']
+        ).create({})
+        self.assertIn(expired_lot, wizard.lot_ids)
+
+        res = wizard.process_no_expired()
+        self.assertEqual(res.get('res_model'), 'stock.backorder.confirmation')
+        backorder_wizard = self.env['stock.backorder.confirmation'].with_context(
+            res['context']
+        )
+        Form(backorder_wizard).save().process_cancel_backorder()
+
+        self.assertEqual(picking_out.state, 'done')
+        self.assertEqual(picking_out.move_line_ids.lot_id, good_lot)
+        self.assertEqual(picking_out.move_line_ids.quantity, 4)
