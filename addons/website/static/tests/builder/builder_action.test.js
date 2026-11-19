@@ -21,6 +21,7 @@ import {
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import { BlockTab } from "@html_builder/sidebar/block_tab";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import {
     addActionOption,
     addPlugin,
@@ -44,12 +45,12 @@ test("the editor is frozen while offline", async () => {
     expect(".o_blockUI:not(.o_blockUI_invisible)").toHaveCount(0);
     expect("iframe[data-src^='/website/force/1']").not.toHaveAttribute("inert");
 
-    getService("offline").offline = true;
+    getService(OfflinePlugin).setOffline(true);
     await animationFrame();
     expect(".o_blockUI:not(.o_blockUI_invisible)").toHaveCount(1);
     expect("iframe[data-src^='/website/force/1']").toHaveAttribute("inert");
 
-    getService("offline").offline = false;
+    getService(OfflinePlugin).setOffline(false);
     await animationFrame();
     expect(".o_blockUI:not(.o_blockUI_invisible)").toHaveCount(0);
     expect("iframe[data-src^='/website/force/1']").not.toHaveAttribute("inert");
@@ -57,7 +58,7 @@ test("the editor is frozen while offline", async () => {
 
 test("the editor is not frozen while offline when it is closed", async () => {
     await setupWebsiteBuilder(`<h1> Homepage </h1>`, { openEditor: false });
-    getService("offline").offline = true;
+    getService(OfflinePlugin).setOffline(true);
     await animationFrame();
     expect(".o_blockUI:not(.o_blockUI_invisible)").toHaveCount(0);
     expect("iframe[data-src^='/website/force/1']").not.toHaveAttribute("inert");
