@@ -65,6 +65,7 @@
         <field name="arch" type="xml">
             <form string="Allocation Request">
                 <field name="can_reset" invisible="1"/>
+                <field name="linked_request_ids" invisible="1"/>
                 <field name="can_approve" invisible="1"/>
                 <field name="holiday_type" invisible="1"/>
                 <header>
@@ -175,6 +176,9 @@
                     attrs="{'invisible': ['|', ('can_approve', '=', False), ('state', 'not in', ('confirm','validate'))]}"/>
                 <button string="Mark as Draft" name="action_draft" type="object"
                         attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse'])]}"/>
+                <button string="Edit" name="action_edit" type="object"
+                        attrs="{'invisible': ['|', '|', ('can_approve', '=', False), ('state', '!=', 'validate'), ('linked_request_ids', '!=', [])]}"
+                        confirm="The allocation will go back to 'To Approve' and will have to be validated again."/>
             </xpath>
             <xpath expr="//div[@id='title']" position="replace">
                 <div class="oe_title">
