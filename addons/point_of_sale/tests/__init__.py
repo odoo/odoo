@@ -15,6 +15,7 @@ from . import test_pos_setup
 from . import test_pos_basic_config
 from . import test_pos_products_with_tax
 from . import test_pos_margin
+from . import test_pos_order_line_fp_taxes
 from . import test_pos_other_currency_config
 from . import test_report_pos_order
 from . import test_report_session
