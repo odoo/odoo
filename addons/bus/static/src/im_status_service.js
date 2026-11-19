@@ -56,7 +56,7 @@ export const imStatusService = {
             }
         );
         presence.bus.addEventListener("presence", () => {
-            if (!lastSentInactivity || lastSentInactivity >= AWAY_DELAY) {
+            if (lastSentInactivity === undefined || lastSentInactivity >= AWAY_DELAY) {
                 this.updateBusPresence();
             }
             startAwayTimeout();

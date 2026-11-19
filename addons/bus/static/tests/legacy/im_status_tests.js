@@ -181,3 +181,28 @@ QUnit.test("new tab update presence when user comes back from away", async () =>
     browser.localStorage.setItem("presence.lastPresence", Date.now()); // Simulate user presence.
     await assertSteps(["update_presence", "update_presence"]);
 });
+
+QUnit.test("im status service doesn't confuse unset inactivity with 0", async () => {
+    const env = await makeTestEnv();
+    patchWithCleanup(env.services.bus_service, {
+        send: (type, payload) => {
+            if (type === "update_presence") {
+                assertAlmostEqual(expectedInactivityPeriod, payload.inactivity_period);
+                step("update_presence");
+            }
+        },
+    });
+    patchWithCleanup(env.services.presence, {
+        getLastPresence: () => new Date().getTime() - AWAY_DELAY,
+    });
+    let expectedInactivityPeriod = AWAY_DELAY;
+    env.services.bus_service.start();
+    await assertSteps(["update_presence"]);
+    patchWithCleanup(env.services.presence, { getInactivityPeriod: () => 0 });
+    expectedInactivityPeriod = 0;
+    document.body.click();
+    await assertSteps(["update_presence"]);
+    document.body.click();
+    await nextTick();
+    await assertSteps([]);
+});
