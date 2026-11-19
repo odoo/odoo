@@ -54,8 +54,7 @@ export class RecipientsInputTagsListPopover extends Component {
     }
 
     get isValidEmail() {
-        const value = parseEmail(this.inputValue());
-        const name = value ? value[0] : "";
+        const [name] = parseEmail(this.inputValue());
         return isEmail(name);
     }
 }
