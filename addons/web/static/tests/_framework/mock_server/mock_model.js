@@ -3073,6 +3073,49 @@ export class Model extends Array {
     }
 
     /**
+     * @param {MaybeIterable<number>} idOrIds
+     * @param {Partial<ModelRecord>} values
+     */
+    web_save_offline(idOrIds, values) {
+        const kwargs = getKwArgs(
+            arguments,
+            "ids",
+            "vals",
+            "onchange_fields",
+            "vals_w_readonly",
+            "onchange_spec",
+            "changed_fields",
+            "fields_to_save"
+        );
+        ({ ids: idOrIds, vals: values } = kwargs);
+        const ids = ensureArray(idOrIds);
+        if (kwargs.onchange_fields?.length) {
+            const { value } = this.onchange(
+                ids,
+                { ...kwargs.vals_w_readonly },
+                kwargs.onchange_fields,
+                kwargs.onchange_spec
+            );
+            for (const [fieldName, fieldValue] of Object.entries(value)) {
+                const isFilledX2many =
+                    ["one2many", "many2many"].includes(this._fields[fieldName].type) &&
+                    values[fieldName]?.length;
+                if (
+                    kwargs.fields_to_save?.includes(fieldName) &&
+                    !kwargs.changed_fields?.includes(fieldName) &&
+                    !isFilledX2many
+                ) {
+                    values[fieldName] =
+                        this._fields[fieldName].type === "many2one" && fieldValue
+                            ? fieldValue.id
+                            : fieldValue;
+                }
+            }
+        }
+        return this.web_save(ids, values, {}, undefined, makeKwArgs({ context: kwargs.context }));
+    }
+
+    /**
      * @param {number[]} ids - List of record IDs to update
      * @param {Partial<ModelRecord>[]} values - List of value dicts (same length/order as `ids`)
      * @param {Record<string, any>} specification - Fields to return after save

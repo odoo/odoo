@@ -231,6 +231,53 @@ class Base(models.AbstractModel):
             record = record.browse(next_id)
         return record.web_read(specification)
 
+    def web_save_offline(
+        self,
+        vals,
+        onchange_fields: list[str],
+        vals_w_readonly: dict,
+        onchange_spec: dict[str, dict],
+        changed_fields: list[str],
+        fields_to_save: list[str],
+    ) -> list[dict]:
+        """ Replay of a ``web_save`` scheduled while offline: the onchanges that
+        could not be made at that time are made first, and their values are
+        added to ``vals``, except for the fields that the user changed.
+
+        :param vals: the values to save, as for :meth:`web_save`
+        :param onchange_fields: names of the fields to trigger the onchange of
+        :param vals_w_readonly: the values to make the onchange with, as the
+            web client sends them for an onchange; unlike ``vals``, they
+            include the readonly fields, which the onchange may depend on
+        :param onchange_spec: specification of the fields in the view, as for
+            :meth:`onchange`
+        :param changed_fields: names of the fields changed by the user; the
+            x2many fields that already have a value in ``vals`` are kept too,
+            as the commands of the onchange are relative to that value
+        :param fields_to_save: names of the fields that the view saves, only
+            their values are taken from the onchange (not the readonly ones)
+        :return: the saved record, as :meth:`web_save` returns it for an empty
+            specification (a list with its ``id``)
+        """
+        if onchange_fields:
+            result = self.onchange(dict(vals_w_readonly), onchange_fields, onchange_spec)
+            for fname, value in result.get('value', {}).items():
+                field = self._fields[fname]
+                is_x2many = field.type in ('one2many', 'many2many')
+                if fname not in fields_to_save or fname in changed_fields or (is_x2many and vals.get(fname)):
+                    continue
+                if field.type == 'many2one' and value:
+                    value = value['id']
+                elif is_x2many:
+                    comodel = self.env[field.comodel_name]
+                    for command in value:
+                        if command[0] in (Command.CREATE, Command.UPDATE):
+                            for name, line_value in command[2].items():
+                                if comodel._fields[name].type == 'many2one' and line_value:
+                                    command[2][name] = line_value['id']
+                vals[fname] = value
+        return self.web_save(vals, {})
+
     def web_save_multi(self, vals_list: list[dict], specification: dict[str, dict]) -> list[dict]:
         """
         Save the provided list of values to the current recordset, either by updating
