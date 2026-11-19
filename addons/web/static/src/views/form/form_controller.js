@@ -223,6 +223,15 @@ export class FormController extends Component {
             });
         });
         onWillDestroy(disposeEffect);
+        let disposeOnlineEffect = () => {};
+        onMounted(() => {
+            disposeOnlineEffect = effect(() => {
+                if (!this.offlineService.offline) {
+                    this.model.root.runPendingOnchanges();
+                }
+            });
+        });
+        onWillDestroy(() => disposeOnlineEffect());
 
         onError((error) => {
             const suggestedCompany = error.data?.context?.suggested_company;
