@@ -34,7 +34,9 @@ class SaleOrder(models.Model):
         delivery_line = self.order_line.filtered(lambda l: l.is_delivery)[:1]
         taxes = delivery_line.product_id.taxes_id._filter_taxes_by_company(self.company_id)
         taxes = self.fiscal_position_id.map_tax(taxes)
-        max_discount = reward.discount_max_amount or float('inf')
+        max_discount = reward.currency_id._convert(
+            reward.discount_max_amount, self.currency_id, self.company_id,
+        ) or float('inf')
         return [{
             'name': _('Free Shipping - %s', reward.description),
             'reward_id': reward.id,
