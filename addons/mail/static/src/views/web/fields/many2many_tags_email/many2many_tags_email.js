@@ -17,7 +17,7 @@ export class FieldMany2ManyTagsEmailMany2xAutocomplete extends Many2XAutocomplet
      * @returns {Object}
      */
     getCreationContext(value) {
-        const [name, email] = value ? parseEmail(value) : ["", ""];
+        const [name, email] = parseEmail(value);
         const context = super.getCreationContext(name);
         if (email) {
             context["default_email"] = email;
@@ -94,7 +94,7 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
 
     async quickCreateRecipient(request) {
         const [name, email] = parseEmail(request);
-        const [partnerId] = await this.orm.create("res.partner", [{ name, email }]);
+        const [partnerId] = await this.orm.create("res.partner", [{ name, email: email || null }]);
         return this.props.record.data[this.props.name].addAndRemove({ add: [partnerId] });
     }
 
