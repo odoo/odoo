@@ -8,17 +8,28 @@
             <group name="group1" position="before">
                 <field name="withhold" widget="radio" options="{'horizontal': True}" nolabel="1" invisible="not display_withholding"/>
             </group>
+            <xpath expr="//field[@name='actionable_errors']/.." position="after">
+                <div role="alert" class="alert alert-info" invisible="not withholding_payment_per_document">
+                    One payment will be registered per bill, each with its own withholding.
+                </div>
+            </xpath>
+            <field name="amount" position="attributes">
+                <attribute name="readonly" add="withholding_payment_per_document" separator=" or "/>
+            </field>
+            <field name="communication" position="attributes">
+                <attribute name="readonly" add="withholding_payment_per_document" separator=" or "/>
+            </field>
             <field name="payment_method_line_id" position="attributes">
                 <attribute name="invisible" separator="or" add="withhold == 'withhold'"/>
             </field>
             <xpath expr="//group[@name='group2']/field[@name='installments_switch_html']" position="attributes">
-                <attribute name="invisible" add="withhold == 'withhold'" separator=" or "/>
+                <attribute name="invisible" add="withhold == 'withhold' or withholding_payment_per_document" separator=" or "/>
             </xpath>
             <footer position="before">
                 <notebook name="payment_register_notebook" colspan="2" invisible="withhold == 'payment' or not display_withholding">
                     <page name="withholding_page" string="Withholding">
                         <group>
-                            <field name="withholding_line_ids" nolabel="1" colspan="2">
+                            <field name="withholding_line_ids" nolabel="1" colspan="2" create="not withholding_payment_per_document" delete="not withholding_payment_per_document">
                                 <list editable="bottom">
                                     <field name="source_base_amount_currency" column_invisible="True"/> <!-- Needed for taxes computation -->
                                     <field name="source_base_amount" column_invisible="True"/> <!-- Needed for taxes computation -->
@@ -33,19 +44,22 @@
                                            options="{'placeholder_field': 'placeholder_value'}"
                                            width="92px"/>
                                     <field name="account_id"
+                                           readonly="parent.withholding_payment_per_document"
                                            column_invisible="parent.withholding_hide_tax_base_account"
                                            width="184px"
                                            optional="show"/>
-                                    <field name="base_amount"/>
+                                    <field name="base_amount" readonly="parent.withholding_payment_per_document"/>
                                     <field name="tax_id"
+                                           readonly="parent.withholding_payment_per_document"
                                            options="{'no_open': True, 'no_create': True}"
                                            width="92px"/>  <!-- Tax names tend to be short -->
                                     <field name="analytic_distribution"
                                            widget="analytic_distribution"
+                                           readonly="parent.withholding_payment_per_document"
                                            groups="analytic.group_analytic_accounting"
                                            optional="hide"
                                            width="200px"/> <!-- Can be opened if needed -->
-                                    <field name="amount" sum="Total Withheld Amount"/>
+                                    <field name="amount" sum="Total Withheld Amount" readonly="parent.withholding_payment_per_document"/>
                                 </list>
                             </field>
                         </group>

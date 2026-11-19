@@ -50,6 +50,7 @@ class AccountPaymentRegister(models.TransientModel):
     )
     withholding_payment_account_id = fields.Many2one(related="payment_method_line_id.payment_account_id")
     withholding_hide_tax_base_account = fields.Boolean(compute='_compute_withholding_hide_tax_base_account')
+    withholding_payment_per_document = fields.Boolean(compute='_compute_withholding_payment_per_document')
 
     @api.model
     def default_get(self, fields_list):
@@ -184,6 +185,31 @@ class AccountPaymentRegister(models.TransientModel):
         for wizard in self:
             wizard.withholding_hide_tax_base_account = bool(wizard.company_id.withholding_tax_base_account_id)
 
+    @api.depends('display_withholding', 'withhold', 'line_ids')
+    def _compute_withholding_payment_per_document(self):
+        """Whether to register one payment per document, as their withholding can't be shared by a single payment.
+
+        A payment has a single counterpart line and its withholding lines are grouped by tax: the reconciliation pays the
+        documents in full one by one, and the withholding is shared based on the amount reconciled with each one. This is
+        only correct for a "Withhold and Pay" of documents with the same withholding ratio.
+        """
+        for wizard in self:
+            moves = wizard.line_ids.move_id
+            amount_residual = sum(moves.mapped('amount_residual'))
+            withholding_residual = sum(moves.mapped('withholding_residual_amount_currency'))
+            wizard.withholding_payment_per_document = bool(
+                wizard.display_withholding
+                and len(moves) > 1
+                and any(move.withholding_residual_amount_currency > 0 for move in moves)
+                and (wizard.withhold != 'withhold_pay' or amount_residual and any(
+                    move.currency_id.compare_amounts(
+                        move.withholding_residual_amount_currency,
+                        withholding_residual * move.amount_residual / amount_residual,
+                    )
+                    for move in moves
+                ))
+            )
+
     @api.depends('can_edit_wizard', 'display_withholding', 'withhold')
     def _compute_amount(self):
         super()._compute_amount()
@@ -291,6 +317,29 @@ class AccountPaymentRegister(models.TransientModel):
             del withholding_line_values['placeholder_value']
             payment_vals['withholding_line_ids'].append(Command.create(withholding_line_values))
         return payment_vals
+
+    def _create_payments(self):
+        # EXTEND 'account'
+        if not self.withholding_payment_per_document:
+            return super()._create_payments()
+
+        wizard_values = self._convert_to_write({
+            fname: self[fname]
+            for fname in ('withhold', 'payment_date', 'journal_id', 'payment_method_line_id', 'currency_id', 'partner_bank_id', 'withholding_outstanding_account_id')
+            if self[fname]
+        })
+        names = {line.tax_id: line.name for line in self.withholding_line_ids if line.name}
+        payments = self.env['account.payment']
+        for move_lines in self.line_ids.grouped('move_id').values():
+            wizard = self.with_context(active_model='account.move.line', active_ids=move_lines.ids).create(wizard_values)
+            if wizard.currency_id.is_zero(wizard.amount):
+                continue
+            for line in wizard.withholding_line_ids.filtered(lambda line: line.tax_id in names):
+                line.name = names[line.tax_id]
+            payments |= wizard._create_payments()
+        if not payments:
+            raise UserError(self.env._("There is nothing to register on the selected documents with this option."))
+        return payments
 
     # ----------------
     # Business methods
