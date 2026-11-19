@@ -316,11 +316,11 @@
                 <t t-if="term_line">
                     <TerminOpis>
                         <Ilosc t-out="term_line.nb_days"/>
-                        <Jednostka>Dni</Jednostka>
+                        <Jednostka t-out="'Miesiące' if term_line.delay_type == 'months_after_on_the' else 'Dni'"/>
                         <ZdarzeniePoczatkowe>
                             <t t-if="term_line.delay_type == 'days_after'">Data wystawienia faktury</t>
                             <t t-elif="term_line.delay_type == 'days_after_end_of_month'">Koniec miesiąca</t>
-                            <t t-elif="term_line.delay_type == 'days_after_end_of_next_month'">Koniec następnego miesiąca</t>
+                            <t t-elif="term_line.delay_type == 'months_after_on_the'">Data wystawienia faktury</t>
                             <t t-else="">Data wystawienia faktury</t>
                         </ZdarzeniePoczatkowe>
                     </TerminOpis>

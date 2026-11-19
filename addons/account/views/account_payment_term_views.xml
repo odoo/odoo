@@ -65,12 +65,12 @@
                             <group string="Due Terms">
                                 <field name="line_ids" widget="payment_term_line_ids" nolabel="1" colspan="2">
                                     <list string="Payment Terms" editable="bottom" no_open="True">
-                                        <field name="value_amount"/>
-                                        <field name="value" nolabel="1"/>
-                                        <field name="nb_days" string="After"/>
-                                        <field name="delay_type" nolabel="1"/>
+                                        <field name="value_amount" help=""/>
+                                        <field name="value" string=" " width="70px"/>
+                                        <field name="nb_days" string="After" width="40px" />
+                                        <field name="delay_type" string=" "/>
                                         <field name="display_days_next_month" column_invisible="1"/>
-                                        <field name="days_next_month" width="30px" nolabel="1" invisible="not display_days_next_month"/>
+                                        <field name="days_next_month" width="40px" string="nᵗʰ" invisible="not display_days_next_month"/>
                                     </list>
                                 </field>
                             </group>
