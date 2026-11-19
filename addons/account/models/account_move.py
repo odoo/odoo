@@ -5115,6 +5115,7 @@ class AccountMove(models.Model):
                 source, target = target, source
             return target[list(source).index(tax_rep)]
 
+        AccountTax = self.env['account.tax']
         company = self.company_id
         payment_term_line = self.line_ids.filtered(lambda x: x.display_type == 'payment_term')
         tax_lines = self.line_ids.filtered('tax_repartition_line_id')
@@ -5150,20 +5151,29 @@ class AccountMove(models.Model):
             }
             for line in invoice_lines
         ]
+        AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
+        AccountTax._round_base_lines_tax_details(base_lines, self.company_id)
+
+        # Track the original amounts in both currencies before the discount.
+        for base_line in base_lines:
+            tax_details = base_line['tax_details']
+            base_line['_source_total_excluded_currency'] = tax_details['total_excluded_currency'] + tax_details['delta_total_excluded_currency']
+            base_line['_source_total_excluded'] = tax_details['total_excluded'] + tax_details['delta_total_excluded']
+
+        # Extract the taxes that are not discountable into separated base_lines.
+        def exclude_function(base_line, tax_data):
+            return not tax_data or not tax_data['tax']._can_be_discounted()
+
+        new_base_lines = AccountTax._dispatch_taxes_into_new_base_lines(base_lines, company, exclude_function)
+        base_lines = []
+        for base_line in new_base_lines:
+            base_lines.append(base_line)
+            base_lines += base_line['removed_taxes_data_base_lines']
+
+        # Apply the early payment discount.
         for base_line in base_lines:
             remaining_part_to_consider = (100 - discount_percentage) / 100.0
             base_line['price_unit'] *= remaining_part_to_consider
-            fixed_tax_discount = sum(
-                base_line['tax_ids'].filtered(lambda t:
-                    t.amount_type == 'fixed'
-                    and not t.price_include
-                ).mapped('amount')
-            ) * discount_percentage / 100
-            base_line['price_unit'] -= fixed_tax_discount
-            base_line['tax_ids'] = base_line['tax_ids'].filtered(lambda t:
-                t.amount_type != 'fixed' or t.include_base_amount or t.price_include
-            )
-        AccountTax = self.env['account.tax']
         AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
         AccountTax._round_base_lines_tax_details(base_lines, self.company_id)
         AccountTax._add_accounting_data_in_base_lines_tax_details(base_lines, self.company_id)
@@ -5189,7 +5199,6 @@ class AccountMove(models.Model):
         resulting_delta_tax_details = {}
         for base_line in base_lines:
             tax_details = base_line['tax_details']
-            invoice_line = base_line['record']
 
             grouping_dict = {
                 'partner_id': base_line['partner_id'].id,
@@ -5209,9 +5218,9 @@ class AccountMove(models.Model):
             })
 
             amount_currency = self.currency_id\
-                .round(self.direction_sign * tax_details['total_excluded_currency'] - invoice_line.amount_currency)
+                .round(self.direction_sign * tax_details['total_excluded_currency'] - base_line['_source_total_excluded_currency'])
             balance = self.company_currency_id\
-                .round(self.direction_sign * tax_details['total_excluded'] - invoice_line.balance)
+                .round(self.direction_sign * tax_details['total_excluded'] - base_line['_source_total_excluded'])
 
             base_detail['balance'] += balance
             base_detail['amount_currency'] += amount_currency
@@ -5236,10 +5245,6 @@ class AccountMove(models.Model):
             for tax_line_vals in resulting_delta_tax_details.values():
                 tax_rep = self.env['account.tax.repartition.line'].browse(tax_line_vals['tax_repartition_line_id'])
                 tax = tax_rep.tax_id
-                # New tax lines represent modification brought to tax amount.
-                # Fixed taxes are not modified, should be skipped.
-                if tax.amount_type == 'fixed':
-                    continue
 
                 grouping_dict = {
                     'account_id': tax_line_vals['account_id'],
