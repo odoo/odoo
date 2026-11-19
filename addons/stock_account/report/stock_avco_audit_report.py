@@ -8,7 +8,7 @@ class StockAverageCostReport(models.AbstractModel):
     _description = 'Stock AVCO Justifier'
     _order = 'date desc, id desc'
 
-    date = fields.Date(string='Date', required=True)
+    date = fields.Datetime(string='Date', required=True)
     user_id = fields.Many2one('res.users', string='User', required=True)
     company_id = fields.Many2one('res.company', string='Company', required=True)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id', string='Currency')

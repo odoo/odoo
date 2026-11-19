@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from freezegun import freeze_time
 from unittest.mock import patch
 
@@ -3489,6 +3489,15 @@ class TestStockValuation(TestStockValuationCommon):
                 {'added_value': -100, 'total_quantity': 10, 'total_value': 200, 'avco_value': 20},
             ]
         )
+
+    def test_avco_report_date_in_user_timezone(self):
+        """The AVCO report date must follow the user's timezone, not the UTC day."""
+        # 2026-01-02 02:00 UTC is still 2026-01-01 in Lima (UTC-5)
+        with freeze_time('2026-01-02 02:00:00'):
+            move = self._make_in_move(self.product_avco, 1, 10)
+        groups = self.env['stock.avco.report'].with_context(tz='America/Lima')._read_group(
+            [('id', '=', move.id)], ['date:day'])
+        self.assertEqual(groups, [(datetime(2026, 1, 1),)])
 
     def test_accounting_user_can_reopen_inventory_valuation_report_after_closing(self):
         """Ensure users with accounting privileges but not stock can reopen the Inventory Valuation
