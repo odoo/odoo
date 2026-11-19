@@ -1,5 +1,7 @@
+/* global Sha1 */
+
 import { test, expect, describe } from "@odoo/hoot";
-import { click, queryAllTexts } from "@odoo/hoot-dom";
+import { click, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { setupPosEnv } from "@point_of_sale/../tests/unit/utils";
 import { LoginScreen } from "@point_of_sale/app/screens/login_screen/login_screen";
@@ -36,5 +38,25 @@ describe("pos_login_screen.js", () => {
         await animationFrame();
         // The current cashier (Administrator) is not part of the selection
         expect(queryAllTexts(".selection-item")).toEqual(["A Little Guy", "Employee1"]);
+    });
+    test("Enter typed in the cashier selection does not open it again", async () => {
+        const store = await setupPosEnv();
+        for (const employee of store.models["hr.employee"].getAll()) {
+            employee._pin = Sha1.hash("1234");
+        }
+        store.login = true;
+        await mountWithCleanup(MainComponentsContainer);
+        const comp = await mountWithCleanup(LoginScreen, {});
+        comp.state.pin = "1234";
+        // The screen listens to keypress, which Hoot's helpers no longer dispatch.
+        window.dispatchEvent(new KeyboardEvent("keypress", { key: "Enter" }));
+        await animationFrame();
+        expect(".modal").toHaveCount(1);
+
+        queryFirst(".modal .selection-item").dispatchEvent(
+            new KeyboardEvent("keypress", { key: "Enter", bubbles: true })
+        );
+        await animationFrame();
+        expect(".modal").toHaveCount(1);
     });
 });
