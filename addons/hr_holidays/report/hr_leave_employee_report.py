@@ -37,7 +37,7 @@ class HrLeaveEmployeeReport(models.Model):
     def _table_query(self):
         fetched_leave_field_names, leave_records = self._fetch_leave_data()
         report_records = self._create_report_records_from_leave_records(leave_records, fetched_leave_field_names)
-        self._compute_leave_duration(report_records)
+        self._compute_leave_duration([report_record for report_record in report_records if report_record['number_of_days'] is None])
         return self._generate_report_query(report_records)
 
     def _fetch_leave_data(self):
@@ -45,23 +45,28 @@ class HrLeaveEmployeeReport(models.Model):
             """
             WITH leave_data AS (
                 SELECT
-                    ROW_NUMBER() OVER(ORDER BY employee_id, days_included_in_request) AS id,
+                    ROW_NUMBER() OVER(ORDER BY employee_id, month_start) AS id,
                     id AS leave_id, employee_id, date_from, date_to,
                     work_entry_type_id, state, private_name AS description,
-                    DATE_TRUNC('day', days_included_in_request) AS day_start
+                    number_of_days, number_of_hours,
+                    DATE_TRUNC('month', date_from) = DATE_TRUNC('month', date_to) AS single_month,
+                    month_start
                 FROM hr_leave hl
                 CROSS JOIN LATERAL GENERATE_SERIES(
-                    DATE_TRUNC('day', date_from),
-                    DATE_TRUNC('day', date_to),
-                    INTERVAL '1 day'
-                ) AS days_included_in_request
+                    DATE_TRUNC('month', date_from),
+                    DATE_TRUNC('month', date_to),
+                    INTERVAL '1 month'
+                ) AS month_start   
                 WHERE hl.employee_company_id IN %(company_ids)s
             )
             SELECT
                 id, leave_id, employee_id,
                 work_entry_type_id, state, description,
-                GREATEST(date_from, day_start) AS working_schedule_aligned_date_from,
-                LEAST(date_to, (day_start + INTERVAL '1 day' - INTERVAL '1 second')) AS day_aligned_date_to
+                GREATEST(date_from, month_start) AS working_schedule_aligned_date_from,
+                LEAST(date_to, (month_start + INTERVAL '1 month' - INTERVAL '1 second')) AS month_aligned_date_to,
+                -- A leave within a single month keeps its own duration, only the months of the others are computed.
+                CASE WHEN single_month THEN number_of_days END AS number_of_days,
+                CASE WHEN single_month THEN number_of_hours END AS number_of_hours
             FROM leave_data;
             """,
             company_ids=tuple(self.env.companies.ids),
@@ -90,7 +95,7 @@ class HrLeaveEmployeeReport(models.Model):
         }
         virtual_leaves_data = [{
             'date_from': report_record['working_schedule_aligned_date_from'],
-            'date_to': report_record.pop('day_aligned_date_to'),
+            'date_to': report_record['month_aligned_date_to'],
             'employee_id': report_record['employee_id'],
              **leave_info_by_id[report_record['leave_id']],
         } for report_record in report_records]
