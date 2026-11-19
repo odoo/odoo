@@ -15,5 +15,17 @@
                 </xpath>
             </field>
         </record>
+        <record id="view_account_payment_search_inherit_l10n_pl" model="ir.ui.view">
+            <field name="name">account.payment.search.inherit</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//search" position="inside">
+                    <group expand="0" string="Group By">
+                        <filter string="Verification Status (PL)" name="group_by_verification_status" context="{'group_by': 'l10n_pl_verification_status'}"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
     </data>
 </odoo>
