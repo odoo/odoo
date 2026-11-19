@@ -603,7 +603,10 @@ class PosOrder(models.Model):
                 raise UserError(_('This order has already been paid. You cannot set it back to draft or edit it.'))
 
         list_line = self._create_pm_change_log(vals)
+        # explicit recompute is required for draft order for `fiscal_position_id`
+        fpos_draft_orders = self.filtered(lambda o: o.state == 'draft') if 'fiscal_position_id' in vals else self.browse()
         res = super().write(vals)
+        fpos_draft_orders.lines._compute_tax_ids_after_fiscal_position()
         for order in self:
             if vals.get('payment_ids'):
                 order._compute_prices()

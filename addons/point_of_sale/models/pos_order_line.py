@@ -7,7 +7,7 @@ from markupsafe import Markup
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
-from odoo.tools import float_is_zero
+from odoo.tools import SQL, float_is_zero
 
 
 class PosOrderLine(models.Model):
@@ -52,7 +52,16 @@ class PosOrderLine(models.Model):
         string='Taxes',
         readonly=True,
     )
-    tax_ids_after_fiscal_position = fields.Many2many('account.tax', compute='_get_tax_ids_after_fiscal_position', string='Taxes to Apply')
+    tax_ids_after_fiscal_position = fields.Many2many(
+        comodel_name='account.tax',
+        relation='pos_order_line_account_tax_fpos_rel',
+        column1='pos_order_line_id',
+        column2='account_tax_id',
+        string='Taxes to Apply',
+        compute='_compute_tax_ids_after_fiscal_position',
+        store=True,
+        init_storage='_init_column_tax_ids_after_fiscal_position',
+    )
     product_uom_id = fields.Many2one('uom.uom', string='Product Unit', related='product_id.uom_id')
     currency_id = fields.Many2one('res.currency', related='order_id.currency_id')
     full_product_name = fields.Char('Full Product Name')
@@ -210,10 +219,69 @@ class PosOrderLine(models.Model):
                 self.price_subtotal = taxes['total_excluded']
                 self.price_subtotal_incl = taxes['total_included']
 
-    @api.depends('order_id', 'order_id.fiscal_position_id', 'tax_ids')
-    def _get_tax_ids_after_fiscal_position(self):
+    @api.depends('tax_ids')
+    def _compute_tax_ids_after_fiscal_position(self):
         for line in self:
             line.tax_ids_after_fiscal_position = line.order_id.fiscal_position_id.map_tax(line.tax_ids)
+
+    def _init_column_tax_ids_after_fiscal_position(self):
+        """
+        Fill the relation table in SQL for existing lines, applying the
+        fiscal position tax mapping rules.
+        """
+        self.env.cr.execute(SQL("""
+            WITH line_tax AS (
+                SELECT rel.pos_order_line_id AS line_id,
+                    rel.account_tax_id AS tax_id,
+                    po.fiscal_position_id AS fpos_id
+                FROM account_tax_pos_order_line_rel rel
+                JOIN pos_order_line pol ON pol.id = rel.pos_order_line_id
+                JOIN pos_order po ON po.id = pol.order_id
+            ),
+            fpos_map AS (
+                SELECT fpos_rel.account_fiscal_position_id AS fpos_id,
+                    alt.src_tax_id,
+                    alt.dest_tax_id
+                FROM account_fiscal_position_account_tax_rel fpos_rel
+                JOIN account_tax_alternatives alt ON alt.dest_tax_id = fpos_rel.account_tax_id
+            )
+            -- Keep original taxes when no fiscal position is set.
+            INSERT INTO pos_order_line_account_tax_fpos_rel (pos_order_line_id, account_tax_id)
+            SELECT lt.line_id, lt.tax_id
+            FROM line_tax lt
+            WHERE lt.fpos_id IS NULL
+
+            UNION
+
+            -- Replace mapped taxes with their destination taxes.
+            SELECT lt.line_id, fm.dest_tax_id
+            FROM line_tax lt
+            JOIN fpos_map fm ON fm.fpos_id = lt.fpos_id AND fm.src_tax_id = lt.tax_id
+
+            UNION
+
+            -- Keep unmapped taxes only when they are not restricted to another fiscal position.
+            SELECT lt.line_id, lt.tax_id
+            FROM line_tax lt
+            WHERE lt.fpos_id IS NOT NULL
+            AND NOT EXISTS (
+                    SELECT 1 FROM fpos_map fm
+                    WHERE fm.fpos_id = lt.fpos_id AND fm.src_tax_id = lt.tax_id
+            )
+            AND (
+                    NOT EXISTS (
+                        SELECT 1 FROM account_fiscal_position_account_tax_rel fpos_rel
+                        WHERE fpos_rel.account_tax_id = lt.tax_id
+                    )
+                    OR EXISTS (
+                        SELECT 1 FROM account_fiscal_position_account_tax_rel fpos_rel
+                        WHERE fpos_rel.account_tax_id = lt.tax_id
+                        AND fpos_rel.account_fiscal_position_id = lt.fpos_id
+                    )
+            )
+            ON CONFLICT DO NOTHING
+        """))
+        return False
 
     def _prepare_reference_vals(self):
         return {
