@@ -1061,7 +1061,7 @@ class AccountPayment(models.Model):
             line_vals_list = pay._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals)
             line_ids_commands = []
 
-            liquidity_lines_vals = [x for x in line_vals_list if x['account_id'] == self.outstanding_account_id.id]
+            liquidity_lines_vals = [x for x in line_vals_list if x['account_id'] == pay.outstanding_account_id.id]
             for liquidity_line, newline_val in zip_longest(liquidity_lines, liquidity_lines_vals):
                 if liquidity_line and newline_val:
                     line_ids_commands.append(Command.update(liquidity_line.id, newline_val))
