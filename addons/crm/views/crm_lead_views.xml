@@ -21,14 +21,11 @@
                             invisible="type == 'lead'" readonly="won_status == 'lost' or not active"/>
                     </header>
                     <sheet>
-                        <field name="won_status" invisible="1"/> <!-- drives invisible of the action_set_won_rainbowman button, the action_restore button and 7 more and readonly of stage_id, probability -->
                         <field name="active" invisible="1"/> <!-- drives invisible of the action_set_won_rainbowman button, the action_convert_to_opportunity button and 2 more and readonly of stage_id -->
                         <field name="company_id" invisible="1"/> <!-- used in the python-declared domain of partner_id, team_id, user_id -->
                         <field name="is_rotting" invisible="1"/> <!-- read by the rotting_statusbar_duration widget of stage_id -->
                         <field name="rotting_days" invisible="1"/> <!-- read by the rotting_statusbar_duration widget of stage_id -->
-                        <field name="lang_code" invisible="1"/> <!-- used in the context of partner_id -->
                         <field name="company_currency" invisible="1"/> <!-- currency_field option of the expected_revenue monetary widget -->
-                        <field name="is_automated_probability" invisible="1"/> <!-- drives invisible of the action_set_automated_probability link, the pls_tooltip_button widget and 2 more -->
                         <div class="oe_button_box" name="button_box">
                             <button name="action_schedule_meeting" type="object"
                                 class="oe_stat_button" icon="calendar_today" icon_class="oi-filled"
@@ -103,7 +100,6 @@
                                     </small>
                                 </div>
                                 <div id="probability" class="d-flex" style="width: 8ch;">
-                                    <field name="is_automated_probability" invisible="1"/> <!-- drives invisible of the action_set_automated_probability link, the pls_tooltip_button widget and 2 more -->
                                     <field name="probability" widget="float"
                                         readonly="won_status != 'pending'"/>
                                     <span>%</span>
@@ -153,12 +149,8 @@
                             <group name="lead_partner">
                                 <!-- Preload all the partner's information -->
                                 <!-- common -->
-                                <field name="is_blacklisted" invisible="1"/> <!-- drives invisible of the mail_action_blacklist_remove button -->
-                                <field name="phone_blacklisted" invisible="1"/> <!-- drives invisible of the phone_action_blacklist_remove button -->
                                 <field name="email_state" invisible="1"/> <!-- read by the predictive lead scoring tooltip of the crm form -->
                                 <field name="phone_state" invisible="1"/> <!-- read by the predictive lead scoring tooltip of the crm form -->
-                                <field name="partner_email_update" invisible="1"/> <!-- drives invisible of the oi text -->
-                                <field name="partner_phone_update" invisible="1"/> <!-- drives invisible of the oi text -->
                                 <!-- opportunity -->
                                 <field name="date_conversion" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
 
@@ -263,7 +255,6 @@
                                             <field name="zip" placeholder="ZIP" class="o_address_zip"/>
                                             <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                                         </div>
-                                        <field name="lang_active_count" invisible="1"/> <!-- drives invisible of lang_id -->
                                         <field name="lang_id" invisible="lang_active_count &lt;= 1"
                                             options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                                     </group>
@@ -706,8 +697,6 @@
                         <button name="%(crm.action_lead_mass_mail)d" type="action" string="Email" />
                     </header>
                     <field name="company_id" column_invisible="True"/> <!-- used in the python-declared domain of partner_id, team_id, user_id -->
-                    <field name="date_deadline" column_invisible="True"/> <!-- read by the forecast kanban renderer and the fill temporal service -->
-                    <field name="won_status" column_invisible="True"/> <!-- drives invisible of the Email button -->
                     <field name="phone_sanitized" column_invisible="1"/> <!-- read by the phone widget of phone for the tel: link -->
                     <field name="phone_formatted" column_invisible="1"/> <!-- read by the phone widget of phone for the displayed format -->
                     <field name="create_date" optional="hide"/>

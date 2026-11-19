@@ -10,7 +10,6 @@
                 <attribute name="disable_autofocus">true</attribute>
             </form>
             <group name="down_payment_specification" position="after">
-                <field name="invoicing_timesheet_enabled" invisible="1"/> <!-- drives invisible of the timesheet_invoice_date_range group -->
                 <group
                     name="timesheet_invoice_date_range"
                     invisible="not invoicing_timesheet_enabled or advance_payment_method != 'delivered'">

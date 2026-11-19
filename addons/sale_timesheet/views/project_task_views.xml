@@ -26,9 +26,7 @@
                         <list editable="bottom">
                             <field name="company_id" column_invisible="True"/> <!-- used in the python-declared domain of account_id, allowed_internal_user_ids, documents_folder_id -->
                             <field name="partner_id" column_invisible="True"/> <!-- drives invisible of the billing_employee_rate page -->
-                            <field name="sale_order_id" column_invisible="True"/> <!-- passed as search_default_order_id in the context of sale_line_id -->
                             <field name="employee_id" widget="many2one_avatar_employee" context="{'create_project_employee_mapping': company_id}"/>
-                            <field name="existing_employee_ids" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                             <field name="sale_line_id" column_invisible="parent.id" required="True" options="{'no_create': True}" context="{'search_default_order_id': sale_order_id}"/>
                             <field name="sale_line_id" column_invisible="not parent.id" required="True" groups="!sales_team.group_sale_salesman" options="{'no_create': True}"
                                 context="{'search_default_order_id': sale_order_id}"/>
@@ -77,9 +75,7 @@
                         <form  string="Timesheet Activities">
                             <sheet>
                                 <group>
-                                    <field name="existing_employee_ids" invisible="1"/> <!-- kept loaded for record data though not shown in this list -->
                                     <field name="partner_id" invisible="1"/> <!-- drives invisible of the billing_employee_rate page -->
-                                    <field name="sale_order_id" invisible="1"/> <!-- passed as search_default_order_id in the context of sale_line_id -->
                                     <field name="currency_id" invisible="1"/> <!-- currency_field option of the display_cost monetary widget -->
                                     <field name="employee_id" widget="many2one_avatar_employee" required="1"/>
                                     <field name="sale_line_id" invisible="parent.id" options="{'no_create': True}" context="{'search_default_order_id': sale_order_id}"/>
@@ -158,7 +154,6 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='remaining_hours']" position="after">
                     <field name="sale_line_id" column_invisible="True"/> <!-- drives invisible of remaining_hours_so -->
-                    <field name="remaining_hours_available" column_invisible="True"/> <!-- drives invisible of remaining_hours_so -->
                     <field name="remaining_hours_so" invisible="not sale_line_id or not remaining_hours_available" widget="timesheet_uom" optional="hide"
                         groups="hr_timesheet.group_hr_timesheet_user" column_invisible="not (context.get('allow_billable', True) and context.get('allow_timesheets', True)) or context.get('template_project')"/>
                 </xpath>
@@ -214,8 +209,6 @@
                 </xpath>
                 <xpath expr="//group[@name='project_hours']//div[hasclass('row') and .//field[@name='remaining_hours']]" position="after">
                     <div class="row align-items-center mb-2" groups="hr_timesheet.group_hr_timesheet_user" invisible="not allow_billable or not sale_order_id or not partner_id or not sale_line_id or not remaining_hours_available">
-                        <field name="sale_order_id" invisible="1"/> <!-- drives invisible of the block -->
-                        <field name="remaining_hours_available" invisible="1"/> <!-- drives invisible of the block -->
                         <div id="remaining_hours_so_label" class="col-6 col-md-8">
                             <label class="fw-bold" for="remaining_hours_so"
                                 invisible="remaining_hours_so &lt; 0"/>

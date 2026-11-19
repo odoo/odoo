@@ -6,7 +6,6 @@
         <field name="inherit_id" ref="product.product_template_only_form_view"/>
         <field name="arch" type="xml">
             <group name="upsell" position="inside">
-                <field name="has_configurable_attributes" invisible="1"/> <!-- drives invisible of product_add_mode -->
                 <field name="product_add_mode" invisible="not has_configurable_attributes"/>
             </group>
         </field>
