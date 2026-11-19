@@ -667,6 +667,17 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_cash_rounding_biggest_tax')
 
+    def test_pint_cash_rounding_line_without_tax_category(self):
+        # testing PINT itself, not on an exported file: BIS3 also inherits the EN 16931
+        # since another format could be exluding the line by itself.
+        vals = {'customer': self.partner_be, 'supplier': self.env.company.partner_id}
+        currency = self.env.company.currency_id
+        cash_rounding_line = {'special_type': 'cash_rounding'}
+        product_line = {'special_type': False}
+
+        self.assertTrue(self.env['account.edi.ubl_pint']._ubl_default_tax_category_grouping_key(product_line, None, vals, currency))
+        self.assertFalse(self.env['account.edi.ubl_pint']._ubl_default_tax_category_grouping_key(cash_rounding_line, None, vals, currency))
+
     def test_invoice_tax_currency_code_tax_totals_foreign_currency(self):
         tax_21 = self.percent_tax(21.0)
         product = self._create_product(lst_price=1039.99, taxes_id=tax_21)
