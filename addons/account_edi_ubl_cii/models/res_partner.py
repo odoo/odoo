@@ -2,10 +2,42 @@
 import re
 from stdnum.fr import siret
 
-from odoo import models, fields, api, _
+from odoo import models, fields, api, _, _lt
 from odoo.exceptions import ValidationError
-from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPING, DEPRECATED_PEPPOL_EAS
+from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPING, DEPRECATED_PEPPOL_EAS, GENERIC_PEPPOL_EAS
 from odoo.addons.account.models.company import PEPPOL_DEFAULT_COUNTRIES
+
+
+PEPPOL_ENDPOINT_RULES = {
+    # eas: (pattern_or_callable, example)
+    '0002': (r"^\d{9}$", "123456789"),
+    '0007': (r"^\d{10}$", "1234567890"),
+    '0009': (siret.is_valid, "73282932000074"),
+    '0106': (r"^\d{8}$", "12345678"),
+    '0151': (r"^\d{11}$", "12345678901"),
+    '0184': (r"^\d{8}$", "12345678"),
+    '0188': (r"^\d{13}$", "1234567890123"),
+    '0190': (r"^\d{20}$", "12345678901234567890"),
+    '0192': (r"^\d{9}$", "123456789"),
+    '0195': (r"^(SGUEN)?([0-9]{8,9}[A-Za-z]|[TSRtsr][0-9]{2}[A-Za-z]{2}[0-9]{4}[A-Za-z])$", "201131415A"),
+    '0196': (r"^\d{10}$", "1234567890"),
+    '0208': (r"^\d{10}$", "0239843188"),
+    '0211': (r"^IT\d{11}$", "IT12345678901"),
+    '0216': (r"^0037\d{8}[A-Za-z0-9]{0,5}$", "003712345678"),
+    '0221': (r"^T\d{13}$", "T1234567890123"),
+    '0235': (r"^\d{10}$", "1001234567"),
+    '0240': (r"^\d{11}$", "12345678901"),
+    '0245': (r"^\d{10}$", "1234567890"),
+    '0246': (r"^\d{13}$", "1234567890123"),
+    '9944': (r"^NL\d{9}B\d{2}$", "NL123456789B01"),
+    '9945': (r"^PL\d{10}$", "PL1234567890"),
+}
+
+PEPPOL_ENDPOINT_DESCRIPTIONS = {
+    '0007': _lt("It should contain exactly 10 digits (Company Registry number)."),
+    '0235': _lt("Please enter a valid 10-digit Tax Identification Number (TIN). "
+                "If your business is VAT-registered, this is the first 10 digits of your 15-digit TRN."),
+}
 
 
 class ResPartner(models.Model):
@@ -241,6 +273,9 @@ class ResPartner(models.Model):
             if value.isalnum():
                 value = value.removeprefix(country_code)
 
+        if country_code == 'DK' and field == 'vat' and value:
+            value = value.removeprefix('DK')
+
         # The UAE Peppol participant identifier is the TIN: the first 10 digits of the 15-digit TRN.
         if country_code == 'AE' and field == 'vat' and value:
             value = value[:10]
@@ -286,31 +321,41 @@ class ResPartner(models.Model):
                                 break
                     partner.peppol_eas = new_eas
 
+    @api.model
+    def _get_available_peppol_eas(self, country_code):
+        """Return the EAS codes selectable for a country, including the generic ones."""
+        available_eas = set(EAS_MAPPING.get(country_code, ())) - DEPRECATED_PEPPOL_EAS
+        return available_eas | GENERIC_PEPPOL_EAS
+
     @api.depends_context('company')
-    @api.depends('company_id', 'peppol_eas')
+    @api.depends('country_code', 'company_id', 'peppol_eas')
     def _compute_available_peppol_eas(self):
         # TO OVERRIDE
         for partner in self:
-            partner.available_peppol_eas = [
-                eas for eas in dict(partner._fields['peppol_eas'].selection)
-                if eas not in DEPRECATED_PEPPOL_EAS or eas == partner.peppol_eas
-            ]
+            country_code = partner._deduce_country_code()
+            available_eas = self._get_available_peppol_eas(country_code)
+            if partner.peppol_eas:
+                available_eas = available_eas | {partner.peppol_eas}
+            partner.available_peppol_eas = list(available_eas)
 
     def _build_error_peppol_endpoint(self, eas, endpoint):
-        """ This function contains all the rules regarding the peppol_endpoint."""
-        if eas == '0208' and not re.match(r"^\d{10}$", endpoint):
-            return _("The Peppol endpoint is not valid. The expected format is: 0239843188")
-        if eas == '0009' and not siret.is_valid(endpoint):
-            return _("The Peppol endpoint is not valid. The expected format is: 73282932000074")
-        if eas == '0007' and not re.match(r"^\d{10}$", endpoint):
-            return _("The Peppol endpoint is not valid. "
-                     "It should contain exactly 10 digits (Company Registry number)."
-                     "The expected format is: 1234567890")
-        if eas == '0235' and not re.match(r"^\d{10}$", endpoint):
-            return self.env._("The Peppol endpoint is not valid. "
-                              "Please enter a valid 10-digit Tax Identification Number (TIN). "
-                              "If your business is VAT-registered, this is the first 10 digits of your 15-digit TRN. "
-                              "Expected format: 1001234567.")
+        """ Validate the peppol_endpoint format for the given EAS code. """
+        if not endpoint:
+            return
+        rule = PEPPOL_ENDPOINT_RULES.get(eas)
+        if not rule:
+            return
+        pattern, example = rule
+        is_valid = pattern(endpoint) if callable(pattern) else re.match(pattern, endpoint)
+        if is_valid:
+            return
+        if description := PEPPOL_ENDPOINT_DESCRIPTIONS.get(eas):
+            return _(
+                "The Peppol endpoint is not valid. %(description)s The expected format is: %(example)s",
+                description=description,
+                example=example,
+            )
+        return _("The Peppol endpoint is not valid. The expected format is: %s", example)
 
     @api.model
     def _get_edi_builder(self, invoice_edi_format):

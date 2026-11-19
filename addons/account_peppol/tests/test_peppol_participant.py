@@ -24,6 +24,7 @@ class TestPeppolParticipant(PeppolConnectorCommon):
         })
 
         cls.env.company.write({
+            'country_id': cls.env.ref('base.be').id,
             'peppol_eas': '0208',
             'peppol_endpoint': '0239843188',
             'account_peppol_phone_number': '+32483123456',
@@ -437,3 +438,24 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             'peppol_eas': '0208',
             'peppol_endpoint': '0475646428',
         }])
+
+    def test_available_peppol_eas(self):
+        # Company registration: exclusive country (BE) and France (excludes 0225)
+        be_company = self.env['res.company'].new({'country_id': self.env.ref('base.be').id})
+        self.assertEqual(be_company._get_peppol_registration_eas() - {'odemo'}, {'0208'})
+
+        fr_company = self.env['res.company'].new({'country_id': self.env.ref('base.fr').id})
+        self.assertNotIn('0225', fr_company._get_peppol_registration_eas())
+        self.assertTrue({'0009', '0002', '9957'}.issubset(fr_company._get_peppol_registration_eas()))
+
+        # Partner contact: country schemes + generic schemes, France includes 0225
+        partner = self.env['res.partner']
+        self.assertIn('0225', partner._get_available_peppol_eas('FR'))
+        self.assertIn('0208', partner._get_available_peppol_eas('BE'))
+        self.assertTrue({'0088', '0060', '0199', '0209'}.issubset(partner._get_available_peppol_eas('BE')))
+
+        # Wizard selection is dynamically restricted by company's allowed EAS
+        wizard = self.env['peppol.registration'].create({})
+        wizard_eas = [eas for eas, _ in wizard._get_peppol_eas_selection()]
+        self.assertIn('0208', wizard_eas)
+        self.assertNotIn('0007', wizard_eas)

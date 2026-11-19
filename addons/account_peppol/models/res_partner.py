@@ -67,14 +67,13 @@ class ResPartner(models.Model):
             else:
                 partner.available_peppol_edi_formats = list(dict(self._fields['invoice_edi_format'].selection))
 
-    @api.depends('peppol_eas')
-    def _compute_available_peppol_eas(self):
+    @api.model
+    def _get_available_peppol_eas(self, country_code):
         # EXTENDS 'account_edi_ubl_cii'
-        super()._compute_available_peppol_eas()
-        is_demo = self.env.company._get_peppol_edi_mode() == 'demo'
-        for partner in self:
-            if not is_demo and partner.available_peppol_eas and 'odemo' in partner.available_peppol_eas:
-                partner.available_peppol_eas = [eas for eas in partner.available_peppol_eas if eas != 'odemo']
+        available_eas = super()._get_available_peppol_eas(country_code)
+        if self.env.company._get_peppol_edi_mode() == 'demo':
+            return available_eas | {'odemo'}
+        return available_eas
 
     # -------------------------------------------------------------------------
     # HELPERS
