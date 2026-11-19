@@ -150,9 +150,9 @@ class HrEmployee(models.Model):
             for employee_id, interval in work_intervals.items():
                 if employee_id not in min_dts or not interval._items:
                     continue
-                for start, _stop, _meta in interval._items:
-                    d1 = start.astimezone(UTC).replace(tzinfo=None)
-                    if min_dts[employee_id] < d1:
+                for start, stop, _meta in interval._items:
+                    if min_dts[employee_id] < stop.astimezone(UTC).replace(tzinfo=None):
+                        d1 = max(start.astimezone(UTC).replace(tzinfo=None), min_dts[employee_id])
                         d2 = result.get(employee_id)
                         if not d2 or d1 < d2:
                             result[employee_id] = d1
