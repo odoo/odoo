@@ -1,0 +1,9 @@
+rules:
+  - id: search
+    languages:
+      - python
+    severity: ERROR
+    message: |
+      Semgrep found a match
+    pattern: |
+      (Store.FieldList $X).extend(...), $X.attr(...)
