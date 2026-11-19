@@ -246,21 +246,28 @@ class ResPartner(models.Model):
     def _store_avatar_card_fields(self, res: Store.FieldList):
         res.extend(["name", "partner_share"])
         self._store_avatar_fields(res)
-        res.from_method("_store_im_status_fields", internal=True)
         # sudo: can access avatar card fields of user of accessible partner
         res.one("main_user_id", "_store_avatar_card_fields", sudo=True, version=False)
-        if res.is_for_internal_users():
-            res.extend(["email_normalized", "phone", "tz"])
-            res.attr("email", predicate=lambda p: not p.email_normalized)
+        res.for_internal_users(
+            lambda res: (
+                res.from_method("_store_im_status_fields"),
+                res.extend(["email_normalized", "phone", "tz"]),
+                res.attr("email", predicate=lambda p: not p.email_normalized),
+            ),
+        )
 
     def _store_partner_fields(self, res: Store.FieldList):
         res.extend(["active", "is_company", "name", "partner_share"])
         self._store_avatar_fields(res)
-        res.from_method("_store_im_status_fields", internal=True)
         # sudo: to access portal user of another company in chatter
         res.one("main_user_id", "_store_main_user_fields", sudo=True, version=False)
-        res.extend(["email_normalized", "tz"], internal=True)
-        res.attr("email", predicate=lambda p: not p.email_normalized, internal=True)
+        res.for_internal_users(
+            lambda res: (
+                res.from_method("_store_im_status_fields"),
+                res.extend(["email_normalized", "tz"]),
+                res.attr("email", predicate=lambda p: not p.email_normalized),
+            ),
+        )
 
     @api.readonly
     @api.model
