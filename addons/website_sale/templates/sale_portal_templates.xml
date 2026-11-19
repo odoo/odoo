@@ -23,7 +23,7 @@
             <t t-if="sale_order.with_user(env.user).sudo()._is_reorder_allowed()">
                 <button
                     id="reorder_sidebar_button"
-                    class="btn btn-secondary o_wsale_reorder_button oe_website_sale"
+                    class="btn btn-light o_wsale_reorder_button oe_website_sale"
                     t-att-data-sale-order-id="sale_order.id"
                 >
                     <i class="oi me-1" data-icon="redo" role="img" aria-hidden="true"/>

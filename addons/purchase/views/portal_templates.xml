@@ -114,10 +114,10 @@
               <t t-set="entries">
                   <div class="d-none d-lg-flex flex-column mt-3">
                       <div class="d-flex flex-column gap-2" id="purchase_order_sidebar_button">
-                          <a class="btn btn-light o_print_btn o_portal_invoice_print" t-att-href="order.get_portal_url(report_type='pdf')" id="print_invoice_report" title="Download" role="button" target="_blank">Download</a>
+                          <a class="btn btn-light o_print_btn o_portal_invoice_print" t-att-href="order.get_portal_url(report_type='pdf')" id="print_invoice_report" title="Download" role="button" target="_blank"><i class="oi me-1" data-icon="download" aria-hidden="true"/>Download</a>
                           <button t-if="order._get_edi_builders()" id="portal_connect_software_modal_btn" type="button" class="btn btn-light"
                               data-bs-toggle="modal" data-bs-target="#portal_connect_software_modal">
-                              Connect with your software!
+                              <i class="oi me-1" data-icon="link" aria-hidden="true"/>Connect with your software!
                           </button>
                       </div>
 
@@ -257,7 +257,7 @@
                   </div>
               </div>
               <div class="d-lg-none flex-shrink-0">
-                  <a class="btn btn-secondary o_print_btn o_portal_invoice_print"
+                  <a class="btn btn-light o_print_btn o_portal_invoice_print"
                       t-att-href="order.get_portal_url(report_type='pdf')"
                       title="Download"
                       aria-label="Download"

@@ -377,8 +377,8 @@
                 <t t-set="sidebar_entries">
                     <div class="d-flex flex-column">
                         <div class="d-flex flex-column gap-2">
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target=".modal_partner_assign_interested">I'm interested</button>
-                            <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target=".modal_partner_assign_desinterested">I'm not interested</button>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target=".modal_partner_assign_interested"><i class="oi me-1" data-icon="thumb_up" aria-hidden="true"/>I'm interested</button>
+                            <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target=".modal_partner_assign_desinterested"><i class="oi me-1" data-icon="thumb_down" aria-hidden="true"/>I'm not interested</button>
                         </div>
                         <t t-if="salesperson" t-call="portal.portal_my_contact"
                             _contact_avatar="image_data_uri(salesperson.avatar_128)"
@@ -440,8 +440,8 @@
                             </div>
                         </div>
                         <div class="d-flex d-lg-none flex-wrap gap-2 mt-3">
-                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target=".modal_partner_assign_interested">I'm interested</button>
-                            <button type="button" class="btn btn-sm bg-white border" data-bs-toggle="modal" data-bs-target=".modal_partner_assign_desinterested">I'm not interested</button>
+                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target=".modal_partner_assign_interested"><i class="oi me-1" data-icon="thumb_up" aria-hidden="true"/>I'm interested</button>
+                            <button type="button" class="btn btn-sm bg-white border" data-bs-toggle="modal" data-bs-target=".modal_partner_assign_desinterested"><i class="oi me-1" data-icon="thumb_down" aria-hidden="true"/>I'm not interested</button>
                         </div>
                     </div>
 
@@ -559,7 +559,7 @@
                 <t t-set="sidebar_subtitle"><span t-field="opportunity.probability"/>% probability</t>
                 <t t-set="sidebar_entries">
                     <div class="d-flex flex-column mt-3">
-                        <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target=".modal_edit_opp">Edit Opportunity</button>
+                        <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target=".modal_edit_opp"><i class="oi me-1" data-icon="edit" aria-hidden="true"/>Edit Opportunity</button>
                         <t t-if="salesperson" t-call="portal.portal_my_contact"
                             _contact_avatar="image_data_uri(salesperson.avatar_128)"
                             _contact_name="salesperson.name"

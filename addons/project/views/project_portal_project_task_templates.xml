@@ -178,9 +178,9 @@
                 </t>
                 <t t-set="entries">
                     <div class="d-none d-lg-flex flex-column mt-3">
-                        <div id="task_sidebar_buttons" class="d-flex flex-column gap-2">
+                        <div id="task_sidebar_buttons" class="d-flex flex-column gap-2 mb-4">
                             <a t-foreach="task_link_section" t-as="task_link" class="btn btn-light" role="button"
-                                t-att-href="task_link['access_url']" t-att-target="task_link.get('target', '_self')" t-out="task_link['title']"/>
+                                t-att-href="task_link['access_url']" t-att-target="task_link.get('target', '_self')"><i class="oi me-1" data-icon="link" aria-hidden="true"/><t t-out="task_link['title']"/></a>
                         </div>
                         <div t-if="task.user_ids" id="task_assignees" class="d-flex flex-column gap-1">
                             <hr t-if="task.date_deadline or task_link_section"/>
@@ -249,7 +249,7 @@
                             </div>
                             <div t-if="task_link_section" id="task_mobile_buttons" class="d-flex d-lg-none flex-wrap gap-2 mt-3">
                                 <a t-foreach="task_link_section" t-as="task_link" class="btn btn-light btn-sm" role="button"
-                                    t-att-href="task_link['access_url']" t-att-target="task_link.get('target', '_self')" t-out="task_link['title']"/>
+                                    t-att-href="task_link['access_url']" t-att-target="task_link.get('target', '_self')"><i class="oi me-1" data-icon="link" aria-hidden="true"/><t t-out="task_link['title']"/></a>
                             </div>
                         </div>
                         <div t-if="has_task_body" id="card_body" class="d-flex flex-column gap-4 p-3 p-lg-4 rounded-bottom border-start border-end border-bottom">

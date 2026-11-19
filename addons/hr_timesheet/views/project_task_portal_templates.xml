@@ -6,13 +6,13 @@
             <t t-set="show_portal_timesheets" t-value="timesheets and timesheets[0].env['account.analytic.line']._show_portal_timesheets()"/>
         </xpath>
         <xpath expr="//div[@id='task_sidebar_buttons']" position="inside">
-            <a t-if="timesheets and allow_timesheets and show_portal_timesheets" class="btn btn-light o_print_btn o_project_timesheet_print" t-att-href="task.get_portal_url(report_type='pdf')" title="View Details" role="button" target="_blank">View Details</a>
+            <a t-if="timesheets and allow_timesheets and show_portal_timesheets" class="btn btn-light o_print_btn o_project_timesheet_print" t-att-href="task.get_portal_url(report_type='pdf')" title="View Details" role="button" target="_blank"><i class="oi me-1" data-icon="schedule" aria-hidden="true"/>View Details</a>
         </xpath>
         <xpath expr="//div[@id='task_mobile_buttons']" position="attributes">
             <attribute name="t-if">task_link_section or (timesheets and allow_timesheets and show_portal_timesheets)</attribute>
         </xpath>
         <xpath expr="//div[@id='task_mobile_buttons']" position="inside">
-            <a t-if="timesheets and allow_timesheets and show_portal_timesheets" class="btn btn-light btn-sm o_print_btn o_project_timesheet_print" t-att-href="task.get_portal_url(report_type='pdf')" title="View Details" role="button" target="_blank">View Details</a>
+            <a t-if="timesheets and allow_timesheets and show_portal_timesheets" class="btn btn-light btn-sm o_print_btn o_project_timesheet_print" t-att-href="task.get_portal_url(report_type='pdf')" title="View Details" role="button" target="_blank"><i class="oi me-1" data-icon="schedule" aria-hidden="true"/>View Details</a>
         </xpath>
         <xpath expr="//div[@id='card']" position="after">
             <section t-if="timesheets and allow_timesheets and show_portal_timesheets" id="task_timesheets" class="p-3 p-lg-4 mt-4 rounded-3 border" data-anchor="true">

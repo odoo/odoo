@@ -195,8 +195,9 @@
                                 data-bs-target="#modalaccept"
                                 href="#"
                             > <!-- If paying by link, signing is skipped. -->
-                                <t t-if="sale_order._has_to_be_paid()"> Sign &amp; Pay</t>
-                                <t t-else=""> Accept &amp; Sign</t>
+                                <i class="oi me-1" data-icon="edit_square" aria-hidden="true"/>
+                                <t t-if="sale_order._has_to_be_paid()">Sign &amp; Pay</t>
+                                <t t-else="">Accept &amp; Sign</t>
                             </a>
                             <a
                                 t-elif="sale_order._has_to_be_paid()
@@ -212,6 +213,7 @@
                                 href="#"
                                 t-att-class="'btn btn-primary' if not sale_order.transaction_ids else 'btn btn-light'"
                             >
+                                <i class="oi me-1" data-icon="credit_card" aria-hidden="true"/>
                                 <t t-if="not sale_order.signature
                                              and sale_order._has_to_be_paid()
                                              and not payment_amount"> Accept &amp; Pay</t>
@@ -221,7 +223,7 @@
                                 id="print_invoice_sidebar_button"
                                 class="o_download_pdf d-flex gap-2 flex-lg-column flex-xl-row flex-wrap"
                             >
-                                <a class="btn btn-light o_print_btn o_portal_invoice_print flex-grow-1" t-att-href="sale_order.get_portal_url(report_type='pdf')" id="print_invoice_report" title="View Details" role="button" target="_blank">Download</a>
+                                <a class="btn btn-light o_print_btn o_portal_invoice_print flex-grow-1" t-att-href="sale_order.get_portal_url(report_type='pdf')" id="print_invoice_report" title="View Details" role="button" target="_blank"><i class="oi me-1" data-icon="download" aria-hidden="true"/>Download</a>
                             </div>
                         </div>
 
@@ -454,6 +456,7 @@
                                 data-bs-toggle="modal"
                                 data-bs-target="#modalaccept"
                                 href="#">
+                                <i class="oi me-1" data-icon="edit_square" aria-hidden="true"/>
                                 <t t-if="sale_order._has_to_be_paid()">Sign &amp; Pay</t>
                                 <t t-else="">Accept &amp; Sign</t>
                             </a>
@@ -465,6 +468,7 @@
                                 data-bs-target="#modalaccept"
                                 href="#"
                                 t-att-class="'btn flex-grow-1 ' + ('btn-primary' if not sale_order.transaction_ids else 'btn-light')">
+                                <i class="oi me-1" data-icon="credit_card" aria-hidden="true"/>
                                 <t t-if="not sale_order.signature
                                         and sale_order._has_to_be_paid()
                                         and not payment_amount">Accept &amp; Pay</t>
@@ -472,7 +476,7 @@
                             </a>
                             <button
                                 t-elif="mobile_can_reorder"
-                                class="btn btn-secondary flex-grow-1 o_wsale_reorder_button oe_website_sale"
+                                class="btn btn-light flex-grow-1 o_wsale_reorder_button oe_website_sale"
                                 t-att-data-sale-order-id="sale_order.id">
                                 <i class="oi me-1" data-icon="redo"/>Order Again
                             </button>
@@ -482,7 +486,7 @@
                                 data-bs-toggle="modal"
                                 data-bs-target="#modaldecline"
                                 href="#">
-                                Reject
+                                <i class="oi me-1" data-icon="close" aria-hidden="true"/>Reject
                             </a>
                             <a role="button"
                                 id="mobile_feedback_button"
@@ -689,12 +693,13 @@
                         </div>
                     </div>
                     <div class="d-inline-block d-lg-none">
-                        <a class="btn btn-secondary flex-grow-1 o_print_btn o_portal_invoice_print"
+                        <a class="btn btn-light flex-grow-1 o_print_btn o_portal_invoice_print"
                             t-att-href="sale_order.get_portal_url(report_type='pdf')"
                             title="Download"
+                            aria-label="Download"
                             role="button"
                             target="_blank">
-                            <i class="oi" data-icon="download"/>
+                            <i class="oi" data-icon="download" aria-hidden="true"/>
                         </a>
                     </div>
                 </div>
