@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_form" model="ir.ui.view">
+        <field name="name">res.company.form.inherit.mitid</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <!-- The company data has been authenticated with MitID Erhverv, it can't be changed anymore -->
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="mitid_kyc_status" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="readonly">mitid_kyc_status == 'success'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='street']" position="attributes">
+                <attribute name="readonly">mitid_kyc_status == 'success'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='street2']" position="attributes">
+                <attribute name="readonly">mitid_kyc_status == 'success'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='city']" position="attributes">
+                <attribute name="readonly">mitid_kyc_status == 'success'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='state_id']" position="attributes">
+                <attribute name="readonly">mitid_kyc_status == 'success'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='zip']" position="attributes">
+                <attribute name="readonly">mitid_kyc_status == 'success'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='country_id']" position="attributes">
+                <attribute name="readonly">mitid_kyc_status == 'success'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='vat']" position="attributes">
+                <attribute name="readonly">mitid_kyc_status == 'success'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='company_registry']" position="attributes">
+                <attribute name="readonly">mitid_kyc_status == 'success'</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>
