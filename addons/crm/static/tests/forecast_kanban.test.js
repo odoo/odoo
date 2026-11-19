@@ -1,3 +1,4 @@
+import { FillTemporalPlugin } from "@crm/views/fill_temporal_plugin";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { expect, test } from "@odoo/hoot";
 import { queryAll, queryAllTexts, runAllTimers } from "@odoo/hoot-dom";
@@ -221,7 +222,7 @@ test("Forecast on months, until the end of the year of the latest data", async (
     });
 
     expect(
-        getService("fillTemporalService")
+        getService(FillTemporalPlugin)
             .getFillTemporalPeriod({
                 modelName: "crm.lead",
                 field: {
@@ -280,7 +281,7 @@ test("Forecast on years, until the end of the year of the latest data", async ()
         groupBy: ["date_deadline:year"],
     });
     expect(
-        getService("fillTemporalService")
+        getService(FillTemporalPlugin)
             .getFillTemporalPeriod({
                 modelName: "crm.lead",
                 field: {
