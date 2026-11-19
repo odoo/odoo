@@ -54,3 +54,16 @@ class TestWorkcenterOverview(common.TestMrpCommon):
         self.assertEqual(load_graph_data[self.workcenter_2.id][0]['is_sample_data'], False)
         self.assertListEqual(load_graph_data[self.workcenter_2.id][0]['labels'], list(week_range.values()))
         self.assertListEqual(load_graph_data[self.workcenter_2.id][0]['values'], [[0, 20.0, 40.0, 0, 0], 40.0, [0, 0, 20.0, 0, 0]])
+
+    @freeze_time('2020-03-13')
+    def test_workcenter_load_counts_blocked_workorders(self):
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product_6
+        mo_form.bom_id = self.bom_3
+        mo = mo_form.save()
+        mo.action_confirm()
+        self.assertIn('blocked', mo.workorder_ids.mapped('state'))
+
+        week_range, date_start, date_stop = self.workcenter_1._get_week_range_and_first_last_days()
+        wc_load_data = self.workcenter_1._get_workcenter_load_per_week(week_range, date_start, date_stop)
+        self.assertEqual(sum(wc_load_data[self.workcenter_1].values()), round(sum(mo.workorder_ids.mapped('duration_expected')) / 60, 1))
