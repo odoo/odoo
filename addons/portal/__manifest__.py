@@ -68,12 +68,6 @@ a dependency towards website editing and customization capabilities.""",
         ],
         "portal.assets_chatter_helpers": [
             "portal/static/src/core/common/**/*",
-            "web/static/src/core/debug/*",
-            "web/static/src/core/commands/command_hook.js",
-            "web/static/src/model/**/*",
-            "web/static/src/search/**/*",
-            "web/static/src/views/utils.js",
-            "web/static/src/views/fields/formatters.js",
             "web/static/src/views/fields/file_handler.*",
             "mail/static/src/model/**/*",
             # ensure core.scss before any other style
