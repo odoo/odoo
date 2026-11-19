@@ -123,6 +123,7 @@ export async function clickCancelButton() {
 
 export async function clickForceDoneButton() {
     await clickActionButton("force_done");
+    await confirmDialog("Validate");
 }
 
 export function isQrPopupShown() {

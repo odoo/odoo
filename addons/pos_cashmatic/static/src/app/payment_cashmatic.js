@@ -85,6 +85,10 @@ export class PaymentCashmatic extends PaymentInterface {
         return true;
     }
 
+    onForceDone() {
+        this.cashmaticService.cancelCurrentPayment();
+    }
+
     get amountInserted() {
         return this.cashmaticAmountToPosAmount(this.cashmaticService.state.amountInserted);
     }

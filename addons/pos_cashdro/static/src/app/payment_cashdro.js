@@ -157,6 +157,14 @@ export class PaymentCashdro extends PaymentInterface {
         return promise;
     }
 
+    onForceDone() {
+        this.cashdroService
+            .cancelPayment(this.operationId)
+            .catch((error) =>
+                console.warn(`Cashdro cancellation failed after Force Done: ${error}`)
+            );
+    }
+
     /**
      * @param {string | number} amountInCents
      * @returns {number}
