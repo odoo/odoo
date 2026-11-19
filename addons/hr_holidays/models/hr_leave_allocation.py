@@ -138,6 +138,7 @@ class HrLeaveAllocation(models.Model):
     can_approve = fields.Boolean('Can Approve', compute='_compute_can_approve')
     can_validate = fields.Boolean('Can Validate', compute='_compute_can_validate')
     can_refuse = fields.Boolean('Can Refuse', compute='_compute_can_refuse')
+    can_submit = fields.Boolean('Can Submit', compute='_compute_can_submit')
     type_request_unit = fields.Selection([
         ('hour', 'Hours'),
         ('half_day', 'Half-Day'),
@@ -335,6 +336,13 @@ class HrLeaveAllocation(models.Model):
     def _compute_can_refuse(self):
         for allocation in self:
             allocation.can_refuse = allocation._check_approval_update('refuse', raise_if_not_possible=False)
+
+    @api.depends_context('uid')
+    @api.depends('state', 'employee_id')
+    def _compute_can_submit(self):
+        for allocation in self:
+            allocation.can_submit = allocation.state == 'refuse' \
+                and allocation._check_approval_update('confirm', raise_if_not_possible=False)
 
     @api.depends('employee_id')
     def _compute_department_id(self):
@@ -1080,6 +1088,8 @@ class HrLeaveAllocation(models.Model):
 
         if validation_type == 'no_validation':
             state_result['confirm'].add('validate')
+        if self.employee_id.user_id == self.env.user:
+            state_result['refuse'].add('confirm')
         return state_result
 
     ####################################################
@@ -1226,6 +1236,10 @@ class HrLeaveAllocation(models.Model):
         if invalid_allocations:
             raise UserError(_('Allocation must be "To Approve" in order to approve it.'))
 
+        self.filtered(lambda allocation: allocation.state == 'refuse').write(
+            {'approver_id': False, 'second_approver_id': False}
+        )
+
         allocation_to_approve.write({'state': 'validate1', 'approver_id': current_employee.id})
         allocation_to_validate._action_validate()
         self.activity_update()
@@ -1259,6 +1273,18 @@ class HrLeaveAllocation(models.Model):
         self.activity_update()
         return True
 
+    def action_submit(self):
+        """Submit refused allocations for approval again after editing them.
+
+        :raise UserError: when an allocation is not ``'refuse'``
+        """
+        if any(allocation.state != 'refuse' for allocation in self):
+            raise UserError(self.env._('Only a refused allocation can be submitted again.'))
+        self._check_approval_update('confirm')
+        self.write({'state': 'confirm', 'approver_id': False, 'second_approver_id': False})
+        self.activity_update()
+        return True
+
     def _check_approval_update(self, state, raise_if_not_possible=True):
         """Check that the current user can move the allocations to ``state``.
 
@@ -1280,7 +1306,7 @@ class HrLeaveAllocation(models.Model):
             dict_all_possible_state = allocation._get_next_states_by_state()
             if allocation.state == state:
                 error_message = _('You can\'t do the same action twice.')
-            elif allocation.employee_id == current_employee and \
+            elif not (allocation.state == 'refuse' and state == 'confirm') and allocation.employee_id == current_employee and \
                 allocation.work_entry_type_id.allocation_validation_type != 'no_validation' and not is_administrator:
                 error_message = _('Only a time off Administrator can approve/refuse their own requests.')
             elif state not in dict_all_possible_state.get(allocation.state, {}):
