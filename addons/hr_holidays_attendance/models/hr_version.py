@@ -127,10 +127,12 @@ class HrVersion(models.Model):
                     att_by_range[check_in, work_check_out] = att
 
             # priority-resolve attendance against wt-leave intervals (lower sequence wins)
-            leave_types = {wet for _, _, wet in wt_iv_by_rid.get(rid, [])}
             combined = raw_att + wt_iv_by_rid.get(rid, [])
             for seg_start, seg_stop, wet in self._resolve_attendance_intervals(combined):
-                if wet in leave_types:
+                if any(
+                    leave_start <= seg_start and seg_stop <= leave_stop and leave_wet == wet
+                    for leave_start, leave_stop, leave_wet in wt_iv_by_rid.get(rid, [])
+                ):
                     # wt-leave won; so we skip and let base handle it
                     continue
                 # attendance won: look up the source record (dict miss on split sub-segments,
