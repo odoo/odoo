@@ -8,6 +8,7 @@ from contextlib import suppress
 from datetime import date, datetime
 from functools import partial, wraps
 from itertools import product
+from types import CellType, MethodType
 from typing import Generic, TypeVar
 
 from markupsafe import Markup
@@ -155,6 +156,7 @@ class Store:
     ):
         self.add_depth = 0
         self.already_done = set()
+        self.field_lists_in_progress = defaultdict(list)
         self.data = defaultdict(lambda: defaultdict(dict))
         self.data_id = None
         self.is_executing_operation_queue = False
@@ -196,20 +198,48 @@ class Store:
         """
         if not records:
             return self
-        # call _format_fields before checking identifier to always compare the final shape
-        field_list = self._format_fields(fields, records, fields_params)
-        identifier = Store._deep_freeze((records.env, records, field_list, as_thread))
+        cache = records.env.cr.precommit.data.get("mail.store.field_lists")
+        key = None
+        if cache is not None and isinstance(fields, str):
+            key = (
+                records.env,
+                records._name,
+                records._ids,
+                fields,
+                Store._deep_freeze(fields_params),
+                as_thread,
+            )
+        if key is not None and key in cache:
+            field_list, identifier = cache[key]
+        else:
+            # call _format_fields before checking identifier to always compare the final shape
+            field_list = self._format_fields(fields, records, fields_params)
+            identifier = Store._deep_freeze((records.env, records, field_list, as_thread))
+            if key is not None:
+                cache[key] = field_list, identifier
         if identifier in self.already_done:
             return self
+        records_key = (records.env, records._name, records._ids, as_thread)
+        running_field_lists = self.field_lists_in_progress[records_key]
+        if running_field_lists:
+            code_identifier = Store._deep_freeze(field_list, with_captures=False)
+            if any(
+                Store._deep_freeze(running, with_captures=False) == code_identifier
+                for running in running_field_lists
+            ):
+                return self
         self.already_done.add(identifier)
+        running_field_lists.append(field_list)
         self.add_depth += 1
         try:
             self._add_field_list(field_list, as_thread=as_thread, ignore_empty=ignore_empty)
             return self
         finally:
+            running_field_lists.pop()
             self.add_depth -= 1
             if self.add_depth == 0:
                 self.already_done.clear()
+                self.field_lists_in_progress.clear()
 
     @store_enqueue
     def add_global_values(self, field_fn=None, /, **values):
@@ -582,25 +612,62 @@ class Store:
         return record.id
 
     @staticmethod
-    def _deep_freeze(obj):
+    def _deep_freeze(obj, with_captures=True):
         """Recursively convert a data structure into an immutable version that can be hashed and
-        compared for identity."""
+        compared for identity. Without captures, a function counts by its code only."""
         if isinstance(obj, (Store.FieldList, Store.Attr, Store.TargetBlock)):
-            return Store._deep_freeze(obj._identity())
+            return Store._deep_freeze(obj._identity(), with_captures)
         if isinstance(obj, dict):
             return (
                 "__dict__",
-                frozenset((Store._deep_freeze(k), Store._deep_freeze(v)) for k, v in obj.items()),
+                frozenset(
+                    (Store._deep_freeze(k, with_captures), Store._deep_freeze(v, with_captures))
+                    for k, v in obj.items()
+                ),
             )
         if isinstance(obj, list):
-            return ("__list__", tuple(Store._deep_freeze(i) for i in obj))
+            return ("__list__", tuple(Store._deep_freeze(i, with_captures) for i in obj))
         if isinstance(obj, tuple):
-            return tuple(Store._deep_freeze(i) for i in obj)
+            return tuple(Store._deep_freeze(i, with_captures) for i in obj)
         if isinstance(obj, set):
-            return frozenset(Store._deep_freeze(i) for i in obj)
+            return frozenset(Store._deep_freeze(i, with_captures) for i in obj)
+        if isinstance(obj, models.BaseModel):
+            return ("__records__", obj.env, obj._name, obj._ids)
+        if with_captures and isinstance(obj, MethodType):
+            return Store._freeze_captured(obj)
         if hasattr(obj, "__code__"):
-            return ("__code__", hash(obj.__code__))
+            captured = (
+                (*(obj.__defaults__ or ()), *(obj.__closure__ or ())) if with_captures else ()
+            )
+            return ("__code__", hash(obj.__code__), tuple(map(Store._freeze_captured, captured)))
         return obj
+
+    @staticmethod
+    def _freeze_captured(value):
+        if isinstance(value, CellType):
+            try:
+                value = value.cell_contents
+            except ValueError:
+                return Store.ObjectIdentity(value)
+        if isinstance(value, models.BaseModel):
+            return Store._deep_freeze(value)
+        try:
+            hash(value)
+        except TypeError:
+            return Store.ObjectIdentity(value)
+        return value
+
+    class ObjectIdentity:
+        """Compares an unhashable value by object, keeping it alive so that its id is not reused."""
+
+        def __init__(self, value):
+            self.value = value
+
+        def __eq__(self, other):
+            return isinstance(other, Store.ObjectIdentity) and self.value is other.value
+
+        def __hash__(self):
+            return id(self.value)
 
     class LazyValue(Generic[T]):  # noqa: OLS01001
         def __init__(self, fn):
