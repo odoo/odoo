@@ -55,6 +55,20 @@ class TestSalesPriceMultiCompany(ProductVariantsCommon):
         ):
             self.assertEqual(self.variant_m.with_company(company).lst_price, price)
 
+    def test_new_variant_gets_company_template_price(self):
+        template = self.env['product.template'].create({'name': "Table", 'list_price': 100.0})
+        template.with_company(self.company_b).list_price = 140.0
+        template.attribute_line_ids = [Command.create({
+            'attribute_id': self.size_attribute.id,
+            'value_ids': [Command.set(self.size_attribute.value_ids.ids)],
+        })]
+        for company, price in (
+            (self.company_a, 100.0),
+            (self.company_b, 140.0),
+            (self.company_c, 100.0),
+        ):
+            self.assertEqual(template.product_variant_ids[:1].with_company(company).lst_price, price)
+
     def test_search_uses_company_price(self):
         self.template.with_company(self.company_b).list_price = 140.0
         products = self.env['product.template'].with_company(self.company_b).search([

@@ -476,15 +476,6 @@ class ProductProduct(models.Model):
                 template.list_price = product.lst_price
                 product.invalidate_recordset(['list_price'])
 
-    def _compute_lst_price_in_other_companies(self):
-        """Compute the sales price of the variants in the other companies with a template sales
-        price, as a stored company dependent field is only computed in the current company."""
-        self.flush_recordset(['lst_price'])  # compute it in the current company first
-        companies = self.env['res.company'].sudo().search([('id', '!=', self.env.company.id)])
-        for company in companies:
-            variants = self.sudo().with_company(company).filtered('list_price')
-            variants._fields['lst_price'].compute_value(variants)
-
     @api.depends_context('partner_id')
     def _compute_product_code(self):
         read_access = self.env['product.supplierinfo'].has_access('read')
@@ -909,16 +900,46 @@ class ProductProduct(models.Model):
         )
         # Make sure the `create_product_product` context is not kept, unless it was already set.
         products = products.with_env(self.env)
-        # a template created with its variant gets its sales price in all the companies
-        products.browse(
+        # a template created with its variant gets its sales price in all the companies, the
+        # variants of an existing template get its sales price of each company
+        with_new_template = products.browse(
             product.id
             for product, vals in zip(products, vals_list)
             if 'product_tmpl_id' not in vals
-        ).product_tmpl_id._set_list_price_in_all_companies()
-        products._compute_lst_price_in_other_companies()
+        )
+        with_new_template.product_tmpl_id._set_list_price_in_all_companies()
+        (products - with_new_template)._set_lst_price_in_all_companies()
         if any('barcode' in vals or 'company_id' in vals for vals in vals_list):
             products._check_barcode_uniqueness()
         return products
+
+    def _set_lst_price_in_all_companies(self):
+        """Set the sales price of the variants in all the companies: the template sales price of
+        each company plus the variant extra of the current company."""
+        if not self:
+            return
+        self.flush_recordset(['lst_price'])
+        self.product_tmpl_id.flush_recordset(['list_price'])
+        self.env.cr.execute(SQL(
+            """
+            UPDATE product_product product
+               SET lst_price = (
+                   SELECT jsonb_object_agg(
+                       company.id::text,
+                       COALESCE((template.list_price ->> company.id::text)::numeric, 0)
+                       + COALESCE((product.lst_price ->> %(company_id)s)::numeric, 0)
+                       - COALESCE((template.list_price ->> %(company_id)s)::numeric, 0)
+                   )
+                     FROM res_company company
+               )
+              FROM product_template template
+             WHERE template.id = product.product_tmpl_id
+               AND product.id = ANY(%(ids)s)
+            """,
+            company_id=str(self.env.company.id),
+            ids=self.ids,
+        ))
+        self.invalidate_recordset(['lst_price'])
 
     def write(self, vals):
         res = super().write(vals)

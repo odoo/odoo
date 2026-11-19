@@ -869,8 +869,8 @@ class ProductTemplate(models.Model):
             self.ids,
         ))
         self.invalidate_recordset(['list_price'])
-        variants = self.with_context(active_test=False).product_variant_ids
-        variants._compute_lst_price_in_other_companies()
+        # variants created with the attribute lines
+        self.with_context(active_test=False).product_variant_ids._set_lst_price_in_all_companies()
 
     def write(self, vals):
         if 'uom_id' in vals:
