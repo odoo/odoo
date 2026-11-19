@@ -60,6 +60,7 @@ class HrAttendance(models.Model):
     is_manager = fields.Boolean(compute="_compute_is_manager")
     is_own = fields.Boolean(compute="_compute_is_manager")
     can_edit = fields.Boolean(compute="_compute_can_edit")
+    can_review = fields.Boolean(compute="_compute_can_review")
     check_in = fields.Datetime(string="Check In", default=fields.Datetime.now, required=True, tracking=True, index=True)
     check_out = fields.Datetime(string="Check Out", tracking=True)
     date = fields.Date(string="Date", compute='_compute_date', store=True, index=True, precompute=True, required=True)
@@ -184,6 +185,23 @@ class HrAttendance(models.Model):
     def _compute_can_edit(self):
         for attendance in self:
             attendance.can_edit = attendance.is_manager or attendance.is_own
+
+    @api.depends_context('uid')
+    @api.depends('is_manager', 'employee_id')
+    def _compute_can_review(self):
+        """Like is_manager, but additionally blocks validating/refusing your OWN
+        attendance unless you're an Administrator"""
+        is_admin = self.env.user.has_group('hr_attendance.group_hr_attendance_manager')
+        for attendance in self:
+            if not attendance.is_manager:
+                attendance.can_review = False
+                continue
+            blocked_self_review = (
+                not is_admin
+                and attendance.employee_id.user_id == self.env.user
+                and attendance.attendance_manager_id.id != self.env.user.id
+            )
+            attendance.can_review = not blocked_self_review
 
     @api.depends('employee_id.company_id.country_id')
     def _compute_allowed_work_entry_type_ids(self):
@@ -364,6 +382,12 @@ class HrAttendance(models.Model):
             not self.env.user.has_group('hr_attendance.group_hr_attendance_manager') and \
             self.env['hr.employee'].sudo().browse(vals['employee_id']).attendance_manager_id.id != self.env.user.id:
             raise AccessError(_("Do not have access, user cannot edit the attendances that are not their own or if they are not the attendance manager of the employee."))
+        if vals.get('state') in ('validated', 'refused') \
+            and not self.env.su \
+            and any(not att.can_review for att in self):
+            # officers must not be able to validate/refuse their own attendance just
+            # because they happen to manage other employees
+            raise exceptions.UserError(_("You cannot validate or refuse your own attendance."))
         # snapshot existing output ids before the pipeline runs so that newly
         # created outputs (fresh, accurate) are not incorrectly marked stale
         stale_targets = self.env['hr.attendance']
@@ -1045,28 +1069,72 @@ class HrAttendance(models.Model):
         """Validate the closed draft attendances within the tolerance of their company.
 
         Only for the companies with ``attendance_validation = 'tolerance_validation'``, on the
-        attendances not produced by a time rule: an attendance is validated when its duration
-        (break included) differs from the expected hours of its local day by at most
-        ``attendance_validation_tolerance``, or when no hours are expected that day. As for
-        :meth:`action_validate`, writing the state runs the time rules on them.
+        attendances not produced by a time rule: an attendance is validated once the employee's
+        total worked hours for its local day (break excluded) are within
+        ``attendance_validation_tolerance`` of the hours expected that day, or when no hours are
+        expected that day - this also picks up and re-validates any other still-draft record
+        from the same day.
         """
-        to_validate = self.browse()
         candidates = self.filtered(lambda a: a.state == 'draft' and a.check_out and not a.time_rule_id)
+        if not candidates:
+            return
+        to_validate = self.browse()
+
+        # first pass: work out which (employee, day) pairs need checking, grouped
+        # by the resulting (start_local, end_local) window
+        seen_days = set()
+        employees_per_window = defaultdict(lambda: self.env['hr.employee'])
         for att in candidates:
-            company = att.employee_id.company_id or self.env.company
-            if company.attendance_validation != 'tolerance_validation':
+            employee = att.employee_id
+            if employee.company_id.attendance_validation != 'tolerance_validation':
                 continue
-            tz = ZoneInfo(att.employee_id._get_tz())
+            tz = ZoneInfo(employee.sudo()._get_version(att.check_in.date())._get_tz())
             day = att.check_in.replace(tzinfo=UTC).astimezone(tz).date()
-            expected = sum_intervals(att.employee_id._get_expected_attendances(
-                datetime.combine(day, time.min, tz),
-                datetime.combine(day, time.max, tz),
-            ))
-            worked = (att.check_out - att.check_in).total_seconds() / 3600
-            if not expected or abs(worked - expected) <= company.attendance_validation_tolerance:
-                to_validate |= att
+            key = (employee.id, day)
+            if key in seen_days:
+                continue
+            seen_days.add(key)
+
+            start_local = datetime.combine(day, time.min, tz)
+            end_local = datetime.combine(day, time.max, tz)
+            employees_per_window[start_local, end_local] |= employee
+
+        expected_per_window = {
+            window: employees._get_expected_attendances_batch(*window)
+            for window, employees in employees_per_window.items()
+        }
+
+        # second pass: one search per window (not per employee) - employees sharing
+        # a window share the query, then get split back out in Python
+        for (start_local, end_local), employees in employees_per_window.items():
+            window_attendances = self.env['hr.attendance'].search([
+                ('employee_id', 'in', employees.ids),
+                ('check_in', '<', end_local.astimezone(UTC).replace(tzinfo=None)),
+                ('check_out', '>=', start_local.astimezone(UTC).replace(tzinfo=None)),
+                ('check_out', '!=', False),
+                ('time_rule_id', '=', False),
+                ('state', '!=', 'refused'),
+            ])
+            attendances_per_employee = window_attendances.grouped('employee_id')
+            expected_per_employee = expected_per_window[start_local, end_local]
+            day_interval = Intervals([(start_local, end_local, self.env['resource.calendar'])])
+
+            for employee in employees:
+                day_attendances = attendances_per_employee.get(employee, self.browse())
+                expected = sum_intervals(expected_per_employee[employee.id])
+                worked = sum(
+                    sum_intervals(Intervals([(a.check_in.replace(tzinfo=UTC), a.check_out.replace(tzinfo=UTC), a)]) & day_interval)
+                    for a in day_attendances
+                )
+                worked -= day_attendances._get_break_duration_within_period(
+                    start_local.replace(tzinfo=None), end_local.replace(tzinfo=None)
+                )
+
+                if not expected or abs(worked - expected) <= employee.company_id.attendance_validation_tolerance:
+                    to_validate |= day_attendances.filtered(lambda a: a.state == 'draft')
         if to_validate:
-            to_validate.with_context(tracking_disable=True).write({'state': 'validated'})
+            # sudo: bypass the self-review guard in write(), meant for guarding user validation.
+            to_validate.sudo().with_context(tracking_disable=True).write({'state': 'validated'})
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -1084,9 +1152,20 @@ class HrAttendance(models.Model):
                     vals['state'] = 'validated'
                 else:
                     company = self.env.company
+                    employee = self.env['hr.employee']
                     if vals.get('employee_id'):
-                        company = self.env['hr.employee'].browse(vals['employee_id']).company_id or company
-                    vals['state'] = 'validated' if company.attendance_validation == 'no_validation' else 'draft'
+                        employee = self.env['hr.employee'].sudo().browse(vals['employee_id'])
+                        company = employee.company_id
+                    # auto-validate if the company doesn't require validation, or if the
+                    # creator has proper access
+                    is_officer_for_employee = self.env.user.has_group('hr_attendance.group_hr_attendance_user') or (
+                        self.env.user.has_group('hr_attendance.group_hr_attendance_officer')
+                        and employee.attendance_manager_id == self.env.user
+                    )
+                    if company.attendance_validation == 'no_validation' or is_officer_for_employee:
+                        vals['state'] = 'validated'
+                    else:
+                        vals['state'] = 'draft'
         res = super().create(vals_list)
         res._update_tolerance_state()
         return res
