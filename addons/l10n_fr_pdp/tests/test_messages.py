@@ -276,6 +276,25 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
         )
         self.assertTrue(bool(move.ubl_cii_xml_id))
 
+    def test_pdp_sender_only_send_success_message(self):
+        self.env.company.account_peppol_proxy_state = 'sender'
+        move = self._create_french_invoice()
+        move.action_post()
+
+        wizard = self.create_send_and_print(move)
+        self.assertEqual(wizard.invoice_edi_format, 'ubl_21_fr')
+        self.assertIn('peppol', wizard.sending_methods)
+
+        wizard.action_send_and_print()
+        self.env['account_edi_proxy_client.user']._cron_peppol_get_message_status()
+
+        self.assertRecordValues(move, [{
+            'peppol_move_state': 'done',
+            'pdp_ppf_move_state': 'in_progress',
+            'peppol_message_uuid': FAKE_UUID[0],
+        }])
+        self.assertTrue(move.ubl_cii_xml_id)
+
     def test_pdp_send_success_message_peppol(self):
         # should be able to send valid invoices correctly
         # attachment should be generated

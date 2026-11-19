@@ -15,7 +15,7 @@ class AccountJournal(models.Model):
         journals = self.with_context(pdp_einvoicing_chatter_messages=chatter_messages)
         super(AccountJournal, journals).peppol_get_new_documents()
         edi_users = journals.env['account_edi_proxy_client.user'].search([
-            ('company_id.account_peppol_proxy_state', '=', 'receiver'),
+            ('company_id.account_peppol_proxy_state', 'in', ('sender', 'receiver')),
             ('company_id', 'in', journals.company_id.ids),
             ('proxy_type', '=', 'pdp'),
         ])

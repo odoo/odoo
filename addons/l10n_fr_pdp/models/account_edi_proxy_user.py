@@ -150,7 +150,7 @@ class AccountEdiProxyClientUser(models.Model):
         return f'0225:{company.pdp_identifier}'
 
     @handle_demo
-    def _register_proxy_user(self, company, proxy_type, edi_mode):
+    def _register_proxy_user(self, company, proxy_type, edi_mode, sender_only=False):
         """ Override to avoid using the deprecated route on IAP """
         if proxy_type != 'pdp':
             return super()._register_proxy_user(company, proxy_type, edi_mode)
@@ -172,7 +172,8 @@ class AccountEdiProxyClientUser(models.Model):
                     'peppol_identifier': peppol_identifier,
                     'public_key': private_key_sudo._get_public_key_bytes(encoding='pem').decode(),
                     'auth_url_hash': company.pdp_authentication_uuid,
-                    'mobility_registration': True,
+                    'mobility_registration': not sender_only,  # no platform migration needed for sender-only registration
+                    'sender_only': sender_only,
                 })
             except AccountEdiProxyError as e:
                 raise UserError(e.message)
@@ -962,9 +963,9 @@ class AccountEdiProxyClientUser(models.Model):
     # -------------------------------------------------------------------------
 
     def _cron_pdp_get_regulatory_documents(self):
-        edi_users = self.search([('company_id.account_peppol_proxy_state', '=', 'receiver'), ('proxy_type', '=', 'pdp')])
+        edi_users = self.search([('company_id.account_peppol_proxy_state', 'in', ('sender', 'receiver')), ('proxy_type', '=', 'pdp')])
         edi_users._pdp_get_regulatory_documents()
 
     def _cron_pdp_send_lifecycles(self):
-        edi_users = self.search([('company_id.account_peppol_proxy_state', '=', 'receiver'), ('proxy_type', '=', 'pdp')])
+        edi_users = self.search([('company_id.account_peppol_proxy_state', 'in', ('sender', 'receiver')), ('proxy_type', '=', 'pdp')])
         edi_users._pdp_send_lifecycles()
