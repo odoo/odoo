@@ -10,8 +10,10 @@ export class EscapeTextNodesPlugin extends Plugin {
     static id = "escapeTextNodes";
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        clean_for_save_processors: withSequence(100, (rootEl) => {
-            escapeTextNodes(rootEl);
+        clean_for_save_processors: withSequence(100, (rootEl, { saveSnippet } = {}) => {
+            if (saveSnippet) {
+                escapeTextNodes(rootEl);
+            }
             return rootEl;
         }),
     };

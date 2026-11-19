@@ -1,4 +1,6 @@
+import { escapeTextNodes } from "@html_builder/utils/escaping";
 import { Plugin } from "@html_editor/plugin";
+import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 
 const ATTRS_TO_TRANSLATE = {
@@ -15,15 +17,25 @@ export class WebsiteSavePlugin extends Plugin {
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         on_ready_to_save_document_handlers: this.saveElements.bind(this),
-        clean_for_save_processors: (rootEl) => {
-            if (
-                (rootEl.dataset.oeModel === "ir.ui.view" && rootEl.dataset.oeField === "arch") ||
-                rootEl.dataset.oeType === "html"
-            ) {
-                this.setTranslateAttributes(rootEl);
-            }
-            return rootEl;
-        },
+        clean_for_save_processors: [
+            (rootEl) => {
+                if (
+                    (rootEl.dataset.oeModel === "ir.ui.view" &&
+                        rootEl.dataset.oeField === "arch") ||
+                    rootEl.dataset.oeType === "html"
+                ) {
+                    this.setTranslateAttributes(rootEl);
+                }
+                return rootEl;
+            },
+            withSequence(100, (rootEl, { saveSnippet } = {}) => {
+                if (!saveSnippet) {
+                    // escaping custom snippet is handled in html_builder
+                    escapeTextNodes(rootEl);
+                }
+                return rootEl;
+            }),
+        ],
     };
 
     setTranslateAttributes(rootEl) {
