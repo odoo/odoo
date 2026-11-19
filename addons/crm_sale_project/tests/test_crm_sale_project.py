@@ -44,3 +44,33 @@ class TestCrmSaleOrderProject(TestCrmCommon):
         action = self.lead_1.action_create_project()
         project = self.env['project.project'].with_context(action['context']).create({'name': 'Project 1'})
         self.assertEqual(project.reinvoiced_sale_order_id, sole_order, "Project should be linked to sale order.")
+
+
+@tagged('-at_install', 'post_install')
+class TestCrmSaleProjectPostInstall(TestCrmCommon):
+
+    def test_project_from_lead_prefers_timesheet_line(self):
+        if self.env['ir.module.module']._get('sale_timesheet').state != 'installed':
+            self.skipTest("Needs sale_timesheet")
+        manual_service, timesheet_service = self.env['product.product'].create([{
+            'name': 'Manual Service',
+            'type': 'service',
+            'service_policy': 'delivered_manual',
+        }, {
+            'name': 'Timesheet Service',
+            'type': 'service',
+            'service_policy': 'delivered_timesheet',
+        }])
+        self.lead_1.partner_id = self.env['res.partner'].create({'name': 'test partner'})
+        sale_order_action = self.lead_1.action_sale_quotations_new()
+        sale_order = self.env['sale.order'].with_context(sale_order_action['context']).create({
+            'partner_id': self.lead_1.partner_id.id,
+            'order_line': [
+                Command.create({'product_id': manual_service.id}),
+                Command.create({'product_id': timesheet_service.id}),
+            ],
+        })
+        timesheet_line = sale_order.order_line.filtered(lambda sol: sol.product_id == timesheet_service)
+        self.assertEqual(timesheet_line.qty_delivered_method, 'timesheet')
+        action = self.lead_1.action_create_project()
+        self.assertEqual(action['context']['default_sale_line_id'], timesheet_line.id)
