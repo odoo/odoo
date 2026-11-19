@@ -135,13 +135,13 @@ class MailThread(models.AbstractModel):
             **kwargs
         )
 
-    def _notify_thread(self, message, **kwargs):
+    def _notify_thread_batch(self, messages, **kwargs):
         # Main notification method. Override to add support of sending SMS notifications.
         scheduled_date = self._is_notification_scheduled(kwargs.get('scheduled_date'))
-        recipients_data = super()._notify_thread(message, **kwargs)
+        recipients_by_msg = super()._notify_thread_batch(messages, **kwargs)
         if not scheduled_date:
-            self._notify_thread_by_sms(message, recipients_data, **kwargs)
-        return recipients_data
+            self._notify_thread_by_sms_batch(messages, recipients_by_msg, **kwargs)
+        return recipients_by_msg
 
     def _notify_thread_by_sms(self, message, recipients_data,
                               sms_content=None, sms_numbers=None, sms_pid_to_number=None,
@@ -164,10 +164,23 @@ class MailThread(models.AbstractModel):
         :param put_in_queue: use cron to send queued SMS instead of sending them
           directly;
         """
+        return self._notify_thread_by_sms_batch(
+            message, {message.id: recipients_data},
+            sms_content=sms_content, sms_numbers=sms_numbers, sms_pid_to_number=sms_pid_to_number,
+            put_in_queue=put_in_queue, **kwargs,
+        )
+
+    def _notify_thread_by_sms_prepare(self, message, recipients_data,
+                                      sms_content=None, sms_numbers=None, sms_pid_to_number=None,
+                                      **kwargs):
+        """ Prepare SMS of a message, see ``_notify_thread_by_sms()`` for
+        parameters.
+
+        :return: list of values to create <sms.sms>;
+        """
         sms_pid_to_number = sms_pid_to_number if sms_pid_to_number is not None else {}
         sms_numbers = sms_numbers if sms_numbers is not None else []
         sms_create_vals = []
-        sms_all = self.env['sms.sms'].sudo()
 
         # pre-compute SMS data
         body = sms_content or html2plaintext(message.body)
@@ -205,13 +218,32 @@ class MailThread(models.AbstractModel):
                 failure_type=False if n else 'sms_number_missing',
             ) for n in tocreate_numbers if n not in existing_partners_numbers]
 
+        return sms_create_vals
+
+    def _notify_thread_by_sms_batch(self, messages, recipients_by_msg, put_in_queue=False, **kwargs):
+        """ Notification method: by SMS, for several messages (see
+        ``_notify_thread_by_sms()`` for parameters). SMS are prepared for each
+        message, then SMS and notifications of all messages are created at once.
+
+        :param messages: <mail.message> records being notified;
+        :param dict recipients_by_msg: recipients data of each message, see
+          ``MailThread._notify_get_recipients_batch()``;
+        """
+        sms_create_vals = []
+        record_by_msg = self._notify_get_record_by_message(messages)
+        for message in messages:
+            sms_create_vals += record_by_msg[message.id]._notify_thread_by_sms_prepare(
+                message, recipients_by_msg[message.id], **kwargs,
+            )
+        sms_all = self.env['sms.sms'].sudo()
+
         # create sms and notification
         if sms_create_vals:
             sms_all |= self.env['sms.sms'].sudo().create(sms_create_vals)
 
             notif_create_values = [{
-                'author_id': message.author_id.id,
-                'mail_message_id': message.id,
+                'author_id': sms.mail_message_id.author_id.id,
+                'mail_message_id': sms.mail_message_id.id,
                 'res_partner_id': sms.partner_id.id,
                 'sms_number': sms.number,
                 'notification_type': 'sms',

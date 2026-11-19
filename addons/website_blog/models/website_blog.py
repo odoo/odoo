@@ -293,13 +293,14 @@ class BlogPost(models.Model):
 
         return groups
 
-    def _notify_thread_by_inbox(self, message, recipients_data, **kwargs):
+    def _notify_thread_by_inbox_batch(self, messages, recipients_by_msg, **kwargs):
         # Override to avoid keeping all notified recipients of a comment.
         # We avoid tracking needaction on post comments. Only emails should be
         # sufficient.
-        if message.message_type == 'comment':
+        messages = messages.filtered(lambda message: message.message_type != 'comment')
+        if not messages:
             return
-        return super()._notify_thread_by_inbox(message, recipients_data, **kwargs)
+        return super()._notify_thread_by_inbox_batch(messages, recipients_by_msg, **kwargs)
 
     def _default_website_meta(self):
         res = super(BlogPost, self)._default_website_meta()

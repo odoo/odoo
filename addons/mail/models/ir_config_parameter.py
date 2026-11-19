@@ -20,19 +20,23 @@ class IrConfig_Parameter(models.Model):
     #   prepares data for 'send' in conjunction with auto_commit=True in order
     #   to avoid repeating batches in case of failure). 1000 by default;
     # * 'mail.mail.force.send.limit': used in
-    #   - MailThread._notify_thread_by_email(): notification emails flow
+    #   - MailThread._notify_thread_by_email_batch(): notification emails flow
     #   - MailComposer._action_send_mail_mass_mail(): mail composer in mass mail mode
     #   to force the cron queue usage and avoid sending too much emails in a given
     #   transaction. When 0 is set flows based on it are always using the email
     #   queue, no direct send is performed. Default value is 100;
     # * 'mail.batch_size': used in
     #   - MailComposer._action_send_mail_mass_mail(): mails generation based on records
-    #   - MailThread._notify_thread_by_email(): mails generation for notification emails
+    #   - MailThread._notify_thread_by_email_batch(): mails generation for notification emails
     #   - MailTemplate.send_mail_batch(): mails generation done directly from templates
     #   to split mail generation in batches;
     #   - EventMail._execute_attendee_based() and EventMail._execute_event_based():
     #    mails (+ sms, whatsapp) generation for each attendee of en event;
     #    50 by default;
+    # * 'mail.notify.batch.recipients_limit': used in MailThread._notify_thread_batch()
+    #   to limit the number of recipients notified at once when notifying
+    #   several messages. A message having more recipients is notified alone.
+    #   1000 by default;
     # * 'mail.render.cron.limit': used in cron involving rendering of content
     #   and/or templates, like event mail scheduler cron. Defaults to 1000;
     # * 'mail.server.personal.limit.minutes': used when sending email using
