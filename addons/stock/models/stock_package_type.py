@@ -99,27 +99,29 @@ class StockPackageType(models.Model):
         return super().create(vals_list)
 
     def write(self, vals):
-        seq_vals = {}
-        if 'sequence_code' in vals:
-            seq_vals['name'] = self.env._('Package Type Sequence %(code)s', code=vals['sequence_code'])
-            seq_vals['prefix'] = vals['sequence_code']
-        if 'company_id' in vals:
-            seq_vals['company_id'] = vals['company_id']
-        if seq_vals:
-            seq_to_todo_ids = set()
-            for package_type in self:
-                if not package_type.sequence_id:
-                    sequence = self.env['ir.sequence'].sudo().create({
-                        **seq_vals,
-                        'padding': 7,
-                        'company_id': seq_vals.get('company_id', package_type.company_id.id),
-                    })
-                    package_type.sequence_id = sequence
-                else:
-                    seq_to_todo_ids.add(package_type.sequence_id.id)
-            if seq_to_todo_ids:
-                self.env['ir.sequence'].browse(list(seq_to_todo_ids)).sudo().write(seq_vals)
-        return super().write(vals)
+        res = super().write(vals)
+        if 'sequence_code' not in vals and 'company_id' not in vals:
+            return res
+
+        for package_type in self:
+            code = package_type.sequence_code
+            if not code:
+                continue
+            seq_vals = {
+                'name': self.env._('Package Type Sequence %(code)s', code=code),
+                'prefix': code,
+                'company_id': package_type.company_id.id,
+            }
+            if not package_type.sequence_id:
+                sequence = self.env['ir.sequence'].sudo().create({
+                    **seq_vals,
+                    'padding': 7,
+                })
+                package_type.sequence_id = sequence
+            else:
+                package_type.sequence_id.sudo().write(seq_vals)
+
+        return res
 
     def _get_next_name_by_sequence(self):
         if len(self) == 1 and self.sequence_id:
