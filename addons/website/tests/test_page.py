@@ -890,3 +890,28 @@ class TestUrlDependencies(TransactionCaseWithUserDemo):
                 dependencies['Website'][0]['record_name'],
                 website.display_name,
             )
+
+    def test_search_url_dependencies_form_redirect(self):
+        website = self.env['website'].search([], limit=1)
+        target_page, form_page = self.env['website.page'].create([{
+            'name': 'Target Page',
+            'url': '/target-page',
+            'type': 'qweb',
+            'arch': '<div>Target</div>',
+            'website_id': website.id,
+        }, {
+            'name': 'Form Page',
+            'url': '/form-page',
+            'type': 'qweb',
+            'arch': '''
+                <form data-success-mode="redirect" data-success-page="/target-page">
+                    <button type="submit">Send</button>
+                </form>
+            ''',
+            'website_id': website.id,
+        }])
+        dependencies = website.search_url_dependencies('website.page', target_page.ids)
+        self.assertEqual(
+            [dep['record_name'] for dep in dependencies.get('Page', [])],
+            [form_page.name],
+        )
