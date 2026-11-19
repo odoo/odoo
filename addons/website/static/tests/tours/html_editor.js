@@ -154,6 +154,10 @@ registerWebsitePreviewTour("html_editor_changed_by", {}, () => [
         trigger: '.o_resource_editor_modified_by:contains("Modified by 1 view")',
     },
     {
+        content: "check that the page view only exists on the website",
+        trigger: '.o_resource_editor_website_status:contains("Website-only view")',
+    },
+    {
         content: "edit the target view",
         trigger: '.o_resource_editor .o_select_menu_toggler:contains("Changed Target")',
         run() {
@@ -193,6 +197,10 @@ registerWebsitePreviewTour("html_editor_changed_by", {}, () => [
     {
         content: "check that the inherited view's arch is displayed",
         trigger: '#resource-editor .ace_line:contains("class_added")',
+    },
+    {
+        content: "check that the inherited view is a base view",
+        trigger: '.o_resource_editor_website_status:contains("Base view")',
     },
 ]);
 

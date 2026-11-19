@@ -209,6 +209,42 @@ export class ResourceEditor extends Component {
     }
 
     /**
+     * @returns {{label: string, tooltip: string}|null} how the current view
+     *  relates to the current website: a base view, a copy of a base view
+     *  for the website (COW), or a view which only exists on the website.
+     *  Null if the current resource is not a view.
+     */
+    getWebsiteStatusInfo() {
+        const resource = this.state.currentResource;
+        if (this.state.type !== "xml" || !resource) {
+            return null;
+        }
+        switch (resource.website_status) {
+            case "base":
+                return {
+                    label: _t("Base view"),
+                    tooltip: _t(
+                        "Saving this view creates a copy (COW) that only applies to the current website. The base view is not changed."
+                    ),
+                };
+            case "copy":
+                return {
+                    label: _t("Website copy (COW) of a base view"),
+                    tooltip: _t(
+                        "This copy only applies to the current website. Saving changes it, not the base view."
+                    ),
+                };
+            case "website":
+                return {
+                    label: _t("Website-only view"),
+                    tooltip: _t("This view only exists on the current website."),
+                };
+            default:
+                return null;
+        }
+    }
+
+    /**
      * @returns {{root: Element, operations: Element[]|null}|null} the parsed
      *  arch of the current view (see `parseTargetArch`), or null if the
      *  current resource is not a view or its arch is not well-formed
