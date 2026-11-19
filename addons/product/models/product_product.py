@@ -1276,3 +1276,10 @@ class ProductProduct(models.Model):
         """ Hook to handle an UoM modification. Avoid recomputation and just replace the
         many2one field on the impacted models."""
         return True
+
+    @api.model
+    def search_panel_select_range(self, field_name, **kwargs):
+        result = super().search_panel_select_range(field_name, **kwargs)
+        if field_name == 'categ_id' and self.env.context.get('product_catalog_order_model') and 'values' in result:
+            result['values'].sort(key=lambda v: v.get('display_name', ''))
+        return result
