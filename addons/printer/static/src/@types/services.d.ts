@@ -1,7 +1,7 @@
 declare module "services" {
-    import { reportPrintersCacheService } from "@printer/services/report_printers_cache";
+    import { ReportPrintersCachePlugin } from "@printer/services/report_printers_cache_plugin";
 
     export interface Services {
-        report_printers_cache: typeof reportPrintersCacheService;
+        report_printers_cache: ReportPrintersCachePlugin;
     }
 }
