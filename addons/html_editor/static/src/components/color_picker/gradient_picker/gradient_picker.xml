@@ -24,10 +24,10 @@
                     </Dropdown>
                 </t>
                 <t t-else="">
-                    <span class="d-flex justify-content-between">
-                        <button t-attf-class="btn btn-sm btn-light {{ this.state.type === 'linear' ? 'active' : ''}}" t-on-click="() => this.selectType('linear')"> Linear </button>
-                        <button t-attf-class="btn btn-sm btn-light {{ this.state.type === 'radial' ? 'active' : ''}}" t-on-click="() => this.selectType('radial')"> Radial </button>
-                        <button t-attf-class="btn btn-sm btn-light {{ this.state.type === 'conic' ? 'active' : ''}}" t-on-click="() => this.selectType('conic')"> Conic </button>
+                    <span class="d-flex justify-content-between gap-1 min-w-0 ms-2">
+                        <button t-attf-class="btn btn-sm btn-light text-truncate {{ this.state.type === 'linear' ? 'active' : ''}}" t-on-click="() => this.selectType('linear')" title="Linear"> Linear </button>
+                        <button t-attf-class="btn btn-sm btn-light text-truncate {{ this.state.type === 'radial' ? 'active' : ''}}" t-on-click="() => this.selectType('radial')" title="Radial"> Radial </button>
+                        <button t-attf-class="btn btn-sm btn-light text-truncate {{ this.state.type === 'conic' ? 'active' : ''}}" t-on-click="() => this.selectType('conic')" title="Conic"> Conic </button>
                     </span>
                 </t>
             </div>
