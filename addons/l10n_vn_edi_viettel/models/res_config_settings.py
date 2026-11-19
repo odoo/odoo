@@ -30,8 +30,8 @@ class ResConfigSettings(models.TransientModel):
         self.l10n_vn_edi_default_symbol = l10n_vn_edi_symbol_field.get_company_dependent_fallback(ResPartner)
 
     def _inverse_l10n_vn_edi_default_symbol(self):
-        for setting in self:
-            self.env['ir.default'].set(
+        for setting in self.sudo():
+            setting.env['ir.default'].set(
                 'res.partner',
                 'l10n_vn_edi_symbol',
                 setting.l10n_vn_edi_default_symbol.id,
