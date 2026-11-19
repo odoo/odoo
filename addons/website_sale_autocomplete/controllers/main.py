@@ -20,6 +20,17 @@ FIELDS_MAPPING = {
     'administrative_area_level_2': ['state', 'country']
 }
 
+CHILEAN_STATES = {
+    'Araucanía': 'de la Araucania',
+    'Región Metropolitana': 'Metropolitana',
+    'Bío Bío': 'del BíoBio',
+    "O'Higgins": "del Libertador Gral. Bernardo O'Higgins",
+    'Los Lagos': 'de los Lagos',
+    'Maule': 'del Maule',
+    'Ñuble': 'del Ñuble',
+    'Aysén': 'Aysén del Gral. Carlos Ibáñez del Campo'
+}
+
 # If a google fields may correspond to multiple standard fields, the first occurrence in the list will overwrite following entries.
 FIELDS_PRIORITY = ['country', 'street_number', 'neighborhood', 'locality', 'route', 'postal_code',
                    'administrative_area_level_1', 'administrative_area_level_2']
@@ -42,12 +53,17 @@ class AutoCompleteController(http.Controller):
                 if field_standard == 'country':
                     standard_data[field_standard] = request.env['res.country'].search(
                         [('code', '=', google_field['short_name'].upper())])[0].id
+                    country_name = google_field['long_name']
                 elif field_standard == 'state':
-                    state = request.env['res.country.state'].search(
-                        [('code', '=', google_field['short_name'].upper()),
-                         ('country_id.id', '=', standard_data['country'])])
-                    if len(state) == 1:
-                        standard_data[field_standard] = state.id
+                    if country_name == 'Chile' and google_field['short_name'] in CHILEAN_STATES:
+                        google_field['long_name'] = CHILEAN_STATES[google_field['short_name']]
+                    state = request.env['res.country.state'].search([
+                            '|',
+                            ('code', '=', google_field['short_name'].upper()),
+                            ('name', '=', google_field['long_name']),
+                            ('country_id', '=', standard_data['country'])])
+                    if len(state) >= 1:
+                        standard_data[field_standard] = state.ids[:1]
                 else:
                     standard_data[field_standard] = google_field['long_name']
         return standard_data
