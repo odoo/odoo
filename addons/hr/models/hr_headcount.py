@@ -3,6 +3,7 @@
 from collections import defaultdict
 
 from odoo import api, fields, models
+from odoo.tools import float_round
 
 
 class HrHeadcount(models.Model):
@@ -81,7 +82,7 @@ class HrHeadcount(models.Model):
         work_rates_by_version = {}
         for version in versions:
             versions_by_employee_id[version.employee_id.id] |= version
-            hours_per_week = round(version.resource_calendar_id.hours_per_week, 2)
+            hours_per_week = float_round(version.resource_calendar_id.hours_per_week, precision_digits=2)
             working_rates.add(hours_per_week)
             work_rates_by_version[version.id] = hours_per_week
 

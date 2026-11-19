@@ -708,7 +708,7 @@ been taken for this time off type. Changing it now would affect existing employe
                 # format all float fields
                 for key, value in lt_info[1].items():
                     if isinstance(value, float):
-                        lt_info[1][key] = round(value, 2)
+                        lt_info[1][key] = float_round(value, precision_digits=2)
                 allocation_data[employee].append(lt_info)
         return allocation_data
 
