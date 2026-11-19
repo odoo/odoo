@@ -31,7 +31,7 @@ class ResConfigSettings(models.TransientModel):
 
     def _inverse_l10n_vn_edi_default_symbol(self):
         for setting in self:
-            self.env['ir.default'].set(
+            self.env['ir.default'].sudo().set(
                 'res.partner',
                 'l10n_vn_edi_symbol',
                 setting.l10n_vn_edi_default_symbol.id,
