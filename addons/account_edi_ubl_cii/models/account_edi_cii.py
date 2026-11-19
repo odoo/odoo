@@ -1,5 +1,6 @@
 from odoo import models, Command
 from odoo.tools import formatLang, frozendict, html2plaintext
+from odoo.tools.float_utils import float_compare
 from odoo.tools.misc import NON_BREAKING_SPACE
 from odoo.tools.partner_identifiers import is_identifier_void
 from datetime import datetime
@@ -402,17 +403,14 @@ class AccountEdiCii(models.AbstractModel):
         currency = recycling_contribution_values['currency']
         amount = recycling_contribution_values['amount']
         tax = recycling_contribution_values['tax']
-        if 'bebat' in tax.name.lower():
-            charge_reason_code = 'CAV'
-        else:
-            charge_reason_code = 'AEO'
         is_charge = recycling_contribution_values['is_charge']
+        tax_reason_code, tax_reason = tax._get_ubl_cii_allowance_charge_fields(is_charge)
         return {
             'ram:ChargeIndicator': {
                 'udt:Indicator': {'_text': 'true' if is_charge else 'false'},
             },
-            'ram:ReasonCode': {'_text': charge_reason_code if is_charge else '100'},
-            'ram:Reason': {'_text': tax.name},
+            'ram:ReasonCode': {'_text': tax_reason_code},
+            'ram:Reason': {'_text': tax_reason},
             'ram:ActualAmount': {
                 '_text': FloatFmt(amount, max_dp=currency.decimal_places),
             },
@@ -439,11 +437,13 @@ class AccountEdiCii(models.AbstractModel):
         amount = excise_values['amount']
         tax = excise_values['tax']
         is_charge = excise_values['is_charge']
+        tax_reason_code, tax_reason = tax._get_ubl_cii_allowance_charge_fields(is_charge)
         return {
             'ram:ChargeIndicator': {
                 'udt:Indicator': {'_text': 'true' if is_charge else 'false'},
             },
-            'ram:Reason': {'_text': tax.name},
+            'ram:ReasonCode': {'_text': tax_reason_code},
+            'ram:Reason': {'_text': tax_reason},
             'ram:ActualAmount': {
                 '_text': FloatFmt(abs(amount), max_dp=currency.decimal_places),
             },
@@ -1176,7 +1176,7 @@ class AccountEdiCii(models.AbstractModel):
         allowances = collected_values['allowances'] = []
         charges = collected_values['charges'] = []
         for allowance_charge_elem in line_tree.iterfind('.//{*}SpecifiedTradeAllowanceCharge'):
-            charge_indicator = allowance_charge_elem.findtext('.//{*}ChargeIndicator/{*}Indicator')
+            charge_indicator = (allowance_charge_elem.findtext('.//{*}ChargeIndicator/{*}Indicator') or '').lower()
             amount_str = allowance_charge_elem.findtext('.//{*}ActualAmount')
             base_amount_str = allowance_charge_elem.findtext('.//{*}BasisAmount')
             reason = allowance_charge_elem.findtext('.//{*}Reason')
@@ -1192,8 +1192,9 @@ class AccountEdiCii(models.AbstractModel):
                 'base_amount': float(base_amount_str) if base_amount_str else None,
                 'reason': reason,
                 'reason_code': reason_code,
+                'charge_indicator': charge_indicator,
             }
-            if charge_indicator.lower() == 'true':
+            if charge_indicator == 'true':
                 charges.append(allowance_charge_values)
             else:
                 allowances.append(allowance_charge_values)
@@ -1440,18 +1441,26 @@ class AccountEdiCii(models.AbstractModel):
             }
         return tax_values
 
-    def _import_cii_invoice_line_prepare_charge_tax_values(self, collected_values, charge):
-        if charge['reason_code'] != 'AEO':
+    def _import_cii_invoice_line_prepare_allowance_charge_tax_values(self, collected_values, allowance_charge):
+        discount_precision_digits = self.env['decimal.precision'].precision_get('Discount')
+        # Since a fixed tax is not affected by the discount, if the discount is 100.0,
+        # we don't search for a matching tax since it will create a tax amount that is not expected for the document.
+        if float_compare(collected_values['to_write']['discount'], 100.0, precision_digits=discount_precision_digits) == 0:
             return
 
         odoo_document_type = collected_values['odoo_document_type']
-        fixed_tax_amount = charge['amount'] / collected_values['to_write']['quantity']
-        charge['attempt_tax_values'] = tax_values = {
-            'name': charge['reason'],
+        fixed_tax_amount = allowance_charge['amount'] / abs(collected_values['to_write']['quantity'] or 1.0)
+        charge_sign = 1 if allowance_charge['charge_indicator'] == 'true' else -1
+        line_sign = self._get_allowance_charge_line_sign(collected_values)
+        fixed_tax_amount_signed = fixed_tax_amount * charge_sign * line_sign
+        allowance_charge['attempt_tax_values'] = tax_values = {
+            'reason': allowance_charge['reason'],
+            'reason_code': allowance_charge['reason_code'],
+            'charge_indicator': allowance_charge['charge_indicator'],
             'amount_type': 'fixed',
             'type_tax_use': odoo_document_type,
-            'amount': fixed_tax_amount,
-            'tax_amount_currency': fixed_tax_amount,
+            'amount': fixed_tax_amount_signed,
+            'tax_amount_currency': fixed_tax_amount_signed,
         }
 
         partner = collected_values.get('customer_values', {}).get('customer')
@@ -1477,8 +1486,8 @@ class AccountEdiCii(models.AbstractModel):
                 global_tax_values['related_taxes_values'].append(tax_values)
 
         # Fixed taxes.
-        for charge in collected_values['charges']:
-            tax_values = self._import_cii_invoice_line_prepare_charge_tax_values(collected_values, charge)
+        for allowance_charge in collected_values['charges'] + collected_values['allowances']:
+            tax_values = self._import_cii_invoice_line_prepare_allowance_charge_tax_values(collected_values, allowance_charge)
             if tax_values:
                 taxes_values.append(tax_values)
 
@@ -1531,6 +1540,10 @@ class AccountEdiCii(models.AbstractModel):
                 attempt_tax_values = charge.get('attempt_tax_values')
                 if attempt_tax_values and attempt_tax_values.get('tax'):
                     difference -= charge['amount']
+            for allowance in line_collected_values['allowances']:
+                attempt_tax_values = allowance.get('attempt_tax_values')
+                if attempt_tax_values and attempt_tax_values.get('tax'):
+                    difference += allowance['amount']
         if currency.is_zero(difference):
             return
 

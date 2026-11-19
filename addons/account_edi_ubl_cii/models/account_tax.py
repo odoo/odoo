@@ -1,5 +1,210 @@
 from odoo import api, fields, models
 
+from odoo.addons.account.models.company import PEPPOL_LIST
+
+ALLOWANCE_REASON_CODES = [
+    ('41', "41 - Bonus for works ahead of schedule"),
+    ('42', "42 - Other bonus"),
+    ('60', "60 - Manufacturer’s consumer discount"),
+    ('62', "62 - Due to military status"),
+    ('63', "63 - Due to work accident"),
+    ('64', "64 - Special agreement"),
+    ('65', "65 - Production error discount"),
+    ('66', "66 - New outlet discount"),
+    ('67', "67 - Sample discount"),
+    ('68', "68 - End-of-range discount"),
+    ('70', "70 - Incoterm discount"),
+    ('71', "71 - Point of sales threshold allowance"),
+    ('88', "88 - Material surcharge/deduction"),
+    ('95', "95 - Discount"),
+    ('100', "100 - Special rebate"),
+    ('102', "102 - Fixed long term"),
+    ('103', "103 - Temporary"),
+    ('104', "104 - Standard"),
+    ('105', "105 - Yearly turnover"),
+]
+
+CHARGE_REASON_CODES = [
+    ('AA', "AA - Advertising"),
+    ('AAA', "AAA - Telecommunication"),
+    ('AAC', "AAC - Technical modification"),
+    ('AAD', "AAD - Job-order production"),
+    ('AAE', "AAE - Outlays"),
+    ('AAF', "AAF - Off-premises"),
+    ('AAH', "AAH - Additional processing"),
+    ('AAI', "AAI - Attesting"),
+    ('AAS', "AAS - Acceptance"),
+    ('AAT', "AAT - Rush delivery"),
+    ('AAV', "AAV - Special construction"),
+    ('AAY', "AAY - Airport facilities"),
+    ('AAZ', "AAZ - Concession"),
+    ('ABA', "ABA - Compulsory storage"),
+    ('ABB', "ABB - Fuel removal"),
+    ('ABC', "ABC - Into plane"),
+    ('ABD', "ABD - Overtime"),
+    ('ABF', "ABF - Tooling"),
+    ('ABK', "ABK - Miscellaneous"),
+    ('ABL', "ABL - Additional packaging"),
+    ('ABN', "ABN - Dunnage"),
+    ('ABR', "ABR - Containerisation"),
+    ('ABS', "ABS - Carton packing"),
+    ('ABT', "ABT - Hessian wrapped"),
+    ('ABU', "ABU - Polyethylene wrap packing"),
+    ('ACF', "ACF - Miscellaneous treatment"),
+    ('ACG', "ACG - Enamelling treatment"),
+    ('ACH', "ACH - Heat treatment"),
+    ('ACI', "ACI - Plating treatment"),
+    ('ACJ', "ACJ - Painting"),
+    ('ACK', "ACK - Polishing"),
+    ('ACL', "ACL - Priming"),
+    ('ACM', "ACM - Preservation treatment"),
+    ('ACS', "ACS - Fitting"),
+    ('ADC', "ADC - Consolidation"),
+    ('ADE', "ADE - Bill of lading"),
+    ('ADJ', "ADJ - Airbag"),
+    ('ADK', "ADK - Transfer"),
+    ('ADL', "ADL - Slipsheet"),
+    ('ADM', "ADM - Binding"),
+    ('ADN', "ADN - Repair or replacement of broken returnable package"),
+    ('ADO', "ADO - Efficient logistics"),
+    ('ADP', "ADP - Merchandising"),
+    ('ADQ', "ADQ - Product mix"),
+    ('ADR', "ADR - Other services"),
+    ('ADT', "ADT - Pick-up"),
+    ('ADW', "ADW - Chronic illness"),
+    ('ADY', "ADY - New product introduction"),
+    ('ADZ', "ADZ - Direct delivery"),
+    ('AEA', "AEA - Diversion"),
+    ('AEB', "AEB - Disconnect"),
+    ('AEC', "AEC - Distribution"),
+    ('AED', "AED - Handling of hazardous cargo"),
+    ('AEF', "AEF - Rents and leases"),
+    ('AEH', "AEH - Location differential"),
+    ('AEI', "AEI - Aircraft refueling"),
+    ('AEJ', "AEJ - Fuel shipped into storage"),
+    ('AEK', "AEK - Cash on delivery"),
+    ('AEL', "AEL - Small order processing service"),
+    ('AEM', "AEM - Clerical or administrative services"),
+    ('AEN', "AEN - Guarantee"),
+    ('AEO', "AEO - Collection and recycling"),
+    ('AEP', "AEP - Copyright fee collection"),
+    ('AES', "AES - Veterinary inspection service"),
+    ('AET', "AET - Pensioner service"),
+    ('AEU', "AEU - Medicine free pass holder"),
+    ('AEV', "AEV - Environmental protection service"),
+    ('AEW', "AEW - Environmental clean-up service"),
+    ('AEX', "AEX - National cheque processing service outside account area"),
+    ('AEY', "AEY - National payment service outside account area"),
+    ('AEZ', "AEZ - National payment service within account area"),
+    ('AJ', "AJ - Adjustments"),
+    ('AU', "AU - Authentication"),
+    ('CA', "CA - Cataloguing"),
+    ('CAB', "CAB - Cartage"),
+    ('CAD', "CAD - Certification"),
+    ('CAE', "CAE - Certificate of conformance"),
+    ('CAF', "CAF - Certificate of origin"),
+    ('CAI', "CAI - Cutting"),
+    ('CAJ', "CAJ - Consular service"),
+    ('CAK', "CAK - Customer collection"),
+    ('CAL', "CAL - Payroll payment service"),
+    ('CAM', "CAM - Cash transportation"),
+    ('CAN', "CAN - Home banking service"),
+    ('CAO', "CAO - Bilateral agreement service"),
+    ('CAP', "CAP - Insurance brokerage service"),
+    ('CAQ', "CAQ - Cheque generation"),
+    ('CAR', "CAR - Preferential merchandising location"),
+    ('CAS', "CAS - Crane"),
+    ('CAT', "CAT - Special colour service"),
+    ('CAU', "CAU - Sorting"),
+    ('CAV', "CAV - Battery collection and recycling"),
+    ('CAW', "CAW - Product take back fee"),
+    ('CAX', "CAX - Quality control released"),
+    ('CAY', "CAY - Quality control held"),
+    ('CAZ', "CAZ - Quality control embargo"),
+    ('CD', "CD - Car loading"),
+    ('CG', "CG - Cleaning"),
+    ('CS', "CS - Cigarette stamping"),
+    ('CT', "CT - Count and recount"),
+    ('DAB', "DAB - Layout/design"),
+    ('DAC', "DAC - Assortment allowance"),
+    ('DAD', "DAD - Driver assigned unloading"),
+    ('DAF', "DAF - Debtor bound"),
+    ('DAG', "DAG - Dealer allowance"),
+    ('DAH', "DAH - Allowance transferable to the consumer"),
+    ('DAI', "DAI - Growth of business"),
+    ('DAJ', "DAJ - Introduction allowance"),
+    ('DAK', "DAK - Multi-buy promotion"),
+    ('DAL', "DAL - Partnership"),
+    ('DAM', "DAM - Return handling"),
+    ('DAN', "DAN - Minimum order not fulfilled charge"),
+    ('DAO', "DAO - Point of sales threshold allowance"),
+    ('DAP', "DAP - Wholesaling discount"),
+    ('DAQ', "DAQ - Documentary credits transfer commission"),
+    ('DL', "DL - Delivery"),
+    ('EG', "EG - Engraving"),
+    ('EP', "EP - Expediting"),
+    ('ER', "ER - Exchange rate guarantee"),
+    ('FAA', "FAA - Fabrication"),
+    ('FAB', "FAB - Freight equalization"),
+    ('FAC', "FAC - Freight extraordinary handling"),
+    ('FC', "FC - Freight service"),
+    ('FH', "FH - Filling/handling"),
+    ('FI', "FI - Financing"),
+    ('GAA', "GAA - Grinding"),
+    ('HAA', "HAA - Hose"),
+    ('HD', "HD - Handling"),
+    ('HH', "HH - Hoisting and hauling"),
+    ('IAA', "IAA - Installation"),
+    ('IAB', "IAB - Installation and warranty"),
+    ('ID', "ID - Inside delivery"),
+    ('IF', "IF - Inspection"),
+    ('IR', "IR - Installation and training"),
+    ('IS', "IS - Invoicing"),
+    ('KO', "KO - Koshering"),
+    ('L1', "L1 - Carrier count"),
+    ('LA', "LA - Labelling"),
+    ('LAA', "LAA - Labour"),
+    ('LAB', "LAB - Repair and return"),
+    ('LF', "LF - Legalisation"),
+    ('MAE', "MAE - Mounting"),
+    ('MI', "MI - Mail invoice"),
+    ('ML', "ML - Mail invoice to each location"),
+    ('NAA', "NAA - Non-returnable containers"),
+    ('OA', "OA - Outside cable connectors"),
+    ('PA', "PA - Invoice with shipment"),
+    ('PAA', "PAA - Phosphatizing (steel treatment)"),
+    ('PC', "PC - Packing"),
+    ('PL', "PL - Palletizing"),
+    ('PRV', "PRV - Price variation"),
+    ('RAB', "RAB - Repacking"),
+    ('RAC', "RAC - Repair"),
+    ('RAD', "RAD - Returnable container"),
+    ('RAF', "RAF - Restocking"),
+    ('RE', "RE - Re-delivery"),
+    ('RF', "RF - Refurbishing"),
+    ('RH', "RH - Rail wagon hire"),
+    ('RV', "RV - Loading"),
+    ('SA', "SA - Salvaging"),
+    ('SAA', "SAA - Shipping and handling"),
+    ('SAD', "SAD - Special packaging"),
+    ('SAE', "SAE - Stamping"),
+    ('SAI', "SAI - Consignee unload"),
+    ('SG', "SG - Shrink-wrap"),
+    ('SH', "SH - Special handling"),
+    ('SM', "SM - Special finish"),
+    ('SU', "SU - Set-up"),
+    ('TAB', "TAB - Tank renting"),
+    ('TAC', "TAC - Testing"),
+    ('TT', "TT - Transportation - third party billing"),
+    ('TV', "TV - Transportation by vendor"),
+    ('V1', "V1 - Drop yard"),
+    ('V2', "V2 - Drop dock"),
+    ('WH', "WH - Warehousing"),
+    ('XAA', "XAA - Combine all same day shipment"),
+    ('YY', "YY - Split pick-up"),
+    ('ZZZ', "ZZZ - Mutually defined"),
+]
+
 
 class AccountTax(models.Model):
     _inherit = 'account.tax'
@@ -121,6 +326,35 @@ class AccountTax(models.Model):
     ubl_cii_requires_exemption_reason = fields.Boolean(compute='_compute_ubl_cii_requires_exemption_reason')
     ubl_cii_available_tax_category_codes = fields.Json(compute='_compute_ubl_cii_available_tax_category_codes')
     ubl_cii_available_tax_exemption_reason_codes = fields.Json(compute='_compute_ubl_cii_available_tax_exemption_reason_codes')
+    ubl_cii_allowance_reason_code = fields.Selection(
+        string="Allowance Reason Code",
+        selection=ALLOWANCE_REASON_CODES,
+        compute='_compute_allowance_charge_fields',
+        store=True,
+        readonly=False,
+    )
+    ubl_cii_charge_reason_code = fields.Selection(
+        string="Charge Reason Code",
+        selection=CHARGE_REASON_CODES,
+        compute='_compute_allowance_charge_fields',
+        store=True,
+        readonly=False,
+    )
+    ubl_cii_allowance_reason = fields.Char(
+        string="Allowance Reason",
+        compute='_compute_allowance_charge_fields',
+        store=True,
+        readonly=False,
+    )
+    ubl_cii_charge_reason = fields.Char(
+        string="Charge Reason",
+        compute='_compute_allowance_charge_fields',
+        store=True,
+        readonly=False,
+    )
+    ubl_cii_is_allowance_charge_code_supported = fields.Boolean(
+        compute='_compute_ubl_cii_is_allowance_charge_code_supported',
+    )
 
     def _compute_ubl_cii_available_tax_category_codes(self):
         # TO OVERRIDE
@@ -135,9 +369,126 @@ class AccountTax(models.Model):
         for tax in self:
             tax.ubl_cii_requires_exemption_reason = tax.ubl_cii_tax_category_code in ['AE', 'E', 'G', 'O', 'K']
 
+    @api.depends('amount_type', 'include_base_amount', 'country_code')
+    def _compute_ubl_cii_is_allowance_charge_code_supported(self):
+        for tax in self:
+            tax.ubl_cii_is_allowance_charge_code_supported = (
+                tax.amount_type in ('fixed', 'code')
+                and tax.include_base_amount
+                and tax.country_code in PEPPOL_LIST
+            )
+
+    @api.depends('ubl_cii_is_allowance_charge_code_supported')
+    def _compute_allowance_charge_fields(self):
+        for tax in self:
+            if not tax.ubl_cii_is_allowance_charge_code_supported:
+                tax.ubl_cii_allowance_reason_code = False
+                tax.ubl_cii_charge_reason_code = False
+                tax.ubl_cii_allowance_reason = False
+                tax.ubl_cii_charge_reason = False
+            else:
+                tax.ubl_cii_allowance_reason_code = tax.ubl_cii_allowance_reason_code or '100'
+                tax.ubl_cii_charge_reason_code = (
+                    tax.ubl_cii_charge_reason_code
+                    or ('CAV' if 'bebat' in (tax.name or '').lower() else 'AEO')
+                )
+                tax.ubl_cii_allowance_reason = tax.ubl_cii_allowance_reason or tax.name
+                tax.ubl_cii_charge_reason = tax.ubl_cii_charge_reason or tax.name
+
     @api.onchange('ubl_cii_requires_exemption_reason')
     def _onchange_ubl_cii_tax_category_code(self):
         for tax in self:
             if not tax.ubl_cii_requires_exemption_reason:
                 tax.ubl_cii_tax_exemption_reason = False
                 tax.ubl_cii_tax_exemption_reason_code = False
+
+    @api.model
+    def _get_ubl_cii_allowance_charge_fields(self, is_charge):
+        if is_charge:
+            return self.ubl_cii_charge_reason_code, self.ubl_cii_charge_reason
+        return self.ubl_cii_allowance_reason_code, self.ubl_cii_allowance_reason
+
+    @api.model
+    def _import_retrieve_tax_from_price_include_exclude(self, tax_values):
+        # Allowance/Charge fixed taxes should only be managed by `_import_retrieve_tax_from_fixed_allowance_charge`
+        if 'charge_indicator' in tax_values:
+            return
+        return super()._import_retrieve_tax_from_price_include_exclude(tax_values)
+
+    @api.model
+    def _import_retrieve_tax_from_fixed_allowance_charge(self, tax_values):
+        if tax_values.get('amount_type') != 'fixed':
+            return
+
+        invoice = tax_values.get('invoice_predictive', {}).get('invoice')
+        company_id = invoice.company_id.id if invoice else self.env.company.id
+        calculated_amount = tax_values.get('amount', 0.0)
+        reason = (tax_values.get('reason') or '').strip().lower()
+        reason_code = (tax_values.get('reason_code') or '').strip().upper()
+        charge_indicator = (tax_values.get('charge_indicator') or '').lower()
+        type_tax_use = tax_values.get('type_tax_use')
+        allowance_charge_type = 'charge' if charge_indicator == 'true' else 'allowance'
+        reason_code_field = f'ubl_cii_{allowance_charge_type}_reason_code'
+        reason_field = f'ubl_cii_{allowance_charge_type}_reason'
+
+        # ignore values param as its static_domain requires an exact amount match,
+        # but we have to use it in the function signature
+        def search_fixed_tax_fuzzy(values):
+            ''' Matching precedence:
+                1. Both reason_code and reason match.
+                2. Only reason_code matches.
+                3. Reason matches.
+                4. Reason is found in the tax name (or the tax name in the reason).
+                5. Without a reason code, fall back on the only candidate tax, if there is exactly one.
+
+            Only the highest-priority matching tax is selected.
+            '''
+            candidate_taxes = self.search([
+                ('company_id', 'in', [company_id, False]),
+                ('amount_type', '=', 'fixed'),
+                ('type_tax_use', '=', type_tax_use),
+                ('amount', '>=', calculated_amount - 0.01),
+                ('amount', '<=', calculated_amount + 0.01),
+            ])
+
+            def contains_both_ways(value):
+                # Match both ways (the reason contains the value or the other way around).
+                value = (value or '').strip().lower()
+                return reason and value and (reason in value or value in reason)
+
+            def match_score(tax):
+                return (
+                    reason_code and tax[reason_code_field] == reason_code,
+                    contains_both_ways(tax[reason_field]),
+                    contains_both_ways(tax.name),
+                )
+
+            if matched := candidate_taxes.filtered(lambda tax: any(match_score(tax))):
+                return min(matched, key=lambda tax: (
+                    tuple(not m for m in match_score(tax)),
+                    abs(tax.amount - calculated_amount),
+                    tax.sequence,
+                    tax.id,
+                ))
+
+            if not reason_code and len(candidate_taxes) == 1:
+                # No reason code means only a (non-matching) reason is given (BR-42/BR-44),
+                # accept the tax if it is the only candidate for the amount.
+                return candidate_taxes
+            return self
+
+        cache_key = (
+            company_id,
+            type_tax_use,
+            calculated_amount,
+            reason,
+            reason_code,
+            allowance_charge_type,
+        )
+
+        return {
+            'criteria': [{
+                'search_method': search_fixed_tax_fuzzy,
+                'cache_key': cache_key,
+            }],
+        }
