@@ -60,16 +60,14 @@
                     <button class="btn btn-secondary" t-on-click="this.props.close">Close</button>
                 </div>
             </div>
-            <div t-if="this.state.currentResource" id="resource-editor-id">
-                <div class="float-end">
-                    <button t-if="this.state.type !== 'xml' and this.isCustomResource(this.state.currentResource.url)" type="button" class="btn btn-sm btn-danger" t-on-click="this.onReset">
-                        <i class="oi" data-icon="undo" role="img" aria-hidden="true"/>
-                        Reset
-                    </button>
-                    <button type="button" class="btn btn-sm btn-link" t-on-click="this.openSearch">Search</button>
-                    <button t-if="this.state.type === 'xml'" type="button" class="btn btn-sm btn-link" t-on-click="this.onFormat">Format</button>
-                </div>
-                <span class="o_resource_editor_resource_info" t-out="this.resourceInfo"/>
+            <div t-if="this.state.currentResource" id="resource-editor-id" class="d-flex align-items-center">
+                <span class="o_resource_editor_resource_info text-truncate" t-att-data-tooltip="this.resourceInfo" t-out="this.resourceInfo"/>
+                <a t-if="this.state.type === 'xml'"
+                    t-att-href="'/odoo/action-base.action_ui_view/' + this.state.currentResource.id"
+                    target="_blank" class="ms-1" data-tooltip="Open the view record in a new tab"
+                    aria-label="Open the view record in a new tab">
+                    <i class="oi" data-icon="open_in_new" role="img" aria-hidden="true"/>
+                </a>
                 <t t-set="websiteStatusInfo" t-value="this.getWebsiteStatusInfo()"/>
                 <span t-if="websiteStatusInfo"
                     class="o_resource_editor_website_status ms-2 small opacity-75 text-nowrap"
