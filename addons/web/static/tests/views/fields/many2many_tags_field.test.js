@@ -168,7 +168,7 @@ test("Many2ManyTagsField with and without color on desktop", async () => {
 test.tags("desktop");
 test("[Offline] Many2ManyTagsField", async () => {
     const setOffline = mockOffline();
-    onRpc("web_save", () => expect.step(`web_save`));
+    onRpc("web_save_offline", () => expect.step(`web_save_offline`));
 
     Partner._fields.partner_ids = fields.Many2many({
         string: "Partner",
@@ -246,7 +246,7 @@ test("[Offline] Many2ManyTagsField", async () => {
     await setOffline(false);
 
     expect(getService("offline").offline).toBe(false);
-    await expect.waitForSteps(["web_save"]); // We sync when the connection returns
+    await expect.waitForSteps(["web_save_offline"]); // We sync when the connection returns
 });
 
 test.tags("desktop");

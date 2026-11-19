@@ -71,6 +71,7 @@ export const UPDATE_METHODS = [
     "create",
     "write",
     "web_save",
+    "web_save_offline",
     "web_save_multi",
     "action_archive",
     "action_unarchive",
