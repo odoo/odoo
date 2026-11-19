@@ -118,6 +118,7 @@ export function clickForceDoneButton() {
             trigger: ".paymentline_status_actions .paymentline_status_actions_button_force_done",
             run: "click",
         },
+        Dialog.confirm("Validate", ".btn-secondary"),
     ];
 }
 

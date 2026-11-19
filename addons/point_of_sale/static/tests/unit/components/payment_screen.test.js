@@ -155,6 +155,42 @@ test("onClickProvider", async () => {
     expect(order.payment_ids[0].payment_method_id).toBe(terminal2);
 });
 
+test("force done dialog closes once the payment ends", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const [terminal] = addTestTerminals(store, 1);
+    const comp = await mountWithCleanup(PaymentScreen, {
+        props: { orderUuid: order.uuid },
+    });
+    const { data: line } = order.addPaymentline(terminal);
+    line.setPaymentStatus("waiting");
+
+    comp.sendForceDone(line);
+    await animationFrame();
+    line.setPaymentStatus("waitingCard");
+    await animationFrame();
+    expect(".modal").toHaveCount(1);
+
+    line.setPaymentStatus("done");
+    await animationFrame();
+    expect(".modal").toHaveCount(0);
+});
+
+test("force done dialog on a payment already done", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const [terminal] = addTestTerminals(store, 1);
+    const comp = await mountWithCleanup(PaymentScreen, {
+        props: { orderUuid: order.uuid },
+    });
+    const { data: line } = order.addPaymentline(terminal);
+    line.setPaymentStatus("done");
+
+    comp.sendForceDone(line);
+    await animationFrame();
+    expect(".modal").toHaveCount(0);
+});
+
 const getPaidOrder = async (store, { invoiced = false } = {}) => {
     const order = await getFilledOrder(store);
     if (invoiced) {
