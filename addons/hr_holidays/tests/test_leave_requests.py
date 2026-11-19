@@ -3689,3 +3689,14 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         }).with_context(hide_employee_name=True)
         self.assertIn(leave.employee_id.name, leave.display_name)
         self.assertNotIn(leave.employee_id.name, leave.with_context(group_by=['employee_id']).display_name)
+
+    def test_display_name_without_employee_starts_with_the_duration(self):
+        leave = self.env['hr.leave'].create({
+            'employee_id': self.employee_emp_id,
+            'work_entry_type_id': self.holidays_type_1.id,
+            'request_date_from': date(2024, 1, 8),
+            'request_date_to': date(2024, 1, 8),
+        })
+        self.env.invalidate_all()
+        leave = leave.with_user(self.user_hrmanager).with_context(hide_employee_name=True, group_by=['employee_id'])
+        self.assertEqual(leave.display_name, "1d NotLimitedHR")
