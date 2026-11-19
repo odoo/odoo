@@ -102,28 +102,39 @@
     <cbc:Note>Payment terms: Immediate Payment</cbc:Note>
   </cac:PaymentTerms>
   <cac:TaxTotal>
-    <cbc:TaxAmount currencyID="EUR">200.00</cbc:TaxAmount>
+    <cbc:TaxAmount currencyID="EUR">232.00</cbc:TaxAmount>
     <cac:TaxSubtotal>
       <cbc:TaxableAmount currencyID="EUR">2000.00</cbc:TaxableAmount>
       <cbc:TaxAmount currencyID="EUR">200.00</cbc:TaxAmount>
       <cac:TaxCategory>
-        <cbc:ID>T</cbc:ID>
+        <cbc:ID>SA</cbc:ID>
         <cbc:Percent>10.0</cbc:Percent>
         <cac:TaxScheme>
-          <cbc:ID>GST</cbc:ID>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:TaxCategory>
+    </cac:TaxSubtotal>
+    <cac:TaxSubtotal>
+      <cbc:TaxableAmount currencyID="EUR">400.00</cbc:TaxableAmount>
+      <cbc:TaxAmount currencyID="EUR">32.00</cbc:TaxAmount>
+      <cac:TaxCategory>
+        <cbc:ID>SE</cbc:ID>
+        <cbc:Percent>8.0</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
         </cac:TaxScheme>
       </cac:TaxCategory>
     </cac:TaxSubtotal>
   </cac:TaxTotal>
   <cac:TaxTotal>
-    <cbc:TaxAmount currencyID="MYR">100.00</cbc:TaxAmount>
+    <cbc:TaxAmount currencyID="MYR">116.00</cbc:TaxAmount>
   </cac:TaxTotal>
   <cac:LegalMonetaryTotal>
-    <cbc:LineExtensionAmount currencyID="EUR">2000.00</cbc:LineExtensionAmount>
-    <cbc:TaxExclusiveAmount currencyID="EUR">2000.00</cbc:TaxExclusiveAmount>
-    <cbc:TaxInclusiveAmount currencyID="EUR">2200.00</cbc:TaxInclusiveAmount>
+    <cbc:LineExtensionAmount currencyID="EUR">2400.00</cbc:LineExtensionAmount>
+    <cbc:TaxExclusiveAmount currencyID="EUR">2400.00</cbc:TaxExclusiveAmount>
+    <cbc:TaxInclusiveAmount currencyID="EUR">2632.00</cbc:TaxInclusiveAmount>
     <cbc:PrepaidAmount currencyID="EUR">0.00</cbc:PrepaidAmount>
-    <cbc:PayableAmount currencyID="EUR">2200.00</cbc:PayableAmount>
+    <cbc:PayableAmount currencyID="EUR">2632.00</cbc:PayableAmount>
   </cac:LegalMonetaryTotal>
   <cac:InvoiceLine>
     <cbc:ID>1</cbc:ID>
@@ -133,15 +144,34 @@
       <cbc:Description>product_a</cbc:Description>
       <cbc:Name>product_a</cbc:Name>
       <cac:ClassifiedTaxCategory>
-        <cbc:ID>T</cbc:ID>
+        <cbc:ID>SA</cbc:ID>
         <cbc:Percent>10.0</cbc:Percent>
         <cac:TaxScheme>
-          <cbc:ID>GST</cbc:ID>
+          <cbc:ID>VAT</cbc:ID>
         </cac:TaxScheme>
       </cac:ClassifiedTaxCategory>
     </cac:Item>
     <cac:Price>
       <cbc:PriceAmount currencyID="EUR">2000.0</cbc:PriceAmount>
+    </cac:Price>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:ID>2</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="DZN">1.0</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="EUR">400.00</cbc:LineExtensionAmount>
+    <cac:Item>
+      <cbc:Description>product_b</cbc:Description>
+      <cbc:Name>product_b</cbc:Name>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID>SE</cbc:ID>
+        <cbc:Percent>8.0</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="EUR">400.0</cbc:PriceAmount>
     </cac:Price>
   </cac:InvoiceLine>
 </Invoice>
