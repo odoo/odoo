@@ -699,7 +699,14 @@ pivotRegistry.add("ODOO", {
     externalData: true,
     onIterationEndEvaluation: () => {},
     dateGranularities: [...granularities],
-    datetimeGranularities: [...granularities, "hour_number", "minute_number", "second_number"],
+    datetimeGranularities: [
+        ...granularities,
+        "hour",
+        "hour_number",
+        "minute",
+        "minute_number",
+        "second_number",
+    ],
     isMeasureCandidate: (field) =>
         ((MEASURES_TYPES.includes(field.type) && field.aggregator) || field.type === "many2one") &&
         field.name !== "id" &&

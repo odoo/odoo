@@ -24,6 +24,7 @@ SUPERUSER_ID = 1
 
 # _read_group stuff
 READ_GROUP_TIME_GRANULARITY = {
+    'minute': dateutil.relativedelta.relativedelta(minutes=1),
     'hour': dateutil.relativedelta.relativedelta(hours=1),
     'day': dateutil.relativedelta.relativedelta(days=1),
     'week': dateutil.relativedelta.relativedelta(days=7),
