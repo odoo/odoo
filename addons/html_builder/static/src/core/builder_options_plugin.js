@@ -189,28 +189,12 @@ export class BuilderOptionsPlugin extends Plugin {
         // when it is reverted.
         history_metadata_properties: {
             current_target: {
-                apply: (targetId, { ensureNewMutations }) => {
-                    if (ensureNewMutations) {
-                        this.dependencies.history.stage("current_target", targetId);
-                    }
-                },
-                revert: (targetId, { ensureNewMutations }) => {
-                    if (ensureNewMutations) {
-                        this.dependencies.history.stage("next_target", targetId);
-                    }
-                },
+                apply: (targetId) => this.dependencies.history.stage("current_target", targetId),
+                revert: (targetId) => this.dependencies.history.stage("next_target", targetId),
             },
             next_target: {
-                apply: (targetId, { ensureNewMutations }) => {
-                    if (ensureNewMutations) {
-                        this.dependencies.history.stage("next_target", targetId);
-                    }
-                },
-                revert: (targetId, { ensureNewMutations }) => {
-                    if (ensureNewMutations) {
-                        this.dependencies.history.stage("current_target", targetId);
-                    }
-                },
+                apply: (targetId) => this.dependencies.history.stage("next_target", targetId),
+                revert: (targetId) => this.dependencies.history.stage("current_target", targetId),
             },
         },
     };
