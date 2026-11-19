@@ -1,6 +1,6 @@
 import { addSectionFromProductCatalog } from "@account/js/tours/tour_utils";
 import { registry } from "@web/core/registry";
-import * as tourUtils from "@sale/js/tours/tour_utils";
+import * as tourUtils from "@sale/tours/tour_utils";
 
 registry.category("web_tour.tours").add('sale_catalog', {
     steps: () => [

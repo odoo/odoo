@@ -1,12 +1,12 @@
 import { proxy } from "@odoo/owl";
 import {
     ComboConfiguratorDialog
-} from '@sale/js/combo_configurator_dialog/combo_configurator_dialog';
-import { ProductCombo } from '@sale/js/models/product_combo';
+} from '@sale/configurator/combo/combo_configurator_dialog';
+import { ProductCombo } from '@sale/configurator/models/product_combo';
 import {
     ProductConfiguratorDialog
-} from '@sale/js/product_configurator_dialog/product_configurator_dialog';
-import { getSelectedCustomPtav, serializeComboItem } from '@sale/js/sale_utils';
+} from '@sale/configurator/product/product_configurator_dialog';
+import { getSelectedCustomPtav, serializeComboItem } from '@sale/sale_utils';
 import { browser } from '@web/core/browser/browser';
 import { serializeDateTime } from '@web/core/l10n/dates';
 import { rpc } from '@web/core/network/rpc';

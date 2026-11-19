@@ -1,5 +1,5 @@
 import { patch } from '@web/core/utils/patch';
-import { ProductProduct } from '@sale/js/models/product_product';
+import { ProductProduct } from '@sale/configurator/models/product_product';
 
 patch(ProductProduct.prototype, {
     /**

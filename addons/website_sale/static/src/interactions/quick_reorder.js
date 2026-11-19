@@ -1,6 +1,6 @@
 import { markup } from '@odoo/owl';
-import { ProductCombo } from '@sale/js/models/product_combo';
-import { serializeComboItem } from '@sale/js/sale_utils';
+import { ProductCombo } from '@sale/configurator/models/product_combo';
+import { serializeComboItem } from '@sale/sale_utils';
 import { serializeDateTime } from '@web/core/l10n/dates';
 import { rpc } from '@web/core/network/rpc';
 import { registry } from '@web/core/registry';

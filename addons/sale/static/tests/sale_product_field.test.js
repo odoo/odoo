@@ -10,7 +10,7 @@ import {
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import { saleModels } from "./sale_test_helpers";
-import { SaleOrderLineProductField } from "@sale/js/sale_product_field/sale_product_field";
+import { SaleOrderLineProductField } from "@sale/views/fields/sale_product_field/sale_product_field";
 
 class SaleOrderLine extends saleModels.SaleOrderLine {
     product_template_attribute_value_ids = fields.Many2many({

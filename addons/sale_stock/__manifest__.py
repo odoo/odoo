@@ -52,7 +52,7 @@ Preferences
             ('remove', 'sale_stock/static/src/return_order_dialog/*'),
         ],
         'web.assets_frontend': [
-            'sale/static/src/js/quantity_buttons/*',
+            'sale/static/src/components/quantity_buttons/*',
             'sale_stock/static/src/interactions/*',
             'sale_stock/static/src/return_order_dialog/*',
         ],
