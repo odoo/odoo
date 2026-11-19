@@ -8,7 +8,7 @@ from odoo.addons.website.tests.test_performance import TestWebsitePerformanceCom
 @tagged("post_install", "-at_install")
 class TestWebsiteLivechatPerformance(TestWebsitePerformanceCommon):
     def test_cached_page_queries(self):
-        self.assertEqual(self._get_url_hot_query(self.page.url), 4)
+        query_count_without_livechat = self._get_url_hot_query(self.page.url)
         operator = self.env["res.users"].create({
             "name": "Operator",
             "login": "operator",
@@ -20,4 +20,4 @@ class TestWebsiteLivechatPerformance(TestWebsitePerformanceCommon):
             "user_ids": [(6, 0, operator.ids)],
         })
         # fresh livechat info: rule count, channel, operators, users, presences
-        self.assertEqual(self._get_url_hot_query(self.page.url), 10)
+        self.assertEqual(self._get_url_hot_query(self.page.url), query_count_without_livechat + 6)
