@@ -331,6 +331,9 @@ export class PosTicketPrinterPlugin extends Plugin {
         const unsuccessfulPrints = [];
         // Each printer has its own change (filtered on its categories) to print again on retry
         const failedChanges = new Map();
+        // Tickets are rendered one by one (shared iframe container), but a printer doesn't wait
+        // for the previous printers to print: printers print in parallel, each one in order.
+        const printJobs = [];
 
         for (const printer of printers) {
             const template = opts.template || "point_of_sale.pos_order_change_receipt";
@@ -344,6 +347,9 @@ export class PosTicketPrinterPlugin extends Plugin {
                 ? this._splitTicketsPerProduct(changes, generator)
                 : changes;
             const orderChanges = changes.length ? changes[0]._rawChange : null;
+            const results = [];
+            let connected = true;
+            let printerJob = Promise.resolve();
 
             for (const ticket of tickets) {
                 if (ticket.extra_data.reprint && !opts.explicitReprint) {
@@ -351,23 +357,37 @@ export class PosTicketPrinterPlugin extends Plugin {
                 }
 
                 if (!printer?._instance) {
-                    unsuccessfulPrints.push(printer.name + " is not connected");
+                    connected = false;
                     break;
                 }
 
-                let result;
+                let sendTicket;
                 if (printer.paper_size === "label") {
                     const zpl = renderToString(
                         "point_of_sale.pos_order_change_receipt_zpl",
                         ticket
                     );
-                    result = await printer._instance.print(zpl);
+                    sendTicket = () => printer._instance.print(zpl);
                 } else {
                     const iframe = await this.generateIframe(template, ticket);
                     this.setIframeSizeFromPrinter(iframe, printer);
                     const image = await this.generateImage(iframe);
-                    result = await this.print({ printer, image });
+                    sendTicket = () => this.print({ printer, image });
                 }
+                // Not awaited: sent after the previous ticket of the same printer
+                printerJob = printerJob.then(async () => {
+                    results.push({ ticket, result: await sendTicket() });
+                });
+            }
+            printJobs.push(printerJob.then(() => ({ printer, connected, results, orderChanges })));
+        }
+
+        // Results are handled in the printers order, as if they were printed sequentially
+        for (const { printer, connected, results, orderChanges } of await Promise.all(printJobs)) {
+            if (!connected) {
+                unsuccessfulPrints.push(printer.name + " is not connected");
+            }
+            for (const { ticket, result } of results) {
                 if (result.successful) {
                     isPrinted = true;
                 }
