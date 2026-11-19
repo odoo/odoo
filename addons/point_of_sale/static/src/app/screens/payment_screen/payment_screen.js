@@ -1,11 +1,12 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
+import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { parseFloat } from "@web/views/fields/parsers";
 
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
 import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/price_formatter";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { ForcePaymentDialog } from "@point_of_sale/app/screens/payment_screen/force_payment_dialog/force_payment_dialog";
 
 import { Component, onMounted, useProps, t, usePlugin } from "@odoo/owl";
 import { Numpad, enhancedButtons } from "@point_of_sale/app/components/numpad/numpad";
@@ -31,6 +32,7 @@ export class PaymentScreen extends Component {
         this.pos = usePos();
         this.ui = useService("ui");
         this.dialog = useService("dialog");
+        this.addOwnedDialog = useOwnedDialogs();
         this.invoiceService = useService("account_move");
         this.notification = useService("notification");
         this.payment_methods_from_config = this.configPaymentMethods || [];
@@ -424,13 +426,35 @@ export class PaymentScreen extends Component {
         await line.cancelPayment(this.currentOrder);
     }
 
-    async sendForceDone(line) {
-        line.forceDone();
-        await this.pos.autoValidateOrder();
+    confirmForceAction(line, body, action) {
+        this.addOwnedDialog(ForcePaymentDialog, {
+            title: _t("Warning"),
+            body,
+            line,
+            confirmLabel: _t("Discard"),
+            cancelLabel: _t("Validate"),
+            cancel: action,
+            dismiss: () => {},
+        });
     }
 
-    async sendForceCancel(line) {
-        line.forceCancel();
+    sendForceDone(line) {
+        this.confirmForceAction(
+            line,
+            _t("Are you sure you want to force the ongoing payment?"),
+            async () => {
+                line.forceDone();
+                await this.pos.autoValidateOrder();
+            }
+        );
+    }
+
+    sendForceCancel(line) {
+        this.confirmForceAction(
+            line,
+            _t("Are you sure you want to cancel the ongoing payment?"),
+            () => line.forceCancel()
+        );
     }
 
     async clickTableGuests() {

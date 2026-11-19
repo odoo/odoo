@@ -73,6 +73,8 @@ export class PaymentInterface {
      */
     async sendPaymentCancel(line) {}
 
+    onForceDone() {}
+
     /**
      * Called when the payment screen in the POS is closed (by
      * e.g. clicking the "Back" button). Could be used to cancel in
