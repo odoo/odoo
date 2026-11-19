@@ -166,6 +166,20 @@ class TestUtm(TestUTMCommon):
                 ["NoDupBatch [2]", "NoDupBatch [4]", "NoDupBatch [6]", "Margoulin"]
             )
 
+    def test_name_generation_with_archived_record(self):
+        """Archived records still hold their name in the unique constraint, so
+        new names must be computed against them too."""
+        self.env['utm.medium'].create({'name': 'Archived Medium', 'active': False})
+        medium = self.env['utm.medium'].create({'name': 'Archived Medium'})
+        self.assertEqual(medium.name, 'Archived Medium [2]')
+
+        self.env['utm.campaign'].create({'title': 'Archived Campaign', 'active': False})
+        campaign = self.env['utm.campaign'].create({'title': 'Archived Campaign'})
+        self.assertEqual(campaign.name, 'Archived Campaign [2]')
+        campaign = self.env['utm.campaign'].create({'title': 'Other Campaign'})
+        campaign.title = 'Archived Campaign'
+        self.assertEqual(campaign.name, 'Archived Campaign [3]')
+
     def test_split_name_and_count(self):
         """ Test for tool '_split_name_and_count' """
         for name, (expected_name, expected_count) in [
