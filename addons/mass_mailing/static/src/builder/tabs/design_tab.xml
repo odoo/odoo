@@ -51,6 +51,13 @@
             actionParam="{ variable: '--wrapper-background-color' }"
         />
     </BuilderRow>
+    <BuilderRow label.translate="Template" extraClass="'pe-2'">
+        <BuilderButton
+            action="'mass_mailing.SwitchTemplateAction'"
+            type="'global'">
+            Switch Template
+        </BuilderButton>
+    </BuilderRow>
 </t>
 
 <t t-name="mass_mailing.DesignHeadingsOption">

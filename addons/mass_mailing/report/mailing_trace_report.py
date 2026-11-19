@@ -19,17 +19,17 @@ class MailingTraceReport(models.Model):
         string='Status', readonly=True)
     email_from = fields.Char('From', readonly=True)
     # traces
-    scheduled = fields.Integer(readonly=True)
-    processing = fields.Integer(readonly=True)
-    pending = fields.Integer(readonly=True)  # Used with SMS before a delivery report is received
-    sent = fields.Integer(readonly=True)
-    delivered = fields.Integer(readonly=True)
-    error = fields.Integer(readonly=True)
-    opened = fields.Integer(readonly=True)
-    replied = fields.Integer(readonly=True)
-    bounced = fields.Integer(readonly=True)
-    canceled = fields.Integer(readonly=True)
-    clicked = fields.Integer(readonly=True)
+    scheduled = fields.Integer(readonly=True, string="Schedules")
+    processing = fields.Integer(readonly=True, string="Processings")
+    pending = fields.Integer(readonly=True, string="Pendings")  # Used with SMS before a delivery report is received
+    sent = fields.Integer(readonly=True, string="Sends")
+    delivered = fields.Integer(readonly=True, string="Deliveries")
+    error = fields.Integer(readonly=True, string="Errors")
+    opened = fields.Integer(readonly=True, string="Opens")
+    replied = fields.Integer(readonly=True, string="Replies")
+    bounced = fields.Integer(readonly=True, string="Bounces")
+    canceled = fields.Integer(readonly=True, string="Cancels")
+    clicked = fields.Integer(readonly=True, string="Clicks")
 
     def init(self):
         """Mass Mail Statistical Report: based on mailing.trace that models the various
