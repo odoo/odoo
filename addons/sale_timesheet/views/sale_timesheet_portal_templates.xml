@@ -72,12 +72,12 @@
     </template>
 
     <template id="portal_invoice_page_inherit" inherit_id="account.portal_invoice_page">
-        <xpath expr="//t[@t-set='entries']/div/div/div[hasclass('o_download_pdf')]" position="after">
+        <xpath expr="//t[@t-set='invoice_actions']/div/div[hasclass('o_download_pdf')]" position="after">
             <t t-if="invoice.timesheet_count > 0 and invoice.env['account.analytic.line']._show_portal_timesheets()">
                 <t t-set="search_value" t-value="invoice.name"/>
                 <t t-if="invoice.state == 'draft'" t-set="search_value" t-value="invoice.id"/>
                 <a t-if="invoice.move_type == 'out_invoice' and invoice.state in ('draft', 'posted') and timesheets"
-                    target="_blank" t-att-href="'/my/timesheets?search_in=invoice&amp;search=%s' % search_value" class="btn btn-light" role="button" title="View Timesheet">View Timesheets</a>
+                    target="_blank" t-att-href="'/my/timesheets?search_in=invoice&amp;search=%s' % search_value" class="btn btn-light" role="button" title="View Timesheet"><i class="oi me-1" data-icon="schedule" aria-hidden="true"/>View Timesheets</a>
             </t>
         </xpath>
     </template>

@@ -156,15 +156,17 @@
                         <span class="o_portal_sidebar_timeago ml4" t-att-datetime="next_due_date"/>
                     </div>
                 </t>
+                <!-- In the sidebar, and under the amount on mobile -->
+                <t t-set="invoice_actions">
+                    <div class="d-flex flex-column gap-2">
+                        <div class="o_download_pdf d-flex flex-lg-column flex-xl-row flex-wrap gap-2">
+                            <a class="btn btn-light o_download_btn flex-grow-1" t-att-href="invoice.get_portal_url(report_type='pdf', download=True)" title="Download" role="button"><i class="oi me-1" data-icon="download" aria-hidden="true"/>Download</a>
+                        </div>
+                    </div>
+                </t>
                 <t t-set="entries">
                     <div class="d-flex flex-column gap-4 mt-3">
-                        <div class="d-flex flex-column gap-2">
-                            <div class="o_download_pdf d-flex flex-lg-column flex-xl-row flex-wrap gap-2">
-                                <a class="btn btn-light o_download_btn flex-grow-1" t-att-href="invoice.get_portal_url(report_type='pdf', download=True)" title="Download" role="button">
-                                    <i class="oi oi-fw" data-icon="download"/> Download
-                                </a>
-                            </div>
-                        </div>
+                        <t t-out="invoice_actions"/>
                         <div t-if="invoice.invoice_user_id" class="flex-grow-1">
                             <h6>
                                 <small class="text-muted">
@@ -184,12 +186,16 @@
                     </div>
                 </t>
                 <t t-call="portal.portal_record_sidebar"
-                    classes.f="col-lg-4 col-xxl-3 d-print-none"
+                    classes.f="col-lg-4 col-xxl-3 d-none d-lg-block d-print-none"
                     title="title"
                     entries="entries"/>
 
                 <!-- Page Content -->
                 <div id="invoice_content" class="o_portal_content col-12 col-lg-8 col-xxl-9">
+                    <div id="invoice_mobile_header" class="d-flex d-lg-none flex-column gap-3 mb-3 border rounded-3 p-3 bg-100 d-print-none">
+                        <div class="d-flex flex-column align-items-center" t-out="title"/>
+                        <t t-out="invoice_actions"/>
+                    </div>
                     <t t-if="error or warning" t-call="account.portal_invoice_error"/>
                     <t t-if="success and (not error and not warning)" t-call="account.portal_invoice_success"/>
 

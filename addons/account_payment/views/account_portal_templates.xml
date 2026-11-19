@@ -253,14 +253,12 @@
                 </div>
             </t>
         </xpath>
-        <xpath expr="//t[@t-set='entries']//div[hasclass('o_download_pdf')]" position="before">
+        <xpath expr="//t[@t-set='invoice_actions']//div[hasclass('o_download_pdf')]" position="before">
             <a t-if="invoice._has_to_be_paid()"
                 href="#"
                 class="btn btn-primary"
                 data-bs-toggle="modal"
-                data-bs-target="#pay_with">
-                <i class="oi oi-fw oi-filled" data-icon="arrow_circle_right"/> Pay Now
-            </a>
+                data-bs-target="#pay_with"><i class="oi me-1" data-icon="credit_card" aria-hidden="true"/>Pay Now</a>
         </xpath>
         <xpath expr="//div[@id='invoice_content']//div[hasclass('o_portal_html_view')]" position="before">
             <t t-set="tx" t-value="invoice.get_portal_last_transaction()"/>
