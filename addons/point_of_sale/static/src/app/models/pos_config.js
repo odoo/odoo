@@ -75,7 +75,7 @@ export class PosConfig extends Base {
 
     get printerCategories() {
         const set = new Set();
-        for (const relPrinter of this.models["pos.printer"].getAll()) {
+        for (const relPrinter of this.preparation_printer_ids) {
             const printer = relPrinter.raw;
             for (const id of printer.product_categories_ids) {
                 set.add(id);
