@@ -59,6 +59,12 @@
         <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
+    <record id="hr_work_location_comp_rule" model="ir.rule">
+        <field name="name">Work location multi company rule</field>
+        <field name="model_id" ref="model_hr_work_location"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
     <record id="ir_rule_res_partner_bank_internal_users" model="ir.rule">
         <field name="name">HR: Prevent non HR officers from accessing employee bank accounts</field>
         <field name="model_id" ref="base.model_res_partner_bank"/>
