@@ -168,7 +168,8 @@ class StockLot(models.Model):
     def _compute_single_location(self):
         for lot in self:
             quants = lot.quant_ids.filtered(lambda q: q.quantity > 0)
-            lot.location_id = quants.location_id if len(quants.location_id) == 1 else False
+            locations = quants.location_id
+            lot.location_id = locations[0] if locations else False
 
     def _set_single_location(self):
         quants = self.quant_ids.filtered(lambda q: q.quantity > 0)
