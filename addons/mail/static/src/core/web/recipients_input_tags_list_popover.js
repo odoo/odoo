@@ -1,4 +1,3 @@
-import { parseEmail } from "@mail/utils/common/format";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { isEmail } from "@web/core/utils/strings";
 
@@ -54,8 +53,7 @@ export class RecipientsInputTagsListPopover extends Component {
     }
 
     get isValidEmail() {
-        const value = parseEmail(this.inputValue());
-        const name = value ? value[0] : "";
-        return isEmail(name);
+        const value = (this.inputValue() ?? "").trim();
+        return isEmail(value);
     }
 }

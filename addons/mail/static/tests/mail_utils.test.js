@@ -228,8 +228,8 @@ test("url with number in subdomain", async () => {
 
 test("parseEmail", () => {
     const testCases = {
-        "": undefined,
-        "   ": ["", false],
+        "": ["", ""],
+        "   ": ["", ""],
         '"Shrek" <shrek@example.com>': ["Shrek", "shrek@example.com"],
         '"Gwonam \\"Squadallah\\" <CEO>" <gwonam@example.com>': [
             'Gwonam "Squadallah" <CEO>',
@@ -243,8 +243,8 @@ test("parseEmail", () => {
         "Barry <barry@example.com>, Adam <adam@example.com>": ["Barry", "barry@example.com"],
         " dofus@example.com ": ["dofus@example.com", "dofus@example.com"],
         "<voiture@example.com>": ["voiture@example.com", "voiture@example.com"],
-        "Marc Demo": ["Marc Demo", false],
-        "  Mitchell Admin  ": ["Mitchell Admin", false],
+        "Marc Demo": ["Marc Demo", ""],
+        "  Mitchell Admin  ": ["Mitchell Admin", ""],
     };
     for (const [input, expected] of Object.entries(testCases)) {
         expect(parseEmail(input)).toEqual(expected);

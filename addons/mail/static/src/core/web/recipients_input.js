@@ -125,7 +125,7 @@ export class RecipientsInput extends Component {
                         });
                     }
 
-                    const [name, email] = term ? parseEmail(term) : ["", ""];
+                    const [name, email] = parseEmail(term);
                     const createOption = {
                         cssClass: "o_m2o_dropdown_option o_m2o_dropdown_option_create",
                         label: _t("Create %s", name),

@@ -662,14 +662,10 @@ const NAME_AND_ADDRESS = new RegExp(r`^${UNQUOTED_NAME}${ADDRESS}`);
  * NOT intended for email validation.
  *
  * @param {string} text
- * @returns {[string, string|false]|undefined} [name, email], with email false
- * if text has no address, or undefined if text is falsy
+ * @returns {[string, string]} [name, email], with email "" if text has no address
  */
 export function parseEmail(text) {
-    if (!text) {
-        return;
-    }
-    text = text.trim();
+    text = text ? text.trim() : "";
     let match = text.match(QUOTED_NAME_AND_ADDRESS);
     if (match) {
         const name = match[1].replace(/\\(.)/g, "$1").trim();
@@ -687,7 +683,7 @@ export function parseEmail(text) {
     if (text.includes("@")) {
         return [text, text];
     }
-    return [text, false];
+    return [text, ""];
 }
 
 /**

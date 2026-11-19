@@ -46,7 +46,7 @@ registerMessageAction("reply-all", {
         // usually reply_to is what you want people to see as being "from"
         // showing this avoids "leaking" the actual user when reply_to is an alias
         const emailFrom = message.reply_to || message.email_from || message.author_id?.displayEmail;
-        const [name, email] = emailFrom ? parseEmail(emailFrom) : ["", ""];
+        const [name, email] = parseEmail(emailFrom);
         const datetime = _t("%(date)s at %(time)s", {
             date: message.datetime.toFormat("ccc, MMM d, yyyy"),
             time: message.datetime.toFormat("hh:mm a"),
@@ -83,7 +83,7 @@ registerMessageAction("forward", {
         // usually reply_to is what you want people to see as being "from"
         // showing this avoids "leaking" the actual user when reply_to is an alias
         const emailFrom = message.reply_to || message.email_from || message.author_id?.displayEmail;
-        const [name, email] = emailFrom ? parseEmail(emailFrom) : ["", ""];
+        const [name, email] = parseEmail(emailFrom);
         const datetime = _t("%(date)s at %(time)s", {
             date: message.datetime.toFormat("ccc, MMM d, yyyy"),
             time: message.datetime.toFormat("hh:mm a"),
