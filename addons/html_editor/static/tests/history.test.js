@@ -1432,6 +1432,22 @@ describe("history properties", () => {
             history.reset([snapshot, undoCommit]);
             expect.verifySteps([]);
         });
+
+        test("restore commits replay the commits they revert in the direction of their type", async () => {
+            const values = valueHistory();
+            const { editor } = await setupEditor(`<p>[]</p>`, {
+                config: { resources: values.resources },
+            });
+            const history = editor.shared.history;
+            const restore = history.makeSavePoint();
+            values.set(editor, 1, "A");
+            history.commit();
+            undo(editor);
+            restore();
+            // Reverting the undo commit reapplies A.
+            expect.verifySteps(["apply A", "revert A", "apply A", "revert A"]);
+            expect(values.value).toBe(0);
+        });
     });
 });
 
