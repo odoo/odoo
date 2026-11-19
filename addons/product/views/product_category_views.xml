@@ -39,7 +39,7 @@
         <field name="model">product.category</field>
         <field name="priority">1</field>
         <field name="arch" type="xml">
-            <list string="Product Categories">
+            <list string="Product Categories" default_order = "name">
                 <field name="display_name" string="Product Category"/>
                 <field name="company_id" groups="base.group_multi_company" optional="hide"/>
             </list>
