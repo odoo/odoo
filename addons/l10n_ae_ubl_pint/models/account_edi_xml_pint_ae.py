@@ -572,6 +572,12 @@ class AccountEdiXmlPintAe(models.AbstractModel):
         if not item_node['cbc:Description']:
             item_node['cbc:Description'] = item_node['cbc:Name']
 
+    def _ubl_add_line_allowance_charge_nodes(self, vals):
+        """ Add the discount of the line as its allowance: cac:InvoiceLine/cac:AllowanceCharge (IBG-27). """
+        # EXTENDS account.edi.ubl
+        super()._ubl_add_line_allowance_charge_nodes(vals)
+        self._ubl_add_line_allowance_charge_nodes_for_discount(vals)
+
     def _ubl_add_line_price_node(self, vals, in_foreign_currency=True):
         """ ibr-126-ae: Item price base quantity (IBT-149) and gross price (IBT-148) are mandatory.
 

@@ -481,6 +481,22 @@ class TestExportPintAe(TestUblCiiCommon):
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'early_payment_discount')
 
+    def test_export_line_discount(self):
+        """ A discount on a line is its allowance: the line net amount and the totals are the invoice's (ibr-147-ae). """
+        invoice = self._create_invoice(
+            move_type='out_invoice',
+            partner_id=self.partner_ae,
+            invoice_line_ids=[
+                self._prepare_invoice_line(product_id=self.product_a, quantity=10, price_unit=100.0, discount=10.0, tax_ids=self.tax_sale_a),
+                self._prepare_invoice_line(product_id=self.product_a, quantity=1, price_unit=50.0, tax_ids=self.tax_sale_a),
+            ],
+            name='INV/2025/00001',
+            post=True,
+        )
+        self.assertEqual(invoice.amount_untaxed, 950.0)
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'line_discount')
+
     def test_export_global_discount(self):
         """ A global discount is exported as document level allowance, not as a line with a negative price (ibr-027). """
         self.ensure_installed('sale')
