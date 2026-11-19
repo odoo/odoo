@@ -6,5 +6,4 @@ from . import hr_applicant
 from . import hr_recruitment_source
 from . import ir_model
 from . import website
-from . import website_page
 from . import website_published_multi_mixin

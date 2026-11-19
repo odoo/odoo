@@ -37,7 +37,6 @@ from . import (
     website,
     website_checkout_step,
     website_menu,
-    website_page,
     website_sale_extra_field,
     website_snippet_filter,
     website_track,
