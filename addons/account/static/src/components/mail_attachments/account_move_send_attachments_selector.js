@@ -61,6 +61,10 @@ export class AccountMoveSendAttachmentsSelector extends Component {
         return this.attachments.filter((a) => a.skip);
     }
 
+    get availableAttachmentsCount() {
+        return this.dropdownAttachments.length;
+    }
+
     async onFileUploaded({ name, data, type }) {
         const thread = await this.mailStore["mail.thread"].insert({
             id: this.props.record.data.move_id.id,
