@@ -385,7 +385,7 @@ def serve_db(request: Request) -> Response:
         # get the registry and cursor (RO)
         try:
             registry = Registry(request.db)
-            cr = registry.cursor(readonly=config.has_db_replica or request.bearer_readonly)
+            cr = registry.cursor(readonly=True)
             # check signaling
             request.env = Environment(cr, request.session.uid, request.session.context)
             request.update_context(host_id=request.env['ir.http']._get_host_id_from_domain(request.httprequest.host))
@@ -416,8 +416,7 @@ def serve_db(request: Request) -> Response:
 
         # keep on using the RO cursor when a replica route matched,
         # and for serve fallback
-        if request.bearer_readonly or (replica and cr.readonly):
-            assert cr.readonly, "readonly bearer must not use a read/write cursor"
+        if request.bearer_readonly or replica:
             threading.current_thread().cursor_mode = 'ro'
             try:
                 return retrying(serve_func, env=request.env)
@@ -437,20 +436,14 @@ def serve_db(request: Request) -> Response:
         # there was a ReadOnlySqlTransaction error
         assert not request.bearer_readonly, \
             "readonly bearer must not use a read/write cursor"
-        if cr.readonly:
-            cr.close()
-            try:
-                cr = request.env.registry.cursor()
-            except psycopg2.OperationalError:
-                _logger.warning("Cannot open a read/write cursor", exc_info=True)
-                abort(Response(status=HTTPStatus.SERVICE_UNAVAILABLE))
-        else:
-            # the cursor is already a RW cursor, start a new transaction
-            # that will avoid repeatable read serialization errors because
-            # check signaling is not done in `retrying` and that function
-            # would just succeed the second time
-            cr.rollback()
-        assert not cr.readonly
+
+        cr.close()
+        try:
+            cr = request.env.registry.cursor()
+        except psycopg2.OperationalError:
+            _logger.warning("Cannot open a read/write cursor", exc_info=True)
+            abort(Response(status=HTTPStatus.SERVICE_UNAVAILABLE))
+
         request.env = request.env(cr=cr)
         try:
             return retrying(serve_func, env=request.env)
