@@ -32,11 +32,9 @@ class WebsiteSaleVariantController(Controller):
 
         product_template = self.env["product.template"].browse(product_template_id)
 
+        combination_ptavs = self.env["product.template.attribute.value"].browse(combination)
         combination_info = product_template._get_combination_info(
-            combination=self.env["product.template.attribute.value"].browse(combination),
-            product_id=product_id,
-            add_qty=add_qty,
-            uom_id=uom_id,
+            combination=combination_ptavs, product_id=product_id, add_qty=add_qty, uom_id=uom_id
         )
         combination_info["currency_precision"] = combination_info["currency"].decimal_places
 
@@ -53,7 +51,31 @@ class WebsiteSaleVariantController(Controller):
             combination_info.pop(key)
 
         product = self.env["product.product"].browse(combination_info["product_id"])
-        if product and product.id == product_id:
+        is_same_variant = product and product.id == product_id
+
+        specifications_template = None
+
+        if self.env.website.is_view_active("website_sale.accordion_specs_item"):
+            specifications_template = "website_sale.product_accordion"
+        elif self.env.website.is_view_active(
+            "website_sale.product_specifications_bottom"
+        ) or self.env.website.is_view_active("website_sale.product_specifications_top"):
+            specifications_template = "website_sale.product_spec_section"
+
+        if specifications_template and (
+            not is_same_variant or combination_ptavs - product.product_template_attribute_value_ids
+        ):
+            combination_info["product_specifications"] = self.env["ir.ui.view"]._render_template(
+                specifications_template,
+                values={
+                    "combination": combination_ptavs,
+                    "product": product_template,
+                    "product_variant": product,
+                    "website": self.env.website,
+                },
+            )
+
+        if is_same_variant:
             combination_info["no_product_change"] = True
             return combination_info
 
@@ -74,10 +96,7 @@ class WebsiteSaleVariantController(Controller):
         if self.env.website.is_view_active("website_sale.documents"):
             combination_info["documents"] = self.env.website._render_template(
                 "website_sale.documents",
-                values={
-                    "product": product_template,
-                    "product_variant": product,
-                },
+                values={"product": product_template, "product_variant": product},
             )
 
         if self.env.website.is_view_active("website_sale.product_tags"):
@@ -111,7 +130,8 @@ class WebsiteSaleVariantController(Controller):
         Used if the `is_thumbnail_visible` option is active on the attribute.
 
         :param int product_template_id: the `product.template` being displayed.
-        :param list combination: the `product.template.attribute.value` ids selected on the product template
+        :param list combination: the `product.template.attribute.value` ids selected on the
+            product template
         :return: A dictionary mapping attribute value IDs to their corresponding image URLs.
         """
         product_template = self.env["product.template"].browse(int(product_template_id))
