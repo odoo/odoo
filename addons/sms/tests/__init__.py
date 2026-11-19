@@ -3,4 +3,5 @@
 
 from . import common
 from . import test_sms_composer
+from . import test_sms_composer_ui
 from . import test_sms_template
