@@ -142,7 +142,7 @@
     </template>
 
     <template id="portal_breadcrumbs" name="Portal Breadcrumbs">
-        <ol t-if="page_name != 'home'" class="o_portal_submenu breadcrumb mb-0 flex-grow-1 px-0">
+        <ol t-if="page_name != 'home'" class="o_portal_submenu breadcrumb flex-grow-1 mb-0 min-w-0 px-0">
             <li class="breadcrumb-item ms-1"><a href="/my/home" aria-label="Home" title="Home"><i class="oi" data-icon="home"/></a></li>
             <li t-if="page_name == 'my_addresses'" class="breadcrumb-item active">Addresses</li>
 
