@@ -38,8 +38,15 @@ class WebsocketController(Controller):
         subscribe_data = request.env["ir.websocket"]._prepare_subscribe_data(channels, last)
         request.env["ir.websocket"]._after_subscribe_data(subscribe_data)
         channels_with_db = [channel_with_db(request.db, c) for c in subscribe_data["channels"]]
-        notifications = request.env["bus.bus"]._poll(channels_with_db, subscribe_data["last"])
-        return {"channels": channels_with_db, "notifications": notifications}
+        notifications, has_more_notifications = request.env["bus.bus"]._poll_batch(
+            channels_with_db,
+            subscribe_data["last"],
+        )
+        return {
+            "channels": channels_with_db,
+            "notifications": notifications,
+            "has_more": has_more_notifications,
+        }
 
     @route("/websocket/on_closed", type="jsonrpc", auth="public", cors="*")
     def on_websocket_closed(self):

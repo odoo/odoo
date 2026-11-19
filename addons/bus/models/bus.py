@@ -41,6 +41,9 @@ def get_notify_payload_max_length(default=8000):
 
 # max length in bytes for the NOTIFY query payload
 NOTIFY_PAYLOAD_MAX_LENGTH = get_notify_payload_max_length()
+FETCH_MAX_BYTES = 1_048_576  # 1 MiB
+# Unlike the byte cap (a running sum), the row cap lets PostgreSQL stop the window early.
+FETCH_MAX_ROWS = 2000
 
 
 # ---------------------------------------------------------
@@ -169,25 +172,71 @@ class BusBus(models.Model):
 
     @api.model
     def _poll(self, channels, last=0, ignore_ids=None):
-        # first poll return the notification in the 'buffer'
+        notifications, _has_more = self._poll_batch(channels, last, ignore_ids, max_bytes=None, max_rows=None)
+        return notifications
+
+    def _poll_batch(
+        self,
+        channels,
+        last=0,
+        ignore_ids=None,
+        *,
+        max_bytes: int | None = FETCH_MAX_BYTES,
+        max_rows: int | None = FETCH_MAX_ROWS,
+    ):
+        """Return the notifications of the given ``channels`` after ``last``, capped by
+        ``max_bytes`` and ``max_rows`` (None: no cap). If the first notification exceeds
+        ``max_bytes``, return it alone.
+
+        :return: A tuple where the first item is the notification list
+        and the second a boolean indicating whether there is more to fetch.
+        :rtype: tuple[list, bool]
+        """
+        if not channels:
+            return [], False
+        channels_with_db = tuple(
+            json_dump(channel_with_db(self.env.cr.dbname, c)) for c in channels
+        )
+        where_parts = [SQL("channel IN %s", channels_with_db)]
         if last == 0:
             timeout_ago = fields.Datetime.now() - datetime.timedelta(seconds=TIMEOUT)
-            domain = [('create_date', '>', timeout_ago)]
-        else:  # else returns the unread notifications
-            domain = [('id', '>', last)]
+            where_parts.append(SQL("create_date > %s", timeout_ago))
+        else:
+            where_parts.append(SQL("id > %s", last))
         if ignore_ids:
-            domain.append(("id", "not in", ignore_ids))
-        channels = [json_dump(channel_with_db(self.env.cr.dbname, c)) for c in channels]
-        domain.append(('channel', 'in', channels))
-        notifications = self.sudo().search_read(domain, ["message"])
-        # list of notification to return
-        result = []
-        for notif in notifications:
-            result.append({
-                'id': notif['id'],
-                'message': orjson.loads(notif['message']),
-            })
-        return result
+            where_parts.append(SQL("id NOT IN %s", tuple(ignore_ids)))
+        self.env.cr.execute(
+            SQL(
+                """
+                    WITH bus_with_size AS (
+                        SELECT id,
+                               message,
+                               SUM(octet_length(message)) OVER (ORDER BY id) AS size,
+                               ROW_NUMBER() OVER (ORDER BY id) AS position,
+                               LEAD(id) OVER (ORDER BY id) AS next_id
+                          FROM bus_bus
+                         WHERE %(where)s
+                      ORDER BY id
+                         LIMIT %(max_rows)s
+                    )
+                    SELECT id,
+                           message,
+                           next_id IS NOT NULL AS has_more_notifications
+                      FROM bus_with_size
+                     WHERE %(max_size)s IS NULL OR size <= %(max_size)s OR position = 1
+                  ORDER BY id ASC
+                """,
+                where=SQL(" AND ").join(where_parts),
+                max_rows=max_rows,
+                max_size=max_bytes,
+            ),
+        )
+        result = self.env.cr.fetchall()
+        notifications = [
+            {"id": id, "message": orjson.loads(message)} for id, message, _has_more in result
+        ]
+        has_more_notifications = bool(result and result[-1][2])
+        return notifications, has_more_notifications
 
     def _bus_last_id(self):
         last = self.env['bus.bus'].search([], order='id desc', limit=1)

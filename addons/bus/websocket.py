@@ -773,7 +773,7 @@ class Websocket:
             env = self.new_env(cr, session)
             if session.uid is not None and not check_session(session, env):
                 raise SessionExpiredException()
-            notifications = env["bus.bus"]._poll(
+            notifications, has_more_notifications = env["bus.bus"]._poll_batch(
                 self._channels, self._last_notif_sent_id, [n[0] for n in self._notif_history]
             )
         if not notifications:
@@ -801,6 +801,8 @@ class Websocket:
             self._last_notif_sent_id = self._notif_history[last_index][0]
             self._notif_history = self._notif_history[last_index + 1 :]
         self._send(notifications)
+        if has_more_notifications:
+            self.trigger_notification_dispatching()
 
     def new_env(self, cr, session, *, set_lang=False):
         """

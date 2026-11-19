@@ -22,6 +22,7 @@ class TestWebsocketController(HttpCaseWithUserDemo):
         notifications = result.get('notifications')
         self.assertIsNotNone(notifications)
         self.assertIsInstance(notifications, list)
+        self.assertIs(result.get('has_more'), False)
 
         result = self.make_jsonrpc_request('/websocket/peek_notifications', {
             'channels': [],
