@@ -8,4 +8,5 @@ from . import account_withholding_line
 from . import l10n_ar_earnings_scale
 from . import l10n_ar_earnings_scale_line
 from . import l10n_ar_partner_tax
+from . import res_company
 from . import res_partner

@@ -26,6 +26,7 @@ class AccountWithholdingLine(models.AbstractModel):
                     tax=line.tax_id,
                     date=date,
                     exclude_payment=line._l10n_ar_get_payment(),
+                    company=line.company_id,
                 )
                 same_period_base, same_period_withheld, company_currency = same_period_vals['base'], same_period_vals['withheld'], same_period_vals['currency']
                 if ars_currency != company_currency:  # Unlikely, AR companies should use ARS as company currency...
