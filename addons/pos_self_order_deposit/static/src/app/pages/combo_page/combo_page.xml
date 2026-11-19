@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order_deposit.ComboPage" t-inherit="pos_self_order.ComboPage" t-inherit-mode="extension">
+        <xpath expr="//ProductCard/div[@t-if='extraPriceSelected']" position="after">
+            <t t-set="deposit" t-value="this.selfOrder.getSharedDepositProduct([comboItem.product_id])"/>
+            <div t-if="deposit" class="text-muted small">
+                Incl. deposit <t t-out="this.selfOrder.getDepositDisplayPrice(deposit)"/>
+            </div>
+        </xpath>
+        <xpath expr="//div[@t-foreach='attributes']" position="after">
+            <t t-set="deposit" t-value="this.selfOrder.getSharedDepositProduct([product])"/>
+            <div t-if="deposit" class="text-muted">
+                Incl. deposit <t t-out="this.selfOrder.getDepositDisplayPrice(deposit)"/>
+            </div>
+        </xpath>
+    </t>
+</templates>
