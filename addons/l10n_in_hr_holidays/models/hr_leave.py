@@ -35,10 +35,7 @@ class HrLeave(models.Model):
         hours = hours if hours is not None else (self.number_of_hours or 0.0)
         if self.work_entry_type_request_unit == 'hour':
             return bool(default_hours) and float_compare(hours, default_hours, precision_digits=2) >= 0
-        if (
-            self.request_date_from_period != self.request_date_to_period
-            and (self.request_date_from_period != "pm" or self.request_date_to_period != "am")
-        ) or not default_hours:
+        if not self._is_half_day() or not default_hours:
             return True
         return float_compare(hours, default_hours, precision_digits=2) >= 0
 

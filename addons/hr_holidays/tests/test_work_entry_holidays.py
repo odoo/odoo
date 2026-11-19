@@ -274,8 +274,8 @@ class TestWorkEntryHolidays(TestWorkEntryBase, TestHolidayContract):
                     self.assertCountEqual(linked_leaves, contributing_leaves)
 
     def test_work_entries_overlap_half_day_leaves(self):
-        """Test that half-day leaves correctly split work entries across multiple days.
-        When a half-day leave spans two days (AM on day 1, AM on day 2), verify that:
+        """Test that a whole day and a half day of leave correctly split work entries on two days.
+        With a whole day on day 1 and a morning on day 2 (half-day type), verify that:
         - The full-day work entry on day 1 is completely replaced by a leave entry
         - The full-day work entry on day 2 is split into a leave entry and attendance entry
         - All durations are correctly calculated (8h full day, 4h half day)
@@ -291,15 +291,20 @@ class TestWorkEntryHolidays(TestWorkEntryBase, TestHolidayContract):
         self.assertEqual(2, len(work_entries_vals))
         self.assertTrue(all(vals['duration'] == 8.0 for vals in work_entries_vals))
         attendance_work_entry_type_id = work_entries_vals[0]['work_entry_type_id']
-        self.env['hr.leave'].create({
+        self.env['hr.leave'].create([{
             'name': 'Half-Day Leave',
             'employee_id': self.richard_emp.id,
             'request_date_from': date(2025, 11, 27),
-            'request_date_from_period': 'am',
-            'request_date_to': date(2025, 11, 28),
-            'request_date_to_period': 'am',
+            'request_date_to': date(2025, 11, 27),
             'work_entry_type_id': self.half_day_work_entry_type.id,
-        })
+        }, {
+            'name': 'Half-Day Leave',
+            'employee_id': self.richard_emp.id,
+            'request_date_from': date(2025, 11, 28),
+            'request_date_to': date(2025, 11, 28),
+            'request_duration': 'am',
+            'work_entry_type_id': self.half_day_work_entry_type.id,
+        }])
         work_entries_vals = self.richard_emp.version_id._generate_work_entries(datetime(2025, 11, 1), datetime(2025, 11, 30))
         work_entries_vals = [
             vals for vals in work_entries_vals

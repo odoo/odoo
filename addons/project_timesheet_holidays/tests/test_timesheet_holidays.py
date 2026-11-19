@@ -587,8 +587,7 @@ class TestTimesheetHolidays(TestCommonTimesheet):
                 'work_entry_type_id': self.hr_work_entry_type_half_day.id,
                 'request_date_from': datetime(2026, 2, 10),
                 'request_date_to': datetime(2026, 2, 10),
-                'request_date_from_period': 'am',
-                'request_date_to_period': 'am',
+                'request_duration': 'am',
             },
             {
                 'name': 'Test Multi-Day',

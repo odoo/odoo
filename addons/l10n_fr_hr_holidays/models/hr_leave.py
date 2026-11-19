@@ -50,15 +50,15 @@ class HrLeave(models.Model):
                 return date_from, date_to
 
             if self.work_entry_type_request_unit == 'half_day':
-                from_period = ['morning'] if self.request_date_from_period == 'am' else ['afternoon']
-                to_period = ['morning'] if self.request_date_to_period == 'am' else ['afternoon']
+                from_period = ['afternoon'] if self.request_duration == 'pm' else ['morning']
+                to_period = ['morning'] if self.request_duration == 'am' else ['afternoon']
             else:
                 from_period = ['morning', 'afternoon']
                 to_period = ['morning', 'afternoon']
             attendance_ids = self.company_id.resource_calendar_id.attendance_ids | self.resource_calendar_id.attendance_ids
             date_from, date_to = adjust_date_range(date_from, date_to, from_period, to_period, attendance_ids, self.employee_id)
 
-        if self.work_entry_type_request_unit == 'half_day' and self.request_date_to_period == 'am':
+        if self.work_entry_type_request_unit == 'half_day' and self.request_duration == 'am':
             # In a case where we work from mon-wed and request a half day in the morning
             # we do not want to push date_to since the next work attendance is actually in the afternoon
             if self.resource_calendar_id.attendance_ids.filtered(lambda a: a.day_period in ('afternoon', 'full_day')):
@@ -85,7 +85,7 @@ class HrLeave(models.Model):
         # Undo the last day increment
         return (date_start, date_target)
 
-    @api.depends('request_date_from_period', 'request_date_to_period', 'request_hour_from', 'request_hour_to',
+    @api.depends('request_duration', 'request_hour_from', 'request_hour_to',
                 'request_date_from', 'request_date_to', 'employee_id')
     def _compute_date_from_to(self):
         super()._compute_date_from_to()
@@ -154,21 +154,13 @@ class HrLeave(models.Model):
                     current = date_start.date()
                     end_date = extended_date_end.date()
                     legal_days = 0.0
-                    is_half_day_start = leave.work_entry_type_request_unit == 'half_day' and (
-                            (leave.request_date_from == leave.request_date_to and leave.request_date_from_period == leave.request_date_to_period)
-                            or (leave.request_date_from != leave.request_date_to and leave.request_date_from_period == 'pm')
-                    )
-                    is_half_day_end = (
-                            leave.work_entry_type_request_unit == 'half_day' and leave.request_date_to_period == 'am'
-                            and not leave.l10n_fr_date_to_changed  # date_to was not extended -> employee works PM
-                            and leave.request_date_from != leave.request_date_to  # same-day handled by is_half_day_start
-                    )
+                    is_half_day = leave._is_half_day()
                     while current <= end_date:
                         if current in holidays_days_list:
                             current += relativedelta(days=1)
                             continue
                         if company_cal._works_on_date(current):
-                            if is_half_day_start and current == date_start.date() or is_half_day_end and current == end_date:
+                            if is_half_day and current == date_start.date():
                                 legal_days += 0.5
                             else:
                                 legal_days += 1.0

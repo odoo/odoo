@@ -83,8 +83,6 @@ class TestCalendarResizeTour(HttpCase, TestHrHolidaysCommon):
                     "work_entry_type_id": leave_type.id,
                     "request_date_from": target,
                     "request_date_to": target,
-                    "request_date_from_period": "am",
-                    "request_date_to_period": "pm",
                 }
             )
         )

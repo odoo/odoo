@@ -24,11 +24,11 @@ class ResourceResource(models.Model):
         holiday_id = leave_record.holiday_id
         tz = ZoneInfo(self.tz or self.env.user.tz)
 
-        if holiday_id.work_entry_type_request_unit == 'half_day':
+        if holiday_id._is_half_day():
             # Half day leaves are limited to half a day within a single day
             leave_day = leave_start.date()
-            half_start_datetime = datetime.combine(leave_day, datetime.min.time() if holiday_id.request_date_from_period == "am" else time(12), tzinfo=tz)
-            half_end_datetime = datetime.combine(leave_day, time(12) if holiday_id.request_date_from_period == "am" else datetime.max.time(), tzinfo=tz)
+            half_start_datetime = datetime.combine(leave_day, datetime.min.time() if holiday_id.request_duration == "am" else time(12), tzinfo=tz)
+            half_end_datetime = datetime.combine(leave_day, time(12) if holiday_id.request_duration == "am" else datetime.max.time(), tzinfo=tz)
             ranges_to_remove.append((half_start_datetime, half_end_datetime, self.env['resource.calendar.attendance']))
 
             if not self._is_fully_flexible():

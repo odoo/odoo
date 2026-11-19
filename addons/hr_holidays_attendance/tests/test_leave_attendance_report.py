@@ -658,8 +658,7 @@ class TestLeaveAttendanceReport(TestHrHolidaysCommon):
             'employee_id': employee.id,
             'request_date_from': monday,
             'request_date_to': monday,
-            'request_date_from_period': 'am',
-            'request_date_to_period': 'am',
+            'request_duration': 'am',
         })
         self.assertEqual(morning_off.state, 'validate')
         self.assertRecordValues(afternoon, [{'is_late_check_in': False, 'is_undertime': False, 'state': 'validated'}])

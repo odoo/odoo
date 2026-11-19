@@ -142,8 +142,7 @@ class TestSandwichLeave(TransactionCase):
             'work_entry_type_id': self.work_entry_type_half_day.id,
             'request_date_from': "2025-08-29",
             'request_date_to': "2025-08-29",
-            'request_date_from_period': 'am',
-            'request_date_to_period': 'am',
+            'request_duration': 'am',
         })
 
         leave = half_leave._get_durations()
@@ -419,17 +418,24 @@ class TestSandwichLeave(TransactionCase):
             --working days: 12th and 15th December
             --non-working days: 13th, 14th December
         """
-        holiday_leave = self.env['hr.leave'].create({
+        before_holiday_leave, after_holiday_leave = self.env['hr.leave'].create([{
             'name': 'Test Leave',
             'employee_id': self.rahul_emp.id,
             'work_entry_type_id': self.work_entry_type_half_day.id,
             'request_date_from': "2025-12-12",
+            'request_date_to': "2025-12-12",
+            'request_duration': 'pm',
+        }, {
+            'name': 'Test Leave',
+            'employee_id': self.rahul_emp.id,
+            'work_entry_type_id': self.work_entry_type_half_day.id,
+            'request_date_from': "2025-12-15",
             'request_date_to': "2025-12-15",
-            'request_date_from_period': 'pm',
-            'request_date_to_period': 'am',
-        })
-        self.assertFalse(holiday_leave.l10n_in_contains_sandwich_leaves)
-        self.assertEqual(holiday_leave.number_of_days, 1)
+            'request_duration': 'am',
+        }])
+        self.assertFalse(before_holiday_leave.l10n_in_contains_sandwich_leaves)
+        self.assertFalse(after_holiday_leave.l10n_in_contains_sandwich_leaves)
+        self.assertEqual(before_holiday_leave.number_of_days + after_holiday_leave.number_of_days, 1)
 
     @freeze_time('2025-12-10')
     def test_sandwich_for_half_day_spanning_weekend(self):
@@ -443,8 +449,6 @@ class TestSandwichLeave(TransactionCase):
             'work_entry_type_id': self.work_entry_type_half_day.id,
             'request_date_from': "2025-12-12",
             'request_date_to': "2025-12-15",
-            'request_date_from_period': 'am',
-            'request_date_to_period': 'pm',
         })
         self.assertTrue(holiday_leave.l10n_in_contains_sandwich_leaves)
         self.assertEqual(holiday_leave.number_of_days, 4)
@@ -461,8 +465,6 @@ class TestSandwichLeave(TransactionCase):
             'work_entry_type_id': self.work_entry_type_half_day.id,
             'request_date_from': "2025-12-12",
             'request_date_to': "2025-12-12",
-            'request_date_from_period': 'am',
-            'request_date_to_period': 'pm',
         })
         after_holiday_leave = self.env['hr.leave'].with_context(leave_fast_create=True).create({
             'name': 'Test Leave',
@@ -470,17 +472,12 @@ class TestSandwichLeave(TransactionCase):
             'work_entry_type_id': self.work_entry_type_half_day.id,
             'request_date_from': "2025-12-15",
             'request_date_to': "2025-12-15",
-            'request_date_from_period': 'am',
-            'request_date_to_period': 'pm',
         })
         self.assertFalse(before_holiday_leave.l10n_in_contains_sandwich_leaves)
         self.assertTrue(after_holiday_leave.l10n_in_contains_sandwich_leaves)
         self.assertEqual(after_holiday_leave.number_of_days, 3)
 
-        after_holiday_leave.write({
-            'request_date_from_period': 'pm',
-            'request_date_to_period': 'pm',
-        })
+        after_holiday_leave.write({'request_duration': 'pm'})
         self.assertEqual(after_holiday_leave.number_of_days, 0.5)
         self.assertFalse(after_holiday_leave.l10n_in_contains_sandwich_leaves)
 

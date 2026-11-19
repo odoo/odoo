@@ -132,8 +132,7 @@
                 <field name="can_approve"/>
                 <field name="can_validate"/>
                 <field name="can_refuse"/>
-                <field name="request_date_from_period"/>
-                <field name="request_date_to_period"/>
+                <field name="request_duration"/>
                 <field name="work_entry_type_requires_allocation"/>
                 <templates>
                     <t t-name="card" class="g-0">
@@ -166,20 +165,13 @@
                                                         </t>
                                                     </t>
                                                     <t t-elif="leave_unit == 'half_day'">
-                                                        <t t-set="same_period" t-value="record.request_date_from_period.raw_value == record.request_date_to_period.raw_value"/>
-                                                        <span class="mx-1">-</span>
-                                                        <t t-out="record.request_date_from_period.value"/>
-                                                        <t t-if="same_day">
-                                                            <t t-if="!same_period">
-                                                                <span class="mx-1">–</span>
-                                                                <t t-out="record.request_date_to_period.value"/>
-                                                            </t>
+                                                        <t t-if="['am', 'pm'].includes(record.request_duration.raw_value)">
+                                                            <span class="mx-1">-</span>
+                                                            <t t-out="record.request_duration.value"/>
                                                         </t>
-                                                        <t t-else="">
+                                                        <t t-elif="!same_day">
                                                             <span class="mx-1">–</span>
                                                             <t t-out="luxon.DateTime.fromISO(record.request_date_to.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
-                                                            <span class="mx-1">-</span>
-                                                            <t t-out="record.request_date_to_period.value"/>
                                                         </t>
                                                     </t>
                                                     <t t-elif="leave_unit == 'hour'">
@@ -261,19 +253,13 @@
                                                 </t>
                                             </t>
                                             <t t-elif="leave_unit == 'half_day'">
-                                                <t t-set="same_period" t-value="record.request_date_from_period.raw_value == record.request_date_to_period.raw_value"/>
-                                                <span class="mx-1">-</span>
-                                                <t t-out="record.request_date_from_period.value"/>
-                                                <t t-if="same_day">
-                                                    <t t-if="!same_period">
-                                                        <span class="mx-1">–</span>
-                                                        <t t-out="record.request_date_to_period.value"/>
-                                                    </t>
+                                                <t t-if="['am', 'pm'].includes(record.request_duration.raw_value)">
+                                                    <span class="mx-1">-</span>
+                                                    <t t-out="record.request_duration.value"/>
                                                 </t>
-                                                <t t-else="">
+                                                <t t-elif="!same_day">
                                                     <span class="mx-1">–</span>
                                                     <span class="text-nowrap" t-out="luxon.DateTime.fromISO(record.request_date_to.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
-                                                    <span class="mx-1"><t t-out="record.request_date_to_period.value"/></span>
                                                 </t>
                                             </t>
                                             <t t-elif="leave_unit == 'hour'">
@@ -442,11 +428,6 @@
                                         <!-- Needed for the onchange -->
                                         <field name="request_hour_from" invisible="1"/> <!-- needed for the onchange recomputing the duration -->
                                         <field name="request_hour_to" invisible="1"/> <!-- needed for the onchange recomputing the duration -->
-                                    </div>
-                                    <div class="o_hr_leave_periods" invisible="work_entry_type_request_unit != 'half_day' or not last_several_days">
-                                        <field name="request_date_from_period" invisible="work_entry_type_request_unit != 'half_day'" required="work_entry_type_request_unit == 'half_day'" readonly="state != 'confirm'"/>
-                                        <i class="oi" data-icon="arrow_forward" aria-label="to" title="To"/>
-                                        <field name="request_date_to_period" invisible="work_entry_type_request_unit != 'half_day'" required="work_entry_type_request_unit == 'half_day'" readonly="state != 'confirm'"/>
                                     </div>
                                     <field name="is_time_rule_trimmed" invisible="1"/> <!-- read by _compute_date_from_to, which preserves the sub-day end written by the time rule instead of snapping it back to the schedule boundary -->
                                     <!-- trimmed source / output: show exact time range set by the rule engine -->

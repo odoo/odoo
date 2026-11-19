@@ -14,11 +14,7 @@
                         class="w-50" nolabel="1"/>
                     <field name="date_to" invisible="1" /> <!-- end date of the date_from daterange widget (end_date_field option) -->
                     <!-- half day or custom hours-->
-                    <label for="date_from_period" invisible="work_entry_type_request_unit != 'half_day'" string="Day Period"/>
-                    <div class="o_row" invisible="work_entry_type_request_unit != 'half_day'">
-                        <field name="date_from_period" invisible="work_entry_type_request_unit != 'half_day'" required="work_entry_type_request_unit == 'half_day'" class="o_hr_narrow_field me-2"/>
-                        <field name="date_to_period" invisible="work_entry_type_request_unit != 'half_day'" required="work_entry_type_request_unit == 'half_day'" class="o_hr_narrow_field"/>
-                    </div>
+                    <field name="request_duration" invisible="work_entry_type_request_unit != 'half_day' or date_from != date_to" required="work_entry_type_request_unit == 'half_day'"/>
                     <label for="hour_from" invisible="work_entry_type_request_unit != 'hour'" string="Hours"/>
                     <div class="o_row" invisible="work_entry_type_request_unit != 'hour'">
                         <field name="hour_from" required="work_entry_type_request_unit != 'hour'" widget="float_time_selection" class="o_hr_narrow_field me-2"/>
