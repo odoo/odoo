@@ -5,6 +5,7 @@ import json
 from odoo.http import Controller, request, route
 from odoo.http.session import SessionExpiredException
 
+from odoo.addons.bus.models.bus import fetch_bus_notifications_batch
 from odoo.addons.bus.websocket import WebsocketConnectionHandler
 
 
@@ -37,11 +38,15 @@ class WebsocketController(Controller):
         elif 'is_websocket_session' not in request.session:
             raise SessionExpiredException()
         subscribe_data = request.env['ir.websocket']._prepare_subscribe_data(channels, last)
-        notifications = request.env['bus.bus']._poll(
-            subscribe_data['channels'],
-            subscribe_data['last'],
+        notifications, has_more_notifications = fetch_bus_notifications_batch(
+            request.env.cr,
+            {c: subscribe_data['last'] for c in subscribe_data['channels']},
         )
-        return {'channels': list(subscribe_data['channels']), 'notifications': notifications}
+        return {
+            'channels': list(subscribe_data['channels']),
+            'notifications': notifications,
+            'has_more': has_more_notifications,
+        }
 
     @route("/websocket/on_closed", type="jsonrpc", auth="public", cors="*")
     def on_websocket_closed(self):
