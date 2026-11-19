@@ -1,8 +1,8 @@
-import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
-import { Component, useProps } from "@odoo/owl";
+import { Component, useProps, usePlugin } from "@odoo/owl";
+import { TimesheetUOMPlugin } from "@hr_timesheet/services/timesheet_uom_plugin";
 
 export class TimesheetUOM extends Component {
     static template = "hr_timesheet.TimesheetUOM";
@@ -15,7 +15,7 @@ export class TimesheetUOM extends Component {
     });
 
     setup() {
-        this.timesheetUOMService = useService("timesheet_uom");
+        this.timesheetUOMService = usePlugin(TimesheetUOMPlugin);
     }
 
     /**
