@@ -158,12 +158,15 @@ export class BottomSheet extends Component {
         // Calculate heights based on percentages
         const maxHeightPx = (this.maxHeightPercent / 100) * viewportHeight;
 
-        // Reset any previously set constraints to measure natural height
+        // Neutralize the constraints to measure the natural height: the
+        // min-height comes from the previously measured `--sheet-height`, so
+        // the sheet could never shrink when its content does.
         const sheet = this.sheetRef();
-        sheet.style.removeProperty("min-height");
+        sheet.style.minHeight = "0";
         sheet.style.removeProperty("height");
 
         const naturalHeight = sheet.offsetHeight;
+        sheet.style.removeProperty("min-height");
         const initialHeightPx = Math.min(naturalHeight, maxHeightPx);
 
         // Store all measurements
