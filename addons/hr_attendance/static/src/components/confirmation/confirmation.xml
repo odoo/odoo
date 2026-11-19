@@ -41,6 +41,11 @@
                 </div>
             </div>
             <div class="o_hr_kiosk_mode_bottom my-4 text-center d-flex justify-content-center gap-3">
+                <button class="btn btn-light btn-lg rounded-pill px-5"
+                        t-on-click="() => this.props.backToManualSelection()">
+                    <i class="oi me-2" data-icon="chevron_backward"/>
+                    <span>Go back</span>
+                </button>
                 <button class="btn btn-primary btn-lg rounded-pill px-5"
                         t-on-click="() => this.props.kioskConfirm(this.props.employeeData.id, false)">
                     <t t-if="this.isCheckedIn">check-out</t>
