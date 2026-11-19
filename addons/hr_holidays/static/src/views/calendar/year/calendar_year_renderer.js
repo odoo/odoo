@@ -127,9 +127,9 @@ export class TimeOffCalendarYearRenderer extends CalendarYearRenderer {
             const isHourUnit = leave.rawRecord?.work_entry_type_request_unit === "hour";
             const leaveEnd = getLeaveLastMoment(leave);
             const isHalfStart =
-                leave.requestDateFromPeriod === "pm" || (isHourUnit && leave.start.c.hour >= 12);
+                leave.requestDuration === "pm" || (isHourUnit && leave.start.c.hour >= 12);
             const isHalfEnd =
-                leave.requestDateToPeriod === "am" || (isHourUnit && leaveEnd.c.hour <= 12);
+                leave.requestDuration === "am" || (isHourUnit && leaveEnd.c.hour <= 12);
             if (!isHalfStart && !isHalfEnd) {
                 return classesToAdd;
             }
