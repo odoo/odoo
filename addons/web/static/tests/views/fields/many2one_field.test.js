@@ -342,7 +342,7 @@ test("do not send context in unity spec if field is invisible", async () => {
 
 test("[Offline] many2one", async () => {
     const setOffline = mockOffline();
-    onRpc("web_save", () => expect.step(`web_save`));
+    onRpc("web_save_offline", () => expect.step(`web_save_offline`));
 
     Partner._views = {
         form: '<form> <field name="trululu"/> </form>',
@@ -412,7 +412,7 @@ test("[Offline] many2one", async () => {
     await setOffline(false);
 
     expect(getService("offline").offline).toBe(false);
-    await expect.waitForSteps(["web_save"]); // We sync when the connection returns
+    await expect.waitForSteps(["web_save_offline"]); // We sync when the connection returns
 });
 
 test("[Offline] many2one autopopulated", async () => {
