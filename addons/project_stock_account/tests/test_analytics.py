@@ -88,6 +88,7 @@ class TestAnalytics(TestStockCommon):
             an aal for the move line created. These aals should be taken into account when computing the 'project
             profitability' right side panel and displayed under the 'costs -> materials' section.
         """
+        self.project._create_analytic_account()
         picking_in = self.PickingObj.create({
             'picking_type_id': self.picking_type_in.id,
             'location_id': self.supplier_location.id,
