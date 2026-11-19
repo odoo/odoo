@@ -1367,20 +1367,23 @@ describe("history properties", () => {
             expect(values.value).toBe(1);
             expect.verifySteps(["apply"]);
         });
-        test("undo and redo commits replay the data of the commit they reverse", async () => {
+
+        test("undo and redo commits hold the data of the commit they reverse", async () => {
             const values = valueHistory();
             const { editor } = await setupEditor(`<p>[]</p>`, {
                 config: { resources: values.resources },
             });
             const history = editor.shared.history;
             values.set(editor, 1);
-            history.commit();
+            const commit = history.commit();
             undo(editor);
             redo(editor);
             undo(editor);
             expect.verifySteps(["apply", "revert", "apply", "revert"]);
             expect(values.value).toBe(0);
-            expect("test_value" in history.getCommits().at(-1).data).toBe(false);
+            for (const reversingCommit of history.getCommits().slice(-3)) {
+                expect(reversingCommit.data.test_value).toEqual(commit.data.test_value);
+            }
 
             // Replaying the history goes through the commits they reverse.
             const commits = JSON.parse(JSON.stringify(history.getCommits()));
@@ -1407,15 +1410,21 @@ describe("history properties", () => {
             expect(values.value).toBe(0);
             const restoreCommit = history.getCommits().at(-1);
             expect(restoreCommit.type).toBe(HISTORY_COMMIT_TYPES.RESTORE);
-            expect("test_value" in restoreCommit.data).toBe(false);
-            expect(restoreCommit.metadata.reverted_commit_ids).toEqual([commitB.id, commitA.id]);
+            expect(restoreCommit.data.reverted_commits).toEqual(
+                [commitB, commitA].map(({ type, data }) => ({
+                    type,
+                    data: { test_value: data.test_value },
+                }))
+            );
+            expect(restoreCommit.data.reapplied_commits).toEqual([]);
 
             const commits = JSON.parse(JSON.stringify(history.getCommits()));
             history.reset(commits);
             expect.verifySteps(["apply A", "apply B", "revert B", "revert A"]);
             expect(values.value).toBe(0);
         });
-        test("replaying a commit whose related commit is not in the history skips its data", async () => {
+
+        test("commits created by the history are replayed without the commits they reverse", async () => {
             const values = valueHistory();
             const { editor } = await setupEditor(`<p>[]</p>`, {
                 config: { resources: values.resources },
@@ -1430,7 +1439,7 @@ describe("history properties", () => {
             // commits the snapshot replaces.
             const [snapshot, , undoCommit] = JSON.parse(JSON.stringify(history.getCommits()));
             history.reset([snapshot, undoCommit]);
-            expect.verifySteps([]);
+            expect.verifySteps(["revert"]);
         });
 
         test("restore commits replay the commits they revert in the direction of their type", async () => {
@@ -1446,6 +1455,11 @@ describe("history properties", () => {
             restore();
             // Reverting the undo commit reapplies A.
             expect.verifySteps(["apply A", "revert A", "apply A", "revert A"]);
+            expect(values.value).toBe(0);
+
+            const commits = JSON.parse(JSON.stringify(history.getCommits()));
+            history.reset([commits[0], commits.at(-1)]);
+            expect.verifySteps(["apply A", "revert A"]);
             expect(values.value).toBe(0);
         });
     });
