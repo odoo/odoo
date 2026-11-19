@@ -287,27 +287,68 @@ class AccountPaymentTermLine(models.Model):
     delay_type = fields.Selection([
             ('days_after', 'Days after invoice date'),
             ('days_after_end_of_month', 'Days after end of month'),
-            ('days_after_end_of_next_month', 'Days after end of next month'),
+            ('days_after_end_of_next_month', 'Days after end of next month'),  # will be removed in future release
+            ('months_after_on_the', 'Months after Invoice Date on the'),  # will replace days_after_end_of_next_month
             ('days_end_of_month_on_the', 'Days end of month on the'),
-        ], required=True, default='days_after')
+        ],
+        help="Form of a delay relative to the invoice date",
+        required=True,
+        default='days_after',
+    )
     display_days_next_month = fields.Boolean(compute='_compute_display_days_next_month')
     days_next_month = fields.Char(
         string='Days on the next month',
+        help="Day of month if applicable",
         readonly=False,
         default='10',
         size=2,
     )
-    nb_days = fields.Integer(string='Days', readonly=False, store=True, compute='_compute_days')
+    nb_days = fields.Integer(  # 'nb' as number
+        string='Days Or Months',
+        help="Number of days or months after reference day, as in \"After N days/months after some form of delay in regards to the invoice day\"",
+        readonly=False,
+        store=True,
+        compute='_compute_days',
+    )
     payment_id = fields.Many2one('account.payment.term', string='Payment Terms', required=True, index=True, ondelete='cascade')
 
     def _get_due_date(self, date_ref):
         self.ensure_one()
         due_date = fields.Date.from_string(date_ref) or fields.Date.context_today(self)
+
         if self.delay_type == 'days_after_end_of_month':
             return date_utils.end_of(due_date, 'month') + relativedelta(days=self.nb_days)
-        elif self.delay_type == 'days_after_end_of_next_month':
+
+        if self.delay_type == 'days_after_end_of_next_month':
             return date_utils.end_of(due_date + relativedelta(months=1), 'month') + relativedelta(days=self.nb_days)
-        elif self.delay_type == 'days_end_of_month_on_the':
+
+        if self.delay_type == 'months_after_on_the':
+            try:
+                day_of_the_month = int(self.days_next_month)
+            except ValueError:
+                day_of_the_month = 1
+
+            amount_of_months = self.nb_days
+            target_date = due_date
+
+            # case for "0": we choose calendar day before the one with
+            # day_of_the_month equal to 1, in order to maintain continuous
+            # change of the target date relative to the day_of_the_month value
+            if day_of_the_month <= 0:
+                target_date = date_utils.end_of(
+                        target_date + relativedelta(months=amount_of_months),
+                        'month',
+                )
+            elif day_of_the_month < due_date.day:
+                # library takes care of NOT crossing month boundary
+                # if the `day_of_the_month`` is more than days in the target month
+                target_date += relativedelta(months=amount_of_months + 1, day=day_of_the_month)
+            else:
+                target_date += relativedelta(months=amount_of_months, day=day_of_the_month)
+
+            return target_date
+
+        if self.delay_type == 'days_end_of_month_on_the':
             try:
                 days_next_month = int(self.days_next_month)
             except ValueError:
@@ -317,6 +358,7 @@ class AccountPaymentTermLine(models.Model):
                 return date_utils.end_of(due_date + relativedelta(days=self.nb_days), 'month')
 
             return due_date + relativedelta(days=self.nb_days) + relativedelta(months=1, day=days_next_month)
+
         return due_date + relativedelta(days=self.nb_days)
 
     @api.constrains('days_next_month')
@@ -331,7 +373,9 @@ class AccountPaymentTermLine(models.Model):
     @api.depends('delay_type')
     def _compute_display_days_next_month(self):
         for record in self:
-            record.display_days_next_month = record.delay_type == 'days_end_of_month_on_the'
+            is_delay_type_binary = record.delay_type in \
+                    ('days_end_of_month_on_the', 'months_after_on_the')
+            record.display_days_next_month = is_delay_type_binary
 
     @api.constrains('value', 'value_amount')
     def _check_percent(self):
