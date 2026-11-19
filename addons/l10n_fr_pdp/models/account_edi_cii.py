@@ -8,7 +8,7 @@ class L10nFRAccountEdiCii(models.AbstractModel):
 
     def _cii_add_exchanged_document_context_node(self, vals):
         node = vals['document_node'].setdefault('rsm:ExchangedDocumentContext', {})
-        if vals['company']._get_peppol_proxy_type() == 'pdp':
+        if vals['company']._peppol_is_french_company():
             node['ram:BusinessProcessSpecifiedDocumentContextParameter'] = {
                 'ram:ID': {'_text': self._l10n_fr_pdp_get_profile_id(vals)},
             }
