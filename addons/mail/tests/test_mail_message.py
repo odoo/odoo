@@ -96,6 +96,32 @@ class TestMailMessage(common.MailCommon, HttpCase):
                 )
 
     @users("employee")
+    def test_search_needaction_has_error_with_many_messages(self):
+        recipient = common.mail_new_test_user(
+            self.env(su=True),
+            email="invalid_email_addr",
+            login="alice_user",
+            name="Alice",
+        )
+        with self.mock_mail_gateway():
+            error_message = self.env.user.partner_id.message_post(
+                body="Hello world!",
+                partner_ids=recipient.partner_id.ids,
+            )
+            needaction_message = self.env.user.partner_id.with_user(self.user_admin).message_post(
+                body="Hello you!",
+                message_type="comment",
+                partner_ids=self.env.user.partner_id.ids,
+                subtype_xmlid="mail.mt_comment",
+            )
+        messages = self.env["mail.message"]
+        limit = messages.sudo().search_count([("has_error", "=", True)]) + 1
+        self.assertGreater(messages.sudo().search_count([]), limit)
+        with patch.object(mail_message_module, "MAX_SEARCH_LIMIT", limit):
+            self.assertEqual(messages.search([("needaction", "=", True)]), needaction_message)
+            self.assertIn(error_message, messages.search([("has_error", "=", True)]))
+
+    @users("employee")
     def test_unlink_failure_message_notify_author(self):
         recipient = new_test_user(self.env(su=True), login="Bob", email="invalid_email_addr")
         with self.mock_mail_gateway():

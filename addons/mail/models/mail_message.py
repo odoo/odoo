@@ -266,8 +266,14 @@ class MailMessage(models.Model):
         'Has error', compute='_compute_has_error', search='_search_has_error', allow_sudo_search=True)
     # notifications
     notification_ids = fields.One2many(
-        'mail.notification', 'mail_message_id', 'Notifications',
-        bypass_search_access=True, copy=False, depends=['notified_partner_ids'])
+        "mail.notification",
+        "mail_message_id",
+        "Notifications",
+        bypass_search_access=True,
+        copy=False,
+        depends=["notified_partner_ids"],
+        allow_sudo_search=True,
+    )
     # user interface
     bookmarked_partner_ids = fields.Many2many(
         'res.partner', 'mail_message_res_partner_bookmarked_rel', string='Bookmarked By',
