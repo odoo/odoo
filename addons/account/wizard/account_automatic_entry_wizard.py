@@ -112,9 +112,13 @@ class AccountAutomaticEntryWizard(models.TransientModel):
             record.lock_date_message = False
             if record.action == 'change_period':
                 for aml in record.move_line_ids:
-                    lock_date_message = aml.move_id._get_lock_date_message(aml.date, False)
-                    if lock_date_message:
-                        record.lock_date_message = lock_date_message
+                    if lock_dates := aml.move_id._get_violated_lock_dates(aml.date, False):
+                        record.lock_date_message = _(
+                            "The date is being set prior to: %(lock_date_info)s. "
+                            "The Journal Entry will be accounted on %(invoice_date)s upon posting.",
+                            lock_date_info=self.env['res.company']._format_lock_dates(lock_dates),
+                            invoice_date=format_date(self.env, aml.move_id._get_accounting_date(aml.date, False, lock_dates=lock_dates)),
+                        )
                         break
 
     @api.depends('destination_account_id')

@@ -250,7 +250,7 @@ class AccountMove(models.Model):
         for move in self:
             try:
                 move._check_fiscal_lock_dates()
-                move.line_ids._check_tax_lock_date()
+                move.line_ids._check_tax_lock_dates(date=True, taxable_date=True)
                 move.button_cancel()
             except UserError as e:
                 move.with_context(no_new_invoice=True).message_post(

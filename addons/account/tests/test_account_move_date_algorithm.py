@@ -1,11 +1,20 @@
 # -*- coding: utf-8 -*-
 from contextlib import closing
+from unittest.mock import patch
 
 import freezegun
 
 from odoo import fields, Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.exceptions import UserError
 from odoo.tests import tagged
+
+
+TAX_LOCK_DATE = '2025-05-15'
+LOCKED, OTHER_LOCKED = '2025-05-10', '2025-05-12'
+OPEN, OTHER_OPEN = '2025-05-20', '2025-05-25'
+
+TAXABLE_DATE_ERROR = "namely the taxable supply one"
 
 
 @tagged('post_install', '-at_install')
@@ -459,3 +468,167 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
 
                 caba_move = self.env['account.move'].search([('tax_cash_basis_origin_move_id', '=', invoice.id)])
                 self.assertEqual(caba_move.date, fields.Date.from_string(expected_caba_date))
+
+    def _assert_write_posted_invoice(
+        self, date, taxable_supply_date=False, new_date=False, new_taxable_supply_date=False, new_state=False,
+        new_name=False, violating_date=False,
+    ):
+        """ Post an invoice with the given accounting and taxable supply dates while ignoring the tax lock date of the
+        company, then write the given new values on it under that tax lock date, bypassing the readonly check of posted moves as some flows do (e.g. bank
+        statement lines). Values left to False aren't written; `new_taxable_supply_date=None` removes the taxable
+        supply date.
+
+        :param violating_date: the date expected to violate the tax lock date, refusing the write (or False if the write
+            is accepted).
+        """
+        vals = {}
+        if new_date:
+            vals['date'] = new_date
+        if new_taxable_supply_date is not False:
+            vals['taxable_supply_date'] = new_taxable_supply_date or False
+        if new_state:
+            vals['state'] = new_state
+        with self.subTest(date=date, taxable_supply_date=taxable_supply_date, vals=vals):
+            company = self.company_data['company']
+            tax_lock_date = company.tax_lock_date
+            company.tax_lock_date = False
+            move = self._create_invoice_one_line(
+                move_type='out_invoice',
+                invoice_date=date,
+                taxable_supply_date=taxable_supply_date,
+                price_unit=100.0,
+                tax_ids=self.tax_sale_a,
+                post=True,
+            ).with_context(skip_readonly_check=True)
+            company.tax_lock_date = tax_lock_date
+            if new_name:
+                vals['name'] = f'{move.name}9'
+
+            # Record the dates violating the tax lock date, to know which one triggered the refusal.
+            get_lock_date_violations = self.registry['res.company']._get_lock_date_violations
+            tax_lock_violating_dates = []
+
+            def patched_get_lock_date_violations(company, accounting_date, *args, **kwargs):
+                violations = get_lock_date_violations(company, accounting_date, *args, **kwargs)
+                if any(field == 'tax_lock_date' for _lock_date, field in violations):
+                    tax_lock_violating_dates.append(accounting_date)
+                return violations
+
+            with patch.object(self.registry['res.company'], '_get_lock_date_violations', patched_get_lock_date_violations):
+                if violating_date:
+                    with self.assertRaises(UserError):
+                        move.write(vals)
+                    # The refusal is raised on the last violation found.
+                    self.assertEqual(tax_lock_violating_dates[-1:], [fields.Date.from_string(violating_date)])
+                else:
+                    move.write(vals)
+
+    @freezegun.freeze_time('2025-06-23')
+    def test_write_posted_move_tax_lock_date(self):
+        """ A write can't take a posted move out of a locked tax period, nor put it in one, whatever the field written.
+        Each refusal must come from the date giving the tax period, checked against the tax lock date. All dates are different, so that the old and new
+        values of a field can't be mistaken for each other.
+        """
+        self.company_data['company'].tax_lock_date = fields.Date.from_string(TAX_LOCK_DATE)
+
+        # Without a taxable supply date, the accounting date gives the tax period.
+        self._assert_write_posted_invoice(date=LOCKED, new_date=OTHER_OPEN, violating_date=LOCKED)
+        self._assert_write_posted_invoice(date=OPEN, new_date=OTHER_LOCKED, violating_date=OTHER_LOCKED)
+        self._assert_write_posted_invoice(date=OPEN, new_date=OTHER_OPEN)
+        self._assert_write_posted_invoice(date=LOCKED, new_taxable_supply_date=OPEN, violating_date=LOCKED)
+        self._assert_write_posted_invoice(date=LOCKED, new_taxable_supply_date=OTHER_LOCKED, violating_date=LOCKED)
+        self._assert_write_posted_invoice(date=OPEN, new_taxable_supply_date=OTHER_LOCKED, violating_date=OTHER_LOCKED)
+        self._assert_write_posted_invoice(date=OPEN, new_taxable_supply_date=OTHER_OPEN)
+        self._assert_write_posted_invoice(date=LOCKED, new_name=True, violating_date=LOCKED)
+        self._assert_write_posted_invoice(date=LOCKED, new_state='draft', violating_date=LOCKED)
+        self._assert_write_posted_invoice(date=OPEN, new_state='draft')
+
+        # A taxable supply date gives the tax period, whatever the accounting date.
+        self._assert_write_posted_invoice(date=OPEN, taxable_supply_date=LOCKED, new_date=OTHER_OPEN)
+        self._assert_write_posted_invoice(date=LOCKED, taxable_supply_date=OPEN, new_date=OTHER_LOCKED)
+        self._assert_write_posted_invoice(date=OPEN, taxable_supply_date=LOCKED, new_taxable_supply_date=OTHER_OPEN, violating_date=LOCKED)
+        self._assert_write_posted_invoice(date=OPEN, taxable_supply_date=OTHER_OPEN, new_taxable_supply_date=OTHER_LOCKED, violating_date=OTHER_LOCKED)
+        self._assert_write_posted_invoice(date=LOCKED, taxable_supply_date=OPEN, new_taxable_supply_date=OTHER_OPEN)
+        self._assert_write_posted_invoice(date=OPEN, taxable_supply_date=LOCKED, new_taxable_supply_date=None, violating_date=LOCKED)
+        self._assert_write_posted_invoice(date=LOCKED, taxable_supply_date=OPEN, new_taxable_supply_date=None, violating_date=LOCKED)
+        self._assert_write_posted_invoice(date=OPEN, taxable_supply_date=OTHER_OPEN, new_taxable_supply_date=None)
+
+        self._assert_write_posted_invoice(date=OPEN, taxable_supply_date=LOCKED, new_state='draft', violating_date=LOCKED)
+        self._assert_write_posted_invoice(date=LOCKED, taxable_supply_date=OPEN, new_state='draft', violating_date=LOCKED)
+
+        # The name of a move depends on its accounting date only.
+        self._assert_write_posted_invoice(date=OPEN, taxable_supply_date=LOCKED, new_name=True)
+        self._assert_write_posted_invoice(date=LOCKED, taxable_supply_date=OPEN, new_name=True, violating_date=LOCKED)
+
+        # Writing the current values doesn't change the tax period.
+        self._assert_write_posted_invoice(date=LOCKED, new_date=LOCKED)
+        self._assert_write_posted_invoice(date=LOCKED, new_taxable_supply_date=None)
+        self._assert_write_posted_invoice(date=OPEN, taxable_supply_date=LOCKED, new_taxable_supply_date=LOCKED)
+
+    @freezegun.freeze_time('2025-06-23')
+    def test_post_taxable_supply_date_in_hard_locked_period(self):
+        """ The hard lock date also applies to the taxable supply date, whose period it makes unalterable. """
+        move = self._create_invoice_one_line(
+            move_type='out_invoice',
+            invoice_date='2025-05-05',
+            taxable_supply_date='2025-04-20',
+            price_unit=100.0,
+            tax_ids=self.tax_sale_a,
+        )
+        self.company_data['company'].hard_lock_date = fields.Date.from_string('2025-04-30')
+        with self.assertRaisesRegex(UserError, TAXABLE_DATE_ERROR):
+            move.action_post()
+
+    @freezegun.freeze_time('2025-06-23')
+    def test_post_taxable_supply_date_in_locked_tax_period(self):
+        """ A move with a taxable supply date in a locked tax period can't be posted, whatever its accounting date. """
+        company = self.company_data['company']
+        company.tax_lock_date = fields.Date.from_string(TAX_LOCK_DATE)
+        for move_type, tax in (
+            ('out_invoice', self.tax_sale_a),
+            ('out_refund', self.tax_sale_a),
+            ('in_invoice', self.tax_purchase_a),
+            ('in_refund', self.tax_purchase_a),
+        ):
+            for date in (OPEN, LOCKED):
+                with self.subTest(move_type=move_type, date=date):
+                    move = self._create_invoice_one_line(move_type=move_type, invoice_date=date, taxable_supply_date=LOCKED, price_unit=100.0, tax_ids=tax)
+                    with self.assertRaisesRegex(UserError, TAXABLE_DATE_ERROR):
+                        move.action_post()
+
+        # The tax lock date is inclusive.
+        move = self._create_invoice_one_line(invoice_date=OPEN, taxable_supply_date=TAX_LOCK_DATE, price_unit=100.0, tax_ids=self.tax_sale_a)
+        with self.assertRaisesRegex(UserError, TAXABLE_DATE_ERROR):
+            move.action_post()
+
+        # An exception to the tax lock date allows posting, keeping the accounting date.
+        self.env['account.lock_exception'].create({
+            'company_id': company.id,
+            'user_id': self.env.user.id,
+            'tax_lock_date': fields.Date.from_string('2025-05-01'),
+            'end_datetime': False,
+        })
+        move = self._create_invoice_one_line(invoice_date=OPEN, taxable_supply_date=LOCKED, price_unit=100.0, tax_ids=self.tax_sale_a, post=True)
+        self.assertRecordValues(move, [{'state': 'posted', 'date': fields.Date.from_string(OPEN)}])
+
+    @freezegun.freeze_time('2025-06-23')
+    def test_taxable_supply_date_in_locked_tax_period_without_tax(self):
+        """ A move without any tax nor tax grid doesn't belong to any tax period: the tax lock date doesn't apply. """
+        self.company_data['company'].tax_lock_date = fields.Date.from_string(TAX_LOCK_DATE)
+        move = self._create_invoice_one_line(invoice_date=OPEN, taxable_supply_date=LOCKED, price_unit=100.0)
+        move.invoice_line_ids.tax_ids = False
+        move.action_post()
+        self.assertEqual(move.state, 'posted')
+        move.button_draft()
+        self.assertEqual(move.state, 'draft')
+
+    @freezegun.freeze_time('2025-06-23')
+    def test_taxable_supply_date_readonly_on_posted_move(self):
+        """ The taxable supply date places a posted move in a tax period: like its accounting date, it can't change. """
+        move = self._create_invoice_one_line(invoice_date=OPEN, taxable_supply_date=OPEN, price_unit=100.0, tax_ids=self.tax_sale_a, post=True)
+        with self.assertRaisesRegex(UserError, "readonly fields"):
+            move.taxable_supply_date = fields.Date.from_string(OTHER_OPEN)
+
+        move.button_draft()
+        move.taxable_supply_date = fields.Date.from_string(OTHER_OPEN)
+        self.assertEqual(move.taxable_supply_date, fields.Date.from_string(OTHER_OPEN))
