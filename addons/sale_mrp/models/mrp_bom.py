@@ -25,8 +25,10 @@ class MrpBom(models.Model):
         for bom in self:
             if not bom.active or bom.type != 'phantom':
                 continue
-            product_ids += bom.product_id.ids or bom.product_tmpl_id.product_variant_ids.ids
-            for product_id in product_ids:
+            bom_product_ids = bom.product_id.ids or bom.product_tmpl_id.product_variant_ids.ids
+            product_ids += bom_product_ids
+            # add bom.company_id to the products of the current bom only
+            for product_id in bom_product_ids:
                 product_bom_company[product_id].add(bom.company_id.id)
         if not product_ids:
             return
