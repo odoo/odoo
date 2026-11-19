@@ -21,17 +21,20 @@ from zlib import adler32
 
 from odoo.api import Environment
 from odoo.tools import config, consteq, get_lang
+from odoo.tools.lru import LRU
 
 from . import request
 from .geoip import GeoIP
 
 if typing.TYPE_CHECKING:
-    from collections.abc import Iterable
+    from collections.abc import Collection, Iterable
 
     from .requestlib import Request
 
 _logger = logging.getLogger('odoo.http')
 
+_cache: MutableMapping[tuple[str, int, int], Session] = LRU(8192)
+# The cache key is (sid, os.stat().st_mtime_ns, os.stat().st_ino)
 
 DEFAULT_LANG = 'en_US'
 """ The default lang to use when the browser doesn't specify it. """
@@ -539,9 +542,15 @@ class SessionStore:
         try:
 
             with open(self.get_session_path(sid), encoding='utf-8') as f:
+                st = os.fstat(f.fileno())
+                cache_key = (sid, st.st_mtime_ns, st.st_ino)
+                if cached_session := _cache.get(cache_key):
+                    return cached_session
                 try:
                     data = json.load(f)
-                    return self.session_cls(data, sid, new=False)
+                    session = self.session_cls(data, sid, new=False)
+                    _cache[cache_key] = session
+                    return session
                 except ValueError:
                     _logger.debug("Could not load session data. Use empty session.", exc_info=True)
                     # The session file exists on the filesystem (the sid must be retained)
@@ -652,6 +661,23 @@ class SessionStore:
                 self.delete_from_identifiers([session.sid[:STORED_SESSION_BYTES]])
                 del session['gc_previous_sessions']
                 self.save(session)
+
+    def refresh(self, sessions: Iterable[Session]) -> Collection[Session]:
+        now = time.time()
+        valid_sessions = []
+        for session in sessions:
+            try:
+                open(self.get_session_path(session.sid), 'rb', buffering=0).close()
+            except (OSError, ValueError):
+                continue  # missing from disk
+            stored = self.get(session.sid)
+            while next_sid := stored.get('next_sid'):
+                stored = self.get(next_sid)
+            self.delete_old_sessions(stored)
+            if stored.get('deletion_time', float('inf')) <= now:
+                continue  # deleted
+            valid_sessions.append(stored)
+        return valid_sessions
 
 
 @functools.cache
