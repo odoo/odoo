@@ -20,6 +20,38 @@
         outline: 0;
     }
 }
+/* The x2many control panel (create buttons) is always rendered before the */
+/* records by the framework (see X2ManyField.xml's `o_x2m_control_panel`), */
+/* regardless of arch order. Reorder visually so the "Line"/"Section"/ */
+/* "Note"/"Catalog" controls appear after the lines, as in sale. */
+.o_account_move_line_o2m {
+    > div {
+        display: flex;
+        flex-direction: column;
+
+        .o_x2m_control_panel {
+            order: 2;
+            /* mt-1/mb-4 assume the panel sits above the records */
+            margin-bottom: 0 !important;
+        }
+
+        .o_kanban_renderer {
+            order: 1;
+        }
+    }
+
+    /* .o_cp_buttons defaults to margin-right: auto (hugs the left, leaving */
+    /* room for a pager on the right - see control_panel.scss). Here there's */
+    /* no pager: stretch the group full width and spread the buttons evenly. */
+    .o_cp_buttons {
+        width: 100%;
+
+        > button {
+            flex: 1 1 0;
+            white-space: nowrap;
+        }
+    }
+}
 /* Special class for the document tax mode in account_move, sale_order and purchase_order */
 /* Ensuring the margin rules applied in .o_notebook are not broken by the .overlap_badge_tab */
 .document_tax_mode + .o_field_widget .o_field_x2many.o_field_x2many_list .o_list_renderer{
