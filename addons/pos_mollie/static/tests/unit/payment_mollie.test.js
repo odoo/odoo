@@ -1,4 +1,5 @@
 import { waitUntil, expect, test, beforeEach } from "@odoo/hoot";
+import { advanceTime } from "@odoo/hoot-mock";
 import { getFilledOrder, setupPosEnv } from "@point_of_sale/../tests/unit/utils";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
 import { onRpc, patchWithCleanup } from "../../../../web/static/tests/web_test_helpers";
@@ -52,6 +53,33 @@ test("successful payment", async () => {
         card_brand: "BRAND",
         card_type: "TYPE",
     });
+
+    await expect(result).resolves.toBe(true);
+    expect(lastError).toBe(null);
+    expect(paymentLine.card_no).toBe("1234");
+    expect(paymentLine.card_brand).toBe("BRAND");
+    expect(paymentLine.card_type).toBe("TYPE");
+});
+
+test("successful payment through polling", async () => {
+    const { mollie, paymentLine, mockMollieCreatePaymentWithStatus } = await setupMollie();
+    mockMollieCreatePaymentWithStatus("open");
+    onRpc("pos.payment.method", "mollie_get_payment", ({ args }) => {
+        expect(args[1]).toBe(fakeMollieId);
+        return {
+            id: fakeMollieId,
+            status: "paid",
+            details: {
+                cardNumber: "1234",
+                cardFunding: "TYPE",
+                cardLabel: "BRAND",
+            },
+        };
+    });
+
+    const result = mollie.sendPaymentRequest(paymentLine);
+    await waitUntil(() => paymentLine.transaction_id === fakeMollieId);
+    await advanceTime(5000);
 
     await expect(result).resolves.toBe(true);
     expect(lastError).toBe(null);

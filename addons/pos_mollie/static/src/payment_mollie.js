@@ -168,7 +168,13 @@ export class PaymentMollie extends PaymentInterface {
                 connectionLost = false;
                 if (!["open", "pending"].includes(result.status) && isPaymentStillValid()) {
                     clearInterval(intervalId);
-                    this.handleMollieStatusResponse(paymentLine, result);
+                    this.handleMollieStatusResponse(paymentLine, {
+                        status: result.status,
+                        card_no: result.details?.cardNumber,
+                        card_type: result.details?.cardFunding,
+                        card_brand: result.details?.cardLabel,
+                        status_reason: result.statusReason,
+                    });
                 }
             } catch {
                 if (!connectionLost) {
