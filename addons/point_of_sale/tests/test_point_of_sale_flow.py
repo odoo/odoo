@@ -1357,6 +1357,16 @@ class TestPointOfSaleFlow(CommonPosTest):
             "Invoice should not use journal bank account when not allowed."
         )
 
+    def test_invoiced_order_keeps_preset_slot(self):
+        preset = self.env['pos.preset'].create({'name': 'Delivery'})
+        self.pos_config_usd.open_ui()
+        self.pos_config_usd.current_session_id.set_opening_control(0, None)
+        slot = '2026-01-01 12:00:00'
+        order = self._create_and_invoice_order().pos_order_ids
+        order.write({'preset_id': preset.id, 'preset_time': slot})
+        usage = preset.get_available_slots()['usage_utc']
+        self.assertEqual(usage[slot], [order.id])
+
     def test_order_invoiced_after_session_closed(self):
         """Test that an order can be invoiced after its session is closed.
         Scenario:
