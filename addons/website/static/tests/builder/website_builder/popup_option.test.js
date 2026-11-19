@@ -406,3 +406,56 @@ describe("Popup visibility", () => {
         expect(":iframe .s_popup > .modal").toHaveClass("show");
     });
 });
+
+describe("Popup options: shadow and border", () => {
+    const popupOptionsSelector = "[data-container-title='Popup']";
+    const modalContentSelector = ":iframe .s_popup .modal-content";
+
+    beforeEach(async () => {
+        await setupWebsiteBuilder("", {
+            loadIframeBundles: true,
+            loadAssetsFrontendJS: true,
+        });
+        await insertCategorySnippet({ group: "content", snippet: "s_popup" });
+        await contains(":iframe .s_popup .modal").click();
+        await waitFor(popupOptionsSelector);
+    });
+
+    test("shadow option is applied on the modal content", async () => {
+        const shadowToggleSelector = `${popupOptionsSelector} [data-label='Shadow'] .o_hb_select_toggle`;
+        expect(modalContentSelector).toHaveClass("shadow");
+
+        await contains(shadowToggleSelector).click();
+        await contains("div.o_hb_select_dropdown_item:contains(Large)").click();
+        expect(modalContentSelector).toHaveClass("shadow-lg");
+        expect(modalContentSelector).not.toHaveClass("shadow");
+        expect(":iframe .s_popup .modal").not.toHaveClass("shadow-lg");
+
+        await contains(shadowToggleSelector).click();
+        await contains("div.o_hb_select_dropdown_item:contains(None)").click();
+        expect(modalContentSelector).not.toHaveClass("shadow-lg");
+        expect(modalContentSelector).not.toHaveClass("shadow");
+    });
+
+    test("border option is applied on the modal content", async () => {
+        await contains(`${popupOptionsSelector} [data-label='Border'] .o_hb_input_number`).edit(
+            "2"
+        );
+        expect(modalContentSelector).toHaveClass("border");
+        expect(modalContentSelector).toHaveStyle({ "border-top-width": "2px" });
+    });
+
+    test("round corners make the close button round and are removed at 0", async () => {
+        const radiusInputSelector = `${popupOptionsSelector} [data-label='Round Corners'] .o_hb_input_number`;
+        const closeSelector = ":iframe .s_popup .s_popup_close";
+
+        await contains(radiusInputSelector).edit("16");
+        expect(modalContentSelector).toHaveClass("rounded");
+        expect(modalContentSelector).toHaveStyle({ "border-radius": "16px" });
+        expect(closeSelector).toHaveStyle({ "border-radius": "50%" });
+
+        await contains(radiusInputSelector).edit("0");
+        expect(modalContentSelector).not.toHaveClass("rounded");
+        expect(closeSelector).not.toHaveStyle({ "border-radius": "50%" });
+    });
+});
