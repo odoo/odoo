@@ -54,8 +54,9 @@ export function pickerGetAnchor({ action, owner }) {
 }
 
 registerComposerAction("send-message", {
-    condition: ({ ancestors, composer, store }) =>
-        (store.ui.isSmall() && composer.message) || (!ancestors.inChatter && !composer.message),
+    condition: ({ ancestors, composer, owner, store }) =>
+        ((store.ui.isSmall() && composer.message) || (!ancestors.inChatter && !composer.message)) &&
+        !owner.isSendButtonHidden,
     disabledCondition: ({ owner }) => owner.isSendButtonDisabled,
     hasBtnBg: true,
     icon: "send",
