@@ -7,7 +7,7 @@ import {
     mockFetch,
     mockLocation,
     mockWebSocket,
-    registerDebugInfo,
+    trackObject,
 } from "@odoo/hoot";
 import { makeErrorFromResponse, rpc, RPCError } from "@web/core/network/rpc";
 import { RPCCache } from "@web/core/network/rpc_cache";
@@ -537,7 +537,8 @@ export class MockServer {
         }
         this._started = true;
 
-        registerDebugInfo("mock server", this);
+        // Retained servers also retain all their models and records
+        trackObject("mock server", this);
 
         // Add RPC cache
         rpc.setCache(new RPCCache("mockRpc", 1, "23aeb0ff5d46cfa8aa44163720d871ac"));
