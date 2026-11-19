@@ -119,7 +119,7 @@ class PaymentTransaction(models.Model):
             "cardholderName": self.billing_partner_id.name,
             "email": self.billing_partner_id.email,
         }
-        if self.partner_state_id.code:
+        if self.billing_partner_id.state_id.code:
             emv3ds_payload["billAddrState"] = self.billing_partner_id.state_id.code
         merchant_parameters = {
             "DS_MERCHANT_AMOUNT": str(converted_amount),

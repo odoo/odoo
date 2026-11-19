@@ -904,7 +904,11 @@ class PaymentProvider(models.Model):
 
         # Handle the billing address requirement
         billing_partner = self.env["res.partner"].browse(billing_partner_id).exists()
-        if not billing_partner or not billing_partner._check_billing_address():
+        # The contact details are left out, as no provider requires them in the billing address.
+        address_fields = billing_partner._get_mandatory_billing_address_fields(
+            billing_partner.country_id
+        ) - {"email", "phone"}
+        if not billing_partner or not all(billing_partner.read(address_fields)[0].values()):
             unfiltered_pms = payment_methods
             payment_methods = payment_methods.filtered(lambda pm: not pm.require_billing_address)
             payment_utils.add_to_report(

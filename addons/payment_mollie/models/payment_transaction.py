@@ -133,7 +133,7 @@ class PaymentTransaction(models.Model):
             "email": self.billing_partner_id.email or "",
         }
         if all((
-            self.billing_partner_id.address,
+            street_and_number,
             self.billing_partner_id.zip,
             self.billing_partner_id.city,
             self.billing_partner_id.country_id,
