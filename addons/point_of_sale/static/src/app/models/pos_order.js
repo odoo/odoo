@@ -379,9 +379,11 @@ export class PosOrder extends PosOrderAccounting {
             (line) => line.price_type === "original" && line.combo_parent_id
         );
         combo_children_lines.forEach((line) => {
-            const currentItem = attributes_prices[line.combo_parent_id.id].find(
+            const items = attributes_prices[line.combo_parent_id.id].filter(
                 (item) => item.combo_item_id.id === line.combo_item_id.id
             );
+            // Free and extra lines of the same product only differ by their quantity
+            const currentItem = items.find((item) => item.qty === line.qty) || items[0];
             line.setUnitPrice(currentItem.price_unit);
             // Removing to be able to have extras that are the same as free products
             attributes_prices[line.combo_parent_id.id].splice(
