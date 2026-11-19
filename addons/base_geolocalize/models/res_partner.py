@@ -64,7 +64,7 @@ class ResPartner(models.Model):
             try:
                 result = partner._geo_localize(*address)
             except GeoCodingError as e:
-                partner.write({
+                partner.update({
                     'geo_localization_error': str(e),
                     'date_localization': fields.Datetime.now(),
                 })
@@ -72,7 +72,7 @@ class ResPartner(models.Model):
                 continue
 
             if result:
-                partner.write({
+                partner.update({
                     'partner_latitude': result[0],
                     'partner_longitude': result[1],
                     'date_localization': fields.Datetime.now(),
@@ -80,7 +80,7 @@ class ResPartner(models.Model):
                     'geo_localization_error': False,
                 })
             else:
-                partner.write({
+                partner.update({
                     'geo_localization_error': self.env._(
                         "No match found for address: %(address)s",
                         address=self.env['base.geocoder'].geo_query_address(*address),
