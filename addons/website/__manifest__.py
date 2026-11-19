@@ -296,6 +296,7 @@
             ('remove', 'website/static/src/interactions/ripple_effect.js'),
             ('remove', 'website/static/src/core/website_edit_service.js'),
             ('replace', 'web/static/src/public/public_root_instance.js', 'website/static/src/js/content/website_root_instance.js'),
+            'website/static/src/services/frontend/offline_plugin.js',
             'website/static/src/snippets/**/*.js',
             ('remove', 'website/static/src/snippets/**/*.edit.js'),
             'website/static/src/scss/website.scss',
