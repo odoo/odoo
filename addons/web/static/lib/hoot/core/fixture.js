@@ -6,6 +6,7 @@ import { _setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
 import { HootError } from "../hoot_utils";
 import { subscribeToTransitionChange } from "../mock/animation";
 import { getViewPortHeight, getViewPortWidth } from "../mock/window";
+import { trackObject } from "./gc";
 
 /**
  * @typedef {Parameters<typeof import("@odoo/owl").mount>[2] & {
@@ -88,7 +89,16 @@ export class FixtureManager {
                 this.currentFixture.style.height = `${height}px`;
             }
 
+<<<<<<< 9ec2ac077e7c5180b9102b878ecdc42d8303c9ef
             document.body.appendChild(this.currentFixture);
+||||||| aee4d7882425b42f56da28f60b2cb2aea3f73dae
+            document.body.appendChild(currentFixture);
+=======
+            document.body.appendChild(currentFixture);
+
+            // Retained fixtures also retain all elements rendered in them
+            trackObject("fixture", currentFixture);
+>>>>>>> 790614ff68a81d1baf842759fc50bbb9f7483e97
         }
         return this.currentFixture;
     }

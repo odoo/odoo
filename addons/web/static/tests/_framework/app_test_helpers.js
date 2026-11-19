@@ -1,5 +1,13 @@
+<<<<<<< 9ec2ac077e7c5180b9102b878ecdc42d8303c9ef:addons/web/static/tests/_framework/app_test_helpers.js
 import { after, afterEach, animationFrame, beforeEach, registerDebugInfo } from "@odoo/hoot";
 import { App } from "@odoo/owl";
+||||||| aee4d7882425b42f56da28f60b2cb2aea3f73dae:addons/web/static/tests/_framework/env_test_helpers.js
+import { after, afterEach, beforeEach, registerDebugInfo } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-mock";
+=======
+import { after, afterEach, beforeEach, trackObject } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-mock";
+>>>>>>> 790614ff68a81d1baf842759fc50bbb9f7483e97:addons/web/static/tests/_framework/env_test_helpers.js
 import { startRouter } from "@web/core/browser/router";
 import { createDebugContext } from "@web/core/debug/debug_context";
 import { appTranslateFn } from "@web/core/l10n/translation";
@@ -185,7 +193,14 @@ export async function makeMockEnv(partialEnv, options) {
     const env = makeEnv();
     Object.assign(env, partialEnv, createDebugContext(env)); // This is needed if the views are in debug mode
 
+<<<<<<< 9ec2ac077e7c5180b9102b878ecdc42d8303c9ef:addons/web/static/tests/_framework/app_test_helpers.js
     assignEnvToApp(env, app);
+||||||| aee4d7882425b42f56da28f60b2cb2aea3f73dae:addons/web/static/tests/_framework/env_test_helpers.js
+    registerDebugInfo("env", env);
+=======
+    // Retained environments also retain their services, and all their state
+    trackObject("env", env);
+>>>>>>> 790614ff68a81d1baf842759fc50bbb9f7483e97:addons/web/static/tests/_framework/env_test_helpers.js
 
     try {
         if (isFirstEnv) {
