@@ -223,8 +223,18 @@ class StockMove(models.Model):
 
     @api.onchange('quantity', 'uom_id', 'picked')
     def _onchange_quantity(self):
+<<<<<<< 31bcd537dd80d69414056d9a5908023da7b0d468
         if self.raw_material_production_id and self.uom_id and \
             not self.uom_id.is_zero(self.quantity) and self.uom_id.compare(self.product_uom_qty, self.quantity) != 0:
+||||||| 3b3ceb599ff44a27112c88ce34bc1df6c6c4f117
+        if self.raw_material_production_id and self.product_uom and \
+            not float_is_zero(self.quantity, precision_rounding=self.product_uom.rounding) and self.product_uom.compare(self.product_uom_qty, self.quantity) != 0:
+=======
+        if (self.raw_material_production_id and self.product_uom
+            and not float_is_zero(self.quantity, precision_rounding=self.product_uom.rounding)
+            and (self.product_uom.compare(self.product_uom_qty, self.quantity)
+                 or self.product_uom.compare(self._origin.quantity, self.quantity))):
+>>>>>>> 38a81b81853f94345b4399d0f6a3c0bcc2fd47ab
             self.manual_consumption = True
             self.picked = True
 
@@ -303,7 +313,7 @@ class StockMove(models.Model):
                 self = other_move + updated_product_move
         moves_to_update = False
         if self.env.context.get('force_manual_consumption') and 'quantity' in vals:
-            moves_to_update = self.filtered(lambda move: move.product_uom_qty != vals['quantity'])
+            moves_to_update = self.filtered(lambda move: move.product_uom.compare(move.quantity, vals['quantity']))
         if 'product_uom_qty' in vals and 'move_line_ids' in vals:
             # first update lines then product_uom_qty as the later will unreserve
             # so possibly unlink lines
