@@ -107,6 +107,17 @@
                             <setting id="signature_delivery_orders" help="Require a signature on your delivery orders">
                                 <field name="group_stock_sign_delivery"/>
                             </setting>
+                            <setting id="stock_label_printers" string="Label Printers" help="Print labels and reports on Zebra and EPSON printers">
+                                <field name="module_stock_printer"/>
+                                <div class="content-group" invisible="not module_stock_printer">
+                                    <div>
+                                        <button name="action_manage_printers" icon="east" type="object" string="Manage Printers" class="btn-link"/>
+                                    </div>
+                                    <div>
+                                        <button name="action_reset_linked_printers" icon="east" type="object" string="Reset Linked Printers" class="btn-link"/>
+                                    </div>
+                                </div>
+                            </setting>
                         </block>
                         <block title="Products" name="product_setting_container">
                             <setting id="product_attributes" help="Set product attributes (e.g. color, size) to manage variants" documentation="/applications/sales/sales/products_prices/products/variants.html">

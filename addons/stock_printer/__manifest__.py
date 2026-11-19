@@ -1,6 +1,6 @@
 {
     'name': "Stock - Printer",
-    'summary': "Manage ZPL/ePOS printers from Inventory",
+    'summary': "Manage Zebra/EPSON printers from Inventory",
     'category': 'Supply Chain/Inventory',
     'depends': ['stock', 'printer'],
     'data': [
