@@ -1,7 +1,7 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.analytic.tests.common import AnalyticCommon
 from odoo.tests import tagged, Form
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError, RedirectWarning
 from odoo import Command
 
 
@@ -351,6 +351,65 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
                 with self.assertRaises(Exception):
                     vam.validate_move()
                 self.assertTrue('posted' not in invoices.mapped('state'))
+
+    def test_mandatory_plan_validation_batch_post_action(self):
+        """
+        Posting via action_validate_moves_with_confirmation() must enforce
+        mandatory analytic validation, just like the form's Post button.
+        Regression test for the fix that added validate_analytic=True to
+        direct_validate_moves._post().
+        """
+        invoice1 = self._create_invoice_one_line(partner_id=self.partner_a, product_id=self.product_a)
+        invoice2 = self._create_invoice_one_line(partner_id=self.partner_b, product_id=self.product_a)
+        self.analytic_plan_2.write({
+            'applicability_ids': [Command.create({
+                'business_domain': 'invoice',
+                'product_categ_id': self.product_a.categ_id.id,
+                'applicability': 'mandatory',
+            })],
+        })
+
+        # Before the fix, moves were posted silently; now a RedirectWarning must be raised.
+        with self.assertRaises(RedirectWarning):
+            (invoice1 | invoice2).action_validate_moves_with_confirmation()
+        self.assertEqual(invoice1.state, 'draft')
+        self.assertEqual(invoice2.state, 'draft')
+
+        # After filling in the distribution, posting succeeds.
+        for inv in (invoice1 | invoice2):
+            inv.invoice_line_ids.analytic_distribution = {self.analytic_account_4.id: 100}
+        (invoice1 | invoice2).action_validate_moves_with_confirmation()
+        self.assertEqual(invoice1.state, 'posted')
+        self.assertEqual(invoice2.state, 'posted')
+
+    def test_action_post_from_move_line_routes_via_button(self):
+        """
+        The "Confirm Entries" button (action_post_from_move_line) in the missing
+        analytic view must enforce the same mandatory analytic validation as the
+        direct action_validate_moves_with_confirmation call.
+        Two invoices are needed: _validate_analytic_distribution raises RedirectWarning
+        only when multiple moves are involved (single-move raises ValidationError instead).
+        """
+        invoice1 = self._create_invoice_one_line(partner_id=self.partner_a, product_id=self.product_a)
+        invoice2 = self._create_invoice_one_line(partner_id=self.partner_b, product_id=self.product_a)
+        self.analytic_plan_2.write({
+            'applicability_ids': [Command.create({
+                'business_domain': 'invoice',
+                'product_categ_id': self.product_a.categ_id.id,
+                'applicability': 'mandatory',
+            })],
+        })
+
+        with self.assertRaises(RedirectWarning):
+            (invoice1 | invoice2).line_ids.action_post_from_move_line()
+        self.assertEqual(invoice1.state, 'draft')
+        self.assertEqual(invoice2.state, 'draft')
+
+        for inv in (invoice1 | invoice2):
+            inv.invoice_line_ids.analytic_distribution = {self.analytic_account_4.id: 100}
+        (invoice1 | invoice2).line_ids.action_post_from_move_line()
+        self.assertEqual(invoice1.state, 'posted')
+        self.assertEqual(invoice2.state, 'posted')
 
     def test_cross_analytics_computing(self):
 

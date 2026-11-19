@@ -197,7 +197,7 @@
                         <button name="edit" type="edit" icon="edit" icon_class="oi-filled"/>
                     </groupby>
                     <groupby name="move_id">
-                        <button name="action_post" type="object" string="Post" class="btn-primary" invisible="state != 'draft'" groups="account.group_account_user"/>
+                        <button name="action_post" type="object" string="Post" class="btn-primary" invisible="state != 'draft'" groups="account.group_account_user" context="{'validate_analytic': True}"/>
                         <button name="set_moves_checked" type="object" string="Review" class="btn-primary" invisible="state != 'posted' or review_state not in ('todo', 'anomaly')" groups="account.group_account_user"/>
                         <button name="edit_move" type="edit"/>
                     </groupby>
@@ -257,6 +257,26 @@
                 <field name="partner_id" position="attributes"><attribute name="optional">hide</attribute></field>
                 <field name="date_maturity" position="attributes"><attribute name="optional">show</attribute></field>
                 <field name="balance" position="attributes"><attribute name="optional">show</attribute></field>
+            </field>
+        </record>
+
+        <record id="view_move_line_tree_missing_analytic" model="ir.ui.view">
+            <field name="name">account.move.line.list.missing.analytic</field>
+            <field name="model">account.move.line</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="account.view_move_line_tree"/>
+            <field name="arch" type="xml">
+                <list position="inside">
+                    <header>
+                        <button name="action_post_from_move_line"
+                                type="object"
+                                string="Confirm Entries"
+                                groups="account.group_account_user"/>
+                    </header>
+                </list>
+                <field name="analytic_distribution" position="attributes">
+                    <attribute name="optional">show</attribute>
+                </field>
             </field>
         </record>
 
