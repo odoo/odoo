@@ -1,7 +1,9 @@
 import { patch } from "@web/core/utils/patch";
 import { BottomSheet } from "@web/core/bottom_sheet/bottom_sheet";
-import { onMounted, onWillUnmount, t, useProps } from "@odoo/owl";
+import { onMounted, onWillUnmount, t, useListener, useProps } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
 import { useViewportChange } from "@web/core/utils/dvu";
+import { useThrottleForAnimation } from "@web/core/utils/timing";
 
 /**
  * @param {Element|null} el the active element of a document
@@ -72,12 +74,43 @@ patch(BottomSheet.prototype, {
             // sheet would stay wherever the keyboard toggle left it.
             useViewportChange(() => {
                 if (this.state.isPositionedReady && !this.state.isDismissing) {
+                    this.fitToVisualViewport();
                     this.positionSheet();
                     this.updateProgressValue(this.scrollRailRef().scrollTop);
                     this.state.isSnappingEnabled = true;
                 }
             });
+            // The keyboard might already be displayed when opening the sheet.
+            onMounted(() => this.fitToVisualViewport());
+            // The browser may pan the visual viewport (e.g. to reveal the
+            // focused input) without resizing it.
+            if (browser.visualViewport) {
+                const throttledFit = useThrottleForAnimation(() => this.fitToVisualViewport());
+                useListener(browser.visualViewport, "scroll", throttledFit);
+            }
         }
+    },
+
+    /**
+     * Keeps the bottom of the sheet at the bottom of the visual viewport.
+     * On some mobile browsers (e.g. Chrome Android), the virtual keyboard
+     * only shrinks the visual viewport: the layout viewport, to which the
+     * sheet is anchored, keeps its height, so the sheet would end up behind
+     * the keyboard, more or less depending on how the browser panned the
+     * visual viewport to reveal the focused element.
+     */
+    fitToVisualViewport() {
+        const containerEl = this.containerRef();
+        const visualViewport = browser.visualViewport;
+        if (!containerEl || !visualViewport) {
+            return;
+        }
+        const hiddenBelow =
+            containerEl.clientHeight - (visualViewport.offsetTop + visualViewport.height);
+        // Moving the container up keeps its dvh height: the sheet dimensions,
+        // expressed in dvh, remain valid.
+        // Ignore subpixel differences due to fractional viewport heights.
+        containerEl.style.top = hiddenBelow >= 1 ? `${-hiddenBelow}px` : "";
     },
 
     onIframeLoad(ev) {
