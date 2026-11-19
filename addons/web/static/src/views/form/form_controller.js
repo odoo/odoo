@@ -39,7 +39,7 @@ import { FormErrorDialog } from "./form_error_dialog/form_error_dialog";
 import { FormStatusIndicator } from "./form_status_indicator/form_status_indicator";
 import { FormCogMenu } from "./form_cog_menu/form_cog_menu";
 
-import { Component, onError, onMounted, onWillUnmount, status } from "@odoo/owl";
+import { Component, onError, onMounted, onWillUnmount, status, useEffect } from "@odoo/owl";
 import { FetchRecordError } from "@web/model/relational_model/errors";
 import { effect } from "@web/core/utils/reactive";
 
@@ -223,6 +223,15 @@ export class FormController extends Component {
                 [this.model]
             );
         });
+        const offlineState = useState(this.offlineService);
+        useEffect(
+            (isOffline) => {
+                if (!isOffline) {
+                    this.model.root.runPendingOnchanges();
+                }
+            },
+            () => [offlineState.offline]
+        );
 
         onError((error) => {
             const suggestedCompany = error.cause?.data?.context?.suggested_company;
