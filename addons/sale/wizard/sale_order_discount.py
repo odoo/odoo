@@ -87,6 +87,18 @@ class SaleOrderDiscount(models.TransientModel):
             discount_product = self.company_id.sale_discount_product_id
         return discount_product
 
+    def _get_discountable_order_lines(self):
+        """Return the order lines a discount (per-line or global) may apply to."""
+        self.ensure_one()
+        return self.sale_order_id.order_line.filtered(
+            lambda line: (
+                not line.display_type
+                and not line.is_downpayment
+                and not line._is_discount_line()
+                and not line._is_not_sellable_line()
+            )
+        )
+
     def _create_discount_lines(self):
         """Create SOline(s) according to wizard configuration"""
         self.ensure_one()
@@ -102,7 +114,7 @@ class SaleOrderDiscount(models.TransientModel):
             ]
         else: # so_discount
             total_price_per_tax_groups = defaultdict(float)
-            for line in self.sale_order_id.order_line:
+            for line in self._get_discountable_order_lines():
                 if not line.product_uom_qty or not line.price_unit:
                     continue
                 discounted_price = line.price_unit * (1 - (line.discount or 0.0)/100)
@@ -149,6 +161,6 @@ class SaleOrderDiscount(models.TransientModel):
         self.ensure_one()
         self = self.with_company(self.company_id)
         if self.discount_type == 'sol_discount':
-            self.sale_order_id.order_line.write({'discount': self.discount_percentage*100})
+            self._get_discountable_order_lines().write({'discount': self.discount_percentage * 100})
         else:
             self._create_discount_lines()
