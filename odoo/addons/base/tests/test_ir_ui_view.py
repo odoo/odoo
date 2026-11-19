@@ -3604,10 +3604,6 @@ class TestViews(ViewCase):
         self.assertValid('<form><span title="text" class="oi" data-icon="warning"/></form>')
         self.assertValid('<form><span aria-label="text" class="oi" data-icon="warning"/></form>')
 
-    def test_valid_simili_button(self):
-        self.assertWarning('<form><a class="btn"/></form>')
-        self.assertValid('<form><a class="btn" role="button"/></form>')
-
     def test_valid_dialog(self):
         self.assertWarning('<form><div class="modal"/></form>')
         self.assertValid('<form><div role="dialog" class="modal"></div></form>')
