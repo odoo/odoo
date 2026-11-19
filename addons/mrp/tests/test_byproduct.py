@@ -160,6 +160,43 @@ class TestMrpByProduct(common.TransactionCase):
         self.assertEqual(mnf_product_a.move_raw_ids.product_id.id, self.product_c_id)
         self.assertFalse(mnf_product_a.move_byproduct_ids)
 
+    def test_set_bom_with_byproduct_on_variant(self):
+        """ Set a BoM with a by-product on an existing MO of any variant of the BoM's template: the MO
+        must keep the finished move of its own variant next to the by-product move. """
+        # the form sends `move_byproduct_ids` only when the by-products tab is shown
+        self.env.user.groups_id += self.env.ref('mrp.group_mrp_byproducts')
+        color = self.env['product.attribute'].create({
+            'name': 'Color',
+            'value_ids': [Command.create({'name': 'Red'}), Command.create({'name': 'Blue'})],
+        })
+        template = self.env['product.template'].create({
+            'name': 'Product with variants',
+            'is_storable': True,
+            'attribute_line_ids': [Command.create({
+                'attribute_id': color.id,
+                'value_ids': [Command.set(color.value_ids.ids)],
+            })],
+        })
+        mos = self.env['mrp.production']
+        for variant in template.product_variant_ids:
+            mo_form = Form(self.env['mrp.production'])
+            mo_form.product_id = variant
+            mos |= mo_form.save()
+        self.assertFalse(mos.bom_id)
+
+        bom = self.MrpBom.create({
+            'product_tmpl_id': template.id,
+            'bom_line_ids': [Command.create({'product_id': self.product_c_id, 'product_qty': 2})],
+            'byproduct_ids': [Command.create({'product_id': self.product_b.id, 'product_qty': 1})],
+        })
+        for mo in mos:
+            with self.subTest(variant=mo.product_id.display_name):
+                mo_form = Form(mo)
+                mo_form.bom_id = bom
+                mo_form.save()
+                self.assertEqual(mo.move_finished_ids.product_id, mo.product_id | self.product_b)
+                self.assertEqual(mo.move_byproduct_ids.product_id, self.product_b)
+
     def test_default_uom(self):
         """ Tests the `uom_id` on the byproduct gets set automatically while creating a byproduct with a product,
             without the need to call an onchange or to set the uom manually in the create.
