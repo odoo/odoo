@@ -46,10 +46,6 @@ export class AttendeeCalendarModel extends CalendarModel {
         return res;
     }
 
-    get attendees() {
-        return this.data.attendees;
-    }
-
     /**
      * @override
      */

@@ -78,12 +78,6 @@ class CalendarRecurrence(models.Model):
     def _get_google_synced_fields(self):
         return {'rrule'}
 
-    @api.model
-    def _restart_google_sync(self):
-        self.env['calendar.recurrence'].search(self._get_sync_domain()).write({
-            'need_sync': True,
-        })
-
     def _write_from_google(self, gevent, vals, calendar):
         current_rrule = self.rrule
         current_tz = ZoneInfo(self.event_tz) if self.event_tz else None
