@@ -1462,3 +1462,10 @@ class ProductProduct(models.Model):
 
     def _get_main_uom(self):
         return self.product_tmpl_id._get_main_uom()
+
+    @api.model
+    def search_panel_select_range(self, field_name, **kwargs):
+        result = super().search_panel_select_range(field_name, **kwargs)
+        if field_name == 'categ_id' and self.env.context.get('product_catalog_order_model') and 'values' in result:
+            result['values'].sort(key=lambda v: v.get('display_name', ''))
+        return result
