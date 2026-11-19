@@ -144,7 +144,7 @@ export class LeaveStatsComponent extends Component {
             .map(([name, vals, , id]) => {
                 const format =
                     vals.unit_of_measure === "hour"
-                        ? (value) => (value ? formatFloatTime(value.toFixed(2)) : 0)
+                        ? (value) => (value ? formatFloatTime(value) : 0)
                         : (value) => value;
 
                 return {

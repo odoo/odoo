@@ -3,6 +3,7 @@ from datetime import UTC
 from zoneinfo import ZoneInfo
 
 from odoo import fields, models
+from odoo.tools import float_round
 
 
 class HrEmployee(models.Model):
@@ -32,8 +33,8 @@ class HrEmployee(models.Model):
                 aggregates=['worked_hours:sum'],
             ))
             for employee in employees:
-                employee.hours_last_month_overtime = round(
-                    overtime_by_employee.get(employee, 0.0), 2
+                employee.hours_last_month_overtime = float_round(
+                    overtime_by_employee.get(employee, 0.0), precision_digits=2
                 )
 
     def get_attendance_data_by_employee(self, date_start, date_stop):

@@ -483,6 +483,8 @@ class TestWorkEntry(TestWorkEntryBase):
         # 7h36
         self.assertEqual(duration_column({'we_collection': {'duration': 7.6 * 3600}}), '7.6')
         self.assertEqual(duration_column({'we_collection': {'duration': 8 * 3600}}), '8.0')
+        # 7m30s are 0.125 hour: rounded half-up, not to the even 0.12
+        self.assertEqual(duration_column({'we_collection': {'duration': 450}}), '0.13')
 
     def test_attendance_display_name_mixed_time_types(self):
         """
