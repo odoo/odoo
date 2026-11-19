@@ -65,6 +65,20 @@ class TestUtm(TestUTMCommon):
         campaign = self.env['utm.mixin']._find_or_create_record('utm.campaign', 'Archived Campaign')
         self.assertEqual(archived_campaign, campaign, "An archived record must be found instead of re-created.")
 
+    def test_name_generation_with_archived_record(self):
+        """Archived records still hold their name in the unique constraint, so
+        new names must be computed against them too."""
+        self.env['utm.medium'].create({'name': 'Archived Medium', 'active': False})
+        medium = self.env['utm.medium'].create({'name': 'Archived Medium'})
+        self.assertEqual(medium.name, 'Archived Medium [2]')
+
+        self.env['utm.campaign'].create({'title': 'Archived Campaign', 'active': False})
+        campaign = self.env['utm.campaign'].create({'title': 'Archived Campaign'})
+        self.assertEqual(campaign.name, 'Archived Campaign [2]')
+        campaign = self.env['utm.campaign'].create({'title': 'Other Campaign'})
+        campaign.title = 'Archived Campaign'
+        self.assertEqual(campaign.name, 'Archived Campaign [3]')
+
     def test_name_generation(self):
         """Test that the name is always unique. A counter must be added at the
         end of the name if it's not the case."""
