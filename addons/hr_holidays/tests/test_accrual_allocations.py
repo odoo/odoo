@@ -4283,6 +4283,43 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         ])
         self.assertEqual(len(created_allocation), 2, "Another accrual allocation should be created for the employee based on their working schedule.")
 
+    @freeze_time('2026-09-01')
+    def test_accrual_allocation_from_working_schedule_ended_contract(self):
+        """ A working schedule with an accrual plan can be set on a contract that
+        already ended: the allocation only accrues until the end of the contract. """
+        attendances = []
+        for index in range(5):
+            attendances.append((0, 0, {
+                'hour_from': 8,
+                'hour_to': 12,
+                'dayofweek': str(index),
+            }))
+            attendances.append((0, 0, {
+                'hour_from': 13,
+                'hour_to': 18,
+                'dayofweek': str(index),
+            }))
+        calendar_emp = self.env['resource.calendar'].create({
+            'name': '45 Hours',
+            'attendance_ids': attendances,
+            'leave_accrual_plan_id': self.accrual_plan_monthly_end.id,
+        })
+        test_employee = self.env['hr.employee'].create({
+            'name': 'John Doe',
+            'date_version': '2025-01-01',
+            'contract_date_start': '2025-01-01',
+            'contract_date_end': '2025-06-30',
+            'resource_calendar_id': calendar_emp.id,
+        })
+        allocation = self.env['hr.leave.allocation'].search([
+            ('employee_id', '=', test_employee.id),
+        ])
+        self.assertEqual(len(allocation), 1, "An accrual allocation should be created for the ended contract.")
+        self.assertEqual(allocation.date_from, datetime.date(2025, 1, 1))
+        self.assertEqual(allocation.date_to, datetime.date(2025, 6, 30))
+        self.assertLessEqual(allocation.last_accrual, datetime.date(2025, 6, 30), "The accrual must stop at the end of the contract.")
+        self.assertGreater(allocation.number_of_days, 0)
+
     def test_accrual_allocation_from_working_schedule_contract_template(self):
         """ A contract template (version without employee) never gets an allocation
         from its working schedule. """
