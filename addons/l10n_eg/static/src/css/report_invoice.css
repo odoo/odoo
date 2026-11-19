@@ -1,0 +1,41 @@
+/* Egyptian dual language invoice (see l10n_eg.l10n_eg_report_invoice_document). */
+
+/* Column widths come from the header cells (see the template): stacked bilingual
+   labels and long descriptions wrap inside their own column. */
+table.o_l10n_eg_invoice_line_table {
+    table-layout: fixed;
+}
+
+table.o_l10n_eg_invoice_line_table th {
+    vertical-align: bottom;
+    white-space: normal !important;
+}
+
+table.o_l10n_eg_invoice_line_table td {
+    word-wrap: break-word;
+}
+
+/* The standard report never wraps tax labels, which overflow a fixed-width column. */
+table.o_l10n_eg_invoice_line_table td[name="td_taxes"],
+table.o_l10n_eg_invoice_line_table td[name="td_taxes_grouped"] {
+    white-space: normal !important;
+}
+
+/* A row split over two pages overlaps the header repeated by wkhtmltopdf on the next one. */
+table.o_l10n_eg_invoice_line_table tbody tr {
+    page-break-inside: avoid;
+}
+
+.o_l10n_eg_terms {
+    line-height: 1.5;
+}
+
+.o_l10n_eg_terms p {
+    margin-bottom: 0.5rem;
+}
+
+.o_l10n_eg_terms ul,
+.o_l10n_eg_terms ol {
+    padding-left: 1.5rem;
+    margin-bottom: 0.5rem;
+}

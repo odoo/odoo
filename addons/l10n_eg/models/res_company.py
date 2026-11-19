@@ -1,4 +1,4 @@
-from odoo import api, models
+from odoo import api, fields, models
 
 L10N_EG_EDI_MODULES = {
     'eta': ('l10n_eg_edi_eta', 'account.action_account_config'),
@@ -8,6 +8,8 @@ L10N_EG_EDI_MODULES = {
 
 class ResCompany(models.Model):
     _inherit = 'res.company'
+
+    l10n_eg_dual_language_invoice = fields.Boolean(string="Egyptian Dual Language Invoices")
 
     @api.model
     def _l10n_eg_action_activate_edi(self, edi_type):
