@@ -218,10 +218,12 @@
         <field name="model">product.category</field>
         <field name="inherit_id" ref="account.view_category_property_form"/>
         <field name="arch" type="xml">
-            <field name="property_account_expense_categ_id" position="after">
-                <field name="property_account_invoices_to_issue_id" options="{'no_create': True}" decoration-muted="not property_account_invoices_to_issue_active"/>
-                <field name="property_account_invoiced_not_delivered_id" options="{'no_create': True}" decoration-muted="not property_account_invoiced_not_delivered_active"/>
-            </field>
+            <group name="stock_properties" position="after">
+                <group name="sale_accruals" string="Sale Accruals">
+                    <field name="property_account_invoices_to_issue_id" options="{'no_create': True}" decoration-muted="not property_account_invoices_to_issue_active"/>
+                    <field name="property_account_invoiced_not_delivered_id" options="{'no_create': True}" decoration-muted="not property_account_invoiced_not_delivered_active"/>
+                </group>
+            </group>
         </field>
     </record>
 

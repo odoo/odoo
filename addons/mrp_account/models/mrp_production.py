@@ -95,7 +95,8 @@ class MrpProduction(models.Model):
     def _post_labour(self):
         for mo in self:
             production_location = mo.product_id.with_company(mo.company_id).property_stock_production
-            if mo.with_company(mo.company_id).product_id.valuation != 'real_time' or not production_location.valuation_account_id:
+            production_account = production_location._get_valuation_account(mo.company_id)
+            if mo.with_company(mo.company_id).product_id.valuation != 'real_time' or not production_account:
                 continue
 
             if mo.workorder_ids.time_ids.account_move_line_id:
@@ -114,8 +115,7 @@ class MrpProduction(models.Model):
                 continue
 
             desc = _('%s - Labour', mo.name)
-            account = production_location.valuation_account_id
-            labour_amounts[account] -= workcenter_cost
+            labour_amounts[production_account] -= workcenter_cost
             account_move = self.env['account.move'].sudo().create({
                 'journal_id': product_accounts['stock_journal'].id,
                 'date': fields.Date.context_today(self),

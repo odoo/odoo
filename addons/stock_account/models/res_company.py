@@ -14,10 +14,26 @@ class ResCompany(models.Model):
         selection_add=[('fifo', "First In First Out (FIFO)")],
         ondelete={'fifo': 'set default'},
     )
+    account_cost_of_production_account_id = fields.Many2one(
+        'account.account',
+        string='Cost of Production',
+        domain=[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'asset_cash', 'liability_credit_card'))],
+        check_company=True,
+        help="Default account used to value stock moves to and from production locations "
+             "that don't have an account set.",
+    )
 
     def write(self, vals):
         companies = self.filtered(lambda c: c.cost_method != vals['cost_method']) if 'cost_method' in vals else []
+        valuation_changed_companies = self.filtered(
+            lambda c: c.inventory_valuation != vals['inventory_valuation']
+        ) if 'inventory_valuation' in vals and 'account_cost_of_production_account_id' not in vals else self.browse()
         res = super().write(vals)
+        for company in valuation_changed_companies:
+            if company.inventory_valuation != 'real_time':
+                company.account_cost_of_production_account_id = False
+            elif not company.account_cost_of_production_account_id:
+                company.account_cost_of_production_account_id = company._get_default_cost_of_production_account()
         for company in companies:
             products = self.env['product.product'].with_company(company).search([
                 ('is_storable', '=', True),
@@ -81,9 +97,12 @@ class ResCompany(models.Model):
 
     def _get_location_valuation_vals(self, at_date=None, location_domain=False):
         """ Reclassification entries between stock locations with their own valuation account. """
+        valued_location_domain = Domain('valuation_account_id', '!=', False)
+        if self.account_cost_of_production_account_id:
+            valued_location_domain |= Domain('usage', '=', 'production')
         location_domain = Domain.AND([
             location_domain or [],
-            [('valuation_account_id', '!=', False)],
+            valued_location_domain,
             [('company_id', '=', self.id)],
         ])
         amls_vals_list = []
@@ -120,11 +139,11 @@ class ResCompany(models.Model):
         account_balance = defaultdict(float)
         for location, category, value in moves_in_by_location:
             stock_valuation_acc = category.property_stock_valuation_account_id or self.account_stock_valuation_id
-            account_balance[location.valuation_account_id, stock_valuation_acc] += value
+            account_balance[location._get_valuation_account(self), stock_valuation_acc] += value
 
         for location, category, value in moves_out_by_location:
             stock_valuation_acc = category.property_stock_valuation_account_id or self.account_stock_valuation_id
-            account_balance[location.valuation_account_id, stock_valuation_acc] -= value
+            account_balance[location._get_valuation_account(self), stock_valuation_acc] -= value
 
         for (location_account, stock_account), balance in account_balance.items():
             if balance == 0:
@@ -137,3 +156,8 @@ class ResCompany(models.Model):
             )
             amls_vals_list += amls_vals
         return amls_vals_list
+
+    def _get_default_cost_of_production_account(self):
+        self.ensure_one()
+        return self.env['account.chart.template'].with_company(self).ref('cost_of_production', raise_if_not_found=False) \
+            or self.env['account.account']

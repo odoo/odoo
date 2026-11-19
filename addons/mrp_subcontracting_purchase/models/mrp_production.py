@@ -27,7 +27,8 @@ class MrpProduction(models.Model):
             if production.product_id.cost_method == 'standard':
                 continue
             production_location = production.product_id.with_company(production.company_id).property_stock_production
-            if production.product_id.valuation != 'real_time' or not production_location.valuation_account_id:
+            production_account = production_location._get_valuation_account(production.company_id)
+            if production.product_id.valuation != 'real_time' or not production_account:
                 continue
             product_accounts = production.product_id.product_tmpl_id.get_product_accounts()
             stock_valuation_account = product_accounts['stock_valuation']
@@ -59,7 +60,7 @@ class MrpProduction(models.Model):
                     Command.create({
                         'name': desc,
                         'product_id': production.product_id.id,
-                        'account_id': production_location.valuation_account_id.id,
+                        'account_id': production_account.id,
                         'balance': amount,
                     }),
                     Command.create({

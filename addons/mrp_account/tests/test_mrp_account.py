@@ -171,6 +171,69 @@ class TestMrpAccount(TestBomPriceCommon, TestMrpCommon):
         self.assertEqual(productB_debit_line.account_id, self.account_stock_valuation)
         self.assertEqual(productB_credit_line.account_id, self.account_production)
 
+    def test_cost_of_production_account_follows_inventory_valuation(self):
+        """ The company Cost of Production account is prefilled when switching to
+        perpetual valuation and emptied when switching back to periodic. """
+        company = self.company.sudo()  # setup master-data
+        default_account = self.env['account.chart.template'].with_company(company).ref('cost_of_production')
+        custom_account = self.env['account.account'].sudo().create({
+            'name': 'Custom Cost of Production',
+            'code': '100103',
+            'account_type': 'asset_current',
+        })
+
+        company.inventory_valuation = 'periodic'
+        self.assertFalse(company.account_cost_of_production_account_id)
+
+        company.inventory_valuation = 'real_time'
+        self.assertEqual(company.account_cost_of_production_account_id, default_account)
+
+        # A custom account is kept as long as the valuation doesn't change
+        company.account_cost_of_production_account_id = custom_account
+        company.inventory_valuation = 'real_time'
+        self.assertEqual(company.account_cost_of_production_account_id, custom_account)
+
+        company.inventory_valuation = 'periodic'
+        self.assertFalse(company.account_cost_of_production_account_id)
+
+        # Writing both at once respects the given account
+        company.write({'inventory_valuation': 'real_time', 'account_cost_of_production_account_id': custom_account.id})
+        self.assertEqual(company.account_cost_of_production_account_id, custom_account)
+
+    def test_cost_of_production_account_location_priority(self):
+        """ Production locations without a valuation account fall back on the
+        company Cost of Production account, the location account has priority. """
+        company_account = self.env['account.account'].sudo().create({
+            'name': 'Company Cost of Production',
+            'code': '100104',
+            'account_type': 'asset_current',
+        })
+        self.company.sudo().account_cost_of_production_account_id = company_account  # setup master-data
+        production_locations = self.env['stock.location'].sudo().search([
+            ('usage', '=', 'production'), ('company_id', '=', self.company.id),
+        ])
+
+        # Location account set: it takes priority over the company one
+        production = self._create_mo(self.bom_1, 1)
+        production.button_mark_done()
+        finished_aml = production.move_finished_ids.account_move_id.line_ids
+        self.assertIn(self.account_production, finished_aml.account_id)
+        self.assertNotIn(company_account, finished_aml.account_id)
+
+        # No location account: the company one is used
+        production_locations.valuation_account_id = False
+        production = self._create_mo(self.bom_1, 1)
+        production.button_mark_done()
+        finished_aml = production.move_finished_ids.account_move_id.line_ids
+        component_aml = production.move_raw_ids.account_move_id.line_ids
+        self.assertIn(company_account, finished_aml.account_id)
+        self.assertNotIn(self.account_production, finished_aml.account_id)
+        self.assertIn(company_account, component_aml.account_id)
+
+        # And the stock valuation report shows the Cost of Production section
+        report_data = self.env['account.stock.valuation.report']._get_report_data(date=fields.Datetime.now())
+        self.assertIn('cost_of_production', report_data)
+
     def test_mrp_user_without_account_permissions_can_create_bom(self):
         mrp_user = new_test_user(self.env['res.users'].sudo().env, 'temp_mrp_user', 'mrp.group_mrp_user')  # setup master-data: user creation
         mo_1 = self._create_mo(self.bom_1, 1)

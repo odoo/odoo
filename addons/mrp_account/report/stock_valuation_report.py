@@ -41,6 +41,8 @@ class StockValuationReport(models.AbstractModel):
         return report_data
 
     def _must_include_cost_of_production(self):
+        if self.env.company.account_cost_of_production_account_id:
+            return True
         return bool(self.env['stock.location'].search_count([
             ('usage', '=', 'production'),
             ('valuation_account_id', '!=', False),

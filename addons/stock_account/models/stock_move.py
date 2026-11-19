@@ -301,11 +301,12 @@ class StockMove(models.Model):
                 move.analytic_account_line_ids += self.env['account.analytic.line'].sudo().create(analytic_line_vals)
 
     def _get_account_move_line_vals(self):
-        if self.location_id.valuation_account_id:
+        src_valuation_account = self.location_id._get_valuation_account(self.company_id)
+        if src_valuation_account:
             debit_acc = self.product_id._get_product_accounts()['stock_valuation']
-            credit_acc = self.location_id.valuation_account_id
+            credit_acc = src_valuation_account
         else:
-            debit_acc = self.location_dest_id.valuation_account_id
+            debit_acc = self.location_dest_id._get_valuation_account(self.company_id)
             credit_acc = self.product_id._get_product_accounts()['stock_valuation']
         value = self.value if self.is_in else -self.value
 
@@ -885,7 +886,7 @@ class StockMove(models.Model):
         """
         self.ensure_one()
         return self.product_id.is_storable and self.is_valued\
-        and (self.location_dest_id.valuation_account_id or self.location_id.valuation_account_id)\
+        and (self.location_dest_id._get_valuation_account(self.company_id) or self.location_id._get_valuation_account(self.company_id))\
         and not self.uom_id.is_zero(self.quantity)\
         and self.product_id.valuation == 'real_time'
 
