@@ -100,6 +100,28 @@ test("ticket data renders tip lines and line css rules", async () => {
     });
 });
 
+test("ticket data shows the unit price on combos, not on their items", async () => {
+    const store = await setupPosEnv();
+    const order = store.addNewOrder();
+    const comboLine = await store.addLineToOrder(
+        {
+            product_tmpl_id: store.models["product.template"].get(7),
+            payload: [
+                [{ combo_item_id: store.models["product.combo.item"].get(1), qty: 1 }],
+                [{ combo_item_id: store.models["product.combo.item"].get(3), qty: 1 }],
+            ],
+            qty: 2,
+        },
+        order
+    );
+
+    const { data, ticket } = renderReceipt(store, order);
+    const unitPrices = [...ticket.querySelectorAll("[name='standard-unit-price']")];
+    expect(data.lines).toHaveLength(1 + comboLine.combo_line_ids.length);
+    expect(unitPrices).toHaveLength(1);
+    expect(unitPrices[0].textContent).toInclude("375.00"); // Combo items 100 + 200, taxed 25%
+});
+
 test("ticket data does not render internal notes", async () => {
     const store = await setupPosEnv();
     const order = store.addNewOrder();
