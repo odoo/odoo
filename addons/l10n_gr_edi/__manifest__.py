@@ -10,7 +10,6 @@
         The Independent Authority for Public Revenue (IAPR),
         to digitize business tax and accounting information declaration.
     """,
-    'countries': ['gr'],
     'depends': ['l10n_gr'],
     'data': [
         'data/ir_cron.xml',
