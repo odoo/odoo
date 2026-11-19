@@ -1108,7 +1108,7 @@ class MrpProduction(models.Model):
                 if not field_values.get('warehouse_id'):
                     field_values['warehouse_id'] = warehouse_id
 
-        moves_to_reassign = self.env['stock.move']
+        production_ids_to_reassign = OrderedSet()
         if vals.get('picking_type_id'):
             picking_type = self.env['stock.picking.type'].browse(vals.get('picking_type_id'))
             for production in self:
@@ -1118,7 +1118,7 @@ class MrpProduction(models.Model):
                     prev_production_name = production.name
                     production.name = picking_type.sequence_id.next_by_id()
                     production.move_raw_ids.reference_ids.filtered(lambda r: r.name == prev_production_name).name = production.name
-                    moves_to_reassign |= production.move_raw_ids
+                    production_ids_to_reassign.add(production.id)
 
         if vals.get('state') == 'progress' and 'date_start' not in vals:
             vals['date_start'] = fields.Datetime.now()
@@ -1155,6 +1155,7 @@ class MrpProduction(models.Model):
                 new_date_start = fields.Datetime.to_datetime(vals.get('date_start'))
                 if not production.date_finished or new_date_start >= production.date_finished:
                     production.date_finished = new_date_start + datetime.timedelta(hours=1)
+        moves_to_reassign = self.browse(production_ids_to_reassign).move_raw_ids
         if moves_to_reassign:
             moves_to_reassign._do_unreserve()
             moves_to_reassign = moves_to_reassign._filtered_for_assign()
