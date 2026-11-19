@@ -10,13 +10,17 @@
                 t-attf-class="py-2 {{ optional_product == this.state.product_lines.at(-1) ? '' : 'border-bottom' }}">
 
                 <!-- Optional Product Line -->
-                <div class="optional-product-line d-flex justify-content-between align-items-center">
+                <t t-set="isSnoozed" t-value="this.pos.isProductSnoozed(optional_product.product_tmpl_id)"/>
+                <div class="optional-product-line d-flex flex-wrap flex-sm-nowrap row-gap-2 column-gap-2 column-gap-sm-0 justify-content-between align-items-center">
                     <!-- Product Details -->
-                    <div class="d-flex flex-column align-items-left overflow-hidden">
+                    <div class="d-flex flex-column align-items-left overflow-hidden flex-grow-1">
                         <div class="d-flex align-items-center flex-grow-1">
-                            <img t-if="this.pos.config.show_product_images" t-att-src="optional_product.product_tmpl_id.getImageUrl()" alt="Product Image"
-                                class="product-img rounded me-3" style="width: 60px; height: 60px; object-fit: cover;"/>
-                            <div class="overflow-hidden">
+                            <img t-if="this.pos.config.show_product_images"
+                                t-attf-class="product-img rounded me-3 {{ isSnoozed ? 'opacity-50' : '' }}"
+                                t-att-src="optional_product.product_tmpl_id.getImageUrl()"
+                                alt="Product Image"
+                                style="width: 60px; height: 60px; object-fit: cover;"/>
+                            <div t-attf-class="overflow-hidden {{ isSnoozed ? 'opacity-50' : '' }}">
                                 <h5 class="product-name mb-1 text-truncate">
                                     <t t-out="optional_product.product_tmpl_id.display_name"/>
                                 </h5>
@@ -27,8 +31,16 @@
                         </div>
                     </div>
 
+                    <t t-set="snoozeLabel" t-value="isSnoozed and this.pos.getProductSnoozeLabel(optional_product.product_tmpl_id)"/>
+                    <div t-if="snoozeLabel" class="d-flex justify-content-end ms-auto ps-2 flex-shrink-0">
+                        <span class="product-snooze-banner rounded small d-inline-flex align-items-center gap-1 px-2 py-1 text-truncate text-white">
+                            <i class="oi" data-icon="schedule" aria-hidden="true"/>
+                            <span t-out="snoozeLabel"/>
+                        </span>
+                    </div>
+
                     <!-- Add to Cart Buttons -->
-                    <div class="cart-buttons btn-group d-flex align-items-center ms-2 flex-shrink-0" role="group">
+                    <div class="cart-buttons btn-group d-flex align-items-center ms-auto ms-sm-2 flex-shrink-0" role="group">
                         <t t-if="!optional_product.qty">
                             <button
                                 type="button"

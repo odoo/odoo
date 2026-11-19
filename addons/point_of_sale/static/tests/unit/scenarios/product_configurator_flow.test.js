@@ -371,6 +371,8 @@ test("test_optional_product: optional product popup and add to cart", async () =
     const img = document.querySelector(".optional-product-line img.product-img");
     expect(img).not.toBe(null);
 
+    expect(".optional-product-line .product-snooze-banner").toHaveCount(0);
+
     await contains('.optional-product-line .cart-buttons button:contains("+ Add")').click();
     await animationFrame();
     await contains('.modal-footer button:contains("Add")').click();
@@ -391,6 +393,20 @@ test("test_optional_product: optional product popup and add to cart", async () =
 
     expect(order.lines).toHaveLength(2);
     expect(Utils.hasOrderline({ productName: "Desk Pad", quantity: "3" })).toBe(true);
+
+    // Verify the snooze banner
+    patchWithCleanup(store, {
+        isProductSnoozed: (product) => product.id === smallShelfTmpl.id,
+        getProductSnoozeLabel: (product) =>
+            product.id === smallShelfTmpl.id ? "Snoozed - 00:59:30 left" : "",
+    });
+
+    await Utils.clickDisplayedProduct("Desk Pad");
+    await waitFor(".modal");
+
+    const banner = document.querySelector(".optional-product-line .product-snooze-banner");
+    expect(banner.textContent).toInclude("Snoozed - 00:59:30 left");
+    expect(".optional-product-line img.product-img.opacity-50").toHaveCount(1);
 });
 
 test("test_optional_product_image_not_display: optional product hides image when config off", async () => {
