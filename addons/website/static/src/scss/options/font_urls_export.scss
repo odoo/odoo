@@ -22,6 +22,27 @@
     }
 }
 
+.o-website-font-preloads {
+    $-i: 1;
+    $-body-weight: o-website-value('font-weight-normal') or 400; // Default to BS
+    $-weights: (
+        'base': $-body-weight,
+        'headings': o-website-value('headings-font-weight') or 500, // Default to BS
+        'buttons': o-website-value('btn-font-weight') or $-body-weight, // Default to BS
+    );
+    @each $alias, $-weight in $-weights {
+        // Without a font of their own, headings and buttons use the base one.
+        $-own-font: o-website-value(map-get($o-font-aliases-to-keys, $alias));
+        $-font-alias: if($-own-font, $alias, 'base');
+        $-attachment: o-get-font-info($-font-alias, 'attachment');
+        $-url: o-get-font-info($-font-alias, 'url');
+        @if $-attachment {
+            --o-font-preload-#{$-i}: "#{$-attachment}:#{$-weight}";
+            $-i: $-i + 1;
+        }
+    }
+}
+
 .o-website-icon-font {
     --o-icon-font-family: "#{o-website-value('icon-font-family')}";
 }
