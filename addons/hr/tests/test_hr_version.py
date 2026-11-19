@@ -5,7 +5,7 @@ from psycopg2.errors import CheckViolation
 
 from odoo.tests import tagged
 from odoo.tests.common import freeze_time
-from odoo.exceptions import AccessError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import mute_logger
 
 from odoo.addons.hr.models.hr_version import format_date_abbr
@@ -1021,6 +1021,54 @@ class TestHrVersion(TestHrCommon):
             'job_id': ('Developer', 'Manager'),
             'private_city': ('Old City', 'New City'),
         })
+
+    def test_version_update_info(self):
+        """The employee form asks where the changes of a version go only when there are next versions."""
+        job_developer, job_manager = self.env['hr.job'].create([{'name': 'Developer'}, {'name': 'Manager'}])
+        employee = self.env['hr.employee'].create({
+            'name': 'John Doe',
+            'date_version': '2020-01-01',
+            'contract_date_start': '2020-01-01',
+            'job_id': job_developer.id,
+        })
+        first_version = employee.version_id
+        second_version = employee.create_version({'date_version': '2021-01-01'})
+        third_version = employee.create_version({'date_version': '2022-01-01', 'job_id': job_manager.id})
+
+        info = first_version.get_version_update_info({
+            'job_id': job_manager.id,
+            'contract_date_end': '2023-12-31',
+        })
+        self.assertEqual(info['selections'], ['current', 'next_versions'])
+        self.assertEqual(info['next_version_ids'], (second_version | third_version).ids)
+        # the contract dates are shared by the versions of the contract: never asked
+        self.assertEqual(info['version_changes'], {'job_id': job_manager.id})
+        self.assertEqual(info['changes_display'], {'job_id': ('Developer', 'Manager')})
+
+        # the old values are read on the changed version, not on the current one
+        info = second_version.get_version_update_info({'job_id': False})
+        self.assertEqual(info['changes_display'], {'job_id': ('Developer', 'None')})
+
+        self.assertFalse(third_version.get_version_update_info({'job_id': job_developer.id}), "No next version")
+        self.assertFalse(first_version.get_version_update_info({'contract_date_end': '2023-12-31'}))
+        self.assertFalse(first_version.get_version_update_info({'unknown_field': 1}))
+
+    def test_create_version_from_update(self):
+        job_developer, job_manager = self.env['hr.job'].create([{'name': 'Developer'}, {'name': 'Manager'}])
+        employee = self.env['hr.employee'].create({
+            'name': 'John Doe',
+            'date_version': '2020-01-01',
+            'contract_date_start': '2020-01-01',
+            'job_id': job_developer.id,
+        })
+        version = employee.version_id
+        with self.assertRaises(UserError):
+            version.action_create_version_from_update('2020-01-01', {'job_id': job_manager.id})
+
+        version.action_create_version_from_update('2021-03-01', {'job_id': job_manager.id, 'unknown_field': 1})
+        self.assertEqual(employee.version_ids.mapped('date_version'), [date(2020, 1, 1), date(2021, 3, 1)])
+        self.assertEqual(employee.version_ids.job_id, job_developer | job_manager)
+        self.assertEqual(version.job_id, job_developer)
 
     def test_version_id_context_multi_employees(self):
         """The ``version_id`` context key applies to its employee in a multi-employee recordset."""
