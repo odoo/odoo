@@ -710,8 +710,15 @@ class StockMove(models.Model):
         dropshipped and non dropshipped moves.
         """
         dropship_moves = self.filtered(lambda m: m._is_dropshipped() or m._is_dropshipped_returned())
-        dropship_quantity = sum(m._get_valued_qty() for m in dropship_moves)
-        dropship_price_unit = dropship_moves._get_price_unit_dropshipped()
+        # interco transit to interco transit is both a dropship and a dropship return
+        delivered_dropship_moves = dropship_moves.filtered(lambda m: not m._is_dropshipped_returned() or (m._is_dropshipped() and not m._is_return()))
+        dropship_quantity = sum(m._get_valued_qty() for m in delivered_dropship_moves)
+        dropship_value = dropship_quantity * delivered_dropship_moves._get_price_unit_dropshipped()
+        # only the returns deducted from the delivered quantity
+        returned_dropship_moves = (dropship_moves - delivered_dropship_moves).filtered(lambda m: m.to_refund)
+        returned_dropship_quantity = sum(m._get_valued_qty() for m in returned_dropship_moves)
+        dropship_value -= returned_dropship_quantity * returned_dropship_moves._get_price_unit_dropshipped()
+        dropship_quantity -= returned_dropship_quantity
         regular_moves = (self - dropship_moves).filtered(lambda m: m.is_out)
         regular_quantity = sum(m._get_valued_qty() for m in regular_moves)
         regular_value = regular_quantity * regular_moves._get_price_unit()
@@ -723,7 +730,7 @@ class StockMove(models.Model):
         total_quantity = dropship_quantity + regular_quantity
         if not total_quantity:
             return self._get_price_unit()
-        return (dropship_quantity * dropship_price_unit + regular_value) / total_quantity
+        return (dropship_value + regular_value) / total_quantity
 
     def _get_price_unit_dropshipped(self):
         """ Returns the unit price to value the dropshipped moves."""
