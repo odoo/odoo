@@ -8,13 +8,13 @@ declare module "plugins" {
     import { content_editable_providers, content_not_editable_providers, contenteditable_to_remove_selector, is_valid_contenteditable_predicates } from "@html_editor/core/content_editable_plugin";
     import { on_will_delete_handlers, delete_backward_line_overrides, delete_backward_overrides, delete_backward_word_overrides, delete_forward_line_overrides, delete_forward_overrides, delete_forward_word_overrides, on_deleted_handlers, delete_range_overrides, DeleteShared, removable_descendants_providers, system_node_selectors } from "@html_editor/core/delete_plugin";
     import { DialogShared } from "@html_editor/core/dialog_plugin";
-    import { DomObserverShared, attributes_mutation_value_processors, on_will_filter_mutations_handlers, set_attribute_overrides, on_content_updated_handlers, on_pending_mutations_staged_handlers, on_pending_mutations_normalized_handlers, is_mutation_savable_predicates, is_classlist_mutation_savable_predicates } from "@html_editor/core/dom_observer_plugin";
+    import { DomObserverShared, attributes_mutation_value_processors, on_will_filter_mutations_handlers, set_attribute_overrides, on_content_updated_handlers, on_pending_mutations_staged_handlers, on_pending_mutations_normalized_handlers, is_mutation_savable_predicates, is_classlist_mutation_savable_predicates, mutations } from "@html_editor/core/dom_observer_plugin";
     import { on_content_inserted_handlers, fragment_to_insert_processors, on_will_set_tag_handlers, DomShared, system_attributes, system_classes, system_style_properties, on_will_insert_handlers, can_insert_block_in_parent_predicates } from "@html_editor/core/dom_plugin";
     import { are_inlines_allowed_at_root_predicates } from "@html_editor/core/no_inline_root_plugin";
     import { DomReferenceMapShared, serializable_descendants_processors } from "@html_editor/core/dom_reference_map_plugin";
     import { dynamic_field_label } from "@html_editor/backend/dynamic_field/dynamic_field_plugin";
     import { can_format_content_predicates, format_specs, is_format_class_predicates, before_format_handlers, formattable_node_providers, FormatShared, can_remove_format_predicates, is_node_in_same_block_segment_predicates, on_all_formats_removed_handlers, on_format_applied_handlers, on_format_requested_handlers, on_collapsed_formats_removed_handlers } from "@html_editor/core/format_plugin";
-    import { HistoryShared, on_apply_history_commit_handlers, on_history_commit_restored_handlers, on_irreversible_history_commit_applied_handlers, on_revert_history_commit_handlers, on_committed_to_history_handlers, on_will_reset_history_handlers, on_history_commit_redone_handlers, on_history_commit_undone_handlers, on_savepoint_restored_handlers, on_will_rebase_history_handlers, on_history_rebased_handlers, on_remote_history_commit_applied_handlers, on_will_preview_handlers, on_pending_changes_unstashed_handlers, on_history_reset_handlers, on_will_invalidate_pending_changes_handlers, on_will_collect_history_draft_handlers, has_history_commit_changes_predicates, is_history_commit_reversible_predicates, pending_history_commit_data_processors, save_point_history_commit_data_processors, snapshot_history_commit_data_processors, history_data_properties, history_metadata_properties } from "@html_editor/core/history_plugin";
+    import { HistoryShared, on_apply_history_commit_handlers, on_revert_history_commit_handlers, on_committed_to_history_handlers, on_will_reset_history_handlers, on_history_commit_redone_handlers, on_history_commit_undone_handlers, on_savepoint_restored_handlers, on_will_rebase_history_handlers, on_history_rebased_handlers, on_will_replay_history_handlers, on_history_replayed_handlers, on_remote_history_commit_applied_handlers, on_will_preview_handlers, on_pending_changes_unstashed_handlers, on_history_reset_handlers, on_will_invalidate_pending_changes_handlers, on_will_collect_history_draft_handlers, has_history_commit_changes_predicates, is_history_commit_reversible_predicates, snapshot_history_commit_data_processors, history_data_properties, history_metadata_properties } from "@html_editor/core/history_plugin";
     import { on_beforeinput_handlers, on_input_handlers } from "@html_editor/core/input_plugin";
     import { on_will_break_line_handlers, insert_line_break_element_overrides, LineBreakShared } from "@html_editor/core/line_break_plugin";
     import { OverlayShared } from "@html_editor/core/overlay_plugin";
@@ -122,6 +122,7 @@ declare module "plugins" {
     export interface HistoryDataProperties {}
     interface HistoryDataProperties {
         dynamic_field_label: dynamic_field_label;
+        mutations: mutations;
     }
     export interface HistoryMetadataProperties {}
     interface HistoryMetadataProperties {
@@ -163,11 +164,10 @@ declare module "plugins" {
         on_format_applied_handlers: on_format_applied_handlers;
         on_format_requested_handlers: on_format_requested_handlers;
         on_history_commit_redone_handlers: on_history_commit_redone_handlers;
-        on_history_commit_restored_handlers: on_history_commit_restored_handlers;
         on_history_commit_undone_handlers: on_history_commit_undone_handlers;
+        on_history_replayed_handlers: on_history_replayed_handlers;
         on_history_reset_handlers: on_history_reset_handlers;
         on_history_rebased_handlers: on_history_rebased_handlers;
-        on_irreversible_history_commit_applied_handlers: on_irreversible_history_commit_applied_handlers;
         on_pending_changes_unstashed_handlers: on_pending_changes_unstashed_handlers;
         on_image_added_handlers: on_image_added_handlers;
         on_image_processed_handlers: on_image_processed_handlers;
@@ -200,6 +200,7 @@ declare module "plugins" {
         on_will_preview_handlers: on_will_preview_handlers;
         on_will_process_image_handlers: on_will_process_image_handlers;
         on_will_rebase_history_handlers: on_will_rebase_history_handlers;
+        on_will_replay_history_handlers: on_will_replay_history_handlers;
         on_will_reset_history_handlers: on_will_reset_history_handlers;
         on_will_save_media_dialog_handlers: on_will_save_media_dialog_handlers;
         on_will_set_tag_handlers: on_will_set_tag_handlers;
@@ -263,8 +264,6 @@ declare module "plugins" {
         html_compatibility_processors: html_compatibility_processors;
         move_widget_position_processors: move_widget_position_processors;
         normalize_processors: normalize_processors;
-        pending_history_commit_data_processors: pending_history_commit_data_processors;
-        save_point_history_commit_data_processors: save_point_history_commit_data_processors;
         serializable_descendants_processors: serializable_descendants_processors;
         snapshot_history_commit_data_processors: snapshot_history_commit_data_processors;
         targeted_nodes_processors: targeted_nodes_processors;

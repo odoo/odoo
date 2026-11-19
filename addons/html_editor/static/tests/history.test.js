@@ -882,6 +882,25 @@ describe("history properties", () => {
         expect(history.getStaged("meta1")).toBe(undefined);
     });
 
+    test("plugins stage values when the draft is collected", async () => {
+        let history;
+        const { editor, el } = await setupEditorWithHistoryProperties({
+            content: `<p>[]x</p>`,
+            metadata: { label: {} },
+            resources: {
+                on_will_collect_history_draft_handlers: (type) => {
+                    history.stage("label", `${type} commit`);
+                },
+            },
+        });
+        history = editor.shared.history;
+        el.querySelector("p").dataset.test = "1";
+        const commit = history.commit();
+        expect(commit.metadata.label).toBe("standard commit");
+        history.undo();
+        expect(history.getCommits().at(-1).metadata.label).toBe("undo commit");
+    });
+
     test("discarding changes reverts them but preserves metadata", async () => {
         const { history } = await setupEditorWithHistoryProperties({
             metadata: { meta1: {} },
@@ -919,23 +938,23 @@ describe("history properties", () => {
             },
             metadata: {
                 meta1: {
-                    apply: (value, { ensureNewMutations }) => {
+                    apply: (value) => {
                         expect.step(`apply meta1 ${value}`);
-                        ensureNewMutations && history.stage("meta1", value);
+                        history.stage("meta1", value);
                     },
-                    revert: (value, { ensureNewMutations }) => {
+                    revert: (value) => {
                         expect.step(`revert meta1 ${value}`);
-                        ensureNewMutations && history.stage("meta2", value);
+                        history.stage("meta2", value);
                     },
                 },
                 meta2: {
-                    apply: (value, { ensureNewMutations }) => {
+                    apply: (value) => {
                         expect.step(`apply meta2 ${value}`);
-                        ensureNewMutations && history.stage("meta2", value);
+                        history.stage("meta2", value);
                     },
-                    revert: (value, { ensureNewMutations }) => {
+                    revert: (value) => {
                         expect.step(`revert meta2 ${value}`);
-                        ensureNewMutations && history.stage("meta1", value);
+                        history.stage("meta1", value);
                     },
                 },
             },
