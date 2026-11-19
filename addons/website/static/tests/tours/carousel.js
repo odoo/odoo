@@ -124,7 +124,7 @@ registerWebsitePreviewTour(
         // expose potential race conditions.)
         {
             content: "Add a slide",
-            trigger: "button.btn.btn-success[aria-label='Add Slide']",
+            trigger: ".o_hb_options_container_header button[aria-label='Add Slide']",
             async run(helpers) {
                 await helpers.click();
                 await delay(360);
@@ -132,7 +132,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Remove a slide",
-            trigger: "button[aria-label='Remove Slide']",
+            trigger: ".o_hb_options_container_header button[aria-label='Remove Slide']",
             async run(helpers) {
                 await helpers.click();
                 await delay(360);
@@ -140,7 +140,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Add a slide",
-            trigger: "button.btn.btn-success[aria-label='Add Slide']",
+            trigger: ".o_hb_options_container_header button[aria-label='Add Slide']",
             async run(helpers) {
                 await helpers.click();
                 await delay(360);
