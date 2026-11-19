@@ -281,6 +281,7 @@ class MailMessage(models.Model):
     # notifications
     notification_ids = fields.One2many(
         'mail.notification', 'mail_message_id', 'Notifications',
+        allow_sudo_search=True,
         bypass_search_access=True, copy=False, depends=['notified_partner_ids'])
     # user interface
     bookmarked_partner_ids = fields.Many2many(
