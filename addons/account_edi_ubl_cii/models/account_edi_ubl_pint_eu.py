@@ -35,7 +35,7 @@ class AccountEdiUBLPintEU(models.AbstractModel):
                 and supplier.country_id.code in EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES
                 and supplier.country_id != customer.country_id
             ):
-                node['cbc:ActualDeliveryDate']['_text'] = invoice.invoice_date
+                node['cbc:ActualDeliveryDate']['_text'] = invoice.delivery_date or invoice.invoice_date
 
         return node
 
