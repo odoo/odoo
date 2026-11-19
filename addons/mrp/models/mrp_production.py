@@ -258,7 +258,6 @@ class MrpProduction(models.Model):
     is_locked = fields.Boolean('Is Locked', default=_get_default_is_locked, copy=False)
     is_planned = fields.Boolean('Its Operations are Planned', compute="_compute_is_planned", store=True)
 
-    show_final_lots = fields.Boolean('Show Final Lots', compute='_compute_show_lots')
     production_location_id = fields.Many2one('stock.location', "Production Location", compute="_compute_production_location", store=True)
     picking_ids = fields.Many2many('stock.picking', compute='_compute_picking_ids', string='Picking associated to this manufacturing order')
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
@@ -575,11 +574,6 @@ class MrpProduction(models.Model):
             prod_loc = production.product_id.with_company(production.company_id).property_stock_production
             comp_locs = location_by_company.get(production.company_id.id)
             production.production_location_id = prod_loc or (comp_locs and comp_locs[0])
-
-    @api.depends('product_id.tracking')
-    def _compute_show_lots(self):
-        for production in self:
-            production.show_final_lots = production.product_id.tracking in ['lot', 'serial']
 
     @api.depends('state')
     def _compute_validate_button_style(self):
