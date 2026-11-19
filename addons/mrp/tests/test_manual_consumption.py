@@ -149,8 +149,10 @@ class TestManualConsumption(TestMrpCommon):
         self.assertEqual(move_manual.quantity, 5)
         self.assertTrue(move_manual.picked)
 
-        move_manual.quantity = 6
-        move_manual._onchange_quantity()
+        # Use the form to test the quantity onchanges.
+        with Form(mo) as mo_form:
+            with mo_form.move_raw_ids.edit(mo.move_raw_ids.ids.index(move_manual.id)) as line:
+                line.quantity = 6
 
         # Now we change quantity to 7. Automatic move will change quantity, but manual move will still be 5 because it has been already picked.
         mo_form = Form(mo)
@@ -322,9 +324,20 @@ class TestManualConsumption(TestMrpCommon):
                 move_line.quantity = 2
             wiz_form.save()
 
-        # Now it should be marked as consumed, since the done quantity differs from the demand.
+        # Now it should be marked as consumed, since the done quantity was changed.
         self.assertRecordValues(mo.move_raw_ids, [
             {"manual_consumption": True, "picked": True, "lot_ids": lots[1].ids},
+        ])
+
+        # Setting it back to the demand should still trigger a pick.
+        mo.move_raw_ids.picked = False
+        with Form.from_action(self.env, mo.move_raw_ids[0].action_show_details()) as wiz_form:
+            with wiz_form.move_line_ids.edit(0) as move_line:
+                move_line.quantity = 1
+            wiz_form.save()
+
+        self.assertRecordValues(mo.move_raw_ids, [
+            {"manual_consumption": True, "picked": True, "quantity": 1, "lot_ids": lots[1].ids},
         ])
 
     def test_consumption_on_new_move_lines(self):
