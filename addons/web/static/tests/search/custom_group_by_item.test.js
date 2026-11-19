@@ -219,3 +219,32 @@ test(`hover on custom group by item`, async () => {
         message: "only one item should be focused at a time",
     });
 });
+
+test(`should discard selection when clicking outside without confirming it`, async () => {
+    const component = await mountWithSearch(SearchBar, {
+        resModel: "foo",
+        searchMenuTypes: ["groupBy"],
+        searchViewId: false,
+        searchViewArch: `
+            <search>
+                <filter string="Foo" name="group_by_foo" context="{'group_by': 'foo'}"/>
+            </search>
+        `,
+        searchViewFields: {
+            foo: { string: "Foo", type: "char", store: true, sortable: true, groupable: true },
+            date: { string: "Date", type: "date", store: true, sortable: true, groupable: true },
+        },
+    });
+
+    await toggleSearchBarMenu();
+    const select = document.querySelector(".o_add_custom_group_menu");
+    select.focus();
+    select.value = "date";
+    document
+        .querySelector(".o_cp_searchview")
+        .dispatchEvent(new Event("click", { bubbles: true }));
+    expect(select.value).toEqual("");
+    select.dispatchEvent(new Event("change", { bubbles: true }));
+    expect(component.env.searchModel.groupBy).toEqual([]);
+    expect(getFacetTexts()).toEqual([]);
+});
