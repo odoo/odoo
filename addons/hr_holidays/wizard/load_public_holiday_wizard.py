@@ -7,7 +7,6 @@ from zoneinfo import ZoneInfo
 from markupsafe import Markup, escape
 
 from odoo import Command, api, fields, models
-from odoo.tools.date_utils import convert_timezone
 
 
 class LoadPublicHolidaysWizard(models.TransientModel):
@@ -128,19 +127,5 @@ class LoadPublicHolidaysWizard(models.TransientModel):
             company = line.company_id
             if company not in companies:
                 continue
-            company_tz = ZoneInfo(company.tz or 'UTC')
-            create_values = {
-                'name': line.name,
-                'date_from': convert_timezone(datetime.combine(line.start_date, time.min), UTC, company_tz),
-                'date_to': convert_timezone(datetime.combine(line.start_date, time.max), UTC, company_tz),
-                'company_id': company.id,
-            }
-            work_entry_type = line.work_entry_type_id
-            if work_entry_type:
-                create_values.update({
-                    'work_entry_type_id': work_entry_type.id,
-                    'count_as': work_entry_type.count_as,
-                    'elligible_for_accrual_rate': work_entry_type.elligible_for_accrual_rate,
-                })
-            values_by_company[company.id].append(create_values)
+            values_by_company[company.id].append(line._prepare_leave_values())
         return values_by_company
