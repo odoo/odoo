@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="resource.ResourceMultiSelectionButtons" t-inherit="web.MultiSelectionButtons" t-inherit-mode="primary">
+        <xpath expr="//button[@data-tooltip='Add']" position="after">
+            <t t-foreach="this.props.reactive.quickAddBlocks or []" t-as="block" t-key="block.key">
+                <button class="btn rounded-1 d-flex flex-column align-items-center justify-content-center text-center py-0 o_resource_quick_add_btn"
+                        t-attf-class="o_calendar_color_#{block.colorIndex}"
+                        t-attf-data-tooltip="Add #{block.title ? block.title + ' ' : ''}#{block.timeLabel}"
+                        t-on-click="() => this.props.reactive.onQuickAdd(block)">
+                    <span class="text-truncate w-100" t-att-class="{ 'lh-sm': block.title }" t-out="block.title or block.timeLabel"/>
+                    <span t-if="block.title" class="lh-1 text-muted text-nowrap smaller w-100" t-out="block.timeLabel"/>
+                </button>
+            </t>
+        </xpath>
+    </t>
+
+</templates>
