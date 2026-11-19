@@ -188,6 +188,8 @@ class AccountMoveLine(models.Model):
     )
     is_imported = fields.Boolean()  # Technical field indicating if the line was captured automatically by import/ocr etc
 
+    is_misc = fields.Boolean(compute='_compute_is_misc')
+
     # === Origin fields === #
     reconcile_model_id = fields.Many2one(
         comodel_name='account.reconcile.model',
@@ -2489,6 +2491,11 @@ class AccountMoveLine(models.Model):
             (root := self.env['account.root']._from_account_code(code)).id: {'id': root.id, 'display_name': root.display_name}
             for code, in account_codes
         }
+
+    @api.depends('move_id.name')
+    def _compute_is_misc(self):
+        for move in self:
+            move.is_misc = move.move_id.name and move.move_id.name.lower().startswith('misc')
 
     # -------------------------------------------------------------------------
     # RECONCILIATION
