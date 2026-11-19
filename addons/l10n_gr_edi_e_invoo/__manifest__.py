@@ -2,7 +2,6 @@
 
 {
     'name': 'Greece - myDATA E-invoicing through e-invoo',
-    'countries': ['gr'],
     'category': 'Accounting/Localizations/EDI',
     'depends': [
         'account_edi_proxy_client',
