@@ -162,13 +162,13 @@ class TestResourceIntervalsApiBenchmark(TransactionCase):
     @classmethod
     def _markdown_report(cls):
         versions = cls.env['hr.version'].search_count([('employee_id', 'in', cls.employees.ids)])
-        lines = [
+        lines = [(
             f"{len(cls.employees)} employees, {versions} versions, {len(cls.calendars)} calendars, "
             f"{len(TIMEZONES)} timezones, median of {cls.RUNS} runs with a cold cache.",
             "",
             "| Period | Method | `_batch` time | New time | Speedup | `_batch` queries | New queries |",
             "|---|---|---:|---:|---:|---:|---:|",
-        ]
+        )]
         for period, method, batch, new in cls.measures:
             speedup = batch['duration'] / new['duration'] if new['duration'] else float('inf')
             lines.append(
