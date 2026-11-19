@@ -1,12 +1,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import colorsys
+import contextlib
 import re
+from collections import defaultdict
 from urllib.parse import urlsplit
 
 from lxml import etree, html
+from markupsafe import Markup
 
-from odoo.tools.misc import hmac
+from odoo.tools.misc import hash_sign
 from odoo.tools.urls import urljoin
+
+HAS_CLASS = 'contains(concat(" ", normalize-space(@class), " "), " %s ")'
 
 
 def distance(s1="", s2="", limit=4):
@@ -171,32 +176,127 @@ def images_from_html(html_fragment, base_url):
     return list(seen)
 
 
-def add_form_signature(html_fragment, env_sudo):
-    for form in html_fragment.iter('form'):
-        if '/website/form/' not in form.attrib.get('action', ''):
-            continue
+def sign_website_forms(content, env_sudo, data_for=None):
+    """ Sign the website forms of the rendered HTML content with what they can
+    submit, to verify their submissions (see `_verify_website_form` on the
+    `WebsiteForm` controller).
 
-        existing_hash_node = form.find('.//input[@type="hidden"][@name="website_form_signature"]')
-        if existing_hash_node is not None:
-            existing_hash_node.getparent().remove(existing_hash_node)
-        input_nodes = form.xpath('.//input[contains(@name, "email_")]')
-        form_values = {input_node.attrib['name']: input_node for input_node in input_nodes}
-        # if this form does not send an email, ignore. But at this stage,
-        # the value of email_to can still be None in case of default value
-        if 'email_to' not in form_values:
-            continue
+    :param str content: the rendered HTML content
+    :param dict data_for: the values set in the forms by their `data-for`
+        element (see `getParsedDataFor`)
+    :rtype: markupsafe.Markup
+    """
+    # The content is already safe (rendered by QWeb), and lxml escapes it again
+    # when serializing it, as done in the `ir.qweb.field.html` converter.
+    body = html.fragment_fromstring(content, create_parent='body')
+    for form in body.xpath('.//form[contains(@action, "/website/form/")]'):
+        for signature_el in form.xpath('.//input[@name="website_form_signature"]'):
+            signature_el.getparent().remove(signature_el)
+        signature = hash_sign(env_sudo, 'website_form_signature', _get_website_form_structure(form, data_for or {}))
+        form.insert(0, etree.Element('input', type='hidden', name='website_form_signature', value=signature))
+    return Markup(etree.tostring(body, encoding='unicode', method='html')[6:-7])
 
-        email_to_value = form_values['email_to'].attrib.get('value')
-        if not email_to_value:
-            email_to_value = env_sudo.company.email or ''
 
-        has_cc = {'email_cc', 'email_bcc'} & form_values.keys()
-        value = email_to_value + (':email_cc' if has_cc else '')
-        hash_value = hmac(env_sudo, 'website_form_signature', value)
-        if has_cc:
-            hash_value += ':email_cc'
-        hash_node = etree.Element('input', attrib={'type': "hidden", 'value': hash_value, 'class': "form-control s_website_form_input s_website_form_custom", 'name': "website_form_signature"})
-        form_values['email_to'].addnext(hash_node)
+def _get_website_form_structure(form, data_for):
+    input_els_by_name = defaultdict(list)
+    for input_el in form.xpath('.//input[@name!=""] | .//select[@name!=""] | .//textarea[@name!=""]'):
+        input_els_by_name[input_el.get('name')].append(input_el)
+    # form.js names the unnamed inputs when submitting (see `send`).
+    unnamed_input_els = form.xpath(f'.//*[{HAS_CLASS % "s_website_form_input"}][not(@name) or @name=""]')
+    for index, input_el in enumerate(unnamed_input_els, 1):
+        input_els_by_name[f'unknown_field_{index}'].append(input_el)
+    inputs = {
+        name: _get_website_form_input_rules(name, input_els, data_for) for name, input_els in input_els_by_name.items()
+    }
+    # The inputs of the fields required by the model are always submitted.
+    for field_el in form.xpath(f'.//*[@data-visibility-dependency][not({HAS_CLASS % "s_website_form_model_required"})]'):
+        input_el = next(iter(field_el.xpath(f'.//*[{HAS_CLASS % "s_website_form_input"}]')), None)
+        if input_el is not None and input_el.get('name') in inputs:
+            # form.js compares a missing condition as an empty string (see `compareTo`).
+            inputs[input_el.get('name')].setdefault('visibility', []).append(
+                [field_el.get(f'data-visibility-{key}', '') for key in ('dependency', 'comparator', 'condition', 'between')]
+            )
+    return {'model': form.get('data-force_action') or form.get('data-model_name'), 'inputs': inputs}
+
+
+def _get_website_form_input_rules(name, input_els, data_for):
+    """ Return the rules of the values of an input: its value if the visitor
+    cannot change it, otherwise what form.js checks before submitting them (see
+    `checkErrorFields`), named like the HTML attributes they come from.
+    """
+    input_attrs = input_els[0].attrib
+    field_el = next(iter(input_els[0].xpath(f'ancestor::*[{HAS_CLASS % "s_website_form_field"}][1]')), None)
+    field_attrs = {} if field_el is None else field_el.attrib
+    field_classes = field_attrs.get('class', '').split()
+    date_el = next(iter(input_els[0].xpath(f'ancestor::*[{HAS_CLASS % "s_website_form_date"} or {HAS_CLASS % "s_website_form_datetime"}]')), None)
+    types = {input_el.get('type', input_el.tag) for input_el in input_els}
+    rules = {}
+    # form.js submits the dates of the model fields in the server format (see `send`).
+    if date_el is not None and field_el is not None and 's_website_form_custom' not in field_classes:
+        rules['server-format'] = True
+    # The inputs of the fields with the "Hidden" visibility rule are submitted
+    # too, while the values prefilled with the data of the visitor are unknown.
+    is_hidden = types == {'hidden'} or 's_website_form_field_hidden' in field_classes
+    if is_hidden and not input_attrs.get('data-fill-with'):
+        rules['value'] = _get_website_form_value(name, input_els, data_for)
+        # The date pickers display the default dates, given as timestamps (see `prepareDateFields`).
+        if date_el is not None and not data_for.get(name):
+            rules['date'] = 'datetime' if 's_website_form_datetime' in date_el.get('class').split() else 'date'
+        return rules
+
+    # The browsers do not check the disabled inputs, that scripts may enable.
+    if any(input_el.get('required') is not None and input_el.get('disabled') is None for input_el in input_els):
+        rules['required'] = True
+    if 'checkbox' in types or 'multiple' in input_attrs:
+        rules['multiple'] = True
+    if types <= {'select', 'radio', 'checkbox'}:
+        options = []
+        for input_el in input_els:
+            if input_el.tag == 'select':
+                options += map(_get_option_value, input_el.iter('option'))
+            else:
+                options.append(input_el.get('value', 'on'))
+        # The options of a select without any are loaded in the browser, and
+        # the "Other" option lets the visitor type any value.
+        if any(options) and not field_attrs.get('data-other-option-allowed'):
+            rules['options'] = options
+    elif input_attrs.get('type') in ('email', 'url', 'number', 'file'):
+        rules['type'] = input_attrs['type']
+    for attribute in ('minlength', 'maxlength', 'step', 'data-max-files-number', 'data-max-file-size'):
+        with contextlib.suppress(TypeError, ValueError):  # the browsers ignore the invalid ones
+            rules[attribute] = float(input_attrs.get(attribute))
+    if input_attrs.get('accept'):
+        rules['accept'] = input_attrs['accept']
+    if field_attrs.get('data-requirement-comparator'):
+        rules['requirement'] = [field_attrs.get(f'data-requirement-{key}') for key in ('comparator', 'condition', 'between')]
+    return rules
+
+
+def _get_website_form_value(name, input_els, data_for):
+    # The `data-for` values replace the default values, except a set `email_to`
+    # (see `prefillValues` in form.js).
+    if data_for.get(name) and not (name == 'email_to' and input_els[0].get('value')):
+        return str(data_for[name])
+    values = []
+    for input_el in input_els:
+        if input_el.tag == 'select':
+            options = list(input_el.iter('option'))
+            selected_options = [option for option in options if option.get('selected') is not None]
+            if not selected_options and input_el.get('multiple') is None:
+                selected_options = options[:1]
+            values += map(_get_option_value, selected_options)
+        elif input_el.get('type') in ('checkbox', 'radio'):
+            if input_el.get('checked') is not None:
+                values.append(input_el.get('value', 'on'))
+        else:
+            values.append(input_el.text if input_el.tag == 'textarea' else input_el.get('value'))
+    # Several values are submitted together, separated by commas (see `send` in form.js).
+    return ','.join(filter(None, values))
+
+
+def _get_option_value(option):
+    # As in the browsers, an option without value has its text as value.
+    return option.get('value', option.xpath('normalize-space()'))
 
 
 def create_image_attachment(env, image_path, image_name):
