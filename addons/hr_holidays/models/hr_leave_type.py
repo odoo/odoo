@@ -681,13 +681,14 @@ class HrLeaveType(models.Model):
         for allocation in allocations:
             fake_allocations |= self.env['hr.leave.allocation'].new(origin=allocation)
         fake_allocations.sudo()._process_accrual_plans(target_date, log=False)
-        carried_over_days_expiration_data = {
-            fake_allocation._origin:
-            {
+        carried_over_days_expiration_data = {}
+        for fake_allocation in fake_allocations:
+            expiring_carryover = fake_allocation.expiring_carryover_days
+            if fake_allocation.holiday_status_id.request_unit == 'hour':
+                expiring_carryover *= fake_allocation.employee_id._get_hours_per_day(fake_allocation.date_from)
+            carried_over_days_expiration_data[fake_allocation._origin] = {
                 'expiration_date': fake_allocation.carried_over_days_expiration_date,
-                'no_expiring_days': max(0, fake_allocation.expiring_carryover_days - fake_allocation.leaves_taken)
+                'no_expiring_days': max(0, expiring_carryover - fake_allocation.leaves_taken),
             }
-            for fake_allocation in fake_allocations
-        }
         fake_allocations.invalidate_recordset()
         return carried_over_days_expiration_data
