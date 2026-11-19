@@ -92,6 +92,10 @@ class website_form_model(models.Model):
                             # Do not fail on malformed forms.
                             continue
                         definition_record = definition_model.browse(int(property_origins[definition_record]))
+                        if not definition_record:
+                            # Do not fail on forms linked to a deleted record
+                            # (e.g. a project removed after the form was set up).
+                            continue
                         properties_definitions = definition_record[definition_record_field]
                         for property_definition in properties_definitions:
                             if ((
