@@ -14,11 +14,23 @@
                         </p>
                     </group>
                     <field name="show_backorder_lines" invisible="1"/> <!-- drives invisible of the backorder lines and of the footer buttons -->
-                    <field name="mrp_production_backorder_line_ids" nolabel="1" invisible="not show_backorder_lines">
+                    <field name="mrp_production_backorder_line_ids" nolabel="1" invisible="not show_backorder_lines" mode="list,kanban">
                         <list create="0" delete="0" editable="top">
                             <field name="mrp_production_id" force_save="1"/>
                             <field name="to_backorder" widget="boolean_toggle"/>
                         </list>
+                        <kanban class="o_kanban_mobile" create="0" delete="0" can_open="0">
+                            <field name="mrp_production_id" force_save="1"/>
+                            <field name="to_backorder"/>
+                            <templates>
+                                <t t-name="card">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <field name="mrp_production_id" class="fw-bold"/>
+                                        <field name="to_backorder" class="ms-auto flex-shrink-0" widget="boolean_toggle"/>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
                     </field>
                     <footer>
                         <button name="action_backorder" string="Create Backorder" data-hotkey="q"

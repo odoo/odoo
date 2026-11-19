@@ -1,6 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="subcontracting_portal_stock_move_kanban_view" model="ir.ui.view">
+        <field name="name">subcontracting.portal.stock.move.kanban</field>
+        <field name="model">stock.move</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" can_open="0">
+                <field name="product_id"/>
+                <field name="show_details_visible"/>
+                <field name="description_picking"/>
+                <field name="date"/>
+                <field name="date_deadline"/>
+                <field name="product_uom_qty"/>
+                <field name="quantity"/>
+                <field name="uom_id"/>
+                <field name="show_subcontracting_details_visible"/>
+                <templates>
+                    <t t-name="card">
+                        <field name="product_id" class="fw-bold"/>
+                        <field name="description_picking" class="text-muted" invisible="not description_picking"/>
+                        <div class="text-muted">Demand: <field name="product_uom_qty"/> <field name="uom_id" groups="uom.group_uom"/></div>
+                        <div class="text-muted">Done: <field name="quantity"/> <field name="uom_id" groups="uom.group_uom"/></div>
+                        <div class="text-muted" invisible="not date">Scheduled Date: <field name="date"/></div>
+                        <div class="text-muted" invisible="not date_deadline">Deadline: <field name="date_deadline"/></div>
+                        <footer class="flex-wrap justify-content-center row-gap-2">
+                            <button name="action_show_details" type="object" icon="format_list_bulleted" class="btn btn-secondary" string="Details"
+                                invisible="not show_details_visible" context="{'is_subcontracting_portal': 1}"/>
+                            <button name="action_show_subcontract_details" type="object" icon="account_tree" class="btn btn-secondary" string="Register Components"
+                                invisible="not show_subcontracting_details_visible"/>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <record id="subcontracting_portal_production_form_view" model="ir.ui.view">
         <field name="name">subcontracting.portal.production.view.form</field>
         <field name="model">stock.picking</field>
@@ -21,7 +56,7 @@
                     </group>
                     <notebook>
                         <page string="Operations" name="operations">
-                            <field name="move_ids" mode="list" context="{'default_picking_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id, 'default_date': scheduled_date}">
+                            <field name="move_ids" mode="list,kanban" context="{'kanban_view_ref': 'mrp_subcontracting.subcontracting_portal_stock_move_kanban_view', 'default_picking_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id, 'default_date': scheduled_date}">
                                 <list no_open="1">
                                     <field name="id" readonly="1" column_invisible="True"/> <!-- drives required of scheduled_date -->
                                     <field name="product_id" readonly="1"/>

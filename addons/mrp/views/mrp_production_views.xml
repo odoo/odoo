@@ -510,7 +510,7 @@
                         <page string="Components" name="components">
                             <field name="move_raw_ids"
                                 mode="list,kanban"
-                                context="{'default_date': date_start, 'default_date_deadline': date_start, 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'default_warehouse_id': warehouse_id, 'default_state': 'draft', 'default_raw_material_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id, 'form_view_ref': 'mrp.view_mrp_stock_move_operations', 'active_mo_id': id}"
+                                context="{'default_date': date_start, 'default_date_deadline': date_start, 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'default_warehouse_id': warehouse_id, 'default_state': 'draft', 'default_raw_material_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id, 'active_mo_id': id}"
                                 readonly="state in ('done', 'cancel')"
                             >
                                 <list editable="bottom">
@@ -576,17 +576,78 @@
                                     <button name="action_show_details" type="object" string="Details" context="{'default_product_uom_qty': 0}" invisible="not show_details_visible or has_tracking not in ['lot', 'serial']"/>
                                     <button class="o_optional_button btn" name="action_show_details" type="object" string="Details" context="{'default_product_uom_qty': 0}" invisible="(has_tracking in ['lot', 'serial']) or not show_details_visible"/>
                                 </list>
+                                <form string="Component">
+                                    <field name="move_lines_count" invisible="1"/>
+                                    <field name="additional" invisible="1"/>
+                                    <field name="state" invisible="1"/>
+                                    <field name="product_qty" invisible="1" readonly="1" force_save="0"/>
+                                    <field name="forecast_expected_date" invisible="1" readonly="1"/>
+                                    <field name="date_deadline" invisible="1"/>
+                                    <field name="is_storable" invisible="1" readonly="1"/>
+                                    <group>
+                                        <field name="product_id" force_save="1" context="{'default_is_storable': True}" required="1" readonly="move_lines_count &gt; 0 or state == 'cancel' or (state != 'draft' and not additional)" domain="[('type', '=', 'consu')]"/>
+                                        <field name="forecast_availability" widget="forecast_widget" readonly="1" invisible="parent.state in ('done', 'cancel')"/>
+                                        <label for="product_uom_qty" string="To Consume"/>
+                                        <div class="o_row">
+                                            <field name="product_uom_qty" force_save="1" readonly="parent.state != 'draft' and ((parent.state not in ('confirmed', 'progress', 'to_close') and not parent.is_planned) or (parent.is_locked and state != 'draft'))"/>
+                                            <field name="uom_id" widget="many2one_uom" options="{'no_open': True, 'no_create': True}" readonly="state != 'draft' and id"/>
+                                        </div>
+                                        <label for="quantity" string="Consumed" invisible="parent.state == 'draft'"/>
+                                        <div class="o_row" invisible="parent.state == 'draft'">
+                                            <field name="quantity" force_save="1"/>
+                                            <field name="uom_id" widget="many2one_uom" options="{'no_open': True, 'no_create': True}" readonly="1"/>
+                                        </div>
+                                    </group>
+                                </form>
+                                <kanban class="o_kanban_mobile">
+                                    <field name="bom_line_id"/>
+                                    <field name="operation_id"/>
+                                    <field name="warehouse_id"/>
+                                    <field name="show_details_visible"/>
+                                    <field name="product_id"/>
+                                    <field name="product_uom_qty"/>
+                                    <field name="quantity"/>
+                                    <field name="uom_id"/>
+                                    <field name="forecast_availability"/>
+                                    <field name="forecast_expected_date"/>
+                                    <field name="product_qty" readonly="1" force_save="0"/>
+                                    <field name="date_deadline"/>
+                                    <field name="is_storable"/>
+                                    <field name="state"/>
+                                    <control>
+                                        <create string="Add a line"/>
+                                        <button name="action_add_from_catalog_raw" string="Catalog" type="object" class="btn-secondary" context="{'order_id': parent.id}"/>
+                                    </control>
+                                    <templates>
+                                        <t t-name="card" class="flex-row gap-2">
+                                            <aside t-att-title="record.product_id.value">
+                                                <field name="product_id" widget="image" options="{'preview_image': 'image_128', 'img_class': 'object-fit-contain w-100'}"/>
+                                            </aside>
+                                            <main>
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <field name="product_id" class="fw-bold"/>
+                                                    <field name="forecast_availability" class="ms-auto flex-shrink-0" widget="forecast_widget" invisible="parent.state in ['done', 'cancel']"/>
+                                                </div>
+                                                <div class="text-muted">To Consume: <field name="product_uom_qty"/> <field name="uom_id" groups="uom.group_uom"/></div>
+                                                <div class="text-muted" invisible="parent.state == 'draft'">Consumed: <field name="quantity"/> <field name="uom_id" groups="uom.group_uom"/></div>
+                                                <footer class="justify-content-center" invisible="not show_details_visible">
+                                                    <button name="action_show_details" type="object" icon="format_list_bulleted" class="btn btn-secondary" string="Details" context="{'default_product_uom_qty': 0}"/>
+                                                </footer>
+                                            </main>
+                                        </t>
+                                    </templates>
+                                </kanban>
                             </field>
                         </page>
                         <page string="Work Orders" name="operations" groups="mrp.group_mrp_routings">
                             <field name="workorder_ids"
-                                context="{'list_view_ref': 'mrp.mrp_production_workorder_tree_editable_view_mo_form', 'from_manufacturing_order': True}"
+                                context="{'list_view_ref': 'mrp.mrp_production_workorder_tree_editable_view_mo_form', 'kanban_view_ref': 'mrp.mrp_production_workorder_kanban_view_mo_form', 'from_manufacturing_order': True}"
                                 create="id != False and state != 'done'"
                                 />
                         </page>
                         <page string="By-Products" name="finished_products" groups="mrp.group_mrp_byproducts">
                             <field name="move_byproduct_ids"
-                                context="{'default_date': date_finished, 'default_date_deadline': date_deadline, 'default_warehouse_id': warehouse_id, 'default_location_id': production_location_id, 'default_location_dest_id': location_dest_id, 'default_state': 'draft', 'default_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id, 'form_view_ref': 'mrp.view_mrp_stock_move_operations'}"
+                                context="{'default_date': date_finished, 'default_date_deadline': date_deadline, 'default_warehouse_id': warehouse_id, 'default_location_id': production_location_id, 'default_location_dest_id': location_dest_id, 'default_state': 'draft', 'default_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id}"
                                 readonly="state in ('done', 'cancel')">
                                 <list decoration-muted="state in ['done', 'cancel']" editable="bottom">
                                     <control>
@@ -629,6 +690,50 @@
                                     <button name="action_show_details" type="object" title="Show Details" icon="format_list_bulleted" invisible="has_tracking not in ['lot', 'serial'] or not show_details_visible"/>
                                     <button class="o_optional_button btn btn-light" name="action_show_details" type="object" title="Show Details" icon="format_list_bulleted" invisible="has_tracking in ['lot', 'serial'] or not show_details_visible"/>
                                 </list>
+                                <form string="By-product">
+                                    <field name="move_lines_count" invisible="1"/>
+                                    <field name="additional" invisible="1"/>
+                                    <field name="state" invisible="1"/>
+                                    <field name="has_tracking" invisible="1"/>
+                                    <group>
+                                        <field name="product_id" context="{'default_is_storable': True}" domain="[('type', '=', 'consu'), ('id', '!=', parent.product_id)]" required="1" force_save="1" readonly="move_lines_count &gt; 0 or state == 'cancel' or (state != 'draft' and not additional)"/>
+                                        <field name="quantity" readonly="has_tracking in ['lot', 'serial']"/>
+                                        <field name="product_uom_qty" string="To Produce" force_save="1" readonly="parent.state != 'draft' and ((parent.state not in ('confirmed', 'progress', 'to_close') and not parent.is_planned) or parent.is_locked)"/>
+                                        <field name="uom_id" widget="many2one_uom" options="{'no_open': True, 'no_create': True}"/>
+                                        <field name="cost_share"/>
+                                    </group>
+                                </form>
+                                <kanban class="o_kanban_mobile">
+                                    <field name="byproduct_id"/>
+                                    <field name="operation_id"/>
+                                    <field name="warehouse_id"/>
+                                    <field name="show_details_visible"/>
+                                    <field name="product_id"/>
+                                    <field name="quantity"/>
+                                    <field name="product_uom_qty"/>
+                                    <field name="uom_id"/>
+                                    <field name="cost_share"/>
+                                    <control>
+                                        <create string="Add a line"/>
+                                        <button name="action_add_from_catalog_byproduct" string="Catalog" type="object" class="btn-secondary" context="{'order_id': parent.id}"/>
+                                    </control>
+                                    <templates>
+                                        <t t-name="card" class="flex-row gap-2">
+                                            <aside t-att-title="record.product_id.value">
+                                                <field name="product_id" widget="image" options="{'preview_image': 'image_128', 'img_class': 'object-fit-contain w-100'}"/>
+                                            </aside>
+                                            <main>
+                                                <field name="product_id" class="fw-bold"/>
+                                                <div class="text-muted" invisible="parent.state == 'draft'">Quantity: <field name="quantity"/> <field name="uom_id" groups="uom.group_uom"/></div>
+                                                <div class="text-muted">To Produce: <field name="product_uom_qty"/> <field name="uom_id" groups="uom.group_uom"/></div>
+                                                <div class="text-muted" invisible="not cost_share">Cost Share: <field name="cost_share"/>%</div>
+                                                <footer class="justify-content-center" invisible="not show_details_visible">
+                                                    <button name="action_show_details" type="object" icon="format_list_bulleted" class="btn btn-secondary" string="Details"/>
+                                                </footer>
+                                            </main>
+                                        </t>
+                                    </templates>
+                                </kanban>
                             </field>
                         </page>
                         <page string="Miscellaneous" name="miscellaneous">

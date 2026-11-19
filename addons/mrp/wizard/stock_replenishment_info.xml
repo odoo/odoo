@@ -27,7 +27,29 @@
         <field name="arch" type="xml">
             <xpath expr="//page" position="before">
                 <page string="Bills of Materials" name="page_boms" invisible="not show_bom_tab">
-                    <field name="bom_ids" readonly="1" context="{'list_view_ref': 'mrp.mrp_bom_replenishment_tree_view', 'stock_replenishment_info_id': id, 'orderpoint_id': orderpoint_id}"/>
+                    <field name="bom_ids" readonly="1" mode="list,kanban" context="{'list_view_ref': 'mrp.mrp_bom_replenishment_tree_view', 'stock_replenishment_info_id': id, 'orderpoint_id': orderpoint_id}">
+                        <kanban class="o_kanban_mobile" create="0" delete="0">
+                            <field name="product_tmpl_id"/>
+                            <field name="product_id"/>
+                            <field name="product_qty"/>
+                            <field name="uom_id"/>
+                            <field name="code"/>
+                            <field name="type"/>
+                            <field name="produce_delay"/>
+                            <field name="show_set_bom_button"/>
+                            <templates>
+                                <t t-name="card">
+                                    <field name="product_tmpl_id" class="fw-bold"/>
+                                    <div class="text-muted">Quantity: <field name="product_qty"/> <field name="uom_id" groups="uom.group_uom"/></div>
+                                    <div class="text-muted" invisible="not product_id">Variant: <field name="product_id"/></div>
+                                    <div class="text-muted" invisible="not code">Reference: <field name="code"/></div>
+                                    <div class="text-muted">Type: <field name="type"/></div>
+                                    <div class="text-muted">Lead Time: <field name="produce_delay"/> days</div>
+                                    <button name="action_set_bom_on_orderpoint" type="object" string="Set as Bill of Materials" class="btn btn-secondary btn-sm mt-2" invisible="not show_set_bom_button"/>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
                 </page>
             </xpath>
         </field>

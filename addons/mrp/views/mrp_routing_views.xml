@@ -54,6 +54,43 @@
             </field>
         </record>
 
+        <record id="mrp_routing_workcenter_bom_kanban_view" model="ir.ui.view">
+            <field name="name">mrp.routing.workcenter.bom.kanban</field>
+            <field name="model">mrp.routing.workcenter</field>
+            <field name="priority">1000</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="sequence"/>
+                    <field name="name"/>
+                    <field name="workcenter_id"/>
+                    <field name="time_cycle"/>
+                    <field name="time_total"/>
+                    <field name="bom_product_template_attribute_value_ids"/>
+                    <field name="blocked_by_operation_ids"/>
+                    <control>
+                        <button name="action_open_operation_form" class="btn-secondary" type="object" string="Add a line" context="{'default_bom_id': context.get('default_bom_id')}"/>
+                        <button name="copy_existing_operations" class="btn-secondary" type="object" string="Copy Existing Operations" context="{'bom_id': context.get('default_bom_id')}"/>
+                    </control>
+                    <templates>
+                        <t t-name="card">
+                            <field name="name" class="fw-bold"/>
+                            <div class="text-muted">Work Center: <field name="workcenter_id"/></div>
+                            <div class="text-muted">Duration: <field name="time_cycle" widget="float_time" options="{'unit': 'minutes', 'show_seconds': True}" class="d-inline"/></div>
+                            <div class="text-muted">Total Duration: <field name="time_total" widget="float_time" options="{'unit': 'minutes', 'show_seconds': True}" class="d-inline"/></div>
+                            <div class="d-flex align-items-center gap-1 text-muted" invisible="not bom_product_template_attribute_value_ids">
+                                <div class="text-nowrap">Apply on Variants:</div>
+                                <field name="bom_product_template_attribute_value_ids" widget="many2many_tags"/>
+                            </div>
+                            <div class="d-flex align-items-center gap-1 text-muted" invisible="not blocked_by_operation_ids">
+                                <div class="text-nowrap">Blocked By:</div>
+                                <field name="blocked_by_operation_ids" widget="many2many_tags"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="mrp_routing_workcenter_copy_to_bom_tree_view" model="ir.ui.view">
             <field name="name">mrp.routing.workcenter.copy_to_bom.list</field>
             <field name="model">mrp.routing.workcenter</field>

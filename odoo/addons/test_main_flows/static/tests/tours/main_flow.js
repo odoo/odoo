@@ -109,8 +109,8 @@ stepUtils.autoExpandMoreButtons(),
 },
 {
 // Add first component
-    // FIXME in mobile replace list by kanban + form
-    trigger: ".o_field_x2many_list_row_add > button",
+    isActive: ["desktop"],
+    trigger: ".o_field_widget[name=bom_line_ids] .o_field_x2many_list_row_add > button",
     content: "Click here to add some lines.",
     run: "click",
 }, {
@@ -124,7 +124,12 @@ stepUtils.autoExpandMoreButtons(),
     run: "click",
 }, {
     isActive: ["mobile"],
-    trigger: ".o_selected_row .o_required_modifier[name=product_id] input",
+    trigger: ".o_field_widget[name=bom_line_ids] .o_x2m_control_panel button:contains('Add a line')",
+    content: "Click here to add some lines.",
+    run: "click",
+}, {
+    isActive: ["mobile"],
+    trigger: ".modal:not(.o_inactive_modal) .o_field_widget[name=product_id] input",
     content: "Click here to open kanban search mobile.",
     run: "click",
 }, {
@@ -258,6 +263,12 @@ stepUtils.autoExpandMoreButtons(),
     run: "click",
 },
 {
+    isActive: ["mobile"],
+    trigger: ".modal:not(.o_inactive_modal) .modal-footer .o_form_button_save:contains('Save & Close'):enabled",
+    content: "Save the BoM component line.",
+    run: "click",
+},
+{
     trigger: "body:not(:has(.modal))",
 },
 {
@@ -297,12 +308,12 @@ stepUtils.autoExpandMoreButtons(),
 },
 {
     isActive: ["mobile"],
-    trigger: ".o_field_x2many_list_row_add > button",
+    trigger: ".o_field_widget[name=bom_line_ids] .o_x2m_control_panel button:contains('Add a line')",
     content: "Click here to add some lines.",
     run: "click",
 }, {
     isActive: ["mobile"],
-    trigger: ".o_selected_row .o_required_modifier[name=product_id] input",
+    trigger: ".modal:not(.o_inactive_modal) .o_field_widget[name=product_id] input",
     content: "Click here to open kanban search mobile.",
     run: "click",
 },
@@ -414,6 +425,12 @@ stepUtils.autoExpandMoreButtons(),
     isActive: ["mobile"],
     trigger: ".modal:not(.o_inactive_modal) .modal-footer .btn-primary:contains(Save):enabled",
     content: 'Save',
+    run: "click",
+},
+{
+    isActive: ["mobile"],
+    trigger: ".modal:not(.o_inactive_modal) .modal-footer .o_form_button_save:contains('Save & Close'):enabled",
+    content: "Save the BoM component line.",
     run: "click",
 },
 {

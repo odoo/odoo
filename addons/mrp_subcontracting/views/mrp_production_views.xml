@@ -75,9 +75,25 @@
             </xpath>
             <xpath expr="//field[@name='move_raw_ids']" position="replace">
                 <field name="bom_product_ids" invisible="1"/> <!-- used in the context of move_line_raw_ids -->
-                <field name="move_line_raw_ids" force_save="1"
-                    context="{'list_view_ref': 'mrp_subcontracting.mrp_subcontracting_portal_stock_move_line_tree_view', 'default_company_id': company_id, 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'bom_product_ids': bom_product_ids}"
-                    />
+                <field name="move_line_raw_ids" force_save="1" mode="list,kanban"
+                    context="{'list_view_ref': 'mrp_subcontracting.mrp_subcontracting_portal_stock_move_line_tree_view', 'kanban_view_ref': 'stock.view_stock_move_line_kanban', 'default_company_id': company_id, 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'bom_product_ids': bom_product_ids}">
+                    <form>
+                        <group>
+                            <field name="company_id" invisible="1"/>
+                            <field name="location_id" invisible="1"/>
+                            <field name="location_dest_id" invisible="1"/>
+                            <field name="tracking" invisible="1"/>
+                            <field name="product_id" required="1" domain="[('id', 'in', context.get('bom_product_ids', []))]"
+                                options="{'no_open': True, 'no_create': True}"/>
+                            <field name="lot_id" groups="stock.group_production_lot"
+                                invisible="tracking not in ('serial', 'lot')" required="tracking in ('serial', 'lot')"
+                                context="{'default_product_id': product_id, 'form_view_ref': 'mrp_subcontracting.stock_lot_portal_form_view'}"
+                                options="{'no_open': True}"/>
+                            <field name="quantity"/>
+                            <field name="uom_id" groups="uom.group_uom" widget="many2one_uom"/>
+                        </group>
+                    </form>
+                </field>
             </xpath>
             <xpath expr="//field[@name='forecasted_issue']" position="replace"/>
         </field>

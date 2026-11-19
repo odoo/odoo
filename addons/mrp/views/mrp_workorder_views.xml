@@ -150,6 +150,57 @@
         </field>
     </record>
 
+    <record id="mrp_production_workorder_kanban_view_mo_form" model="ir.ui.view">
+        <field name="name">mrp.production.work.order.kanban.mo.form</field>
+        <field name="model">mrp.workorder</field>
+        <field name="priority" eval="1000"/>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" default_order="sequence,date_start">
+                <field name="sequence"/>
+                <field name="operation_id"/> <!-- preserves the BoM operation link when saving work orders generated on a draft MO -->
+                <field name="name"/>
+                <field name="workcenter_id"/>
+                <field name="date_start"/>
+                <field name="date_finished"/>
+                <field name="duration_expected"/>
+                <field name="duration"/>
+                <field name="state"/>
+                <field name="production_state"/>
+                <field name="working_state"/>
+                <field name="is_user_working"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex align-items-center gap-2">
+                            <field name="name" class="fw-bold"/>
+                            <field name="state" widget="mo_view_list_dropdown" options="{'no_open': True, 'display': 'badge'}" class="ms-auto flex-shrink-0" invisible="production_state == 'draft'"/>
+                        </div>
+                        <div class="text-muted" invisible="not workcenter_id">Work Center: <field name="workcenter_id"/></div>
+                        <div class="text-muted" invisible="not date_start and not date_finished">
+                            Scheduled: <field name="date_start"/>
+                            <t invisible="not date_start or not date_finished"> – </t>
+                            <field name="date_finished"/>
+                        </div>
+                        <div class="text-muted">Expected Duration: <field name="duration_expected" widget="float_time" options="{'unit': 'minutes', 'show_seconds': True}" class="d-inline"/></div>
+                        <div class="text-muted" invisible="not duration">Real Duration: <field name="duration" widget="mrp_timer" class="d-inline"/></div>
+                        <footer>
+                            <div class="d-flex gap-1">
+                                <button name="button_start" type="object" title="Start" class="btn-danger px-2"
+                                    invisible="production_state in ('draft', 'done', 'cancel') or working_state != 'blocked' or state in ('done', 'cancel') or is_user_working" icon="play_arrow"/>
+                                <button name="button_start" type="object" title="Start" class="btn-success px-2"
+                                    invisible="production_state in ('draft', 'done', 'cancel') or working_state == 'blocked' or state in ('done', 'cancel') or is_user_working" icon="play_arrow"/>
+                                <button name="button_pending" type="object" title="Pause" class="btn-warning px-2" icon="pause" icon_class="oi-filled"
+                                    invisible="production_state in ('draft', 'done', 'cancel') or not is_user_working"/>
+                                <button name="button_finish" type="object" title="Done" class="btn-success px-2" icon="check"
+                                    invisible="production_state in ('draft', 'done', 'cancel') or not is_user_working"/>
+                            </div>
+                            <div name="assigned_users" class="d-flex justify-content-end ms-auto"/>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <record id="mrp_production_workorder_tree_view" model="ir.ui.view">
         <field name="name">mrp.production.work.order.list</field>
         <field name="model">mrp.workorder</field>
@@ -416,6 +467,30 @@
                                 <field name="company_id" column_invisible="True"/> <!-- needed by the company-dependent domain of the check_company fields of this time tracking list -->
                                 <field name="loss_id" string="Productivity" optional="hide"/>
                             </list>
+                            <kanban class="o_kanban_mobile">
+                                <field name="user_id"/>
+                                <field name="duration"/>
+                                <field name="workcenter_id"/>
+                                <field name="date_start"/>
+                                <field name="date_end"/>
+                                <field name="loss_id"/>
+                                <templates>
+                                    <t t-name="card">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <field name="user_id" class="fw-bold"/>
+                                            <field name="user_id" widget="many2one_avatar_user" readonly="1" class="ms-auto flex-shrink-0"/>
+                                        </div>
+                                        <div class="text-muted">Work Center: <field name="workcenter_id"/></div>
+                                        <div class="text-muted" invisible="not date_start and not date_end">
+                                            <span invisible="not date_start">Start: <field name="date_start"/></span>
+                                            <t invisible="not date_start or not date_end"> – </t>
+                                            <span invisible="not date_end">End: <field name="date_end"/></span>
+                                        </div>
+                                        <div class="text-muted" invisible="not loss_id">Productivity: <field name="loss_id"/></div>
+                                        <div class="text-muted">Duration: <field name="duration" widget="float_time" options="{'unit': 'minutes', 'show_seconds': True}" class="d-inline"/></div>
+                                    </t>
+                                </templates>
+                            </kanban>
                             <form>
                                 <group>
                                     <group>
@@ -452,10 +527,57 @@
                             <field name="product_qty_available" string="On Hand" optional="hide" invisible="not is_storable"/>
                             <field name="product_virtual_available" string="Forecasted" optional="hide" invisible="not is_storable"/>
                         </list>
+                        <form string="Component" create="0">
+                            <group>
+                                <field name="product_id" readonly="1"/>
+                                <label for="product_uom_qty" string="Demand"/>
+                                <div class="o_row">
+                                    <field name="product_uom_qty" readonly="1"/>
+                                    <field name="uom_id" readonly="1" widget="many2one_uom" options="{'no_open': True, 'no_create': True}"/>
+                                </div>
+                                <label for="quantity" string="Quantity"/>
+                                <div class="o_row">
+                                    <field name="quantity" readonly="1"/>
+                                    <field name="uom_id" readonly="1" widget="many2one_uom" options="{'no_open': True, 'no_create': True}"/>
+                                </div>
+                                <field name="picked" string="Consumed"/>
+                                <field name="is_storable" invisible="1"/>
+                                <field name="product_qty_available" string="On Hand" readonly="1" invisible="not is_storable"/>
+                                <field name="product_virtual_available" string="Forecasted" readonly="1" invisible="not is_storable"/>
+                            </group>
+                        </form>
+                        <kanban class="o_kanban_mobile">
+                            <field name="product_id"/>
+                            <field name="product_uom_qty"/>
+                            <field name="quantity"/>
+                            <field name="uom_id"/>
+                            <field name="picked"/>
+                            <field name="is_storable"/>
+                            <field name="product_qty_available"/>
+                            <field name="product_virtual_available"/>
+                            <control>
+                                <button string="Add component" name="action_add_from_catalog_wo" type="object" class="btn-secondary" context="{'order_id': parent.id}"/>
+                            </control>
+                            <templates>
+                                <t t-name="card" class="flex-row gap-2">
+                                    <aside t-att-title="record.product_id.value">
+                                        <field name="product_id" widget="image" options="{'preview_image': 'image_128', 'img_class': 'object-fit-contain w-100'}"/>
+                                    </aside>
+                                    <main>
+                                        <field name="product_id" class="fw-bold"/>
+                                        <div class="text-muted">Demand: <field name="product_uom_qty"/> <field name="uom_id" groups="uom.group_uom"/></div>
+                                        <div class="text-muted">Quantity: <field name="quantity"/> <field name="uom_id" groups="uom.group_uom"/></div>
+                                        <div class="text-muted" invisible="not is_storable">On Hand: <field name="product_qty_available"/></div>
+                                        <div class="text-muted" invisible="not is_storable">Forecasted: <field name="product_virtual_available"/></div>
+                                        <div class="d-flex align-items-center gap-1 text-muted">Consumed: <field name="picked" readonly="1"/></div>
+                                    </main>
+                                </t>
+                            </templates>
+                        </kanban>
                     </field>
                 </page>
                 <page string="Blocked By" name="dependencies" invisible="not blocked_by_workorder_ids">
-                    <field name="blocked_by_workorder_ids" nolabel="1" readonly="1">
+                    <field name="blocked_by_workorder_ids" nolabel="1" readonly="1" mode="list,kanban">
                         <list>
                             <field name="company_id" column_invisible="True"/> <!-- needed by the company-dependent domain of the check_company fields of this blocked by list -->
                             <field name="name" string="Operation" readonly="state in ['cancel', 'done']"/>
@@ -470,6 +592,32 @@
                                 column_invisible="parent.state == 'draft'"
                                 invisible="production_state == 'draft'"/>
                         </list>
+                        <kanban class="o_kanban_mobile">
+                            <field name="name"/>
+                            <field name="workcenter_id"/>
+                            <field name="date_start"/>
+                            <field name="date_finished"/>
+                            <field name="duration_expected"/>
+                            <field name="company_id"/>
+                            <field name="production_state"/>
+                            <field name="state"/>
+                            <templates>
+                                <t t-name="card">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <field name="name" class="fw-bold"/>
+                                        <field name="state" widget="mo_view_list_dropdown" options="{'no_open': True, 'display': 'badge'}" class="ms-auto flex-shrink-0" invisible="production_state == 'draft'"/>
+                                    </div>
+                                    <div class="text-muted" invisible="not workcenter_id">Work Center: <field name="workcenter_id"/></div>
+                                    <div class="text-muted" invisible="not date_start and not date_finished">
+                                        Planned: <field name="date_start"/>
+                                        <t invisible="not date_start or not date_finished"> – </t>
+                                        <field name="date_finished"/>
+                                    </div>
+                                    <div class="text-muted">Expected Duration: <field name="duration_expected" widget="float_time" options="{'unit': 'minutes', 'show_seconds': True}" class="d-inline"/></div>
+                                    <div class="text-muted" groups="base.group_multi_company" invisible="not company_id">Company: <field name="company_id"/></div>
+                                </t>
+                            </templates>
+                        </kanban>
                     </field>
                 </page>
                 </notebook>

@@ -7,7 +7,7 @@
             <field name="model">mrp.production.split.multi</field>
             <field name="arch" type="xml">
                 <form string="Split Productions">
-                    <field name="production_ids">
+                    <field name="production_ids" mode="list,kanban">
                         <list create="0" editable="top">
                             <field name="production_id"/>
                             <field name="product_id"/>
@@ -16,6 +16,24 @@
                             <field name="uom_id" groups="uom.group_uom" widget="many2one_uom"/>
                             <button name="action_prepare_split" type="object" icon="content_cut" title="Split Production"/>
                         </list>
+                        <kanban class="o_kanban_mobile" create="0" can_open="0">
+                            <field name="production_id"/>
+                            <field name="product_id"/>
+                            <field name="product_qty"/>
+                            <field name="production_capacity"/>
+                            <field name="uom_id"/>
+                            <templates>
+                                <t t-name="card">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <field name="production_id" class="fw-bold"/>
+                                        <button name="action_prepare_split" type="object" icon="content_cut" title="Split Production" class="btn btn-link ms-auto flex-shrink-0 p-0"/>
+                                    </div>
+                                    <div class="text-muted">Product: <field name="product_id"/></div>
+                                    <div class="text-muted">Quantity: <field name="product_qty"/> <field name="uom_id" groups="uom.group_uom"/></div>
+                                    <div class="text-muted">Capacity: <field name="production_capacity"/></div>
+                                </t>
+                            </templates>
+                        </kanban>
                     </field>
                     <footer>
                         <button class="btn-secondary" special="cancel" data-hotkey="x"/>
@@ -50,12 +68,32 @@
                             <field name="num_splits"/>
                         </group>
                     </group>
-                    <field name="production_detailed_vals_ids" invisible="max_batch_size &lt;= 0">
+                    <field name="production_detailed_vals_ids" invisible="max_batch_size &lt;= 0" mode="list,kanban">
                         <list editable="top">
                             <field name="date"/>
                             <field name="user_id"/>
                             <field name="quantity"/>
                         </list>
+                        <form string="Split Detail">
+                            <field name="mrp_production_split_id" invisible="1"/>
+                            <group>
+                                <field name="date"/>
+                                <field name="quantity"/>
+                                <field name="user_id"/>
+                            </group>
+                        </form>
+                        <kanban class="o_kanban_mobile">
+                            <field name="date"/>
+                            <field name="user_id"/>
+                            <field name="quantity"/>
+                            <templates>
+                                <t t-name="card">
+                                    <div class="text-muted">Schedule Date: <field name="date" class="fw-bold"/></div>
+                                    <div class="text-muted">Quantity: <field name="quantity" class="fw-bold"/></div>
+                                    <div class="text-muted">Responsible: <field name="user_id" class="fw-bold"/></div>
+                                </t>
+                            </templates>
+                        </kanban>
                     </field>
                     <field name="production_split_multi_id" invisible="1"/> <!-- drives invisible of the footer buttons -->
                     <field name="valid_details" invisible="1"/> <!-- drives invisible of the warning block and of the Split button -->
