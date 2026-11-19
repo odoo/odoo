@@ -31,15 +31,15 @@
             t-on-click="this.goToThemeTab"/>
     </BuilderRow>
 
-    <t t-if="this.state.currentButtonType === 'custom'">
-        <BuilderRow label.translate="Text" level="1">
+    <BuilderContext t-if="this.state.currentButtonType === 'custom'" level="true">
+        <BuilderRow label.translate="Text">
             <BuilderColorPicker styleAction="'color'" enabledTabs="['solid', 'custom']" />
         </BuilderRow>
-        <BuilderRow label.translate="Fill" level="1">
+        <BuilderRow label.translate="Fill">
             <BuilderColorPicker action="'buttonFillColorAction'" actionParam="{ mainParam: 'background-color', allowImportant: false }" enabledTabs="['solid', 'custom', 'gradient']" />
         </BuilderRow>
-        <BorderConfigurator label.translate="Border" withRoundCorner="false" withBSClass="false" level="1"/>
-    </t>
+        <BorderConfigurator label.translate="Border" withRoundCorner="false" withBSClass="false"/>
+    </BuilderContext>
 
     <BuilderRow label.translate="Size">
         <BuilderSelect action="'buttonStyleAction'" actionParam="'size'">

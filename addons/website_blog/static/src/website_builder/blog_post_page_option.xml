@@ -12,7 +12,7 @@
                 <BuilderCheckbox id="'blog_cover_opt'" actionParam="{views: ['website_blog.opt_blog_cover_post']}"/>
             </BuilderRow>
 
-            <BuilderRow label.translate="Full Width" t-if="this.isActiveItem('blog_cover_opt')" level="1">
+            <BuilderRow label.translate="Full Width" t-if="this.isActiveItem('blog_cover_opt')" level="true">
                 <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_cover_post_fullwidth_design']}"/>
             </BuilderRow>
         </t>
@@ -67,7 +67,7 @@
             </BuilderSelect>
         </BuilderRow>
 
-        <BuilderRow label.translate="Size" level="1"
+        <BuilderRow label.translate="Size" level="true"
             t-if="this.isActiveItem('blog_posts_bordered_grid_opt') or (this.isActiveItem('blog_posts_grid_opt') and !this.isActiveItem('blog_posts_promoted_opt'))">
             <BuilderSelect>
                 <BuilderSelectItem actionParam="{views: ['website_blog.opt_blog_grid_columns_2']}">2 Columns</BuilderSelectItem>
@@ -76,15 +76,15 @@
             </BuilderSelect>
         </BuilderRow>
 
-        <t t-if="this.isActiveItem('blog_posts_grid_opt')">
-            <BuilderRow label.translate="Promote Last" tooltip.translate="Emphasize the most recent post in the blog posts list" level="1">
+        <BuilderContext t-if="this.isActiveItem('blog_posts_grid_opt')" level="true">
+            <BuilderRow label.translate="Promote Last" tooltip.translate="Emphasize the most recent post in the blog posts list">
                 <BuilderCheckbox id="'blog_posts_promoted_opt'" actionParam="{views: ['website_blog.opt_blog_promoted_post']}"/>
             </BuilderRow>
 
-            <BuilderRow label.translate="Cards Design" level="1">
+            <BuilderRow label.translate="Cards Design">
                 <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_cards_design']}"/>
             </BuilderRow>
-        </t>
+        </BuilderContext>
 
         <BuilderRow label.translate="Content Width"
             t-if="!this.isActiveItem('blog_posts_simple_list_opt') and !this.isActiveItem('blog_posts_split_grid_opt')">
@@ -108,7 +108,7 @@
                     <BuilderCheckbox id="'blog_posts_cover_opt'" actionParam="{views: ['website_blog.opt_posts_loop_show_cover']}"/>
                 </BuilderRow>
 
-                <BuilderRow label.translate="Filter" level="1"
+                <BuilderRow label.translate="Filter" level="true"
                     t-if="this.isActiveItem('blog_posts_split_grid_opt') and this.isActiveItem('blog_posts_cover_opt')"
                     tooltip.translate="Add a filter on the highligthed blog post">
                     <BuilderCheckbox actionParam="{views: ['website_blog.opt_posts_loop_show_filter']}"/>

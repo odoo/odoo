@@ -19,22 +19,22 @@
         </BuilderSelect>
     </BuilderRow>
 
-    <t t-if="!this.domState.isPieChart">
-        <BuilderRow level="1" label.translate="Min Axis" t-if="!this.domState.isRadarChart">
+    <BuilderContext t-if="!this.domState.isPieChart" level="true">
+        <BuilderRow label.translate="Min Axis" t-if="!this.domState.isRadarChart">
             <BuilderNumberInput step="1" action="'setMinMax'" actionParam="'min'" default="null"/>
         </BuilderRow>
-        <BuilderRow level="1" label.translate="Max Axis">
+        <BuilderRow label.translate="Max Axis">
             <BuilderNumberInput step="1" action="'setMinMax'" actionParam="'max'" default="null"/>
         </BuilderRow>
-        <BuilderRow level="1" label.translate="Stacked" t-if="this.domState.data.datasets.length > 1 and !this.domState.isRadarChart">
+        <BuilderRow label.translate="Stacked" t-if="this.domState.data.datasets.length > 1 and !this.domState.isRadarChart">
             <BuilderCheckbox dataAttributeAction="'stacked'" dataAttributeActionValue="'true'" preview="false"/>
         </BuilderRow>
-        <BuilderRow level="1" label.translate="Grid Color">
+        <BuilderRow label.translate="Grid Color">
             <BuilderColorPicker dataAttributeAction="'gridColor'" enabledTabs="['solid', 'custom']" />
         </BuilderRow>
-    </t>
+    </BuilderContext>
 
-    <BuilderRow t-if="this.domState.isLineChart" level="1" label.translate="Smooth curves">
+    <BuilderRow t-if="this.domState.isLineChart" level="true" label.translate="Smooth curves">
         <BuilderCheckbox dataAttributeAction="'interpolate'" dataAttributeActionValue="'true'" preview="false"/>
     </BuilderRow>
 

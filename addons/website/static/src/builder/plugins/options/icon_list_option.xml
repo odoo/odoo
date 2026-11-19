@@ -8,13 +8,14 @@
         </BuilderButton>
     </BuilderRow>
 
-    <BuilderRow label.translate="Color" level="1">
-        <BuilderColorPicker enabledTabs="['solid', 'custom']" styleAction="'--icon-list-icon-color'"/>
-    </BuilderRow>
-
-    <BuilderRow label.translate="Background Color" level="1">
-        <BuilderColorPicker enabledTabs="['solid', 'custom', 'gradient']" styleAction="'--icon-list-icon-bg-color'"/>
-    </BuilderRow>
+    <BuilderContext level="true">
+        <BuilderRow label.translate="Color">
+            <BuilderColorPicker enabledTabs="['solid', 'custom']" styleAction="'--icon-list-icon-color'"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Background Color">
+            <BuilderColorPicker enabledTabs="['solid', 'custom', 'gradient']" styleAction="'--icon-list-icon-bg-color'"/>
+        </BuilderRow>
+    </BuilderContext>
 </t>
 
 <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">

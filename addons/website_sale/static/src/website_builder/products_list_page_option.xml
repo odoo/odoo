@@ -47,27 +47,29 @@
         </div>
     </BuilderContext>
 
-    <BuilderRow label.translate="Display" level="1">
-        <BuilderNumberInput action="'setPpg'" step="1"/>
-        <t t-if="this.isActiveItem('grid_view_opt')">
-            <span class="mx-1">in</span>
-            <div class="w-75">
-                <BuilderSelect action="'setPpr'">
-                    <BuilderSelectItem actionValue="2">2 columns</BuilderSelectItem>
-                    <BuilderSelectItem actionValue="3">3 columns</BuilderSelectItem>
-                    <BuilderSelectItem actionValue="4">4 columns</BuilderSelectItem>
-                    <BuilderSelectItem actionValue="5">5 columns</BuilderSelectItem>
-                </BuilderSelect>
-            </div>
-        </t>
-    </BuilderRow>
+    <BuilderContext level="true">
+        <BuilderRow label.translate="Display">
+            <BuilderNumberInput action="'setPpg'" step="1"/>
+            <t t-if="this.isActiveItem('grid_view_opt')">
+                <span class="mx-1">in</span>
+                <div class="w-75">
+                    <BuilderSelect action="'setPpr'">
+                        <BuilderSelectItem actionValue="2">2 columns</BuilderSelectItem>
+                        <BuilderSelectItem actionValue="3">3 columns</BuilderSelectItem>
+                        <BuilderSelectItem actionValue="4">4 columns</BuilderSelectItem>
+                        <BuilderSelectItem actionValue="5">5 columns</BuilderSelectItem>
+                    </BuilderSelect>
+                </div>
+            </t>
+        </BuilderRow>
 
-    <BuilderRow t-if="this.isActiveItem('grid_view_opt')" label.translate="Mobile" level="1">
-        <BuilderSelect action="'websiteConfig'">
-            <BuilderSelectItem actionParam="{views: ['website_sale.products_mobile_cols_single']}">1 Column</BuilderSelectItem>
-            <BuilderSelectItem actionParam="{views: []}">2 Columns</BuilderSelectItem>
-        </BuilderSelect>
-    </BuilderRow>
+        <BuilderRow t-if="this.isActiveItem('grid_view_opt')" label.translate="Mobile">
+            <BuilderSelect action="'websiteConfig'">
+                <BuilderSelectItem actionParam="{views: ['website_sale.products_mobile_cols_single']}">1 Column</BuilderSelectItem>
+                <BuilderSelectItem actionParam="{views: []}">2 Columns</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+    </BuilderContext>
 
     <BuilderRow label.translate="Categories" action="'templatePreviewableWebsiteConfig'">
         <BuilderButton
@@ -95,78 +97,80 @@
         >Top</BuilderButton>
     </BuilderRow>
 
-    <BuilderRow label.translate="Style" level="1">
-        <BuilderSelect action="'websiteConfig'" t-if="this.isActiveItem('categories_opt_top')">
-            <BuilderSelectItem actionParam="{views: []}" title.translate="Default">
-                <Image
-                    src="'/website_sale/static/src/img/filmstrips/default.svg'"
-                    style="'width:120px;'"
-                />
-            </BuilderSelectItem>
-            <BuilderSelectItem
-                actionParam="{views: ['website_sale.filmstrip_categories_bordered']}"
-                title.translate="Bordered"
-            >
-                <Image
-                    src="'/website_sale/static/src/img/filmstrips/bordered.svg'"
-                    style="'width:120px;'"
-                />
-            </BuilderSelectItem>
-            <BuilderSelectItem
-                actionParam="{views: ['website_sale.filmstrip_categories_tabs']}"
-                title.translate="Tabs"
-            >
-                <Image
-                    src="'/website_sale/static/src/img/filmstrips/tabs.svg'"
-                    style="'width:120px;'"
-                />
-            </BuilderSelectItem>
-            <BuilderSelectItem
-                actionParam="{views: ['website_sale.filmstrip_categories_pills']}"
-                title.translate="Pills"
-            >
-                <Image
-                    src="'/website_sale/static/src/img/filmstrips/pills.svg'"
-                    style="'width:120px;'"
-                />
-            </BuilderSelectItem>
-            <BuilderSelectItem
-                actionParam="{views: ['website_sale.filmstrip_categories_images']}"
-                title.translate="Images"
-            >
-                <Image
-                    src="'/website_sale/static/src/img/filmstrips/images.svg'"
-                    style="'width:120px;'"
-                />
-            </BuilderSelectItem>
-            <BuilderSelectItem
-                actionParam="{views: ['website_sale.filmstrip_categories_grid']}"
-                title.translate="Grid"
-            >
-                <Image
-                    src="'/website_sale/static/src/img/filmstrips/grid.svg'"
-                    style="'width:120px;'"
-                />
-            </BuilderSelectItem>
-            <BuilderSelectItem
-                actionParam="{views: ['website_sale.filmstrip_categories_large_images']}"
-                title.translate="Large Images"
-            >
-                <Image
-                    src="'/website_sale/static/src/img/filmstrips/large_images.svg'"
-                    style="'width:120px;'"
-                />
-            </BuilderSelectItem>
-        </BuilderSelect>
-    </BuilderRow>
+    <BuilderContext level="true">
+        <BuilderRow label.translate="Style">
+            <BuilderSelect action="'websiteConfig'" t-if="this.isActiveItem('categories_opt_top')">
+                <BuilderSelectItem actionParam="{views: []}" title.translate="Default">
+                    <Image
+                        src="'/website_sale/static/src/img/filmstrips/default.svg'"
+                        style="'width:120px;'"
+                    />
+                </BuilderSelectItem>
+                <BuilderSelectItem
+                    actionParam="{views: ['website_sale.filmstrip_categories_bordered']}"
+                    title.translate="Bordered"
+                >
+                    <Image
+                        src="'/website_sale/static/src/img/filmstrips/bordered.svg'"
+                        style="'width:120px;'"
+                    />
+                </BuilderSelectItem>
+                <BuilderSelectItem
+                    actionParam="{views: ['website_sale.filmstrip_categories_tabs']}"
+                    title.translate="Tabs"
+                >
+                    <Image
+                        src="'/website_sale/static/src/img/filmstrips/tabs.svg'"
+                        style="'width:120px;'"
+                    />
+                </BuilderSelectItem>
+                <BuilderSelectItem
+                    actionParam="{views: ['website_sale.filmstrip_categories_pills']}"
+                    title.translate="Pills"
+                >
+                    <Image
+                        src="'/website_sale/static/src/img/filmstrips/pills.svg'"
+                        style="'width:120px;'"
+                    />
+                </BuilderSelectItem>
+                <BuilderSelectItem
+                    actionParam="{views: ['website_sale.filmstrip_categories_images']}"
+                    title.translate="Images"
+                >
+                    <Image
+                        src="'/website_sale/static/src/img/filmstrips/images.svg'"
+                        style="'width:120px;'"
+                    />
+                </BuilderSelectItem>
+                <BuilderSelectItem
+                    actionParam="{views: ['website_sale.filmstrip_categories_grid']}"
+                    title.translate="Grid"
+                >
+                    <Image
+                        src="'/website_sale/static/src/img/filmstrips/grid.svg'"
+                        style="'width:120px;'"
+                    />
+                </BuilderSelectItem>
+                <BuilderSelectItem
+                    actionParam="{views: ['website_sale.filmstrip_categories_large_images']}"
+                    title.translate="Large Images"
+                >
+                    <Image
+                        src="'/website_sale/static/src/img/filmstrips/large_images.svg'"
+                        style="'width:120px;'"
+                    />
+                </BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
 
-    <BuilderRow t-if="this.isActiveItem('categories_opt')" label.translate="Collapse Category Recursive" level="1">
-        <BuilderCheckbox
-                id="'collapse_category_recursive'"
-                action="'websiteConfig'"
-                actionParam="{views: ['website_sale.option_collapse_products_categories']}"
-        />
-    </BuilderRow>
+        <BuilderRow t-if="this.isActiveItem('categories_opt')" label.translate="Collapse Category Recursive">
+            <BuilderCheckbox
+                    id="'collapse_category_recursive'"
+                    action="'websiteConfig'"
+                    actionParam="{views: ['website_sale.option_collapse_products_categories']}"
+            />
+        </BuilderRow>
+    </BuilderContext>
 
     <BuilderRow label.translate="Filters">
         <BuilderSelect action="'templatePreviewableWebsiteConfig'">
@@ -199,13 +203,13 @@
 
     <BuilderContext
             t-if="this.isActiveItem('attributes_opt') or this.isActiveItem('attributes_opt_top')"
-            action="'websiteConfig'"
+            action="'websiteConfig'" level="true"
     >
-        <BuilderRow label.translate="Price" level="1">
+        <BuilderRow label.translate="Price">
             <BuilderCheckbox actionParam="{views: ['website_sale.filter_products_price']}"/>
         </BuilderRow>
 
-        <BuilderRow label.translate="Tags" level="1">
+        <BuilderRow label.translate="Tags">
             <BuilderCheckbox id="'o_wsale_tags_filter_opt'" actionParam="{views: ['website_sale.filter_products_tags']}"/>
         </BuilderRow>
     </BuilderContext>
@@ -227,31 +231,32 @@
         <BuilderButton id="'search_top_opt'" actionParam="{views: ['website_sale.search']}">Search</BuilderButton>
     </BuilderRow>
 
-    <BuilderRow
-            t-if="this.isActiveItem('attributes_opt_top') or this.isActiveItem('search_top_opt') or this.isActiveItem('sort_top_opt')"
-            label.translate="Floating"
-            tooltip.translate="Floating sticky Toolbar"
-            level="1"
-    >
-        <BuilderCheckbox
-                action="'templatePreviewableWebsiteConfig'"
-                actionParam="{
-                    views: ['website_sale.floating_bar'],
-                    previewClass: 'o_wsale_previewing_floating_bar',
-                    templateId: 'website_sale.editor_preview.floating_bar',
-                    placeExcludeRootClosest: '#o_wsale_container.o_wsale_has_floating_bar',
-                    placeAfter: '.o_wsale_products_main_row',
-                }"
-        />
-    </BuilderRow>
+    <BuilderContext level="true">
+        <BuilderRow
+                t-if="this.isActiveItem('attributes_opt_top') or this.isActiveItem('search_top_opt') or this.isActiveItem('sort_top_opt')"
+                label.translate="Floating"
+                tooltip.translate="Floating sticky Toolbar"
+        >
+            <BuilderCheckbox
+                    action="'templatePreviewableWebsiteConfig'"
+                    actionParam="{
+                        views: ['website_sale.floating_bar'],
+                        previewClass: 'o_wsale_previewing_floating_bar',
+                        templateId: 'website_sale.editor_preview.floating_bar',
+                        placeExcludeRootClosest: '#o_wsale_container.o_wsale_has_floating_bar',
+                        placeAfter: '.o_wsale_products_main_row',
+                    }"
+            />
+        </BuilderRow>
 
-    <BuilderRow label.translate="Default Sort" level="1">
-        <BuilderSelect action="'setDefaultSort'">
-            <t t-foreach="this.products_sort_mapping" t-as="queryAndLabel" t-key="queryAndLabel_index">
-                <BuilderSelectItem actionValue="queryAndLabel.query" t-out="queryAndLabel.label"/>
-            </t>
-        </BuilderSelect>
-    </BuilderRow>
+        <BuilderRow label.translate="Default Sort">
+            <BuilderSelect action="'setDefaultSort'">
+                <t t-foreach="this.products_sort_mapping" t-as="queryAndLabel" t-key="queryAndLabel_index">
+                    <BuilderSelectItem actionValue="queryAndLabel.query" t-out="queryAndLabel.label"/>
+                </t>
+            </BuilderSelect>
+        </BuilderRow>
+    </BuilderContext>
 </t>
 
 </templates>
