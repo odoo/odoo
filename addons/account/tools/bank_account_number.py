@@ -93,7 +93,7 @@ def validate_clabe(env, clabe):
 
 
 def normalize_account_number(account_number):
-    return re.sub(r'[\W_]', '', account_number or '')
+    return re.sub(r'[\W_]', '', account_number or '').upper()
 
 
 def format_account_number(env, account_number):
