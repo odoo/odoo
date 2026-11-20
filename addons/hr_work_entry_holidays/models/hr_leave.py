@@ -3,10 +3,16 @@
 
 import pytz
 
-from datetime import datetime, time
+from collections import defaultdict
+from datetime import date, datetime, time, timedelta
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
+
+
+def _get_version_tz(version):
+    version_tz = (version.resource_calendar_id or version.employee_id.resource_calendar_id or version.employee_id).tz
+    return pytz.timezone(version_tz) if version_tz else pytz.utc
 
 
 class HrLeaveType(models.Model):
@@ -52,23 +58,7 @@ class HrLeave(models.Model):
             return
 
         # 1. Create a work entry for each leave
-        work_entries_vals_list = []
-        for leave in self:
-            contracts = leave.employee_id.sudo()._get_versions_with_contract_overlap_with_period(leave.date_from.date(), leave.date_to.date())
-            for contract in contracts:
-                # Generate only if it has aleady been generated
-                if leave.date_to >= contract.date_generated_from and leave.date_from <= contract.date_generated_to:
-                    contract_tz = (contract.resource_calendar_id or contract.employee_id.resource_calendar_id or contract.employee_id).tz
-                    tz = pytz.timezone(contract_tz) if contract_tz else pytz.utc
-                    contract_start = fields.Datetime.to_datetime(contract.date_start)
-                    contract_stop = datetime.combine(fields.Datetime.to_datetime(contract.date_end or datetime.max.date()), time.max)
-                    work_entry_start = max(pytz.utc.localize(leave.date_from).astimezone(tz).replace(tzinfo=None), contract_start)
-                    work_entry_end = min(pytz.utc.localize(leave.date_to).astimezone(tz).replace(tzinfo=None), contract_stop)
-                    work_entries_vals_list += contract._get_work_entries_values(
-                        tz.localize(datetime.combine(work_entry_start, time.min)),
-                        tz.localize(datetime.combine(work_entry_end, time.max)),
-                    )
-
+        work_entries_vals_list = self._get_work_entries_values_of_days(self._get_work_entry_days())
         work_entries_vals_list = self.env['hr.version']._generate_work_entries_postprocess(work_entries_vals_list)
         new_leave_work_entries = self.env['hr.work.entry'].create(work_entries_vals_list)
 
@@ -155,8 +145,9 @@ class HrLeave(models.Model):
         Override to archive linked work entries and recreate attendance work entries
         where the refused leave was.
         """
+        validated_leaves = self.filtered(lambda leave: leave.state == 'validate')
         res = super().action_refuse()
-        self._regen_work_entries()
+        validated_leaves._regen_work_entries()
         return res
 
     def _move_validate_leave_to_confirm(self):
@@ -165,25 +156,61 @@ class HrLeave(models.Model):
         return res
 
     def _action_user_cancel(self, reason=None):
+        validated_leaves = self.filtered(lambda leave: leave.state == 'validate')
         res = super()._action_user_cancel(reason)
-        self.sudo()._regen_work_entries()
+        validated_leaves.sudo()._regen_work_entries()
         return res
 
     def _regen_work_entries(self):
         """
         Called when the leave is refused or cancelled to regenerate the work entries properly for that period.
         """
-        work_entries = self.env['hr.work.entry'].sudo().search([('leave_id', 'in', self.ids)])
-
-        work_entries.write({'active': False})
-        # Re-create attendance work entries
-        vals_list = []
-        for version, work_entry_date in {(work_entry.version_id, work_entry.date) for work_entry in work_entries}:
-            vals_list += version._get_work_entries_values(
-                datetime.combine(work_entry_date, time.min),
-                datetime.combine(work_entry_date, time.max))
+        days = self._get_work_entry_days()
+        work_entries = self.env['hr.work.entry'].sudo().search([
+            ('version_id', 'in', [version.id for version in days]),
+            ('date', 'in', list(set().union(*days.values()))),
+        ]).filtered(lambda work_entry: work_entry.date in days[work_entry.version_id])
+        validated = work_entries.filtered(lambda work_entry: work_entry.state == 'validated')
+        (work_entries - validated).write({'active': False})
+        for work_entry in validated:
+            days[work_entry.version_id].discard(work_entry.date)
+        vals_list = self._get_work_entries_values_of_days(days)
         vals_list = self.env['hr.version']._generate_work_entries_postprocess(vals_list)
         self.env['hr.work.entry'].create(vals_list)
+
+    def _get_work_entry_days(self):
+        """ Return the days covered by the leaves whose work entries were already generated, per version. """
+        days = defaultdict(set)
+        for leave in self:
+            versions = leave.employee_id.sudo()._get_versions_with_contract_overlap_with_period(leave.date_from.date(), leave.date_to.date())
+            for version in versions:
+                # Generate only if it has already been generated
+                if leave.date_to >= version.date_generated_from and leave.date_from <= version.date_generated_to:
+                    tz = _get_version_tz(version)
+                    version_start = version.date_start
+                    version_stop = version.date_end or date.max
+                    start = max(pytz.utc.localize(leave.date_from).astimezone(tz).date(), version_start)
+                    stop = min(pytz.utc.localize(leave.date_to).astimezone(tz).date(), version_stop)
+                    days[version] |= {start + timedelta(days=offset) for offset in range((stop - start).days + 1)}
+        return days
+
+    def _get_work_entries_values_of_days(self, days):
+        """ Generate the work entries of each day once, by runs of consecutive days. """
+        vals_list = []
+        for version, version_days in days.items():
+            tz = _get_version_tz(version)
+            run_start = run_stop = None
+            for day in sorted(version_days) + [None]:
+                if run_stop and day == run_stop + timedelta(days=1):
+                    run_stop = day
+                    continue
+                if run_start:
+                    vals_list += version._get_work_entries_values(
+                        tz.localize(datetime.combine(run_start, time.min)),
+                        tz.localize(datetime.combine(run_stop, time.max)),
+                    )
+                run_start = run_stop = day
+        return vals_list
 
     def _compute_can_cancel(self):
         super()._compute_can_cancel()

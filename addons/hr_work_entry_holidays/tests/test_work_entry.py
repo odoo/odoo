@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 import pytz
@@ -479,3 +480,95 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
             {work_entry.work_entry_type_id: work_entry.duration for work_entry in work_entries},
             {self.work_entry_type: 4.0, self.work_entry_type_unpaid: 4.0},
         )
+
+    def _create_employee_working_monday(self):
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Calendar',
+            'tz': 'UTC',
+            'attendance_ids': [
+                Command.create({'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning', 'work_entry_type_id': self.work_entry_type.id}),
+                Command.create({'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon', 'work_entry_type_id': self.work_entry_type.id}),
+            ],
+        })
+        employee = self.env['hr.employee'].create({
+            'name': 'Test',
+            'resource_calendar_id': calendar.id,
+            'tz': 'UTC',
+            'date_version': date(2024, 9, 1),
+            'contract_date_start': date(2024, 9, 1),
+            'contract_date_end': date(2024, 9, 30),
+            'wage': 5000.0,
+        })
+        employee.generate_work_entries(date(2024, 9, 2), date(2024, 9, 2))
+        return employee
+
+    def _create_half_day_leaves(self, employee, periods):
+        return self.env['hr.leave'].create([{
+            'employee_id': employee.id,
+            'holiday_status_id': self.half_day_leave_type.id,
+            'request_date_from': date(2024, 9, 2),
+            'request_date_from_period': period,
+            'request_date_to': date(2024, 9, 2),
+            'request_date_to_period': period,
+        } for period in periods])
+
+    def _get_durations_by_type(self, employee):
+        durations = defaultdict(float)
+        for work_entry in self.env['hr.work.entry'].search([('employee_id', '=', employee.id)]):
+            durations[work_entry.work_entry_type_id] += work_entry.duration
+        return dict(durations)
+
+    def test_refuse_half_day_time_off_does_not_duplicate_attendance(self):
+        """ Check that refusing a morning time off gives back a single day of attendance. """
+        employee = self._create_employee_working_monday()
+        leave = self._create_half_day_leaves(employee, ['am'])
+        leave.action_approve()
+        self.assertDictEqual(self._get_durations_by_type(employee), {self.work_entry_type_leave: 4.0, self.work_entry_type: 4.0})
+
+        leave.action_refuse()
+        self.assertDictEqual(self._get_durations_by_type(employee), {self.work_entry_type: 8.0})
+
+    def test_refuse_second_half_day_time_off_gives_back_attendance(self):
+        """ Check that refusing the afternoon time off of a day whose morning is also off gives
+        back the afternoon attendance. """
+        employee = self._create_employee_working_monday()
+        leaves = self._create_half_day_leaves(employee, ['am', 'pm'])
+        leaves[0].action_approve()
+        leaves[1].action_approve()
+        self.assertDictEqual(self._get_durations_by_type(employee), {self.work_entry_type_leave: 8.0})
+
+        leaves[1].action_refuse()
+        self.assertDictEqual(self._get_durations_by_type(employee), {self.work_entry_type_leave: 4.0, self.work_entry_type: 4.0})
+
+    def test_approve_two_half_day_time_offs_at_once_generates_day_once(self):
+        """ Check that approving the morning and afternoon time offs of a day together gives
+        one day of time off. """
+        employee = self._create_employee_working_monday()
+        leaves = self._create_half_day_leaves(employee, ['am', 'pm'])
+        leaves.action_approve()
+        self.assertDictEqual(self._get_durations_by_type(employee), {self.work_entry_type_leave: 8.0})
+
+    def test_refuse_pending_time_off_keeps_edited_work_entries(self):
+        """ Refusing a time off that was never approved must not touch the work entries of its day. """
+        employee = self._create_employee_working_monday()
+        work_entry = self.env['hr.work.entry'].search([('employee_id', '=', employee.id)])
+        self.assertRecordValues(work_entry, [{'work_entry_type_id': self.work_entry_type.id, 'duration': 8.0}])
+        work_entry.duration = 6.0
+
+        leave = self._create_half_day_leaves(employee, ['am'])
+        self.assertEqual(leave.state, 'confirm')
+        leave.action_refuse()
+        self.assertTrue(work_entry.active)
+        self.assertDictEqual(self._get_durations_by_type(employee), {self.work_entry_type: 6.0})
+
+    def test_cancel_pending_time_off_keeps_edited_work_entries(self):
+        """ Cancelling a time off that was never approved must not touch the work entries of its day. """
+        employee = self._create_employee_working_monday()
+        work_entry = self.env['hr.work.entry'].search([('employee_id', '=', employee.id)])
+        work_entry.duration = 6.0
+
+        leave = self._create_half_day_leaves(employee, ['am'])
+        self.assertEqual(leave.state, 'confirm')
+        leave._action_user_cancel()
+        self.assertTrue(work_entry.active)
+        self.assertDictEqual(self._get_durations_by_type(employee), {self.work_entry_type: 6.0})
