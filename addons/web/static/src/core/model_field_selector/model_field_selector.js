@@ -22,7 +22,6 @@ export class ModelFieldSelector extends Component {
         filter: t.function().optional(),
         sort: t.function().optional(),
         followRelation: t.or([t.boolean(), t.function()]).optional(true),
-        showDebugInput: t.boolean().optional(),
     });
 
     setup() {
@@ -71,7 +70,6 @@ export class ModelFieldSelector extends Component {
             filter: this.props.filter,
             sort: this.props.sort,
             followRelation: this.props.followRelation,
-            showDebugInput: this.props.showDebugInput,
         };
     }
 

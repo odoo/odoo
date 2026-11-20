@@ -923,21 +923,6 @@ test("Modify path in popover debug input and click away", async () => {
     expect.verifySteps(["foooooo"]);
 });
 
-test("showDebugInput = false", async () => {
-    await mountWithCleanup(ModelFieldSelector, {
-        props: {
-            readonly: false,
-            path: "product_id",
-            resModel: "partner",
-            isDebugMode: true,
-            showDebugInput: false,
-        },
-    });
-
-    await openModelFieldSelectorPopover();
-    expect(".o_model_field_selector_debug").toHaveCount(0);
-});
-
 test("models with a m2o of the same name should show the correct page data", async () => {
     class Cat extends models.Model {
         cat_name = fields.Char();

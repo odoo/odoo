@@ -114,7 +114,6 @@ export const modelFieldSelectorPopoverProps = {
         ),
     sort: t.function().optional(),
     followRelation: t.or([t.boolean(), t.function()]).optional(true),
-    showDebugInput: t.boolean().optional(),
     isDebugMode: t.boolean().optional(false),
     path: t.any().optional(),
     readProperty: t.boolean().optional(),
@@ -179,10 +178,6 @@ export class ModelFieldSelectorPopover extends Component {
 
     get fieldNames() {
         return this.state.page.fieldNames;
-    }
-
-    get showDebugInput() {
-        return this.props.showDebugInput ?? this.props.isDebugMode;
     }
 
     canFollowRelationFor(fieldDef) {
