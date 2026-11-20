@@ -2,7 +2,7 @@
 
 from freezegun import freeze_time
 
-from odoo.tests import Form, tagged
+from odoo.tests import Form, HttpCase, tagged
 
 from odoo import Command
 from odoo.addons.base.tests.common import BaseCommon
@@ -910,3 +910,45 @@ class TestSaleMrpKitBom(BaseCommon):
 
         self.assertEqual(so.with_context({'accrual_entry_date': '2020-01-15'}).order_line.qty_delivered_at_date, 1)
         self.assertEqual(so.with_context({'accrual_entry_date': '2020-01-10'}).order_line.qty_delivered_at_date, 0)
+
+
+@tagged('post_install', '-at_install')
+class TestSaleMrpKitPortalReturn(BaseCommon, HttpCase):
+
+    _test_user_groups = None  # FIXME list needed groups
+
+    def test_portal_return_data_kit_components(self):
+        """ The portal return dialog should show the delivered components of a kit, not the kit """
+        self.env.company.allow_spontaneous_returns = True
+        portal_user = self._create_new_portal_user()
+        component_1, component_2 = self.env['product.product'].create([
+            {'name': 'Kit Component 1', 'is_storable': True},
+            {'name': 'Kit Component 2', 'is_storable': True},
+        ])
+        kit = self.env['product.product'].create({'name': 'Kit Product'})
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({'product_id': component_1.id, 'product_qty': 4}),
+                Command.create({'product_id': component_2.id, 'product_qty': 1}),
+            ],
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': portal_user.partner_id.id,
+            'order_line': [Command.create({'product_id': kit.id, 'product_uom_qty': 2})],
+        })
+        so.action_confirm()
+        for move in so.picking_ids.move_ids:
+            move.write({'quantity': move.product_uom_qty, 'picked': True})
+        so.picking_ids.button_validate()
+        so._portal_ensure_token()
+
+        self.authenticate(portal_user.login, portal_user.login)
+        result = self.url_open('/my/order/return_data', json={
+            'params': {'order_id': so.id, 'access_token': so.access_token},
+        }).json()['result']
+        self.assertEqual(
+            [(line['product_id'], line['name'], line['remaining_delivered_qty']) for line in result['returnable_lines']],
+            [(component_1.id, 'Kit Component 1', 8), (component_2.id, 'Kit Component 2', 2)],
+        )
