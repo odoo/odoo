@@ -3,6 +3,24 @@ import { patch } from "@web/core/utils/patch";
 import { Domain } from "@web/core/domain";
 
 patch(PosStore.prototype, {
+    async setup() {
+        await super.setup(...arguments);
+        this.paidSelfOrderIds = [];
+        if (this.config.self_ordering_mode === "mobile") {
+            await this.fetchPaidSelfOrderIds();
+        }
+    },
+    async fetchPaidSelfOrderIds() {
+        try {
+            this.paidSelfOrderIds = await this.data.orm.search("pos.order", [
+                ["session_id", "=", this.session.id],
+                ["source", "=", "mobile"],
+                ["state", "in", ["paid", "done"]],
+            ]);
+        } catch (error) {
+            console.log(error);
+        }
+    },
     getServerOrdersDomain() {
         const base = super.getServerOrdersDomain();
         if (this.session._self_ordering) {
