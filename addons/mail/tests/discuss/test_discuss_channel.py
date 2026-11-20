@@ -1576,3 +1576,30 @@ class TestChannelInternals(MailCommon, HttpCase):
                     ],
                 }
             )
+
+    def test_unpin_message_neutralizes_pin_notification(self):
+        """The pin notification must stop linking to a message once it is unpinned."""
+        channel = self.test_channel.with_user(self.user_employee)
+        channel.channel_join()
+        message = channel.message_post(body="Message to pin")
+        channel.set_message_pin(message.id, True)
+        pin_domain = [
+            ("model", "=", "discuss.channel"),
+            ("res_id", "=", channel.id),
+            ("message_type", "=", "notification"),
+            ("body", "ilike", f'data-oe-id="{message.id}"'),
+        ]
+        notification = self.env["mail.message"].search(pin_domain)
+        self.assertEqual(len(notification), 1)
+        self.assertIn("pinned a message", notification.body)
+        self.assertTrue(message.pinned_at)
+
+        channel.set_message_pin(message.id, False)
+        self.assertFalse(message.pinned_at)
+        self.assertFalse(
+            self.env["mail.message"].search(pin_domain),
+            "the notification should no longer reference the unpinned message",
+        )
+        notification.invalidate_recordset(["body"])
+        self.assertIn("unpinned a message", notification.body)
+        self.assertNotIn("<a ", notification.body)
