@@ -502,7 +502,7 @@ class ProductProduct(models.Model):
             cmp_value = {float(v) for v in value}
         else:
             cmp_value = float(value)
-        products = self.with_context(prefetch_fields=False).search([('type', '!=', 'service')])
+        products = self.with_context(prefetch_fields=False).search([('type', '=', 'goods')])
         quantities = products.with_context(search_all=True)._compute_quantities_dict(
             self.env.context.get('lot_id'), self.env.context.get('owner_id'), self.env.context.get('package_id'),
             self.env.context.get('from_date'), self.env.context.get('to_date'),
