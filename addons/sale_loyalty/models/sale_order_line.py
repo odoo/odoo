@@ -68,7 +68,7 @@ class SaleOrderLine(models.Model):
         return super()._can_be_invoiced_alone() and not self.is_reward_line
 
     def _is_discount_line(self):
-        return super()._is_discount_line() or self.reward_id.reward_type == "discount"
+        return super()._is_discount_line() or self.reward_id.sudo().reward_type == "discount"
 
     def _reset_loyalty(self, complete=False):
         """Reset the line(s) to a state which does not impact reward computation.
@@ -109,12 +109,38 @@ class SaleOrderLine(models.Model):
                 if line.state != "sale":
                     continue
                 if line.points_cost != previous_cost or line.coupon_id != previous_coupon:
+<<<<<<< 746d42e4dbde5fc42a94e7aff5286046f2823682
                     if previous_coupon:
                         pairs.add((line.order_id, previous_coupon))
                     if line.coupon_id and line.coupon_id != previous_coupon:
                         pairs.add((line.order_id, line.coupon_id))
             if pairs:
                 self.env["sale.order"]._recompute_loyalty_history(pairs)
+||||||| 92c79a1d58f62eada5e97e1fe4f3d27d1d43c495
+                    previous_coupon.points += previous_cost
+                    line.coupon_id.points -= line.points_cost
+                    # Same coupon: apply the delta in a single call to avoid a redundant search.
+                    if line.coupon_id == previous_coupon:
+                        line.order_id._update_loyalty_history(line.coupon_id, line.points_cost - previous_cost)
+                    else:
+                        if previous_coupon:
+                            line.order_id._update_loyalty_history(previous_coupon, -previous_cost)
+                        if line.coupon_id:
+                            line.order_id._update_loyalty_history(line.coupon_id, line.points_cost)
+=======
+                    previous_coupon.points += previous_cost
+                    line.coupon_id.points -= line.points_cost
+                    # Same coupon: apply the delta in a single call to avoid a redundant search.
+                    if line.coupon_id == previous_coupon:
+                        line.order_id._update_loyalty_history(
+                            line.coupon_id, line.points_cost - previous_cost
+                        )
+                    else:
+                        if previous_coupon:
+                            line.order_id._update_loyalty_history(previous_coupon, -previous_cost)
+                        if line.coupon_id:
+                            line.order_id._update_loyalty_history(line.coupon_id, line.points_cost)
+>>>>>>> 73cda4cc7dbb50c9307807f8fac90db280105b35
         return res
 
     def unlink(self):
