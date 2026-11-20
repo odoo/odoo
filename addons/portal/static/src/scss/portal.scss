@@ -142,16 +142,11 @@ li > p {
     background-color: inherit;
 }
 
-/* Replaces old BS3 page-header class */
-%o-page-header {
+.o_page_header {
+    /* Replaces old BS3 page-header class */
     margin-bottom: calc(var(--o-bs-headings-margin-bottom) * 2);
     padding-bottom: var(--o-bs-headings-margin-bottom);
-    border-bottom-width: var(--o-bs-border-width);
-    border-bottom-style: solid;
-    border-bottom-color: var(--o-border-color, var(--o-bs-border-color));
-}
-.o_page_header {
-    @extend %o-page-header;
+    border-bottom: var(--o-bs-border-width) solid var(--o-border-color, var(--o-bs-border-color));
 }
 
 /* Images spacing */
