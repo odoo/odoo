@@ -1,4 +1,4 @@
-import { Component, proxy, t, useProps } from "@odoo/owl";
+import { Component, proxy, useProps } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
@@ -14,10 +14,7 @@ export class SubtaskKanbanList extends Component {
         Field,
         SubtaskCreate,
     };
-    props = useProps({
-        ...standardWidgetProps,
-        isReadonly: t.boolean().optional(),
-    });
+    props = useProps(standardWidgetProps);
     static template = "project.SubtaskKanbanList";
 
     setup() {
@@ -27,7 +24,6 @@ export class SubtaskKanbanList extends Component {
         this.isClosedState = isClosedState;
         this.subtaskCreate = proxy({
             open: false,
-            name: "",
         });
         // Sub-tasks list (child_ids) from which `openSubtaskIdsAtLoad` was computed.
         this.subtasksAtLoad = null;
@@ -84,12 +80,8 @@ export class SubtaskKanbanList extends Component {
         });
     }
 
-    async onSubTaskCreated(ev) {
+    onAddSubtaskClick() {
         this.subtaskCreate.open = true;
-    }
-
-    async _onBlur() {
-        this.subtaskCreate.open = false;
     }
 
     async _onSubtaskCreateNameChanged(name) {
@@ -109,7 +101,6 @@ export class SubtaskKanbanList extends Component {
                 sequence: nextSequence,
             }]);
             this.subtaskCreate.open = false;
-            this.subtaskCreate.name = "";
             this.props.record.load();
         }
     }
