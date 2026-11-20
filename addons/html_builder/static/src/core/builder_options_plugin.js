@@ -1,13 +1,13 @@
 import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { uniqueId } from "@web/core/utils/functions";
-import { isRemovable } from "./remove_plugin";
-import { getElementsWithOption, isElementInViewport } from "@html_builder/utils/utils";
+import { getElementsWithOption, isEditable, isElementInViewport } from "@html_builder/utils/utils";
 import { OptionsContainer } from "@html_builder/sidebar/option_container";
 import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
 import { scrollTo } from "@html_builder/utils/scrolling";
 import { _t } from "@web/core/l10n/translation";
 import { closestElement } from "@html_editor/utils/dom_traversal";
+import { isUnremovableQWebElement } from "@html_editor/others/qweb_plugin";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
 import { ShadowOption } from "@html_builder/plugins/shadow_option";
@@ -155,6 +155,18 @@ export class BuilderOptionsPlugin extends Plugin {
         on_history_commit_undone_handlers: this.restoreContainers.bind(this),
         on_history_commit_redone_handlers: this.restoreContainers.bind(this),
         clean_for_save_processors: this.cleanForSave.bind(this),
+        // Not in RemovePlugin: the removability is also evaluated when that
+        // plugin is not loaded (e.g. in translation mode).
+        is_element_removable_predicates: (el) => {
+            if (
+                !isEditable(el.parentNode) ||
+                el.matches(".oe_unremovable") ||
+                isUnremovableQWebElement(el) ||
+                el.parentElement?.matches('[data-oe-type="image"]')
+            ) {
+                return false;
+            }
+        },
         reload_context_processors: (context, el) => {
             if (el) {
                 context.selector = this.getReloadSelector(el);
@@ -428,7 +440,8 @@ export class BuilderOptionsPlugin extends Plugin {
                         : {},
                     hideOverlay: Options.length && Options.every((Option) => Option.hideOverlay),
                     hasOverlayOptions: this.hasOverlayOptions(element),
-                    isRemovable: isRemovable(element),
+                    isRemovable:
+                        this.checkPredicates("is_element_removable_predicates", element) ?? true,
                     removeDisabledReason: this.getRemoveDisabledReason(element),
                     isClonable: this.isClonable(element),
                     cloneDisabledReason: this.getCloneDisabledReason(element),
@@ -608,7 +621,10 @@ export class BuilderOptionsPlugin extends Plugin {
      */
     isClonable(el) {
         // TODO and isDraggable
-        return el.matches(this.clonableSelector) || isRemovable(el);
+        return (
+            el.matches(this.clonableSelector) ||
+            (this.checkPredicates("is_element_removable_predicates", el) ?? true)
+        );
     }
 
     /**
@@ -818,11 +834,7 @@ export class BuilderOptionsPlugin extends Plugin {
 }
 
 function getClosestElements(element, selector) {
-    if (!element) {
-        // TODO we should remove it
-        return [];
-    }
-    const parent = element.closest(selector);
+    const parent = element?.closest(selector);
     return parent ? [parent, ...getClosestElements(parent.parentElement, selector)] : [];
 }
 

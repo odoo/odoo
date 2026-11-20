@@ -36,9 +36,9 @@ import {
 import { formSelectXml } from "@website/../tests/interactions/snippets/helpers";
 import { BuilderList } from "@html_builder/core/building_blocks/builder_list";
 import {
-    confirmAddSnippet,
     dummyBase64Img,
     getDragHelper,
+    insertCategorySnippet,
     unfoldAllOptionsGroups,
     waitForEndOfOperation,
 } from "@html_builder/../tests/helpers";
@@ -698,9 +698,7 @@ test("dropping a snippet containing a form applies the default recipient email",
     onRpc("res.company", "read", () => [{ email: "company@mail.com" }]);
     await setupWebsiteBuilder("", { loadIframeBuilderTemplates: true });
 
-    await contains("[data-snippet-group='contact_and_forms'] .o_snippet_thumbnail_area").click();
-    await confirmAddSnippet("s_website_form_info");
-    await waitForEndOfOperation();
+    await insertCategorySnippet({ group: "contact_and_forms", snippet: "s_website_form_info" });
 
     await contains(":iframe .s_website_form_info .s_website_form").click();
 

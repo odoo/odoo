@@ -1,12 +1,11 @@
 import { jsToPyLocale } from "@web/core/l10n/utils";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
+import { unslugHtmlDataObject } from "@website/utils/misc";
 
 export const websitePageService = {
     start() {
         const htmlEl = document.querySelector("html");
-        // TODO this is duplicated in website_service.js at least... to share
-        const match = htmlEl.dataset.mainObject?.match(/(.+)\((-?\d+),(.*)\)/);
 
         return {
             context: {
@@ -15,10 +14,7 @@ export const websitePageService = {
                 lang: jsToPyLocale(htmlEl.getAttribute("lang")) || "en_US",
                 user_lang: user.context.lang,
             },
-            mainObject: {
-                model: match && match[1],
-                id: match && match[2] | 0,
-            },
+            mainObject: unslugHtmlDataObject(htmlEl.dataset.mainObject) || {},
         };
     },
 };

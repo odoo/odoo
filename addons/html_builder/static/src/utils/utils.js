@@ -1,6 +1,8 @@
 import { useSubEnv } from "@web/owl2/utils";
 import { DependencyManager } from "../core/dependency_manager";
 import { _t } from "@web/core/l10n/translation";
+import { getScrollingElement, getScrollingTarget } from "@web/core/utils/scrolling";
+import { throttleForAnimation } from "@web/core/utils/timing";
 
 /**
  * Retrieves the default name corresponding to the edited element (to display it
@@ -198,4 +200,46 @@ export function removePlugins(plugins, pluginsToRemove) {
  */
 export function isSmallInteger(value) {
     return /^-?[0-9]{1,15}$/.test(value);
+}
+
+/**
+ * Keeps an overlay in sync with the user interactions: refreshes it when the
+ * window is resized, hides it on keydown until the mouse moves, and hides it
+ * while scrolling.
+ *
+ * @param {import("@html_editor/plugin").Plugin} plugin
+ * @param {Object} callbacks
+ * @param {Function} callbacks.refresh
+ * @param {Function} callbacks.hide
+ * @param {Function} callbacks.show
+ * @returns {Function} the throttled `refresh`
+ */
+export function addOverlayListeners(plugin, { refresh, hide, show }) {
+    const throttledRefresh = throttleForAnimation(refresh);
+    plugin.addDomListener(window, "resize", throttledRefresh);
+
+    const onMouseMoveOrDown = throttleForAnimation(() => {
+        show();
+        plugin.editable.removeEventListener("mousemove", onMouseMoveOrDown);
+        plugin.editable.removeEventListener("mousedown", onMouseMoveOrDown);
+    });
+    plugin.addDomListener(plugin.editable, "keydown", () => {
+        hide();
+        plugin.editable.addEventListener("mousemove", onMouseMoveOrDown);
+        plugin.editable.addEventListener("mousedown", onMouseMoveOrDown);
+    });
+
+    // Show the overlay again when the scroll is over.
+    let scrollingTimeout;
+    plugin.addDomListener(
+        getScrollingTarget(getScrollingElement(plugin.document)),
+        "scroll",
+        throttleForAnimation(() => {
+            hide();
+            clearTimeout(scrollingTimeout);
+            scrollingTimeout = setTimeout(show, 250);
+        }),
+        { capture: true, passive: true }
+    );
+    return throttledRefresh;
 }

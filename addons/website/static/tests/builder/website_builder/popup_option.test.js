@@ -4,13 +4,13 @@ import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import {
     addPlugin,
     defineWebsiteModels,
-    insertCategorySnippet,
     setupWebsiteBuilder,
     setupWebsiteBuilderWithSnippet,
 } from "@website/../tests/builder/website_helpers";
 import {
     confirmAddSnippet,
     getDragHelper,
+    insertCategorySnippet,
     waitForEndOfOperation,
 } from "@html_builder/../tests/helpers";
 import { Plugin } from "@html_editor/plugin";

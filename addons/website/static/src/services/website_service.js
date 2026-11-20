@@ -6,21 +6,10 @@ import { isVisible } from "@web/core/utils/ui";
 
 import { FullscreenIndication } from "../components/fullscreen_indication/fullscreen_indication";
 import { WebsiteLoader } from "../components/website_loader/website_loader";
+import { unslugHtmlDataObject } from "@website/utils/misc";
 import { EventBus, proxy } from "@odoo/owl";
 
 const websiteSystrayRegistry = registry.category("website_systray");
-
-// TODO this is duplicated in website_root at least, it should be a shared util
-export const unslugHtmlDataObject = (repr) => {
-    const match = repr && repr.match(/(.+)\((-?\d+),(.*)\)/);
-    if (!match) {
-        return null;
-    }
-    return {
-        model: match[1],
-        id: match[2] | 0,
-    };
-};
 
 const ANONYMOUS_PROCESS_ID = "ANONYMOUS_PROCESS_ID";
 

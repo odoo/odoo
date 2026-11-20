@@ -171,10 +171,6 @@ export class DynamicSnippet extends Interaction {
             this.renderedContentNode = document.createDocumentFragment();
         }
         this.renderContent();
-        // TODO What was this about ? Rendered content is already started.
-        // for (const childEl of this.el.children) {
-        //     this.services["public.interactions"].startInteractions(childEl);
-        // }
     }
 
     renderContent() {
