@@ -171,6 +171,7 @@ class AccountJournal(models.Model):
             ('company_id', 'in', self.env.companies.ids),
             ('journal_id.type', 'in', ('bank', 'cash', 'credit')),
             ('date', '>=', date_from),
+            ('account_type', 'in', ('asset_cash', 'liability_credit_card')),
         ])
         table = query.table
 
