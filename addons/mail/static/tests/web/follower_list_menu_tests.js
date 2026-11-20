@@ -4,7 +4,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { start } from "@mail/../tests/helpers/test_utils";
 
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { editInput, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { click, contains, scroll } from "@web/../tests/utils";
 
 QUnit.module("follower list menu");
@@ -155,6 +155,60 @@ QUnit.test("click on remove follower", async (assert) => {
     await click("button[title='Remove this follower']");
     assert.verifySteps(["message_unsubscribe"]);
     await contains(".o-mail-Follower", { count: 0 });
+});
+
+QUnit.test("saving the record refreshes followers and recipients", async () => {
+    const pyEnv = await startServer();
+    const [threadId, partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+        { name: "Ticket" },
+        { email: "luigi@example.com", name: "Luigi" },
+        { email: "mario@example.com", name: "Mario" },
+    ]);
+    const [selfFollowerId, followerId_1] = pyEnv["mail.followers"].create([
+        {
+            is_active: true,
+            partner_id: pyEnv.currentPartnerId,
+            res_id: threadId,
+            res_model: "res.partner",
+        },
+        {
+            is_active: true,
+            partner_id: partnerId_1,
+            res_id: threadId,
+            res_model: "res.partner",
+        },
+    ]);
+    const views = {
+        "res.partner,false,form": `
+            <form>
+                <field name="name"/>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                    <field name="message_follower_ids"/>
+                </div>
+            </form>`,
+    };
+    const { openFormView } = await start({ serverData: { views } });
+    openFormView("res.partner", threadId);
+    await click("button", { text: "Send message" });
+    await contains(".o-mail-Chatter", { text: "To: luigi" });
+    await click(".o-mail-Followers-button");
+    await contains(".o-mail-Follower", { text: "Mitchell Admin" });
+    await contains(".o-mail-Follower", { text: "Luigi" });
+    pyEnv["mail.followers"].unlink([selfFollowerId, followerId_1]);
+    pyEnv["mail.followers"].create({
+        is_active: true,
+        partner_id: partnerId_2,
+        res_id: threadId,
+        res_model: "res.partner",
+    });
+    await editInput(document.body, ".o_field_char[name=name] input", "Reassigned ticket");
+    await click(".o_form_button_save");
+    await contains(".o-mail-Chatter", { text: "To: mario" });
+    await click(".o-mail-Followers-button");
+    await contains(".o-mail-Follower", { text: "Mario" });
+    await contains(".o-mail-Follower", { count: 0, text: "Mitchell Admin" });
+    await contains(".o-mail-Follower", { count: 0, text: "Luigi" });
 });
 
 QUnit.test(

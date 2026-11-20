@@ -74,11 +74,12 @@ patch(ThreadService.prototype, {
             this.setMainAttachmentFromIndex(thread, 0);
         }
         if ("followers" in result) {
-            if (result.selfFollower) {
-                thread.selfFollower = { followedThread: thread, ...result.selfFollower };
-            }
+            thread.selfFollower = result.selfFollower
+                ? { followedThread: thread, ...result.selfFollower }
+                : undefined;
             thread.followersCount = result.followersCount;
             Record.MAKE_UPDATE(() => {
+                thread.followers.clear();
                 for (const followerData of result.followers) {
                     const follower = this.store.Follower.insert({
                         followedThread: thread,
@@ -90,6 +91,7 @@ patch(ThreadService.prototype, {
                 }
             });
             thread.recipientsCount = result.recipientsCount;
+            thread.recipients.clear();
             for (const recipientData of result.recipients) {
                 thread.recipients.add({ followedThread: thread, ...recipientData });
             }
