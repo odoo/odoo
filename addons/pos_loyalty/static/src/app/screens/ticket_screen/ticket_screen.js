@@ -11,12 +11,6 @@ patch(TicketScreen.prototype, {
         super.setup(...arguments);
         this.notification = useService("notification");
     },
-    async setOrder(order) {
-        await super.setOrder(...arguments);
-        if (order && this.pos.models["loyalty.program"]?.length) {
-            this.pos.updateRewards();
-        }
-    },
     _onUpdateSelectedOrderline() {
         const order = this.getSelectedOrder();
         if (!order) {
