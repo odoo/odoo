@@ -318,3 +318,25 @@ class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuPosCommon):
 
                 self.assertEqual(order_submission_invoice_number, order_cancellation_invoice_number)
                 self.assertNotEqual(order_cancellation_invoice_number, invoice_invoice_number)
+
+    def test_invoiced_order_only_sent_for_cancellation(self):
+        with self.with_pos_session():
+            with self._mock_zeep_registration_operation('l10n_es_edi_verifactu/tests/responses/batch_single_accepted_registration.json'):
+                order = self._create_order({
+                    'is_invoiced': True,
+                    'customer': self.partner_b,
+                    'pos_order_lines_ui_args': [
+                        (self.product, 1.0),
+                    ],
+                    'payments': [(self.bank_pm1, 121.0)],
+                    'account_move': {
+                        'name': 'INV/2019/00026',
+                        'date': '2019-12-30',
+                        'invoice_date': '2024-12-30',
+                    },
+                })
+        self.assertTrue(order.account_move)
+        self.assertEqual(order._l10n_es_edi_verifactu_check(), [
+            "Veri*Factu documents can only be generated for invoiced Point of Sale Orders for cancellation purpose.",
+        ])
+        self.assertFalse(order._l10n_es_edi_verifactu_check(cancellation=True))
