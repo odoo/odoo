@@ -1144,6 +1144,11 @@ class Registry(Mapping[str, type["BaseModel"]]):
         """ Notifies other processes if registry or cache has been invalidated. """
         if not names:
             return
+        # Lock table to be the only one signaling and consuming the sequence
+        # until the end of the transaction. This way `max(id)` is always the
+        # latest update.
+        cr.execute("LOCK TABLE orm_signaling_registry IN SHARE UPDATE EXCLUSIVE MODE")
+
         if 'registry' in names:
             _logger.info("Registry changed, signaling through the database")
             cr.execute("INSERT INTO orm_signaling_registry DEFAULT VALUES")
