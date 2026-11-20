@@ -572,6 +572,21 @@ test("Systray icon keeps track of earlier actions", async () => {
     await contains(".o-discuss-CallMenu-buttonContent .fa-desktop");
 });
 
+test("changing the microphone while muted keeps the microphone muted", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const env = await start();
+    const rtc = env.services["discuss.rtc"];
+    await openDiscuss(channelId);
+    await click("[title='Start Call']");
+    await click("[title='Mute']");
+    await contains("[title='Unmute']");
+    await rtc.store.settings.setAudioInputDevice("mockAudioDeviceId");
+    await waitUntil(() => rtc.state.micAudioTrack === streams[1]?.getAudioTracks()[0]);
+    expect(rtc.selfSession.is_muted).toBe(true);
+    await contains("[title='Unmute']");
+});
+
 test("show call participants in discuss sidebar", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
