@@ -32,7 +32,7 @@ class ResPartner(models.Model):
         res = super().write(vals)
         company_id = vals.get('company_id')
         if company_id:
-            lots = self.env['stock.lot'].search([
+            lots = self.env['stock.lot'].sudo().search([
                 ('company_id', '!=', False),
                 ('company_id', '!=', company_id),
                 ('partner_ids', 'in', self.ids),
