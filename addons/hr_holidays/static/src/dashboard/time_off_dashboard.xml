@@ -1,7 +1,9 @@
 <?xml version="1.0" ?>
 <templates xml:space="preserve">
-    <div t-name="hr_holidays.TimeOffDashboard" class="o_timeoff_dashboard mb-2 px-3">
-        <div class="d-flex flex-row p-0 pb-2 gap-3 overflow-x-auto">
+    <div t-name="hr_holidays.TimeOffDashboard" class="o_timeoff_dashboard"
+         t-att-class="this.props.vertical ? 'o_timeoff_dashboard_vertical' : 'mb-2 px-3'">
+        <div class="d-flex p-0 gap-3"
+             t-att-class="this.props.vertical ? 'flex-column' : 'flex-row pb-2 overflow-x-auto'">
             <t t-foreach="this.state.holidays" t-as="holiday" t-key="holiday[3]">
                 <TimeOffCard
                     name="holiday[0]"
