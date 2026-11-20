@@ -102,6 +102,19 @@
     }
 }
 
+/* The Bootstrap primary variant, without the override above */
+.o_btn_bs_primary {
+    @include button-variant($primary, $primary);
+}
+
+.o_btn_navbar {
+    @include button-variant(darken($o-navbar-background, 5%), darken($o-navbar-background, 5%), $o-navbar-entry-color, darken($o-navbar-background, 10%));
+}
+
+.o_btn_hover_danger:hover {
+    @include button-variant($danger, $danger);
+}
+
 /* 4. Space out the buttons of a '.btn-group' instead of letting them overlap */
 /* their borders, making each of them individually recognizable. */
 .btn-group {

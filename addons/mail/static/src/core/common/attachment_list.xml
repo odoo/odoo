@@ -195,7 +195,7 @@
                     t-out="this.formatDateTime(duplicate.create_date)" /></span>
         </div>
         <button t-if="this.showDelete(duplicate)"
-            class="o-mail-Attachment-duplicateUnlink btn btn-secondary btn-sm py-0"
+            class="o-mail-Attachment-duplicateUnlink btn btn-secondary o_btn_hover_danger btn-sm py-0"
             t-on-click.stop="() => this.onClickUnlink(duplicate)"
             title="Remove">
             <i class="oi oi-filled" data-icon="delete" role="img" aria-label="Remove" />
