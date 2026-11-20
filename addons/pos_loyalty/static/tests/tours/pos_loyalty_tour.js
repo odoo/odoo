@@ -801,3 +801,28 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountNegativeLine"
             PosLoyalty.finalizeOrder("Cash", "850"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosLoyaltyDeleteOrderActionsPopup", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            {
+                trigger: "body",
+                run: async () => {
+                    const order = posmodel.get_order();
+                    order.set_pricelist(posmodel.models["product.pricelist"].getFirst());
+                    await posmodel.syncAllOrders({ orders: [order] });
+                },
+            },
+            ProductScreen.clickControlButtonMore(),
+            {
+                content: "delete the synced order while the Actions popup is open",
+                trigger: ".modal .control-buttons-modal",
+                run: async () => {
+                    await posmodel.onDeleteOrder(posmodel.get_order());
+                },
+            },
+            ProductScreen.orderIsEmpty(),
+        ].flat(),
+});

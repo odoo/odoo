@@ -140,10 +140,14 @@ export class ControlButtonsPopup extends Component {
     static components = { Dialog, ControlButtons };
     static template = xml`
         <Dialog bodyClass="'d-flex flex-column'" footer="false" title="'Actions'" t-on-click="props.close">
-            <ControlButtons showRemainingButtons="true" close="props.close"/>
+            <ControlButtons t-if="pos.get_order()" showRemainingButtons="true" close="props.close"/>
         </Dialog>
     `;
     static props = {
         close: Function,
     };
+
+    setup() {
+        this.pos = usePos();
+    }
 }
