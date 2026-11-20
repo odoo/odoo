@@ -42,6 +42,8 @@
     <field name="arch" type="xml">
         <form js_class="page_properties_dialog_form">
             <group class="mt-4">
+                <!-- Old URLs are redirected to the new slug by the routing -->
+                <field name="seo_name" string="Custom URL" invisible="not can_edit_seo_name" placeholder="Default name of the record"/>
                 <label for="is_in_menu" string="In Menu"/>
                 <div class="o_row">
                     <field name="is_in_menu" widget="boolean_toggle"/>
@@ -120,7 +122,6 @@
 
             <field name="website_indexed"/>
             <field name="is_in_menu" string="Is In Main Menu"/>
-            <field name="is_seo_optimized"/>
             <field name="is_published" invisible="publish_on and is_published"/>
             <field name="parent_id" widget="many2one" optional="show"/>
             <field name="publish_on" string="Scheduled" invisible="not publish_on"/>
@@ -135,6 +136,9 @@
 
             <field name="website_id" groups="website.group_multi_website"/>
 
+            <field name="is_seo_optimized" column_invisible="True"/>
+            <button name="action_optimize_seo" type="object" string="SEO" title="SEO is optimized" icon="check_circle" class="text-success" invisible="not is_seo_optimized"/>
+            <button name="action_optimize_seo" type="object" string="SEO" title="SEO needs your attention" icon="warning" class="text-warning" invisible="is_seo_optimized"/>
             <button name="action_page_debug_view" type="object" title="Settings" icon="bug_report" icon_class="oi-lg" groups="base.group_no_one"/>
         </list>
     </field>
@@ -194,6 +198,7 @@
             <filter string="Tracked" name="tracked" domain="[('track', '=', True)]"/>
             <filter string="Not tracked" name="not_tracked" domain="[('track', '=', False)]"/>
             <separator/>
+            <filter string="SEO optimized" name="seo_optimized" domain="[('is_seo_optimized', '=', True)]"/>
             <filter string="Not SEO optimized" name="not_seo_optimized" domain="[('is_seo_optimized', '=', False)]"/>
         </search>
     </field>

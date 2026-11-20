@@ -35,6 +35,7 @@ import { getScrollingElement } from "@web/core/utils/scrolling";
 import { redirect } from "@web/core/utils/urls";
 import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
 import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
+import { OptimizeSEODialog } from "@website/components/dialog/seo";
 import { ResourceEditor } from "@website/components/resource_editor/resource_editor";
 import { CreatePageMessage } from "./create_page_message";
 import { isHTTPSorNakedDomainRedirection } from "./utils";
@@ -55,6 +56,7 @@ export class WebsiteBuilderClientAction extends Component {
         ...standardActionServiceProps,
         editTranslations: t.boolean().optional(),
         enableEditor: t.boolean().optional(),
+        optimizeSeo: t.boolean().optional(),
         path: t.string().optional(),
         websiteId: t.or([t.number(), t.literal(false)]).optional(),
     });
@@ -63,6 +65,7 @@ export class WebsiteBuilderClientAction extends Component {
         return {
             editTranslations: action.params?.edit_translations || false,
             enableEditor: action.params?.enable_editor || false,
+            optimizeSeo: action.params?.optimize_seo || false,
             path: action.params?.path,
             websiteId: action.params?.website_id || false,
         };
@@ -153,6 +156,8 @@ export class WebsiteBuilderClientAction extends Component {
             const edition = !!(this.enableEditor || this.editTranslations);
             if (edition) {
                 this.onEditPage();
+            } else if (this.props.optimizeSeo) {
+                this.openOptimizeSeoDialog();
             }
             if (!this.ui.isSmall) {
                 // preload builder and snippets so clicking on "edit" is faster
@@ -323,6 +328,13 @@ export class WebsiteBuilderClientAction extends Component {
             params.forcedURL = this.websiteService.currentLocation;
         }
         this.dialog.add(AddPageDialog, params);
+    }
+
+    async openOptimizeSeoDialog() {
+        await this.iframeLoaded;
+        if (this.websiteService.currentWebsite.metadata.canOptimizeSeo) {
+            this.dialog.add(OptimizeSEODialog);
+        }
     }
 
     async onEditPage() {

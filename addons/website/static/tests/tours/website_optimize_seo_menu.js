@@ -131,3 +131,43 @@ registerWebsitePreviewTour(
         },
     ]
 );
+
+registerWebsitePreviewTour("website_optimize_seo_headings_and_url", {}, () => [
+    ...openSeoModal(),
+    {
+        content: "The skipped heading level is reported in the overview",
+        trigger: ".oe_seo_configuration .o_seo_overview .alert-warning:contains('Headings')",
+    },
+    {
+        content: "The skipped heading level is reported in the content checks",
+        trigger:
+            ".oe_seo_configuration .o_seo_headings_issues:contains('Heading elements should appear in a sequentially-descending order')",
+    },
+    {
+        content: "There is only one H1, which is not reported",
+        trigger: ".oe_seo_configuration .o_seo_headings_issues:not(:contains('H1'))",
+    },
+    {
+        content: "The redirection is only proposed once the URL changes",
+        trigger: ".oe_seo_configuration:not(:has(#website_redirect_old_url))",
+    },
+    {
+        content: "Change the URL of the page",
+        trigger: ".oe_seo_configuration #website_page_url",
+        run: "edit /seo-headings-new",
+    },
+    {
+        content: "Redirect the old URL",
+        trigger: ".oe_seo_configuration #website_redirect_old_url",
+        run: "click",
+    },
+    {
+        content: "The redirection is permanent by default",
+        trigger: ".oe_seo_configuration select:value(301)",
+    },
+    ...saveSeoModal(),
+    {
+        content: "The page is reloaded",
+        trigger: ":iframe #wrap h1:contains('Title')",
+    },
+]);

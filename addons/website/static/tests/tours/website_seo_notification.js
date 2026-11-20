@@ -7,7 +7,7 @@ import {
 } from "@website/js/tours/tour_utils";
 
 registerWebsitePreviewTour("website_seo_notification", {}, () => [
-    // Part one checks that the SEO notification is displayed when the page title is not set.
+    // Part one checks that the SEO notification is displayed when the page description is not set.
     {
         content: "Open new page menu",
         trigger: ".o_menu_systray .o_new_content_container > button",
@@ -50,7 +50,7 @@ registerWebsitePreviewTour("website_seo_notification", {}, () => [
     },
     {
         content: "Check the SEO notification is displayed",
-        trigger: ".o_notification_manager .o_notification:contains('Page title not set.')",
+        trigger: ".o_notification_manager .o_notification:contains('Page description not set.')",
     },
     {
         trigger: "body:not(:has(.o_notification_manager .o_notification))",
