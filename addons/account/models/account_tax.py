@@ -4230,6 +4230,7 @@ class AccountTax(models.Model):
                         if sub_tax_data['tax'].price_include
                     )
                 ) / (base_line['quantity'] or 1.0),
+                discount=0.0,
                 tax_details=second_tax_details,
                 _removed_tax_data=tax_data_to_remove,
             )
