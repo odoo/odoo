@@ -45,6 +45,7 @@ import { OPEN_DELAY, SHOW_AFTER_DELAY } from "@web/core/tooltip/tooltip_plugin";
 import { range } from "@web/core/utils/numbers";
 import { fontSizeItems } from "../src/main/font/font_size_plugin";
 import { Plugin } from "../src/plugin";
+import { signal } from "@odoo/owl";
 import { convertNumericToUnit, getCSSVariableValue, getHtmlStyle } from "../src/utils/formatting";
 import { setupEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
@@ -310,6 +311,51 @@ test("a toolbar button with opensUi does not restore the focus to the editable",
     await contains(".o-we-toolbar .btn[name='test_btn']").click();
     expect(el).not.toBeFocused();
     expect(".o-we-toolbar .btn[name='test_btn']").toBeFocused();
+});
+
+test("a toolbar button opening a popup announces it, and references it while open", async () => {
+    const popupId = signal(null);
+    class TestPlugin extends Plugin {
+        static id = "TestPlugin";
+        resources = {
+            user_commands: { id: "test_cmd", run: () => popupId.set("test-popup") },
+            toolbar_groups: withSequence(24, { id: "test_group" }),
+            toolbar_items: [
+                {
+                    id: "test_btn",
+                    groupId: "test_group",
+                    commandId: "test_cmd",
+                    description: "Test Button",
+                    icon: "square",
+                    namespaces: ["compact", "expanded"],
+                    opensUi: true,
+                    popup: "dialog",
+                    popupId: () => popupId(),
+                },
+            ],
+        };
+    }
+    await setupEditor("<p>[test]</p>", { config: { includePlugins: [TestPlugin] } });
+    const button = ".o-we-toolbar .btn[name='test_btn']";
+    await waitFor(button);
+    expect(button).toHaveAttribute("aria-haspopup", "dialog");
+    expect(button).toHaveAttribute("aria-expanded", "false");
+    expect(button).not.toHaveAttribute("aria-controls");
+    expect(button).not.toHaveClass("active");
+
+    await contains(button).click();
+    expect(button).toHaveAttribute("aria-expanded", "true");
+    expect(button).toHaveAttribute("aria-controls", "test-popup");
+    expect(button).toHaveClass("active");
+
+    popupId.set(null);
+    await animationFrame();
+    expect(button).toHaveAttribute("aria-expanded", "false");
+    expect(button).not.toHaveAttribute("aria-controls");
+
+    // Buttons that do not open a popup are not concerned.
+    expect(".o-we-toolbar .btn[name='bold']").not.toHaveAttribute("aria-haspopup");
+    expect(".o-we-toolbar .btn[name='bold']").not.toHaveAttribute("aria-expanded");
 });
 
 test.tags("desktop");

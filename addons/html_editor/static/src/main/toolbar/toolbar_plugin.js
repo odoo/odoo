@@ -46,6 +46,11 @@ import { removeStyle } from "@html_editor/utils/dom";
  * @property {(selection: EditorSelection, nodes: Node[]) => boolean} [isActive]
  * @property {(selection: EditorSelection, nodes: Node[]) => boolean} [isDisabled]
  * @property {boolean} [opensUi] The button opens some UI (dialog, popover...) that takes the focus
+ * @property {"dialog" | "listbox" | "menu"} [popup] The role of the popup the
+ * button opens, announced through `aria-haspopup`
+ * @property {() => string | undefined} [popupId] The id of the popup while it
+ * is open, referenced by the button's `aria-controls`; marks the button
+ * `aria-expanded` meanwhile. Read on render, so it should be reactive.
  *
  * @typedef {Object} ToolbarComponentItem
  * Adds a custom component to the toolbar.
@@ -76,6 +81,8 @@ import { removeStyle } from "@html_editor/utils/dom";
  * @property {(selection: EditorSelection, nodes: Node[]) => boolean} [isActive]
  * @property {(selection: EditorSelection, nodes: Node[]) => boolean} [isDisabled]
  * @property {boolean} [opensUi]
+ * @property {"dialog" | "listbox" | "menu"} [popup]
+ * @property {() => string | undefined} [popupId]
  *
  * @typedef {Object} ToolbarComponentButton
  * Adds a custom component to the toolbar (processed version with required fields).
@@ -555,7 +562,16 @@ export class ToolbarPlugin extends Plugin {
                         ...(button.Component
                             ? pick(button, "Component", "props")
                             : {
-                                  ...pick(button, "run", "icon", "iconClass", "text", "opensUi"),
+                                  ...pick(
+                                      button,
+                                      "run",
+                                      "icon",
+                                      "iconClass",
+                                      "text",
+                                      "opensUi",
+                                      "popup",
+                                      "popupId"
+                                  ),
                                   isActive: !!button.isActive?.(selection, targetedNodes),
                               }),
                     })),
