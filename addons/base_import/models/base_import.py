@@ -423,9 +423,9 @@ class Base_ImportImport(models.TransientModel):
         book = xlrd.open_workbook(file_contents=self.file.content)
         sheets = options['sheets'] = book.sheet_names()
         sheet = options['sheet'] = options.get('sheet') or sheets[0]
-        return self._read_xls_book(book, sheet)
+        return self._read_xls_book(book, sheet, options.get('_html_columns', set()))
 
-    def _read_xls_book(self, book, sheet_name):
+    def _read_xls_book(self, book, sheet_name, html_columns=()):
         import xlrd  # noqa: PLC0415
         sheet = book.sheet_by_name(sheet_name)
         rows = []
@@ -460,7 +460,7 @@ class Base_ImportImport(models.TransientModel):
                         }
                     )
                 else:
-                    if cell.ctype == xlrd.XL_CELL_TEXT and isinstance(cell.value, str):
+                    if colx - 1 in html_columns and cell.ctype == xlrd.XL_CELL_TEXT and isinstance(cell.value, str):
                         values.append(cell.value.replace("\n", "<br/>"))
                     else:
                         values.append(cell.value)

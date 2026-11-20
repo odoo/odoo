@@ -471,6 +471,21 @@ class TestPreview(TransactionCase):
         ])
         self.assertEqual(result['preview'], [['foo', 'bar', 'qux'], ['1', '3', '5'], ['2', '4', '6']])
 
+    def test_xls_multiline_text_in_char_field(self):
+        """ Line breaks in a text cell of an .xls file must be kept as-is
+        when imported in a non-HTML field (they are only converted to <br/>
+        for HTML fields). """
+        file_content = self.file_read('test_import_export/data/test_import_multiline.xls')
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'import.preview',
+            'file': file_content,
+            'file_type': 'application/vnd.ms-excel',
+        })
+        result = import_wizard.execute_import(['name', 'somevalue'], [], {'has_headers': True})
+        self.assertFalse(result['messages'])
+        record = self.env['import.preview'].browse(result['ids'])
+        self.assertEqual(record.name, "first line\nsecond line")
+
     def test_xlsx_success(self):
         file_content = self.file_read('test_import_export/data/test_import.xlsx')
         import_wizard = self.env['base_import.import'].create({
