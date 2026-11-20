@@ -201,7 +201,7 @@ class ResConfigSettings(models.TransientModel):
 
                 {   'default': [('default_foo', 'model', 'foo'), ...],
                     'group':   [('group_bar', [browse_group], browse_implied_group), ...],
-                    'module':  [('module_baz', browse_module), ...],
+                    'module':  ir.module.module(...),  # modules of the module_baz fields
                     'config':  [('config_qux', 'my.parameter'), ...],
                     'other':   ['other_field', ...],
                 }
