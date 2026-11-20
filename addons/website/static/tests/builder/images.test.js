@@ -200,7 +200,7 @@ test("pasted/dropped images are converted to attachments on save in website edit
 
     // Save and check if image has been saved as attachment
     await contains(".o_hb_snippets_top_actions button:contains(Save)").click();
-    expect.verifySteps(["add_data", "save"]);
+    await expect.waitForSteps(["add_data", "save"]);
 });
 
 test("pasted/dropped images are converted to attachments on snippet save", async () => {
