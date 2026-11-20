@@ -696,12 +696,23 @@ class Clickbot {
         }
         await this._testView(viewType);
         this._stats.testedViews++;
-        if (this.state.light === true) {
+        // Light offline run: make sure a view usable offline (list or kanban) is visited
+        if (
+            this.state.light === true &&
+            (!this.state.offline || ["list", "kanban"].includes(viewType))
+        ) {
             return;
         }
-        const switchButtons = document.querySelectorAll(
-            "nav.o_cp_switch_buttons > button.o_switch_view:not(.active):not(.o_map)"
-        );
+        const switchButtons =
+            this.state.light === true
+                ? [
+                      ...document.querySelectorAll(
+                          "nav.o_cp_switch_buttons > button.o_switch_view:is(.o_kanban, .o_list)"
+                      ),
+                  ].slice(0, 1)
+                : document.querySelectorAll(
+                      "nav.o_cp_switch_buttons > button.o_switch_view:not(.active):not(.o_map)"
+                  );
         for (const switchButton of switchButtons) {
             // Only way to get the viewType from the switchButton
             const viewType = [...switchButton.classList]
