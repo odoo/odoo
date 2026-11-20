@@ -2,7 +2,7 @@
 <templates>
 
     <t t-name="sale.ExtraTotalsField">
-        <table t-if="this.props.record.data[this.props.name].length" class="float-end text-end">
+        <table t-if="this.props.record.data[this.props.name].length" class="w-100">
             <tbody>
                 <t t-foreach="this.groups" t-as="group" t-key="group_index">
                     <tr t-if="group_index > 0">
@@ -10,10 +10,10 @@
                     </tr>
                     <t t-foreach="group.lines" t-as="line" t-key="line_index">
                         <tr>
-                            <td class="o_td_label">
+                            <td class="o_td_label w-100 text-start">
                                 <label class="o_form_label mb-0 text-muted" t-out="line.label"/>
                             </td>
-                            <td class="o_list_monetary">
+                            <td class="o_list_monetary ps-3 text-muted">
                                 <span t-if="line.is_not_monetary" t-out="line.value"/>
                                 <span t-else="" t-out="this.formatMonetary(line.value)"/>
                             </td>
