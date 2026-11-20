@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import odoo
+from datetime import timedelta
 
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 
@@ -140,3 +141,41 @@ class TestReportPoSOrder(TestPoSCommon):
         self.assertEqual(reports[0].margin, 150)
         self.assertEqual(reports[0].price_subtotal_excl, 150)
         self.assertEqual(reports[0].price_total, 150)
+
+    def test_report_pos_order_future_preset_order_config(self):
+        """A future preset order detached from its session on closing keeps its point of sale in the report."""
+        product1 = self.create_product('Product 1', self.categ_basic, 150)
+        self.open_new_session()
+        session = self.pos_session
+
+        def create_order(preset_time):
+            return self.env['pos.order'].create({
+                'session_id': session.id,
+                'lines': [(0, 0, {
+                    'name': "OL/0001",
+                    'product_id': product1.id,
+                    'price_unit': 150,
+                    'qty': 1.0,
+                    'price_subtotal': 150,
+                    'price_subtotal_incl': 150,
+                })],
+                'amount_total': 150.0,
+                'amount_tax': 0.0,
+                'amount_paid': 0.0,
+                'amount_return': 0.0,
+                'preset_time': preset_time,
+            })
+
+        future_order = create_order(odoo.fields.Datetime.now() + timedelta(days=2))
+        cancelled_order = create_order(odoo.fields.Datetime.now() - timedelta(days=2))
+        cancelled_order.action_pos_order_cancel()
+
+        session.close_session_from_ui()
+        self.assertEqual(session.state, 'closed')
+        self.assertFalse(future_order.session_id)
+
+        reports = self.env['report.pos.order'].sudo().search([('product_id', '=', product1.id)])
+        self.assertRecordValues(reports.sorted(lambda r: r.order_id.id), [
+            {'order_id': future_order.id, 'session_id': False, 'config_id': self.config.id},
+            {'order_id': cancelled_order.id, 'session_id': session.id, 'config_id': self.config.id},
+        ])
