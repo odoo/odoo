@@ -486,3 +486,43 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         rewards = order._get_claimable_rewards()[coupon]
         msg = "The discount reward should still be applicable as only the shipping one was claimed."
         self.assertEqual(rewards, discount_reward, msg)
+
+    def test_free_shipping_max_amount_foreign_currency(self):
+        """ The maximum amount of a free shipping reward is expressed in the program
+        currency and must be converted to the currency of the order.
+        """
+        foreign_currency = self.setup_other_currency('EUR', rates=[('2000-01-01', 2.0)])
+        foreign_pricelist = self._create_pricelist(currency_id=foreign_currency.id)
+        program = self.env['loyalty.program'].create({
+            'name': "Free shipping (max 10 USD)",
+            'trigger': 'auto',
+            'rule_ids': [Command.create({'minimum_amount': 0})],
+            'reward_ids': [Command.create({
+                'reward_type': 'shipping',
+                'discount_max_amount': 10.0,
+            })],
+        })
+        self.assertEqual(program.currency_id, self.env.company.currency_id)
+        carrier = self.env['delivery.carrier'].create({
+            'name': "Fixed 20",
+            'delivery_type': 'fixed',
+            'fixed_price': 20.0,
+            'product_id': self.product_delivery_poste.id,
+        })
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'pricelist_id': foreign_pricelist.id,
+            'order_line': [Command.create({'product_id': self.product_A.id})],
+        })
+        self.assertEqual(order.currency_id, foreign_currency)
+        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context(
+            default_order_id=order.id,
+            default_carrier_id=carrier.id,
+        ))
+        delivery_wizard.save().button_confirm()
+        delivery_line = order.order_line.filtered('is_delivery')
+        self.assertEqual(delivery_line.price_unit, 40.0, "20 USD is 40 EUR")
+
+        self._auto_rewards(order, program)
+        reward_line = order.order_line.filtered(lambda line: line.reward_id.reward_type == 'shipping')
+        self.assertEqual(reward_line.price_unit, -20.0, "10 USD is 20 EUR")
