@@ -43,6 +43,7 @@ export class CodeBlockPlugin extends Plugin {
         ],
         shorthands: [
             {
+                label: _t("Syntax Highlighting"),
                 literals: ["```"],
                 commandId: "setTagPre",
             },

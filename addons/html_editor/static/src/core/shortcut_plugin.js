@@ -1,3 +1,4 @@
+import { _t } from "@web/core/l10n/translation";
 import { Plugin, isValidTargetForDomListener } from "../plugin";
 import { leftLeafOnlyNotBlockPath } from "@html_editor/utils/dom_state";
 import { omit } from "@web/core/utils/objects";
@@ -57,18 +58,21 @@ export class ShortCutPlugin extends Plugin {
         ],
         shorthands: [
             {
+                label: _t("Right Arrow"),
                 literals: ["->"],
                 commandId: "replaceSymbol",
                 commandParams: { symbol: "\u2192" }, //→
                 inline: true,
             },
             {
+                label: _t("Left Arrow"),
                 literals: ["<-"],
                 commandId: "replaceSymbol",
                 commandParams: { symbol: "\u2190" }, //←
                 inline: true,
             },
             {
+                label: _t("Rightwards Arrow"),
                 literals: ["=>"],
                 commandId: "replaceSymbol",
                 commandParams: { symbol: "\u2B95" }, //⮕
@@ -105,6 +109,9 @@ export class ShortCutPlugin extends Plugin {
             hotkeyService.registerIframe({ contentWindow: this.window });
         }
         for (const shortcut of this.getResource("shortcuts")) {
+            if (!shortcut.commandId) {
+                continue;
+            }
             const command = this.dependencies.userCommand.getCommand(shortcut.commandId);
             this.addShortcut(
                 shortcut.hotkey,
