@@ -2,11 +2,11 @@
 <odoo>
     <template id="report_invoice_document" inherit_id="account.report_invoice_document">
         <xpath expr="//div[@id='qrcode']" position="after">
-            <div t-if="o._l10n_pk_edi_pos_qr()" name="l10n_pk_edi_pos_qr_code">
-                <p>
-                    <strong class="text-center">FBR QR Code</strong>
-                    <img class="d-block" t-att-src="o._l10n_pk_edi_pos_qr_code_src()"/>
-                </p>
+            <div t-if="o._l10n_pk_edi_pos_qr()" name="l10n_pk_edi_pos_qr_code" class="d-flex mb-3 avoid-page-break-inside">
+                <div class="qrcode me-3">
+                    <img t-att-src="o._l10n_pk_edi_pos_qr_code_src()"/>
+                </div>
+                <img src="/l10n_pk_edi_pos/static/src/img/img_fbr_pos.png" alt="FBR POS Invoicing System" style="width: 1in; height: 1in; object-fit: contain;"/>
             </div>
         </xpath>
     </template>

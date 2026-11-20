@@ -1,22 +1,104 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <data>
+        <template id="l10n_pk_edi_pos.pos_order_receipt" inherit_id="point_of_sale.pos_order_receipt">
+            <xpath expr="//table[@t-foreach='lines']" position="attributes">
+                <attribute name="t-if" add="not conditions.get('l10n_pk_edi_pos_enabled') or conditions['basic_receipt']" separator="and"/>
+            </xpath>
+            <xpath expr="//table[@t-foreach='lines']" position="before">
+                <table t-if="conditions.get('l10n_pk_edi_pos_enabled') and not conditions['basic_receipt']" class="w-100 l10n-pk-edi-pos-lines" name="l10n_pk_edi_pos_lines">
+                    <thead>
+                        <tr class="text-small">
+                            <th class="text-start" style="width: 34%">Description</th>
+                            <th class="text-end" style="width: 18%">GST Rate</th>
+                            <th class="text-end" style="width: 10%">QTY</th>
+                            <th class="text-end" style="width: 16%">GST</th>
+                            <th class="text-end" style="width: 22%">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="lines" t-as="line">
+                            <tr t-if="not line['l10n_pk_edi_pos_is_service_fee']" class="lines text-normal">
+                                <td class="text-start top" t-att-class="{'ps-3': line['combo_parent_id']}">
+                                    <t t-call="point_of_sale.pos_orderline_receipt_information"/>
+                                </td>
+                                <td class="text-end top"><t t-if="not len(line['combo_line_ids'])" t-out="line['l10n_pk_edi_pos_tax_rate']"/></td>
+                                <td class="text-end top" t-out="line['qty']"/>
+                                <td class="text-end top font-monospace"><t t-if="not len(line['combo_line_ids'])" t-out="line['l10n_pk_edi_pos_tax_amount']"/></td>
+                                <td class="text-end top font-monospace"><t t-if="not len(line['combo_line_ids'])" t-out="line['l10n_pk_edi_pos_total']"/></td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </xpath>
+            <xpath expr="//tr[@name='taxes_line']/following-sibling::tr[1]" position="attributes">
+                <attribute name="t-if" add="not conditions.get('l10n_pk_edi_pos_enabled')" separator="and"/>
+            </xpath>
+            <xpath expr="//td[@name='rounding']/.." position="before">
+                <tr t-if="conditions.get('l10n_pk_edi_pos_enabled') and extra_data['l10n_pk_edi_pos_service_fee']">
+                    <td class="text-start w-70" name="l10n_pk_edi_pos_service_fee">POS Service Fee:</td>
+                    <td class="text-end w-30 font-monospace" t-out="extra_data['l10n_pk_edi_pos_service_fee']"/>
+                </tr>
+            </xpath>
+            <xpath expr="//t[@name='payments']" position="before">
+                <tr t-if="conditions.get('l10n_pk_edi_pos_enabled')" class="text-bold">
+                    <td class="text-start w-70" name="l10n_pk_edi_pos_received">Received:</td>
+                    <td class="text-end w-30 font-monospace" t-out="extra_data['l10n_pk_edi_pos_received']"/>
+                </tr>
+            </xpath>
+        </template>
+
+        <template id="l10n_pk_edi_pos.pos_order_receipt_style" inherit_id="point_of_sale.pos_order_receipt_style">
+            <xpath expr="//style" position="inside">
+                #pos-receipt .l10n-pk-edi-pos-lines .name { font-size: inherit !important; line-height: inherit !important; }
+                #pos-receipt .l10n-pk-edi-pos-lines .price-unit { font-size: 0.8em !important; line-height: 1.4 !important; }
+            </xpath>
+        </template>
+
         <template id="l10n_pk_edi_pos.pos_order_receipt_header" inherit_id="point_of_sale.pos_order_receipt_header">
             <div name="header" position="before">
                 <div class="text-center" t-if="order['l10n_pk_edi_pos_error']">RECEIPT WITHOUT FISCAL VALUE</div>
             </div>
+            <span name="ticket" position="attributes">
+                <attribute name="t-if" add="not conditions.get('l10n_pk_edi_pos_enabled')" separator="and"/>
+            </span>
+            <span name="ticket" position="after">
+                <span t-if="conditions.get('l10n_pk_edi_pos_enabled')" name="l10n_pk_edi_pos_invoice_number_label">POS Invoice Number:</span>
+            </span>
+        </template>
+
+        <template id="l10n_pk_edi_pos.pos_orderline_receipt_information" inherit_id="point_of_sale.pos_orderline_receipt_information">
+            <xpath expr="//div[hasclass('no-discount-price')]" position="attributes">
+                <attribute name="t-if" add="not conditions.get('l10n_pk_edi_pos_enabled')" separator="and"/>
+            </xpath>
+            <xpath expr="//div[hasclass('no-discount-price')]" position="after">
+                <div t-if="conditions.get('l10n_pk_edi_pos_enabled') and line['discount'] and not conditions['basic_receipt'] and not line['combo_parent_id']" class="text-small no-discount-price">
+                    <t t-out="line['discount']"/>% discount
+                </div>
+            </xpath>
         </template>
 
         <template id="l10n_pk_edi_pos.pos_order_receipt_footer" inherit_id="point_of_sale.pos_order_receipt_footer">
             <div name="footer" position="after">
                 <t t-if="order['l10n_pk_edi_pos_qr']">
                     <hr class="mt-1 mb-0"/>
-                    <div class="pos-receipt-order-data mb-2">
-                        FBR QR code
+                    <div class="pos-receipt-order-data mt-2" name="l10n_pk_edi_pos_invoice_number">
+                        <div>FBR Invoice #</div>
+                        <div t-out="order['l10n_pk_edi_pos_invoice_number']"/>
                     </div>
-                    <div class="mt-3 l10n-pk-edi-pos-qr">
-                        <img t-att-src="extra_data['l10n_pk_edi_pos_qr']" class="pos-receipt-qrcode"/>
-                    </div>
+                    <table class="w-100 mt-2">
+                        <tbody>
+                            <tr>
+                                <td class="w-50 text-center">
+                                    <img t-att-src="image['l10n_pk_edi_pos_fbr_logo']" alt="FBR POS Invoicing System" style="width: 44%"/>
+                                </td>
+                                <td class="w-50 text-center">
+                                    <img t-att-src="extra_data['l10n_pk_edi_pos_qr']" class="pos-receipt-qrcode" style="width: 52%"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="mt-2 mb-2 text-small">Verify this invoice through FBR Tax Asaan Mobile App or SMS at 9966 and win exciting prizes in draw.</div>
                 </t>
             </div>
         </template>

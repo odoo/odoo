@@ -16,10 +16,9 @@ class AccountMove(models.Model):
         encoded_params = urlencode(
             {
                 'barcode_type': 'QR',
-                'quiet': 0,
                 'value': self._l10n_pk_edi_pos_qr(),
-                'width': 200,
-                'height': 200,
+                'width': 96,
+                'height': 96,
             }
         )
         return f"/report/barcode/?{encoded_params}"
