@@ -171,7 +171,7 @@ class PdpFlow(models.Model):
                 'report_type': last_sent_flow.report_type,
             }
         transaction = move if report_type == 'transaction' else move._l10n_fr_pdp_get_matched_transactions()[0]
-        period_data = self._get_period_flow_properties(move.company_id, move.date, report_type)
+        period_data = self._get_period_flow_properties(move.company_id, move.invoice_date or move.date, report_type)
         operation_type = 'purchase' if transaction._l10n_fr_pdp_is_purchase() else 'sale'
         return {
             'company_id': move.company_id.id,
@@ -188,7 +188,7 @@ class PdpFlow(models.Model):
         """
         scope_params = self._get_scope_params_for_move(move)
         report_type = scope_params['report_type']
-        period_data = self._get_period_flow_properties(move.company_id, move.date, report_type)
+        period_data = self._get_period_flow_properties(move.company_id, move.invoice_date or move.date, report_type)
         existing_flows = self.search(
             domain=[(key, '=', value) for key, value in scope_params.items()],
             order='id',
@@ -509,8 +509,10 @@ class PdpFlow(models.Model):
         moves = self.env['account.move'].search_fetch(
                 domain=[
                     ('company_id', '=', self.company_id.id),
-                    ('date', '>=', self.period_start),
-                    ('date', '<=', self.period_end),
+                    # Moves are reported in the period of their invoice date, or of their date when they have none.
+                    '|',
+                    '&', ('invoice_date', '>=', self.period_start), ('invoice_date', '<=', self.period_end),
+                    '&', '&', ('invoice_date', '=', False), ('date', '>=', self.period_start), ('date', '<=', self.period_end),
                     ('state', '=', 'posted'),
                     ('l10n_fr_pdp_flow_10_report_type', '=', self.report_type),
                     ('l10n_fr_pdp_flow_10_operation_type', '=', self.operation_type),
