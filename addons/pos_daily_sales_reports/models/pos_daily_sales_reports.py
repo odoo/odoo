@@ -317,10 +317,14 @@ class ReportSaleDetails(models.AbstractModel):
         def get_total_discount(self):
             amount = 0
             for line in self.env['pos.order.line'].search([('order_id', 'in', self.order_ids.ids), ('discount', '>', 0)]):
-                normal_price = line.qty * line.price_unit
-                normal_price = normal_price + (normal_price / 100 * line.tax_ids.amount)
-                amount += normal_price - line.price_subtotal_incl
-
+                taxes = line.tax_ids.compute_all(
+                    line.price_unit,
+                    line.order_id.currency_id,
+                    line.qty,
+                    product=line.product_id,
+                    partner=line.order_id.partner_id,
+                )
+                amount += taxes["total_included"] - line.price_subtotal
             return amount
 
         def _get_invoice_total_list(self):
