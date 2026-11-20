@@ -17,6 +17,11 @@ class SmsTracker(models.Model):
 
     mailing_trace_id = fields.Many2one('mailing.trace', ondelete='cascade', index='btree_not_null')
 
+    def _lock_tracking_records(self):
+        super()._lock_tracking_records()
+        self._lock_records(self.mailing_trace_id)
+        self._lock_records(self.mailing_trace_id.mass_mailing_id)
+
     def _action_update_from_provider_error(self, provider_error):
         error_status, failure_type, failure_reason = super()._action_update_from_provider_error(provider_error)
         self._update_sms_traces(error_status or 'error', failure_type=failure_type, failure_reason=failure_reason)
