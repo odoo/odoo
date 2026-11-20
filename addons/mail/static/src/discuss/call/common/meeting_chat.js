@@ -4,7 +4,7 @@ import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { Typing } from "@mail/discuss/typing/common/typing";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
-import { Component, proxy, signal, types, useProps } from "@odoo/owl";
+import { Component, proxy, signal, types, useOnChange, useProps } from "@odoo/owl";
 
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { useService } from "@web/core/utils/hooks";
@@ -25,6 +25,16 @@ export class MeetingChat extends Component {
         this.state = proxy({ jumpPresent: 0 });
         this.panelContentRef = signal.ref();
         this.isMobileOS = isMobileOS();
+        useOnChange(
+            () => [this.channel],
+            (channel) => {
+                if (channel && channel.thread.pinned_message_count === undefined) {
+                    channel.thread
+                        .fetchPinnedMessagesData(["pinned_message_count"])
+                        .catch(() => {});
+                }
+            }
+        );
         this.ancestors = useAncestors({ inMeetingChat: true });
     }
 

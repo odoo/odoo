@@ -304,11 +304,11 @@ export class Thread extends Record {
 
     /** @param {string[]} requestList */
     fetchPinnedMessagesData(requestList) {
-        return this.store.fetchStoreData("mail.thread", {
-            thread_model: this.model,
-            thread_id: this.id,
-            request_list: requestList,
-        });
+        // guests and portal members can't use "mail.thread"
+        return this.store.fetchStoreData(
+            this.channel ? "/discuss/channel/pinned_messages" : "mail.thread",
+            { ...this.getFetchParams(), request_list: requestList }
+        );
     }
 
     async fetchPinnedMessages() {
