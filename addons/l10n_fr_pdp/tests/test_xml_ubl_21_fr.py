@@ -217,6 +217,23 @@ class TestL10nFrPdpXml(TestL10nFrPdpCommon):
         self.assertEqual(bill.partner_id, other_establishment)
         self.assertEqual(bill.partner_bank_id.partner_id, other_establishment)
 
+    def test_import_suppliers_with_platform_routing_address(self):
+        """ An AP may send the bills of all its clients with its own electronic address
+        as the one of the seller: this address must not be used to identify the suppliers. """
+        # The first supplier sends an invalid VAT: its partner is created without VAT.
+        supplier_1 = self._import_invoice_as_attachment_on('ubl_21_fr_in_invoice_platform_routing_address_1').partner_id
+        self.assertRecordValues(supplier_1, [{'name': 'FIRST PLATFORM SUPPLIER', 'vat': False}])
+
+        supplier_2 = self._import_invoice_as_attachment_on('ubl_21_fr_in_invoice_platform_routing_address_2').partner_id
+        self.assertRecordValues(supplier_1 + supplier_2, [
+            {'name': 'FIRST PLATFORM SUPPLIER', 'vat': False, 'peppol_eas': '0225', 'peppol_endpoint': '314159260'},
+            {'name': 'SECOND PLATFORM SUPPLIER', 'vat': 'FR47271828188', 'peppol_eas': '0225', 'peppol_endpoint': '271828188'},
+        ])
+
+        # Both suppliers are still retrieved on their next bills.
+        self.assertEqual(self._import_invoice_as_attachment_on('ubl_21_fr_in_invoice_platform_routing_address_1').partner_id, supplier_1)
+        self.assertEqual(self._import_invoice_as_attachment_on('ubl_21_fr_in_invoice_platform_routing_address_2').partner_id, supplier_2)
+
     def test_ubl_use_correct_vat(self):
         """Test that UBL use the foreign VAT when available, else the company VAT."""
         germany = self.env.ref("base.de")
