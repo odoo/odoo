@@ -65,17 +65,20 @@
                 option_name.translate="UTM Campaign"
                 attribute_rule="'visibilityValueUtmCampaignRule'"
                 save_attribute="'visibilityValueUtmCampaign'"
-                model="'utm.campaign'"/>
+                model="'utm.campaign'"
+                data_fields="['name']"/>
 		    <t t-call="website.snippet_options_conditional_visibility"
                 option_name.translate="UTM Medium"
                 attribute_rule="'visibilityValueUtmMediumRule'"
                 save_attribute="'visibilityValueUtmMedium'"
-                model="'utm.medium'"/>
+                model="'utm.medium'"
+                data_fields="['name']"/>
 		    <t t-call="website.snippet_options_conditional_visibility"
                 option_name.translate="UTM Source"
                 attribute_rule="'visibilityValueUtmSourceRule'"
                 save_attribute="'visibilityValueUtmSource'"
-                model="'utm.source'"/>
+                model="'utm.source'"
+                data_fields="['name']"/>
 		    <BuilderRow label.translate="Users" level="1" t-if="this.isActiveItem('visibility_conditional')" preview="false">
 		        <BuilderSelect dataAttributeAction="'visibilityValueLogged'">
 		            <BuilderSelectItem dataAttributeActionValue="'[{&quot;id&quot;:1,&quot;value&quot;:&quot;true&quot;}]'">Visible for Logged In</BuilderSelectItem>

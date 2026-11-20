@@ -177,7 +177,7 @@ describe("BuilderMany2One: exit editor when previewing", () => {
             testAction: class extends BuilderAction {
                 static id = "testAction";
                 apply({ editingElement, value }) {
-                    editingElement.textContent = JSON.parse(value).name;
+                    editingElement.textContent = JSON.parse(value).display_name;
                     editingElement.dataset.test = value;
                 }
                 getValue({ editingElement }) {

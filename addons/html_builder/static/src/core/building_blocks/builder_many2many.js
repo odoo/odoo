@@ -46,19 +46,16 @@ export class BuilderMany2Many extends Component {
         this.domState = useDomState(async (el) => {
             const selectionString = getValue(el);
             const selection = JSON.parse(selectionString || "[]");
-            const selectedWithMissingName = selection.filter(
-                (e) => !("display_name" in e && "name" in e)
-            );
+            const selectedWithMissingName = selection.filter((e) => !("display_name" in e));
             if (selectedWithMissingName.length) {
                 await this.searchModel.currentPromise();
                 const namedValues = await this.cachedModel.ormRead(
                     this.searchModel(),
                     selectedWithMissingName.map((e) => e.id),
-                    ["display_name", "name"]
+                    ["display_name"]
                 );
                 const nameMap = new Map(namedValues.map((e) => [e.id, e]));
                 for (const e of selectedWithMissingName) {
-                    e.name ||= nameMap.get(e.id).name;
                     e.display_name ||= nameMap.get(e.id).display_name;
                 }
             }

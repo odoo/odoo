@@ -57,7 +57,7 @@ test("many2many: find tag, select tag, unselect tag", async () => {
     expect("span.o-dropdown-item").toHaveCount(3);
     await contains("span.o-dropdown-item").click();
     expect(editableContent).toHaveInnerHTML(
-        `<div class="test-options-target" data-test="[{&quot;id&quot;:1,&quot;display_name&quot;:&quot;First&quot;,&quot;name&quot;:&quot;First&quot;}]">b</div>`
+        `<div class="test-options-target" data-test="[{&quot;id&quot;:1,&quot;display_name&quot;:&quot;First&quot;}]">b</div>`
     );
     expect("table tr").toHaveCount(1);
 
@@ -67,14 +67,14 @@ test("many2many: find tag, select tag, unselect tag", async () => {
     expect("span.o-dropdown-item").toHaveCount(2);
     await contains("span.o-dropdown-item").click();
     expect(editableContent).toHaveInnerHTML(
-        `<div class="test-options-target" data-test="[{&quot;id&quot;:1,&quot;display_name&quot;:&quot;First&quot;,&quot;name&quot;:&quot;First&quot;},{&quot;id&quot;:2,&quot;display_name&quot;:&quot;Second&quot;,&quot;name&quot;:&quot;Second&quot;}]">b</div>`
+        `<div class="test-options-target" data-test="[{&quot;id&quot;:1,&quot;display_name&quot;:&quot;First&quot;},{&quot;id&quot;:2,&quot;display_name&quot;:&quot;Second&quot;}]">b</div>`
     );
     expect("table tr").toHaveCount(2);
 
     await contains("button[data-icon='remove']").click();
     expect.verifySteps(["name_search", "name_search"]);
     expect(editableContent).toHaveInnerHTML(
-        `<div class="test-options-target" data-test="[{&quot;id&quot;:2,&quot;display_name&quot;:&quot;Second&quot;,&quot;name&quot;:&quot;Second&quot;}]">b</div>`
+        `<div class="test-options-target" data-test="[{&quot;id&quot;:2,&quot;display_name&quot;:&quot;Second&quot;}]">b</div>`
     );
     expect("table tr").toHaveCount(1);
     expect("table input").toHaveValue("Second");
@@ -127,7 +127,7 @@ test("many2many: async load", async () => {
     defWillLoad.resolve();
     await defDidApply.promise;
     expect(editableContent).toHaveInnerHTML(
-        `<div class="test-options-target" data-test="[{&quot;id&quot;:1,&quot;display_name&quot;:&quot;First&quot;,&quot;name&quot;:&quot;First&quot;}]">b</div>`
+        `<div class="test-options-target" data-test="[{&quot;id&quot;:1,&quot;display_name&quot;:&quot;First&quot;}]">b</div>`
     );
 });
 
