@@ -817,6 +817,42 @@ class TestSaleOrder(SaleCommon):
         self.assertEqual(so.order_line[0].price_unit, 1200)
         self.assertEqual(so.order_line[0].amount_to_invoice_at_date, 2400)
 
+    def test_copy_translations_reordered_lines(self):
+        """Duplicating an order keeps the translations of its lines on the matching lines,
+        even when the lines have been reordered."""
+        self.env['res.lang']._activate_lang('fr_FR')
+        note_field = self.env['ir.model.fields'].create({
+            'model_id': self.env['ir.model']._get_id('sale.order.line'),
+            'name': 'x_note',
+            'field_description': 'Note',
+            'ttype': 'char',
+            'translate': 'standard',
+        })
+        self.addCleanup(note_field.unlink)
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({'product_id': self.product.id, 'sequence': 10, 'x_note': note})
+                for note in ('A', 'B', 'C')
+            ],
+        })
+        line_a, line_b, line_c = order.order_line.sorted('id')
+
+        # Move line C to the top, and trigger the reload
+        line_c.sequence = 5
+        order.invalidate_recordset(['order_line'])
+
+        for line, note_FR in ((line_a, '1'), (line_b, '2'), (line_c, '3')):
+            line.with_context(lang='fr_FR').x_note = note_FR
+
+        copy = order.copy()
+
+        self.assertEqual(copy.order_line.mapped('x_note'), ['C', 'A', 'B'])
+        self.assertEqual(
+            copy.with_context(lang='fr_FR').order_line.mapped('x_note'),
+            ['3', '1', '2'],
+        )
+
 
 @tagged('post_install', '-at_install')
 class TestSaleOrderInvoicing(AccountTestInvoicingCommon, SaleCommon):
