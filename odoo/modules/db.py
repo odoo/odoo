@@ -38,7 +38,7 @@ from odoo.tools.misc import exec_pg_environ, find_pg_tool
 from odoo.tools.sql import quoted_identifier
 
 if typing.TYPE_CHECKING:
-    from odoo.sql_db import BaseCursor, Cursor
+    from odoo.sql_db import Cursor
 
 _logger = logging.getLogger(__name__)
 
@@ -200,7 +200,7 @@ class FunctionStatus(IntEnum):
     INDEXABLE = 2  # function is present and indexable (immutable)
 
 
-def has_unaccent(cr: BaseCursor) -> FunctionStatus:
+def has_unaccent(cr: Cursor) -> FunctionStatus:
     """ Test whether the database has function 'unaccent' and return its status.
 
     The unaccent is supposed to be provided by the PostgreSQL unaccent contrib
@@ -224,7 +224,7 @@ def has_unaccent(cr: BaseCursor) -> FunctionStatus:
     return FunctionStatus.INDEXABLE if result[0] == 'i' else FunctionStatus.PRESENT
 
 
-def has_trigram(cr: BaseCursor) -> bool:
+def has_trigram(cr: Cursor) -> bool:
     """ Test if the database has the a word_similarity function.
 
     The word_similarity is supposed to be provided by the PostgreSQL built-in
