@@ -17,7 +17,8 @@
                         <span class="payment-name">
                             <t t-out="line.displayName" /> <t t-out="line.currency.name" t-if="line.payment_method_id.availableCurrencies.length > 1" />
                         </span>
-                        <div class="payment-amount px-3">
+                        <span t-if="line.is_forced" class="badge text-bg-warning fs-6 ms-auto">Forced</span>
+                        <div class="payment-amount px-3" t-att-class="{ 'ms-auto': !line.is_forced }">
                             <PriceFormatter price="this.getFormattedPrice(line)" />
                         </div>
                     </div>

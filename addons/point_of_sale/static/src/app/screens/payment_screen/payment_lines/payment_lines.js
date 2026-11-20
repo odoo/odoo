@@ -194,6 +194,9 @@ export class PaymentScreenPaymentLines extends Component {
         else if (status === "done") {
             state.id = isRefund ? "refunded" : "paid";
             state.title = isRefund ? _t("Refund Successful") : _t("Payment Successful");
+            if (line.is_forced) {
+                state.title = _t("Payment forced");
+            }
         }
 
         // --- Refund available
