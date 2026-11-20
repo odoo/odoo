@@ -219,6 +219,37 @@ class PropertiesCase(TestPropertiesMixin):
             # missing 'type'
             self.message_1.attributes = [{'name': 'name', 'definition_changed': True}]
 
+    def test_properties_definition_copy(self):
+        """ The copy of a container keeps its definition, with new property names. """
+        discussion_copy = self.discussion_1.copy()
+
+        definition = self.discussion_1.attributes_definition
+        definition_copy = discussion_copy.attributes_definition
+        self.assertEqual(len(definition_copy), len(definition))
+
+        names = {d['name'] for d in definition}
+        names_copy = {d['name'] for d in definition_copy}
+        self.assertEqual(len(names_copy), len(definition))
+        self.assertFalse(names & names_copy, 'The property names must not be shared')
+
+        for property_definition, property_definition_copy in zip(definition, definition_copy):
+            self.assertEqual(
+                {k: v for k, v in property_definition.items() if k != 'name'},
+                {k: v for k, v in property_definition_copy.items() if k != 'name'},
+            )
+
+        # the original definition is untouched
+        self.assertEqual({d['name'] for d in self.discussion_1.attributes_definition}, names)
+
+        # the copy is not mixed up with the original container
+        message = self.env['test_orm.message'].create({
+            'name': 'Test Message',
+            'discussion': discussion_copy.id,
+            'author': self.user.id,
+        })
+        self.assertEqual(set(message.attributes), {d['name'] for d in definition_copy if 'default' in d})
+        self.assertFalse(names & set(message.attributes))
+
     def test_properties_field_parameters_raised(self):
         # check that the keys not valid for the given type are raised
         with self.assertRaises(ValueError):
