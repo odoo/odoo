@@ -42,14 +42,14 @@ class CrmLead(models.Model):
                 [
                     ('order_id', 'in', self.order_ids.ids),
                     ('is_service', '=', True),
-                    ('qty_delivered_method', 'in', ['timesheets', 'milestones', 'manual'])
+                    ('qty_delivered_method', 'in', ['timesheet', 'milestones', 'manual']),
                 ],
                 ['qty_delivered_method'],
                 ['id:recordset'],
             )
         )
         sale_line = self.env['sale.order.line']
-        if sols := (sale_lines_per_delivered_method.get('timesheets')
+        if sols := (sale_lines_per_delivered_method.get('timesheet')
                     or sale_lines_per_delivered_method.get('milestones')
                     or sale_lines_per_delivered_method.get('manual')):
             sale_line = sols[:1]
