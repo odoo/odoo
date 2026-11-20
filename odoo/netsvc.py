@@ -130,16 +130,17 @@ class PerfFilter(logging.Filter):
         return cursor_mode or '-'
 
     def filter(self, record):
-        if hasattr(threading.current_thread(), "query_count"):
-            query_count = threading.current_thread().query_count
-            query_time = threading.current_thread().query_time
-            perf_t0 = threading.current_thread().perf_t0
+        current_thread = threading.current_thread()
+        if hasattr(current_thread, "query_count") and not getattr(current_thread, "perf_info_done", False):
+            query_count = current_thread.query_count
+            query_time = current_thread.query_time
+            perf_t0 = current_thread.perf_t0
             remaining_time = time.time() - perf_t0 - query_time
             record.perf_info = '%s %s %s' % self.format_perf(query_count, query_time, remaining_time)
             if tools.config['db_replica_host'] is not False:
-                cursor_mode = threading.current_thread().cursor_mode
+                cursor_mode = current_thread.cursor_mode
                 record.perf_info = f'{record.perf_info} {self.format_cursor_mode(cursor_mode)}'
-            delattr(threading.current_thread(), "query_count")
+            current_thread.perf_info_done = True
         else:
             if tools.config['db_replica_host'] is not False:
                 record.perf_info = "- - - -"
