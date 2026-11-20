@@ -955,6 +955,29 @@ class TestHrEmployee(TestHrCommon):
             if presence_state == 'out_of_working_hour':
                 self.assertEqual(employees.ids, [out_working_emp.id])
 
+    def test_unusual_days_historical_flexible_calendar(self):
+        flex_calendar = self.env['resource.calendar'].create({
+            'name': 'Flexible Calendar',
+            'calendar_type': 'undefined',
+        })
+        employee = self.env['hr.employee'].create({
+            'name': 'Test Employee',
+            'date_version': date(2025, 1, 1),
+            'contract_date_start': date(2025, 1, 1),
+            'contract_date_end': date(2025, 10, 31),
+            'resource_calendar_id': flex_calendar.id,
+            'tz': 'UTC',
+        })
+        employee.create_version({
+            'date_version': date(2025, 11, 1),
+            'resource_calendar_id': self.env.ref('resource.resource_calendar_std').id,
+        })
+
+        days = employee._get_unusual_days('2025-01-01 00:00:00', '2025-12-31 23:59:59')
+
+        self.assertFalse(days['2025-01-04'])  # Flexible Saturday
+        self.assertTrue(days['2025-11-08'])   # Fixed Saturday
+
     def test_exclude_archived_employees_from_direct_subordinate_filter(self):
         """ Test that archived subordinates aren't included when searching on child_ids. """
         employee_1, employee_2 = self.env['hr.employee'].create([

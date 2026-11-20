@@ -863,7 +863,7 @@ class ResourceCalendar(models.Model):
         domain = [('count_as', '=', 'absence')]
         if company_id:
             domain += [('company_id', 'in', (company_id.id, False))]
-        if resource and resource._is_flexible():
+        if resource and (self or resource.calendar_id)._is_flexible():
             leave_intervals = self._leave_intervals_batch(start_dt, end_dt, domain=domain, resources_per_tz=resource._get_resources_per_tz())[resource.id]
             works = set()
             for start_int, end_int, _ in leave_intervals:
