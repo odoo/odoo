@@ -102,6 +102,46 @@ class TestHolidaysMultiContract(TestHolidayContract):
         })
         new_contract_cdi.state = 'open'
 
+    @freeze_time('2026-06-30')
+    def test_bulk_leave_duration_with_flexible_contract_between_requests(self):
+        employee = self.env['hr.employee'].create({
+            'name': 'Employee with changing schedules',
+            'resource_calendar_id': self.calendar_40h.id,
+            'tz': self.calendar_40h.tz,
+        })
+        flexible_calendar = self.calendar_40h.copy({'flexible_hours': True})
+        self.env['hr.contract'].create([
+            {
+                'name': f'Contract starting {date_start}',
+                'employee_id': employee.id,
+                'resource_calendar_id': calendar.id,
+                'date_start': date_start,
+                'date_end': date_end,
+                'state': 'close' if date_end else 'open',
+                'wage': 5000.0,
+            }
+            for calendar, date_start, date_end in (
+                (self.calendar_40h, date(2026, 6, 1), date(2026, 6, 10)),
+                (flexible_calendar, date(2026, 6, 11), date(2026, 6, 15)),
+                (self.calendar_40h, date(2026, 6, 16), False),
+            )
+        ])
+
+        # Each request is on the fixed schedule. Only the gap crosses the flexible contract.
+        leaves = self.env['hr.leave'].create([
+            {
+                'employee_id': employee.id,
+                'holiday_status_id': self.leave_type.id,
+                'request_date_from': request_date,
+                'request_date_to': request_date,
+            }
+            for request_date in (date(2026, 6, 3), date(2026, 6, 18))
+        ])
+        self.assertRecordValues(leaves, [
+            {'number_of_days': 1.0, 'number_of_hours': 8.0},
+            {'number_of_days': 1.0, 'number_of_hours': 8.0},
+        ])
+
     def test_leave_multi_contracts_split(self):
         # Check that setting a contract as running correctly
         # splits the existing time off for this employee that

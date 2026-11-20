@@ -858,6 +858,46 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         global_time_off.unlink()
         self.assertEqual(time_off.number_of_days, 5)
 
+    def test_hourly_leave_duration_with_overlapping_attendance(self):
+        calendar = self.employee_emp.resource_calendar_id
+        self.env['resource.calendar.attendance'].create({
+            'name': 'Employee-specific Monday hours',
+            'calendar_id': calendar.id,
+            'resource_id': self.employee_emp.resource_id.id,
+            'dayofweek': '0',
+            'hour_from': 10,
+            'hour_to': 12,
+            'duration_days': 0.5,
+        })
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Hourly Time Off',
+            'request_unit': 'hour',
+            'requires_allocation': 'no',
+            'leave_validation_type': 'hr',
+        })
+        leaves = self.env['hr.leave'].create([
+            {
+                'employee_id': employee.id,
+                'holiday_status_id': leave_type.id,
+                'request_date_from': request_date,
+                'request_date_to': request_date,
+                'request_unit_hours': True,
+                'request_hour_from': 8,
+                'request_hour_to': 9,
+            }
+            for employee, request_date in (
+                (self.employee_emp, date(2026, 6, 1)),
+                (self.employee_hruser, date(2026, 6, 2)),
+            )
+        ])
+
+        # The employee-specific attendance starts after the Monday request ends.
+        self.assertEqual(leaves[0]._get_durations()[leaves[0].id], (0.125, 1.0))
+        self.assertRecordValues(leaves, [
+            {'number_of_days': 0.125, 'number_of_hours': 1.0},
+            {'number_of_days': 0.125, 'number_of_hours': 1.0},
+        ])
+
     def test_time_off_duration_zero(self):
         time_off = self.env['hr.leave'].create({
             'name': 'Holiday Request',
