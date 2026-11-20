@@ -8,7 +8,14 @@ const fetchCacheRespond = async (event) => {
     const cache = await caches.open(cacheName);
     try {
         const response = await fetch(event.request);
-        cache.put(event.request, response.clone());
+        // A server error (500) or a proxy in front of a stopped server (502, 503)
+        // is handled like a network drop: open the cached page, never cache it.
+        if (response.status >= 500) {
+            return (await cache.match(event.request)) || response;
+        }
+        if (response.ok) {
+            cache.put(event.request, response.clone());
+        }
         return response;
     } catch {
         return await cache.match(event.request);
