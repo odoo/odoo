@@ -4484,12 +4484,19 @@ class MailThread(models.AbstractModel):
         are important for functional flows :
 
           - record responsible
-          - parent message author (if internal user)
+          - parent message author (if internal user and explicitly replied to)
         """
         pids = [r['id'] for r in recipients_data if r['id']]
         additional_users_su = self.env['res.users'].sudo()
         if self and 'user_id' in self:
             additional_users_su += self.user_id.sudo().filtered(lambda u: u.partner_id != ooo_author)
+
+        # on flat threads, the parent of a posted message defaults to the last message,
+        # which is not necessarily the one being replied to; incoming emails carry the
+        # actual parent through their headers
+        message_type = msg_vals['message_type'] if 'message_type' in (msg_vals or {}) else message.message_type
+        if self._mail_flat_thread and message_type != 'email':
+            return additional_users_su
 
         parent_msg = self.env['mail.message'].sudo()
         if (msg_vals or {}).get('parent_id'):
