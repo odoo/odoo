@@ -45,8 +45,8 @@ class MrpProduction(models.Model):
 
     def _get_purchase_orders(self):
         self.ensure_one()
-        moves = self.move_raw_ids | self.move_raw_ids.move_orig_ids
-        purchase_lines = moves.mapped('created_purchase_line_ids') | moves.mapped('purchase_line_id')
+        moves = self.move_raw_ids.browse(self.move_raw_ids._rollup_move_origs())
+        purchase_lines = moves.created_purchase_line_ids | moves.purchase_line_id
         return purchase_lines.mapped('order_id')
 
     def _prepare_merge_orig_links(self):
