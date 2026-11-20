@@ -857,10 +857,12 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             product_lines = []
             product = component_move.product_id
             required_qty = component_move.product_uom_qty
+            origins_used_qty = self._get_origins_used_qty(component_move)
             for move_origin in self.env['stock.move'].browse(component_move._rollup_move_origs()):
                 doc_origin = self._get_origin(move_origin)
-                if doc_origin:
-                    to_uom_qty = move_origin.product_uom._compute_quantity(move_origin.product_uom_qty, component_move.product_uom)
+                available_qty = move_origin.product_qty - origins_used_qty[move_origin]
+                if doc_origin and product.uom_id.compare(available_qty, 0) > 0:
+                    to_uom_qty = product.uom_id._compute_quantity(available_qty, component_move.product_uom)
                     used_qty = min(required_qty, to_uom_qty)
                     required_qty -= used_qty
                     # Create a fake "forecast line" so it will be processed as normal afterwards with only the required info
@@ -878,6 +880,26 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
 
         return replenish_data
 
+    def _get_origins_used_qty(self, component_move):
+        """ An origin can be shared by several component moves (e.g. the backorders of a MO are linked
+        to all the origins of the initial MO). Returns the quantity of each origin, in the product UoM,
+        already used by the done component moves created before `component_move`.
+        """
+        origins_used_qty = defaultdict(float)
+        origins = self.env['stock.move'].browse(component_move._rollup_move_origs())
+        previous_moves = self.env['stock.move'].browse(origins._rollup_move_dests()).filtered_domain([
+            ('raw_material_production_id', '!=', False), ('state', '=', 'done'),
+            ('product_id', '=', component_move.product_id.id), ('id', '<', component_move.id),
+        ])
+        for previous_move in previous_moves.sorted('id'):
+            required_qty = previous_move.product_qty
+            for move_origin in self.env['stock.move'].browse(previous_move._rollup_move_origs()):
+                if self._get_origin(move_origin):
+                    used_qty = min(required_qty, move_origin.product_qty - origins_used_qty[move_origin])
+                    origins_used_qty[move_origin] += used_qty
+                    required_qty -= used_qty
+        return origins_used_qty
+
     def _set_replenish_data(self, new_lines, product, replenish_data):
         if product.id not in replenish_data['products']:
             replenish_data['products'][product.id] = {'forecast': []}
@@ -894,12 +916,14 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         new_lines = []
         for line in filter(lambda line: not line.get('document_in', False) and line.get('move_out', False) and line.get('replenishment_filled', False), forecast_lines):
             move_out_qty = line['move_out'].product_uom._compute_quantity(line['move_out'].product_uom_qty, line['uom_id'])
+            origins_used_qty = self._get_origins_used_qty(line['move_out'])
             for move_origin in self.env['stock.move'].browse(line['move_out']._rollup_move_origs()):
                 doc_origin = self._get_origin(move_origin)
-                if doc_origin:
+                available_qty = move_origin.product_qty - origins_used_qty[move_origin]
+                if doc_origin and move_origin.product_id.uom_id.compare(available_qty, 0) > 0:
                     # Remove 'in_transit' for MTO replenishments
                     line['in_transit'] = False
-                    move_origin_qty = move_origin.product_uom._compute_quantity(move_origin.product_uom_qty, line['uom_id'])
+                    move_origin_qty = move_origin.product_id.uom_id._compute_quantity(available_qty, line['uom_id'])
                     # Move quantity matches forecast, can add origin to the line
                     if float_compare(line['quantity'], move_origin_qty, precision_rounding=line['uom_id'].rounding) == 0:
                         line['document_in'] = {'_name': doc_origin._name, 'id': doc_origin.id}
