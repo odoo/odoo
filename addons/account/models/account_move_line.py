@@ -3584,7 +3584,7 @@ class AccountMoveLine(models.Model):
                     'res_model': 'account.move.line',
                     'type': 'ir.actions.act_window',
                     'domain': [('id', 'in', lines_with_missing_analytic_distribution.ids)],
-                    'views': [(self.env.ref('account.view_move_line_tree').id, 'list')],
+                    'views': [(self.env.ref('account.view_move_line_tree_missing_analytic').id, 'list')],
                 },
                 button_text=_("See items"),
             )
@@ -4104,6 +4104,9 @@ class AccountMoveLine(models.Model):
 
     def action_open_business_doc(self):
         return self.move_id.action_open_business_doc()
+
+    def action_post_from_move_line(self):
+        return self.mapped('move_id').action_validate_moves_with_confirmation()
 
     def action_automatic_entry(self, default_action=None):
         action = self.env['ir.actions.act_window']._for_xml_id('account.account_automatic_entry_wizard_action')
