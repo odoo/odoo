@@ -84,6 +84,10 @@ export class SubtaskKanbanList extends Component {
         this.subtaskCreate.open = true;
     }
 
+    onSubtaskCreateClose() {
+        this.subtaskCreate.open = false;
+    }
+
     async _onSubtaskCreateNameChanged(name) {
         if (name.trim() === "") {
             this.notification.add(_t("Invalid Display Name"), {

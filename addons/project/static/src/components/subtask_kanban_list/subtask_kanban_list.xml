@@ -27,7 +27,8 @@
                 <div class="mt-2">
                     <SubtaskCreate
                         t-if="this.subtaskCreate.open"
-                        onSubtaskCreateNameChanged.bind="this._onSubtaskCreateNameChanged"/>
+                        onSubtaskCreateNameChanged.bind="this._onSubtaskCreateNameChanged"
+                        onClose.bind="this.onSubtaskCreateClose"/>
                     <button t-else="" class="subtask_create btn btn-sm btn-secondary w-100" t-on-click.stop="this.onAddSubtaskClick">
                         <i class="oi" data-icon="add"/> Add Sub-task
                     </button>

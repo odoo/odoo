@@ -5,6 +5,7 @@ import {
     describe,
     edit,
     expect,
+    press,
     queryOne,
     test,
 } from "@odoo/hoot";
@@ -355,6 +356,33 @@ test("project.task (kanban): check subtask creation when input is empty", async 
     });
     expect(".o_notification_bar").toHaveClass("bg-danger", {
         message: "The notification bar should have type 'danger'.",
+    });
+});
+
+test("project.task (kanban): subtask creation input closes on Escape or when left empty", async () => {
+    await mountView({
+        resModel: "project.task",
+        type: "kanban",
+    });
+    await click(".subtask_list_button");
+    await animationFrame();
+
+    await click(".subtask_create");
+    await animationFrame();
+    expect(".subtask_create_input input").toBeFocused();
+    await press("Escape");
+    await animationFrame();
+    expect(".subtask_create_input").toHaveCount(0, {
+        message: "Pressing Escape should close the subtask creation input",
+    });
+    expect(".subtask_create").toHaveCount(1);
+
+    await click(".subtask_create");
+    await animationFrame();
+    await click(".o_kanban_renderer");
+    await animationFrame();
+    expect(".subtask_create_input").toHaveCount(0, {
+        message: "Leaving the input while empty should close it",
     });
 });
 
