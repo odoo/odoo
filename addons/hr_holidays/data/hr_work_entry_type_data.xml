@@ -266,6 +266,27 @@
         <field name="country_id" ref="base.be"/>
     </record>
 
+    <record id="hr_work_entry.l10n_be_work_entry_type_common_law_illness_non_attributable_to_worker" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="request_unit">half_day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+        <field name="color">10</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_illness_insufficient_seniority" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+        <field name="requires_allocation">False</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="request_unit">half_day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+        <field name="color">10</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
     <record id="hr_work_entry.l10n_be_work_entry_type_long_sick" model="hr.work.entry.type">
         <field name="requires_allocation">False</field>
         <field name="leave_validation_type">hr</field>
@@ -364,6 +385,16 @@
         <field name="unit_of_measure">day</field>
         <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
         <field name="color">16</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_work_accident_after_one_year" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="request_unit">half_day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+        <field name="color">17</field>
         <field name="country_id" ref="base.be"/>
     </record>
 
