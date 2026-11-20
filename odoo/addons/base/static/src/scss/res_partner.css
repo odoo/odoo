@@ -11,7 +11,8 @@
     --Card__image-width: 36px;
 
     @media screen and (min-width: 768px), print and (min-width: 188mm) {
-        &:not(:hover) .o_has_no_activity {
+        /* Also shown while something in the card has the keyboard focus. */
+        &:not(:hover, :focus-visible, :has(:focus-visible)) .o_has_no_activity {
             opacity: 0;
         }
     }

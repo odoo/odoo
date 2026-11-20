@@ -42,6 +42,9 @@
 
 .o-mail-MessagingMenu-filters {
     overflow-x: auto;
+    /* Room for the focus ring of the filters, which the scrolling would cut. */
+    padding: var(--o-focus-ring-width);
+    margin: calc(-1 * var(--o-focus-ring-width));
     scrollbar-width: none;
 
     &::-webkit-scrollbar {
@@ -103,7 +106,8 @@
     }
 
     &:focus-visible {
-        outline: var(--border-width) solid var(--o-enterprise-action-color) !important;
+        outline: var(--o-focus-ring, var(--border-width) solid var(--o-enterprise-action-color)) !important;
+        outline-offset: var(--o-focus-ring-offset, -2px);
     }
 
     .o-mail-MessagingMenu-tabIcon {

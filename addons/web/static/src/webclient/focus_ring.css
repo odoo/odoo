@@ -1,0 +1,63 @@
+/* Keyboard focus ring of the web client: an outline, which forced colors mode */
+/* keeps (it drops shadows). It sits inside the element by default, where no */
+/* container clips it; an element picks its place with --o-focus-ring-offset. */
+:root {
+    --o-focus-ring-width: 2px;
+    --o-focus-ring-color: var(--o-component-active-border);
+    --o-focus-ring: var(--o-focus-ring-width) solid var(--o-focus-ring-color);
+    --o-focus-ring-inside: calc(-1 * var(--o-focus-ring-width));
+    --o-focus-ring-outside: var(--o-focus-ring-width);
+    --o-focus-ring-offset: var(--o-focus-ring-inside);
+}
+
+/* Text entry keeps its own focus style. Bootstrap removes the outline of the */
+/* components listed after it. */
+:where(:focus-visible:not(
+    input:not([type="checkbox"], [type="radio"], [type="button"], [type="submit"], [type="reset"], [type="range"], [type="color"], [type="file"]),
+    textarea,
+    select,
+    [contenteditable]:not([contenteditable="false"])
+)),
+.btn:focus-visible,
+.btn-check:focus-visible + .btn,
+.nav-link:focus-visible,
+.btn-close:focus-visible,
+.accordion-button:focus-visible,
+.navbar-toggler:focus-visible,
+.page-link:focus-visible,
+.form-check-input:focus-visible {
+    outline: var(--o-focus-ring);
+    outline-offset: var(--o-focus-ring-offset);
+    /* Scrolled into view, it keeps room for a ring drawn outside it. */
+    scroll-margin: max(0px, calc(var(--o-focus-ring-width) + var(--o-focus-ring-offset)));
+}
+
+/* Buttons draw the ring against their edge, outside, where the solid band of */
+/* their former ring was: it would not stand out on a fill, and would cover the */
+/* content of buttons without padding. Checkboxes draw it 2px away, so that it */
+/* does not merge with a checked box. */
+.btn {
+    --o-focus-ring-offset: var(--o-focus-ring-btn-offset, 0px);
+}
+.form-check-input,
+input:is([type="checkbox"], [type="radio"]) {
+    --o-focus-ring-offset: var(--o-focus-ring-outside);
+}
+
+/* Grouped buttons share their borders, and menus clip what overflows them: */
+/* their buttons' ring goes back inside, 2px away from a colored fill. */
+:is(.btn-group, .btn-group-vertical, .input-group, .dropdown-menu) {
+    --o-focus-ring-btn-offset: var(--o-focus-ring-inside);
+
+    & :is(.btn-primary, .btn-success, .btn-danger, .btn-warning, .btn-info, .btn-dark):focus-visible,
+    & :is(.btn-outline-primary, .btn-outline-success, .btn-outline-danger, .btn-outline-warning, .btn-outline-info, .btn-outline-dark):focus-visible,
+    & > :is(.btn-primary, .btn-success, .btn-danger, .btn-warning, .btn-info, .btn-dark) ~ .btn.dropdown-toggle-split:focus-visible {
+        box-shadow: inset 0 0 0 calc(1.5 * var(--o-focus-ring-width)) var(--o-view-background-color);
+    }
+}
+
+/* Tabs overlap their neighbor: lift the focused one above it. */
+.nav-link:focus-visible {
+    position: relative;
+    z-index: 1;
+}
