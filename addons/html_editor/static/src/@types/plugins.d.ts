@@ -40,6 +40,7 @@ declare module "plugins" {
     import { is_link_eligible_for_visual_indication_predicates } from "@html_editor/main/link/link_selection_plugin";
     import { paste_media_url_command_providers } from "@html_editor/main/link/powerbox_url_paste_plugin";
     import { LocalOverlayPlugin } from "@html_editor/main/local_overlay_plugin";
+    import { IconPlugin } from "@html_editor/main/media/icon_plugin";
     import { ImageCropPlugin } from "@html_editor/main/media/image_crop_plugin";
     import { delete_image_overrides, image_name_providers, ImagePlugin } from "@html_editor/main/media/image_plugin";
     import { ImagePostProcessPlugin, on_image_updated_handlers, on_image_processed_handlers, on_will_process_image_handlers } from "@html_editor/main/media/image_post_process_plugin";
@@ -107,6 +108,7 @@ declare module "plugins" {
         table: SharedOf<typeof TablePlugin>;
         toolbar: SharedOf<typeof ToolbarPlugin>;
         emoji: SharedOf<typeof EmojiPlugin>;
+        icon: SharedOf<typeof IconPlugin>;
         localOverlay: SharedOf<typeof LocalOverlayPlugin>;
         tabulation: SharedOf<typeof TabulationPlugin>;
         feff: SharedOf<typeof FeffPlugin>;

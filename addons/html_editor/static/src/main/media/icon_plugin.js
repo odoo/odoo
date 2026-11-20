@@ -1,7 +1,7 @@
 import { withSequence } from "@html_editor/utils/resource";
-import { Plugin } from "../../plugin";
+import { Plugin, shared } from "../../plugin";
 import { _t } from "@web/core/l10n/translation";
-import { MediaDialog } from "./media_dialog/media_dialog";
+import { IconPicker } from "./icon_picker/icon_picker";
 import {
     ICON_SELECTOR,
     ICON_SIZE_CLASS_REGEX,
@@ -10,13 +10,25 @@ import {
     isIconElement,
 } from "@html_editor/utils/dom_info";
 import { closestElement } from "@html_editor/utils/dom_traversal";
+import { rightPos } from "@html_editor/utils/position";
 
 export class IconPlugin extends Plugin {
     static id = "icon";
-    static dependencies = ["history", "selection", "color", "dialog"];
+    static dependencies = ["history", "selection", "color", "dom", "overlay"];
+    static shared = shared(["openIconPicker"]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
+            {
+                id: "insertIcon",
+                title: _t("Icon"),
+                description: _t("Insert an icon"),
+                icon: "add_reaction",
+                run: () => this.openIconPicker(),
+                isAvailable: (selection) =>
+                    this.dependencies.dom.supportsHtmlContent(selection) &&
+                    !closestElement(selection.anchorNode, "label"),
+            },
             {
                 id: "resizeIcon1",
                 description: _t("Resize icon 1x"),
@@ -51,9 +63,18 @@ export class IconPlugin extends Plugin {
             {
                 id: "replaceIcon",
                 description: _t("Replace icon"),
-                run: this.openIconDialog.bind(this),
+                run: this.openReplaceIconPicker.bind(this),
             },
         ],
+        // Next to the media command, in the category of the media plugin, and
+        // only where that command is available.
+        ...(this.config.allowImage && {
+            powerbox_items: {
+                categoryId: "media",
+                commandId: "insertIcon",
+                keywords: [_t("Icons"), _t("Pictogram")],
+            },
+        }),
         properties: [{ predicate: isIconElement, toolbar: "icon" }],
         toolbar_groups: [
             withSequence(2, { id: "icon_size", namespaces: ["icon"] }),
@@ -117,6 +138,113 @@ export class IconPlugin extends Plugin {
         ),
     };
 
+    setup() {
+        this.iconPickerOverlay = this.dependencies.overlay.createOverlay(IconPicker, {
+            hasAutofocus: true,
+            className: "popover",
+        });
+        this.addDomListener(this.editable, "dblclick", (ev) => {
+            const iconEl = closestElement(ev.target, isIconElement);
+            if (iconEl && this.isReplaceableOnDblClick(iconEl)) {
+                this.openIconPicker({ iconEl });
+            }
+        });
+    }
+
+    /**
+     * @param {HTMLElement} iconEl
+     * @returns {boolean} whether double-clicking the icon opens the icon picker
+     */
+    isReplaceableOnDblClick(iconEl) {
+        return !!iconEl.parentElement?.isContentEditable;
+    }
+
+    /**
+     * Opens the icon picker, to insert an icon at the selection or to replace
+     * the given one.
+     *
+     * @param {Object} [params]
+     * @param {HTMLElement} [params.iconEl] the icon to replace, the picker is
+     *  positioned next to it
+     * @param {(icon: { name: string, filled: boolean }) => void} [params.onSelect]
+     *  called with the picked icon instead of inserting or replacing one
+     */
+    openIconPicker({ iconEl, onSelect } = {}) {
+        this.iconPickerOverlay.open({
+            target: iconEl,
+            props: {
+                document: this.document,
+                currentIcon: iconEl?.dataset.icon
+                    ? {
+                          name: iconEl.dataset.icon,
+                          filled: iconEl.classList.contains("oi-filled"),
+                      }
+                    : undefined,
+                close: () => {
+                    this.iconPickerOverlay.close();
+                    this.dependencies.selection.focusEditable();
+                },
+                onSelect: (icon) => {
+                    if (onSelect) {
+                        onSelect(icon);
+                    } else if (iconEl) {
+                        this.replaceIcon(iconEl, icon);
+                    } else {
+                        this.insertIcon(icon);
+                    }
+                },
+            },
+        });
+    }
+
+    /**
+     * @param {{ name: string, filled: boolean }} icon
+     * @returns {HTMLElement}
+     */
+    createIconElement({ name, filled }) {
+        const iconEl = this.document.createElement("span");
+        iconEl.classList.add("oi");
+        iconEl.classList.toggle("oi-filled", filled);
+        iconEl.dataset.icon = name;
+        return iconEl;
+    }
+
+    /**
+     * @param {{ name: string, filled: boolean }} icon
+     */
+    insertIcon(icon) {
+        const iconEl = this.createIconElement(icon);
+        this.dependencies.dom.insert(iconEl);
+        const [anchorNode, anchorOffset] = rightPos(iconEl);
+        this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
+        this.dependencies.history.commit();
+    }
+
+    openReplaceIconPicker() {
+        const iconEl = this.getTargetedIcon();
+        if (iconEl) {
+            this.openIconPicker({ iconEl });
+        }
+    }
+
+    /**
+     * Changes the glyph of an icon, keeping its tag and its other classes
+     * (size, color, spin...), except those of a legacy FontAwesome icon.
+     *
+     * @param {HTMLElement} iconEl
+     * @param {{ name: string, filled: boolean }} icon
+     */
+    replaceIcon(iconEl, { name, filled }) {
+        const fontAwesomeClasses = [...iconEl.classList].filter(
+            (cls) => ["fa", "fab", "fad", "far"].includes(cls) || cls.startsWith("fa-")
+        );
+        iconEl.classList.remove(...fontAwesomeClasses);
+        iconEl.classList.add("oi");
+        iconEl.classList.toggle("oi-filled", filled);
+        iconEl.dataset.icon = name;
+        this.dependencies.history.commit();
+    }
+
     getTargetedIcon() {
         const targetedNodes = this.dependencies.selection.getTargetedNodes();
         return targetedNodes.find((node) => isElement(node) && node.matches(ICON_SELECTOR));
@@ -170,26 +298,6 @@ export class IconPlugin extends Plugin {
         return (
             selectedIcon.classList.contains("oi-spin") || selectedIcon.classList.contains("fa-spin")
         );
-    }
-
-    openIconDialog() {
-        const selectedIcon = this.getTargetedIcon();
-        if (!selectedIcon) {
-            return;
-        }
-        this.dependencies.dialog.addDialog(MediaDialog, {
-            visibleTabs: ["ICONS"],
-            media: selectedIcon,
-            save: (el) => this.onSaveIcon(el, selectedIcon),
-            document: this.document,
-        });
-    }
-
-    onSaveIcon(icon, prevIcon) {
-        for (const attribute of icon.attributes) {
-            prevIcon.setAttribute(attribute.nodeName, attribute.nodeValue);
-        }
-        this.dependencies.history.commit();
     }
 
     computeBackgroundColorForIcon() {

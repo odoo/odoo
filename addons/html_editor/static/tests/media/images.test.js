@@ -1,6 +1,6 @@
 import { EDITABLE_MEDIA_CLASS } from "@html_editor/utils/dom_info";
 import { describe, expect, test } from "@odoo/hoot";
-import { click, dblclick, press, waitFor, waitForNone } from "@odoo/hoot-dom";
+import { click, dblclick, press, queryAllTexts, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { cleanHints } from "../_helpers/dispatch";
@@ -192,19 +192,30 @@ test("press escape to close media dialog", async () => {
 });
 
 describe("Powerbox search keywords", () => {
-    test("Image and Icon are keywords for the Media command", async () => {
+    test("Image is a keyword for the Media command, but not Icon", async () => {
         const { editor } = await setupEditor("<p>[]<br></p>");
         await insertText(editor, "/");
-        for (const word of ["image", "icon"]) {
+        for (const [word, command] of [
+            ["image", "Media"],
+            ["icon", "Icon"],
+            ["icons", "Icon"],
+        ]) {
             await insertText(editor, word);
             await animationFrame();
-            expect(".active .o-we-command-name").toHaveText("Media");
+            expect(".active .o-we-command-name").toHaveText(command);
             // delete the keyword to try the next one
             for (let i = 0; i < word.length; i++) {
                 await press("backspace");
             }
         }
     });
+});
+
+test("No Icon command where media cannot be inserted", async () => {
+    const { editor } = await setupEditor("<p>[]<br></p>", { config: { allowImage: false } });
+    await insertText(editor, "/icon");
+    await animationFrame();
+    expect(queryAllTexts(".o-we-command-name")).not.toInclude("Icon");
 });
 
 describe("(non-)editable media", () => {

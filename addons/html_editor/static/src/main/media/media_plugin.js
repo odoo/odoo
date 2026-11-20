@@ -65,8 +65,8 @@ export class MediaPlugin extends Plugin {
                 id: "insertMedia",
                 title: _t("Media"),
                 description: this.config.allowVideo
-                    ? _t("Insert image, icon or video")
-                    : _t("Insert image or icon"),
+                    ? _t("Insert image or video")
+                    : _t("Insert image"),
                 icon: "image",
                 run: (params, context = {}) =>
                     this.openMediaDialog({
@@ -135,8 +135,11 @@ export class MediaPlugin extends Plugin {
             categoryId: "media",
             commandId: "insertMedia",
             // Evaluation is deferred because this.availableTabs is only ready after setup.
+            // Icons have their own command, see the icon plugin.
             get keywords() {
-                return self.availableTabs.map((tab) => tab.title);
+                return self.availableTabs
+                    .filter((tab) => tab.id !== TABS.ICONS.id)
+                    .map((tab) => tab.title);
             },
         };
     }

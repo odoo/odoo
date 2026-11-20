@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="html_editor.IconPicker">
+    <div class="o-IconPicker d-flex flex-column" t-att-style="this.iconsStyle" t-on-keydown="this.onKeydown">
+        <div class="o-IconPicker-search mx-2 mt-2">
+            <span class="o-IconPicker-searchContour d-flex w-100 align-items-center rounded-pill border bg-view">
+                <i class="oi ps-2 py-1 fs-7 opacity-50" data-icon="search" title="Search..." role="img" aria-label="Search..."/>
+                <input
+                    class="form-control border-0 flex-grow-1 rounded-pill lh-1"
+                    t-att-placeholder="this.placeholder"
+                    t-model="this.searchTerm"
+                    t-ref="this.inputRef"
+                    t-on-input="this.onInput"
+                />
+                <button t-if="this.searchTerm()" class="btn btn-sm btn-link p-0 px-1 opacity-50 opacity-100-hover" title="Clear search" t-on-click="this.clearSearch">
+                    <i class="oi oi-filled" data-icon="cancel"/>
+                </button>
+            </span>
+        </div>
+        <t t-set="frequentIcons" t-value="this.frequentIcons()"/>
+        <t t-set="otherIcons" t-value="this.otherIcons()"/>
+        <div class="o-IconPicker-content d-flex flex-grow-1 flex-wrap align-content-start overflow-auto user-select-none mt-1" t-ref="this.gridRef">
+            <span t-if="this.loadFailed" class="o-IconPicker-empty w-100 mt-5 text-center">Failed to load icons...</span>
+            <span t-elif="!frequentIcons.length and !otherIcons.length" class="o-IconPicker-empty w-100 mt-5 text-center">No icons match your search</span>
+            <t t-if="frequentIcons.length">
+                <span t-if="!this.searchTerm()" class="o-IconPicker-section w-100 px-2 py-1 position-sticky top-0">
+                    <small class="text-uppercase opacity-50">Frequently used</small>
+                </span>
+                <t t-foreach="frequentIcons" t-as="icon" t-key="'frequent_' + icon.id">
+                    <t t-call="html_editor.IconPicker.icon" index="icon_index"/>
+                </t>
+                <span t-if="!this.searchTerm()" class="o-IconPicker-section w-100 px-2 py-1 position-sticky top-0">
+                    <small class="text-uppercase opacity-50">All icons</small>
+                </span>
+            </t>
+            <t t-foreach="otherIcons" t-as="icon" t-key="icon.id">
+                <t t-call="html_editor.IconPicker.icon" index="frequentIcons.length + icon_index"/>
+            </t>
+        </div>
+    </div>
+</t>
+
+<t t-name="html_editor.IconPicker.icon">
+    <span
+        class="o-IconPicker-icon oi d-flex justify-content-center align-items-center rounded-3 cursor-pointer"
+        t-att-class="{
+            'oi-filled': icon.filled,
+            'o-active': this.activeIndex() === index,
+            'o-selected': this.isCurrentIcon(icon),
+        }"
+        t-att-data-icon="icon.name"
+        t-att-data-index="index"
+        t-att-title="icon.name"
+        t-att-aria-label="icon.name"
+        role="img"
+        t-on-click="() => this.selectIcon(icon)"
+        t-on-mouseenter="() => this.hoveredIcon.set(icon)"
+        t-on-mouseleave="() => this.hoveredIcon.set(null)"
+    />
+</t>
+
+</templates>
