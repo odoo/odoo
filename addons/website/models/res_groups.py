@@ -10,4 +10,5 @@ class ResGroups(models.Model):
         return (
             *super()._get_light_group_xmlids(),
             'website.group_multi_website',
+            'website.website_page_controller_expose',
         )
