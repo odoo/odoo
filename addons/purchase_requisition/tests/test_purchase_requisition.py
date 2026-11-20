@@ -658,3 +658,27 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         self.assertEqual(po.partner_id, purchase_requisition.vendor_id, 'The partner should have been set from the purchase requisition')
         self.assertEqual(po.order_line.price_unit, purchase_requisition.line_ids.price_unit, 'The unit price should have been set from the purchase requisition')
         self.assertEqual(po.order_line.taxes_id, purchase_requisition.line_ids.product_id.supplier_taxes_id, 'The blanket order taxes should have been set')
+
+    def test_blanket_order_purchase_user_edit_confirmed_lines(self):
+        """ A purchase user (not manager) can update the price of a line of a
+        confirmed blanket order and delete a line of it, which updates or removes
+        the related vendor pricelists.
+        """
+        blanket_order = self.env['purchase.requisition'].with_user(self.user_purchase_requisition_user).create({
+            'requisition_type': 'blanket_order',
+            'vendor_id': self.res_partner_1.id,
+            'line_ids': [
+                Command.create({'product_id': self.product_09.id, 'product_qty': 10.0, 'price_unit': 20.0}),
+                Command.create({'product_id': self.product_13.id, 'product_qty': 10.0, 'price_unit': 50.0}),
+            ],
+        })
+        blanket_order.action_confirm()
+        line_09, line_13 = blanket_order.line_ids
+        supplier_info_13 = line_13.supplier_info_ids
+        self.assertEqual(len(supplier_info_13), 1)
+
+        line_09.price_unit = 15.0
+        self.assertEqual(line_09.supplier_info_ids.price, 15.0)
+
+        line_13.unlink()
+        self.assertFalse(supplier_info_13.exists())
