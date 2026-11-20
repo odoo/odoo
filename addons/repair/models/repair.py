@@ -722,10 +722,18 @@ class RepairOrder(models.Model):
 
     def _update_invoice_line_price(self):
         invoices = self.invoice_ids.filtered(lambda inv: inv.state == 'draft')
+        # Only the lines of the parts and services of the repair: the invoice can hold other lines,
+        # e.g. the ones of other sale orders invoiced together or added manually.
+        sale_order_lines = self.move_ids.sale_line_id | self.repair_service_line_ids.sale_line_id
+        invoice_lines = invoices.invoice_line_ids.filtered(lambda line: (
+            line.stock_move_id in self.move_ids
+            or line.repair_service_line_id in self.repair_service_line_ids
+            or line.sale_line_ids & sale_order_lines
+        ))
         if self.under_warranty:
-            invoices.invoice_line_ids.write({'price_unit': 0.0})
+            invoice_lines.write({'price_unit': 0.0})
         else:
-            invoices.invoice_line_ids._compute_price_unit()
+            invoice_lines._compute_price_unit()
 
     def _get_sale_order_values(self):
         self.ensure_one()
