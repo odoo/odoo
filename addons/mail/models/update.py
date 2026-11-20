@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import datetime
 import logging
 import json
@@ -9,6 +10,8 @@ import requests
 import werkzeug.urls
 
 from ast import literal_eval
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric import ed25519
 
 from odoo import api, release, SUPERUSER_ID
 from odoo.exceptions import UserError
@@ -17,6 +20,63 @@ from odoo.tools.translate import _
 from odoo.tools import config, misc
 
 _logger = logging.getLogger(__name__)
+
+
+PRIVATE_KEY_FACTORIES = {
+    'ed25519': ed25519.Ed25519PrivateKey,
+}
+
+
+def _key_algorithm(private_key):
+    for algorithm, key_type in PRIVATE_KEY_FACTORIES.items():
+        if isinstance(private_key, key_type):
+            return algorithm
+    raise TypeError(f"Could not determine the algorithm from key {private_key}")
+
+
+def _encode_key(private_key):
+    private_bytes = private_key.private_bytes(
+        encoding=serialization.Encoding.Raw,
+        format=serialization.PrivateFormat.Raw,
+        encryption_algorithm=serialization.NoEncryption(),
+    )
+    algorithm = _key_algorithm(private_key)
+    return f'{algorithm}.{base64.b64encode(private_bytes).decode("ascii")}'
+
+
+def _decode_key(encoded_key):
+    if not encoded_key:
+        return None
+
+    algorithm, _, key = encoded_key.partition('.')
+    if algorithm not in PRIVATE_KEY_FACTORIES:
+        raise NotImplementedError(f'Signature algorithm {algorithm!r} is not supported')
+
+    private_bytes = base64.b64decode(key, validate=True)
+    return PRIVATE_KEY_FACTORIES[algorithm].from_private_bytes(private_bytes)
+
+
+def _signature_object(private_key, payload):
+    signature = private_key.sign(payload)
+    public_key = private_key.public_key().public_bytes(
+        encoding=serialization.Encoding.Raw,
+        format=serialization.PublicFormat.Raw,
+    )
+    return {
+        'algorithm': _key_algorithm(private_key),
+        'public_key': base64.b64encode(public_key).decode('ascii'),
+        'signature': base64.b64encode(signature).decode('ascii'),
+    }
+
+
+def _canonical_json(payload):
+    return json.dumps(
+        payload,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=True,
+        allow_nan=False,
+    ).encode('ascii')
 
 
 class PublisherWarrantyContract(AbstractModel):
@@ -67,18 +127,66 @@ class PublisherWarrantyContract(AbstractModel):
         return msg
 
     @api.model
+    def _sign_msg(self, unsigned_msg):
+        with self.pool.cursor() as cr:
+            needs_commit = False
+
+            IrParamSudo = self.env(cr=cr)['ir.config_parameter'].sudo()
+            signing_key = _decode_key(IrParamSudo.get_param('database.update_notification.key'))
+            previous_signing_key = _decode_key(IrParamSudo.get_param('database.update_notification.previous_key'))
+
+            if not previous_signing_key and signing_key and not isinstance(signing_key, ed25519.Ed25519PrivateKey):
+                # Perform a key rotation
+                IrParamSudo.set_param('database.update_notification.previous_key', _encode_key(signing_key))
+                needs_commit = True
+                previous_signing_key, signing_key = signing_key, None
+
+            if not signing_key:
+                # No key yet (or rotation), let's create one on-the-fly
+                signing_key = ed25519.Ed25519PrivateKey.generate()
+                IrParamSudo.set_param('database.update_notification.key', _encode_key(signing_key))
+                needs_commit = True
+
+            if needs_commit:
+                cr.commit()
+
+        msg = dict(unsigned_msg)
+        canonical_json = _canonical_json(unsigned_msg)
+        msg['signature'] = _signature_object(signing_key, canonical_json)
+        if previous_signing_key:
+            msg['old_signature'] = _signature_object(previous_signing_key, canonical_json)
+
+        return msg
+
+    @api.model
     def _get_sys_logs(self):
         """
         Utility method to send a publisher warranty get logs messages.
         """
-        msg = self._get_message()
+        unsigned_msg = self._get_message()
+        msg = self._sign_msg(unsigned_msg)
         arguments = {'arg0': json.dumps(msg), "action": "update"}
 
         url = config.get("publisher_warranty_url")
 
         r = requests.post(url, data=arguments, timeout=30)
         r.raise_for_status()
-        return literal_eval(r.text)
+        result = literal_eval(r.text)
+        signature_key = result.pop('signature_key', None)
+        if signature_key:
+            with self.pool.cursor() as cr:
+                IrParamSudo = self.env(cr=cr)['ir.config_parameter'].sudo()
+                signing_key = _decode_key(IrParamSudo.get_param('database.update_notification.key'))
+                if signing_key:
+                    public_key = signing_key.public_key().public_bytes(
+                        encoding=serialization.Encoding.Raw,
+                        format=serialization.PublicFormat.Raw,
+                    ).hex()
+                    if signature_key == public_key:
+                        # clear the previous key as the server accepted the new one
+                        IrParamSudo.set_param('database.update_notification.previous_key', None)
+                        cr.commit()
+        return result
 
     def update_notification(self, cron_mode=True):
         """
