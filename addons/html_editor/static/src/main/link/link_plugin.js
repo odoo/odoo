@@ -944,6 +944,17 @@ export class LinkPlugin extends Plugin {
             !closestElement(selection.anchorNode, "a") &&
             selection.anchorNode.nodeType === Node.TEXT_NODE
         ) {
+            // In Safari, changing the DOM or the selection during beforeinput
+            // cancels the native insertion: only touch them if there is a URL.
+            let textBeforeCaret = selection.anchorNode.textContent.slice(0, selection.anchorOffset);
+            let node = selection.anchorNode.previousSibling;
+            while (node?.nodeType === Node.TEXT_NODE) {
+                textBeforeCaret = node.textContent + textBeforeCaret;
+                node = node.previousSibling;
+            }
+            if (!URL_REGEX.test(textBeforeCaret.split(/\s/).pop())) {
+                return;
+            }
             // Merge adjacent text nodes.
             const cursor = this.dependencies.selection.preserveSelection();
             mergeAdjacentTextNodes(selection.anchorNode.parentNode, cursor);
