@@ -154,6 +154,9 @@ class MicrosoftCalendarSync(models.AbstractModel):
                 for value in values:
                     record._microsoft_insert(value)
         for record in updated_records.filtered('need_sync_m'):
+            if not record.microsoft_id:
+                _logger.warning("Skipping Outlook synchronization for Odoo event %s: missing microsoft_id.", record.id)
+                continue
             values = record._microsoft_values(self._get_microsoft_synced_fields())
             if not values:
                 continue
