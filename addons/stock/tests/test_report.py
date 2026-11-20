@@ -1531,6 +1531,40 @@ class TestReports(TestReportsCommon):
             self.assertEqual(product_line['needs'][0]['quantity'], 24)
             self.assertEqual(product_line['needs'][0]['reserved_quantity'], 6)
 
+    def test_allocation_report_assign_all_merged_moves(self):
+        """ With a location for allocation, the receipt's moves are split for each need then merged
+        back once they all go to that location: the deleted moves shouldn't be used."""
+        allocation_location = self.env['stock.location'].create({
+            'name': 'Allocation',
+            'location_id': self.stock_location.id,
+        })
+        self.picking_type_in.allocated_location_id = allocation_location
+        deliveries = self.env['stock.picking'].create([{
+            'picking_type_id': self.picking_type_out.id,
+            'move_ids': [Command.create({'product_id': self.product.id, 'product_uom_qty': 4})],
+        } for _ in range(3)])
+        deliveries.action_confirm()
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_in.id,
+            'move_ids': [Command.create({'product_id': self.product.id, 'product_uom_qty': 12})],
+        })
+        receipt.action_confirm()
+
+        res = self.allocation_report.action_assign_all([
+            (receipt.move_ids.ids, [(delivery.move_ids.ids, 4) for delivery in deliveries]),
+        ])
+        self.assertRecordValues(receipt.move_ids, [{
+            'product_uom_qty': 12,
+            'location_dest_id': allocation_location.id,
+            'move_dest_ids': deliveries.move_ids.ids,
+        }])
+        in_move_ids = res[self.product.id]['in_moves']
+        self.assertEqual(in_move_ids, receipt.move_ids.ids)
+
+        # The returned moves can be used for the next action.
+        self.allocation_report.action_unassign(in_move_ids, deliveries[0].move_ids.ids, 4)
+        self.assertFalse(deliveries[0].move_ids.move_orig_ids)
+
     def test_report_reception_1_one_receipt(self):
         """ Create 2 deliveries and 1 receipt where some of the products being received
         can be reserved for the deliveries. Check that the reception report correctly
