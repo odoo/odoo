@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_picking_form_inherit_l10n_gr_edi_e_invoo" model="ir.ui.view">
+        <field name="name">stock.picking.form.inherit.l10n_gr_edi_e_invoo</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="l10n_gr_edi_delivery_note.view_picking_form_inherit_l10n_gr_edi"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='l10n_gr_edi_document_ids']/list" position="attributes">
+                <attribute name="decoration-warning">state == 'delivery_note_pending'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='l10n_gr_edi_document_ids']/list/field[@name='state']" position="after">
+                <field name="provider_pdf_state" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="vpicktree_inherit_l10n_gr_edi_e_invoo" model="ir.ui.view">
+        <field name="name">stock.picking.list.inherit.l10n_gr_edi_e_invoo</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="l10n_gr_edi_delivery_note.vpicktree_inherit_l10n_gr_edi"/>
+        <field name="arch" type="xml">
+            <field name="l10n_gr_edi_state" position="attributes">
+                <attribute name="decoration-warning">l10n_gr_edi_state == 'delivery_note_pending'</attribute>
+            </field>
+        </field>
+    </record>
+
+</odoo>
