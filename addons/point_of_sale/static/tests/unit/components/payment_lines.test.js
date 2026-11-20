@@ -563,5 +563,35 @@ describe("spinner or delete button", () => {
         });
         expect(".paymentline i.oi-spin[data-icon='autorenew']").toHaveCount(0);
         expect(".paymentline button.delete-button").toHaveCount(0);
+        expect(".paymentline .badge").toHaveCount(0);
+        expect(".paymentline_status_title").toHaveText("Payment Successful");
+    });
+
+    test("selected and forced", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        const card = store.models["pos.payment.method"].get(2);
+        const paymentline = createPaymentLine(store, order, card, {
+            payment_status: "waiting",
+        });
+
+        paymentline.forceDone();
+        order.uiState.selected_paymentline_uuid = paymentline.uuid;
+
+        await mountWithCleanup(PaymentScreenPaymentLines, {
+            props: {
+                paymentLines: [paymentline],
+                deleteLine: () => {},
+                selectLine: () => {},
+                sendForceDone: () => {},
+                sendForceCancel: () => {},
+                sendPaymentCancel: () => {},
+                sendPaymentRequest: () => {},
+                updateSelectedPaymentline: () => {},
+                isRefundOrder: false,
+            },
+        });
+        expect(".paymentline .badge").toHaveText("Forced");
+        expect(".paymentline_status_title").toHaveText("Payment forced");
     });
 });

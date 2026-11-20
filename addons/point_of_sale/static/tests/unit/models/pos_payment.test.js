@@ -127,8 +127,10 @@ test("forceDone", async () => {
     const data = { payment_status: "waiting" };
     const paymentline = createPaymentLine(store, order, card, data);
 
+    expect(paymentline.is_forced).not.toBe(true);
     paymentline.forceDone();
     expect(paymentline.payment_status).toBe("done");
+    expect(paymentline.is_forced).toBe(true);
     expect(paymentline.card_no).toBe("forced");
 });
 

@@ -181,6 +181,7 @@ export class PosPayment extends Base {
         }
         this.payment_interface?.onForceDone();
         this.card_no = "forced";
+        this.is_forced = true;
         this.setPaymentStatus("done");
     }
 
