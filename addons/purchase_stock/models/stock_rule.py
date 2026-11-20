@@ -182,9 +182,10 @@ class StockRule(models.Model):
         """
         delays, delay_description = super()._get_lead_days(product, bypass_delay_description=bypass_delay_description, **values)
         buy_rule = self.filtered(lambda r: r.action == 'buy')
-        seller_info = 'supplierinfo' in values and values['supplierinfo']._get_seller_info() or product.with_company(buy_rule.company_id)._select_seller(quantity=None)
         if not buy_rule:
             return delays, delay_description
+        seller_info = ('supplierinfo' in values and values['supplierinfo']._get_seller_info()) or \
+            self.env['stock.rule']._pick_supplier(buy_rule.company_id, product)
         if not seller_info:
             delays['total_delay'] += 365
             delays['no_vendor_found_delay'] += 365
