@@ -79,7 +79,6 @@ registry.category("web_tour.tours").add("PosHrTour", {
 
             // Cash in/out should be accessible for all users.
             Chrome.doCashMove("50", "Test cash out"),
-            Dialog.discard(),
 
             // order for admin
             PosHr.clickCashierName(),
