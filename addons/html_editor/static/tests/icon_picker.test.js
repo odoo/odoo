@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { click, edit, press, queryAll, waitFor } from "@odoo/hoot-dom";
+import { click, edit, press, queryAll, queryOne, waitFor } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { setupEditor } from "./_helpers/editor";
 import { getContent } from "./_helpers/selection";
@@ -175,5 +175,78 @@ describe("icon picker", () => {
         expect(".o-IconPicker-section").toHaveCount(0);
         expect(displayedIcons().slice(0, 2)).toEqual(["mail (filled)", "mail"]);
         expect(displayedIcons().filter((icon) => icon === "mail (filled)")).toHaveLength(1);
+    });
+
+    test("expose the picker to assistive technologies", async () => {
+        const { editor } = await setupEditor("<p>[]</p>");
+        await openIconPicker(editor);
+        expect(".o-IconPicker").toHaveAttribute("role", "dialog");
+        expect(".o-IconPicker").toHaveAttribute("aria-label", "Insert an icon");
+
+        const input = queryOne(".o-IconPicker input");
+        expect(input).toHaveAttribute("role", "combobox");
+        expect(input).toHaveAttribute("aria-label", "Search an icon");
+        const listbox = queryOne(`#${input.getAttribute("aria-controls")}`);
+        expect(listbox).toHaveAttribute("role", "listbox");
+        expect(".o-IconPicker-search [data-icon='search']").toHaveAttribute("aria-hidden", "true");
+
+        // Every icon is an option named after its readable name
+        expect(queryAll(".o-IconPicker-icon").every((el) => el.role === "option")).toBe(true);
+        expect(".o-IconPicker-icon[data-icon='local_bar']").toHaveAttribute(
+            "aria-label",
+            "local bar"
+        );
+        expect(".o-IconPicker-icon[data-icon='home'].oi-filled").toHaveAttribute(
+            "aria-label",
+            "home (filled)"
+        );
+        expect(".o-IconPicker-icon[data-icon='oi_view-kanban']").toHaveAttribute(
+            "aria-label",
+            "view kanban"
+        );
+
+        // The active option follows the keyboard navigation
+        const activeOption = () => queryOne(`#${input.getAttribute("aria-activedescendant")}`);
+        expect(activeOption()).toHaveAttribute("data-icon", "check");
+        expect(activeOption()).toHaveAttribute("aria-selected", "true");
+        await press("ArrowRight");
+        await animationFrame();
+        expect(activeOption()).toHaveAttribute("data-icon", "close");
+        expect(".o-IconPicker-icon[data-icon='check']").toHaveAttribute("aria-selected", "false");
+
+        await search("zzzz");
+        expect(input).not.toHaveAttribute("aria-activedescendant");
+        expect(".o-IconPicker-empty").toHaveAttribute("role", "status");
+
+        await click(".o-IconPicker button[title='Clear search']");
+        await animationFrame();
+        expect(activeOption()).toHaveAttribute("data-icon", "check");
+    });
+
+    test("name the sections of the listbox", async () => {
+        const { editor } = await setupEditor("<p>[]</p>");
+        await openIconPicker(editor);
+        expect(".o-IconPicker [role='group']").toHaveCount(0);
+        await click(".o-IconPicker-icon[data-icon='mail']:not(.oi-filled)");
+        await animationFrame();
+
+        await openIconPicker(editor);
+        const groups = queryAll(".o-IconPicker [role='listbox'] > [role='group']");
+        expect(groups).toHaveLength(2);
+        expect(
+            groups.map((group) =>
+                queryOne(`#${group.getAttribute("aria-labelledby")}`).textContent.trim()
+            )
+        ).toEqual(["Frequently used", "All icons"]);
+    });
+
+    test("the clear search button is an accessible button", async () => {
+        const { editor } = await setupEditor("<p>[]</p>");
+        await openIconPicker(editor);
+        await search("heart");
+        const button = ".o-IconPicker button[title='Clear search']";
+        expect(button).toHaveAttribute("type", "button");
+        expect(button).toHaveAttribute("aria-label", "Clear search");
+        expect(`${button} .oi`).toHaveAttribute("aria-hidden", "true");
     });
 });

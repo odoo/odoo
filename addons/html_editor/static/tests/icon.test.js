@@ -1,5 +1,5 @@
 import { describe, expect, press, test } from "@odoo/hoot";
-import { click, dblclick, queryAll, waitFor, waitForNone } from "@odoo/hoot-dom";
+import { click, dblclick, queryAll, queryOne, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { animationFrame } from "@odoo/hoot-mock";
 import { getContent, setContent, setSelection } from "./_helpers/selection";
@@ -175,6 +175,29 @@ test("Can replace icon using toolbar", async () => {
     undo(editor);
     expect("span[data-icon='search']").toHaveCount(0);
     expect("span[data-icon='favorite']").toHaveCount(1);
+});
+
+test.tags("desktop");
+test("The Replace button references the icon picker it opens", async () => {
+    await setupIcon("favorite");
+    const button = ".o-we-toolbar button[name='icon_replace']";
+    expect(button).toHaveAttribute("aria-haspopup", "dialog");
+    expect(button).toHaveAttribute("aria-expanded", "false");
+    expect(button).not.toHaveAttribute("aria-controls");
+
+    await contains(button).click();
+    await waitFor(".o-IconPicker");
+    expect(button).toHaveAttribute("aria-expanded", "true");
+    const picker = queryOne(`#${queryOne(button).getAttribute("aria-controls")}`);
+    expect(picker).toHaveClass("o-IconPicker");
+    expect(picker).toHaveAttribute("role", "dialog");
+    expect(picker).toHaveAttribute("aria-label", queryOne(button).getAttribute("title"));
+
+    await press("Escape");
+    await animationFrame();
+    expect(".o-IconPicker").toHaveCount(0);
+    expect(button).toHaveAttribute("aria-expanded", "false");
+    expect(button).not.toHaveAttribute("aria-controls");
 });
 
 test("Styles should be preserved when replacing icon", async () => {

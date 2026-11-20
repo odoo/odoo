@@ -1,6 +1,8 @@
 import { withSequence } from "@html_editor/utils/resource";
 import { Plugin, shared } from "../../plugin";
+import { signal } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { uniqueId } from "@web/core/utils/functions";
 import { IconPicker } from "./icon_picker/icon_picker";
 import {
     ICON_SELECTOR,
@@ -128,6 +130,8 @@ export class IconPlugin extends Plugin {
                 groupId: "icon_replace",
                 commandId: "replaceIcon",
                 opensUi: true,
+                popup: "dialog",
+                popupId: () => this.iconPickerId(),
                 icon: "image",
             },
         ],
@@ -139,10 +143,13 @@ export class IconPlugin extends Plugin {
     };
 
     setup() {
-        this.iconPickerOverlay = this.dependencies.overlay.createOverlay(IconPicker, {
-            hasAutofocus: true,
-            className: "popover",
-        });
+        /** The id of the open icon picker, referenced by the Replace button. */
+        this.iconPickerId = signal(null);
+        this.iconPickerOverlay = this.dependencies.overlay.createOverlay(
+            IconPicker,
+            { hasAutofocus: true, className: "popover" },
+            { onRemove: () => this.iconPickerId.set(null) }
+        );
         this.addDomListener(this.editable, "dblclick", (ev) => {
             const iconEl = closestElement(ev.target, isIconElement);
             if (iconEl && this.isReplaceableOnDblClick(iconEl)) {
@@ -170,9 +177,17 @@ export class IconPlugin extends Plugin {
      *  called with the picked icon instead of inserting or replacing one
      */
     openIconPicker({ iconEl, onSelect } = {}) {
+        if (this.iconPickerOverlay.isOpen) {
+            return;
+        }
+        const id = uniqueId("o-we-icon-picker-");
+        this.iconPickerId.set(id);
         this.iconPickerOverlay.open({
             target: iconEl,
             props: {
+                id,
+                // Named after the button that opens it.
+                label: iconEl ? _t("Replace icon") : _t("Insert an icon"),
                 document: this.document,
                 currentIcon: iconEl?.dataset.icon
                     ? {
