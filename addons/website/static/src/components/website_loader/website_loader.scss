@@ -1,5 +1,60 @@
+@keyframes loaderCheck {
+    from {
+        transform: translateX(-25%);
+        opacity: 0;
+    }
+}
+
+@keyframes loaderDone {
+    from {
+        transform: translateX(.5em);
+        opacity: 0;
+    }
+}
+
+@keyframes colorsPlaneMotion {
+    from {
+        transform: scale(1.6) rotate3d(1.6, 1, -1.1, 37deg) translateX(10%) translateY(-3%);
+    }
+    to {
+        transform: scale(1.5) rotate3d(1.4, 1, -1.1, 29deg) translateX(10%) translateY(0);
+    }
+}
+
+@keyframes elevateColoredCells {
+    0%, 100% {
+        transform: translateZ(0px);
+        background-color: #1F2937;
+    }
+    30% {
+        transform: translateZ(25px);
+        background-color: var(--background-color);
+    }
+}
+
+@keyframes filmstripScroll {
+    to {
+        transform: translateX(-100%);
+    }
+}
+
+@keyframes loaderTextFading {
+    0%, 100% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+@keyframes rotateLoader {
+    0% { transform: rotate(0deg);}
+    100% { transform: rotate(360deg);}
+}
+
 .o_website_loader_container {
-    $-accent-color: #BB86FC; /* dark mode primary color */
+    --o-website-loader-accent-color: #BB86FC; /* dark mode primary color */
+
     background-color: var(--o-view-background-color);
     pointer-events: all;
     z-index: calc(var(--o-bs-zindex-modal) - 1);
@@ -25,34 +80,20 @@
         .o_tour_pointer {
             --TourPointer__height: 1em;
             --TourPointer__width: 1em;
-            --TourPointer__color: #{$-accent-color};
-            --TourPointer__color-accent: #{lighten($-accent-color, 7%)};
+            --TourPointer__color: var(--o-website-loader-accent-color);
+            --TourPointer__color-accent: hsl(from var(--o-website-loader-accent-color) h s min(l + 7, 100));
         }
     }
     .o_website_loader_text_highlight {
-        color: $-accent-color;
+        color: var(--o-website-loader-accent-color);
     }
     .o_website_loader_progress {
         --progress-height: 0.5rem;
     }
     .o_website_loader_check {
-        @keyframes loaderCheck {
-            from {
-                transform: translateX(-25%);
-                opacity: 0;
-            }
-        }
-
         animation: loaderCheck 1s ease-out;
     }
     .o_website_loader_done {
-        @keyframes loaderDone {
-            from {
-                transform: translateX(.5em);
-                opacity: 0;
-            }
-        }
-
         animation: loaderDone 1s ease-out;
     }
     /* Animation Steps Container */
@@ -148,9 +189,6 @@
 
     /* COLORS step */
     #o_website_loader_step_colors {
-        $-random-colors: #7d773c, #607944, #775c35, #3d6273, #5f414c, #805f54, #76527a, #56476e, #4b676b, #95985f;
-        $-random-color-cells: 28, 43, 31, 37, 14, 41, 34, 23, 19, 12;
-
         display: grid;
         grid-template-columns: repeat(8, 1fr);
         grid-template-rows: repeat(8, 1fr);
@@ -158,36 +196,58 @@
         transform: scale(1.5) rotate3d(1.6, 1, -1.1, 37deg) translateX(10%);
         animation: 7s ease-in-out alternate colorsPlaneMotion;
 
-        @keyframes colorsPlaneMotion {
-            from {
-                transform: scale(1.6) rotate3d(1.6, 1, -1.1, 37deg) translateX(10%) translateY(-3%);
-            }
-            to {
-                transform: scale(1.5) rotate3d(1.4, 1, -1.1, 29deg) translateX(10%) translateY(0);
-            }
-        }
-
-        @keyframes elevateColoredCells {
-            0%, 100% {
-                transform: translateZ(0px);
-                background-color: #1F2937;
-            }
-            30% {
-                transform: translateZ(25px);
-                background-color: var(--background-color);
-            }
-        }
-
         span {
             border-radius: .4rem;
             background-color: #1F2937;
 
-            @for $i from 1 through length($-random-color-cells) {
-                &:nth-child(#{nth($-random-color-cells, $i)}) {
-                    animation: elevateColoredCells (5s + ($i * .2s)) ease-in-out infinite;
-                    animation-delay: ($i - 1) * .5s;
-                    --background-color: #{nth($-random-colors, $i)};
-                }
+            &:nth-child(28) {
+                animation: elevateColoredCells 5.2s ease-in-out 0s infinite;
+                --background-color: #7d773c;
+            }
+
+            &:nth-child(43) {
+                animation: elevateColoredCells 5.4s ease-in-out 0.5s infinite;
+                --background-color: #607944;
+            }
+
+            &:nth-child(31) {
+                animation: elevateColoredCells 5.6s ease-in-out 1s infinite;
+                --background-color: #775c35;
+            }
+
+            &:nth-child(37) {
+                animation: elevateColoredCells 5.8s ease-in-out 1.5s infinite;
+                --background-color: #3d6273;
+            }
+
+            &:nth-child(14) {
+                animation: elevateColoredCells 6s ease-in-out 2s infinite;
+                --background-color: #5f414c;
+            }
+
+            &:nth-child(41) {
+                animation: elevateColoredCells 6.2s ease-in-out 2.5s infinite;
+                --background-color: #805f54;
+            }
+
+            &:nth-child(34) {
+                animation: elevateColoredCells 6.4s ease-in-out 3s infinite;
+                --background-color: #76527a;
+            }
+
+            &:nth-child(23) {
+                animation: elevateColoredCells 6.6s ease-in-out 3.5s infinite;
+                --background-color: #56476e;
+            }
+
+            &:nth-child(19) {
+                animation: elevateColoredCells 6.8s ease-in-out 4s infinite;
+                --background-color: #4b676b;
+            }
+
+            &:nth-child(12) {
+                animation: elevateColoredCells 7s ease-in-out 4.5s infinite;
+                --background-color: #95985f;
             }
         }
     }
@@ -201,12 +261,6 @@
     .o_website_loader_filmstrip {
         min-height: 45vh;
         animation-play-state: paused;
-
-        @keyframes filmstripScroll {
-            to {
-                transform: translateX(-100%);
-            }
-        }
 
         .o_website_loader_filmstrip_inner {
             width: 200%;
@@ -238,7 +292,6 @@
 
     /* TEXT step */
     #o_website_loader_step_text {
-
         .o_website_loader_text_content {
             font-size: 180vh;
             transform: translate(-25%, -25%);
@@ -249,14 +302,6 @@
             mix-blend-mode: plus-lighter;
             color: rgba(255, 255, 255, .5);
 
-            @keyframes loaderTextFading {
-                0%, 100% {
-                    opacity: 0;
-                }
-                50% {
-                    opacity: 1;
-                }
-            }
             &:nth-child(2) {
                 animation-delay: 2s;
                 color: color-mix(in srgb, color-mix(in srgb, cyan, white) 50%, transparent);
@@ -271,13 +316,8 @@
 
     /* GENERIC step */
     .o_website_loader_loader {
-        $-loader-size: 120px;
-        $-loader-gap: $-loader-size * .5;
-
-        @keyframes rotateLoader {
-            0% { transform: rotate(0deg);}
-            100% { transform: rotate(360deg);}
-        }
+        --o-website-loader-size: 120px;
+        --o-website-loader-gap: calc(var(--o-website-loader-size) * .5);
 
         .o_website_loader_circle, .o_website_loader_circle_mask {
             position: absolute;
@@ -285,23 +325,23 @@
             left: 50%;
             bottom: auto;
             right: auto;
-            margin-left: $-loader-gap * -1;
-            margin-top: $-loader-gap * -1;
+            margin-left: calc(var(--o-website-loader-gap) * -1);
+            margin-top: calc(var(--o-website-loader-gap) * -1);
         }
         .o_website_loader_circle, .o_website_loader_circle_line {
-            height: $-loader-size;
-            width: $-loader-size;
+            height: var(--o-website-loader-size);
+            width: var(--o-website-loader-size);
             border-radius: 50%;
             box-shadow: inset 0 0 0 1px #FFF;
         }
         .o_website_loader_circle {
-            height: $-loader-size;
+            height: var(--o-website-loader-size);
             opacity: .2;
         }
         .o_website_loader_circle_mask {
-            height: $-loader-size;
-            width: $-loader-gap;
-            transform-origin: $-loader-gap $-loader-gap;
+            height: var(--o-website-loader-size);
+            width: var(--o-website-loader-gap);
+            transform-origin: var(--o-website-loader-gap) var(--o-website-loader-gap);
             -webkit-mask-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
             animation: rotateLoader 1.2s infinite linear;
         }

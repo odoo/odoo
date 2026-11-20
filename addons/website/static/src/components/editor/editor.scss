@@ -7,7 +7,9 @@
     background-color: var(--o-we-sidebar-content-field-dropdown-bg);
     box-shadow: var(--o-we-sidebar-content-field-dropdown-shadow);
     > li {
-        border-bottom: var(--o-we-sidebar-content-field-border-width) solid lighten($o-we-sidebar-content-field-dropdown-border-color, 15%);
+        --o-website-autocomplete-item-border-color: hsl(from var(--o-we-sidebar-content-field-dropdown-border-color) h s min(l + 15, 100));
+
+        border-bottom: var(--o-we-sidebar-content-field-border-width) solid var(--o-website-autocomplete-item-border-color);
         background-color: var(--o-we-sidebar-content-field-clickable-bg);
         > .dropdown-item,
         > .dropdown-item:focus,
@@ -35,26 +37,30 @@
     }
 }
 .o_we_slider_tint input[type="range"] {
+    --o-we-slider-tint-track-margin: calc(var(--o-we-sidebar-content-field-progress-control-height) / -2);
+
     background: linear-gradient(to right, #F00 0%, #FF0 16.66%, #0F0 33.33%, #0FF 50%, #00F 66.66%, #F0F 83.33%, #F00 100%);
     height: var(--o-we-sidebar-content-field-progress-control-height) !important;
     padding: 0 !important;
     cursor: pointer;
 
-    @mixin slider-track {
-        $margin-horizontal: $o-we-sidebar-content-field-progress-control-height / -2;
-        background-color: transparent !important;
-        margin: 0 $margin-horizontal 0 $margin-horizontal;
-    }
+    /* One rule per engine: a browser drops a whole rule naming a pseudo-element it does not know */
     &::-webkit-slider-runnable-track {
-        @include slider-track;
+        background-color: transparent !important;
+        margin: 0 var(--o-we-slider-tint-track-margin);
     }
+
     &::-moz-range-track {
-        @include slider-track;
+        background-color: transparent !important;
+        margin: 0 var(--o-we-slider-tint-track-margin);
     }
+
     &::-moz-range-progress {
-        @include slider-track;
+        background-color: transparent !important;
+        margin: 0 var(--o-we-slider-tint-track-margin);
     }
-    @mixin slider-thumb {
+
+    &::-webkit-slider-thumb {
         appearance: none !important;
         height: var(--o-we-sidebar-content-field-colorpicker-size) !important;
         border: 1px solid var(--o-we-bg-dark) !important;
@@ -63,11 +69,15 @@
         border-radius: 0 !important;
         margin-top: -5% !important;
     }
-    &::-webkit-slider-thumb {
-        @include slider-thumb;
-    }
+
     &::-moz-range-thumb {
-        @include slider-thumb;
+        appearance: none !important;
+        height: var(--o-we-sidebar-content-field-colorpicker-size) !important;
+        border: 1px solid var(--o-we-bg-dark) !important;
+        box-shadow: inset 0 0 0 1px white !important;
+        background: transparent !important;
+        border-radius: 0 !important;
+        margin-top: -5% !important;
     }
 }
 

@@ -51,6 +51,11 @@
     --o-burger-topbar-color: #{$o-burger-topbar-color};
     --o-calendar-today-background-color: #{$o-calendar-today-background-color};
     --o-calendar-today-color: #{$o-calendar-today-color};
+    --o-card-body-bg-opacity: #{$o-card-body-bg-opacity};
+    /* The PDF exports keep the var() of Bootstrap for these */
+    @if type-of($text-muted) == color and type-of($card-bg) == color {
+        --o-card-text-muted: #{adjust-color-to-background($text-muted, $card-bg, mute-color($color-contrast-light), mute-color($color-contrast-dark))};
+    }
     --o-caret-down: #{$o-caret-down};
     --o-component-active-bg: #{$o-component-active-bg};
     --o-component-active-border: #{$o-component-active-border};
