@@ -130,6 +130,27 @@ class TestCompanyCheck(common.TransactionCase):
             'company_id': self.company_b.id,
         })
 
+    def test_company_check_create_id_forms(self):
+        """ Check the company consistency is respected at create, with the parent given as (id, name). """
+        with self.assertRaises(UserError):
+            self.env['test_new_api.model_child'].create({
+                'name': 'M1',
+                'company_id': self.company_a.id,
+                'parent_id': (self.parent_b.id, 'M2'),
+            })
+
+    def test_company_check_create_not_an_id(self):
+        """ Check a parent which is not an id is dropped at create, in cache and in database. """
+        parent_id = self.parent_b.id
+        child = self.env['test_new_api.model_child'].create({
+            'name': 'M1',
+            'company_id': self.company_a.id,
+            'parent_id': float(parent_id),
+        })
+        self.assertFalse(child.parent_id)
+        child.invalidate_recordset()
+        self.assertFalse(child.parent_id)
+
     def test_company_environment(self):
         """ Check the company context on the environment is verified. """
 
