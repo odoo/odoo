@@ -5,6 +5,9 @@ from werkzeug import urls
 
 from odoo import _, api, fields, models
 from odoo.tools import format_amount
+from odoo.tools.float_utils import float_repr
+
+from odoo.addons.payment import utils as payment_utils
 
 
 class PaymentLinkWizard(models.TransientModel):
@@ -54,3 +57,17 @@ class PaymentLinkWizard(models.TransientModel):
         return {
             'sale_order_id': self.res_id,
         }
+
+    def _get_access_token(self):
+        """ Override of `payment` to include the sales order in the access token. """
+        res = super()._get_access_token()
+        if self.res_model != 'sale.order':
+            return res
+
+        return payment_utils.generate_access_token(
+            self.partner_id.id,
+            float(float_repr(self.amount, self.currency_id.decimal_places)),
+            self.currency_id.id,
+            self.res_model,
+            self.res_id,
+        )
