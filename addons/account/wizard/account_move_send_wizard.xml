@@ -8,7 +8,7 @@
             <form class="o_account_move_send_wizard">
                 <field name="move_id" invisible="1"/> <!-- read by account_move_send_attachments_selector.js and drives all move-based computes -->
                 <field name="attachments_not_supported" invisible="1"/> <!-- read by mail_attachments.js widget -->
-                <field name="can_edit_body" invisible="1"/> <!-- drives invisible of the template selector -->
+                <field name="can_edit_body" invisible="1"/> <!-- needed for the `mail_composer_template_selector` widget -->
 
                 <!-- Warnings -->
                 <div class="m-0" id="alerts" invisible="not alerts">
@@ -78,7 +78,7 @@
                             class="btn-secondary"/>
 
                     <field name="mail_attachments_widget" widget="account_move_send_attachments_selector" invisible="not display_attachments_widget"/>
-                    <field name="template_id" widget="mail_composer_template_selector" invisible="not can_edit_body"/>
+                    <field name="template_id" widget="mail_composer_template_selector" invisible="'email' not in sending_methods"/>
                 </footer>
             </form>
         </field>

@@ -609,8 +609,6 @@ class TestComposerForm(TestMailComposer):
         """ Ensure that the current user's identity serves as the sender,
         particularly when transitioning from a template with a designated sender to one lacking such specifications.
         Moreover, we verify that switching to a template lacking any subject maintains the existing subject intact. """
-        # template editors can switch templates in mass mode, as body remains editable
-        self.user_employee.group_ids += self.env.ref('mail.group_mail_template_editor')
         # Setup: Prepare Templates
         template_complete = self.template.copy({
             "email_from": "not_current_user@template_complete.com",
@@ -629,9 +627,13 @@ class TestComposerForm(TestMailComposer):
                 self.assertEqual(form.email_from, template_complete.email_from, "email_from not set correctly to form this test")
                 self.assertEqual(form.subject, template_complete.subject, "subject not set correctly to form this test")
 
+                # body of a template cannot be edited by non editors in mass mode
+                self.assertEqual(form.can_edit_body, composition_mode == 'comment')
+
                 # Switch to Template without Sender
                 form.template_id = template_no_sender
                 self.assertEqual(form.email_from, self.env.user.email_formatted, "email_from not updated to current user")
+                self.assertEqual(form.can_edit_body, composition_mode == 'comment')
 
                 # Switch to Template without Subject
                 form.template_id = template_no_subject

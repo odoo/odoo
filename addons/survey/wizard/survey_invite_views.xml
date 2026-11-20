@@ -51,7 +51,7 @@
                             <field name="subject" invisible="not send_email" placeholder="Subject..." widget="char_emojis"/>
                         </group>
                         <hr invisible="not send_email"/>
-                        <field name="can_edit_body" invisible="1"/> <!-- drives readonly of body and invisible of the template selector -->
+                        <field name="can_edit_body" invisible="1"/> <!-- drives readonly of body -->
                         <field name="body" class="oe-bordered-editor"
                             widget="html_mail"
                             options="{'height': 300}"
@@ -72,7 +72,7 @@
                         <button string="Send" invisible="not send_email" name="action_invite" type="object" class="btn-primary" data-hotkey="q"/>
                         <button string="Close" class="btn-secondary" special="cancel" data-hotkey="x"/>
                         <field name="attachment_ids" widget="mail_composer_attachment_selector" invisible="not send_email" data-hotkey="a"/>
-                        <field name="template_id" widget="mail_composer_template_selector" invisible="not send_email or not can_edit_body"/>
+                        <field name="template_id" widget="mail_composer_template_selector" invisible="not send_email"/>
                         <field name="scheduled_date" widget="datetime_scheduled_date" invisible="not send_email"/>
                     </footer>
                 </form>

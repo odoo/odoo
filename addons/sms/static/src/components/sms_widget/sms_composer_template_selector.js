@@ -5,6 +5,10 @@ import {
 import { registry } from "@web/core/registry";
 
 export class SmsComposerTemplateSelector extends MailComposerTemplateSelector {
+    get canSaveTemplate() {
+        return true;
+    }
+
     async onManageTemplateBtnClick() {
         const action = await this.action.loadAction("sms.sms_template_action");
         action.context = {
@@ -18,4 +22,5 @@ export class SmsComposerTemplateSelector extends MailComposerTemplateSelector {
 registry.category("fields").add("sms_composer_template_selector", {
     ...mailComposerTemplateSelector,
     component: SmsComposerTemplateSelector,
+    fieldDependencies: [],
 });

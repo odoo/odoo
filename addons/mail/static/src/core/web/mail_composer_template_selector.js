@@ -36,6 +36,14 @@ export class MailComposerTemplateSelector extends Component {
         });
     }
 
+    /**
+     * Saving the body as a template is allowed only when it can be edited, as
+     * it otherwise comes from the current template.
+     */
+    get canSaveTemplate() {
+        return this.props.record.data.can_edit_body;
+    }
+
     get templateDomain() {
         return getFieldDomain(this.props.record, this.props.name, this.props.domain);
     }
@@ -104,6 +112,7 @@ export class MailComposerTemplateSelector extends Component {
 export const mailComposerTemplateSelector = {
     component: MailComposerTemplateSelector,
     extractProps: (fieldInfo, dynamicInfo) => ({ domain: dynamicInfo.domain }),
+    fieldDependencies: [{ name: "can_edit_body", type: "boolean" }],
 };
 
 registry.category("fields").add("mail_composer_template_selector", mailComposerTemplateSelector);

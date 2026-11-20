@@ -25,7 +25,7 @@
                 </div>
                 <t t-if="!this.state.hideMailTemplateManagementOptions">
                     <div class="dropdown-divider"/>
-                    <DropdownItem class="'px-3 d-flex align-items-center o-gap-1_5'" onSelected="() => this.onSaveTemplate()">
+                    <DropdownItem t-if="this.canSaveTemplate" class="'px-3 d-flex align-items-center o-gap-1_5'" onSelected="() => this.onSaveTemplate()">
                         <i class="oi oi-fw opacity-75" data-icon="save"/>Save as Template
                     </DropdownItem>
                     <DropdownItem class="'px-3 d-flex align-items-center o-gap-1_5'" onSelected="() => this.onManageTemplateBtnClick()">
