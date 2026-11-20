@@ -188,7 +188,7 @@ class HrLeave(models.Model):
         'Duration (Hours)', compute='_compute_duration', store=True, tracking=True,
         help='Number of hours of the time off request. Used in the calculation.')
     last_several_days = fields.Boolean("All day", compute="_compute_last_several_days")
-    duration_display = fields.Char('Requested', compute='_compute_duration_display', store=True)    # details
+    duration_display = fields.Char('Requested', compute='_compute_duration_display')
     # details
     meeting_id = fields.Many2one('calendar.event', string='Meeting', copy=False)
     first_approver_id = fields.Many2one(
@@ -782,7 +782,8 @@ class HrLeave(models.Model):
                 tz = leave.employee_id._get_tz(leave.date_from) or tz
             leave.tz = tz
 
-    @api.depends('number_of_hours', 'number_of_days')
+    @api.depends_context('lang')
+    @api.depends('number_of_hours', 'number_of_days', 'work_entry_type_request_unit')
     def _compute_duration_display(self):
         for leave in self:
             duration = leave.number_of_days
