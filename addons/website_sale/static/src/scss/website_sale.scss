@@ -1119,11 +1119,10 @@ $-product-radius-map: (
             'cta': 400px,
         );
         $_min_width: map-get($_sizes_min, 'infos') + map-get($_sizes_min, 'spacer') + map-get($_sizes_min, 'cta');
-        $_max_width: map-get($_sizes_max, 'infos') + map-get($_sizes_max, 'spacer') + map-get($_sizes_max, 'cta');
 
         @container product-details (min-width: #{$_min_width}) {
             width: 100%;
-            max-width: var(--o-wsale-product-details-content-max-width, #{$_max_width}) !important;
+            max-width: var(--o-wsale-product-details-content-max-width) !important;
             margin: 0;
 
             article {
