@@ -2013,6 +2013,44 @@ class TestBoM(TestMrpCommon):
             {'operation_id': False, 'workorder_id': mo_1.workorder_ids[2].id},
         ])
 
+    def test_bom_updates_mo_with_never_attribute_values(self):
+        """ Updating the BoM of a confirmed MO must keep the components and work orders that only
+        apply to the 'never' attribute values of the MO.
+        """
+        attribute_line = self.env['product.template.attribute.line'].create({
+            'attribute_id': self.no_variant_attribute.id,
+            'product_tmpl_id': self.product_4.product_tmpl_id.id,
+            'value_ids': [Command.set(self.no_variant_attribute.value_ids.ids)],
+        })
+        extra_ptav, second_ptav = attribute_line.product_template_value_ids
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product_4.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [
+                Command.create({'product_id': self.product_2.id, 'product_qty': 1, 'bom_product_template_attribute_value_ids': [Command.set(extra_ptav.ids)]}),
+                Command.create({'product_id': self.product_1.id, 'product_qty': 1}),
+            ],
+            'operation_ids': [
+                Command.create({'name': 'Engrave', 'workcenter_id': self.workcenter_1.id, 'bom_product_template_attribute_value_ids': [Command.set(extra_ptav.ids)]}),
+                Command.create({'name': 'Polish', 'workcenter_id': self.workcenter_1.id, 'bom_product_template_attribute_value_ids': [Command.set(second_ptav.ids)]}),
+            ],
+        })
+        mo = self.env['mrp.production'].create({
+            'bom_id': bom.id,
+            'product_qty': 1.0,
+            'never_product_template_attribute_value_ids': [Command.set(extra_ptav.ids)],
+        })
+        mo.action_confirm()
+        self.assertEqual(mo.move_raw_ids.product_id, self.product_2 | self.product_1)
+        self.assertEqual(mo.workorder_ids.mapped('name'), ['Engrave'])
+
+        bom.bom_line_ids = [Command.update(bom.bom_line_ids[1].id, {'product_qty': 2})]
+        self.assertTrue(mo.is_outdated_bom)
+        mo.action_update_bom()
+        self.assertEqual(mo.move_raw_ids.product_id, self.product_2 | self.product_1, "The component of the 'never' attribute value should be kept")
+        self.assertEqual(mo.move_raw_ids.filtered(lambda m: m.product_id == self.product_1).product_uom_qty, 2)
+        self.assertEqual(mo.workorder_ids.mapped('name'), ['Engrave'], "The operation of the 'never' attribute value should be kept")
+
     def test_bom_updates_mo_with_pre_prod_picking(self):
         """ With a 2-steps config, creates a MO, then updates its BoM by
         replacing one of its BoM line's product. Updates the MO and checks a new
