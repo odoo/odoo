@@ -587,8 +587,10 @@ class ProductProduct(models.Model):
                         filled = min(shortage, in_qty)
                         if shortage_move.out_move:
                             old_unit = shortage_move.value / shortage_move.quantity
+                            old_value = shortage_move.out_move.value
                             shortage_move.out_move.value += filled * (old_unit - unit_price)
-                            edited_move_ids.add(shortage_move.out_move.id)
+                            if old_value != shortage_move.out_move.value:
+                                edited_move_ids.add(shortage_move.out_move.id)
                         in_qty -= filled
                         remaining_qty = shortage_move.quantity + filled
                         if remaining_qty < 0:
