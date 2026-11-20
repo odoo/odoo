@@ -11,6 +11,7 @@ import {
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
+import { uniqueId } from "@web/core/utils/functions";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { FrequentIconPlugin } from "./frequent_icon_plugin";
@@ -25,6 +26,8 @@ const MAX_FREQUENT_ICONS = 42;
  * @property {string} id unique among the variants of every icon
  * @property {string} name the icon name, i.e. its `data-icon`
  * @property {boolean} filled whether it is the filled variant of the icon
+ * @property {string} label the readable name of the icon variant, e.g.
+ *  "local bar (filled)", for assistive technologies and tooltips
  * @property {string[]} searchTerms the name and the tags the search matches
  */
 
@@ -42,10 +45,18 @@ export async function loadIcons() {
         { cache: { type: "disk" } }
     );
     return catalog.flatMap(({ name, has_fill, tags }) => {
+        // e.g. "local_bar" -> "local bar", "oi_view-kanban" -> "view kanban"
+        const label = name.replace(/^oi_/, "").replaceAll(/[_-]/g, " ");
         const searchTerms = [name.replaceAll("_", " "), ...tags];
-        const icons = [{ id: name, name, filled: false, searchTerms }];
+        const icons = [{ id: name, name, filled: false, label, searchTerms }];
         if (has_fill) {
-            icons.push({ id: `${name}:filled`, name, filled: true, searchTerms });
+            icons.push({
+                id: `${name}:filled`,
+                name,
+                filled: true,
+                label: _t("%(icon)s (filled)", { icon: label }),
+                searchTerms,
+            });
         }
         return icons;
     });
@@ -56,6 +67,8 @@ export class IconPicker extends Component {
 
     props = useProps({
         onSelect: t.function(),
+        id: t.string().optional(),
+        label: t.string().optional(),
         close: t.function().optional(),
         currentIcon: t.object({ name: t.string(), filled: t.boolean() }).optional(),
         document: t
@@ -69,6 +82,8 @@ export class IconPicker extends Component {
 
     gridRef = signal.ref();
     inputRef = signal.ref();
+
+    listboxId = uniqueId("o-we-icon-picker-listbox-");
 
     /** @type {PickerIcon[]} */
     icons = [];
@@ -124,7 +139,23 @@ export class IconPicker extends Component {
     }
 
     get placeholder() {
-        return this.hoveredIcon()?.name ?? _t("Search an icon");
+        return this.hoveredIcon()?.label ?? _t("Search an icon");
+    }
+
+    /**
+     * @param {number} index
+     * @returns {string} the id of the option of the icon at the given index
+     */
+    getOptionId(index) {
+        return `${this.listboxId}-${index}`;
+    }
+
+    /**
+     * @returns {string | undefined} the id of the active option, if displayed
+     */
+    get activeDescendant() {
+        const index = this.activeIndex();
+        return index < this.getDisplayedIcons().length ? this.getOptionId(index) : undefined;
     }
 
     /**
