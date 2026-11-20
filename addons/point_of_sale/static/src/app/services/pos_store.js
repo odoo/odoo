@@ -2540,6 +2540,10 @@ export class PosStore extends WithLazyGetterTrap {
         return false;
     }
 
+    getQRCodeValueContext(_payment) {
+        return {};
+    }
+
     async showQR(payment) {
         if (this.currency.isZero(payment.amount)) {
             this.notification.add(_t("Can't create a QR for a zero amount"), { type: "warning" });
@@ -2548,14 +2552,19 @@ export class PosStore extends WithLazyGetterTrap {
         payment.setPaymentStatus("waiting");
         let qrCodeValue;
         try {
-            qrCodeValue = await this.data.call("pos.payment.method", "get_qr_code_value", [
-                [payment.payment_method_id.id],
-                payment.amount,
-                payment.pos_order_id.name + " " + payment.pos_order_id.tracking_number,
-                "",
-                this.currency.id,
-                payment.pos_order_id.partner_id?.id,
-            ]);
+            qrCodeValue = await this.data.call(
+                "pos.payment.method",
+                "get_qr_code_value",
+                [
+                    [payment.payment_method_id.id],
+                    payment.amount,
+                    payment.pos_order_id.name + " " + payment.pos_order_id.tracking_number,
+                    "",
+                    this.currency.id,
+                    payment.pos_order_id.partner_id?.id,
+                ],
+                { context: this.getQRCodeValueContext(payment) }
+            );
         } catch (error) {
             qrCodeValue = payment.payment_method_id.default_qr;
             if (!qrCodeValue) {
