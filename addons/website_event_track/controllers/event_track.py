@@ -9,6 +9,7 @@ from werkzeug.exceptions import Forbidden, NotFound
 import babel
 import babel.dates
 import base64
+import fnmatch
 import json
 import operator
 import pytz
@@ -18,6 +19,8 @@ from odoo.fields import Domain
 from odoo.http import content_disposition, request
 from odoo.tools import is_html_empty, plaintext2html
 from odoo.tools.misc import babel_locale_parse
+
+from odoo.addons.website.models.ir_http import sitemap_qs2dom
 
 
 class EventTrackController(http.Controller):
@@ -365,8 +368,18 @@ class EventTrackController(http.Controller):
     # TRACK PAGE VIEW
     # ------------------------------------------------------------
 
+    def sitemap_event_track(env, rule, query_string):
+        Track = env['event.track']
+        domain = sitemap_qs2dom(query_string, '/event/track', Track._rec_name)
+        domain &= Domain('event_id', 'any', [('website_track', '=', True), ('active', '=', True)])
+        slug = env['ir.http']._slug
+        for track in Track.search_fetch(domain, ['name', 'seo_name', 'event_id']):
+            url = f'/event/{slug(track.event_id)}/track/{slug(track)}'
+            if not query_string or fnmatch.fnmatch(url.lower(), '*%s*' % '*'.join(query_string.split('/'))):
+                yield {'loc': url}
+
     @http.route('''/event/<model("event.event", "[('website_track', '=', True)]"):event>/track/<model("event.track", "[('event_id', '=', event.id)]"):track>''',
-                type='http', auth="public", website=True, sitemap=True, readonly=True)
+                type='http', auth="public", website=True, sitemap=sitemap_event_track, readonly=True)
     def event_track_page(self, event, track, **options):
         track = self._fetch_track(track.id, allow_sudo=False)
 
