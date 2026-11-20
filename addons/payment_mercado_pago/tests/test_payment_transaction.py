@@ -45,6 +45,39 @@ class TestPaymentTransaction(MercadoPagoCommon, PaymentHttpCommon):
             },
         })
 
+    def test_tokenizing_payment_is_first_credential_on_file(self):
+        tx = self._create_transaction(flow='direct', tokenize=True)
+        payload = tx._mercado_pago_prepare_payment_request_payload()
+        self.assertDictEqual(payload['point_of_interaction'], {
+            'type': 'CREDENTIAL_ON_FILE',
+            'sub_type': 'unscheduled',
+            'transaction_data': {
+                'first_transaction': True,
+                'storage': 'store',
+                'transaction_initiator': 'customer',
+            },
+        })
+
+    def test_token_payment_references_first_payment(self):
+        token = self._create_token()
+        tx = self._create_transaction(
+            flow='token', reference='renewal', operation='offline', token_id=token.id,
+        )
+        self.assertIsNone(tx._mercado_pago_prepare_cof_payload())
+
+        self._create_transaction(
+            flow='direct', token_id=token.id, provider_reference=self.MP_PAYMENT_ID,
+        )
+        self._create_transaction(
+            flow='token', reference='later', token_id=token.id, provider_reference='999',
+        )
+        self.assertDictEqual(tx._mercado_pago_prepare_cof_payload()['transaction_data'], {
+            'first_transaction': False,
+            'storage': 'stored',
+            'transaction_initiator': 'merchant',
+            'reference': {'id': self.MP_PAYMENT_ID},
+        })
+
     @mute_logger('odoo.addons.payment.models.payment_transaction')
     def test_no_input_missing_from_redirect_form(self):
         """ Test that the `api_url` key is not omitted from the rendering values. """
