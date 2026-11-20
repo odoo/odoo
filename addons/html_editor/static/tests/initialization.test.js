@@ -1,7 +1,8 @@
-import { describe, test } from "@odoo/hoot";
-import { testEditor } from "./_helpers/editor";
+import { describe, expect, test } from "@odoo/hoot";
+import { setupEditor, testEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
 import { FORMATTABLE_TAGS } from "@html_editor/utils/formatting";
+import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 
 /**
  * content of the "init" sub suite in editor.test.js
@@ -305,6 +306,14 @@ describe("color normalization", () => {
             `),
         });
     });
+
+    test("should unwrap nested identical <font> tags inside a QWeb directive", async () => {
+        await testEditor({
+            config: { includePlugins: [QWebPlugin] },
+            contentBefore: `<p><font style="color: red;">a<t t-if="test"><font style="color: red;">b</font></t></font></p>`,
+            contentAfter: `<p><font style="color: red;">a<t t-if="test">b</t></font></p>`,
+        });
+    });
 });
 
 describe("formatting normalization", () => {
@@ -377,6 +386,144 @@ describe("formatting normalization", () => {
             });
         });
     }
+
+    test("should not unwrap font-weight: normal inside a bold parent", async () => {
+        await testEditor({
+            styleContent: `.boldClass { font-weight: bold; }`,
+            contentBefore: `<p class="boldClass">a<font style="font-weight: normal;">b</font>c</p>`,
+            contentAfter: `<p class="boldClass">a<font style="font-weight: normal;">b</font>c</p>`,
+        });
+    });
+
+    test("should unwrap nested bold tags inside a QWeb directive", async () => {
+        await testEditor({
+            config: { includePlugins: [QWebPlugin] },
+            contentBefore: `<p><strong>a<t t-if="test"><strong>b</strong></t></strong></p>`,
+            contentAfter: `<p><strong>a<t t-if="test">b</t></strong></p>`,
+        });
+    });
+
+    test("should not unwrap intermediate color style override", async () => {
+        await testEditor({
+            contentBefore: `<p><font style="color: red;"><span style="color: blue;"><font style="color: red;">text</font></span></font></p>`,
+            contentAfter: `<p><font style="color: red;"><span style="color: blue;"><font style="color: red;">text</font></span></font></p>`,
+        });
+    });
+
+    test("should detect semantic formatting tags as redundant when parent already has that visual formatting", async () => {
+        const { el, editor } = await setupEditor("<p><br></p>");
+        const { isRedundantElement } = editor.shared.format;
+        el.innerHTML = `<p style="font-weight: bold;"><b>boldText</b><i>italicText</i><u>underlineText</u></p>`;
+        const pElement = el.firstChild;
+        const b = pElement.childNodes[0];
+        const i = pElement.childNodes[1];
+        const u = pElement.childNodes[2];
+
+        expect(isRedundantElement(b)).toBe(true);
+        expect(isRedundantElement(i)).toBe(false);
+        expect(isRedundantElement(u)).toBe(false);
+    });
+
+    test("should detect nested small tags as redundant", async () => {
+        const { el, editor } = await setupEditor("<p><br></p>");
+        const { isRedundantElement } = editor.shared.format;
+        el.innerHTML = `<p><small><small>small text</small></small></p>`;
+        const outerSmall = el.firstChild.firstChild;
+        const innerSmall = outerSmall.firstChild;
+
+        expect(isRedundantElement(outerSmall)).toBe(false);
+        expect(isRedundantElement(innerSmall)).toBe(true);
+    });
+
+    test("should detect strong tag inside a visually-bold parent via class as redundant", async () => {
+        const { el, editor } = await setupEditor("<p><br></p>", {
+            styleContent: ".boldClass { font-weight: bold; }",
+        });
+        const { isRedundantElement } = editor.shared.format;
+        el.innerHTML = `<p class="boldClass"><strong>bold text</strong></p>`;
+        const strong = el.firstChild.firstChild;
+
+        expect(isRedundantElement(strong)).toBe(true);
+    });
+
+    test("should evaluate empty span/font (0 attributes) as redundant only inside the exact same tag", async () => {
+        const { el, editor } = await setupEditor("<p><br></p>");
+        const { isRedundantElement } = editor.shared.format;
+        el.innerHTML = `<span><span>nested span</span></span>`;
+        const innerSpan = el.firstChild.firstChild;
+        expect(isRedundantElement(innerSpan)).toBe(true);
+
+        el.innerHTML = `<font><span>nested different tag</span></font>`;
+        const innerSpanInFont = el.firstChild.firstChild;
+        expect(isRedundantElement(innerSpanInFont)).toBe(false);
+    });
+
+    test("should return false for span/font containing exotic attributes like id, data-*, lang", async () => {
+        const { el, editor } = await setupEditor("<p><br></p>");
+        const { isRedundantElement } = editor.shared.format;
+        el.innerHTML = `<p style="color: red;"><span style="color: red;" id="my-span" data-test="123" lang="en">text</span></p>`;
+        const span = el.firstChild.firstChild;
+
+        expect(isRedundantElement(span)).toBe(false);
+    });
+
+    test("should detect inline style matching parent computed style as redundant", async () => {
+        const { el, editor } = await setupEditor("<p><br></p>");
+        const { isRedundantElement } = editor.shared.format;
+        el.innerHTML = `<div style="color: rgb(255, 0, 0);"><span style="color: red;">text</span></div>`;
+        const span = el.firstChild.firstChild;
+
+        expect(isRedundantElement(span)).toBe(true);
+    });
+
+    test("should reject redundancy for intermediate style overrides", async () => {
+        const { el, editor } = await setupEditor("<p><br></p>");
+        const { isRedundantElement } = editor.shared.format;
+        el.innerHTML = `<font style="color: red;"><span style="color: blue;"><font style="color: red;">text</font></span></font>`;
+        const middleSpan = el.firstChild.firstChild;
+        const innerFont = middleSpan.firstChild;
+
+        expect(isRedundantElement(middleSpan)).toBe(false);
+        expect(isRedundantElement(innerFont)).toBe(false);
+    });
+
+    test("should detect color class already covered by ancestor span or font as redundant", async () => {
+        const { el, editor } = await setupEditor("<p><br></p>");
+        const { isRedundantElement } = editor.shared.format;
+        el.innerHTML = `<span class="text-danger"><span class="text-danger">danger text</span></span>`;
+        const innerSpan = el.firstChild.firstChild;
+
+        expect(isRedundantElement(innerSpan)).toBe(true);
+    });
+
+    test("should reject redundancy when color class is overridden by a different class of same category on intermediate ancestor", async () => {
+        const { el, editor } = await setupEditor("<p><br></p>");
+        const { isRedundantElement } = editor.shared.format;
+        el.innerHTML = `<span class="text-danger"><span class="text-primary"><span class="text-danger">text</span></span></span>`;
+        const middleSpan = el.firstChild.firstChild;
+        const innerSpan = middleSpan.firstChild;
+
+        expect(isRedundantElement(middleSpan)).toBe(false);
+        expect(isRedundantElement(innerSpan)).toBe(false);
+    });
+
+    test("should return false when node classes are not all recognized color classes", async () => {
+        const { el, editor } = await setupEditor("<p><br></p>");
+        const { isRedundantElement } = editor.shared.format;
+        el.innerHTML = `<span class="text-danger"><span class="text-danger my-custom-class">text</span></span>`;
+        const innerSpan = el.firstChild.firstChild;
+
+        expect(isRedundantElement(innerSpan)).toBe(false);
+    });
+
+    test("should require both inline styles and color classes to be redundant when both are present", async () => {
+        const { el, editor } = await setupEditor("<p><br></p>");
+        const { isRedundantElement } = editor.shared.format;
+        el.innerHTML = `<span style="color: red;" class="text-danger"><span style="color: red;" class="text-primary">text</span></span>`;
+        const innerSpan = el.firstChild.firstChild;
+
+        expect(isRedundantElement(innerSpan)).toBe(false);
+    });
 });
 
 describe("Editor config initialization", () => {
