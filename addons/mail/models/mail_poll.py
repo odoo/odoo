@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 from odoo.addons.mail.tools.discuss import Store
 
 
@@ -30,13 +31,21 @@ class MailPoll(models.Model):
         ongoing_polls = self.filtered(lambda poll: not poll.end_message_id)
         ongoing_polls.winning_option_id = None
         for poll in self - ongoing_polls:
-            max_vote = max(option.vote_percentage for option in poll.option_ids)
+            max_vote = max(
+                (option.vote_percentage for option in poll.option_ids),
+                default=0,
+            )
             winners = [
                 option
                 for option in poll.option_ids
                 if option.vote_percentage == max_vote and option.vote_percentage > 0
             ]
             poll.winning_option_id = winners[0] if len(winners) == 1 else None
+
+    @api.constrains("option_ids")
+    def _check_option_ids(self):
+        if any(len(poll.option_ids) < 2 for poll in self):
+            raise ValidationError(self.env._("At least two options are required"))
 
     def _store_poll_fields(self, res: Store.FieldList, *, with_start_message_id=True):
         res.extend(["allow_multiple_options", "create_date", "create_uid", "end_message_id"])
