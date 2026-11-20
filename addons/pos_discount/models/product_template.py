@@ -9,7 +9,7 @@ class ProductTemplate(models.Model):
         config_id = data['pos.config']['records'][0]
         discount_product_id = config_id.discount_product_id.product_tmpl_id
 
-        if config_id.module_pos_discount:
+        if config_id.module_pos_discount and not search_params.get('domain'):
             data['product.template']['records'] |= discount_product_id._filtered_access('read')
 
         return data
