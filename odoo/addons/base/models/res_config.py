@@ -129,10 +129,6 @@ class ResConfigSettings(models.TransientModel):
         *   For a boolean field like 'module_XXX', ``execute`` triggers the immediate
             installation of the module named 'XXX' if the field has value ``True``.
 
-        *   For a selection field like 'module_XXX' composed of 2 string values ('0' and '1'),
-            ``execute`` triggers the immediate installation of the module named 'XXX'
-            if the field has the value ``'1'``.
-
         *   For a field with no specific prefix BUT an attribute 'config_parameter',
             ``execute``` will save its value in an ir.config.parameter (global setting for the
             database).
@@ -201,7 +197,7 @@ class ResConfigSettings(models.TransientModel):
 
                 {   'default': [('default_foo', 'model', 'foo'), ...],
                     'group':   [('group_bar', [browse_group], browse_implied_group), ...],
-                    'module':  [('module_baz', browse_module), ...],
+                    'module':  ir.module.module(...),  # modules of the module_baz fields
                     'config':  [('config_qux', 'my.parameter'), ...],
                     'other':   ['other_field', ...],
                 }
@@ -234,8 +230,8 @@ class ResConfigSettings(models.TransientModel):
                 field_groups = Groups.concat(ref(it) for it in field_group_xmlids)
                 groups.append((name, field_groups, ref(field.implied_group)))
             elif name.startswith('module_'):
-                if field.type not in ('boolean', 'selection'):
-                    raise Exception("Field %s must have type 'boolean' or 'selection'" % field)
+                if field.type != 'boolean':
+                    raise Exception("Field %s must have type 'boolean'" % field)
                 modules += IrModule._get(name[7:])
             elif hasattr(field, 'config_parameter') and field.config_parameter:
                 if field.type not in ('boolean', 'integer', 'float', 'char', 'selection', 'many2one', 'datetime'):
