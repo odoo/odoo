@@ -3,6 +3,8 @@
 #-----------------------------------------------------------
 import datetime
 import errno
+import functools
+import json
 import logging
 import os
 import os.path
@@ -11,6 +13,7 @@ import random
 import select
 import signal
 import socket
+import struct
 import subprocess
 import sys
 import threading
@@ -66,6 +69,12 @@ from odoo.tools import stripped_sys_argv, dumpstacks, log_ormcache_stats
 
 _logger = logging.getLogger(__name__)
 
+try:
+    LISTEN_FDS = int(os.getenv("LISTEN_FDS") or 0) if os.getenv("LISTEN_PID") == str(os.getpid()) else 0
+except ValueError:
+    LISTEN_FDS = 0
+SD_LISTEN_FDS_START = 3
+
 SLEEP_INTERVAL = 60     # 1 min
 
 def memory_info(process):
@@ -93,6 +102,76 @@ def empty_pipe(fd):
     except OSError as e:
         if e.errno not in [errno.EAGAIN]:
             raise
+
+
+# ---------------------------------------------------------
+# Proxy handoff
+# ---------------------------------------------------------
+class HandoffSocket(socket.socket):
+    buffer = b''
+    on_finish = None
+
+    def recv_into(self, buffer, nbytes=0, flags=0):
+        if self.buffer:
+            data = self.buffer[:nbytes or len(buffer)]
+            self.buffer = self.buffer[len(data):]
+            buffer[:len(data)] = data
+            return len(data)
+        return super().recv_into(buffer, nbytes, flags)
+
+    def recv(self, bufsize, flags=0):
+        if self.buffer:
+            data, self.buffer = self.buffer[:bufsize], self.buffer[bufsize:]
+            return data
+        return super().recv(bufsize, flags)
+
+    def close(self):
+        on_finish, self.on_finish = self.on_finish, None
+        if on_finish:
+            on_finish()
+        super().close()
+
+
+def handoff_reply(handoff_socket, roundtrip, start_time):
+    thread = threading.current_thread()
+    handoff_socket.sendmsg([json.dumps({
+        'roundtrip': roundtrip,
+        'status': getattr(thread, 'status', None),
+        'query_count': getattr(thread, 'query_count', 0),
+        'query_time': getattr(thread, 'query_time', 0),
+        'perf_t0': getattr(thread, 'perf_t0', start_time),
+        'perf_t1': time.time(),
+    }).encode()])
+
+
+def serve_handoffs(handoff_socket, dispatch):
+    payload_size_len = 4  # we use one integer to store the size of the payload
+    handoff_socket.sendmsg([b"started"])
+    while True:
+        try:
+            msg, ancdata, _, _ = handoff_socket.recvmsg(64 * 1024, socket.CMSG_SPACE(4))  # one file descriptor
+        except OSError:
+            msg = b''
+        if not msg:
+            _logger.info("Proxy handoff socket closed, stop serving handoffs")
+            return
+        fd = None
+        try:
+            fd = struct.unpack('i', ancdata[0][2])[0]
+            payload_size = int.from_bytes(msg[:payload_size_len], 'big')
+            payload = json.loads(msg[payload_size_len:payload_size_len + payload_size]) if payload_size else {}
+            sock = HandoffSocket(fileno=fd)
+        except (IndexError, ValueError, OSError, struct.error):
+            _logger.exception("Invalid proxy handoff message: %r", msg[:1024 * 4])
+            if fd is not None:
+                os.close(fd)
+            continue
+        sock.setblocking(True)
+        sock.buffer = msg[payload_size_len + payload_size:]
+        if 'roundtrip' in payload:
+            sock.on_finish = functools.partial(handoff_reply, handoff_socket, payload['roundtrip'], time.time())
+        dispatch(sock, tuple(payload.get('address') or ('127.0.0.1', 0)))
+
 
 #----------------------------------------------------------
 # Werkzeug WSGI servers patched
@@ -228,9 +307,19 @@ class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.
         # so the server waits for them when shutting down gracefully.
         self.daemon_threads = False
 
+        if LISTEN_FDS >= 2:
+            _logger.info("HTTP service (werkzeug) proxy handoff activated")
+            handoff_socket = socket.socket(fileno=SD_LISTEN_FDS_START + 1)
+            handoff_socket.setblocking(True)
+            threading.Thread(
+                target=serve_handoffs,
+                args=(handoff_socket, self.process_handoff),
+                name="odoo.service.httpd.handoff",
+                daemon=True,
+            ).start()
+
     def server_bind(self):
-        SD_LISTEN_FDS_START = 3
-        if os.environ.get('LISTEN_FDS') == '1' and os.environ.get('LISTEN_PID') == str(os.getpid()):
+        if LISTEN_FDS:
             self.reload_socket = True
             self.socket = socket.fromfd(SD_LISTEN_FDS_START, socket.AF_INET, socket.SOCK_STREAM)
             _logger.info('HTTP service (werkzeug) running through socket activation')
@@ -256,6 +345,11 @@ class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.
         t.type = 'http'
         t.start_time = time.time()
         t.start()
+
+    def process_handoff(self, request, client_address):
+        if self.max_http_threads:
+            self.http_threads_sem.acquire()
+        self.process_request(request, client_address)
 
     # TODO: Remove this method as soon as either of the revision
     # - python/cpython@8b1f52b5a93403acd7d112cd1c1bc716b31a418a for Python 3.6,
@@ -802,13 +896,21 @@ class GeventServer(CommonServer):
             signal.signal(signal.SIGUSR1, log_ormcache_stats)
             gevent.spawn(self.watchdog)
 
+        if LISTEN_FDS:
+            listener = socket.socket(fileno=SD_LISTEN_FDS_START)
+            _logger.info("Evented Service (longpolling) running through socket activation")
+        else:
+            listener = (self.interface, self.port)
+            _logger.info("Evented Service (longpolling) running on %s:%s", self.interface, self.port)
         self.httpd = WSGIServer(
-            (self.interface, self.port), self.app,
+            listener, self.app,
             log=logging.getLogger('longpolling'),
             error_log=logging.getLogger('longpolling'),
             handler_class=ProxyHandler,
         )
-        _logger.info('Evented Service (longpolling) running on %s:%s', self.interface, self.port)
+        if LISTEN_FDS >= 2:
+            _logger.info("Evented Service (longpolling) proxy handoff activated")
+            gevent.spawn(serve_handoffs, socket.socket(fileno=SD_LISTEN_FDS_START + 1), self.httpd.do_handle)
         try:
             self.httpd.serve_forever()
         except:
