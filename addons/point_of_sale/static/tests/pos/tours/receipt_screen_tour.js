@@ -25,7 +25,7 @@ registry.category("web_tour.tours").add("ReceiptScreenTour", {
             Dialog.confirm("Continue with limited functionality"),
             ProductScreen.addOrderline("Letter Tray", "10", "5"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Partner Full"),
+            ProductScreen.clickCustomer("Partner Full", { searchMore: false }),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.validateButtonIsHighlighted(true),
