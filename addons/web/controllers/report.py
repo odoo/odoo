@@ -128,7 +128,7 @@ class ReportController(http.Controller):
                     if report.print_report_name and not len(obj) > 1:
                         report_name = safe_eval(report.print_report_name, {'object': obj, 'time': time})
                         filename = "%s.%s" % (report_name, extension)
-                response.headers.add('Content-Disposition', content_disposition(filename))
+                response.headers.add('Content-Disposition', content_disposition(filename.replace('/', '_')))
                 return response
             else:
                 return
