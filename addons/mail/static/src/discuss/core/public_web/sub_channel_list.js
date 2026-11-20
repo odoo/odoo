@@ -13,6 +13,7 @@ import {
     usePlugin,
     useProps,
 } from "@odoo/owl";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { useService } from "@web/core/utils/hooks";
 import { fuzzyLookup } from "@web/core/utils/search";
 
@@ -24,7 +25,7 @@ export class SubChannelList extends Component {
 
     setup() {
         this.store = useService("mail.store");
-        this.offlineService = useService("offline");
+        this.offlinePlugin = usePlugin(OfflinePlugin);
         // bound once so `onClickSubChannel` is a stable (useProps.static) handler
         this.onClickSubChannel = this.onClickSubChannel.bind(this);
         this.props = useProps({

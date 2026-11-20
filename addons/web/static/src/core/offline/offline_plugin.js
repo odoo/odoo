@@ -14,7 +14,6 @@ import { _t } from "@web/core/l10n/translation";
 import { normalize } from "@web/core/l10n/utils";
 import { ConnectionLostError, rpc, rpcBus } from "@web/core/network/rpc";
 import { ORM } from "@web/core/orm_plugin";
-import { registry } from "@web/core/registry";
 import { services } from "@web/core/services";
 import { IndexedDB } from "@web/core/utils/indexed_db";
 import { hashCode } from "@web/core/utils/strings";
@@ -451,40 +450,3 @@ export class OfflinePlugin extends Plugin {
 }
 
 services.add(OfflinePlugin);
-
-/**
- * -----------------------------------------------------------------------------
- * @todo owl3 migration
- * temporary - to remove when all use of the offline service are removed
- * -----------------------------------------------------------------------------
- *
- * Bridges the legacy `useService("offline")` API to the OfflinePlugin. New code
- * should use `usePlugin(OfflinePlugin)` directly and read the `isOffline()` signal.
- */
-export const offlineService = {
-    start() {
-        const offlinePlugin = usePlugin(OfflinePlugin);
-        const offlineService = Object.create(offlinePlugin);
-        Object.defineProperty(offlineService, "offline", {
-            get() {
-                return offlinePlugin.isOffline();
-            },
-            set(offline) {
-                offlinePlugin.setOffline(offline);
-            },
-        });
-        Object.defineProperty(offlineService, "syncingORM", {
-            get() {
-                return offlinePlugin.syncingORM();
-            },
-        });
-        Object.defineProperty(offlineService, "scheduledORM", {
-            get() {
-                return offlinePlugin._ormToSync();
-            },
-        });
-        return offlineService;
-    },
-};
-
-registry.category("services").add("offline", offlineService);
