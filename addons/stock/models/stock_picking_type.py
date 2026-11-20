@@ -230,6 +230,7 @@ class StockPickingType(models.Model):
         help="If set to Automatic, put pickings into batches as they are confirmed when possible.")
     batch_group_by_partner = fields.Boolean('Contact', help="Automatically group batches by contacts.")
     batch_group_by_destination = fields.Boolean('Destination Country', help="Automatically group batches by destination country.")
+    batch_group_by_destination_state = fields.Boolean('Destination State', help="Automatically group batches by destination state.")
     batch_group_by_src_loc = fields.Boolean('Group by Source Location',
         help="Automatically group batches by their source location.")
     batch_group_by_dest_loc = fields.Boolean('Group by Destination Location',
@@ -698,7 +699,7 @@ class StockPickingType(models.Model):
 
     @api.model
     def _get_batch_group_by_keys(self):
-        return ['batch_group_by_destination', 'batch_group_by_src_loc', 'batch_group_by_dest_loc', 'batch_group_by_partner']
+        return ['batch_group_by_destination', 'batch_group_by_destination_state', 'batch_group_by_src_loc', 'batch_group_by_dest_loc', 'batch_group_by_partner']
 
     @api.model
     def _get_wave_group_by_keys(self):
