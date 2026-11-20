@@ -1,5 +1,5 @@
 import { Plugin, shared } from "@html_editor/plugin";
-import { MEDIA_SELECTOR, isProtected } from "@html_editor/utils/dom_info";
+import { MEDIA_SELECTOR, isIconElement, isProtected } from "@html_editor/utils/dom_info";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
 import { _t } from "@web/core/l10n/translation";
@@ -7,7 +7,7 @@ import { Tooltip } from "@web/core/tooltip/tooltip";
 
 export class MediaWebsitePlugin extends Plugin {
     static id = "media_website";
-    static dependencies = ["media", "selection", "builderOptions", "operation"];
+    static dependencies = ["media", "icon", "selection", "builderOptions", "operation"];
     static shared = shared(["onDblClickEditableMedia", "openImageTooltip", "replaceMedia"]);
 
     /** @type {import("plugins").BuilderResources} */
@@ -85,7 +85,8 @@ export class MediaWebsitePlugin extends Plugin {
     }
 
     /**
-     * Opens the media dialog to replace the selected media.
+     * Opens the media dialog to replace the selected media, or the icon picker
+     * to replace an icon (see `isReplacedFromIconPicker`).
      *
      * @param {HTMLElement} mediaEl the media element to replace
      */
@@ -98,7 +99,27 @@ export class MediaWebsitePlugin extends Plugin {
             "replace_media_dialog_params_processors",
             this.getMediaDialogProps({ mediaEl, closestSnippetEl, editableEl })
         );
+        if (this.isReplacedFromIconPicker(mediaEl, params)) {
+            this.dependencies.icon.openIconPicker({ iconEl: mediaEl });
+            return;
+        }
         await this.dependencies.media.openMediaDialog(params, editableEl);
+    }
+
+    /**
+     * An icon is replaced from the icon picker, unless the media dialog params
+     * explicitly allow other kinds of media in its place (e.g. an image for
+     * the icons of the social media snippets).
+     *
+     * @param {HTMLElement} mediaEl
+     * @param {Object} params the media dialog params
+     * @returns {boolean}
+     */
+    isReplacedFromIconPicker(mediaEl, params) {
+        return (
+            isIconElement(mediaEl) &&
+            (!params.visibleTabs || params.visibleTabs.every((tab) => tab === "ICONS"))
+        );
     }
 
     getMediaDialogProps({ mediaEl, closestSnippetEl, editableEl }) {
