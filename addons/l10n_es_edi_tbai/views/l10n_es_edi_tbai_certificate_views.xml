@@ -34,17 +34,12 @@
             </field>
         </record>
 
-        <menuitem id="menu_l10n_es_edi_tbai_root"
-                  name="Spain TicketBAI"
-                  sequence="110"
-                  groups="account.group_account_manager"
-                  parent="account.menu_finance_configuration">
-            <menuitem id="menu_l10n_es_edi_tbai_certificates"
-                      name="Certificates"
-                      action="l10n_es_edi_tbai_certificate_action"
-                      sequence="100"
-                      groups="account.group_account_manager"/>
-        </menuitem>
+        <menuitem id="menu_l10n_es_edi_tbai_certificates"
+                  name="TBAI Certificates"
+                  action="l10n_es_edi_tbai_certificate_action"
+                  sequence="30"
+                  parent="l10n_es.menu_l10n_es_root"
+                  groups="account.group_account_manager"/>
 
     </data>
 </odoo>
