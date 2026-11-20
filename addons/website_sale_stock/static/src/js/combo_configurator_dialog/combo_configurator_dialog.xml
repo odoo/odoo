@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <t t-inherit="sale.ComboConfiguratorDialog" t-inherit-mode="extension">
-        <ProductCard position="attributes">
+        <xpath expr="//div[@t-foreach='configurableCombos']//ProductCard" position="attributes">
             <attribute name="quantity">state.quantity</attribute>
-        </ProductCard>
+        </xpath>
         <QuantityButtons position="attributes">
             <attribute name="isPlusButtonDisabled">
                 !isComboQuantityAllowed(state.quantity + 1)
