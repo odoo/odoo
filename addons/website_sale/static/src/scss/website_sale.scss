@@ -1931,7 +1931,7 @@ body.modal-open:has(.o_wsale_product_page) {
 
 /* Product Ribbon Classes */
 .oe_website_sale{
-    @mixin o-ribbon-tag() {
+    .o_wsale_ribbon, .o_wsale_badge {
         margin: 0;
         font-size: 0.8rem;
         white-space: nowrap;
@@ -1944,14 +1944,12 @@ body.modal-open:has(.o_wsale_product_page) {
     }
 
     .o_wsale_ribbon {
-        @include o-ribbon-tag();
         padding: var(--o-bs-spacer-2) $ribbon-padding;
         transform-origin: top right;
         z-index: 1;
     }
 
     .o_wsale_badge {
-        @include o-ribbon-tag();
         padding: var(--o-bs-spacer-1) var(--o-bs-spacer-2);
         border-radius: var(--border-radius) !important;
     }
