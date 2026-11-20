@@ -14,10 +14,53 @@ test("Icon styles should be retained when it is replaced with another icon", asy
     await setupWebsiteBuilder(`<i class="oi ${extractClasses}" data-icon="search"/>`);
 
     await dblclick(":iframe .oi");
-    await animationFrame();
-    await click("[data-icon=favorite]");
+    await waitFor(".o-IconPicker");
+    expect(".o_select_media_dialog").toHaveCount(0);
+    await click(".o-IconPicker-icon[data-icon=favorite]:not(.oi-filled)");
     await animationFrame();
     expect(":iframe [data-icon=favorite]").toHaveClass(extractClasses);
+});
+
+test("The Replace option of an icon still opens the media dialog", async () => {
+    // So that an icon can be replaced by another kind of media.
+    await setupWebsiteBuilder(`<p><i class="oi" data-icon="search"></i></p>`);
+    await click(":iframe .oi");
+    await contains("[data-action-id=replaceMedia]").click();
+    await waitFor(".o_select_media_dialog");
+    expect(".o-IconPicker").toHaveCount(0);
+});
+
+test("The Replace with icon option of an icon opens the icon picker", async () => {
+    await setupWebsiteBuilder(`<p><i class="oi" data-icon="search"></i></p>`);
+    await click(":iframe .oi");
+    await contains("[data-action-id=replaceWithIcon]").click();
+    await waitFor(".o-IconPicker");
+    expect(".o_select_media_dialog").toHaveCount(0);
+    await click(".o-IconPicker-icon[data-icon=favorite].oi-filled");
+    await animationFrame();
+    expect(".o-IconPicker").toHaveCount(0);
+    expect(":iframe .oi").toHaveAttribute("data-icon", "favorite");
+    expect(":iframe .oi").toHaveClass("oi-filled");
+});
+
+test("Only icons have the Replace with icon option", async () => {
+    await setupWebsiteBuilder(`<p><img src="/web/static/img/logo.png"/></p>`);
+    await contains(":iframe img").click();
+    await waitFor("[data-action-id=replaceMedia]");
+    expect("[data-action-id=replaceWithIcon]").toHaveCount(0);
+});
+
+test("The icons of the social media snippet are still replaced from the media dialog", async () => {
+    // They can be replaced by an image as well.
+    await setupWebsiteBuilder(
+        `<div class="s_social_media" data-snippet="s_social_media">
+            <a href="https://www.example.com"><i class="oi" data-icon="search"/></a>
+        </div>`
+    );
+    await dblclick(":iframe .s_social_media .oi");
+    await waitFor(".o_select_media_dialog");
+    expect(".o-IconPicker").toHaveCount(0);
+    expect(".o_select_media_dialog .nav-link:contains('Images')").toHaveCount(1);
 });
 
 function mockIconFontCustomization() {
@@ -43,19 +86,25 @@ describe("Icon styles", () => {
         await contains(".o_hb_snippets_tabs button[data-name=theme]").click();
         await contains(".o_theme_tab [data-action-param='icon-font-family'][data-action-value='Material Symbols Sharp']").click();
         await dblclick(":iframe .oi");
-        await waitFor(".font-icons-icons [data-icon='favorite']");
-        expect(".font-icons-icons [data-icon='favorite']").toHaveStyle({ fontFamily: /Material Symbols Sharp/ });
+        await waitFor(".o-IconPicker-icon[data-icon='favorite']");
+        expect(".o-IconPicker-icon[data-icon='favorite']").toHaveStyle({
+            fontFamily: /Material Symbols Sharp/,
+        });
         // Odoo custom icons have their own font, whatever the selected variant.
-        expect(".font-icons-icons [data-icon^='oi_']").toHaveCount(null, { message: "Odoo custom icons are listed" });
-        expect(".font-icons-icons [data-icon^='oi_']").toHaveStyle({ fontFamily: /odoo_ui_icons/ });
+        expect(".o-IconPicker-icon[data-icon^='oi_']").toHaveCount(null, {
+            message: "Odoo custom icons are listed",
+        });
+        expect(".o-IconPicker-icon[data-icon^='oi_']").toHaveStyle({ fontFamily: /odoo_ui_icons/ });
     });
 
     test("Icons use the outlined font with the default theme options", async () => {
         await setupWebsiteBuilder(`<i class="oi" data-icon="search"/>`);
         await dblclick(":iframe .oi");
-        await waitFor(".font-icons-icons [data-icon='favorite']");
-        expect(".font-icons-icons [data-icon='favorite']").toHaveStyle({ fontFamily: /Material Symbols Outlined/ });
-        expect(".font-icons-icons [data-icon^='oi_']").toHaveStyle({ fontFamily: /odoo_ui_icons/ });
+        await waitFor(".o-IconPicker-icon[data-icon='favorite']");
+        expect(".o-IconPicker-icon[data-icon='favorite']").toHaveStyle({
+            fontFamily: /Material Symbols Outlined/,
+        });
+        expect(".o-IconPicker-icon[data-icon^='oi_']").toHaveStyle({ fontFamily: /odoo_ui_icons/ });
     });
 });
 

@@ -9,6 +9,13 @@
             className="'flex-grow-1'"
             type="'success'"
             label.translate="Replace" />
+        <!-- TODO: temporary, see `ReplaceWithIconAction`. -->
+        <BuilderButton
+            t-if="this.state.isIcon"
+            action="'replaceWithIcon'"
+            title.translate="Replace with another icon"
+            className="'flex-grow-1'"
+            label.translate="Replace with icon" />
         <BuilderButton icon="'link'"
             t-if="this.state.canSetLink"
             id="'media_link_opt'"
