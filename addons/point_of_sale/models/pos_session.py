@@ -1057,6 +1057,7 @@ class PosSession(models.Model):
         rounding_vals = []
         if not float_is_zero(rounding_difference['amount'], precision_rounding=self.currency_id.rounding) or not float_is_zero(rounding_difference['amount_converted'], precision_rounding=self.currency_id.rounding):
             rounding_vals = [self._get_rounding_difference_vals(rounding_difference['amount'], rounding_difference['amount_converted'])]
+        rounding_vals = [val for val in rounding_vals if val]
 
         MoveLine.create(tax_vals + rounding_vals)
         move_line_ids = MoveLine.create(list(starmap(self._get_sale_vals, sales.items())))
