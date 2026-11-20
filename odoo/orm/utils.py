@@ -73,7 +73,7 @@ SQL_OPERATORS = {
 def check_object_name(name):
     """ Check if the given name is a valid model name.
 
-        The _name attribute in osv and osv_memory object is subject to
+        The _name attribute of models is subject to
         some restrictions. This function returns True or False whether
         the given name is allowed or not.
 
@@ -84,8 +84,8 @@ def check_object_name(name):
 
             psycopg2.ProgrammingError: relation "xxx" does not exist).
 
-        The same restriction should apply to both osv and osv_memory
-        objects for consistency.
+        The same restriction should apply to both regular and transient
+        models for consistency.
 
     """
     return regex_object_name.match(name) is not None

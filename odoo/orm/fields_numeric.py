@@ -184,12 +184,12 @@ class Float(Field[float, float]):
 
 class Monetary(Field[float, float]):
     """ Encapsulates a :class:`float` expressed in a given
-    :class:`res_currency<odoo.addons.base.models.res_currency.Currency>`.
+    :class:`res_currency<odoo.addons.base.models.res_currency.ResCurrency>`.
 
     The decimal precision and currency symbol are taken from the ``currency_field`` attribute.
 
     :param str currency_field: name of the :class:`Many2one` field
-        holding the :class:`res_currency <odoo.addons.base.models.res_currency.Currency>`
+        holding the :class:`res_currency <odoo.addons.base.models.res_currency.ResCurrency>`
         this monetary field is expressed in (default: `\'currency_id\'`)
     """
     type = 'monetary'

@@ -22,7 +22,7 @@ class Command(enum.IntEnum):
     either 0 (commands delete, unlink, link, and clear).
     This triplet is aliased as ``CommandValue``.
 
-    Via Python, we encourage developers craft new commands via the various
+    Via Python, we encourage developers to craft new commands via the various
     functions of this namespace. We also encourage developers to use the
     command identifier constant names when comparing the 1st element of
     existing commands.
