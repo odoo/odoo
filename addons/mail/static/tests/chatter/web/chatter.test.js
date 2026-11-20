@@ -30,7 +30,7 @@ import {
 import { Message } from "@mail/core/common/message";
 import { HIGHLIGHT_CLASS } from "@mail/core/common/message_search_plugin";
 import { describe, expect, mockUserAgent, rightClick, test } from "@odoo/hoot";
-import { advanceTime } from "@odoo/hoot-mock";
+import { advanceTime, animationFrame } from "@odoo/hoot-mock";
 
 import { range } from "@web/core/utils/numbers";
 import {
@@ -46,7 +46,14 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { DELAY_FOR_SPINNER } from "@mail/chatter/web/chatter_patch";
-import { click as clickField, edit, queryFirst, waitFor, waitForNone } from "@odoo/hoot-dom";
+import {
+    click as clickField,
+    edit,
+    queryFirst,
+    waitFor,
+    waitForNone,
+    waitUntil,
+} from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -87,7 +94,7 @@ test("simple chatter on a record", async () => {
                     "contact_fields",
                     "defaultSubject",
                     "followers",
-                    "has_pinned_messages",
+                    "pinned_message_count",
                     "scheduledMessages",
                     "showSubjectInSmallComposer",
                     "suggestedRecipients",
@@ -339,25 +346,16 @@ test("chatter: drop attachment should refresh thread data with hasParentReloadOn
     await waitFor(".o-mail-Attachment iframe:count(1)");
 });
 
-test("chatter: dropping attachments should close pinned messages and search panels", async () => {
+test("chatter: dropping attachments should close search panel", async () => {
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Armstrong" });
-    pyEnv["mail.message"].create([
-        {
-            body: "Pinned message",
-            model: "res.partner",
-            pinned_at: "2025-01-01 00:00:00",
-            res_id: partnerId,
-        },
-        {
-            body: "Searched text",
-            model: "res.partner",
-            res_id: partnerId,
-        },
-    ]);
+    pyEnv["mail.message"].create({
+        body: "Searched text",
+        model: "res.partner",
+        res_id: partnerId,
+    });
     const text = new File(["hello, world"], "text.txt", { type: "text/plain" });
-    const text2 = new File(["hello, world"], "text2.txt", { type: "text/plain" });
     await start();
     await openFormView("res.partner", partnerId);
     await contains("[title='Search Messages']:count(1)").click();
@@ -374,17 +372,6 @@ test("chatter: dropping attachments should close pinned messages and search pane
     await waitForNone(".o-mail-SearchMessageResult");
     // the search is cleared, so its term is not highlighted in the file names
     await waitForNone(`.${HIGHLIGHT_CLASS}`);
-    await contains("button[title='Pinned Messages']:count(1)").click();
-    await waitFor(".o-mail-pinnedMessages:count(1)");
-    await dragenterFiles(".o-mail-Chatter", [text2]);
-    await dropFiles(".o-Dropzone", [text2]);
-    await waitFor(
-        ".o-mail-AttachmentContainer:not(.o-isUploading):has(:text('text.txt')):count(1)"
-    );
-    await waitFor(
-        ".o-mail-AttachmentContainer:not(.o-isUploading):has(:text('text2.txt')):count(1)"
-    );
-    await waitForNone(".o-mail-pinnedMessages");
 });
 
 test("chatter: drop attachment while editing a message", async () => {
@@ -1287,4 +1274,251 @@ test("fetching new messages after posting in an empty chatter loads them from th
             },
         ],
     ]);
+});
+
+test("chatter: pinned messages can be expanded and collapsed", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Armstrong" });
+    const [, , messageId] = pyEnv["mail.message"].create([
+        {
+            body: "First pinned message",
+            model: "res.partner",
+            pinned_at: "2025-01-01 00:00:00",
+            res_id: partnerId,
+        },
+        {
+            body: "Second pinned message",
+            model: "res.partner",
+            pinned_at: "2025-01-02 00:00:00",
+            res_id: partnerId,
+        },
+        { body: "Third message", model: "res.partner", res_id: partnerId },
+    ]);
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains(
+        ".o-mail-pinnedMessages button[aria-expanded='false'] .badge:text('2'):count(1)"
+    ).click();
+    await waitFor(".o-mail-pinnedMessages .o-mail-Message:count(2)");
+    // Pinned by another user, then loaded here with its pinned date only, as when the
+    // messages are fetched again: the pinned messages count does not come with it.
+    getService("mail.store")["mail.message"].insert({
+        id: messageId,
+        pinned_at: "2025-01-03 00:00:00",
+    });
+    await waitFor(".o-mail-pinnedMessages .o-mail-Message:count(3)");
+    await contains(".o-mail-pinnedMessages button[aria-expanded='true']:count(1)").click();
+    await waitFor(".o-mail-pinnedMessages button[aria-expanded='false'] .badge:text('3'):count(1)");
+    await waitForNone(".o-mail-pinnedMessages .o-mail-Message");
+});
+
+test("chatter: pinning and unpinning a message updates the pinned messages section", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Armstrong" });
+    pyEnv["mail.message"].create({ body: "Hello world", model: "res.partner", res_id: partnerId });
+    await start();
+    await openFormView("res.partner", partnerId);
+    listenStoreFetch("mail.thread", { logParams: ["mail.thread"] });
+    await contains(".o-mail-Message:has(:text('Hello world')):count(1)").hover();
+    await contains(".o-mail-Message [title='Expand']:count(1)").click();
+    await contains(".dropdown-item:text('Pin'):count(1)").click();
+    // The section shows with the count of the pin notification: only expanding it fetches
+    // the pinned messages.
+    await contains(
+        ".o-mail-pinnedMessages button[aria-expanded='false']:has(.badge:text('1')):count(1)"
+    ).click();
+    await waitStoreFetch([
+        [
+            "mail.thread",
+            {
+                thread_model: "res.partner",
+                thread_id: partnerId,
+                request_list: ["pinnedMessages"],
+            },
+        ],
+    ]);
+    await contains(
+        ".o-mail-pinnedMessages .card:has(:text('Hello world')) button[title='Unpin']:count(1)"
+    ).click();
+    await waitForNone(".o-mail-pinnedMessages");
+});
+
+test("chatter: pinned messages can be fetched again after a failure", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Armstrong" });
+    pyEnv["mail.message"].create({
+        body: "Pinned message",
+        model: "res.partner",
+        pinned_at: "2025-01-01 00:00:00",
+        res_id: partnerId,
+    });
+    let failFetch = true;
+    onRpc("/mail/store", async (request) => {
+        const { params } = await request.json();
+        if (
+            failFetch &&
+            params.fetch_params.some(
+                ([name, fetchParams]) =>
+                    name === "mail.thread" && fetchParams.request_list.includes("pinnedMessages")
+            )
+        ) {
+            failFetch = false;
+            throw new Error("pinned messages fetch failed");
+        }
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains(".o-mail-pinnedMessages button[aria-expanded='false']:count(1)").click();
+    await waitFor(
+        `.o-mail-pinnedMessages-error:contains("Couldn't load the pinned messages."):count(1)`
+    );
+    expect(".o-mail-pinnedMessages-error").toHaveAttribute("role", "alert");
+    await waitForNone(".o-mail-pinnedMessages .o-mail-MessageCardList");
+    await contains(".o-mail-pinnedMessages-error button:text('Retry'):count(1)").press("Enter");
+    await waitFor(".o-mail-pinnedMessages .o-mail-Message:has(:text('Pinned message')):count(1)");
+    await waitForNone(".o-mail-pinnedMessages-error");
+    // The Retry button went away with the error: the focus stays on the section.
+    expect(".o-mail-pinnedMessages button[aria-expanded='true']").toBeFocused();
+});
+
+test("chatter: pinned messages unpinned elsewhere are dropped on the next fetch", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Armstrong" });
+    const [, unpinnedId] = pyEnv["mail.message"].create([
+        {
+            body: "Still pinned",
+            model: "res.partner",
+            pinned_at: "2025-01-01 00:00:00",
+            res_id: partnerId,
+        },
+        {
+            body: "Unpinned elsewhere",
+            model: "res.partner",
+            pinned_at: "2025-01-02 00:00:00",
+            res_id: partnerId,
+        },
+    ]);
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains(".o-mail-pinnedMessages button[aria-expanded='false']:count(1)").click();
+    await waitFor(".o-mail-pinnedMessages .o-mail-Message:has(:text('Still pinned')):count(1)");
+    await waitFor(
+        ".o-mail-pinnedMessages .o-mail-Message:has(:text('Unpinned elsewhere')):count(1)"
+    );
+    // Unpinned by another user: no notification reaches the current user.
+    pyEnv["mail.message"].write([unpinnedId], { pinned_at: false });
+    // Expanding the section again fetches the pinned messages.
+    await contains(".o-mail-pinnedMessages button[aria-expanded='true']:count(1)").click();
+    await contains(".o-mail-pinnedMessages button[aria-expanded='false']:count(1)").click();
+    await waitFor(".o-mail-pinnedMessages .o-mail-Message:has(:text('Still pinned')):count(1)");
+    await waitForNone(".o-mail-pinnedMessages .o-mail-Message:has(:text('Unpinned elsewhere'))");
+});
+
+test("chatter: pinned messages section is reset when switching records", async () => {
+    const pyEnv = await startServer();
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+        { name: "Armstrong" },
+        { name: "Aldrin" },
+    ]);
+    const [, secondMessageId] = pyEnv["mail.message"].create([
+        {
+            body: "First pinned message",
+            model: "res.partner",
+            pinned_at: "2025-01-01 00:00:00",
+            res_id: partnerId_1,
+        },
+        { body: "Second message", model: "res.partner", res_id: partnerId_1 },
+        {
+            body: "Pinned message of Aldrin",
+            model: "res.partner",
+            pinned_at: "2025-01-01 00:00:00",
+            res_id: partnerId_2,
+        },
+    ]);
+    await start();
+    await openFormView("res.partner", partnerId_1, {
+        arch: `
+            <form string="Partners">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <chatter/>
+            </form>`,
+        resIds: [partnerId_1, partnerId_2],
+    });
+    await contains(".o-mail-pinnedMessages button[aria-expanded='false']:count(1)").click();
+    await waitFor(".o-mail-pinnedMessages .o-mail-Message:count(1)");
+    // Pinned by another user: no notification reaches the current user.
+    pyEnv["mail.message"].write([secondMessageId], { pinned_at: "2025-01-02 00:00:00" });
+    await contains(".o_pager_next:count(1)").click();
+    await waitFor(".o-mail-pinnedMessages button[aria-expanded='false'] .badge:text('1'):count(1)");
+    await waitForNone(".o-mail-pinnedMessages .o-mail-Message");
+    // Back on the first record, the fresh count replaces the list loaded before.
+    await contains(".o_pager_previous:count(1)").click();
+    await contains(
+        ".o-mail-pinnedMessages button[aria-expanded='false']:has(.badge:text('2')):count(1)"
+    ).click();
+    await waitFor(".o-mail-pinnedMessages .o-mail-Message:has(:text('Second message')):count(1)");
+});
+
+test("chatter: pinning a message that is not loaded updates the loaded pinned messages", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Armstrong" });
+    const messageIds = pyEnv["mail.message"].create(
+        [...Array(40).keys()].map((i) => ({
+            body: `Message ${i}`,
+            message_type: "comment",
+            model: "res.partner",
+            res_id: partnerId,
+        }))
+    );
+    pyEnv["mail.message"].write([messageIds[39]], { pinned_at: "2025-01-01 00:00:00" });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await waitFor(".o-mail-Thread .o-mail-Message:has(:text('Message 39')):count(1)");
+    await waitForNone(".o-mail-Thread .o-mail-Message:has(:text('Message 0'))");
+    await contains(".o-mail-pinnedMessages button[aria-expanded='false']:count(1)").click();
+    await waitFor(".o-mail-pinnedMessages .o-mail-Message:count(1)");
+    // Pinned from another tab: the notification has the count, not the message data.
+    pyEnv["mail.thread"].set_message_pin.call(pyEnv["res.partner"], partnerId, messageIds[0], true);
+    await waitFor(".o-mail-pinnedMessages .o-mail-Message:has(:text('Message 0')):count(1)");
+    await waitFor(".o-mail-pinnedMessages .o-mail-Message:count(2)");
+    await contains(".o-mail-pinnedMessages button[aria-expanded='true']:count(1)").click();
+    await waitFor(".o-mail-pinnedMessages button[aria-expanded='false'] .badge:text('2'):count(1)");
+});
+
+test("chatter: reloading the record fetches the expanded pinned messages in the same request", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Armstrong" });
+    pyEnv["mail.message"].create({
+        body: "Pinned message",
+        message_type: "comment",
+        model: "res.partner",
+        pinned_at: "2025-01-01 00:00:00",
+        res_id: partnerId,
+    });
+    const env = await start();
+    await openFormView("res.partner", partnerId);
+    await contains(".o-mail-pinnedMessages button[aria-expanded='false']:count(1)").click();
+    await waitFor(".o-mail-pinnedMessages .o-mail-Message:count(1)");
+    const threadRequestLists = [];
+    onRpcBefore("/mail/store", (args) => {
+        for (const [name, params] of args.fetch_params) {
+            if (name === "mail.thread") {
+                threadRequestLists.push(params.request_list);
+            }
+        }
+    });
+    env.bus.trigger("MAIL:RELOAD-THREAD", { model: "res.partner", id: partnerId });
+    await waitUntil(() => threadRequestLists.length > 0);
+    const thread = getService("mail.store")["mail.thread"].get({
+        model: "res.partner",
+        id: partnerId,
+    });
+    await waitUntil(() => thread.pinnedMessagesState === "loaded");
+    await animationFrame();
+    expect(threadRequestLists).toHaveLength(1);
+    expect(threadRequestLists[0]).toInclude("pinned_message_count");
+    expect(threadRequestLists[0]).toInclude("pinnedMessages");
+    await waitFor(".o-mail-pinnedMessages .o-mail-Message:count(1)");
 });

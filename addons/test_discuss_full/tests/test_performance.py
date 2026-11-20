@@ -390,7 +390,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - read group mail_followers (followersCount)
     #       - search_fetch mail_followers (selfFollower)
     #       - read group mail_followers (recipientsCount)
-    #       - read group mail_message (has_pinned_messages)
+    #       - read group mail_message (pinned_message_count)
     #       - search_fetch mail_scheduled_message (scheduledMessages)
     #       - search_fetch mail_activity (activities)
     #         [enterprise] search whatsapp_template (canSendWhatsapp)
@@ -858,7 +858,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                                     "contact_fields",
                                     "defaultSubject",
                                     "followers",
-                                    "has_pinned_messages",
+                                    "pinned_message_count",
                                     "scheduledMessages",
                                     "showSubjectInSmallComposer",
                                     "suggestedRecipients",
@@ -1294,11 +1294,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "hasReadAccess": True,
                     "hasWriteAccess": False,
                     "has_mail_thread": True,
-                    "has_pinned_messages": False,
                     "id": partner.id,
                     "isLoadingAttachments": False,
                     "model": "res.partner",
                     "partner_fields": [],
+                    "pinned_message_count": 0,
                     "primary_email_field": "email",
                     "recipients": [],
                     "recipientsCount": 0,

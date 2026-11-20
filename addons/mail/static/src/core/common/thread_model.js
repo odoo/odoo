@@ -91,6 +91,21 @@ export class Thread extends Record {
             },
             { immediate: true }
         );
+        this.onChange(
+            () => [this.pinned_message_count],
+            function onChangePinnedMessageCount(pinnedMessageCount) {
+                // A count that disagrees with the loaded list, e.g. after the pin of a message
+                // that is not loaded here, is fresher: use it until the list is fetched again.
+                if (
+                    this.pinnedMessagesState === "loaded" &&
+                    pinnedMessageCount !== undefined &&
+                    pinnedMessageCount !== this.pinnedMessages.length
+                ) {
+                    this.pinnedMessagesState = undefined;
+                }
+            },
+            { initialRun: false }
+        );
     }
 
     /**
@@ -148,12 +163,6 @@ export class Thread extends Record {
         )
     );
     create_uid = fields.One("res.users");
-    /**
-     * Server-side value used in chatter to determine if the thread has pinned messages without
-     * having to load them all. Dynamic value should count "pinnedMessages" instead.
-     * @type {boolean}
-     **/
-    has_pinned_messages;
     /** @type {number} */
     id;
     /** @type {string} */
@@ -302,6 +311,25 @@ export class Thread extends Record {
     pid;
     composerDisabled = this.computed(() => this.computeComposerDisabled());
     pinnedMessages = fields.Many("mail.message", { inverse: "threadAsPinned" });
+    /**
+     * Ids of the pinned messages answered by the last fetch of the pinned messages, used to clear
+     * the known ones that are no longer pinned. The list itself follows "pinned_at".
+     * @type {number[]|undefined}
+     */
+    pinnedMessageIds;
+    /**
+     * Server-side value used in chatter to count the pinned messages of the thread without
+     * having to load them all. Dynamic value should use "pinnedMessagesCount" instead.
+     * @type {number|undefined}
+     */
+    pinned_message_count;
+    pinnedMessagesCount = this.computed(() =>
+        this.pinnedMessagesState === "loaded"
+            ? this.pinnedMessages.length
+            : this.pinned_message_count
+    );
+    /** @type {"loaded"|"loading"|"error"|undefined} */
+    pinnedMessagesState;
     sortedPinnedMessages = this.computedShallowEqual(() =>
         [...this.pinnedMessages].sort((m1, m2) => {
             if (m1.pinned_at === m2.pinned_at) {
@@ -313,13 +341,51 @@ export class Thread extends Record {
 
     async fetchPinnedMessages() {
         if (this.store.self_user?.share !== false) {
+            // The "mail.thread" store handler only serves internal users: what is known is all
+            // that can be shown.
+            this.pinnedMessagesState = "loaded";
             return;
         }
-        await this.store.fetchStoreData("mail.thread", {
-            thread_model: this.model,
-            thread_id: this.id,
-            request_list: ["pinned_messages"],
-        });
+        if (this.pinnedMessagesState === "loading") {
+            return;
+        }
+        await this.loadPinnedMessages(() =>
+            this.store.fetchStoreData("mail.thread", {
+                thread_model: this.model,
+                thread_id: this.id,
+                request_list: ["pinnedMessages"],
+            })
+        );
+    }
+
+    /**
+     * Load the pinned messages through the given request, which must ask the "mail.thread" store
+     * handler for "pinnedMessages", possibly along with other data of the thread.
+     *
+     * @param {() => Promise} fetch
+     */
+    async loadPinnedMessages(fetch) {
+        this.pinnedMessagesState = "loading";
+        const previouslyPinnedMessages = new Set(this.pinnedMessages);
+        this.pinnedMessageIds = undefined;
+        try {
+            await fetch();
+        } catch (e) {
+            this.pinnedMessagesState = "error";
+            throw e;
+        }
+        // Not sent when the thread cannot be read: keep what is known then.
+        if (this.pinnedMessageIds) {
+            // Only the messages known as pinned before the fetch: a message (un)pinned while it
+            // loads keeps the newer pinned_at of its notification.
+            const pinnedIds = new Set(this.pinnedMessageIds);
+            for (const message of previouslyPinnedMessages) {
+                if (!pinnedIds.has(message.id)) {
+                    message.pinned_at = undefined;
+                }
+            }
+        }
+        this.pinnedMessagesState = "loaded";
     }
 
     get accessRestrictedToGroupText() {

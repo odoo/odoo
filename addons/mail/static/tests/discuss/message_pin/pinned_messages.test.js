@@ -5,14 +5,17 @@ import {
     defineMailModels,
     hover,
     isInViewportOf,
+    onRpcAfter,
+    onRpcBefore,
     openDiscuss,
     scroll,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test, waitFor, waitForNone } from "@odoo/hoot";
-import { disableAnimations } from "@odoo/hoot-mock";
-import { serverState } from "@web/../tests/web_test_helpers";
+import { waitUntil } from "@odoo/hoot-dom";
+import { animationFrame, disableAnimations } from "@odoo/hoot-mock";
+import { Command, getService, serverState, withUser } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -52,6 +55,74 @@ test("Pin message", async () => {
     await waitFor(
         `${actionPanel("Pinned Messages")} .o-mail-Message:has(:text('Hello world!')):count(1)`
     );
+});
+
+test("A message pinned while the pinned messages load stays in the panel", async () => {
+    const pyEnv = await startServer();
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob" });
+    const bobUserId = pyEnv["res.users"].create({ partner_id: bobPartnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: bobPartnerId }),
+        ],
+    });
+    const [, laterId] = pyEnv["mail.message"].create([
+        {
+            body: "Already pinned",
+            message_type: "comment",
+            model: "discuss.channel",
+            pinned_at: "2025-01-01 00:00:00",
+            res_id: channelId,
+        },
+        {
+            body: "Pinned meanwhile",
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+    ]);
+    // Build the answer of the pinned messages, then hold it until Bob pinned the other message.
+    let isPinnedMessagesFetch = false;
+    const answerBuilt = Promise.withResolvers();
+    const releaseAnswer = Promise.withResolvers();
+    onRpcBefore("/mail/store", (args) => {
+        isPinnedMessagesFetch = args.fetch_params.some(
+            ([name, params]) =>
+                name === "mail.thread" && params?.request_list?.includes("pinnedMessages")
+        );
+    });
+    onRpcAfter("/mail/store", async (response) => {
+        if (!isPinnedMessagesFetch) {
+            return;
+        }
+        isPinnedMessagesFetch = false;
+        await response;
+        answerBuilt.resolve();
+        await releaseAnswer.promise;
+    });
+    await start();
+    await openDiscuss(channelId);
+    await waitFor(".o-mail-Thread .o-mail-Message:has(:text('Pinned meanwhile')):count(1)");
+    await click(".o-mail-DiscussContent-header button[title='Pinned Messages']");
+    await answerBuilt.promise;
+    await withUser(bobUserId, () =>
+        pyEnv["discuss.channel"].set_message_pin(channelId, laterId, true)
+    );
+    await waitFor(
+        `${actionPanel("Pinned Messages")} .o-mail-Message:has(:text('Pinned meanwhile')):count(1)`
+    );
+    releaseAnswer.resolve();
+    const thread = getService("mail.store")["discuss.channel"].get(channelId).thread;
+    await waitUntil(() => thread.pinnedMessagesState === "loaded");
+    await animationFrame();
+    expect(
+        `${actionPanel("Pinned Messages")} .o-mail-Message:has(:text('Pinned meanwhile'))`
+    ).toHaveCount(1);
+    expect(
+        `${actionPanel("Pinned Messages")} .o-mail-Message:has(:text('Already pinned'))`
+    ).toHaveCount(1);
 });
 
 test("Unpin message", async () => {
