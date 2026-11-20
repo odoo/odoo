@@ -6,7 +6,7 @@ import { formatCurrency } from "@web/core/currency";
 const CONSOLE_COLOR = "#4EFF4D";
 
 export class PosOrderAccounting extends Base {
-    static accountingFields = new Set(["pricelist_id", "fiscal_position_id"]);
+    static accountingFields = new Set(["pricelist_id", "fiscal_position_id", "is_refund"]);
 
     setup() {
         super.setup();
@@ -31,8 +31,34 @@ export class PosOrderAccounting extends Base {
 
     _doRecomputeAllPrices() {
         this._pricesDirty = false;
+        this._isRefundDocument = this._computeIsRefundDocument();
         this._prices.original = this._constructPriceData();
         this._prices.unit = this._constructPriceData({ baseLineOpts: { quantity: 1 } });
+    }
+
+    get isRefundDocument() {
+        if (this._pricesDirty) {
+            this._doRecomputeAllPrices();
+        }
+        return this._isRefundDocument ?? this.isRefund;
+    }
+
+    _computeIsRefundDocument() {
+        if (!this.isRefund || !this.lines.some((line) => line.qty > 0)) {
+            return this.isRefund;
+        }
+        const baseLines = this.lines.map((line) =>
+            line.getBaseLine({ quantity: line.qty, price_unit: line.price_unit, is_refund: false })
+        );
+        accountTaxHelpers.add_tax_details_in_base_lines(baseLines, this.company);
+        accountTaxHelpers.round_base_lines_tax_details(baseLines, this.company);
+        const total = accountTaxHelpers.get_tax_totals_summary(
+            baseLines,
+            this.currency,
+            this.company,
+            {}
+        ).total_amount_currency;
+        return this.currency.isZero(total) || total < 0;
     }
 
     get paymentAmountInCurrency() {
@@ -378,12 +404,14 @@ export class PosOrderAccounting extends Base {
     _computeAllPrices(opts = {}) {
         const currency = this.currency;
         const lines = opts.lines || this.lines;
-        const documentSign = this.isRefund ? -1 : 1;
+        const isRefundDocument = this.isRefundDocument;
+        const documentSign = isRefundDocument ? -1 : 1;
         const company = this.company;
         const baseLines = lines.map((l) =>
             l.getBaseLine({
                 quantity: l.qty,
                 price_unit: l.price_unit,
+                is_refund: isRefundDocument,
                 ...(opts.baseLineOpts || {}),
             })
         );

@@ -56,7 +56,7 @@ describe("PoS Discount", () => {
 
         // Sale of 10 x 3.00 with a fixed 5.00 global discount.
         const sale = store.addNewOrder();
-        await store.addLineToOrder({ product_tmpl_id: product, qty: 10 }, sale);
+        const saleLine = await store.addLineToOrder({ product_tmpl_id: product, qty: 10 }, sale);
         await store.applyDiscount(5, "fixed", sale);
         const saleTotal = sale.priceIncl;
         expect(saleTotal).toBe(1145); // 1150 incl - 5.00 fixed discount
@@ -67,7 +67,10 @@ describe("PoS Discount", () => {
         // the refund to -39.50, making amount_paid != amount_total.
         const refund = store.addNewOrder();
         refund.is_refund = true;
-        await store.addLineToOrder({ product_tmpl_id: product, qty: -10 }, refund);
+        await store.addLineToOrder(
+            { product_tmpl_id: product, qty: -10, refunded_orderline_id: saleLine },
+            refund
+        );
         await store.applyDiscount(5, "fixed", refund);
         expect(refund.priceIncl).toBe(-saleTotal); // -1145, not -1155
     });

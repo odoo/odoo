@@ -14,12 +14,13 @@ export class LoyaltyProgram extends Base {
         if (this.program_type === "coupons") {
             return 0;
         }
-        if (order.isRefund && !this.is_payment_program) {
-            return this._getRefundReversalPoints(order).issued;
-        }
-        let points = 0;
+        const isRefund = order.isRefund && !this.is_payment_program;
+        const lines = isRefund
+            ? order.getOrderlines().filter((line) => !line.refunded_orderline_id)
+            : order.getOrderlines();
+        let points = isRefund ? this._getRefundReversalPoints(order).issued : 0;
         for (const rule of this.rule_ids) {
-            points += rule.getPoints(order);
+            points += rule.getPoints(order, lines);
         }
         return points;
     }

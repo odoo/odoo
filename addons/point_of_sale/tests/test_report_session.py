@@ -475,7 +475,17 @@ class TestReportSession(TestPoSCommon):
         self.assertEqual(refund.lines[0].discount, 10)
         self.assertEqual(refund.lines[0].qty, -2)
         self.assertEqual(refund.lines[0].price_subtotal_incl, 180)
-        self.make_payment(refund, self.bank_pm1, -180.0)
+        new_product = self.create_product('New Book', self.categ_basic, 50)
+        refund.lines = [Command.create({
+            'product_id': new_product.id,
+            'price_unit': 50,
+            'qty': 1,
+            'tax_ids': [],
+            'price_subtotal': -50,
+            'price_subtotal_incl': -50,
+        })]
+        refund._compute_prices()
+        self.make_payment(refund, self.bank_pm1, -130.0)
 
         session.close_session_from_ui()
         report = self.env['report.point_of_sale.report_saledetails'].get_sale_details()
@@ -485,6 +495,8 @@ class TestReportSession(TestPoSCommon):
             report["discount_amount"], 0.0,
             "A fully refunded discounted line must net its discount to zero",
         )
+        sold = {p['product_name']: p['base_amount'] for cat in report['products'] for p in cat['products']}
+        self.assertEqual(sold['New Book'], 50.0)
 
     def test_report_header_reflects_actual_order_sessions(self):
         """A date-range report whose orders span multiple sessions (e.g. one

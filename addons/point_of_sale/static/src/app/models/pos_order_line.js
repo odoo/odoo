@@ -311,6 +311,10 @@ export class PosOrderline extends PosOrderlineAccounting {
         );
     }
 
+    get isRefundLocked() {
+        return Boolean(this.refunded_orderline_id);
+    }
+
     isPosGroupable() {
         const unit_groupable = this.product_id.uom_id
             ? this.product_id.uom_id.is_pos_groupable
