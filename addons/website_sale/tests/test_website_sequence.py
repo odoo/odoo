@@ -80,27 +80,19 @@ class TestWebsiteSequence(BaseCommon):
         sequence_order = self.get_product_sort_mapping("Featured")
         self.assert_product_ordering(self.p1 + self.p2 + self.p3 + self.p4, sequence_order)
         # 100:1, 180:2, 225:3, 250:4
-        self.p2.set_sequence_down()
+        (self.p1 + self.p3 + self.p2 + self.p4)._website_resequence()
         # 100:1, 180:3, 225:2, 250:4
         self.assert_product_ordering(self.p1 + self.p3 + self.p2 + self.p4, sequence_order)
-        self.p4.set_sequence_up()
+        (self.p3 + self.p4 + self.p2)._website_resequence()
         # 100:1, 180:3, 225:4, 250:2
         self.assert_product_ordering(self.p1 + self.p3 + self.p4 + self.p2, sequence_order)
-        self.p2.set_sequence_top()
-        # 95:2, 100:1, 180:3, 225:4
+        (self.p2 + self.p1 + self.p3 + self.p4)._website_resequence()
+        # 100:2, 180:1, 225:3, 250:4
         self.assert_product_ordering(self.p2 + self.p1 + self.p3 + self.p4, sequence_order)
-        self.p1.set_sequence_bottom()
-        # 95:2, 180:3, 225:4, 230:1
-        self.assert_product_ordering(self.p2 + self.p3 + self.p4 + self.p1, sequence_order)
 
         current_products = self.get_sorted_products(sequence_order)
         current_sequences = current_products.mapped("website_sequence")
-        self.assertEqual(current_sequences, [95, 180, 225, 230], "Wrong sequence order (2)")
-
-        self.p2.website_sequence = 1
-        self.p3.set_sequence_top()
-        # -4:3, 1:2, 225:4, 230:1
-        self.assertEqual(self.p3.website_sequence, -4, "`website_sequence` should go below 0")
+        self.assertEqual(current_sequences, [100, 180, 225, 250], "Wrong sequence order (2)")
 
         new_product = self.env["product.template"].create({"name": "Last Newly Created Product"})
         current_products += new_product
@@ -109,6 +101,22 @@ class TestWebsiteSequence(BaseCommon):
             self.get_sorted_products(sequence_order, current_products)[-1],
             new_product,
             "New product should be last",
+        )
+
+    def test_website_resequence_same_sequence(self):
+        sequence_order = self.get_product_sort_mapping("Featured")
+        (self.p1 + self.p2 + self.p3).website_sequence = 300
+        (self.p1 + self.p3 + self.p2)._website_resequence()
+        self.assert_product_ordering(self.p4 + self.p1 + self.p3 + self.p2, sequence_order)
+        self.assertEqual(self.p4.website_sequence, 250)
+
+    def test_website_resequence_keeps_other_products_in_place(self):
+        # Shop order on ties is `id desc`: p4, p3 | p2, p1 (page boundary).
+        self.product_tmpls.website_sequence = 300
+        (self.p3 + self.p4)._website_resequence()
+        self.assertEqual(
+            self.get_sorted_products("website_sequence asc, id desc").ids,
+            (self.p3 + self.p4 + self.p2 + self.p1).ids,
         )
 
     def test_02_newest_arrivals(self):
