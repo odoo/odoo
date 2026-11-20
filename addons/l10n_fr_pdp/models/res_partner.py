@@ -233,10 +233,14 @@ class ResPartner(models.Model):
             return 'not_verified'
         if invoice_edi_format != 'ubl_21_fr':
             return 'not_valid_format'
-        participant_info = self._pdp_annuaire_lookup_participant(edi_identification)
-        if (participant_info or {}).get('in_annuaire'):
-            return 'valid'
-        return 'not_valid'
+        participant_info = self._pdp_annuaire_lookup_participant(edi_identification) or {}
+        if not participant_info.get('in_annuaire'):
+            return 'not_valid'
+        # Non regulated messages go through Peppol, so the partner must publish that process there.
+        # An older proxy doesn't tell, in which case nothing is blocked.
+        if self.env.company._l10n_fr_pdp_sends_unregulated() and not participant_info.get('accepts_unregulated', True):
+            return 'not_valid_format'
+        return 'valid'
 
     @api.model
     @handle_demo
