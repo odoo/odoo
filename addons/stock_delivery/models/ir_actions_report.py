@@ -82,6 +82,6 @@ class IrActionsReport(models.Model):
                     " to print %s from the chatter.",
                     report.name
                 ))
-            return base64.b64decode(attachments[0].raw), "pdf"
+            return bytes(attachments[0].raw), "pdf"
 
         return super()._render_qweb_pdf(report_ref, res_ids, data=data)
