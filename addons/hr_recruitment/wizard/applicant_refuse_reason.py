@@ -258,16 +258,11 @@ class ApplicantRefuseSingle(models.TransientModel):
             wizard.attachment_ids = template.attachment_ids if template else False
             wizard.scheduled_date = template.scheduled_date if template else False
 
-    def _prepare_send_refusal_mails(self):
-        """ Post the edited subject and body as is, without rendering them again. """
-        self.ensure_one()
-        email_from = self.template_id.email_from or self.env.user.email_formatted
-        self.applicant_id.message_post(
-            body=self.body or '',
-            subject=self.subject,
-            email_from=email_from,
-            author_id=self.env.user.partner_id.id,
-            scheduled_date=self.scheduled_date,
-            attachment_ids=[(4, att.id) for att in self.attachment_ids],
-            partner_ids=self.applicant_id.partner_id.ids,
-        )
+    def _prepare_mail_values(self, applicant):
+        """ Send the edited subject and body as is, without rendering them again. """
+        return {
+            'body': self.body or '',
+            'subject': self.subject,
+            'scheduled_date': self.scheduled_date,
+            'attachment_ids': self.attachment_ids.ids,
+        }
