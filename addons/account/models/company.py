@@ -908,6 +908,10 @@ class ResCompany(models.Model):
 
         companies = super().write(vals)
 
+        if vals.get('tax_exigibility'):
+            # The Cash Basis journal comes archived with the chart, until cash basis is enabled
+            self.tax_cash_basis_journal_id.action_unarchive()
+
         # We revoke all active exceptions affecting the changed lock dates and recreate them (with the updated lock dates)
         changed_soft_lock_fields = [field for field in SOFT_LOCK_DATE_FIELDS if field in vals]
         for company in self:
