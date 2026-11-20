@@ -991,6 +991,8 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
         )
 
     def test_see_records_action(self):
+        def normalize_domain(domain):
+            return list(Domain(domain))
         action = self.env["account.account"].spreadsheet_move_line_action(
             {
                 "date_range": {
@@ -1002,6 +1004,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                 "include_unposted": True,
             }
         )
+        action["domain"] = normalize_domain(action["domain"])
         self.assertEqual(
             action,
             {
@@ -1010,7 +1013,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                 "view_mode": "list",
                 "views": [[False, "list"]],
                 "target": "current",
-                "domain": Domain([
+                "domain": normalize_domain([
                     "&",
                     "&",
                     "&",
