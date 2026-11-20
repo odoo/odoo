@@ -11,6 +11,7 @@ from odoo.tests import tagged
 from .common import HOST, L10nCnEdiYunshuiTestCommon, MockYunshuiGateway
 from odoo.addons.l10n_cn_edi_yunshui.tools.yunshui_client import (
     BLUE_LIST,
+    GET_CREDIT_LINE,
     H5_DOWNLOAD,
     RED_FORM_DETAIL,
     RED_FORM_INIT,
@@ -68,8 +69,8 @@ class TestYunshuiRed(L10nCnEdiYunshuiTestCommon):
         credit_note.action_l10n_cn_edi_request_red_form()
 
         self.assertEqual(
-            [request['interface_code'] for request in self.gateway.requests][:3],
-            [BLUE_LIST, RED_FORM_INIT, RED_FORM_ISSUE],
+            [request['interface_code'] for request in self.gateway.requests][:4],
+            [GET_CREDIT_LINE, BLUE_LIST, RED_FORM_INIT, RED_FORM_ISSUE],
         )
         issue = next(request for request in self.gateway.requests if request['interface_code'] == RED_FORM_ISSUE)
         self.assertTrue(issue['url'].endswith('/ele.h5.pass.through'))
@@ -127,6 +128,16 @@ class TestYunshuiRed(L10nCnEdiYunshuiTestCommon):
         self.assertEqual(self._red_form(credit_note).state, 'failed')
         self.assertIn('may already be reversed', credit_note.message_ids[0].body)
         self.assertNotIn(RED_FORM_ISSUE, [request['interface_code'] for request in self.gateway.requests])
+
+    def test_red_form_request_asks_the_drawer_to_log_in_first(self):
+        credit_note = self._credit_note(reason='02')
+        self.gateway.handlers[GET_CREDIT_LINE] = {'_outer_code': '1101', '_outer_msg': '需重新登陆'}
+
+        with patch.object(self.env.registry['res.company'], '_l10n_cn_edi_action_login', return_value={'type': 'login'}):
+            self.assertEqual(credit_note.action_l10n_cn_edi_request_red_form(), {'type': 'login'})
+
+        self.assertFalse(self._red_form(credit_note))
+        self.assertEqual([request['interface_code'] for request in self.gateway.requests], [GET_CREDIT_LINE])
 
     def test_red_relogin_code_forces_next_login(self):
         credit_note = self._credit_note(reason='02')

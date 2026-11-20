@@ -411,6 +411,8 @@ class AccountMove(models.Model):
             ))
         client = self.company_id._l10n_cn_edi_get_client()
         client.ensure_ready()
+        if client.get_session_state() != 'ok':
+            return self.company_id._l10n_cn_edi_action_login()
         doc = self._l10n_cn_edi_get_document('red_form')
         if doc.state in RED_FORM_ACTIVE_STATES:
             raise UserError(self.env._("This Credit Note already has a Red Form."))
@@ -423,9 +425,10 @@ class AccountMove(models.Model):
             doc.write({'state': 'failed', 'error_message': str(e)})
             self.l10n_cn_edi_state = 'failed'
             self.message_post(body=self.env._("Red Form request failed: %(error)s", error=e))
-            return
+            return None
         doc.write({'red_form_uuid': result['uuid'], 'state': 'red_form_pending'})
         doc._l10n_cn_edi_apply_red_form_result(result)
+        return None
 
     def action_l10n_cn_edi_cancel_red_form(self):
         """Withdraw the red form of this credit note, while the customer hasn't answered it."""
