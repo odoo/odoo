@@ -74,9 +74,11 @@ the attacker's reading:
   and check what its `super()` returns: the check still runs before the
   record is created. Those values already hold the context defaults and the
   `ir.default` ones, so there is no need to handle them by hand.
-- A raise after `super().create()` is too late: the record is created
-  already, so if the caller catches the `AccessError`, the creation is not
-  reverted.
+- A check after `super().create()` also works when the `AccessError` reaches
+  the request: the transaction is rolled back, same as when the ORM checks
+  record rules after the INSERT. But a caller that catches it keeps the
+  record, unless it opened a savepoint around the call (see
+  [Transactions and exceptions](../odoo-guidelines/guidelines/orm.md#transactions-and-exceptions)).
 - In `_prepare_create_values`, the values also hold the `default=` of the
   field. A check that only tests that a value is there, as
   `if vals.get('book_id'):`, then also refuses a create where the caller gave

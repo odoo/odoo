@@ -132,3 +132,11 @@ and calling the method of its direction.
   ones propagate to the framework. To recover from framework exceptions, wrap the
   work in `with self.env.cr.savepoint():` (note: >64 savepoints per transaction
   degrades PostgreSQL, so bound batch sizes).
+- When a `try` block catches an exception without a savepoint, what the
+  block wrote before the exception (a record created, a field written) stays
+  in the database, and the request commits it. This is a common bug in
+  controllers. Going on after a caught exception is only fine when:
+  - the `try` block opens a savepoint (`with self.env.cr.savepoint():`);
+  - or the block does not write to the database;
+  - or the exception is a custom one (defined in your module or an
+    external library), and you know what the block wrote before it.
