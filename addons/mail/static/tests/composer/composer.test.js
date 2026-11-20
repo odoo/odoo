@@ -1035,6 +1035,38 @@ test("removing attachment from composer should not delete it from template", asy
     });
 });
 
+test("a file dropped in a composer for several records is uploaded once", async () => {
+    const pyEnv = await startServer();
+    assignDialogTestEnv();
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+        { name: "Alice" },
+        { name: "Bob" },
+    ]);
+    registerArchs({
+        "mail.compose.message,false,form": `
+            <form string="Compose Email" js_class="mail_composer_form">
+                <field name="model" invisible="1"/>
+                <field name="res_ids" invisible="1"/>
+                <field name="attachment_ids" widget="mail_composer_attachment_list"/>
+            </form>`,
+    });
+    onRpc("/mail/attachment/upload", async (request) => {
+        const body = await request.clone().formData();
+        expect.step(`upload on ${body.get("thread_id")}, pending: ${body.get("is_pending")}`);
+    });
+    await start();
+    const composerId = pyEnv["mail.compose.message"].create({
+        model: "res.partner",
+        res_ids: JSON.stringify([partnerId_1, partnerId_2]),
+    });
+    await openFormView("mail.compose.message", composerId);
+    const file = new File(["hello, world"], "text.txt", { type: "text/plain" });
+    await dragenterFiles(".o_form_renderer", [file]);
+    await dropFiles(".o-Dropzone", [file]);
+    await waitFor(".o_field_mail_composer_attachment_list:contains(text.txt)");
+    await expect.waitForSteps([`upload on ${partnerId_1}, pending: true`]);
+});
+
 test("remove an uploading attachment", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
