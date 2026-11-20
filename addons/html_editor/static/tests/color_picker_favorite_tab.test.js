@@ -1,5 +1,5 @@
 import { expect, mockUserAgent, test } from "@odoo/hoot";
-import { animationFrame, click, queryOne } from "@odoo/hoot-dom";
+import { animationFrame, click, queryOne, select } from "@odoo/hoot-dom";
 import {
     getService,
     makeTestApp,
@@ -8,6 +8,7 @@ import {
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
+import { cookie } from "@web/core/browser/cookie";
 import { user } from "@web/core/user";
 import { ColorPicker } from "@html_editor/components/color_picker/color_picker";
 import { FavoriteColorsPlugin } from "@html_editor/components/color_picker/favorite_colors_plugin";
@@ -18,14 +19,21 @@ import { FavoriteColorsPlugin } from "@html_editor/components/color_picker/favor
  * @param {Function} [params.applyColor]
  * @param {string[]} [params.favoriteColors] favorite colors of the company
  * @param {boolean} [params.isAdmin] whether the user can edit the company
+ * @param {Object[]} [params.otherCompanies] other active companies
  */
 async function mountFavoriteTab({
     selectedColor = "",
     applyColor = () => {},
     favoriteColors = [],
     isAdmin = true,
+    otherCompanies = [],
 } = {}) {
-    serverState.companies = [{ ...serverState.companies[0], favorite_colors: favoriteColors }];
+    const companies = [
+        { ...serverState.companies[0], favorite_colors: favoriteColors },
+        ...otherCompanies,
+    ];
+    cookie.set("cids", companies.map(({ id }) => id).join("-"));
+    serverState.companies = companies;
     // The user is rebuilt when the server state changes, patch it afterwards.
     patchWithCleanup(user, { isAdmin });
     onRpc("res.company", "add_favorite_color", ({ args }) => {
@@ -79,6 +87,8 @@ test("favorite tab starts with only the add button", async () => {
     expect(".o_favorite_color").toHaveCount(0);
     expect(".o_favorite_color_add").toHaveCount(1);
     expect(".o_colorpicker_widget").toHaveCount(0);
+    // With a single active company, there is no company to choose.
+    expect(".o_favorite_colors_company").toHaveCount(0);
 });
 
 test("favorite tab is hidden when there is nothing to choose nor the right to add", async () => {
@@ -230,4 +240,44 @@ test("favorite colors are kept by company", async () => {
         ["add_favorite_color", [[2], "#B5D6A5"]],
         ["remove_favorite_color", [[2], "#00FFFF"]],
     ]);
+});
+
+test("choose the company of the favorite colors", async () => {
+    await mountFavoriteTab({
+        favoriteColors: ["#FF9C00"],
+        otherCompanies: [{ id: 2, name: "Other", currency_id: 1, favorite_colors: ["#00FFFF"] }],
+    });
+    expect(".o_favorite_colors_company option").toHaveCount(2);
+    expect("label:has(.o_favorite_colors_company) .oi[data-icon='business']").toHaveAttribute(
+        "aria-hidden",
+        "true"
+    );
+    expect(".o_favorite_colors_company").toHaveAttribute("aria-label", "Company");
+    expect(".o_favorite_colors_company").toHaveValue("1");
+    expect(".o_favorite_color .o_color_button").toHaveAttribute("data-color", "#FF9C00");
+
+    await select("2", { target: ".o_favorite_colors_company" });
+    await animationFrame();
+    expect(".o_favorite_color .o_color_button").toHaveAttribute("data-color", "#00FFFF");
+
+    // The colors are added to the chosen company.
+    await click(".o_favorite_color_add");
+    await animationFrame();
+    await click(".o_color_picker_favorite_tab .btn-primary");
+    await animationFrame();
+    expect.verifySteps([["add_favorite_color", [[2], "#FF0000"]]]);
+    // The chosen company is kept for the next color pickers.
+    expect(getService(FavoriteColorsPlugin).selectedCompanyId).toBe(2);
+});
+
+test("favorite tab is shown when another active company has favorite colors", async () => {
+    await mountFavoriteTab({
+        isAdmin: false,
+        otherCompanies: [{ id: 2, name: "Other", currency_id: 1, favorite_colors: ["#00FFFF"] }],
+    });
+    expect("button.favorite-tab").toHaveCount(1);
+    expect(".o_favorite_color").toHaveCount(0);
+    await select("2", { target: ".o_favorite_colors_company" });
+    await animationFrame();
+    expect(".o_favorite_color .o_color_button").toHaveAttribute("data-color", "#00FFFF");
 });

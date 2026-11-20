@@ -9,7 +9,9 @@ import { user } from "@web/core/user";
  * to date by the changes of the current user (the changes of other users only
  * show up after a reload, or along with a change of the current user).
  *
- * Every method works on the active company, unless another one is given.
+ * Every method works on the selected company, unless another one is given.
+ * The selected company is the active one, until another one is selected; it
+ * is then kept until a reload, for all the color pickers.
  */
 export class FavoriteColorsPlugin extends Plugin {
     #orm = usePlugin(ORM);
@@ -21,12 +23,35 @@ export class FavoriteColorsPlugin extends Plugin {
             ])
         )
     );
+    #selectedCompanyId = signal(user.activeCompany?.id);
+
+    /**
+     * The companies whose favorite colors are offered: the active ones, as
+     * the user works with them.
+     */
+    get companies() {
+        return user.activeCompanies;
+    }
+
+    /**
+     * @returns {number | undefined}
+     */
+    get selectedCompanyId() {
+        return this.#selectedCompanyId();
+    }
+
+    /**
+     * @param {number} companyId
+     */
+    selectCompany(companyId) {
+        this.#selectedCompanyId.set(companyId);
+    }
 
     /**
      * @param {number} [companyId]
      * @returns {string[]}
      */
-    getColors(companyId = user.activeCompany?.id) {
+    getColors(companyId = this.selectedCompanyId) {
         return this.#colorsByCompany()[companyId] || [];
     }
 
@@ -37,7 +62,7 @@ export class FavoriteColorsPlugin extends Plugin {
      * @param {number} [companyId]
      * @returns {boolean}
      */
-    canEdit(companyId = user.activeCompany?.id) {
+    canEdit(companyId = this.selectedCompanyId) {
         return companyId in this.#colorsByCompany() && user.isAdmin;
     }
 
@@ -45,7 +70,7 @@ export class FavoriteColorsPlugin extends Plugin {
      * @param {string} color
      * @param {number} [companyId]
      */
-    async add(color, companyId = user.activeCompany?.id) {
+    async add(color, companyId = this.selectedCompanyId) {
         color = color.toUpperCase();
         const colors = this.getColors(companyId);
         if (!colors.includes(color)) {
@@ -57,7 +82,7 @@ export class FavoriteColorsPlugin extends Plugin {
      * @param {string} color
      * @param {number} [companyId]
      */
-    async remove(color, companyId = user.activeCompany?.id) {
+    async remove(color, companyId = this.selectedCompanyId) {
         const colors = this.getColors(companyId);
         if (colors.includes(color)) {
             const newColors = colors.filter((c) => c !== color);

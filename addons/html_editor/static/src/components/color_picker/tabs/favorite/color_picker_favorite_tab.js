@@ -76,6 +76,13 @@ export class ColorPickerFavoriteTab extends Component {
     }
 
     /**
+     * @param {Event} ev
+     */
+    onCompanyChange(ev) {
+        this.favoriteColors.selectCompany(parseInt(ev.target.value));
+    }
+
+    /**
      * @param {string} color
      */
     async onRemoveClick(color) {
@@ -94,7 +101,9 @@ registry.category("color_picker_tabs").add(
         // Without favorite colors, the tab is only useful to define them.
         isAvailable: () => {
             const favoriteColors = usePlugin(FavoriteColorsPlugin);
-            return favoriteColors.canEdit() || favoriteColors.getColors().length > 0;
+            return favoriteColors.companies.some(
+                ({ id }) => favoriteColors.canEdit(id) || favoriteColors.getColors(id).length > 0
+            );
         },
     },
     { sequence: 100 }
