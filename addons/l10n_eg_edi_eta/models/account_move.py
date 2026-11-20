@@ -1,4 +1,5 @@
 import json
+from collections import defaultdict
 
 from werkzeug.urls import url_encode
 from odoo import api, models, fields
@@ -338,7 +339,12 @@ class AccountMove(models.Model):
                 },
             })
 
-        if lines_without_product := amls_to_check.filtered(lambda line: not line.product_id):
+        # Negative lines are not sent as invoice lines, so they need no product or ETA code.
+        amls_sent_as_lines = amls_to_check.filtered(
+            lambda line: line.currency_id.compare_amounts(line.price_subtotal, 0.0) >= 0,
+        )
+
+        if lines_without_product := amls_sent_as_lines.filtered(lambda line: not line.product_id):
             alerts.update({
                 'eg_eta_edi_lines_without_product': {
                     'level': 'danger',
@@ -348,7 +354,7 @@ class AccountMove(models.Model):
                 },
             })
 
-        if invalid_line_names := amls_to_check.filtered(lambda line: len(line.name or '') > 500):
+        if invalid_line_names := amls_sent_as_lines.filtered(lambda line: len(line.name or '') > 500):
             alerts.update({
                 'eg_eta_edi_lines_with_invalid_name': {
                     'level': 'danger',
@@ -361,7 +367,7 @@ class AccountMove(models.Model):
                 },
             })
 
-        if products_without_code := amls_to_check.product_id.filtered(lambda p: not (p.l10n_eg_eta_code or p.barcode)):
+        if products_without_code := amls_sent_as_lines.product_id.filtered(lambda p: not (p.l10n_eg_eta_code or p.barcode)):
             alerts.update({
                 'eg_eta_edi_lines_without_product': {
                     'level': 'danger',
@@ -464,6 +470,10 @@ class AccountMove(models.Model):
         AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
         AccountTax._round_base_lines_tax_details(base_lines, self.company_id, tax_lines=tax_lines)
 
+        base_lines, negative_base_lines = self._l10n_eg_edi_dispatch_negative_lines(base_lines)
+        # ETA applies extraDiscountAmount after taxes, so the negative lines left over go there taxes included.
+        extra_discount_amount = -sum(base_line['tax_details']['total_included'] for base_line in negative_base_lines)
+
         base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, grouping_function_base_line)
         invoice_line_data, totals = self._l10n_eg_eta_prepare_invoice_lines_data(base_lines_aggregated_values)
 
@@ -498,8 +508,11 @@ class AccountMove(models.Model):
             'totalDiscountAmount': self._l10n_eg_edi_round(totals['discount_total']),
             'totalSalesAmount': self._l10n_eg_edi_round(totals['total_price_subtotal_before_discount']),
             'netAmount': self._l10n_eg_edi_round(sum(x['base_amount'] for x in values_per_grouping_key_total_amount.values())),
-            'totalAmount': self._l10n_eg_edi_round(sum(x['base_amount'] + x['tax_amount'] for x in values_per_grouping_key_total_amount.values())),
-            'extraDiscountAmount': 0.0,
+            'totalAmount': self._l10n_eg_edi_round(
+                sum(x['base_amount'] + x['tax_amount'] for x in values_per_grouping_key_total_amount.values())
+                - extra_discount_amount,
+            ),
+            'extraDiscountAmount': self._l10n_eg_edi_round(extra_discount_amount),
             'totalItemsDiscountAmount': 0.0,
         }
         if self.ref:
@@ -510,6 +523,68 @@ class AccountMove(models.Model):
         if is_demo:
             eta_invoice['signatures'] = [{'i': 'i'}]
         return eta_invoice
+
+    def _l10n_eg_edi_dispatch_negative_lines(self, base_lines):
+        """ ETA only accepts positive invoice lines. Each negative line, down payment deductions included, is placed on
+        the positive lines before taxes, so the VAT is lowered too, which extraDiscountAmount cannot do:
+        1. A negative quantity lowers the quantity of a line with the same product, price, discount and taxes.
+        2. Else, it is split as a discount over the lines with the same product and taxes, the lines it discounts.
+        3. Else, it is split as a discount over the lines with the same taxes.
+
+        :param base_lines: The base lines of the invoice, with their tax details.
+        :return: The positive base lines, and the negative lines that could not be placed.
+        """
+        self.ensure_one()
+        AccountTax = self.env['account.tax']
+        index_per_line = {base_line['record']: index for index, base_line in enumerate(base_lines)}
+
+        def is_negative(base_line):
+            return self.currency_id.compare_amounts(base_line['tax_details']['raw_total_excluded_currency'], 0.0) < 0
+
+        def dispatch(lines_to_group, grouping_function):
+            base_lines_per_key = defaultdict(list)
+            for base_line in lines_to_group:
+                base_lines_per_key[grouping_function(base_line)].append(base_line)
+
+            new_base_lines = []
+            for group_base_lines in base_lines_per_key.values():
+                has_negative_line = any(is_negative(base_line) for base_line in group_base_lines)
+                group_total = sum(
+                    base_line['tax_details']['raw_total_excluded_currency'] for base_line in group_base_lines
+                )
+                # Negative lines larger than the positive ones would leave a negative line once split: keep them whole.
+                if not has_negative_line or self.currency_id.compare_amounts(group_total, 0.0) < 0:
+                    new_base_lines += group_base_lines
+                    continue
+                group_base_lines = AccountTax._dispatch_global_discount_lines(group_base_lines, self.company_id)
+                AccountTax._squash_global_discount_lines(group_base_lines, self.company_id)
+                new_base_lines += group_base_lines
+            return new_base_lines
+
+        base_lines = AccountTax._dispatch_return_of_merchandise_lines(base_lines, self.company_id)
+        AccountTax._squash_return_of_merchandise_lines(base_lines, self.company_id)
+        # Marked after the returns, so the excess of a return larger than its line is split too. As in l10n_mx_edi, a
+        # negative down payment is a discount, while a sale discount line is positive on a credit note and stays a line.
+        for base_line in base_lines:
+            base_line['special_type'] = 'global_discount' if is_negative(base_line) else False
+        base_lines = dispatch(base_lines, lambda base_line: (base_line['product_id'], base_line['tax_ids']))
+        base_lines = dispatch(base_lines, lambda base_line: base_line['tax_ids'])
+        # The dispatch regroups the lines: send them in the invoice order.
+        base_lines.sort(key=lambda base_line: index_per_line[base_line['record']])
+        positive_base_lines = []
+        negative_base_lines = []
+        for base_line in base_lines:
+            if is_negative(base_line):
+                negative_base_lines.append(base_line)
+            elif (
+                base_line['return_of_merchandise_base_lines']
+                and base_line['product_uom_id'].is_zero(base_line['quantity'])
+            ):
+                # Nothing is left to declare on a line whose whole quantity was returned.
+                continue
+            else:
+                positive_base_lines.append(base_line)
+        return positive_base_lines, negative_base_lines
 
     def _l10n_eg_eta_prepare_invoice_lines_data(self, base_lines_aggregated_values):
         self.ensure_one()
@@ -522,24 +597,33 @@ class AccountMove(models.Model):
             line = base_line['record']
             tax_details = base_line['tax_details']
             has_full_line_discount = float_compare(line.discount, 100.00, precision_digits=2)
+            # ETA needs positive quantities and prices: -1 x -10 is sent as 1 x 10.
+            quantity = abs(base_line['quantity'])
+            # The tax details also hold the split discounts, so the amount sold starts from the line, minus its returns.
+            sold_balance = abs(line.balance) + sum(
+                sub_base_line['tax_details']['total_excluded'] + sub_base_line['tax_details']['delta_total_excluded']
+                for sub_base_line in base_line['return_of_merchandise_base_lines']
+            )
             price_unit = (
                 (line.quantity and has_full_line_discount)
                 and self._l10n_eg_edi_round(abs((line.balance / line.quantity) / (1 - (line.discount / 100.0))))
-                or line.price_unit
+                or abs(line.price_unit)
             )
             price_subtotal_before_discount = (
                 has_full_line_discount
-                and self._l10n_eg_edi_round(abs(line.balance / (1 - (line.discount / 100))))
-                or self._l10n_eg_edi_round(price_unit * line.quantity)
+                and self._l10n_eg_edi_round(sold_balance / (1 - (line.discount / 100)))
+                or self._l10n_eg_edi_round(price_unit * quantity)
             )
-            discount_amount = self._l10n_eg_edi_round(price_subtotal_before_discount - abs(line.balance))
+            # The tax details include the discounts split on this line, unlike line.balance.
+            net_total = self._l10n_eg_edi_round(tax_details['total_excluded'] + tax_details['delta_total_excluded'])
+            discount_amount = self._l10n_eg_edi_round(price_subtotal_before_discount - net_total)
             item_code = line.product_id.l10n_eg_eta_code or line.product_id.barcode or ''
             lines.append({
                 'description': line.with_context(display_default_code=False).label,
                 'itemType': item_code.startswith('EG') and 'EGS' or 'GS1',
                 'itemCode': item_code,
                 'unitType': line.product_uom_id.l10n_eg_unit_code_id.code,
-                'quantity': line.quantity,
+                'quantity': quantity,
                 'internalCode': line.product_id.default_code or '',
                 'valueDifference': 0.0,
                 'totalTaxableFees': 0.0,
@@ -549,7 +633,8 @@ class AccountMove(models.Model):
                     'amountEGP': price_unit,
                 },
                 'discount': {
-                    'rate': line.discount,
+                    # ETA skips the rate * salesTotal check at rate 0, so the amount can include the split lines.
+                    'rate': 0.0 if base_line.get('discount_base_lines') else line.discount,
                     'amount': discount_amount,
                 },
                 'taxableItems': [
@@ -563,14 +648,14 @@ class AccountMove(models.Model):
                     if grouping_key
                 ],
                 'salesTotal': price_subtotal_before_discount,
-                'netTotal': self._l10n_eg_edi_round(tax_details['total_excluded'] + tax_details['delta_total_excluded']),
+                'netTotal': net_total,
                 'total': self._l10n_eg_edi_round(tax_details['total_included']),
             })
             totals['discount_total'] += discount_amount
             totals['total_price_subtotal_before_discount'] += price_subtotal_before_discount
             if self.currency_id != self.env.ref('base.EGP'):
                 lines[-1]['unitValue']['currencyExchangeRate'] = self._l10n_eg_edi_round(self._l10n_eg_edi_exchange_currency_rate())
-                lines[-1]['unitValue']['amountSold'] = line.price_unit
+                lines[-1]['unitValue']['amountSold'] = abs(line.price_unit)
         return lines, totals
 
     def _l10n_eg_eta_prepare_address_data(self, partner, issuer=False):
