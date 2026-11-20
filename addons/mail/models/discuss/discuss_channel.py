@@ -554,7 +554,7 @@ class DiscussChannel(models.Model):
             if any(cmd[0] not in (4, 6) for cmd in partner_ids_cmd):
                 raise ValidationError(_('Invalid value when creating a channel with members, only 4 or 6 are allowed.'))
             partner_ids = [cmd[1] for cmd in partner_ids_cmd if cmd[0] == 4]
-            partner_ids += [cmd[2] for cmd in partner_ids_cmd if cmd[0] == 6]
+            partner_ids += [pid for cmd in partner_ids_cmd if cmd[0] == 6 for pid in cmd[2]]
 
             # find partners to add from channel_member_ids
             membership_ids_cmd = vals.get('channel_member_ids', [])
