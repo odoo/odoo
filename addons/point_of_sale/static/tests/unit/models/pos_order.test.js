@@ -593,6 +593,40 @@ test("comboLineSplitFollowsChoicesSequence", async () => {
     ]);
 });
 
+test("comboExtraLinesOfFreeProductKeepPriceOnRecompute", async () => {
+    const store = await setupPosEnv();
+    store.models["pos.preset"].get(1).pricelist_id = false;
+    store.models["product.product"].get(7).lst_price = 100;
+    const chairsCombo = store.models["product.combo"].get(1);
+    chairsCombo.qty_free = 1;
+    chairsCombo.qty_max = 8;
+    chairsCombo.base_price = 0;
+    const template = store.models["product.template"].get(7);
+    template.combo_ids = [chairsCombo.id];
+    const chair = store.models["product.combo.item"].get(1);
+    const order = store.addNewOrder();
+    // 1 free chair + 7 extra chairs of the same product
+    await store.addLineToOrder(
+        {
+            product_tmpl_id: template,
+            payload: [[{ combo_item_id: chair, qty: 8 }]],
+            qty: 1,
+        },
+        order
+    );
+    const getComboLines = () =>
+        order.lines[0].combo_line_ids.map((line) => [line.qty, line.price_unit]);
+    expect(getComboLines()).toEqual([
+        [7, 0],
+        [1, 100],
+    ]);
+    order.setPricelist(store.models["product.pricelist"].get(3));
+    expect(getComboLines()).toEqual([
+        [7, 0],
+        [1, 10],
+    ]);
+});
+
 test("Ignore attribute always extra price with combo", async () => {
     const store = await setupPosEnv();
     store.models["pos.preset"].get(1).pricelist_id = false;
