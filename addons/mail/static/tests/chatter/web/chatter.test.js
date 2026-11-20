@@ -1414,6 +1414,39 @@ test("chatter: pinned messages unpinned elsewhere are dropped on the next fetch"
     await waitForNone(".o-mail-pinnedMessages .o-mail-Message:has(:text('Unpinned elsewhere'))");
 });
 
+test("chatter: section toggles can be used with the keyboard", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Armstrong" });
+    pyEnv["mail.message"].create({
+        body: "Pinned message",
+        model: "res.partner",
+        pinned_at: "2025-01-01 00:00:00",
+        res_id: partnerId,
+    });
+    pyEnv["mail.activity"].create({ res_id: partnerId, res_model: "res.partner" });
+    pyEnv["mail.scheduled.message"].create({
+        body: "<p>Scheduled message</p>",
+        model: "res.partner",
+        res_id: partnerId,
+        scheduled_date: "2100-01-01 00:00:00",
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains(".o-mail-pinnedMessages button[aria-expanded='false']:count(1)").press("Enter");
+    await waitFor(".o-mail-pinnedMessages button[aria-expanded='true']:count(1)");
+    await waitFor(".o-mail-pinnedMessages .o-mail-Message:count(1)");
+    await waitFor(".o-mail-ActivityList .o-mail-Activity:count(1)");
+    await contains(".o-mail-ActivityList button[aria-expanded='true']:count(1)").press("Enter");
+    await waitFor(".o-mail-ActivityList button[aria-expanded='false']:count(1)");
+    await waitForNone(".o-mail-ActivityList .o-mail-Activity");
+    await waitFor(".o-mail-ScheduledMessagesList .o-mail-Scheduled-Message:count(1)");
+    await contains(".o-mail-ScheduledMessagesList button[aria-expanded='true']:count(1)").press(
+        "Enter"
+    );
+    await waitFor(".o-mail-ScheduledMessagesList button[aria-expanded='false']:count(1)");
+    await waitForNone(".o-mail-ScheduledMessagesList .o-mail-Scheduled-Message");
+});
+
 test("chatter: pinned messages section is reset when switching records", async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([

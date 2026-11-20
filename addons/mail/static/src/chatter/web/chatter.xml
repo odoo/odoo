@@ -153,13 +153,13 @@
 <t t-name="mail.ActivityList">
     <div class="o-mail-ActivityList z-1">
         <div class="d-flex pt-2 px-2 cursor-pointer fw-bold" t-on-click="this.toggleActivities">
-            <hr class="flex-grow-1 fs-3"/>
-            <div class="d-flex align-items-center px-3">
-                <i class="oi oi-fw" t-att-data-icon="this.state.showActivities ? 'arrow_drop_down' : 'arrow_right'"/>
+            <hr class="flex-grow-1"/>
+            <button type="button" class="btn d-flex align-items-center px-3 py-0 border-0 fw-bold" t-att-aria-expanded="this.state.showActivities ? 'true' : 'false'">
+                <i class="oi oi-fw" t-att-data-icon="this.state.showActivities ? 'arrow_drop_down' : 'arrow_right'" role="img" aria-hidden="true"/>
                 Planned Activities
                 <span t-if="!this.state.showActivities" class="badge rounded-pill ms-2 text-bg-success"><t t-out="this.activities.length"/></span>
-            </div>
-            <hr class="flex-grow-1 fe-3"/>
+            </button>
+            <hr class="flex-grow-1"/>
         </div>
         <t t-if="this.state.showActivities">
             <t t-foreach="this.activities" t-as="activity" t-key="activity.id">
@@ -173,13 +173,13 @@
 <t t-name="mail.ScheduledMessagesList">
     <div class="o-mail-ScheduledMessagesList">
         <div class="d-flex pt-2 cursor-pointer fw-bold" t-on-click="this.toggleScheduledMessages">
-            <hr class="flex-grow-1 fs-3"/>
-            <div class="d-flex align-items-center px-3">
-                <i class="oi oi-fw" t-att-data-icon="this.state.showScheduledMessages ? 'arrow_drop_down' : 'arrow_right'"/>
+            <hr class="flex-grow-1"/>
+            <button type="button" class="btn d-flex align-items-center px-3 py-0 border-0 fw-bold" t-att-aria-expanded="this.state.showScheduledMessages ? 'true' : 'false'">
+                <i class="oi oi-fw" t-att-data-icon="this.state.showScheduledMessages ? 'arrow_drop_down' : 'arrow_right'" role="img" aria-hidden="true"/>
                 Scheduled Messages
                 <span t-if="!this.state.showScheduledMessages" class="badge rounded-pill ms-2 text-bg-success" t-out="this.scheduledMessages.length"/>
-            </div>
-            <hr class="flex-grow-1 fe-3"/>
+            </button>
+            <hr class="flex-grow-1"/>
         </div>
         <div t-if="this.state.showScheduledMessages">
             <t t-foreach="this.scheduledMessages" t-as="scheduledMessage" t-key="scheduledMessage.id">
