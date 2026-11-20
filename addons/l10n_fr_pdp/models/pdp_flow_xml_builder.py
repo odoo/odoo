@@ -352,7 +352,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
         mapped_country_code = drom_com_territories.map_country_code_for_ppf(partner.country_id.code)
         mapped_country_code = mapped_country_code.upper() if mapped_country_code else mapped_country_code
         company_scheme, company_id = partner._l10n_fr_pdp_get_flow_10_identifier()
-        partner_vat = partner.vat or ''
+        partner_vat = partner._l10n_fr_pdp_get_flow_10_vat()
 
         partner_vals = {
             'CompanyId': {
