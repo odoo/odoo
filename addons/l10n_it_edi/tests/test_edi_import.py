@@ -1161,3 +1161,36 @@ class TestItEdiImport(TestItEdi, TestAccountEdiProxyUser):
             "A FatturaPA seller with no VAT number must not match any existing partner "
             "(including partners with '/' as a placeholder VAT). A new partner should be created.",
         )
+
+    def test_generate_pdf_when_xml_does_not_provide_one(self):
+
+        def _run_pdf_engine_without_processing(*args, **kwargs):
+            return tools.file_open(f'{self.module}/tests/test_preview.pdf', 'rb').read()
+
+        purchase_journal = self.company_data_2['default_journal_purchase']
+        self.company_data_2['default_journal_purchase'] = purchase_journal.with_context(force_report_rendering=True)
+        report_cls = self.env.registry['ir.actions.report']
+        try:
+            with patch.object(report_cls, '_run_pdf_engine_without_processing', _run_pdf_engine_without_processing):
+                invoice = self._assert_import_invoice('IT01234567890_FPR01.xml', [{'move_type': 'in_invoice'}])
+                self.assertEqual(invoice.message_main_attachment_id.mimetype, 'application/pdf')
+                self.assertIn('Preview', invoice.message_main_attachment_id.name)
+
+                # Ensure PDF generation is skipped when disabled by config parameter
+                self.env['ir.config_parameter'].sudo().set_bool('l10n_it_edi.disable_pdf_in_xml', True)
+                invoice_disabled = self._assert_import_invoice(
+                    'IT01234567890_FPR01.xml', [{'move_type': 'in_invoice'}],
+                )
+                self.assertFalse(invoice_disabled.attachment_ids.filtered(lambda a: a.mimetype == 'application/pdf'))
+                self.env['ir.config_parameter'].sudo().set_bool('l10n_it_edi.disable_pdf_in_xml', False)
+        finally:
+            self.company_data_2['default_journal_purchase'] = purchase_journal
+
+        # Test report rendering
+        html, _ = self.env['ir.actions.report']._render_qweb_html(
+            'account_edi_ubl_cii.action_report_account_invoices_generated_by_odoo',
+            [invoice.id]
+        )
+        html_str = html.decode()
+        self.assertIn('Preview', html_str)
+        self.assertIn('This is a visual representation of the xml content', html_str)
