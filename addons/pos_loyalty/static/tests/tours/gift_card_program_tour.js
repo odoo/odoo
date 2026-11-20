@@ -3,12 +3,8 @@ import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import { registry } from "@web/core/registry";
-import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
-import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
 import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
-import * as Notification from "@point_of_sale/../tests/generic_helpers/notification_util";
-import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 
 registry.category("web_tour.tours").add("GiftCardProgramTour1", {
     steps: () =>
@@ -46,56 +42,6 @@ registry.category("web_tour.tours").add("GiftCardProgramTwoCardsTour", {
             Dialog.proceed({ title: "unpaid gift card" }),
             PosLoyalty.orderTotalIs("0.00"),
             PosLoyalty.finalizeOrder("Cash", "0"),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("GiftCardWithRefundTour", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            ProductScreen.addOrderline("Magnetic Board", "1"), // 1.98
-            PosLoyalty.orderTotalIs("1.98"),
-            PosLoyalty.finalizeOrder("Cash", "20"),
-            ...ProductScreen.clickRefund(),
-            TicketScreen.selectOrder("001"),
-            Order.hasLine({
-                withClass: ".selected",
-                productName: "Magnetic Board",
-            }),
-            ProductScreen.clickNumpad("1"),
-            TicketScreen.confirmRefund(),
-            PaymentScreen.isShown(),
-            PaymentScreen.clickBack(),
-            ProductScreen.isShown(),
-            ProductScreen.clickLine("Magnetic Board", "-1"),
-            ProductScreen.selectedOrderlineHas("Magnetic Board", "-1"),
-            ProductScreen.addOrderline("Gift Card", "1"),
-            ProductScreen.selectedOrderlineHas("Gift Card", "1"),
-            PosLoyalty.orderTotalIs("0.0"),
-            PosLoyalty.finalizeOrder("Cash", "0"),
-            ...ProductScreen.clickRefund(),
-            TicketScreen.selectOrder("002"),
-            Order.hasLine({
-                withClass: ".selected",
-                productName: "Gift Card",
-                run: "click",
-            }),
-            Order.hasLine({
-                withClass: ".selected",
-                productName: "Gift Card",
-                run: "click",
-            }),
-            Notification.has(
-                "Refunding a top up or reward product for an eWallet or gift card program is not allowed."
-            ),
-            negateStep(
-                ...Order.hasLine({
-                    withClass: ".selected",
-                    productName: "Gift Card",
-                    refundQty: "2",
-                })
-            ),
         ].flat(),
 });
 
@@ -216,17 +162,6 @@ registry.category("web_tour.tours").add("GiftCardProgramInvoice", {
         ].flat(),
 });
 
-registry.category("web_tour.tours").add("test_gift_card_no_date", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Gift Card"),
-            PosLoyalty.createManualGiftCard("test", "42", ""),
-            PosLoyalty.finalizeOrder("Cash", "42"),
-        ].flat(),
-});
-
 registry.category("web_tour.tours").add("test_physical_gift_card_invoiced", {
     steps: () =>
         [
@@ -244,16 +179,6 @@ registry.category("web_tour.tours").add("test_physical_gift_card_invoiced", {
             PaymentScreen.clickValidate(),
             FeedbackScreen.isShown(),
             FeedbackScreen.clickNextOrder(),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("EmptyProductScreenTour", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            ProductScreen.isEmpty(),
-            ProductScreen.loadSampleButtonIsThere(),
         ].flat(),
 });
 

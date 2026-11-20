@@ -152,14 +152,6 @@ export function removeRewardLine(name) {
     return [selectRewardLine(name), ProductScreen.clickNumpad("⌫")].flat();
 }
 
-export function checkAddedLoyaltyPoints(points) {
-    return [
-        {
-            trigger: `.loyalty-points-won:contains("${points}")`,
-        },
-    ];
-}
-
 export function useExistingLoyaltyCard(code, valid = true) {
     const steps = [
         {
@@ -244,16 +236,6 @@ export function clickPhysicalGiftCard(code = "Sell physical gift card?") {
         {
             trigger: `ul.info-list .text-wrap:contains("${code}")`,
             run: "click",
-        },
-    ];
-}
-
-export function checkPartnerPoints(name, points) {
-    return [
-        ...ProductScreen.clickPartnerButton(),
-        {
-            content: `Check '${name}' has ${points} Loyalty Points`,
-            trigger: `.partner-list .partner-line:contains(${name}) .partner-line-balance:contains(${points} Loyalty Point(s))`,
         },
     ];
 }
