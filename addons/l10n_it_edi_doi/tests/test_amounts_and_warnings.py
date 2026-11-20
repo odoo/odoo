@@ -525,3 +525,19 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
             'not_yet_invoiced': 2000.0,
             'remaining': -11000.0,
         }])
+
+    def test_sale_order_cancelled_no_warning(self):
+        declaration = self.declaration_1000
+        order = self.create_sale_order(declaration, [
+            Command.create({
+                'name': 'declaration line',
+                'product_id': self.product_1.id,
+                'price_unit': 2000.0,
+                'tax_id': [Command.set(declaration.company_id.l10n_it_edi_doi_tax_id.ids)],
+            }),
+        ])
+        self.assertTrue(order.l10n_it_edi_doi_warning)
+
+        order._action_cancel()
+        self.assertEqual(order.state, 'cancel')
+        self.assertEqual(order.l10n_it_edi_doi_warning, '')
