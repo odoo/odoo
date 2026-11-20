@@ -24,6 +24,9 @@ class StockForecasted_Product_Product(models.AbstractModel):
 
     def _get_report_header(self, product_template_ids, product_ids, wh_location_ids):
         res = super()._get_report_header(product_template_ids, product_ids, wh_location_ids)
+        products = self._get_products(product_template_ids, product_ids)
+        res['bom_ids'] = {product.id: product.variant_bom_ids.ids for product in products}
+
         domain = self._product_domain(product_template_ids, product_ids)
         domain += [('state', '=', 'draft')]
 
@@ -32,10 +35,25 @@ class StockForecasted_Product_Product(models.AbstractModel):
             ('raw_material_production_id', '!=', False),
             ('location_id', 'in', wh_location_ids),
         ]
-        in_product_qty = {k.id: v for k, v in self.env['mrp.production'].sudo()._read_group(in_domain, aggregates=['product_qty:sum'], groupby=['product_id'])}
-        out_product_qty = {k.id: v for k, v in self.env['stock.move']._read_group(out_domain, aggregates=['product_qty:sum'], groupby=['product_id'])}
+        in_product_qty = {
+            self._product_warehouse_key(product.id, warehouse.id): quantity
+            for product, warehouse, quantity in self.env['mrp.production'].sudo()._read_group(
+                in_domain,
+                aggregates=['product_qty:sum'],
+                groupby=['product_id', 'warehouse_id'],
+            )
+        }
 
-        self._add_product_quantities(res, product_template_ids, product_ids, 'draft_production_qty', in_product_qty, out_product_qty)
+        out_product_qty = {
+            self._product_warehouse_key(product.id, warehouse.id): quantity
+            for product, warehouse, quantity in self.env['stock.move']._read_group(
+                out_domain,
+                aggregates=['product_qty:sum'],
+                groupby=['product_id', 'warehouse_id'],
+            )
+        }
+
+        self._add_product_quantities(res, 'draft_production_qty', in_product_qty, out_product_qty)
 
         return res
 
