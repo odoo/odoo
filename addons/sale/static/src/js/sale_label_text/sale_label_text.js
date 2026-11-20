@@ -9,10 +9,20 @@ import { patch } from "@web/core/utils/patch";
 import { CharField } from "@web/views/fields/char/char_field";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { TextField, ListTextField } from "@web/views/fields/text/text_field";
+import { ProductSearchMany2XAutocomplete } from "../sale_product_field/sale_product_field";
 import { saleProductMixin } from "../sale_product_mixin";
 
 export class SaleLabelTextField extends AccountLabelTextField {
     static template = "sale.SaleLabelTextField";
+    static components = {
+        ...AccountLabelTextField.components,
+        Many2XAutocomplete: ProductSearchMany2XAutocomplete,
+    };
+
+    setup() {
+        super.setup();
+        this.lastProductSearch = "";
+    }
 
     get m2XAutoCompleteModel() {
         return "product.template";
@@ -20,6 +30,18 @@ export class SaleLabelTextField extends AccountLabelTextField {
 
     get productDomain() {
         return [["sale_ok", "=", true]];
+    }
+
+    /**
+     * @override
+     */
+    get m2xAutocompleteProps() {
+        return {
+            ...super.m2xAutocompleteProps,
+            onProductSearch: (searchTerm) => {
+                this.lastProductSearch = searchTerm;
+            },
+        };
     }
 
     get canEditProduct() {
