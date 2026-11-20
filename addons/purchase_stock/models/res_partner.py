@@ -5,6 +5,8 @@ from datetime import timedelta, datetime, time
 from collections import defaultdict
 
 from odoo import api, fields, models
+from odoo.fields import Domain
+from odoo.tools import SQL
 
 
 class ResPartner(models.Model):
@@ -53,21 +55,25 @@ class ResPartner(models.Model):
             field_names=['date_promised', 'partner_id', 'product_uom_qty'],
         )
         lines_quantity = defaultdict(lambda: 0)
-        moves = self.env['stock.move'].search_fetch(
-            domain=[
+        # Caveat: If you're going to edit the following lines, make sure the business logic in the vendor delay report
+        # matches it and produces identical results. (eg filtering, UoM conversions, rounding logic)
+        on_time_moves = self.env['stock.move']._read_group(
+            domain=Domain([
                 ('purchase_line_id', 'in', order_lines.ids),
                 ('state', '=', 'done'),
-            ],
-            field_names=['purchase_line_id', 'date', 'quantity'],
-        )
-        moves = moves.filtered(lambda m: m.date.date() <= m.purchase_line_id.date_promised.date())
-        for move in moves:
-            lines_quantity[move.purchase_line_id.id] += move.quantity
+                ('location_dest_id.usage', '!=', 'supplier'),
+                ('origin_returned_move_id', '=', False),
+            ]) & Domain.custom(to_sql=lambda table: SQL(
+                "%s::date <= %s::date", table.date, table.purchase_line_id.date_promised)),
+            # `product_id` is needed because kits' component moves all have that kit's POL.
+            groupby=['purchase_line_id', 'uom_id', 'product_id'], aggregates=['quantity:sum'])
+        for line, uom, product, quantity in on_time_moves:
+            lines_quantity[line.id] += uom._compute_quantity(quantity, product.uom_id, round=False)
         partner_dict = {}
         for line in order_lines:
             on_time, ordered = partner_dict.get(line.partner_id, (0, 0))
             ordered += line.product_uom_qty
-            on_time += lines_quantity[line.id]
+            on_time += min(lines_quantity[line.id], line.product_uom_qty)
             partner_dict[line.partner_id] = (on_time, ordered)
         seen_partner = self.env['res.partner']
         for partner, numbers in partner_dict.items():
