@@ -125,7 +125,7 @@ export const EDITOR_MUTATION_TYPES = /** @type {const} */ ({
 /**
  * The DOM mutations of a commit, one by one.
  *
- * @typedef {(mutation: SerializedMutation, options: { ensureNewMutations: boolean }) => void} mutations
+ * @typedef {(mutation: SerializedMutation) => void} mutations
  */
 
 export class DomObserverPlugin extends Plugin {
@@ -145,10 +145,10 @@ export class DomObserverPlugin extends Plugin {
         // including collaborators' changes.
         history_data_properties: withSequence(0, {
             mutations: {
-                apply: (mutation, { ensureNewMutations } = {}) =>
-                    this.applyMutations([mutation], { ensureNewMutations }),
-                revert: (mutation, { ensureNewMutations } = {}) =>
-                    this.revertMutations([mutation], { ensureNewMutations }),
+                apply: (mutation) =>
+                    this.applyMutations([mutation], { ensureNewMutations: this.isReplayRecorded }),
+                revert: (mutation) =>
+                    this.revertMutations([mutation], { ensureNewMutations: this.isReplayRecorded }),
                 shouldRecordReplays: true,
                 // Add the observed nodes of the editable to an empty one.
                 takeSnapshot: () =>
@@ -209,15 +209,15 @@ export class DomObserverPlugin extends Plugin {
         },
 
         // Replay
-        on_will_replay_history_handlers: () => {
+        on_will_replay_history_handlers: ({ isRecorded }) => {
             this.stagePendingMutations();
-            this.replayDepth++;
+            this.replays.push({ isRecorded });
         },
         on_history_replayed_handlers: () => {
-            // Process the replayed mutations without staging them: the history
-            // already holds them.
+            // Process the replayed mutations, which are only staged if the
+            // replay is recorded: otherwise, the history already holds them.
             this.flush();
-            this.replayDepth--;
+            this.replays.pop();
         },
         // Stage the pending mutations, so that the history discards them.
         on_will_invalidate_pending_changes_handlers: () => this.flush(),
@@ -238,8 +238,11 @@ export class DomObserverPlugin extends Plugin {
         this.mutationFilteredAttributes = new Set(this.getResource("system_attributes"));
         this.observer = new MutationObserver((mutations) => this.stagePendingMutations(mutations));
         this.ignoreMutationsIds = new Set();
-        /** How many replays of history changes are in progress. */
-        this.replayDepth = 0;
+        /**
+         * The replays of history changes in progress, innermost last.
+         * @type { { isRecorded: boolean }[] }
+         */
+        this.replays = [];
         this._cleanups.push(() => {
             this.observer.disconnect();
             this.isObserverConnected = false;
@@ -316,6 +319,14 @@ export class DomObserverPlugin extends Plugin {
     }
 
     /**
+     * Is true if the innermost replay of history changes in progress is
+     * recorded (the commit it creates holds what it changes), false otherwise.
+     */
+    get isReplayRecorded() {
+        return !!this.replays.at(-1)?.isRecorded;
+    }
+
+    /**
      * Any node that was added to the DOM without a mutation record in a commit
      * (typically due to {@link ignore}) is considered an unobserved node.
      *
@@ -357,7 +368,8 @@ export class DomObserverPlugin extends Plugin {
 
     /**
      * Process the given native mutation records (or take the observer's current
-     * mutation records by default) and stage them, then notify plugins.
+     * mutation records by default) and stage them, then notify plugins, unless
+     * they replay history changes.
      *
      * Note: this is meant to handle new mutations from the observer. The only
      * reason it accepts mutations as argument is for the observer's callback to
@@ -368,7 +380,7 @@ export class DomObserverPlugin extends Plugin {
      */
     stagePendingMutations(mutations = this.observer.takeRecords()) {
         const serializedMutations = this.flush(mutations);
-        if (serializedMutations.length) {
+        if (serializedMutations.length && !this.replays.length) {
             // TODO modify `handleMutations` of web_studio to handle `undoOperation`.
             this.trigger("on_pending_mutations_staged_handlers", serializedMutations);
             // Process potential new mutations caused by the handlers.
@@ -391,7 +403,7 @@ export class DomObserverPlugin extends Plugin {
     flush(mutations = this.observer.takeRecords()) {
         const processedMutations = this.processNativeMutations(mutations);
         const serializedMutations = this.serializeEditorMutations(processedMutations);
-        if (this.replayDepth) {
+        if (this.replays.length && !this.isReplayRecorded) {
             // The history already holds the changes it replays.
             return [];
         }
@@ -947,8 +959,6 @@ export class DomObserverPlugin extends Plugin {
      */
     applyMutations(mutations, { ensureNewMutations = false, areReversed = false } = {}) {
         if (ensureNewMutations) {
-            // Leave out the changes made before applying the mutations.
-            this.flush();
             this.fixClassListMutationsToEnsureNewMutations(mutations);
         }
         for (const mutation of mutations) {
@@ -981,12 +991,6 @@ export class DomObserverPlugin extends Plugin {
                     break;
                 }
             }
-        }
-        if (ensureNewMutations) {
-            // Record what applying the mutations did, as changes of the commit
-            // that the replay creates.
-            const records = this.observer.takeRecords();
-            this.stage(this.serializeEditorMutations(this.processNativeMutations(records)));
         }
     }
 

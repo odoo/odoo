@@ -60,9 +60,8 @@ import { _t } from "@web/core/l10n/translation";
  *
  * The replays of a data property with `shouldRecordReplays` are recorded
  * instead: the commits created by the history hold, as their own changes, what
- * replaying its data actually did, and replay them like any changes. When a
- * replay creates a commit, its `apply` and `revert` receive `ensureNewMutations`
- * and stage what they do.
+ * replaying its data actually did, along with what plugins changed during the
+ * replay, and replay them like any changes (see `replay`).
  *
  * A data property can declare `takeSnapshot`, which returns the data that
  * recreates its current state from an empty one, for snapshot commits.
@@ -70,7 +69,7 @@ import { _t } from "@web/core/l10n/translation";
  * @template { HistoryDataPropertyId } Id
  * @typedef {Object} HistoryDataProperty
  * @property {import("plugins").HistoryDataProperties[Id]} apply
- * @property {(data: HistoryData<Id>, options: { ensureNewMutations: boolean }) => void} revert
+ * @property {(data: HistoryData<Id>) => void} revert
  * @property {boolean} [shouldRecordReplays]
  * @property {() => HistoryData<Id>[]} [takeSnapshot]
  */
@@ -124,7 +123,7 @@ import { _t } from "@web/core/l10n/translation";
  * @typedef { (() => void)[] } on_will_invalidate_pending_changes_handlers
  * @typedef { (() => void)[] } on_will_preview_handlers
  * @typedef { (() => void)[] } on_will_rebase_history_handlers
- * @typedef { (() => void)[] } on_will_replay_history_handlers
+ * @typedef { ((options: { isRecorded: boolean }) => void)[] } on_will_replay_history_handlers
  * @typedef { (() => void)[] } on_will_reset_history_handlers
  *
  * @typedef { ((commit: HistoryCommit) => boolean | undefined)[] } has_history_commit_changes_predicates
@@ -451,31 +450,32 @@ export class HistoryPlugin extends Plugin {
      * The direction in which a commit created by the history replays the copies
      * it holds depends on its type: an undo commit reverts the data of the
      * commit it reverts, and a restore commit reverts and reapplies the commits
-     * it holds.
+     * it holds. The commits created by the history hold copies of that data
+     * rather than what replaying it changes, so it is replayed in a replay that
+     * isn't recorded.
      *
      * @param {HistoryReplayedCommit} commit
-     * @param {Object} [options]
-     * @param {boolean} [options.ensureNewMutations = false] whether the replay
-     *        creates a commit, which records the replays of recorded properties
      * @returns {void}
      */
-    applyDataProperties(commit, { ensureNewMutations = false } = {}) {
-        this.applyData(commit.data, { isRecorded: true, ensureNewMutations });
-        switch (commit.type) {
-            case HISTORY_COMMIT_TYPES.UNDO:
-                this.revertData(commit.data, { isRecorded: false });
-                break;
-            case HISTORY_COMMIT_TYPES.RESTORE:
-                for (const revertedCommit of commit.data.reverted_commits) {
-                    this.revertDataProperties(revertedCommit);
-                }
-                for (const reappliedCommit of commit.data.reapplied_commits) {
-                    this.applyDataProperties(reappliedCommit);
-                }
-                break;
-            default:
-                this.applyData(commit.data, { isRecorded: false });
-        }
+    applyDataProperties(commit) {
+        this.applyData(commit.data, { isRecorded: true });
+        this.replay(() => {
+            switch (commit.type) {
+                case HISTORY_COMMIT_TYPES.UNDO:
+                    this.revertData(commit.data, { isRecorded: false });
+                    break;
+                case HISTORY_COMMIT_TYPES.RESTORE:
+                    for (const revertedCommit of commit.data.reverted_commits) {
+                        this.revertDataProperties(revertedCommit);
+                    }
+                    for (const reappliedCommit of commit.data.reapplied_commits) {
+                        this.applyDataProperties(reappliedCommit);
+                    }
+                    break;
+                default:
+                    this.applyData(commit.data, { isRecorded: false });
+            }
+        });
     }
 
     /**
@@ -483,28 +483,27 @@ export class HistoryPlugin extends Plugin {
      * `applyDataProperties`.
      *
      * @param {HistoryReplayedCommit} commit
-     * @param {Object} [options]
-     * @param {boolean} [options.ensureNewMutations = false] whether the replay
-     *        creates a commit, which records the replays of recorded properties
      * @returns {void}
      */
-    revertDataProperties(commit, { ensureNewMutations = false } = {}) {
-        this.revertData(commit.data, { isRecorded: true, ensureNewMutations });
-        switch (commit.type) {
-            case HISTORY_COMMIT_TYPES.UNDO:
-                this.applyData(commit.data, { isRecorded: false });
-                break;
-            case HISTORY_COMMIT_TYPES.RESTORE:
-                for (const reappliedCommit of commit.data.reapplied_commits.toReversed()) {
-                    this.revertDataProperties(reappliedCommit);
-                }
-                for (const revertedCommit of commit.data.reverted_commits.toReversed()) {
-                    this.applyDataProperties(revertedCommit);
-                }
-                break;
-            default:
-                this.revertData(commit.data, { isRecorded: false });
-        }
+    revertDataProperties(commit) {
+        this.revertData(commit.data, { isRecorded: true });
+        this.replay(() => {
+            switch (commit.type) {
+                case HISTORY_COMMIT_TYPES.UNDO:
+                    this.applyData(commit.data, { isRecorded: false });
+                    break;
+                case HISTORY_COMMIT_TYPES.RESTORE:
+                    for (const reappliedCommit of commit.data.reapplied_commits.toReversed()) {
+                        this.revertDataProperties(reappliedCommit);
+                    }
+                    for (const revertedCommit of commit.data.reverted_commits.toReversed()) {
+                        this.applyDataProperties(revertedCommit);
+                    }
+                    break;
+                default:
+                    this.revertData(commit.data, { isRecorded: false });
+            }
+        });
     }
 
     /**
@@ -515,19 +514,13 @@ export class HistoryPlugin extends Plugin {
      * @param {Object} options
      * @param {boolean} options.isRecorded whether to apply the data of the
      *        properties whose replays are recorded, or of the others
-     * @param {boolean} [options.ensureNewMutations = false] passed to the
-     *        properties whose replays are recorded
      * @returns {void}
      */
-    applyData(data, { isRecorded, ensureNewMutations = false }) {
+    applyData(data, { isRecorded }) {
         for (const [id, { apply, shouldRecordReplays = false }] of this.dataProperties) {
             if (shouldRecordReplays === isRecorded) {
                 for (const item of data[id] ?? []) {
-                    if (isRecorded) {
-                        apply(item, { ensureNewMutations });
-                    } else {
-                        apply(item);
-                    }
+                    apply(item);
                 }
             }
         }
@@ -541,19 +534,13 @@ export class HistoryPlugin extends Plugin {
      * @param {Object} options
      * @param {boolean} options.isRecorded whether to revert the data of the
      *        properties whose replays are recorded, or of the others
-     * @param {boolean} [options.ensureNewMutations = false] passed to the
-     *        properties whose replays are recorded
      * @returns {void}
      */
-    revertData(data, { isRecorded, ensureNewMutations = false }) {
+    revertData(data, { isRecorded }) {
         for (const [id, { revert, shouldRecordReplays = false }] of this.dataProperties) {
             if (shouldRecordReplays === isRecorded) {
                 for (const item of (data[id] ?? []).toReversed()) {
-                    if (isRecorded) {
-                        revert(item, { ensureNewMutations });
-                    } else {
-                        revert(item);
-                    }
+                    revert(item);
                 }
             }
         }
@@ -725,13 +712,18 @@ export class HistoryPlugin extends Plugin {
     /**
      * Replay changes that the history already holds (applying, reverting or
      * discarding them), notifying plugins before and after, so that they don't
-     * record them again.
+     * record them again. A recorded replay creates a commit, which holds what
+     * the replay changes: plugins stage it as changes of that commit, except in
+     * the replays nested in it that aren't recorded.
      *
      * @param { () => void } operation
+     * @param { Object } [options]
+     * @param { boolean } [options.isRecorded = false] whether the replay creates
+     *        a commit, which holds what it changes
      * @returns { void }
      */
-    replay(operation) {
-        this.trigger("on_will_replay_history_handlers");
+    replay(operation, { isRecorded = false } = {}) {
+        this.trigger("on_will_replay_history_handlers", { isRecorded });
         try {
             operation();
         } finally {
@@ -750,10 +742,13 @@ export class HistoryPlugin extends Plugin {
      * @param { boolean } [params.restoreSelection = false]
      */
     applyCommit(commit, { ensureNewMutations = false, restoreSelection = false } = {}) {
-        this.replay(() => {
-            this.applyDataProperties(commit, { ensureNewMutations });
-            this.trigger("on_apply_history_commit_handlers", commit, { restoreSelection });
-        });
+        this.replay(
+            () => {
+                this.applyDataProperties(commit);
+                this.trigger("on_apply_history_commit_handlers", commit, { restoreSelection });
+            },
+            { isRecorded: ensureNewMutations }
+        );
     }
 
     /**
@@ -767,10 +762,13 @@ export class HistoryPlugin extends Plugin {
      * @param { boolean } [params.restoreFocus = true]
      */
     revertCommit(commit, { ensureNewMutations = false, restoreFocus = true } = {}) {
-        this.replay(() => {
-            this.revertDataProperties(commit, { ensureNewMutations });
-            this.trigger("on_revert_history_commit_handlers", commit, { restoreFocus });
-        });
+        this.replay(
+            () => {
+                this.revertDataProperties(commit);
+                this.trigger("on_revert_history_commit_handlers", commit, { restoreFocus });
+            },
+            { isRecorded: ensureNewMutations }
+        );
     }
 
     /**
