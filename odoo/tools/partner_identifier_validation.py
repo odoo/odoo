@@ -9,6 +9,8 @@ from odoo.tools import single_email_re
 NON_DIGIT_RE = re.compile(r'\D')
 # AE TIN: 10-digit
 AE_TIN_RE = re.compile(r'\d{10}')
+# KR Sub-Business Number: 4-digit
+KR_SUB_BUSINESS_NUMBER_RE = re.compile(r'\d{4}')
 # KVK: 8-digit
 NL_KVK_RE = re.compile(r'\d{8}')
 # OIN: 20-digit
@@ -125,3 +127,10 @@ def at_steuernummer_validate(number):
     if s != number[-1]:
         raise InvalidChecksum()
     return number
+
+
+def kr_sub_business_number_validate(value):
+    """Validate a Korean Sub-Business Number (exactly 4 digits)."""
+    if not KR_SUB_BUSINESS_NUMBER_RE.fullmatch(value):
+        raise InvalidFormat()
+    return value
