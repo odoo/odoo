@@ -1,31 +1,3 @@
-$o-account-dashboard-kpi-card-min-width: 13rem;
-$o-account-dashboard-kpi-card-gap: $o-kanban-record-margin * 2;
-
-@mixin show-account-dashboard-kpi-at-capacity(
-    $capacity,
-    $card-id,
-    $fallback-card-id: null,
-    $card-min-width: $o-account-dashboard-kpi-card-min-width
-) {
-    $cards-width: $card-min-width * $capacity;
-    $gaps-width: $o-account-dashboard-kpi-card-gap * ($capacity - 1);
-
-    @container (min-width: calc(#{$cards-width} + #{$gaps-width})) {
-        .o_account_dashboard_kpis {
-            > [data-kpi-id="#{$card-id}"] {
-                display: flex;
-            }
-
-            @if $fallback-card-id {
-                &.o_account_dashboard_kpis_without_invoice_layout
-                    > .o_account_dashboard_kpi_card[data-kpi-id="#{$fallback-card-id}"] {
-                    display: flex;
-                }
-            }
-        }
-    }
-}
-
 .o_account_dashboard_kpis_wrapper {
     display: grid;
     gap: var(--o-bs-spacer-2);
@@ -39,13 +11,16 @@ $o-account-dashboard-kpi-card-gap: $o-kanban-record-margin * 2;
 }
 
 .o_account_dashboard_kpis {
+    --o-account-dashboard-kpi-card-min-width: 13rem;
+    --o-account-dashboard-kpi-card-gap: calc(var(--o-kanban-record-margin) * 2);
+
     display: grid;
     grid-template-columns: repeat(
         auto-fit,
-        minmax($o-account-dashboard-kpi-card-min-width, 1fr)
+        minmax(var(--o-account-dashboard-kpi-card-min-width), 1fr)
     );
     grid-auto-rows: 1fr;
-    gap: $o-account-dashboard-kpi-card-gap;
+    gap: var(--o-account-dashboard-kpi-card-gap);
     width: 100%;
     min-width: 0;
     overflow: scroll hidden;
@@ -62,21 +37,68 @@ $o-account-dashboard-kpi-card-gap: $o-kanban-record-margin * 2;
     }
 }
 
-/* Keep the highest-priority cards that fit on one row. */
-@include show-account-dashboard-kpi-at-capacity(2, "invoices", "expenses");
-@include show-account-dashboard-kpi-at-capacity(3, "expenses", "receivable");
-@include show-account-dashboard-kpi-at-capacity(4, "receivable", "payable");
-@include show-account-dashboard-kpi-at-capacity(5, "payable", "cash");
-@include show-account-dashboard-kpi-at-capacity(6, "cash");
+/* Keep the highest-priority cards that fit on one row: N cards of the minimum
+   width and the N - 1 gaps between them, written as values since container
+   conditions cannot read custom properties. */
+@container (min-width: calc(26rem + 16px)) {
+    .o_account_dashboard_kpis {
+        > [data-kpi-id="invoices"] {
+            display: flex;
+        }
+
+        &.o_account_dashboard_kpis_without_invoice_layout > .o_account_dashboard_kpi_card[data-kpi-id="expenses"] {
+            display: flex;
+        }
+    }
+}
+
+@container (min-width: calc(39rem + 32px)) {
+    .o_account_dashboard_kpis {
+        > [data-kpi-id="expenses"] {
+            display: flex;
+        }
+
+        &.o_account_dashboard_kpis_without_invoice_layout > .o_account_dashboard_kpi_card[data-kpi-id="receivable"] {
+            display: flex;
+        }
+    }
+}
+
+@container (min-width: calc(52rem + 48px)) {
+    .o_account_dashboard_kpis {
+        > [data-kpi-id="receivable"] {
+            display: flex;
+        }
+
+        &.o_account_dashboard_kpis_without_invoice_layout > .o_account_dashboard_kpi_card[data-kpi-id="payable"] {
+            display: flex;
+        }
+    }
+}
+
+@container (min-width: calc(65rem + 64px)) {
+    .o_account_dashboard_kpis {
+        > [data-kpi-id="payable"] {
+            display: flex;
+        }
+
+        &.o_account_dashboard_kpis_without_invoice_layout > .o_account_dashboard_kpi_card[data-kpi-id="cash"] {
+            display: flex;
+        }
+    }
+}
+
+@container (min-width: calc(78rem + 80px)) {
+    .o_account_dashboard_kpis {
+        > [data-kpi-id="cash"] {
+            display: flex;
+        }
+    }
+}
 
 @media screen and (max-width: 575.98px), print and (max-width: 99.98mm) {
-    $mobile-card-min-width: 12rem;
-
     .o_account_dashboard_kpis {
-        grid-template-columns: repeat(
-            auto-fit,
-            minmax($mobile-card-min-width, 1fr)
-        );
+        --o-account-dashboard-kpi-card-min-width: 12rem;
 
         > [data-kpi-id="invoice_layout"] {
             display: none;
@@ -84,21 +106,35 @@ $o-account-dashboard-kpi-card-gap: $o-kanban-record-margin * 2;
     }
 
     /* Shift priorities because Invoice Layout is unavailable on mobile. */
-    @include show-account-dashboard-kpi-at-capacity(
-        1, "invoices", null, $mobile-card-min-width
-    );
-    @include show-account-dashboard-kpi-at-capacity(
-        2, "expenses", null, $mobile-card-min-width
-    );
-    @include show-account-dashboard-kpi-at-capacity(
-        3, "receivable", null, $mobile-card-min-width
-    );
-    @include show-account-dashboard-kpi-at-capacity(
-        4, "payable", null, $mobile-card-min-width
-    );
-    @include show-account-dashboard-kpi-at-capacity(
-        5, "cash", null, $mobile-card-min-width
-    );
+    @container (min-width: 12rem) {
+        .o_account_dashboard_kpis > [data-kpi-id="invoices"] {
+            display: flex;
+        }
+    }
+
+    @container (min-width: calc(24rem + 16px)) {
+        .o_account_dashboard_kpis > [data-kpi-id="expenses"] {
+            display: flex;
+        }
+    }
+
+    @container (min-width: calc(36rem + 32px)) {
+        .o_account_dashboard_kpis > [data-kpi-id="receivable"] {
+            display: flex;
+        }
+    }
+
+    @container (min-width: calc(48rem + 48px)) {
+        .o_account_dashboard_kpis > [data-kpi-id="payable"] {
+            display: flex;
+        }
+    }
+
+    @container (min-width: calc(60rem + 64px)) {
+        .o_account_dashboard_kpis > [data-kpi-id="cash"] {
+            display: flex;
+        }
+    }
 }
 
 .o_account_dashboard_kpi_card {

@@ -163,13 +163,24 @@ export class Dashboard extends Component {
         const dashboardCardClasses = [];
         if (this.isCardDisabled(cardName)) {
             dashboardCardClasses.push("bg-300 text-700 disabled");
-        } else {
-            dashboardCardClasses.push(`o_dashboard_card_${CARD_COLORS_MAPPING[cardName]}`);
         }
         if (this.state.selectedCard === cardName) {
             dashboardCardClasses.push("active");
         }
         return dashboardCardClasses.join(" ");
+    }
+
+    getDashboardCardStyle(cardName) {
+        if (this.isCardDisabled(cardName)) {
+            return "";
+        }
+        const color = CARD_COLORS_MAPPING[cardName];
+        return [
+            `--o-dashboard-card-bg: var(--DashboardCard__${color}-bg-color, var(--o-bs-${color}-100))`,
+            `--o-dashboard-card-bg-active: var(--DashboardCard__${color}-bg-color--active, var(--o-bs-${color}-200))`,
+            `--o-dashboard-card-color: var(--DashboardCard__${color}-color, var(--o-bs-${color}-700))`,
+            `--o-dashboard-card-color-active: var(--DashboardCard__${color}-color--active, var(--o-bs-${color}-800))`,
+        ].join(";");
     }
 
     formatCurrency(value) {
