@@ -446,6 +446,9 @@ class MicrosoftSync(models.AbstractModel):
                 # saves the event's id of the last user who synced the event (who might be or not the current user).
                 status, event = microsoft_service._get_single_event(self.ms_universal_event_id, token=token)
                 if status and event and event.get('value') and len(event.get('value')) == 1:
+                    # Outlook refuses any answer to a meeting cancelled by its organizer.
+                    if event.get('value')[0].get('isCancelled'):
+                        return
                     # Send the attendee answer with its own ms_organizer_event_id.
                     res = microsoft_service.answer(
                         event.get('value')[0].get('id'),
