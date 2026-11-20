@@ -14,6 +14,14 @@ test("product with single 'is_custom' attr is configurable", async () => {
     expect(!!product.isConfigurable()).toBe(true);
 });
 
+test("getUomPriceFactor uses absolute UoM factors", async () => {
+    const store = await setupPosEnv();
+    const product = store.models["product.template"].get(1);
+    product.uom_id = store.models["uom.uom"].get(15);
+
+    expect(product.getUomPriceFactor(store.models["uom.uom"].get(16))).toBe(1000);
+});
+
 test("product with single 'multi' display_type attr with single choice is configurable", async () => {
     const store = await setupPosEnv();
     const product = store.models["product.template"].get(52);

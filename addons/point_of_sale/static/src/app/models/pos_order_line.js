@@ -91,10 +91,9 @@ export class PosOrderline extends PosOrderlineAccounting {
             }
 
             if (product_packaging_by_barcode[code.code]) {
-                this.setQuantity(
-                    uom_by_id[product_packaging_by_barcode[code.code].uom_id.id].factor /
-                        this.product_id.product_tmpl_id.uom_id.factor
-                );
+                this.product_uom_id = uom_by_id[product_packaging_by_barcode[code.code].uom_id.id];
+                this.recomputeUnitPrice();
+                this.price_type = "automatic";
             }
         }
 
@@ -263,11 +262,11 @@ export class PosOrderline extends PosOrderlineAccounting {
     recomputeUnitPrice() {
         const productTemplate = this.product_id.product_tmpl_id;
         this.setUnitPrice(
-            productTemplate.getPrice(
+            productTemplate.getUomPrice(
                 this.order_id.pricelist_id,
                 this.getQuantity(),
+                this.product_uom_id,
                 this.getPriceExtra(),
-                false,
                 this.product_id
             )
         );
@@ -279,11 +278,11 @@ export class PosOrderline extends PosOrderlineAccounting {
         );
         const price = ProductPrice.round(this.price_unit || 0);
         const product = orderline.getProduct();
-        const order_line_price = product.getPrice(
+        const order_line_price = product.getUomPrice(
             orderline.order_id.pricelist_id,
             this.getQuantity(),
+            orderline.product_uom_id,
             0,
-            false,
             product
         );
 
@@ -302,12 +301,13 @@ export class PosOrderline extends PosOrderlineAccounting {
             this.currency.isZero(
                 this.currency.round(price) -
                     this.currency.round(order_line_price) -
-                    orderline.getPriceExtra()
+                    orderline.getPriceExtra() * product.getUomPriceFactor(orderline.product_uom_id)
             ) &&
             this.full_product_name === orderline.full_product_name &&
             isSameCustomerNote &&
             !this.refunded_orderline_id &&
-            !orderline.isPartOfCombo()
+            !orderline.isPartOfCombo() &&
+            this.product_uom_id?.id === orderline.product_uom_id?.id
         );
     }
 

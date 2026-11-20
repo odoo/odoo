@@ -44,9 +44,9 @@ export class ProductTemplateAccounting extends Base {
 
     // Port of _get_product_price on product.pricelist.
     //
-    // Anything related to UOM can be ignored, the POS will always use
-    // the default UOM set on the product and the user cannot change
-    // it.
+    // `quantity` is expressed in `uom` (the product UoM when not given).
+    // `uom` only selects the applicable rules: the returned price is
+    // always per product UoM, see getUomPrice.
     //
     // Pricelist items do not have to be sorted. All
     // product.pricelist.item records are loaded with a search_read
@@ -59,7 +59,8 @@ export class ProductTemplateAccounting extends Base {
         recurring = false,
         variant = false,
         original_line = false,
-        related_lines = []
+        related_lines = [],
+        uom = false
     ) {
         // In case of nested pricelists, it is necessary that all pricelists are made available in
         // the POS. Display a basic alert to the user in the case where there is a pricelist item
@@ -93,14 +94,14 @@ export class ProductTemplateAccounting extends Base {
         // 1. Variant Rules
         if (product) {
             const productRules = pricelist.getRulesByProductId(product.id);
-            rule = pricelist.findBestRule(productRules, quantity);
+            rule = pricelist.findBestRule(productRules, quantity, uom, productTmpl.uom_id);
             isVariantSpecificRule = Boolean(rule);
         }
 
         // 2. Template Rules
         if (!rule) {
             const tmplRules = pricelist.getRulesByTmplId(productTmpl.id);
-            rule = pricelist.findBestRule(tmplRules, quantity);
+            rule = pricelist.findBestRule(tmplRules, quantity, uom, productTmpl.uom_id);
         }
 
         // 3. Category Rules
@@ -109,7 +110,7 @@ export class ProductTemplateAccounting extends Base {
             if (categoryRulesIds.length > 0) {
                 const categoryRules =
                     this.models["product.pricelist.item"].readMany(categoryRulesIds);
-                rule = pricelist.findBestRule(categoryRules, quantity);
+                rule = pricelist.findBestRule(categoryRules, quantity, uom, productTmpl.uom_id);
             }
         }
 
@@ -118,7 +119,7 @@ export class ProductTemplateAccounting extends Base {
             const globalRulesIds = pricelist.getGlobalRulesIds();
             if (globalRulesIds.length > 0) {
                 const globalRules = this.models["product.pricelist.item"].readMany(globalRulesIds);
-                rule = pricelist.findBestRule(globalRules, quantity);
+                rule = pricelist.findBestRule(globalRules, quantity, uom, productTmpl.uom_id);
             }
         }
 
@@ -128,7 +129,16 @@ export class ProductTemplateAccounting extends Base {
 
         if (rule.base === "pricelist") {
             if (rule.base_pricelist_id) {
-                price = this.getPrice(rule.base_pricelist_id, quantity, price_extra, true, variant);
+                price = this.getPrice(
+                    rule.base_pricelist_id,
+                    quantity,
+                    price_extra,
+                    true,
+                    variant,
+                    false,
+                    [],
+                    uom
+                );
             }
         } else if (rule.base === "standard_price") {
             price = standardPrice;
