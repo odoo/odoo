@@ -911,30 +911,32 @@ class ResPartner(models.Model):
         if not vat or vat in ('/', 'na', 'NA'):
             return
 
+        criteria = []
+        name = (customer_values.get('name') or '').strip()
+
+        def add_vat_criteria(vat_domain):
+            if name:
+                criteria.append({'domain': [*vat_domain, ('name', '=ilike', name)]})
+            criteria.append({'domain': vat_domain})
+
         # Sometimes, the vat is specified with some whitespaces or dots.
         normalized_vat = vat.replace(' ', '').replace('.', '')
         country_prefix = re.match('^[a-zA-Z]{2}|^', vat).group()
-
-        criteria = []
         if country_code := customer_values.get('country_code'):
-            criteria.append({'domain': [('vat', 'in', (normalized_vat, vat)), ('country_id.code', '=', country_code.upper())]})
-        criteria.append({'domain': [('vat', 'in', (normalized_vat, vat))]})
+            add_vat_criteria([('vat', 'in', (normalized_vat, vat)), ('country_id.code', '=', country_code.upper())])
+        add_vat_criteria([('vat', 'in', (normalized_vat, vat))])
         extra_vat_values = self._get_country_specific_vat_variants(normalized_vat, country_prefix)
         if extra_vat_values:
-            criteria.append({'domain': [('vat', 'in', extra_vat_values)]})
+            add_vat_criteria([('vat', 'in', extra_vat_values)])
         if country_prefix:
-            criteria.append({
-                'domain': [
-                    ('vat', 'in', (normalized_vat[2:], vat[2:])),
-                    ('country_id.code', '=', country_prefix.upper()),
-                ],
-            })
-            criteria.append({
-                'domain': [
-                    ('vat', 'in', (normalized_vat[2:], vat[2:])),
-                    ('country_id.code', '=', False),
-                ],
-            })
+            add_vat_criteria([
+                ('vat', 'in', (normalized_vat[2:], vat[2:])),
+                ('country_id.code', '=', country_prefix.upper()),
+            ])
+            add_vat_criteria([
+                ('vat', 'in', (normalized_vat[2:], vat[2:])),
+                ('country_id.code', '=', False),
+            ])
 
         try:
             vat_only_numeric = str(int(re.sub(r'^\D{2}', '', normalized_vat) or 0))
