@@ -361,6 +361,17 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         self._webhook_notification_flow(self.webhook_notification_batch_data)
         self.assertEqual(tx.state, "done")
 
+    def test_api_response_without_amount_keeps_transaction_done(self):
+        tx = self._create_transaction("direct")
+        self._webhook_notification_flow(self.webhook_notification_batch_data)
+        tx._record({
+            "merchantReference": tx.reference,
+            "pspReference": self.psp_reference,
+            "resultCode": "Authorised",
+        })
+        self._run_processing()
+        self.assertEqual(tx.state, "done")
+
     def test_webhook_notification_authorizes_transaction(self):
         self.provider.payment_method_ids.active = False  # TODO VCHU: remove in master
         self.provider.capture_manually = True
