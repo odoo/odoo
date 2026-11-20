@@ -201,15 +201,10 @@ class ProductProduct(models.Model):
                 else ('order_id.company_id', 'in', self.env.companies.ids),
         ], limit=1))
 
-    def _has_vendor_pricelist(self, partner_id=False, company_id=False):
+    def _has_vendor_pricelist(self, partner_id=False, params=False):
         self.ensure_one()
         partners = partner_id | partner_id.parent_id if partner_id else self.env['res.partner']
-        return any(
-            (not s.product_id or s.product_id == self)
-            and (not s.company_id or not company_id or s.company_id == company_id)
-            and (not partners or s.partner_id in partners)
-            for s in self.seller_ids
-        )
+        return any(not partners or s.partner_id in partners for s in self._prepare_sellers(params))
 
     def _get_last_po_line(self, partner_id=False, company_id=False):
         if not self.id:
@@ -218,6 +213,7 @@ class ProductProduct(models.Model):
             ('state', '=', 'purchase'),
             ('date_approve', '!=', False),
             ('order_line.product_id', '=', self.id),
+            *self._get_last_po_line_extra_domain(),
         ]
         if partner_id:
             vendor = partner_id if not partner_id.parent_id else partner_id.parent_id
@@ -231,6 +227,9 @@ class ProductProduct(models.Model):
             ('order_id', '=', last_order.id),
             ('product_id', '=', self.id),
         ], order='id desc', limit=1)
+
+    def _get_last_po_line_extra_domain(self):
+        return []
 
     def _get_last_po_seller_info(self, partner_id=False, company_id=False):
         last_line = self._get_last_po_line(partner_id=partner_id, company_id=company_id)
@@ -263,13 +262,13 @@ class ProductProduct(models.Model):
 
     def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False, ordered_by='price_discounted', params=False):
         seller_info = super()._select_seller(partner_id=partner_id, quantity=quantity, date=date, uom_id=uom_id, ordered_by=ordered_by, params=params)
-        if not seller_info and self._is_last_po_fallback_applicable(params):
+        if not seller_info and self._is_last_po_fallback_applicable(params) \
+                and not self._has_vendor_pricelist(partner_id, params):
+            # No pricelist defined for this vendor: the last confirmed po line acts as one
             company = self.env.company
             if params and params.get('order_id') and params['order_id'].company_id:
                 company = params['order_id'].company_id
-            if not self._has_vendor_pricelist(partner_id, company):
-                # No pricelist defined for this vendor: the last confirmed po line acts as one
-                seller_info = self._get_last_po_seller_info(partner_id, company)
+            seller_info = self._get_last_po_seller_info(partner_id, company)
         return seller_info
 
 
