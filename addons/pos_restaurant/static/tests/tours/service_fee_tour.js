@@ -176,6 +176,11 @@ registry.category("web_tour.tours").add("ServiceFeeRefundTour", {
             ...ProductScreen.clickRefund(),
             TicketScreen.selectOrder("001"),
 
+            {
+                content: "select the Coca-Cola line for refund",
+                trigger: '.ticket-screen .orderline:has(.product-name:contains("Coca-Cola"))',
+                run: "click",
+            },
             inLeftSide(Order.hasLine({ productName: "Coca-Cola", withClass: ".selected" })),
             ProductScreen.clickNumpad("1"),
             TicketScreen.toRefundTextContains("1", "Coca-Cola"),

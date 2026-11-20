@@ -5,7 +5,7 @@
         <t t-if="lines.length">
             <div class="d-flex flex-column flex-grow-1 overflow-hidden">
                 <div t-ref="this.scrollableRef" class="order-container d-flex flex-column flex-grow-1 overflow-y-auto text-start">
-                    <t t-foreach="lines" t-as="line" t-key="line_index">
+                    <t t-foreach="lines" t-as="line" t-key="line.uuid">
                         <t t-if="this.props.slots.default" t-call-slot="default" line="line" />
                         <Orderline t-else="" line="line" mode="this.props.mode" />
                     </t>
