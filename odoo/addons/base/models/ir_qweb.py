@@ -1136,10 +1136,53 @@ class IrQweb(models.AbstractModel):
                 yield from {def_name}_content(self, values)
                 """, 0)]
 
+<<<<<<< b95779b72800eaec1d800d2e778d717c42bcbca9
         code_lines = []
         json_options = json.scriptsafe.loads(json.scriptsafe.dumps(options, default=str))
         code_lines.append(f'template_options = {pprint.pformat(json_options, indent=4)}')
         code_lines.append('code = None')
+||||||| 9feee1c7c7a0db66a7026f2f2c340a4b88c17a45
+                        yield from {def_name}_content(self, values)
+                    except QWebException:
+                        raise
+                    except Exception as e:
+                        if isinstance(e, TransactionRollbackError):
+                            raise
+                        if isinstance(e, ReadOnlySqlTransaction):
+                            raise
+                        raise QWebException("Error while render the template",
+                            self, template, ref={compile_context['ref']!r}, code=code) from e
+                    """, 0)]
+        except QWebException:
+            raise
+        except Exception as e:
+            raise QWebException("Error when compiling xml template",
+                self, template, ref=compile_context['ref'], path_xml=compile_context['_qweb_error_path_xml']) from e
+
+        code_lines = ['code = None']
+        code_lines.append(f'template = {(document if isinstance(template, etree._Element) else template)!r}')
+=======
+                        yield from {def_name}_content(self, values)
+                    except QWebException:
+                        raise
+                    except Exception as e:
+                        if isinstance(e, TransactionRollbackError):
+                            raise
+                        if isinstance(e, ReadOnlySqlTransaction):
+                            raise
+                        raise QWebException("Error while render the template",
+                            self, template, ref={compile_context['ref']!r}, code=code) from e
+                    """, 0)]
+        except QWebException:
+            raise
+        except Exception as e:
+            raise QWebException("Error when compiling xml template",
+                self, template, ref=compile_context['ref'], path_xml=compile_context['_qweb_error_path_xml']) from e
+
+        code_lines = ['code = None']
+        code_lines.append(f'template = {(document if isinstance(template, etree._Element) else template)!r}')
+        code_lines.append('_qweb_template = template')
+>>>>>>> f95e7ed7d14b2cb2dceaca4cc34f683da8df9be0
         code_lines.append('template_functions = {}')
 
         for lines in compile_context['template_functions'].values():
@@ -2700,6 +2743,286 @@ class IrQweb(models.AbstractModel):
 
         return code
 
+<<<<<<< b95779b72800eaec1d800d2e778d717c42bcbca9
+||||||| 9feee1c7c7a0db66a7026f2f2c340a4b88c17a45
+    def _compile_directive_cache(self, el, compile_context, level):
+        """Compile the `t-cache` tuple expression into a key cache.
+
+        The `t-cache` directive allows you to keep the rendered result
+        of a template part. The supplied key must be a tuple. This tuple
+        can contain recordset in this case the zone will be invalidated
+        each time the write_date of these records changes.
+        The values are scoped into the `t-cache` and are not available
+        outside.
+        see: `t-nocache`
+        """
+        expr = el.attrib.pop('t-cache')
+        code = self._flush_text(compile_context, level)
+
+        def_name = compile_context['make_name']('t_cache')
+
+        # Generate the content function
+        def_code = [indent_code(f"""def {def_name}(self, values):""", 0)]
+        def_content = self._compile_directives(el, compile_context, 1)
+        if def_content and not compile_context['_text_concat']:
+            self._append_text('', compile_context) # To ensure the template function is a generator and doesn't become a regular function
+        def_code.extend(def_content)
+        def_code.extend(self._flush_text(compile_context, 1))
+        compile_context['template_functions'][def_name] = def_code
+
+        # Get the dynamic key for the cache and load the content.
+        # The t-nocache yield a tuple (ref, function name) instead of a
+        # When reading tuple coming from t-nocache, we check if the
+        # method is already known otherwise the corresponding template
+        # and its functions are loaded.
+        code.append(indent_code(f"""
+            template_cache_key = {self._compile_expr(expr)} if not self.env.context.get('is_t_cache_disabled') else None
+            cache_key = self._get_cache_key(template_cache_key) if template_cache_key else None
+            uniq_cache_key = cache_key and ({str(self.env.context['__qweb_base_key_cache'])!r}, '{def_name}_cache', cache_key)
+            loaded_values = values['__qweb_loaded_values']
+            def {def_name}_cache():
+                content = []
+                text = []
+                for item in {def_name}(self, {{**values, '__qweb_in_cache': True}}):
+                    if isinstance(item, str):
+                        text.append(item)
+                    else:
+                        content.append(''.join(text))
+                        content.append(item)
+                        text = []
+                if text:
+                    content.append(''.join(text))
+                return content
+            cache_content = self._load_values(uniq_cache_key, {def_name}_cache, loaded_values)
+            if values.get('__qweb_in_cache'):
+                yield from cache_content
+            else:
+                for item in cache_content:
+                    if isinstance(item, str):
+                        yield item
+                    else:
+                        ref, function_name, cached_values = item
+                        t_nocache_function = loaded_values.get(function_name)
+                        if not t_nocache_function:
+                            t_call_template_functions, def_name = self._compile(ref)
+                            t_nocache_function = t_call_template_functions[function_name]
+
+                        nocache_values = values['__qweb_root_values'].copy()
+                        nocache_values.update(cached_values)
+                        yield ''.join(t_nocache_function(self, nocache_values))
+            """, level))
+
+        return code
+
+    def _compile_directive_nocache(self, el, compile_context, level):
+        """
+        The `t-nocache` directive makes it possible to force rendering
+        of a part even if it is in a `t-cache`. The values available in
+        the `t-nocache` are the one provided when calling the template
+        (and therefore ignores any t-set that could have been done).
+
+        The `t-nocache-*` are the values whose result of the
+        expression will be cached and added to the root's values when
+        rendering the no cache part. Only primitive types can be cached.
+
+        see: `t-cache`
+        """
+        if 't-nocache' not in el.attrib:
+            raise SyntaxError("t-nocache-* must be on the same node as t-nocache")
+
+        el.attrib.pop('t-nocache')
+        code = self._flush_text(compile_context, level)
+
+        # t-nocache-* will generate the values to put in cache
+        # must cosume this attributes before generate the cached content.
+        code_cache_values = []
+        for key in list(el.attrib):
+            if key.startswith('t-nocache-'):
+                expr = el.attrib.pop(key)
+                varname = key[10:]
+                if not VARNAME_REGEXP.match(varname):
+                    raise ValueError(f'The varname {varname!r} can only contain alphanumeric characters and underscores.')
+                code_cache_values.append(indent_code(f"""
+                    cached_value = {self._compile_expr(expr)}
+                    if cached_value is not None and not isinstance(cached_value, (str, int, float, bool)):
+                        raise ValueError(f'''The value type of {key!r} cannot be cached: {{cached_value!r}}''')
+                    cached_values[{varname!r}] = cached_value
+                """, level + 1))
+
+        # generate the cached content method
+        def_name = compile_context['make_name']('t_nocache')
+        def_code = [f"def {def_name}(self, values):"]
+        def_code.append(indent_code("try:", 1))
+        def_content = self._compile_directives(el, compile_context, 2)
+        if def_content and not compile_context['_text_concat']:
+            self._append_text('', compile_context) # To ensure the template function is a generator and doesn't become a regular function
+        def_code.extend(def_content)
+        def_code.extend(self._flush_text(compile_context, 2))
+        def_code.append(indent_code(f"""
+                except QWebException:
+                    raise
+                except Exception as e:
+                    raise QWebException("Error while render the template",
+                        self, template, ref={compile_context['ref']!r}, code=code) from e
+            """, 1))
+        compile_context['template_functions'][def_name] = def_code
+
+        # if the nocache is inside a cache return a tuple with the method name and the cached values
+        code.append(indent_code("""
+            if values.get('__qweb_in_cache'):
+                cached_values = {}
+            """, level))
+        code.extend(code_cache_values)
+        code.append(indent_code(f"yield ({compile_context['template']!r}, {def_name!r}, cached_values)", level+1))
+        # else render the content
+        code.append(indent_code(f"""
+            else:
+                yield from {def_name}(self, values)
+            """, level))
+
+        return code
+
+=======
+    def _compile_directive_cache(self, el, compile_context, level):
+        """Compile the `t-cache` tuple expression into a key cache.
+
+        The `t-cache` directive allows you to keep the rendered result
+        of a template part. The supplied key must be a tuple. This tuple
+        can contain recordset in this case the zone will be invalidated
+        each time the write_date of these records changes.
+        The values are scoped into the `t-cache` and are not available
+        outside.
+        see: `t-nocache`
+        """
+        expr = el.attrib.pop('t-cache')
+        code = self._flush_text(compile_context, level)
+
+        def_name = compile_context['make_name']('t_cache')
+
+        # Generate the content function
+        def_code = [indent_code(f"""def {def_name}(self, values):""", 0)]
+        def_content = self._compile_directives(el, compile_context, 1)
+        if def_content and not compile_context['_text_concat']:
+            self._append_text('', compile_context) # To ensure the template function is a generator and doesn't become a regular function
+        def_code.extend(def_content)
+        def_code.extend(self._flush_text(compile_context, 1))
+        compile_context['template_functions'][def_name] = def_code
+
+        # Get the dynamic key for the cache and load the content.
+        # The t-nocache yield a tuple (ref, function name) instead of a
+        # When reading tuple coming from t-nocache, we check if the
+        # method is already known otherwise the corresponding template
+        # and its functions are loaded.
+        code.append(indent_code(f"""
+            template_cache_key = {self._compile_expr(expr)} if not self.env.context.get('is_t_cache_disabled') else None
+            cache_key = self._get_cache_key(template_cache_key) if template_cache_key else None
+            uniq_cache_key = cache_key and ({str(self.env.context['__qweb_base_key_cache'])!r}, '{def_name}_cache', cache_key)
+            loaded_values = values['__qweb_loaded_values']
+            def {def_name}_cache():
+                content = []
+                text = []
+                for item in {def_name}(self, {{**values, '__qweb_in_cache': True}}):
+                    if isinstance(item, str):
+                        text.append(item)
+                    else:
+                        content.append(''.join(text))
+                        content.append(item)
+                        text = []
+                if text:
+                    content.append(''.join(text))
+                return content
+            cache_content = self._load_values(uniq_cache_key, {def_name}_cache, loaded_values)
+            if values.get('__qweb_in_cache'):
+                yield from cache_content
+            else:
+                for item in cache_content:
+                    if isinstance(item, str):
+                        yield item
+                    else:
+                        ref, function_name, cached_values = item
+                        t_nocache_function = loaded_values.get(function_name)
+                        if not t_nocache_function:
+                            t_call_template_functions, def_name = self._compile(ref)
+                            t_nocache_function = t_call_template_functions[function_name]
+
+                        nocache_values = values['__qweb_root_values'].copy()
+                        nocache_values.update(cached_values)
+                        yield ''.join(t_nocache_function(self, nocache_values))
+            """, level))
+
+        return code
+
+    def _compile_directive_nocache(self, el, compile_context, level):
+        """
+        The `t-nocache` directive makes it possible to force rendering
+        of a part even if it is in a `t-cache`. The values available in
+        the `t-nocache` are the one provided when calling the template
+        (and therefore ignores any t-set that could have been done).
+
+        The `t-nocache-*` are the values whose result of the
+        expression will be cached and added to the root's values when
+        rendering the no cache part. Only primitive types can be cached.
+
+        see: `t-cache`
+        """
+        if 't-nocache' not in el.attrib:
+            raise SyntaxError("t-nocache-* must be on the same node as t-nocache")
+
+        el.attrib.pop('t-nocache')
+        code = self._flush_text(compile_context, level)
+
+        # t-nocache-* will generate the values to put in cache
+        # must cosume this attributes before generate the cached content.
+        code_cache_values = []
+        for key in list(el.attrib):
+            if key.startswith('t-nocache-'):
+                expr = el.attrib.pop(key)
+                varname = key[10:]
+                if not VARNAME_REGEXP.match(varname):
+                    raise ValueError(f'The varname {varname!r} can only contain alphanumeric characters and underscores.')
+                code_cache_values.append(indent_code(f"""
+                    cached_value = {self._compile_expr(expr)}
+                    if cached_value is not None and not isinstance(cached_value, (str, int, float, bool)):
+                        raise ValueError(f'''The value type of {key!r} cannot be cached: {{cached_value!r}}''')
+                    cached_values[{varname!r}] = cached_value
+                """, level + 1))
+
+        # generate the cached content method
+        def_name = compile_context['make_name']('t_nocache')
+        def_code = [f"def {def_name}(self, values):"]
+        def_code.append(indent_code("try:", 1))
+        def_content = self._compile_directives(el, compile_context, 2)
+        if def_content and not compile_context['_text_concat']:
+            self._append_text('', compile_context) # To ensure the template function is a generator and doesn't become a regular function
+        def_code.extend(def_content)
+        def_code.extend(self._flush_text(compile_context, 2))
+        def_code.append(indent_code(f"""
+                except QWebException:
+                    raise
+                except Exception as e:
+                    if isinstance(e, TransactionRollbackError):
+                        raise
+                    raise QWebException("Error while render the template",
+                        self, _qweb_template, ref={compile_context['ref']!r}, code=code) from e
+            """, 1))
+        compile_context['template_functions'][def_name] = def_code
+
+        # if the nocache is inside a cache return a tuple with the method name and the cached values
+        code.append(indent_code("""
+            if values.get('__qweb_in_cache'):
+                cached_values = {}
+            """, level))
+        code.extend(code_cache_values)
+        code.append(indent_code(f"yield ({compile_context['template']!r}, {def_name!r}, cached_values)", level+1))
+        # else render the content
+        code.append(indent_code(f"""
+            else:
+                yield from {def_name}(self, values)
+            """, level))
+
+        return code
+
+>>>>>>> f95e7ed7d14b2cb2dceaca4cc34f683da8df9be0
     # methods called by the compiled function at rendering time.
 
     def _debug_trace(self, debugger, values):
