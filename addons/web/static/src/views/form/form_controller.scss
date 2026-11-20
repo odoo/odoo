@@ -1,55 +1,3 @@
-/* Define left and right padding according to screen resolution */
-@mixin o-form-sheet-inner-left-padding {
-    padding-left: var(--o-horizontal-padding);
-    @media screen and (min-width: 992px), print and (min-width: 190mm) {
-        padding-left: calc(var(--o-horizontal-padding) * 2);
-    }
-}
-@mixin o-form-sheet-inner-right-padding {
-    padding-right: var(--o-horizontal-padding);
-    @media screen and (min-width: 992px), print and (min-width: 190mm) {
-        padding-right: calc(var(--o-horizontal-padding) * 2);
-    }
-}
-
-/* Form view rules to break the default table layout */
-@mixin form-break-table() {
-    --fieldWidget-margin-bottom: 0;
-
-    grid-template-columns: minmax(0, 1fr);
-
-    .o_cell {
-        max-width: 100%;
-
-        &.o_wrap_label {
-            line-height: var(--o-label-font-size-factor);
-        }
-
-        .o_field_widget {
-            &:not(.o_field_boolean){
-                width: 100%;
-            }
-
-            &.o_field_boolean {
-                margin-right: 0;
-            }
-        }
-
-        .o_input_dropdown {
-            width: auto;
-            max-width: 100%;
-        }
-
-    }
-}
-
-
-@mixin editable-form-break-table() {
-    .o_address_type, .o_address_format {
-        --fieldWidget-margin-bottom: calc(var(--o-form-spacing-unit) * 2);
-    }
-}
-
 .o_form_view {
     --fieldWidget-margin-bottom: var(--o-form-spacing-unit);
     --Ribbon-z-index: 1;
@@ -64,10 +12,44 @@
     .oe_inline, .o_field_widget.oe_inline > * {
         width: auto!important;
     }
-    @for $i from 2 through 16 {
-        .o_field_widget.o_input_#{$i}ch input{
-            width: 1ch * $i !important;
-        }
+    .o_field_widget.o_input_3ch input {
+        width: 3ch !important;
+    }
+
+    .o_field_widget.o_input_4ch input {
+        width: 4ch !important;
+    }
+
+    .o_field_widget.o_input_5ch input {
+        width: 5ch !important;
+    }
+
+    .o_field_widget.o_input_6ch input {
+        width: 6ch !important;
+    }
+
+    .o_field_widget.o_input_7ch input {
+        width: 7ch !important;
+    }
+
+    .o_field_widget.o_input_8ch input {
+        width: 8ch !important;
+    }
+
+    .o_field_widget.o_input_9ch input {
+        width: 9ch !important;
+    }
+
+    .o_field_widget.o_input_10ch input {
+        width: 10ch !important;
+    }
+
+    .o_field_widget.o_input_12ch input {
+        width: 12ch !important;
+    }
+
+    .o_field_widget.o_input_16ch input {
+        width: 16ch !important;
     }
 
     .o_field_empty:empty {
@@ -427,11 +409,38 @@
     /* uses the two columns layout defined above. */
     &.o_kanban_quick_create_form {
         .o_inner_group {
-            @include form-break-table;
+            --fieldWidget-margin-bottom: 0;
+
+            grid-template-columns: minmax(0, 1fr);
+
+            .o_cell {
+                max-width: 100%;
+
+                &.o_wrap_label {
+                    line-height: var(--o-label-font-size-factor);
+                }
+
+                .o_field_widget {
+                    &:not(.o_field_boolean) {
+                        width: 100%;
+                    }
+
+                    &.o_field_boolean {
+                        margin-right: 0;
+                    }
+                }
+
+                .o_input_dropdown {
+                    width: auto;
+                    max-width: 100%;
+                }
+            }
         }
 
         &.o_form_editable .o_inner_group {
-            @include editable-form-break-table();
+            .o_address_type, .o_address_format {
+                --fieldWidget-margin-bottom: calc(var(--o-form-spacing-unit) * 2);
+            }
         }
     }
 
@@ -518,8 +527,11 @@
 
                         .note-editing-area, .o_readonly {
                             padding: var(--o-bs-card-spacer-y) var(--o-bs-card-spacer-x);
-                            @include o-form-sheet-inner-left-padding;
-                            @include o-form-sheet-inner-right-padding;
+                            padding-inline: var(--o-horizontal-padding);
+
+                            @media screen and (min-width: 992px), print and (min-width: 190mm) {
+                                padding-inline: calc(var(--o-horizontal-padding) * 2);
+                            }
                         }
 
                         .note-editable.panel-body {
@@ -989,12 +1001,39 @@
 
     &.modal-sm .o_form_view {
         .o_inner_group {
-            @include form-break-table;
+            --fieldWidget-margin-bottom: 0;
+
+            grid-template-columns: minmax(0, 1fr);
             row-gap: 0;
+
+            .o_cell {
+                max-width: 100%;
+
+                &.o_wrap_label {
+                    line-height: var(--o-label-font-size-factor);
+                }
+
+                .o_field_widget {
+                    &:not(.o_field_boolean) {
+                        width: 100%;
+                    }
+
+                    &.o_field_boolean {
+                        margin-right: 0;
+                    }
+                }
+
+                .o_input_dropdown {
+                    width: auto;
+                    max-width: 100%;
+                }
+            }
         }
 
         .o_form_editable .o_inner_group {
-            @include editable-form-break-table();
+            .o_address_type, .o_address_format {
+                --fieldWidget-margin-bottom: calc(var(--o-form-spacing-unit) * 2);
+            }
         }
     }
 }
@@ -1049,11 +1088,38 @@
 @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
     .o_form_view {
         .o_inner_group {
-            @include form-break-table;
+            --fieldWidget-margin-bottom: 0;
+
+            grid-template-columns: minmax(0, 1fr);
+
+            .o_cell {
+                max-width: 100%;
+
+                &.o_wrap_label {
+                    line-height: var(--o-label-font-size-factor);
+                }
+
+                .o_field_widget {
+                    &:not(.o_field_boolean) {
+                        width: 100%;
+                    }
+
+                    &.o_field_boolean {
+                        margin-right: 0;
+                    }
+                }
+
+                .o_input_dropdown {
+                    width: auto;
+                    max-width: 100%;
+                }
+            }
         }
 
         .o_form_editable .o_inner_group {
-            @include editable-form-break-table();
+            .o_address_type, .o_address_format {
+                --fieldWidget-margin-bottom: calc(var(--o-form-spacing-unit) * 2);
+            }
         }
     }
 }
