@@ -1108,12 +1108,12 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
             invoice_line_ids=[
                 # This section should be ignored, the product line should be exported instead.
                 self._prepare_invoice_line(name="Section 2", display_type='line_section', collapse_composition=False, price_unit=0.0),
-                self._prepare_invoice_line(product_id=product_4, tax_ids=[tax_21.id]),
+                self._prepare_invoice_line(product_id=product_4, tax_ids=tax_21),
                 # This section should be exported twice : one for 12%, other for 21%.
                 self._prepare_invoice_line(name="Section 1", display_type='line_section', collapse_composition=True, price_unit=0.0),
-                self._prepare_invoice_line(product_id=product_1, tax_ids=[tax_12.id]),
-                self._prepare_invoice_line(product_id=product_2, tax_ids=[tax_12.id]),
-                self._prepare_invoice_line(product_id=product_3, tax_ids=[tax_21.id]),
+                self._prepare_invoice_line(product_id=product_1, tax_ids=tax_12),
+                self._prepare_invoice_line(product_id=product_2, tax_ids=tax_12),
+                self._prepare_invoice_line(product_id=product_3, tax_ids=tax_21),
             ],
             post=True,
         )

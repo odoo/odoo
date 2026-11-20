@@ -3498,7 +3498,14 @@ class AccountTax(models.Model):
         }
 
     @api.model
-    def _reduce_base_lines_with_grouping_function(self, base_lines, grouping_function=None, aggregate_function=None, computation_key=None):
+    def _reduce_base_lines_with_grouping_function(
+        self,
+        base_lines,
+        grouping_function=None,
+        aggregate_function=None,
+        filter_function=None,
+        computation_key=None,
+    ):
         """ Create the new base lines that will get the discount.
         Since they no longer contain fixed taxes, we can remove the quantity and aggregate them depending on
         the grouping_function passed as parameter.
@@ -3511,12 +3518,21 @@ class AccountTax(models.Model):
                                     being the way the base lines will be aggregated all together.
                                     By default, the base lines will be aggregated by taxes.
         :param aggregate_function:  An optional function taking the 2 base lines as parameter to be aggregated together.
+        :param filter_function:     An optional function taking the base line as parameter.
+                                    If the method returns True, then the base line will be grouped.
         :param computation_key:     The computation_key to be set on the aggregated base_lines.
         :return:                    The base lines aggregated.
         """
-        aggregated_base_lines = {}
-        base_line_map = {}
+        aggregated_base_lines_mapping = {}
+        order_base_lines_mapping = {}
+        index = 0
         for base_line in base_lines:
+            has_to_be_grouped = filter_function is None or filter_function(base_line)
+            if not has_to_be_grouped:
+                order_base_lines_mapping[index] = ('line', base_line)
+                index += 1
+                continue
+
             price_unit_after_discount = base_line['price_unit'] * (1 - (base_line['discount'] / 100.0))
             new_base_line = self._prepare_base_line_for_taxes_computation(
                 base_line,
@@ -3529,11 +3545,7 @@ class AccountTax(models.Model):
                 grouping_key.update(grouping_function(new_base_line))
             grouping_key = frozendict(grouping_key)
 
-            if base_line['analytic_distribution']:
-                for account_id, distribution in base_line['analytic_distribution'].items():
-                    aggregated_base_lines.setdefault(account_id, []).append(distribution)
-
-            target_base_line = base_line_map.get(grouping_key)
+            target_base_line, aggregated_base_lines = aggregated_base_lines_mapping.get(grouping_key, (None, None))
             if target_base_line:
                 target_base_line['price_unit'] += new_base_line['price_unit']
                 target_base_line['tax_details'] = self._merge_tax_details(
@@ -3542,6 +3554,7 @@ class AccountTax(models.Model):
                 )
                 if aggregate_function:
                     aggregate_function(target_base_line, base_line)
+                aggregated_base_lines_mapping[grouping_key][1].append(base_line)
             else:
                 target_base_line = self._prepare_base_line_for_taxes_computation(
                     new_base_line,
@@ -3552,42 +3565,49 @@ class AccountTax(models.Model):
                         'taxes_data': [dict(tax_data) for tax_data in base_line['tax_details']['taxes_data']],
                     },
                 )
-                base_line_map[grouping_key] = target_base_line
+                aggregated_base_lines_mapping[grouping_key] = (target_base_line, [base_line])
+                order_base_lines_mapping[index] = ('group', grouping_key)
                 if aggregate_function:
                     aggregate_function(target_base_line, base_line)
-            aggregated_base_lines.setdefault(grouping_key, []).append(base_line)
+                index += 1
 
-        # Remove zero lines.
-        base_line_map = {
-            grouping_key: base_line
-            for grouping_key, base_line in base_line_map.items()
-            if not base_line['currency_id'].is_zero(base_line['price_unit'])
-        }
+        new_base_lines = []
+        for index in range(0, len(order_base_lines_mapping)):
+            quid, item = order_base_lines_mapping[index]
+            if quid == 'line':
+                new_base_lines.append(item)
+            else:
+                target_base_line, aggregated_base_lines = aggregated_base_lines_mapping[item]
 
-        # Compute the analytic distribution for the new base line.
-        # To do so, we have to aggregate the analytic distribution of each line that has been aggregated.
-        # We need to take care about the negative lines but also of the negative distribution.
-        # Suppose:
-        # - line1 of 1000 having an analytic distribution of 100%
-        # - line2 of -100 having an analytic distribution of 50%
-        # After the aggregation, the result will be an analytic distribution of
-        # ((1000 * 1) + (-100 * 0.5)) / (1000 - 100) = 1.055555556
-        # In the special case the aggregated line total is 0, set analytic distribution to 100% by default
-        # (could be anything since 100% of 0 or 50% of 0 is the same)
-        for grouping_key, base_line in base_line_map.items():
-            total_factor = 0.0
-            analytic_distribution_to_aggregate = defaultdict(float)
-            for aggregated_base_line in aggregated_base_lines[grouping_key]:
-                amount = aggregated_base_line['tax_details']['raw_total_excluded_currency']
-                total_factor += amount
-                for account_id, distribution in (aggregated_base_line['analytic_distribution'] or {}).items():
-                    analytic_distribution_to_aggregate[account_id] += distribution * amount / 100.0
-            analytic_distribution = {}
-            for account_id, amount in analytic_distribution_to_aggregate.items():
-                analytic_distribution[account_id] = (amount * 100 / total_factor) if total_factor else 100.0
-            base_line['analytic_distribution'] = analytic_distribution
+                # Remove zero lines.
+                if target_base_line['currency_id'].is_zero(target_base_line['price_unit']):
+                    continue
 
-        return list(base_line_map.values())
+                # Compute the analytic distribution for the new base line.
+                # To do so, we have to aggregate the analytic distribution of each line that has been aggregated.
+                # We need to take care about the negative lines but also of the negative distribution.
+                # Suppose:
+                # - line1 of 1000 having an analytic distribution of 100%
+                # - line2 of -100 having an analytic distribution of 50%
+                # After the aggregation, the result will be an analytic distribution of
+                # ((1000 * 1) + (-100 * 0.5)) / (1000 - 100) = 1.055555556
+                # In the special case the aggregated line total is 0, set analytic distribution to 100% by default
+                # (could be anything since 100% of 0 or 50% of 0 is the same)
+                total_factor = 0.0
+                analytic_distribution_to_aggregate = defaultdict(float)
+                for aggregated_base_line in aggregated_base_lines:
+                    amount = aggregated_base_line['tax_details']['raw_total_excluded_currency']
+                    total_factor += amount
+                    for account_id, distribution in (aggregated_base_line['analytic_distribution'] or {}).items():
+                        analytic_distribution_to_aggregate[account_id] += distribution * amount / 100.0
+                analytic_distribution = {}
+                for account_id, amount in analytic_distribution_to_aggregate.items():
+                    analytic_distribution[account_id] = (amount * 100 / total_factor) if total_factor else 100.0
+                target_base_line['analytic_distribution'] = analytic_distribution
+
+                new_base_lines.append(target_base_line)
+
+        return new_base_lines
 
     @api.model
     def _apply_base_lines_manual_amounts_to_reach(
