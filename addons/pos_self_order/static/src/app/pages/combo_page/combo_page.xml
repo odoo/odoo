@@ -71,7 +71,7 @@
                         </div>
                         <!-- Attributes -->
                         <div class="">
-                            <AttributeSelection t-if="product.attribute_line_ids.length" productTemplate="product" onSelection="this.onAttributeSelection" isCombo="true"/>
+                            <AttributeSelection t-if="product.attribute_line_ids.length" t-key="this.currentChoiceState.displayAttributesOfItem.id" productTemplate="product" onSelection="this.onAttributeSelection" isCombo="true"/>
                         </div>
                         <t t-if="this.hasMissingAttributeValues(this.currentChoiceState.displayAttributesOfItem) and this.shouldShowMissingDetails()" t-call="pos_self_order.MissingRequiredDetails" />
                     </div>
@@ -79,9 +79,10 @@
                     <div t-else="" class="o_self_combo_confirmation d-flex flex-column o_self_fade" id="k-combo-scroll-target">
                         <h2 class="mb-3">Validate your selection</h2>
                         <div class="confirmation_box d-flex flex-column p-3 rounded-4 bg-white shadow-sm">
+                            <t t-set="fixedItems" t-value="this.fixedComboItems"/>
                             <t t-foreach="this.getSelection()" t-as="selection" t-key="selection.combo_choice_id.id">
                                 <t t-foreach="selection.combo_items" t-as="combo_item" t-key="combo_item.combo_item_id.id">
-                                    <div role="button" t-attf-class="d-flex align-items-center cursor-pointer {{!combo_item_last || !selection_last ? ' pb-3 mb-3 border-bottom border-medium' : 'mb-0'}}" t-on-click="()=>this.onChoiceClicked(selection_index)" >
+                                    <div role="button" t-attf-class="d-flex align-items-center cursor-pointer {{!combo_item_last || !selection_last || fixedItems.length ? ' pb-3 mb-3 border-bottom border-medium' : 'mb-0'}}" t-on-click="()=>this.onChoiceClicked(selection_index)" >
                                         <t t-set="product" t-value="combo_item.product_id"/>
                                         <t t-set="item_qty" t-value="combo_item.qty"/>
                                         <t t-set="attributes" t-value="combo_item.attributes"/>
@@ -107,6 +108,18 @@
                                         </span>
                                     </div>
                                 </t>
+                            </t>
+                            <t t-foreach="fixedItems" t-as="fixed_item" t-key="fixed_item.id">
+                                <div t-attf-class="d-flex align-items-center {{!fixed_item_last ? 'pb-3 mb-3 border-bottom border-medium' : 'mb-0'}}">
+                                    <t t-set="product" t-value="fixed_item.product_id"/>
+                                    <div class="o_self_product_image me-3 ratio ratio-1x1 w-25">
+                                        <img class="object-fit-scale rounded-4" t-attf-src="/web/image/product.product/{{product.id}}/image_512?unique=#{product.write_date}" loading="lazy"/>
+                                    </div>
+                                    <div class="fs-4 fw-bold text-break" t-out="this.formatProductName(product)"/>
+                                    <span t-if="fixed_item.extra_price" class="badge px-2 py-1 rounded-3 text-bg-primary fw-medium ms-auto">
+                                        Extra: <t t-out="this.selfOrder.formatMonetary(fixed_item.extra_price)"/>
+                                    </span>
+                                </div>
                             </t>
                         </div>
                     </div>

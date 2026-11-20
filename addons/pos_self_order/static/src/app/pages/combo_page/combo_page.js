@@ -41,6 +41,7 @@ export class ComboPage extends Component {
         if (history.state?.selectedCombos?.length) {
             this.applyPreselectedCombos(history.state.selectedCombos);
         }
+        this.selectSingleItem();
     }
 
     get selectedChoice() {
@@ -56,6 +57,20 @@ export class ComboPage extends Component {
                 (c.combo_item_ids.some((c) => c.product_id.attribute_line_ids.length !== 0) &&
                     !c.combo_item_ids.every((c) => c.product_id.isCombo()))
         );
+    }
+
+    get fixedComboItems() {
+        return this.props.productTemplate.combo_ids.flatMap((choice) => {
+            const [item] = choice.combo_item_ids;
+            const product = item?.product_id;
+            const isFixed =
+                choice.qty_max <= 1 &&
+                choice.combo_item_ids.length === 1 &&
+                !product.attribute_line_ids.length &&
+                product.self_order_available &&
+                !this.selfOrder.isProductSnoozed(product.product_tmpl_id);
+            return isFixed ? [item] : [];
+        });
     }
 
     get comboItems() {
@@ -213,6 +228,17 @@ export class ComboPage extends Component {
             }
             return line.product_template_value_ids.some((a) => !(isKiosk && a.is_custom));
         });
+    }
+
+    selectSingleItem() {
+        const choice = this.selectedChoice;
+        if (!choice || choice.qty_free === 0 || choice.combo_item_ids.length !== 1) {
+            return;
+        }
+        const [item] = this.comboItems;
+        if (item && this.hasAttribute(item.product_id) && !this.hasSelectedItems) {
+            this.selectItem(item);
+        }
     }
 
     getSelectedItems(choiceState = undefined) {
@@ -409,6 +435,16 @@ export class ComboPage extends Component {
                 }
             }
             this.currentChoiceState.displayAttributesOfItem = false;
+            const choice = this.selectedChoice;
+            if (choice.qty_free > 0 && choice.combo_item_ids.length === 1) {
+                if (this.state.selectedChoiceIndex === 0) {
+                    this.goBack();
+                    return;
+                }
+                this.currentChoiceState.selectedItems = {};
+                this.currentChoiceState.selectedItemsOrder = [];
+                this.state.selectedChoiceIndex -= 1;
+            }
         } else {
             this.state.selectedChoiceIndex = Math.max(0, this.state.selectedChoiceIndex - 1);
         }
@@ -466,6 +502,7 @@ export class ComboPage extends Component {
                 this.state.showResume = true;
             } else {
                 this.state.selectedChoiceIndex += 1;
+                this.selectSingleItem();
             }
             newSectionDisplayed = true;
         }
@@ -504,6 +541,7 @@ export class ComboPage extends Component {
         this.state.showResume = false;
         this.state.selectedChoiceIndex = choiceIndex;
         this.currentChoiceState.displayAttributesOfItem = false;
+        this.selectSingleItem();
         this.resetScrollPosition();
     }
 
@@ -567,7 +605,7 @@ export class ComboPage extends Component {
     }
 
     getComboSelection() {
-        return this.getSelection().flatMap((choice) =>
+        const selectedItems = this.getSelection().flatMap((choice) =>
             choice.combo_items.map((item) => ({
                 combo_item_id: item.combo_item_id,
                 qty: item.qty,
@@ -581,6 +619,16 @@ export class ComboPage extends Component {
                 },
             }))
         );
+        const fixedItems = this.fixedComboItems.map((item) => ({
+            combo_item_id: item,
+            qty: 1,
+            configuration: {
+                attribute_custom_values: [],
+                attribute_value_ids: [],
+                price_extra: 0,
+            },
+        }));
+        return [...selectedItems, ...fixedItems];
     }
 
     addToCart() {

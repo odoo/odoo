@@ -80,3 +80,7 @@ export async function verifyConfirmationPageShown() {
 export async function verifyConfirmationHasExtraPrice(productName) {
     await waitFor(".o_self_combo_confirmation .badge:contains('Extra:')");
 }
+
+export async function verifyConfirmationHasProduct(productName) {
+    await waitFor(`.o_self_combo_confirmation:contains('${productName}')`);
+}
