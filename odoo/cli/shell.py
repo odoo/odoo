@@ -5,11 +5,15 @@ import os
 import signal
 import sys
 import threading
+from contextlib import closing
+
+import psycopg2
 
 import odoo  # to expose in the shell
 from odoo import api
 from odoo.modules.registry import Registry
 from odoo.service import server
+from odoo.sql_db import db_connect
 from odoo.tools import config
 from . import Command, server as cli_server
 
@@ -133,7 +137,21 @@ class Shell(Command):
             'odoo': odoo,
         }
         if dbname:
-            registry = Registry(dbname)
+            try:
+                registry = Registry(dbname)
+            except psycopg2.OperationalError as connection_error:
+                try:
+                    # distinguish "missing database" from "connection issue"
+                    # by connecting to "postgres".
+                    with closing(db_connect(config['db_system']).cursor()):
+                        pass
+                except psycopg2.OperationalError:
+                    raise connection_error from None  # noqa: TRY201
+                connection_error.add_note(
+                    f"The shell requires an existing, accessible database {dbname!r} "
+                    "and cannot initialize a new one."
+                )
+                raise
             with registry.cursor() as cr:
                 uid = api.SUPERUSER_ID
                 ctx = api.Environment(cr, uid, {})['res.users'].context_get()
