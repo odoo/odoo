@@ -10,23 +10,23 @@ class AccountEdiUBLPintEU(models.AbstractModel):
 
     def _ubl_add_customization_id_node(self, vals):
         super()._ubl_add_customization_id_node(vals)
-        if self._is_document(vals, 'invoice', 'credit_note'):
+        if self._is_document(vals, 'sale_invoice_kind'):
             vals['document_node']['cbc:CustomizationID']['_text'] = 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0'
-        elif self._is_document(vals, 'self_invoice', 'self_credit_note'):
+        elif self._is_document(vals, 'self_invoice_kind'):
             vals['document_node']['cbc:CustomizationID']['_text'] = 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:selfbilling:3.0'
 
     def _ubl_add_profile_id_node(self, vals):
         super()._ubl_add_profile_id_node(vals)
-        if self._is_document(vals, 'invoice', 'credit_note'):
+        if self._is_document(vals, 'sale_invoice_kind'):
             vals['document_node']['cbc:ProfileID']['_text'] = 'urn:fdc:peppol.eu:2017:poacc:billing:01:1.0'
-        elif self._is_document(vals, 'self_invoice', 'self_credit_note'):
+        elif self._is_document(vals, 'self_invoice_kind'):
             vals['document_node']['cbc:ProfileID']['_text'] = 'urn:fdc:peppol.eu:2017:poacc:selfbilling:01:1.0'
 
     def _ubl_get_delivery_node_from_delivery_address(self, vals):
         # Intracom delivery inside European area.
         node = super()._ubl_get_delivery_node_from_delivery_address(vals)
 
-        if self._is_document(vals, 'invoice', 'self_invoice', 'credit_note', 'self_credit_note'):
+        if self._is_document(vals, 'account_move_kind'):
             invoice = vals['invoice']
             customer = vals['customer']
             supplier = vals['supplier']
@@ -54,7 +54,7 @@ class AccountEdiUBLPintEU(models.AbstractModel):
     def _ubl_add_payment_means_nodes(self, vals):
         super()._ubl_add_payment_means_nodes(vals)
 
-        if self._is_document(vals, 'invoice', 'self_invoice', 'credit_note', 'self_credit_note'):
+        if self._is_document(vals, 'account_move_kind'):
             # [DK] In Denmark payment code 30 is not allowed. Hardcode to 1 ("unknown")
             # as we cannot deduce this information from the invoice.
             customer = vals['customer'].commercial_partner_id
@@ -88,7 +88,7 @@ class AccountEdiUBLPintEU(models.AbstractModel):
         document_node = vals['document_node']
         nsmap = document_node['_nsmap']
 
-        if self._is_document(vals, 'invoice', 'self_invoice', 'credit_note', 'self_credit_note'):
+        if self._is_document(vals, 'account_move_kind'):
             # PEPPOL-EN16931-R003: A buyer reference or purchase order reference MUST be provided.
             if (
                 not vals['document_node']['cbc:BuyerReference']
@@ -97,7 +97,7 @@ class AccountEdiUBLPintEU(models.AbstractModel):
                 constraints['cen_en16931_buyer_reference_and_order_reference_must_not_be_both_present'] = _("A buyer reference or purchase order reference must be provided.")
 
         if (
-            self._is_document(vals, 'invoice', 'credit_note')
+            self._is_document(vals, 'sale_invoice_kind')
             and document_node['cac:AccountingSupplierParty']['cac:Party']['cac:PostalAddress']['cac:Country']['cbc:IdentificationCode']['_text'] == 'NL'
         ):
 

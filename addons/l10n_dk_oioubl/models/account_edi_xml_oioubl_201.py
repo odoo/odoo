@@ -325,13 +325,16 @@ class AccountEdiXmlOioubl_201(models.AbstractModel):
             }
         }
 
-    def _get_document_type_code_node(self, invoice, invoice_data):
-        # http://www.datypic.com/sc/ubl20/e-cbc_DocumentTypeCode.html
-        return {
-            '_text': '380' if invoice.move_type == 'out_invoice' else '381',
-            'listAgencyID': '6',
-            'listID': 'UN/ECE 1001',
-        }
+    def _ubl_get_additional_document_reference_node_from_invoice_pdf_report_values(self, vals, pdf_values):
+        # EXTENDS account.edi.ubl
+        node = super()._ubl_get_additional_document_reference_node_from_invoice_pdf_report_values(vals, pdf_values)
+        if self._is_document(vals, 'account_move_kind'):
+            node['cbc:DocumentTypeCode']['_text'] = {
+                '_text': vals['document_node']['cbc:InvoiceTypeCode']['_text'],
+                'listAgencyID': '6',
+                'listID': 'UN/ECE 1001',
+            }
+        return node
 
     def _get_tax_category_node(self, vals):
         # TaxCategory id list: https://www.oioubl.info/codelists/en/urn_oioubl_id_taxcategoryid-1.1.html
