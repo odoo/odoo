@@ -7,7 +7,8 @@ from odoo.fields import Domain
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
-    expense_manager_id = fields.Many2one(readonly=False, related='version_id.expense_manager_id', inherited=True)
+    expense_manager_id = fields.Many2one(readonly=False, related='version_id.expense_manager_id', inherited=True,
+        ui_domain=lambda self: self.env['hr.version']._group_hr_expense_user_domain())
 
     filter_for_expense = fields.Boolean(store=False, search='_search_filter_for_expense', groups="hr.group_hr_user,hr_expense.group_hr_expense_manager")
 
@@ -42,6 +43,9 @@ class HrEmployee(models.Model):
 
     def _get_user_m2o_to_empty_on_archived_employees(self):
         return super()._get_user_m2o_to_empty_on_archived_employees() + ['expense_manager_id']
+
+    def _get_approver_fields(self):
+        return super()._get_approver_fields() | {'expense_manager_id': 'hr_expense.group_hr_expense_team_approver'}
 
 
 class HrEmployeePublic(models.Model):

@@ -576,7 +576,7 @@ class HrLeave(models.Model):
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
 
         for leave in self:
-            if is_officer or leave.user_id == self.env.user or leave.employee_id.leave_manager_id == self.env.user:
+            if is_officer or leave.user_id == self.env.user or leave.employee_id._is_acting_approver('leave_manager_id'):
                 leave.name = leave.sudo().private_name
             else:
                 leave.name = '*****'
@@ -585,7 +585,7 @@ class HrLeave(models.Model):
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
 
         for leave in self:
-            if is_officer or leave.user_id == self.env.user or leave.employee_id.leave_manager_id == self.env.user:
+            if is_officer or leave.user_id == self.env.user or leave.employee_id._is_acting_approver('leave_manager_id'):
                 leave.sudo().private_name = leave.name
 
     def _search_description(self, operator, value):
@@ -1378,7 +1378,7 @@ class HrLeave(models.Model):
             elif holiday.state in ('confirm', 'validate', 'validate1'):
                 began_in_past = holiday.date_from and holiday.date_from.date() < today
                 holiday.can_reschedule = (
-                    (is_officer or not began_in_past or holiday.employee_id.leave_manager_id == self.env.user)
+                    (is_officer or not began_in_past or holiday.employee_id._is_acting_approver('leave_manager_id'))
                     and holiday.has_access('write')
                 )
             else:
@@ -1672,7 +1672,7 @@ class HrLeave(models.Model):
 
         is_leave_user = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
         if state == 'validate1':
-            employees = employees.filtered(lambda employee: employee.leave_manager_id != self.env.user)
+            employees = employees.filtered(lambda employee: not employee._is_acting_approver('leave_manager_id'))
             if employees and not is_leave_user:
                 raise AccessError(_('You cannot first approve a time off for %s, because you are not his time off manager', employees[0].name))
         elif state == 'validate' and not is_leave_user:
@@ -1783,7 +1783,7 @@ class HrLeave(models.Model):
         values = vals
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user') or self.env.su
         if not is_officer and values.keys() - {'attachment_ids', 'supported_attachment_ids', 'message_main_attachment_id'}:
-            if any(hol.date_from.date() < fields.Date.today() and hol.employee_id.leave_manager_id != self.env.user
+            if any(hol.date_from.date() < fields.Date.today() and not hol.employee_id._is_acting_approver('leave_manager_id')
                    and hol.state not in ('confirm', 'draft') for hol in self):
                 raise UserError(_('You must have manager rights to modify/validate a time off that already begun'))
             if any(leave.state == 'cancel' for leave in self):
@@ -2541,7 +2541,7 @@ class HrLeave(models.Model):
         is_in_past = self.date_from and self.date_from.date() < fields.Date.context_today(self)
 
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
-        is_time_off_manager = self.employee_id.leave_manager_id == self.env.user
+        is_time_off_manager = self.employee_id._is_acting_approver('leave_manager_id')
 
         if is_own_leave and (not is_in_past or is_officer):
             state_result['validate1'].add('cancel')
@@ -2587,7 +2587,7 @@ class HrLeave(models.Model):
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
 
         for holiday in self:
-            is_time_off_manager = holiday.employee_id.leave_manager_id == self.env.user
+            is_time_off_manager = holiday.employee_id._is_acting_approver('leave_manager_id')
             dict_all_possible_state = holiday._get_next_states_by_state()
             validation_type = holiday.validation_type
             error_message = ""

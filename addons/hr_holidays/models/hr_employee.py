@@ -17,7 +17,8 @@ from odoo.tools.intervals import Intervals
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
-    leave_manager_id = fields.Many2one(readonly=False, related='version_id.leave_manager_id', inherited=True)
+    leave_manager_id = fields.Many2one(readonly=False, related='version_id.leave_manager_id', inherited=True,
+        ui_domain=lambda self: self.env['hr.version']._get_leave_manager_domain())
     current_work_entry_type_id = fields.Many2one('hr.work.entry.type', compute='_compute_current_work_entry_type_id', string="Current Time Type",
                                        groups="hr.group_hr_user")
     current_leave_state = fields.Selection(compute='_compute_leave_status', string="Current Time Off Status",
@@ -280,7 +281,7 @@ class HrEmployee(models.Model):
     def _compute_show_leaves(self):
         show_leaves = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
         for employee in self:
-            if show_leaves or employee.user_id == self.env.user or employee.leave_manager_id == self.env.user:
+            if show_leaves or employee.user_id == self.env.user or employee._is_acting_approver('leave_manager_id'):
                 employee.show_leaves = True
             else:
                 employee.show_leaves = False
@@ -405,6 +406,9 @@ class HrEmployee(models.Model):
 
     def _get_user_m2o_to_empty_on_archived_employees(self):
         return super()._get_user_m2o_to_empty_on_archived_employees() + ['leave_manager_id']
+
+    def _get_approver_fields(self):
+        return super()._get_approver_fields() | {'leave_manager_id': 'hr_holidays.group_hr_holidays_responsible'}
 
     def action_time_off_dashboard(self, scale=None):
         dashboard_view_by_scale = {

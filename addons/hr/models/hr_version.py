@@ -131,6 +131,11 @@ class HrVersion(models.Model):
     work_location_id = fields.Many2one('hr.work.location', 'Work Location', compute='_compute_work_location_id',
                                        store=True, readonly=False,
                                        ui_domain="[('location_type', '=', 'office')]", index=True, tracking=1)
+    approval_backups = fields.Many2many(
+        'res.users',
+        string="Approval Backups",
+        help="Users who can see and approve the requests (time off, attendances, expenses, timesheets) that this employee approves, in their place",
+    )
 
     departure_id = fields.Many2one('hr.employee.departure', string="Departure", copy=False, index='btree_not_null')
     departure_reason_id = fields.Many2one(related='departure_id.departure_reason_id', readonly=False, groups="hr.group_hr_user", tracking=1)

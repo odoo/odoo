@@ -158,7 +158,7 @@ class HrLeaveReportCalendar(models.Model):
     @api.depends('leave_manager_id')
     def _compute_is_manager(self):
         for leave in self:
-            leave.is_manager = self.env.user.has_group('hr_holidays.group_hr_holidays_user') or leave.leave_manager_id == self.env.user
+            leave.is_manager = self.env.user.has_group('hr_holidays.group_hr_holidays_user') or leave.employee_id._is_acting_approver('leave_manager_id')
 
     @api.depends_context('uid')
     def _compute_can_delete(self):
@@ -182,7 +182,7 @@ class HrLeaveReportCalendar(models.Model):
         if current_user.has_group('hr_holidays.group_hr_holidays_user'):
             # If the user is a leave manager, approve the leave
             self.leave_id.action_approve()
-        elif self.leave_manager_id == current_user and self.sudo().work_entry_type_id.leave_validation_type in ('manager', 'both'):
+        elif self.employee_id._is_acting_approver('leave_manager_id') and self.sudo().work_entry_type_id.leave_validation_type in ('manager', 'both'):
             # If the user is the employee's time off approver, approve the leave
             self.sudo().leave_id.sudo(False).action_approve()
         else:
@@ -194,7 +194,7 @@ class HrLeaveReportCalendar(models.Model):
         if current_user.has_group('hr_holidays.group_hr_holidays_user'):
             # If the user is a leave manager, refuse the leave
             self.leave_id.action_refuse()
-        elif self.leave_manager_id == current_user and self.sudo().work_entry_type_id.leave_validation_type in ('manager', 'both'):
+        elif self.employee_id._is_acting_approver('leave_manager_id') and self.sudo().work_entry_type_id.leave_validation_type in ('manager', 'both'):
             # If the user is the employee's time off approver, refuse the leave
             self.sudo().leave_id.sudo(False).action_refuse()
         else:
