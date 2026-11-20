@@ -148,10 +148,14 @@ SupplyChainTrade = {
         },
     },
     'ram:ApplicableHeaderTradeSettlement': {
+        'ram:CreditorReferenceID': {},
         'ram:PaymentReference': {},
         'ram:InvoiceCurrencyCode': {},
         'ram:SpecifiedTradeSettlementPaymentMeans': {
             'ram:TypeCode': {},
+            'ram:PayerPartyDebtorFinancialAccount': {
+                'ram:IBANID': {},
+            },
             'ram:PayeePartyCreditorFinancialAccount': {
                 'ram:IBANID': {},
                 'ram:ProprietaryID': {},
@@ -171,6 +175,7 @@ SupplyChainTrade = {
         'ram:SpecifiedTradePaymentTerms': {
             'ram:Description': {},
             'ram:DueDateDateTime': DateTimeString,
+            'ram:DirectDebitMandateID': {},
             'ram:ApplicableTradePaymentDiscountTerms': {
                 'ram:BasisPeriodMeasure': {},
                 'ram:CalculationPercent': {},
