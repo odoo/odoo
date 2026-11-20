@@ -24,6 +24,9 @@
     <!-- Generic Field Layout -->
     <!-- Changes made here needs to be reflected in the different Form view (Contact Us, Jobs, ...) -->
     <t t-name="website.form_field">
+        <t t-set="floatingLabel" t-value="this.field.formatInfo.labelPosition === 'none'
+            and !this.field.isCheck
+            and !['date', 'datetime', 'many2many'].includes(this.field.type)"/>
         <div t-attf-class="s_website_form_field mb-3 #{this.field.formatInfo.col or 'col-12'} #{this.field.formatInfo.offset} #{this.field.custom and 's_website_form_custom' or ''} #{(this.field.required and 's_website_form_required' or '') or (this.field.modelRequired and 's_website_form_model_required' or '')} #{this.field.hidden and 's_website_form_field_hidden' or ''} #{this.field.dnone and 's_website_form_dnone' or ''} #{fieldTypeClasses or ''}"
             t-att-data-type="this.field.type"
             data-name="Field">
@@ -35,6 +38,13 @@
                     <t t-out="0"/>
                     <t t-call="website.form_field_description"/>
                 </div>
+            </div>
+            <div t-elif="floatingLabel" class="form-floating">
+                <t t-out="0"/>
+                <label class="s_website_form_label" t-att-data-label-width="this.field.formatInfo.labelWidth" t-att-for="this.field.id">
+                     <t t-call="website.form_label_content"/>
+                </label>
+                <t t-call="website.form_field_description"/>
             </div>
             <t t-else="">
                 <label t-attf-class="s_website_form_label #{this.field.formatInfo.labelPosition === 'none' and 'd-none' or ''}" t-attf-style="width: #{this.field.formatInfo.labelWidth or '200px'}" t-att-for="this.field.id">

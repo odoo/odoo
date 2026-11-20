@@ -55,7 +55,8 @@ export class CustomerAddress extends Interaction {
         this.addressForm.phone.placeholder = data.phone_code;
         const vatLabel = this._getInputLabel("vat");
         if (vatLabel) {
-            vatLabel.textContent = data.vat_label;
+             // the warning icon is a child of the label, only its text is replaced
+            vatLabel.firstChild.replaceWith(data.vat_label);
         }
 
         // manage fields order / visibility
@@ -170,8 +171,10 @@ export class CustomerAddress extends Interaction {
      */
     async onChangeZip() {}
 
+    /** The field's grid column, which holds the floating label wrapper. */
     _getInputDiv(name) {
-        return this.addressForm[name].parentElement;
+        const input = this.addressForm[name];
+        return input.closest(".form-floating")?.parentElement ?? input.parentElement;
     }
 
     _getInputLabel(name) {
@@ -181,13 +184,13 @@ export class CustomerAddress extends Interaction {
 
     _showInput(name) {
         // show parent div, containing label and input
-        this.addressForm[name].parentElement.style.display = "";
+        this._getInputDiv(name).style.display = "";
         this.addressForm[name].disabled = false;
     }
 
     _hideInput(name, clearValue = true) {
         // hide parent div, containing label and input
-        this.addressForm[name].parentElement.style.display = "none";
+        this._getInputDiv(name).style.display = "none";
         if (!clearValue) {
             return;
         }

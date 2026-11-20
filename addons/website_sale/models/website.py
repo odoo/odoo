@@ -114,6 +114,12 @@ class Website(models.Model):
 
     shop_gap = fields.Char(string="Grid-gap on the shop", default="16px", required=False)
 
+    address_form_mark = fields.Char(string="Mark of the required or optional checkout fields")
+    address_form_mark_color = fields.Char(string="Color of the checkout fields mark")
+    address_form_label_width = fields.Char(
+        string="Width of the checkout labels placed beside their field"
+    )
+
     shop_opt_products_design_classes = fields.Char(
         string="Shop Design Class",
         default=(
@@ -391,6 +397,22 @@ class Website(models.Model):
         return self._fields["shop_default_sort"]._description_selection(self.env)
 
     # === BUSINESS METHODS ===#
+
+    def _get_address_form_style(self):
+        """Return the address form options as custom properties for its stylesheet.
+
+        The mark is text, so it is quoted as a css string, the others are css values.
+        """
+        self.ensure_one()
+        declarations = [
+            f"--form-mark: {json.dumps(self.address_form_mark or '*', ensure_ascii=False)}"
+        ]
+        # unset, the mark keeps the colour of its label and the labels their default width
+        if self.address_form_mark_color:
+            declarations.append(f"--form-mark-color: {self.address_form_mark_color}")
+        if self.address_form_label_width:
+            declarations.append(f"--form-label-width: {self.address_form_label_width}")
+        return "; ".join(declarations)
 
     @api.model
     def _render_template(self, template, values=None):

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="website_sale.AddressFormOptions">
+        <BuilderRow
+            label.translate="Marked Fields"
+            tooltip.translate="Add an icon to the labels of required or optional fields"
+        >
+            <BuilderSelect action="'previewableWebsiteConfig'">
+                <BuilderSelectItem
+                    id="'address_mark_none_opt'"
+                    actionParam="{
+                        previewClass: 'o_mark_none',
+                        views: ['website_sale.address_mark_none'],
+                    }"
+                >
+                    None
+                </BuilderSelectItem>
+                <BuilderSelectItem actionParam="{views: []}">Required</BuilderSelectItem>
+                <BuilderSelectItem
+                    actionParam="{
+                        previewClass: 'o_mark_optional',
+                        views: ['website_sale.address_mark_optional'],
+                    }"
+                >
+                    Optional
+                </BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow
+            t-if="!this.isActiveItem('address_mark_none_opt')"
+            label.translate="Marker"
+            level="1"
+        >
+            <BuilderTextInput
+                action="'setAddressFormValue'"
+                actionParam="{
+                    property: '--form-mark',
+                    field: 'address_form_mark',
+                    text: true,
+                }"
+            />
+            <BuilderColorPicker
+                enabledTabs="['solid', 'custom']"
+                action="'setAddressFormValue'"
+                actionParam="{
+                    property: '--form-mark-color',
+                    field: 'address_form_mark_color',
+                    fallback: 'color',
+                }"
+            />
+        </BuilderRow>
+        <BuilderRow label.translate="Labels Position">
+            <BuilderButtonGroup action="'previewableWebsiteConfig'">
+                <BuilderButton title.translate="Hide" actionParam="{views: []}">
+                    <i class="oi" data-icon="visibility_off"/>
+                </BuilderButton>
+                <BuilderButton
+                    title.translate="Top"
+                    actionParam="{
+                        previewClass: 'o_labels_top',
+                        views: ['website_sale.address_labels_top'],
+                    }"
+                    iconImg="'/website/static/src/img/snippets_options/pos_top.svg'"
+                />
+                <BuilderButton
+                    id="'address_labels_left_opt'"
+                    ltrRtlMapping="'left-right'"
+                    title.translate="Left"
+                    actionParam="{
+                        previewClass: 'o_labels_left',
+                        views: ['website_sale.address_labels_left'],
+                    }"
+                    iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"
+                />
+                <BuilderButton
+                    id="'address_labels_right_opt'"
+                    ltrRtlMapping="'left-right'"
+                    title.translate="Right"
+                    actionParam="{
+                        previewClass: 'o_labels_right',
+                        views: ['website_sale.address_labels_right'],
+                    }"
+                    iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"
+                />
+            </BuilderButtonGroup>
+        </BuilderRow>
+        <BuilderRow
+            t-if="this.isActiveItem('address_labels_left_opt')
+                || this.isActiveItem('address_labels_right_opt')"
+            label.translate="Labels Width"
+            level="1"
+        >
+            <BuilderNumberInput
+                action="'setAddressFormValue'"
+                actionParam="{
+                    property: '--form-label-width',
+                    field: 'address_form_label_width',
+                }"
+                unit="'px'"
+                default="200"
+            />
+        </BuilderRow>
+    </t>
+
+</templates>
