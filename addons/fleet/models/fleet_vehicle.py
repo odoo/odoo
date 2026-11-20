@@ -248,7 +248,7 @@ class FleetVehicle(models.Model):
         datetime_today = fields.Datetime.from_string(today)
         limit_date = fields.Datetime.to_string(datetime_today + relativedelta(days=+delay_alert_contract))
         res_ids = self.env['fleet.vehicle.log.contract'].search([
-            ('expiration_date', '>', today),
+            ('expiration_date', '>=', today),
             ('expiration_date', '<', limit_date),
             ('state', 'in', ['open', 'expired'])
         ]).mapped('vehicle_id').ids
