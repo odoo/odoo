@@ -44,7 +44,7 @@ test("custom icons are preserved after score change", async () => {
     await contains(":iframe .s_rating").click();
 
     await contains("[data-action-id='customIcon'][data-action-param='customActiveIcon']").click();
-    await contains(".o_select_media_dialog .font-icons-icons span[data-icon='favorite']").click();
+    await contains(".o-IconPicker-icon[data-icon='favorite']:not(.oi-filled)").click();
     expect(":iframe .s_rating_active_icons i").toHaveAttribute("data-icon", "favorite");
     expect(":iframe .s_rating_inactive_icons i").toHaveAttribute("data-icon", "star");
 

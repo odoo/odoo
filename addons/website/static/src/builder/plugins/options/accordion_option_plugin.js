@@ -20,20 +20,19 @@ export class accordionOptionPlugin extends Plugin {
 
 export class DefineCustomIconAction extends BuilderAction {
     static id = "defineCustomIcon";
-    static dependencies = ["media"];
-    async load() {
-        let selectedIcon;
-        await new Promise((resolve) => {
-            const onClose = this.dependencies.media.openMediaDialog({
-                visibleTabs: ["ICONS"],
-                save: (icon) => {
-                    selectedIcon = { className: icon.className, name: icon.dataset.icon };
-                    resolve();
-                },
-            });
-            onClose.then(resolve);
+    static dependencies = ["icon"];
+    async load({ editingElement, params }) {
+        // The current custom icon, to highlight it in the picker.
+        const currentIconEl = document.createElement("i");
+        currentIconEl.className = "oi";
+        currentIconEl.dataset.icon = params.isActiveIcon
+            ? editingElement.dataset.activeCustomIcon
+            : editingElement.dataset.inactiveCustomIcon;
+        const iconEl = await this.dependencies.icon.pickIcon({
+            target: editingElement,
+            iconEl: currentIconEl,
         });
-        return selectedIcon;
+        return iconEl && { className: iconEl.className, name: iconEl.dataset.icon };
     }
     apply({ editingElement, params, loadResult: selectedIcon }) {
         if (!selectedIcon) {
