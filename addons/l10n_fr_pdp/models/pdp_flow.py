@@ -1,5 +1,7 @@
+import base64
 import calendar
 import logging
+from lxml import etree
 from markupsafe import Markup
 
 from odoo import _, api, fields, models
@@ -305,11 +307,16 @@ class PdpFlow(models.Model):
                         name=previous_flow.name
                     ))
                     continue
-                if flow.state != 'error' and set(previous_flow.sent_move_ids.ids) == set(valid_moves_ids):
-                    flow._message_post_once(_(
-                        "This flow is identical to the previous flow %(name)s.",
-                        name=previous_flow.name
+                valid_moves = self.env['account.move'].browse(valid_moves_ids)
+                if flow.state != 'error' and flow._is_same_as_flow(previous_flow, valid_moves):
+                    # Nothing to rectify: the moves stay reported as they are in the previous flow.
+                    valid_moves.l10n_fr_pdp_sent_in_flow_ids += previous_flow
+                    previous_flow._message_post_once(_(
+                        "The rectificative flow %(name)s was identical to this flow and has been deleted.",
+                        name=flow.name,
                     ))
+                    flow.unlink()
+                    flow_moves._compute_l10n_fr_pdp_last_flow_id()
                     continue
             elif not valid_moves_ids:
                 flow._message_post_once(_("No valid transactions/payments to send."))
@@ -524,6 +531,17 @@ class PdpFlow(models.Model):
         moves._compute_l10n_fr_pdp_has_error()
         return moves
 
+    def _is_same_as_flow(self, flow, moves):
+        """ Return whether reporting `moves` in this flow would send the same content as the last payload of `flow`. """
+        self.ensure_one()
+
+        def get_report_content(raw_payload):
+            # The header always differs (id, issue date time, IN/RE type code): only compare the reported data.
+            return [etree.tostring(node) for node in etree.fromstring(raw_payload) if node.tag != 'ReportDocument']
+
+        payload = self.env['pdp.flow.10.xml.builder']._build_payload(self, moves)
+        return get_report_content(base64.b64decode(payload)) == get_report_content(flow.payload_id.raw)
+
     # -------------------------------------------------------------------------
     # Actions
     # -------------------------------------------------------------------------
@@ -547,7 +565,11 @@ class PdpFlow(models.Model):
                     "Fix them or use the 'Send without invalid invoices' button.",
                 ))
         _logger.info('Manual transport submission triggered for flows: %s', self.ids)
-        return self.with_context(ctx).action_send()
+        self.with_context(ctx).action_send()
+        if not self.exists():
+            # Identical rectificative flows are deleted when sent.
+            return self.env['ir.actions.act_window']._for_xml_id('l10n_fr_pdp.l10n_fr_pdp_reports_action_flows')
+        return True
 
     def action_view_error_moves(self):
         """Open list view of invalid invoices."""
@@ -611,6 +633,10 @@ class PdpFlow(models.Model):
                 if flow.transmission_type == 'initial':
                     if today < flow.due_period_start:
                         continue
+                    if not flow._get_moves():
+                        # Nothing to report anymore for the period (e.g. its moves were cancelled).
+                        flow.unlink()
+                        continue
                     if flow.error_moves_count and today < flow.due_period_end:
                         continue
                 else:
@@ -618,6 +644,8 @@ class PdpFlow(models.Model):
                     if flow.state != 'ready' or flow.error_moves_count:
                         continue
                 flow.with_company(flow.company_id).sudo().action_send(check_totp=False)
+                if not flow.exists():
+                    continue
                 flow._log_cron_event(
                     _("Flow automatically sent by cron (status: %(status)s). %(extra)s",
                       status=flow.transport_status or flow.state,
