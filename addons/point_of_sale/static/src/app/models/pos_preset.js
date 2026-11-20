@@ -1,6 +1,8 @@
 import { registry } from "@web/core/registry";
 import { range } from "@web/core/utils/numbers";
 import { Base } from "./related_models";
+import { serializeDate } from "@web/core/l10n/dates";
+import { serializeLocalDateTime } from "@point_of_sale/utils";
 
 const { DateTime } = luxon;
 
@@ -36,7 +38,7 @@ export class PosPreset extends Base {
 
     get nextSlot() {
         const dateNow = DateTime.now();
-        const sqlDate = dateNow.toFormat("yyyy-MM-dd");
+        const sqlDate = serializeDate(dateNow);
         return Object.values(this.uiState.availabilities[sqlDate]).find(
             (s) => !s.isFull && s.datetime > dateNow
         );
@@ -81,7 +83,7 @@ export class PosPreset extends Base {
     get currentSlot() {
         const now = DateTime.now();
         const interval = this.interval_time;
-        const todayAvailabilities = this.availabilities[now.toFormat("yyyy-MM-dd")];
+        const todayAvailabilities = this.availabilities[serializeDate(now)];
         for (const slot of Object.values(todayAvailabilities)) {
             if (slot.datetime < now && slot.datetime.plus({ minutes: interval }) > now) {
                 return slot;
@@ -108,7 +110,7 @@ export class PosPreset extends Base {
                     minute: Math.round((hour % 1) * 60),
                 });
             const dayOfWeek = (dateNow.weekday - 1).toString();
-            const date = dateNow.toFormat("yyyy-MM-dd");
+            const date = serializeDate(dateNow);
             const attToday = this.attendance_ids.filter((a) => a.dayofweek === dayOfWeek);
             slots[date] = [];
 
@@ -119,7 +121,7 @@ export class PosPreset extends Base {
                 let start = dateOpening;
                 while (start >= dateOpening && start <= dateClosing && interval > 0) {
                     if (start >= now) {
-                        const sqlDatetime = start.toFormat("yyyy-MM-dd HH:mm:ss");
+                        const sqlDatetime = serializeLocalDateTime(start);
                         if (slots[date][sqlDatetime]) {
                             slots[date][sqlDatetime].order_ids.add(...(usage[sqlDatetime] || []));
                         } else {
