@@ -4,6 +4,7 @@ from odoo.fields import Command, Domain
 
 from xmlrpc.client import MAXINT
 
+from odoo.tools.bank_account_number import normalize_account_number
 from odoo.tools import SQL
 
 
@@ -62,7 +63,13 @@ class AccountBankStatementLine(models.Model):
         check_company=True)
 
     # Technical field used to store the bank account number before its creation, upon the line's processing
-    account_number = fields.Char(string='Bank Account Number')
+    account_number = fields.Char(string='Bank Account Number', search='_search_account_number')
+    sanitized_account_number = fields.Char(
+        string='Sanitized Bank Account Number',
+        compute='_compute_sanitized_account_number',
+        compute_sql='_compute_sql_sanitized_account_number',
+        compute_sudo=False,
+    )
 
     # This field is used to record the third party name when importing bank statement in electronic format,
     # when the partner doesn't exist yet in the database (or cannot be found).
@@ -309,6 +316,21 @@ class AccountBankStatementLine(models.Model):
             else:
                 # The journal entry seems reconciled.
                 st_line.is_reconciled = True
+
+    @api.depends('account_number')
+    def _compute_sanitized_account_number(self):
+        for st_line in self:
+            st_line.sanitized_account_number = normalize_account_number(st_line.account_number)
+
+    def _compute_sql_sanitized_account_number(self, table):
+        return SQL(r"regexp_replace(upper(%s), '[\W_]+', '', 'g')", table.account_number)
+
+    def _search_account_number(self, operator, value):
+        if operator in ('in', 'not in'):
+            value = [normalize_account_number(account_number) for account_number in value]
+        else:
+            value = normalize_account_number(value)
+        return [('sanitized_account_number', operator, value)]
 
     # -------------------------------------------------------------------------
     # CONSTRAINT METHODS
