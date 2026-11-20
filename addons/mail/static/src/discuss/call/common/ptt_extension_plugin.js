@@ -4,7 +4,6 @@ import { markup, Plugin, signal, useListener } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { services } from "@web/core/services";
-import { useEnv } from "@web/owl2/utils";
 
 const INITIAL_RELEASE_TIMEOUT = 750;
 const COMMON_RELEASE_TIMEOUT = 200;
@@ -13,12 +12,12 @@ const EXT_ID = "mdiacebcbkmjjlpclnbcgiepgifcnpmg";
 
 export class PttExtensionPlugin extends Plugin {
     /**
-     * `discuss.rtc` is a legacy service that depends on this plugin: read it lazily from
-     * `env.services`.
+     * Set by the `discuss.rtc` service when it starts: it is a legacy service that depends
+     * on this plugin, so it does not exist yet when this plugin starts.
      *
-     * @private
+     * @type {import("models").Rtc | undefined}
      */
-    env = useEnv();
+    rtc;
     isEnabled = signal(false);
     voiceActivated = signal(false);
     downloadURL = `https://chromewebstore.google.com/detail/discuss-push-to-talk/${EXT_ID}`;
@@ -64,8 +63,7 @@ export class PttExtensionPlugin extends Plugin {
         ) {
             return;
         }
-        // Plugins start before the legacy services: `env.services` is unset until then.
-        const rtc = this.env.services?.["discuss.rtc"];
+        const rtc = this.rtc;
         if (!rtc && data.type !== "answer-is-enabled") {
             return;
         }

@@ -1,12 +1,20 @@
 import { MessageSeenIndicator } from "@mail/discuss/core/common/message_seen_indicator";
 import { useHover } from "@mail/utils/common/hooks";
 
-import { Component, onWillUnmount, signal, types, useListener, useProps } from "@odoo/owl";
+import {
+    Component,
+    onWillUnmount,
+    signal,
+    types,
+    useListener,
+    usePlugin,
+    useProps,
+} from "@odoo/owl";
 
+import { GlobalBusPlugin } from "@web/core/global_bus_plugin";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
-import { useEnv } from "@web/owl2/utils";
 
 export class ThreadPreview extends Component {
     static components = { MessageSeenIndicator };
@@ -46,7 +54,7 @@ export function useThreadPreview(
     rootRef,
     { canOpen = () => true, channel, className, delay = 0, position, showName }
 ) {
-    const env = useEnv();
+    const { bus } = usePlugin(GlobalBusPlugin);
     const isOpen = signal(false);
     const popover = usePopover(ThreadPreview, {
         animation: false,
@@ -63,7 +71,7 @@ export function useThreadPreview(
         if (!isMouse || !hover.isHover || !canOpen()) {
             return;
         }
-        env.bus.trigger("ThreadPreview:will-open", popover);
+        bus.trigger("ThreadPreview:will-open", popover);
         popover.open(rootRef(), { channel: channel(), className, showName });
         isOpen.set(true);
     };
@@ -71,7 +79,7 @@ export function useThreadPreview(
         clearTimeout(timeout);
         popover.close();
     };
-    useListener(env.bus, "ThreadPreview:will-open", ({ detail }) => {
+    useListener(bus, "ThreadPreview:will-open", ({ detail }) => {
         if (detail !== popover) {
             close();
         }
