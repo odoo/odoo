@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="pos_sale.PayInPosField">
+        <t t-set="sessions" t-value="this.sessions"/>
+        <t t-set="label">
+            <i class="oi me-1" data-icon="shopping_basket"/>Pay in PoS
+        </t>
+        <button t-if="sessions.length === 1" class="btn btn-secondary"
+                t-on-click="() => this.openPos(sessions[0])">
+            <t t-out="label"/>
+        </button>
+        <Dropdown t-elif="sessions.length > 1">
+            <button class="btn btn-secondary">
+                <t t-out="label"/>
+            </button>
+            <t t-set-slot="content">
+                <DropdownItem t-foreach="sessions" t-as="session" t-key="session.id"
+                              onSelected="() => this.openPos(session)">
+                    <t t-out="session.name"/>
+                </DropdownItem>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

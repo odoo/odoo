@@ -10,11 +10,41 @@ import { PosStore } from "@point_of_sale/app/services/pos_store";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 
 patch(PosStore.prototype, {
+    async setup() {
+        // read the param and clear it from the URL right away
+        const url = new URL(window.location.href);
+        const soId = parseInt(url.searchParams.get("pay_sale_order")) || false;
+        if (soId) {
+            url.searchParams.delete("pay_sale_order");
+            window.history.replaceState(window.history.state, "", url);
+        }
+        await super.setup(...arguments);
+        if (soId) {
+            await this.payPendingSaleOrder(soId);
+        }
+    },
+    async payPendingSaleOrder(soId) {
+        try {
+            // don't mix the sale order into a restored draft order
+            if (!this.getOrder() || this.getOrder().lines.length) {
+                this.addNewOrder();
+            }
+            await this._processSaleOrder(await this._getSaleOrder(soId), { settle: true });
+            if (this.getOrder().lines.length) {
+                await this.pay();
+            }
+        } catch (error) {
+            console.error(error);
+            this.notification.add(_t("Could not load the sale order for payment."), {
+                type: "danger",
+            });
+        }
+    },
     async onClickSaleOrder(clickedOrderId) {
         const sale_order = await this._getSaleOrder(clickedOrderId);
         await this._processSaleOrder(sale_order);
     },
-    async _processSaleOrder(sale_order) {
+    async _processSaleOrder(sale_order, { settle = false } = {}) {
         const currentSaleOrigin = this.getOrder()
             .getOrderlines()
             .find((line) => line.sale_order_origin_id)?.sale_order_origin_id;
@@ -43,22 +73,24 @@ patch(PosStore.prototype, {
             fiscal_position_id: orderFiscalPos,
         });
 
-        const selectedOption = await makeAwaitable(this.dialog, SelectionPopup, {
-            title: _t("What do you want to do?"),
-            list: [
-                { id: "0", label: _t("Settle the order"), item: "settle" },
-                {
-                    id: "1",
-                    label: _t("Apply a down payment (percentage)"),
-                    item: "dpPercentage",
-                },
-                {
-                    id: "2",
-                    label: _t("Apply a down payment (fixed amount)"),
-                    item: "dpAmount",
-                },
-            ],
-        });
+        const selectedOption = settle
+            ? "settle"
+            : await makeAwaitable(this.dialog, SelectionPopup, {
+                  title: _t("What do you want to do?"),
+                  list: [
+                      { id: "0", label: _t("Settle the order"), item: "settle" },
+                      {
+                          id: "1",
+                          label: _t("Apply a down payment (percentage)"),
+                          item: "dpPercentage",
+                      },
+                      {
+                          id: "2",
+                          label: _t("Apply a down payment (fixed amount)"),
+                          item: "dpAmount",
+                      },
+                  ],
+              });
         if (!selectedOption) {
             return;
         }
