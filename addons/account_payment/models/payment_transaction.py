@@ -181,7 +181,7 @@ class PaymentTransaction(models.Model):
                 for aml_values_list in early_payment_values.values():
                     if aml_values_list:
                         aml_vl = aml_values_list[0]
-                        aml_vl['partner_id'] = self.partner_id.id
+                        aml_vl['partner_id'] = self.partner_id.commercial_partner_id.id
                         payment_values['write_off_line_vals'] += [aml_vl]
 
         payment = self.env['account.payment'].create(payment_values)
