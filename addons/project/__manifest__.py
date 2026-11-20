@@ -88,7 +88,6 @@
             ('remove', 'project/static/src/views/project_project_activity/**'),
         ],
         'web.assets_backend_lazy': [
-            'project/static/src/views/project_task_model_mixin',
             'project/static/src/views/project_task_activity/**',
             'project/static/src/views/project_task_graph/**',
             'project/static/src/views/project_task_pivot/**',
