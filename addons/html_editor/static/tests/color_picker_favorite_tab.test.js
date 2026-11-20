@@ -281,3 +281,34 @@ test("favorite tab is shown when another active company has favorite colors", as
     await animationFrame();
     expect(".o_favorite_color .o_color_button").toHaveAttribute("data-color", "#00FFFF");
 });
+
+test("use the company related to what is being edited", async () => {
+    // Company 2 is allowed but not active, company 3 is not allowed.
+    cookie.set("cids", "1");
+    serverState.companies = [
+        { ...serverState.companies[0], favorite_colors: ["#FF9C00"] },
+        { id: 2, name: "Other", currency_id: 1, favorite_colors: ["#00FFFF"] },
+    ];
+    await makeTestApp();
+    const favoriteColors = getService(FavoriteColorsPlugin);
+    expect(favoriteColors.companies.map(({ id }) => id)).toEqual([1]);
+    expect(favoriteColors.getColors()).toEqual(["#FF9C00"]);
+
+    const restore = favoriteColors.useCompany(2);
+    expect(favoriteColors.companies.map(({ id }) => id)).toEqual([1, 2]);
+    expect(favoriteColors.selectedCompanyId).toBe(2);
+    expect(favoriteColors.getColors()).toEqual(["#00FFFF"]);
+    // Another company can still be selected while one is used.
+    favoriteColors.selectCompany(1);
+    expect(favoriteColors.getColors()).toEqual(["#FF9C00"]);
+
+    restore();
+    expect(favoriteColors.companies.map(({ id }) => id)).toEqual([1]);
+    expect(favoriteColors.selectedCompanyId).toBe(1);
+
+    // The colors of a company which is not allowed are unknown: nothing changes.
+    favoriteColors.useCompany(3)();
+    favoriteColors.useCompany(3);
+    expect(favoriteColors.companies.map(({ id }) => id)).toEqual([1]);
+    expect(favoriteColors.selectedCompanyId).toBe(1);
+});

@@ -11,7 +11,8 @@ import { user } from "@web/core/user";
  *
  * Every method works on the selected company, unless another one is given.
  * The selected company is the active one, until another one is selected; it
- * is then kept until a reload, for all the color pickers.
+ * is then kept until a reload, for all the color pickers. A company related to
+ * what is being edited can also be used, see `useCompany`.
  */
 export class FavoriteColorsPlugin extends Plugin {
     #orm = usePlugin(ORM);
@@ -24,13 +25,43 @@ export class FavoriteColorsPlugin extends Plugin {
         )
     );
     #selectedCompanyId = signal(user.activeCompany?.id);
+    #usedCompanyId = signal(undefined);
 
     /**
      * The companies whose favorite colors are offered: the active ones, as
-     * the user works with them.
+     * the user works with them, and the one in use (see `useCompany`).
      */
     get companies() {
-        return user.activeCompanies;
+        const companies = user.activeCompanies;
+        const usedCompanyId = this.#usedCompanyId();
+        if (usedCompanyId && !companies.some(({ id }) => id === usedCompanyId)) {
+            return [...companies, user.allowedCompanies.find(({ id }) => id === usedCompanyId)];
+        }
+        return companies;
+    }
+
+    /**
+     * Uses the favorite colors of the given company, which is related to what
+     * is being edited (e.g. the company of a website), until the returned
+     * function is called: the company is then selected and offered, even if
+     * it is not active. Nothing changes if the company is not allowed to the
+     * user, as its colors are then unknown.
+     *
+     * @param {number} companyId
+     * @returns {() => void} restores the previously selected company
+     */
+    useCompany(companyId) {
+        if (!(companyId in this.#colorsByCompany())) {
+            return () => {};
+        }
+        const previousSelectedCompanyId = this.#selectedCompanyId();
+        const previousUsedCompanyId = this.#usedCompanyId();
+        this.#usedCompanyId.set(companyId);
+        this.#selectedCompanyId.set(companyId);
+        return () => {
+            this.#usedCompanyId.set(previousUsedCompanyId);
+            this.#selectedCompanyId.set(previousSelectedCompanyId);
+        };
     }
 
     /**
