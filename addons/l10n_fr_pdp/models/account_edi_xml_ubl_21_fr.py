@@ -36,6 +36,10 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
     # EXPORT
     # -------------------------------------------------------------------------
 
+    def _get_document_description(self):
+        # Override account.edi.common
+        return 'LISIBLE'
+
     def _export_invoice_filename(self, invoice):
         return f"{invoice.name.replace('/', '_')}_ubl_21_fr.xml"
 
