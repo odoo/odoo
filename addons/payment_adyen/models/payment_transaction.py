@@ -429,7 +429,12 @@ class PaymentTransaction(models.Model):
         if self.provider_code != "adyen":
             return super()._extract_amount_data(payment_data)
 
-        amount_data = payment_data.get("amount", {})
+        # The amount is optional in API responses (e.g., never sent in the /payments/details
+        # response of Bancontact mobile payments), unlike in webhooks where it is required.
+        if "amount" not in payment_data:
+            return None  # Skip the validation.
+
+        amount_data = payment_data["amount"]
         amount = payment_utils.to_major_currency_units(
             amount_data.get("value", 0),
             self.currency_id,
