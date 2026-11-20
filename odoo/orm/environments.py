@@ -16,7 +16,7 @@ from weakref import ref as weakref
 from zoneinfo import ZoneInfo
 
 from odoo.exceptions import AccessError, UserError
-from odoo.sql_db import BaseCursor
+from odoo.sql_db import Cursor
 from odoo.tools import clean_context, frozendict, reset_cached_properties, OrderedSet, SQL
 from odoo.tools.func import deprecated
 from odoo.tools.lru import LRU
@@ -53,14 +53,14 @@ class Environment(Mapping[str, "BaseModel"]):
     structure to manage recomputations.
     """
 
-    cr: BaseCursor
+    cr: Cursor
     uid: int
     context: frozendict
     su: bool
     transaction: Transaction
 
-    def __new__(cls, cr: BaseCursor, uid: int, context: dict, su: bool = False):
-        assert isinstance(cr, BaseCursor)
+    def __new__(cls, cr: Cursor, uid: int, context: dict, su: bool = False):
+        assert isinstance(cr, Cursor)
         if uid == SUPERUSER_ID:
             su = True
 
@@ -123,7 +123,7 @@ class Environment(Mapping[str, "BaseModel"]):
 
     def __call__(
         self,
-        cr: BaseCursor | None = None,
+        cr: Cursor | None = None,
         user: IdType | BaseModel | None = None,
         context: dict | None = None,
         su: bool | None = None,
@@ -131,7 +131,6 @@ class Environment(Mapping[str, "BaseModel"]):
         """ Return an environment based on ``self`` with modified parameters.
 
         :param cr: optional database cursor to change the current cursor
-        :type cursor: :class:`~odoo.sql_db.Cursor`
         :param user: optional user/user id to change the current user
         :type user: int or :class:`res.users record<~odoo.addons.base.models.res_users.ResUsers>`
         :param dict context: optional context dictionary to change the current context
@@ -724,7 +723,7 @@ class Transaction:
                 Environment(env.cr, public_user.id, {}).flush_all()
                 break
 
-    def _check_signaling(self, cr: BaseCursor) -> None:
+    def _check_signaling(self, cr: Cursor) -> None:
         """ Check the sequences in the database an invalidate accordingly.
 
         When the registry changed, create a new registry and rebind to it.
