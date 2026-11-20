@@ -1,7 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
-import { getScrollingElement } from "@web/core/utils/scrolling";
 import { _t } from "@web/core/l10n/translation";
 import { AnimateText } from "./animate_text";
 import { unwrapContents } from "@html_editor/utils/dom";
@@ -16,7 +15,6 @@ import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils"
 
 /**
  * @typedef { Object } AnimateOptionShared
- * @property { AnimateOptionPlugin['forceAnimation'] } forceAnimation
  * @property { AnimateOptionPlugin['getDirectionsItems'] } getDirectionsItems
  * @property { AnimateOptionPlugin['getEffectsItems'] } getEffectsItems
  */
@@ -35,7 +33,6 @@ export class AnimateOptionPlugin extends Plugin {
     static id = "animateOption";
     static dependencies = ["dom", "history", "selection", "split", "properties"];
     static shared = [
-        "forceAnimation",
         "getDirectionsItems",
         "getEffectsItems",
         "hasAnimationEffect",
@@ -71,7 +68,6 @@ export class AnimateOptionPlugin extends Plugin {
         builder_actions: {
             SetAnimationModeAction,
             SetAnimateIntensityAction,
-            ForceAnimationAction,
             SetAnimationEffectAction,
         },
         normalize_processors: this.normalize.bind(this),
@@ -92,10 +88,6 @@ export class AnimateOptionPlugin extends Plugin {
             this.onWillSaveMediaDialogHandlers.bind(this)
         ),
     };
-
-    setup() {
-        this.scrollingElement = getScrollingElement(this.document);
-    }
 
     canHaveScrollEffect(el) {
         return this.dependencies.properties.get(el, "scrollEffect", true);
@@ -177,31 +169,6 @@ export class AnimateOptionPlugin extends Plugin {
         return this.getEffectsItems().some(({ className }) =>
             editingElement.classList.contains(className)
         );
-    }
-
-    async forceAnimation(editingElement) {
-        editingElement.style.animationName = "dummy";
-        if (editingElement.classList.contains("o_animate_on_scroll")) {
-            // Trigger a DOM reflow.
-            void editingElement.offsetWidth;
-            editingElement.style.animationName = "";
-            this.window.dispatchEvent(new Event("resize"));
-        } else {
-            // Trigger a DOM reflow (Needed to prevent the animation from
-            // being launched twice when previewing the "Intensity" option).
-            await new Promise((resolve) => setTimeout(resolve));
-            editingElement.classList.add("o_animating");
-            this.scrollingElement.classList.add("o_wanim_overflow_xy_hidden");
-            editingElement.style.animationName = "";
-            editingElement.addEventListener(
-                "animationend",
-                () => {
-                    this.scrollingElement.classList.remove("o_wanim_overflow_xy_hidden");
-                    editingElement.classList.remove("o_animating");
-                },
-                { once: true }
-            );
-        }
     }
 
     /**
@@ -488,16 +455,13 @@ export class SetAnimationModeAction extends BuilderAction {
     static dependencies = ["animateOption"];
     setup() {
         this.animationWithFadein = ["onAppearance", "onScroll"];
-        this.scrollingElement = getScrollingElement(this.document);
     }
     // todo: to remove after having the commit of louis
     isApplied() {
         return true;
     }
     async clean({ editingElement, value: effectName, nextAction }) {
-        this.scrollingElement.classList.remove("o_wanim_overflow_xy_hidden");
         editingElement.classList.remove(
-            "o_animating",
             "o_animate_both_scroll",
             "o_visible",
             "o_animated",
@@ -529,7 +493,7 @@ export class SetAnimationModeAction extends BuilderAction {
         }
     }
 
-    async apply({ editingElement, value: effectName, params: { forceAnimation } }) {
+    async apply({ editingElement, value: effectName }) {
         const { hasAnimationEffect, getEffectsItems } = this.dependencies.animateOption;
         // Remove appearance-only effects when switching to "On Scroll" so the
         // default "Fade" effect can be applied.
@@ -550,9 +514,6 @@ export class SetAnimationModeAction extends BuilderAction {
             // included in translation. This implementation is a hack and could
             // be improved.
             await this.triggerAsync("on_hover_animation_mode_applied_handlers", editingElement);
-        }
-        if (forceAnimation) {
-            this.dependencies.animateOption.forceAnimation(editingElement);
         }
     }
     /**
@@ -591,7 +552,6 @@ export class SetAnimationModeAction extends BuilderAction {
 }
 export class SetAnimateIntensityAction extends BuilderAction {
     static id = "setAnimateIntensity";
-    static dependencies = ["animateOption"];
     getValue({ editingElement }) {
         const intensity = parseInt(
             this.window.getComputedStyle(editingElement).getPropertyValue("--wanim-intensity")
@@ -600,18 +560,6 @@ export class SetAnimateIntensityAction extends BuilderAction {
     }
     apply({ editingElement, value }) {
         editingElement.style.setProperty("--wanim-intensity", `${value}`);
-        this.dependencies.animateOption.forceAnimation(editingElement);
-    }
-}
-export class ForceAnimationAction extends BuilderAction {
-    static id = "forceAnimation";
-    static dependencies = ["animateOption"];
-    // todo: to remove after having the commit of louis
-    isActive() {
-        return true;
-    }
-    apply({ editingElement }) {
-        this.dependencies.animateOption.forceAnimation(editingElement);
     }
 }
 export class SetAnimationEffectAction extends BuilderAction {
@@ -640,7 +588,6 @@ export class SetAnimationEffectAction extends BuilderAction {
             editingElement.classList.add(directionClassName);
         }
         editingElement.classList.add(effectClassName);
-        this.dependencies.animateOption.forceAnimation(editingElement);
     }
 }
 
