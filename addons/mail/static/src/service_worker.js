@@ -2,10 +2,7 @@
 /* global idbKeyval */
 importScripts("/mail/static/lib/idb-keyval/idb-keyval.js");
 
-const MESSAGE_TYPE = {
-    POST_RTC_LOGS: "POST_RTC_LOGS",
-    STORE_PUSH_TOKEN: "STORE_PUSH_TOKEN",
-};
+const MESSAGE_TYPE = { POST_RTC_LOGS: "POST_RTC_LOGS" };
 const PUSH_NOTIFICATION_TYPE = {
     CALL: "CALL",
     CANCEL: "CANCEL",
@@ -19,8 +16,6 @@ const { Store, set, get } = idbKeyval;
 const LOG_AGE_LIMIT = 24 * 60 * 60 * 1000; // 24h
 let db;
 const unread_store = new Store("odoo-mail-unread-db", "odoo-mail-unread-store");
-/** Store for the push device token used to refresh subscriptions without a session. */
-const push_device_store = new Store("odoo-push-db", "device");
 let interactionSinceCleanupCount = 0;
 
 async function openDatabase() {
@@ -253,38 +248,13 @@ self.addEventListener("push", async (event) => {
 /** @type {Map<string, Function>} string is correlationId and Function is handler */
 self.handlePushEventMessageFns = new Map();
 
-self.addEventListener("message", (event) => {
-    const { data } = event;
+self.addEventListener("message", ({ data }) => {
     const { type, payload } = data;
     if (type === "notification-display-response") {
         const fn = self.handlePushEventMessageFns.get(payload.correlationId);
         if (fn) {
             self.handlePushEventMessageFns.delete(payload.correlationId);
             fn({ data });
-        }
-    }
-    if (type === "STORE_PUSH_TOKEN" && payload?.token) {
-        event.waitUntil(set("token", payload.token, push_device_store));
-    }
-    switch (data.name) {
-        case MESSAGE_TYPE.POST_RTC_LOGS: {
-            const { logs, download } = data;
-            event.waitUntil(
-                (async () => {
-                    try {
-                        const result = await storeLogs(logs, { download });
-                        if (download) {
-                            event.source.postMessage({
-                                action: "POST_RTC_LOGS",
-                                data: result,
-                            });
-                        }
-                    } catch (error) {
-                        console.error("Error storing log:", error);
-                    }
-                })()
-            );
-            break;
         }
     }
 });
@@ -333,125 +303,56 @@ async function handlePushEvent(notification) {
         }, 500);
     });
 }
+async function postPushDevice(route, params) {
+    const response = await fetch(route, {
+        headers: {
+            "Content-type": "application/json",
+        },
+        body: JSON.stringify({ id: 1, jsonrpc: "2.0", method: "call", params }),
+        method: "POST",
+        credentials: "include",
+    });
+    return response.json();
+}
 self.addEventListener("pushsubscriptionchange", (event) => {
+    if (!event.oldSubscription) {
+        return;
+    }
     event.waitUntil(
         (async () => {
-            if (!event.oldSubscription) {
-                return;
-            }
-            const newSubscription = await self.registration.pushManager.subscribe(
+            const subscription = await self.registration.pushManager.subscribe(
                 event.oldSubscription.options
             );
-            const subscriptionData = newSubscription.toJSON();
-            const oldEndpoint = event.oldSubscription.endpoint;
-
-            // Encode the VAPID public key as base64url to pass to the server for validation.
-            const vapid_public_key = arrayBufferToBase64Url(
-                newSubscription.options.applicationServerKey
+            const params = {
+                ...subscription.toJSON(),
+                vapid_public_key: arrayBufferToBase64Url(subscription.options.applicationServerKey),
+                previousEndpoint: event.oldSubscription.endpoint,
+            };
+            const refreshed = await postPushDevice("/web/push/device/refresh", params).catch(
+                () => null
             );
-
-            /**
-             * Attempt to refresh the subscription using the given access token.
-             * On success the server rotates the access token and returns the new value.
-             * @param {string} accessToken
-             * @returns {Object|null} server result or null on network error
-             */
-            async function tryRefresh(accessToken) {
-                try {
-                    const resp = await fetch("/web/push/device/refresh", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                            jsonrpc: "2.0",
-                            method: "call",
-                            id: 1,
-                            params: {
-                                token: accessToken,
-                                ...subscriptionData,
-                                vapid_public_key,
-                                previousEndpoint: oldEndpoint,
-                            },
-                        }),
-                    });
-                    const json = await resp.json();
-                    return json.result ?? null;
-                } catch {
-                    return null;
-                }
-            }
-
-            // 1. Prefer access-token-based refresh: works even when the Odoo session
-            //    has expired (access token is stored in IndexedDB, not a session cookie).
-            const token = await get("token", push_device_store).catch(() => null);
-            if (token) {
-                const result = await tryRefresh(token);
-                if (result?.success) {
-                    // Server rotated the access token; persist the new one.
-                    if (result.token) {
-                        await set("token", result.token, push_device_store);
-                    }
-                    return;
-                }
-
-                // 2. Access token is valid but expired: use the HttpOnly refresh token
-                //    cookie (attached automatically by the browser) to rotate both tokens.
-                if (result?.reason === "expired") {
-                    try {
-                        const rotateResp = await fetch("/web/push/device/token/rotate", {
-                            method: "POST",
-                            credentials: "include", // browser attaches the HttpOnly cookie
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({
-                                jsonrpc: "2.0",
-                                method: "call",
-                                id: 1,
-                                params: { previousEndpoint: oldEndpoint },
-                            }),
-                        });
-                        const rotateJson = await rotateResp.json();
-                        const rotateResult = rotateJson.result ?? {};
-                        if (rotateResult.token) {
-                            await set("token", rotateResult.token, push_device_store);
-                            const retryResult = await tryRefresh(rotateResult.token);
-                            if (retryResult?.success) {
-                                if (retryResult.token) {
-                                    await set("token", retryResult.token, push_device_store);
-                                }
-                                return;
-                            }
-                        }
-                    } catch {
-                        // fall through to session-based fallback below
-                    }
-                }
-            }
-
-            // 3. Fallback: session-based registration. Requires an active session cookie
-            //    but also sets a fresh refresh token cookie for future renewals.
-            try {
-                const resp = await fetch("/web/push/device/register", {
-                    method: "POST",
-                    credentials: "include",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        jsonrpc: "2.0",
-                        method: "call",
-                        id: 1,
-                        params: {
-                            ...subscriptionData,
-                            vapid_public_key,
-                            previousEndpoint: oldEndpoint,
-                        },
-                    }),
-                });
-                const json = await resp.json();
-                const result = json.result ?? {};
-                if (result.token) {
-                    await set("token", result.token, push_device_store);
-                }
-            } catch {
-                // Nothing more we can do; the subscription will be renewed on next login.
+            if (!refreshed?.result?.success) {
+                await postPushDevice("/web/push/device/register", params);
             }
         })()
     );
+});
+self.addEventListener("message", async ({ data, source }) => {
+    switch (data.name) {
+        case MESSAGE_TYPE.POST_RTC_LOGS: {
+            const { logs, download } = data;
+            try {
+                const data = await storeLogs(logs, { download });
+                if (download) {
+                    source.postMessage({
+                        action: "POST_RTC_LOGS",
+                        data,
+                    });
+                }
+            } catch (error) {
+                console.error("Error storing log:", error);
+            }
+            break;
+        }
+    }
 });

@@ -2,7 +2,6 @@ import { rpc } from "@web/core/network/rpc";
 import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
 import { ORM } from "@web/core/orm_plugin";
 import { patch } from "@web/core/utils/patch";
-
 import { WebClient } from "@web/webclient/webclient";
 import { onWillDestroy, usePlugin } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
@@ -104,21 +103,7 @@ patch(WebClient.prototype, {
             );
             // Use the dedicated JSON-RPC route (instead of a plain ORM call) so the server
             // can set the refresh token as an HttpOnly cookie in the same response.
-            const result = await rpc("/web/push/device/register", kwargs);
-            // Forward the access token to the service worker for session-independent
-            // subscription renewal (pushsubscriptionchange without an active session).
-            if (result?.token && navigator.serviceWorker?.controller) {
-                navigator.serviceWorker.controller.postMessage({
-                    type: "STORE_PUSH_TOKEN",
-                    payload: { token: result.token },
-                });
-            }
-            if (result?.error) {
-                // Mimic the RPC error shape so the InvalidVapidError retry check below works.
-                const err = new Error(result.error);
-                err.data = { name: result.error };
-                throw err;
-            }
+            await rpc("/web/push/device/register", kwargs);
         } catch (e) {
             // The component was destroyed during the call: rethrow so the AbortError skips the
             // error handling below and reaches the global handler, which silently ignores it.

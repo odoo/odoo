@@ -5,10 +5,10 @@ from odoo import http
 from odoo.exceptions import AccessError, MissingError
 from odoo.fields import Domain
 from odoo.http import request
+
 from odoo.addons.mail.controllers.thread import ThreadController
 from odoo.addons.mail.models.mail_message import SHARE_DOMAIN
 from odoo.addons.mail.tools.discuss import Store
-from odoo.addons.mail.tools.jwt import InvalidVapidError
 from odoo.addons.mail.tools.store_handler import store_handler
 
 # HttpOnly cookie used to store the push refresh token (30-day sliding credential).
@@ -279,91 +279,49 @@ class WebclientController(ThreadController):
         """Register (or update) a push subscription for the logged-in user.
 
         Uses a JSON-RPC route (instead of a plain ORM call) so that the server can
-        set the refresh token as an HttpOnly cookie, via ``request.future_response``,
-        in the same response that returns the short-lived access token.
+        set the refresh token as an HttpOnly cookie via ``request.future_response``.
 
         Expects the fields from PushSubscription.toJSON() plus ``vapid_public_key``
-        and optionally ``previous_endpoint``.
+        and optionally ``previousEndpoint``.
         """
-        try:
-            result = request.env["mail.push.device"].register_devices(**kwargs)
-        except InvalidVapidError:
-            return {'error': 'odoo.addons.mail.tools.jwt.InvalidVapidError'}
-        if not result:
-            return {'error': 'registration_failed'}
-        request.future_response.set_cookie(
-            _PUSH_REFRESH_COOKIE,
-            result['refresh_token'],
-            httponly=True,
-            secure=True,
-            samesite='Strict',
-            max_age=_PUSH_REFRESH_COOKIE_MAX_AGE,
-            path='/web/push/device/',
-        )
-        return {'token': result['token']}
-
-    @http.route("/web/push/device/token/rotate", methods=["POST"], type="jsonrpc", auth="public")
-    def push_device_token_rotate(self, previousEndpoint=None, **kwargs):
-        """Exchange a valid refresh token for a new access + refresh token pair.
-
-        The service worker calls this route (with ``credentials: "include"``) when
-        POST /web/push/device/refresh returns ``{'reason': 'expired'}``. The browser
-        attaches the HttpOnly refresh token cookie automatically; JavaScript cannot
-        read it.
-
-        On success a new refresh token is set as a replacement HttpOnly cookie (via
-        ``request.future_response``) and the new access token is returned in the JSON
-        body for storage in IndexedDB.
-        """
-        refresh_token = request.httprequest.cookies.get(_PUSH_REFRESH_COOKIE)
-        if not refresh_token:
-            return {'error': 'no_refresh_token'}
-        result = request.env["mail.push.device"].sudo()._rotate_tokens(
-            refresh_token=refresh_token,
-            previous_endpoint=previousEndpoint,
-        )
-        if not result:
-            return {'error': 'invalid_token'}
-        request.future_response.set_cookie(
-            _PUSH_REFRESH_COOKIE,
-            result['refresh_token'],
-            httponly=True,
-            secure=True,
-            samesite='Strict',
-            max_age=_PUSH_REFRESH_COOKIE_MAX_AGE,
-            path='/web/push/device/',
-        )
-        return {'token': result['access_token']}
+        refresh_token = request.env["mail.push.device"].register_devices(**kwargs)
+        if refresh_token:
+            self._set_push_refresh_cookie(refresh_token)
 
     @http.route("/web/push/device/refresh", methods=["POST"], type="jsonrpc", auth="public")
-    def push_device_refresh(self, token, endpoint, keys, vapid_public_key,
+    def push_device_refresh(self, endpoint=None, keys=None, vapid_public_key=None,
                             previousEndpoint=None, expirationTime=None, **kwargs):
         """Refresh a push subscription endpoint without requiring an active session.
 
-        The service worker calls this route from its pushsubscriptionchange handler when
-        the browser renews a push subscription and the user's Odoo session may have
-        expired. Authentication is based on the short-lived access token (1 hour)
-        issued by /web/push/device/register and stored by the service worker in IndexedDB.
+        The service worker calls this route from its pushsubscriptionchange handler,
+        when the user's Odoo session may have expired. Authentication is based on the
+        refresh token in the HttpOnly cookie set by /web/push/device/register, which
+        the browser attaches automatically and which is rotated on success.
 
-        Returns {'success': True, 'token': new_token} on success so the service worker
-        can update its stored access token. Returns {'success': False, 'reason': 'expired'}
-        when the access token has expired, signalling the service worker to call
-        /web/push/device/token/rotate to obtain a new pair via the HttpOnly refresh cookie.
-
-        :param str token: access token from the service worker's IndexedDB
-        :param str endpoint: new push subscription endpoint URL
-        :param dict keys: new push subscription keys (p256dh, auth)
-        :param str vapid_public_key: server VAPID public key (for cross-check)
-        :param str previousEndpoint: old endpoint used to locate the device record
-        :param expirationTime: optional new expiration timestamp (camelCase from subscription.toJSON())
+        :returns: {'success': bool}
         """
-        return request.env["mail.push.device"].sudo().refresh_subscription_by_token(
-            token=token,
+        new_refresh_token = request.env["mail.push.device"].sudo()._refresh_subscription(
+            refresh_token=request.httprequest.cookies.get(_PUSH_REFRESH_COOKIE),
+            previous_endpoint=previousEndpoint,
             endpoint=endpoint,
             keys=keys,
             vapid_public_key=vapid_public_key,
-            previous_endpoint=previousEndpoint,
             expiration_time=expirationTime,
+        )
+        if not new_refresh_token:
+            return {'success': False}
+        self._set_push_refresh_cookie(new_refresh_token)
+        return {'success': True}
+
+    def _set_push_refresh_cookie(self, refresh_token):
+        request.future_response.set_cookie(
+            _PUSH_REFRESH_COOKIE,
+            refresh_token,
+            httponly=True,
+            secure=True,
+            samesite='Strict',
+            max_age=_PUSH_REFRESH_COOKIE_MAX_AGE,
+            path='/web/push/device/',
         )
 
     @classmethod
