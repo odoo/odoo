@@ -417,3 +417,20 @@ class TestRecruitmentSkills(TransactionCase):
         self.assertEqual(talent.applicant_skill_ids.skill_type_id, applicant.applicant_skill_ids.skill_type_id)
         self.assertEqual(talent.applicant_skill_ids.skill_level_id, applicant.applicant_skill_ids.skill_level_id)
         self.assertEqual(talent.applicant_skill_ids.skill_id, applicant.applicant_skill_ids.skill_id)
+
+    def test_job_name_search_with_matching_score(self):
+        """
+        Check that typing in the job field of the "Apply to Jobs" wizard filters the jobs
+        """
+        job_3 = self.env["hr.job"].create({"name": "Other Position"})
+        Job = self.env["hr.job"].with_context(
+            show_matching_score_in_name=True,
+            active_applicant_id=self.t_applicant.id,
+            active_applicant_job_ids=self.t_applicant.job_id.ids,
+        )
+        self.assertEqual([job_id for job_id, _name in Job.name_search("Test Job")], self.t_job_2.ids)
+        self.assertEqual([job_id for job_id, _name in Job.name_search("Other Position")], job_3.ids)
+        found_job_ids = [job_id for job_id, _name in Job.name_search("", domain=[("id", "not in", job_3.ids)])]
+        self.assertIn(self.t_job_2.id, found_job_ids)
+        self.assertNotIn(job_3.id, found_job_ids)
+        self.assertNotIn(self.t_job_1.id, found_job_ids, "The jobs of the applicant are not proposed")
