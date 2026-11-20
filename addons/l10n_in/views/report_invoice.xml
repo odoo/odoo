@@ -61,6 +61,10 @@
             <td t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_gst_registration_type"></td>
         </xpath>
 
+        <xpath expr="//td[@name='account_invoice_line_name_grouped_desktop']/../td[1]" position="after">
+            <td t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_gst_registration_type"></td>
+        </xpath>
+
         <xpath expr="//div[@id='qrcode_info']" position="attributes">
             <attribute name="t-if" add="o.company_id.account_fiscal_country_id.code != 'IN'" separator="and"/>
         </xpath>
