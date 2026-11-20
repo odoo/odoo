@@ -354,6 +354,36 @@ class TestReorderingRule(TransactionCase):
         self.assertEqual(pol.product_qty, 2.0)
         self.assertEqual(rr.qty_to_order, 0.0)
 
+    def test_reordering_rule_and_mto_delivery(self):
+        """
+        Check that confirming a purchase through MTO after an automatic RR trigger does not merge the PO lines
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        stock_location = warehouse.lot_stock_id
+        customer_location = self.env.ref('stock.stock_location_customers')
+        self.env['stock.warehouse.orderpoint'].create({'product_id': self.product_01.id})
+        mts_delivery, mto_delivery = self.env['stock.picking'].create([{
+            'picking_type_id': warehouse.out_type_id.id,
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'move_ids': [Command.create({
+                'name': self.product_01.name,
+                'product_id': self.product_01.id,
+                'product_uom_qty': qty,
+                'procure_method': procure_method,
+                'location_id': stock_location.id,
+                'location_dest_id': customer_location.id,
+            })],
+        } for qty, procure_method in [(10, 'make_to_stock'), (5, 'make_to_order')]])
+        mts_delivery.action_confirm()
+        mto_delivery.action_confirm()
+
+        pols = self.env['purchase.order.line'].search([('product_id', '=', self.product_01.id)])
+        self.assertRecordValues(pols.sorted('product_qty'), [
+            {'product_qty': 5.0},
+            {'product_qty': 10.0},
+        ])
+
     def test_replenish_report_1(self):
         """Tests the auto generation of manual orderpoints.
 
