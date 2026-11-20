@@ -158,10 +158,14 @@ module.exports = [
             "**/web_studio/static/src/client_action/report_editor/qweb_table_plugin.css",
             "**/web_studio/static/src/client_action/view_editor/editors/form/form_editor_renderer/form_editor_renderer.css",
             "**/website_event_track_quiz/static/src/scss/event_quiz.css",
+            "**/website_sale/static/src/scss/website_sale.css",
+            // container conditions @eslint/css does not know yet
+            "**/web/static/src/core/bottom_sheet/bottom_sheet.css",
             // valid values mixing var() that @eslint/css resolves with ones it cannot, which it reports as invalid
             "**/hr_referral/static/src/scss/progress_bar.css",
             "**/im_livechat/static/src/core/web/livechat_channel_info_list.css",
             "**/im_livechat/static/src/core/web/notification_item.css",
+            "**/mail/static/src/core/common/core.css",
             "**/mail/static/src/core/common/poll.css",
             "**/web/static/src/core/datetime/datetime_picker.css",
             "**/web/static/src/views/calendar/calendar_renderer.css",

@@ -120,7 +120,7 @@
             ('remove', 'web/static/src/webclient/reload_company_plugin.js'),
             ('remove', 'web/static/src/webclient/menus/menu_plugin.js'),
             ('remove', 'web/static/src/webclient/clickbot/clickbot.js'),  # lazy loaded
-            ('remove', 'web/static/src/views/form/button_box/*.scss'),
+            ('remove', 'web/static/src/views/form/button_box/*.css'),
             ('remove', 'web/static/src/webclient/share_target/*'),
 
             # remove the report code and whitelist only what's needed
@@ -133,7 +133,7 @@
             'base/static/src/scss/res_partner.css',
 
             # Form style should be computed before
-            'web/static/src/views/form/button_box/*.scss',
+            'web/static/src/views/form/button_box/*.css',
 
             'mrp_subcontracting/static/src/subcontracting_portal/*',
             'web/static/src/start.js',

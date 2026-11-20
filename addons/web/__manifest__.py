@@ -102,7 +102,7 @@ This module provides the core of the Odoo Web Client.
 
             'web/static/src/webclient/**/*',
             ('remove', 'web/static/src/webclient/clickbot/clickbot.js'), # lazy loaded
-            ('remove', 'web/static/src/views/form/button_box/*.scss'),
+            ('remove', 'web/static/src/views/form/button_box/*.css'),
 
             # remove the report code and whitelist only what's needed
             ('remove', 'web/static/src/webclient/actions/reports/**/*'),
@@ -116,7 +116,7 @@ This module provides the core of the Odoo Web Client.
             'base/static/src/scss/res_users.css',
 
             # Form style should be computed before
-            'web/static/src/views/form/button_box/*.scss',
+            'web/static/src/views/form/button_box/*.css',
 
             # Don't include dark mode files in light mode
             ('remove', 'web/static/src/**/*.dark.css'),
