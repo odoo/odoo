@@ -483,10 +483,12 @@ const base64Data = dummyBase64Img.split("base64,")[1];
 
 function setupBodyImageMocks() {
     const scssChanges = {};
+    const addDataParams = {};
     onRpc("/html_editor/attachment/add_data", async (request) => {
         const { params } = await request.json();
         expect(params.is_image).toBe(true);
         expect(params.data).toBe(base64Data);
+        Object.assign(addDataParams, params);
         expect.step("attachment_add_data");
         return {
             id: 7,
@@ -510,23 +512,26 @@ function setupBodyImageMocks() {
         expect.step("bundle_reload");
         return { success: true };
     });
-    return scssChanges;
+    return { scssChanges, addDataParams };
 }
 
 test("theme background image uploaded through the media dialog is saved as its attachment URL", async () => {
     const pngBytes = Uint8Array.from(atob(base64Data), (char) => char.charCodeAt(0));
-    const scssChanges = setupBodyImageMocks();
+    const { scssChanges, addDataParams } = setupBodyImageMocks();
     onRpc("ir.attachment", "search_read", () => []);
 
-    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`, {
-        loadIframeBundles: true,
-    });
+    await setupWebsiteBuilder(
+        `<h1 data-oe-model="blog.post" data-oe-id="3" data-oe-field="name">Title</h1>`,
+        { loadIframeBundles: true }
+    );
     onRpc("/html_editor/get_image_info", () => ({
         attachment: { id: 7 },
         original: { id: 7, image_src: bodyImageSrc, mimetype: "image/png" },
     }));
     onRpc(bodyImageSrc, () => new Response(pngBytes, { headers: { "Content-Type": "image/png" } }));
 
+    // The cursor is in a record, but the body background must not be bound to it.
+    await contains(":iframe h1").click();
     await contains("[data-name='theme']").click();
     await contains(
         ".o_theme_tab button[data-action-id='customizeBodyBgType'][data-action-value='image']"
@@ -534,12 +539,15 @@ test("theme background image uploaded through the media dialog is saved as its a
     await contains(".o_select_media_dialog .o_upload_media_button").click();
     await setInputFiles([new File([pngBytes], "bg.png", { type: "image/png" })]);
     await expect.waitForSteps(["attachment_add_data", "scss_customization", "bundle_reload"]);
+    // No record: the server attaches the image to ir.ui.view, so it is public.
+    expect(addDataParams.res_model).toBe(undefined);
+    expect(addDataParams.res_id).toBe(undefined);
     expect(scssChanges["body-image"]).toBe(`'${bodyImageSrc}'`);
     expect(scssChanges["body-image-type"]).toBe("'image'");
 });
 
 test("normalizeBodyBackgroundImage converts body-image variable before save", async () => {
-    const scssChanges = setupBodyImageMocks();
+    const { scssChanges } = setupBodyImageMocks();
     onRpc("ir.ui.view", "save", () => {
         expect.step("websiteSave");
         return true;
