@@ -8,18 +8,18 @@ hr_leave_rule_employee_update,Time Off base.group_user create/write,hr.leave,hr_
                     ('state', 'not in', ['validate', 'validate1']),
                 '&',
                     ('validation_type', 'in', ['manager', 'both', 'no_validation']),
-                    ('employee_id.leave_manager_id', '=', user.id),
+                    '|', ('employee_id.leave_manager_id', '=', user.id), '&', ('employee_id.leave_manager_id.approval_backups', 'in', [user.id]), ('employee_id.user_id', '!=', user.id),
         ]"
 hr_leave_rule_employee_unlink,Time Off base.group_user unlink,hr.leave,hr_holidays.group_hr_holidays_employee,d,"[('employee_id.user_id', '=', user.id), ('state', 'in', ['confirm', 'validate1'])]"
 hr_leave_rule_responsible_read,Time Off Responsible read,hr.leave,hr_holidays.group_hr_holidays_responsible,r,"[
-                ('employee_id.leave_manager_id', '=', user.id),
+                '|', ('employee_id.leave_manager_id', '=', user.id), '&', ('employee_id.leave_manager_id.approval_backups', 'in', [user.id]), ('employee_id.user_id', '!=', user.id),
         ]"
 hr_leave_rule_responsible_update,Time Off Responsible create/write,hr.leave,hr_holidays.group_hr_holidays_responsible,cu,"[
             '|',
                 '&',
                     ('employee_id.user_id', '=', user.id),
                     ('state', '!=', 'validate'),
-                ('employee_id.leave_manager_id', '=', user.id),
+                '|', ('employee_id.leave_manager_id', '=', user.id), '&', ('employee_id.leave_manager_id.approval_backups', 'in', [user.id]), ('employee_id.user_id', '!=', user.id),
         ]"
 hr_leave_rule_multicompany,Time Off: multi company global rule,hr.leave,,crud,"[('company_id', 'in', company_ids)]"
 hr_leave_allocation_rule_manager,Allocations: administrator: no limit,hr.leave.allocation,hr_holidays.group_hr_holidays_manager,crud,

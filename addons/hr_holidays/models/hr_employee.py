@@ -18,7 +18,9 @@ class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
     def _get_leave_manager_domain(self):
-        return "[('share', '=', False), ('company_ids', 'in', company_id), ('role', 'in', ['regular_user', 'group_system']), ('all_group_ids', 'in', %s)]" % self.env.ref('hr_holidays.group_hr_holidays_employee').id
+        # any internal user can approve: the approver group is granted on assignment
+        # (see hr.employee._grant_approver_groups), making a light user a regular one
+        return "[('share', '=', False), ('company_ids', 'in', company_id)]"
     leave_manager_id = fields.Many2one(
         'res.users', string='Time Off Approver',
         compute='_compute_leave_manager', store=True, readonly=False,
@@ -297,7 +299,7 @@ class HrEmployee(models.Model):
     def _compute_show_leaves(self):
         show_leaves = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
         for employee in self:
-            if show_leaves or employee.user_id == self.env.user or employee.leave_manager_id == self.env.user:
+            if show_leaves or employee.user_id == self.env.user or employee._is_acting_approver('leave_manager_id'):
                 employee.show_leaves = True
             else:
                 employee.show_leaves = False
@@ -418,6 +420,9 @@ class HrEmployee(models.Model):
 
     def _get_user_m2o_to_empty_on_archived_employees(self):
         return super()._get_user_m2o_to_empty_on_archived_employees() + ['leave_manager_id']
+
+    def _get_approver_fields(self):
+        return super()._get_approver_fields() | {'leave_manager_id': 'hr_holidays.group_hr_holidays_responsible'}
 
     def action_time_off_dashboard(self, scale=None):
         dashboard_view_by_scale = {

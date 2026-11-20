@@ -16,7 +16,9 @@ class HrEmployee(models.Model):
     attendance_based = fields.Boolean(readonly=False, related="version_id.attendance_based", inherited=True, groups="hr.group_hr_user")
 
     def _get_attendance_manager_domain(self):
-        return "[('share', '=', False), ('company_ids', 'in', company_id), ('role', 'in', ['regular_user', 'group_system']), ('all_group_ids', 'in', %s)]" % self.env.ref('hr_attendance.group_hr_attendance_own').id
+        # any internal user can approve: the approver group is granted on assignment
+        # (see hr.employee._grant_approver_groups), making a light user a regular one
+        return "[('share', '=', False), ('company_ids', 'in', company_id)]"
 
     attendance_manager_id = fields.Many2one(
         'res.users', store=True, readonly=False,
@@ -177,6 +179,9 @@ class HrEmployee(models.Model):
             })
         return res
 
+    def _get_approver_fields(self):
+        return super()._get_approver_fields() | {'attendance_manager_id': 'hr_attendance.group_hr_attendance_officer'}
+
     @api.depends_context('uid')
     @api.depends('user_id', 'user_id.group_ids')
     def _compute_display_attendances(self):
@@ -190,7 +195,7 @@ class HrEmployee(models.Model):
         has_attendance_own_reader_group = current_user.has_group('hr_attendance.group_hr_attendance_own_reader')
 
         for employee in self:
-            is_approver = is_attendance_officer and employee.attendance_manager_id and employee.attendance_manager_id == current_user
+            is_approver = is_attendance_officer and employee._is_acting_approver('attendance_manager_id')
             is_users_employee = has_attendance_own_reader_group and employee in current_user.employee_ids
             employee.display_attendances = has_attendance_user_group or is_approver or is_users_employee
 
@@ -457,7 +462,7 @@ class HrEmployee(models.Model):
         # edited with the "Self Attendance Edit" right, but only deleted by their attendance manager or an officer
         user = self.env.user
         can_manage = user.has_group('hr_attendance.group_hr_attendance_user') \
-            or (user.has_group('hr_attendance.group_hr_attendance_officer') and self.attendance_manager_id == user)
+            or (user.has_group('hr_attendance.group_hr_attendance_officer') and self._is_acting_approver('attendance_manager_id'))
         can_edit = can_manage or (user.has_group('hr_attendance.group_hr_attendance_own') and self.user_id == user)
         return {
             "type": "ir.actions.act_window",

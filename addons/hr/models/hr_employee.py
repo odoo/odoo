@@ -289,6 +289,11 @@ class HrEmployee(models.Model):
         related='version_id.country_id.code',
         groups="hr.group_hr_user"
     )
+    approval_backups = fields.Many2many(readonly=False, related='version_id.approval_backups', inherited=True, tracking=True,
+                                        groups="hr.group_hr_user", ui_domain="[('id', '!=', user_id), ('share', '=', False)]")
+    is_approver = fields.Boolean(
+        compute='_compute_is_approver', groups="hr.group_hr_user",
+        help="Whether the user of this employee approves at least one employee (see _get_approver_fields)")
     # Direct subordinates
     parent_id = fields.Many2one('hr.employee', 'Manager', tracking=True, index=True,
                                 ui_domain="['|', ('company_id', '=', False), ('company_id', 'in', allowed_company_ids)]")
@@ -448,6 +453,14 @@ class HrEmployee(models.Model):
                 **{k: v for k, v in version_vals.items() if k in version_fields},
             })
         return new_vals_list
+
+    @api.depends('user_id')
+    def _compute_is_approver(self):
+        approvers = self.env['res.users']
+        for field in self._get_approver_fields():
+            approvers |= self._get_approvers(field, self.user_id)
+        for employee in self:
+            employee.is_approver = bool(employee.user_id) and employee.user_id in approvers
 
     @api.depends('employee_skill_ids', 'company_id', 'employee_skill_ids.skill_type_id.company_id')
     def _compute_current_employee_skill_ids(self):
@@ -2424,6 +2437,7 @@ class HrEmployee(models.Model):
             }
             onboarding_notes_bodies[employee.id] = message
         employees._message_log_batch(onboarding_notes_bodies)
+        employees._grant_approver_groups()
         employees.invalidate_recordset()
         return employees
 
@@ -2504,6 +2518,9 @@ class HrEmployee(models.Model):
                 if employee.version_id == employee.current_version_id:
                     resources |= employee.resource_id
             resources.write({'calendar_id': vals.get('resource_calendar_id')})
+        # approver fields also change through their computes on parent_id
+        if vals.keys() & {'approval_backups', 'parent_id', 'user_id', *self._get_approver_fields()}:
+            self._grant_approver_groups()
         return res
 
     def unlink(self):
@@ -2517,6 +2534,111 @@ class HrEmployee(models.Model):
         resources = self.mapped('resource_id')
         super(HrEmployee, self.with_context(hr_unlink_employee_ids=self.ids)).unlink()
         return resources.unlink()
+
+    def _get_approver_fields(self):
+        """Return the ``hr.employee`` many2one fields (to ``res.users``) designating an approver.
+
+        Hook for the approval backups (e.g. ``hr_holidays`` adds the time off approver
+        ``leave_manager_id``): the approval backups of an approver can act as that approver
+        (see :meth:`_is_acting_approver`) and are given the approver's group.
+
+        :return: the approver group xmlid by field name
+        :rtype: dict[str, str]
+        """
+        return {}
+
+    @api.model
+    def _get_approvers(self, approver_field, users):
+        """Return the subset of ``users`` set as ``approver_field`` on at least one active employee.
+
+        :param str approver_field: a field of :meth:`_get_approver_fields`
+        :type users: res.users
+        :rtype: res.users
+        """
+        if not users:
+            return self.env['res.users']
+        # sudo: approver fields may be restricted to groups the reader does not have
+        groups = self.env['hr.employee'].sudo()._read_group([(approver_field, 'in', users.ids)], [approver_field])
+        return self.env['res.users'].union(user for [user] in groups)
+
+    def _is_acting_approver(self, approver_field):
+        """Return whether the current user can act as the ``approver_field`` of the employee.
+
+        This is the approver itself, or one of its approval backups, unless the backup is
+        the employee (nobody approves their own requests as a backup).
+
+        :param str approver_field: a field of :meth:`_get_approver_fields`
+        :rtype: bool
+        """
+        self.ensure_one()
+        user = self.env.user
+        # sudo: approver fields may be restricted to groups the reader does not have
+        employee_sudo = self.sudo()
+        approver = employee_sudo[approver_field]
+        if not approver:
+            return False
+        return approver == user or (employee_sudo.user_id != user and user in approver.approval_backups)
+
+    @api.model
+    def _get_acting_approver_domain(self, approver_path, user_path):
+        """Return the domain matching the records the current user can act as approver of.
+
+        Domain counterpart of :meth:`_is_acting_approver`, e.g.
+        ``_get_acting_approver_domain('employee_id.leave_manager_id', 'employee_id.user_id')``
+        on ``hr.leave``.
+
+        :param str approver_path: path to the approver (``res.users``)
+        :param str user_path: path to the user of the employee
+        :rtype: Domain
+        """
+        uid = self.env.uid
+        return Domain(approver_path, '=', uid) | (
+            Domain(f'{approver_path}.approval_backups', 'in', [uid]) & Domain(user_path, '!=', uid)
+        )
+
+    def _grant_approver_groups(self):
+        """Give their approver groups to the approvers of ``self``, and to the approval backups
+        of these approvers and of the users of ``self``.
+
+        Called when the approvers or the approval backups of ``self`` may have changed. Any
+        internal user can be an approver or a backup: as the approver groups are not light
+        groups, this makes light users regular ones. The groups are not removed when a user
+        stops being an approval backup.
+        """
+        approver_fields = self._get_approver_fields()
+        if not approver_fields:
+            return
+        # sudo: the approver groups are granted on behalf of the writer
+        employees = self.sudo()
+        approvers = self.env['res.users'].union(employees[field] for field in approver_fields)
+        if approvers:
+            employees |= self.env['hr.employee'].sudo().search([('user_id', 'in', approvers.ids)])
+        candidates = approvers | employees.user_id
+        for field, group_xmlid in approver_fields.items():
+            group = self.env.ref(group_xmlid, raise_if_not_found=False)
+            if not group:
+                continue
+            field_approvers = self._get_approvers(field, candidates)
+            backups = employees.filtered(lambda employee: employee.user_id in field_approvers).approval_backups
+            users = (field_approvers | backups).filtered(lambda user: not user.has_group(group_xmlid))
+            if users:
+                group.sudo().write({'user_ids': [Command.link(user.id) for user in users]})
+
+    @api.model
+    def _get_backups_of_approvers(self, approver_field, users):
+        """Return the subset of ``users`` that are approval backups of an ``approver_field``.
+
+        Used to keep the approver group of these users when they stop being approvers themselves.
+
+        :param str approver_field: a field of :meth:`_get_approver_fields`
+        :type users: res.users
+        :rtype: res.users
+        """
+        if not users:
+            return self.env['res.users']
+        employees = self.env['hr.employee'].sudo().search([('approval_backups', 'in', users.ids)])
+        approvers = self._get_approvers(approver_field, employees.user_id)
+        return employees.filtered(lambda employee: employee.user_id in approvers).approval_backups & users
 
     def _get_employee_m2o_to_empty_on_archived_employees(self):
         """Return the ``hr.employee`` many2one fields (to ``hr.employee``) emptied when the target is archived.

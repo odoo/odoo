@@ -443,7 +443,10 @@ class HrExpense(models.Model):
             )
             if is_all_approver:
                 managers |= self.env.user
-            if expense.employee_id.id in expenses_employee_ids_under_user_ones:
+            if (
+                expense.employee_id.id in expenses_employee_ids_under_user_ones
+                or employee._is_acting_approver('expense_manager_id')
+            ):
                 managers |= self.env.user
             if not expense.is_own_expense and self.env.user in managers:
                 # If Approver-level or designated manager, can edit other people expense
@@ -957,7 +960,7 @@ class HrExpense(models.Model):
                 and (
                         is_all_approver
                         or expense.employee_id.id in expenses_employee_ids_under_user_ones
-                        or expense.employee_id.expense_manager_id == user
+                        or expense.employee_id._is_acting_approver('expense_manager_id')
                         or (expense.state in {'draft', 'submitted'} and expense.employee_id.user_id == user)
                 )
             )
@@ -1660,7 +1663,7 @@ class HrExpense(models.Model):
             is_expense_team_approver = (
                     is_team_approver  # Admins are team approvers, not necessarily direct parents
                     or expense_employee.id in expenses_employee_ids_under_user_ones
-                    or (expense_employee.expense_manager_id == self.env.user)
+                    or expense_employee._is_acting_approver('expense_manager_id')
             )
             if expense.company_id.id not in valid_company_ids:
                 reason = _(
@@ -1676,7 +1679,10 @@ class HrExpense(models.Model):
                     expense_employee._get_expense_managers()
                     | expense.manager_id
                 )
-                if expense_employee.id in expenses_employee_ids_under_user_ones:
+                if (
+                    expense_employee.id in expenses_employee_ids_under_user_ones
+                    or expense_employee._is_acting_approver('expense_manager_id')
+                ):
                     current_managers |= self.env.user
 
                 if expense_employee.user_id == self.env.user:
