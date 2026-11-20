@@ -39,7 +39,7 @@ class ResPartner(models.Model):
             iap_data['state_id'] = {'id': state.id, 'display_name': state.display_name}
 
         # Handle base_address_extended
-        if self.env['ir.module.module']._get('base_address_extended').state == 'installed':
+        if 'base_address_extended' in self.env['ir.module.module']._installed():
             city_zip, city_name = iap_data.get('zip'), iap_data.get('city')
             if (city_zip or city_name) and country and country.enforce_cities:
                 domain = Domain('country_id', '=', country.id)
@@ -117,7 +117,7 @@ class ResPartner(models.Model):
         query_country = self.env['res.country'].browse(query_country_id).exists() or self.env.company.country_id
         if (
             query_country
-            and self.env['ir.module.module']._get('base_vat').state == 'installed'
+            and 'base_vat' in self.env['ir.module.module']._installed()
             and not self._run_vat_checks(query_country, vat, validation='setnull')[0]
         ):
             return []
@@ -183,7 +183,7 @@ class ResPartner(models.Model):
     @api.model
     def _validate_partner_autocomplete_response(self, autocomplete_response):
         company_data = self.env.context.get('enriched_company_data')
-        if not company_data or self.env['ir.module.module']._get('base_vat').state != 'installed':
+        if not company_data or 'base_vat' in self.env['ir.module.module']._installed():
             return autocomplete_response
         country = self.env['res.country'].browse((company_data.get('country_id') or {}).get('id')).exists()
         if vat_number := autocomplete_response.get('vat'):
