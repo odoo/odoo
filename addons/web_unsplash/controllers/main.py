@@ -155,3 +155,16 @@ class Web_Unsplash(http.Controller):
             request.env['ir.config_parameter'].sudo().set_param('unsplash.access_key', post.get('key'))
             return True
         raise werkzeug.exceptions.NotFound()
+
+
+class Unsplash_HTML_Editor(HTML_Editor):
+
+    def _handle_modified_attachment(self, original_attachment, new_attachment):
+        super()._handle_modified_attachment(original_attachment, new_attachment)
+        if original_attachment.type == 'binary' and original_attachment.url and original_attachment.url.startswith('/unsplash/'):
+            # Uniquify url by adding a path segment with the id before the name.
+            # This allows us to keep the unsplash url format so it still reacts
+            # to the unsplash beacon.
+            url_fragments = original_attachment.url.split('/')
+            url_fragments.insert(-1, str(new_attachment.id))
+            new_attachment.sudo().url = '/'.join(url_fragments)
