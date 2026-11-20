@@ -136,8 +136,8 @@ class ResPartner(models.Model):
 
     def _get_peppol_endpoint_value(self, country_code, field):
         self.ensure_one()
-        if country_code == 'FR' and field == 'peppol_endpoint':
-            return self._get_suggested_pdp_identifier()
+        if country_code == 'FR' and field == 'peppol_endpoint' and (identifier := self._get_suggested_pdp_identifier()):
+            return identifier
         return super()._get_peppol_endpoint_value(country_code, field)
 
     def _build_error_peppol_endpoint(self, eas, endpoint):

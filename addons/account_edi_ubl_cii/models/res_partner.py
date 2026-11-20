@@ -227,6 +227,12 @@ class ResPartner(models.Model):
         self.ensure_one()
         # Field `peppol_endpoint` can be used as placeholer for custom logic (by extending this function)
         if field == 'peppol_endpoint':
+            if (
+                country_code == 'FR'
+                and not ('siret' in self._fields and self['siret'])
+            ):
+                match = re.fullmatch(r'FR[A-Z0-9]{2}([0-9]{9})', (self.vat or '').replace(' ', ''), re.IGNORECASE)
+                return match and match.group(1)
             return None
 
         value = field in self._fields and self[field]
