@@ -52,6 +52,8 @@ UOM_TO_UNECE_CODE = {
     'uom.product_uom_kwh': 'KWH',
 }
 
+UNECE_CODE_TO_UOM = {code: xmlid for xmlid, code in UOM_TO_UNECE_CODE.items()}
+
 # -------------------------------------------------------------------------
 # ELECTRONIC ADDRESS SCHEME (EAS), see https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/
 # -------------------------------------------------------------------------
@@ -233,6 +235,12 @@ class AccountEdiCommon(models.AbstractModel):
         if xmlid and uom.id in xmlid:
             return UOM_TO_UNECE_CODE.get(xmlid[uom.id], 'C62')
         return 'C62'
+
+    @api.model
+    def _get_uom_from_unece_code(self, unece_code):
+        if uom_xmlid := UNECE_CODE_TO_UOM.get(unece_code):
+            return self.env.ref(uom_xmlid, raise_if_not_found=False) or self.env['uom.uom']
+        return self.env['uom.uom']
 
     def _find_value(self, xpaths, tree, nsmap=False):
         """ Iteratively queries the tree using the xpaths and returns a result as soon as one is found """
@@ -867,7 +875,7 @@ class AccountEdiCommon(models.AbstractModel):
             delivered_qty = float(quantity_node.text)
             uom_xml = quantity_node.attrib.get('unitCode')
             if uom_xml:
-                uom_infered_xmlid = {v: k for k, v in UOM_TO_UNECE_CODE.items()}.get(uom_xml)
+                uom_infered_xmlid = UNECE_CODE_TO_UOM.get(uom_xml)
                 if uom_infered_xmlid:
                     product_uom = self.env.ref(uom_infered_xmlid, raise_if_not_found=False) or self.env['uom.uom']
         if product and product_uom and product_uom.category_id != product.product_tmpl_id.uom_id.category_id:
@@ -1313,7 +1321,7 @@ class AccountEdiCommon(models.AbstractModel):
 
             to_write['product_uom_id'] = False
             if uom_code:
-                matched_uom_xmlid = {v: k for k, v in UOM_TO_UNECE_CODE.items()}.get(uom_code)
+                matched_uom_xmlid = UNECE_CODE_TO_UOM.get(uom_code)
                 if matched_uom_xmlid:
                     if matched_uom_xmlid in cache:
                         uom = cache[matched_uom_xmlid]

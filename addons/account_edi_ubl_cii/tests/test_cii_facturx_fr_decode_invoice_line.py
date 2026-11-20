@@ -182,6 +182,38 @@ class TestCiiImportFacturXFRInvoiceLine(CiiImportFacturXFR):
             'discount': 9.523809523809524,
         }])
 
+    def test_partial_import_invoice_line_price_amount_base_quantity_invoiced_quantity_different_uom(self):
+        # net_price = 1€
+        # gross_price = 2€
+        # net_qty = 2L
+        # gross_qty = 2L
+        # net_price per liter = 0.5€
+        # billed_qty = 2m³ = 2000L
+        # charge = 50
+        # allowance = 100
+        # line total amount = 950 (including allowance and charge)
+        invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_invoice_line_price_amount_base_quantity_invoiced_quantity_different_uom')
+        self.assertRecordValues(invoice.invoice_line_ids, [{
+            'price_unit': 1025,
+            'quantity': 2.0,
+            'product_uom_id': self.ref('uom.product_uom_cubic_meter'),
+            'discount': 53.65853658536585,
+        }])
+
+    def test_partial_import_invoice_line_price_amount_base_quantity_invoiced_quantity_smaller_uom(self):
+        # gross_price = 1000€ per m³, price allowance = 500€ => net_price = 500€ per m³ = 0.5€ per L
+        # billed_qty = 2000L
+        # price_unit = 1€ + charge per L (50 / 2000) = 1.025€
+        # discount = (100 + 500 * 2) / (1.025 * 2000) * 100 = 53.658...
+        invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_invoice_line_price_amount_base_quantity_invoiced_quantity_smaller_uom')
+        self.assertRecordValues(invoice.invoice_line_ids, [{
+            'price_unit': 1.025,
+            'quantity': 2000.0,
+            'product_uom_id': self.ref('uom.product_uom_litre'),
+            'discount': 53.65853658536585,
+            'price_subtotal': 950.0,
+        }])
+
     def test_partial_import_invoice_line_price_unit_precision(self):
         # Line 1: price = 0.043, basis_qty = 1, billed_qty = 2000, line_total_amount = 0.043 * 2000 = 86.00
         # Line 2: price = 10.00 for 3 units, billed_qty = 3, line_total_amount = 10.00
