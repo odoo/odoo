@@ -154,8 +154,17 @@ class ProductProduct(models.Model):
             product.update({key: val for key, val in res[product.id].items() if val})
 
     def _compute_quantities_dict(self, lot_id, owner_id, package_id, from_date=False, to_date=False):
+<<<<<<< 223002d3d537f47a40db66261ee7bf6d586d97e5
         domain_quant_loc, domain_move_in_loc, domain_move_out_loc, domain_move_in_loc_done, domain_move_out_loc_done = self._get_domain_locations()
         domain_quant = [('product_id', 'in', self.ids)] + domain_quant_loc
+||||||| 3d9994500c86cea7aac48cf4f46e79dce160af70
+        search_all = self.env.context.get('search_all')
+        domain_quant_loc, domain_move_in_loc, domain_move_out_loc = self._get_domain_locations()
+        domain_quant = domain_quant_loc if search_all else [('product_id', 'in', self.ids)] + domain_quant_loc
+=======
+        domain_quant_loc, domain_move_in_loc, domain_move_out_loc = self._get_domain_locations()
+        domain_quant = [('product_id', 'in', self.ids)] + domain_quant_loc
+>>>>>>> 03015b187990fa1cf7c697c557666c1c5031f1fb
         dates_in_the_past = False
         # only to_date as to_date will correspond to qty_available
         to_date = self.env.company._to_datetime_upper_bound(to_date)
@@ -186,9 +195,27 @@ class ProductProduct(models.Model):
         if package_id is not None:
             domain_quant += [('package_id', '=', package_id)]
         if dates_in_the_past:
+<<<<<<< 223002d3d537f47a40db66261ee7bf6d586d97e5
             # Use the done location domains (simple location_dest_id) for move lines
             domain_move_in_done = [('product_id', 'in', self.ids)] + domain_move_in_loc_done
             domain_move_out_done = [('product_id', 'in', self.ids)] + domain_move_out_loc_done
+||||||| 3d9994500c86cea7aac48cf4f46e79dce160af70
+            _, domain_move_in_done_loc, domain_move_out_done_loc = self.with_context(
+                skip_in_progress=True,
+            )._get_domain_locations()
+            domain_move_in_done = domain_move_in_done_loc if search_all else [('product_id', 'in', self.ids)] + domain_move_in_done_loc
+            domain_move_out_done = domain_move_out_done_loc if search_all else [('product_id', 'in', self.ids)] + domain_move_out_done_loc
+            if lot_id is not None:
+                domain_move_in_done += [('lot_id', '=', lot_id)]
+                domain_move_out_done += [('lot_id', '=', lot_id)]
+=======
+            _, domain_move_in_done, domain_move_out_done = self.with_context(
+                skip_in_progress=True,
+            )._get_domain_locations()
+            if lot_id is not None:
+                domain_move_in_done += [('lot_id', '=', lot_id)]
+                domain_move_out_done += [('lot_id', '=', lot_id)]
+>>>>>>> 03015b187990fa1cf7c697c557666c1c5031f1fb
             if owner_id is not None:
                 domain_move_in_done += [('owner_id', '=', owner_id)]
                 domain_move_out_done += [('owner_id', '=', owner_id)]
@@ -226,13 +253,35 @@ class ProductProduct(models.Model):
         moves_out_res_past = defaultdict(float)
         if dates_in_the_past:
             # Calculate the moves that were done before now to calculate back in time (as most questions will be recent ones)
+<<<<<<< 223002d3d537f47a40db66261ee7bf6d586d97e5
             domain_move_in_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_in_done
             domain_move_out_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_out_done
 
             for product, quantity in MoveLine._read_group(domain_move_in_done, ['product_id'], ['quantity_product_uom:sum']):
+||||||| 3d9994500c86cea7aac48cf4f46e79dce160af70
+            domain_move_in_done = [('state', '=', 'done'), ('move_id.date', '>', to_date)] + domain_move_in_done
+            domain_move_out_done = [('state', '=', 'done'), ('move_id.date', '>', to_date)] + domain_move_out_done
+            MoveLine = self.env['stock.move.line'].with_context(active_test=False)
+            moves_in_res_past = defaultdict(float)
+            for product, quantity in MoveLine._read_group(domain_move_in_done, ['product_id'], ['quantity_product_uom:sum'], having=[('quantity_product_uom:sum', '!=', 0)]):
+=======
+            domain_move_in_done = [('state', '=', 'done'), ('move_id.date', '>', to_date)] + domain_move_in_done
+            domain_move_out_done = [('state', '=', 'done'), ('move_id.date', '>', to_date)] + domain_move_out_done
+            MoveLine = self.env['stock.move.line'].with_context(active_test=False)
+            moves_in_res_past = defaultdict(float)
+            for product, quantity in MoveLine._read_group(domain_move_in_done, ['product_id'], ['quantity_product_uom:sum']):
+>>>>>>> 03015b187990fa1cf7c697c557666c1c5031f1fb
                 moves_in_res_past[product.id] += quantity
 
+<<<<<<< 223002d3d537f47a40db66261ee7bf6d586d97e5
             for product, quantity in MoveLine._read_group(domain_move_out_done, ['product_id'], ['quantity_product_uom:sum']):
+||||||| 3d9994500c86cea7aac48cf4f46e79dce160af70
+            moves_out_res_past = defaultdict(float)
+            for product, quantity in MoveLine._read_group(domain_move_out_done, ['product_id'], ['quantity_product_uom:sum'], having=[('quantity_product_uom:sum', '!=', 0)]):
+=======
+            moves_out_res_past = defaultdict(float)
+            for product, quantity in MoveLine._read_group(domain_move_out_done, ['product_id'], ['quantity_product_uom:sum']):
+>>>>>>> 03015b187990fa1cf7c697c557666c1c5031f1fb
                 moves_out_res_past[product.id] += quantity
 
         res = dict()
@@ -483,6 +532,38 @@ class ProductProduct(models.Model):
             return [('id', 'in', product_ids)]
         return self._search_product_quantity(operator, value, 'free_qty')
 
+<<<<<<< 223002d3d537f47a40db66261ee7bf6d586d97e5
+||||||| 3d9994500c86cea7aac48cf4f46e79dce160af70
+    def _search_product_quantity(self, operator, value, field):
+        op = PY_OPERATORS.get(operator)
+        if not op:
+            # Order the search on `id` to prevent the default order on the product name which slows
+            # down the search.
+            ids = self.with_context(prefetch_fields=False).search_fetch([], [field], order='id').filtered_domain([(field, operator, value)]).ids
+            return [('id', 'in', ids)]
+
+        if isinstance(value, Iterable) and not isinstance(value, str):
+            cmp_value = {float(v) for v in value}
+        else:
+            cmp_value = float(value)
+
+        products = self.with_context(prefetch_fields=False).search([])
+        quantities = products.with_context(search_all=True)._compute_quantities_dict(
+            self.env.context.get('lot_id'), self.env.context.get('owner_id'), self.env.context.get('package_id'),
+            self.env.context.get('from_date'), self.env.context.get('to_date'),
+        )
+        ids = [product_id for product_id, qties in quantities.items() if op(qties[field], cmp_value)]
+        return [('id', 'in', ids)]
+
+    # TODO: remove in master. No longer called (superseded by `_search_product_quantity`)
+=======
+    def _search_product_quantity(self, operator, value, field):
+        # Order the search on `id` to prevent the default order on the product name which slows
+        # down the search.
+        ids = self.with_context(prefetch_fields=False).search_fetch([], [field], order='id').filtered_domain([(field, operator, value)]).ids
+        return [('id', 'in', ids)]
+
+>>>>>>> 03015b187990fa1cf7c697c557666c1c5031f1fb
     def _search_qty_available_new(self, operator, value, lot_id=False, owner_id=False, package_id=False):
         return self._search_field_by_quants(operator, value, lot_id, owner_id, package_id)
 
