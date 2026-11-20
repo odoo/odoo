@@ -13,7 +13,7 @@ from unittest.mock import patch
 
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.sql_db import Cursor
 from odoo.tests import Form, HttpCase, users, tagged
 from odoo.tools import mute_logger
@@ -980,6 +980,32 @@ class TestMailingScheduleDateWizard(MassMailCommon):
 
 
 class TestMassMailingActions(MassMailCommon):
+
+    def test_cannot_edit_sending_mailing(self):
+        """Only mailings being sent refuse changes.
+
+        A user can keep a mailing form open while the queue cron sends it. Saving
+        that form updates the mailing while the cron is delivering it: the cron
+        then fails on a concurrent update, its last batch is rolled back although
+        its emails may already be sent, and the next run sends them again. The
+        cron commits the 'sending' state before delivering, so that such a save
+        is refused instead.
+
+        Other states stay editable: a queued mailing until the cron picks it, and
+        a sent one, e.g. to add it to the templates (favorite) or because some
+        flows keep editing sent mailings (marketing automation templates).
+        """
+        mailing = self.env['mailing.mailing'].create({'subject': 'A mailing'})
+        for state in ('draft', 'in_queue', 'done'):
+            with self.subTest(state=state):
+                mailing.state = state
+                mailing.write({'favorite': True, 'subject': f'Edited in {state}'})
+                self.assertEqual(mailing.subject, f'Edited in {state}')
+
+        mailing.state = 'sending'
+        with self.assertRaisesRegex(UserError, "You cannot edit a mailing while it is being sent."):
+            mailing.subject = 'Edited too late'
+
     def test_mailing_action_open(self):
         mass_mailings = self.env['mailing.mailing'].create([
             {'subject': 'First subject'},
