@@ -1,12 +1,41 @@
+/* ==== Animations */
+@keyframes configuratorFadeIn {
+    from {opacity: 0}
+    to {opacity: 1}
+}
+
+@keyframes theme_iframe_preview_scroll {
+    to {
+        transform:
+            translateY(calc(-1 * var(--o-configurator-iframe-scroll-distance, 0px)))
+            scale(var(--o-configurator-iframe-scale, 1));
+    }
+}
+
+@keyframes textPulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.08);
+        opacity: 0.65;
+    }
+}
+
+@keyframes o-configurator-showcase-float {
+    0% {transform: translateZ(0)}
+    100% { transform: translate(0, 0) translateZ(0);}
+    50% {
+        transform: translate(var(--o-configurator-showcase-float-x, 0px), calc(var(--o-configurator-showcase-float-y, 12px) * -1) ) translateZ(0);
+    }
+}
+
 .o_configurator_container {
     position: absolute;
     inset: 0;
-    background-color: if(
-        $o-webclient-color-scheme == dark,
-        $o-webclient-background-color,
-        #F4F4F4
-    );
-    $input-font-size: 40%;
+    background-color: #F4F4F4;
 
     /* Animated Background */
     .o_configurator_background {
@@ -24,52 +53,14 @@
     }
 
     .o_configurator_screen {
-        /* ==== Animations */
-        @keyframes configuratorFadeIn{
-            from {opacity: 0}
-            to {opacity: 1}
-        }
-
-        @keyframes theme_iframe_preview_scroll {
-            to {
-                transform:
-                    translateY(calc(-1 * var(--o-configurator-iframe-scroll-distance, 0px)))
-                    scale(var(--o-configurator-iframe-scale, 1));
-            }
-        }
-
-        @keyframes textPulse {
-            0%, 100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-
-            50% {
-                transform: scale(1.08);
-                opacity: 0.65;
-            }
-        }
-
-        @keyframes o-configurator-showcase-float {
-            0% {transform: translateZ(0)}
-            100% { transform: translate(0, 0) translateZ(0);}
-            50% {
-                transform: translate(var(--o-configurator-showcase-float-x, 0px), calc(var(--o-configurator-showcase-float-y, 12px) * -1) ) translateZ(0);
-            }
-        }
-
         /* ==== General Components */
-        %o_configurator_titles_weight {
+        .o_configurator_typing_text {
+            font-size: 28px;
             font-weight: 300;
 
             b {
                 font-weight: 500;
             }
-        }
-
-        .o_configurator_typing_text {
-            font-size: 28px;
-            @extend %o_configurator_titles_weight;
 
             @media screen and (min-width: 768px), print and (min-width: 188mm) {
                 font-size: 32px;
@@ -497,8 +488,8 @@
                 padding: 0.4rem 0.85rem;
                 font-size: 0.72rem;
                 font-weight: 600;
-                color: adjust-color-to-background($text-muted, $card-bg, mute-color($color-contrast-light), mute-color($color-contrast-dark)) !important;
-                background: rgba($card-bg, $o-card-body-bg-opacity);
+                color: var(--o-card-text-muted) !important;
+                background: rgb(from var(--o-bs-card-bg) r g b / var(--o-card-body-bg-opacity));
                 border-radius: 999px;
                 opacity: 0;
                 transform: translate3d(-50%, 12px, 0);
@@ -508,7 +499,7 @@
             .o_configurator_theme_preview_loader {
                 z-index: 1;
                 background: var(--o-bs-card-bg);
-                color: adjust-color-to-background($text-muted, $card-bg, mute-color($color-contrast-light), mute-color($color-contrast-dark));
+                color: var(--o-card-text-muted);
                 font-size: 1.5rem;
                 transition: opacity 0.2s ease;
             }
