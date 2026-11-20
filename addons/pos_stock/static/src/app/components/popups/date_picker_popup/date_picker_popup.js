@@ -12,6 +12,7 @@ export class DatePickerPopup extends Component {
     props = useProps({
         title: t.string().optional(_t("DatePicker")),
         defaultValue: t.instanceOf(DateTime).optional(),
+        pickupLater: t.boolean().optional(),
         confirmLabel: t.string().optional(_t("Confirm")),
         getPayload: t.function(),
         close: t.function(),
@@ -20,7 +21,10 @@ export class DatePickerPopup extends Component {
     setup() {
         super.setup();
         this.dialog = useService("dialog");
-        this.state = proxy({ shippingDate: this.props.defaultValue ?? DateTime.now() });
+        this.state = proxy({
+            shippingDate: this.props.defaultValue ?? DateTime.now(),
+            pickupLater: this.props.pickupLater,
+        });
         onMounted(() => {
             const input = document.querySelector(".shipping-date-selector input");
             if (input) {
@@ -43,7 +47,7 @@ export class DatePickerPopup extends Component {
         }
     }
     confirm() {
-        this.props.getPayload(this.state.shippingDate);
+        this.props.getPayload(this.state.shippingDate, this.state.pickupLater);
         this.props.close();
     }
 }

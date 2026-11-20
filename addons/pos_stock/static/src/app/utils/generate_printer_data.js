@@ -17,6 +17,7 @@ patch(GeneratePrinterData.prototype, {
             "shipping_date",
             "date"
         );
+        receiptData.extra_data.pickup_later = this.order.pickup_later;
         return receiptData;
     },
 });

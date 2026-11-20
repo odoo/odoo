@@ -10,6 +10,7 @@ patch(OrderPaymentValidation.prototype, {
         if (
             isOrderValid &&
             this.order.shipping_date &&
+            !this.order.pickup_later &&
             !(partner.name && partner.street && partner.city && partner.country_id)
         ) {
             this.pos.dialog.add(AlertDialog, {

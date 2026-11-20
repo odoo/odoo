@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, click, waitFor } from "@odoo/hoot-dom";
-import { contains } from "@web/../tests/web_test_helpers";
+import { contains, MockServer } from "@web/../tests/web_test_helpers";
 import { setupAndMountPosApp } from "@point_of_sale/../tests/unit/utils";
 import { definePosStockModels } from "@pos_stock/../tests/unit/data/generate_model_definitions";
 import * as PosUiUtils from "@point_of_sale/../tests/unit/ui_utils";
@@ -9,6 +9,8 @@ import * as SaleUiUtils from "@pos_sale/../tests/unit/ui_utils";
 const Utils = { ...PosUiUtils, ...SaleUiUtils };
 
 definePosStockModels();
+
+const { DateTime } = luxon;
 
 function lotNamesOf(order) {
     return order.lines
@@ -85,8 +87,8 @@ test("PosShipLaterNoDefault: settling a sale order does not activate ship later"
     await waitFor(".payment-screen");
 
     expect(store.getOrder().shipping_date).toBeEmpty();
-    expect(`.button:contains("Ship Later")`).toHaveCount(1);
-    expect(`.button.highlight:contains("Ship Later")`).toHaveCount(0);
+    expect(`.button:contains("Schedule for later")`).toHaveCount(1);
+    expect(`.button.highlight:contains("Schedule for later")`).toHaveCount(0);
 });
 
 test("PosSettleOrder4 / PosSettleOrderShipLater: ship later sets the shipping date of the order", async () => {
@@ -96,11 +98,21 @@ test("PosSettleOrder4 / PosSettleOrderShipLater: ship later sets the shipping da
     await Utils.clickPayButton();
     await waitFor(".payment-screen");
 
-    await contains(`.button:contains("Ship Later")`).click();
+    await contains(`.button:contains("Schedule for later")`).click();
     await waitFor(".modal");
     await click(`.modal .btn:contains("Confirm")`);
     await animationFrame();
 
     expect(store.getOrder().shipping_date).not.toBeEmpty();
-    expect(`.button.highlight:contains("Ship Later")`).toHaveCount(1);
+    expect(`.button.highlight:contains("Schedule for later")`).toHaveCount(1);
+});
+
+test("Settling a sale order defaults the shipping date to its initial picking date", async () => {
+    const store = await setupAndMountPosApp({ ship_later: true });
+    const pickingDate = DateTime.now().plus({ days: 3 }).toISODate();
+    MockServer.env["sale.order"].write([1], { pos_initial_picking_date: pickingDate });
+
+    await Utils.settleSaleOrder("S00001");
+
+    expect(store.getOrder().shipping_date.toISODate()).toBe(pickingDate);
 });

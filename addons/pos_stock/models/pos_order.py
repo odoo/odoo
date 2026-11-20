@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 
 
 class PosOrder(models.Model):
@@ -10,6 +11,7 @@ class PosOrder(models.Model):
     picking_type_id = fields.Many2one('stock.picking.type', related='session_id.config_id.picking_type_id', string="Operation Type", readonly=False)
     stock_reference_ids = fields.Many2many('stock.reference', 'stock_reference_pos_order_rel', 'pos_order_id', 'reference_id', string="Reference")
     shipping_date = fields.Date('Shipping Date')
+    pickup_later = fields.Boolean('Pick Up Later', copy=False, help="The customer collects the order in store on the shipping date.")
 
     @api.depends('picking_ids', 'picking_ids.state')
     def _compute_picking_count(self):
@@ -61,10 +63,41 @@ class PosOrder(models.Model):
             else:
                 return product._get_fifo_value(quantity) / quantity if quantity else 0
 
+    def _cron_process_pos_orders(self):
+        super()._cron_process_pos_orders()
+        self._validate_due_pickup_pickings()
+
+    @api.model
+    def _validate_due_pickup_pickings(self):
+        """The goods of a pickup order leave the stock on its pickup date."""
+        warning_type = self.env.ref('mail.mail_activity_data_warning')
+        pickings = self.env['stock.picking'].search([
+            ('pos_order_id.pickup_later', '=', True),
+            ('scheduled_date', '<=', fields.Datetime.now()),
+            ('state', 'not in', ('done', 'cancel')),
+            # already failed: left to the warehouse
+            ('activity_ids', 'not any', [('activity_type_id', '=', warning_type.id)]),
+        ])
+        for picking in pickings:
+            try:
+                with self.env.cr.savepoint():
+                    for move in picking.move_ids:
+                        if move.state not in ('done', 'cancel') and move.uom_id.compare(move.quantity, move.product_uom_qty) < 0:
+                            move._set_quantity_done(move.product_uom_qty)
+                    picking.move_ids.picked = True
+                    picking._action_done()
+            except UserError as e:  # e.g. no lot entered in the POS
+                picking.activity_schedule(
+                    'mail.mail_activity_data_warning', note=str(e), activity_user_id_fname='user_id',
+                )
+
     def process_saved_payments(self, order, existing_order):
         # update pickings
         if order.get('shipping_date'):
-            existing_order.write({'shipping_date': order.get('shipping_date')})
+            existing_order.write({
+                'shipping_date': order.get('shipping_date'),
+                'pickup_later': order.get('pickup_later', False),
+            })
             existing_order.picking_ids.filtered(lambda p: p.state not in ['done', 'cancel']).write({'scheduled_date': order.get('shipping_date')})
         super().process_saved_payments(order, existing_order)
 

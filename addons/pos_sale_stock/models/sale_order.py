@@ -1,14 +1,22 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
+from odoo import api, fields, models
 
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
+    pos_initial_picking_date = fields.Date(compute='_compute_pos_initial_picking_date')
+
+    @api.depends('picking_ids.scheduled_date')
+    def _compute_pos_initial_picking_date(self):
+        for order in self:
+            first_date = min(order.picking_ids.mapped('scheduled_date'), default=False)
+            order.pos_initial_picking_date = first_date and fields.Date.context_today(order, first_date)
+
     @api.model
     def _load_pos_data_fields(self, config):
-        return super()._load_pos_data_fields(config) + ['picking_ids']
+        return super()._load_pos_data_fields(config) + ['pos_initial_picking_date']
 
 
 class SaleOrderLine(models.Model):
