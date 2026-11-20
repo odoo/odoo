@@ -29,7 +29,7 @@
                         t-on-click.stop="this.toggleState"
                 >
                     <i
-                        t-attf-class="{{ this.stateClassIcon(this.currentValue) }} {{ this.statusColor(this.currentValue) }} {{ ['1_done', '1_canceled'].includes(this.currentValue) and this.isView(['activity', 'card']) ? 'opacity-50' : '' }}"
+                        t-attf-class="{{ this.stateClassIcon(this.currentValue) }} {{ this.statusColor(this.currentValue) }} {{ this.isClosedState(this.currentValue) and this.isView(['activity', 'card']) ? 'opacity-50' : '' }}"
                         t-att-data-icon="this.stateIcon(this.currentValue)"
                     ></i>
                 </button>
@@ -66,7 +66,7 @@
                 ></i>
                 <i
                     t-else=""
-                    t-attf-class="{{ this.stateClassIcon(this.currentValue) }} {{ this.statusColor(this.currentValue) }} {{ ['1_done', '1_canceled'].includes(this.currentValue) and this.isView(['activity', 'card']) ? 'opacity-50' : '' }}"
+                    t-attf-class="{{ this.stateClassIcon(this.currentValue) }} {{ this.statusColor(this.currentValue) }} {{ this.isClosedState(this.currentValue) and this.isView(['activity', 'card']) ? 'opacity-50' : '' }}"
                     t-att-data-icon="this.stateIcon(this.currentValue)"
                 ></i>
             </div>
@@ -77,7 +77,7 @@
                         Waiting
                     </span>
                 </t>
-                <t t-elif="this.currentValue != '1_done' and this.currentValue != '1_canceled'">
+                <t t-elif="!this.isClosedState(this.currentValue)">
                     <span t-attf-class="o_status_label" t-out="this.label"/>
                 </t>
                 <t t-else="">

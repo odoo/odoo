@@ -7,6 +7,7 @@ import { _t } from "@web/core/l10n/translation";
 import { Field, getPropertyFieldInfo } from "@web/views/fields/field";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { SubtaskCreate } from "./subtask_kanban_create/subtask_kanban_create";
+import { isClosedState } from "../../utils/project_utils";
 
 export class SubtaskKanbanList extends Component {
     static components = {
@@ -23,6 +24,7 @@ export class SubtaskKanbanList extends Component {
         this.actionService = useService("action");
         this.orm = useService("orm");
         this.notification = useService("notification");
+        this.isClosedState = isClosedState;
         this.subtaskCreate = proxy({
             open: false,
             name: "",
@@ -44,7 +46,7 @@ export class SubtaskKanbanList extends Component {
             this.state.prevSubtaskCount = currentCount;
             this.state.isLoad = false;
             this.state.subtasks = this.list.records
-                .filter((subtask) => !["1_done", "1_canceled"].includes(subtask.data.state));
+                .filter((subtask) => !this.isClosedState(subtask.data.state));
         }
         return this.state.subtasks;
     }

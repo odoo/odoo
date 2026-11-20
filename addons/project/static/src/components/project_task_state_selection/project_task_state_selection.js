@@ -9,6 +9,7 @@ import {
     StateSelectionField,
     stateSelectionField,
 } from "@web/views/fields/state_selection/state_selection_field";
+import { isClosedState } from "../../utils/project_utils";
 
 export class ProjectTaskStateSelection extends StateSelectionField {
     static template = "project.ProjectTaskStateSelection";
@@ -23,6 +24,7 @@ export class ProjectTaskStateSelection extends StateSelectionField {
 
     setup() {
         this.uiService = useService("ui");
+        this.isClosedState = isClosedState;
         this.state = proxy({
             isStateButtonHighlighted: false,
         });
