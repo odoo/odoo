@@ -64,7 +64,73 @@ def patch_init() -> None:
 
     patch_module('_cpython')
 
+<<<<<<< 5d4238315bf8dd8fc5de645cf54527f395b81327
 
 def patch_module(name: str) -> None:
     module = importlib.import_module(f'.{name}', __name__)
     module.patch_module()
+||||||| 06fc4e71f1334a7fb876260792c5e47bdf37bf66
+    from .codecs import patch_codecs
+    patch_codecs()
+    from .email import patch_email
+    patch_email()
+    from .mimetypes import patch_mimetypes
+    patch_mimetypes()
+    from .pytz import patch_pytz
+    patch_pytz()
+    from .literal_eval import patch_literal_eval
+    patch_literal_eval()
+    from .lxml import patch_lxml
+    patch_lxml()
+    from .num2words import patch_num2words
+    patch_num2words()
+    from .stdnum import patch_stdnum
+    patch_stdnum()
+    from .urllib3 import patch_urllib3
+    patch_urllib3()
+    from .werkzeug_urls import patch_werkzeug
+    patch_werkzeug()
+    from .zeep import patch_zeep
+    patch_zeep()
+    from .markupsafe import patch_markup
+    patch_markup()
+    from .requests import patch_requests
+    patch_requests()
+    from .pyopenssl import patch_pyopenssl
+    patch_pyopenssl()
+    from ._cpython import patch_cpython
+    patch_cpython()
+=======
+    from .codecs import patch_codecs
+    patch_codecs()
+    from .email import patch_email
+    patch_email()
+    from .mimetypes import patch_mimetypes
+    patch_mimetypes()
+    from .pytz import patch_pytz
+    patch_pytz()
+    from .babel import patch_module as patch_babel
+    patch_babel()
+    from .literal_eval import patch_literal_eval
+    patch_literal_eval()
+    from .lxml import patch_lxml
+    patch_lxml()
+    from .num2words import patch_num2words
+    patch_num2words()
+    from .stdnum import patch_stdnum
+    patch_stdnum()
+    from .urllib3 import patch_urllib3
+    patch_urllib3()
+    from .werkzeug_urls import patch_werkzeug
+    patch_werkzeug()
+    from .zeep import patch_zeep
+    patch_zeep()
+    from .markupsafe import patch_markup
+    patch_markup()
+    from .requests import patch_requests
+    patch_requests()
+    from .pyopenssl import patch_pyopenssl
+    patch_pyopenssl()
+    from ._cpython import patch_cpython
+    patch_cpython()
+>>>>>>> 37b6f6f1bdbc6adf4454f2de50696d51140cd071
