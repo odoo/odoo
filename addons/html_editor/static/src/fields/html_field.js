@@ -22,17 +22,21 @@ import { Wysiwyg } from "@html_editor/wysiwyg";
 import {
     Component,
     markup,
+    Plugin,
     proxy,
     signal,
     t,
     useApp,
     useEffect,
+    usePlugin,
     useProps,
     useScope,
 } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
+import { ORM } from "@web/core/orm_plugin";
 import { registry } from "@web/core/registry";
+import { services } from "@web/core/services";
 import { Mutex } from "@web/core/utils/concurrency";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { useRecordObserver } from "@web/model/relational_model/utils";
@@ -101,7 +105,7 @@ export class HtmlField extends Component {
         );
         this.busService = this.env.services.bus_service;
         this.ormService = useService("orm");
-        this.pendingAttachmentsService = useService("pending_attachment_service");
+        this.pendingAttachmentsService = usePlugin(PendingAttachmentPlugin);
 
         this.isDirty = false;
         this.lastChangeId = 0;
@@ -519,42 +523,38 @@ export function setHtmlFieldMetadata(content, metadata) {
     return contentDocument.body.innerHTML;
 }
 
-const pendingAttachmentsService = {
-    dependencies: ["orm"],
-    start(env, { orm }) {
-        const pendingAttachmentIds = {};
-        async function unlinkPendingAttachments(recordId) {
-            if (pendingAttachmentIds[recordId]?.length) {
-                orm.unlink("ir.attachment", [...new Set(pendingAttachmentIds[recordId])]);
-                clearPendingAttachments(recordId);
-            }
-        }
-        function addPendingAttachments(recordId, ids) {
-            if (!pendingAttachmentIds[recordId]) {
-                pendingAttachmentIds[recordId] = [];
-            }
-            pendingAttachmentIds[recordId].push(...ids);
-        }
-        function clearPendingAttachments(recordId) {
-            delete pendingAttachmentIds[recordId];
-        }
-        function addAttachmentsIdsToContext(record) {
-            if (pendingAttachmentIds[record?.resId]) {
-                record.context["pending_attachment_ids"] = pendingAttachmentIds[record?.resId];
-            }
-        }
-        function clearAttachmentsIdsFromContext(record) {
-            delete record.context["pending_attachment_ids"];
-        }
-        return {
-            unlinkPendingAttachments,
-            addPendingAttachments,
-            clearPendingAttachments,
-            pendingAttachmentIds,
-            addAttachmentsIdsToContext,
-            clearAttachmentsIdsFromContext,
-        };
-    },
-};
+export class PendingAttachmentPlugin extends Plugin {
+    #orm = usePlugin(ORM);
 
-registry.category("services").add("pending_attachment_service", pendingAttachmentsService);
+    pendingAttachmentIds = {};
+
+    async unlinkPendingAttachments(recordId) {
+        if (this.pendingAttachmentIds[recordId]?.length) {
+            this.#orm.unlink("ir.attachment", [...new Set(this.pendingAttachmentIds[recordId])]);
+            this.clearPendingAttachments(recordId);
+        }
+    }
+
+    addPendingAttachments(recordId, ids) {
+        if (!this.pendingAttachmentIds[recordId]) {
+            this.pendingAttachmentIds[recordId] = [];
+        }
+        this.pendingAttachmentIds[recordId].push(...ids);
+    }
+
+    clearPendingAttachments(recordId) {
+        delete this.pendingAttachmentIds[recordId];
+    }
+
+    addAttachmentsIdsToContext(record) {
+        if (this.pendingAttachmentIds[record.resId]) {
+            record.context["pending_attachment_ids"] = this.pendingAttachmentIds[record.resId];
+        }
+    }
+
+    clearAttachmentsIdsFromContext(record) {
+        delete record.context["pending_attachment_ids"];
+    }
+}
+
+services.add(PendingAttachmentPlugin);
