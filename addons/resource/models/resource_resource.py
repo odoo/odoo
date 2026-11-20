@@ -374,7 +374,7 @@ class ResourceResource(models.Model):
                 duration_per_day[day] += (interval_end - interval_start).total_seconds() / 3600
 
             full_time_required_hours = resource.calendar_id.full_time_required_hours if resource.calendar_id else resource.company_id.resource_calendar_id.hours_per_week
-            hours_per_day = resource.calendar_id.hours_per_day if resource.calendar_id else resource.hours_per_day
+            hours_per_day = resource.calendar_id.hours_per_day if resource.calendar_id else (resource.hours_per_day or resource.hours_per_week / 7)
 
             start_day, end_day = period_days_per_resource[resource.id]
             for day, hours in duration_per_day.items():
@@ -415,7 +415,7 @@ class ResourceResource(models.Model):
     def _get_flexible_resource_work_hours(self, intervals, flexible_resources_hours_per_day, flexible_resources_hours_per_week, work_hours_per_day=None):
         assert self._is_flexible()
 
-        if self._is_fully_flexible() or not self.hours_per_day:
+        if self._is_fully_flexible():
             return round(sum_intervals(intervals), 2)
 
         # start and end for each Interval have the same day thanks to schedule_intervals_per_resource_id format for flexible employees
