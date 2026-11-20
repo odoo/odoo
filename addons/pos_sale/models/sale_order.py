@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _, Command
+from odoo.exceptions import UserError
+from odoo.fields import Domain
 from odoo.tools import format_date
 
 
@@ -11,6 +13,54 @@ class SaleOrder(models.Model):
 
     pos_order_line_ids = fields.One2many('pos.order.line', 'sale_order_origin_id', string="Order lines Transfered to Point of Sale", readonly=True, groups="point_of_sale.group_pos_user")
     pos_order_count = fields.Integer(string='Pos Order Count', compute='_count_pos_order', readonly=True, groups="point_of_sale.group_pos_user")
+    pos_session_options = fields.Json(compute='_compute_pos_session_options', groups="point_of_sale.group_pos_user")
+
+    @api.model
+    def _get_pos_payable_domain(self, config):
+        return (
+            Domain('state', '!=', 'cancel')
+            & Domain('invoice_status', '!=', 'invoiced')
+            & Domain('currency_id', '=', config.currency_id.id)
+            & (
+                Domain('amount_unpaid', '>', 0)
+                | Domain('amount_total', '<=', 0)
+                | Domain('order_line.is_downpayment', '=', True)
+            )
+        )
+
+    @api.depends('state', 'invoice_status', 'amount_unpaid', 'amount_total', 'order_line.is_downpayment', 'company_id', 'currency_id')
+    def _compute_pos_session_options(self):
+        sessions = self.env['pos.session'].search([
+            ('state', '=', 'opened'),
+            ('company_id', 'in', self.company_id.ids),
+        ])
+        payable_orders_by_session = {
+            session: self.filtered_domain(self._get_pos_payable_domain(session.config_id))
+            for session in sessions
+        }
+        for order in self:
+            order.pos_session_options = [
+                {
+                    'id': session.id,
+                    'name': f"{session.config_id.name} ({session.name})",
+                    'config_id': session.config_id.id,
+                }
+                for session, payable_orders in payable_orders_by_session.items()
+                if session.company_id == order.company_id and order in payable_orders
+            ]
+
+    def action_pay_in_pos(self, session_id):
+        self.ensure_one()
+        session = self.env['pos.session'].search([
+            ('id', '=', session_id),
+            ('state', '=', 'opened'),
+            ('company_id', '=', self.company_id.id),
+        ])
+        if not session or not self.filtered_domain(self._get_pos_payable_domain(session.config_id)):
+            raise UserError(self.env._("This sale order can no longer be paid in this session."))
+        action = session.config_id._action_to_open_ui()
+        action['url'] += f'&pay_sale_order={self.id}'
+        return action
 
     @api.model
     def _load_pos_data_domain(self, data):
