@@ -11,4 +11,10 @@ export class IconPlugin extends EditorIconPlugin {
             ...this.resources.properties,
         ],
     };
+
+    isReplaceableOnDblClick() {
+        // Double-clicking a media, icons included, opens the media dialog,
+        // see the media_website plugin.
+        return false;
+    }
 }
