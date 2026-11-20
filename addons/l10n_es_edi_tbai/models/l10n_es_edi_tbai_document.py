@@ -778,7 +778,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
                 return vals['sequence'], vals['number']
 
         sequence = "TEST" if self.company_id.l10n_es_tbai_test_env else ""
-        return sequence, self.name
+        return sequence, self.name[-20:]
 
     @api.model
     def _get_tbai_seq_from_name(self, name):
