@@ -2,7 +2,6 @@ import { useRootComponents } from "@html_editor/others/embedded_component_utils"
 import { readonlySyntaxHighlightingEmbedding } from "@html_editor/others/embedded_components/core/syntax_highlighting/readonly_syntax_highlighting";
 
 import { AttachmentList } from "@mail/core/common/attachment_list";
-import { Composer } from "@mail/core/common/composer";
 import { ImStatus } from "@mail/core/common/im_status";
 import { MessageInReply, onParentMessageClickType } from "@mail/core/common/message_in_reply";
 import { MessageLinkPreviewList } from "@mail/core/common/message_link_preview_list";
@@ -77,7 +76,6 @@ export class Message extends Component {
     static components = {
         ActionList,
         AttachmentList,
-        Composer,
         Dropdown,
         ImStatus,
         MessageContextMenu,

@@ -1,4 +1,3 @@
-import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread";
 import { MessageHighlightPlugin } from "@mail/core/common/message_highlight_plugin";
 import { propComputed } from "@mail/utils/common/hooks";
@@ -13,7 +12,7 @@ import { useThrottleForAnimation } from "@web/core/utils/timing";
 
 export class Chatter extends Component {
     static template = "mail.Chatter";
-    static components = { Thread, Composer };
+    static components = { Thread };
 
     setup() {
         this.store = useService("mail.store");
