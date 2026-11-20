@@ -734,6 +734,11 @@ class PosSession(models.Model):
         third = (self.name if self.name != '/' else '')
         self.name = first + second + third
         self._set_opening_control_data(cashbox_value, notes)
+        self.config_id._notify_synchronisation(
+            self.id,
+            self.env.context.get('device_identifier', 0),
+            {'pos.session': self.ids},
+        )
         return {
             'pos.session': self._load_pos_data_read(self, self.config_id)
         }
