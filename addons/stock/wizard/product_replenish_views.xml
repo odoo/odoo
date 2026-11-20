@@ -5,6 +5,11 @@
         <field name="model">product.replenish</field>
         <field name="arch" type="xml">
             <form string="Replenish wizard">
+                <div class="alert alert-danger" role="alert" invisible="has_replenishment_rule">
+                    No rule has been found to replenish "<field name="product_id" readonly="1" options="{'no_open':1}"/>
+                    in "<field name="location_id" readonly="1" options="{'no_open':1}"/>".
+                    Verify the routes configuration on the product.
+                </div>
                 <p>
                     The forecasted quantity of
                     <field name="product_id"
@@ -38,7 +43,8 @@
                         string="Confirm"
                         type="object"
                         data-hotkey="q"
-                        class="btn-primary"/>
+                        class="btn-primary"
+                        invisible="not has_replenishment_rule"/>
                     <button class="btn-secondary"
                         special="cancel"
                         data-hotkey="x"/>

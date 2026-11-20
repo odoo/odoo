@@ -25,8 +25,10 @@ class ProductReplenish(models.TransientModel):
         'stock.warehouse', string='Warehouse', required=True,
         check_company=True,
     )
+    location_id = fields.Many2one('stock.location', compute='_compute_location_id')
     company_id = fields.Many2one('res.company')
     forecasted_quantity = fields.Float(string="Forecasted Quantity", compute="_compute_forecasted_quantity")
+    has_replenishment_rule = fields.Boolean(compute='_compute_has_replenishment_rule')
 
     @api.onchange('product_id', 'warehouse_id')
     def _onchange_product_id(self):
@@ -47,6 +49,20 @@ class ProductReplenish(models.TransientModel):
     def _compute_date_planned(self):
         for rec in self:
             rec.date_planned = rec._get_date_planned(rec.route_id)
+
+    @api.depends('warehouse_id')
+    def _compute_location_id(self):
+        for rec in self:
+            rec.location_id = rec.warehouse_id.lot_stock_id
+
+    @api.depends('product_id', 'warehouse_id', 'route_id')
+    def _compute_has_replenishment_rule(self):
+        for rec in self:
+            rules = rec.product_id._get_rules_from_location(
+                rec.warehouse_id.lot_stock_id,
+                route_ids=rec.route_id,
+            )
+            rec.has_replenishment_rule = rules
 
     @api.model
     def default_get(self, fields):
