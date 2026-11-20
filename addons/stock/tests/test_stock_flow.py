@@ -2875,6 +2875,18 @@ class TestStockFlowPostInstall(TestStockCommon):
         picking.picking_type_id = picking_type_1
         self.assertEqual(picking.name, "PT1/00002")
 
+    def test_create_picking_type_as_stock_manager(self):
+        """Check that a stock manager without settings rights can create an operation type and change its prefix."""
+        picking_type = self.env['stock.picking.type'].with_user(self.user_stock_manager).create({
+            'name': 'Custom Picking Type',
+            'code': 'internal',
+            'sequence_code': 'CPT/',
+            'warehouse_id': self.warehouse_1.id,
+        })
+        self.assertEqual(picking_type.sequence_id.prefix, 'CPT/')
+        picking_type.sequence_code = 'CUSTP/'
+        self.assertEqual(picking_type.sequence_id.prefix, 'CUSTP/')
+
     def test_name_create_location(self):
         """
         e.g., from .csv/.xlsx import:
