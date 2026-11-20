@@ -9,11 +9,18 @@ import logging
 import odoo
 import werkzeug
 
-from odoo import http
+from odoo import _, http
+from odoo.exceptions import UserError
 from odoo.http import request
 from werkzeug.exceptions import NotFound
 
 _logger = logging.getLogger(__name__)
+
+PLUGIN_REDIRECT_URLS = {
+    'https://download.odoo.com/plugins/outlook/taskpane.html': 'Outlook',
+    'https://download.odoo.com/plugins/v15/outlook/taskpane.html': 'Outlook',
+    'https://script.google.com/macros/d/1wAzxJBkBYbIs_P2K76RpoBGovgjNNfSoRASf7660wgkxwYa89WZmh2gS/usercallback': 'Gmail',
+}
 
 
 class Authenticate(http.Controller):
@@ -27,6 +34,7 @@ class Authenticate(http.Controller):
          old route name "/mail_client_extension/auth is deprecated as of saas-14.3,it is not needed for newer
          versions of the mail plugin but necessary for supporting older versions
          """
+        values['friendlyname'] = self._check_redirect(values.get('redirect'))
         return request.render('mail_plugin.app_auth', values)
 
     @http.route(['/mail_client_extension/auth/confirm', '/mail_plugin/auth/confirm'], type='http', auth="user", methods=['POST'])
@@ -40,10 +48,11 @@ class Authenticate(http.Controller):
         old route name "/mail_client_extension/auth/confirm is deprecated as of saas-14.3,it is not needed for newer
         versions of the mail plugin but necessary for supporting older versions
         """
+        app_name = self._check_redirect(redirect)
         parsed_redirect = werkzeug.urls.url_parse(redirect)
         params = parsed_redirect.decode_query()
         if do:
-            name = friendlyname if not info else f'{friendlyname}: {info}'
+            name = app_name if not info else f'{app_name}: {info}'
             auth_code = self._generate_auth_code(scope, name)
             # params is a MultiDict which does not support .update() with kwargs
             # the state attribute is needed for the gmail connector
@@ -79,6 +88,17 @@ class Authenticate(http.Controller):
         scope = 'odoo.plugin.' + auth_message.get('scope', '')
         api_key = request.env['res.users.apikeys']._generate(scope, auth_message['name'])
         return {'access_token': api_key}
+
+    def _check_redirect(self, redirect):
+        custom_urls = request.env['ir.config_parameter'].sudo().get_param('mail_plugin.auth_redirect_urls') or ''
+        if redirect in PLUGIN_REDIRECT_URLS:
+            return PLUGIN_REDIRECT_URLS[redirect]
+        if redirect in [url.strip() for url in custom_urls.splitlines() if url.strip()]:
+            return redirect
+        _logger.info(
+            "Mail plugin authorization refused: %r is not a registered plugin page"
+            " (see the system parameter mail_plugin.auth_redirect_urls)", redirect)
+        raise UserError(_("This mail plugin isn't allowed to connect to this database. Ask your administrator to allow it."))
 
     def _get_auth_code_data(self, auth_code):
         data, auth_code_signature = auth_code.split('.')
