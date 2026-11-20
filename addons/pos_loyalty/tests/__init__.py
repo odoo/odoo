@@ -10,3 +10,4 @@ from . import test_product_loading
 from . import test_order_receipt
 from . import test_gift_card_communication
 from . import test_loyalty_mirror
+from . import test_load_data
