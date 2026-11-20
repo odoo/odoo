@@ -24,6 +24,7 @@ This module adds support for Georgian withholding tax, including:
         'views/account_payment_views.xml',
         'views/account_tax_views.xml',
         'views/l10n_ge_wht_category_views.xml',
+        'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
         'wizards/account_payment_register_views.xml',
     ],

@@ -15,3 +15,7 @@ class AccountChartTemplate(models.AbstractModel):
         tax_data = self._parse_csv('ge', 'account.tax', module='l10n_ge_withholding')
         self._deref_account_tags('ge', tax_data)
         return tax_data
+
+    @template('ge', 'res.company')
+    def _get_ge_withholding_res_company(self):
+        return {self.env.company.id: {'l10n_ge_withholding_gross_account_id': 'ge_account_740900'}}

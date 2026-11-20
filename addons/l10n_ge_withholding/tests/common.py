@@ -13,7 +13,8 @@ class TestL10nGeWithholdingCommon(AccountTestInvoicingCommon):
         chart_template = cls.env['account.chart.template'].with_company(company)
         cls.tax_services = chart_template.ref('ge_tax_wh_10_s')
         cls.tax_dividends = chart_template.ref('ge_tax_wh_5_d')
-        (cls.tax_services + cls.tax_dividends).withholding_sequence_id = withholding_sequence
+        cls.tax_interest = chart_template.ref('ge_tax_wh_5_i')
+        (cls.tax_services + cls.tax_dividends + cls.tax_interest).withholding_sequence_id = withholding_sequence
 
     def _register_payment(self, bills, **vals):
         wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=bills.ids).create(vals)

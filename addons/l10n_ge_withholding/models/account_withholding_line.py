@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 
 
 class AccountWithholdingLine(models.AbstractModel):
@@ -29,6 +30,14 @@ class AccountWithholdingLine(models.AbstractModel):
             else:
                 line.l10n_ge_tax_id_domain = []
 
+    @api.depends('tax_id.l10n_ge_is_gross')
+    def _compute_original_amounts(self):
+        super()._compute_original_amounts()
+        # A base typed by hand is the gross base, as on the lines coming from a bill: don't gross it up again.
+        for line in self.filtered(lambda line: not line.source_currency_id and line.tax_id.l10n_ge_is_gross):
+            line_curr = line.comodel_currency_id or line.comodel_company_currency_id
+            line.original_tax_amount = line_curr.round(line.original_base_amount * abs(line.tax_id.amount) / 100)
+
     def _l10n_ge_get_treaty_exempt_amounts(self):
         """ Return the (tax line grouping key, treaty exempt amount) of each line, the amount in company currency. """
         AccountTax = self.env['account.tax']
@@ -48,3 +57,23 @@ class AccountWithholdingLine(models.AbstractModel):
                     grouping_key = {field: value for field, value in tax_rep_data[0]['grouping_key'].items() if field not in ('partner_id', 'tax_tag_ids') and not field.startswith('__')}
                     treaty_amounts.append((grouping_key, amount))
         return treaty_amounts
+
+    def _prepare_withholding_amls_create_values(self):
+        aml_create_values_list = super()._prepare_withholding_amls_create_values()
+        company = self.company_id
+        gross_cost_values_list = []
+        for vals in aml_create_values_list:
+            tax = self.env['account.tax.repartition.line'].browse(vals.get('tax_repartition_line_id')).tax_id
+            if tax.l10n_ge_is_gross:
+                # The company bears the gross withholding: its cost balances the withheld tax, so the vendor is paid in full.
+                if not company.l10n_ge_withholding_gross_account_id:
+                    raise UserError(self.env._("Set the Gross Withholding Cost account in the Invoicing settings to pay gross withholding taxes."))
+                gross_cost_values_list.append({
+                    'name': self.env._("WH Gross Cost: %(name)s", name=tax.name),
+                    'account_id': company.l10n_ge_withholding_gross_account_id.id,
+                    'partner_id': vals['partner_id'],
+                    'currency_id': vals['currency_id'],
+                    'amount_currency': -vals['amount_currency'],
+                    'balance': -vals['balance'],
+                })
+        return aml_create_values_list + gross_cost_values_list

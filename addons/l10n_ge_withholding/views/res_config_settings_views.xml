@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_form_inherit_l10n_ge_withholding" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.l10n_ge_withholding</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="l10n_account_withholding_tax.res_config_settings_form"/>
+        <field name="arch" type="xml">
+            <setting id="withholding" position="inside">
+                <div class="content-group" invisible="country_code != 'GE'">
+                    <div class="row mt8">
+                        <label for="l10n_ge_withholding_gross_account_id" class="col-lg-5 o_light_label"/>
+                        <field name="l10n_ge_withholding_gross_account_id"/>
+                    </div>
+                </div>
+            </setting>
+        </field>
+    </record>
+</odoo>

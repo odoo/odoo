@@ -9,6 +9,9 @@
                 <field name="l10n_ge_wht_category_ids" widget="many2many_tags"
                        invisible="country_code != 'GE' or not is_withholding_tax"
                        options="{'no_create': True}"/>
+                <field name="l10n_ge_is_gross" widget="boolean_toggle"
+                       invisible="country_code != 'GE' or not is_withholding_tax or type_tax_use != 'purchase' or amount_type != 'percent'"
+                       readonly="l10n_ge_is_gross_locked"/>
             </field>
         </field>
     </record>

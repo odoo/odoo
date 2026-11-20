@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class AccountMoveLine(models.Model):
@@ -28,3 +29,10 @@ class AccountMoveLine(models.Model):
                 treaty_amounts_per_payment[payment] = payment.withholding_line_ids._l10n_ge_get_treaty_exempt_amounts()
             line_grouping_key = AccountTax._prepare_tax_line_repartition_grouping_key(AccountTax._prepare_tax_line_for_taxes_computation(line))
             line.l10n_ge_treaty_exempt_amount = sign * sum(amount for grouping_key, amount in treaty_amounts_per_payment[payment] if all(line_grouping_key.get(field) == value for field, value in grouping_key.items()))
+
+    @api.constrains('tax_ids')
+    def _check_l10n_ge_gross_withholding_tax_alone(self):
+        for line in self:
+            withholding_taxes = line.tax_ids.filtered('is_withholding_tax')
+            if len(withholding_taxes) > 1 and any(withholding_taxes.mapped('l10n_ge_is_gross')):
+                raise ValidationError(self.env._("A gross withholding tax cannot be combined with another withholding tax on the same line."))
