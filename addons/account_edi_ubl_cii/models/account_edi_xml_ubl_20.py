@@ -1146,7 +1146,8 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         bank_details = [bank_detail_node.text for bank_detail_node in bank_detail_nodes if bank_detail_node.text]
 
         partner_vals = self._import_retrieve_partner_vals(tree, role)
-        if bank_details:
+        if bank_details and invoice.move_type in ('out_refund', 'in_invoice'):
+            # payee is the partner being imported
             partner_vals['bank_details'] = bank_details
         partner, partner_logs = self._import_partner(invoice.company_id, **partner_vals)
         # Need to set partner before to compute bank and lines properly
