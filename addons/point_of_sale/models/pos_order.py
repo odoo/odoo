@@ -1117,7 +1117,7 @@ class PosOrder(models.Model):
 
         return aml_vals_list_per_nature
 
-    def _create_misc_reversal_move(self, payment_moves):
+    def _create_misc_reversal_move(self, payment_moves, invoice=None):
         """ Create a misc move to reverse POS orders and "remove" it from the POS closing entry.
         This is done by taking data from the orders and using it to somewhat replicate the resulting entry in orders to
         reverse partially the movements done in the POS closing entry.
@@ -1164,11 +1164,23 @@ class PosOrder(models.Model):
 
         lines_by_account = {}
         for line in candidate_lines:
-            if line.account_id in accounts and not line.reconciled:
-                lines_by_account.setdefault(line.account_id, self.env['account.move.line'])
-                lines_by_account[line.account_id] |= line
+            if line.account_id not in accounts:
+                continue
+            if line.reconciled:
+                counterpart = line.matched_debit_ids.debit_move_id | line.matched_credit_ids.credit_move_id
+                line.remove_move_reconcile()
+                line |= counterpart
+            lines_by_account.setdefault(line.account_id, self.env['account.move.line'])
+            lines_by_account[line.account_id] |= line
+
+        if invoice:
+            for account_id, lines in lines_by_account.items():
+                lines_by_account[account_id] |= invoice.line_ids.filtered(
+                    lambda l: l.account_id == account_id and not l.reconciled
+                )
+
         for lines in lines_by_account.values():
-            lines.reconcile()
+            lines.filtered(lambda l: not l.reconciled).reconcile()
 
     def action_pos_order_invoice(self):
         self.ensure_one()
@@ -1221,7 +1233,7 @@ class PosOrder(models.Model):
 
         # reverse payment moves from closed sessions
         for order, payment_moves in payment_moves_from_closed_sessions.items():
-            order._create_misc_reversal_move(payment_moves)
+            order._create_misc_reversal_move(payment_moves, invoice)
 
         if self.env.context.get('generate_pdf', True):
             invoice.with_context(skip_invoice_sync=True)._generate_and_send()
