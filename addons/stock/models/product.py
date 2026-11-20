@@ -507,7 +507,7 @@ class ProductProduct(models.Model):
             self.env.context.get('lot_id'), self.env.context.get('owner_id'), self.env.context.get('package_id'),
             self.env.context.get('from_date'), self.env.context.get('to_date'),
         )
-        ids = [product_id for product_id, qties in quantities.items() if op(qties[field], cmp_value)]
+        ids = [product_id for product_id, qties in quantities.items() if op(qties.get(field, 0), cmp_value)]
         return [('id', 'in', ids)]
 
     # TODO: remove in master. No longer called (superseded by `_search_product_quantity`)
