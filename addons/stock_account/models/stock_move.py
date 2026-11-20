@@ -309,7 +309,7 @@ class StockMove(models.Model):
             credit_acc = self.product_id._get_product_accounts()['stock_valuation']
         value = self.value if self.is_in else -self.value
 
-        account_move = self.account_move_id
+        account_move = self.sudo().account_move_id
         locked = bool(account_move) and bool(account_move.company_id._get_lock_date_violations(
             account_move.date, sale=False, purchase=False))
 
@@ -319,12 +319,13 @@ class StockMove(models.Model):
             'stock_move_id': self.id,
             'move_id': account_move.id,
         }
-        existing_balance = sum(self.invoice_line_ids.filtered(lambda l: l.account_id == credit_acc).mapped('balance'))
+        invoice_lines = self.sudo().invoice_line_ids
+        existing_balance = sum(invoice_lines.filtered(lambda l: l.account_id == credit_acc).mapped('balance'))
         correction_line_vals = []
         for account, balance in ((credit_acc, -value - existing_balance), (debit_acc, value + existing_balance)):
             if self.company_currency_id.is_zero(balance):
                 continue
-            existing_lines = self.invoice_line_ids.filtered(lambda l: l.account_id == account)
+            existing_lines = invoice_lines.filtered(lambda l: l.account_id == account)
             if len(existing_lines) > 1 and credit_acc == debit_acc:
                 # Edge case that would result in updating the same line, resulting with multiple lines with the same balance.
                 existing_lines = existing_lines.filtered(lambda l: l.balance < 0 if balance < 0 else l.balance > 0)
@@ -341,49 +342,55 @@ class StockMove(models.Model):
         return correction_line_vals
 
     def _update_accounting_entries(self):
-        correction_line_vals = []
-        move_ids_to_create = set()
-        for move in self:
-            if move._should_create_account_move():
-                if move.account_move_id:
-                    correction_line_vals += move._get_account_move_line_vals()
-                elif not self.env.context.get('no_create_missing'):
-                    # If previous value was 0, then no line would be existing yet.
-                    move_ids_to_create.add(move.id)
-        if move_ids_to_create:
-            moves_to_create = self.env['stock.move'].browse(move_ids_to_create)
-            moves_to_create._create_account_move()
-        moves_with_cogs = self.filtered('cogs_aml_ids')
-        moves_without_cogs = (self - moves_with_cogs)
-        correction_line_vals += moves_with_cogs.cogs_aml_ids._set_cogs()
-        if moves_without_cogs:
-            # If previous value was zero, then no cogs would existing yet.
-            moves_by_invoices = moves_without_cogs._get_moves_by_invoice()
-            locked_cogs_vals, unlocked_cogs_vals = [], []
-            for invoice, moves in moves_by_invoices.items():
-                invoice = invoice.with_company(invoice.company_id)
-                locked = bool(invoice.company_id._get_lock_date_violations(invoice.date, sale=False, purchase=False))
-                cogs_vals_list = locked_cogs_vals if locked else unlocked_cogs_vals
-                cogs_vals_list += invoice._get_cogs_lines_vals()
-            # Lines from invoices outside of lock period can be created directly in them. Otherwise, create a correction entry
-            self.env['account.move.line'].create(unlocked_cogs_vals)
-            correction_line_vals += locked_cogs_vals
-        refs = list(set(self.mapped('reference')))
-        if len(refs) > 10:
-            refs = refs[:10] + [self.env._("Others")]
-        justification = self.env._("Valuation correction following a cost change on: %s", refs)
-
-        if not correction_line_vals:
+        done_moves = self.filtered(lambda m: m.state == 'done')
+        if not done_moves:
+            # Prevents a lot of checks for no reason.
             return
-        correction_move = self.env['account.move'].with_context(clean_context(self.env.context)).with_company(self.company_id).create({
-            'journal_id': self.company_id.account_stock_journal_id.id,
-            'date': fields.Date.context_today(self),
-            'ref': justification,
-            'line_ids': [
-                Command.create(line_vals) for line_vals in correction_line_vals
-            ],
-        })
-        correction_move.action_post()
+
+        for company, moves in done_moves.grouped('company_id').items():
+            correction_line_vals = []
+            move_ids_to_create = set()
+            for move in done_moves:
+                if move._should_create_account_move():
+                    if move.account_move_id:
+                        correction_line_vals += move._get_account_move_line_vals()
+                    elif not self.env.context.get('no_create_missing'):
+                        # If previous value was 0, then no line would be existing yet.
+                        move_ids_to_create.add(move.id)
+            if move_ids_to_create:
+                moves_to_create = self.env['stock.move'].browse(move_ids_to_create)
+                moves_to_create._create_account_move()
+            moves_with_cogs = done_moves.filtered('cogs_aml_ids')
+            moves_without_cogs = (done_moves - moves_with_cogs)
+            correction_line_vals += moves_with_cogs.cogs_aml_ids._set_cogs()
+            if moves_without_cogs:
+                # If previous value was zero, then no cogs would existing yet.
+                moves_by_invoices = moves_without_cogs._get_moves_by_invoice()
+                locked_cogs_vals, unlocked_cogs_vals = [], []
+                for invoice, moves in moves_by_invoices.items():
+                    invoice = invoice.with_company(invoice.company_id)
+                    locked = bool(invoice.company_id._get_lock_date_violations(invoice.date, sale=False, purchase=False))
+                    cogs_vals_list = locked_cogs_vals if locked else unlocked_cogs_vals
+                    cogs_vals_list += invoice._get_cogs_lines_vals()
+                # Lines from invoices outside of lock period can be created directly in them. Otherwise, create a correction entry
+                self.env['account.move.line'].create(unlocked_cogs_vals)
+                correction_line_vals += locked_cogs_vals
+            refs = list(set(done_moves.mapped('reference')))
+            if len(refs) > 10:
+                refs = refs[:10] + [self.env._("Others")]
+            justification = self.env._("Valuation correction following a cost change on: %s", refs)
+
+            if not correction_line_vals:
+                return
+            correction_move = self.env['account.move'].with_context(clean_context(self.env.context)).with_company(company).create({
+                'journal_id': company.account_stock_journal_id.id,
+                'date': fields.Date.context_today(self),
+                'ref': justification,
+                'line_ids': [
+                    Command.create(line_vals) for line_vals in correction_line_vals
+                ],
+            })
+            correction_move._post()
 
     def _get_analytic_distribution(self):
         return {}
@@ -501,6 +508,7 @@ class StockMove(models.Model):
 
         for move in self:
             move = move.with_company(move.company_id)
+            old_value = move.value
             if move.is_in:
                 products_to_recompute.add(move.product_id.id)
                 if move.product_id.lot_valuated:
@@ -510,7 +518,8 @@ class StockMove(models.Model):
                             move.product_id.display_name))
                     lots_to_recompute.update(move.move_line_ids.lot_id.ids)
                 move.value = move.sudo()._get_value()
-                edited_move_ids.add(move.id)
+                if old_value != move.value:
+                    edited_move_ids.add(move.id)
                 continue
             # Outgoing moves
             if not move.is_out:
@@ -544,7 +553,8 @@ class StockMove(models.Model):
                         price = move_line.lot_id.standard_price if move_line.lot_id else move.product_id.standard_price
                         value += price * move_line.quantity_product_uom
                     move.value = - value
-            edited_move_ids.add(move.id)
+            if old_value != move.value:
+                edited_move_ids.add(move.id)
 
         # Recompute the standard price
         self.env['product.product'].browse(products_to_recompute)._update_standard_price()
