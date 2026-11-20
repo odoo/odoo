@@ -1,9 +1,9 @@
 declare module "plugins" {
     import { anchor_allowed_selectors, anchor_excluded_selectors, AnchorShared } from "@html_builder/core/anchor/anchor_plugin";
     import { builder_components, BuilderComponentShared } from "@html_builder/core/builder_component_plugin";
-    import { builder_header_middle_buttons, builder_options_render_context, BuilderOptionsShared, on_current_options_containers_changed_handlers, clone_disabled_reason_providers, container_title, elements_to_options_title_components, options_container_top_buttons_providers, has_overlay_options, should_keep_overlay_options_predicates, no_parent_containers, on_will_restore_containers_handlers, remove_disabled_reason_providers, auto_unfold_container_providers } from "@html_builder/core/builder_options_plugin";
+    import { builder_header_middle_buttons, builder_options_render_context, BuilderOptionsShared, current_target, next_target, on_current_options_containers_changed_handlers, clone_disabled_reason_providers, container_title, elements_to_options_title_components, options_container_top_buttons_providers, has_overlay_options, should_keep_overlay_options_predicates, no_parent_containers, on_will_restore_containers_handlers, remove_disabled_reason_providers, auto_unfold_container_providers } from "@html_builder/core/builder_options_plugin";
     import { BuilderOverlayShared } from "@html_builder/core/builder_overlay/builder_overlay_plugin";
-    import { CachedModelShared } from "@html_builder/core/cached_model_plugin";
+    import { cached_model, CachedModelShared } from "@html_builder/core/cached_model_plugin";
     import { CloneShared, on_cloned_handlers, on_will_clone_handlers } from "@html_builder/core/clone_plugin";
     import { DisableSnippetsShared } from "@html_builder/core/disable_snippets_plugin";
     import { dropzone_selectors, DropZoneShared, ignored_sibling_selectors, is_valid_for_sibling_dropzone_predicates } from "@html_builder/core/drop_zone_plugin";
@@ -60,6 +60,14 @@ declare module "plugins" {
         visibility: VisibilityShared;
 
         // Other
+    }
+
+    interface HistoryDataProperties {
+        cached_model: cached_model;
+    }
+    interface HistoryMetadataProperties {
+        current_target: current_target;
+        next_target: next_target;
     }
 
     interface GlobalResources extends BuilderResourcesAccess {}

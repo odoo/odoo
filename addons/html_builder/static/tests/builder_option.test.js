@@ -26,7 +26,7 @@ test("Undo/Redo correctly restores the stored container target", async () => {
         selector: ".test-options-target",
         template: xml`<BuilderButton action="'customAction'">Test</BuilderButton>`,
     });
-    await setupHTMLBuilder(`
+    const { getEditor } = await setupHTMLBuilder(`
         <div data-name="Target 1" class="test-options-target target1">
             Homepage
         </div>
@@ -39,6 +39,8 @@ test("Undo/Redo correctly restores the stored container target", async () => {
     await contains(":iframe .target1").click();
     expect(".o_hb_options_container").toHaveAttribute("data-container-title", "Target 1");
     await contains("[data-action-id='customAction']").click();
+    const { data, metadata } = getEditor().shared.history.getCommits().at(-1);
+    expect(structuredClone({ data, metadata })).toEqual({ data, metadata });
     await contains(":iframe .target2").click();
     expect(".o_hb_options_container").toHaveAttribute("data-container-title", "Target 2");
 

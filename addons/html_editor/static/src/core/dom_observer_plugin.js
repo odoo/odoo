@@ -132,8 +132,6 @@ export class DomObserverPlugin extends Plugin {
     ];
     /** @type {import("plugins").EditorResources} */
     resources = {
-        history_commit_data_properties: ["mutations"],
-
         // Handlers
         // --------
 
@@ -218,8 +216,8 @@ export class DomObserverPlugin extends Plugin {
         // Processors
         // ----------
 
-        pending_history_commit_data_processors: withSequence(0, (data) =>
-            this.processPendingData(data)
+        pending_history_commit_data_processors: withSequence(0, (data, metadata) =>
+            this.processPendingData(data, metadata)
         ),
         snapshot_history_commit_data_processors: (data) => {
             data.mutations = childNodes(this.editable)
@@ -414,11 +412,13 @@ export class DomObserverPlugin extends Plugin {
      * into the provided `data` object before returning it.
      *
      * @typedef { import("./history_plugin").HistoryCommitData } HistoryCommitData
+     * @typedef { import("./history_plugin").HistoryCommitMetadata } HistoryCommitMetadata
      * @param { HistoryCommitData } data
+     * @param { HistoryCommitMetadata } metadata
      * @returns { HistoryCommitData & { mutations: SerializedMutation[] } }
      */
-    processPendingData(data) {
-        const hasRelatedCommit = !!data.relatedCommit;
+    processPendingData(data, metadata) {
+        const hasRelatedCommit = !!metadata.related_commit_id;
         // Stage the observer's current changes.
         if (hasRelatedCommit) {
             this.flush();

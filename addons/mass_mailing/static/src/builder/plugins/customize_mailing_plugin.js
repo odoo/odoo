@@ -21,12 +21,26 @@ export const PRIORITY_STYLES = {
 const PLUGIN_ID = "mass_mailing.CustomizeMailingPlugin";
 const ACTION_ID = "mass_mailing.CustomizeMailingVariable";
 
+/**
+ * @typedef {(data: {
+ *     variable: string,
+ *     before: string,
+ *     after: string,
+ * }) => void} mailing_variable
+ */
+
 export class CustomizeMailingPlugin extends Plugin {
     static id = PLUGIN_ID;
     static dependencies = ["history"];
     static shared = ["getVariableValue", "setVariable"];
 
     resources = {
+        history_data_properties: {
+            mailing_variable: {
+                apply: ({ variable, after }) => this.setVariable(variable, after),
+                revert: ({ variable, before }) => this.setVariable(variable, before),
+            },
+        },
         builder_actions: {
             CustomizeMailingVariable,
         },
@@ -246,17 +260,19 @@ export class CustomizeMailingVariable extends BuilderAction {
     }
     apply({ params, value }) {
         const oldValue = this.getValue(...arguments);
-        this.dependencies.history.stageCustomOperation({
-            apply: () => this.dependencies[PLUGIN_ID].setVariable(params.variable, value),
-            revert: () => this.dependencies[PLUGIN_ID].setVariable(params.variable, oldValue),
+        this.dependencies.history.apply("mailing_variable", {
+            variable: params.variable,
+            before: oldValue,
+            after: value,
         });
     }
     clean({ params }) {
         const value = params.clean ?? "";
         const oldValue = this.getValue(...arguments);
-        this.dependencies.history.stageCustomOperation({
-            apply: () => this.dependencies[PLUGIN_ID].setVariable(params.variable, value),
-            revert: () => this.dependencies[PLUGIN_ID].setVariable(params.variable, oldValue),
+        this.dependencies.history.apply("mailing_variable", {
+            variable: params.variable,
+            before: oldValue,
+            after: value,
         });
     }
 }
