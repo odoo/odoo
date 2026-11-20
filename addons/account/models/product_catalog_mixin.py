@@ -225,6 +225,18 @@ class ProductCatalogMixin(models.AbstractModel):
         if section := self.env[self._fields[child_field].comodel_name].browse(section_id).exists():
             (section | section._get_section_lines()).unlink()
 
+    def _get_duplicated_section_lines_vals(self, section_lines, new_section_sequence):
+        """Return the values to create the duplicated section lines.
+
+        :param recordset section_lines: The lines to duplicate (section + its children).
+        :param int new_section_sequence: The starting sequence for the duplicated lines.
+        :return: A list of values, one per line to create.
+        """
+        return [
+            {**line_data, "sequence": new_section_sequence + index}
+            for index, line_data in enumerate(section_lines.copy_data())
+        ]
+
     def duplicate_section(self, child_field, section_id) -> dict:
         """Duplicate the given section with all its children.
 
@@ -245,8 +257,8 @@ class ProductCatalogMixin(models.AbstractModel):
 
         # Insert duplicated block
         self[child_field] = [
-            Command.create({**line_data, "sequence": new_section_sequence + index})
-            for index, line_data in enumerate(section_lines.copy_data())
+            Command.create(vals)
+            for vals in self._get_duplicated_section_lines_vals(section_lines, new_section_sequence)
         ]
         new_lines = (self[child_field] - lines).sorted("sequence")
 
