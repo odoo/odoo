@@ -36,24 +36,31 @@ class MailMail(models.Model):
 
         if body and self.mailing_id and self.mailing_trace_ids:
             Wrapper = body.__class__
-            for match in set(re.findall(tools.mail.URL_REGEX, body)):
-                href = match[0]
-                url = match[1]
+            if self._is_click_tracking_allowed():
+                for match in set(re.findall(tools.mail.URL_REGEX, body)):
+                    href = match[0]
+                    url = match[1]
 
-                parsed = werkzeug.urls.url_parse(url, scheme='http')
+                    parsed = werkzeug.urls.url_parse(url, scheme='http')
 
-                if parsed.scheme.startswith('http') and parsed.path.startswith('/r/'):
-                    new_href = href.replace(url, f"{url}/m/{self.mailing_trace_ids[0].id}")
-                    body = body.replace(Wrapper(href), Wrapper(new_href))
+                    if parsed.scheme.startswith('http') and parsed.path.startswith('/r/'):
+                        new_href = href.replace(url, f"{url}/m/{self.mailing_trace_ids[0].id}")
+                        body = body.replace(Wrapper(href), Wrapper(new_href))
 
-            # generate tracking URL
-            tracking_url = self._get_tracking_url()
-            body = tools.mail.append_content_to_html(
-                body,
-                f'<img src="{tracking_url}"/>',
-                plaintext=False,
-            )
+            if self._is_open_tracking_allowed():
+                tracking_url = self._get_tracking_url()
+                body = tools.mail.append_content_to_html(
+                    body,
+                    f'<img src="{tracking_url}"/>',
+                    plaintext=False,
+                )
         return body
+
+    def _is_open_tracking_allowed(self):
+        return True
+
+    def _is_click_tracking_allowed(self):
+        return True
 
     def _prepare_outgoing_list(self, mail_server=False, recipients_follower_status=None):
         """ Update mailing specific links to replace generic unsubscribe and

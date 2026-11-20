@@ -1001,6 +1001,9 @@ class MassMailing(models.Model):
     def _get_seen_list_extra(self):
         return ('', '')
 
+    def _get_click_tracking_blocked_res_ids(self, model, res_ids):
+        return set()
+
     def _get_mass_mailing_context(self):
         """Returns extra context items with pre-filled blacklist and seen list for massmailing"""
         return {
