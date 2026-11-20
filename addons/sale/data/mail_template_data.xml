@@ -5,7 +5,6 @@
             <field name="name">Sales: Send Quotation</field>
             <field name="model_id" ref="sale.model_sale_order"/>
             <field name="subject">{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and 'Quotation' or 'Order' }} {{ object.name or 'n/a' }} {{ object.client_order_ref and ('(' + object.client_order_ref + ')') or '' }}</field>
-            <field name="email_from">{{ (object.user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
             <field name="partner_to" eval="False"/>
             <field name="use_default_to" eval="True"/>
             <field name="description">Used by salespeople when they send quotations or proforma to prospects</field>
@@ -57,8 +56,8 @@
         </t>
         <br/>
         Do not hesitate to contact us if you have any questions.
-        <t t-if="not is_html_empty(object.user_id.signature)">
-            <div>--<br/><t t-out="object.user_id.signature or ''">Mitchell Admin</t></div>
+        <t t-if="not is_html_empty(object._mail_get_default_signature())">
+            <div>--<br/><t t-out="object._mail_get_default_signature() or ''">Mitchell Admin</t></div>
         </t>
     </p>
 </div>
@@ -71,7 +70,6 @@
             <field name="name">Sales: Send Pro Forma</field>
             <field name="model_id" ref="sale.model_sale_order"/>
             <field name="subject">{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and 'Pro Forma' or 'Order'}} (Ref {{ object.name or 'n/a' }})</field>
-            <field name="email_from">{{ (object.user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
             <field name="partner_to" eval="False"/>
             <field name="use_default_to" eval="True"/>
             <field name="description">Used by salespeople when they send pro forma to prospects</field>
@@ -96,8 +94,8 @@
         amounting in <span style="font-weight: bold;"  t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</span> is available.
         <br/><br/>
         Do not hesitate to contact us if you have any questions.
-        <t t-if="not is_html_empty(object.user_id.signature)">
-            <div>--<br/><t t-out="object.user_id.signature or ''">Mitchell Admin</t></div>
+        <t t-if="not is_html_empty(object._mail_get_default_signature())">
+            <div>--<br/><t t-out="object._mail_get_default_signature() or ''">Mitchell Admin</t></div>
         </t>
     </p>
 </div>
@@ -110,7 +108,6 @@
             <field name="name">Sales: Order Confirmation</field>
             <field name="model_id" ref="sale.model_sale_order"/>
             <field name="subject">{{ object.company_id.name }} Order {{ object.name or 'n/a' }} {{ object.client_order_ref and ('(' + object.client_order_ref + ')') or '' }}</field>
-            <field name="email_from">{{ (object.user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
             <field name="partner_to" eval="False"/>
             <field name="use_default_to" eval="True"/>
             <field name="description">Sent to customers on order confirmation</field>
@@ -181,8 +178,8 @@
                                 </t>
                             </ul>
                         </t>
-                        <t t-if="not is_html_empty(object.user_id.signature)">
-                            <div style="font-size: 14px; margin: 0 0 16px;"><t t-out="object.user_id.signature or ''">Mitchell Admin</t></div>
+                        <t t-if="not is_html_empty(object._mail_get_default_signature())">
+                            <div style="font-size: 14px; margin: 0 0 16px;"><t t-out="object._mail_get_default_signature() or ''">Mitchell Admin</t></div>
                         </t>
                     </p>
                     <t t-if="hasattr(object, 'website_id') and object.website_id">
@@ -402,7 +399,6 @@
             <field name="name">Sales: Payment Done</field>
             <field name="model_id" ref="sale.model_sale_order"/>
             <field name="subject">{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state == 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/a' }})</field>
-            <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>
             <field name="partner_to" eval="False"/>
             <field name="use_default_to" eval="True"/>
             <field name="description">Sent to customers when a payment is received but doesn't immediately confirm their order</field>
@@ -443,8 +439,8 @@
         Thank you for your trust!
         <br/>
         Do not hesitate to contact us if you have any questions.
-        <t t-if="not is_html_empty(object.user_id.signature)">
-            <div>--<br/><t t-out="object.user_id.signature or ''">Mitchell Admin</t></div>
+        <t t-if="not is_html_empty(object._mail_get_default_signature())">
+            <div>--<br/><t t-out="object._mail_get_default_signature() or ''">Mitchell Admin</t></div>
         </t>
     </p>
 </div>
