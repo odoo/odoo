@@ -1,8 +1,8 @@
 import { BackgroundOption } from "@html_builder/plugins/background_option/background_option";
 import { Plugin } from "@html_editor/plugin";
 import { expect, test } from "@odoo/hoot";
-import { animationFrame, press, queryOne, scroll, waitFor } from "@odoo/hoot-dom";
-import { contains } from "@web/../tests/web_test_helpers";
+import { animationFrame, press, queryOne, scroll, setInputFiles, waitFor } from "@odoo/hoot-dom";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import {
     addPlugin,
     addOption,
@@ -10,6 +10,8 @@ import {
     setupWebsiteBuilder,
 } from "@website/../tests/builder/website_helpers";
 import { patchDragImage } from "@website/../tests/builder/image_test_helpers";
+import { setSelection } from "@html_editor/../tests/_helpers/selection";
+import { dummyBase64Img } from "@html_builder/../tests/helpers";
 
 const RGB_RED = "rgb(255, 0, 0)";
 const RGB_BLUE = "rgb(0, 0, 255)";
@@ -397,6 +399,50 @@ test("open the media dialog to toggle the image background but do not choose an 
     expect(".modal").toBeDisplayed();
 });
 
+test("background image of a snippet is uploaded on the record of the snippet, not on the cursor's", async () => {
+    const imageSrc = "/web/image/7-abcd1234/bg.png";
+    const base64Data = dummyBase64Img.split("base64,")[1];
+    const pngBytes = Uint8Array.from(atob(base64Data), (char) => char.charCodeAt(0));
+    let addDataParams;
+    onRpc("/html_editor/attachment/add_data", async (request) => {
+        ({ params: addDataParams } = await request.json());
+        expect.step("attachment_add_data");
+        return {
+            id: 7,
+            name: "bg.png",
+            mimetype: "image/png",
+            image_src: imageSrc,
+            access_token: false,
+            public: true,
+        };
+    });
+    onRpc("ir.attachment", "search_read", () => []);
+    onRpc("/html_editor/get_image_info", () => ({
+        attachment: { id: 7 },
+        original: { id: 7, image_src: imageSrc, mimetype: "image/png" },
+    }));
+    onRpc(imageSrc, () => new Response(pngBytes, { headers: { "Content-Type": "image/png" } }));
+
+    const { getEditableContent } = await setupWebsiteBuilder(`
+        <h1 data-oe-model="website" data-oe-id="1" data-oe-field="name">Name</h1>
+        <div data-oe-model="blog.post" data-oe-id="3" data-oe-field="content" data-oe-type="html">
+            <section>AAAA</section>
+        </div>`);
+    await contains(":iframe section").click();
+    // The cursor moves to another record, the options still target the section.
+    setSelection({
+        anchorNode: getEditableContent().querySelector("h1").firstChild,
+        anchorOffset: 0,
+    });
+    await contains("[data-action-id='toggleBgImage']").click();
+    await contains(".o_select_media_dialog .o_upload_media_button").click();
+    await setInputFiles([new File([pngBytes], "bg.png", { type: "image/png" })]);
+    await expect.waitForSteps(["attachment_add_data"]);
+    await waitFor(":iframe section.oe_img_bg");
+    expect(addDataParams.res_model).toBe("blog.post");
+    expect(addDataParams.res_id).toBe("3");
+});
+
 test("remove the background image of a snippet", async () => {
     const { waitSidebarUpdated } = await setupWebsiteBuilder(`
         <section style="background-image: url('/web/image/123/transparent.png'); width: 500px; height:500px">
@@ -732,6 +778,6 @@ test("Change the background position when multiple background layer is applied",
     await contains("[data-label='Position'] .dropdown-toggle").click();
     await contains("[data-action-value='repeat-pattern']").click();
     expect(section).toHaveClass("o_bg_img_opt_repeat");
-    expect(section).toHaveStyle({"background-size": /^100px.+cover$/});
+    expect(section).toHaveStyle({ "background-size": /^100px.+cover$/ });
     expect("[data-action-value='repeat-pattern']").toHaveClass("active");
 });
