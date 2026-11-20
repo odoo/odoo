@@ -1,0 +1,37 @@
+<templates xml:space="preserve">
+<t t-name="html_editor.ColorPickerFavoriteTab">
+    <div class="o_color_picker_favorite_tab p-2 pb-0">
+        <div class="small fw-bold mb-1">Favorite</div>
+        <div class="o_colorpicker_section" t-on-click="this.props.onColorClick"
+            t-on-mouseover="this.props.onColorPointerOver" t-on-mouseout="this.props.onColorPointerOut"
+            t-on-focusin="this.props.onFocusin" t-on-focusout="this.props.onFocusout">
+            <div t-foreach="this.favoriteColors.getColors()" t-as="color" t-key="color"
+                class="o_favorite_color position-relative">
+                <button type="button" class="o_color_button o_preview_alpha_background o_color_picker_button btn p-0"
+                    t-att-class="{'selected': color === this.props.selectedColor?.toUpperCase()}"
+                    t-att-data-color="color" t-attf-style="background-color: {{color}}"
+                    t-att-aria-label="color" t-att-data-tooltip="color" data-tooltip-position="bottom"/>
+                <button type="button" t-if="this.favoriteColors.canEdit()" class="o_favorite_color_remove o_colorpicker_ignore btn oi position-absolute top-0 end-0 p-0"
+                    data-icon="close" title="Remove" aria-label="Remove"
+                    t-on-click="() => this.onRemoveClick(color)"/>
+            </div>
+            <button type="button" t-if="this.favoriteColors.canEdit()" t-ref="this.addButtonRef" class="o_favorite_color_add o_color_button o_colorpicker_ignore btn oi p-0"
+                t-att-class="{'active': this.state.isAdding}"
+                data-icon="add" title="Add a favorite color" aria-label="Add a favorite color"
+                t-on-click="this.toggleColorPicker"/>
+        </div>
+        <t t-if="this.state.isAdding">
+            <CustomColorPicker
+                selectedColor="this.state.newColor"
+                onColorSelect.bind="this.onNewColorChange"
+                onColorPreview.bind="this.onNewColorChange"
+                noTransparency="this.props.noTransparency"
+                defaultOpacity="this.props.defaultOpacity"/>
+            <div class="d-flex gap-1 mb-2">
+                <button type="button" class="btn btn-sm btn-primary" t-on-click="this.onSaveClick">Save</button>
+                <button type="button" class="btn btn-sm btn-secondary" t-on-click="this.onDiscardClick">Discard</button>
+            </div>
+        </t>
+    </div>
+</t>
+</templates>
