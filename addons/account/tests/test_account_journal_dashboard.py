@@ -615,3 +615,38 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
             'is_invoice_layout_card': True,
             'name': 'Setup Your Invoice Layout',
         }])
+
+    @freeze_time("2025-01-22")
+    def test_cashflow_kpi_liquidity_lines_only(self):
+        """ Test that counterpart lines on payable accounts (such as lines from a
+        bill and a partial vendor credit note reconciled on the same bank transaction)
+        are not included in the cashflow KPI calculation.
+        """
+        bank_journal = self.company_data['default_journal_bank']
+        payable_account = self.company_data['default_account_payable']
+
+        self.env['account.bank.statement.line'].create({
+            'journal_id': bank_journal.id,
+            'amount': -800.0,
+            'date': '2025-01-15',
+            'line_ids': [
+                Command.create({
+                    'name': 'Bank line',
+                    'account_id': bank_journal.default_account_id.id,
+                    'balance': -800.0,
+                }),
+                Command.create({
+                    'name': 'Bill counterpart',
+                    'account_id': payable_account.id,
+                    'balance': 1000.0,
+                }),
+                Command.create({
+                    'name': 'Credit note counterpart',
+                    'account_id': payable_account.id,
+                    'balance': -200.0,
+                }),
+            ],
+        })
+
+        kpi_amount = self.env['account.journal']._get_cashflow_kpi_amount()
+        self.assertEqual(kpi_amount, -800.0)
