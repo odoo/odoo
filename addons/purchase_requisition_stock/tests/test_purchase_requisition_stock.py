@@ -39,7 +39,6 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
             'product_id': product_test.id,
             'uom_id': unit,
             'product_uom_qty': 10.0,
-            'price_unit': 10,
         })
         move1._action_confirm()
 
@@ -65,7 +64,6 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
             'product_id': product_test.id,
             'uom_id': unit,
             'product_uom_qty': 10.0,
-            'price_unit': 10
         })
         move2._action_confirm()
 
@@ -86,7 +84,6 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
             'product_id': product_test.id,
             'uom_id': unit,
             'product_uom_qty': 10.0,
-            'price_unit': 10
         })
         move3._action_confirm()
 
@@ -196,7 +193,6 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
             'product_id': product_1.id,
             'uom_id': unit,
             'product_uom_qty': 10.0,
-            'price_unit': 100,
         })
         move2 = self.env['stock.move'].create({
             'procure_method': 'make_to_order',
@@ -205,7 +201,6 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
             'product_id': product_2.id,
             'uom_id': unit,
             'product_uom_qty': 10.0,
-            'price_unit': 100,
         })
         move1._action_confirm()
         move2._action_confirm()

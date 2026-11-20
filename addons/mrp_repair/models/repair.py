@@ -93,7 +93,6 @@ class StockMove(models.Model):
             'repair_id': self.repair_id.id,
             'repair_line_type': self.repair_line_type,
             'product_id': product.id,
-            'price_unit': self.price_unit,
             'product_uom_qty': qty,
             'location_id': self.location_id.id,
             'location_dest_id': self.location_dest_id.id,
