@@ -1,21 +1,18 @@
+import { Plugin, usePlugin, useScope } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
+import { services } from "@web/core/services";
 import { browser } from "@web/core/browser/browser";
 
-async function _waitForEnv() {
-    while (!odoo.__WOWL_DEBUG__?.root?.env) {
-        await new Promise((resolve) => browser.setTimeout(resolve, 50));
-    }
-    return odoo.__WOWL_DEBUG__.root.env;
-}
+let rootScope;
 
 export async function startClickEverywhere(options) {
     await loadBundle("web.assets_clickbot");
     const { ClickbotLauncher } = odoo.loader.modules.get("@web/webclient/clickbot/clickbot");
-    const env = await _waitForEnv();
 
-    const launcher = new ClickbotLauncher(env, options.currentState || options);
+    const launcher = rootScope.run(() => usePlugin(ClickbotLauncher));
+    launcher.configure(options.currentState || options);
     if (options.withOverlay) {
         launcher.open();
         return;
@@ -34,10 +31,18 @@ export function runClickbotLauncherItem() {
     };
 }
 
-const currentState = JSON.parse(browser.localStorage.getItem("running.clickbot"));
-if (currentState) {
-    startClickEverywhere({ withOverlay: true, currentState });
+// Gives the scope needed to start the `ClickbotLauncher` plugin, which lives in a lazy bundle,
+// to `startClickEverywhere`, and resumes a run interrupted by a page reload.
+class ClickbotResumePlugin extends Plugin {
+    setup() {
+        rootScope = useScope();
+        const currentState = browser.localStorage.getItem("running.clickbot");
+        if (currentState) {
+            startClickEverywhere({ withOverlay: true, currentState: JSON.parse(currentState) });
+        }
+    }
 }
+services.add(ClickbotResumePlugin);
 
 registry
     .category("debug")

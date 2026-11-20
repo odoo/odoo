@@ -5,6 +5,7 @@ import {
     defineMenus,
     defineModels,
     fields,
+    getTestApp,
     makeServerError,
     models,
     mountWithCleanup,
@@ -12,11 +13,17 @@ import {
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 
-import { onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { onWillStart, onWillUpdateProps, usePlugin } from "@odoo/owl";
 
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { ClickbotLauncher, FAILURE_SIGNAL, SUCCESS_SIGNAL } from "@web/webclient/clickbot/clickbot";
 import { WebClient } from "@web/webclient/webclient";
+
+function startClickbot(options) {
+    const launcher = getTestApp().pluginManager.run(() => usePlugin(ClickbotLauncher));
+    launcher.configure(options);
+    launcher.start();
+}
 
 class Foo extends models.Model {
     foo = fields.Char();
@@ -145,8 +152,8 @@ test("clickbot clickeverywhere test", async () => {
             xmlid: "app2",
         },
     ]);
-    const webClient = await mountWithCleanup(WebClient);
-    new ClickbotLauncher(webClient.env, { logger: true }).start();
+    await mountWithCleanup(WebClient);
+    startClickbot({ logger: true });
     await promise;
     expect.verifySteps([
         "Starting ClickEverywhere test",
@@ -250,8 +257,8 @@ test("only one app", async () => {
             xmlid: "app2",
         },
     ]);
-    const webClient = await mountWithCleanup(WebClient);
-    new ClickbotLauncher(webClient.env, { xmlId: "app1", logger: true }).start();
+    await mountWithCleanup(WebClient);
+    startClickbot({ xmlId: "app1", logger: true });
     await promise;
     expect.verifySteps([
         "Starting ClickEverywhere test",
@@ -340,11 +347,11 @@ test("clickbot clickeverywhere test (with dropdown menu)", async () => {
         ],
         { mode: "replace" }
     );
-    const webClient = await mountWithCleanup(WebClient);
+    await mountWithCleanup(WebClient);
     await runAllTimers();
     await animationFrame();
     expect(".o_menu_sections .dropdown-toggle").toHaveText("a dropdown");
-    new ClickbotLauncher(webClient.env, { logger: true }).start();
+    startClickbot({ logger: true });
     await promise;
     expect.verifySteps([
         "Starting ClickEverywhere test",
@@ -420,11 +427,11 @@ test("clickbot test waiting rpc after clicking filter", async () => {
             xmlid: "app1",
         },
     ]);
-    const webClient = await mountWithCleanup(WebClient);
+    await mountWithCleanup(WebClient);
     await runAllTimers();
     await animationFrame();
     clickBotStarted = true;
-    new ClickbotLauncher(webClient.env, { logger: true }).start();
+    startClickbot({ logger: true });
     await promise;
     expect.verifySteps([
         "web_search_read called", // click on the App
@@ -510,11 +517,11 @@ test("clickbot show rpc error when an error dialog is detected", async () => {
             xmlid: "app2",
         },
     ]);
-    const webClient = await mountWithCleanup(WebClient);
+    await mountWithCleanup(WebClient);
     await runAllTimers();
     await animationFrame();
     clickBotStarted = true;
-    new ClickbotLauncher(webClient.env, { logger: true }).start();
+    startClickbot({ logger: true });
     await promise;
     await tick();
 
@@ -690,11 +697,11 @@ test("clickbot test waiting render after clicking filter", async () => {
             xmlid: "app1",
         },
     ]);
-    const webClient = await mountWithCleanup(WebClient);
+    await mountWithCleanup(WebClient);
     await runAllTimers();
     await animationFrame();
     clickBotStarted = true;
-    new ClickbotLauncher(webClient.env, { logger: true }).start();
+    startClickbot({ logger: true });
     await promise;
     expect.verifySteps([
         "onWillStart called", // click on APP
@@ -754,8 +761,8 @@ test("clickbot clickeverywhere menu modal", async () => {
             xmlid: "test.modal",
         },
     ]);
-    const webClient = await mountWithCleanup(WebClient);
-    new ClickbotLauncher(webClient.env, { logger: true }).start();
+    await mountWithCleanup(WebClient);
+    startClickbot({ logger: true });
     await promise;
     expect.verifySteps([
         "Starting ClickEverywhere test",

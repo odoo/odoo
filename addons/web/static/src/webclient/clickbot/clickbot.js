@@ -3,9 +3,13 @@
  * view. On each view, click on each filter.
  */
 
-import { App, effect, proxy } from "@odoo/owl";
+import { App, effect, Plugin, proxy, usePlugin, useScope } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
+import { GlobalBusPlugin } from "@web/core/global_bus_plugin";
 import { rpcBus } from "@web/core/network/rpc";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { OverlayPlugin } from "@web/core/overlay/overlay_plugin";
+import { MenuPlugin } from "@web/webclient/menus/menu_plugin";
 import { ClickbotOverlay } from "@web/webclient/clickbot/clickbot_overlay";
 
 export const SUCCESS_SIGNAL = "clickbot test succeeded";
@@ -67,8 +71,10 @@ const STUDIO_SYSTRAY_ICON_SELECTOR = ".o_web_studio_navbar_item:not(.o_disabled)
 // State (including xmlId) is always built and owned by ClickbotLauncher (below);
 // Clickbot never constructs its own default state.
 class Clickbot {
-    constructor(env, currentState) {
-        this.env = env;
+    constructor(currentState) {
+        this.menuPlugin = usePlugin(MenuPlugin);
+        this.bus = usePlugin(GlobalBusPlugin).bus;
+        this.offlinePlugin = usePlugin(OfflinePlugin);
         this.state = proxy(currentState);
         this._actionCount = 0;
         this._calledRPC = {};
@@ -84,7 +90,7 @@ class Clickbot {
         return (
             !this.state.testingOffline ||
             !menu.actionID ||
-            this.env.services.offline.isAvailableOffline(menu.actionID)
+            this.offlinePlugin.isAvailableOffline(menu.actionID)
         );
     }
 
@@ -96,7 +102,7 @@ class Clickbot {
         this.state.startTime = this.state.startTime || performance.now();
         this.state.phase = "running";
         if (!this.state.xmlId) {
-            this.state.totalApps = this.env.services.menu.getApps().length;
+            this.state.totalApps = this.menuPlugin.getApps().length;
         }
         try {
             if (!this.state.testingOffline) {
@@ -141,7 +147,7 @@ class Clickbot {
 
     async _start() {
         if (this.state.xmlId) {
-            const app = this.env.services.menu.getApps().find((a) => a.xmlid === this.state.xmlId);
+            const app = this.menuPlugin.getApps().find((a) => a.xmlid === this.state.xmlId);
             if (!app) {
                 throw new Error(`No app found for xmlid ${this.state.xmlId}`);
             }
@@ -149,7 +155,7 @@ class Clickbot {
             await this._testApp(app);
         } else {
             this.state.appIndex = 0;
-            const apps = this.env.services.menu.getApps();
+            const apps = this.menuPlugin.getApps();
             while (this.state.appIndex < apps.length) {
                 this.currentAPP = apps[this.state.appIndex];
                 await this._testApp(apps[this.state.appIndex]);
@@ -181,14 +187,14 @@ class Clickbot {
         browser.XMLHttpRequest = FakeOfflineXHR;
         window.XMLHttpRequest = FakeOfflineXHR;
 
-        this.env.services.offline.offline = true;
-        await this.env.services.offline.getVisitedStatus();
+        this.offlinePlugin.setOffline(true);
+        await this.offlinePlugin.getVisitedStatus();
 
         return this._start();
     }
 
     _setup() {
-        this.env.bus.addEventListener("ACTION_MANAGER:UI-UPDATED", this._uiUpdate);
+        this.bus.addEventListener("ACTION_MANAGER:UI-UPDATED", this._uiUpdate);
         rpcBus.addEventListener("RPC:REQUEST", this._onRPCRequest);
         rpcBus.addEventListener("RPC:RESPONSE", this._onRPCResponse);
         this._disposeEffect = effect(() => {
@@ -219,12 +225,12 @@ class Clickbot {
             browser.XMLHttpRequest = this.originalXHR;
             window.fetch = this.oldFetch;
             window.XMLHttpRequest = this.originalXHR;
-            this.env.services.offline.offline = false;
+            this.offlinePlugin.setOffline(false);
         }
         console.warn = this._originalWarn;
         console.error = this._originalError;
         localStorage.removeItem("running.clickbot");
-        this.env.bus.removeEventListener("ACTION_MANAGER:UI-UPDATED", this._uiUpdate);
+        this.bus.removeEventListener("ACTION_MANAGER:UI-UPDATED", this._uiUpdate);
         rpcBus.removeEventListener("RPC:REQUEST", this._onRPCRequest);
         rpcBus.removeEventListener("RPC:RESPONSE", this._onRPCResponse);
     }
@@ -752,7 +758,7 @@ class Clickbot {
         this._stats.testedMenus.push(menu.xmlid);
         const startActionCount = this._actionCount;
         try {
-            await this.env.services.menu.selectMenu(menu);
+            await this.menuPlugin.selectMenu(menu);
             let isModal = false;
             await this._waitForCondition(() => {
                 if (document.querySelector(DIALOG_SELECTOR)) {
@@ -807,7 +813,7 @@ class Clickbot {
             }
             return node.childrenTree.flatMap(flatten);
         };
-        const menus = this.env.services.menu.getMenuAsTree(app.id).childrenTree.flatMap(flatten);
+        const menus = this.menuPlugin.getMenuAsTree(app.id).childrenTree.flatMap(flatten);
 
         this.state.totalMenus = menus.length;
         while (this.state.menuIndex < menus.length) {
@@ -820,51 +826,58 @@ class Clickbot {
 
 // Drives the overlay UI: owns the one state object shared verbatim with Clickbot
 // and with ClickbotOverlay, and (re)creates the Clickbot instance on start().
-export class ClickbotLauncher {
-    constructor(env, persistedState) {
-        this.env = env;
-        this.apps = env.services.menu.getApps();
-        this.state = proxy({
-            light: false,
-            logger: true,
-            offline: false,
-            testingOffline: false,
-            appIndex: 0,
-            menuIndex: 0,
-            currentApp: "",
-            totalApps: 0,
-            totalMenus: 0,
-            phase: "launcher",
-            error: null,
-            timeTaken: 0,
-            xmlId: "", // falsy = all apps, set = restrict to that app
-            onlineStats: {
-                testedApps: [],
-                testedMenus: [],
-                testedViews: 0,
-                testedFormsViews: 0,
-                testedNewRecord: 0,
-                testedModals: 0,
-                testedFilters: 0,
-                studioCount: 0,
-                errorMenuCount: 0,
-            },
-            offlineStats: {
-                testedApps: [],
-                testedMenus: [],
-                testedViews: 0,
-                testedFormsViews: 0,
-                testedNewRecord: 0,
-                testedModals: 0,
-                errorMenuCount: 0,
-            },
-            ...persistedState,
-        });
-        this.clickbot = null;
+export class ClickbotLauncher extends Plugin {
+    scope = useScope();
+    menuPlugin = usePlugin(MenuPlugin);
+    overlayPlugin = usePlugin(OverlayPlugin);
+    clickbot = null;
+
+    get apps() {
+        return this.menuPlugin.getApps();
+    }
+
+    state = proxy({
+        light: false,
+        logger: true,
+        offline: false,
+        testingOffline: false,
+        appIndex: 0,
+        menuIndex: 0,
+        currentApp: "",
+        totalApps: 0,
+        totalMenus: 0,
+        phase: "launcher",
+        error: null,
+        timeTaken: 0,
+        xmlId: "", // falsy = all apps, set = restrict to that app
+        onlineStats: {
+            testedApps: [],
+            testedMenus: [],
+            testedViews: 0,
+            testedFormsViews: 0,
+            testedNewRecord: 0,
+            testedModals: 0,
+            testedFilters: 0,
+            studioCount: 0,
+            errorMenuCount: 0,
+        },
+        offlineStats: {
+            testedApps: [],
+            testedMenus: [],
+            testedViews: 0,
+            testedFormsViews: 0,
+            testedNewRecord: 0,
+            testedModals: 0,
+            errorMenuCount: 0,
+        },
+    });
+
+    configure(persistedState) {
+        Object.assign(this.state, persistedState);
     }
 
     start() {
-        this.clickbot = new Clickbot(this.env, this.state);
+        this.clickbot = this.scope.run(() => new Clickbot(this.state));
         return this.clickbot.start();
     }
 
@@ -873,7 +886,7 @@ export class ClickbotLauncher {
     }
 
     open() {
-        this.removeOverlay = this.env.services.overlay.add(ClickbotOverlay, { state: this });
+        this.removeOverlay = this.overlayPlugin.add(ClickbotOverlay, { state: this });
         if (this.state.phase !== "launcher") {
             this.start();
         }
