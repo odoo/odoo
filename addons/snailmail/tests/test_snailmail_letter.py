@@ -15,6 +15,21 @@ class TestSnailmailLetter(TransactionCase):
             'country_id': cls.env.ref('base.de').id,
         })
 
+    def test_letter_address_follows_country_format(self):
+        """ With two street lines, a letter merges them on one line and keeps the country format
+        for the rest of the address. """
+        partner = self.env['res.partner'].new({
+            'street': 'Hrusovska 455/10',
+            'street2': 'Building B',
+            'zip': '102 00',
+            'city': 'Praha',
+            'country_id': self.env.ref('base.cz').id,
+        })
+        self.assertEqual(
+            partner.with_context(snailmail_layout=True)._display_address(),
+            'Hrusovska 455/10, Building B\n102 00 Praha\nCzech Republic',
+        )
+
     def test_cover_address_split_germany(self):
         """ German cover addresses put both street lines on a single line separated by ' // '
         (Pingen requirement) and must keep a single zip/city line. """

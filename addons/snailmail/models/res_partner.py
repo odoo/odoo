@@ -46,6 +46,6 @@ class ResPartner(models.Model):
                 result += " // %(street2)s"
             return result + "\n%(zip)s %(city)s\n%(country_name)s"
         if self.env.context.get('snailmail_layout') and self.street2:
-            return "%(street)s, %(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s"
+            return super()._get_address_format().replace("%(street)s\n%(street2)s", "%(street)s, %(street2)s")
 
         return super(ResPartner, self)._get_address_format()

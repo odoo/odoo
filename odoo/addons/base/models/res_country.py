@@ -67,7 +67,7 @@ class ResCountry(models.CachedModel):
              "\n%(state_code)s: the code of the state"
              "\n%(country_name)s: the name of the country"
              "\n%(country_code)s: the code of the country",
-        default='%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s')
+        default='%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s')
     address_view_id = fields.Many2one(
         comodel_name='ir.ui.view', string="Input View",
         domain=[('model', '=', 'res.partner'), ('type', '=', 'form')],
