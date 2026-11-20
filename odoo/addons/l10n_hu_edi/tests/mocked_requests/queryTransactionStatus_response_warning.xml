@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:QueryTransactionStatusResponse xmlns="http://schemas.nav.gov.hu/NTCA/1.0/common"
+    xmlns:ns2="http://schemas.nav.gov.hu/OSA/3.0/api"
+    xmlns:ns3="http://schemas.nav.gov.hu/OSA/3.0/base"
+    xmlns:ns4="http://schemas.nav.gov.hu/OSA/3.0/data">
+    <header>
+        <requestId>ODOO3a15385713c6410b90531e2701</requestId>
+        <timestamp>2023-10-02T09:28:25.689Z</timestamp>
+        <requestVersion>3.0</requestVersion>
+        <headerVersion>1.0</headerVersion>
+    </header>
+    <result>
+        <funcCode>OK</funcCode>
+    </result>
+    <ns2:software>
+        <ns2:softwareId>ODOOENTERPRISE-160</ns2:softwareId>
+        <ns2:softwareName>Odoo Enterprise</ns2:softwareName>
+        <ns2:softwareOperation>LOCAL_SOFTWARE</ns2:softwareOperation>
+        <ns2:softwareMainVersion>16.0+e</ns2:softwareMainVersion>
+        <ns2:softwareDevName>OdooTech Zrt.</ns2:softwareDevName>
+        <ns2:softwareDevContact>info@odootech.hu</ns2:softwareDevContact>
+        <ns2:softwareDevCountryCode>HU</ns2:softwareDevCountryCode>
+        <ns2:softwareDevTaxNumber>32226375</ns2:softwareDevTaxNumber>
+    </ns2:software>
+    <ns2:processingResults>
+        <ns2:processingResult>
+            <ns2:index>1</ns2:index>
+            <ns2:invoiceStatus>DONE</ns2:invoiceStatus>
+            <ns2:businessValidationMessages>
+                <ns2:validationResultCode>WARN</ns2:validationResultCode>
+                <ns2:validationErrorCode>INCORRECT_SUMMARY_DATA_INVOICE_NET_AMOUNT</ns2:validationErrorCode>
+                <ns2:message>Eredeti (CREATE) számla nettó összege nem lehet negatív.</ns2:message>
+                <ns2:pointer>
+                    <ns2:tag>
+                        InvoiceData/invoiceMain/invoice/invoiceSummary/summaryNormal/invoiceNetAmount</ns2:tag>
+                    <ns2:value>-36.91</ns2:value>
+                </ns2:pointer>
+            </ns2:businessValidationMessages>
+            <ns2:businessValidationMessages>
+                <ns2:validationResultCode>WARN</ns2:validationResultCode>
+                <ns2:validationErrorCode>INCORRECT_SUMMARY_DATA_VAT_OUT_OF_SCOPE</ns2:validationErrorCode>
+                <ns2:message>Az Áfa törvény hatályán kívüli jelölés a tételsorok és az összesítő
+                    közül csak az egyikben fordul elő, a másikból hiányzik.</ns2:message>
+                <ns2:pointer>
+                    <ns2:tag>
+                        InvoiceData/invoiceMain/invoice/invoiceSummary/summaryNormal/summaryByVatRate/vatRate/vatOutOfScope/case</ns2:tag>
+                    <ns2:value>ATK</ns2:value>
+                </ns2:pointer>
+            </ns2:businessValidationMessages>
+            <ns2:compressedContentIndicator>false</ns2:compressedContentIndicator>
+        </ns2:processingResult>
+        <ns2:originalRequestVersion>3.0</ns2:originalRequestVersion>
+    </ns2:processingResults>
+</ns2:QueryTransactionStatusResponse>

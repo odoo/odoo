@@ -1,0 +1,22 @@
+.o_newsletter_modal {
+
+    .modal-header {
+        padding: 0;
+        border: none;
+    }
+    .modal-title {
+        display: none;
+    }
+    .close {
+        z-index: $zindex-modal;
+        @include o-position-absolute(0, 0);
+        width: $font-size-lg * 2;
+        height: $font-size-lg * 2;
+        line-height: $font-size-lg * 2;
+        margin: 0;
+        padding: 0;
+        @include o-bg-color(color-contrast(o-color('primary')), o-color('primary'), $with-extras: false);
+        box-shadow: $box-shadow-sm;
+        opacity: 1;
+    }
+}

@@ -1,0 +1,75 @@
+.o_popover_field_selector {
+    &.o-popover-top > .popover-arrow::after {
+        border-top-color: #{$o-gray-300};
+    }
+    &.o-popover-bottom > .popover-arrow::after {
+        border-bottom-color: #{$o-gray-300};
+    }
+}
+
+.o_model_field_selector_popover {
+    width: 265px;
+    background-color: $dropdown-bg;
+    --o-input-background-color: #{$dropdown-bg};
+
+    &:focus {
+        outline: none;
+    }
+
+    .o_model_field_selector_popover_header, .o_model_field_selector_popover_footer {
+        color: map-get($theme-colors, 'dark');
+        background: #{$o-gray-300};
+        font-weight: bold;
+        padding: 5px 0.4em;
+
+        .o_model_field_selector_popover_title {
+            width: 100%;
+            @include o-text-overflow;
+            padding: 0px 35px;
+            text-align: center;
+        }
+        .o_model_field_selector_popover_option {
+            @include o-position-absolute($top: 0);
+            padding: 8px;
+            cursor: pointer;
+
+            &.o_model_field_selector_popover_prev_page {
+                left: 0;
+            }
+            &.o_model_field_selector_popover_close {
+                right: 0;
+            }
+            &:hover {
+                color: darken(map-get($theme-colors, 'dark'), 10%);
+            }
+        }
+    }
+    .o_model_field_selector_popover_body {
+        .o_model_field_selector_popover_page {
+            position: relative;
+            height: 320px;
+            overflow: auto;
+            margin: 0;
+            padding: 0;
+
+            > .o_model_field_selector_popover_item {
+                list-style: none;
+                cursor: pointer;
+                font-family: Arial;
+                font-size: 13px;
+                border-bottom: 1px solid mix($o-black, $dropdown-link-hover-bg, 8%);
+                &.active button {
+                    background: $dropdown-link-hover-bg;
+                    border: none;
+                }
+                .o_model_field_selector_popover_item_title {
+                    font-size: 12px;
+                }
+                .o_model_field_selector_popover_item_relation {
+                    border-radius: 0px;
+                    border-left: 1px solid mix($o-black, $dropdown-link-hover-bg, 8%);
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,177 @@
+body:not(.o_touch_device) .o_settings_container .o_field_selection {
+    &:not(:hover):not(:focus-within) {
+        & select:not(:hover) {
+            background: transparent $o-caret-down no-repeat right center;
+        }
+    }
+}
+
+.o_base_settings_view .o_form_renderer {
+   height: 100%;
+   overflow: auto;
+}
+
+.o_setting_container {
+   height: 100%;
+   > * {
+      overflow: auto;
+      flex: 1 0 auto;
+   }
+}
+
+.o_enterprise_label {
+   position: absolute;
+   top: 0px;
+   right: 40px;
+}
+
+// MIXINS
+@mixin o-base-settings-horizontal-padding($padding-base: $input-btn-padding-y-sm) {
+   padding: $padding-base $o-horizontal-padding;
+
+   @include media-breakpoint-up(xl) {
+       padding-left: $o-horizontal-padding*2;;
+   }
+}
+
+// Use a very specif selector to overwrite generic form-view rules
+.o_form_view.o_base_settings_view .o_form_renderer.o_form_nosheet {
+   display: flex;
+   flex-flow: column nowrap;
+   padding: 0px;
+}
+
+// BASE SETTINGS LAYOUT
+.o_base_settings_view .o_form_renderer {
+   --settings__tab-bg: #{map-get($grays, '100')};
+   --settings__tab-bg--active: #{$o-component-active-bg};
+   --settings__tab-color: #{map-get($grays, '700')};
+   --settings__title-bg: #{map-get($grays, '200')};
+
+   height: 100%;
+
+   .o_control_panel {
+       flex: 0 0 auto;
+
+       .o_panel {
+           display: flex;
+           flex-flow: row wrap;
+           width: 100%;
+       }
+
+       .o_form_statusbar {
+           padding: 0;
+           margin: 0;
+           border: 0;
+       }
+   }
+
+   .o_setting_container {
+       display: flex;
+       flex: 1 1 auto;
+       overflow: auto;
+
+       .settings_tab {
+           display: flex;
+           flex: 0 0 auto;
+           flex-flow: column nowrap;
+           background: var(--settings__tab-bg);
+           overflow: auto;
+
+           .selected {
+               background-color: var(--settings__tab-bg--active, #{$o-component-active-bg});
+               box-shadow: inset 2px 0 0 $o-component-active-border;
+           }
+
+           .tab {
+               display: flex;
+               padding: 0 $o-horizontal-padding*2 0 $o-horizontal-padding;
+               height: 40px;
+               color: var(--settings__tab-color);
+               font-size: 13px;
+               line-height: 40px;
+               cursor: pointer;
+               white-space: nowrap;
+
+               .icon {
+                   width: 23px;
+                   min-width: 23px;
+                   margin-right: 10px;
+               }
+
+               &:hover, &.selected {
+                   color: $o-gray-900;
+               }
+           }
+       }
+
+       .settings {
+           position: relative;
+           flex: 1 1 100%;
+           background-color: $o-view-background-color;
+           overflow: auto;
+
+           > .app_settings_block {
+               h2 {
+                   margin: 0 0 !important;
+                   @include o-base-settings-horizontal-padding(.7rem);
+                   background-color: var(--settings__title-bg);
+                   font-size: 15px;
+
+                   &.o_invisible_modifier + .o_settings_container {
+                       display: none;
+                   }
+               }
+
+               h3 {
+                   margin: 0 0 !important;
+                   @include o-base-settings-horizontal-padding(.7rem);
+                   font-weight: 400;
+                   font-size: 13px;
+               }
+
+               .o_settings_container {
+                   max-width: map-get($grid-breakpoints, lg); // Provide a maximum container size to ensure readability
+                   @include media-breakpoint-up(md) {
+                        @include o-base-settings-horizontal-padding(0);
+                   }
+                   margin-bottom: 24px;
+               }
+           }
+
+           .settingSearchHeader {
+               display: flex;
+               align-items: center;
+               margin-bottom: 10px;
+               @include o-base-settings-horizontal-padding(.8rem);
+               background-color: map-get($grays, '200');
+
+               .icon {
+                   width: 1.4em;
+                   height: 1.4em;
+                   margin-right: 10px;
+               }
+
+               & + .app_settings_header {
+                   margin-top: -10px;
+               }
+           }
+
+           .app_settings_header {
+               @include o-base-settings-horizontal-padding(0);
+           }
+
+           .highlighter {
+               background: yellow;
+           }
+
+            .o_datepicker .o_datepicker_button {
+                visibility: visible;
+            }
+       }
+
+       .d-block {
+           display: block!important;
+       }
+   }
+}

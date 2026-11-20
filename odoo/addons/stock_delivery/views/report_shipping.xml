@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_shipping2" inherit_id="stock.report_picking">
+        <xpath expr="//div[@name='div_sched_date']" position="after">
+            <div t-if="o.picking_type_id.code == 'outgoing' and o.carrier_id" class="col-auto">
+                <strong>Carrier:</strong>
+                <p t-field="o.carrier_id"/>
+            </div>
+            <div t-if="o.weight" class="col-auto">
+                <strong>Weight:</strong>
+                <br/>
+                <span t-field="o.weight"/>
+                <span t-field="o.weight_uom_name"/>
+            </div>
+        </xpath>
+    </template>
+</odoo>

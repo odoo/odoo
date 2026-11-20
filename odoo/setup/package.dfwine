@@ -1,0 +1,85 @@
+# Please note that this Dockerfile is used for testing nightly builds and should
+# not be used to deploy Odoo
+FROM debian:bookworm
+MAINTAINER Odoo S.A. <info@odoo.com>
+
+ENV DEBIAN_FRONTEND noninteractive
+ENV LC_ALL C.UTF-8
+
+RUN dpkg --add-architecture i386
+
+RUN apt-get update \
+    && apt-get install -y curl unzip 7zip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Use wine-devel to get the fix for this bug (fixed in wine 9.3): https://bugs.winehq.org/show_bug.cgi?id=55897
+RUN mkdir -pm755 /etc/apt/keyrings \
+    && curl -sSL https://dl.winehq.org/wine-builds/winehq.key -o /etc/apt/keyrings/winehq-archive.key \
+    && curl -sSL https://dl.winehq.org/wine-builds/debian/dists/bookworm/winehq-bookworm.sources -o /etc/apt/sources.list.d/winehq.sources \
+    && apt-get update \
+    && apt-get install --install-recommends -y winehq-devel \
+    && rm -rf /var/lib/apt/lists/*
+
+USER odoo
+
+ARG DRIVE_C_DIR=/var/lib/odoo/.wine/drive_c
+ARG ODOO_BUILD_DIR=${DRIVE_C_DIR}/odoobuild
+# pre-create directories and link odoo sources to their mount point
+RUN mkdir -pm755 ${DRIVE_C_DIR} ${ODOO_BUILD_DIR}/nssm-2.24 ${ODOO_BUILD_DIR}/vcredist ${ODOO_BUILD_DIR}/WinPy64 ${ODOO_BUILD_DIR}/wkhtmltopdf \
+    && ln -s /data/src ${ODOO_BUILD_DIR}/server
+
+# Ignoring debug and fixme's message when running wine
+ENV WINEDEBUG=-all
+
+ARG NSIS_URL=https://downloads.sourceforge.net/project/nsis/NSIS%203/3.10/nsis-3.10.zip
+RUN curl -sSL ${NSIS_URL} -o /tmp/nsis.zip \
+    && unzip /tmp/nsis.zip -d ${DRIVE_C_DIR} \
+    && rm /tmp/nsis.zip
+
+ARG NSIS_PLUG_CURL=https://github.com/negrutiu/nsis-nscurl/releases/download/v24.6.7.61/NScurl.zip
+RUN curl -sSL ${NSIS_PLUG_CURL} -o /tmp/nsis_curl.zip \
+    && unzip /tmp/nsis_curl.zip Plugins/* -d ${DRIVE_C_DIR}/nsis-3.10/ \
+    && rm /tmp/nsis_curl.zip
+
+ARG NSIS_PLUG_ACCESS=https://nsis.sourceforge.io/mediawiki/images/4/4a/AccessControl.zip
+RUN curl -sSL ${NSIS_PLUG_ACCESS} -o /tmp/nsis_access.zip \
+        && unzip /tmp/nsis_access.zip Plugins/* -d ${DRIVE_C_DIR}/nsis-3.10/ \
+        && mv ${DRIVE_C_DIR}/nsis-3.10/Plugins/i386-unicode/* ${DRIVE_C_DIR}/nsis-3.10/Plugins/x86-unicode/ \
+        && mv ${DRIVE_C_DIR}/nsis-3.10/Plugins/i386-ansi/* ${DRIVE_C_DIR}/nsis-3.10/Plugins/x86-ansi/ \
+        && rm /tmp/nsis_access.zip
+
+ARG NSIS_PLUG_UNZIP=https://nsis.sourceforge.io/mediawiki/images/5/5a/NSISunzU.zip
+RUN curl -sSL ${NSIS_PLUG_UNZIP} -o /tmp/nsis_unzip.zip \
+        && unzip -j /tmp/nsis_unzip.zip NSISunzU/Plugin*/* -d ${DRIVE_C_DIR}/nsis-3.10/Plugins/x86-unicode/ \
+        && rm /tmp/nsis_unzip.zip
+
+ARG WINPY=7.5.20240410final/Winpython64-3.12.3.0dot.exe
+RUN curl -sSL https://github.com/winpython/winpython/releases/download/${WINPY} -o /tmp/winpydot.exe \
+    && 7zz x /tmp/winpydot.exe -o${ODOO_BUILD_DIR} \
+    && mv ${ODOO_BUILD_DIR}/WPy64*/* ${ODOO_BUILD_DIR}/WinPy64/ \
+    && rmdir ${ODOO_BUILD_DIR}/WPy64* \
+    && rm /tmp/winpydot.exe
+
+RUN curl -sSL https://nssm.cc/release/nssm-2.24.zip -o /tmp/nssm.zip \
+    && unzip /tmp/nssm.zip -d ${ODOO_BUILD_DIR} \
+    && rm /tmp/nssm.zip
+
+ARG WKHTMLTOPDF_URL=https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox-0.12.6-1.msvc2015-win64.exe
+RUN curl ${WKHTMLTOPDF_URL} -sSL  -o/tmp/wkhtml_installer.exe \
+    && echo '1efcfaf8472871268fd399865a3e62b435b91d4413009b80830eaaff7a57d088 /tmp/wkhtml_installer.exe' | sha256sum -c \
+    && 7zz e /tmp/wkhtml_installer.exe bin/wkhtmltopdf.exe -o${ODOO_BUILD_DIR}/wkhtmltopdf/ \
+    && rm /tmp/wkhtml_installer.exe
+
+ADD --chown=odoo:odoo \
+    https://download.microsoft.com/download/9/3/F/93FCF1E7-E6A4-478B-96E7-D4B285925B00/vc_redist.x64.exe \
+    ${ODOO_BUILD_DIR}/vcredist/
+
+# Pre install requirements
+ADD --chown=odoo:odoo requirements.txt ${DRIVE_C_DIR}
+ADD --chown=odoo:odoo requirements-local-proxy.txt ${DRIVE_C_DIR}
+ADD --chown=odoo:odoo https://nightly.odoo.com/wheels/netifaces-0.11.0-cp312-cp312-win_amd64.whl ${DRIVE_C_DIR}
+RUN wine ${ODOO_BUILD_DIR}/WinPy64/python-3.12.3.amd64/python.exe -m pip install --upgrade pip \
+    && wine ${ODOO_BUILD_DIR}/WinPy64/python-3.12.3.amd64/python.exe -m pip install "c:\netifaces-0.11.0-cp312-cp312-win_amd64.whl" \
+    && cat ${DRIVE_C_DIR}/requirements*.txt | while read PACKAGE ; do \
+    echo "${PACKAGE%%#*}" ; wine ${ODOO_BUILD_DIR}/WinPy64/python-3.12.3.amd64/python.exe -m pip install "${PACKAGE%%#*}" ; \
+    done

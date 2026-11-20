@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="hr_timesheet_attendance_report_restricted_company_rule" model="ir.rule">
+        <field name="name">Restricted Timesheet attendance Record: multi-company</field>
+        <field name="model_id" ref="model_hr_timesheet_attendance_report"/>
+        <field name="domain_force"> [('company_id', 'in', company_ids + [False])]</field>
+    </record>
+
+    <record id="hr_timesheet_attendance_report_rule_user" model="ir.rule">
+        <field name="name">Timesheet attendance Report: User</field>
+        <field name="model_id" ref="model_hr_timesheet_attendance_report"/>
+        <field name="domain_force">[('employee_id', '=', user.employee_id.id)]</field>
+        <field name="groups" eval="[(4, ref('hr_timesheet.group_hr_timesheet_user'))]"/>
+    </record>
+
+    <record id="hr_timesheet_attendance_report_rule_approver" model="ir.rule">
+        <field name="name">Timesheet attendance Report: Approver</field>
+        <field name="model_id" ref="model_hr_timesheet_attendance_report"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('hr_timesheet.group_hr_timesheet_approver'))]"/>
+    </record>
+
+    <record id="hr_timesheet_attendance_report_rule_manager" model="ir.rule">
+        <field name="name">Timesheet attendance Report: Administrator</field>
+        <field name="model_id" ref="model_hr_timesheet_attendance_report"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('hr_timesheet.group_timesheet_manager'))]"/>
+    </record>
+</odoo>

@@ -1,0 +1,1028 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* base_import
+# 
+# Translators:
+# Robin Calvin, 2023
+# Kim Asplund <kim.asplund@gmail.com>, 2023
+# Daniel Löfgren, 2023
+# Haojun Zou <apollo_zhj@msn.com>, 2023
+# Simon S, 2023
+# Martin Trigaux, 2023
+# Claes-Johan Dahlin, 2024
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
+# Lasse L, 2024
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2024
+# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-02-10 10:34+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2024\n"
+"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sv\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+#, python-format
+msgid "%s at multiple rows"
+msgstr "%s på flera rader"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+#, python-format
+msgid "%s records successfully imported"
+msgstr "%s poster har importerats framgångsrikt"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+#, python-format
+msgid ""
+"A single column was found in the file, this often means the file separator "
+"is incorrect."
+msgstr ""
+"En enda kolumn hittades i filen, detta betyder ofta att filseparatorn är "
+"felaktig."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
+#, python-format
+msgid "Additional Fields"
+msgstr "Ytterligare fält"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid "Advanced"
+msgstr "Avancerad"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid "Allow matching with subfields"
+msgstr "Tillåt matchning med delfält"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+#, python-format
+msgid ""
+"An unknown issue occurred during import (possibly lost connection, data "
+"limit exceeded or memory limits exceeded). Please retry in case the issue is"
+" transient. If the issue still occurs, try to split the file rather than "
+"import it at once."
+msgstr ""
+"Ett okänt fel uppstod vid importen (möjligen att anslutningen tappades, "
+"datagränsen eller minnesgränsen överskreds). Försök igen och kvarstår "
+"problemet bör du dela upp den i mindre bitar."
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base
+msgid "Base"
+msgstr "Bas"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_import
+msgid "Base Import"
+msgstr "Basimport"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_mapping
+msgid "Base Import Mapping"
+msgstr "Basimport härledning"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+#, python-format
+msgid "Batch"
+msgstr "Batch"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid "Batch Import"
+msgstr "Batch-import"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid "Batch limit"
+msgstr "Batchgräns"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+#, python-format
+msgid "Cancel"
+msgstr "Avbryt"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+#, python-format
+msgid "Click 'Resume' to proceed with the import, resuming at line %s."
+msgstr ""
+"Klicka på \"Fortsätt\" för att fortsätta med importen, som återupptas på rad"
+" %s."
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid "Column %s contains incorrect values (value: %s)"
+msgstr "Kolumn %s innehåller inkorrekt värde (värde: %s)"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid "Column %s contains incorrect values. Error in line %d: %s"
+msgstr "Kolumn %s innehåller inkorrekta värden. Fel på rad %d: %s"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
+msgid "Column Name"
+msgstr "Kolumnnamn"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+#: code:addons/base_import/static/src/import_model.js:0
+#: code:addons/base_import/static/src/import_model.js:0
+#, python-format
+msgid "Comma"
+msgstr "Komma"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+#, python-format
+msgid "Comments"
+msgstr "Kommentarer"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
+"%(error)s"
+msgstr ""
+"Kunde inte hämta URL %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+#, python-format
+msgid "Create new values"
+msgstr "Skapa nya värden"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__create_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__create_uid
+msgid "Created by"
+msgstr "Skapad av"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__create_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__create_date
+msgid "Created on"
+msgstr "Skapad den"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid "Database ID"
+msgstr "Databas-ID"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+#, python-format
+msgid "Date Format:"
+msgstr "Datumformat:"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+#, python-format
+msgid "Datetime Format:"
+msgstr "Datumtid-format:"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+#, python-format
+msgid "Decimals Separator:"
+msgstr "Avgränsare för decimaler:"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__display_name
+msgid "Display Name"
+msgstr "Visningsnamn"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+#: code:addons/base_import/static/src/import_model.js:0
+#, python-format
+msgid "Dot"
+msgstr "Punkt"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid "Download"
+msgstr "Ladda ner"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+#, python-format
+msgid "Encoding:"
+msgstr "Teckenkodning:"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid "Error Parsing Date [%s:L%d]: %s"
+msgstr "Fel vid datumanalys [%s:L %d]:%s"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+#, python-format
+msgid "Error at row %s: \"%s\""
+msgstr "Fel på rad %s: \"%s\""
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: Text Delimiter should be a single character."
+msgstr "Fel vid import av poster: Textavgränsare ska vara ett enda tecken."
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: all rows should be of the same size, but the "
+"title row has %d entries while the first row has %d. You may need to change "
+"the separator character."
+msgstr ""
+"Fel vid import av poster: alla rader ska vara av samma storlek, men "
+"titelraden har %d poster medan den första raden har %d. Du kan behöva ändra "
+"tecknet för separator."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+#, python-format
+msgid "Estimated time left:"
+msgstr "Beräknad tid kvar:"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+#, python-format
+msgid "Everything seems valid."
+msgstr "Allting verkar giltigt."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+#, python-format
+msgid "Excel files are recommended as formatting is automatic."
+msgstr "Excel-filer rekommenderas eftersom formateringen sker automatiskt."
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid "External ID"
+msgstr "Externt ID"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__field_name
+msgid "Field Name"
+msgstr "Fältnamn"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__file
+msgid "File"
+msgstr "Fil"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+#, python-format
+msgid "File Column"
+msgstr "Fil kolumn"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__file_name
+msgid "File Name"
+msgstr "Filnamn"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__file_type
+msgid "File Type"
+msgstr "Filtyp"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid "File size exceeds configured maximum (%s bytes)"
+msgstr "Filen överskrider det angivna maximala (%s bytes)"
+
+#. module: base_import
+#: model:ir.model.fields,help:base_import.field_base_import_import__file
+msgid "File to check and/or import, raw binary (not base64)"
+msgstr "Fil att kontrollera och/eller importera, rå binär (inte base64)"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+#, python-format
+msgid "Finalizing current batch before interrupting..."
+msgstr "Slutföra nuvarande batch innan den avbryts..."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+#, python-format
+msgid "For CSV files, you may need to select the correct separator."
+msgstr "För CSV-filer behöver du också välja korrekt separator."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid "Formatting"
+msgstr "Formaterar"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Found invalid image data, images should be imported as either URLs or "
+"base64-encoded data."
+msgstr ""
+"Hittade ogiltig bild-data. Bilder borde importeras som URL eller "
+"base64-kodad data."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid "Go to Import FAQ"
+msgstr "Gå till Vanliga frågor om import"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid "Help"
+msgstr "Hjälp"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+#, python-format
+msgid "Here is the start of the file we could not import:"
+msgstr "Det här är starten på filen som inte kunde importeras:"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__id
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__id
+msgid "ID"
+msgstr "ID"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+#, python-format
+msgid ""
+"If the file contains\n"
+"                    the column names, Odoo can try auto-detecting the\n"
+"                    field corresponding to the column. This makes imports\n"
+"                    simpler especially when the file has many columns."
+msgstr ""
+"Om filen innehåller\n"
+"                    kolumnnamn kan Odoo försöka med automatisk detektering av\n"
+"                    fält som motsvarar kolumnen. Detta gör importen enklare\n"
+"                    enklare, särskilt när filen har många kolumner."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid ""
+"If the model uses openchatter, history tracking will set up subscriptions "
+"and send notifications during the import, but lead to a slower import."
+msgstr ""
+"Om modellen använder openchatter kommer historik-spårningen ange en "
+"prenumeration och skicka notiser under importen. Detta leder dock till en "
+"långsammare import."
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Image size excessive, imported images must be smaller than 42 million pixel"
+msgstr ""
+"För stor bildstorlek, importerade bilder måste vara mindre än 42 miljoner "
+"pixlar"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+#, python-format
+msgid "Import"
+msgstr "Importera"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+#, python-format
+msgid "Import FAQ"
+msgstr "Frågor och svar om import"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+#, python-format
+msgid "Import a File"
+msgstr "Importera en fil"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid "Import file has no content or is corrupt"
+msgstr "Importfilen har inget innehåll eller är korrupt"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+#, python-format
+msgid "Import preview failed due to: \""
+msgstr "Förhandsgranskning av import misslyckades på grund av: \""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_records/import_records.xml:0
+#, python-format
+msgid "Import records"
+msgstr "Importera poster"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid "Imported file"
+msgstr "Importerad fil"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+#, python-format
+msgid "Importing"
+msgstr "Importerar"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with "
+"format: %(cell_format)s, as (%(format_type)s) formats are not supported."
+msgstr ""
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
+msgstr "Ogiltigt cellvärde på rad %(row)s, kolumn %(col)s: %(cell_value)s"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__write_uid
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__write_uid
+msgid "Last Updated by"
+msgstr "Senast uppdaterad av"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__write_date
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__write_date
+msgid "Last Updated on"
+msgstr "Senast uppdaterad den"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+#, python-format
+msgid "Load File"
+msgstr "Ladda fil"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+#, python-format
+msgid "Loading file..."
+msgstr "Laddar fil..."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_block_ui.xml:0
+#, python-format
+msgid "Loading..."
+msgstr "Laddar..."
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import__res_model
+msgid "Model"
+msgstr "Modell"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+#, python-format
+msgid "Multiple errors occurred"
+msgstr "Flera fel uppstod"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+#, python-format
+msgid "Need Help?"
+msgstr "Behöver du hjälp?"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+#, python-format
+msgid "No Separator"
+msgstr "Ingen separator"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+#, python-format
+msgid "No matching records found for the following name"
+msgstr "Inga matchande register hittades för följande namn"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+#, python-format
+msgid "Odoo Field"
+msgstr "Odoo-fältet"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+#, python-format
+msgid "Prevent import"
+msgstr "Förhindra import"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+#, python-format
+msgid "Preview"
+msgstr "Förhandsgranskning"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+#, python-format
+msgid "Progress bar"
+msgstr "Progress bar"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid "Reimport"
+msgstr "Återimport"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
+#, python-format
+msgid "Relation Fields"
+msgstr "Relationsfält"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
+msgid "Res Model"
+msgstr "Res model"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+#, python-format
+msgid "Resume"
+msgstr " Meritförteckning"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
+#, python-format
+msgid "Search a field..."
+msgstr "Sök i ett fält..."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+#, python-format
+msgid "See possible values"
+msgstr "Se möjliga värden"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+#, python-format
+msgid "Selected Sheet:"
+msgstr "Valt blad:"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+#, python-format
+msgid "Semicolon"
+msgstr "Semikolon"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+#, python-format
+msgid "Separator:"
+msgstr "Separator:"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+#, python-format
+msgid "Set to: %s"
+msgstr "Ställ in på: %s"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+#, python-format
+msgid "Set to: False"
+msgstr "Sätt till: Falsk"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+#, python-format
+msgid "Set to: True"
+msgstr "Sätt till: Sant"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+#, python-format
+msgid "Set value as empty"
+msgstr "Ange värde som tomt"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid "Sheet:"
+msgstr "Blad:"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+#, python-format
+msgid "Skip record"
+msgstr "Hoppa över post"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+#, python-format
+msgid "Space"
+msgstr "Mellanslag"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
+#, python-format
+msgid "Standard Fields"
+msgstr "Standardfält"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid "Start at line"
+msgstr "Börja på rad"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+#, python-format
+msgid "Stop Import"
+msgstr "Avbryt import"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
+#, python-format
+msgid "Suggested Fields"
+msgstr "Föreslagna fält"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+#, python-format
+msgid "Tab"
+msgstr "Tabb"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+#, python-format
+msgid "Test"
+msgstr "Testa"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+#, python-format
+msgid "Testing"
+msgstr "Testar"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+#, python-format
+msgid "Text Delimiter:"
+msgstr "Textavskiljare:"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+#, python-format
+msgid "The file contains blocking errors (see below)"
+msgstr "Filen innehåller blockeringsfel (se nedan)"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid "The file will be imported by batches"
+msgstr "Filen kommer att importeras i omgångar"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+#, python-format
+msgid "This column will be concatenated in field"
+msgstr "Denna kolumn kommer att konkateneras i fältet"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+#, python-format
+msgid "Thousands Separator:"
+msgstr "Tusentalsseparator:"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+#, python-format
+msgid "To import multiple values, separate them by a comma."
+msgstr "För att importera flera värden, separera dem med ett kommatecken."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+#, python-format
+msgid "To import, select a field..."
+msgstr "För att importera, välj ett fält..."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid "Track history during import"
+msgstr "Spåra historik under import"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
+msgstr "Kunde inte ladda \"{extension}\" fil: kräver Python-modulen \"{modname}\""
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
+msgstr ""
+"Inget stöd för filformatet \"{}\". Importen stöder bar CSV, ODS, XLS och "
+"XLSX"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+#, python-format
+msgid "Untitled"
+msgstr "Namnlös"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+#, python-format
+msgid "Upload File"
+msgstr "Ladda upp fil"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+#, python-format
+msgid "Upload an Excel or CSV file to import"
+msgstr "Ladda upp en Excel- eller CSV-fil för import"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+#, python-format
+msgid ""
+"Use HH for hours in a 24h system, use II in conjonction with 'p' for a 12h "
+"system. You can use a custom format in addition to the suggestions provided."
+" Leave empty to let Odoo guess the format (recommended)"
+msgstr ""
+"Använd HH för timmar i ett 24h-system, använd II i kombination med 'p' för "
+"ett 12h-system. Du kan använda ett anpassat format utöver de förslag som "
+"ges. Lämna tomt för att låta Odoo gissa formatet (rekommenderas)"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+#, python-format
+msgid ""
+"Use YYYY to represent the year, MM for the month and DD for the day. Include"
+" separators such as a dot, forward slash or dash. You can use a custom "
+"format in addition to the suggestions provided. Leave empty to let Odoo "
+"guess the format (recommended)"
+msgstr ""
+"Använd YYYY för att ange året, MM för månaden och DD för dagen. Inkludera "
+"separatorer som punkt, snedstreck eller bindestreck. Du kan använda ett "
+"anpassat format utöver de förslag som ges. Lämna tomt för att låta Odoo "
+"gissa formatet (rekommenderas)"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid "Use first row as header"
+msgstr "Använd första raden som rubrik"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_res_users
+msgid "User"
+msgstr "Användare"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid ""
+"Warning: ignores the labels line, empty lines and lines composed only of "
+"empty cells"
+msgstr ""
+"Varning: ignorerar etikettraden, tomma rader och rader som endast består av "
+"tomma celler"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_options/import_data_options.xml:0
+#, python-format
+msgid "When a value cannot be matched:"
+msgstr "När ett värde inte kan matchas:"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"You can not import images via URL, check with your administrator or support "
+"for the reason."
+msgstr ""
+"Du kan inte importera bilder via URL. Kontakta din administratör eller "
+"support för att få veta orsaken."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+#, python-format
+msgid "You can test or reload your file before resuming the import."
+msgstr "Du kan testa eller ladda om din fil innan du återupptar importen."
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid "You must configure at least one field to import"
+msgstr "Du måste välja minst ett fält att importera"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+#, python-format
+msgid "at multiple rows"
+msgstr "på flera rader"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+#, python-format
+msgid "at row"
+msgstr "på rad"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+#, python-format
+msgid "in field"
+msgstr "på fältet"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+#, python-format
+msgid "minutes"
+msgstr "minuter"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+#, python-format
+msgid "more"
+msgstr "mer"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+#, python-format
+msgid "out of"
+msgstr "av"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+#, python-format
+msgid "seconds"
+msgstr "sekunder"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid "unknown error code %s"
+msgstr "okänd felkod %s"

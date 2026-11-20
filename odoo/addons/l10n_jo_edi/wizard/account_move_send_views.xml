@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_move_send_form" model="ir.ui.view">
+        <field name="name">account.move.send.form</field>
+        <field name="model">account.move.send</field>
+        <field name="inherit_id" ref="account.account_move_send_form"/>
+        <field name="arch" type="xml">
+            <div name="warnings" position="inside">
+                <div class="alert alert-warning" role="alert"
+                    invisible="not l10n_jo_edi_is_visible or not l10n_jo_edi_is_enabled">
+                    Jordanian e-invoicing (JoFotara) was enabled
+                </div>
+            </div>
+            <xpath expr="//div[@name='advanced_options']" position="inside">
+                <field name="l10n_jo_edi_is_visible" invisible="1"/>
+                <div name="option_l10n_jo_edi" invisible="not l10n_jo_edi_is_visible">
+                    <field name="l10n_jo_edi_is_enabled"/>
+                    <b>
+                        <label for="l10n_jo_edi_is_enabled"/>
+                    </b>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,916 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* purchase_stock
+# 
+# Translators:
+# InfernalLV <karlisdreizis@gmail.com>, 2023
+# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023
+# Konstantins Zabogonskis <inculin4ik@gmail.com>, 2023
+# Arnis Putniņš <arnis@allegro.lv>, 2023
+# Martin Trigaux, 2023
+# ievaputnina <ievai.putninai@gmail.com>, 2023
+# Will Sensors, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Will Sensors, 2024\n"
+"Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: lv\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
+msgid "% On-Time Delivery"
+msgstr "% piegāde laikā"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+#: code:addons/purchase_stock/models/stock_rule.py:0
+#: code:addons/purchase_stock/models/stock_rule.py:0
+#, python-format
+msgid "+ %d day(s)"
+msgstr "+ %d diena(-as)"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
+msgid "<span class=\"o_stat_text\">On-time Rate</span>"
+msgstr "<span class=\"o_stat_text\">Savlaicīguma rādītājs</span>"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.stock_production_lot_view_form
+msgid "<span class=\"o_stat_text\">Purchases</span>"
+msgstr "<span class=\"o_stat_text\">Iepirkumi</span>"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
+msgid "<span class=\"o_stat_value\">%</span>"
+msgstr "<span class=\"o_stat_value\">%</span>"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
+msgid "<span invisible=\"on_time_rate &gt;= 0\">No On-time Delivery Data</span>"
+msgstr ""
+"<span invisible=\"on_time_rate &gt;= 0\">Nav laicīgas piegādes datu</span>"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+msgid "<span> days</span>"
+msgstr "<span> dienas</span>"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
+msgid "<span>Forecasted: </span>"
+msgstr "<span>Prognozēts: </span>"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
+#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
+msgid "<strong>Incoterm:</strong>"
+msgstr "<strong>Incoterm:</strong><br/>"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
+#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
+msgid "<strong>Shipping address:</strong>"
+msgstr "<strong>Piegādes adrese:</strong>"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__qty_received_method
+msgid ""
+"According to product configuration, the received quantity can be automatically computed by mechanism:\n"
+"  - Manual: the quantity is set manually on the line\n"
+"  - Stock Moves: the quantity comes from confirmed pickings\n"
+msgstr ""
+"Atbilstoši produkta konfigurācijai saņemto daudzumu var automātiski aprēķināt ar mehānisma palīdzību:\n"
+"  - Manuāli: daudzums tiek iestatīts manuāli uz līnijas\n"
+"  - Krājumu pārvietošana: daudzums tiek iegūts no apstiprinātās komplektācijas\n"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__action
+msgid "Action"
+msgstr "Darbība"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__effective_date
+msgid "Arrival"
+msgstr "Ierašanās"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock.py:0
+#: model:ir.model.fields.selection,name:purchase_stock.selection__stock_rule__action__buy
+#: model:stock.route,name:purchase_stock.route_warehouse0_buy
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_report_stock_rule
+#, python-format
+msgid "Buy"
+msgstr "Pirkt"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__buy_pull_id
+msgid "Buy rule"
+msgstr "Pirkšanas noteikums"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__buy_to_resupply
+msgid "Buy to Resupply"
+msgstr "Pirkt noliktavas krājumiem"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_res_company
+msgid "Companies"
+msgstr "Uzņēmumi"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order__effective_date
+msgid "Completion date of the first receipt order."
+msgstr "Pirmā pasūtījuma saņemšanas datums."
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfigurācijas uzstādījumi"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_res_partner
+msgid "Contact"
+msgstr "Kontaktpersona"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/purchase_order.py:0
+#, python-format
+msgid "Corresponding receipt not found."
+msgstr "Atbilstoša piegāde nav atrasta."
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_move__created_purchase_line_ids
+msgid "Created Purchase Order Lines"
+msgstr "Izveidotās pirkuma pasūtījuma rindas"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_move.py:0
+#: code:addons/purchase_stock/models/stock_move.py:0
+#, python-format
+msgid "Currency exchange rate difference"
+msgstr "Valūtas kursa starpība"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__product_description_variants
+msgid "Custom Description"
+msgstr "Pielāgotais apraksts"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+msgid "Days needed to confirm a PO"
+msgstr "Dienas, kas vajadzīgas, lai apstiprinātu PO"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_res_company__days_to_purchase
+#: model:ir.model.fields,help:purchase_stock.field_res_config_settings__days_to_purchase
+msgid "Days needed to confirm a PO, define when a PO should be validated"
+msgstr ""
+"Dienas, kas vajadzīgas, lai apstiprinātu PO, noteikt, kad PO jāapstiprina"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+#: model:ir.model.fields,field_description:purchase_stock.field_res_company__days_to_purchase
+#: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__days_to_purchase
+#, python-format
+msgid "Days to Purchase"
+msgstr "Dienas līdz iegādei"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_type_id
+msgid "Deliver To"
+msgstr "Piegāde uz"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_product_product__route_ids
+#: model:ir.model.fields,help:purchase_stock.field_product_template__route_ids
+msgid ""
+"Depending on the modules installed, this will allow you to define the route "
+"of the product: whether it will be bought, manufactured, replenished on "
+"order, etc."
+msgstr ""
+"Atkarībā no instalētajiem moduļiem tas ļaus jums noteikt produkta maršrutu: "
+"vai tas tiks nopirkts, izgatavots, papildināts pēc pasūtījuma utt."
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__default_location_dest_id_usage
+msgid "Destination Location Type"
+msgstr "Piegādes vieta"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__display_name
+msgid "Display Name"
+msgstr "Attēlotais nosaukums"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_dest_ids
+msgid "Downstream moves alt"
+msgstr "Pārvietoties uz leju alt"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__dest_address_id
+msgid "Dropship Address"
+msgstr "Dropship adrese"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__module_stock_dropshipping
+msgid "Dropshipping"
+msgstr "Dropship piegādes"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__effective_date
+#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__date
+msgid "Effective Date"
+msgstr "Izpildes Datums"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_filter
+msgid "Effective Date Last Year"
+msgstr "Izpildes datums Pagājušais gads"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
+msgid "Exception(s) occurred on the purchase order(s):"
+msgstr "Iepirkuma pasūtījumā(-os) konstatēts(-i) izņēmums(-i):"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
+msgid "Exception(s):"
+msgstr "Izņēmums(-i):"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/purchase_order_line.py:0
+#, python-format
+msgid ""
+"For the product %s, the warehouse of the operation type (%s) is inconsistent"
+" with the location (%s) of the reordering rule (%s). Change the operation "
+"type or cancel the request for quotation."
+msgstr ""
+"Produktam %s operācijas tipa noliktava (%s) neatbilst sakārtošanas noteikuma"
+" (%s) atrašanās vietai (%s). Mainiet operācijas veidu vai anulējiet cenu "
+"piedāvājuma pieprasījumu."
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
+msgid "Forecast Report"
+msgstr "Prognozes ziņojums"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__forecasted_issue
+msgid "Forecasted Issue"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order__receipt_status__full
+msgid "Fully Received"
+msgstr "Pilnībā saņemts"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
+#, python-format
+msgid "Generate the draft vendor bill."
+msgstr "Veidot melnrakstu izmaksai."
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
+#, python-format
+msgid "Go back to the purchase order to generate the vendor bill."
+msgstr "Atgriezties iepirkuma pasūtījumā, lai izveidotu izmaksu."
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__id
+msgid "ID"
+msgstr "ID"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__incoming_picking_count
+msgid "Incoming Shipment count"
+msgstr "Ienākošo sūtījumu skaits"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
+msgid "Incoming Shipments"
+msgstr "Ienākošie Sūtījumi"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__incoterm_location
+msgid "Incoterm Location"
+msgstr "Incoterm Atrašanās vieta"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__is_shipped
+msgid "Is Shipped"
+msgstr "Ir nosūtīts"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__is_installed_sale
+msgid "Is the Sale Module Installed"
+msgstr "Vai ir instalēts pārdošanas modulis"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_account_move
+msgid "Journal Entry"
+msgstr "Grāmatojumi"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_account_move_line
+msgid "Journal Item"
+msgstr "Kontējums"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_product_supplierinfo__last_purchase_date
+msgid "Last Purchase"
+msgstr "Pēdējais pirkums"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
+msgid "Logistics"
+msgstr "Loģistika"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_lot
+msgid "Lot/Serial"
+msgstr "Partija/Sērija"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
+msgid "Manual actions may be needed."
+msgstr "Var būt nepieciešamas manuālas darbības."
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+msgid ""
+"Margin of error for vendor lead times. When the system generates Purchase "
+"Orders for reordering products,they will be scheduled that many days earlier"
+" to cope with unexpected vendor delays."
+msgstr ""
+"Kļūdas robeža attiecībā uz piegādātāju izpildes termiņiem. Kad sistēma "
+"ģenerē iepirkuma pasūtījumus produktu atkārtotai pasūtīšanai, tie tiks "
+"plānoti par daudzām dienām agrāk, lai tiktu galā ar neparedzētiem "
+"piegādātāju kavējumiem."
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_warehouse_orderpoint
+msgid "Minimum Inventory Rule"
+msgstr "Minimālu atlikumu noteikums"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+msgid "Move forward expected request creation date by"
+msgstr "Pārcelt paredzamo pieprasījuma izveides datumu par"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
+msgid "Next transfer(s) impacted:"
+msgstr "Nākamais(-ie) pārskaitījums(-i), kas ietekmē:"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
+msgid "No data yet"
+msgstr "Vēl nav datu"
+
+#. module: purchase_stock
+#: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order__receipt_status__pending
+msgid "Not Received"
+msgstr "Nav saņemts"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_move.py:0
+#, python-format
+msgid ""
+"Odoo is not able to generate the anglo saxon entries. The total valuation of"
+" %s is zero."
+msgstr ""
+"Odoo nespēj ģenerēt anglosakšu ierakstus. Kopējais %s novērtējums ir nulle."
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_view_graph
+msgid "On-Time Delivery"
+msgstr "Piegāde laikā"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__on_time_rate
+#: model:ir.model.fields,field_description:purchase_stock.field_res_partner__on_time_rate
+#: model:ir.model.fields,field_description:purchase_stock.field_res_users__on_time_rate
+#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__on_time_rate
+msgid "On-Time Delivery Rate"
+msgstr "Laicīgas piegādes likme"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__qty_on_time
+msgid "On-Time Quantity"
+msgstr "Laicīgas piegādes daudzums"
+
+#. module: purchase_stock
+#: model:ir.actions.act_window,name:purchase_stock.action_purchase_vendor_delay_report
+#: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_filter
+msgid "On-time Delivery"
+msgstr "Piegāde laikā"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
+msgid "On-time Rate"
+msgstr "Piegādes precizitātes rādītājs"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__orderpoint_id
+msgid "Orderpoint"
+msgstr "Pasūtījuma punkts"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order__on_time_rate
+#: model:ir.model.fields,help:purchase_stock.field_res_partner__on_time_rate
+#: model:ir.model.fields,help:purchase_stock.field_res_users__on_time_rate
+msgid ""
+"Over the past x days; the number of products received on time divided by the"
+" number of ordered products.x is either the System Parameter "
+"purchase_stock.on_time_delivery_days or the default 365"
+msgstr ""
+"Pēdējo x dienu laikā; savlaicīgi saņemto produktu skaits, dalīts ar pasūtīto"
+" produktu skaitu.x ir vai nu sistēmas parametrs "
+"purchase_stock.on_time_delivery_days, vai noklusējuma vērtība 365"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_product_product__purchase_order_line_ids
+msgid "PO Lines"
+msgstr "PO līnijas"
+
+#. module: purchase_stock
+#: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order__receipt_status__partial
+msgid "Partially Received"
+msgstr "Daļēji saņemts"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_product_category__property_account_creditor_price_difference_categ
+#: model:ir.model.fields,field_description:purchase_stock.field_product_product__property_account_creditor_price_difference
+#: model:ir.model.fields,field_description:purchase_stock.field_product_template__property_account_creditor_price_difference
+msgid "Price Difference Account"
+msgstr "Cenu starpības konts"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
+#, python-format
+msgid "Process all the receipt quantities."
+msgstr "Apstrādājiet visus saņemtos daudzumus."
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_procurement_group
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__group_id
+msgid "Procurement Group"
+msgstr "Apgādes grupa"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_product_template
+#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__product_id
+msgid "Product"
+msgstr "Produkts"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_product_category
+#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__category_id
+msgid "Product Category"
+msgstr "Produkta Kategorija"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_product_replenish
+msgid "Product Replenish"
+msgstr "Pasūtīt klāt produktu"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__supplierinfo_id
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__supplier_id
+msgid "Product Supplier"
+msgstr "Produkta piegādātājs"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_product_product
+msgid "Product Variant"
+msgstr "Produkta variants"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__propagate_cancel
+msgid "Propagate cancellation"
+msgstr "Propagēt atcelšanu"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_res_partner__purchase_line_ids
+#: model:ir.model.fields,field_description:purchase_stock.field_res_users__purchase_line_ids
+msgid "Purchase Lines"
+msgstr "Iepirkuma rindas"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_purchase_order
+msgid "Purchase Order"
+msgstr "Iepirkšanas Pasūtījums"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_purchase_order_line
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_move__purchase_line_id
+msgid "Purchase Order Line"
+msgstr "Pasūtījuma rinda"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_lot__purchase_order_ids
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__purchase_id
+#: model_terms:ir.ui.view,arch_db:purchase_stock.stock_production_lot_view_form
+msgid "Purchase Orders"
+msgstr "Iepirkšanas Pasūtījumi"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_purchase_report
+msgid "Purchase Report"
+msgstr "Iepirkumu ziņojums"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+#, python-format
+msgid "Purchase Security Lead Time"
+msgstr "Iepirkuma drošības nodrošināšanas laiks"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__purchase_visibility_days
+msgid "Purchase Visibility Days"
+msgstr "Iepirkuma redzamības dienas"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_lot__purchase_order_count
+msgid "Purchase order count"
+msgstr "Iepirkšanas pasūtījumu skaits"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order__dest_address_id
+msgid ""
+"Put an address if you want to deliver directly from the vendor to the "
+"customer. Otherwise, keep empty to deliver to your own company."
+msgstr ""
+"Ievieto adresi, ja vēlies piegādāt pa tiešo no piegādātāja klientam. Vai "
+"atstāj tukšu, lai piegādātu uz Tavu adresi."
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
+msgid "Receipt"
+msgstr "Saņemšana"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__receipt_status
+msgid "Receipt Status"
+msgstr "Saņemšanas statuss"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
+msgid "Receive Products"
+msgstr "Saņemt Preci"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
+#, python-format
+msgid "Receive the ordered products."
+msgstr "Saņemt pasūtītos produktus."
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__qty_received_method
+msgid "Received Qty Method"
+msgstr "Saņemtā daudzuma metode"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_ids
+msgid "Receptions"
+msgstr "Saņemšana"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
+msgid "Request your vendors to deliver to your customers"
+msgstr "Pieprasiet saviem piegādātājiem veikt piegādi klientiem"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/purchase_stock_forecasted/forecasted_details.xml:0
+#, python-format
+msgid "Requests for quotation"
+msgstr "Cenu piedāvājuma pieprasījumi"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_ids
+msgid "Reservation"
+msgstr "Rezervācija"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_return_picking
+msgid "Return Picking"
+msgstr "Preču Atgriešana"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_product_product__route_ids
+#: model:ir.model.fields,field_description:purchase_stock.field_product_template__route_ids
+msgid "Routes"
+msgstr "Maršruti"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+msgid "Schedule request for quotations earlier to avoid delays"
+msgstr ""
+"Lai izvairītos no kavēšanās, cenu piedāvājumu pieprasījumu ieplānojiet agrāk"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.product_supplierinfo_replenishment_tree_view
+msgid "Set as Supplier"
+msgstr "Iestatīts kā piegādātājs"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_product_supplierinfo__show_set_supplier_button
+msgid "Show Set Supplier Button"
+msgstr "Rādīt pogu Iestatīt piegādātāju"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_product_replenish__show_vendor
+msgid "Show Vendor"
+msgstr "Rādīt piegādātāju"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__show_supplier
+msgid "Show supplier column"
+msgstr "Rādīt piegādātāja kolonnu"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_move
+msgid "Stock Move"
+msgstr "Preču kustība Noliktavā"
+
+#. module: purchase_stock
+#: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order_line__qty_received_method__stock_moves
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_line_view_form_inherit
+msgid "Stock Moves"
+msgstr "Preču kustība Noliktavā"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_forecasted_product_product
+msgid "Stock Replenishment Report"
+msgstr "Noliktavas papildināšanas pārskats"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_rule
+msgid "Stock Rule"
+msgstr "Noliktavas noteikums"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_valuation_layer
+msgid "Stock Valuation Layer"
+msgstr "Noliktavas vērtēšanas slānis"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_report_stock_report_stock_rule
+msgid "Stock rule report"
+msgstr "Pārskats par noliktavas noteikumiem"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_replenishment_info
+msgid "Stock supplier replenishment information"
+msgstr "Informācija par preču papildināšanu no piegādātājiem"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_replenishment_option
+msgid "Stock warehouse replenishment option"
+msgstr "Krājumu noliktavas papildināšanas iespēja"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_product_supplierinfo
+msgid "Supplier Pricelist"
+msgstr "Piegādātāja cenrādis"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__supplierinfo_ids
+msgid "Supplierinfo"
+msgstr "Piegādātāja info"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order__default_location_dest_id_usage
+msgid "Technical field used to display the Drop Ship Address"
+msgstr "Tiek izmantots tehniskais lauks, lai attēlotu Dropship adresi"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock.py:0
+#, python-format
+msgid "The following replenishment order has been generated"
+msgstr "Ir izveidots šāds papildināšanas rīkojums"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/purchase_order_line.py:0
+#, python-format
+msgid ""
+"The quantities on your purchase order indicate less than billed. You should "
+"ask for a refund."
+msgstr ""
+"Iepirkšanas pasūtījumā norādītais daudzums ir mazāks par rēķinā norādīto. "
+"Jums jāpieprasa atmaksāt naudu."
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+#, python-format
+msgid ""
+"There is no matching vendor price to generate the purchase order for product"
+" %s (no vendor defined, minimum quantity not reached, dates not valid, ...)."
+" Go on the product form and complete the list of vendors."
+msgstr ""
+"Preces %s pirkuma pasūtījuma sagatavošanai nav atbilstošas piegādātāja cenas"
+" (nav noteikts piegādātājs, minimālais daudzums nav sasniegts, datumi nav "
+"derīgi, ...). Iet uz produkta kartiņu un aizpildiet piegādātāja sarakstu."
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_product_product__property_account_creditor_price_difference
+#: model:ir.model.fields,help:purchase_stock.field_product_template__property_account_creditor_price_difference
+msgid ""
+"This account is used in automated inventory valuation to record the price "
+"difference between a purchase order and its related vendor bill when "
+"validating this vendor bill."
+msgstr ""
+"Šo kontu izmanto automatizētajā krājumu novērtēšanā, lai reģistrētu cenu "
+"starpību starp pirkuma pasūtījumu un ar to saistīto piegādātāja rēķinu, "
+"apstiprinot šo piegādātāja rēķinu."
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_product_category__property_account_creditor_price_difference_categ
+msgid ""
+"This account will be used to value price difference between purchase price "
+"and accounting cost."
+msgstr ""
+"Šis konts tiks izmantots cenas starpībai starp piegādātāja cenu un "
+"grāmatvedības izmaksām."
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
+msgid ""
+"This adds a dropshipping route to apply on products in order to request your"
+" vendors to deliver to your customers. A product to dropship will generate a"
+" purchase request for quotation once the sales order confirmed. This is a "
+"on-demand flow. The requested delivery address will be the customer delivery"
+" address and not your warehouse."
+msgstr ""
+"Tas papildina dropshipping maršrutu, kas jāpiemēro produktiem, lai "
+"pieprasītu piegādātājiem piegādāt jūsu klientiem. Kad pārdošanas pasūtījums "
+"būs apstiprināts, dropship produkts radīs pirkuma pieprasījumu. Šī ir plūsma"
+" pēc pieprasījuma. Pieprasītā piegādes adrese būs klienta piegādes adrese, "
+"nevis jūsu noliktava."
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order__picking_type_id
+msgid "This will determine operation type of incoming shipment"
+msgstr "Tas noteiks ienākošā sūtījuma veidu"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/purchase_order.py:0
+#, python-format
+msgid ""
+"Those dates couldn’t be modified accordingly on the receipt %s which had "
+"already been validated."
+msgstr ""
+"Šos datumus nevarēja attiecīgi mainīt saņemšanā %s, kas jau bija "
+"apstiprināta."
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/purchase_order.py:0
+#, python-format
+msgid "Those dates have been updated accordingly on the receipt %s."
+msgstr "Šie datumi ir attiecīgi atjaunināti saņemšanā %s."
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__qty_total
+msgid "Total Quantity"
+msgstr "Kopējais Daudzums"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_picking
+msgid "Transfer"
+msgstr "Pārskaitījums"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/purchase_order.py:0
+#, python-format
+msgid ""
+"Unable to cancel purchase order %s as some receptions have already been "
+"done."
+msgstr "Nevar atcelt iepirkumu %s jo dažas pozīcijas ir jau saņemtas."
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
+#, python-format
+msgid "Validate the receipt of all ordered products."
+msgstr "Apstipriniet visu pasūtīto produktu saņemšanu."
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_product_replenish__supplier_id
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__vendor_id
+#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__partner_id
+#: model_terms:ir.ui.view,arch_db:purchase_stock.view_warehouse_orderpoint_tree_editable_inherited_mrp
+msgid "Vendor"
+msgstr "Piegādātājs"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_vendor_delay_report
+msgid "Vendor Delay Report"
+msgstr "Piegādātāja kavējuma ziņojums"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+#, python-format
+msgid "Vendor Lead Time"
+msgstr "Piegādātāja izpildes laiks"
+
+#. module: purchase_stock
+#: model_terms:ir.actions.act_window,help:purchase_stock.action_purchase_vendor_delay_report
+msgid "Vendor On-time Delivery analysis"
+msgstr "Piegādātāju piegādes analīze"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.view_stock_replenishment_info_stock_purchase_inherit
+msgid "Vendors"
+msgstr "Pārdevēji"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_stock_warehouse_orderpoint__purchase_visibility_days
+msgid "Visibility Days applied on the purchase routes."
+msgstr "Redzamības dienas, kas tiek piemērotas iepirkuma maršrutiem."
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_warehouse
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__picking_type_id
+msgid "Warehouse"
+msgstr "Noliktava"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_stock_warehouse__buy_to_resupply
+msgid "When products are bought, they can be delivered to this warehouse"
+msgstr "Kad produkti tiek iepirkti, they can be delivered to this warehouse"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+#, python-format
+msgid ""
+"When products are needed in <b>%s</b>, <br/> a request for quotation is "
+"created to fulfill the need.<br/>Note: This rule will be used in combination"
+" with the rules<br/>of the reception route(s)"
+msgstr ""
+"Kad produkti ir nepieciešami <b>%s</b>, <br/> tiek izveidots cenu "
+"piedāvājuma pieprasījums, lai apmierinātu vajadzību.<br/>Piezīme: Šis "
+"noteikums tiks izmantots kopā ar saņemšanas maršruta(-u) noteikumiem<br/>"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/purchase_order_line.py:0
+#, python-format
+msgid ""
+"You cannot decrease the ordered quantity below the received quantity.\n"
+"Create a return first."
+msgstr ""
+"Jūs nevarat samazināt pasūtīto daudzumu zem saņemtā daudzuma.\n"
+"Vispirms izveidojiet atgriešanu."
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/purchase_order.py:0
+#, python-format
+msgid "You must set a Vendor Location for this partner %s"
+msgstr "Šim partnerim jānorāda Piegādātāja atrašanās vieta %s"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+msgid "days"
+msgstr "dienas"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
+msgid "of"
+msgstr "no"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
+msgid "ordered instead of"
+msgstr "pasūtīts šī vietā"

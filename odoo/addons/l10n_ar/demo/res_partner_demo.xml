@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ADHOC - Supplier/Customer -->
+
+    <record id="res_partner_adhoc" model="res.partner">
+        <field name="name">ADHOC SA</field>
+        <field eval="[(6, 0, [ref('base.res_partner_category_8'), ref('base.res_partner_category_11')])]" name="category_id"/>
+        <field name="is_company">1</field>
+        <field name="city">Rosario</field>
+        <field name="zip">2000</field>
+        <field name="state_id" ref="base.state_ar_s"/>
+        <field name="country_id" ref="base.ar"/>
+        <field name="street">Ovidio Lagos 41 bis</field>
+        <field name="email">contacto@adhoc.ar</field>
+        <field name="phone">(+54) (341) 208 0203</field>
+        <field name="website">https://www.adhoc.ar/</field>
+        <field name='l10n_latam_identification_type_id' ref="l10n_ar.it_cuit"/>
+        <field name='vat'>30714295698</field>
+        <field name="image_1920" type="base64" file="l10n_ar/demo/adhoc_logo.png"/>
+        <field name='l10n_ar_afip_responsibility_type_id' ref="l10n_ar.res_IVARI"/>
+    </record>
+
+    <!-- Gritti Agrimensura -->
+    <record id="res_partner_gritti_agrimensura" model="res.partner">
+        <field name="name">Gritti Agrimensura</field>
+        <field eval="[(6, 0, [ref('base.res_partner_category_8'), ref('base.res_partner_category_11')])]" name="category_id"/>
+        <field name="is_company">1</field>
+        <field name="city">Rosario</field>
+        <field name="zip">2000</field>
+        <field name="state_id" ref="base.state_ar_s"/>
+        <field name="country_id" ref="base.ar"/>
+        <field name="street">Calle Falsa 123</field>
+        <field name="email">info@example.com.ar</field>
+        <field name="phone">(+54) (341) 111 2222</field>
+        <field name="website">http://www.grittiagrimensura.com</field>
+        <field name='l10n_latam_identification_type_id' ref="l10n_ar.it_cuit"/>
+        <field name='vat'>27320732811</field>
+        <field name="image_1920" type="base64" file="l10n_ar/demo/gritti_logo.png"/>
+        <field name='l10n_ar_afip_responsibility_type_id' ref="l10n_ar.res_RM"/>
+    </record>
+
+    <!-- Servicios Globales SRL -->
+    <record id="res_partner_cmr" model="res.partner">
+        <field name="name">Servicios Globales SRL</field>
+        <field name="is_company">1</field>
+        <field name="city">Rosario</field>
+        <field name="zip">2000</field>
+        <field name="state_id" ref="base.state_ar_s"/>
+        <field name="country_id" ref="base.ar"/>
+        <field name="street">Bv. Oroño 789</field>
+        <field name="email">contacto@serviciosglobales.com.ar</field>
+        <field name="phone">(+54) (341) 333 4444</field>
+        <field name="website">http://www.serviciosglobales.com.ar/</field>
+        <field name='l10n_latam_identification_type_id' ref="l10n_ar.it_cuit"/>
+        <field name='vat'>30684679372</field>
+        <field name='l10n_ar_afip_responsibility_type_id' ref="l10n_ar.res_IVAE"/>
+    </record>
+
+    <!-- Odoo -->
+    <record id="res_partner_odoo" model="res.partner">
+        <field name="name">Odoo Inc</field>
+        <field name="is_company">1</field>
+        <field name="city">San Francisco</field>
+        <field name="zip">CA 94107</field>
+        <field name="country_id" ref="base.us"/>
+        <field name="street">51 Federal Street, Suite 401</field>
+        <field name="email">info@odoo.com</field>
+        <field name="phone">(+00) (11) 222 3333</field>
+        <field name="website">https://www.odoo.com/</field>
+        <field name='l10n_latam_identification_type_id' ref="l10n_latam_base.it_fid"/>
+        <field name='vat'>111222333444</field>
+        <field name="image_1920" type="base64" file="l10n_ar/demo/odoo_logo.jpg"/>
+        <field name='l10n_ar_afip_responsibility_type_id' ref="l10n_ar.res_EXT"/>
+    </record>
+
+    <!-- Telecom -->
+    <record id="res_partner_telecom" model="res.partner">
+        <field name="name">TELECOM</field>
+        <field name="is_company">1</field>
+        <field name='l10n_latam_identification_type_id' ref="l10n_ar.it_cuit"/>
+        <field name='vat'>30639453738</field>
+        <field name='l10n_ar_afip_responsibility_type_id' ref="l10n_ar.res_IVARI"/>
+    </record>
+
+    <!-- Odoo -->
+    <record id="res_partner_expresso" model="res.partner">
+        <field name="name">Barcelona Food</field>
+        <field name="is_company">1</field>
+        <field name="city">Barcelona</field>
+        <field name="zip">11002</field>
+        <field name="country_id" ref="base.es"/>
+        <field name="street">La gran avenida 123</field>
+        <field name="email">info@barcelonafoods.com</field>
+        <field name="phone">(+00) (11) 222 3333</field>
+        <field name="website">http://www.barcelonafoods.com/</field>
+        <field name='l10n_latam_identification_type_id' ref="l10n_latam_base.it_fid"/>
+        <field name='vat'>2222333344445555</field>
+        <field name='l10n_ar_afip_responsibility_type_id' ref="l10n_ar.res_EXT"/>
+    </record>
+
+    <!-- Montana Sur -->
+    <record id="res_partner_cerrocastor" model="res.partner">
+        <field name="name">Montaña Sur</field>
+        <field name="is_company">1</field>
+        <field name="city">San Martín de los Andes</field>
+        <field name="state_id" ref="base.state_ar_v"/>
+        <field name="country_id" ref="base.ar"/>
+        <field name="street">Av. de los Arrayanes 500</field>
+        <field name="email">contacto@montanasur.com.ar</field>
+        <field name="phone">(+54) (297) 4876 123</field>
+        <field name="website">http://www.montanasur.com.ar/</field>
+        <field name='l10n_latam_identification_type_id' ref="l10n_ar.it_cuit"/>
+        <field name='vat'>27333333339</field>
+        <field name='l10n_ar_afip_responsibility_type_id' ref="l10n_ar.res_IVA_LIB"/>
+    </record>
+
+    <!-- Foreign Partner -->
+    <record id="res_partner_foreign" model="res.partner">
+        <field name="name">Foreign Inc</field>
+        <field eval="[(6, 0, [ref('base.res_partner_category_14'), ref('base.res_partner_category_12')])]" name="category_id"/>
+        <field name="is_company">1</field>
+        <field name="street">7841 Red Road</field>
+        <field name="city">San Francisco</field>
+        <field name="state_id" ref='base.state_us_5'/>
+        <field name="zip">95380</field>
+        <field name="country_id" ref="base.us"/>
+        <field name="email">foreing@example.com</field>
+        <field name="phone">(123)-456-7890</field>
+        <field name="website">http://www.foreign-inc.com</field>
+        <field name='l10n_latam_identification_type_id' ref="l10n_ar.it_cuit"/>
+        <field name='vat'>30222222229</field>
+        <field name='l10n_ar_afip_responsibility_type_id' ref="l10n_ar.res_EXT"/>
+    </record>
+
+    <!-- Trenes argentinos -->
+    <record id="res_partner_mipyme" model="res.partner">
+        <field name="name">Trenes Argentinos (Mipyme)</field>
+        <field eval="[(6, 0, [ref('base.res_partner_category_14'), ref('base.res_partner_category_12')])]" name="category_id"/>
+        <field name="is_company">1</field>
+        <field name="street">Santa Cruz 4636</field>
+        <field name="city">Buenos Aires</field>
+        <field name="state_id" ref='base.state_ar_c'/>
+        <field name="zip">1524</field>
+        <field name="country_id" ref="base.ar"/>
+        <field name="email">mipyme@example.com</field>
+        <field name="phone">(123)-754-3876</field>
+        <field name="website">http://www.mypime-inc.com</field>
+        <field name='l10n_latam_identification_type_id' ref="l10n_ar.it_cuit"/>
+        <field name='vat'>30714101443</field>
+        <field name='l10n_ar_afip_responsibility_type_id' ref="l10n_ar.res_IVARI"/>
+    </record>
+
+</odoo>

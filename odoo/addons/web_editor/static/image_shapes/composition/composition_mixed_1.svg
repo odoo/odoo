@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="shape" width="800" height="600">
+  <style>
+    @keyframes rotate {
+      from {transform: rotate(45deg) scale(.7);}
+      to   {transform: rotate(405deg) scale(.7);}
+    }
+    #diamond {
+      transform: rotate(45deg) scale(.7);
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: rotate 80s linear infinite;
+    }
+  </style>
+  <defs>
+      <clipPath id="clip-path" clipPathUnits="objectBoundingBox">
+          <use xlink:href="#filterPath" fill="none"/>
+      </clipPath>
+      <path id="filterPath" preserveAspectRatio="none" d="M.826.2725c.0765.1205.1182.2347.0904.333c-.0278.0951-.1286.1713-.2468.2347c-.1182.0603-.2572.1078-.3824.073c-.1252-.0349-.2364-.149-.2572-.2728c-.0243-.1237.0452-.257.1426-.3806c.0974-.1237.2225-.2379.3442-.2347C.6313.0282.746.1519.826.2725z">
+          <animate dur="20s" repeatCount="indefinite" attributeName="d" attributeType="XML"
+          values="
+          M.826.2725c.0765.1205.1182.2347.0904.333c-.0278.0951-.1286.1713-.2468.2347c-.1182.0603-.2572.1078-.3824.073c-.1252-.0349-.2364-.149-.2572-.2728c-.0243-.1237.0452-.257.1426-.3806c.0974-.1237.2225-.2379.3442-.2347C.6313.0282.746.1519.826.2725z;
+          M.8352.1556c.0762.0943.1112.2467.0762.3627c-.0349.1197-.1366.2031-.2574.283c-.1208.0798-.2574.1524-.3781.1124c-.1239-.0363-.2319-.185-.2479-.341c-.0191-.1524.054-.3119.1493-.4099c.0953-.0979.2161-.1342.3368-.1379C.6349.0286.7557.0649.8352.1556z;
+          M.8837.2442c.0634.1251.0444.2662.0063.3848c-.0411.1219-.1013.2213-.1931.2662c-.0918.0449-.2058.0353-.3452-.0032c-.1362-.0385-.2977-.1058-.323-.2084C.0034.5809.1142.443.2218.3082c.1076-.1347.2121-.2694.3357-.2822C.681.0132.8203.119.8837.2442z;
+          M.826.2725c.0765.1205.1182.2347.0904.333c-.0278.0951-.1286.1713-.2468.2347c-.1182.0603-.2572.1078-.3824.073c-.1252-.0349-.2364-.149-.2572-.2728c-.0243-.1237.0452-.257.1426-.3806c.0974-.1237.2225-.2379.3442-.2347C.6313.0282.746.1519.826.2725z"
+          calcMode="spline"
+          keySplines=".45 .05 .55 .95;.45 .05 .55 .95;.45 .05 .55 .95"/>
+      </path>
+      <g id="animation">
+          <animateTransform xlink:href="#shape" attributeName="transform" attributeType="XML" type="translate" dur="6s" values="0 0;0 8;0 0" repeatCount="indefinite" calcMode="spline" keySplines=".45 .05 .55 .95;.45 .05 .55 .95"/>
+          <animateTransform xlink:href="#points" attributeName="transform" attributeType="XML" type="rotate" dur="15s" values="0;100;0" repeatCount="indefinite" additive="sum"/>
+          <animateTransform xlink:href="#points" attributeName="transform" attributeType="XML" type="translate" dur="15s" values="0 0;-10 -10;0 0;" repeatCount="indefinite" additive="sum"/>
+          <animateTransform xlink:href="#triangle" attributeName="transform" attributeType="XML" type="rotate" dur="20s" values="0;-20;0" repeatCount="indefinite" additive="sum"/>    
+          <animateTransform xlink:href="#triangle" attributeName="transform" attributeType="XML" type="translate" dur="20s" values="0 0;-1.5 1;0 0;" repeatCount="indefinite" additive="sum"/>
+      </g>
+  </defs>
+  <svg viewBox="0 0 1 1" id="preview" preserveAspectRatio="none">
+      <use xlink:href="#filterPath" fill="darkgrey"/>
+  </svg>
+  <image xlink:href="" clip-path="url(#clip-path)"/>
+  <svg class="points" viewBox="0 0 66.3 66.3" width="25%" height="25%" x="0%" y="10%">
+      <path id="points" fill="#383E45" transform="scale(.6)" transform-origin="center" d="M3.9 2c0 1.1-.9 2-2 2S0 3 0 2s.9-2 2-2S3.9.9 3.9 2zM22.8 0c-1.1 0-2 .9-2 2s.9 2 2 2c1.1 0 2-.9 2-2S23.8 0 22.8 0zM43.6 0c-1.1 0-2 .9-2 2s.9 2 2 2c1.1 0 2-.9 2-2S44.6 0 43.6 0zM64.4 0c-1.1 0-2 .9-2 2s.9 2 2 2s2-.9 2-2S65.4 0 64.4 0zM2 20.8c-1.1 0-2 .9-2 2c0 1.1.9 2 2 2s2-.9 2-2C3.9 21.7 3 20.8 2 20.8zM22.8 20.8c-1.1 0-2 .9-2 2c0 1.1.9 2 2 2c1.1 0 2-.9 2-2C24.7 21.7 23.8 20.8 22.8 20.8zM43.6 20.8c-1.1 0-2 .9-2 2c0 1.1.9 2 2 2c1.1 0 2-.9 2-2C45.5 21.7 44.6 20.8 43.6 20.8zM64.4 20.8c-1.1 0-2 .9-2 2c0 1.1.9 2 2 2s2-.9 2-2C66.3 21.7 65.4 20.8 64.4 20.8zM2 41.6c-1.1 0-2 .9-2 2c0 1.1.9 2 2 2s2-.9 2-2C3.9 42.5 3 41.6 2 41.6zM22.8 41.6c-1.1 0-2 .9-2 2c0 1.1.9 2 2 2c1.1 0 2-.9 2-2C24.7 42.5 23.8 41.6 22.8 41.6zM43.6 41.6c-1.1 0-2 .9-2 2c0 1.1.9 2 2 2c1.1 0 2-.9 2-2C45.5 42.5 44.6 41.6 43.6 41.6zM64.4 41.6c-1.1 0-2 .9-2 2c0 1.1.9 2 2 2s2-.9 2-2C66.3 42.5 65.4 41.6 64.4 41.6zM2 62.4c-1.1 0-2 .9-2 2s.9 2 2 2s2-.9 2-2S3 62.4 2 62.4zM22.8 62.4c-1.1 0-2 .9-2 2s.9 2 2 2c1.1 0 2-.9 2-2S23.8 62.4 22.8 62.4zM43.6 62.4c-1.1 0-2 .9-2 2s.9 2 2 2c1.1 0 2-.9 2-2S44.6 62.4 43.6 62.4zM64.4 62.4c-1.1 0-2 .9-2 2s.9 2 2 2s2-.9 2-2S65.4 62.4 64.4 62.4z"/>
+  </svg>
+  <svg viewBox="0 0 10 10" class="diamond" width="30%" height="30%" x="66%" y="65%">
+      <rect id="diamond" x="0.5" y="0.5" width="9" height="9" fill="none" stroke="#7C6576" stroke-miterlimit="10" stroke-width="1" opacity=".8"/>
+  </svg>
+  <svg class="triangle" viewBox="0 0 10 10" width="40%" height="40%" x="5%" y="55%">
+      <polygon id="triangle" points="10 10 0 10 0 0 10 10" fill="#3AADAA" transform="scale(.6)" transform-origin="center" opacity=".66"/>
+  </svg>
+</svg>

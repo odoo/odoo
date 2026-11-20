@@ -1,0 +1,128 @@
+///
+/// This file regroups the CSS rules made to fix/extend bootstrap in all places
+/// where it is used in Odoo (backend / frontend / reports / ...)
+///
+
+.alert {
+    // Alerts are block elements with relative positioning.
+    // They would go over floating elements, which is never what we want.
+    clear: both;
+}
+
+%-card-body-reviewed {
+    // BS4 colored cards do not have a very popular design. This will reset them
+    // to a BS3-like one: only the header and footer are colored and the body
+    // will use the color of a default card background with a light opacity.
+    // Limitation: bg-* utilities cannot be used on card-body elements anymore.
+    // Note: these rules need grays utilities to be defined before so that the
+    // related o-bg-color text-muted rules work. Since backend and fronted
+    // generate these classes differently, this pseudo-class is called in the
+    // respective 'bootstrap_review_x' file immediately after gray classes
+    // generation.
+    @include o-bg-color(rgba($card-bg, $o-card-body-bg-opacity));
+
+    &:first-child {
+        @include border-top-radius($card-inner-border-radius);
+    }
+    &:last-child {
+        @include border-bottom-radius($card-inner-border-radius);
+    }
+
+    &.row {
+        // The 'row' class should not be used on a 'card-body' element but if
+        // it is done, our custom bg color would overflow the card. As a fix
+        // for those cases (normally only one at the time this fix is made),
+        // remove the background color.
+        // TODO remove me in master.
+        background-color: transparent !important;
+    }
+}
+.accordion {
+    .collapsing, .collapse.show {
+        > .card-body:first-child {
+            // Above background color would overflow on the card-header border
+            // without this
+            margin-top: $card-border-width;
+        }
+    }
+}
+
+.toast-header {
+    background-clip: border-box;
+}
+.toast-body {
+    // Same as card-body, see explanation above
+    @include o-bg-color(opacify($toast-background-color, 0.08));
+}
+
+// Modify modals so that their scrollable element is the modal-body (except in
+// mobile).
+// TODO: should be replaced by .modal-dialog-scrollable class
+@include media-breakpoint-up(sm) {
+    :not(.s_popup) > .modal {
+        .modal-dialog {
+            height: 100%;
+            padding: $modal-dialog-margin-y-sm-up 0;
+            margin: 0 auto;
+        }
+        .modal-content {
+            max-height: 100%;
+        }
+        .modal-header, .modal-footer {
+            flex: 0 0 auto;
+        }
+        .modal-body {
+            overflow: auto;
+            min-height: 0;
+        }
+    }
+}
+
+// Do not display the backdrop element added by bootstrap in the body and add a
+// background on the modal to keep the same effect. The bootstrap backdrop was
+// probably useful for compatibility with <IE9 but is no longer needed. This
+// also avoids z-index issues because modals could be opened in an element
+// (e.g. the website #wrapwrap) whose stacking context is different of the body
+// one (where the backdrop is opened). This would make the backdrop appears on
+// top of the modal.
+.modal-backdrop {
+    display: none;
+}
+.modal:not([data-bs-backdrop="false"]) {
+    background-color: rgba($modal-backdrop-bg, $modal-backdrop-opacity);
+}
+
+// Force field label pointer to cursor
+.form-check {
+    @include o-field-pointer();
+}
+
+// Update the border color when hovering form-select elements
+.form-select:where(:not(:disabled)):hover {
+    border-color: $form-check-input-checked-border-color;
+}
+
+// Disable RTL for the dropdown position
+.dropdown-menu {
+    &[x-placement^="top"],
+    &[x-placement^="right"],
+    &[x-placement^="bottom"],
+    &[x-placement^="left"] {
+        /*rtl:ignore*/
+        right: auto;
+    }
+}
+
+// Disable RTL for the popover position
+.popover {
+    right: auto#{"/*rtl:ignore*/"};
+}
+
+// Review $link-decoration behavior
+@if $link-decoration and $link-decoration != none {
+    .btn:not(.btn-link), .nav-link, .dropdown-item, .page-link, .breadcrumb-item > a, .badge, .fa {
+        &, &:hover, &:focus {
+            text-decoration: none;
+        }
+    }
+}

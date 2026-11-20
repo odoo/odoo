@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.SearchBar.Facets">
+        <t t-foreach="env.searchModel.facets" t-as="facet" t-key="facet_index">
+            <div class="o_searchview_facet position-relative d-inline-flex align-items-stretch rounded-2 bg-200 text-nowrap opacity-trigger-hover"
+                t-att-class="{o_facet_with_domain: facet.domain }"
+                role="listitem"
+                aria-label="search"
+                tabindex="0"
+                t-on-keydown="ev => this.onFacetKeydown(facet, facet_index, ev)"
+                >
+
+                <!-- :hover overlay -->
+                <div class="position-absolute start-0 top-0 bottom-0 end-0 bg-view border rounded-2 shadow opacity-0 opacity-100-hover"/>
+
+                <div class="o_searchview_facet_label position-relative rounded-start-2 px-1"
+                    t-on-click="(ev) => this.onFacetLabelClick(ev.target, facet)"
+                    t-att-role="facet.domain ? 'button' : 'img'"
+                    t-att-class="{
+                        'text-bg-action d-flex align-items-center': facet.type == 'groupBy' || facet.type == 'comparison',
+                        'btn btn-primary rounded-end-0 p-0': facet.type == 'field' || facet.type == 'filter',
+                        'btn btn-favourite rounded-end-0 p-0': facet.type == 'favorite'
+                    }"
+                    >
+                    <i t-if="facet.icon" class="small fa-fw" t-att-class="facet.icon" role="image"/>
+                    <small t-else="" class="px-1" t-esc="facet.title"/>
+
+                    <!-- Editable facets' overlay -->
+                    <span t-if="facet.domain"
+                        class="position-absolute start-0 top-0 bottom-0 end-0 bg-inherit opacity-0 opacity-100-hover"
+                        t-att-class="{'px-2 transition-base': !facet.icon}"
+                        >
+                        <i class="fa fa-fw fa-cog"/>
+                    </span>
+                </div>
+
+                <div class="o_facet_values position-relative d-flex flex-wrap align-items-center ps-2 rounded-end-2 text-wrap">
+                    <t t-foreach="facet.values" t-as="facetValue" t-key="facetValue_index">
+                        <em t-if="!facetValue_first" class="o_facet_values_sep small fw-bold mx-1 opacity-50" t-esc="facet.separator"/>
+                        <small class="o_facet_value" t-esc="facetValue"/>
+                    </t>
+                    <button class="o_facet_remove oi oi-close btn btn-link py-0 px-2 text-danger"
+                        role="button"
+                        aria-label="Remove"
+                        title="Remove"
+                        t-on-click="() => this.onFacetRemove(facet)"
+                    />
+                </div>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="web.SearchBar.Input">
+        <input type="text"
+            class="o_searchview_input o_input d-print-none flex-grow-1 w-auto border-0"
+            accesskey="Q"
+            placeholder="Search..."
+            role="searchbox"
+            t-ref="autofocus"
+            t-on-keydown="onSearchKeydown"
+            t-on-input="onSearchInput"
+        />
+    </t>
+
+    <t t-name="web.SearchBar.Items">
+        <ul class="o-dropdown--menu dropdown-menu o_searchview_autocomplete show" role="menu">
+            <t t-foreach="items" t-as="item" t-key="item.id">
+                <li class="o_menu_item dropdown-item"
+                    t-att-class="{ o_indent: item.isChild, focus: item_index === state.focusedIndex}"
+                    t-att-id="item.id"
+                    t-on-click="() => this.selectItem(item)"
+                    t-on-mousemove="() => this.onItemMousemove(item_index)"
+                    >
+                    <t t-if="item.isParent">
+                        <a t-att-class="{ o_expand: true, 'ms-4': item.isFieldProperty}"
+                            href="#"
+                            t-on-click.stop.prevent="() => this.toggleItem(item, !item.isExpanded)"
+                            >
+                            <i t-attf-class="fa fa-caret-{{ item.isExpanded ? 'down' : 'right' }}"/>
+                        </a>
+                    </t>
+                    <a href="#" t-on-click.prevent="" t-att-class="{'ps-3 pe-2 text-truncate': item.isFieldProperty }" t-att-title="item.title">
+                        <t t-if="item.isChild">
+                            <t t-esc="item.label"/>
+                        </t>
+                        <t t-elif="!item.isFieldProperty" > Search </t> <b t-esc="item.searchItemDescription"/> <t t-if="item.preposition"> <t t-esc="item.preposition"/>: <b class="fst-italic text-primary" t-esc="item.label"/> </t>
+                    </a>
+                </li>
+            </t>
+        </ul>
+    </t>
+
+    <t t-name="web.SearchBar">
+        <div class="o_cp_searchview d-flex input-group" role="search" t-ref="root">
+            <div class="o_searchview form-control d-print-contents d-flex align-items-center py-1" role="search" aria-autocomplete="list">
+                <i class="o_searchview_icon d-print-none oi oi-search me-2"
+                    role="img"
+                    aria-label="Search..."
+                    title="Search..."
+                />
+                <div class="o_searchview_input_container d-flex flex-grow-1 flex-wrap gap-1">
+                    <t t-call="web.SearchBar.Facets"/>
+                    <t t-call="web.SearchBar.Input"/>
+                    <t t-if="items.length">
+                        <t t-call="web.SearchBar.Items"/>
+                    </t>
+                </div>
+            </div>
+            <SearchBarMenu>
+                <t t-slot="search-bar-additional-menu"/>
+            </SearchBarMenu>
+        </div>
+    </t>
+
+</templates>

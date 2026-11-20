@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_warehouse_inherit_mrp_subcontracting_dropshipping" model="ir.ui.view">
+        <field name="name">Stock Warehouse Inherit Subcontracting Dropshipping</field>
+        <field name="model">stock.warehouse</field>
+        <field name="inherit_id" ref="mrp_subcontracting.view_warehouse_inherit_mrp_subcontracting"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='subcontracting_to_resupply']" position="before">
+                <field name="subcontracting_dropshipping_to_resupply" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="1">
+
+    <!-- CHANNEL 5: Basics of Furniture Creation -->
+    <!-- ======================================= -->
+    <record id="slide_slide_demo_5_4" model="slide.slide">
+        <field name="name">Furniture Creation Certification</field>
+        <field name="sequence">7</field>
+        <field name="image_1920" type="base64" file="website_slides/static/src/img/slide_demo_furniture.jpg"/>
+        <field name="slide_category">certification</field>
+        <field name="channel_id" ref="website_slides.slide_channel_demo_5_furn2"/>
+        <field name="category_id" ref="website_slides.slide_category_demo_5_0"/>
+        <field name="survey_id" ref="website_slides_survey.furniture_certification"/>
+        <field name="is_published" eval="True"/>
+        <field name="date_published" eval="datetime.now() - timedelta(days=8)"/>
+        <field name="is_preview" eval="False"/>
+        <field name="description">Now that you have completed the course, it's time to test your knowledge!</field>
+    </record>
+
+    <!-- CHANNEL 6: DIY Furniture -->
+    <!-- ======================================= -->
+    <record id="slide_slide_demo_6_0" model="slide.slide">
+        <field name="name">DIY Furniture Certification</field>
+        <field name="sequence">1</field>
+        <field name="image_1920" type="base64" file="website_slides/static/src/img/slide_demo_furniture.jpg"/>
+        <field name="slide_category">certification</field>
+        <field name="channel_id" ref="website_slides.slide_channel_demo_6_furn3"/>
+        <field name="category_id" eval="False"/>
+        <field name="survey_id" ref="website_slides_survey.furniture_certification"/>
+        <field name="is_published" eval="True"/>
+        <field name="date_published" eval="datetime.now() - timedelta(days=8)"/>
+        <field name="is_preview" eval="False"/>
+        <field name="description">It's time to test your knowledge!</field>
+    </record>
+
+</data></odoo>

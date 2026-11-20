@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.DiscussSidebarCategories">
+        <hr class="w-100 opacity-0"/>
+        <input t-if="hasQuickSearch" class="form-control mx-4 mb-2 rounded-3 w-auto" placeholder="Quick search..." t-model="state.quickSearchVal"/>
+        <t t-foreach="categories" t-as="categoryData" t-key="categoryData_index">
+            <t t-if="categoryData.predicate?.(store) ?? true" t-call="mail.DiscussSidebarCategory">
+                <t t-set="category" t-value="categoryData.value(store)"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="mail.DiscussSidebarCategory">
+        <t t-set="hover_class" t-value="'btn p-0 text-start text-700 opacity-100-hover opacity-75'"/>
+        <div class="o-mail-DiscussSidebarCategory d-flex align-items-center my-1" t-att-class="category.extraClass">
+            <div t-attf-class="d-flex align-items-baseline mx-1 {{ hover_class }}" t-on-click="() => this.toggleCategory(category)">
+                <i class="o-mail-DiscussSidebarCategory-icon small me-1" t-att-class="category.isOpen ? 'oi oi-chevron-down' : 'oi oi-chevron-right'"/>
+                <span class="btn-sm p-0 text-uppercase fw-bolder"><t t-esc="category.name"/></span>
+            </div>
+            <div class="flex-grow-1"/>
+            <div class="d-flex me-3">
+                <i t-if="category.canView" t-attf-class="fa fa-cog {{ hover_class }}" title="View or join channels" t-on-click="() => this.openCategory(category)" role="img"/>
+                <i t-if="category.canAdd and category.isOpen" class="o-mail-DiscussSidebarCategory-add" t-attf-class="fa fa-plus {{ hover_class }} ms-1" t-on-click="() => this.addToCategory(category)" t-att-title="category.addTitle" role="img"  t-att-data-hotkey="category.addHotkey"/>
+            </div>
+            <div t-if="!category.isOpen and threadService.getDiscussSidebarCategoryCounter(category.id) > 0" class="o-mail-DiscussSidebar-badge badge rounded-pill me-3 o-discuss-badge fw-bold">
+                <t t-esc="threadService.getDiscussSidebarCategoryCounter(category.id)"/>
+            </div>
+        </div>
+        <t t-if="category.isOpen">
+            <div t-if="state.editing === category.id" class="p-2" t-ref="selector">
+                <ChannelSelector category="category" onValidate.bind="stopEditing" autofocus="true" close.bind="stopEditing" />
+            </div>
+            <t t-foreach="filteredThreads(category)" t-as="thread" t-key="thread.localId" t-call="mail.DiscussSidebarChannel">
+                <t t-set="thread" t-value="thread"/>
+            </t>
+        </t>
+        <t t-elif="store.discuss.thread?.in(category.threads)" t-call="mail.DiscussSidebarChannel">
+            <t t-set="thread" t-value="store.discuss.thread"/>
+        </t>
+    </t>
+
+    <t t-name="mail.DiscussSidebarChannel">
+        <t t-set="counter" t-value="threadService.getCounter(thread)"/>
+        <button class="o-mail-DiscussSidebarChannel o-mail-DiscussSidebar-item btn btn-secondary d-flex align-items-center w-100 px-0 py-2 border-0 rounded-0 text-reset"
+            t-att-class="{
+                'bg-inherit': thread.notEq(store.discuss.thread),
+                'o-active': thread.eq(store.discuss.thread),
+                'o-unread': thread.message_unread_counter > 0 and !thread.muteUntilDateTime,
+                'opacity-50': thread.muteUntilDateTime,
+            }"
+            t-on-click="(ev) => this.openThread(ev, thread)"
+        >
+            <div class="bg-inherit position-relative d-flex ms-4 flex-shrink-0" style="width:30px;height:30px">
+                <img class="w-100 h-100 rounded" t-att-src="thread.imgUrl" alt="Thread Image"/>
+                <ThreadIcon t-if="thread.type === 'chat' or (thread.type === 'channel' and !thread.authorizedGroupFullName)" thread="thread" size="'small'" className="'o-mail-DiscussSidebarChannel-threadIcon position-absolute bottom-0 end-0 p-1 me-n1 mb-n1 d-flex align-items-center justify-content-center rounded-circle bg-inherit'"/>
+            </div>
+            <span class="ms-3 me-2 text-truncate" t-att-class="{ 'o-item-unread fw-bolder': thread.message_unread_counter > 0 and !thread.muteUntilDateTime }">
+                <t t-esc="thread.displayName"/>
+            </span>
+            <div class="flex-grow-1"/>
+            <div class="o-mail-DiscussSidebarChannel-commands d-none ms-1 me-3">
+                <i t-if="thread.type === 'channel'" t-attf-class="fa fa-cog {{ hover_class }}" title="Channel settings" t-on-click.stop="() => this.openSettings(thread)" role="img"/>
+                <div t-if="threadService.canLeave(thread)" class="fa fa-times ms-1" t-attf-class="{{ hover_class }}"
+                    t-on-click.stop="() => this.leaveChannel(thread)" title="Leave this channel" role="img"/>
+                <div t-if="threadService.canUnpin(thread)" t-attf-class="fa fa-times ms-1 {{ hover_class }}" t-on-click.stop="() => threadService.unpin(thread)" title="Unpin Conversation" role="img"/>
+            </div>
+            <t t-foreach="channelIndicators" t-as="indicator" t-key="indicator_index" t-component="indicator" t-props="{ thread }"/>
+            <div t-if="counter > 0">
+                <span t-attf-class="o-mail-DiscussSidebar-badge badge rounded-pill o-discuss-badge ms-1 me-3 fw-bold {{thread.muteUntilDateTime ? 'o-muted' : ''}}" t-esc="counter"/>
+            </div>
+        </button>
+    </t>
+</templates>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_resource_config" name="Resource"
+        parent="base.menu_custom"
+        sequence="30"/>
+    <menuitem id="menu_resource_calendar"
+        parent="menu_resource_config"
+        action="action_resource_calendar_form"
+        sequence="1"/>
+    <menuitem id="menu_view_resource_calendar_leaves_search"
+        parent="menu_resource_config"
+        action="action_resource_calendar_leave_tree"
+        sequence="2"/>
+    <menuitem id="menu_resource_resource"
+        parent="menu_resource_config"
+        action="action_resource_resource_tree"
+        sequence="3"/>
+</odoo>

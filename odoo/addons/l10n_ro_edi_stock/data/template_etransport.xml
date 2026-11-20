@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="l10n_ro_template_etransport">
+        <eTransport
+                xmlns="mfp:anaf:dgti:eTransport:declaratie:v2"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="mfp:anaf:dgti:eTransport:declaratie:v2"
+                t-att-codDeclarant="data['codDeclarant']"
+                t-att-refDeclarant="data['refDeclarant']">
+
+            <t t-set="data_notificare" t-value="data['notificare']"/>
+            <notificare t-att-codTipOperatiune="data_notificare['codTipOperatiune']">
+                <t t-foreach="data_notificare['bunuriTransportate']" t-as="data_transport_content">
+                    <bunuriTransportate
+                            t-att-codScopOperatiune="data_transport_content['codScopOperatiune']"
+                            t-att-codTarifar="data_transport_content['codTarifar']"
+                            t-att-denumireMarfa="data_transport_content['denumireMarfa']"
+                            t-att-cantitate="data_transport_content['cantitate']"
+                            t-att-codUnitateMasura="data_transport_content['codUnitateMasura']"
+                            t-att-greutateNeta="data_transport_content['greutateNeta']"
+                            t-att-greutateBruta="data_transport_content['greutateBruta']"
+                            t-att-valoareLeiFaraTva="data_transport_content['valoareLeiFaraTva']"/>
+                </t>
+
+                <t t-set="data_partner" t-value="data_notificare['partenerComercial']"/>
+                <partenerComercial
+                        t-att-codTara="data_partner['codTara']"
+                        t-att-denumire="data_partner['denumire']"
+                        t-att-cod="data_partner['cod']"/>
+
+                <t t-set="data_date_transport" t-value="data_notificare['dateTransport']"/>
+                <dateTransport
+                        t-att-nrVehicul="data_date_transport['nrVehicul']"
+                        t-att-nrRemorca1="data_date_transport['nrRemorca1']"
+                        t-att-nrRemorca2="data_date_transport['nrRemorca2']"
+                        t-att-codTaraOrgTransport="data_date_transport['codTaraOrgTransport']"
+                        t-att-codOrgTransport="data_date_transport['codOrgTransport']"
+                        t-att-denumireOrgTransport="data_date_transport['denumireOrgTransport']"
+                        t-att-dataTransport="data_date_transport['dataTransport']"/>
+
+                <t t-set="data_start" t-value="data_notificare['locStartTraseuRutier']"/>
+                <t t-if="data_start['location_type'] == 'location'">
+                    <locStartTraseuRutier>
+                        <t t-set="data_start_loc" t-value="data_start['locatie']"/>
+                        <locatie
+                                t-att-codJudet="data_start_loc['codJudet']"
+                                t-att-denumireLocalitate="data_start_loc['denumireLocalitate']"
+                                t-att-denumireStrada="data_start_loc['denumireStrada']"
+                                t-att-codPostal="data_start_loc['codPostal']"
+                                t-att-alteInfo="data_start_loc['alteInfo']"/>
+                    </locStartTraseuRutier>
+                </t>
+                <t t-elif="data_start['location_type'] == 'bcp'">
+                    <locStartTraseuRutier t-att-codPtf="data_start['codPtf']"/>
+                </t>
+                <t t-elif="data_start['location_type'] == 'customs'">
+                    <locStartTraseuRutier t-att-codBirouVamal="data_start['codBirouVamal']"/>
+                </t>
+
+                <t t-set="data_end" t-value="data_notificare['locFinalTraseuRutier']"/>
+                <t t-if="data_end['location_type'] == 'location'">
+                    <locFinalTraseuRutier>
+                        <t t-set="data_end_loc" t-value="data_end['locatie']"/>
+                        <locatie
+                                t-att-codJudet="data_end_loc['codJudet']"
+                                t-att-denumireLocalitate="data_end_loc['denumireLocalitate']"
+                                t-att-denumireStrada="data_end_loc['denumireStrada']"
+                                t-att-codPostal="data_end_loc['codPostal']"
+                                t-att-alteInfo="data_end_loc['alteInfo']"/>
+                    </locFinalTraseuRutier>
+                </t>
+                <t t-elif="data_end['location_type'] == 'bcp'">
+                    <locFinalTraseuRutier t-att-codPtf="data_end['codPtf']"/>
+                </t>
+                <t t-elif="data_end['location_type'] == 'customs'">
+                    <locFinalTraseuRutier t-att-codBirouVamal="data_end['codBirouVamal']"/>
+                </t>
+
+                <t t-set="data_doc" t-value="data_notificare['documenteTransport']"/>
+                <documenteTransport
+                        t-att-tipDocument="data_doc['tipDocument']"
+                        t-att-dataDocument="data_doc['dataDocument']"
+                        t-att-numarDocument="data_doc['numarDocument']"
+                        t-att-observatii="data_doc['observatii']"/>
+            </notificare>
+        </eTransport>
+    </template>
+</odoo>

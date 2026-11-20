@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.project</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="50"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="inside">
+                    <app data-string="Project" string="Project" name="project" groups="project.group_project_manager">
+                        <block title="Tasks Management" id="tasks_management">
+                            <setting id="recurring_tasks_setting" help="Auto-generate tasks for regular activities">
+                                <field name="group_project_recurring_tasks"/>
+                            </setting>
+                            <setting id="task_dependencies_setting" help="Determine the order in which to perform tasks">
+                                <field name="group_project_task_dependencies"/>
+                            </setting>
+                            <setting id="project_stages" help="Track the progress of your projects">
+                                <field name="group_project_stages"/>
+                                <div class="content-group" invisible="not group_project_stages">
+                                    <div class="mt8">
+                                        <button name="%(project.project_project_stage_configure)d" icon="oi-arrow-right" type="action" string="Configure Stages" class="btn-link"/>
+                                    </div>
+                                </div>
+                            </setting>
+                            <setting id="project_milestone" help="Track major progress points that must be reached to achieve success">
+                                <field name="group_project_milestone"/>
+                            </setting>
+                        </block>
+                        <block title="Time Management" name="project_time">
+                            <setting id="log_time_tasks_setting" help="Track time spent on projects and tasks">
+                                <field name="module_hr_timesheet"/>
+                            </setting>
+                        </block>
+                        <block title="Analytics" name="analytic">
+                            <setting id="track_customer_satisfaction_setting" help="Track customer satisfaction on tasks">
+                                <field name="group_project_rating"/>
+                                <div class="content-group" invisible="not group_project_rating">
+                                    <div class="mt16">
+                                        <button name="%(project.open_task_type_form)d" context="{'project_id':id}" icon="oi-arrow-right" type="action" string="Set a Rating Email Template on Stages" class="btn-link"/>
+                                    </div>
+                                </div>
+                            </setting>
+                            <setting id="default_plan_setting" groups="analytic.group_analytic_accounting" help="Track the profitability of your project with analytic accounting. Select the analytic plan for new projects:" title="Track the profitability of your projects. Any project, its tasks and timesheets are linked to an analytic account and any analytic account belongs to a plan.">
+                                <field name="analytic_plan_id"/>
+                            </setting>
+                        </block>
+                    </app>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="project_config_settings_action" model="ir.actions.act_window">
+            <field name="name">Settings</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <field name="context">{'module' : 'project', 'bin_size': False}</field>
+        </record>
+</odoo>
