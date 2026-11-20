@@ -1,0 +1,74 @@
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.clinic.visit.manager</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="35"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Clinic"
+                     string="Clinic"
+                     name="clinic_visit_manager"
+                     groups="clinic_visit_manager.group_clinic_manager,base.group_system">
+                    <block title="Visit Defaults" name="clinic_visit_defaults">
+                        <setting id="clinic_default_doctor"
+                                 string="Default Doctor"
+                                 help="Use this doctor name on new clinic visits when no doctor is entered.">
+                            <field name="clinic_default_doctor_name" placeholder="e.g. Dr. Sharma"/>
+                        </setting>
+                        <setting id="clinic_default_consultation_fee"
+                                 string="Consultation Fee"
+                                 help="Use this amount on new clinic visits when no fee is entered.">
+                            <field name="clinic_default_consultation_fee"/>
+                        </setting>
+                    </block>
+                    <block title="Patients" name="clinic_patient_settings">
+                        <setting id="clinic_auto_create_patient"
+                                 string="Patient Cards"
+                                 help="Automatically create a patient card when a new visit is entered with only a patient name.">
+                            <field name="clinic_auto_create_patient"/>
+                        </setting>
+                    </block>
+                    <block title="Invoicing" name="clinic_invoicing_settings">
+                        <setting id="clinic_invoice_product"
+                                 string="Invoice Product"
+                                 help="Use an existing Odoo product or service when a clinic visit creates a customer invoice.">
+                            <field name="clinic_invoice_product_id"/>
+                        </setting>
+                    </block>
+                    <block title="Administration" name="clinic_administration_settings">
+                        <setting id="clinic_roles"
+                                 string="Clinic Roles"
+                                 help="Manage Receptionist, Doctor, and Manager access from Odoo users.">
+                            <button type="action"
+                                    name="%(base.action_res_users)d"
+                                    string="Manage Users"
+                                    icon="oi-arrow-right"
+                                    class="btn-link"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_clinic_configuration" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'module': 'clinic_visit_manager', 'bin_size': False}</field>
+    </record>
+
+    <menuitem id="menu_clinic_configuration"
+              name="Configuration"
+              parent="menu_clinic_root"
+              sequence="90"
+              groups="clinic_visit_manager.group_clinic_manager,base.group_system"/>
+
+    <menuitem id="menu_clinic_settings"
+              name="Settings"
+              parent="menu_clinic_configuration"
+              action="action_clinic_configuration"
+              sequence="10"
+              groups="clinic_visit_manager.group_clinic_manager,base.group_system"/>
+</odoo>
