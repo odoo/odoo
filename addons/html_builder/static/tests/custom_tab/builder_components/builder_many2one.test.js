@@ -10,6 +10,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { xml } from "@odoo/owl";
 import { contains, defineModels, fields, models, onRpc } from "@web/../tests/web_test_helpers";
+import { delay } from "@web/core/utils/concurrency";
 
 class Test extends models.Model {
     _name = "test";
@@ -21,8 +22,18 @@ class Test extends models.Model {
     name = fields.Char();
 }
 
+class TestNoName extends models.Model {
+    _name = "test.no.name";
+    _rec_name = "title";
+    _records = [
+        { id: 1, title: "First" },
+        { id: 2, title: "Second" },
+    ];
+    title = fields.Char();
+}
+
 describe.current.tags("desktop");
-defineModels([Test]);
+defineModels([Test, TestNoName]);
 
 test("many2one: async load", async () => {
     const defWillLoad = Promise.withResolvers();
@@ -74,7 +85,7 @@ test("many2one: async load", async () => {
     defWillLoad.resolve();
     await defDidApply.promise;
     expect(editableContent).toHaveInnerHTML(
-        `<div class="test-options-target" data-test="{&quot;id&quot;:1,&quot;display_name&quot;:&quot;First&quot;,&quot;name&quot;:&quot;First&quot;}">b</div>`
+        `<div class="test-options-target" data-test="{&quot;id&quot;:1,&quot;display_name&quot;:&quot;First&quot;}">b</div>`
     );
 });
 
@@ -140,7 +151,7 @@ test("BuilderMany2One: add null_text option in website builder dropdown", async 
         testAction: class extends BuilderAction {
             static id = "testAction";
             apply({ editingElement, value }) {
-                editingElement.textContent = JSON.parse(value).name;
+                editingElement.textContent = JSON.parse(value).display_name;
                 editingElement.dataset.test = value;
             }
             getValue({ editingElement }) {
@@ -163,4 +174,93 @@ test("BuilderMany2One: add null_text option in website builder dropdown", async 
     await contains(".btn.o-dropdown").click();
     await contains("span.o-dropdown-item:contains('First')").click();
     expect(editableContent.textContent.trim()).toBe("First");
+});
+
+test("BuilderMany2One: createAction checks uniqueness on display_name", async () => {
+    onRpc("test.no.name", "read", ({ args }) => {
+        expect.step(`read ${args[1]}`);
+    });
+    onRpc("test.no.name", "search_read", ({ kwargs }) => {
+        expect.step(`search_read ${kwargs.fields}`);
+    });
+    addBuilderAction({
+        testAction: class extends BuilderAction {
+            static id = "testAction";
+            apply({ editingElement, value }) {
+                editingElement.dataset.test = value;
+            }
+            getValue({ editingElement }) {
+                return editingElement.dataset.test;
+            }
+        },
+        testCreateAction: class extends BuilderAction {
+            static id = "testCreateAction";
+            apply({ value }) {
+                expect.step(`create ${value}`);
+            }
+        },
+    });
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderMany2One action="'testAction'" model="'test.no.name'" createAction="'testCreateAction'"/>`,
+    });
+    const { waitSidebarUpdated } = await setupHTMLBuilder(
+        `<div class="test-options-target" data-test='{"id":1}'>b</div>`
+    );
+    await contains(":iframe .test-options-target").click();
+    await waitSidebarUpdated();
+    expect(".btn.o-dropdown").toHaveText("First");
+    expect.verifySteps(["read display_name"]);
+
+    await contains(".btn.o-dropdown").click();
+    await contains(".o_hb_selectMany2X_dropdown input").edit("Second", { confirm: false });
+    await delay(300); // debounce
+    await animationFrame();
+    expect(".o_we_m2o_create").toHaveCount(0);
+    expect.verifySteps(["read display_name", "search_read id,display_name"]);
+
+    await contains(".o_hb_selectMany2X_dropdown input").edit("Third", { confirm: false });
+    await delay(300); // debounce
+    await animationFrame();
+    expect(".o_we_m2o_create").toHaveText(`Create "Third"`);
+
+    await contains(".o_we_m2o_create").click();
+    expect.verifySteps(["create Third"]);
+});
+
+test("BuilderMany2One: does not read `name` on a model without it", async () => {
+    onRpc("test.no.name", "read", ({ args }) => {
+        expect.step(`read ${args[1]}`);
+    });
+    addBuilderAction({
+        testAction: class extends BuilderAction {
+            static id = "testAction";
+            apply({ editingElement, value }) {
+                editingElement.dataset.test = value;
+            }
+            getValue({ editingElement }) {
+                return editingElement.dataset.test;
+            }
+        },
+    });
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderMany2One action="'testAction'" model="'test.no.name'"/>`,
+    });
+    const { getEditableContent } = await setupHTMLBuilder(
+        `<div class="test-options-target">b</div>`
+    );
+    await contains(":iframe .test-options-target").click();
+    await contains(".btn.o-dropdown").click();
+    await contains("input").click();
+    await animationFrame();
+    expect("span.o-dropdown-item").toHaveCount(2);
+    expect.verifySteps(["read display_name"]);
+
+    await contains("span.o-dropdown-item:contains(First)").click();
+    expect(getEditableContent()).toHaveInnerHTML(
+        `<div class="test-options-target" data-test="{&quot;id&quot;:1,&quot;display_name&quot;:&quot;First&quot;}">b</div>`
+    );
+    // value already has display_name: no re-read
+    expect.verifySteps([]);
 });
