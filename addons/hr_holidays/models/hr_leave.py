@@ -900,6 +900,14 @@ class HrLeave(models.Model):
             else:
                 leave.work_entry_type_increases_duration = ''
 
+    def _get_public_holidays_domain(self, max_end, min_start):
+        return [
+            ('resource_id', '=', False),
+            ('company_id', 'in', self.company_id.ids),
+            ('date_from', '<=', max_end),
+            ('date_to', '>=', min_start),
+        ]
+
     def _get_durations(self, check_work_entry_type=True, resource_calendar=None, additional_domain=None):
         """Compute the duration of the requests without assigning the fields.
 
@@ -968,12 +976,9 @@ class HrLeave(models.Model):
 
         public_holidays = self.env['resource.calendar.leaves']
         if min_start and max_end:
-            public_holidays = public_holidays.search([
-                ('resource_id', '=', False),
-                ('company_id', 'in', self.company_id.ids),
-                ('date_from', '<=', max_end),
-                ('date_to', '>=', min_start),
-            ])
+            public_holidays = public_holidays.search(
+                self._get_public_holidays_domain(max_end, min_start)
+            )
 
         public_holidays_per_company = public_holidays.grouped('company_id')
         for leave in self:
