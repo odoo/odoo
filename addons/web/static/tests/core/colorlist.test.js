@@ -34,7 +34,7 @@ test("basic rendering", async () => {
 
     expect(".o_colorlist button").toHaveCount(12);
     expect(".o_colorlist button:eq(0)").toHaveAttribute("title", "No color");
-    expect(".o_colorlist button:eq(0)").toHaveClass("o_colorlist_item_color_0");
+    expect(".o_colorlist button:eq(0)").toHaveClass("o_colorlist_color_0");
     await contains(".o_colorlist button:eq(9)").click();
     expect.verifySteps(["color 9 selected"]);
 });
@@ -49,7 +49,7 @@ test("use 'disableTransparent' props to hide the transparent option", async () =
 
     expect(".o_colorlist button").toHaveCount(11);
     expect(".o_colorlist button:eq(0)").toHaveAttribute("title", "Red");
-    expect(".o_colorlist button:eq(0)").toHaveClass("o_colorlist_item_color_1");
+    expect(".o_colorlist button:eq(0)").toHaveClass("o_colorlist_color_1");
     await contains(".o_colorlist button:eq(9)").click();
     expect.verifySteps(["color 10 selected"]);
 });
@@ -61,5 +61,5 @@ test("use 'selectedColor' props to highlight the selected color", async () => {
         },
     });
 
-    expect(".o_colorlist button.o_colorlist_item_color_3.active").toHaveCount(1);
+    expect(".o_colorlist button.o_colorlist_color_3.active").toHaveCount(1);
 });

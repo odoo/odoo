@@ -43,6 +43,18 @@ export function getColor(key) {
 }
 
 /**
+ * The palette color of a color index (see getColor) as a CSS value, which its producer sets in
+ * the custom property the stylesheets of the calendars read: empty for a CSS color, which the
+ * producers apply themselves.
+ * @param {*} key
+ * @returns {string}
+ */
+export function getPaletteColor(key) {
+    const color = getColor(key);
+    return typeof color === "string" ? "" : `var(--o-colors-${color || 0})`;
+}
+
+/**
  * Formats a date span between two dates with various formatting options.
  * @param {DateTime} start
  * @param {DateTime} end

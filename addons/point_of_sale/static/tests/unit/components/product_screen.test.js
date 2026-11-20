@@ -80,7 +80,7 @@ test("full slots remain available in POS", async () => {
     store.selectPreset(preset);
     await contains(".o_dialog .btn:contains('Tomorrow')").click();
 
-    const fullSlots = queryAll(".preset-slot-button.o_colorlist_item_numpad_color_1");
+    const fullSlots = queryAll(".preset-slot-button.o_colorlist_numpad.o_colorlist_color_1");
     const fullSlot = preset.availabilities["2019-03-12"].find(
         (s) => s.time === "2019-03-12 12:00:00"
     );

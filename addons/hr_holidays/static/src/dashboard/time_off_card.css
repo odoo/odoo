@@ -15,7 +15,6 @@
     .o_timeoff_duration {
         font-size: 40px;
         width: auto;
-        padding: auto 5px;
         line-height: 1;
 
         img {
@@ -32,11 +31,10 @@
         /* The goal is to achieve the same background as in the calendar renderer, */
         /* which uses a mix for the background color and has 30% opacity. */
         /* (with a darker shade for the bright version, otherwise it wouldn't be visible) */
-        $base_color: mix($o-white, nth($o-colors-complete, 1), 25%);
-        $calendar_bg: $o-view-background-color;
-        $base_color_with_fake_opacity: mix($base_color, $calendar_bg, 30%);
+        --timeOffCard-base-color: color-mix(in srgb, var(--o-white) 25%, var(--o-colors-0));
+        --timeOffCard-base-color-with-fake-opacity: color-mix(in srgb, var(--timeOffCard-base-color) 30%, var(--o-view-background-color));
 
-        background-color: #{$base_color_with_fake_opacity};
+        background-color: var(--timeOffCard-base-color-with-fake-opacity);
     }
 }
 

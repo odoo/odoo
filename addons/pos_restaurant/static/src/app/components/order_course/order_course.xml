@@ -4,7 +4,7 @@
         <div t-att-class="{'mb-1' : this.course.isEmpty()}">
             <div class="order-course-name p-2 text-truncate d-flex"
                  t-att-class="{
-                  'o_colorlist_item_color_10' : this.course.isSelected(),
+                  'o_colorlist_color o_colorlist_color_10' : this.course.isSelected(),
                   'bg-secondary': !this.course.isSelected(),
                   'cursor-pointer': !this.course.fired}"
                  t-on-click="(event) => this.clickCourse(event, this.course)">

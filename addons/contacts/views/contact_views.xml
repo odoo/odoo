@@ -10,7 +10,7 @@
                 <field name="commercial_partner_id" />
                 <templates>
                     <t t-name="hierarchy-box">
-                        <div t-attf-class="o_hierarchy_node_header d-flex justify-content-center o_hierarchy_node_color_{{record.commercial_partner_id.raw_value ? ((record.commercial_partner_id.raw_value - 1) % 11) + 1 : 0}}" t-att-title="record.type.value">
+                        <div t-attf-class="o_hierarchy_node_header d-flex justify-content-center o_hierarchy_node_color o_colorlist_color_{{record.commercial_partner_id.raw_value ? ((record.commercial_partner_id.raw_value - 1) % 11) + 1 : 0}}" t-att-title="record.type.value">
                             <div class="mt-n4 rounded-circle overflow-hidden position-relative z-1" style="width:48px; height:48px;">
                                 <field name="avatar_128" widget="image" options="{'zoom': true, 'zoom_delay': 1000}" class="w-100 h-100 object-fit-cover"/>
                             </div>

@@ -13,7 +13,7 @@
         .o_calendar_fc_view_multiMonthYear .hr_mandatory_day:not([aria-disabled]):not([aria-current=date]) .o_calendar_day_top:not(:hover),
         > div > .o_calendar_fc_view_dayGridMonth .hr_mandatory_day:not([aria-disabled]):not([aria-current=date]) {
             .o_calendar_day_top_number {
-                color: var(--mandatory-day-color) !important;
+                color: var(--o-colorlist-color) !important;
             }
         }
 
@@ -21,15 +21,9 @@
             border-radius: var(--border-radius-pill);
         }
 
-        :is(.o_calendar_fc_view_dayGridMonth, .o_calendar_fc_view_multiMonthYear) .o_calendar_day[aria-current=date][class*="hr_mandatory_day_"] {
-            --o-calendar-day-number-bg: var(--mandatory-day-color);
+        :is(.o_calendar_fc_view_dayGridMonth, .o_calendar_fc_view_multiMonthYear) .o_calendar_day[aria-current=date].hr_mandatory_day {
+            --o-calendar-day-number-bg: var(--o-colorlist-color);
         }
-
-        @for $size from 1 through length($o-colors) {
-            .hr_mandatory_day_#{$size - 1} {
-                --mandatory-day-color: #{nth($o-colors, $size)};
-            }
-        }   
     }
 }
 

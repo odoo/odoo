@@ -22,7 +22,7 @@ class HrWorkEntryType(models.Model):
         help="The code is used as a reference in salary rules. Careful, changing an existing code can lead to unwanted behaviors.")
     external_code = fields.Char(tracking=True, help="Use this code to export your data to a third party")
 
-    # Color Palette Specification (corresponds to default 12-color palette / .o_calendar_color_N / badges):
+    # Color Palette Specification (corresponds to default 12-color palette / --o-colors-N / badges):
     #  0: No color / Gray - Out of contract / not applicable (Outside contract, career break)
     #  1: Red             - Unpaid absence & Disciplinary (Leave without pay, unjustified absence, tardiness)
     #  2: Orange          - Overtime / premium pay (Overtime, extra hours, worked holidays)

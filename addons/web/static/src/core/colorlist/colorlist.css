@@ -1,0 +1,62 @@
+.o_colorlist {
+    padding: var(--ColorListField-padding, 0);
+    box-sizing: content-box;
+    margin-bottom: var(--ColorListField-marginBottom, 0);
+    grid-template-columns: repeat(auto-fit, var(--o-bubble-color-size-xl));
+
+    .o_bottom_sheet_body & {
+        --ColorListField-padding: var(--o-bs-spacer-3) var(--BottomSheet-Entry-paddingX);
+        --fieldWidget-display: block;
+        --ColorListField-Entry-fontSize: 1.4em;
+
+        grid-template-columns: repeat(var(--ColorListField-columns, 6), 1fr);
+        @media screen and (min-width: 768px), print and (min-width: 188mm) {
+            grid-template-columns: repeat(var(--ColorListField-columns, 12), 1fr);
+        }
+    }
+
+    button {
+        position: relative;
+        display: block;
+        min-width: var(--ColorListField-Entry-minWidth, 1.25rem);
+        aspect-ratio: var(--ColorListField-Entry-aspectRatio, 1);
+        border-radius: var(--ColorListField-Entry-borderRadius, 100%);
+        font-size: var(--ColorListField-Entry-fontSize, smaller);
+        overflow: hidden;
+
+        &.active {
+            &::after {
+                position: absolute;
+                inset: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: var(--color, var(--o-bs-body-color));
+                /* eslint-disable-next-line css/font-family-fallbacks -- icon font */
+                font: normal normal normal var(--ColorListField-Entry-minWidth, 1.25rem)/1 "Material Symbols Outlined";
+                content: "check";
+            }
+        }
+
+        &:hover:not(.active) {
+            opacity: var(--o-opacity-muted);
+        }
+    }
+
+    :not(.o_field_widget) > & {
+        justify-content: center;
+    }
+}
+
+/* No Color */
+.o_colorlist_color:where(.o_colorlist_color_0) {
+    background: transparent;
+    box-shadow: inset 0 0 0 1px var(--gray-500);
+}
+
+.o_colorlist_color:where(:not(.o_colorlist_color_0)) {
+    --background-color: rgb(from var(--o-colorlist-color) r g b / var(--bg-opacity, 1));
+    background-color: var(--background-color) !important;
+    --color: rgb(from var(--o-colorlist-contrast) r g b / var(--text-opacity, 1));
+    color: var(--color) !important;
+}

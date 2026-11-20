@@ -11,7 +11,7 @@
             <div class="floating-order-container position-relative">
                 <button t-out="order.getName()"
                     t-att-class="{ 'active': this.pos.getOrder()?.id === order.id }"
-                    t-attf-class="{{`o_colorlist_item_color_transparent_${order.preset_id?.color}`}}"
+                    t-attf-class="{{ order.preset_id?.color ? 'o_colorlist_transparent o_colorlist_color_' + order.preset_id?.color : '' }}"
                     class="btn btn-lg btn-secondary px-3 lh-lg text-truncate"
                     style="min-width: 4rem;"
                     t-on-click="() => this.selectFloatingOrder(order)"

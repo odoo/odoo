@@ -4,7 +4,7 @@ import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { Transition } from "@web/core/transition";
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
-import { getColor } from "../utils";
+import { getColor, getPaletteColor } from "../utils";
 import { Component, proxy, t, useProps } from "@odoo/owl";
 
 let nextId = 1;
@@ -64,8 +64,13 @@ export class CalendarFilterSection extends Component {
     }
 
     getFilterColor(filter) {
-        return filter.colorIndex !== null
-            ? "o_calendar_filter_color_" + getColor(filter.colorIndex)
+        const color = filter.colorIndex !== null && getColor(filter.colorIndex);
+        return typeof color === "number" ? "o_calendar_filter_color" : "";
+    }
+
+    getFilterStyle(filter) {
+        return this.getFilterColor(filter)
+            ? `--o-calendar-filter-color: ${getPaletteColor(filter.colorIndex)};`
             : "";
     }
 

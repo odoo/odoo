@@ -8,7 +8,7 @@
                     role="menuitem"
                     t-on-click="() => this.selectColor(color_index)"
                     t-att-class="{ 'active' : this.props.record.data?.color === color_index}"
-                    t-attf-class="border-0 rounded-circle o_colorlist_item_color_{{ color_index }}"
+                    t-attf-class="border-0 rounded-circle o_colorlist_color o_colorlist_color_{{ color_index }}"
                     t-att-title="color"
                     t-att-aria-label="color"/>
             </t>

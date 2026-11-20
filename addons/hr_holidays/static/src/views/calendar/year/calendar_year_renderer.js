@@ -39,9 +39,7 @@ export class TimeOffCalendarYearRenderer extends CalendarYearRenderer {
 
     /** @override **/
     async onDateClick(info) {
-        const is_mandatory_day = [...info.dayEl.classList].some((elClass) =>
-            elClass.startsWith("hr_mandatory_day_")
-        );
+        const is_mandatory_day = info.dayEl.classList.contains("hr_mandatory_day");
         this.mandatoryDayPopover.close();
         if (this.uiService.isSmall) {
             return super.onDateClick(info);

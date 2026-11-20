@@ -147,7 +147,7 @@ export class ResourceCalendarAttendanceCalendarCommonRenderer extends CalendarCo
                     default_hour_to: end.hour + end.minute / 60,
                 },
             },
-            `o_calendar_popover card o_calendar_color_0`
+            "o_calendar_popover card o_calendar_color"
         );
     }
 

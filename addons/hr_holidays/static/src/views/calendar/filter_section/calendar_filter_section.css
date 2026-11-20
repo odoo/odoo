@@ -16,10 +16,8 @@
         }
     }
 
-    @for $size from 1 through length($o-colors) {
-        .hr_mandatory_day_#{$size - 1} {
-            color: nth($o-colors, $size) !important;
-        }
+    .hr_mandatory_day {
+        color: var(--o-colorlist-color) !important;
     }
 }
 

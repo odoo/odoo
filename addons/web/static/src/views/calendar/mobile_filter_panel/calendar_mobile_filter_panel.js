@@ -1,5 +1,5 @@
 import { Component, t, useProps } from "@odoo/owl";
-import { getColor } from "../utils";
+import { getColor, getPaletteColor } from "../utils";
 
 export class CalendarMobileFilterPanel extends Component {
     static components = {};
@@ -12,8 +12,9 @@ export class CalendarMobileFilterPanel extends Component {
     get caretDirection() {
         return this.props.sidePanelShown ? "keyboard_arrow_down" : "chevron_backward";
     }
-    getFilterColor(filter) {
-        return `o_color_${getColor(filter.colorIndex)}`;
+    getFilterColorStyle(filter) {
+        const color = getColor(filter.colorIndex);
+        return color ? `color: ${getPaletteColor(filter.colorIndex) || color};` : "";
     }
     getFilterTypePriority(type) {
         return ["user", "record", "dynamic", "all"].indexOf(type);

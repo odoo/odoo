@@ -1,0 +1,17 @@
+.o_tag {
+    font-size: var(--Tag-font-size, var(--o-bs-font-size-sm));
+    max-width: var(--Tag-max-width, 100%);
+
+    &:is(
+        .o_tag_color_0, .o_tag_color_1, .o_tag_color_2, .o_tag_color_3, .o_tag_color_4,
+        .o_tag_color_5, .o_tag_color_6, .o_tag_color_7, .o_tag_color_8, .o_tag_color_9,
+        .o_tag_color_10, .o_tag_color_11
+    ) {
+        &, &::after {
+            --background-color: rgb(from var(--o-colorlist-bg-subtle) r g b / var(--bg-opacity, 1));
+            background-color: var(--background-color) !important;
+            --color: rgb(from var(--o-colorlist-text-emphasis) r g b / var(--text-opacity, 1));
+            color: var(--color) !important;
+        }
+    }
+}

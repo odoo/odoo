@@ -6,7 +6,7 @@
         <Dialog title="this.props.title" footer="false" size="this.props.size" bodyClass="bodyClass">
             <button t-foreach="this.props.list" t-as="item" t-key="item.id"
                     class="selection-item d-flex align-items-center btn btn-lg btn-outline-secondary text-start"
-                    t-attf-class="o_colorlist_item_color_{{ item.color }}"
+                    t-attf-class="{{ item.color === undefined ? '' : 'o_colorlist_color o_colorlist_color_' + item.color }}"
                     t-att-class="this.getItemBtnClass(item)"
                     t-on-click="() => this.selectItem(item.id)">
 

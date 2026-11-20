@@ -392,4 +392,29 @@
     --o-check-mark-danger-image: #{o-check-mark-image($danger)};
     --o-check-mark-form-check-checked-image: #{o-check-mark-image($form-check-input-checked-bg-color)};
     --o-crossed-out-image: #{str-replace(url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='39' height='39'><line y2='0' x2='39' y1='39' x1='0' style='stroke:#{map-get($theme-colors, 'danger')};stroke-width:2'/><line y2='1' x2='40' y1='40' x1='1' style='stroke:rgb(255,255,255);stroke-width:1'/></svg>"), "#", "%23")};
+
+    /* Colors of the palettes, indexed like the classes that use them */
+    @for $i from 1 through length($o-colors-complete) {
+        --o-colors-#{$i - 1}: #{nth($o-colors-complete, $i)};
+    }
+}
+
+/* Color of the color list entry an element names in its o_colorlist_color_* class, for the
+   rules giving its look: one rule per color here instead of one per color in
+   each stylesheet (the rules drawing the "no color" entry, 0, ignore it) */
+@for $i from 1 through length($o-colors-complete) {
+    .o_colorlist_color_#{$i - 1} {
+        --o-colorlist-color: var(--o-colors-#{$i - 1});
+        --o-colorlist-contrast: #{color-contrast(nth($o-colors-complete, $i))};
+    }
+}
+
+/* Tones of the tags and badges, which stored messages and pages name by their
+   color classes */
+@for $i from 1 through length($o-colors-bg-subtle) {
+    .o_tag_color_#{$i - 1}, .o_badge_color_#{$i - 1} {
+        --o-colorlist-bg-subtle: #{nth($o-colors-bg-subtle, $i)};
+        --o-colorlist-border: #{nth($o-colors-border, $i)};
+        --o-colorlist-text-emphasis: #{nth($o-colors-text-emphasis, $i)};
+    }
 }
