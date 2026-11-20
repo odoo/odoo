@@ -3176,6 +3176,34 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertAlmostEqual(expired_alloc.number_of_days, 5.0, places=5,
                                msg="Expired allocation must be untouched")
 
+    def test_work_entries_with_attendance_with_falsy_check_out(self):
+        employee = self.env['hr.employee'].create({
+            'name': 'Attendance-based Employee',
+            'tz': 'UTC',
+            'attendance_based': True,
+            'resource_calendar_id': self.calendar.id,
+            'date_version': '2020-01-01',
+            'contract_date_start': '2020-01-01',
+        })
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': employee.id,
+            'check_in': datetime(2022, 12, 12, 8),
+            'check_out': datetime(2022, 12, 12, 18),
+        })
+        attendance.check_out = False
+
+        overtime_attendances = self.env['hr.attendance'].search([
+            ('employee_id', '=', employee.id),
+            ('source_attendance_id', '=', attendance.id),
+            ('time_rule_id', '!=', False),
+        ])
+        self.assertTrue(overtime_attendances)
+
+        work_entries = employee.version_id.generate_work_entries(date(2022, 12, 12), date(2022, 12, 12))
+        self._check_work_entries(work_entries, [
+            (date(2022, 12, 12), 2, self.overtime_type),
+        ])
+
 
 @tagged('-at_install', 'post_install', 'work_entry_pipeline', 'time_rule_pipeline')
 class TestTimeRuleCronBehavior(TransactionCase):
