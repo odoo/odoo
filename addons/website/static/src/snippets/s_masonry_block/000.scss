@@ -64,8 +64,10 @@ html[data-no-flex] .s_masonry_block:not([data-vcss]) {
         }
     }
 
-    .content {
-        @include clearfix;
+    .content::after {
+        display: block;
+        clear: both;
+        content: "";
     }
 
     @media (min-width: 768px) { /* media-breakpoint-up(md) */
