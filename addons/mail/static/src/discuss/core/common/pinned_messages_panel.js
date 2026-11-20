@@ -30,7 +30,10 @@ export class PinnedMessagesPanel extends Component {
      * Get the message to display when nothing is pinned on this channel or client is offline.
      */
     get emptyText() {
-        if (this.offlineService.offline && this.props.channel.pinnedMessagesState !== "loaded") {
+        if (
+            this.offlineService.offline &&
+            this.props.channel.thread.pinnedMessagesState !== "loaded"
+        ) {
             return _t("Go online to load pinned messages.");
         }
         return _t("This channel doesn't have any pinned messages.");

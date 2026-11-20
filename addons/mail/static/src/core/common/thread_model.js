@@ -135,12 +135,6 @@ export class Thread extends Record {
         )
     );
     create_uid = fields.One("res.users");
-    /**
-     * Server-side value used in chatter to determine if the thread has pinned messages without
-     * having to load them all. Dynamic value should count "pinnedMessages" instead.
-     * @type {boolean}
-     **/
-    has_pinned_messages;
     /** @type {number} */
     id;
     /** @type {string} */
@@ -289,6 +283,16 @@ export class Thread extends Record {
     pid;
     composerDisabled = this.computed(() => this.computeComposerDisabled());
     pinnedMessages = fields.Many("mail.message", { inverse: "threadAsPinned" });
+    /**
+     * Undefined until received: display pinnedMessagesCount instead.
+     * @type {number|undefined}
+     */
+    pinned_message_count;
+    pinnedMessagesCount = this.computed(
+        () => this.pinned_message_count ?? this.pinnedMessages.length
+    );
+    /** @type {"loaded"|"loading"|"error"|undefined} */
+    pinnedMessagesState;
     sortedPinnedMessages = this.computedShallowEqual(() =>
         [...this.pinnedMessages].sort((m1, m2) => {
             if (m1.pinned_at === m2.pinned_at) {
@@ -298,12 +302,31 @@ export class Thread extends Record {
         })
     );
 
-    async fetchPinnedMessages() {
-        await this.store.fetchStoreData("mail.thread", {
+    /** @param {string[]} requestList */
+    fetchPinnedMessagesData(requestList) {
+        return this.store.fetchStoreData("mail.thread", {
             thread_model: this.model,
             thread_id: this.id,
-            request_list: ["pinned_messages"],
+            request_list: requestList,
         });
+    }
+
+    async fetchPinnedMessages() {
+        if (this.pinnedMessagesState === "loading") {
+            return;
+        }
+        this.pinnedMessagesState = "loading";
+        const previouslyPinnedMessages = new Set(this.pinnedMessages);
+        try {
+            await this.fetchPinnedMessagesData(["pinned_message_count", "pinnedMessages"]);
+        } catch (e) {
+            this.pinnedMessagesState = "error";
+            throw e;
+        }
+        for (const message of previouslyPinnedMessages.difference(new Set(this.pinnedMessages))) {
+            message.pinned_at = undefined;
+        }
+        this.pinnedMessagesState = "loaded";
     }
 
     get accessRestrictedToGroupText() {

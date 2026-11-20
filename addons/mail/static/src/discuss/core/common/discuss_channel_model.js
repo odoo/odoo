@@ -534,8 +534,6 @@ export class DiscussChannel extends Record {
     /** @type {true|undefined} */
     open_chat_window;
     parent_channel_id = fields.One("discuss.channel", { inverse: "sub_channel_ids" });
-    /** @type {"loaded"|"loading"|"error"|undefined} */
-    pinnedMessagesState = undefined;
     get showCorrespondentCountry() {
         return false;
     }
@@ -667,17 +665,10 @@ export class DiscussChannel extends Record {
     }
 
     async fetchPinnedMessages() {
-        if (["loaded", "loading"].includes(this.pinnedMessagesState)) {
+        if (this.thread.pinnedMessagesState === "loaded") {
             return;
         }
-        this.pinnedMessagesState = "loading";
-        try {
-            await this.thread.fetchPinnedMessages();
-        } catch (e) {
-            this.pinnedMessagesState = "error";
-            throw e;
-        }
-        this.pinnedMessagesState = "loaded";
+        await this.thread.fetchPinnedMessages();
     }
 
     async fetchMoreAttachments(limit = 30) {

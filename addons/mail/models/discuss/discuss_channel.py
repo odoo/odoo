@@ -1717,10 +1717,14 @@ class DiscussChannel(models.Model):
 
     # Store: _store_thread_fields is looked up by name and silently skipped when
     # missing, so a channel without it loses the whole payload of
-    # /mail/thread/data: pinned_messages (fetchPinnedMessages) and the
-    # hasReadAccess, hasWriteAccess and canPostOnReadonly attrs of that call.
+    # /mail/thread/data: the hasReadAccess, hasWriteAccess and canPostOnReadonly
+    # attrs of that call.
     def _store_thread_fields(self, *args, **kwargs):
         return MailThread._store_thread_fields(self, *args, **kwargs)
+
+    # Store: looked up by name too, see _store_thread_fields.
+    def _store_pinned_messages_fields(self, *args, **kwargs):
+        return MailThread._store_pinned_messages_fields(self, *args, **kwargs)
 
     def _check_can_update_message_content(self, message):
         # Don't call super in this override as we want to ignore the mail.thread behavior completely

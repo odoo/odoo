@@ -1344,6 +1344,38 @@ class TestChannelInternals(MailCommon, HttpCase):
         with self.assertBus(notifications):
             test_group.execute_command_help()
 
+    @users("employee")
+    def test_message_pin(self):
+        self.authenticate(self.env.user.login, self.env.user.login)
+        channel = self.env["discuss.channel"].create({"name": "Pin channel"})
+        message_1 = channel.message_post(body="Message 1", message_type="comment")
+        message_2 = channel.message_post(body="Message 2", message_type="comment")
+        self.assertTrue(channel.set_message_pin(message_1.id, True))
+        self.assertTrue(channel.set_message_pin(message_2.id, True))
+        self.assertTrue(channel.set_message_pin(message_2.id, False))
+        self.assertTrue(message_1.pinned_at)
+        self.assertFalse(message_2.pinned_at)
+        data = pop_store_version(
+            self.make_jsonrpc_request(
+                "/mail/store",
+                {
+                    "fetch_params": [
+                        [
+                            "mail.thread",
+                            {
+                                "thread_model": "discuss.channel",
+                                "thread_id": channel.id,
+                                "request_list": ["pinned_message_count", "pinnedMessages"],
+                            },
+                        ],
+                    ],
+                },
+            ),
+        )
+        thread = next(t for t in data["mail.thread"] if t["id"] == channel.id)
+        self.assertEqual(thread["pinned_message_count"], 1)
+        self.assertEqual(thread["pinnedMessages"], message_1.ids)
+
     @users('employee')
     def test_message_update_content_bus(self):
         self.maxDiff = None
