@@ -20,7 +20,7 @@ patch(OrderPaymentValidation.prototype, {
         const reports = {};
         for (const line of this.order.getOrderlines()) {
             const card = line.card_id;
-            const reportId = card?._pos_report_print_id;
+            const reportId = card?.raw?._pos_report_print_id;
             if (reportId) {
                 (reports[reportId] ??= []).push(card.id);
             }
