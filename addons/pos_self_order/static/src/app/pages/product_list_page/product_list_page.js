@@ -169,7 +169,7 @@ export class ProductListPage extends Component {
             return [];
         }
         const parentCategory = currentCategory.parent_id || currentCategory;
-        return (parentCategory.child_ids || []).filter((c) =>
+        return parentCategory.children.filter((c) =>
             this.selfOrder.isCategoryAvailable(c.id)
         );
     }

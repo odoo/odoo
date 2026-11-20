@@ -688,6 +688,82 @@ describe("pos_store.js", () => {
         expect(grouped[0][1].map((p) => p.id)).not.toInclude(specialProduct.id);
     });
 
+    test("productToDisplayByCateg follows the category sequence tree", async () => {
+        const store = await setupPosEnv();
+        store.config.iface_group_by_categ = true;
+        const categories = store.models["pos.category"];
+        const products = store.models["product.template"];
+        const createCateg = (name, sequence, parent) =>
+            categories.create({ name, sequence, parent_id: parent?.id });
+        const rootA = createCateg("seq_root_a", -30);
+        const rootB = createCateg("seq_root_b", -20);
+        const childA2 = createCateg("seq_child_a2", 2, rootA);
+        const childA1 = createCateg("seq_child_a1", 1, rootA);
+        const childB1 = createCateg("seq_child_b1", 1, rootB);
+        for (const categ of [rootA, rootB, childA2, childA1, childB1]) {
+            products.create({
+                name: `${categ.name}_product`,
+                pos_categ_ids: [categ.id],
+                active: true,
+                available_in_pos: true,
+            });
+        }
+        const expectedIds = [rootA, childA1, childA2, rootB, childB1].map((c) => c.id);
+        const groupedIds = (grouped) =>
+            grouped.map(([id]) => id).filter((id) => expectedIds.includes(id));
+
+        expect(groupedIds(store.productToDisplayByCateg)).toEqual(expectedIds);
+
+        store.selectedCategory = rootA;
+        expect(groupedIds(store.productToDisplayByCateg)).toEqual([
+            rootA.id,
+            childA1.id,
+            childA2.id,
+        ]);
+    });
+
+    test("productToDisplayByCateg shows a product only in its deepest category", async () => {
+        const store = await setupPosEnv();
+        store.config.iface_group_by_categ = true;
+        const categories = store.models["pos.category"];
+        const parent = categories.create({ name: "dedup_parent", sequence: -30 });
+        const child = categories.create({
+            name: "dedup_child",
+            sequence: 1,
+            parent_id: parent.id,
+        });
+        const other = categories.create({ name: "dedup_other", sequence: -20 });
+        const createProduct = (name, categs) =>
+            store.models["product.template"].create({
+                name,
+                pos_categ_ids: categs.map((c) => c.id),
+                active: true,
+                available_in_pos: true,
+            });
+        createProduct("dedup_both", [parent, child]);
+        createProduct("dedup_parent_only", [parent]);
+        createProduct("dedup_parent_and_other", [parent, other]);
+
+        const namesByCateg = (grouped) =>
+            Object.fromEntries(
+                grouped
+                    .filter(([id]) => [parent.id, child.id, other.id].includes(id))
+                    .map(([id, products]) => [id, products.map((p) => p.name).sort()])
+            );
+
+        expect(namesByCateg(store.productToDisplayByCateg)).toEqual({
+            [parent.id]: ["dedup_parent_and_other", "dedup_parent_only"],
+            [child.id]: ["dedup_both"],
+            [other.id]: ["dedup_parent_and_other"],
+        });
+
+        store.selectedCategory = parent;
+        expect(namesByCateg(store.productToDisplayByCateg)).toEqual({
+            [parent.id]: ["dedup_parent_and_other", "dedup_parent_only"],
+            [child.id]: ["dedup_both"],
+        });
+    });
+
     test("productToDisplayByCateg count", async () => {
         const store = await setupPosEnv();
         const createProductsAndCateg = (prefix, count) => {
