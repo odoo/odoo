@@ -191,8 +191,7 @@ class PaymentTransaction(models.Model):
                 open_balance = next_payment_values['epd_discount_amount']
                 early_payment_values = self.env['account.move']._get_invoice_counterpart_amls_for_early_payment_discount(epd_aml_values_list, open_balance)
                 for aml_values_list in early_payment_values.values():
-                    if (aml_values_list):
-                        aml_vl = aml_values_list[0]
+                    for aml_vl in aml_values_list:
                         aml_vl['partner_id'] = invoice.partner_id.id
                         payment_values['write_off_line_vals'] += [aml_vl]
                 break
