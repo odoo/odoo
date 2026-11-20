@@ -280,29 +280,35 @@ export function convertCSSColorToRgba(cssColor = "") {
 }
 
 /**
- * Returns whether the given color's luminance is light.
- * Formula adapted from APCA's simplification at
- * https://gist.github.com/Myndex/e1025706436736166561d339fd667493#the-38-flip
+ * Converts color value from sRGB to linear RGB.
  *
- * @param {string} color - CSS color
- * @returns {boolean|undefined} true if the color is light, false if it is dark,
- * undefined if the color is not recognized.
+ * @param {number} value standard rgb in [0, 255]
+ * @returns {number} linear rgb
  */
-function isRelativeLuminanceLight(color) {
-    color = convertCSSColorToRgba(color);
-    if (!color) {
-        return;
+function srgbToLin(value) {
+    value = value / 255;
+    if (value <= 0.04045) {
+        return value / 12.92;
     }
-    const { red, green, blue } = color;
-    const rgbContrastRatios = { red: 0.2126, green: 0.7152, blue: 0.0722 };
-    const channelLuminance = (channel, value) =>
-        Math.pow(value / 255, 2.2) * rgbContrastRatios[channel];
-    const luminance =
-        channelLuminance("red", red) +
-        channelLuminance("green", green) +
-        channelLuminance("blue", blue);
-    // Perceptual luminance inflection point for the human eye is 0.38, not 0.5.
-    return luminance > 0.38;
+    return Math.pow((value + 0.055) / 1.055, 2.4);
+}
+
+/**
+ * @param {number[]} rgb [r, g, b] in [0, 255]
+ * @returns {number} WCAG relative luminance
+ */
+export function getRelativeLuminance([r, g, b]) {
+    return 0.2126 * srgbToLin(r) + 0.7152 * srgbToLin(g) + 0.0722 * srgbToLin(b);
+}
+
+/**
+ * @param {number[]} fg [r, g, b]
+ * @param {number[]} bg [r, g, b]
+ * @returns {number} WCAG contrast ratio, from 1 to 21
+ */
+export function getContrastRatio(fg, bg) {
+    const [hi, lo] = [getRelativeLuminance(fg), getRelativeLuminance(bg)].sort((a, b) => b - a);
+    return (hi + 0.05) / (lo + 0.05);
 }
 
 /**
@@ -312,7 +318,14 @@ function isRelativeLuminanceLight(color) {
  * @returns {"#000000"|"#FFFFFF"}
  */
 export function getContrastingColor(color) {
-    return isRelativeLuminanceLight(color) ? "#000000" : "#FFFFFF";
+    const rgba = convertCSSColorToRgba(color);
+    if (!rgba) {
+        return "#FFFFFF";
+    }
+    const rgb = [rgba.red, rgba.green, rgba.blue];
+    const blackContrast = getContrastRatio(rgb, [0, 0, 0]);
+    const whiteContrast = getContrastRatio(rgb, [255, 255, 255]);
+    return blackContrast > whiteContrast ? "#000000" : "#FFFFFF";
 }
 
 /**

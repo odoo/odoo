@@ -9,7 +9,12 @@ import { withSequence } from "@html_editor/utils/resource";
 import { getBgImageURLFromURL } from "@html_editor/utils/image";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { getHtmlStyle, getCSSVariableValue } from "@html_editor/utils/formatting";
-import { rgbToHex, isColorGradient } from "@web/core/utils/colors";
+import {
+    convertCSSColorToRgba,
+    getContrastRatio,
+    isColorGradient,
+    rgbToHex,
+} from "@web/core/utils/colors";
 import { isVisible } from "@web/core/utils/ui";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 
@@ -626,38 +631,26 @@ export class BackgroundShapeOptionPlugin extends Plugin {
         return this.nearestVisibleSnippetSibling(editingElement[elementSibling], elementSibling);
     }
     /**
-     * Compute the luminance of a color.
-     *
-     */
-    getLuminance(color) {
-        const hexColor = rgbToHex(color);
-        const r = parseInt(hexColor.slice(1, 3), 16);
-        const g = parseInt(hexColor.slice(3, 5), 16);
-        const b = parseInt(hexColor.slice(5), 16);
-        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-    }
-    /**
      * Return the color of the current theme with the most contrast compared to
      * the given color.
      *
      */
     getContrastingColor(baseColor) {
-        const baseLuminance = this.getLuminance(baseColor);
-
+        const toRgb = (color) => {
+            const { red, green, blue } = convertCSSColorToRgba(color);
+            return [red, green, blue];
+        };
+        const baseRgb = toRgb(baseColor);
         const htmlStyle = getHtmlStyle(this.document);
         const colors = ["o-color-1", "o-color-2", "o-color-3", "o-color-4", "o-color-5"];
-        const luminances = colors.map((color) => {
-            const colorValue = getCSSVariableValue(color, htmlStyle);
-            return { color, luminance: this.getLuminance(colorValue) };
-        });
 
         let bestContrast;
-        let maxDifference = 0;
+        let maxRatio = 0;
 
-        for (const { color, luminance } of luminances) {
-            const difference = Math.abs(baseLuminance - luminance);
-            if (difference > maxDifference) {
-                maxDifference = difference;
+        for (const color of colors) {
+            const ratio = getContrastRatio(baseRgb, toRgb(getCSSVariableValue(color, htmlStyle)));
+            if (ratio > maxRatio) {
+                maxRatio = ratio;
                 bestContrast = color;
             }
         }

@@ -1,10 +1,15 @@
 import { Plugin } from "@html_editor/plugin";
-import { convertCSSColorToRgba, convertRgbToHsl, convertHslToRgb } from "@web/core/utils/colors";
+import {
+    convertCSSColorToRgba,
+    convertHslToRgb,
+    convertRgbToHsl,
+    getContrastRatio,
+    getRelativeLuminance,
+} from "@web/core/utils/colors";
 import { hasColor, hasTextColorClass } from "@html_editor/utils/color";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { removeStyle } from "@html_editor/utils/dom";
-import { getContrastRatio, getRelativeLuminance } from "@html_editor/utils/contrast";
 
 export class ContrastPlugin extends Plugin {
     static id = "contrast";
