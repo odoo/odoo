@@ -249,4 +249,42 @@ describe("icon picker", () => {
         expect(button).toHaveAttribute("aria-label", "Clear search");
         expect(`${button} .oi`).toHaveAttribute("aria-hidden", "true");
     });
+
+    test("pick an icon for another purpose than inserting it", async () => {
+        const { el, editor } = await setupEditor("<p>ab[]</p>");
+        let promise = editor.shared.icon.pickIcon({ target: el.querySelector("p") });
+        await waitFor(".o-IconPicker");
+        expect(".o-IconPicker").toHaveAttribute("aria-label", "Select an icon");
+        await click(".o-IconPicker-icon[data-icon='favorite'].oi-filled");
+        const iconEl = await promise;
+        await expectElementCount(".o-IconPicker", 0);
+        expect(iconEl.outerHTML).toBe(`<span class="oi oi-filled" data-icon="favorite"></span>`);
+        expect(getContent(el)).toBe("<p>ab[]</p>", { message: "nothing is inserted" });
+
+        promise = editor.shared.icon.pickIcon();
+        await waitFor(".o-IconPicker");
+        await press("Escape");
+        expect(await promise).toBe(undefined, { message: "closed without picking" });
+
+        // Opening a picker closes the open one
+        const firstPromise = editor.shared.icon.pickIcon();
+        await waitFor(".o-IconPicker");
+        promise = editor.shared.icon.pickIcon();
+        expect(await firstPromise).toBe(undefined);
+        await animationFrame();
+        await expectElementCount(".o-IconPicker", 1);
+        await click(".o-IconPicker-icon[data-icon='home']:not(.oi-filled)");
+        expect((await promise).dataset.icon).toBe("home");
+    });
+
+    test("highlight the current icon when picking one", async () => {
+        const { editor } = await setupEditor("<p>[]</p>");
+        const iconEl = document.createElement("i");
+        iconEl.className = "oi";
+        iconEl.dataset.icon = "mail";
+        editor.shared.icon.pickIcon({ iconEl });
+        await waitFor(".o-IconPicker");
+        expect(".o-IconPicker-icon.o-selected").toHaveAttribute("data-icon", "mail");
+        expect(".o-IconPicker-icon.o-selected").not.toHaveClass("oi-filled");
+    });
 });

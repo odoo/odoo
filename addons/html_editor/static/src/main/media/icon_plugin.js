@@ -17,7 +17,7 @@ import { rightPos } from "@html_editor/utils/position";
 export class IconPlugin extends Plugin {
     static id = "icon";
     static dependencies = ["history", "selection", "color", "dom", "overlay"];
-    static shared = shared(["openIconPicker"]);
+    static shared = shared(["openIconPicker", "pickIcon"]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
@@ -148,8 +148,10 @@ export class IconPlugin extends Plugin {
         this.iconPickerOverlay = this.dependencies.overlay.createOverlay(
             IconPicker,
             { hasAutofocus: true, className: "popover" },
-            { onRemove: () => this.iconPickerId.set(null) }
+            { onRemove: this.onIconPickerRemoved.bind(this) }
         );
+        /** Called when the open icon picker is closed, whatever the reason. */
+        this.onIconPickerClose = null;
         this.addDomListener(this.editable, "dblclick", (ev) => {
             const iconEl = closestElement(ev.target, isIconElement);
             if (iconEl && this.isReplaceableOnDblClick(iconEl)) {
@@ -166,28 +168,40 @@ export class IconPlugin extends Plugin {
         return !!iconEl.parentElement?.isContentEditable;
     }
 
+    onIconPickerRemoved() {
+        const onClose = this.onIconPickerClose;
+        this.onIconPickerClose = null;
+        this.iconPickerId.set(null);
+        onClose?.();
+    }
+
     /**
      * Opens the icon picker, to insert an icon at the selection or to replace
      * the given one.
      *
      * @param {Object} [params]
-     * @param {HTMLElement} [params.iconEl] the icon to replace, the picker is
-     *  positioned next to it
+     * @param {HTMLElement} [params.iconEl] the icon to replace, highlighted in
+     *  the picker, which is positioned next to it
+     * @param {HTMLElement} [params.target] the element to position the picker
+     *  next to, instead of the icon or the selection
+     * @param {string} [params.label] the accessible name of the picker, which
+     *  should be the one of the button that opens it
      * @param {(icon: { name: string, filled: boolean }) => void} [params.onSelect]
      *  called with the picked icon instead of inserting or replacing one
+     * @param {() => void} [params.onClose] called when the picker is closed,
+     *  after `onSelect` if an icon was picked
      */
-    openIconPicker({ iconEl, onSelect } = {}) {
-        if (this.iconPickerOverlay.isOpen) {
-            return;
-        }
+    openIconPicker({ iconEl, target, label, onSelect, onClose } = {}) {
+        // A single picker at a time: the open one, if any, is closed first.
+        this.iconPickerOverlay.close();
         const id = uniqueId("o-we-icon-picker-");
         this.iconPickerId.set(id);
+        this.onIconPickerClose = onClose;
         this.iconPickerOverlay.open({
-            target: iconEl,
+            target: target || iconEl,
             props: {
                 id,
-                // Named after the button that opens it.
-                label: iconEl ? _t("Replace icon") : _t("Insert an icon"),
+                label: label || (iconEl ? _t("Replace icon") : _t("Insert an icon")),
                 document: this.document,
                 currentIcon: iconEl?.dataset.icon
                     ? {
@@ -209,6 +223,30 @@ export class IconPlugin extends Plugin {
                     }
                 },
             },
+        });
+    }
+
+    /**
+     * Lets the user pick an icon from the icon picker, e.g. for an option.
+     *
+     * @param {Object} [params]
+     * @param {HTMLElement} [params.target] the element to position the picker
+     *  next to, the selection by default
+     * @param {HTMLElement} [params.iconEl] the current icon, highlighted in the
+     *  picker
+     * @param {string} [params.label] the accessible name of the picker
+     * @returns {Promise<HTMLElement | undefined>} a new element of the picked
+     *  icon, or `undefined` if the picker was closed without picking one
+     */
+    pickIcon({ target, iconEl, label = _t("Select an icon") } = {}) {
+        return new Promise((resolve) => {
+            this.openIconPicker({
+                target,
+                iconEl,
+                label,
+                onSelect: (icon) => resolve(this.createIconElement(icon)),
+                onClose: () => resolve(),
+            });
         });
     }
 
