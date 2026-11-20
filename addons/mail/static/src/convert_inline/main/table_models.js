@@ -1,0 +1,103 @@
+import { assignDefaultElementOptions, ElementLayout, LayoutModel } from "../core/render_models";
+
+export class TableLayout extends ElementLayout {
+    constructor(options = {}) {
+        const refs = options.refs ?? {};
+        options.refs = refs;
+        refs.root ??= {};
+        refs.root.tag = "TABLE";
+        refs.root = assignDefaultElementOptions(refs.root, {
+            style: {
+                width: "100%",
+            },
+        });
+        super(options);
+        this.setAttributes({
+            attributes: {
+                cellspacing: "0",
+                cellpadding: "0",
+                border: "0",
+                role: "presentation",
+            },
+            classNames: "o-ci-table-layout",
+            style: {
+                "border-collapse": "separate",
+            },
+        });
+    }
+}
+
+export class RowLayout extends ElementLayout {
+    constructor(options = {}) {
+        const refs = options.refs ?? {};
+        options.refs = refs;
+        refs.root ??= {};
+        refs.root.tag = "TR";
+        super(options);
+        this.setAttributes({ classNames: "o-ci-row-layout" }, "row");
+    }
+}
+
+export class TableRowLayout extends LayoutModel {
+    static template = "mail.TableRow";
+    constructor(options = {}) {
+        const refs = options.refs ?? {};
+        options.refs = refs;
+        refs.root = assignDefaultElementOptions(refs.root, {
+            style: {
+                width: "100%",
+            },
+        });
+        super(options);
+        this.setAttributes({
+            classNames: "o-ci-table-layout",
+            style: {
+                "border-collapse": "separate",
+            },
+        });
+        this.setAttributes({ classNames: "o-ci-row-layout" }, "row");
+    }
+
+    get ancestorTag() {
+        return "TABLE";
+    }
+
+    get descendantTag() {
+        return "TR";
+    }
+}
+
+export class CellLayout extends ElementLayout {
+    constructor(options = {}) {
+        const refs = options.refs ?? {};
+        options.refs = refs;
+        refs.root ??= {};
+        refs.root.tag = "TD";
+        refs.root = assignDefaultElementOptions(refs.root, {
+            attributes: {
+                valign: "top",
+            },
+            style: {
+                "vertical-align": "top",
+            },
+        });
+        super(options);
+        this.setAttributes({
+            classNames: "o-ci-cell-layout",
+        });
+    }
+}
+
+export class EmptyCellLayout extends CellLayout {
+    constructor(options = {}) {
+        const refs = options.refs ?? {};
+        options.refs = refs;
+        refs.root ??= {};
+        refs.root.tag = "TD";
+        refs.root = assignDefaultElementOptions(refs.root, {
+            attributes: { height: "0" },
+            style: { height: "0" },
+        });
+        super(options);
+    }
+}
