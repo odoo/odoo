@@ -28,7 +28,7 @@ from .registry import Registry
 if typing.TYPE_CHECKING:
     from collections.abc import Collection, Iterable
     from odoo.api import Environment
-    from odoo.sql_db import BaseCursor
+    from odoo.sql_db import Cursor
     from odoo.tests.result import OdooTestResult
     from .module_graph import ModuleNode
 
@@ -324,7 +324,7 @@ def load_module_graph(
                    odoo.sql_db.sql_counter - loading_extra_query_count)  # extra queries: testes, notify, any other closed cursor
 
 
-def _check_module_names(cr: BaseCursor, module_names: Iterable[str]) -> None:
+def _check_module_names(cr: Cursor, module_names: Iterable[str]) -> None:
     mod_names = set(module_names)
     mod_names.discard('all')
     if mod_names:
@@ -340,7 +340,7 @@ def _check_module_names(cr: BaseCursor, module_names: Iterable[str]) -> None:
 
 def load_modules(
     registry: Registry,
-    cr: BaseCursor,
+    cr: Cursor,
     *,
     update_module: bool = False,
     upgrade_modules: Collection[str] = (),
@@ -622,7 +622,7 @@ def load_modules(
     registry.check_null_constraints(cr)
 
 
-def reset_modules_state(cr: BaseCursor) -> None:
+def reset_modules_state(cr: Cursor) -> None:
     """
     Resets modules flagged as "to x" to their original state
     """
