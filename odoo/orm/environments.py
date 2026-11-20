@@ -234,7 +234,7 @@ class Environment(Mapping[str, "BaseModel"]):
 
         :raise AccessError: invalid or unauthorized `allowed_company_ids` context key content.
         :return: current company (default=`self.user.company_id`), with the current environment
-        :rtype: :class:`res.company record<~odoo.addons.base.models.res_company.Company>`
+        :rtype: :class:`res.company record<~odoo.addons.base.models.res_company.ResCompany>`
 
         .. warning::
 
@@ -264,7 +264,7 @@ class Environment(Mapping[str, "BaseModel"]):
 
         :raise AccessError: invalid or unauthorized `allowed_company_ids` context key content.
         :return: current companies (default=`self.user.company_ids`), with the current environment
-        :rtype: :class:`res.company recordset<~odoo.addons.base.models.res_company.Company>`
+        :rtype: :class:`res.company recordset<~odoo.addons.base.models.res_company.ResCompany>`
 
         .. warning::
 
@@ -337,17 +337,17 @@ class Environment(Mapping[str, "BaseModel"]):
     def _(self, source: str | LazyGettext, *args, **kwargs) -> str:
         """Translate the term using current environment's language.
 
-        Usage:
+        Usage::
 
-        ```
-        self.env._("hello world")  # dynamically get module name
-        self.env._("hello %s", "test")
-        self.env._(LAZY_TRANSLATION)
-        ```
+            self.env._("hello world")  # dynamically get module name
+            self.env._("hello %s", "test")
+            self.env._(LAZY_TRANSLATION)
 
         :param source: String to translate or lazy translation
-        :param ...: args or kwargs for templating
-        :return: The transalted string
+        :param args: positional arguments for ``%`` formatting
+        :param kwargs: keyword arguments for ``%(name)s`` formatting
+            (use either ``args`` or ``kwargs``, not both)
+        :return: The translated string
         """
         lang = self.lang or 'en_US'
         if isinstance(source, str):
@@ -562,7 +562,7 @@ class Environment(Mapping[str, "BaseModel"]):
 
 
 class Transaction:
-    """ A object holding ORM data structures for a transaction.
+    """ An object holding ORM data structures for a transaction.
 
     Signaling summary:
 
@@ -821,7 +821,7 @@ class Transaction:
 
         if _logger_signaling.isEnabledFor(logging.DEBUG):
             # log information about invalidation_cause
-            # could be interresting to log in info but this will need to minimize invalidation first,
+            # could be interesting to log in info but this will need to minimize invalidation first,
             # mainly in some setupclass and crons
             frame = inspect.currentframe().f_back
             code = frame.f_code
@@ -1100,16 +1100,16 @@ class CacheLayer(MutableMapping):
 
     @property
     def snapshot(self):
-        """ Compatibilty with the API of LRU for testing. See clear()."""
+        """ Compatibility with the API of LRU for testing. See clear()."""
         return dict(self)
 
     @property
     def count(self):
-        """ Compatibilty with the API of LRU for testing. See clear()."""
+        """ Compatibility with the API of LRU for testing. See clear()."""
         return 999999
 
     def clear(self):
-        """ Compatibilty with the API of LRU for testing.
+        """ Compatibility with the API of LRU for testing.
 
         This is need for tests which put a CacheLayer on the registry.
         See `odoo.tests.common.flushing_cursor()`.

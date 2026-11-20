@@ -426,7 +426,7 @@ class BaseModel(metaclass=MetaModel):
 
     _name: str = None                   #: the model name (in dot-notation, module namespace)
     _description: str | None = None     #: the model's informal name
-    _explanation: str | None = None     #: the model's verbose explanation (what purpuse does it serve)
+    _explanation: str | None = None     #: the model's verbose explanation (what purpose does it serve)
     _module: str | None = None          #: the model's module (in the Odoo sense)
     _custom: bool = False               #: should be True for custom models only
 
@@ -465,7 +465,7 @@ class BaseModel(metaclass=MetaModel):
     _inherit_children: OrderedSet[str]
 
     _rec_name: str = ''                           #: field to use for labeling records, default: ``name``
-    _rec_names_search: Collection[str] = ()       #: fields to consider in ``name_search``
+    _rec_names_search: Collection[str] = ()       #: fields to search on when searching ``display_name``, default: ``_rec_name``
     _order: str = 'id'                            #: default order field for searching results
     _parent_name: str = 'parent_id'               #: the many2one field used as parent field
     _parent_store: bool = False
@@ -1307,7 +1307,7 @@ class BaseModel(metaclass=MetaModel):
 
     @api.model
     def default_get(self, fields: Sequence[str]) -> ValuesType:
-        """Return default values for the fields in ``fields_list``. Default
+        """Return default values for the fields in ``fields``. Default
         values are determined by the context, user defaults, user fallbacks
         and the model itself.
 
@@ -1318,7 +1318,7 @@ class BaseModel(metaclass=MetaModel):
         .. note::
 
             Unrequested defaults won't be considered, there is no need to return a
-            value for fields whose names are not in `fields_list`.
+            value for fields whose names are not in ``fields``.
         """
         defaults = {}
         parent_fields = defaultdict(list)
@@ -1494,12 +1494,16 @@ class BaseModel(metaclass=MetaModel):
 
     @api.depends(lambda self: (self._rec_name,) if self._rec_name else ())
     def _compute_display_name(self):
-        """Compute the value of the `display_name` field.
+        """Compute the value of the ``display_name`` field.
 
-        The `display_name` field is a textual representation of the record.
-        This method can be overridden to change the representation.  If needed,
-        it can be made field-dependent using :attr:`~odoo.api.depends` and
-        context-dependent using :attr:`~odoo.api.depends_context`.
+        ``display_name`` is the textual representation of the record. By
+        default, it is the display value of the
+        :attr:`~odoo.models.BaseModel._rec_name` field, or ``"<model>,<id>"``
+        when the model has no ``_rec_name``.
+
+        If needed, it can be made field-dependent using
+        :attr:`~odoo.api.depends` and context-dependent using
+        :attr:`~odoo.api.depends_context`.
         """
         if self._rec_name:
             convert = self._fields[self._rec_name].convert_to_display_name
@@ -1512,12 +1516,13 @@ class BaseModel(metaclass=MetaModel):
     @api.model
     def _search_display_name(self, operator, value):
         """
-        Returns a domain that matches records whose display name matches the
+        Return a domain that matches records whose display name matches the
         given ``name`` pattern when compared with the given ``operator``.
-        This method is used to implement the search on the ``display_name``
-        field, and can be overridden to change the search criteria.
-        The default implementation searches the fields defined in `_rec_names_search`
-        or `_rec_name`.
+        The default implementation searches the fields defined in
+        ``_rec_names_search`` or ``_rec_name``.
+
+        Override this method to change the search criteria, typically together
+        with :meth:`~odoo.models.Model._compute_display_name`.
         """
         search_fnames = self._rec_names_search or ([self._rec_name] if self._rec_name else [])
         if not search_fnames:
@@ -1938,9 +1943,9 @@ class BaseModel(metaclass=MetaModel):
                 list to match all records.
         :param groupby: list of groupby descriptions by which the records will be grouped.
                 A groupby description is either a field (then it will be grouped by that field)
-                or a string `'field:granularity'`. Right now, the only supported granularities
-                are `'day'`, `'week'`, `'month'`, `'quarter'` or `'year'`, and they only make sense for
-                date/datetime fields.
+                or a string `'field:granularity'`. The supported granularities are
+                `'hour'`, `'day'`, `'week'`, `'month'`, `'quarter'` and `'year'`, and they only make
+                sense for date/datetime fields (`'hour'` for datetime only).
                 Additionally integer date parts are also supported:
                 `'year_number'`, `'quarter_number'`, `'month_number'`, `'iso_week_number'`, `'day_of_year'`, `'day_of_month'`,
                 'day_of_week', 'hour_number', 'minute_number' and 'second_number'.
@@ -2001,9 +2006,9 @@ class BaseModel(metaclass=MetaModel):
         :param domain: :ref:`A search domain <reference/orm/domains>`.
         :param groupby: list of groupby descriptions by which the records will be grouped.
                 A groupby description is either a field (then it will be grouped by that field)
-                or a string `'field:granularity'`. Right now, the only supported granularities
-                are `'day'`, `'week'`, `'month'`, `'quarter'` or `'year'`, and they only make sense for
-                date/datetime fields.
+                or a string `'field:granularity'`. The supported granularities are
+                `'hour'`, `'day'`, `'week'`, `'month'`, `'quarter'` and `'year'`, and they only make
+                sense for date/datetime fields (`'hour'` for datetime only).
                 Additionally integer date parts are also supported:
                 `'year_number'`, `'quarter_number'`, `'month_number'`, `'iso_week_number'`, `'day_of_year'`, `'day_of_month'`,
                 'day_of_week', 'hour_number', 'minute_number' and 'second_number'.
@@ -2684,7 +2689,7 @@ class BaseModel(metaclass=MetaModel):
 
     @api.model
     def has_field_access(self, field: Field, operation: typing.Literal['read', 'write']) -> bool:
-        """ Determine whether the user access rights on the given field for the given operation.
+        """ Return whether the current user can perform ``operation`` on the given field.
 
         :param field: the field to check
         :param operation: one of ``read``, ``write``
@@ -3157,7 +3162,7 @@ class BaseModel(metaclass=MetaModel):
 
         :param field_names: the collection of requested fields, or ``None`` for
             all accessible fields marked with ``prefetch=True``
-        :param ignore_when_in_cache: whether to ignore fields that are alreay in cache for ``self``
+        :param ignore_when_in_cache: whether to ignore fields that are already in cache for ``self``
         :return: the list of fields that must be fetched
         :raise AccessError: when trying to fetch fields to which the user does not have access
         """
@@ -3332,9 +3337,9 @@ class BaseModel(metaclass=MetaModel):
         :param list fnames: names of relational fields to check
         :raises UserError: if the `company_id` of the value of any field is not
             in `[False, self.company_id]` (or `self` if
-            :class:`~odoo.addons.base.models.res_company`).
+            :class:`~odoo.addons.base.models.res_company.ResCompany`).
 
-        For :class:`~odoo.addons.base.models.res_users` relational fields,
+        For :class:`~odoo.addons.base.models.res_users.ResUsers` relational fields,
         verifies record company is in `company_ids` fields.
 
         User with main company A, having access to company A and B, could be
@@ -4059,7 +4064,7 @@ class BaseModel(metaclass=MetaModel):
                 if field.store or field.type not in ('one2many', 'many2many'):
                     # Protect the field from being recomputed while being
                     # inversed. In the case of non-stored x2many fields, the
-                    # field's value may contain unexpeced new records (created
+                    # field's value may contain unexpected new records (created
                     # by command 0). Those new records are necessary for
                     # inversing the field, but should no longer appear if the
                     # field is recomputed afterwards. Not protecting the field
@@ -5047,7 +5052,7 @@ class BaseModel(metaclass=MetaModel):
 
         The `active_test` flag specifies whether to filter only active records.
         The `bypass_access` controls whether or not permissions should be
-        checked on the model and record rules should be applied.
+        checked on the model and access rules should be applied.
         """
         if self.env.su or bypass_access:
             sec_domain = Domain.TRUE
@@ -5243,7 +5248,7 @@ class BaseModel(metaclass=MetaModel):
             return
         query = Query(self)
         query.add_where(SQL("%s IN %s", SQL.identifier(self._table, 'id'), tuple(ids)))
-        # Use SKIP LOCKED instead of NOWAIT because the later aborts the
+        # Use SKIP LOCKED instead of NOWAIT because the latter aborts the
         # transaction and we do not want to use SAVEPOINTS.
         if allow_referencing:
             lock_sql = SQL("FOR NO KEY UPDATE SKIP LOCKED")
@@ -5315,7 +5320,7 @@ class BaseModel(metaclass=MetaModel):
         if not self.ids or not self[field_name]:
             return False
 
-        # must ignore 'active' flag, ir.rules, etc.
+        # must ignore 'active' flag, ir.access, etc.
         # direct recursive SQL query with cycle detection for performance
         self.flush_model([field_name])
         if field.type == 'many2many':
@@ -5567,7 +5572,7 @@ class BaseModel(metaclass=MetaModel):
     def ensure_one(self) -> Self:
         """Verify that the current recordset holds a single record.
 
-        :raise odoo.exceptions.ValueError: ``len(self) != 1``
+        :raise ValueError: if ``len(self) != 1``
         """
         try:
             # unpack to ensure there is only one value is faster than len when true and
@@ -5597,7 +5602,7 @@ class BaseModel(metaclass=MetaModel):
         .. warning::
 
             Using ``sudo`` could cause data access to cross the
-            boundaries of record rules, possibly mixing records that
+            boundaries of access rules, possibly mixing records that
             are meant to be isolated (e.g. records from different
             companies in multi-company environments).
 
@@ -5670,7 +5675,7 @@ class BaseModel(metaclass=MetaModel):
             r2 = records.with_context(key2=True)
             # -> r2.env.context is {'key1': True, 'key2': True}
 
-        .. note:
+        .. note::
 
             The returned recordset has the same prefetch object as ``self``.
         """  # noqa: RST210
@@ -6226,7 +6231,7 @@ class BaseModel(metaclass=MetaModel):
             yield cls(env, (id_,), prefetch_ids)
 
     def __reversed__(self) -> Iterator[Self]:
-        """ Return an reversed iterator over ``self``. """
+        """ Return a reversed iterator over ``self``. """
         # same as __iter__ but reversed
         ids = self._ids
         size = len(ids)
@@ -6580,7 +6585,7 @@ class BaseModel(metaclass=MetaModel):
         else:
             # When called after modification, one should traverse backwards
             # dependencies by taking into account all fields already known to
-            # be recomputed.  In that case, we mark fieds to compute as soon as
+            # be recomputed.  In that case, we mark fields to compute as soon as
             # possible.
             marked = {}
             tomark = self.env.transaction.tocompute

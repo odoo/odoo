@@ -75,7 +75,7 @@ def constrains(*args) -> Decorator:
         ``@constrains`` will be triggered only if the declared fields in the
         decorated method are included in the ``create`` or ``write`` call.
         It implies that fields not present in a view will not trigger a call
-        during a record creation. A override of ``create`` is necessary to make
+        during a record creation. An override of ``create`` is necessary to make
         sure a constraint will always be triggered (e.g. to test the absence of
         value).
 
@@ -272,7 +272,7 @@ def autovacuum[C: Callable](method: C) -> C:
     ``ir.autovacuum``).  This is typically used for garbage-collection-like
     tasks that do not deserve a specific cron job.
 
-    A return value can be a tuple (done, remaining) which have simular meaning
+    A return value can be a tuple (done, remaining) which have similar meaning
     as in :meth:`~odoo.addons.base.models.ir_cron.IrCron._commit_progress`.
     """
     assert method.__name__.startswith('_'), "%s: autovacuum methods must be private" % method.__name__
@@ -314,7 +314,7 @@ def private[C: Callable](method: C) -> C:
 
 def readonly[C: Callable](method: C) -> C:
     """ Decorate a record-style method where ``self.env.cr`` can be a
-        readonly cursor when called trough a rpc call.
+        readonly cursor when called through an RPC call. Example::
 
             @api.readonly
             def method(self, args):

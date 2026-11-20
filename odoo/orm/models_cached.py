@@ -8,9 +8,12 @@ from .models import api, Model
 
 
 class CachedModel(Model):
-    """ The abstract model 'ir.cached.data' is used as a mixin to provide a stable
-    cache for some fields of the model's records.  It uses the cache named
-    ``'stable'`` and automatically invalidates it based on ``_clear_cache_name``.
+    """ Base class for models whose records are few and rarely modified.
+
+    The values of the fields listed in ``_cached_data_fields`` for the records
+    matching ``_cached_data_domain`` are kept in the ormcache named
+    ``'stable'``, which is invalidated when one of those fields is modified.
+    Reading those fields on such records then avoids database queries.
     """
     _register: bool = False  # not visible in ORM registry, meant to be Python-inherited only
 

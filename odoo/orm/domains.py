@@ -98,12 +98,12 @@ This should be supported in the framework at all levels.
     _search with active_test=False
   - if value is a Domain for a x2many,
     _search on the comodel of the field (with its context)
-- `any!` works like `any` but bypass adding record rules on the comodel
+- `any!` works like `any` but bypass adding access rules on the comodel
 - `in` for equality checks where the given value is a collection of values
   - the collection is transformed into OrderedSet
   - False value indicates that the value is *not set*
   - for relational fields
-    - if int, bypass record rules
+    - if int, bypass access rules
     - if str, search using display_name of the model
   - the value should have the type of the field
   - SQL type is always accepted
@@ -201,15 +201,13 @@ class Domain:
     _opt_level: OptimizationLevel
 
     def __new__(cls, *args, internal: bool = False):
-        """Build a domain AST.
+        """Build a domain AST. Examples::
 
-        ```
-        Domain([('a', '=', 5), ('b', '=', 8)])
-        Domain('a', '=', 5) & Domain('b', '=', 8)
-        Domain.AND([Domain('a', '=', 5), *other_domains, Domain.TRUE])
-        ```
+            Domain([('a', '=', 5), ('b', '=', 8)])
+            Domain('a', '=', 5) & Domain('b', '=', 8)
+            Domain.AND([Domain('a', '=', 5), *other_domains, Domain.TRUE])
 
-        If we have one argument, it is a `Domain`, or a list representation, or a bool.
+        If we have one argument, it is a ``Domain``, or a list representation, or a bool.
         In case we have multiple ones, there must be 3 of them:
         a field (str), the operator (str) and a value for the condition.
 
@@ -290,7 +288,7 @@ class Domain:
     ) -> DomainCustom:
         """Create a custom domain.
 
-        :param to_sql: callable(model, alias, query) that returns the SQL
+        :param to_sql: callable(table: TableSQL) that returns the SQL condition
         :param optimize: callable(custom_domain, model) that runs for full
                          optimization in order to translate to a normal domain
         :param predicate: callable(record) that checks whether a record is kept
@@ -300,12 +298,12 @@ class Domain:
 
     @staticmethod
     def AND(items: Iterable) -> Domain:
-        """Build the conjuction of domains: (item1 AND item2 AND ...)"""
+        """Build the conjunction of domains: (item1 AND item2 AND ...)"""
         return DomainAnd.apply(Domain(item) for item in items)
 
     @staticmethod
     def OR(items: Iterable) -> Domain:
-        """Build the disjuction of domains: (item1 OR item2 OR ...)"""
+        """Build the disjunction of domains: (item1 OR item2 OR ...)"""
         return DomainOr.apply(Domain(item) for item in items)
 
     def __setattr__(self, name, value):
@@ -769,7 +767,7 @@ class DomainCustom(Domain):
 
     _filtered: Callable[[BaseModel], bool] | None
     _optimize_func: Callable[[DomainCustom, BaseModel], Domain] | None
-    _sql: Callable[[BaseModel, str, Query], SQL] | None
+    _sql: Callable[[TableSQL], SQL] | None
 
     def __new__(
         cls,
@@ -779,10 +777,10 @@ class DomainCustom(Domain):
     ):
         """Create a new domain.
 
-        :param to_sql: callable(model, alias, query) that implements ``_to_sql``
-                       which is used to generate the query for searching
-        :param predicate: callable(record) that checks whether a record is kept
-                          when filtering (``Model.filtered``)
+        :param sql: callable(table: TableSQL) that implements ``_to_sql``
+                    which is used to generate the query for searching
+        :param filtered: callable(record) that checks whether a record is kept
+                         when filtering (``Model.filtered_domain``)
         :param optimize_func: callable(custom_domain, model) when set this
                               domain is at dynamic level and can be fully
                               optimized by that function
@@ -1343,7 +1341,7 @@ def merging_conditions(
 
     Parameters `field_types` and `not_field_types` are exclusive.
     If `not_field_types` is given (`field_types` should be ``None``), the
-    optimizarion is applied on all fields except the ones from the given types.
+    optimization is applied on all fields except the ones from the given types.
     """
     assert not (field_types and not_field_types), "merging_conditions() does not accept both field_types and not_field_types"
 
@@ -2187,7 +2185,7 @@ def _x2many_any_conditions(conditions, model):
 @merging_conditions('|', ['any', 'not any'], ['many2one'])
 @merging_conditions('|', ['any!', 'not any!'], ['many2one'])
 def _or_many2one_any_conditions(conditions, model):
-    """Merge domains of any condititions for many2one fields.
+    """Merge domains of any conditions for many2one fields.
 
     This will lead to smaller number of sub-queries which are equivalent.
     Example:
@@ -2215,7 +2213,7 @@ def _or_many2one_any_conditions(conditions, model):
 @merging_conditions('&', ['any', 'not any'], ['many2one'])
 @merging_conditions('&', ['any!', 'not any!'], ['many2one'])
 def _and_many2one_any_conditions(conditions, model):
-    """Merge domains of any condititions for many2one fields.
+    """Merge domains of any conditions for many2one fields.
 
     This will lead to smaller number of sub-queries which are equivalent.
     Example:
