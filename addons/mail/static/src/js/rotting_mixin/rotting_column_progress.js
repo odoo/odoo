@@ -15,7 +15,9 @@ export class RottingColumnProgress extends ColumnProgress {
         }
         return {
             title: isRottingField.string,
-            value: group.list.records.filter((record) => record.data.is_rotting).length,
+            value:
+                group.list.rottingCount ??
+                group.list.records.filter((record) => record.data.is_rotting).length,
         };
     }
 

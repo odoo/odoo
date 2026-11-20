@@ -1,7 +1,8 @@
 import { checkRainbowmanMessage } from "@crm/views/check_rainbowman_message";
+import { RottingKanbanModel } from "@mail/js/rotting_mixin/rotting_kanban_model";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
 
-export class CrmKanbanModel extends RelationalModel {
+export class CrmKanbanModel extends RottingKanbanModel {
     setup(params, { effect }) {
         super.setup(...arguments);
         this.effect = effect;
