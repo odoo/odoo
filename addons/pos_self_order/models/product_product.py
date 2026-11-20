@@ -44,9 +44,14 @@ class ProductProduct(models.Model):
 
     @api.model
     def _load_pos_self_data_fields(self, config_id):
-        params = super()._load_pos_self_data_fields(config_id)
-        params += ['public_description', 'list_price']
-        return params
+        return [
+            'display_name', 'lst_price', 'pos_categ_ids', 'taxes_id',
+            'name', 'product_tmpl_id', 'type', 'attribute_line_ids', 'active',
+            'image_128', 'combo_ids', 'product_template_variant_value_ids',
+            'self_order_available', 'public_description', 'list_price', 'barcode',
+            'uom_id', 'categ_id', 'tracking', 'default_code', 'write_date',
+            'is_storable', 'to_weight', 'available_in_pos',
+        ]
     
     @api.model
     def _load_pos_self_data_domain(self, data):
@@ -134,6 +139,8 @@ class ProductProduct(models.Model):
         config_self = self.env['pos.config'].sudo().search([('self_ordering_mode', '!=', 'nothing')])
         for config in config_self:
             if config.current_session_id and config.access_token:
+                products = self.read(self._load_pos_self_data_fields(config.id), load=False)
+                self._compute_product_price_with_pricelist(products, config.id)
                 config._notify('PRODUCT_CHANGED', {
-                    'product.product': self.read(self._load_pos_self_data_fields(config.id), load=False)
+                    'product.product': products,
                 })
