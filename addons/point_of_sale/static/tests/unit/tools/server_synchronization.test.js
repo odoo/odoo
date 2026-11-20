@@ -200,3 +200,18 @@ test("Closing the session from another device sends an order synced as draft the
     expect(syncedStates).toEqual(["paid"]);
     expect(order.isUnsyncedPaid).toBe(false);
 });
+
+test("An order synced as draft then paid offline is sent again after a reload", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    await store.syncAllOrders();
+
+    const cashPm = store.models["pos.payment.method"].find((pm) => pm.type === "cash");
+    order.addPaymentline(cashPm);
+    order.state = "paid";
+    order.unmarkDirty();
+    expect(order.isUnsyncedPaid).toBe(true);
+
+    await store.afterProcessServerData();
+    expect(order.isUnsyncedPaid).toBe(false);
+});
