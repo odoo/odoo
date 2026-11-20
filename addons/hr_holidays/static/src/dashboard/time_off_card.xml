@@ -8,7 +8,7 @@
              t-attf-class="{{this.getColor()}} bg-gradient-{{this.isDarkTheme ? 'sm' : 'lg'}}"
             role="button"
             t-on-click.stop="(ev) => this.onClickInfo(ev)">
-            <span class="o_timeoff_duration">
+            <span class="o_timeoff_duration" t-att-class="{ 'o_timeoff_duration_long': parsed_duration.length > 5 }">
                 <span t-att-style="data.holds_changes ? 'color: #B6D369;' : ''">
                     <t t-out="parsed_duration"/>
                 </span>

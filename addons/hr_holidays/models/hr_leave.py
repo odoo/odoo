@@ -360,12 +360,16 @@ class HrLeave(models.Model):
             max_excess = leave.work_entry_type_id.max_allowed_negative if leave.work_entry_type_id.allows_negative else 0
 
             if request_amount > (remaining + max_excess):
-                if is_hour:
-                    leave.allocation_display_warning = self.env._(
-                        "Only %(remaining)s hour(s) available", remaining=float_round(remaining, precision_digits=2))
+                remaining = float_round(remaining, precision_digits=2)
+                if is_hour and remaining == 1:
+                    message = self.env._("Only %(remaining)s hour available", remaining=remaining)
+                elif is_hour:
+                    message = self.env._("Only %(remaining)s hours available", remaining=remaining)
+                elif remaining == 1:
+                    message = self.env._("Only %(remaining)s day available", remaining=remaining)
                 else:
-                    leave.allocation_display_warning = self.env._(
-                        "Only %(remaining)s day(s) available", remaining=float_round(remaining, precision_digits=2))
+                    message = self.env._("Only %(remaining)s days available", remaining=remaining)
+                leave.allocation_display_warning = message
 
     @api.depends("work_entry_type_request_unit", "last_several_days")
     def _compute_allowed_request_durations(self):
