@@ -72,6 +72,10 @@ export class FeedbackScreen extends Component {
     }
 
     async _afterWaitFinished() {
+        if (this.currentOrder.state === "draft") {
+            this.backToPaymentScreen();
+            return;
+        }
         this.state.loading = false;
 
         if (this.isAutoSkip && !this.ignoreTimeout) {
@@ -122,6 +126,10 @@ export class FeedbackScreen extends Component {
 
     goNext() {
         this.pos.orderDone(this.currentOrder);
+    }
+
+    backToPaymentScreen() {
+        this.pos.navigate("PaymentScreen", { orderUuid: this.props.orderUuid });
     }
 
     get canSendReceipt() {
