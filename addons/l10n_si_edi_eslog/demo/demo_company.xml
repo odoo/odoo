@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="base.partner_demo_customer_si" model="res.partner" forcecreate="1">
+        <field name="name">SI Customer</field>
+        <field name="vat">SI10000003</field>
+        <field name="street">Ulica</field>
+        <field name="city">Mesto</field>
+        <field name="country_id" ref="base.si"/>
+        <field name="zip">00000</field>
+        <field name="phone">+386 00 000 0000</field>
+        <field name="email">info@customer.siexample.com</field>
+        <field name="is_company" eval="True"/>
+        <field name="invoice_edi_format">eslog</field>
+    </record>
+</odoo>
