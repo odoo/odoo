@@ -12,22 +12,46 @@ export class TextInputPopup extends Component {
         placeholder: t.string().optional(""),
         rows: t.number().optional(1),
         removeNewLines: t.boolean().optional(),
+        inputValidationFunc: t.function().optional(),
         getPayload: t.function(),
         close: t.function(),
     });
 
     inputRef = signal.ref();
     setup() {
-        this.state = proxy({ inputValue: this.props.startingValue });
+        this.state = proxy({
+            inputValue: this.props.startingValue,
+            errorMessage: "",
+            isProcessing: false,
+        });
         onMounted(this.onMounted);
     }
     onMounted() {
         this.inputRef()?.focus();
         this.inputRef()?.select();
     }
-    confirm() {
-        this.props.getPayload(this.state.inputValue);
-        this.props.close();
+    async confirm() {
+        if (this.state.isProcessing) {
+            return;
+        }
+        this.state.isProcessing = true;
+        try {
+            if (this.props.inputValidationFunc) {
+                this.state.errorMessage = await this.props.inputValidationFunc(
+                    this.state.inputValue
+                );
+            }
+            if (!this.state.errorMessage) {
+                this.props.getPayload(this.state.inputValue);
+                this.props.close();
+            }
+        } finally {
+            this.state.isProcessing = false;
+        }
+    }
+
+    onInput() {
+        this.state.errorMessage = "";
     }
 
     close() {

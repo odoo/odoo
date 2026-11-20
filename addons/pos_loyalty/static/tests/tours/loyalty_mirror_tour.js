@@ -22,7 +22,7 @@ registry.category("web_tour.tours").add("test_loyalty_mirror", {
                 trigger: "body",
                 run: async () => {
                     const order = posmodel.getOrder();
-                    if (!order.applyCode("MIRROR10").success) {
+                    if (!order.applyCode("MIRROR10")) {
                         throw new Error("MIRROR10 code was rejected");
                     }
                     order.setOrderPrices();

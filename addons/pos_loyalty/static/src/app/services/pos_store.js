@@ -209,27 +209,29 @@ patch(PosStore.prototype, {
         this.updateRewards();
     },
     /**
-     * Ensure the loyalty card for a scanned/typed code is loaded into memory.
-     * If it's not in memory, load from the backend (loyalty.card.get_card_status)
-     * and connect into the local models
+     * Ensure the loyalty card for a scanned/typed code is loaded into memory and
+     * check that the code can be applied on the current order.
+     * If the card is not in memory, load it from the backend (loyalty.card.get_card_status)
+     * and connect it into the local models.
      * @param {string} code
-     * @returns {Promise<string>} "" when the card is in memory, otherwise the rejection reason
+     * @returns {Promise<string>} "" when the code can be applied, otherwise the rejection reason
      */
     async loadCode(code) {
+        const order = this.getOrder();
         let card = this.models["loyalty.card"].find((card) => card.code === code);
+        const rule = card ? null : this.models["loyalty.rule"].find((r) => r.matchCode(code));
 
         let result = null;
-        if (!card) {
-            const isDiscountCode = this.models["loyalty.rule"].some((rule) => rule.matchCode(code));
-            if (isDiscountCode) {
-                return "";
-            }
+        if (!card && !rule) {
             result = await this.data.call("loyalty.card", "get_card_status", [
                 code,
                 this.config.id,
             ]);
             if (!result["loyalty.card"].length) {
-                return _t("That coupon is invalid (%s).", code);
+                return _t(
+                    'No coupon or gift card matches the code "%s". Check the code and try again.',
+                    code
+                );
             }
             const payload = { "loyalty.card": result["loyalty.card"] };
             this.data.synchronizeServerDataInIndexedDB(payload);
@@ -238,10 +240,29 @@ patch(PosStore.prototype, {
         }
 
         if (card?.isExpired()) {
-            return _t("That card has expired (%s).", code);
+            return _t('The card "%s" has expired and can no longer be used.', code);
+        }
+        if (order.applied_codes.includes(rule ? rule.code : code)) {
+            return _t('The code "%s" has already been applied to this order.', code);
+        }
+        const program = card?.program_id || rule?.program_id;
+        if (program && !order.isProgramPricelistValid(program)) {
+            return _t(
+                'The code "%s" is not valid for the current pricelist. Change the pricelist and try again.',
+                code
+            );
+        }
+        if (card?.partner_id && order.partner_id && order.partner_id != card.partner_id) {
+            return _t(
+                'The card "%s" belongs to another customer and cannot be used on this order.',
+                code
+            );
         }
 
-        if (result && card?.program_id?.program_type === "gift_card" && !result.has_source_order) {
+        if (
+            card?.program_id?.program_type === "gift_card" &&
+            ((result && !result.has_source_order) || (!result && !card.raw.source_pos_order_id))
+        ) {
             const confirmed = await ask(this.dialog, {
                 title: _t("Unpaid gift card"),
                 body: _t(
@@ -249,19 +270,24 @@ patch(PosStore.prototype, {
                 ),
             });
             if (!confirmed) {
-                return _t("Unpaid gift card rejected.");
+                return _t("This gift card was not applied because it is not linked to any order.");
             }
         }
         return "";
     },
     async applyCode(code) {
         const order = this.getOrder();
-        const result = order.applyCode(code);
-        if (!result.success) {
-            this.notification.add(result.rejection_message, { type: "danger" });
+        const program = order.applyCode(code);
+        if (!program) {
+            this.notification.add(
+                _t(
+                    'No coupon or gift card matches the code "%s". Check the code and try again.',
+                    code
+                ),
+                { type: "danger" }
+            );
             return;
         }
-        const program = result.program_id;
         if (program.reward_ids.length > 1 && !program.is_payment_program) {
             const reward = await makeAwaitable(this.dialog, SelectionPopup, {
                 title: _t("Please select a reward"),

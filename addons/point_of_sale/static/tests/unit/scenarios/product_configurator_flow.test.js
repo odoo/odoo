@@ -143,7 +143,7 @@ test("test_line_configurators_combo: line configurators combo", async () => {
 
     await Utils.longPressOrderline("Office Combo");
     await waitFor(".modal");
-    await Utils.cancelDialog();
+    await Utils.closeDialog();
     await animationFrame();
 
     await Utils.longPressOrderline("Office Combo");
