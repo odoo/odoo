@@ -1,5 +1,3 @@
-$o-discuss-talkingColor: lighten($success, 10%);
-
 .o-mail-emoji {
     font-size: 121%;
     line-height: var(--o-bs-display-line-height);
@@ -11,10 +9,6 @@ $o-discuss-talkingColor: lighten($success, 10%);
 
 .o-bg-body {
     background-color: var(--body-bg) !important;
-}
-
-.o-border-opacity-7_5 {
-    --border-opacity: 0.075;
 }
 
 .o-discuss-badge {
@@ -38,10 +32,6 @@ $o-discuss-talkingColor: lighten($success, 10%);
 
 .o-discuss-warningBadge {
     background-color: var(--warning) !important;
-}
-
-@function o-rounded-bubble() {
-    @return calc((#{$border-radius} + #{$border-radius-lg}) * 7 / 8);
 }
 
 /* Tint of the messages and thread previews with a bubble color */
@@ -75,40 +65,15 @@ $o-discuss-talkingColor: lighten($success, 10%);
 
     padding: var(--o-bs-dropdown-padding-y) var(--o-bs-dropdown-padding-x);
 
-    @if $o-webclient-color-scheme != dark {
-        &.o-discussCallTheme {
-            background-color: var(--gray-800);
-            border-color: var(--gray-700) !important;
-
-            * {
-                color: white;
-            }
-
-            .btn, .o-dropdown-item {
-                --gradient: transparent;
-            }
-
-            .form-switch .form-check-input {
-                &:checked {
-                    --#{$prefix}form-switch-bg: #{escape-svg($form-switch-bg-image-dark)};
-                }
-            }
-
-            select option {
-                background-color: var(--gray-700);
-            }
-        }
-    }
-
     .popover-arrow {
         --position-max: calc(100% - var(--o-bs-spacer-4));
     }
 
     .dropdown-item {
-        --#{$prefix}dropdown-item-padding-y: var(--o-bs-dropdown-item-padding-y);
-        --#{$prefix}dropdown-item-padding-x: var(--o-bs-dropdown-item-padding-x);
-        --#{$prefix}dropdown-item-border-radius: calc((var(--o-bs-dropdown-border-radius) - var(--o-bs-dropdown-padding-x)));
-        --#{$prefix}gradient: 0;
+        --dropdown-item-padding-y: var(--o-bs-dropdown-item-padding-y);
+        --dropdown-item-padding-x: var(--o-bs-dropdown-item-padding-x);
+        --dropdown-item-border-radius: calc((var(--o-bs-dropdown-border-radius) - var(--o-bs-dropdown-padding-x)));
+        --gradient: 0;
 
         font-size: var(--o-bs-dropdown-font-size);
 
@@ -125,16 +90,16 @@ $o-discuss-talkingColor: lighten($success, 10%);
     aspect-ratio: 1;
     padding: 0;
     border-radius: 50%;
-    --btn-border-color: #{rgba($dark, var(--o-discuss-ellipsisButton-mutedBorderOpacity, .5))};
+    --btn-border-color: color-mix(in srgb, var(--dark) calc(var(--o-discuss-ellipsisButton-mutedBorderOpacity, .5) * 100%), transparent);
     --btn-hover-border-color: var(--dark);
     --btn-active-border-color: var(--o-action);
-    --btn-hover-color: #{color-contrast($light)};
-    --btn-active-color: #{color-contrast($light)};
+    --btn-hover-color: var(--o-bs-light-contrast);
+    --btn-active-color: var(--o-bs-light-contrast);
 
     &::before {
         content: "more_horiz" / ""; /* empty alt text: keeps the ligature out of the accessible name */
-        font-size: map-get($icon-sizes, 'lg'); /* .oi-lg */
-        width: #{$oi-fw-ratio}em; /* .oi-fw */
+        font-size: var(--oi-size-lg); /* .oi-lg */
+        width: calc(var(--oi-fw-ratio) * 1em); /* .oi-fw */
         text-align: center;
     }
 }
@@ -188,136 +153,192 @@ $o-discuss-talkingColor: lighten($success, 10%);
     text-decoration: underline;
 }
 
-$o-mail-spacers-sizes: () !default;
-$o-mail-spacers-sizes: map-merge(
-    $o-mail-spacers-sizes,
-    (
-        "0_5": calc(var(--o-bs-spacer-1) / 2),
-        "1_5": calc((var(--o-bs-spacer-1) + var(--o-bs-spacer-2)) / 2),
-        "2_5": calc((var(--o-bs-spacer-2) + var(--o-bs-spacer-3)) / 2),
-        "3_5": calc((var(--o-bs-spacer-3) + var(--o-bs-spacer-4)) / 2),
-        "4_5": calc((var(--o-bs-spacer-4) + var(--o-bs-spacer-5)) / 2),
-    )
-);
+.o-gap-0_5 {
+    gap: calc(var(--o-bs-spacer-1) / 2) !important;
+}
 
-$o-mail-rounded-sizes: () !default;
-$o-mail-rounded-sizes: map-merge(
-    $o-mail-rounded-sizes,
-    (
-        "2_5": calc((#{$border-radius} + #{$border-radius-lg}) / 2),
-        "bubble": o-rounded-bubble(),
-    )
-);
+.o-gap-1_5 {
+    gap: calc((var(--o-bs-spacer-1) + var(--o-bs-spacer-2)) / 2) !important;
+}
 
-$o-mail-utilities: () !default;
-$o-mail-utilities: map-merge(
-    $o-mail-utilities,
-    (
-        "o-gap": (
-            property: gap,
-            class: o-gap,
-            values: $o-mail-spacers-sizes,
-        ),
-        "o-m": (
-            property: margin,
-            class: o-m,
-            values: $o-mail-spacers-sizes,
-        ),
-        "o-mx": (
-            property: margin-left margin-right,
-            class: o-mx,
-            values: $o-mail-spacers-sizes,
-        ),
-        "o-my": (
-            property: margin-top margin-bottom,
-            class: o-my,
-            values: $o-mail-spacers-sizes,
-        ),
-        "o-mt": (
-            property: margin-top,
-            class: o-mt,
-            values: $o-mail-spacers-sizes,
-        ),
-        "o-me": (
-            property: margin-right,
-            class: o-me,
-            values: $o-mail-spacers-sizes,
-        ),
-        "o-mb": (
-            property: margin-bottom,
-            class: o-mb,
-            values: $o-mail-spacers-sizes,
-        ),
-        "o-ms": (
-            property: margin-left,
-            class: o-ms,
-            values: $o-mail-spacers-sizes,
-        ),
-        "o-p": (
-            property: padding,
-            class: o-p,
-            values: $o-mail-spacers-sizes,
-        ),
-        "o-px": (
-            property: padding-left padding-right,
-            class: o-px,
-            values: $o-mail-spacers-sizes,
-        ),
-        "o-py": (
-            property: padding-top padding-bottom,
-            class: o-py,
-            values: $o-mail-spacers-sizes,
-        ),
-        "o-pt": (
-            property: padding-top,
-            class: o-pt,
-            values: $o-mail-spacers-sizes,
-        ),
-        "o-pe": (
-            property: padding-right,
-            class: o-pe,
-            values: $o-mail-spacers-sizes,
-        ),
-        "o-pb": (
-            property: padding-bottom,
-            class: o-pb,
-            values: $o-mail-spacers-sizes,
-        ),
-        "o-ps": (
-            property: padding-left,
-            class: o-ps,
-            values: $o-mail-spacers-sizes,
-        ),
-        "o-rounded": (
-            property: border-radius,
-            class: o-rounded,
-            values: $o-mail-rounded-sizes,
-        ),
-        "o-rounded-top": (
-            property: border-top-left-radius border-top-right-radius,
-            class: o-rounded-top,
-            values: $o-mail-rounded-sizes,
-        ),
-        "o-rounded-end": (
-            property: border-top-right-radius border-bottom-right-radius,
-            class: o-rounded-end,
-            values: $o-mail-rounded-sizes,
-        ),
-        "o-rounded-bottom": (
-            property: border-bottom-right-radius border-bottom-left-radius,
-            class: o-rounded-bottom,
-            values: $o-mail-rounded-sizes,
-        ),
-        "o-rounded-start": (
-            property: border-bottom-left-radius border-top-left-radius,
-            class: o-rounded-start,
-            values: $o-mail-rounded-sizes,
-        ),
-    ),
-);
+.o-gap-2_5 {
+    gap: calc((var(--o-bs-spacer-2) + var(--o-bs-spacer-3)) / 2) !important;
+}
 
-@each $key, $utility in $o-mail-utilities {
-    @include generate-utility($utility)
+.o-m-2_5 {
+    margin: calc((var(--o-bs-spacer-2) + var(--o-bs-spacer-3)) / 2) !important;
+}
+
+.o-mx-0_5 {
+    margin-inline: calc(var(--o-bs-spacer-1) / 2) !important;
+}
+
+.o-mx-1_5 {
+    margin-inline: calc((var(--o-bs-spacer-1) + var(--o-bs-spacer-2)) / 2) !important;
+}
+
+.o-mx-2_5 {
+    margin-inline: calc((var(--o-bs-spacer-2) + var(--o-bs-spacer-3)) / 2) !important;
+}
+
+.o-my-0_5 {
+    margin-block: calc(var(--o-bs-spacer-1) / 2) !important;
+}
+
+.o-mt-0_5 {
+    margin-top: calc(var(--o-bs-spacer-1) / 2) !important;
+}
+
+.o-me-0_5 {
+    margin-right: calc(var(--o-bs-spacer-1) / 2) !important;
+}
+
+.o-me-1_5 {
+    margin-right: calc((var(--o-bs-spacer-1) + var(--o-bs-spacer-2)) / 2) !important;
+}
+
+.o-me-2_5 {
+    margin-right: calc((var(--o-bs-spacer-2) + var(--o-bs-spacer-3)) / 2) !important;
+}
+
+.o-me-3_5 {
+    margin-right: calc((var(--o-bs-spacer-3) + var(--o-bs-spacer-4)) / 2) !important;
+}
+
+.o-mb-0_5 {
+    margin-bottom: calc(var(--o-bs-spacer-1) / 2) !important;
+}
+
+.o-ms-0_5 {
+    margin-left: calc(var(--o-bs-spacer-1) / 2) !important;
+}
+
+.o-ms-1_5 {
+    margin-left: calc((var(--o-bs-spacer-1) + var(--o-bs-spacer-2)) / 2) !important;
+}
+
+.o-ms-4_5 {
+    margin-left: calc((var(--o-bs-spacer-4) + var(--o-bs-spacer-5)) / 2) !important;
+}
+
+.o-p-0_5 {
+    padding: calc(var(--o-bs-spacer-1) / 2) !important;
+}
+
+.o-p-1_5 {
+    padding: calc((var(--o-bs-spacer-1) + var(--o-bs-spacer-2)) / 2) !important;
+}
+
+.o-p-2_5 {
+    padding: calc((var(--o-bs-spacer-2) + var(--o-bs-spacer-3)) / 2) !important;
+}
+
+.o-px-0_5 {
+    padding-inline: calc(var(--o-bs-spacer-1) / 2) !important;
+}
+
+.o-px-1_5 {
+    padding-inline: calc((var(--o-bs-spacer-1) + var(--o-bs-spacer-2)) / 2) !important;
+}
+
+.o-px-2_5 {
+    padding-inline: calc((var(--o-bs-spacer-2) + var(--o-bs-spacer-3)) / 2) !important;
+}
+
+.o-px-3_5 {
+    padding-inline: calc((var(--o-bs-spacer-3) + var(--o-bs-spacer-4)) / 2) !important;
+}
+
+.o-py-0_5 {
+    padding-block: calc(var(--o-bs-spacer-1) / 2) !important;
+}
+
+.o-py-1_5 {
+    padding-block: calc((var(--o-bs-spacer-1) + var(--o-bs-spacer-2)) / 2) !important;
+}
+
+.o-py-2_5 {
+    padding-block: calc((var(--o-bs-spacer-2) + var(--o-bs-spacer-3)) / 2) !important;
+}
+
+.o-pt-0_5 {
+    padding-top: calc(var(--o-bs-spacer-1) / 2) !important;
+}
+
+.o-pt-2_5 {
+    padding-top: calc((var(--o-bs-spacer-2) + var(--o-bs-spacer-3)) / 2) !important;
+}
+
+.o-pe-0_5 {
+    padding-right: calc(var(--o-bs-spacer-1) / 2) !important;
+}
+
+.o-pe-1_5 {
+    padding-right: calc((var(--o-bs-spacer-1) + var(--o-bs-spacer-2)) / 2) !important;
+}
+
+.o-pe-2_5 {
+    padding-right: calc((var(--o-bs-spacer-2) + var(--o-bs-spacer-3)) / 2) !important;
+}
+
+.o-pb-2_5 {
+    padding-bottom: calc((var(--o-bs-spacer-2) + var(--o-bs-spacer-3)) / 2) !important;
+}
+
+.o-pb-3_5 {
+    padding-bottom: calc((var(--o-bs-spacer-3) + var(--o-bs-spacer-4)) / 2) !important;
+}
+
+.o-ps-0_5 {
+    padding-left: calc(var(--o-bs-spacer-1) / 2) !important;
+}
+
+.o-ps-1_5 {
+    padding-left: calc((var(--o-bs-spacer-1) + var(--o-bs-spacer-2)) / 2) !important;
+}
+
+.o-ps-2_5 {
+    padding-left: calc((var(--o-bs-spacer-2) + var(--o-bs-spacer-3)) / 2) !important;
+}
+
+.o-ps-3_5 {
+    padding-left: calc((var(--o-bs-spacer-3) + var(--o-bs-spacer-4)) / 2) !important;
+}
+
+.o-ps-4_5 {
+    padding-left: calc((var(--o-bs-spacer-4) + var(--o-bs-spacer-5)) / 2) !important;
+}
+
+.o-rounded-bubble,
+.o-rounded-top-bubble,
+.o-rounded-end-bubble,
+.o-rounded-bottom-bubble,
+.o-rounded-start-bubble {
+    --o-mail-rounded-bubble: calc((var(--o-bs-border-radius) + var(--o-bs-border-radius-lg)) * 7 / 8);
+}
+
+.o-rounded-bubble {
+    border-radius: var(--o-mail-rounded-bubble) !important;
+}
+
+.o-rounded-top-bubble {
+    border-top-left-radius: var(--o-mail-rounded-bubble) !important;
+    border-top-right-radius: var(--o-mail-rounded-bubble) !important;
+}
+
+.o-rounded-end-bubble {
+    border-top-right-radius: var(--o-mail-rounded-bubble) !important;
+    border-bottom-right-radius: var(--o-mail-rounded-bubble) !important;
+}
+
+.o-rounded-bottom-bubble {
+    border-bottom-right-radius: var(--o-mail-rounded-bubble) !important;
+    border-bottom-left-radius: var(--o-mail-rounded-bubble) !important;
+}
+
+.o-rounded-start-bubble {
+    border-bottom-left-radius: var(--o-mail-rounded-bubble) !important;
+    border-top-left-radius: var(--o-mail-rounded-bubble) !important;
 }
 
 .o-fs-small {
@@ -338,7 +359,7 @@ $o-mail-utilities: map-merge(
 }
 
 .o-xsmaller {
-    font-size: $o-mail-FontSize-xs;
+    font-size: var(--o-mail-FontSize-xs);
 }
 
 .o-xxsmaller {

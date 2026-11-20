@@ -1,15 +1,25 @@
 .o-mail-ActionList {
-    --o-mail-ActionList-successNoBgColor: #{lighten($success, 10%)};
-    --o-mail-ActionList-dangerNoBgColor: #{lighten($danger, 10%)};
-    --o-mail-ActionList-primaryNoBgColor: #{lighten($primary, 10%)};
+    --o-mail-ActionList-successNoBgColor: hsl(from var(--success) h s calc(l + 10));
+    --o-mail-ActionList-dangerNoBgColor: hsl(from var(--danger) h s calc(l + 10));
+    --o-mail-ActionList-primaryNoBgColor: hsl(from var(--primary) h s calc(l + 10));
 
     .o-hasBtnBg.o-tag-SUCCESS {
-        @include button-variant(darken($success, 10%), darken($success, 10%));
+        /* The white of the dark theme is black: like the tints of Bootstrap, mixing it darkens */
         --btn-color: white;
+        --btn-bg: hsl(from var(--success) h s calc(l - 10));
+        --btn-border-color: var(--btn-bg);
+        --btn-hover-color: white;
+        --btn-hover-bg: color-mix(in srgb, var(--btn-bg), var(--white) 15%);
+        --btn-hover-border-color: color-mix(in srgb, var(--btn-border-color), var(--white) 10%);
         --btn-active-color: white;
+        --btn-active-bg: color-mix(in srgb, var(--btn-bg), var(--white) 20%);
+        --btn-active-border-color: color-mix(in srgb, var(--btn-border-color), var(--white) 10%);
+        --btn-disabled-color: white;
+        --btn-disabled-bg: var(--btn-bg);
+        --btn-disabled-border-color: var(--btn-border-color);
 
         i {
-            text-shadow: 0px 0px 1px darken($success, 10%);
+            text-shadow: 0px 0px 1px var(--btn-bg);
         }
     }
 

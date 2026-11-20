@@ -1,4 +1,4 @@
-@mixin o-mail-AttachmentView {
+.o_attachment_preview, .o-mail-PopoutAttachmentView {
     > .o-mail-Attachment {
         position: relative;
         width: 100%;
@@ -10,12 +10,19 @@
             left: auto;
             bottom: auto;
             right: 0;
-            @include o-FileViewer-arrow;
+            background-color: rgba(0, 0, 0, 0.4);
+            color: color-mix(in srgb, var(--light) 70%, transparent);
             transition: width 0.3s;
             padding-top: 30px;
             height: 75px;
             &:hover {
                 width: 7%;
+                background-color: rgba(0, 0, 0, 0.6);
+                color: white;
+            }
+            &.disabled {
+                color: var(--gray-600);
+                background: none;
             }
             &.o_move_previous {
                 left: 2px;
@@ -46,7 +53,6 @@
         overflow: hidden;
         width: var(--o-mail-Chatter-minWidth);
 
-        @include o-mail-AttachmentView;
     }
     .o_attachment_control {
         position: absolute;
@@ -74,7 +80,6 @@
 .o-mail-PopoutAttachmentView {
     width: auto;
 
-    @include o-mail-AttachmentView;
     .o_attachment_control {
         display: none;
     }
