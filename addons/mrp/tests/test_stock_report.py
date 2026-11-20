@@ -388,6 +388,7 @@ class TestMrpStockReports(TestReportsCommon):
 
         overview_values = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
         self.assertEqual(overview_values['data']['id'], mo.id, "computing overview value should work")
+        self.assertEqual(overview_values['data']['operations']['details'][0]['name'], f"{workcenter.display_name}: {mo.name} - {mo.workorder_ids.name}")
 
     def test_overview_with_component_also_as_byproduct(self):
         """ Check that opening he overview of an MO for which the BoM contains an element as both component and byproduct
