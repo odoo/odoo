@@ -426,6 +426,7 @@ class DeliveryCarrier(models.Model):
                 fiscal_position=order.fiscal_position_id,
                 product_price_unit=res["price"],
                 product_currency=company.currency_id,
+                document_tax_mode=order.document_tax_mode,
             )
             # apply margin on computed price
             res["price"] = order.currency_id.round(self._apply_margins(res["price"], order))
