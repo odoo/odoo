@@ -96,7 +96,7 @@ class Constraint(TableObject):
         definition: str,
         message: ConstraintMessageType = '',
     ) -> None:
-        """ SQL table containt.
+        """ SQL table constraint.
 
         The definition is the SQL that will be used to add the constraint.
         If the constraint is violated, we will show the message to the user

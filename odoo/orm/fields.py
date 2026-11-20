@@ -69,7 +69,7 @@ def determine(needle, records: BaseModel, *args):
 
     :param needle: callable or name of method to call on ``records``
     :param BaseModel records: recordset to call ``needle`` on or with
-    :params args: additional arguments to pass to the determinant
+    :param args: additional arguments to pass to the determinant
     :returns: the determined value if the determinant is a method name or callable
     :raise TypeError: if ``records`` is not a recordset, or ``needle`` is not
                       a callable or valid method name
@@ -103,6 +103,8 @@ class Field[T, C]:
         (if the field is a stored field or an inversable one).
 
     :param bool ui_readonly: whether the field is readonly in the UI
+
+        Defaults to ``readonly``.
 
     :param bool required: whether the value of the field is required (default: ``False``)
 
@@ -199,7 +201,7 @@ class Field[T, C]:
         * ``avg`` : the average (arithmetic mean) of all values
         * ``sum`` : sum of all values
 
-    :param str group_expand: function used to expand results when grouping on the
+    :param group_expand: function used to expand results when grouping on the
         current field for kanban/list/gantt views. For selection fields,
         ``group_expand=True`` automatically expands groups for all selection keys.
 
@@ -254,7 +256,9 @@ class Field[T, C]:
         ``X`` has a dependency like ``parent_id.X``); declaring a field recursive
         must be explicit to guarantee that recomputation is correct
 
-    :param str compute_sql: name of a method that produces SQL for the field
+    :param str compute_sql: name of a method ``(self, table: TableSQL) -> SQL``
+        returning the SQL expression of the computed field, which makes it
+        searchable, groupable and sortable; requires an explicit ``compute_sudo``
 
         .. seealso:: :ref:`Advanced Fields/Compute fields <reference/fields/compute>`
 
@@ -302,7 +306,7 @@ class Field[T, C]:
     compute: str | Callable[[BaseModel], None] | None = None   # compute(recs) computes field on recs
     compute_sudo: bool = False          # whether field should be recomputed as superuser
     precompute: bool = False            # whether field has to be computed before creation
-    compute_sql: str | Callable[[BaseModel, TableSQL], SQL] | None = None      # compute_sql(model, alias, query) that gets the SQL for the field
+    compute_sql: str | Callable[[BaseModel, TableSQL], SQL] | None = None      # compute_sql(model, table) that gets the SQL for the field
     inverse: str | Callable[[BaseModel], None] | None = None  # inverse(recs) inverses field on recs
     search: str | Callable[[BaseModel, str, typing.Any], DomainType] | None = None  # search(recs, operator, value) searches on self
     related: str | None = None          # sequence of field names, for related fields
@@ -1045,7 +1049,7 @@ class Field[T, C]:
         if self.column_type and (self.store or self.compute_sql):  # shortcut
             return True
         if self.inherited_field and self.inherited_field._description_sortable(env):
-            # avoid compuation for inherited field
+            # avoid computation for inherited field
             return True
 
         model = env[self.model_name]
@@ -1062,7 +1066,7 @@ class Field[T, C]:
         if self.column_type and (self.store or self.compute_sql):  # shortcut
             return True
         if self.inherited_field and self.inherited_field._description_groupable(env):
-            # avoid compuation for inherited field
+            # avoid computation for inherited field
             return True
         from .models import BaseModel  # noqa: PLC0415
         if self.type != 'many2many' and env.registry[self.model_name]._read_group_groupby is BaseModel._read_group_groupby:
@@ -1083,7 +1087,7 @@ class Field[T, C]:
         if not self.aggregator or (self.column_type and (self.store or self.compute_sql)):  # shortcut
             return self.aggregator
         if self.inherited_field and self.inherited_field._description_aggregator(env):
-            # avoid compuation for inherited field
+            # avoid computation for inherited field
             return self.inherited_field.aggregator
         from .models import BaseModel  # noqa: PLC0415
         if env.registry[self.model_name]._read_group_select is BaseModel._read_group_select:
@@ -1503,7 +1507,7 @@ class Field[T, C]:
                 return SQL("(%s OR %s)", sql, sql_null) if sql else sql_null
 
             elif operator == 'not in' and null_in_condition and not sql:
-                # if we have a base query, null values are already exluded
+                # if we have a base query, null values are already excluded
                 return SQL("%s IS NOT NULL", sql_field) if can_be_null else SQL("TRUE")
 
             assert sql, f"Missing sql query for {operator} {value!r}"
@@ -2107,7 +2111,7 @@ class Field[T, C]:
         return determine(self.search, records, operator, value)
 
     def determine_group_expand(self, records, values, domain):
-        """ Return a domain representing a condition on ``self``. """
+        """ Return the groups to add when grouping by ``self`` (see ``group_expand``). """
         return determine(self.group_expand, records, values, domain)
 
 
