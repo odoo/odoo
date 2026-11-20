@@ -28,7 +28,10 @@ class PurchaseRequisition(models.Model):
         default=lambda self: self.env.user, check_company=True)
     description = fields.Html()
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
-    purchase_ids = fields.One2many('purchase.order', 'requisition_id', string='Purchase Orders')
+    purchase_ids = fields.Many2many(
+        'purchase.order',
+        relation='purchase_order_requisition_rel',
+    )
     line_ids = fields.One2many('purchase.requisition.line', 'requisition_id', string='Products to Purchase', copy=True)
     product_id = fields.Many2one('product.product', related='line_ids.product_id', string='Product')
     state = fields.Selection(
@@ -168,7 +171,7 @@ class PurchaseRequisitionLine(models.Model):
         ('line_subsection', "Subsection"),
         ('line_note', "Note"),
     ], default=False, help="Technical field for UX purpose.")
-    name = fields.Text(string='Line Description')
+    name = fields.Text(string='Description')
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)])
     uom_id = fields.Many2one(
         'uom.uom', 'Unit',
@@ -181,6 +184,10 @@ class PurchaseRequisitionLine(models.Model):
     price_subtotal = fields.Monetary(compute='_compute_price_subtotal', string='Amount', store=True)
     qty_ordered = fields.Float(compute='_compute_ordered_qty', string='Ordered')
     requisition_id = fields.Many2one('purchase.requisition', required=True, string='Purchase Agreement', ondelete='cascade', index=True)
+    purchase_line_ids = fields.One2many(
+        'purchase.order.line',
+        'requisition_line_id',
+    )
     currency_id = fields.Many2one('res.currency', related='requisition_id.currency_id')
     company_id = fields.Many2one('res.company', related='requisition_id.company_id', string='Company', store=True, readonly=True)
     supplier_info_ids = fields.One2many('product.supplierinfo', 'purchase_requisition_line_id')
@@ -189,6 +196,49 @@ class PurchaseRequisitionLine(models.Model):
         string="Parent Section Line",
         compute='_compute_parent_id',
     )
+    received_qty = fields.Float(compute='_compute_received_qty', string="Received")
+    remaining_qty = fields.Float(compute='_compute_remaining_qty', string="Remaining")
+    lead_time = fields.Integer(
+        compute='_compute_lead_time',
+        inverse='_inverse_lead_time',
+        store=True,
+        readonly=False,
+    )
+
+    @api.depends('supplier_info_ids.delay')
+    def _compute_lead_time(self):
+        for line in self:
+            if line.supplier_info_ids:
+                line.lead_time = line.supplier_info_ids[:1].delay
+
+    def _inverse_lead_time(self):
+        for line in self:
+            line.supplier_info_ids.filtered(lambda s: s.delay != line.lead_time).write({
+                'delay': line.lead_time,
+            })
+
+    @api.depends('product_qty', 'qty_ordered')
+    def _compute_remaining_qty(self):
+        for line in self:
+            line.remaining_qty = line.product_qty - line.qty_ordered
+
+    @api.depends('purchase_line_ids.state', 'purchase_line_ids.qty_received', 'purchase_line_ids.uom_id')
+    def _compute_received_qty(self):
+        for line in self:
+            if line.display_type:
+                line.received_qty = 0.0
+                continue
+
+            total_received = 0.0
+            for po_line in line.purchase_line_ids.filtered(lambda l: l.state in ('purchase', 'done')):
+                if po_line.uom_id != line.uom_id:
+                    total_received += po_line.uom_id._compute_quantity(
+                        po_line.qty_received, line.uom_id
+                    )
+                else:
+                    total_received += po_line.qty_received
+
+            line.received_qty = total_received
 
     @api.constrains('display_type', 'product_id')
     def _check_line_type(self):
@@ -224,25 +274,19 @@ class PurchaseRequisitionLine(models.Model):
                 elif line in purchase_requisition_lines:
                     line.parent_id = last_subsection or last_section
 
-    @api.depends('requisition_id.purchase_ids.state')
+    @api.depends('purchase_line_ids.state', 'purchase_line_ids.product_qty', 'purchase_line_ids.uom_id')
     def _compute_ordered_qty(self):
-        line_found = defaultdict(set)
         for line in self:
             if line.display_type:
-                line.qty_ordered = 0
+                line.qty_ordered = 0.0
                 continue
             total = 0.0
-            for po in line.requisition_id.purchase_ids.filtered(lambda purchase_order: purchase_order.state == 'purchase'):
-                for po_line in po.order_line.filtered(lambda order_line: order_line.product_id == line.product_id):
-                    if po_line.uom_id != line.uom_id:
-                        total += po_line.uom_id._compute_quantity(po_line.product_qty, line.uom_id)
-                    else:
-                        total += po_line.product_qty
-            if line.product_id not in line_found[line.requisition_id]:
-                line.qty_ordered = total
-                line_found[line.requisition_id].add(line.product_id)
-            else:
-                line.qty_ordered = 0
+            for po_line in line.purchase_line_ids.filtered(lambda l: l.state == 'purchase'):
+                if po_line.uom_id != line.uom_id:
+                    total += po_line.uom_id._compute_quantity(po_line.product_qty, line.uom_id)
+                else:
+                    total += po_line.product_qty
+            line.qty_ordered = total
 
     @api.depends('product_id')
     def _compute_uom_id(self):
@@ -330,6 +374,9 @@ class PurchaseRequisitionLine(models.Model):
                 'price': self.price_unit,
                 'currency_id': self.requisition_id.currency_id.id,
                 'purchase_requisition_line_id': self.id,
+                'date_start': self.requisition_id.date_start,
+                'date_end': self.requisition_id.date_end,
+                'delay': self.lead_time,
             })
 
     def _get_section_totals(self, totals_field):
@@ -361,6 +408,7 @@ class PurchaseRequisitionLine(models.Model):
                 'display_type': self.display_type,
                 'name': self.name,
                 'sequence': self.sequence,
+                'requisition_line_id': self._origin.id or self.id,
             }
         if self.product_description_variants:
             name += '\n' + self.product_description_variants
@@ -377,4 +425,5 @@ class PurchaseRequisitionLine(models.Model):
             'date_planned': date_planned,
             'analytic_distribution': self.analytic_distribution,
             'sequence': self.sequence,
+            'requisition_line_id': self._origin.id or self.id,
         }

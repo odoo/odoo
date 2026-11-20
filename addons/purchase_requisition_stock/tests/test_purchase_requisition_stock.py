@@ -69,9 +69,9 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         })
         move2._action_confirm()
 
-        # As the supplier.info linked to the blanket order has the same price, the first one is stille used.
-        self.assertEqual(purchase1.order_line.product_qty, 20)
-
+        # Whenver a blanket order is available prefer to use it when creating a new PO
+        purchase2 = self.env['purchase.order'].search([('partner_id', '=', vendor2.id), ('requisition_id', '=', requisition_blanket.id)])
+        self.assertEqual(purchase2.order_line.product_qty, 10)
         # Update the sequence of the blanket order's supplier info.
         supplier_info1.sequence = 2
         requisition_blanket.line_ids.supplier_info_ids.sequence = 1
@@ -91,9 +91,10 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         move3._action_confirm()
 
         # Verifications
-        purchase2 = self.env['purchase.order'].search([('partner_id', '=', vendor2.id), ('requisition_id', '=', requisition_blanket.id)])
-        self.assertEqual(len(purchase2), 1)
-        self.assertEqual(purchase2.order_line.price_unit, 50, 'The price on the purchase order is not the blanquet order one')
+        purchase3 = self.env['purchase.order'].search([('partner_id', '=', vendor2.id), ('requisition_id', '=', requisition_blanket.id)])
+        self.assertEqual(len(purchase3), 1)
+        self.assertEqual(purchase3.order_line.price_unit, 50, 'The price on the purchase order is not the blanquet order one')
+        self.assertEqual(purchase3.order_line.product_qty, 20, 'The two orders of the blanket order will merge into one')
 
     def test_blanket_order_line_unit_change_replenishment_price(self):
         """ Changing the unit of a line of a confirmed blanket order must be taken into

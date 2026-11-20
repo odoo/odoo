@@ -9,6 +9,7 @@ class ProductSupplierinfo(models.Model):
 
     purchase_requisition_id = fields.Many2one('purchase.requisition', related='purchase_requisition_line_id.requisition_id', string='Agreement')
     purchase_requisition_line_id = fields.Many2one('purchase.requisition.line', index='btree_not_null')
+    qty_remaining = fields.Float(related='purchase_requisition_line_id.remaining_qty')
 
 
 class ProductProduct(models.Model):
