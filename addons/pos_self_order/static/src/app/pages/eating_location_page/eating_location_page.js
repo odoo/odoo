@@ -41,4 +41,8 @@ export class EatingLocationPage extends Component {
     get presets() {
         return this.selfOrder.availablePresets;
     }
+
+    showAverageTime(preset) {
+        return this.ui.size > SIZES.XS && preset.use_timing;
+    }
 }
