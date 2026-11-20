@@ -18,7 +18,7 @@ function cleanupWebSocketWorker() {
         clearTimeout(currentWebSocketWorker.connectTimeout);
     }
 
-    currentWebSocketWorker.firstSubscribeResolver = Promise.withResolvers();
+    currentWebSocketWorker.isSubscribed = false;
     currentWebSocketWorker.websocket = null;
     currentWebSocketWorker = null;
 }

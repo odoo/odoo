@@ -213,18 +213,18 @@ test("check connection health during inactivity", async () => {
             expect.step("_restartConnectionCheckInterval");
             super._restartConnectionCheckInterval();
         },
-        _sendToServer(payload) {
-            if (payload.event_name === "foo") {
-                super._sendToServer(payload);
-            }
-        },
     });
     const worker = await startWebSocketWorker((type) => {
         if (type === "BUS:CONNECT") {
             expect.step(`broadcast ${type}`);
         }
     });
-    await expect.waitForSteps(["broadcast BUS:CONNECT", "_restartConnectionCheckInterval"]);
+    // Restarted on open, then by the first subscription.
+    await expect.waitForSteps([
+        "broadcast BUS:CONNECT",
+        "_restartConnectionCheckInterval",
+        "_restartConnectionCheckInterval",
+    ]);
     worker.websocket.dispatchEvent(
         new MessageEvent("message", {
             data: JSON.stringify([{ id: 70, message: { type: "foo" } }]),
@@ -339,4 +339,37 @@ test("database change from a tab without uid keeps the known uid", async () => {
     worker.channelsByClient.set(client, ["C2"]);
     worker._initializeConnection(client, { ...initData, db: "db2", uid: 1, startTs: 3000 });
     expect(worker.channelsByClient.get(client)).toEqual(["C2"]);
+});
+
+test("message sent before the first subscription survives a reconnection", async () => {
+    patchWithCleanup(WebSocket.prototype, {
+        send(data) {
+            if (typeof data === "string") {
+                expect.step(`sent ${JSON.parse(data).event_name}`);
+            }
+            return super.send(...arguments);
+        },
+    });
+    const worker = await startWebSocketWorker((type) => {
+        if (["BUS:RECONNECTING", "BUS:RECONNECT"].includes(type)) {
+            expect.step(type);
+        }
+    });
+    await expect.waitForSteps(["sent subscribe"]);
+    const reconnect = async () => {
+        worker.websocket.close(WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE);
+        await expect.waitForSteps(["BUS:RECONNECTING"]);
+        await runAllTimers();
+        await expect.waitForSteps(["BUS:RECONNECT"]);
+    };
+    const updateChannels = worker._debouncedUpdateChannels;
+    worker._debouncedUpdateChannels = () => {};
+    await reconnect();
+    // The new websocket is open, but did not subscribe yet.
+    worker._sendToServer({ event_name: "foo" });
+    await reconnect();
+    worker._debouncedUpdateChannels = updateChannels;
+    worker._scheduleUpdateChannels();
+    await runAllTimers();
+    await expect.waitForSteps(["sent subscribe", "sent foo"]);
 });
