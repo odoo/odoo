@@ -9,7 +9,22 @@
                     <xpath expr="//field[@name='list_price']" position="after">
                         <field name="taxes_id" widget="many2many_tax_tags" context="{'search_default_domestictax': True, 'append_fields': ['company_id']}"/>
                     </xpath>
+                    <xpath expr="//list" position="attributes">
+                        <attribute name="js_class">product_sellable_action_list</attribute>
+                    </xpath>
                 </field>
+        </record>
+
+        <record id="product_template_kanban_view_sellable_inherit" model="ir.ui.view">
+            <field name="name">product.template.kanban.sellable.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_kanban_view"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <kanban position="attributes">
+                    <attribute name="js_class">product_sellable_action_kanban</attribute>
+                </kanban>
+            </field>
         </record>
 
         <record id="product_template_list_view_purchasable_inherit" model="ir.ui.view">
@@ -28,7 +43,7 @@
             <field name="res_model">product.template</field>
             <field name="path">customer-products</field>
             <field name="view_ids" eval="[Command.clear(),
-                Command.create({'view_mode': 'kanban'}),
+                Command.create({'view_mode': 'kanban', 'view_id': ref('product_template_kanban_view_sellable_inherit')}),
                 Command.create({'view_mode': 'list', 'view_id': ref('account.product_template_list_view_sellable_inherit')}),
                 Command.create({'view_mode': 'form'}),
                 Command.create({'view_mode': 'activity'})]"/>
