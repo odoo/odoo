@@ -267,6 +267,7 @@
     --o-bs-h1-font-size: #{$h1-font-size};
     --o-bs-h2-font-size: #{$h2-font-size};
     --o-bs-h3-font-size: #{$h3-font-size};
+    --o-bs-h3-font-size-fluid: #{rfs-fluid-value($h3-font-size)};
     --o-bs-h4-font-size: #{$h4-font-size};
     --o-bs-h5-font-size: #{$h5-font-size};
     --o-bs-h6-font-size: #{$h6-font-size};
@@ -359,6 +360,7 @@
     --o-bs-success-text-emphasis: #{$success-text-emphasis};
     --o-bs-table-bg: #{$table-bg};
     --o-bs-table-cell-padding-x-sm: #{$table-cell-padding-x-sm};
+    --o-bs-table-cell-padding-y: #{$table-cell-padding-y};
     --o-bs-table-cell-padding-y-sm: #{$table-cell-padding-y-sm};
     --o-bs-table-hover-bg: #{$table-hover-bg};
     --o-bs-table-hover-bg-factor: #{$table-hover-bg-factor};
@@ -403,6 +405,7 @@
     /* Variables whose value reads another custom property in some bundles */
     --o-bs-btn-link-hover-color: #{$btn-link-hover-color};
     --o-bs-card-border-color: #{$card-border-color};
+    --o-bs-card-border-width: #{$card-border-width};
     --o-bs-dropdown-bg: #{$dropdown-bg};
     --o-bs-font-family-base: #{$font-family-base};
     --o-bs-form-range-track-bg: #{$form-range-track-bg};
@@ -419,6 +422,9 @@
     --o-bs-gray-200-contrast: #{color-contrast($gray-200)};
     --o-bs-info-contrast: #{color-contrast($info)};
     --o-bs-light-contrast: #{color-contrast($light)};
+    @if type-of($list-group-bg) == color {
+        --o-bs-list-group-bg-contrast: #{color-contrast($list-group-bg)};
+    }
     --o-bs-primary-contrast: #{color-contrast($primary)};
     --o-bs-success-contrast: #{color-contrast($success)};
     --o-bs-warning-contrast: #{color-contrast($warning)};
@@ -428,6 +434,7 @@
     --o-view-background-color-contrast: #{color-contrast($o-view-background-color)};
 
     /* Images that Sass draws with a color of the theme */
+    --o-bs-accordion-button-icon: #{escape-svg($accordion-button-icon)};
     --o-check-mark-black-image: #{o-check-mark-image($black)};
     --o-check-mark-danger-image: #{o-check-mark-image($danger)};
     --o-check-mark-form-check-checked-image: #{o-check-mark-image($form-check-input-checked-bg-color)};

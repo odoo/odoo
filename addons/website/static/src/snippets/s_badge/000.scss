@@ -1,10 +1,14 @@
 
 .s_badge {
-    padding: $s-badge-padding;
-    margin: $s-badge-margin;
-    border-radius: if($s-badge-border-radius != null, $s-badge-border-radius, $badge-border-radius);
+    --s-badge-padding: .5rem;
+    --s-badge-margin: .5rem .5rem .5rem 0;
+    --s-badge-i-margin: 0 .3rem 0 0;
+
+    padding: var(--s-badge-padding);
+    margin: var(--s-badge-margin);
+    border-radius: var(--s-badge-border-radius, var(--badge-border-radius));
 
     .oi, .oi {
-        margin: $s-badge-i-margin;
+        margin: var(--s-badge-i-margin);
     }
 }

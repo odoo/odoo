@@ -1,5 +1,8 @@
 /* This file regroups the website design rules. */
 
+$o-theme-navbar-logo-height: $nav-link-height !default;
+$o-theme-navbar-fixed-logo-height: $nav-link-height !default;
+
 :root {
     /* Border color
        Let borders color adapt according to body and CCs. Also, set a fallback
@@ -9,6 +12,9 @@
     --o-border-color: #{fade-currentColor()};
 
     --o-theme-headings-font: #{inspect($o-theme-headings-font)};
+
+    /* 1 when the header stays on screen while scrolling, 0 otherwise */
+    --o-header-sticky: #{if(o-website-value('header-scroll-effect') == null or o-website-value('header-scroll-effect') == 'fixed', 1, 0)};
 
     /* Height of the nav of the mobile mega menu, whose dropdown behaves as
        offcanvas */
@@ -2679,6 +2685,9 @@ span.list-inline-item.o_add_language:last-child {
 
 /* Ribbons */
 $ribbon-padding: 100px;
+:root {
+    --o-ribbon-padding: #{$ribbon-padding};
+}
 .o_ribbon {
     margin: 0;
     font-size: 1rem;

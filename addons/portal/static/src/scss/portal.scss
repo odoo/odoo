@@ -2,21 +2,12 @@
    rules. */
 
 /* ======  Variables ========= */
-$o-theme-navbar-logo-height: $nav-link-height !default;
-$o-theme-navbar-fixed-logo-height: $nav-link-height !default;
-
-/* Portal toolbar (filters, search bar) */
-$o-portal-mobile-toolbar: true; /* Enable/Disable custom design */
-$o-portal-mobile-toolbar-border: $border-color;
 :root {
+    /* Portal toolbar (filters, search bar) */
     --o-portal-mobile-toolbar-bg: var(--gray-200);
-}
 
-/* Portal Tables */
-$o-portal-table-th-pt: var(--o-bs-spacer-1) !default;
-$o-portal-table-th-pb: var(--o-bs-spacer-1) !default;
-$o-portal-table-td-pt: var(--o-bs-spacer-2) !default;
-$o-portal-table-td-pb: var(--o-bs-spacer-2) !default;
+    --o-theme-btn-icon-hover-decoration: none;
+}
 
 /* Frontend general */
 body {
@@ -41,14 +32,16 @@ header {
             padding-bottom: 0;
 
             img {
+                --o-theme-navbar-logo-height: var(--logo-height, var(--o-bs-nav-link-height));
+
                 /* object-fit does not work on IE but is only used as a fallback */
                 object-fit: contain;
                 display: block;
                 width: auto;
-                height: $o-theme-navbar-logo-height;
+                height: var(--o-theme-navbar-logo-height);
 
                 @media (max-width: 767.98px) {
-                    max-height: min($o-theme-navbar-logo-height, 5rem);
+                    max-height: min(var(--o-theme-navbar-logo-height), 5rem);
                 }
             }
         }
@@ -77,7 +70,7 @@ ul.flex-column > li > a {
 /* Link without text but an icon */
 a, .btn-link {
     &.oi:hover {
-        text-decoration: $o-theme-btn-icon-hover-decoration;
+        text-decoration: var(--o-theme-btn-icon-hover-decoration);
     }
 }
 
@@ -133,7 +126,7 @@ li > p {
 }
 
 .list-group-item:not([class*="list-group-item-"]):not(.active) {
-    color: color-contrast($list-group-bg);
+    color: var(--o-bs-list-group-bg-contrast);
 }
 
 .o_page_header {
@@ -265,15 +258,20 @@ img, .media_iframe_video, .o_image {
     }
 
     .o_portal_my_doc_table {
+        --o-portal-table-th-pt: var(--o-bs-spacer-1);
+        --o-portal-table-th-pb: var(--o-bs-spacer-1);
+        --o-portal-table-td-pt: var(--o-bs-spacer-2);
+        --o-portal-table-td-pb: var(--o-bs-spacer-2);
+
         th {
-            padding-top: $o-portal-table-th-pt;
-            padding-bottom: $o-portal-table-th-pb;
+            padding-top: var(--o-portal-table-th-pt);
+            padding-bottom: var(--o-portal-table-th-pb);
             max-width: 500px;
         }
 
         td {
-            padding-top: $o-portal-table-td-pt;
-            padding-bottom: $o-portal-table-td-pb;
+            padding-top: var(--o-portal-table-td-pt);
+            padding-bottom: var(--o-portal-table-td-pb);
             max-width: 10rem;
 
         }
@@ -290,14 +288,14 @@ img, .media_iframe_video, .o_image {
         margin-top: 0.5em;
     }
 
-    @if ($o-portal-mobile-toolbar) {
-        #o_portal_navbar_content {
-            @media (max-width: 991.98px) {
-                margin: var(--o-bs-navbar-padding-y) 0 0;
-                padding: var(--o-bs-navbar-padding-y) calc(var(--o-bs-grid-gutter-width) / 2);
-                border-top: var(--o-bs-border-width) solid $o-portal-mobile-toolbar-border;
-                background-color: var(--o-portal-mobile-toolbar-bg);
-            }
+    #o_portal_navbar_content {
+        @media (max-width: 991.98px) {
+            --o-portal-mobile-toolbar-border: var(--o-border-color, var(--o-bs-border-color));
+
+            margin: var(--o-bs-navbar-padding-y) 0 0;
+            padding: var(--o-bs-navbar-padding-y) calc(var(--o-bs-grid-gutter-width) / 2);
+            border-top: var(--o-bs-border-width) solid var(--o-portal-mobile-toolbar-border);
+            background-color: var(--o-portal-mobile-toolbar-bg);
         }
     }
 
@@ -337,7 +335,7 @@ img, .media_iframe_video, .o_image {
         }
 
         .oi {
-            line-height: $line-height-base;
+            line-height: var(--o-bs-line-height-base);
             color: var(--o-gray-500);
 
             + span, + div {
@@ -356,7 +354,7 @@ img, .media_iframe_video, .o_image {
     }
 
     span[itemprop="streetAddress"], .o_address_card_vat {
-        color: var(--#{$prefix}secondary-color);
+        color: var(--secondary-color);
     }
 }
 

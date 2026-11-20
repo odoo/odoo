@@ -33,12 +33,10 @@ class TestDisableSnippetsAssets(TransactionCase):
         self.assertEqual(s_website_form_000_css.active, True)
         self.assertEqual(s_website_form_001_scss.active, True)
 
-        # Old snippet with scss and scss variables
+        # Old snippet with scss
         s_masonry_block_000_scss = self._get_snippet_asset('s_masonry_block', '000', 'scss')
-        s_masonry_block_000_variables_scss = self._get_snippet_asset('s_masonry_block', '000_variables', 'scss')
         s_masonry_block_001_scss = self._get_snippet_asset('s_masonry_block', '001', 'scss')
         self.assertEqual(s_masonry_block_000_scss.active, True)
-        self.assertEqual(s_masonry_block_000_variables_scss.active, True)
         self.assertEqual(s_masonry_block_001_scss.active, True)
 
         # New snippet
@@ -83,10 +81,8 @@ class TestDisableSnippetsAssets(TransactionCase):
         self.assertEqual(s_website_form_001_scss.active, True)
 
         s_masonry_block_000_scss = self._get_snippet_asset('s_masonry_block', '000', 'scss')
-        s_masonry_block_000_variables_scss = self._get_snippet_asset('s_masonry_block', '000_variables', 'scss')
         s_masonry_block_001_scss = self._get_snippet_asset('s_masonry_block', '001', 'scss')
         self.assertEqual(s_masonry_block_000_scss.active, False)
-        self.assertEqual(s_masonry_block_000_variables_scss.active, False)
         self.assertEqual(s_masonry_block_001_scss.active, True)
 
         s_image_gallery_000 = self._get_snippet_asset('s_image_gallery', '000', 'css')
