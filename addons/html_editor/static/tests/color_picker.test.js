@@ -25,7 +25,7 @@ test("basic rendering", async () => {
         },
     });
     expect(".o_font_color_selector").toHaveCount(1);
-    expect(".o_font_color_selector .btn-tab").toHaveCount(2);
+    expect(".o_font_color_selector .btn-tab").toHaveCount(3);
     expect(".o_font_color_selector .btn[data-icon='delete'].oi-filled").toHaveCount(1);
     expect(".o_font_color_selector .o_colorpicker_section").toHaveCount(1);
     expect(".o_font_color_selector .o_colorpicker_section .o_color_button").toHaveCount(5);
@@ -343,7 +343,7 @@ test("can register an extra tab", async () => {
             enabledTabs: ["solid", "custom", "extra"],
         },
     });
-    expect(".o_font_color_selector .btn-tab").toHaveCount(3);
+    expect(".o_font_color_selector .btn-tab").toHaveCount(4);
     await click("button.extra-tab");
     await animationFrame();
     expect("button.extra-tab").toHaveClass("active");

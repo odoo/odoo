@@ -1,6 +1,6 @@
 <templates xml:space="preserve">
 <t t-name="html_editor.ColorPicker">
-    <div t-attf-class="o_input_number_no_arrows o_font_color_selector user-select-none {{this.props.className}}"
+    <div t-attf-class="o_input_number_no_arrows o_font_color_selector user-select-none {{this.props.className}} {{this.state.subPanel ? 'o_color_picker_sub_panel_open' : ''}}"
         t-on-pointerdown.stop="() => {}" data-prevent-closing-overlay="true" t-ref="this.rootRef"
         t-on-mouseenter="this.onMouseEnter">
         <div class="px-1 mb-1 pt-2 d-flex" t-ref="this.tabListRef">
@@ -22,10 +22,13 @@
             </t>
             <t t-else="">
                 <t t-foreach="this.tabs" t-as="tab" t-key="tab.id">
-                    <button t-attf-class="btn btn-sm text-truncate btn-tab me-1 #{tab.id}-tab #{ this.isDarkTheme ? 'btn-secondary' : 'btn-light'} #{this.state.activeTab === tab.id ? 'active' : ''}"
+                    <button t-attf-class="btn btn-sm text-truncate btn-tab #{tab.icon ? 'o_btn_tab_icon' : ''} #{tab.id}-tab #{ this.isDarkTheme ? 'btn-secondary' : 'btn-light'} #{this.state.activeTab === tab.id ? 'active' : ''}"
                         role="tab"
+                        t-att-title="tab.icon and tab.name"
+                        t-att-aria-label="tab.icon and tab.name"
                         t-on-click="() => this.setTab(tab.id)">
-                        <t t-out="tab.name" />
+                        <i t-if="tab.icon" class="oi" t-att-data-icon="tab.icon" aria-hidden="true"/>
+                        <t t-else="" t-out="tab.name" />
                     </button>
                 </t>
             </t>
@@ -65,7 +68,19 @@
             currentCustomColor: this.state.currentCustomColor,
             currentColorPreview: this.state.currentColorPreview,
             selectedColor: this.props.state.selectedColor,
+            openSubPanel: this.openSubPanel.bind(this),
+            closeSubPanel: this.closeSubPanel.bind(this),
         }" />
+        <div t-if="this.state.subPanel" class="o_color_picker_sub_panel">
+            <div class="d-flex align-items-center px-1 pt-2 mb-1">
+                <button type="button" t-ref="this.subPanelBackButtonRef"
+                    class="oi btn btn-secondary bg-transparent border-0" data-icon="keyboard_arrow_left"
+                    title="Go back" aria-label="Go back" t-on-click="this.closeSubPanel"/>
+                <span class="small fw-bold cursor-pointer" t-out="this.state.subPanel.title"
+                    t-on-click="this.closeSubPanel"/>
+            </div>
+            <t t-component="this.state.subPanel.component" t-props="this.state.subPanel.props"/>
+        </div>
     </div>
 </t>
 

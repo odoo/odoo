@@ -60,8 +60,22 @@
         /* picker minus the trash button width. Changing it could make the tab */
         /* buttons too wide depending on the displayed language. */
         min-width: 53px;
+        margin-right: 2px;
         padding: 3px;
         font-size: 12px;
+
+        /* Icon tabs only take the room of their icon, to leave it to the */
+        /* names of the other tabs. */
+        &.o_btn_tab_icon {
+            flex-shrink: 0;
+            min-width: 0;
+            padding: 3px 4px;
+
+            .oi {
+                font-size: 16px;
+                vertical-align: middle;
+            }
+        }
 
         &:focus-visible {
             z-index: 1;
@@ -98,4 +112,9 @@
     @each $color, $value in $grays {
         @include print-variable($color, $value);
     }
+}
+
+/* While a sub panel is open, it replaces the tabs, which stay mounted. */
+.o_color_picker_sub_panel_open > :not(.o_color_picker_sub_panel) {
+    display: none !important;
 }

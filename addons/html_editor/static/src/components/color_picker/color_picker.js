@@ -1,5 +1,5 @@
 import { CustomColorPicker } from "@html_editor/components/color_picker/custom_color_picker/custom_color_picker";
-import { Component, useProps, proxy, signal, t, useListener, computed } from "@odoo/owl";
+import { Component, useProps, proxy, signal, t, useListener, computed, markRaw } from "@odoo/owl";
 import { cookie } from "@web/core/browser/cookie";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -71,10 +71,14 @@ export class ColorPicker extends Component {
     defaultColorSet = computed(() => this.getDefaultColorSet());
 
     setup() {
+        // The favorite colors are offered by every color picker.
+        const enabledTabs = [...this.props.enabledTabs, "favorite"];
+        // `isAvailable` is called during the setup, so that it can use hooks
+        // such as `usePlugin`.
         this.tabs = registry
             .category("color_picker_tabs")
             .getAll()
-            .filter((tab) => this.props.enabledTabs.includes(tab.id));
+            .filter((tab) => enabledTabs.includes(tab.id) && (tab.isAvailable?.() ?? true));
 
         this.DEFAULT_COLORS = DEFAULT_COLORS;
         this.grayscales = Object.assign({}, DEFAULT_GRAYSCALES, this.props.grayscales);
@@ -97,14 +101,31 @@ export class ColorPicker extends Component {
             currentCustomColor: this.props.state.selectedColor,
             currentColorPreview: undefined,
             isHoverPreviewActive: false,
+            subPanel: null,
         });
+        this.subPanelBackButtonRef = signal.ref();
+        this.subPanelOpenerEl = null;
         this.usedCustomColors = this.props.getUsedCustomColors();
         useLayoutEffect(
             () => {
                 // Recompute the positioning of the popover if any.
                 this.env[POSITION_BUS]?.trigger("update");
             },
-            () => [this.state.activeTab]
+            () => [this.state.activeTab, this.state.subPanel]
+        );
+        useLayoutEffect(
+            () => {
+                // Keep the focus in the color picker, as losing it would close
+                // it in the editor: on the back button of an opened sub panel,
+                // then back on the element which opened it.
+                if (this.state.subPanel) {
+                    this.subPanelBackButtonRef()?.focus();
+                } else if (this.subPanelOpenerEl) {
+                    this.subPanelOpenerEl.focus();
+                    this.subPanelOpenerEl = null;
+                }
+            },
+            () => [this.state.subPanel]
         );
         const documents = [
             window.top,
@@ -126,10 +147,11 @@ export class ColorPicker extends Component {
     }
 
     getDefaultTab() {
-        if (this.props.enabledTabs.includes(this.props.state.defaultTab)) {
+        const tabIds = this.tabs.map((tab) => tab.id);
+        if (tabIds.includes(this.props.state.defaultTab)) {
             return this.props.state.defaultTab;
         }
-        return this.props.enabledTabs[0];
+        return this.props.enabledTabs.find((tabId) => tabIds.includes(tabId)) ?? tabIds[0];
     }
 
     get selectedColor() {
@@ -138,6 +160,25 @@ export class ColorPicker extends Component {
 
     get isDarkTheme() {
         return cookie.get("color_scheme") === "dark";
+    }
+
+    /**
+     * Displays a sub panel instead of the tabs, with a title and a back button
+     * closing it. The tabs stay mounted, so that they keep their state.
+     *
+     * @param {typeof Component} component
+     * @param {Object} props
+     * @param {string} title
+     */
+    openSubPanel(component, props, title) {
+        this.subPanelOpenerEl = this.rootRef()?.contains(document.activeElement)
+            ? document.activeElement
+            : null;
+        this.state.subPanel = markRaw({ component, props, title });
+    }
+
+    closeSubPanel() {
+        this.state.subPanel = null;
     }
 
     setTab(tab) {
@@ -349,12 +390,20 @@ export class ColorPicker extends Component {
 
     /**
      * Removes the close callback on Escape, so that a preview is cancelled with
-     * escape instead of being applied.
+     * escape instead of being applied. Escape closes the sub panel first, if
+     * any.
      *
      * @param {KeydownEvent} ev
      */
     onKeyDown(ev) {
         const hotkey = getActiveHotkey(ev);
+        if (hotkey === "escape" && this.state.subPanel) {
+            // Escape closes the sub panel, not the color picker.
+            ev.preventDefault();
+            ev.stopPropagation();
+            this.closeSubPanel();
+            return;
+        }
         if (hotkey === "escape") {
             this.props.setOnCloseCallback?.(() => {
                 this.props.onEscape();
