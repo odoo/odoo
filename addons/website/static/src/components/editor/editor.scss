@@ -1,13 +1,3 @@
-.editor_has_snippets, .editor_has_dummy_snippets {
-    .o_notification_manager {
-        position: absolute;
-        top: var(--o-bs-spacer-2);
-        left: auto;
-        bottom: auto;
-        right: calc(var(--o-we-sidebar-width) + 0.5rem);
-    }
-}
-
 .ui-autocomplete.o_website_ui_autocomplete {
     --dropdown-padding-y: 0px;
 
@@ -92,83 +82,6 @@
     }
     div {
         width: 100%;
-    }
-}
-
-@mixin preview-outline-button($type, $ccIndex) {
-    .btn-#{$type} {
-        background-color: transparent;
-        color: var(--we-cp-o-cc#{$ccIndex}-btn-#{$type});
-        border-color: var(--we-cp-o-cc#{$ccIndex}-btn-#{$type});
-    }
-    .btn-#{$type}:hover {
-        background-color: var(--we-cp-o-cc#{$ccIndex}-btn-#{$type});
-        color: var(--we-cp-o-cc#{$ccIndex}-btn-#{$type}-text);
-    }
-}
-
-.o_w_wysiwyg, .o_loading_dummy {
-    #oe_snippets {
-        transform: none;
-        transition: none;
-
-        .o_we_cc_preview_wrapper {
-            @for $index from 1 through 5 {
-                &.o_cc#{$index} {
-                    background-color: var(--we-cp-o-cc#{$index}-bg);
-                    background-image: var(--we-cp-o-cc#{$index}-bg-gradient), url('/web/static/img/transparent.png');
-                    color: var(--we-cp-o-cc#{$index}-text);
-                    h1 {
-                        color: var(--we-cp-o-cc#{$index}-headings);
-                    }
-                    .btn-primary {
-                        background-color: var(--we-cp-o-cc#{$index}-btn-primary);
-                        color: var(--we-cp-o-cc#{$index}-btn-primary-text);
-                        border-color: var(--we-cp-o-cc#{$index}-btn-primary-border);
-                    }
-                    .btn-secondary {
-                        background-color: var(--we-cp-o-cc#{$index}-btn-secondary);
-                        color: var(--we-cp-o-cc#{$index}-btn-secondary-text);
-                        border-color: var(--we-cp-o-cc#{$index}-btn-secondary-border);
-                    }
-                }
-            }
-        }
-        &.o_we_has_btn_outline_primary {
-            .o_we_cc_preview_wrapper {
-                @for $index from 1 through 5 {
-                    &.o_cc#{$index} {
-                        @include preview-outline-button('primary', $index)
-                    }
-                }
-            }
-        }
-        &.o_we_has_btn_outline_secondary {
-            .o_we_cc_preview_wrapper {
-                @for $index from 1 through 5 {
-                    &.o_cc#{$index} {
-                        @include preview-outline-button('secondary', $index)
-                    }
-                }
-            }
-        }
-    }
-}
-
-.o_loading_dummy {
-    position: absolute;
-    z-index: var(--o-bs-zindex-modal-backdrop);
-}
-
-.o_website_fullscreen {
-    #oe_snippets {
-        transform: translateX(100%);
-    }
-}
-
-.o_w_wysiwyg_transition {
-    #oe_snippets {
-        transition: transform ease 400ms;
     }
 }
 
