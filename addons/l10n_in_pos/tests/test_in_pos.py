@@ -40,16 +40,17 @@ class TestGenericIN(TestGenericLocalization, CommonPosTest):
         })
 
     def test_generic_localization(self):
-        _, html = super().test_generic_localization()
+        order, html = super().test_generic_localization()
         self.assertTrue("HSN Code" in html)
-        self.assertTrue("Tax Invoice" in html)
+        # The customer is a company: the order is invoiced on request (B2B).
+        self.assertFalse(order.l10n_in_b2c_invoice_number)
+        self.assertIn(order.account_move.name, html)
 
-    def _get_refund_receipt_html(self, to_invoice=False):
+    def test_refund_order_receipt(self):
         _, refund = self.create_backend_pos_order({
             'pos_config': self.main_pos_config,
             'order_data': {
-                'partner_id': self.partner_a.id,
-                'to_invoice': to_invoice,
+                'partner_id': self.partner_b.id,  # Without GSTIN: B2C order
             },
             'line_data': [
                 {'product_id': self.product_a.id},
@@ -65,10 +66,5 @@ class TestGenericIN(TestGenericLocalization, CommonPosTest):
                 }
             ],
         })
-        return refund.order_receipt_generate_html()
-
-    def test_refund_order_receipt(self):
-        self.assertIn("R-INVOICE", self._get_refund_receipt_html())
-
-    def test_refund_invoice_order_receipt(self):
-        self.assertIn("Tax R-Invoice", self._get_refund_receipt_html(to_invoice=True))
+        self.assertTrue(refund.l10n_in_b2c_invoice_number.startswith('R'))
+        self.assertIn(refund.l10n_in_b2c_invoice_number, refund.order_receipt_generate_html())

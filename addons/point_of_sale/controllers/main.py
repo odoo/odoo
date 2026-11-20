@@ -200,7 +200,7 @@ class PosController(PortalAccount):
         pos_order = pos_order.with_company(pos_order.company_id).with_context(allowed_company_ids=pos_order.company_id.ids)
 
         # If the order was already invoiced, return the invoice directly by forcing the access token so that the non-connected user can see it.
-        if pos_order.is_singly_invoiced:
+        if self._is_ticket_order_invoiced(pos_order):
             return request.redirect('/my/invoices/%s?access_token=%s' % (pos_order.account_move.id, pos_order.account_move._portal_ensure_token()))
 
         if not request.env['res.company']._with_locked_records(pos_order, allow_raising=False):
@@ -215,8 +215,9 @@ class PosController(PortalAccount):
 
         # Validate the form by ensuring required fields are filled and the VAT is correct.
         form_values = {'extra_field_values': {}}
-        has_order_partner = bool(pos_order.partner_id)
-        partner = (user_is_connected and (pos_order.partner_id or request.env.user.partner_id)) or pos_order.partner_id
+        order_partner = self._get_ticket_order_partner(pos_order)
+        has_order_partner = bool(order_partner)
+        partner = (user_is_connected and (order_partner or request.env.user.partner_id)) or order_partner
         if kwargs and request.httprequest.method == 'POST':
             form_values.update(kwargs)
             # Extract the additional fields values from the kwargs now as they can't be there when validating the 'regular' partner form.
@@ -248,7 +249,7 @@ class PosController(PortalAccount):
             ))
 
         elif user_is_connected:
-            partner_to_check = pos_order.partner_id or request.env.user.partner_id
+            partner_to_check = order_partner or request.env.user.partner_id
             missing_fields, error_messages = set(), []
             if self._user_can_edit_partner(partner_to_check, request.env.user.partner_id):
                 missing_fields, error_messages = _validate_connected_user_data(partner_to_check)
@@ -259,8 +260,8 @@ class PosController(PortalAccount):
                     'invalid_field': form_values.get('invalid_fields', []) + list(missing_fields),
                     'error_message': form_values.get('messages', []) + error_messages
                 })
-        elif pos_order.partner_id:
-            return self._get_invoice(pos_order.partner_id, {}, pos_order, additional_invoice_fields, kwargs)
+        elif order_partner:
+            return self._get_invoice(order_partner, {}, pos_order, additional_invoice_fields, kwargs)
 
         # Prefill the customer extra values if there is any and an user is connected
         if partner:
@@ -289,6 +290,14 @@ class PosController(PortalAccount):
             'invoice_sending_methods': {'email': _("by Email")},
             **form_values,
         })
+
+    def _is_ticket_order_invoiced(self, pos_order):
+        """Whether the order already has the invoice the customer asks for on the ticket page."""
+        return pos_order.is_singly_invoiced
+
+    def _get_ticket_order_partner(self, pos_order):
+        """The customer of the order the ticket page invoices to, if any."""
+        return pos_order.partner_id
 
     def _get_default_country(self, pos_order=False, **kwargs):
         if pos_order:
