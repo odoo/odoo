@@ -55,7 +55,10 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
 
     def _prepare_employees_holiday_values(self, employees, date_from_tz, date_to_tz):
         self.ensure_one()
-        work_days_data = employees.sudo()._get_work_days_data_batch(date_from_tz, date_to_tz)
+        work_days_data = employees.sudo()._get_work_days_data_batch(
+            date_from_tz, date_to_tz,
+            domain=[('count_as', '=', 'absence'), ('holiday_id', '=', False)],
+        )
         validated = self.env.user.has_group('hr_holidays.group_hr_holidays_user') or self.work_entry_type_id.leave_validation_type == 'no_validation'
         values = []
         for employee in employees:
@@ -97,7 +100,9 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
             ('date_from', '<=', date_to_tz),
             ('date_to', '>', date_from_tz),
             ('state', 'not in', ['cancel', 'refuse']),
-            ('employee_id', 'in', employees.ids)])
+            ('employee_id', 'in', employees.ids),
+            ('work_entry_type_id.allow_request_on_top', '=', False),
+        ]) if not self.work_entry_type_id.allow_request_on_top else self.env['hr.leave']
 
         if conflicting_leaves:
             # YTI: More complex use cases could be managed later
@@ -124,14 +129,28 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
         leaves._validate_leave_request()
 
         return {
-            'type': 'ir.actions.act_window',
-            'name': self.env._('Generated Time Off'),
-            "views": [[self.env.ref('hr_holidays.hr_leave_view_tree').id, "list"], [self.env.ref('hr_holidays.hr_leave_view_form_manager').id, "form"]],
-            'view_mode': 'list',
-            'res_model': 'hr.leave',
-            'domain': [('id', 'in', leaves.ids)],
-            'context': {
-                'active_id': False,
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': 'success',
+                'sticky': False,
+                'title': self.env._('Time Off Generated'),
+                'message': self.env._(
+                    '%(success_count)s time off request(s) created successfully.',
+                    success_count=len(leaves),
+                ),
+                'next': {
+                    'type': 'ir.actions.act_window',
+                    'name': self.env._('Generated Time Off'),
+                    'views': [
+                        [self.env.ref('hr_holidays.hr_leave_view_tree').id, "list"],
+                        [self.env.ref('hr_holidays.hr_leave_view_form_manager').id, "form"],
+                    ],
+                    'view_mode': 'list',
+                    'res_model': 'hr.leave',
+                    'domain': [('id', 'in', leaves.ids)],
+                    'context': {'active_id': False},
+                },
             },
         }
 
