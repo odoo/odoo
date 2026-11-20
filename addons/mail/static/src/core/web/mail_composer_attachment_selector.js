@@ -18,7 +18,7 @@ export class MailComposerAttachmentSelector extends Component {
         this.mailStore = useService("mail.store");
         this.attachmentUploadService = useService("mail.attachment_upload");
         this.operations = useX2ManyCrud(() => this.props.record.data["attachment_ids"], true);
-        this.doUpload = useMailComposerAttachmentsUploader();
+        this.doUpload = useMailComposerAttachmentsUploader(this.props.record.model);
     }
 
     /** @param {Object} data */

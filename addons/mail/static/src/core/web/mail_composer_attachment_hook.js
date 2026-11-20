@@ -1,10 +1,11 @@
-import { useComponent } from "@odoo/owl";
 import { useBus } from "@web/core/utils/hooks";
 
-export function useMailComposerAttachmentsUploader() {
+/**
+ * @param {import("@web/model/relational_model/relational_model").RelationalModel} model
+ *  the model of the composer record: its save waits for the ongoing uploads
+ */
+export function useMailComposerAttachmentsUploader(model) {
     const uploadingFiles = [];
-    const component = useComponent();
-    const { model } = component.props.record;
     useBus(model.bus, "NEED_LOCAL_CHANGES", ({ detail }) => {
         detail.proms.push(Promise.all(uploadingFiles));
     });
