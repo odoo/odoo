@@ -812,6 +812,28 @@ class TestBatchPicking(TransactionCase):
         self.assertEqual(batch_1.description, 'Amazing batch', 'The description should be the one of the earliest batch')
         self.assertEqual(batch_1.scheduled_date, early_date)
 
+    def test_batch_merge_without_scheduled_date(self):
+        # Merging batches that all lack a scheduled date must not fail.
+        batch_1, batch_2 = self.env['stock.picking.batch'].create([{
+            'company_id': self.env.company.id,
+            'description': description,
+        } for description in ['Empty batch 1', 'Empty batch 2']])
+        (batch_1 | batch_2).action_merge()
+        self.assertFalse(batch_2.exists())
+        self.assertEqual(batch_1.description, 'Empty batch 1')
+
+        # Without an earliest batch, the scheduled date of the merged batch
+        # is computed from its transfers instead of being reset.
+        pickings = self.picking_client_1 | self.picking_client_2
+        batch_3, batch_4 = self.env['stock.picking.batch'].create([{
+            'company_id': self.env.company.id,
+            'picking_ids': [Command.link(picking.id)],
+        } for picking in pickings])
+        (batch_3 | batch_4).scheduled_date = False
+        (batch_3 | batch_4).action_merge()
+        self.assertEqual(batch_3.picking_ids, pickings)
+        self.assertEqual(batch_3.scheduled_date, min(pickings.mapped('scheduled_date')))
+
 
 @tagged('-at_install', 'post_install')
 class TestBatchPicking02(TransactionCase):
