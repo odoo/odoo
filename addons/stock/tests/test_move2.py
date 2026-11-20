@@ -2238,6 +2238,33 @@ class TestSinglePicking(TestStockCommon):
         self.assertEqual(move.state, 'confirmed')
         self.assertEqual(delivery_order.show_check_availability, True, 'The Reserve button should reappear.')
 
+    def test_discard_backorder_wizard_keeps_moves_unpicked(self):
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 5.0)
+        delivery_order = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.picking_type_out.id,
+            'move_ids': [Command.create({
+                'product_id': self.productA.id,
+                'product_uom_qty': 10,
+                'uom_id': self.productA.uom_id.id,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
+            })],
+        })
+        delivery_order.action_confirm()
+        delivery_order.action_assign()
+
+        res = delivery_order.button_validate()
+        self.assertEqual(res.get('res_model'), 'stock.backorder.confirmation')
+        self.assertFalse(delivery_order.move_ids.picked)
+        self.assertTrue(delivery_order.show_check_availability)
+
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 5.0)
+        delivery_order.action_assign()
+        self.assertEqual(delivery_order.move_ids.quantity, 10.0)
+        self.assertEqual(delivery_order.state, 'assigned')
+
     def test_owner_1(self):
         # Required for `owner_id` to be visible in the view
         self.env.user.group_ids += self.env.ref("stock.group_tracking_owner")
