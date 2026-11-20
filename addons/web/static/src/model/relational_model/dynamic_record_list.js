@@ -113,6 +113,12 @@ export class DynamicRecordList extends DynamicList {
 
     async _addNewRecord(atFirstPosition) {
         const { promise, resolve } = Promise.withResolvers();
+        const cache = this.model._getCacheParams({ ...this.config, isMonoRecord: true }, promise);
+        if (cache) {
+            // The cache callback can't update the new row, so only use the cached onchange result
+            // when offline. Online, the fresh result is used (and stored in the cache).
+            cache.noCache = !this.model.offlinePlugin.isOffline();
+        }
         const values = await this.model._loadNewRecord(
             {
                 resModel: this.resModel,
@@ -121,9 +127,7 @@ export class DynamicRecordList extends DynamicList {
                 context: this.context,
                 isMonoRecord: true,
             },
-            {
-                cache: this.model._getCacheParams({ ...this.config, isMonoRecord: true }, promise),
-            }
+            { cache }
         );
         const record = this._createRecordDatapoint(values, "edit");
         this._addRecord(record, atFirstPosition ? 0 : this.records.length);
