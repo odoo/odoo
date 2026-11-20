@@ -71,6 +71,21 @@ class TestAnswerEvents(TestCommon):
             timeout=20,
         )
 
+    @patch.object(MicrosoftCalendarService, '_get_single_event')
+    @patch.object(MicrosoftCalendarService, 'answer')
+    def test_attendee_declines_event_cancelled_in_outlook(self, mock_answer, mock_get_single_event):
+        """ Declining (or deleting) from Odoo a meeting already cancelled by its organizer in Outlook
+        must not send the answer to Outlook, which refuses it. """
+        attendee = self.env["calendar.attendee"].search([
+            ('event_id', '=', self.simple_event.id),
+            ('partner_id', '=', self.attendee_user.partner_id.id),
+        ])
+        mock_get_single_event.return_value = (True, {'value': [{'id': attendee.event_id.microsoft_id, 'isCancelled': True}]})
+        attendee.with_user(self.attendee_user).do_decline()
+        self.call_post_commit_hooks()
+        mock_answer.assert_not_called()
+        self.assertEqual(attendee.state, 'declined')
+
     @freeze_time('2021-09-22')
     @patch.object(MicrosoftCalendarService, 'get_events')
     def test_attendee_accepts_event_from_outlook_calendar(self, mock_get_events):
