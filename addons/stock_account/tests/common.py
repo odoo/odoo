@@ -350,6 +350,8 @@ class TestStockValuationCommon(BaseCommon):
 
         # To move to stock common later
         cls.route_mto = cls.env.ref('stock.route_warehouse0_mto')
+        # Don't use company fixture: warehouses that exist when mrp_subcontracting is installed also get the
+        # "Resupply Subcontractor on Order" route, which changes subcontracting valuation flows
         cls.company = cls.env['res.company'].create({'name': 'Inventory Test Company'})
         cls.env["account.chart.template"]._load(
             "generic_coa", cls.company, install_demo=False

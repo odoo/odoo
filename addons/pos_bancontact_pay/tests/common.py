@@ -16,11 +16,12 @@ class TestBancontactPay(TestPointOfSaleHttpCommon):
         cls.company.currency_id = cls.eur_currency
 
         # Second company for multi-company tests
-        cls.company_2 = cls.env["res.company"].create({
+        cls.company_2 = cls.add_class_company('base.test_company_template2', {
             "name": "Test Currency Company",
             "currency_id": cls.eur_currency.id,
         })
-        cls.env.user.company_ids |= cls.company_2
+        if cls.company_2 == cls.company:
+            raise AssertionError("Bancontact needs a separate company for multi-company tests")
 
         # Journals
         cls.bancontact_journal = cls.env["account.journal"].create({

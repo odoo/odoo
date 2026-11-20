@@ -8,16 +8,17 @@ from odoo import Command
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestSandwichLeave(TransactionCase):
 
-    def setUp(self):
-        super().setUp()
-        self.indian_company = self.env['res.company'].create({
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.indian_company = cls.add_class_company('base.test_company_template', {
             'name': 'Test Indian Company',
-            'country_id': self.env.ref('base.in').id,
+            'country_id': cls.env.ref('base.in').id,
             'tz': 'UTC',
         })
-        self.test_calendar = self.env["resource.calendar"].create({
+        cls.test_calendar = cls.env["resource.calendar"].create({
             "name": "Test 8-17 Calendar",
-            "company_id": self.indian_company.id,
+            "company_id": cls.indian_company.id,
             "attendance_ids": [
                 Command.create({
                     "dayofweek": str(day),
@@ -31,20 +32,20 @@ class TestSandwichLeave(TransactionCase):
                 )
             ]},
         )
-        self.indian_company.resource_calendar_id = self.test_calendar
-        self.env = self.env(context=dict(self.env.context, allowed_company_ids=self.indian_company.ids))
-        self.demo_user = self.env["res.users"].with_company(self.indian_company).create({
+        cls.indian_company.resource_calendar_id = cls.test_calendar
+        cls.env = cls.env(context=dict(cls.env.context, allowed_company_ids=cls.indian_company.ids))
+        cls.demo_user = cls.env["res.users"].with_company(cls.indian_company).create({
             "login": "piyush",
             "name": "piyush_demo",
-            "group_ids": [Command.link(self.env.ref("base.group_user").id), Command.link(self.env.ref("hr_holidays.group_hr_holidays_employee").id)],
+            "group_ids": [Command.link(cls.env.ref("base.group_user").id), Command.link(cls.env.ref("hr_holidays.group_hr_holidays_employee").id)],
         })
 
-        self.demo_employee = self.env['hr.employee'].with_company(self.indian_company).create({
+        cls.demo_employee = cls.env['hr.employee'].with_company(cls.indian_company).create({
             'name': 'Piyush',
-            'user_id': self.demo_user.id,
+            'user_id': cls.demo_user.id,
         })
 
-        self.work_entry_type_day, self.work_entry_type_half_day, self.work_entry_type_hours, self.work_entry_type_day_without_sl = self.env['hr.work.entry.type'].create([{
+        cls.work_entry_type_day, cls.work_entry_type_half_day, cls.work_entry_type_hours, cls.work_entry_type_day_without_sl = cls.env['hr.work.entry.type'].create([{
             'name': 'Test Leave Type',
             'code': 'Test Leave Type',
             'request_unit': 'day',
@@ -75,18 +76,18 @@ class TestSandwichLeave(TransactionCase):
             'requires_allocation': False,
             'count_as': 'absence',
         }])
-        self.rahul_emp = self.env['hr.employee'].create({
+        cls.rahul_emp = cls.env['hr.employee'].create({
             'name': 'Rahul',
-            'country_id': self.env.ref('base.in').id,
-            'company_id': self.indian_company.id,
-            'resource_calendar_id': self.test_calendar.id,
+            'country_id': cls.env.ref('base.in').id,
+            'company_id': cls.indian_company.id,
+            'resource_calendar_id': cls.test_calendar.id,
         })
-        self.wednesday_public_holiday = self.env['resource.calendar.leaves'].create({
+        cls.wednesday_public_holiday = cls.env['resource.calendar.leaves'].create({
             'name': 'test public holiday',
             'date_from': '2025-01-29 00:00:00',
             'date_to': '2025-01-29 23:59:59',
             'resource_id': False,
-            'company_id': self.indian_company.id,
+            'company_id': cls.indian_company.id,
         })
 
     def test_approved_leave_does_not_raise_access_error(self):

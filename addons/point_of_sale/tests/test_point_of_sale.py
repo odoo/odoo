@@ -15,13 +15,16 @@ class TestPointOfSale(TransactionCase):
         cls.env["product.pricelist"].search([]).write({"active": False})
 
         cls.currency = cls.env.ref("base.USD")
-        cls.company1, cls.company2 = cls.env["res.company"].create([{
+        cls.company1 = cls.add_class_company('base.test_company_template', {
             "name": "company 1",
             "currency_id": cls.currency.id
-        }, {
+        })
+        cls.company2 = cls.add_class_company('base.test_company_template2', {
             "name": "company 2",
             "currency_id": cls.currency.id
-        }])
+        })
+        if cls.company1.root_id == cls.company2.root_id:
+            raise AssertionError("The pricelist test needs companies from separate hierarchies")
         cls.company2_pricelist = cls.env["product.pricelist"].create({
             "name": "company 2 pricelist",
             "currency_id": cls.currency.id,
