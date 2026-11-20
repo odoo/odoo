@@ -39,7 +39,7 @@ class ResPartner(models.Model):
             iap_data['state_id'] = {'id': state.id, 'display_name': state.display_name}
 
         # Handle base_address_extended
-        if self.env['ir.module.module']._get('base_address_extended').state == 'installed':
+        if 'base_address_extended' in self.env['ir.module.module']._installed():
             city_zip, city_name = iap_data.get('zip'), iap_data.get('city')
             if (city_zip or city_name) and country and country.enforce_cities:
                 domain = Domain('country_id', '=', country.id)
