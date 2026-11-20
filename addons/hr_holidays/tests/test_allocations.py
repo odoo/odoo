@@ -625,7 +625,7 @@ class TestAllocations(TestHrHolidaysCommon):
         })
         self.assertEqual(leave.work_entry_type_request_unit, 'day')  # leave request is for 2 days -> 16 hours > 8.5 hours
         self.assertEqual(leave.number_of_hours, 16)
-        self.assertEqual(leave.allocation_display_warning, "Only 8.5 hour(s) available")
+        self.assertEqual(leave.allocation_display_warning, "Only 8.5 hours available")
 
     def test_leave_allocation_by_removing_employee(self):
         """
@@ -944,7 +944,7 @@ class TestAllocations(TestHrHolidaysCommon):
         self.assertFalse(leave_form.allocation_display_warning)
         leave_form.employee_id = other_employee
         self.assertEqual(leave_form.work_entry_type_id, self.work_entry_type)
-        self.assertEqual(leave_form.allocation_display_warning, "Only 0.0 day(s) available")
+        self.assertEqual(leave_form.allocation_display_warning, "Only 0.0 days available")
         with self.assertRaises(ValidationError):
             leave_form.save()
 

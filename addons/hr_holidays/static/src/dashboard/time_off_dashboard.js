@@ -12,6 +12,7 @@ export class TimeOffDashboard extends Component {
 
     props = useProps({
         employeeId: t.or([t.number(), t.literal(null)]),
+        vertical: t.boolean().optional(),
     });
 
     setup() {
