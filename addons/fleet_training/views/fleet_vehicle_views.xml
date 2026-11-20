@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fleet_training_vehicle_view_list" model="ir.ui.view">
+        <field name="name">fleet_training.vehicle.list</field>
+        <field name="model">fleet_training.vehicle</field>
+        <field name="arch" type="xml">
+            <list string="Vehicles">
+                <field name="name"/>
+                <field name="license_plate"/>
+                <field name="category_id"/>
+                <field name="driver_id"/>
+                <field name="model_year"/>
+                <field name="seats"/>
+                <field name="age_years"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'available'"
+                       decoration-info="state == 'assigned'"
+                       decoration-warning="state == 'maintenance'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="fleet_training_vehicle_view_kanban" model="ir.ui.view">
+        <field name="name">fleet_training.vehicle.kanban</field>
+        <field name="model">fleet_training.vehicle</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state">
+                <field name="state"/>
+                <templates>
+                    <t t-name="card">
+                        <widget name="web_ribbon" title="In Maintenance" bg_color="text-bg-warning"
+                                invisible="state != 'maintenance'"/>
+                        <field class="fw-bold fs-5" name="name"/>
+                        <div><field name="license_plate"/></div>
+                        <div class="d-flex" invisible="not driver_id">
+                            <field name="driver_id" widget="many2one_avatar" options="{'no_create': 1, 'no_open': 1}"/>
+                            <field name="driver_id" class="ms-2"/>
+                        </div>
+                        <field name="category_id"/>
+                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="fleet_training_vehicle_view_form" model="ir.ui.view">
+        <field name="name">fleet_training.vehicle.form</field>
+        <field name="model">fleet_training.vehicle</field>
+        <field name="arch" type="xml">
+            <form string="Vehicle">
+                <header>
+                    <button name="action_set_maintenance" type="object" string="Send to Maintenance"
+                            class="btn-secondary" invisible="state == 'maintenance'"/>
+                    <button name="%(action_fleet_training_maintenance_wizard)d" type="action" string="Log Maintenance..."
+                            class="btn-secondary" context="{'default_vehicle_id': id}"/>
+                    <button name="action_set_available" type="object" string="Mark Available"
+                            class="btn-secondary" invisible="state != 'maintenance'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="available,assigned,maintenance"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="active" invisible="1"/>  <!-- Needed for the Archived ribbon's invisible condition -->
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_maintenance" type="object" class="oe_stat_button" icon="build">
+                            <field name="maintenance_count" widget="statinfo" string="Maintenance"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Fleet-001"/></h1>
+                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    </div>
+                    <group>
+                        <group string="Identification">
+                            <field name="license_plate"/>
+                            <field name="vin_sn"/>
+                            <field name="color"/>
+                            <field name="category_id"/>
+                        </group>
+                        <group string="Specifications">
+                            <field name="model_year"/>
+                            <field name="seats"/>
+                            <field name="acquisition_date"/>
+                            <field name="insurance_expiry_date"/>
+                            <field name="age_years" readonly="1"/>
+                            <field name="driver_id"/>
+                            <field name="maintenance_cost_total"/>
+                            <field name="currency_id" invisible="1"/>  <!-- Needed for maintenance_cost_total's Monetary widget -->
+                        </group>
+                    </group>
+                    <group string="Notes">
+                        <field name="notes" nolabel="1"/>
+                    </group>
+                </sheet>
+                <chatter reload_on_post="True"/>
+            </form>
+        </field>
+    </record>
+
+    <record id="fleet_training_vehicle_view_search" model="ir.ui.view">
+        <field name="name">fleet_training.vehicle.search</field>
+        <field name="model">fleet_training.vehicle</field>
+        <field name="arch" type="xml">
+            <search string="Search Vehicles">
+                <field name="name"/>
+                <field name="license_plate"/>
+                <field name="vin_sn"/>
+                <field name="driver_id"/>
+                <field name="category_id"/>
+                <filter name="filter_inactive" string="Archived" domain="[('active', '=', False)]"/>
+                <filter name="filter_unassigned" string="Unassigned" domain="[('driver_id', '=', False)]"/>
+                <filter name="filter_maintenance" string="In Maintenance" domain="[('state', '=', 'maintenance')]"/>
+                <group>
+                    <filter name="group_by_state" string="Status" domain="[]" context="{'group_by': 'state'}"/>
+                    <filter name="group_by_model_year" string="Model Year" domain="[]" context="{'group_by': 'model_year'}"/>
+                    <filter name="group_by_category" string="Category" domain="[]" context="{'group_by': 'category_id'}"/>
+                    <filter name="group_by_driver" string="Driver" domain="[]" context="{'group_by': 'driver_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+</odoo>
