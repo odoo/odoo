@@ -1164,7 +1164,7 @@ class PosSession(models.Model):
         if self.currency_id.compare_amounts(amounts['amount'], 0) < 0:
             payment_type = 'outbound'
 
-        account_payment = self.env['account.payment'].with_context(pos_payment=True).create({
+        payment_vals = {
             'amount': abs(amounts['amount']),
             'journal_id': payment_method.journal_id.id,
             'force_outstanding_account_id': outstanding_account.id,
@@ -1174,7 +1174,9 @@ class PosSession(models.Model):
             'pos_session_id': self.id,
             'company_id': self.company_id.id,
             'payment_type': payment_type,
-        })
+        }
+        payment_vals.update(self._get_payment_method_line_without_bank_account_vals(payment_vals))
+        account_payment = self.env['account.payment'].with_context(pos_payment=True).create(payment_vals)
 
         self._ensure_payment_outstanding_account(account_payment, amounts['amount'])
         account_payment.action_post()
@@ -1228,6 +1230,22 @@ class PosSession(models.Model):
             'payment_type': payment_type,
         }
 
+    def _get_payment_method_line_without_bank_account_vals(self, payment_vals):
+        """ PoS payments are already settled at the terminal: they must not use a payment method
+        that requires a trusted recipient bank account (e.g. ISO20022 credit transfers), which
+        would block their posting. Fall back on a method that does not need one.
+        """
+        if payment_vals['payment_type'] != 'outbound':
+            return {}
+        payment = self.env['account.payment'].new(payment_vals)
+        if not payment.require_partner_bank_account or payment.partner_bank_id.allow_out_payment:
+            return {}
+        codes_needing_bank_account = self.env['account.payment']._get_method_codes_needing_bank_account()
+        method_line = payment.available_payment_method_line_ids.filtered(
+            lambda line: line.code not in codes_needing_bank_account
+        )[:1]
+        return {'payment_method_line_id': method_line._origin.id} if method_line else {}
+
     def _create_split_account_payments(self, payment_amounts_list):
         vals_list = []
         entries = []
@@ -1236,7 +1254,9 @@ class PosSession(models.Model):
                 continue
             accounting_partner = self.env["res.partner"]._find_accounting_partner(payment.partner_id)
             destination_account = accounting_partner.property_account_receivable_id
-            vals_list.append(self._get_split_account_payment_vals(payment, amounts, accounting_partner, destination_account))
+            payment_vals = self._get_split_account_payment_vals(payment, amounts, accounting_partner, destination_account)
+            payment_vals.update(self._get_payment_method_line_without_bank_account_vals(payment_vals))
+            vals_list.append(payment_vals)
             entries.append((payment, amounts, destination_account))
         account_payments = self.env['account.payment'].create(vals_list)
         for account_payment, (payment, amounts, destination_account) in zip(account_payments, entries):

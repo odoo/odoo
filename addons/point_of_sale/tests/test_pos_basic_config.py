@@ -3,7 +3,7 @@
 
 import odoo
 
-from odoo import fields
+from odoo import Command, fields
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 from odoo.exceptions import ValidationError
 from freezegun import freeze_time
@@ -1776,3 +1776,32 @@ class TestPoSBasicConfig(TestPoSCommon):
             special_product.unlink()
         with self.assertRaisesRegex(UserError, "You cannot archive a product that is set as a special product in a Point of Sale configuration. Please change the configuration first."):
             special_product.product_variant_ids[0].unlink()
+
+    def test_close_session_negative_bank_total_with_bank_account_payment_method(self):
+        method_needing_bank = self.env['account.payment.method'].sudo().create({
+            'name': 'Needs Bank Account',
+            'code': 'needs_bank_account',
+            'payment_type': 'outbound',
+        })
+        self.bank_pm1.journal_id.outbound_payment_method_line_ids = [
+            Command.create({'payment_method_id': method_needing_bank.id, 'sequence': 0}),
+        ]
+
+        self.open_new_session()
+        self.env['pos.order'].sync_from_ui([
+            self.create_ui_order_data([(self.product1, -10)], payments=[(self.bank_pm1, -100)]),
+            self.create_ui_order_data([(self.product1, 4)], payments=[(self.bank_pm1, 40)]),
+            self.create_ui_order_data([(self.product2, -1)], customer=self.customer, payments=[(self.bank_split_pm1, -20)]),
+        ])
+        with unittest.mock.patch.object(
+            self.env.registry['account.payment'], '_get_method_codes_needing_bank_account',
+            return_value=['needs_bank_account'],
+        ):
+            self.pos_session.close_session_from_ui()
+
+        self.assertEqual(self.pos_session.state, 'closed')
+        payments = self.env['account.payment'].search([('pos_session_id', '=', self.pos_session.id)])
+        self.assertRecordValues(payments.sorted('amount'), [
+            {'amount': 20.0, 'payment_type': 'outbound', 'payment_method_code': 'manual'},
+            {'amount': 60.0, 'payment_type': 'outbound', 'payment_method_code': 'manual'},
+        ])
