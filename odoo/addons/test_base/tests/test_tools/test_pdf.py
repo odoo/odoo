@@ -623,3 +623,44 @@ class TestSignature(TransactionCase):
                           return_value=(self.private_key, self.certificate, None)):
             signed = PdfSigner(merged, self.env).sign_pdf()
         self.assertEqual(self._verify_pdf_signatures(signed), 1)
+
+    def test_incremental_merge_with_jbig2_stream(self):
+        """ Incremental merge must preserve base PDF streams without decompressing them,
+        even when they use external filters such as /JBIG2Decode. """
+        raw = (
+            b"%PDF-1.4\n"
+            b"1 0 obj\n<<\n  /Type /Catalog\n  /Pages 2 0 R\n>>\nendobj\n"
+            b"2 0 obj\n<<\n  /Type /Pages\n  /Kids [ 3 0 R ]\n  /Count 1\n>>\nendobj\n"
+            b"3 0 obj\n<<\n  /Type /Page\n  /Parent 2 0 R\n  /MediaBox [ 0 0 612 792 ]\n"
+            b"  /Resources <<\n    /XObject <<\n      /Im0 4 0 R\n    >>\n  >>\n"
+            b"  /Contents 5 0 R\n>>\nendobj\n"
+            b"4 0 obj\n<<\n  /Type /XObject\n  /Subtype /Image\n  /Width 100\n  /Height 100\n"
+            b"  /BitsPerComponent 1\n  /ColorSpace /DeviceGray\n  /Filter /JBIG2Decode\n  /Length 10\n>>\n"
+            b"stream\n0123456789\nendstream\nendobj\n"
+            b"5 0 obj\n<<\n  /Length 11\n>>\nstream\nq /Im0 Do Q\nendstream\nendobj\n"
+            b"xref\n0 6\n"
+            b"0000000000 65535 f \n"
+            b"0000000009 00000 n \n"
+            b"0000000062 00000 n \n"
+            b"0000000127 00000 n \n"
+            b"0000000285 00000 n \n"
+            b"0000000480 00000 n \n"
+            b"trailer\n<<\n  /Size 6\n  /Root 1 0 R\n>>\nstartxref\n543\n%%EOF\n"
+        )
+        overlay_raw = self._build_nested_xobject_overlay(612, 792)
+
+        merger = IncrementalPdfMerge(raw)
+        merger.merge_pdf_regions_as_annotations(
+            pdf.PdfFileReader(io.BytesIO(overlay_raw), strict=False),
+            {0: [(10, 10, 110, 60)]},
+            annotations_title="signature",
+        )
+        merged = merger.get_output_stream_value()
+
+        # The increment only appended bytes
+        self.assertEqual(merged[:len(raw)], raw)
+
+        # The stamp annotation is added to the page at the given coordinates
+        reader = pdf.PdfFileReader(io.BytesIO(merged), strict=False)
+        stamp = reader.pages[0]["/Annots"][-1].get_object()
+        self.assertEqual(stamp["/Subtype"], "/Stamp")
