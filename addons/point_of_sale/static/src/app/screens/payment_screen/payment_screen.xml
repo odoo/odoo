@@ -129,8 +129,16 @@
                     </span>
                 </button>
                 <button class="button js_invoice btn btn-secondary btn-lg d-flex justify-content-between align-items-baseline w-100 w-md-50 lh-lg"
+<<<<<<< 12024c6d4373723a2402267777091f8861d2b180
                     t-att-class="{ 'highlight active': this.currentOrder.isToInvoice(), 'opacity-50': !this.pos.config.canInvoice }"
                     t-on-click="this.toggleIsToInvoice" t-att-disabled="this.currentOrder?.refunded_order_id?.isToInvoice()">
+||||||| 3d14cbde577dd2125a888b741918d4196bdbd675
+                    t-att-class="{ 'highlight active': currentOrder.isToInvoice(), 'opacity-50': !pos.config.canInvoice }"
+                    t-on-click="toggleIsToInvoice" t-att-disabled="currentOrder?.refunded_order_id?.isToInvoice()">
+=======
+                    t-att-class="{ 'highlight active': currentOrder.isToInvoice(), 'opacity-50': !pos.config.canInvoice }"
+                    t-on-click="toggleIsToInvoice" t-att-disabled="disableInvoiceBtn()">
+>>>>>>> 276c7139ca24bea58e443889e9a64610f77e2409
                     <span>
                         <i class="fa fa-file-text-o me-2" />
                         <t t-if="this.pos.config.canInvoice">Invoice</t>
