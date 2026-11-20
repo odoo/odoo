@@ -35,7 +35,7 @@ import { localeCompare } from "@web/core/l10n/utils";
 
 function handleMissingParentHistoryCommits(peerInfos, peerInfo, { commit, fromCommitId }) {
     const missingCommits = peerInfos[
-        commit.data.peerId
+        commit.metadata.peer_id
     ].collaborationPlugin.historyGetMissingCommits({
         fromCommitId,
         toCommitId: commit.id,

@@ -1,6 +1,6 @@
 declare module "plugins" {
     import { CarouselOptionShared } from "@website/builder/plugins/carousel_option_plugin";
-    import { CustomizeWebsiteShared, on_website_color_updated_handlers } from "@website/builder/plugins/customize_website_plugin";
+    import { body_background, body_background_position, CustomizeWebsiteShared, on_website_color_updated_handlers, views_on_save, website_custom_value } from "@website/builder/plugins/customize_website_plugin";
     import { on_content_manually_updated_handlers, EditInteractionShared } from "@website/builder/plugins/edit_interaction_plugin";
     import { floating_snippet_scope_providers, floating_snippets_selectors } from "@website/builder/plugins/floating_snippets_plugin";
     import { WebsiteFontShared } from "@website/builder/plugins/font/font_plugin";
@@ -25,8 +25,8 @@ declare module "plugins" {
     import { WebsiteParallaxShared } from "@website/builder/plugins/options/parallax_option_plugin";
     import { searchbar_option_order_by_items } from "@website/builder/plugins/options/searchbar_option_plugin";
     import { SocialMediaOptionShared } from "@website/builder/plugins/options/social_media_option_plugin";
-    import { on_visibility_toggled_handlers, visibility_selector_parameters } from "@website/builder/plugins/options/visibility_option_plugin";
-    import { WebsitePageConfigOptionShared } from "@website/builder/plugins/options/website_page_config_option_plugin";
+    import { device_visibility, on_visibility_toggled_handlers, visibility_selector_parameters } from "@website/builder/plugins/options/visibility_option_plugin";
+    import { page_visibility, WebsitePageConfigOptionShared } from "@website/builder/plugins/options/website_page_config_option_plugin";
     import { PopupVisibilityShared } from "@website/builder/plugins/popup_visibility_plugin";
     import { SwitchableViewsShared } from "@website/builder/plugins/switchable_views_plugin";
     import { theme_options, ThemeTabShared } from "@website/builder/plugins/theme/theme_tab_plugin";
@@ -35,8 +35,10 @@ declare module "plugins" {
     import { on_nodes_marked_translatable_handlers, TranslationShared } from "@website/builder/plugins/translation/translation_plugin";
     import { save_element_context_processors } from "@website/builder/plugins/website_save_plugin";
     import { force_background_translation_state_selectors } from "@website/builder/plugins/translation/repeat_translation_state_plugin";
-    import { ValueHistoryShared } from "@website/builder/plugins/value_history_plugin";
+    import { form_value, ValueHistoryShared } from "@website/builder/plugins/value_history_plugin";
     import { WebsiteBridgeShared } from "@website/builder/plugins/website_bridge_plugin";
+    import { popup_visibility } from "@website/builder/plugins/options/popup_option_plugin";
+    import { portal_cards, portal_gap } from "@website/builder/plugins/options/portal_option_plugin";
 
     interface SharedMethods {
         animateOption: AnimateOptionShared;
@@ -71,6 +73,19 @@ declare module "plugins" {
         websitePageConfigOptionPlugin: WebsitePageConfigOptionShared;
         websiteParallaxPlugin: WebsiteParallaxShared;
         websiteBridge: WebsiteBridgeShared;
+    }
+
+    interface HistoryDataProperties {
+        body_background: body_background;
+        body_background_position: body_background_position;
+        device_visibility: device_visibility;
+        form_value: form_value;
+        page_visibility: page_visibility;
+        popup_visibility: popup_visibility;
+        portal_cards: portal_cards;
+        portal_gap: portal_gap;
+        views_on_save: views_on_save;
+        website_custom_value: website_custom_value;
     }
 
     interface GlobalResources extends WebsiteResourcesAccess {}

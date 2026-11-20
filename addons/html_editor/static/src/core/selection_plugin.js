@@ -35,6 +35,7 @@ import {
 } from "../utils/selection";
 import { closestScrollableY } from "@web/core/utils/scrolling";
 import { withSequence } from "@html_editor/utils/resource";
+import { HISTORY_COMMIT_TYPES } from "@html_editor/core/history_plugin";
 
 /**
  * @typedef { Object } EditorSelection
@@ -85,13 +86,6 @@ import { withSequence } from "@html_editor/utils/resource";
  * @property { number } anchorOffset
  * @property { NodeId } focusNodeId
  * @property { number } focusOffset
- */
-
-/**
- * @typedef { Object } SelectionCommitData
- * @property { NodeId } activeElementId              // the ID of the active element before applying the mutations
- * @property { SerializedSelection } selection       // the serialized selection before applying the mutations
- * @property { SerializedSelection } selectionAfter  // the serialized selection after applying the mutations
  */
 
 export function isNotAllowedContent(node) {
@@ -206,9 +200,19 @@ function scrollToSelection(selection) {
  * @typedef {((targetedNodes: Node[]) => Node[])[]} targeted_nodes_processors
  */
 
+/**
+ * The ID of the active element and the selection before the changes of a
+ * commit, and the selection after them. For a savepoint, the selection after is
+ * the one it restores, null if there was none when it was made.
+ *
+ * @typedef { import("@html_editor/core/dom_reference_map_plugin").NodeId | null } active_element_id
+ * @typedef { SerializedSelection } selection
+ * @typedef { SerializedSelection | null } selection_after
+ */
+
 export class SelectionPlugin extends Plugin {
     static id = "selection";
-    static dependencies = ["domReferenceMap", "properties"];
+    static dependencies = ["domReferenceMap", "properties", "history"];
     static shared = [
         "getSelectionData",
         "getEditableSelection",
@@ -240,13 +244,9 @@ export class SelectionPlugin extends Plugin {
     resources = {
         user_commands: { id: "selectAll", run: this.selectAll.bind(this) },
         shortcuts: [{ hotkey: "control+a", commandId: "selectAll" }],
-        history_commit_data_properties: ["activeElementId", "selection", "selectionAfter"],
+        history_metadata_properties: { active_element_id: {}, selection: {}, selection_after: {} },
 
-        on_will_reset_history_handlers: () => {
-            this.resetStagedData();
-        },
         on_committed_to_history_handlers: () => {
-            this.resetStagedData();
             this.stageSelection();
         },
         on_history_reset_handlers: () => {
@@ -260,73 +260,46 @@ export class SelectionPlugin extends Plugin {
         on_revert_history_commit_handlers: withSequence(
             100,
             (commit, { restoreFocus = true } = {}) => {
-                if (restoreFocus && "activeElementId" in commit.data) {
-                    this.setSerializedFocus(commit.data.activeElementId);
+                if (restoreFocus && "active_element_id" in commit.metadata) {
+                    this.setSerializedFocus(commit.metadata.active_element_id);
                 }
                 if (restoreFocus) {
                     this.stageFocus();
                 }
-                if ("selection" in commit.data) {
-                    this.setSerializedSelection(commit.data.selection);
+                if ("selection" in commit.metadata) {
+                    this.setSerializedSelection(commit.metadata.selection);
                 }
-                if ("selectionAfter" in commit.data) {
-                    this.currentData.selection = commit.data.selectionAfter;
+                if ("selection_after" in commit.metadata) {
+                    this.dependencies.history.stage("selection", commit.metadata.selection_after);
                 }
             }
         ),
         on_apply_history_commit_handlers: (commit, { restoreSelection = false } = {}) => {
-            if (restoreSelection && commit.data.selection) {
-                this.setSerializedSelection(commit.data.selection);
+            if (restoreSelection && commit.metadata.selection) {
+                this.setSerializedSelection(commit.metadata.selection);
             }
         },
         on_savepoint_restored_handlers: (savePoint) => {
-            // The live cursor may have been dragged onto a node the revert
-            // removed, so restore it from a serialized snapshot.
-            const serializedSelection =
-                savePoint.data.lastRevertedChanges?.selection ?? savePoint.data.serializedSelection;
-            if (serializedSelection && !savePoint.data.mutations.length) {
-                savePoint.data.selection.setCursor((cursor) => {
-                    cursor.anchor.node = this.dependencies.domReferenceMap.getNodeById(
-                        serializedSelection.anchorNodeId
-                    );
-                    cursor.anchor.offset = serializedSelection.anchorOffset;
-                    cursor.focus.node = this.dependencies.domReferenceMap.getNodeById(
-                        serializedSelection.focusNodeId
-                    );
-                    cursor.focus.offset = serializedSelection.focusOffset;
-                });
-            }
-
             // TODO ABD TODO @phoenix: evaluate if the selection is not restorable at the desired position
-            savePoint.data.selection.restore();
+            if (savePoint.metadata.selection_after) {
+                this.setSerializedSelection(savePoint.metadata.selection_after);
+            }
         },
-        save_point_history_commit_data_processors: (data) => ({
-            ...data,
-            // Live cursor, plus a snapshot to fall back on if it gets invalidated.
-            selection: this.preserveSelection(),
-            serializedSelection: this.serializeEditableSelection(),
-        }),
-        snapshot_history_commit_data_processors: (data) => ({
-            ...data,
-            activeElementId: null,
-            selection: {
-                anchorNode: undefined,
-                anchorOffset: undefined,
-                focusNode: undefined,
-                focusOffset: undefined,
-            },
-            selectionAfter: null,
-        }),
-        // Execute this late to ensure the state of the DOM doesn't change and
-        // invalidate the selection after setting it here.
-        pending_history_commit_data_processors: withSequence(
-            100,
-            this.processCommitData.bind(this)
-        ),
+        // The draft is collected after the data is processed, which normalizes
+        // the DOM and registers the pending mutations: the selection refers to
+        // the nodes of the commit or savepoint, and the DOM doesn't change and
+        // invalidate it after staging it here.
+        on_will_collect_history_draft_handlers: (type) => {
+            const isSavePointWithoutSelection =
+                type === HISTORY_COMMIT_TYPES.SAVEPOINT && !getSelection(this.editable)?.anchorNode;
+            this.dependencies.history.stage(
+                "selection_after",
+                isSavePointWithoutSelection ? null : this.serializeEditableSelection()
+            );
+        },
     };
 
     setup() {
-        this.resetStagedData();
         this.resetSelection();
         this.addGlobalDomListener("selectionchange", () => {
             this.updateActiveSelection();
@@ -416,20 +389,6 @@ export class SelectionPlugin extends Plugin {
             this.editable.focus = this.editableOriginalFocus;
         }
         super.destroy();
-    }
-    resetStagedData() {
-        this.currentData = {
-            /** @type { NodeId | null } */
-            activeElementId: null,
-            /** @type { SerializedSelection | {} } */
-            selection: {},
-            /** @type { SerializedSelection | null } */
-            selectionAfter: null,
-        };
-    }
-    processCommitData(data) {
-        this.currentData.selectionAfter = this.serializeEditableSelection();
-        return { ...data, ...this.currentData };
     }
 
     editableDocumentHasFocus() {
@@ -1437,19 +1396,23 @@ export class SelectionPlugin extends Plugin {
     // =======
 
     /**
-     * Set the serialized selection of the currentData.
+     * Set the serialized selection in the shared history draft.
      *
-     * This method is used to save a serialized selection in the currentData.
+     * This method is used to save a serialized selection in the shared history draft.
      * It will be necessary if the commit is reverted at some point because we
      * need to set the selection to where it was before any mutation was made.
+     *
+     * @returns {void}
      */
     stageSelection() {
         this.stageFocus();
-        this.currentData.selection = this.serializeEditableSelection();
+        this.dependencies.history.stage("selection", this.serializeEditableSelection());
     }
 
     /**
-     * Set the serialized focus of the currentData.
+     * Set the serialized focus in the shared history draft.
+     *
+     * @returns {void}
      */
     stageFocus() {
         let activeElement = this.document.activeElement;
@@ -1457,8 +1420,10 @@ export class SelectionPlugin extends Plugin {
             activeElement = this.editable;
         }
         if (this.editable.contains(activeElement)) {
-            this.currentData.activeElementId =
-                this.dependencies.domReferenceMap.register(activeElement);
+            this.dependencies.history.stage(
+                "active_element_id",
+                this.dependencies.domReferenceMap.register(activeElement)
+            );
         }
     }
 

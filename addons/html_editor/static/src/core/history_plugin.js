@@ -9,12 +9,6 @@ import { _t } from "@web/core/l10n/translation";
  * @property { Function } preview
  * @property { Function } revert
  */
-/**
- * @template [T=any]
- * @typedef { Object } CustomOperation<T>
- * @property { () => T } apply
- * @property { () => void } revert
- */
 
 /**
  * @typedef { Object } HistoryShared
@@ -25,7 +19,9 @@ import { _t } from "@web/core/l10n/translation";
  * @property { HistoryPlugin['redo'] } redo
  * @property { HistoryPlugin['canUndo'] } canUndo
  * @property { HistoryPlugin['canRedo'] } canRedo
- * @property { HistoryPlugin['stageCustomOperation'] } stageCustomOperation
+ * @property { HistoryPlugin['stage'] } stage
+ * @property { HistoryPlugin['getStaged'] } getStaged
+ * @property { HistoryPlugin['apply'] } apply
  * @property { HistoryPlugin['getCommits'] } getCommits
  * @property { HistoryPlugin['reset'] } reset
  * @property { HistoryPlugin['createSnapshotCommit'] } createSnapshotCommit
@@ -36,30 +32,103 @@ import { _t } from "@web/core/l10n/translation";
  * @property { HistoryPlugin['makeSavePoint'] } makeSavePoint
  */
 /**
- * @typedef { string[] } history_commit_data_properties
- * @typedef { ((commit: HistoryCommit, options: { ensureNewMutations: boolean, restoreSelection: boolean }) => void)[] } on_apply_history_commit_handlers
+ * Properties are named entries of the commit data (changes) or metadata. Their
+ * values are staged in the history draft, then collected into the next commit,
+ * after which the draft is cleared. Undefined values are left out of the
+ * commit. Staged values are immutable: replace them, don't mutate them. Values
+ * that are computed when a commit is created are staged by
+ * `on_will_collect_history_draft_handlers`, which are triggered right before the
+ * draft is collected. Properties are applied and reverted in resource order.
+ */
+/**
+ * Plugins declare history properties in objects keyed by their ids. These ids
+ * are registered in the `HistoryDataProperties` and `HistoryMetadataProperties`
+ * interfaces of the "plugins" module: each data property with the signature of
+ * its `apply`, each metadata property with the type of its value.
+ *
+ * @typedef { keyof import("plugins").HistoryDataProperties } HistoryDataPropertyId
+ * @typedef { keyof import("plugins").HistoryMetadataProperties } HistoryMetadataPropertyId
+ */
+/**
+ * A data property holds changes, in the commit's `data`: its value is the list
+ * of the data passed to `apply`, which applies and stages it. That data must be
+ * serializable. `apply` and `revert` receive one of them, to apply it again on
+ * redo, and to revert it on undo or when it is discarded. The commits created
+ * by the history (undo, redo, restore) hold a copy of the data they replay, so
+ * that they can be replayed without the commits they revert or reapply, which
+ * collaborators may not have.
+ *
+ * The replays of a data property with `shouldRecordReplays` are recorded
+ * instead: the commits created by the history hold, as their own changes, what
+ * replaying its data actually did, and replay them like any changes. When a
+ * replay creates a commit, its `apply` and `revert` receive `ensureNewMutations`
+ * and stage what they do.
+ *
+ * A data property can declare `takeSnapshot`, which returns the data that
+ * recreates its current state from an empty one, for snapshot commits.
+ *
+ * @template { HistoryDataPropertyId } Id
+ * @typedef {Object} HistoryDataProperty
+ * @property {import("plugins").HistoryDataProperties[Id]} apply
+ * @property {(data: HistoryData<Id>, options: { ensureNewMutations: boolean }) => void} revert
+ * @property {boolean} [shouldRecordReplays]
+ * @property {() => HistoryData<Id>[]} [takeSnapshot]
+ */
+/**
+ * The data that the handlers of a data property receive.
+ *
+ * @template { HistoryDataPropertyId } Id
+ * @typedef { Parameters<import("plugins").HistoryDataProperties[Id]>[0] } HistoryData
+ */
+/** @typedef { { [Id in HistoryDataPropertyId]?: HistoryDataProperty<Id> }[] } history_data_properties */
+/**
+ * A metadata property describes its commit, in its `metadata` (the selection,
+ * for example). Any metadata that a plugin adds to commits is declared as a
+ * metadata property. It is not a change: its draft is kept when changes are
+ * discarded, and savepoints restore it as is. `apply` and `revert` receive its
+ * value when its commit is applied or reverted to create a new commit (undo,
+ * redo, savepoint restoration), undefined if the commit has none.
+ *
+ * @template { HistoryMetadataPropertyId } Id
+ * @typedef {Object} HistoryMetadataProperty
+ * @property {(value: import("plugins").HistoryMetadataProperties[Id] | undefined) => void} [apply]
+ * @property {(value: import("plugins").HistoryMetadataProperties[Id] | undefined) => void} [revert]
+ */
+/** @typedef { { [Id in HistoryMetadataPropertyId]?: HistoryMetadataProperty<Id> }[] } history_metadata_properties */
+/**
+ * The value of a property in the draft: the list of its data for a data
+ * property, its value for a metadata property.
+ *
+ * @template { HistoryDataPropertyId | HistoryMetadataPropertyId } Id
+ * @typedef { Id extends HistoryDataPropertyId
+ *     ? HistoryData<Id>[]
+ *     : Id extends HistoryMetadataPropertyId
+ *       ? import("plugins").HistoryMetadataProperties[Id]
+ *       : never
+ * } HistoryStagedValue
+ */
+
+/**
+ * @typedef { ((commit: HistoryCommit, options: { restoreSelection: boolean }) => void)[] } on_apply_history_commit_handlers
  * @typedef { ((commit: HistoryCommit) => void)[] } on_committed_to_history_handlers
- * @typedef { (() => void)[] } on_history_commit_restored_handlers
  * @typedef { ((lastCommitUndone: HistoryCommit<"standard" | "redo"> | undefined) => void)[] } on_history_commit_undone_handlers
  * @typedef { ((lastCommitRedone: HistoryCommit<"undo"> | undefined) => void)[] } on_history_commit_redone_handlers
  * @typedef { (() => void)[] } on_history_rebased_handlers
+ * @typedef { (() => void)[] } on_history_replayed_handlers
  * @typedef { (() => void)[] } on_history_reset_handlers
- * @typedef { (() => void)[] } on_irreversible_history_commit_applied_handlers
  * @typedef { ((stashedCommit: HistoryCommit<"stash">) => void)[] } on_pending_changes_unstashed_handlers
  * @typedef { ((newCommit: HistoryCommit) => void)[] } on_remote_history_commit_applied_handlers
- * @typedef { ((commit: HistoryCommit, options: { ensureNewMutations: boolean, restoreFocus: boolean }) => void)[] } on_revert_history_commit_handlers
+ * @typedef { ((commit: HistoryCommit, options: { restoreFocus: boolean }) => void)[] } on_revert_history_commit_handlers
  * @typedef { ((savePoint: HistoryCommit<"savePoint">) => void)[] } on_savepoint_restored_handlers
+ * @typedef { ((type: HistoryCommitType) => void)[] } on_will_collect_history_draft_handlers
  * @typedef { (() => void)[] } on_will_invalidate_pending_changes_handlers
  * @typedef { (() => void)[] } on_will_preview_handlers
  * @typedef { (() => void)[] } on_will_rebase_history_handlers
+ * @typedef { (() => void)[] } on_will_replay_history_handlers
  * @typedef { (() => void)[] } on_will_reset_history_handlers
  *
  * @typedef { ((commit: HistoryCommit) => boolean | undefined)[] } has_history_commit_changes_predicates
  * @typedef { ((commit: HistoryCommit) => boolean | undefined)[] } is_history_commit_reversible_predicates
- *
- * @typedef { ((data: HistoryCommitData) => HistoryCommitData)[] } pending_history_commit_data_processors
- * @typedef { ((data: HistoryCommitData<"savePoint">) => HistoryCommitData<"savePoint">)[] } save_point_history_commit_data_processors
- * @typedef { ((data: HistoryCommitData<"standard"> & { authorTimestamp: number }) => HistoryCommitData<"standard">)[] } snapshot_history_commit_data_processors
  */
 
 export const COMMIT_DEBOUNCE_DELAY = 250;
@@ -83,7 +152,9 @@ export class HistoryPlugin extends Plugin {
         "redo",
         "canUndo",
         "canRedo",
-        "stageCustomOperation",
+        "stage",
+        "getStaged",
+        "apply",
         "getCommits",
         "reset",
         "createSnapshotCommit",
@@ -135,55 +206,68 @@ export class HistoryPlugin extends Plugin {
             { hotkey: "control+y", commandId: "historyRedo", global: true },
             { hotkey: "control+shift+z", commandId: "historyRedo", global: true },
         ],
-        history_commit_data_properties: [
-            "authorTimestamp",
-            "commitTimestamp",
-            "batchable",
-            "previousCommitId",
-            "relatedCommit",
-        ],
 
         on_editor_started_handlers: () => {
             this.reset();
         },
         on_will_reset_history_handlers: this.resetAuthorTimestamp.bind(this),
-        on_committed_to_history_handlers: () => {
+        on_committed_to_history_handlers: withSequence(0, () => {
             this.resetAuthorTimestamp();
-            this.currentStage = [];
-        },
-
-        // Stage custom operation
-
-        pending_history_commit_data_processors: this.addStagedData.bind(this),
-        save_point_history_commit_data_processors: this.addStagedData.bind(this),
-        // Custom callbacks can depend on attributes restored by the DOM
-        // observer. Make sure to apply/revert them after those.
-        on_apply_history_commit_handlers: withSequence(20, (commit) => {
-            commit.data.custom?.forEach(this.stageCustomOperation.bind(this));
+            this.stagedData = {};
         }),
-        on_revert_history_commit_handlers: withSequence(20, (commit) => {
-            commit.data.custom?.toReversed().forEach(({ apply, revert }) =>
-                // Redo reverts the undo commit, so record the inverse operation.
-                this.stageCustomOperation({ apply: revert, revert: apply })
-            );
+
+        // Properties
+
+        on_savepoint_restored_handlers: withSequence(0, (savePoint) => {
+            this.replay(() => {
+                for (const [id, { apply }] of this.dataProperties) {
+                    if (savePoint.data[id]) {
+                        // The discarded data is applied and staged again.
+                        this.stage(id, savePoint.data[id]);
+                        for (const data of savePoint.data[id]) {
+                            apply(data);
+                        }
+                    }
+                }
+            });
+            for (const id of this.metadataProperties.keys()) {
+                this.stagedData[id] = savePoint.metadata[id];
+            }
         }),
-        on_will_invalidate_pending_changes_handlers: () => {
-            this.currentStage.toReversed().forEach(({ revert }) => revert());
-            this.currentStage = [];
-        },
-        on_savepoint_restored_handlers: (savePoint) => {
-            savePoint.data.custom?.forEach(this.stageCustomOperation.bind(this));
+        on_pending_changes_unstashed_handlers: (stashedCommit) => {
+            for (const id of this.dataProperties.keys()) {
+                if (stashedCommit.data[id]) {
+                    // Applying the stash did not stage its data.
+                    this.stage(id, stashedCommit.data[id]);
+                }
+            }
         },
         has_history_commit_changes_predicates: (commit) => {
-            if (commit.data.custom?.length) {
+            if (this.hasDataProperties(commit)) {
                 return true;
             }
         },
     };
 
     setup() {
-        /** @type { CustomOperation[] } */
-        this.currentStage = [];
+        this.stagedData = {};
+        /** @type {Map<HistoryDataPropertyId, HistoryDataProperty<HistoryDataPropertyId>>} */
+        this.dataProperties = new Map();
+        /** @type {Map<HistoryMetadataPropertyId, HistoryMetadataProperty<HistoryMetadataPropertyId>>} */
+        this.metadataProperties = new Map();
+        for (const [resourceId, properties] of [
+            ["history_data_properties", this.dataProperties],
+            ["history_metadata_properties", this.metadataProperties],
+        ]) {
+            for (const propertiesById of this.getResource(resourceId)) {
+                for (const [id, property] of Object.entries(propertiesById)) {
+                    if (this.dataProperties.has(id) || this.metadataProperties.has(id)) {
+                        throw new Error(`Duplicate history property: ${id}`);
+                    }
+                    properties.set(id, property);
+                }
+            }
+        }
         this.resetAuthorTimestamp();
         this._onKeyupResetContenteditableNodes = [];
         this.addDomListener(this.document, "beforeinput", this.onDocumentBeforeInput.bind(this));
@@ -199,6 +283,7 @@ export class HistoryPlugin extends Plugin {
      * @param { HistoryCommit[] } [commits]
      */
     reset(commits) {
+        this.stagedData = {};
         this.trigger("on_will_reset_history_handlers");
         this.commits = commits || [this.createSnapshotCommit()];
         /** @type {Set<HistoryCommitId>} Commits reverted by undo/redo operations */
@@ -219,21 +304,21 @@ export class HistoryPlugin extends Plugin {
     // ===============
 
     /**
-     * Create a commit from data and write it to history.
+     * Create a commit from the draft and write it to history.
      *
-     * @param { HistoryCommitData<"standard"> } [initialData = {}]
+     * @param { HistoryCommitMetadata<"standard"> } [initialMetadata = {}]
      * @returns { HistoryCommit<"standard"> | false }
      */
-    commit(initialData = {}) {
+    commit(initialMetadata = {}) {
         // Set the type of the commit here. That way, the state of undo and redo
         // is truly accessible when executing the `onChange` callback. It is
         // useful for external components if they execute `can(Undo|Redo)`.
-        const data = this.processCommitData({
-            batchable: false, // possibly overridden by `initialData`
-            ...initialData,
-            authorTimestamp: this.authorTimestamp,
+        const { data, metadata } = this.processCommit(HISTORY_COMMIT_TYPES.STANDARD, {
+            batchable: false, // possibly overridden by `initialMetadata`
+            ...initialMetadata,
+            author_timestamp: this.authorTimestamp,
         });
-        const commit = new HistoryCommit({ data });
+        const commit = new HistoryCommit({ data, metadata });
         return this.appendCommit(commit);
     }
 
@@ -253,17 +338,15 @@ export class HistoryPlugin extends Plugin {
 
     /**
      * Gather all staged changes and add them to the stash for later use. Then
-     * trigger `on_will_invalidate_pending_changes_handlers` to allow plugins to
      * discard those changes.
      */
     stash() {
         const stashCommit = new HistoryCommit({
             type: HISTORY_COMMIT_TYPES.STASH,
-            /** @type { HistoryCommitData<"stash"> }*/
-            data: this.processCommitData(),
+            ...this.processCommit(HISTORY_COMMIT_TYPES.STASH),
         });
         this.currentStash.push(stashCommit);
-        this.trigger("on_will_invalidate_pending_changes_handlers");
+        this.discardStagedChanges();
     }
 
     /**
@@ -283,18 +366,239 @@ export class HistoryPlugin extends Plugin {
     }
 
     /**
-     * Apply and stage an operation to be included in the next commit. Its
-     * `apply` callback is immediately called and will be called when applying
-     * the commit, and its `revert` callback will be called when reverting the
-     * commit. The return value of `apply` is returned.
+     * Stage the value of a property in the draft, to be collected into the next
+     * commit. Staged values are immutable: replace them, don't mutate them.
      *
-     * @template T
-     * @param { CustomOperation<T> } operation
-     * @returns {T}
+     * @template { HistoryDataPropertyId | HistoryMetadataPropertyId } Id
+     * @param {Id} id The registered property.
+     * @param {HistoryStagedValue<Id>} value
      */
-    stageCustomOperation({ apply = () => {}, revert = () => {} }) {
-        this.currentStage.push({ apply, revert });
-        return apply();
+    stage(id, value) {
+        this.getProperty(id);
+        this.stagedData[id] = value;
+    }
+
+    /**
+     * Return the value of a property in the draft.
+     *
+     * @template { HistoryDataPropertyId | HistoryMetadataPropertyId } Id
+     * @param {Id} id The registered property.
+     * @returns {HistoryStagedValue<Id> | undefined} The staged value, undefined if none.
+     */
+    getStaged(id) {
+        this.getProperty(id);
+        return this.stagedData[id];
+    }
+
+    /**
+     * Look up a registered history property.
+     *
+     * @param {HistoryDataPropertyId | HistoryMetadataPropertyId} id
+     * @returns {HistoryDataProperty<HistoryDataPropertyId> | HistoryMetadataProperty<HistoryMetadataPropertyId>}
+     * @throws {Error} If the property is not registered.
+     */
+    getProperty(id) {
+        const property = this.dataProperties.get(id) ?? this.metadataProperties.get(id);
+        if (!property) {
+            throw new Error(`Unknown history property: ${id}`);
+        }
+        return property;
+    }
+
+    /**
+     * Discard the pending changes of the draft: notify plugins to discard
+     * theirs, then revert the data of the data properties and clear it.
+     * Metadata properties keep their draft.
+     *
+     * @returns {void}
+     */
+    discardStagedChanges() {
+        this.trigger("on_will_invalidate_pending_changes_handlers");
+        this.replay(() => {
+            for (const [id, { revert }] of this.dataProperties) {
+                const stagedData = this.stagedData[id] ?? [];
+                delete this.stagedData[id];
+                for (const data of stagedData.toReversed()) {
+                    revert(data);
+                }
+            }
+        });
+    }
+
+    /**
+     * Apply data of a data property and stage it, to be replayed with the
+     * commit it ends up in: applied again on redo, reverted on undo.
+     *
+     * @template { HistoryDataPropertyId } Id
+     * @param {Id} id The registered data property.
+     * @param {HistoryData<Id>} data Serializable data passed to the property's handlers.
+     * @returns {ReturnType<import("plugins").HistoryDataProperties[Id]>} The value returned
+     *          by the property's `apply` handler.
+     */
+    apply(id, data) {
+        const property = /** @type {HistoryDataProperty<Id>} */ (this.dataProperties.get(id));
+        if (!property) {
+            throw new Error(`Unknown history data property: ${id}`);
+        }
+        data = structuredClone(data);
+        this.stage(id, [...(this.stagedData[id] ?? []), data]);
+        return property.apply(data);
+    }
+
+    /**
+     * Apply the data properties of the given commit. The data of the properties
+     * whose replays are recorded is the commit's own changes, applied as is.
+     * The direction in which a commit created by the history replays the copies
+     * it holds depends on its type: an undo commit reverts the data of the
+     * commit it reverts, and a restore commit reverts and reapplies the commits
+     * it holds.
+     *
+     * @param {HistoryReplayedCommit} commit
+     * @param {Object} [options]
+     * @param {boolean} [options.ensureNewMutations = false] whether the replay
+     *        creates a commit, which records the replays of recorded properties
+     * @returns {void}
+     */
+    applyDataProperties(commit, { ensureNewMutations = false } = {}) {
+        this.applyData(commit.data, { isRecorded: true, ensureNewMutations });
+        switch (commit.type) {
+            case HISTORY_COMMIT_TYPES.UNDO:
+                this.revertData(commit.data, { isRecorded: false });
+                break;
+            case HISTORY_COMMIT_TYPES.RESTORE:
+                for (const revertedCommit of commit.data.reverted_commits) {
+                    this.revertDataProperties(revertedCommit);
+                }
+                for (const reappliedCommit of commit.data.reapplied_commits) {
+                    this.applyDataProperties(reappliedCommit);
+                }
+                break;
+            default:
+                this.applyData(commit.data, { isRecorded: false });
+        }
+    }
+
+    /**
+     * Revert the data properties of the given commit: the inverse of
+     * `applyDataProperties`.
+     *
+     * @param {HistoryReplayedCommit} commit
+     * @param {Object} [options]
+     * @param {boolean} [options.ensureNewMutations = false] whether the replay
+     *        creates a commit, which records the replays of recorded properties
+     * @returns {void}
+     */
+    revertDataProperties(commit, { ensureNewMutations = false } = {}) {
+        this.revertData(commit.data, { isRecorded: true, ensureNewMutations });
+        switch (commit.type) {
+            case HISTORY_COMMIT_TYPES.UNDO:
+                this.applyData(commit.data, { isRecorded: false });
+                break;
+            case HISTORY_COMMIT_TYPES.RESTORE:
+                for (const reappliedCommit of commit.data.reapplied_commits.toReversed()) {
+                    this.revertDataProperties(reappliedCommit);
+                }
+                for (const revertedCommit of commit.data.reverted_commits.toReversed()) {
+                    this.applyDataProperties(revertedCommit);
+                }
+                break;
+            default:
+                this.revertData(commit.data, { isRecorded: false });
+        }
+    }
+
+    /**
+     * Apply the data of the data properties whose replays are recorded, or of
+     * the others, in order.
+     *
+     * @param {HistoryCommitData} data
+     * @param {Object} options
+     * @param {boolean} options.isRecorded whether to apply the data of the
+     *        properties whose replays are recorded, or of the others
+     * @param {boolean} [options.ensureNewMutations = false] passed to the
+     *        properties whose replays are recorded
+     * @returns {void}
+     */
+    applyData(data, { isRecorded, ensureNewMutations = false }) {
+        for (const [id, { apply, shouldRecordReplays = false }] of this.dataProperties) {
+            if (shouldRecordReplays === isRecorded) {
+                for (const item of data[id] ?? []) {
+                    if (isRecorded) {
+                        apply(item, { ensureNewMutations });
+                    } else {
+                        apply(item);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Revert the data of the data properties whose replays are recorded, or of
+     * the others, last first.
+     *
+     * @param {HistoryCommitData} data
+     * @param {Object} options
+     * @param {boolean} options.isRecorded whether to revert the data of the
+     *        properties whose replays are recorded, or of the others
+     * @param {boolean} [options.ensureNewMutations = false] passed to the
+     *        properties whose replays are recorded
+     * @returns {void}
+     */
+    revertData(data, { isRecorded, ensureNewMutations = false }) {
+        for (const [id, { revert, shouldRecordReplays = false }] of this.dataProperties) {
+            if (shouldRecordReplays === isRecorded) {
+                for (const item of (data[id] ?? []).toReversed()) {
+                    if (isRecorded) {
+                        revert(item, { ensureNewMutations });
+                    } else {
+                        revert(item);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Return whether the given commit has data properties, directly or through
+     * the commits it holds.
+     *
+     * @param {HistoryReplayedCommit} commit
+     * @returns {boolean}
+     */
+    hasDataProperties(commit) {
+        if ([...this.dataProperties.keys()].some((id) => commit.data[id]?.length)) {
+            return true;
+        }
+        return (
+            commit.type === HISTORY_COMMIT_TYPES.RESTORE &&
+            [...commit.data.reverted_commits, ...commit.data.reapplied_commits].some(
+                (replayedCommit) => this.hasDataProperties(replayedCommit)
+            )
+        );
+    }
+
+    /**
+     * Return the data of the given commit that the history replays, for a
+     * commit that replays it: the data of its data properties whose replays
+     * aren't recorded or, for a restore commit, the commits it holds. That data
+     * is immutable: it is shared rather than cloned.
+     *
+     * @param {HistoryCommit} commit
+     * @returns {HistoryCommitData}
+     */
+    getReplayedData(commit) {
+        if (commit.type === HISTORY_COMMIT_TYPES.RESTORE) {
+            const { reverted_commits, reapplied_commits } = commit.data;
+            return { reverted_commits, reapplied_commits };
+        }
+        const data = {};
+        for (const [id, { shouldRecordReplays }] of this.dataProperties) {
+            if (!shouldRecordReplays && commit.data[id]) {
+                data[id] = commit.data[id];
+            }
+        }
+        return data;
     }
 
     /**
@@ -311,21 +615,47 @@ export class HistoryPlugin extends Plugin {
     // ====================
 
     /**
-     * Return a complete `HistoryCommitData` object made of any pending data
-     * in plugins that subscribe to `pending_history_commit_data_processors`, as
-     * well as metadata provided by this plugin.
+     * Return the data and metadata of a new commit, made of the properties
+     * collected from the draft, as well as metadata provided by this plugin.
      *
-     * @template { WritableHistoryCommitType } [T="standard"]
-     * @param { HistoryCommitData<T> } [data = {}]
-     * @returns { HistoryCommitData<T> }
+     * @template { Exclude<HistoryCommitType, "savePoint"> } [T="standard"]
+     * @param { T } type The type of the commit.
+     * @param { HistoryCommitMetadata<T> } [metadata = {}]
+     * @returns { { data: HistoryCommitData<T>, metadata: HistoryCommitMetadata<T> } }
      */
-    processCommitData(data = {}) {
+    processCommit(type, metadata = {}) {
         // Set the timestamp of the commit or keep the timestamp of the commit
         // it reverts:
-        data.commitTimestamp ??= Date.now();
-        data.authorTimestamp ??= this.authorTimestamp;
-        data.previousCommitId = this.commits?.at(-1)?.id;
-        return this.processThrough("pending_history_commit_data_processors", data);
+        metadata.commit_timestamp ??= Date.now();
+        metadata.author_timestamp ??= this.authorTimestamp;
+        metadata.previous_commit_id = this.commits?.at(-1)?.id;
+        const data = {};
+        this.collectStagedProperties(type, data, metadata);
+        return { data, metadata };
+    }
+
+    /**
+     * Let plugins stage the values they compute when the draft is collected,
+     * then add the values of the properties staged in the draft to the given
+     * data and metadata.
+     *
+     * @param { HistoryCommitType } type The type of the commit or savepoint.
+     * @param { HistoryCommitData } data
+     * @param { HistoryCommitMetadata } metadata
+     * @returns { void }
+     */
+    collectStagedProperties(type, data, metadata) {
+        this.trigger("on_will_collect_history_draft_handlers", type);
+        for (const [properties, values] of [
+            [this.dataProperties, data],
+            [this.metadataProperties, metadata],
+        ]) {
+            for (const id of properties.keys()) {
+                if (this.stagedData[id] !== undefined) {
+                    values[id] = this.stagedData[id];
+                }
+            }
+        }
     }
 
     /**
@@ -333,20 +663,6 @@ export class HistoryPlugin extends Plugin {
      */
     resetAuthorTimestamp() {
         this.authorTimestamp = Date.now();
-    }
-
-    /**
-     * Add the current staged data to the given data object's `custom` property.
-     *
-     * @param {HistoryCommitData} data
-     * @returns {HistoryCommitData}
-     */
-    addStagedData(data = {}) {
-        if (this.currentStage.length) {
-            data.custom ??= [];
-            data.custom.push(...this.currentStage);
-        }
-        return data;
     }
 
     // =======================
@@ -384,16 +700,22 @@ export class HistoryPlugin extends Plugin {
     }
 
     /**
-     * Create and return a "snapshot" commit.
+     * Create and return a "snapshot" commit, which recreates the current state
+     * from an empty one with the snapshots of the data properties.
      *
      * @returns { HistoryCommit<"standard"> }
      */
     createSnapshotCommit() {
         /** @type { HistoryCommitData<"standard"> } */
-        const data = this.processThrough("snapshot_history_commit_data_processors", {
-            authorTimestamp: this.authorTimestamp,
-        });
-        return new HistoryCommit({ id: this.commits?.at(-1)?.id, data });
+        const data = {};
+        for (const [id, { takeSnapshot }] of this.dataProperties) {
+            if (takeSnapshot) {
+                data[id] = takeSnapshot();
+            }
+        }
+        /** @type { HistoryCommitMetadata<"standard"> } */
+        const metadata = { author_timestamp: this.authorTimestamp };
+        return new HistoryCommit({ id: this.commits?.at(-1)?.id, data, metadata });
     }
 
     // ===========================
@@ -401,35 +723,80 @@ export class HistoryPlugin extends Plugin {
     // ===========================
 
     /**
-     * Delegate the application of the changes in the given commit to the
-     * plugins that subscribe to `on_apply_history_commit_handlers`.
+     * Replay changes that the history already holds (applying, reverting or
+     * discarding them), notifying plugins before and after, so that they don't
+     * record them again.
+     *
+     * @param { () => void } operation
+     * @returns { void }
+     */
+    replay(operation) {
+        this.trigger("on_will_replay_history_handlers");
+        try {
+            operation();
+        } finally {
+            this.trigger("on_history_replayed_handlers");
+        }
+    }
+
+    /**
+     * Apply the data of the given commit, then let the plugins that subscribe
+     * to `on_apply_history_commit_handlers` react to it.
      *
      * @param { HistoryCommit } commit
      * @param { Object } [params = {}]
-     * @param { boolean } [params.ensureNewMutations = false]
+     * @param { boolean } [params.ensureNewMutations = false] whether the replay
+     *        creates a commit, which records it
      * @param { boolean } [params.restoreSelection = false]
      */
     applyCommit(commit, { ensureNewMutations = false, restoreSelection = false } = {}) {
-        this.trigger("on_apply_history_commit_handlers", commit, {
-            ensureNewMutations,
-            restoreSelection,
+        this.replay(() => {
+            this.applyDataProperties(commit, { ensureNewMutations });
+            this.trigger("on_apply_history_commit_handlers", commit, { restoreSelection });
         });
     }
 
     /**
-     * Delegate the reversal of the changes in the given commit to the plugins
-     * that subscribe to `on_revert_history_commit_handlers`.
+     * Revert the data of the given commit, then let the plugins that subscribe
+     * to `on_revert_history_commit_handlers` react to it.
      *
      * @param { HistoryCommit } commit
      * @param { Object } [params = {}]
-     * @param { boolean } [params.ensureNewMutations = false]
+     * @param { boolean } [params.ensureNewMutations = false] whether the replay
+     *        creates a commit, which records it
      * @param { boolean } [params.restoreFocus = true]
      */
     revertCommit(commit, { ensureNewMutations = false, restoreFocus = true } = {}) {
-        this.trigger("on_revert_history_commit_handlers", commit, {
-            ensureNewMutations,
-            restoreFocus,
+        this.replay(() => {
+            this.revertDataProperties(commit, { ensureNewMutations });
+            this.trigger("on_revert_history_commit_handlers", commit, { restoreFocus });
         });
+    }
+
+    /**
+     * Call the `apply` hooks of the metadata properties with the values of the
+     * given commit, which is applied to create a new commit.
+     *
+     * @param { HistoryCommit } commit
+     * @returns { void }
+     */
+    applyMetadataProperties(commit) {
+        for (const [id, { apply }] of this.metadataProperties) {
+            apply?.(commit.metadata[id]);
+        }
+    }
+
+    /**
+     * Call the `revert` hooks of the metadata properties with the values of the
+     * given commit, which is reverted to create a new commit.
+     *
+     * @param { HistoryCommit } commit
+     * @returns { void }
+     */
+    revertMetadataProperties(commit) {
+        for (const [id, { revert }] of this.metadataProperties) {
+            revert?.(commit.metadata[id]);
+        }
     }
 
     // ============================
@@ -443,7 +810,7 @@ export class HistoryPlugin extends Plugin {
      * @param {T} type
      */
     reverse(type) {
-        this.trigger("on_will_invalidate_pending_changes_handlers");
+        this.discardStagedChanges();
         const commitsToReverse = this.getNextCommitsToReverse(type);
         if (!commitsToReverse.length) {
             return;
@@ -452,19 +819,15 @@ export class HistoryPlugin extends Plugin {
         let reversedCommit;
         for (reversedCommit of commitsToReverse) {
             this.revertCommit(reversedCommit, { ensureNewMutations: true });
+            this.revertMetadataProperties(reversedCommit);
             this.revertedCommits.add(reversedCommit.id);
-            /** @type { HistoryCommitData<T> } */
-            const commitData = this.processCommitData({
-                batchable: reversedCommit.data.batchable,
-                commitTimestamp: reversedCommit.data.commitTimestamp,
-                relatedCommit: reversedCommit,
+            const { data, metadata } = this.processCommit(type, {
+                batchable: reversedCommit.metadata.batchable,
+                commit_timestamp: reversedCommit.metadata.commit_timestamp,
+                related_commit_id: reversedCommit.id,
             });
-            this.appendCommit(
-                new HistoryCommit({
-                    type,
-                    data: commitData,
-                })
-            );
+            Object.assign(data, this.getReplayedData(reversedCommit));
+            this.appendCommit(new HistoryCommit({ type, data, metadata }));
         }
         this.trigger(
             type === HISTORY_COMMIT_TYPES.UNDO
@@ -570,12 +933,12 @@ export class HistoryPlugin extends Plugin {
     canCommitsBeBatched(index1, index2) {
         const commit1 = this.commits[index1];
         const commit2 = this.commits[index2];
-        if (!commit1.data.batchable || !commit2.data.batchable) {
+        if (!commit1.metadata.batchable || !commit2.metadata.batchable) {
             return false;
         }
         // Keep only if close enough in time.
         if (
-            Math.abs(commit1.data.commitTimestamp - commit2.data.commitTimestamp) >
+            Math.abs(commit1.metadata.commit_timestamp - commit2.metadata.commit_timestamp) >
             COMMIT_DEBOUNCE_DELAY
         ) {
             return false;
@@ -637,20 +1000,22 @@ export class HistoryPlugin extends Plugin {
     makeSavePoint() {
         const savePoint = new HistoryCommit({
             type: HISTORY_COMMIT_TYPES.SAVEPOINT,
-            data: this.processThrough("save_point_history_commit_data_processors", {
-                relatedCommit: this.commits.at(-1),
-                hasBeenRestored: false,
-            }),
+            data: {},
+            metadata: { related_commit_id: this.commits.at(-1).id, has_been_restored: false },
         });
+        this.collectStagedProperties(
+            HISTORY_COMMIT_TYPES.SAVEPOINT,
+            savePoint.data,
+            savePoint.metadata
+        );
         return () => {
-            if (savePoint.data.hasBeenRestored) {
+            if (savePoint.metadata.has_been_restored) {
                 return;
             }
-            this.trigger("on_will_invalidate_pending_changes_handlers");
-            /** @type { HistoryCommit } */
-            const relatedCommit = savePoint.data.relatedCommit;
-            const isLastCommit = relatedCommit === this.commits.at(-1);
-            const index = this.commits.findLastIndex((commit) => commit?.id === relatedCommit.id);
+            this.discardStagedChanges();
+            const { related_commit_id: relatedCommitId } = savePoint.metadata;
+            const isLastCommit = relatedCommitId === this.commits.at(-1).id;
+            const index = this.commits.findLastIndex((commit) => commit?.id === relatedCommitId);
             const commitsToRestore = this.commits.slice(index === -1 ? 1 : index + 1).reverse();
             /** @type { HistoryCommit[] } */
             const irreversibleCommits = [];
@@ -663,10 +1028,9 @@ export class HistoryPlugin extends Plugin {
                     ensureNewMutations: true,
                     restoreFocus: false,
                 });
-                this.trigger("on_history_commit_restored_handlers");
+                this.revertMetadataProperties(commitToRestore);
                 if (isReversible) {
                     this.discardedCommits.add(commitToRestore.id);
-                    savePoint.data.lastRevertedChanges = commitToRestore.data;
                 } else {
                     irreversibleCommits.unshift(commitToRestore);
                 }
@@ -677,19 +1041,29 @@ export class HistoryPlugin extends Plugin {
                     ensureNewMutations: true,
                     restoreSelection: true,
                 });
-                this.trigger("on_irreversible_history_commit_applied_handlers");
+                this.applyMetadataProperties(irreversibleCommit);
             }
             if (!isLastCommit) {
-                // Register resulting mutations as a new "restore" commit
-                // (prevent undo).
+                // Register the restoration as a new "restore" commit (prevent
+                // undo).
+                const { data, metadata } = this.processCommit(HISTORY_COMMIT_TYPES.RESTORE, {
+                    related_commit_id: relatedCommitId,
+                });
+                const toReplayedCommit = (commit) => ({
+                    type: commit.type,
+                    data: this.getReplayedData(commit),
+                });
+                data.reverted_commits = commitsToRestore.map(toReplayedCommit);
+                data.reapplied_commits = irreversibleCommits.map(toReplayedCommit);
                 /** @type { HistoryCommit<"restore"> } */
                 const restoreCommit = new HistoryCommit({
                     type: HISTORY_COMMIT_TYPES.RESTORE,
-                    data: this.processCommitData({ relatedCommit }),
+                    data,
+                    metadata,
                 });
                 this.appendCommit(restoreCommit);
             }
-            savePoint.data.hasBeenRestored = true;
+            savePoint.metadata.has_been_restored = true;
             this.trigger("on_savepoint_restored_handlers", savePoint);
         };
     }
@@ -755,6 +1129,7 @@ export class HistoryPlugin extends Plugin {
                 };
                 this.isPreviewing = true;
                 try {
+                    this.trigger("on_will_preview_handlers");
                     await operation(...args);
                 } catch (error) {
                     revertSavePoint();
@@ -856,34 +1231,54 @@ export class HistoryPlugin extends Plugin {
  * @typedef { Exclude<HistoryCommitType, "savePoint" | "stash"> } WritableHistoryCommitType
  */
 /**
+ * The changes of a commit: the data of its data properties. A commit created
+ * by the history holds the data it replays: an undo or redo commit, the data
+ * of the commit it reverts; a restore commit, the commits it reverts and
+ * reapplies.
+ *
  * @template { HistoryCommitType } [T=WritableHistoryCommitType]
- * @typedef { Record<string, any> & {
- *   authorTimestamp?: number,
- *   commitTimestamp?: number,
- *   previousCommitId?: HistoryCommitId,
- *   custom?: CustomOperation,
+ * @typedef { { [Id in HistoryDataPropertyId]?: HistoryData<Id>[] } & (
+ *   T extends "restore"
+ *     ? {
+ *         reverted_commits: HistoryReplayedCommit[],
+ *         reapplied_commits: HistoryReplayedCommit[],
+ *       }
+ *     : {}
+ * ) } HistoryCommitData<T>
+ */
+/**
+ * A commit as a restore commit holds it: its type, and the data the history
+ * replays.
+ *
+ * @typedef { { type: HistoryCommitType, data: HistoryCommitData } } HistoryReplayedCommit
+ */
+/**
+ * The description of a commit: the values of its metadata properties, and the
+ * history's own metadata.
+ *
+ * @template { HistoryCommitType } [T=WritableHistoryCommitType]
+ * @typedef { {
+ *   [Id in HistoryMetadataPropertyId]?: import("plugins").HistoryMetadataProperties[Id]
+ * } & {
+ *   author_timestamp?: number,
+ *   commit_timestamp?: number,
+ *   previous_commit_id?: HistoryCommitId,
  * } & (
  *   T extends "savePoint" | "restore" | "stash"
  *     ? {}
  *     : { batchable: boolean }
  * ) & (
- *   T extends "standard" | "stash"
+ *   T extends "standard" | "stash" | "savePoint"
  *     ? {}
- *     : {
- *         relatedCommit: HistoryCommit<(
- *           T extends "undo"
- *             ? "standard" | "redo"
- *             : ( T extends "redo" ? "undo" : WritableHistoryCommitType )
- *         )>
- *       }
+ *     : { related_commit_id: HistoryCommitId }
  * ) & (
  *   T extends "savePoint"
  *     ? {
- *         hasBeenRestored: boolean,
- *         lastRevertedChanges?: HistoryCommitData<WritableHistoryCommitType>,
+ *         related_commit_id: HistoryCommitId,
+ *         has_been_restored: boolean,
  *       }
  *     : {}
- * ) } HistoryCommitData<T>
+ * ) } HistoryCommitMetadata<T>
  */
 
 /**
@@ -895,14 +1290,22 @@ export class HistoryCommit {
      * @param { HistoryCommitId } [params.id = this.generateId()]
      * @param { T } [params.type = HISTORY_COMMIT_TYPES.STANDARD]
      * @param { HistoryCommitData<T> } [params.data = {}]
+     * @param { HistoryCommitMetadata<T> } [params.metadata = {}]
      */
-    constructor({ id = this.generateId(), type = HISTORY_COMMIT_TYPES.STANDARD, data = {} } = {}) {
+    constructor({
+        id = this.generateId(),
+        type = HISTORY_COMMIT_TYPES.STANDARD,
+        data = {},
+        metadata = {},
+    } = {}) {
         /** @type { HistoryCommitId } */
         this.id = id;
         /** @type { T } */
         this.type = type;
         /** @type { HistoryCommitData<T> } */
         this.data = data;
+        /** @type { HistoryCommitMetadata<T> } */
+        this.metadata = metadata;
     }
 
     /**

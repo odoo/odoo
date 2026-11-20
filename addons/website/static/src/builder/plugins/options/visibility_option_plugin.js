@@ -16,11 +16,36 @@ import { BuilderAction } from "@html_builder/core/builder_action";
  * @typedef {((editingElement: HTMLElement) => void)[]} on_visibility_toggled_handlers
  */
 export const DEVICE_VISIBILITY_OPTION_SELECTOR = "section .row > div";
+/**
+ * @typedef {(data: {
+ *     nodeId: import("@html_editor/core/dom_reference_map_plugin").NodeId,
+ *     removeOnApply: boolean,
+ * }) => void} device_visibility
+ */
+
 export class VisibilityOptionPlugin extends Plugin {
     static id = "visibilityOption";
-    static dependencies = ["visibility", "websiteBridge"];
+    static dependencies = ["visibility", "websiteBridge", "domReferenceMap"];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
+        history_data_properties: {
+            device_visibility: {
+                apply: ({ nodeId, removeOnApply }) => {
+                    if (removeOnApply) {
+                        this.dependencies.domReferenceMap
+                            .getNodeById(nodeId)
+                            .classList.remove("o_snippet_override_invisible");
+                    }
+                },
+                revert: ({ nodeId, removeOnApply }) => {
+                    if (!removeOnApply) {
+                        this.dependencies.domReferenceMap
+                            .getNodeById(nodeId)
+                            .classList.remove("o_snippet_override_invisible");
+                    }
+                },
+            },
+        },
         builder_actions: {
             ForceVisibleAction,
             ToggleDeviceVisibilityAction,
@@ -176,7 +201,7 @@ export class ForceVisibleAction extends BuilderAction {
 }
 export class ToggleDeviceVisibilityAction extends BuilderAction {
     static id = "toggleDeviceVisibility";
-    static dependencies = ["visibility", "history"];
+    static dependencies = ["visibility", "history", "domReferenceMap"];
 
     apply({ editingElement, params: { mainParam: visibility } }) {
         // Clean first as the widget is not part of a group
@@ -196,8 +221,9 @@ export class ToggleDeviceVisibilityAction extends BuilderAction {
         const isMobile = this.services.website.context.isMobile;
         const show = visibility !== (isMobile ? "no_mobile" : "no_desktop");
         this.dependencies.visibility.onOptionVisibilityUpdate(editingElement, show);
-        this.dependencies.history.stageCustomOperation({
-            revert: () => editingElement.classList.remove("o_snippet_override_invisible"),
+        this.dependencies.history.apply("device_visibility", {
+            nodeId: this.dependencies.domReferenceMap.register(editingElement),
+            removeOnApply: false,
         });
         this.trigger("on_visibility_toggled_handlers", editingElement);
     }
@@ -212,8 +238,9 @@ export class ToggleDeviceVisibilityAction extends BuilderAction {
         const style = getComputedStyle(editingElement);
         const display = style["display"];
         editingElement.classList.remove(`d-md-${display}`, `d-lg-${display}`);
-        this.dependencies.history.stageCustomOperation({
-            apply: () => editingElement.classList.remove("o_snippet_override_invisible"),
+        this.dependencies.history.apply("device_visibility", {
+            nodeId: this.dependencies.domReferenceMap.register(editingElement),
+            removeOnApply: true,
         });
         this.trigger("on_visibility_toggled_handlers", editingElement);
     }

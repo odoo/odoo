@@ -44,6 +44,35 @@ import { loadImage } from "@html_editor/utils/image_processing";
 
 export const NO_IMAGE_SELECTION = Symbol.for("NoImageSelection");
 
+/**
+ * @typedef { Object } BodyBackgroundConfig
+ * @property { string } type
+ * @property { string } image
+ *
+ * @typedef { Object } ViewsOnSave
+ * @property { string[] } enable
+ * @property { string[] } disable
+ *
+ * @typedef {(data: {
+ *     actionId: string,
+ *     params: import("@html_builder/core/builder_action").ActionParams,
+ *     loadResult?: import("@html_builder/core/builder_action").LoadResult,
+ *     nodeId?: import("@html_editor/core/dom_reference_map_plugin").NodeId,
+ *     before: import("@html_builder/core/builder_action").ActionValue,
+ *     after: import("@html_builder/core/builder_action").ActionValue,
+ * }) => Promise<void>} website_custom_value
+ * @typedef {(data: {
+ *     before: BodyBackgroundConfig,
+ *     after: BodyBackgroundConfig,
+ * }) => Promise<void>} body_background
+ * @typedef {(data: {
+ *     nodeId: import("@html_editor/core/dom_reference_map_plugin").NodeId,
+ *     before: string,
+ *     after: string,
+ * }) => Promise<void>} body_background_position
+ * @typedef {(data: { before: ViewsOnSave, after: ViewsOnSave }) => void} views_on_save
+ */
+
 export class CustomizeWebsitePlugin extends Plugin {
     static id = "customizeWebsite";
     static dependencies = [
@@ -52,6 +81,7 @@ export class CustomizeWebsitePlugin extends Plugin {
         "edit_interaction",
         "websiteBridge",
         "history",
+        "domReferenceMap",
     ];
     static shared = [
         "customizeWebsiteColors",
@@ -73,6 +103,30 @@ export class CustomizeWebsitePlugin extends Plugin {
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
+        history_data_properties: {
+            website_custom_value: {
+                apply: (data) => this.replayCustomValue(data, data.after),
+                revert: (data) => this.replayCustomValue(data, data.before),
+            },
+            body_background: {
+                apply: ({ after }) =>
+                    this.dependencies.builderActions
+                        .getAction("toggleBodyBgImage")
+                        .applyConfigWithLoader(after),
+                revert: ({ before }) =>
+                    this.dependencies.builderActions
+                        .getAction("toggleBodyBgImage")
+                        .applyConfigWithLoader(before),
+            },
+            body_background_position: {
+                apply: ({ nodeId, after }) => this.replayBackgroundPosition(nodeId, after),
+                revert: ({ nodeId, before }) => this.replayBackgroundPosition(nodeId, before),
+            },
+            views_on_save: {
+                apply: ({ after }) => this.restoreViewsOnSave(after),
+                revert: ({ before }) => this.restoreViewsOnSave(before),
+            },
+        },
         builder_actions: {
             CustomizeWebsiteVariableAction,
             CustomizeWebsiteSubVariablesAction,
@@ -351,23 +405,58 @@ export class CustomizeWebsitePlugin extends Plugin {
     }
 
     withCustomHistory(action) {
-        const applyFn = action.apply.bind(action);
+        action.historyApply = action.apply.bind(action);
         action.apply = async (arg) => {
-            const oldValue = action.getValue(arg);
-            const { value } = arg;
-            const blockedApply = (v) => {
-                this.services.ui.block({ delay: 2500 });
-                return applyFn({ ...arg, value: v })
-                    .then(() => {
-                        this.trigger("on_dom_updated_handlers");
-                    })
-                    .finally(() => this.services.ui.unblock());
+            const data = {
+                actionId: action.constructor.id,
+                params: arg.params,
+                loadResult: arg.loadResult,
+                nodeId:
+                    arg.editingElement &&
+                    this.dependencies.domReferenceMap.register(arg.editingElement),
+                before: action.getValue(arg),
+                after: arg.value,
             };
-            await this.dependencies.history.stageCustomOperation({
-                apply: () => blockedApply(value),
-                revert: () => blockedApply(oldValue),
-            });
+            await this.dependencies.history.apply("website_custom_value", data);
         };
+    }
+
+    /**
+     * Replay a recorded builder action with its stored context and value.
+     *
+     * @param {Object} operation
+     * @param {string} operation.actionId
+     * @param {import("@html_builder/core/builder_action").ActionParams} operation.params
+     * @param {import("@html_builder/core/builder_action").LoadResult} [operation.loadResult]
+     * @param {import("@html_editor/core/dom_reference_map_plugin").NodeId} [operation.nodeId]
+     * @param {import("@html_builder/core/builder_action").ActionValue} value
+     * @returns {Promise<void>}
+     */
+    async replayCustomValue({ actionId, params, loadResult, nodeId }, value) {
+        this.services.ui.block({ delay: 2500 });
+        try {
+            await this.dependencies.builderActions.getAction(actionId).historyApply({
+                params,
+                loadResult,
+                value,
+                editingElement: nodeId && this.dependencies.domReferenceMap.getNodeById(nodeId),
+            });
+            this.trigger("on_dom_updated_handlers");
+        } finally {
+            this.services.ui.unblock();
+        }
+    }
+
+    /**
+     * Restore the body background position and clear its temporary inline style.
+     *
+     * @param {import("@html_editor/core/dom_reference_map_plugin").NodeId} nodeId
+     * @param {string} value The CSS background-position value.
+     * @returns {Promise<void>}
+     */
+    async replayBackgroundPosition(nodeId, value) {
+        await this.customizeWebsiteVariables({ "body-image-background-position": value });
+        this.dependencies.domReferenceMap.getNodeById(nodeId).style.backgroundPosition = "";
     }
 
     async loadTemplateKey(key) {
@@ -416,25 +505,44 @@ export class CustomizeWebsitePlugin extends Plugin {
         });
     }
     setViewsOnSave(views, to_enable) {
-        const initialViewsToEnableOnSave = new Set(this.viewsToEnableOnSave);
-        const initialViewsToDisableOnSave = new Set(this.viewsToDisableOnSave);
+        const before = this.getViewsOnSave();
+        const viewsToEnable = new Set(before.enable);
+        const viewsToDisable = new Set(before.disable);
         for (let view of views) {
             const toEnable = view.startsWith("!") ? !to_enable : to_enable;
             view = view.startsWith("!") ? view.substring(1) : view;
             if (toEnable) {
-                this.viewsToEnableOnSave.add(view);
-                this.viewsToDisableOnSave.delete(view);
+                viewsToEnable.add(view);
+                viewsToDisable.delete(view);
             } else {
-                this.viewsToDisableOnSave.add(view);
-                this.viewsToEnableOnSave.delete(view);
+                viewsToDisable.add(view);
+                viewsToEnable.delete(view);
             }
         }
-        return () => {
-            // "Undo" callback
-            this.viewsToEnableOnSave = initialViewsToEnableOnSave;
-            this.viewsToDisableOnSave = initialViewsToDisableOnSave;
-        };
+        const after = { enable: [...viewsToEnable], disable: [...viewsToDisable] };
+        this.dependencies.history.apply("views_on_save", { before, after });
     }
+
+    /**
+     * Snapshot the view keys queued for activation or deactivation on save.
+     *
+     * @returns {{enable: string[], disable: string[]}}
+     */
+    getViewsOnSave() {
+        return { enable: [...this.viewsToEnableOnSave], disable: [...this.viewsToDisableOnSave] };
+    }
+
+    /**
+     * Restore the queued view changes from a history snapshot.
+     *
+     * @param {{enable: string[], disable: string[]}} state
+     * @returns {void}
+     */
+    restoreViewsOnSave({ enable, disable }) {
+        this.viewsToEnableOnSave = new Set(enable);
+        this.viewsToDisableOnSave = new Set(disable);
+    }
+
     isPluginDestroyed() {
         return this.isDestroyed;
     }
@@ -554,9 +662,9 @@ export class ToggleBodyBgImageAction extends BuilderAction {
         };
     }
     async applyConfig(oldConfig, newConfig) {
-        await this.dependencies.history.stageCustomOperation({
-            apply: () => this.applyConfigWithLoader(newConfig),
-            revert: () => this.applyConfigWithLoader(oldConfig),
+        await this.dependencies.history.apply("body_background", {
+            before: oldConfig,
+            after: newConfig,
         });
     }
     async apply({ editingElement: el } = {}) {
@@ -607,6 +715,7 @@ export class BodyBgPositionOverlayAction extends BuilderAction {
         "backgroundPositionOption",
         "customizeWebsite",
         "history",
+        "domReferenceMap",
     ];
     setup() {
         this.withLoadingEffect = false;
@@ -618,12 +727,6 @@ export class BodyBgPositionOverlayAction extends BuilderAction {
             // Remove inline position used for preview once value is stored in
             // variables.
             editingElement.style.backgroundPosition = "";
-        };
-        const setBackgroundPosition = async (value) => {
-            await this.dependencies.customizeWebsite.customizeWebsiteVariables({
-                "body-image-background-position": value,
-            });
-            clearInlinePosition();
         };
         const bgPosition = await new Promise((resolve) => {
             const removeOverlay = this.services.overlay.add(ImagePositionOverlay, {
@@ -648,9 +751,10 @@ export class BodyBgPositionOverlayAction extends BuilderAction {
                 this.dependencies.customizeWebsite.getWebsiteVariableValue(
                     "body-image-background-position"
                 ) || "";
-            this.dependencies.history.stageCustomOperation({
-                apply: () => setBackgroundPosition(bgPosition),
-                revert: () => setBackgroundPosition(currentPosition),
+            await this.dependencies.history.apply("body_background_position", {
+                nodeId: this.dependencies.domReferenceMap.register(editingElement),
+                before: currentPosition,
+                after: bgPosition,
             });
         } else {
             clearInlinePosition();
@@ -858,13 +962,7 @@ export class PreviewableWebsiteConfigAction extends BuilderAction {
         }
         if (!isPreviewing) {
             const viewsToApply = params["views"] || [];
-            let revert;
-            this.dependencies.history.stageCustomOperation({
-                apply: () => {
-                    revert = this.dependencies.customizeWebsite.setViewsOnSave(viewsToApply, true);
-                },
-                revert: () => revert(),
-            });
+            this.dependencies.customizeWebsite.setViewsOnSave(viewsToApply, true);
         }
     }
     clean({ editingElement: el, isPreviewing, params }) {
@@ -873,13 +971,7 @@ export class PreviewableWebsiteConfigAction extends BuilderAction {
         }
         if (!isPreviewing) {
             const viewsToClean = params["views"] || [];
-            let revert;
-            this.dependencies.history.stageCustomOperation({
-                apply: () => {
-                    revert = this.dependencies.customizeWebsite.setViewsOnSave(viewsToClean, false);
-                },
-                revert: () => revert(),
-            });
+            this.dependencies.customizeWebsite.setViewsOnSave(viewsToClean, false);
         }
     }
 }
