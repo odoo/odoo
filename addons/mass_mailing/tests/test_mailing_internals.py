@@ -13,7 +13,7 @@ from unittest.mock import patch
 
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.sql_db import Cursor
 from odoo.tests.common import users, Form, HttpCase, tagged
 from odoo.tools import mute_logger
@@ -489,6 +489,42 @@ class TestMassMailValues(MassMailCommon):
 
         self.assertFalse(mailing.body_html)
         self.assertEqual(mailing.mailing_model_name, 'res.partner')
+
+    def test_mail_composer_mailing_name_access(self):
+        """ Creating a mailing from the mass mail composer requires the email marketing
+        rights: nothing gives them away, e.g. through a sudo. """
+        recipients = self.env['res.partner'].create([
+            {'name': f'Recipient {idx}', 'email': f'recipient.{idx}@example.com'} for idx in range(2)
+        ])
+        composer = self.env['mail.compose.message'].with_user(self.user_employee).with_context(
+            default_composition_mode='mass_mail',
+            default_model='res.partner',
+            default_res_ids=recipients.ids,
+        ).create({
+            'subject': 'Composer Mailing',
+            'body': '<p>Hello</p>',
+            'mass_mailing_name': 'Composer Mailing',
+        })
+        with self.assertRaises(AccessError):
+            composer._action_send_mail()
+        self.assertFalse(self.env['mailing.mailing'].search([('name', '=', 'Composer Mailing')]))
+
+    def test_mail_composer_mailing_name_marketing_only(self):
+        """ Only email marketing users can create a mailing from the mass mail composer. """
+        recipients = self.env['res.partner'].create([
+            {'name': f'Recipient {idx}', 'email': f'recipient.{idx}@example.com'} for idx in range(2)
+        ])
+        ctx = {
+            'default_composition_mode': 'mass_mail',
+            'default_model': 'res.partner',
+            'default_res_ids': recipients.ids,
+        }
+        composer_form = Form(self.env['mail.compose.message'].with_user(self.user_employee).with_context(ctx))
+        with self.assertRaisesRegex(AssertionError, "invisible field 'mass_mailing_name'"):
+            composer_form.mass_mailing_name = 'Mailing'
+
+        composer_form = Form(self.env['mail.compose.message'].with_user(self.user_marketing).with_context(ctx))
+        composer_form.mass_mailing_name = 'Mailing'
 
 
 @tagged("mass_mailing", "utm")
