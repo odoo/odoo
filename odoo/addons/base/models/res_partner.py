@@ -351,6 +351,7 @@ class ResPartner(models.Model):
          ('delivery', 'Delivery'),
          ('other', 'Other'),
         ], string='Address Type',
+        required=True,
         default='contact')
     type_address_label = fields.Char('Address Type Description', compute='_compute_type_address_label')
     # address fields
