@@ -263,8 +263,8 @@
     .o_form_statusbar {
         position: relative;
         z-index: 0;
-        margin-inline: calc(-1 * var(--formView-sheetBg-padding-x)) calc(-1 * var(--formView-sheetBg-padding-right, --formView-sheetBg-padding-x));
-        padding-inline: var(--formView-sheetBg-padding-x) var(--formView-sheetBg-padding-right, --formView-sheetBg-padding-x);
+        margin-inline: calc(-1 * var(--formView-sheetBg-padding-x)) calc(-1 * var(--formView-sheetBg-padding-right, var(--formView-sheetBg-padding-x)));
+        padding-inline: var(--formView-sheetBg-padding-x) var(--formView-sheetBg-padding-right, var(--formView-sheetBg-padding-x));
         padding-top: var(--formView-statusbar-padding-top, var(--o-bs-spacer-2));
 
         @media screen and (min-width: 768px), print and (min-width: 188mm) {
