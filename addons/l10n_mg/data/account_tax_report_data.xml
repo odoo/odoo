@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="tax_report" model="account.report">
+        <field name="name">VAT Return</field>
+        <field name="name@fr">Déclaration de TVA</field>
+        <field name="name@mg">Fanambarana TVA</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.mg"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@fr">Solde</field>
+                <field name="name@mg">Sisa</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_report_section_operations" model="account.report.line">
+                <field name="name">Operations for the period (CPF art. I-104)</field>
+                <field name="name@fr">Opérations de la période (CPF art. I-104)</field>
+                <field name="name@mg">Asa natao nandritra ny vanim-potoana (CPF and. I-104)</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_line_01" model="account.report.line">
+                        <field name="name">[01] Taxable operations at 20%</field>
+                        <field name="name@fr">[01] Opérations taxables à 20%</field>
+                        <field name="name@mg">[01] Asa iharan'ny TVA 20%</field>
+                        <field name="code">tax_mg_01</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_01_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-01</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_02" model="account.report.line">
+                        <field name="name">[02] Taxable operations at 10% (butane gas)</field>
+                        <field name="name@fr">[02] Opérations taxables à 10% (gaz butane)</field>
+                        <field name="name@mg">[02] Asa iharan'ny TVA 10% (entona butane)</field>
+                        <field name="code">tax_mg_02</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_02_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-02</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_03" model="account.report.line">
+                        <field name="name">[03] Exports at 0%</field>
+                        <field name="name@fr">[03] Exportations à 0%</field>
+                        <field name="name@mg">[03] Fanondranana 0%</field>
+                        <field name="code">tax_mg_03</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_03_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-03</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_04" model="account.report.line">
+                        <field name="name">[04] Exempt operations (CDI art. 06.01.06)</field>
+                        <field name="name@fr">[04] Opérations exonérées (CDI art. 06.01.06)</field>
+                        <field name="name@mg">[04] Asa tsy andoavana TVA (CDI and. 06.01.06)</field>
+                        <field name="code">tax_mg_04</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_04_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-04</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_05" model="account.report.line">
+                        <field name="name">[05] Markets subject to IRM (CDI art. 01.01.44)</field>
+                        <field name="name@fr">[05] Marchés soumis à l'IRM (CDI art. 01.01.44)</field>
+                        <field name="name@mg">[05] Tsena iharan'ny IRM (CDI and. 01.01.44)</field>
+                        <field name="code">tax_mg_05</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_05_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-05</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_section_collected" model="account.report.line">
+                <field name="name">Collected VAT (CDI art. 06.01.12)</field>
+                <field name="name@fr">TVA collectée (CDI art. 06.01.12)</field>
+                <field name="name@mg">TVA voaangona (CDI and. 06.01.12)</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_line_06" model="account.report.line">
+                        <field name="name">[06] Collected VAT at 20%</field>
+                        <field name="name@fr">[06] TVA collectée à 20%</field>
+                        <field name="name@mg">[06] TVA voaangona 20%</field>
+                        <field name="code">tax_mg_06</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_06_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-06</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_07" model="account.report.line">
+                        <field name="name">[07] Collected VAT at 10%</field>
+                        <field name="name@fr">[07] TVA collectée à 10%</field>
+                        <field name="name@mg">[07] TVA voaangona 10%</field>
+                        <field name="code">tax_mg_07</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_07_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-07</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_08" model="account.report.line">
+                        <field name="name">[08] Total collected VAT</field>
+                        <field name="name@fr">[08] Total TVA collectée</field>
+                        <field name="name@mg">[08] Totalin'ny TVA voaangona</field>
+                        <field name="code">tax_mg_08</field>
+                        <field name="aggregation_formula">tax_mg_06.balance + tax_mg_07.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_section_purchases" model="account.report.line">
+                <field name="name">Purchases for the period</field>
+                <field name="name@fr">Achats de la période</field>
+                <field name="name@mg">Fividianana nandritra ny vanim-potoana</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_line_09" model="account.report.line">
+                        <field name="name">[09] Local purchases of goods and services</field>
+                        <field name="name@fr">[09] Achats locaux de biens et services</field>
+                        <field name="name@mg">[09] Fividianana entana sy tolotra eto an-toerana</field>
+                        <field name="code">tax_mg_09</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_09_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">09</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_10" model="account.report.line">
+                        <field name="name">[10] Fixed assets and imports</field>
+                        <field name="name@fr">[10] Immobilisations et importations</field>
+                        <field name="name@mg">[10] Fananana sy fanafarana</field>
+                        <field name="code">tax_mg_10</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_10_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">10</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_11" model="account.report.line">
+                        <field name="name">[11] Purchases with non-deductible VAT (CDI art. 06.01.18)</field>
+                        <field name="name@fr">[11] Achats dont la TVA est non déductible (CDI art. 06.01.18)</field>
+                        <field name="name@mg">[11] Fividianana tsy azo hesorina ny TVA (CDI and. 06.01.18)</field>
+                        <field name="code">tax_mg_11</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_11_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">11</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_section_deductible" model="account.report.line">
+                <field name="name">Deductible VAT (CDI art. 06.01.17)</field>
+                <field name="name@fr">TVA déductible (CDI art. 06.01.17)</field>
+                <field name="name@mg">TVA azo hesorina (CDI and. 06.01.17)</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_line_12" model="account.report.line">
+                        <field name="name">[12] On goods and services</field>
+                        <field name="name@fr">[12] Sur biens et services</field>
+                        <field name="name@mg">[12] Amin'ny entana sy tolotra</field>
+                        <field name="code">tax_mg_12</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_12_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">12</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_13" model="account.report.line">
+                        <field name="name">[13] On fixed assets</field>
+                        <field name="name@fr">[13] Sur immobilisations</field>
+                        <field name="name@mg">[13] Amin'ny fananana</field>
+                        <field name="code">tax_mg_13</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_13_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">13</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_14" model="account.report.line">
+                        <field name="name">[14] Paid on imports</field>
+                        <field name="name@fr">[14] Acquittée à l'importation</field>
+                        <field name="name@mg">[14] Naloa tamin'ny fanafarana</field>
+                        <field name="code">tax_mg_14</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_14_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">14</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_15" model="account.report.line">
+                        <field name="name">[15] Intermittent VAT on services from non-residents (CDI art. 06.01.09 bis)</field>
+                        <field name="name@fr">[15] TVA intermittente sur prestations de non-résidents (CDI art. 06.01.09 bis)</field>
+                        <field name="name@mg">[15] TVA miserana amin'ny tolotra avy amin'ny tsy mponina (CDI and. 06.01.09 bis)</field>
+                        <field name="code">tax_mg_15</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_15_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">15</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_16" model="account.report.line">
+                        <field name="name">[16] Total deductible VAT</field>
+                        <field name="name@fr">[16] Total TVA déductible</field>
+                        <field name="name@mg">[16] Totalin'ny TVA azo hesorina</field>
+                        <field name="code">tax_mg_16</field>
+                        <field name="aggregation_formula">tax_mg_12.balance + tax_mg_13.balance + tax_mg_14.balance + tax_mg_15.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_section_result" model="account.report.line">
+                <field name="name">VAT result</field>
+                <field name="name@fr">Résultat</field>
+                <field name="name@mg">Vokatra</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_line_17" model="account.report.line">
+                        <field name="name">[17] VAT payable (CDI art. 06.01.16)</field>
+                        <field name="name@fr">[17] TVA à payer (CDI art. 06.01.16)</field>
+                        <field name="name@mg">[17] TVA tokony haloa (CDI and. 06.01.16)</field>
+                        <field name="code">tax_mg_17</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_17_formula" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">tax_mg_08.balance - tax_mg_16.balance</field>
+                                <field name="subformula">if_above(CUR(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_18" model="account.report.line">
+                        <field name="name">[18] VAT credit to carry forward (CDI art. 06.01.23)</field>
+                        <field name="name@fr">[18] Crédit de TVA à reporter (CDI art. 06.01.23)</field>
+                        <field name="name@mg">[18] TVA ambim-bola hafindra (CDI and. 06.01.23)</field>
+                        <field name="code">tax_mg_18</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_18_formula" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">tax_mg_16.balance - tax_mg_08.balance</field>
+                                <field name="subformula">if_above(CUR(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+    <record id="tax_report_intermittent" model="account.report">
+        <field name="name">Intermittent VAT Return</field>
+        <field name="name@fr">Déclaration de TVA intermittente</field>
+        <field name="name@mg">Fanambarana TVA miserana</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.mg"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_intermittent_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@fr">Solde</field>
+                <field name="name@mg">Sisa</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_report_section_intermittent" model="account.report.line">
+                <field name="name">Services from non-resident providers (CDI art. 06.01.09 bis)</field>
+                <field name="name@fr">Prestations de prestataires non-résidents (CDI art. 06.01.09 bis)</field>
+                <field name="name@mg">Tolotra avy amin'ny mpanome tolotra tsy mponina (CDI and. 06.01.09 bis)</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_line_I01" model="account.report.line">
+                        <field name="name">[I01] Amount of services</field>
+                        <field name="name@fr">[I01] Montant des prestations</field>
+                        <field name="name@mg">[I01] Sandan'ny tolotra</field>
+                        <field name="code">tax_mg_I01</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_I01_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">I01</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_I02" model="account.report.line">
+                        <field name="name">[I02] Intermittent VAT due</field>
+                        <field name="name@fr">[I02] TVA intermittente due</field>
+                        <field name="name@mg">[I02] TVA miserana tokony haloa</field>
+                        <field name="code">tax_mg_I02</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_I02_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-I02</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+    <record id="tax_report_irinr" model="account.report">
+        <field name="name">IRI-NR Return</field>
+        <field name="name@fr">Déclaration IRI-NR</field>
+        <field name="name@mg">Fanambarana IRI-NR</field>
+        <field name="country_id" ref="base.mg"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_irinr_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@fr">Solde</field>
+                <field name="name@mg">Sisa</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_report_section_irinr" model="account.report.line">
+                <field name="name">Services paid to non-resident providers (CDI art. 01.01.14 II)</field>
+                <field name="name@fr">Prestations payées aux prestataires non-résidents (CDI art. 01.01.14 II)</field>
+                <field name="name@mg">Tolotra naloa tamin'ny mpanome tolotra tsy mponina (CDI and. 01.01.14 II)</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_line_NR01" model="account.report.line">
+                        <field name="name">[NR01] Amount paid</field>
+                        <field name="name@fr">[NR01] Montant payé</field>
+                        <field name="name@mg">[NR01] Vola naloa</field>
+                        <field name="code">tax_mg_NR01</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_NR01_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">NR01</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_NR02" model="account.report.line">
+                        <field name="name">[NR02] IRI-NR withheld at 10%</field>
+                        <field name="name@fr">[NR02] IRI-NR retenu à 10%</field>
+                        <field name="name@mg">[NR02] IRI-NR nalaina 10%</field>
+                        <field name="code">tax_mg_NR02</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_NR02_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-NR02</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+    <record id="tax_report_is_withholding" model="account.report">
+        <field name="name">Synthetic Tax Withheld Return</field>
+        <field name="name@fr">Déclaration de l'IS retenu à la source</field>
+        <field name="name@mg">Fanambarana hetra synthétique nalaina</field>
+        <field name="country_id" ref="base.mg"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_is_withholding_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@fr">Solde</field>
+                <field name="name@mg">Sisa</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_report_section_is_withholding" model="account.report.line">
+                <field name="name">Purchases from base producers (CDI art. 01.02.07 bis)</field>
+                <field name="name@fr">Achats auprès des producteurs de base (CDI art. 01.02.07 bis)</field>
+                <field name="name@mg">Fividianana amin'ny mpamokatra fototra (CDI and. 01.02.07 bis)</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_line_IS01" model="account.report.line">
+                        <field name="name">[IS01] Amount of purchases</field>
+                        <field name="name@fr">[IS01] Montant des achats</field>
+                        <field name="name@mg">[IS01] Sandan'ny fividianana</field>
+                        <field name="code">tax_mg_IS01</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_IS01_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">IS01</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_IS02" model="account.report.line">
+                        <field name="name">[IS02] Synthetic tax withheld</field>
+                        <field name="name@fr">[IS02] Impôt synthétique retenu</field>
+                        <field name="name@mg">[IS02] Hetra synthétique nalaina</field>
+                        <field name="code">tax_mg_IS02</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_IS02_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-IS02</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>
