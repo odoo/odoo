@@ -1293,7 +1293,7 @@ class TestChannelInternals(MailCommon, HttpCase):
         test_group = self.env['discuss.channel'].create({
             'name': 'Private Channel',
             'channel_type': 'group',
-            'channel_partner_ids': [(6, 0, test_user.partner_id.id)]
+            'channel_partner_ids': [Command.set(test_user.partner_id.ids)],
         })
         test_group._add_members(users=self.user_employee_nomail)
 
@@ -1564,6 +1564,15 @@ class TestChannelInternals(MailCommon, HttpCase):
         actual_member_ids = [m.partner_id.id if m.partner_id else m.guest_id.id for m in channel.channel_member_ids]
         expected_member_ids = [self.partner_employee.id, self.guest.id, self.env.user.partner_id.id]
         self.assertCountEqual(actual_member_ids, expected_member_ids)
+
+    @users("employee")
+    def test_create_channel_with_partner_ids_set_command(self):
+        partners = self.partner_employee | self.test_partner
+        channel = self.env["discuss.channel"].create({
+            "name": "test channel",
+            "channel_partner_ids": [Command.set(partners.ids)],
+        })
+        self.assertEqual(channel.channel_partner_ids, partners)
 
     def test_channel_add_members_push_notification(self):
         invited_user = mail_new_test_user(self.env, login="invitee_push_lang", groups="base.group_user")
