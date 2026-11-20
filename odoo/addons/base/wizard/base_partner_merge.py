@@ -500,7 +500,7 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
             })
 
         # Merge bank accounts before merging partners
-        self._merge_bank_accounts(src_partners, dst_partner)
+        self.sudo()._merge_bank_accounts(src_partners, dst_partner)
 
         # call sub methods to do the merge
         self._update_foreign_keys(src_partners, dst_partner)
