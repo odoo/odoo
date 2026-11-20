@@ -53,6 +53,10 @@ export class CarouselSlider extends Interaction {
             },
             "t-att-tabindex": (el) => (el.classList.contains("active") ? undefined : "-1"),
         },
+        ":scope:not(.s_carousel_controllers_indicators_outside):has(.slide-link) > :is(.o_horizontal_controllers, .s_carousel_intro_controllers, .carousel-indicators)":
+            {
+                "t-on-click.noUpdate": this.onIndicatorsWrapperClick,
+            },
     };
     carouselOptions = undefined;
     showClickableSlideLinks = true;
@@ -304,6 +308,32 @@ export class CarouselSlider extends Interaction {
                 imageEl.removeAttribute("loading");
             }
         }
+    }
+
+    /**
+     * Forwards click events from the indicator/controller wrapper to the active
+     * slide link.
+     *
+     * The wrapper can overlap the active slide link, preventing direct
+     * interaction with it. Instead of relying on CSS `pointer-events` (which
+     * would break horizontal scrolling on mobile), clicks on the wrapper are
+     * manually redirected to the active slide link.
+     *
+     * Clicks originating from carousel controls or indicator buttons are
+     * ignored to preserve their native behavior.
+     *
+     * @param {PointerEvent} ev
+     */
+    onIndicatorsWrapperClick(ev) {
+        if (
+            !this.showClickableSlideLinks ||
+            ev.target.closest("[data-bs-slide-to], .carousel-control-prev, .carousel-control-next")
+        ) {
+            return;
+        }
+        this.el
+            .querySelector(".carousel-item.active .slide-link")
+            ?.dispatchEvent(new ev.constructor(ev.type, ev));
     }
 }
 
