@@ -1,4 +1,4 @@
-import { Component, useProps, proxy, signal, t } from "@odoo/owl";
+import { Component, onMounted, onPatched, useProps, proxy, signal, t } from "@odoo/owl";
 import { OptionsContainer } from "./option_container";
 import { useVisibilityObserver } from "../core/utils";
 import { CustomizeComponent } from "@html_builder/sidebar/customize_component";
@@ -19,6 +19,10 @@ export class CustomizeTab extends Component {
             this.state.hasContent = hasContent;
         });
         this.overlayPreviewedEl = null;
+        const { getOptionsDisplay, notifyOptionsRendered } = this.env.editor.shared.builderOptions;
+        this.optionsDisplay = getOptionsDisplay();
+        onMounted(notifyOptionsRendered);
+        onPatched(notifyOptionsRendered);
     }
 
     toggleOverlayPreview(el, show) {

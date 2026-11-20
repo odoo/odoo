@@ -1,8 +1,22 @@
-import { Component, onMounted, onPatched, proxy, signal, t, useEffect, useProps } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onPatched,
+    onWillDestroy,
+    providePlugins,
+    proxy,
+    signal,
+    t,
+    useEffect,
+    useProps,
+} from "@odoo/owl";
 import { useTransition } from "@web/core/transition";
 import { uniqueId } from "@web/core/utils/functions";
 import {
     basicContainerBuilderComponentProps,
+    findPlugin,
+    OptionsContainerPlugin,
+    OptionsRowPlugin,
     useApplyVisibility,
     useBuilderComponent,
     useVisibilityObserver,
@@ -34,11 +48,23 @@ export class BuilderRow extends Component {
 
     setup() {
         useBuilderComponent(this.props);
+        const container = findPlugin(OptionsContainerPlugin)?.container;
+        if (container) {
+            const row = {
+                getLabel: () => this.props.label,
+                getElement: this.rootRef,
+                controls: new Set(),
+            };
+            container.rows.add(row);
+            onWillDestroy(() => container.rows.delete(row));
+            providePlugins([OptionsRowPlugin], { row });
+        }
+        const expand =
+            this.props.expand ||
+            (container && this.env.editor.shared.builderOptions.getOptionsDisplay().showAll);
         useVisibilityObserver(this.contentRef, useApplyVisibility(this.rootRef));
 
-        this.state = proxy({
-            expanded: this.props.expand,
-        });
+        this.state = proxy({ expanded: expand });
 
         if (this.props.slots.collapse) {
             useVisibilityObserver(this.collapseContentRef, useApplyVisibility(this.collapseRef));
@@ -49,7 +75,7 @@ export class BuilderRow extends Component {
         let isMounted = false;
 
         onMounted(() => {
-            if (this.props.initialExpandAnim) {
+            if (this.props.initialExpandAnim && !expand) {
                 setTimeout(() => {
                     this.toggleCollapseContent();
                 }, 150);
@@ -57,7 +83,7 @@ export class BuilderRow extends Component {
         });
 
         this.transition = useTransition({
-            initialVisibility: this.props.expand,
+            initialVisibility: expand,
             leaveDuration: 350,
             name: "o_hb_collapse_content",
         });
@@ -76,7 +102,7 @@ export class BuilderRow extends Component {
             };
 
             // Skip transition on first mount if expand=true.
-            if (isFirstMount && this.props.expand) {
+            if (isFirstMount && expand) {
                 setHeightAuto();
                 return;
             }
