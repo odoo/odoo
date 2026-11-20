@@ -306,6 +306,29 @@ describe("selection", () => {
         });
         expect(getContent(el)).toBe("<p>[]a</p>");
     });
+
+    test("undo should restore the selection staged at startup and after each commit", async () => {
+        const { editor, el } = await setupEditor("<p>a[]d</p>");
+        const text = el.querySelector("p").firstChild;
+
+        // Change 1: a[]d -> ab[]d
+        text.textContent = "abd";
+        setSelection({ anchorNode: text, anchorOffset: 2 });
+        editor.shared.history.commit();
+
+        // Change 2: ab[]d -> abc[]d
+        text.textContent = "abcd";
+        setSelection({ anchorNode: text, anchorOffset: 3 });
+        editor.shared.history.commit();
+
+        // Undo 1: abc[]d -> ab[]d
+        editor.shared.history.undo();
+        expect(getContent(el)).toBe("<p>ab[]d</p>");
+
+        // Undo 2: ab[]d -> a[]d
+        editor.shared.history.undo();
+        expect(getContent(el)).toBe("<p>a[]d</p>");
+    });
 });
 
 describe("commit", () => {
@@ -537,9 +560,63 @@ describe("makeSavePoint", () => {
         restore();
         expect(getContent(el)).toBe(`<p>[abc]</p>`);
     });
+    test("makeSavePoint restores a selection in a node added by draft mutations", async () => {
+        const { el, editor } = await setupEditor("<p>[]a</p>");
+
+        // Uncommitted change before save point: []a -> ab[]
+        const b = document.createTextNode("b");
+        el.querySelector("p").append(b);
+        setSelection({ anchorNode: b, anchorOffset: 1 });
+        const restore = editor.shared.history.makeSavePoint();
+
+        // Committed change after save point: []a -> abc[]
+        editor.shared.dom.insert("c");
+        editor.shared.history.commit();
+        expect(getContent(el)).toBe("<p>abc[]</p>");
+
+        restore();
+        expect(getContent(el)).toBe("<p>ab[]</p>");
+    });
+    test("makeSavePoint does not set a selection if there was none", async () => {
+        const { el, editor } = await setupEditor("<p>a</p>");
+        const restore = editor.shared.history.makeSavePoint();
+        el.querySelector("p").append(document.createTextNode("b"));
+        restore();
+        expect(getContent(el)).toBe("<p>a</p>");
+        expect(document.getSelection().anchorNode).toBe(null);
+    });
 });
 
 describe("makePreviewableOperation", () => {
+    test("makePreviewableOperation captures the live cursor without losing pending mutations", async () => {
+        const { editor, el } = await setupEditor("<p>a[]bcd</p>");
+        const p = el.querySelector("p");
+
+        // Uncommitted change: <p>a[]bcd</p> -> <p data-pending="1">abc[]d</p>
+        p.dataset.pending = "1";
+        setSelection({ anchorNode: p.firstChild, anchorOffset: 3 });
+
+        // Preview: <p data-pending="1">abc[]d</p> -> <p data-pending="1" data-preview="2">[]abcd</p>
+        const operation = editor.shared.history.makePreviewableOperation(() => {
+            p.dataset.preview = "2";
+            setSelection({ anchorNode: p.firstChild, anchorOffset: 0 });
+        });
+        operation.preview();
+        expect(getContent(el)).toBe('<p data-pending="1" data-preview="2">[]abcd</p>');
+
+        // A commit was made with the previewed selection and all the mutations.
+        const { data } = editor.shared.history.getCommits().at(-1);
+        expect(data.selection.anchorOffset).toBe(3);
+        expect(data.selection.focusOffset).toBe(3);
+        const changedAttributes = data.mutations.map((mutation) => mutation.attributeName);
+        expect(changedAttributes.includes("data-pending")).toBe(true);
+        expect(changedAttributes.includes("data-preview")).toBe(true);
+
+        // Reverting the operation restores the state before the preview.
+        operation.revert();
+        expect(getContent(el)).toBe('<p data-pending="1">abc[]d</p>');
+    });
+
     test("makePreviewableOperation correctly revert previews", async () => {
         const { plugins } = await setupEditor(`<div id="test"></div>`);
 
@@ -1010,6 +1087,36 @@ describe("custom operations", () => {
 
         // Redoing again re-applies the committed operation again.
         redo(editor);
+        expect.verifySteps(["apply"]);
+    });
+    test("operations are replayed after the DOM mutations of their commit", async () => {
+        const { editor, el } = await setupEditor(`<p>[]a</p>`);
+        const paragraph = editor.document.createElement("p");
+
+        // In the same commit, add a paragraph and stage an operation that
+        // depends on it.
+        el.append(paragraph);
+        editor.shared.history.stageCustomOperation({
+            apply: () => {
+                expect(paragraph.isConnected).toBe(true, {
+                    message: "Redo adds the paragraph again before applying the operation.",
+                });
+                expect.step("apply");
+            },
+            revert: () => {
+                expect(paragraph.isConnected).toBe(false, {
+                    message: "Undo removes the paragraph before reverting the operation.",
+                });
+                expect.step("revert");
+            },
+        });
+        expect.verifySteps(["apply"]);
+        editor.shared.history.commit();
+
+        editor.shared.history.undo();
+        expect.verifySteps(["revert"]);
+
+        editor.shared.history.redo();
         expect.verifySteps(["apply"]);
     });
 });

@@ -48,6 +48,109 @@ test("Undo/Redo correctly restores the stored container target", async () => {
     expect(".o_hb_options_container").toHaveCount(0);
 });
 
+const BASIC_OPTION_CLASS = "test-options-target";
+const BASIC_OPTION_NAME = "Target";
+const setupBasicBuilderWithOption = async () => {
+    addBuilderOption({
+        selector: `.${BASIC_OPTION_CLASS}`,
+        template: xml`<div>Test</div>`,
+    });
+    const { getEditor } = await setupHTMLBuilder(`
+        <div data-name="${BASIC_OPTION_NAME}" class="${BASIC_OPTION_CLASS}"><p>Homepage</p></div>
+    `);
+    return getEditor();
+};
+const assertTargetIsBasicOption = (builderOptions) => {
+    expect(builderOptions.getTarget().classList.contains(BASIC_OPTION_CLASS)).toBe(true);
+    expect(".o_hb_options_container").toHaveAttribute("data-container-title", BASIC_OPTION_NAME);
+};
+
+test("Changing container targets does not create committable history data", async () => {
+    const editor = await setupBasicBuilderWithOption();
+    const { history, builderOptions } = editor.shared;
+
+    // Change the container target.
+    await contains(`:iframe .${BASIC_OPTION_CLASS}`).click();
+    assertTargetIsBasicOption(builderOptions); // The target changed.
+    // No changes were recorded.
+    expect(history.commit()).toBe(false);
+    expect(history.canUndo()).toBe(false);
+
+    // Set the container to be deactivated on the next commit.
+    builderOptions.setNextTarget(false);
+    assertTargetIsBasicOption(builderOptions); // The target didn't change.
+    // No changes were recorded.
+    expect(history.commit()).toBe(false);
+    expect(history.canUndo()).toBe(false);
+});
+
+test("Restoring a save point discards a later pending target deactivation", async () => {
+    const editor = await setupBasicBuilderWithOption();
+    const { history, builderOptions } = editor.shared;
+
+    // Test the difference between with and without the save point restoration.
+    for (const withSavePointRestoration of [false, true]) {
+        // Change the container target.
+        await contains(`:iframe .${BASIC_OPTION_CLASS}`).click();
+        assertTargetIsBasicOption(builderOptions); // The target changed.
+
+        if (withSavePointRestoration) {
+            // Set the container to be deactivated on the next commit, then restore to
+            // the save point just before that.
+            const restore = history.makeSavePoint();
+            builderOptions.setNextTarget(false);
+            restore();
+        } else {
+            builderOptions.setNextTarget(false);
+        }
+        assertTargetIsBasicOption(builderOptions); // The target didn't change.
+
+        // Make a change in the DOM and commit.
+        const newClass = withSavePointRestoration ? "restore" : "do-not-restore";
+        builderOptions.getTarget().classList.add(newClass);
+        history.commit();
+        await animationFrame(); // Waiting for the option to re-render.
+        if (withSavePointRestoration) {
+            // The target didn't change (so `setNextTarget(false)` was reversed).
+            assertTargetIsBasicOption(builderOptions);
+        } else {
+            // The target changed (so `setNextTarget(false)` was applied).
+            expect(builderOptions.getTarget()).toBe(null);
+            expect(".o_hb_options_container").toHaveCount(0);
+        }
+    }
+});
+
+test("Undo/redo restores a newly created container target", async () => {
+    const editor = await setupBasicBuilderWithOption();
+    const { history, builderOptions, clone } = editor.shared;
+
+    // Change the container target.
+    await contains(`:iframe .${BASIC_OPTION_CLASS}`).click();
+    const originalTarget = builderOptions.getTarget();
+
+    // Clone the target and activate it.
+    const clonedTarget = await clone.cloneElement(originalTarget);
+    expect(`:iframe .${BASIC_OPTION_CLASS}`).toHaveCount(2); // The clone was inserted.
+    history.commit();
+    // By default, `cloneElement` sets the clone to be activated on commit.
+    expect(builderOptions.getTarget()).toBe(clonedTarget); // The clone was activated.
+
+    // Undo restores the original target.
+    history.undo();
+    expect(`:iframe .${BASIC_OPTION_CLASS}`).toHaveCount(1); // The clone was removed.
+    expect(builderOptions.getTarget()).toBe(originalTarget); // The original target was restored.
+
+    // Redo restores the clone as target.
+    history.redo();
+    expect(`:iframe .${BASIC_OPTION_CLASS}`).toHaveCount(2); // The clone was re-inserted.
+    const finalTarget = builderOptions.getTarget();
+    expect(finalTarget).toBe(clonedTarget); // The clone was activated.
+    // The clone is properly rendered.
+    expect(finalTarget.isConnected).toBe(true);
+    expect(finalTarget.innerHTML).toBe("<p>Homepage</p>");
+});
+
 test("Undo/Redo multiple actions always restores the action container target", async () => {
     addBuilderAction({
         customAction: class extends BuilderAction {
