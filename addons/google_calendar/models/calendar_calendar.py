@@ -92,7 +92,14 @@ class CalendarCalendar(models.Model):
         new = google_calendars - updated - primary - deleted
 
         if primary:
-            self.env.user._find_or_create_primary_calendar().write({'google_id': primary.id, 'need_sync': False})
+            primary_calendar = self.env.user._find_or_create_primary_calendar()
+            # After switching Google accounts, the Odoo primary calendar is still linked to the primary calendar
+            # of the previous account. If that calendar is shared with the new account, it must be imported as
+            # a separate calendar instead of updating the primary one.
+            previous_primary = updated.filter(lambda c: not c.primary and c.odoo_id(self.env) == primary_calendar.id)
+            updated -= previous_primary
+            new += previous_primary
+            primary_calendar.write({'google_id': primary.id, 'need_sync': False})
 
         # Create
         if new:
@@ -147,7 +154,9 @@ class CalendarCalendar(models.Model):
         existing_calendar_user = odoo_calendar.calendar_user_id
         if existing_calendar_user:
             command = Command.update(existing_calendar_user.id, {
-                'access_role': new_access_role or existing_calendar_user.access_role,
+                # The primary calendar always belongs to its user, whatever the role given by Google
+                'access_role': existing_calendar_user.access_role if existing_calendar_user.is_primary
+                    else new_access_role or existing_calendar_user.access_role,
                 'name': google_record.summaryOverride or google_record.summary or existing_calendar_user.name,
             })
         else:
