@@ -5,7 +5,6 @@ import logging
 import re
 
 from datetime import datetime
-from itertools import starmap
 
 from odoo import _, api, fields, models
 from odoo.exceptions import LockError, UserError
@@ -13,6 +12,9 @@ from odoo.addons.l10n_in_ewaybill.tools.ewaybill_api import EWayBillApi, EWayBil
 from odoo.tools import BinaryBytes
 
 _logger = logging.getLogger(__name__)
+
+# Maximum number of entries accepted in the itemList of the e-Waybill API
+EWAYBILL_MAX_ITEMS = 250
 
 
 class L10nInEwaybill(models.Model):
@@ -119,6 +121,19 @@ class L10nInEwaybill(models.Model):
         ],
         string="Transaction Type",
         compute='_compute_transaction_type',
+    )
+    item_representation = fields.Selection(
+        selection=[
+            ('detailed', "Detailed"),
+            ('summarised', "Summarised"),
+        ],
+        string="Item Details",
+        required=True,
+        default='detailed',
+        tracking=True,
+        help="Detailed: one e-Waybill item is sent for each line of the document.\n"
+             "Summarised: lines sharing the same HSN code, unit of measure and taxes are combined "
+             "into a single e-Waybill item. The source document itself is not modified.",
     )
 
     # Document number and date required in case of transportation mode is Rail, Air or Ship.
@@ -556,13 +571,34 @@ class L10nInEwaybill(models.Model):
                 "Retrying E-Waybill generation on the government portal."
             ))
 
+    def _check_item_list_size(self, item_list):
+        if len(item_list) <= EWAYBILL_MAX_ITEMS:
+            return
+        if self.item_representation == 'detailed':
+            raise UserError(_(
+                "An e-Waybill can contain at most %(max_items)s items, but this document results in %(count)s items.\n"
+                "Select the 'Summarised' option for Items to combine the lines sharing the same HSN code, "
+                "unit of measure and taxes.",
+                max_items=EWAYBILL_MAX_ITEMS,
+                count=len(item_list),
+            ))
+        raise UserError(_(
+            "An e-Waybill can contain at most %(max_items)s items, but this document still results in "
+            "%(count)s items after summarisation.\n"
+            "Only the lines sharing the same HSN code, unit of measure and taxes can be combined.",
+            max_items=EWAYBILL_MAX_ITEMS,
+            count=len(item_list),
+        ))
+
     def _generate_ewaybill(self):
         self.ensure_one()
+        ewaybill_json = self._ewaybill_generate_direct_json()
+        self._check_item_list_size(ewaybill_json['itemList'])
         self._log_retry_message_on_generate()
         ewb_api = EWayBillApi(self.company_id)
         self._lock_ewaybill()
         try:
-            response = ewb_api._ewaybill_generate(self._ewaybill_generate_direct_json())
+            response = ewb_api._ewaybill_generate(ewaybill_json)
         except EWayBillError as error:
             self._handle_error(error)
             return False
@@ -633,6 +669,57 @@ class L10nInEwaybill(models.Model):
         if tax_details_by_code.get('cess_rate'):
             line_details.update({'cessRate': round_value(tax_details_by_code.get('cess_rate'))})
         return line_details
+
+    def _get_l10n_in_ewaybill_line_uom(self, line):
+        """ Return the unit of measure and the taxes of a line given to `_get_l10n_in_ewaybill_line_details`. """
+        return line.product_uom_id
+
+    def _get_l10n_in_ewaybill_item_grouping_key(self, line, item):
+        """ Return the key identifying the items that can be combined with `item` in summarised mode,
+        or None if it must be kept on its own.
+
+        The key holds every item-level value of the e-Waybill except the quantity, the taxable amount
+        and the product name and description. The unit of measure and the taxes of the line are part of
+        it too, so that only lines with the same unit and the same tax treatment (e.g. exempt vs nil
+        rated) are combined. Lines without a valid HSN code or unit of measure are never combined.
+        """
+        uom = self._get_l10n_in_ewaybill_line_uom(line)
+        return (
+            item['hsnCode'],
+            item['qtyUnit'],
+            uom,
+            *(item.get(rate) for rate in ('cgstRate', 'sgstRate', 'igstRate', 'cessRate')),
+        )
+
+    def _get_l10n_in_ewaybill_item_list(self, lines_tax_details):
+        """ Build the itemList of the e-Waybill according to the selected item representation.
+
+        :param lines_tax_details: iterable of (line, tax_details) pairs, as given to `_get_l10n_in_ewaybill_line_details`
+        :return: list of item dictionaries
+        """
+        items = [
+            (line, self._get_l10n_in_ewaybill_line_details(line, tax_details))
+            for line, tax_details in lines_tax_details
+        ]
+        if self.item_representation != 'summarised':
+            return [item for _line, item in items]
+
+        round_value = self.env['account.move']._l10n_in_round_value
+        quantity_digits = self.env['decimal.precision'].precision_get('Product Unit')
+        summarised_items = {}
+        for line, item in items:
+            # Lines that cannot be combined get a key of their own (the line itself)
+            key = self._get_l10n_in_ewaybill_item_grouping_key(line, item) or line
+            if not (summarised_item := summarised_items.get(key)):
+                summarised_items[key] = dict(item)
+                continue
+            summarised_item['quantity'] = round_value(summarised_item['quantity'] + item['quantity'], quantity_digits)
+            summarised_item['taxableAmount'] = round_value(summarised_item['taxableAmount'] + item['taxableAmount'])
+            # Only keep the product details shared by all the combined lines
+            for product_field in ('productName', 'productDesc'):
+                if summarised_item[product_field] != item[product_field]:
+                    summarised_item[product_field] = ""
+        return list(summarised_items.values())
 
     def _prepare_ewaybill_base_json_payload(self):
         def prepare_details(key_paired_function, partner_detail):
@@ -716,7 +803,7 @@ class L10nInEwaybill(models.Model):
             )
             total_invoice_value -= adjusting_rc_amount
         return {
-            "itemList": list(starmap(self._get_l10n_in_ewaybill_line_details, filtered_invoice_line_tax_details.items())),
+            "itemList": self._get_l10n_in_ewaybill_item_list(filtered_invoice_line_tax_details.items()),
             "totalValue": round_value(tax_details.get("base_amount", 0.00)),
             **{
                 f'{tax_type}Value': round_value(tax_details_by_code.get(f'{tax_type}_amount', 0.00))
