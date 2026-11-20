@@ -883,7 +883,8 @@ class ResCompany(models.Model):
         def del_lines(lines):
             nonlocal open_balance
             for line in lines:
-                open_balance -= line.balance
+                if line.account_id != balancing_account:
+                    open_balance -= line.balance
                 yield Command.delete(line.id)
 
         def update_vals(account, side, balance, balancing=False):
@@ -891,12 +892,14 @@ class ResCompany(models.Model):
             corresponding_lines = corresponding_lines_per_account[(account, side)]
             currency = account.currency_id or self.currency_id
             amount_currency = balance if balancing else self.currency_id._convert(balance, currency, date=conversion_date)
-            open_balance += balance
+            if not balancing:
+                open_balance += balance
             if self.currency_id.is_zero(balance):
                 yield from del_lines(corresponding_lines)
             elif corresponding_lines:
                 line_to_update = corresponding_lines[0]
-                open_balance -= line_to_update.balance
+                if not balancing:
+                    open_balance -= line_to_update.balance
                 yield Command.update(line_to_update.id, {
                     'balance': balance,
                     'amount_currency': amount_currency,
@@ -920,9 +923,10 @@ class ResCompany(models.Model):
 
         # Update the opening move's lines.
         balancing_account = self.get_unaffected_earnings_account()
-        open_balance = (
-            sum(corresponding_lines_per_account[(balancing_account, 'credit')].mapped('credit'))
-            -sum(corresponding_lines_per_account[(balancing_account, 'debit')].mapped('debit'))
+        # Sum of the balances of the non-balancing lines: the balancing line is recomputed from it,
+        # so the existing balancing lines must not be counted here.
+        open_balance = sum(
+            line.balance for line in opening_move.line_ids if line.account_id != balancing_account
         )
         commands = []
         move_values = {'line_ids': commands}
