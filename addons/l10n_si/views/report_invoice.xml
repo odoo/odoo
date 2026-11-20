@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+        <xpath expr="//div[@id='qrcode_image']/t[@t-set='qr_code_url']" position="after">
+            <t t-set="l10n_si_is_upn_qr" t-value="o._get_qr_code_method() == 'si_upn_qr'"/>
+        </xpath>
+        <!-- The UPN QR standard sets the printed size (§ 5.1): 32.6 mm, 36 mm with its white margin.
+             PDF reports shrink their content by 1.25, made up for like the Swiss QR-bill does. -->
+        <xpath expr="//div[@id='qrcode_image']//img[@t-att-src='qr_code_url']" position="attributes">
+            <attribute name="t-att-style">'width: 45mm; height: 45mm;' if l10n_si_is_upn_qr else None</attribute>
+        </xpath>
+        <!-- Nothing may cover the UPN QR code -->
+        <xpath expr="//div[@id='qrcode_image']//img[@id='qrcode_odoo_logo']" position="attributes">
+            <attribute name="t-if">not l10n_si_is_upn_qr</attribute>
+        </xpath>
+    </template>
+
+</odoo>
