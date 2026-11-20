@@ -124,6 +124,11 @@ def force_demo(cr):
     env['ir.module.module'].invalidate_model(['demo'])
     env['res.groups']._update_user_groups_view()
 
+    # Update translations for all installed languages
+    overwrite = odoo.tools.config["overwrite_existing_translations"]
+    modules = env['ir.module.module'].search([('name', 'in', module_list)])
+    modules._update_translations(overwrite=overwrite)
+
 
 def load_module_graph(cr, graph, status=None, perform_checks=True,
                       skip_modules=None, report=None, models_to_check=None):
