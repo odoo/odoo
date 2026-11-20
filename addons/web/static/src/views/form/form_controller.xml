@@ -44,7 +44,7 @@
                     </t>
 
                     <t t-set-slot="control-panel-status-indicator">
-                        <t t-if="canEdit">
+                        <t t-if="canEdit or model.root.isInEdition">
                             <FormStatusIndicator model="model" discard.bind="discard" save.bind="saveButtonClicked" />
                         </t>
                     </t>
