@@ -130,7 +130,8 @@ class AccountMove(models.Model):
     def _need_cancel_request(self):
         # EXTENDS 'account'
         # For the in_progress state, we do not want to allow resetting to draft nor cancelling. We need to wait for the result first.
-        return super()._need_cancel_request() or self._get_active_myinvois_document()
+        # Sudo as users reading the invoice may not have access to its MyInvois documents.
+        return super()._need_cancel_request() or bool(self.sudo()._get_active_myinvois_document())
 
     def _get_name_invoice_report(self):
         # EXTENDS 'account'

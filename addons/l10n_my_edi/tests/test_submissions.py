@@ -4,6 +4,7 @@ from unittest.mock import patch
 
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
+from lxml import etree
 
 from odoo import Command
 from odoo.exceptions import UserError
@@ -493,6 +494,30 @@ class L10nMyEDITestNewSubmission(TestAccountMoveSendCommon):
         with patch(CONTACT_PROXY_METHOD, new=self._test_16_mock), \
              self.assertRaisesRegex(UserError, r'This document is too large to be sent to MyInvois \(350 KB, the maximum is 250 KB\)'):
             self.basic_invoice.action_l10n_my_edi_send_invoice()
+
+    @freeze_time('2024-07-15 10:00:00')
+    def test_17_invoice_form_without_accounting_access(self):
+        """ A user reading invoices without any accounting group, as Sales and Purchase users do, opens the invoice form without reading its MyInvois documents. """
+        invoice_reader_group = self.env['res.groups'].create({'name': 'Invoice Reader'})
+        self.env['ir.model.access'].create([{
+            'name': f'{model} invoice reader',
+            'model_id': self.env['ir.model']._get_id(model),
+            'group_id': invoice_reader_group.id,
+            'perm_read': True,
+        } for model in ('account.journal', 'account.move', 'account.move.line')])
+        invoice_reader = self._create_new_internal_user(
+            login='invoice_reader',
+            group_ids=(self.env.ref('base.group_user') | invoice_reader_group).ids,
+        )
+        with patch(CONTACT_PROXY_METHOD, new=self._test_01_mock):
+            self.basic_invoice.action_l10n_my_edi_send_invoice()
+
+        invoice = self.basic_invoice.with_user(invoice_reader)
+        myinvois_nodes = "//field[@name='l10n_my_edi_document_ids'] | //button[@name='action_show_myinvois_documents']"
+        self.assertEqual(len(etree.fromstring(self.basic_invoice.get_view()['arch']).xpath(myinvois_nodes)), 2)
+        self.assertFalse(etree.fromstring(invoice.get_view()['arch']).xpath(myinvois_nodes))
+        self.env.invalidate_all()
+        self.assertTrue(invoice.need_cancel_request)
 
     # -------------------------------------------------------------------------
     # Patched methods
