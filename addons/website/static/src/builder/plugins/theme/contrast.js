@@ -1,5 +1,4 @@
-import { convertCSSColorToRgba } from "@web/core/utils/colors";
-import { getContrastRatio } from "@html_editor/utils/contrast";
+import { convertCSSColorToRgba, getContrastRatio } from "@web/core/utils/colors";
 
 const WHITE = [255, 255, 255];
 
