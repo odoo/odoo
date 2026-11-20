@@ -2,6 +2,7 @@ import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import {
     Component,
     onMounted,
+    onPatched,
     onWillDestroy,
     onWillStart,
     onWillUnmount,
@@ -20,6 +21,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
 import { RPCError } from "@web/core/network/rpc";
+import { Deferred } from "@web/core/utils/concurrency";
 import { uniqueId } from "@web/core/utils/functions";
 import { useChildRef, useService, useBus } from "@web/core/utils/hooks";
 import { effect } from "@web/core/utils/reactive";
@@ -91,7 +93,13 @@ export class WebsiteBuilderClientAction extends Component {
         useSubEnv({
             builderRef: useRef("container"),
         });
-        this.state = useState({ isEditing: false, showSidebar: true, key: 1, is404: false });
+        this.state = useState({
+            isEditing: false,
+            isReloadingEditor: false,
+            showSidebar: true,
+            is404: false,
+        });
+        onPatched(() => this.builderUnmounted?.resolve());
         this.websiteContext = useState(this.websiteService.context);
         this.component = useComponent();
 
@@ -602,11 +610,17 @@ export class WebsiteBuilderClientAction extends Component {
         this.initialTab = param.initialTab;
         this.target = param.target || null;
         this.folded = param.folded || [];
-        await this.reloadIframe(this.state.isEditing, param.url);
-        // Disable the current instance of the builder and trigger a new
-        // instance of it with `t-key`
-        this.builderSidebarRef.el.firstElementChild.classList.add("o_builder_disabled");
-        this.state.key++;
+        // Unmount the current builder (and destroy its editor) before reloading
+        // the iframe, so that it never runs on an unloaded document. A new
+        // instance is mounted once the iframe is loaded.
+        this.builderUnmounted = new Deferred();
+        this.state.isReloadingEditor = true;
+        await this.builderUnmounted;
+        try {
+            await this.reloadIframe(this.state.isEditing, param.url);
+        } finally {
+            this.state.isReloadingEditor = false;
+        }
     }
 
     async reloadIframeAndCloseEditor() {
