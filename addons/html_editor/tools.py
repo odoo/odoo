@@ -110,6 +110,27 @@ def translated_icon_tags(lang) -> dict[str, str]:
     }
 
 
+@functools.cache
+def icons_catalog(lang) -> list[dict]:
+    """Return every icon with its fill flag and its search tags, for the icon
+    picker to search on the client side.
+
+    The tags are the English ones followed by those translated in ``lang``
+    that differ, so that both stay searchable.  Read from the po files, so the
+    cache is safely shared by all databases.
+    """
+    catalog = []
+    for name, icon in ICONS.items():
+        tags = icon['tags']._source.split('|')
+        if lang != 'en_US':
+            tags += [
+                tag for tag in icon['tags']._translate(lang).split('|')
+                if tag not in tags
+            ]
+        catalog.append({'name': name, 'has_fill': icon['has_fill'], 'tags': tags})
+    return catalog
+
+
 def search_icons(env, needle=''):
     """Yield the name of every icon matching all the words of ``needle``.
 
