@@ -2176,7 +2176,7 @@ class HrExpense(models.Model):
             'move_type': 'entry',
             'partner_id': employee_partner.id,
             'journal_id': self.env['account.journal'].search(
-                [('type', '=', 'bank'), ('company_id', '=', self.env.company.id)], limit=1).id,
+                [('type', '=', 'bank'), *self.env['account.journal']._check_company_domain(self.company_id)], limit=1).id,
             'commercial_partner_id': employee_partner.id,
             'currency_id': self.currency_id.id,
             'company_id': self.company_id.id,
