@@ -453,11 +453,9 @@ class AccountReportLine(models.Model):
             if report_line.parent_id:
                 report_line.horizontal_split_side = report_line.parent_id.horizontal_split_side
 
-    @api.depends('create_date')
+    @api.depends('create_date', 'report_id.groupby', 'groupby')
     def _compute_foldability(self):
         for line in self:
-            if line.foldability:
-                continue
             has_groupby = bool(line.groupby or line.user_groupby or line.report_id.groupby or line.report_id.user_groupby)
             if line.children_ids:
                 line.foldability = 'always_unfolded'
