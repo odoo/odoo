@@ -1,5 +1,5 @@
 .o_field_property_definition {
-    max-height: 100vh;
+    max-height: 70vh;
     overflow-y: auto;
 
     .o_modal_container {
@@ -28,8 +28,21 @@
             margin-left: 0 !important;
         }
     }
-    @media screen and (min-width: 576px), print and (min-width: 100mm) {
-        max-height: 70vh !important;
+
+    @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
+        max-height: 100vh;
+        background-color: var(--o-view-background-color);
+
+        .o_inner_group .o_form_label {
+            font-size: calc(var(--o-label-font-size-factor) * var(--o-font-size-base-touch));
+        }
+
+        .o_field_property_definition_footer {
+            position: sticky;
+            bottom: 0;
+            padding-top: var(--o-bs-spacer-3);
+            background-color: var(--o-view-background-color);
+        }
     }
 }
 
