@@ -135,6 +135,22 @@ registerStoreHandler(
 );
 
 registerStoreHandler(
+    "/discuss/channel/pinned_messages",
+    function store_get_discuss_channel_pinned_messages(store, params) {
+        const DiscussChannel = this.env["discuss.channel"];
+        store.add(
+            DiscussChannel.browse(DiscussChannel.search([["id", "=", params.channel_id]])),
+            "_store_pinned_messages_fields",
+            {
+                as_thread: true,
+                fields_params: { request_list: params.request_list },
+            }
+        );
+    },
+    { audience: "everyone" }
+);
+
+registerStoreHandler(
     "/discuss/channel/pin",
     function store_set_discuss_channel_pin(store, params) {
         /** @type {import("mock_models").DiscussChannelMember} */

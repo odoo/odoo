@@ -1344,6 +1344,93 @@ class TestChannelInternals(MailCommon, HttpCase):
         with self.assertBus(notifications):
             test_group.execute_command_help()
 
+    @users("employee")
+    def test_message_pin(self):
+        self.authenticate(self.env.user.login, self.env.user.login)
+        channel = self.env["discuss.channel"].create({"name": "Pin channel"})
+        message_1 = channel.message_post(body="Message 1", message_type="comment")
+        message_2 = channel.message_post(body="Message 2", message_type="comment")
+        self.assertTrue(channel.set_message_pin(message_1.id, True))
+        self.assertTrue(channel.set_message_pin(message_2.id, True))
+        self.assertTrue(channel.set_message_pin(message_2.id, False))
+        self.assertTrue(message_1.pinned_at)
+        self.assertFalse(message_2.pinned_at)
+        data = pop_store_version(
+            self.make_jsonrpc_request(
+                "/mail/store",
+                {
+                    "fetch_params": [
+                        [
+                            "mail.thread",
+                            {
+                                "thread_model": "discuss.channel",
+                                "thread_id": channel.id,
+                                "request_list": ["pinned_message_count", "pinnedMessages"],
+                            },
+                        ],
+                    ],
+                },
+            ),
+        )
+        thread = next(t for t in data["mail.thread"] if t["id"] == channel.id)
+        self.assertEqual(thread["pinned_message_count"], 1)
+        self.assertEqual(thread["pinnedMessages"], message_1.ids)
+
+    def test_pinned_messages_store_handler_access(self):
+        portal_user = mail_new_test_user(self.env, login="portal_pin", groups="base.group_portal")
+        guest = self.env["mail.guest"].create({"name": "Guest"})
+        other_guest = self.env["mail.guest"].create({"name": "Other Guest"})
+        channel = self.env["discuss.channel"]._create_channel(group_id=None, name="Meeting")
+        channel._add_members(guests=guest, users=self.user_employee | portal_user)
+        message_1 = channel.message_post(
+            body="Message 1", message_type="comment", subtype_xmlid="mail.mt_comment",
+        )
+        channel.message_post(
+            body="Message 2", message_type="comment", subtype_xmlid="mail.mt_comment",
+        )
+        channel.set_message_pin(message_1.id, True)
+        # a group is only readable by its members
+        group = self.env["discuss.channel"]._create_group(users_to=self.user_employee)
+        group._add_members(guests=guest)
+        group_message = group.message_post(
+            body="Group message", message_type="comment", subtype_xmlid="mail.mt_comment",
+        )
+        group.set_message_pin(group_message.id, True)
+
+        def fetch_pinned_messages(channel, **kwargs):
+            fetch_params = [
+                [
+                    "/discuss/channel/pinned_messages",
+                    {
+                        "channel_id": channel.id,
+                        "request_list": ["pinned_message_count", "pinnedMessages"],
+                    },
+                ],
+            ]
+            data = pop_store_version(
+                self.make_jsonrpc_request("/mail/store", {"fetch_params": fetch_params}, **kwargs),
+            )
+            return next((t for t in data.get("mail.thread", []) if t["id"] == channel.id), None)
+
+        for user in (self.user_employee, portal_user):
+            with self.subTest(user=user.login):
+                self.authenticate(user.login, user.login)
+                thread = fetch_pinned_messages(channel)
+                self.assertEqual(thread["pinned_message_count"], 1)
+                self.assertEqual(thread["pinnedMessages"], message_1.ids)
+        self.authenticate(None, None)
+        guest_cookies = {guest._cookie_name: guest._format_auth_cookie()}
+        with self.subTest(user="guest member"):
+            for thread_channel, pinned_message in ((channel, message_1), (group, group_message)):
+                thread = fetch_pinned_messages(thread_channel, cookies=guest_cookies)
+                self.assertEqual(thread["pinned_message_count"], 1)
+                self.assertEqual(thread["pinnedMessages"], pinned_message.ids)
+        with self.subTest(user="guest non-member"):
+            thread = fetch_pinned_messages(
+                group, cookies={other_guest._cookie_name: other_guest._format_auth_cookie()},
+            )
+            self.assertIsNone(thread)
+
     @users('employee')
     def test_message_update_content_bus(self):
         self.maxDiff = None
