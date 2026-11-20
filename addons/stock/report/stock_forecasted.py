@@ -99,9 +99,11 @@ class StockForecasted_Product_Product(models.AbstractModel):
         """Return a dictionary with product lead times."""
         products = self._get_products(product_template_ids, product_ids)
         location = self._get_warehouse().lot_stock_id
+        supplier_id = self.env.context.get('supplier_id')
+        supplier = self.env['product.supplierinfo'].browse(supplier_id) if supplier_id else False
         for product in products:
             rule = product._get_rules_from_location(location)
-            leadtime = rule._get_lead_days(product)
+            leadtime = rule._get_lead_days(product, supplierinfo=supplier)
             if not leadtime:
                 leadtime = [{'total_delay': 0}, {}]
             res['product'][product.id]['leadtime'] = {
