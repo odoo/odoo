@@ -18,6 +18,7 @@
                 <xpath expr="//field[@name='company_id']" position="attributes">
                     <attribute name="readonly">0</attribute>
                     <attribute name="optional">hide</attribute>
+                    <attribute name="options">{'no_create': True, 'no_quick_create': True}</attribute>
                 </xpath>
                 <xpath expr="//field[@name='partner_id']" position="attributes">
                     <attribute name="readonly">0</attribute>
@@ -59,6 +60,10 @@
                 <xpath expr="//page[@name='purchase']" position="attributes">
                     <attribute name="invisible" remove="1" separator="or"/>
                     <attribute name="groups">purchase.group_purchase_user</attribute>
+                </xpath>
+                <xpath expr="//field[@name='company_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                    <attribute name="readonly">1</attribute>
                 </xpath>
                 <group name="purchase" position="before">
                     <field name="seller_ids" context="{'default_product_tmpl_id': id, 'default_price': standard_price, 'product_template_invisible_variant': True, 'list_view_ref':'purchase.product_supplierinfo_tree_view2'}" nolabel="1" invisible="product_variant_count &gt; 1" readonly="product_variant_count &gt; 1"/>
