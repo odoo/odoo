@@ -1,0 +1,21 @@
+/* The call theme looks dark, which the dark theme already provides. */
+.o-discuss-dropdownMenu.o-discussCallTheme {
+    background-color: var(--gray-800);
+    border-color: var(--gray-700) !important;
+
+    * {
+        color: white;
+    }
+
+    .btn, .o-dropdown-item {
+        --gradient: transparent;
+    }
+
+    .form-switch .form-check-input:checked {
+        --form-switch-bg: var(--o-bs-form-switch-bg-image-dark);
+    }
+
+    select option {
+        background-color: var(--gray-700);
+    }
+}

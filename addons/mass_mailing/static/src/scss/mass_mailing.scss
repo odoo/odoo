@@ -1,7 +1,7 @@
 .o_form_view.o_mass_mailing_mailing_form .o_form_renderer {
     .o_notebook .tab-content .tab-pane .o_mail_body {
         /* cancel the padding of the form_sheet */
-        margin: -$o-sheet-cancel-hpadding calc(var(--formView-sheet-padding-x) * -1) -40px;
+        margin: calc(var(--o-sheet-cancel-hpadding) * -1) calc(var(--formView-sheet-padding-x) * -1) -40px;
     }
 
     .oe-toolbar {
@@ -84,13 +84,6 @@
                 }
             }
         }
-        @mixin kanban-stats-button-style {
-            font-size: 150% !important;
-            margin-bottom: 30px;
-            min-width: 90px;
-            width: 40%;
-            margin-right: 1rem !important;
-        }
         &.o_kanban_grouped {
             .flex-row > div {
                 flex: 1 1 100% !important;
@@ -104,7 +97,11 @@
                     display: none !important; /* forcing the d-none to override the d-lg or d-sm classes for grouped view */
                 }
                 &.o_mailing_list_kanban_stats > a {
-                    @include kanban-stats-button-style;
+                    font-size: 150% !important;
+                    margin-bottom: 30px;
+                    min-width: 90px;
+                    width: 40%;
+                    margin-right: 1rem !important;
                 }
             }
         }
@@ -120,7 +117,11 @@
                     color: rgb(1, 126, 132) !important;
                 }
                 @media screen and (max-width: 575.98px), print and (max-width: 99.98mm) {
-                    @include kanban-stats-button-style;
+                    font-size: 150% !important;
+                    margin-bottom: 30px;
+                    min-width: 90px;
+                    width: 40%;
+                    margin-right: 1rem !important;
                 }
             }
             .o_mailing_list_kanban_button {
@@ -206,7 +207,7 @@
     align-items: center !important;
     
     .btn-link, .btn {
-        color: if($o-webclient-color-scheme == dark, $o-gray-900, black);
+        color: black;
     }
 
     .btn:hover, .btn-link:hover {
