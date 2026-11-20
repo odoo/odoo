@@ -4,6 +4,7 @@ from markupsafe import Markup
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.tools import format_date
 
 
 class HrEmployeeDeparture(models.Model):
@@ -81,6 +82,15 @@ class HrEmployeeDeparture(models.Model):
                 departure.apply_immediately = departure.action_date <= today
             else:
                 departure.apply_immediately = departure.departure_date < today
+
+    @api.depends('employee_id.name', 'departure_date')
+    def _compute_display_name(self):
+        for departure in self:
+            departure.display_name = self.env._(
+                "%(employee)s (%(date)s)",
+                employee=departure.employee_id.name or "",
+                date=format_date(self.env, departure.departure_date),
+            )
 
     @api.constrains('employee_id')
     def _check_departure_validity(self):
