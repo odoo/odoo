@@ -38,6 +38,19 @@ test("Burger menu can be opened and closed", async () => {
     expect(queryAll(".o_burger_menu", { root: document.body })).toHaveCount(0);
 });
 
+test("the body is flagged while the app menu sidebar is open", async () => {
+    await mountWithCleanup(WebClient);
+    expect(document.body).not.toHaveClass("o-app-menu-sidebar-open");
+
+    await contains("a.o_menu_toggle", { root: document.body }).click();
+    expect(queryAll(".o_app_menu_sidebar", { root: document.body })).toHaveCount(1);
+    expect(document.body).toHaveClass("o-app-menu-sidebar-open");
+
+    await contains(".o_app_menu_sidebar .o_sidebar_close", { root: document.body }).click();
+    expect(queryAll(".o_app_menu_sidebar", { root: document.body })).toHaveCount(0);
+    expect(document.body).not.toHaveClass("o-app-menu-sidebar-open");
+});
+
 test("Burger Menu on an App", async () => {
     defineMenus([
         {

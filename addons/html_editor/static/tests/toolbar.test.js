@@ -31,12 +31,15 @@ import {
     contains,
     defineModels,
     fields,
+    getService,
     models,
     mountView,
     onRpc,
     patchTranslations,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
+import { Component, xml } from "@odoo/owl";
+import { FileModel } from "@web/core/file_viewer/file_model";
 import { OPEN_DELAY, SHOW_AFTER_DELAY } from "@web/core/tooltip/tooltip_service";
 import { range } from "@web/core/utils/numbers";
 import { fontSizeItems } from "../src/main/font/font_size_plugin";
@@ -172,6 +175,56 @@ test("toolbar remains visible while a button tooltip is shown in mobile", async 
     expect(".o_popover[role=tooltip]").toHaveCount(1);
     expect(".o-toolbar-above-keyboard").toBeVisible();
     expect(".o-we-toolbar button[name='bold']").toBeVisible();
+});
+
+test.tags("mobile");
+test("mobile toolbar is hidden while a popover or a bottom sheet is displayed", async () => {
+    class Dummy extends Component {
+        static template = xml`<div class="o-dummy">dummy</div>`;
+    }
+    const { el } = await setupEditor("<p>test</p>");
+    setContent(el, "<p>[test]</p>");
+    await waitFor(".o-toolbar-above-keyboard");
+    expect(".o-toolbar-above-keyboard").toBeVisible();
+
+    const removePopover = getService("popover").add(el, Dummy);
+    await animationFrame();
+    expect(".o-toolbar-above-keyboard").not.toBeVisible();
+    removePopover();
+    await animationFrame();
+    expect(".o-toolbar-above-keyboard").toBeVisible();
+
+    const removeBottomSheet = getService("bottom_sheet").add(el, Dummy);
+    await animationFrame();
+    expect(".o-toolbar-above-keyboard").not.toBeVisible();
+    removeBottomSheet();
+    await animationFrame();
+    expect(".o-toolbar-above-keyboard").toBeVisible();
+});
+
+test.tags("mobile");
+test("mobile toolbar is hidden while the file viewer is displayed", async () => {
+    const { el } = await setupEditor("<p>test</p>");
+    setContent(el, "<p>[test]</p>");
+    await waitFor(".o-toolbar-above-keyboard");
+    expect(".o-toolbar-above-keyboard").toBeVisible();
+
+    const file = Object.assign(new FileModel(), {
+        id: 1,
+        name: "image.png",
+        mimetype: "image/png",
+        type: "binary",
+    });
+    const fileViewer = getService("fileViewer")();
+    fileViewer.open(file);
+    await animationFrame();
+    expect(".o-FileViewer").toHaveCount(1);
+    expect(".o-toolbar-above-keyboard").not.toBeVisible();
+
+    fileViewer.close();
+    await animationFrame();
+    expect(".o-FileViewer").toHaveCount(0);
+    expect(".o-toolbar-above-keyboard").toBeVisible();
 });
 
 test("toolbar closes when selection leaves editor", async () => {
