@@ -39,7 +39,8 @@ class AccountMove(models.Model):
 
             if existing_service:  # Existing service => Update it instead of creating a new one
                 new_lines.write({'vehicle_log_service_id': existing_service.id})
-                existing_service.message_post(
+                # sudo: the accountant posting the bill may only have read access to the fleet services
+                existing_service.sudo().message_post(
                     body=self.env._('Additional line(s) merged from Vendor Bill: %s', move._get_html_link()),
                 )
             else:  # No service => Create a new one
@@ -51,7 +52,8 @@ class AccountMove(models.Model):
                     'account_move_line_ids': [Command.set(new_lines.ids)],
                 })
 
-        for service in self.env['fleet.vehicle.log.services'].create(val_list):
+        # sudo: the accountant posting the bill may only have read access to the fleet services
+        for service in self.env['fleet.vehicle.log.services'].sudo().create(val_list):
             service.message_post(body=self.env._('Service Vendor Bill: %s', service.account_move_line_ids.move_id._get_html_link()))
 
         return posted
