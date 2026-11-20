@@ -5062,9 +5062,20 @@ class Many2many(_RelationalMulti[M]):
         """ Add the foreign keys corresponding to the field's relation table. """
         comodel = model.env[self.comodel_name]
         if model._is_an_ordinary_table():
+            # the relation table may be shared with a field of the comodel,
+            # whose ondelete applies to our column1: use it, otherwise the
+            # foreign key depends on which of both models are initialized
+            inverse_ondelete = next((
+                field.ondelete
+                for field in comodel._fields.values()
+                if field.type == 'many2many' and field.store
+                and field.relation == self.relation
+                and field.comodel_name == model._name
+                and field.column2 == self.column1
+            ), None)
             model.pool.add_foreign_key(
-                self.relation, self.column1, model._table, 'id', 'cascade',
-                model, self._module, force=False,
+                self.relation, self.column1, model._table, 'id', inverse_ondelete or 'cascade',
+                model, self._module, force=bool(inverse_ondelete),
             )
         if comodel._is_an_ordinary_table():
             model.pool.add_foreign_key(

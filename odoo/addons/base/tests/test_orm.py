@@ -406,3 +406,28 @@ class TestClassVersionTagExhaustion(TransactionCase):
                         exhausted_classes_count += 1
         if exhausted_classes_count:
             raise AssertionError(f"{exhausted_classes_count} classes have exhausted their version tag budget")
+
+
+class TestSharedRelationForeignKeys(TransactionCase):
+
+    def _get_confdeltype(self):
+        self.env.cr.execute("""
+            SELECT fk.confdeltype
+              FROM pg_constraint fk
+              JOIN pg_attribute a ON a.attrelid = fk.conrelid AND a.attnum = fk.conkey[1]
+             WHERE fk.contype = 'f'
+               AND fk.conrelid = 'rule_group_rel'::regclass
+               AND a.attname = 'group_id'
+        """)
+        return self.env.cr.fetchone()[0]
+
+    def test_shared_relation_keeps_ondelete(self):
+        """ ir.rule.groups and res.groups.rule_groups share rule_group_rel, and
+        ir.rule.groups declares ondelete='restrict' on group_id. Initializing
+        res.groups alone, as an update of a module extending it does, must not
+        turn that foreign key into ON DELETE CASCADE. """
+        self.assertEqual(self._get_confdeltype(), 'r')
+        self.registry.init_models(self.env.cr, ['res.groups'], {'module': 'base'})
+        self.assertEqual(self._get_confdeltype(), 'r')
+        self.registry.init_models(self.env.cr, ['ir.rule'], {'module': 'base'})
+        self.assertEqual(self._get_confdeltype(), 'r')
