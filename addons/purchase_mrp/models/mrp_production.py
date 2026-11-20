@@ -45,8 +45,8 @@ class MrpProduction(models.Model):
 
     def _get_purchase_orders(self):
         self.ensure_one()
-        moves = self.move_raw_ids | self.move_raw_ids.move_orig_ids
-        purchase_lines = moves.mapped('created_purchase_line_ids') | moves.mapped('purchase_line_id')
+        moves = self.move_raw_ids.browse(self.move_raw_ids._rollup_move_origs())
+        purchase_lines = moves.created_purchase_line_ids | moves.purchase_line_id
         # MTSO: the PO line only shares the references, no move chain reaches it
         purchase_lines |= self.reference_ids.purchase_ids.order_line.filtered(
             lambda line: line.state != 'cancel'
