@@ -36,6 +36,24 @@ export class FormLabel extends Component {
         return classes.join(" ");
     }
 
+    /**
+     * Effective readonly matches Field widgets: arch readonly or form not in edition.
+     * Readonly values are not labelable controls, so we must not emit a dangling `for`.
+     */
+    get isReadonly() {
+        const { readonly } = fieldVisualFeedback(
+            this.props.fieldInfo.field,
+            this.props.record,
+            this.props.fieldName,
+            this.props.fieldInfo
+        );
+        return readonly || !this.props.record.isInEdition;
+    }
+
+    get labelId() {
+        return `${this.props.id}_label`;
+    }
+
     get hasTooltip() {
         return Boolean(odoo.debug) || this.tooltipHelp;
     }
