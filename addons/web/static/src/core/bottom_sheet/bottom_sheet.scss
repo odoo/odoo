@@ -1,23 +1,23 @@
+@keyframes bottom-sheet-in {
+    from { transform: translateY(100%) translateZ(0); }
+    to { transform: translateY(0) translateZ(0); }
+}
+
+@keyframes bottom-sheet-out {
+    from { transform: translateY(0) translateZ(0); }
+    to { transform: translateY(100%) translateZ(0); }
+}
+
 .o_bottom_sheet {
     /* ============================================= */
     /* Layout and inner elements */
     /* ============================================= */
-    --BottomSheet-slideIn-duration: #{$o_BottomSheet_slideIn_duration};
-    --BottomSheet-slideIn-easing: #{$o_BottomSheet_slideIn_easing};
-    --BottomSheet-slideOut-duration: #{$o_BottomSheet_slideOut_duration};
-    --BottomSheet-slideOut-easing: #{$o_BottomSheet_slideOut_easing};
+    --BottomSheet-slideIn-duration: 400ms;
+    --BottomSheet-slideIn-easing: var(--o-easing-enter);
+    --BottomSheet-slideOut-duration: 200ms;
+    --BottomSheet-slideOut-easing: var(--o-easing-exit);
 
-    --BottomSheet-Sheet-borderColor: #{$o_BottomSheet_Sheet_borderColor};
-
-    @mixin has-more-content-visual {
-        content: "";
-        position: fixed;
-        inset: auto 0 0;
-        height: var(--o-bs-spacer-4);
-        background: linear-gradient(transparent, #00000050);
-        z-index: var(--o-bs-zindex-offcanvas);
-        pointer-events: none;
-    }
+    --BottomSheet-Sheet-borderColor: transparent;
 
     position: fixed;
     top: 0;
@@ -48,7 +48,13 @@
         }
 
         &::after {
-            @include has-more-content-visual;
+            content: "";
+            position: fixed;
+            inset: auto 0 0;
+            height: var(--o-bs-spacer-4);
+            background: linear-gradient(transparent, #00000050);
+            z-index: var(--o-bs-zindex-offcanvas);
+            pointer-events: none;
             opacity: 0;
             transition: opacity var(--BottomSheet-slideIn-duration, 500ms);
         }
@@ -64,7 +70,7 @@
     .o_bottom_sheet_backdrop {
         position: fixed;
         inset: 0;
-        background-color: rgba($modal-backdrop-bg, $modal-backdrop-opacity);
+        background-color: color-mix(in srgb, var(--o-bs-modal-backdrop-bg) calc(var(--o-bs-modal-backdrop-opacity) * 100%), transparent);
         opacity: 0;
         @media (prefers-reduced-motion: no-preference) {
             transition: all 0.2s ease;
@@ -88,13 +94,13 @@
 
     /* The actual sheet */
     .o_bottom_sheet_sheet {
-        --offcanvas-box-shadow: #{$box-shadow};
+        --offcanvas-box-shadow: var(--box-shadow);
 
         margin: 0 auto;
         max-width: 640px;
         min-height: var(--sheet-height);
         max-height: var(--sheet-max-height);
-        border-radius: $border-radius-xl $border-radius-xl 0 0;
+        border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
         border-bottom-width: 0;
         visibility: visible;
         transition: none;
@@ -112,16 +118,6 @@
     /* ============================================= */
     /* States */
     /* ============================================= */
-    @keyframes bottom-sheet-in {
-        from { transform: translateY(100%) translateZ(0); }
-        to { transform: translateY(0) translateZ(0); }
-    }
-
-    @keyframes bottom-sheet-out {
-        from { transform: translateY(0) translateZ(0); }
-        to { transform: translateY(100%) translateZ(0); }
-    }
-
     /* BottomSheet is ready to be rendered on screen */
     &.o_bottom_sheet_ready {
         opacity: 1;
@@ -152,10 +148,10 @@
         &:before {
             position: fixed;
             inset: auto auto 0 50%;
-            height: calc(var(--sheet-height) - #{$border-radius-xl * 2});
+            height: calc(var(--sheet-height) - var(--border-radius-xl) * 2);
             width: calc(100% - (var(--o-bs-border-width) * 2));
-            max-width: calc(var(--o-bs-breakpoint-sm) - #{$border-width * 2});
-            background: $offcanvas-bg-color;
+            max-width: calc(var(--o-bs-breakpoint-sm) - var(--o-bs-border-width) * 2);
+            background: var(--body-bg);
             z-index: var(--o-bs-zindex-offcanvas);
             transform: translateY(calc((1 - var(--BottomSheet-progress)) * 150%)) translateX(-50%);
             content: "";
@@ -192,7 +188,8 @@
 .o_bottom_sheet .o_bottom_sheet_sheet {
     --BottomSheet-Entry-paddingX: var(--o-bs-list-group-item-padding-x);
 
-    %BottomSheet-Entry-active {
+    .o_bottom_sheet_body:not(.o_custom_bottom_sheet) .dropdown-item.active:not(.dropdown-item_active_noarrow),
+    .o_bottom_sheet_body:not(.o_custom_bottom_sheet) .dropdown-item.selected:not(.dropdown-item_active_noarrow) {
         position: relative;
         border: var(--o-bs-border-width) solid var(--o-bs-list-group-active-border-color);
         border-radius: var(--o-bs-border-radius-lg);
@@ -225,7 +222,7 @@
 
     /* Dropdown */
     .dropdown-divider {
-        --dropdown-divider-bg: #{$border-color};
+        --dropdown-divider-bg: var(--o-border-color, var(--o-bs-border-color));
         margin: var(--o-bs-spacer-2) calc(var(--o-bs-offcanvas-padding-x) * .5);
     }
 
@@ -249,13 +246,6 @@
         /* Leave space for the active checkmark icon */
         &:has(.dropdown-item.active, .dropdown-item.selected) .dropdown-item {
             padding-right: calc(var(--o-bs-spacer) * 2.5);
-        }
-
-        /* Dropdown */
-        .dropdown-item:not(.dropdown-item_active_noarrow) {
-            &.active, &.selected {
-                @extend %BottomSheet-Entry-active;
-            }
         }
     }
 

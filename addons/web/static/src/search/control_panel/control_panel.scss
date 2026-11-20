@@ -4,7 +4,7 @@
     background-color: var(--o-control-panel-background-color);
     @media screen {
         .o_control_panel_breadcrumbs {
-            --#{$variable-prefix}breadcrumb-font-size: var(--o-bs-small-font-size);
+            --breadcrumb-font-size: var(--o-bs-small-font-size);
             /* Let a long record name be truncated instead of pushing the
                other sections (button box, pager) out of the control panel. */
             min-width: 0;
@@ -60,7 +60,7 @@
         .o_breadcrumb {
             flex-direction: row !important;
             align-items: start;
-            font-family: $o-font-family-monospace;
+            font-family: var(--o-font-family-monospace);
 
             a {
                 font-weight: bold !important;
@@ -116,47 +116,39 @@
     }
 }
 
-/* Simple button place-holder */
-%-custom-button {
-    $-value: map-get($o-btns-bs-override, 'secondary');
-    @include button-variant(
-            o-safe-get($-value, background),
-            o-safe-get($-value, border),
-            o-safe-get($-value, color),
-            o-safe-get($-value, hover-background),
-            o-safe-get($-value, hover-border),
-            o-safe-get($-value, hover-color),
-            o-safe-get($-value, active-background),
-            o-safe-get($-value, active-border),
-            o-safe-get($-value, active-color),
-    );
-    --#{$prefix}btn-border-width: var(--border-width);
-    --#{$prefix}btn-border-radius: var(--o-bs-btn-border-radius);
-
-    background-color: var(--#{$prefix}btn-bg);
-    border: var(--#{$prefix}btn-border-width) solid var(--#{$prefix}btn-border-color);
-    border-radius: var(--#{$prefix}btn-border-radius);
-
-    &.selected {
-        color: var(--#{$prefix}btn-active-color);
-        background-color: var(--#{$prefix}btn-active-bg);
-        border-color: var(--#{$prefix}btn-active-border-color);
-        box-shadow: var(--#{$prefix}btn-active-shadow);
-    }
-}
-
 .o_bottom_sheet .o_cp_switch_buttons {
     display: grid;
     gap: var(--o-bs-spacer-2);
     grid-template-columns: repeat(3, 1fr);
 
     .o-dropdown-item {
-        @extend %-custom-button;
+        --btn-color: var(--o-btn-secondary-color);
+        --btn-bg: var(--o-btn-secondary-background);
+        --btn-border-color: var(--o-btn-secondary-border);
+        --btn-hover-color: var(--o-btn-secondary-hover-color);
+        --btn-hover-bg: var(--o-btn-secondary-hover-background);
+        --btn-hover-border-color: var(--o-btn-secondary-hover-border);
+        --btn-focus-shadow-rgb: var(--o-btn-secondary-focus-shadow-rgb);
+        --btn-active-color: var(--o-btn-secondary-active-color);
+        --btn-active-bg: var(--o-btn-secondary-active-background);
+        --btn-active-border-color: var(--o-btn-secondary-active-border);
+        --btn-border-width: var(--border-width);
+        --btn-border-radius: var(--o-bs-btn-border-radius);
 
+        background-color: var(--btn-bg);
+        border: var(--btn-border-width) solid var(--btn-border-color);
+        border-radius: var(--btn-border-radius);
         display: grid;
         justify-items: center;
         gap: var(--o-bs-spacer-2);
         padding: var(--o-bs-spacer-3) var(--o-bs-spacer-2);
+
+        &.selected {
+            color: var(--btn-active-color);
+            background-color: var(--btn-active-bg);
+            border-color: var(--btn-active-border-color);
+            box-shadow: var(--btn-active-shadow);
+        }
 
         &.selected::before {
             content: none !important;

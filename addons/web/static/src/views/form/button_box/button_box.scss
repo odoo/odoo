@@ -1,14 +1,17 @@
 .o-form-buttonbox {
     /* Compute the expected oe_stat_button's height according to the default btn size. */
-    $-stat-button-inner-size: calc(#{$btn-padding-y} * 2 + #{$btn-font-size} * #{$btn-line-height});
-    $-stat-button-height: calc(#{$-stat-button-inner-size} + #{$btn-border-width} * 2);
+    --o-stat-button-inner-size: calc(var(--o-bs-btn-padding-y) * 2 + var(--o-bs-btn-font-size) * var(--o-bs-btn-line-height));
+    --o-stat-button-height: calc(var(--o-stat-button-inner-size) + var(--border-width) * 2);
 
     --o-stat-button-icon-size: 1.5em;
-    $-stat-button-icon-margin-end: $btn-padding-x * 0.5;
+    --o-stat-button-icon-margin-end: calc(var(--o-bs-btn-padding-x) * 0.5);
 
     margin-bottom: var(--ButtonBox-margin-bottom, 0);
 
-    %-stat-button-container {
+    .oe_stat_button .o_stat_info,
+    .oe_stat_button > span,
+    .oe_stat_button .o_field_statinfo,
+    .o_pie_info {
         display: flex;
         flex-direction: column;
         max-width: 100%;
@@ -17,7 +20,10 @@
         line-height: 1;
     }
 
-    %-stat-button-text {
+    .oe_stat_button .o_stat_info .o_stat_text,
+    .oe_stat_button > span .o_stat_text,
+    .oe_stat_button .o_field_statinfo .o_stat_text,
+    .o_pie_text {
         display: block;
         max-width: 100%;
         white-space: nowrap;
@@ -29,14 +35,18 @@
         line-height: var(--o-bs-line-height-sm);
     }
 
-    %-stat-button-value {
+    .oe_stat_button .o_stat_info .o_stat_value,
+    .oe_stat_button > span .o_stat_value,
+    .oe_stat_button .o_field_statinfo .o_stat_value,
+    .o_pie_value {
         order: 2;
         font-weight: var(--o-bs-font-weight-bold);
         color: var(--color, var(--o-stat-text-color, var(--o-brand-primary)));
         font-size: var(--o-font-size-base-smaller);
     }
 
-    %-stat-button-figure-offset {
+    .oe_stat_button:not(:first-child) .o_button_icon,
+    .oe_stat_button:not(:first-child) .o_pie {
         margin-left: calc(var(--o-bs-btn-padding-x) * -0.33);
     }
 
@@ -50,7 +60,7 @@
         min-width: 0;
 
         @media screen and (min-width: 768px), print and (min-width: 188mm) {
-            height: $-stat-button-height;
+            height: var(--o-stat-button-height);
             min-width: 7.5em; /* Arbitrary */
         }
 
@@ -59,7 +69,7 @@
             color: var(--o-stat-button-color, var(--primary));
 
             &:before {
-                margin-right: $-stat-button-icon-margin-end;
+                margin-right: var(--o-stat-button-icon-margin-end);
             }
         }
 
@@ -78,18 +88,8 @@
         }
 
         .o_stat_info, > span, .o_field_statinfo {
-            @extend %-stat-button-container;
-
-            .o_stat_text {
-                @extend %-stat-button-text;
-
-                .o_field_empty {
-                    display: none;
-                }
-            }
-
-            .o_stat_value {
-                @extend %-stat-button-value;
+            .o_stat_text .o_field_empty {
+                display: none;
             }
         }
 
@@ -97,10 +97,6 @@
             > .o_stat_info .o_field_widget, > span .o_field_widget {
                 cursor: pointer;
             }
-        }
-
-        &:not(:first-child) .o_button_icon {
-            @extend %-stat-button-figure-offset;
         }
 
         &:not(:hover) .o_stat_info > .o_hover {
@@ -147,35 +143,21 @@
 
         > .oe_stat_button:first-child,
         > div:first-child > .oe_stat_button {
-            @include border-start-radius($border-radius);
+            border-top-left-radius: var(--o-bs-border-radius);
+            border-bottom-left-radius: var(--o-bs-border-radius);
         }
 
         > button.oe_stat_button:last-child,
         > div:last-child > .oe_stat_button,
         > div.oe_stat_button:last-child > button {
-            @include border-end-radius($border-radius);
+            border-top-right-radius: var(--o-bs-border-radius);
+            border-bottom-right-radius: var(--o-bs-border-radius);
         }
     }
 
     /* Piechart */
     --PercentPieField-size: var(--o-stat-button-icon-size);
-    --PercentPieField-gap: #{$-stat-button-icon-margin-end};
-
-    .oe_stat_button:not(:first-child) .o_pie {
-        @extend %-stat-button-figure-offset;
-    }
-
-    .o_pie_info {
-        @extend %-stat-button-container;
-    }
-
-    .o_pie_text {
-        @extend %-stat-button-text;
-    }
-
-    .o_pie_value {
-        @extend %-stat-button-value;
-    }
+    --PercentPieField-gap: var(--o-stat-button-icon-margin-end);
 }
 
 .o-form-buttonbox-small {

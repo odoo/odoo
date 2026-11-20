@@ -32,6 +32,15 @@
     --o-btn-outline-secondary-border: #{map-get(map-get($o-btns-bs-outline-override, 'secondary') or (), 'border')};
     --o-btn-primary-background: #{map-get(map-get($o-btns-bs-override, 'primary') or (), 'background')};
     --o-btn-primary-color: #{map-get(map-get($o-btns-bs-override, 'primary') or (), 'color')};
+    --o-btn-secondary-background: #{map-get(map-get($o-btns-bs-override, 'secondary') or (), 'background')};
+    --o-btn-secondary-border: #{map-get(map-get($o-btns-bs-override, 'secondary') or (), 'border')};
+    --o-btn-secondary-color: #{map-get(map-get($o-btns-bs-override, 'secondary') or (), 'color')};
+    --o-btn-secondary-hover-background: #{map-get(map-get($o-btns-bs-override, 'secondary') or (), 'hover-background')};
+    --o-btn-secondary-hover-border: #{map-get(map-get($o-btns-bs-override, 'secondary') or (), 'hover-border')};
+    --o-btn-secondary-hover-color: #{map-get(map-get($o-btns-bs-override, 'secondary') or (), 'hover-color')};
+    @if map-get(map-get($o-btns-bs-override, 'secondary') or (), 'color') and map-get(map-get($o-btns-bs-override, 'secondary') or (), 'border') {
+        --o-btn-secondary-focus-shadow-rgb: #{to-rgb(mix(map-get(map-get($o-btns-bs-override, 'secondary') or (), 'color'), map-get(map-get($o-btns-bs-override, 'secondary') or (), 'border'), 15%))};
+    }
     --o-btn-secondary-active-background: #{map-get(map-get($o-btns-bs-override, 'secondary') or (), 'active-background')};
     --o-btn-secondary-active-border: #{map-get(map-get($o-btns-bs-override, 'secondary') or (), 'active-border')};
     --o-btn-secondary-active-color: #{map-get(map-get($o-btns-bs-override, 'secondary') or (), 'active-color')};
@@ -54,9 +63,11 @@
     --o-dropdown-max-height: #{$o-dropdown-max-height};
     --o-dropdown-vpadding: #{$o-dropdown-vpadding};
     --o-easing-enter: #{$o-easing-enter};
+    --o-easing-exit: #{$o-easing-exit};
     --o-enterprise-action-color: #{$o-enterprise-action-color};
     --o-enterprise-color: #{$o-enterprise-color};
     --o-field-translate-padding: #{$o-field-translate-padding};
+    --o-font-family-monospace: #{inspect($o-font-family-monospace)};
     --o-font-family-sans-serif: #{inspect($o-font-family-sans-serif)};
     --o-font-size-base: #{$o-font-size-base};
     --o-font-size-base-small: #{$o-font-size-base-small};
@@ -148,10 +159,6 @@
     --o-statusbar-arrow-width: #{$o-statusbar-arrow-width};
     --o-success: #{$o-success};
     --o-system-fonts: #{inspect($o-system-fonts)};
-    --o-text-color-danger: #{map-get(map-merge($theme-colors, $o-theme-text-colors), 'danger')};
-    --o-text-color-primary: #{map-get(map-merge($theme-colors, $o-theme-text-colors), 'primary')};
-    --o-text-color-success: #{map-get(map-merge($theme-colors, $o-theme-text-colors), 'success')};
-    --o-text-color-warning: #{map-get(map-merge($theme-colors, $o-theme-text-colors), 'warning')};
     --o-view-background-color: #{$o-view-background-color};
     --o-warning: #{$o-warning};
     --o-webclient-background-color: #{$o-webclient-background-color};
@@ -279,6 +286,7 @@
     --o-bs-input-transition: #{$input-transition};
     --o-bs-lead-font-size: #{$lead-font-size};
     --o-bs-lead-font-weight: #{$lead-font-weight};
+    --o-bs-line-height-base: #{$line-height-base};
     --o-bs-line-height-lg: #{$line-height-lg};
     --o-bs-line-height-sm: #{$line-height-sm};
     --o-bs-link-shade-percentage: #{o-strip-unit($link-shade-percentage)};
@@ -288,6 +296,8 @@
     --o-bs-list-group-hover-bg: #{$list-group-hover-bg};
     --o-bs-list-group-item-padding-x: #{$list-group-item-padding-x};
     --o-bs-list-group-item-padding-y: #{$list-group-item-padding-y};
+    --o-bs-modal-backdrop-bg: #{$modal-backdrop-bg};
+    --o-bs-modal-backdrop-opacity: #{$modal-backdrop-opacity};
     --o-bs-modal-content-bg: #{$modal-content-bg};
     --o-bs-modal-dialog-margin: #{$modal-dialog-margin};
     --o-bs-modal-dialog-margin-y-sm-up: #{$modal-dialog-margin-y-sm-up};
@@ -331,6 +341,10 @@
     --o-bs-table-hover-bg: #{$table-hover-bg};
     --o-bs-table-hover-bg-factor: #{$table-hover-bg-factor};
     --o-bs-text-muted: #{$text-muted};
+    --o-bs-tooltip-bg: #{$tooltip-bg};
+    --o-bs-tooltip-border-radius: #{$tooltip-border-radius};
+    --o-bs-tooltip-color: #{$tooltip-color};
+    --o-bs-tooltip-font-size: #{$tooltip-font-size};
     --o-bs-tooltip-max-width: #{$tooltip-max-width};
     --o-bs-tooltip-padding-x: #{$tooltip-padding-x};
     --o-bs-tooltip-padding-y: #{$tooltip-padding-y};
@@ -378,6 +392,7 @@
     --o-bs-component-active-bg-contrast: #{color-contrast($component-active-bg)};
     --o-bs-gray-100-contrast: #{color-contrast($gray-100)};
     --o-bs-gray-200-contrast: #{color-contrast($gray-200)};
+    --o-bs-info-contrast: #{color-contrast($info)};
     --o-bs-light-contrast: #{color-contrast($light)};
     --o-bs-primary-contrast: #{color-contrast($primary)};
     --o-bs-success-contrast: #{color-contrast($success)};
@@ -393,9 +408,20 @@
     --o-check-mark-form-check-checked-image: #{o-check-mark-image($form-check-input-checked-bg-color)};
     --o-crossed-out-image: #{str-replace(url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='39' height='39'><line y2='0' x2='39' y1='39' x1='0' style='stroke:#{map-get($theme-colors, 'danger')};stroke-width:2'/><line y2='1' x2='40' y1='40' x1='1' style='stroke:rgb(255,255,255);stroke-width:1'/></svg>"), "#", "%23")};
 
+    @each $-name, $-color in map-merge($theme-colors, $o-theme-text-colors) {
+        --o-text-color-#{$-name}: #{$-color};
+    }
+
     /* Colors of the palettes, indexed like the classes that use them */
     @for $i from 1 through length($o-colors-complete) {
         --o-colors-#{$i - 1}: #{nth($o-colors-complete, $i)};
+    }
+
+    /* For the badges and gantt pills that name no color class */
+    @for $i from 1 through length($o-colors-bg-subtle) {
+        --o-colors-bg-subtle-#{$i - 1}: #{nth($o-colors-bg-subtle, $i)};
+        --o-colors-border-#{$i - 1}: #{nth($o-colors-border, $i)};
+        --o-colors-text-emphasis-#{$i - 1}: #{nth($o-colors-text-emphasis, $i)};
     }
 }
 
