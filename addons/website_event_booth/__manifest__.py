@@ -22,7 +22,7 @@ Display your booths on your website for the users to register.
     'assets': {
         'web.assets_frontend': [
             '/website_event_booth/static/src/interactions/*',
-            '/website_event_booth/static/src/scss/website_event_booth.scss',
+            '/website_event_booth/static/src/scss/website_event_booth.css',
             '/website_event_booth/static/src/xml/event_booth_registration_templates.xml',
         ],
     },

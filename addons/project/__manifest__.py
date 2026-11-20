@@ -187,7 +187,7 @@
             'web/static/src/views/widgets/**/*',
             'web/static/src/webclient/**/*',
             ('remove', 'web/static/src/webclient/clickbot/clickbot.js'), # lazy loaded
-            ('remove', 'web/static/src/views/form/button_box/*.scss'),
+            ('remove', 'web/static/src/views/form/button_box/*.css'),
             ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
 
             # remove the report code and whitelist only what's needed
@@ -200,7 +200,7 @@
             'base/static/src/scss/res_partner.css',
 
             # Form style should be computed before
-            'web/static/src/views/form/button_box/*.scss',
+            'web/static/src/views/form/button_box/*.css',
 
             'bus/static/src/**/*.js',
 

@@ -193,8 +193,8 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/lib/selfie_segmentation/selfie_segmentation.js',
             'mail/static/src/js/**/*',
             'mail/static/src/model/**/*',
-            # ensure core.scss before any other style
-            "mail/static/src/core/common/core.scss",
+            # ensure core.css before any other style
+            "mail/static/src/core/common/core.css",
             'mail/static/src/core/common/**/*',
             'mail/static/src/core/public_web/**/*',
             'mail/static/src/core/web_portal_project/**/*',
@@ -203,7 +203,6 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/**/public_web/**/*',
             'mail/static/src/**/web_portal_project/**/*',
             'mail/static/src/**/web/**/*',
-            ('remove', 'mail/static/src/**/*.dark.scss'),
             ('remove', 'mail/static/src/**/*.dark.css'),
             # discuss (loaded last to fix dependencies)
             ('remove', 'mail/static/src/discuss/**/*'),
@@ -225,7 +224,6 @@ For more specific needs, you may also assign custom-defined actions
         "web.assets_web_dark": [
             # ensure core.dark.css before any other style
             'mail/static/src/core/common/core.dark.css',
-            'mail/static/src/**/*.dark.scss',
             'mail/static/src/**/*.dark.css',
             # rules that only the light theme needs
             ('remove', 'mail/static/src/**/*.light.css'),
@@ -294,15 +292,14 @@ For more specific needs, you may also assign custom-defined actions
             ("include", "html_editor.assets_editor"),
 
             'mail/static/src/model/**/*',
-            # ensure core.scss before any other style
-            "mail/static/src/core/common/core.scss",
+            # ensure core.css before any other style
+            "mail/static/src/core/common/core.css",
             'mail/static/src/core/common/**/*',
             'mail/static/src/core/public_web/**/*',
             'mail/static/src/**/common/**/*',
             'mail/static/src/**/public_web/**/*',
             'mail/static/src/**/public/**/*',
             'mail/static/lib/selfie_segmentation/selfie_segmentation.js',
-            ('remove', 'mail/static/src/**/*.dark.scss'),
             ('remove', 'mail/static/src/**/*.dark.css'),
             # discuss (loaded last to fix dependencies)
             ('remove', 'mail/static/src/discuss/**/*'),
@@ -321,7 +318,6 @@ For more specific needs, you may also assign custom-defined actions
             'html_editor/static/src/**/*.dark.css',
             # ensure core.dark.css before any other style
             'mail/static/src/core/common/core.dark.css',
-            'mail/static/src/**/common/**/*.dark.scss',
             'mail/static/src/**/common/**/*.dark.css',
             'mail/static/src/**/public_web/**/*.dark.css',
             # rules that only the light theme needs
@@ -332,11 +328,10 @@ For more specific needs, you may also assign custom-defined actions
         ],
         'im_livechat.assets_embed_core': [
             'mail/static/src/model/**/*',
-            # ensure core.scss before any other style
-            "mail/static/src/core/common/core.scss",
+            # ensure core.css before any other style
+            "mail/static/src/core/common/core.css",
             "mail/static/src/core/common/**/*",
             "mail/static/src/**/common/**/*",
-            ('remove', 'mail/static/src/**/*.dark.scss'),
             ('remove', 'mail/static/src/**/*.dark.css'),
         ],
         'im_livechat.assets_embed_external': [
