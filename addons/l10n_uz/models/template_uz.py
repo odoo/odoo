@@ -33,3 +33,4 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_loss_account_id': 'uz9050',
             },
         }
+
