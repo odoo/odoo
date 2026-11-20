@@ -165,6 +165,7 @@
                                 <field name="card_no" invisible="not card_no"/>
                                 <field name="card_brand" string="Card's Brand" invisible="not card_brand or not card_no"/>
                                 <field name="cardholder_name" invisible="not cardholder_name or not card_no"/>
+                                <field name="is_forced" string="Is Forced" readonly="1"/>
                             </list>
                         </field>
                         <group class="oe_subtotal_footer" colspan="2" name="order_total">

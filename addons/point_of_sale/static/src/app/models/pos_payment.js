@@ -176,6 +176,7 @@ export class PosPayment extends Base {
 
     // ----- Payment Force State -----
     forceDone() {
+        this.is_forced = true;
         this.setPaymentStatus("done");
     }
 
