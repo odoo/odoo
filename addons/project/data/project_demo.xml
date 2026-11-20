@@ -1649,6 +1649,48 @@ Send it ASAP, its urgent.</field>
             <field name="active">False</field>
         </record>
 
+        <record id="project_3_task_6" model="project.task">
+            <field name="allocated_hours" eval="35.0"/>
+            <field name="user_ids" eval="[Command.link(ref('base.user_demo'))]"/>
+            <field name="priority">1</field>
+            <field name="project_id" ref="project.project_project_3"/>
+            <field name="name">Master Bedroom</field>
+            <field name="stage_id" ref="project_stage_0"/>
+            <field name="is_template" eval="True"/>
+        </record>
+
+        <record id="project_3_task_6_bedroom_sub_task" model="project.task">
+            <field name="allocated_hours" eval="20.0"/>
+            <field name="user_ids" eval="[Command.link(ref('base.user_demo'))]"/>
+            <field name="priority">1</field>
+            <field name="project_id" ref="project.project_project_3"/>
+            <field name="name">BedRoom</field>
+            <field name="stage_id" ref="project_stage_0"/>
+            <field name="parent_id" ref="project_3_task_6"/>
+            <field name="is_template" eval="True"/>
+        </record>
+
+        <record id="project_3_task_6_bathroom_sub_task" model="project.task">
+            <field name="allocated_hours" eval="15.0"/>
+            <field name="user_ids" eval="[Command.link(ref('base.user_demo'))]"/>
+            <field name="priority">1</field>
+            <field name="project_id" ref="project.project_project_3"/>
+            <field name="name">Bathroom</field>
+            <field name="stage_id" ref="project_stage_0"/>
+            <field name="parent_id" ref="project_3_task_6"/>
+            <field name="is_template" eval="True"/>
+        </record>
+
+        <record id="project_3_task_7" model="project.task">
+            <field name="allocated_hours" eval="30.0"/>
+            <field name="user_ids" eval="[Command.link(ref('base.user_demo'))]"/>
+            <field name="priority">2</field>
+            <field name="project_id" ref="project.project_project_3"/>
+            <field name="name">Drawing Room</field>
+            <field name="stage_id" ref="project_stage_0"/>
+            <field name="is_template" eval="True"/>
+        </record>
+
         <!-- Private tasks -->
         <record id="project_private_task_1" model="project.task">
             <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
