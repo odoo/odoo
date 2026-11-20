@@ -70,6 +70,8 @@ export async function loadDefaultEmbedConfig() {
     const pyEnv = MockServer.env ?? (await startServer());
     const livechatChannelId = pyEnv["im_livechat.channel"].create({
         user_ids: [serverState.userId],
+        name: "YourWebsite.com",
+        review_link: "https://www.odoo.com",
     });
     patch(session, {
         livechatData: {
@@ -82,10 +84,8 @@ export async function loadDefaultEmbedConfig() {
                 button_text_color: "#FFFFFF",
                 button_text: "Need help? Chat with us.",
                 default_message: "Hello, how may I help you?",
-                channel_name: "YourWebsite.com",
                 channel_id: livechatChannelId,
                 default_username: "Visitor",
-                review_link: "https://www.odoo.com",
             },
         },
     });

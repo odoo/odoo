@@ -98,6 +98,10 @@ export class Chatbot extends Record {
      * @param {import("models").Message} message
      */
     async processAnswer(message) {
+        if (!message) {
+            this.isProcessingAnswer = false;
+            return;
+        }
         if (
             this.channel_id.livechat_agent_history_ids.length ||
             this.channel_id.notEq(message.thread.channel) ||
