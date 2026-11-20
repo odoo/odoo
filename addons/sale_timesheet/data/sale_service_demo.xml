@@ -410,11 +410,9 @@
             <field name="user_id" ref="base.user_admin"/>
         </record>
 
-        <!-- Confirm Sale Orders -->
-        <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_1')]]"/>
-        <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_2')]]"/>
-        <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_3')]]"/>
-        <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_4_construction')]]"/>
+        <function model="sale.order" name="_action_confirm_demo">
+            <value model="sale.order" eval="[ref('sale_order_1'), ref('sale_order_2'), ref('sale_order_3'), ref('sale_order_4_construction')]"/>
+        </function>
 
         <!-- Function to set task stage and users -->
         <function model="project.task" name="write">
