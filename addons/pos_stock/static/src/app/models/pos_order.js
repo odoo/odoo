@@ -2,10 +2,21 @@ import { PosOrder } from "@point_of_sale/app/models/pos_order";
 import { patch } from "@web/core/utils/patch";
 import { _t } from "@web/core/l10n/translation";
 
+const { DateTime } = luxon;
+
 patch(PosOrder.prototype, {
     setup(vals) {
         super.setup(vals);
         this.shipping_date = vals.shipping_date;
+        this.pickup_later = vals.pickup_later;
+    },
+
+    get isPickupDue() {
+        return Boolean(
+            this.pickup_later &&
+                this.shipping_date &&
+                this.shipping_date.startOf("day") <= DateTime.now().startOf("day")
+        );
     },
 
     get pickingType() {
