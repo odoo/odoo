@@ -475,12 +475,14 @@ describe("Font size preview with mixed interactions", () => {
         const { el } = await setupEditor('<p>a<span class="h4-fs">[bc]</span>d</p>');
         const inputEl = await openFontSizeDropdown();
 
-        await hover(getFontSizeItem(21));
+        const hoveredItem = getFontSizeItem(21);
+        await hover(hoveredItem);
         expect(getContent(el)).toBe(`<p>a<span class="h2-fs">[bc]</span>d</p>`);
 
+        const nextItem = hoveredItem.nextElementSibling;
         await press("ArrowDown");
         await animationFrame();
-        expect(getFontSizeItem(34)).toBeFocused();
+        expect(nextItem).toBeFocused();
         expect(getContent(el)).toBe(`<p>a<span class="h1-fs">[bc]</span>d</p>`);
 
         await press("Escape");
