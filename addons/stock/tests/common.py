@@ -54,9 +54,14 @@ class TestStockCommon(ProductVariantsCommon):
         return Move.create(move_values)
 
     @classmethod
+    def _get_stock_company_fixture(cls):
+        return ['base.test_company', 'stock.test_warehouse']
+
+    @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.company = cls.env['res.company'].create({
+        stock_company_xmlid, stock_warehouse_xmlid = cls._get_stock_company_fixture()
+        cls.company = cls.add_class_company(stock_company_xmlid, {
             'name': 'Stock Tests Company',
         })
         # Some models use env.company in various methods, so we make sure they will find the stock company
@@ -113,6 +118,8 @@ class TestStockCommon(ProductVariantsCommon):
 
         # Warehouses
         cls.warehouse_1 = cls.env['stock.warehouse'].search([('company_id', '=', cls.company.id)], limit=1)
+        if cls.warehouse_1 != cls.env.ref(stock_warehouse_xmlid):
+            raise AssertionError(f"Expected {stock_warehouse_xmlid} as the default warehouse for {stock_company_xmlid}")
         cls.warehouse_1.write({
             'name': 'Base Warehouse',
             'reception_steps': 'one_step',
