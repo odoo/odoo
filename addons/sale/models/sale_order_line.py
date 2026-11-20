@@ -325,7 +325,9 @@ class SaleOrderLine(models.Model):
         comodel_name="account.analytic.line", inverse_name="so_line", string="Analytic lines"
     )
     # precomputed as the amounts, which are precomputed, read it to prepare the tax base lines
-    analytic_distribution = fields.Json(compute="_compute_analytic_distribution", store=True, precompute=True)
+    analytic_distribution = fields.Json(
+        compute="_compute_analytic_distribution", store=True, precompute=True
+    )
 
     invoice_lines = fields.Many2many(
         comodel_name="account.move.line",
@@ -422,6 +424,11 @@ class SaleOrderLine(models.Model):
         string="Collapse Composition", copy=True, default=False
     )  # Whether this section's lines will be hidden in reports and in the portal.
     line_number_offset = fields.Integer(compute="_compute_line_number_offset")
+    selected_combo_item_qty = fields.Integer(
+        string="Selected Quantity",
+        help="Remembers the initial quantity selected for this combo item.",
+        default=1,
+    )
 
     mandatory_product = fields.Boolean(
         string="Is Product Mandatory", compute="_compute_mandatory_product"
@@ -481,8 +488,8 @@ class SaleOrderLine(models.Model):
         if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
         domain = Domain("product_id.product_tmpl_id", operator, value)
-        if operator == 'in' and False in value:  # relation may be falsy
-            domain |= Domain('product_id', '=', False)
+        if operator == "in" and False in value:  # relation may be falsy
+            domain |= Domain("product_id", "=", False)
         return domain
 
     @api.depends("product_id")
@@ -964,6 +971,8 @@ class SaleOrderLine(models.Model):
                 company=self.company_id,
                 date=self.order_id.date_order,
             )
+            # `included_qty` is 0 for POS upsell combos; weigh them as 1 item in Sales.
+            * (combo_id.included_qty or 1)
             for combo_id in combo_line.product_template_id.sudo().combo_ids
         }
         total_combo_base_price = sum(combo_base_prices.values())
@@ -998,7 +1007,10 @@ class SaleOrderLine(models.Model):
             company=self.company_id,
             date=self.order_id.date_order,
         )
-        return combo_prices[self.combo_item_id.combo_id] + extra_price
+        return (
+            combo_prices[self.combo_item_id.combo_id]
+            / (self.combo_item_id.combo_id.included_qty or 1)
+        ) + extra_price
 
     @api.depends("product_id", "product_uom_id", "product_uom_qty")
     def _compute_discount(self):
@@ -1300,7 +1312,16 @@ class SaleOrderLine(models.Model):
                     or invoice_line.move_id.payment_state == "invoicing_legacy"
                 ) and line._affects_qty_invoiced(invoice_line):
                     if line.is_downpayment:
-                        if not line.currency_id.is_zero(sum(invoice_lines.filtered(lambda l: l.move_id.state != 'cancel' or l.move_id.payment_state == 'invoicing_legacy').mapped('balance'))):
+                        if not line.currency_id.is_zero(
+                            sum(
+                                invoice_lines.filtered(
+                                    lambda l: (
+                                        l.move_id.state != "cancel"
+                                        or l.move_id.payment_state == "invoicing_legacy"
+                                    )
+                                ).mapped("balance")
+                            )
+                        ):
                             invoiced_qties[line] = 1
                             line.qty_invoiced = 1
                         else:
@@ -1570,9 +1591,7 @@ class SaleOrderLine(models.Model):
 
             line.untaxed_amount_to_invoice = amount_to_invoice
 
-    @api.depends(
-        "discount", "price_total", "product_uom_qty", "qty_invoiced_posted"
-    )
+    @api.depends("discount", "price_total", "product_uom_qty", "qty_invoiced_posted")
     def _compute_amount_to_invoice(self):
         for line in self:
             if line.product_uom_qty:
@@ -1759,7 +1778,7 @@ class SaleOrderLine(models.Model):
         """
         for line in self:
             linked_line = line._get_linked_line()
-            allowed_combo_items = linked_line.product_template_id.combo_ids.combo_item_ids
+            allowed_combo_items = linked_line.product_template_id.sudo().combo_ids.combo_item_ids
             if line.combo_item_id and line.combo_item_id not in allowed_combo_items:
                 raise ValidationError(
                     line.env._(
