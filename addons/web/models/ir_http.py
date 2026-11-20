@@ -106,6 +106,11 @@ class IrHttp(models.AbstractModel):
             else False
         )
 
+        lang = user.lang
+        numbering_system = (
+            IrConfigSudo.get_str(f'web.numbering_system_{lang}').strip() or False
+            if lang else False
+        )
         session_info = {
             "uid": session_uid,
             "device_salt": device_salt,
@@ -128,6 +133,7 @@ class IrHttp(models.AbstractModel):
             "partner_id": user.partner_id.id if session_uid and user.partner_id else None,
             "web.base.url": IrConfigSudo.get_str('web.base.url'),
             "active_ids_limit": IrConfigSudo.get_int('web.active_ids_limit') or 20000,
+            "numbering_system": numbering_system,
             'profile_session': request.session.get('profile_session'),
             'profile_collectors': request.session.get('profile_collectors'),
             'profile_params': request.session.get('profile_params'),
