@@ -29,26 +29,33 @@ export class SubtaskKanbanList extends Component {
             open: false,
             name: "",
         });
-        this.state = proxy({
-            subtasks: [],
-            isLoad: true,
-            prevSubtaskCount: 0,
-        });
+        // Sub-tasks list (child_ids) from which `openSubtaskIdsAtLoad` was computed.
+        this.subtasksAtLoad = null;
+        // Ids of the sub-tasks that were open when the parent task was last loaded.
+        this.openSubtaskIdsAtLoad = new Set();
     }
 
-    get list() {
+    get subtasks() {
         return this.props.record.data.child_ids;
     }
 
-    get closedList() {
-        const currentCount = this.list.records.length;
-        if (this.state.isLoad || currentCount !== this.state.prevSubtaskCount) {
-            this.state.prevSubtaskCount = currentCount;
-            this.state.isLoad = false;
-            this.state.subtasks = this.list.records
-                .filter((subtask) => !this.isClosedState(subtask.data.state));
+    /**
+     * Sub-tasks to display: those that were open when the parent task was last
+     * loaded. A sub-task closed from the card stays visible (greyed out) until
+     * the next load, so the row does not vanish under the user's cursor.
+     * Each load of the parent creates a new child_ids list, which is what
+     * triggers a new snapshot of the open ids.
+     */
+    get displayedSubtasks() {
+        if (this.subtasksAtLoad !== this.subtasks) {
+            this.subtasksAtLoad = this.subtasks;
+            this.openSubtaskIdsAtLoad = new Set(
+                this.subtasks.records
+                    .filter((subtask) => !this.isClosedState(subtask.data.state))
+                    .map((subtask) => subtask.resId)
+            );
         }
-        return this.state.subtasks;
+        return this.subtasks.records.filter((subtask) => this.openSubtaskIdsAtLoad.has(subtask.resId));
     }
 
     get fieldInfo() {
@@ -67,7 +74,7 @@ export class SubtaskKanbanList extends Component {
     async goToSubtask(subtask_id) {
         return this.actionService.doAction({
             type: "ir.actions.act_window",
-            res_model: this.list.resModel,
+            res_model: this.subtasks.resModel,
             res_id: subtask_id,
             views: [[false, "form"]],
             target: "current",
@@ -91,7 +98,7 @@ export class SubtaskKanbanList extends Component {
                 type: "danger",
             });
         } else {
-            const sequences = this.list.records.map(r => r.data.sequence);
+            const sequences = this.subtasks.records.map(r => r.data.sequence);
             const nextSequence = (sequences.length ? Math.max(...sequences) : 0) + 1;
 
             await this.orm.create("project.task", [{
