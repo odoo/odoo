@@ -109,6 +109,9 @@ class ImBus(models.Model):
 
     @api.model
     def _sendone(self, target, notification_type, message):
+        no_bus_notification_types = self.env['ir.config_parameter'].sudo().get_param('no_bus_notification_types')
+        if no_bus_notification_types and notification_type in no_bus_notification_types.split(','):
+            return
         self._ensure_hooks()
         channel = channel_with_db(self.env.cr.dbname, target)
         self.env.cr.precommit.data["bus.bus.values"].append(
