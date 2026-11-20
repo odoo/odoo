@@ -12,6 +12,14 @@ import { _t } from "@web/core/l10n/translation";
  */
 
 /**
+ * Part of the content of a tab: the records matching all of `filters`, resolved server side from
+ * the filter ids like the tab itself. With a search term, only `searchResults`: the records the
+ * list shows for it, as the search matches what the list displays, which the server does not know.
+ *
+ * @typedef {{ filters: MessagingMenuTabFilter[], searchTerm?: string, searchResults?: import("models").Record[] }} MessagingMenuTabDomain
+ */
+
+/**
  * A button shown next to the search bar. An action carrying `subActions` is rendered as a
  * dropdown offering them instead: clicking it only opens the menu, so such an action has no
  * `onClick` of its own.
@@ -198,9 +206,48 @@ export class MessagingMenuTab extends Record {
         return !this.hidden && (!this.hideWhenZeroCounter || this.counter > 0);
     }
 
+    /**
+     * Whether the content of this tab, or only its part in `domain`, has a read state that
+     * `markAllAsRead` clears.
+     *
+     * @param {MessagingMenuTabDomain} [domain]
+     */
+    canMarkAllAsRead(domain) {
+        return !domain && this.eq(this.store.messagingMenu.notificationTab);
+    }
+
     /** The filter selected by default when this tab is opened, if any. */
     get defaultFilter() {
         return this.filters.find((f) => f.isDefault);
+    }
+
+    /**
+     * The part of this tab its counter counts: narrowed by its default filter, if any.
+     *
+     * @returns {MessagingMenuTabDomain}
+     */
+    getCounterDomain() {
+        return { filters: this.defaultFilter ? [this.defaultFilter] : [] };
+    }
+
+    /**
+     * Whether the part of this tab in `_domain` has something to mark as read, as far as what
+     * is loaded tells.
+     *
+     * @param {MessagingMenuTabDomain} _domain
+     */
+    hasUnread(_domain) {
+        return this.counter > 0;
+    }
+
+    /**
+     * Marks what the counter of this tab counts as read, or only the part of this tab in
+     * `_domain`, whether it is loaded or not.
+     *
+     * @param {MessagingMenuTabDomain} [_domain]
+     */
+    async markAllAsRead(_domain) {
+        return this.store.markNeedactionMessagesAsRead();
     }
 
     /** Filters in the order they are shown, right after the "All" one. */

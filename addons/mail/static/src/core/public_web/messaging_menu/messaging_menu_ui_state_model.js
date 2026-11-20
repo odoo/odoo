@@ -63,6 +63,18 @@ export class MessagingMenuUIState extends Record {
         return Object.values(this.pluginFilters).filter(Boolean);
     }
 
+    /**
+     * The part of the active tab its list shows.
+     *
+     * @returns {import("@mail/core/public_web/messaging_menu/messaging_menu_tab_model").MessagingMenuTabDomain}
+     */
+    getTabDomain() {
+        return {
+            filters: [this.selectedFilter, ...this.activePluginFilters].filter(Boolean),
+            searchTerm: this.searchTerm,
+        };
+    }
+
     get initialLoadKey() {
         if (!this._isReadyForInitialLoad() || !this.activeTab) {
             return null;

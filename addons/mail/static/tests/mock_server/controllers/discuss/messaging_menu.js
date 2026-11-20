@@ -297,6 +297,96 @@ registerStoreHandler(
     { audience: "everyone" }
 );
 
+/** Mirrors `DiscussMessagingMenuController._get_menu_tab_view_domain`. */
+function _get_menu_tab_view_domain(env, { tab_id, filter_ids = [], channel_ids }) {
+    const domain = _get_menu_tab_full_domain(env, tab_id, filter_ids);
+    if (channel_ids) {
+        domain.push(["id", "in", channel_ids]);
+    }
+    return domain;
+}
+
+/** Mirrors `DiscussMessagingMenuController._get_menu_unread_channels`. */
+function _get_menu_unread_channel_ids(env, params) {
+    /** @type {import("mock_models").DiscussChannel} */
+    const DiscussChannel = env["discuss.channel"];
+    const domain = [
+        ..._get_menu_tab_view_domain(env, params),
+        ["self_member_id.is_unread", "=", true],
+    ];
+    return DiscussChannel.search(_resolve_self_member_domain.call({ env }, domain));
+}
+
+/**
+ * Mirrors `DiscussMessagingMenuController._get_menu_needaction_channels`, resolving the
+ * `message_needaction` leaf of the tab domain from the channels with needactions.
+ */
+function _get_menu_needaction_channel_ids(env, params) {
+    /** @type {import("mock_models").DiscussChannel} */
+    const DiscussChannel = env["discuss.channel"];
+    const needactionChannelIds = DiscussChannel._filter([])
+        .filter((channel) => _channel_has_needaction(env, channel))
+        .map((channel) => channel.id);
+    const domain = [
+        ..._get_menu_tab_view_domain(env, params).map((leaf) =>
+            leaf[0] === "message_needaction" ? ["id", "in", needactionChannelIds] : leaf
+        ),
+        ["id", "in", needactionChannelIds],
+    ];
+    return DiscussChannel.search(_resolve_self_member_domain.call({ env }, domain));
+}
+
+registerStoreHandler(
+    "/mail/messaging_menu/discuss.channel/mark_all_as_read",
+    function store_messaging_menu_discuss_channel_mark_all_as_read(store, params) {
+        /** @type {import("mock_models").DiscussChannelMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
+        /** @type {import("mock_models").MailMessage} */
+        const MailMessage = this.env["mail.message"];
+        const channelIds = _get_menu_unread_channel_ids(this.env, params);
+        const channelMessages = MailMessage._filter([
+            ["model", "=", "discuss.channel"],
+            ["res_id", "in", channelIds],
+        ]);
+        for (const member of DiscussChannelMember._filter([
+            ["channel_id", "in", channelIds],
+            ["is_self", "=", true],
+        ])) {
+            const messageIds = channelMessages
+                .filter((message) => message.res_id === member.channel_id)
+                .map((message) => message.id);
+            if (messageIds.length) {
+                DiscussChannelMember._mark_as_read([member.id], Math.max(...messageIds));
+            }
+        }
+        store.resolve_data_request((res) =>
+            res.many("channels", [], { value: this.env["discuss.channel"].browse(channelIds) })
+        );
+    },
+    { audience: "everyone", readonly: false }
+);
+
+registerStoreHandler(
+    "/mail/messaging_menu/discuss.channel/set_needaction_done",
+    function store_messaging_menu_discuss_channel_set_needaction_done(store, params) {
+        /** @type {import("mock_models").MailMessage} */
+        const MailMessage = this.env["mail.message"];
+        const channelIds = _get_menu_needaction_channel_ids(this.env, params);
+        MailMessage.set_message_done(
+            MailMessage._filter([
+                ["model", "=", "discuss.channel"],
+                ["res_id", "in", channelIds],
+            ])
+                .filter((message) => MailMessage._needaction(message))
+                .map((message) => message.id)
+        );
+        store.resolve_data_request((res) =>
+            res.many("channels", [], { value: this.env["discuss.channel"].browse(channelIds) })
+        );
+    },
+    { readonly: false }
+);
+
 registerStoreHandler(
     "/mail/messaging_menu/get_most_popular_channels",
     function store_messaging_menu_get_most_popular_channels(store) {

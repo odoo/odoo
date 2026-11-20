@@ -823,6 +823,26 @@ class DiscussChannelMember(models.Model):
         # Mark as read only moves forward.
         self._set_new_message_separator(max(self.new_message_separator, last_message.id + 1))
 
+    def _mark_channels_as_read(self):
+        """Mark the channels of these members as read up to their last message, as
+        `_mark_as_read` does for one member, with a single write of their separators."""
+        # Reading the channels is showing up: their invitations are no longer pending.
+        self.filtered("invitation_sent_dt").invitation_sent_dt = False
+        last_messages = self.channel_id._get_last_messages()
+        if not last_messages:
+            return
+        last_message_by_channel_id = last_messages.grouped("res_id")
+        members = self.filtered(lambda m: m.channel_id.id in last_message_by_channel_id)
+        for member in members:
+            member._set_last_seen_message(last_message_by_channel_id[member.channel_id.id])
+        # The separator is a threshold on message ids: past the last message of all these
+        # channels, it is past the last message of each of them.
+        separator = max(last_messages.ids) + 1
+        # Mark as read only moves forward.
+        members.filtered(
+            lambda m: m.new_message_separator < separator,
+        ).new_message_separator = separator
+
     def _set_last_seen_message(self, message, notify=True):
         """
         Set the last seen message of the current member.
