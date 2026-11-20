@@ -103,10 +103,12 @@
                                 <field name="private_email" string="Private Email"/>
                                 <field name="private_phone" widget="phone" class="o_force_ltr" string="Private Phone"/>
                                 <label for="birthday"/>
-                                <div class="o_row" name="div_birthday">
+                                <div class="d-flex flex-column" name="div_birthday">
                                     <field name="birthday" class="o_hr_narrow_field"/>
-                                    <label for="birthday_public_display" invisible="not birthday"/>
-                                    <field name="birthday_public_display" string="Show To All Employees" widget="boolean_toggle" invisible="not birthday"/>
+                                    <div class="d-flex align-items-center" invisible="not birthday">
+                                        <field name="birthday_public_display" widget="boolean_toggle" class="w-auto"/>
+                                        <label for="birthday_public_display" string="Show birthdate in directory" class="fw-normal"/>
+                                    </div>
                                 </div>
                             </group>
                             <group string="Emergency Contact">
