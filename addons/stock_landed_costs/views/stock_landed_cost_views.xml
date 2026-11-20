@@ -12,6 +12,7 @@
                     <header>
                         <button name="button_validate" string="Validate" invisible="state != 'draft'" class="oe_highlight" type="object"/>
                         <button name="button_cancel" string="Cancel" invisible="state != 'draft'" type="object"/>
+                        <button name="button_reset_to_draft" string="Reset to Draft" invisible="state != 'done'" type="object"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
                     </header>
                     <sheet>

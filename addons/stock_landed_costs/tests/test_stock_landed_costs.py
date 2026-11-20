@@ -77,6 +77,58 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
         self.assertEqual(refrigerator_val_line.additional_landed_cost, 75)
         self.assertFalse(valuation_lines.filtered(lambda line: line.product_id == self.product_a))
 
+    def test_landed_cost_reset_to_draft(self):
+        """Resetting a posted landed cost to draft reverses its journal entry and resets the moves values.
+        Posting it again creates a new entry and applies the cost again."""
+        product = self.product_refrigerator  # AVCO, automated valuation, cost 1
+        receipt, delivery = self.Picking.create([{
+            'picking_type_id': picking_type.id,
+            'location_id': location_id,
+            'location_dest_id': location_dest_id,
+            'move_ids': [Command.create({'product_id': product.id, 'product_uom_qty': quantity})],
+        } for picking_type, location_id, location_dest_id, quantity in [
+            (self.warehouse.in_type_id, self.supplier_location_id, self.warehouse.lot_stock_id.id, 10),
+            (self.warehouse.out_type_id, self.warehouse.lot_stock_id.id, self.customer_location_id, 4),
+        ]])
+        self._process_pickings(receipt)
+        self._process_pickings(delivery)
+        moves = receipt.move_ids | delivery.move_ids
+
+        lc = self.LandedCost.create({
+            'account_journal_id': self.stock_journal.id,
+            'picking_ids': [Command.set(receipt.ids)],
+            'cost_lines': [Command.create({
+                'product_id': self.landed_cost.id,
+                'price_unit': 60,
+                'split_method': 'equal',
+            })],
+        })
+
+        self.assertRecordValues(moves, [{'value': 10}, {'value': -4}])
+        self.assertEqual(product.standard_price, 1)
+
+        lc.button_validate()
+        self.assertEqual(lc.state, 'done')
+        self.assertEqual(lc.account_move_id.state, 'posted')
+        self.assertEqual(sum(lc.account_move_id.line_ids.mapped('debit')), 36)
+        self.assertRecordValues(moves, [{'value': 70}, {'value': -28}])
+        self.assertEqual(product.standard_price, 7)
+        first_entry = lc.account_move_id
+
+        # resetting the LC to draft reverses its entry and removes the link to it
+        lc.button_reset_to_draft()
+        self.assertEqual(lc.state, 'draft')
+        self.assertFalse(lc.account_move_id)
+        reversal = first_entry.reversal_move_ids
+        self.assertEqual(reversal.state, 'posted')
+        self.assertRecordValues(moves, [{'value': 10}, {'value': -4}])
+        self.assertEqual(product.standard_price, 1)
+
+        # reposting the LC again, creates a new entry
+        lc.button_validate()
+        self.assertEqual(lc.state, 'done')
+        self.assertNotEqual(lc.account_move_id, first_entry)
+
 
 class TestStockLandedCostsReevaluation(TestStockLandedCostsCommon):
 
