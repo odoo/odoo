@@ -3,7 +3,7 @@
 from base64 import b32encode
 from hashlib import sha256
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, Command
 from odoo.exceptions import ValidationError
 
 
@@ -56,7 +56,8 @@ class PosPrinter(models.Model):
         ('receipt', "Receipt"),
     ], string="Type", default="preparation")
     product_categories_ids = fields.Many2many('pos.category', 'printer_category_rel', 'printer_id', 'category_id', string='Printed Product Categories')
-    pos_config_ids = fields.Many2many('pos.config', 'pos_config_receipt_printer_rel', 'printer_id', 'config_id', string="Point of Sale")
+    pos_config_ids = fields.Many2many('pos.config', 'pos_config_receipt_printer_rel', 'printer_id', 'config_id')
+    preparation_pos_config_ids = fields.Many2many('pos.config', 'pos_config_printer_rel', 'printer_id', 'config_id')
     printer_ip = fields.Char(
         string='Printer IP Address',
         help=(
@@ -90,10 +91,19 @@ class PosPrinter(models.Model):
 
     @api.onchange('use_type')
     def _onchange_use_type(self):
-        """Disable use_cashdrawer when printer type is preparation"""
+        """Keep POS config consistent with the printer type."""
         for rec in self:
-            if rec.use_type == "preparation" and rec.use_cashdrawer:
-                rec.use_cashdrawer = False
+            if rec.use_type == "receipt":
+                if rec.preparation_pos_config_ids:
+                    rec.pos_config_ids = rec.preparation_pos_config_ids
+                    rec.preparation_pos_config_ids = [Command.clear()]
+            else:
+                if rec.pos_config_ids:
+                    rec.preparation_pos_config_ids = rec.pos_config_ids
+                    rec.pos_config_ids = [Command.clear()]
+                if rec.use_cashdrawer:
+                    # Disable use_cashdrawer when printer type is preparation
+                    rec.use_cashdrawer = False
 
     def _can_print_backend_receipt(self):
         self.ensure_one()
