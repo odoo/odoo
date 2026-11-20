@@ -76,10 +76,10 @@ export class WebsocketWorker {
         this.connectRetryDelay = this.INITIAL_RECONNECT_DELAY;
         this.connectTimeout = null;
         this.currentDB = null;
+        /** @type {number|false|null} null when not known yet. */
         this.currentUID = null;
         this.firstSubscribeResolver = Promise.withResolvers();
         this.isReconnecting = false;
-        this.isWaitingForNewUID = true;
         this.lastChannelSubscription = null;
         this.lastNotificationId = null;
         /** @type {?{force: boolean, minId: number|null}} */
@@ -308,27 +308,24 @@ export class WebsocketWorker {
      * @param {Number} param0.startTs Timestamp of start of bus service sender.
      */
     _initializeConnection(client, { db, lastNotificationId, uid, websocketURL, startTs }) {
-        if (this.newestStartTs && this.newestStartTs > startTs) {
-            this.sendToClient(client, "BUS:WORKER_STATE_UPDATED", this.state);
-            this.sendToClient(client, "BUS:INITIALIZED");
-            return;
-        }
-        this.newestStartTs = startTs;
-        this.websocketURL = websocketURL;
-        this.lastNotificationId ??= lastNotificationId;
-        const isCurrentUserKnown = uid !== undefined;
-        if (this.isWaitingForNewUID && isCurrentUserKnown) {
-            this.isWaitingForNewUID = false;
-            this.currentUID = uid;
-        }
-        this.currentDB ||= db;
-        if ((this.currentUID !== uid && isCurrentUserKnown) || (db && this.currentDB !== db)) {
-            this.currentUID = uid;
-            this.currentDB = db || this.currentDB;
-            if (this.websocket) {
-                this.websocket.close(WEBSOCKET_CLOSE_CODES.CLEAN);
+        const isStale = this.newestStartTs > startTs;
+        if (!isStale) {
+            this.newestStartTs = startTs;
+            this.websocketURL = websocketURL;
+            this.lastNotificationId ??= lastNotificationId;
+            const uidChanged =
+                uid !== undefined && this.currentUID !== null && this.currentUID !== uid;
+            const dbChanged = Boolean(db && this.currentDB && this.currentDB !== db);
+            if (uid !== undefined || dbChanged) {
+                this.currentUID = uid ?? null;
             }
-            this.channelsByClient.forEach((_, key) => this.channelsByClient.set(key, []));
+            if (db) {
+                this.currentDB = db;
+            }
+            if (uidChanged || dbChanged) {
+                this.websocket?.close(WEBSOCKET_CLOSE_CODES.CLEAN);
+                this.channelsByClient.forEach((_, key) => this.channelsByClient.set(key, []));
+            }
         }
         this.sendToClient(client, "BUS:WORKER_STATE_UPDATED", this.state);
         this.sendToClient(client, "BUS:INITIALIZED");
@@ -383,7 +380,8 @@ export class WebsocketWorker {
         this.broadcast("BUS:RECONNECTING", { closeCode: code });
         this.isReconnecting = true;
         if (code === WEBSOCKET_CLOSE_CODES.SESSION_EXPIRED) {
-            this.isWaitingForNewUID = true;
+            // The next known uid is adopted, not seen as a user change.
+            this.currentUID = null;
         }
         this._retryConnectionWithDelay();
     }
