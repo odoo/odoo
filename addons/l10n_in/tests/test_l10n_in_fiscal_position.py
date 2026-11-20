@@ -89,7 +89,13 @@ class TestFiscal(L10nInTestInvoicingCommon):
             state_id=self.partner_b.state_id.id,  # Setting Partner B state will be now Intra State for branch 1
             account_fiscal_country_id=self.country_in.id,
         )
-        with self._set_env_company(self.outside_in_company):
+        outside_in_company = self.add_company('base.test_company_template2', {
+            'name': 'Outside India Company',
+            'country_id': self.country_us.id,
+            'currency_id': self.default_company.currency_id.id,
+        })
+        self.assertNotEqual(outside_in_company, self.default_company)
+        with self._set_env_company(outside_in_company):
             branch_2 = self.env['res.company'].create({
                 'name': 'Branch 2',
                 'parent_id': self.default_company.id,

@@ -74,9 +74,10 @@ class TestUserRoleGroupSync(HttpCaseWithUserDemo):
     res_user_group_ids_field.js (`this.debugMode.isActive() ? ... : ""`).
     """
 
-    def setUp(self):
-        super().setUp()
-        self.extra_group = self.env['res.groups'].create({
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.extra_group = cls.env['res.groups'].create({
             'name': 'Test Role Sync Extra Group',
         })
         # A 2nd company on the target user is the actual trigger condition
@@ -86,13 +87,14 @@ class TestUserRoleGroupSync(HttpCaseWithUserDemo):
         # without the res_users.py fix unless the user has multiple
         # companies (matching the real-world report: Marc Demo has
         # company_count > 1).
-        self.company2 = self.env['res.company'].create({'name': 'Role Sync Test Company 2'})
-        self.test_user = self.env['res.users'].create({
+        # Use the fixture directly: add_company() would also link it to the current user
+        cls.company2 = cls.env.ref('base.test_company_template')
+        cls.test_user = cls.env['res.users'].create({
             'name': 'Role Sync Test User',
             'login': 'role_sync_test_user',
-            'group_ids': [Command.set(self.env.ref('base.group_user').ids)],
+            'group_ids': [Command.set(cls.env.ref('base.group_user').ids)],
         })
-        self.group_regular = self.env.ref('base.group_user_regular')
+        cls.group_regular = cls.env.ref('base.group_user_regular')
         # Give the user a 2nd company *without* going through write()/
         # create() (both have their own correct group_multi_company sync,
         # same idea as the new() override, so a plain write() here would
@@ -101,11 +103,14 @@ class TestUserRoleGroupSync(HttpCaseWithUserDemo):
         # group_ids/role still say "light", matching Marc Demo's actual
         # starting state in the original bug report). This is exactly the
         # inconsistent starting state the bug needs to be observable.
-        self.env.cr.execute(
+        if cls.company2 in cls.test_user.company_ids:
+            raise AssertionError("The role-sync user must start with only their default company")
+        cls.env.cr.execute(
             "INSERT INTO res_company_users_rel (cid, user_id) VALUES (%s, %s)",
-            [self.company2.id, self.test_user.id],
+            [cls.company2.id, cls.test_user.id],
         )
-        self.test_user.invalidate_recordset()
+        # The SQL insert bypasses the ORM, so the cached company_ids still contain one company.
+        cls.test_user.invalidate_recordset()
 
     def _user_url(self):
         # Not /odoo/res.users/<id>: with hr installed, that bare model URL
