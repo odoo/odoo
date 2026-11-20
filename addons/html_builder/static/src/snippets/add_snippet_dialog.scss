@@ -28,8 +28,8 @@
 
         .list-group {
             --list-group-border-radius: 0;
-            --list-group-active-bg: #{$o-brand-primary};
-            --list-group-active-border-color: #{$o-brand-primary};
+            --list-group-active-bg: var(--o-brand-primary);
+            --list-group-active-border-color: var(--o-brand-primary);
             --list-group-active-color: var(--o-brand-primary-contrast);
 
             min-width: 200px;
@@ -44,7 +44,7 @@
     }
 
     .o_add_snippet_dialog_search {
-        background-color: var(--SearchBar-bg-color, #{$o-white});
+        background-color: var(--SearchBar-bg-color, var(--o-white));
     }
 }
 .o_add_snippet_dialog_iframe_loader {
