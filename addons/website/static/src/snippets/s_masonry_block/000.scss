@@ -47,6 +47,11 @@
 }
 
 html[data-no-flex] .s_masonry_block:not([data-vcss]) {
+    --s-masonry-block-content-top: 35%;
+    --s-masonry-block-content-right: 25%;
+    --s-masonry-block-content-bottom: 35%;
+    --s-masonry-block-content-left: 25%;
+
     min-height: 340px;
     > div {
         height: 100%;
@@ -77,10 +82,10 @@ html[data-no-flex] .s_masonry_block:not([data-vcss]) {
     }
 
     @media (min-width: 992px) { /* media-breakpoint-up(lg) */
-        height: 0px; // hack to force height chain
+        height: 0px; /* hack to force height chain */
         &.s_ratio_2_1 {
             position: relative;
-            padding: 0 0 50% 0; // to have 2:1 aspect ratio
+            padding: 0 0 50% 0; /* to have 2:1 aspect ratio */
             > div {
                 padding-top: 0;
                 padding-bottom:0;
@@ -91,8 +96,8 @@ html[data-no-flex] .s_masonry_block:not([data-vcss]) {
 
         .content {
             position: absolute;
-            inset-block: $s-masonry-block-content-top $s-masonry-block-content-bottom;
-            inset-inline: $s-masonry-block-content-left $s-masonry-block-content-right;
+            inset-block: var(--s-masonry-block-content-top) var(--s-masonry-block-content-bottom);
+            inset-inline: var(--s-masonry-block-content-left) var(--s-masonry-block-content-right);
         }
     }
 }

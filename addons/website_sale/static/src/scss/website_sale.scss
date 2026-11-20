@@ -1,6 +1,22 @@
 /* Website Sale
    ============================================================================= */
 
+/* Make custom property animatable */
+@property --o-wsale-js-grid-product-height {
+    syntax: "<length>";
+    inherits: true;
+    initial-value: 280px;
+}
+
+@keyframes o-produt-grid-loading {
+    0% {
+        opacity: .25;
+    }
+    100% {
+        opacity: .5;
+    }
+}
+
 
 /* ==== Products list Pages (/shop, /category, /search) ========================
    ============================================================================= */
@@ -14,21 +30,18 @@
     /* === Sidebar (Left) ====================================================== */
     #products_grid_before {
         flex: 0 0 25%;
-        min-width: o-to-rem(240px);
+        min-width: 15rem;
         max-width: var(--o-wsale-sidebar-maxwidth, 15rem);
 
         /* == Guess the distance with the navbar */
-        $-container-top-gap: $grid-gutter-width / 2; /* = o_wsale_products_main_row */
+        --o-wsale-container-top-gap: calc(var(--o-bs-grid-gutter-width) / 2); /* = o_wsale_products_main_row */
 
         /* == Guess the distance with the viewport's top.
            Defined using CSS variables to ease custom-headers overrides. */
-        --o_ws_sidebar_top_gap: calc((var(--o-bs-navbar-padding-y) * 2) + (var(--o-bs-btn-padding-y-lg) * 2) + #{$-container-top-gap});
+        --o_ws_sidebar_top_gap: calc((var(--o-bs-navbar-padding-y) * 2) + (var(--o-bs-btn-padding-y-lg) * 2) + var(--o-wsale-container-top-gap));
 
-        @if (o-website-value('header-scroll-effect') == null) or (o-website-value('header-scroll-effect') == 'fixed') {
-            top: var(--o_ws_sidebar_top_gap);
-        } @else {
-            top: $-container-top-gap;
-        }
+        /* Below the header when it stays on screen */
+        top: calc(var(--o-header-sticky) * var(--o_ws_sidebar_top_gap) + (1 - var(--o-header-sticky)) * var(--o-wsale-container-top-gap));
 
         .o_wsale_products_grid_before_rail{
             height: calc(100vh - var(--o_ws_sidebar_top_gap));
@@ -116,15 +129,6 @@
                 }
             }
         }
-
-        /* Hide empty dropzones when no dropzone are dragged. */
-        @at-root body:where(:not(.oe_dropzone_active)) {
-            #oe_structure_products_header_shop {
-                &:has(> br:first-child:last-child), &:empty {
-                    display: none;
-                }
-            }
-        }
     }
 
     /* == Filmstrip */
@@ -151,7 +155,9 @@
         &.o_wsale_filmstrip_default {
             --o-wsale-filmstrip-item-min-height: 3.5rem;
             --o-wsale-filmstrip-item-color: var(--o-bs-light-contrast);
-            --o-wsale-filmstrip-item-bg-hover: #{if(lightness($light) > 50%, darken($light, 8%), lighten($light, 8%))};
+            /* Lighter than a dark light color, darker than the others: clamp() gives 1
+               up to 50% of lightness and -1 above */
+            --o-wsale-filmstrip-item-bg-hover: hsl(from var(--light) h s calc(l + 8 * clamp(-1, (50.1 - l) * 100, 1)));
         }
 
         &.o_wsale_filmstrip_bordered {
@@ -248,7 +254,7 @@
             --o-wsale-filmstrip-item-direction: column;
             --o-wsale-filmstrip-item-justify: flex-start;
             --o-wsale-filmstrip-item-width: 18rem;
-            --o-wsale-filmstrip-item-border-width: 0 var(--o-bs-border-width) 0 0 #{"/*rtl: 0 0 0 " + $border-width + "*/"};
+            --o-wsale-filmstrip-item-border-width: 0 var(--o-bs-border-width) 0 0 /*rtl:0 0 0 var(--o-bs-border-width)*/;
             --o-wsale-filmstrip-item-border-radius: 0;
             --o-wsale-filmstrip-item-padding-y: var(--o-bs-spacer-3);
             --o-wsale-filmstrip-item-padding-x: var(--o-bs-spacer-3);
@@ -306,13 +312,13 @@
             --o-wsale-filmstrip-item-font-weight: var(--o-bs-headings-font-weight);
             --o-wsale-filmstrip-item-text-wrap: wrap;
             --o-wsale-filmstrip-item-color: var(--white);
-            --o-wsale-filmstrip-item-bg: #{transparent};
+            --o-wsale-filmstrip-item-bg: transparent;
             --o-wsale-filmstrip-item-image-bg: transparent;
             --o-wsale-filmstrip-item-placeholder-display: block;
             --o-wsale-filmstrip-item-word-break: break-word;
 
             --o-wsale-filmstrip-item-color-active: var(--white);
-            --o-wsale-filmstrip-item-bg-active: #{transparent};
+            --o-wsale-filmstrip-item-bg-active: transparent;
             --o-wsale-filmstrip-item-text-decoration-active: underline;
 
             --o-wsale-filmstrip-item-image-position: absolute;
@@ -482,7 +488,7 @@
                 }
 
                 &::-webkit-scrollbar-thumb {
-                    border-radius: $btn-border-radius-sm;
+                    border-radius: var(--btn-border-radius-sm);
                     background: color-mix(in srgb, var(--o-bs-body-color) 25%, transparent);
                 }
 
@@ -533,6 +539,14 @@
 
                 right: calc(0px - calc(var(--_offset) - var(--_livechat-gap)));
             }
+        }
+    }
+}
+/* Hide empty dropzones when no dropzone are dragged. */
+body:where(:not(.oe_dropzone_active)) {
+    #oe_structure_products_header_shop {
+        &:has(> br:first-child:last-child), &:empty {
+            display: none;
         }
     }
 }
@@ -697,10 +711,10 @@
 
         &:where(:has(#o_wsale_products_grid.o_wsale_products_opt_design_grid)) {
             &.o_wsale_page_contained .oe_product_cart {
-                --o-wsale-card-border-width: 0 #{$border-width $border-width $border-width};
+                --o-wsale-card-border-width: 0 var(--o-bs-border-width) var(--o-bs-border-width) var(--o-bs-border-width);
 
                 @media (min-width: 992px) {
-                    --o-wsale-card-border-width: 0 #{$border-width $border-width} 0;
+                    --o-wsale-card-border-width: 0 var(--o-bs-border-width) var(--o-bs-border-width) 0;
                 }
             }
 
@@ -720,7 +734,7 @@
 
             .oe_product_cart {
                 --o-wsale-card-flex-align-items: stretch;
-                --o-wsale-card-info-padding: var(--o-bs-spacer-2) #{$container-padding-x * 0.5} var(--o-bs-spacer-2) var(--o-bs-spacer-2);
+                --o-wsale-card-info-padding: var(--o-bs-spacer-2) calc(var(--o-bs-container-padding-x) * 0.5) var(--o-bs-spacer-2) var(--o-bs-spacer-2);
                 --o-wsale-card-info-marign: 0;
                 --o-wsale-card-sub-wrap: nowrap;
                 --o-wsale-card-sub-align-items: start;
@@ -797,8 +811,13 @@
     }
 
     h1[itemprop="name"] {
-        @include font-size($h3-font-size);
+        font-size: var(--o-bs-h3-font-size-fluid);
         font-weight: var(--o-bs-font-weight-bold);
+
+        /* Where the responsive font sizes of Bootstrap stop growing */
+        @media (min-width: 1200px) {
+            font-size: var(--o-bs-h3-font-size);
+        }
     }
 
     input.js_quantity {
@@ -974,8 +993,8 @@ a.no-decoration {
     }
 
     .breadcrumb .breadcrumb-item {
-        padding-top: calc(var(--o-bs-btn-padding-y) + #{$btn-border-width});
-        padding-bottom: calc(var(--o-bs-btn-padding-y) + #{$btn-border-width});
+        padding-top: calc(var(--o-bs-btn-padding-y) + var(--btn-border-width));
+        padding-bottom: calc(var(--o-bs-btn-padding-y) + var(--btn-border-width));
         font-size: var(--o-bs-btn-font-size);
         line-height: var(--o-bs-btn-line-height);
     }
@@ -1055,7 +1074,7 @@ a.no-decoration {
     display: flex;
     flex-direction: column;
 
-    /* Two-Column Product Details Layout Mixin
+    /* Two-Column Product Details Layout
        =========================================================================
        Creates a responsive two-column layout for product details pages using
        CSS container queries. When the container width exceeds the minimum
@@ -1071,54 +1090,13 @@ a.no-decoration {
        │   etc.)         │        │   Price, etc.)  │
        └─────────────────┴────────┴─────────────────┘
 
-       @param {Length|null} $_infos_max - Maximum width for the info column
-       @param {Length|null} $_spacer_max - Maximum width for the spacer column
+       --o-wsale-product-details-infos-max-width - Maximum width for the info column
+       --o-wsale-product-details-spacer-max-width - Maximum width for the spacer column
 
        Container Query Breakpoint:
        - Activates when container width ≥ (412px + spacer + 300px) = ~minimum
-       viable width.
+       viable width, 727px with the half grid gutter as spacer.
        - Uses CSS container queries for element-based responsive design */
-    @mixin o-product-details-trig-two-cols($_infos_max: null, $_spacer_max: null) {
-        $_sizes_min: (
-            'infos': 412px,
-            'spacer': $grid-gutter-width * 0.5,
-            'cta': 300px,
-        );
-        $_sizes_max: (
-            'infos': if($_infos_max != null, $_infos_max, 520px),
-            'spacer': if($_spacer_max != null, $_spacer_max, $grid-gutter-width),
-            'cta': 400px,
-        );
-        $_min_width: map-get($_sizes_min, 'infos') + map-get($_sizes_min, 'spacer') + map-get($_sizes_min, 'cta');
-
-        @container product-details (min-width: #{$_min_width}) {
-            width: 100%;
-            max-width: var(--o-wsale-product-details-content-max-width) !important;
-            margin: 0;
-
-            article {
-                display: grid;
-                grid-template-columns:
-                    minmax(map-get($_sizes_min, 'infos'), map-get($_sizes_max, 'infos'))
-                    minmax(map-get($_sizes_min, 'spacer'), map-get($_sizes_max, 'spacer'))
-                    minmax(map-get($_sizes_min, 'cta'), map-get($_sizes_max, 'cta'));
-                grid-auto-rows: auto;
-                align-items: start;
-
-                .o_wsale_product_details_content_section {
-                    grid-column: 1;
-                }
-
-                .o_wsale_product_details_content_section_cta {
-                    --o-wsale-product-details-section-border-width: 0px;
-                    --o-wsale-product-details-section-padding-top: 0px;
-                    grid-column: 3;
-                    grid-row: 1 / -6;
-                    align-self: start;
-                }
-            }
-        }
-    }
 
     /* ==== Two-columns info product layout trigger conditions */
     .o_wsale_product_page_opt_image_width_none &,
@@ -1126,13 +1104,41 @@ a.no-decoration {
         @media (min-width: 992px) {
             --o-wsale-product-details-content-max-width: 100%;
             --o-wsale-product-details-content-section-max-width: 640px;
-
-            @include o-product-details-trig-two-cols($_infos_max: 640px, $_spacer_max: 10000px);
+            --o-wsale-product-details-infos-max-width: 640px;
+            --o-wsale-product-details-spacer-max-width: 10000px;
         }
     }
+    .o_wsale_product_page_opt_image_width_none &,
+    .o_wsale_product_page_opt_image_width_100_pc &,
     .o_wsale_product_page_opt_image_width_33_pc & {
         @media (min-width: 992px) {
-            @include o-product-details-trig-two-cols($_spacer_max: var(--o-wsale-product-col-details-padding-left));
+            @container product-details (min-width: 727px) {
+                width: 100%;
+                max-width: var(--o-wsale-product-details-content-max-width) !important;
+                margin: 0;
+
+                article {
+                    display: grid;
+                    grid-template-columns:
+                        minmax(412px, var(--o-wsale-product-details-infos-max-width, 520px))
+                        minmax(calc(var(--o-bs-grid-gutter-width) * 0.5), var(--o-wsale-product-details-spacer-max-width, var(--o-wsale-product-col-details-padding-left)))
+                        minmax(300px, 400px);
+                    grid-auto-rows: auto;
+                    align-items: start;
+
+                    .o_wsale_product_details_content_section {
+                        grid-column: 1;
+                    }
+
+                    .o_wsale_product_details_content_section_cta {
+                        --o-wsale-product-details-section-border-width: 0px;
+                        --o-wsale-product-details-section-padding-top: 0px;
+                        grid-column: 3;
+                        grid-row: 1 / -6;
+                        align-self: start;
+                    }
+                }
+            }
         }
     }
 
@@ -1217,15 +1223,6 @@ a.no-decoration {
 
 /* ==== Product Grid =========================================================== */
 #o-grid-product {
-    @at-root {
-        /* Make custom property animatable */
-        @property --o-wsale-js-grid-product-height {
-            syntax: "<length>";
-            inherits: true;
-            initial-value: 280px;
-        }
-    }
-
     .o_wsale_product_page_grid_row {
         display: var(--o-wsale-grid-product-row-display, flex);
     }
@@ -1265,7 +1262,7 @@ a.no-decoration {
 
         /* ==== Mobile specific styles */
         @media (max-width: 991.98px) {
-            $_max_height: 60vh;
+            --_max_height: 60vh;
 
             .o_wsale_product_page_grid_row {
                 --_lastBlock_margin_bottom: calc(var(--o-bs-grid-gutter-width) * -0.5);
@@ -1273,7 +1270,7 @@ a.no-decoration {
                 flex-direction: column;
                 height: var(--o-wsale-js-grid-product-height);
                 min-height: 146px; /* Arbitrary, based on the wider aspect-ratio */
-                max-height: $_max_height;
+                max-height: var(--_max_height);
                 overflow-y: scroll;
                 overflow-x: hidden;
                 scroll-snap-type: y mandatory;
@@ -1300,7 +1297,7 @@ a.no-decoration {
             .o_product_detail_img_wrapper {
                 scroll-snap-align: center;
                 scroll-snap-stop: always;
-                max-height: $_max_height;
+                max-height: var(--_max_height);
                 order: var(--o-wsale-grid-product-img-natural-order);
                 width: 100%;
 
@@ -1313,10 +1310,6 @@ a.no-decoration {
                 /* When images have inconsistent aspect-ratio, we set the grid
                    height in js according to the tallest image. Perform a "loading"
                    animation during this process. */
-                @keyframes o-produt-grid-loading {
-                    0% { opacity: .25; }
-                    100% { opacity: .5; }
-                }
                 .o_product_detail_img_wrapper {
                     animation: o-produt-grid-loading 2s ease-in-out var(--o-wsale-grid-product-images-animation-count, infinite);
                 }
@@ -1699,7 +1692,7 @@ a.no-decoration {
 
                 /* Calculate the height of 4.5 <tr> through the images height.
                    (+ spacer 3 to compensate negative margin) */
-                max-height: calc(calc(var(--o-bs-border-width) * 4 + (#{$table-cell-padding-y} + var(--o-bs-spacer-3) + (var(--o-wsale-checkout-cart-product-img-width) / var(--o-wsale-shop-thumb-aspect-ratio, 1))) * 4.5) + var(--o-bs-spacer-3));
+                max-height: calc(calc(var(--o-bs-border-width) * 4 + (var(--o-bs-table-cell-padding-y) + var(--o-bs-spacer-3) + (var(--o-wsale-checkout-cart-product-img-width) / var(--o-wsale-shop-thumb-aspect-ratio, 1))) * 4.5) + var(--o-bs-spacer-3));
             }
         }
     }
@@ -1859,10 +1852,10 @@ body {
 .oe_website_sale {
     /* Changes the chevron color to contrast with user's theme background color */
     .accordion-button::after {
-        background-image: escape-svg($accordion-button-icon);
+        background-image: var(--o-bs-accordion-button-icon);
     }
 
-    #product_accordion, #wsale_products_attributes_collapse h6, #o_wsale_price_range_option h6, #o_wsale_total_accordion .accordion-header {
+    #product_accordion, #wsale_products_attributes_collapse h6, #wsale_products_attributes_collapse .h6, #o_wsale_price_range_option h6, #o_wsale_total_accordion .accordion-header {
         --accordion-active-bg: inherit;
         --accordion-active-color: var(--accordion-btn-color);
         --accordion-btn-padding-x : 0;
@@ -1944,7 +1937,7 @@ body.modal-open:has(.o_wsale_product_page) {
     }
 
     .o_wsale_ribbon {
-        padding: var(--o-bs-spacer-2) $ribbon-padding;
+        padding: var(--o-bs-spacer-2) var(--o-ribbon-padding);
         transform-origin: top right;
         z-index: 1;
     }
@@ -1961,14 +1954,14 @@ body.modal-open:has(.o_wsale_product_page) {
         /* 0.708 is 1 - cos(45deg)
            Transforms are applied right-to-left
            Cannot use matrix because of the use of % values. */
-        transform: translateX(calc(-0.708 * (100% - #{2 * $ribbon-padding}))) rotate(45deg) translateX(calc(100% - #{$ribbon-padding}));
+        transform: translateX(calc(-0.708 * (100% - 2 * var(--o-ribbon-padding)))) rotate(45deg) translateX(calc(100% - var(--o-ribbon-padding)));
     }
 
     .o_wsale_ribbon.o_left{
         position: absolute;
         top: 0;
         inset-inline-start: 0;
-        transform: translateX(calc(0.708 * (100% - #{2 * $ribbon-padding}) - 100%)) rotate(-45deg) translateX($ribbon-padding);
+        transform: translateX(calc(0.708 * (100% - 2 * var(--o-ribbon-padding)) - 100%)) rotate(-45deg) translateX(var(--o-ribbon-padding)) #{"/*rtl:translateX(calc(-1 * (0.708 * (100% - 2 * var(--o-ribbon-padding)) - 100%))) rotate(45deg) translateX(calc(var(--o-ribbon-padding) * -1))*/"};
     }
 
     .o_wsale_badge.o_left {

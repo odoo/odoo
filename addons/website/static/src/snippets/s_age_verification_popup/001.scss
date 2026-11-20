@@ -1,26 +1,15 @@
 .s_age_verification_popup[data-vcss='001'] {
     .modal {
-        z-index: calc(var(--o-bs-zindex-modal) + 2); // Always appear on top in case of multiple popups.
+        z-index: calc(var(--o-bs-zindex-modal) + 2); /* Always appear on top in case of multiple popups. */
     }
 }
 
-@mixin o-apply-age-popup-blur-overlay {
+body:not(.editor_enable) #wrapwrap:has([data-age-verification-pending="true"]):has([data-blur-background="true"])::before,
+.editor_enable #wrapwrap:has(.show[data-blur-background="true"])::before {
     content: "";
     position: fixed;
     inset: 0;
     z-index: calc(var(--o-bs-zindex-modal) + 1);
     background: rgba(0, 0, 0, 0.15);
     backdrop-filter: blur(16px);
-}
-
-body:not(.editor_enable) {
-    #wrapwrap:has([data-age-verification-pending="true"]):has([data-blur-background="true"])::before {
-        @include o-apply-age-popup-blur-overlay;
-    }
-}
-
-.editor_enable {
-    #wrapwrap:has(.show[data-blur-background="true"])::before {
-        @include o-apply-age-popup-blur-overlay;
-    }
 }
