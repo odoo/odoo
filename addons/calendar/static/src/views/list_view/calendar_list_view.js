@@ -4,8 +4,9 @@ import { user } from "@web/core/user";
 import { CaledarListController } from "./calendar_list_controller";
 
 export class CalendarListModel extends listView.Model {
-    setup(params, { action, dialog, notification, rpc, user, view, company }) {
+    setup(params) {
         super.setup(...arguments);
+        this.calendarFilters = params.calendarFilters;
     }
 
     /**
@@ -13,7 +14,7 @@ export class CalendarListModel extends listView.Model {
      * Add the calendar view's selected attendees to the list view's domain.
      */
     async load(params = {}) {
-        const filters = params?.context?.calendar_filters;
+        const filters = this.calendarFilters;
         // Apply selected calendar attendees only when the action has no domain.
         if (filters && params.domain && !this.env.searchModel.globalDomain.length) {
             this.selectedPartnerIds ??= this.orm.call(
