@@ -36,6 +36,7 @@ class PosOrder(models.Model):
         attachment=True,
         copy=False,
     )
+    l10n_eg_edi_pos_refund_reason = fields.Char(string="Refund Reason", copy=False)
 
     def action_pos_order_paid(self):
         if (

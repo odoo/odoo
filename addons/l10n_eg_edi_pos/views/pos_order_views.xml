@@ -24,6 +24,7 @@
             </xpath>
             <group name="other_information" position="inside">
                 <field name="l10n_eg_edi_pos_state" invisible="country_code != 'EG'" readonly="1"/>
+                <field name="l10n_eg_edi_pos_refund_reason" invisible="country_code != 'EG' or not refunded_order_id" readonly="1"/>
             </group>
         </field>
     </record>

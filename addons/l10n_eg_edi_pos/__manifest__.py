@@ -5,8 +5,10 @@
 Egypt E-Receipts (POS)
 ======================
 Submits POS sales receipts to the Egyptian Tax Authority (ETA) eReceipt API
-after order payment. Prints a compliant QR on the receipt when accepted, prints
-RECEIPT WITHOUT FISCAL VALUE when not, and tracks ETA state per-order.
+after order payment. Prints a compliant QR at the top of the receipt when
+accepted, prints THIS IS NOT A LEGAL DOCUMENT when not, and tracks ETA state
+per-order. Refunds made from the POS ask for a reason, printed on the receipt
+together with the reference of the refunded order.
 """,
     'author': "Odoo S.A.",
     'category': 'Accounting/Localizations/EDI',
