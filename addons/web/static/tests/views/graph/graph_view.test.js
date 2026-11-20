@@ -5,6 +5,7 @@ import {
     editFavoriteName,
     fields,
     getService,
+    isSmall,
     makeMockServer,
     mockService,
     models,
@@ -187,7 +188,17 @@ class Currency extends models.Model {
     ];
 }
 
-defineModels([Foo, Color, Product, Currency]);
+class User extends models.Model {
+    _name = "res.users";
+
+    name = fields.Char();
+
+    has_group() {
+        return true;
+    }
+}
+
+defineModels([Foo, Color, Product, Currency, User]);
 
 setupChartJsForTests();
 
@@ -2079,7 +2090,7 @@ test("clicking on bar charts triggers a do_action", async () => {
                     [false, "form"],
                 ],
             });
-            expect(options).toEqual({ newWindow: false, viewType: "list" });
+            expect(options).toEqual({ newWindow: false });
         },
     });
 
@@ -2120,7 +2131,7 @@ test("middle click on bar charts triggers a do_action", async () => {
                     [false, "form"],
                 ],
             });
-            expect(options).toEqual({ newWindow: true, viewType: "list" });
+            expect(options).toEqual({ newWindow: true });
         },
     });
 
@@ -2161,7 +2172,7 @@ test("Clicking on bar charts removes group_by and search_default_* context keys"
                     [false, "form"],
                 ],
             });
-            expect(options).toEqual({ newWindow: false, viewType: "list" });
+            expect(options).toEqual({ newWindow: false });
         },
     });
 
@@ -2181,6 +2192,77 @@ test("Clicking on bar charts removes group_by and search_default_* context keys"
     });
 
     await clickOnDataset(view);
+});
+
+test("clicking on bar charts opens kanban on mobile if the action has a kanban view", async () => {
+    expect.assertions(2);
+
+    Foo._views[["list", 364]] = /* xml */ `<list />`;
+    Foo._views[["form", 29]] = /* xml */ `<form />`;
+    Foo._views[["kanban", 12]] = /* xml */ `<kanban />`;
+
+    mockService("action", {
+        doAction(actionRequest, options) {
+            const expectedViews = [
+                [364, "list"],
+                [29, "form"],
+            ];
+            if (isSmall()) {
+                expectedViews.unshift([12, "kanban"]);
+            }
+            expect(actionRequest.views).toEqual(expectedViews);
+            expect(options).toEqual({ newWindow: false });
+        },
+    });
+
+    const view = await mountView({
+        type: "graph",
+        resModel: "foo",
+        arch: /* xml */ `
+            <graph string="Foo Analysis">
+                <field name="bar" />
+            </graph>
+        `,
+        config: {
+            views: [
+                [364, "list"],
+                [29, "form"],
+                [12, "kanban"],
+            ],
+        },
+    });
+
+    await clickOnDataset(view);
+});
+
+test("clicking on bar charts renders kanban on mobile and list on desktop (real action service)", async () => {
+    Foo._views.graph = /* xml */ `<graph><field name="bar" /></graph>`;
+    Foo._views.kanban = /* xml */ `
+        <kanban>
+            <templates><t t-name="card"><field name="foo" /></t></templates>
+        </kanban>
+    `;
+    Foo._views.list = /* xml */ `<list><field name="foo" /></list>`;
+    Foo._views.form = /* xml */ `<form><field name="foo" /></form>`;
+
+    const webClient = await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        res_model: "foo",
+        type: "ir.actions.act_window",
+        views: [
+            [false, "graph"],
+            [false, "kanban"],
+            [false, "list"],
+        ],
+    });
+    expect(".o_graph_view").toHaveCount(1);
+
+    await clickOnDataset(webClient);
+    await animationFrame();
+    expect(".o_kanban_view").toHaveCount(isSmall() ? 1 : 0);
+    expect(".o_list_view").toHaveCount(isSmall() ? 0 : 1);
+    const recordSelector = isSmall() ? ".o_kanban_record:not(.o_kanban_ghost)" : ".o_data_cell";
+    expect(queryAllTexts(recordSelector)).toEqual(["24", "4", "63", "42", "48"]);
 });
 
 test("clicking on a pie chart trigger a do_action with correct views", async () => {
@@ -2204,7 +2286,7 @@ test("clicking on a pie chart trigger a do_action with correct views", async () 
                     [29, "form"],
                 ],
             });
-            expect(options).toEqual({ newWindow: false, viewType: "list" });
+            expect(options).toEqual({ newWindow: false });
         },
     });
 
@@ -2254,7 +2336,7 @@ test("middle click on a pie chart trigger a do_action with correct views", async
                     [29, "form"],
                 ],
             });
-            expect(options).toEqual({ newWindow: true, viewType: "list" });
+            expect(options).toEqual({ newWindow: true });
         },
     });
 

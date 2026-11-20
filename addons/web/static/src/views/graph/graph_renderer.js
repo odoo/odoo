@@ -853,10 +853,7 @@ export class GraphRenderer extends Component {
                 type: "ir.actions.act_window",
                 views,
             },
-            {
-                newWindow,
-                viewType: "list",
-            }
+            { newWindow }
         );
     }
     /**
@@ -875,10 +872,11 @@ export class GraphRenderer extends Component {
         for (const [viewId, viewType] of this.env.config.views || []) {
             views[viewType] = viewId;
         }
-        function getView(viewType) {
-            return [views[viewType] || false, viewType];
+        const viewTypes = ["list", "form"];
+        if (this.uiService.isSmall && "kanban" in views) {
+            viewTypes.unshift("kanban");
         }
-        const actionViews = [getView("list"), getView("form")];
+        const actionViews = viewTypes.map((viewType) => [views[viewType] || false, viewType]);
         this.openView(domain, actionViews, context, isMiddleClick);
     }
 
