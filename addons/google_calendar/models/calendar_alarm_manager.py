@@ -10,6 +10,6 @@ class AlarmManager(models.AbstractModel):
     @api.model
     def _get_notify_alert_extra_conditions(self, alarm_type=None):
         base = super()._get_notify_alert_extra_conditions(alarm_type)
-        if alarm_type == 'email':
+        if alarm_type == 'email' and not self.env.context.get('fetch_all_synced_reminders'):
             return SQL("%s AND event.google_id IS NULL", base)
         return base

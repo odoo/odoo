@@ -171,7 +171,7 @@ class CalendarAlarm_Manager(models.AbstractModel):
     @api.model
     def _send_reminder(self):
         # Executed via cron
-        events_by_alarm = self._get_events_by_alarm_to_notify('email')
+        events_by_alarm = self.with_context(fetch_all_synced_reminders=True)._get_events_by_alarm_to_notify('email')
         if not events_by_alarm:
             return
 
@@ -185,7 +185,7 @@ class CalendarAlarm_Manager(models.AbstractModel):
         alarms = self.env['calendar.alarm'].browse(events_by_alarm.keys())
         for alarm in alarms:
             alarm_attendees = attendees.filtered(lambda attendee: attendee.event_id.id in events_by_alarm[alarm.id])
-            alarm_attendees.with_context(calendar_template_ignore_recurrence=True)._notify_attendees(
+            alarm_attendees.with_context(calendar_template_ignore_recurrence=True, calendar_alarm_reminder=True)._notify_attendees(
                 alarm.mail_template_id,
                 force_send=len(attendees) <= force_send_limit,
                 notify_author=True,
