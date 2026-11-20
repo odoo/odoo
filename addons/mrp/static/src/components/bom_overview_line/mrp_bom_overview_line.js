@@ -114,7 +114,7 @@ export class BomOverviewLine extends Component {
             (this.data.phantom_bom &&
                 this.data.components &&
                 this.data.components.some((comp) => comp.is_storable));
-        return is_storable && this.data?.quantity_available !== false;
+        return is_storable;
     }
 
     get hasLeadTime() {
