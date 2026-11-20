@@ -3,6 +3,7 @@ import { AttendeeCalendarSidePanel } from "@calendar/views/attendee_calendar/sid
 import { CalendarController } from "@web/views/calendar/calendar_controller";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useArchiveOrUnlinkCalendarEvent } from "@calendar/views/hooks";
+import { useSetupAction } from "@web/search/action_hook";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { onWillStart } from "@odoo/owl";
@@ -21,6 +22,9 @@ export class AttendeeCalendarController extends CalendarController {
         this.actionService = useService("action");
         this.archiveOrUnlinkCalendarEvent = useArchiveOrUnlinkCalendarEvent();
         this.orm = useService("orm");
+        useSetupAction({
+            getGlobalState: () => ({ calendarFilters: this.model.selectedFilters }),
+        });
         onWillStart(async () => {
             this.isSystemUser = await user.hasGroup("base.group_system");
         });

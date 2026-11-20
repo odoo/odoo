@@ -23,6 +23,13 @@ export class CaledarListController extends ListController {
         return actionMenuItems;
     }
 
+    get modelParams() {
+        return {
+            ...super.modelParams,
+            calendarFilters: this.props.globalState?.calendarFilters,
+        };
+    }
+
     get modelOptions() {
         return {
             ...super.modelOptions,
