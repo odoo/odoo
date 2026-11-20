@@ -252,7 +252,8 @@ export class HtmlField extends Component {
             const el = await this.getEditorContent();
             this.pendingAttachmentsService.addPendingAttachments(
                 this.props.record?.resId,
-                extractUnmappedAttachmentsIds(editable)
+                extractUnmappedAttachmentsIds(editable),
+                this.props.name
             );
             const content = el.innerHTML;
             this.clearElementToCompare(el);
@@ -334,7 +335,8 @@ export class HtmlField extends Component {
             getPendingAttachmentsIds: () => {
                 this.pendingAttachmentsService.addPendingAttachments(
                     this.props.record?.resId,
-                    extractUnmappedAttachmentsIds(this.editor.editable)
+                    extractUnmappedAttachmentsIds(this.editor.editable),
+                    this.props.name
                 );
                 return this.pendingAttachmentsService.pendingAttachmentIds[
                     this.props.record?.resId
@@ -504,28 +506,36 @@ const pendingAttachmentsService = {
     dependencies: ["orm"],
     start(env, { orm }) {
         const pendingAttachmentIds = {};
+        const pendingAttachmentFields = {};
         async function unlinkPendingAttachments(recordId) {
             if (pendingAttachmentIds[recordId]?.length) {
                 orm.unlink("ir.attachment", [...new Set(pendingAttachmentIds[recordId])]);
                 clearPendingAttachments(recordId);
             }
         }
-        function addPendingAttachments(recordId, ids) {
+        function addPendingAttachments(recordId, ids, fieldName) {
             if (!pendingAttachmentIds[recordId]) {
                 pendingAttachmentIds[recordId] = [];
             }
             pendingAttachmentIds[recordId].push(...ids);
+            if (fieldName) {
+                pendingAttachmentFields[recordId] ??= {};
+                (pendingAttachmentFields[recordId][fieldName] ??= []).push(...ids);
+            }
         }
         function clearPendingAttachments(recordId) {
             delete pendingAttachmentIds[recordId];
+            delete pendingAttachmentFields[recordId];
         }
         function addAttachmentsIdsToContext(record) {
             if (pendingAttachmentIds[record?.resId]) {
                 record.context["pending_attachment_ids"] = pendingAttachmentIds[record?.resId];
+                record.context["pending_attachment_fields"] = pendingAttachmentFields[record?.resId] || {};
             }
         }
         function clearAttachmentsIdsFromContext(record) {
             delete record.context["pending_attachment_ids"];
+            delete record.context["pending_attachment_fields"];
         }
         return {
             unlinkPendingAttachments,
