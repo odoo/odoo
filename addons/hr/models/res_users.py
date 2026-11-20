@@ -7,6 +7,7 @@ from markupsafe import Markup
 from odoo import _, api, fields, models
 from odoo.exceptions import AccessError
 from odoo.fields import Command, Domain
+from odoo.tools import SQL
 from odoo.tools.misc import clean_context
 from odoo.addons.mail.tools.discuss import Store
 
@@ -109,11 +110,11 @@ class ResUsers(models.Model):
     employee_ids = fields.One2many('hr.employee', 'user_id', string='Related employee', domain=_employee_ids_domain)
     all_employee_ids = fields.One2many("hr.employee", "user_id", string="Related employees from all companies")
     employee_public_ids = fields.One2many('hr.employee.public', 'user_id', string='Related employee (public)', domain=_employee_ids_domain, readonly=True)
-    employee_id = fields.Many2one('hr.employee', string="Company employee",
-        compute='_compute_company_employee', search='_search_company_employee', readonly=True)
+    employee_id = fields.Many2one('hr.employee', string="Company employee", compute='_compute_company_employee', search='_search_company_employee', compute_sql='_compute_sql_company_employee', compute_sudo=False, readonly=True)
     department_id = fields.Many2one(related='employee_id.department_id', string='Department')
+    job_id = fields.Many2one(related='employee_id.job_id')
+    skill_ids = fields.Many2many(related='employee_id.skill_ids')
 
-    job_id = fields.Many2one('hr.job', **related_employee_field('job_id'))
     work_phone = fields.Char(**related_employee_field('work_phone'), user_writeable=True)
     mobile_phone = fields.Char(**related_employee_field('mobile_phone'), user_writeable=True)
     work_email = fields.Char(**related_employee_field('work_email'), user_writeable=True)
@@ -380,6 +381,27 @@ class ResUsers(models.Model):
                 # since the search is done in sudo to avoid cache issues, apply access rules
                 employee = employee.filtered(lambda e: e.has_access('read'))
             user.employee_id = employee
+
+    def _compute_sql_company_employee(self, table):
+        """SQL for ``employee_id``: current-company employee, same access as ``_compute_company_employee``"""
+        Employee = self.env['hr.employee']
+        employee = table._make_alias('company_employee', Employee.sudo())
+        condition = SQL(
+            "%s = %s AND %s = %s",
+            table.id,
+            employee.user_id,
+            employee.company_id,
+            self.env.company.id,
+        )
+        if not self.env.su:
+            access_domain = Domain('user_id', '=', self.env.uid) | Employee._access_domain('read')
+            condition = SQL(
+                "%s AND (%s)",
+                condition,
+                access_domain.optimize_full(Employee.sudo())._to_sql(employee),
+            )
+        table._query.add_join('LEFT JOIN', employee, None, condition)
+        return employee.id
 
     def _search_company_employee(self, operator, value):
         # Equivalent to `[('employee_ids', operator, value)]`,
