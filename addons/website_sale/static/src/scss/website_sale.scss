@@ -1866,9 +1866,9 @@ $-product-radius-map: (
 
 /* Unified product image aspect ratios */
 
-%o-wsale-shop-thumb {
+.o_cart_product_image img,
+.o_sale_product_configurator_img img {
     object-fit: cover;
-    object-position: center;
     aspect-ratio: var(--o-wsale-shop-thumb-aspect-ratio, 1);
 }
 
@@ -1898,11 +1898,6 @@ $-product-radius-map: (
 
 .o_cart_product_image img {
     max-width: var(--o-wsale-checkout-cart-product-img-width, 64px);
-    @extend %o-wsale-shop-thumb;
-}
-
-.o_sale_product_configurator_img img {
-    @extend %o-wsale-shop-thumb;
 }
 
 .oe_website_sale {
