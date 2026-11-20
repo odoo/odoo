@@ -18,6 +18,7 @@ import {
 import { execCommand } from "./_helpers/userCommands";
 import { nodeToTree } from "@html_editor/core/dom_reference_map_plugin";
 import { HISTORY_COMMIT_TYPES } from "@html_editor/core/history_plugin";
+import { withSequence } from "@html_editor/utils/resource";
 import { NATIVE_MUTATION_TYPES } from "../src/core/dom_observer_plugin";
 
 describe("reset", () => {
@@ -283,7 +284,7 @@ describe("redo", () => {
 
 describe("selection", () => {
     test("should stage the selection upon click", async () => {
-        const { el, plugins } = await setupEditor("<p>a</p>");
+        const { editor, el } = await setupEditor("<p>a</p>");
         const pElement = queryOne("p");
         await pointerDown(pElement);
         setSelection({
@@ -295,10 +296,8 @@ describe("selection", () => {
         await tick();
         await pointerUp(pElement);
         await tick();
-        const domReferenceMapPlugin = plugins.get("domReferenceMap");
-        const nodeId = domReferenceMapPlugin.getNodeId(pElement.firstChild);
-        const selectionPlugin = plugins.get("selection");
-        expect(selectionPlugin.currentData.selection).toEqual({
+        const nodeId = editor.shared.domReferenceMap.getNodeId(pElement.firstChild);
+        expect(editor.shared.history.getStaged("selection")).toEqual({
             anchorNodeId: nodeId,
             anchorOffset: 0,
             focusNodeId: nodeId,
@@ -588,34 +587,36 @@ describe("makeSavePoint", () => {
 });
 
 describe("makePreviewableOperation", () => {
-    test("makePreviewableOperation captures the live cursor without losing pending mutations", async () => {
-        const { editor, el } = await setupEditor("<p>a[]bcd</p>");
-        const p = el.querySelector("p");
+    for (const method of ["makePreviewableOperation", "makePreviewableAsyncOperation"]) {
+        test(`${method} captures the live cursor without losing pending mutations`, async () => {
+            const { editor, el } = await setupEditor("<p>a[]bcd</p>");
+            const p = el.querySelector("p");
 
-        // Uncommitted change: <p>a[]bcd</p> -> <p data-pending="1">abc[]d</p>
-        p.dataset.pending = "1";
-        setSelection({ anchorNode: p.firstChild, anchorOffset: 3 });
+            // Uncommitted change: <p>a[]bcd</p> -> <p data-pending="1">abc[]d</p>
+            p.dataset.pending = "1";
+            setSelection({ anchorNode: p.firstChild, anchorOffset: 3 });
 
-        // Preview: <p data-pending="1">abc[]d</p> -> <p data-pending="1" data-preview="2">[]abcd</p>
-        const operation = editor.shared.history.makePreviewableOperation(() => {
-            p.dataset.preview = "2";
-            setSelection({ anchorNode: p.firstChild, anchorOffset: 0 });
+            // Preview: <p data-pending="1">abc[]d</p> -> <p data-pending="1" data-preview="2">[]abcd</p>
+            const operation = editor.shared.history[method](() => {
+                p.dataset.preview = "2";
+                setSelection({ anchorNode: p.firstChild, anchorOffset: 0 });
+            });
+            await operation.preview();
+            expect(getContent(el)).toBe('<p data-pending="1" data-preview="2">[]abcd</p>');
+
+            // A commit was made with the previewed selection and all the mutations.
+            const { data, metadata } = editor.shared.history.getCommits().at(-1);
+            expect(metadata.selection.anchorOffset).toBe(3);
+            expect(metadata.selection.focusOffset).toBe(3);
+            const changedAttributes = data.mutations.map((mutation) => mutation.attributeName);
+            expect(changedAttributes.includes("data-pending")).toBe(true);
+            expect(changedAttributes.includes("data-preview")).toBe(true);
+
+            // Reverting the operation restores the state before the preview.
+            await operation.revert();
+            expect(getContent(el)).toBe('<p data-pending="1">abc[]d</p>');
         });
-        operation.preview();
-        expect(getContent(el)).toBe('<p data-pending="1" data-preview="2">[]abcd</p>');
-
-        // A commit was made with the previewed selection and all the mutations.
-        const { data } = editor.shared.history.getCommits().at(-1);
-        expect(data.selection.anchorOffset).toBe(3);
-        expect(data.selection.focusOffset).toBe(3);
-        const changedAttributes = data.mutations.map((mutation) => mutation.attributeName);
-        expect(changedAttributes.includes("data-pending")).toBe(true);
-        expect(changedAttributes.includes("data-preview")).toBe(true);
-
-        // Reverting the operation restores the state before the preview.
-        operation.revert();
-        expect(getContent(el)).toBe('<p data-pending="1">abc[]d</p>');
-    });
+    }
 
     test("makePreviewableOperation correctly revert previews", async () => {
         const { plugins } = await setupEditor(`<div id="test"></div>`);
@@ -830,294 +831,590 @@ describe("destroy", () => {
     });
 });
 
-describe("custom operations", () => {
-    test("undo and redo custom operations without mutations", async () => {
-        const { el, editor } = await setupEditor(`<p>[]c</p>`);
-        // Perform and commit a mutation.
-        await insertText(editor, "a");
-
-        let value = 0;
-        // 0 -> 1.
-        editor.shared.history.stageCustomOperation({
-            apply: () => {
-                expect.step("apply");
-                value = 1;
-            },
-            revert: () => {
-                expect.step("revert");
-                value = 0;
-            },
+describe("history properties", () => {
+    const sequences = { late: 30, first_default: undefined, early: 0, second_default: 10 };
+    function sequencedProperties(getHandlers) {
+        return Object.entries(sequences).map(([id, sequence]) => {
+            const properties = { [id]: getHandlers(id) };
+            return sequence === undefined ? properties : withSequence(sequence, properties);
         });
-        expect(value).toBe(1);
-        expect.verifySteps(["apply"]);
-        editor.shared.history.commit();
+    }
+    async function setupEditorWithHistoryProperties({ content = "<p>[]<br></p>", data, metadata }) {
+        const resources = {};
+        if (data) {
+            resources.history_data_properties = data;
+        }
+        if (metadata) {
+            resources.history_metadata_properties = metadata;
+        }
+        const { editor, el, plugins } = await setupEditor(content, { config: { resources } });
+        return { editor, el, plugins, history: editor.shared.history };
+    }
 
-        // Call the revert function: 1 -> 0.
-        undo(editor);
-        expect(value).toBe(0);
-        expect(getContent(el)).toBe(`<p>a[]c</p>`);
-        expect.verifySteps(["revert"]);
+    test("staged values are collected into the next commit", async () => {
+        const { history } = await setupEditorWithHistoryProperties({
+            data: { data1: { apply: (value) => expect.step(`apply ${value}`) }, data2: {} },
+            metadata: { meta1: {}, meta2: {} },
+        });
 
-        // Call the apply function: 0 -> 1.
-        redo(editor);
-        expect(value).toBe(1);
-        expect.verifySteps(["apply"]);
+        // Stage metadata: meta1 = 1
+        history.stage("meta1", 1);
+        expect(history.getStaged("meta1")).toBe(1);
 
-        // Call the revert function: 1 -> 0.
-        undo(editor);
-        expect(value).toBe(0);
-        expect(getContent(el)).toBe(`<p>a[]c</p>`);
-        expect.verifySteps(["revert"]);
+        // No change was made -> nothing to commit. Keep the metadata.
+        expect(history.commit()).toBe(false);
+        expect(history.canUndo()).toBe(false);
+        expect(history.getStaged("meta1")).toBe(1);
 
-        // Revert the mutation.
-        undo(editor);
-        expect(getContent(el)).toBe(`<p>[]c</p>`);
-        // The value shouldn't have changed.
-        expect(value).toBe(0);
-        expect.verifySteps([]);
+        // Make a change.
+        history.apply("data1", 2);
+        expect.verifySteps(["apply 2"]);
+
+        // Commit the change (data) and the metadata changed earlier.
+        const { data, metadata } = history.commit();
+        expect(data.data1).toEqual([2]);
+        expect("data2" in data).toBe(false);
+        expect(metadata.meta1).toBe(1);
+        expect("meta2" in metadata).toBe(false);
+
+        // The values are reset for the next commit.
+        expect(history.getStaged("data1")).toBe(undefined);
+        expect(history.getStaged("meta1")).toBe(undefined);
     });
-    test("undo custom operations in reverse order", async () => {
-        const { editor } = await setupEditor(`<p>[]</p>`);
-        let value = 0;
-        // 0 -> 1.
-        editor.shared.history.stageCustomOperation({
-            apply: () => {
-                expect.step("apply A");
-                value = 1;
-            },
-            revert: () => {
-                expect.step("revert A");
-                value = 0;
+
+    test("discarding changes reverts them but preserves metadata", async () => {
+        const { history } = await setupEditorWithHistoryProperties({
+            metadata: { meta1: {} },
+            data: {
+                data1: Object.fromEntries(
+                    ["apply", "revert"].map((op) => [op, (label) => expect.step(`${op} ${label}`)])
+                ),
             },
         });
-        expect(value).toBe(1);
-        expect.verifySteps(["apply A"]);
 
-        // 1 -> 2.
-        editor.shared.history.stageCustomOperation({
-            apply: () => {
-                expect.step("apply B");
-                value = 2;
-            },
-            revert: () => {
-                expect.step("revert B");
-                value = 1;
-            },
-        });
-        expect(value).toBe(2);
-        expect.verifySteps(["apply B"]);
-        editor.shared.history.commit();
+        // Apply and stage a change without committing.
+        history.apply("data1", 1);
+        expect.verifySteps(["apply 1"], { message: "The change was applied." });
+        expect(history.getStaged("data1")).toEqual([1], { message: "The change was staged." });
 
-        // Call the second then first revert functions: 2 -> 1 -> 0.
-        undo(editor);
-        expect(value).toBe(0);
-        expect.verifySteps(["revert B", "revert A"]);
+        // Stage metadata without committing.
+        history.stage("meta1", 2);
+        expect(history.getStaged("meta1")).toBe(2, { message: "The metadata was staged." });
 
-        // Call the first then second apply functions: 0 -> 1 -> 2.
-        redo(editor);
-        expect(value).toBe(2);
-        expect.verifySteps(["apply A", "apply B"]);
-
-        // Call the second then first revert functions again: 2 -> 1 -> 0.
-        undo(editor);
-        expect(value).toBe(0);
-        expect.verifySteps(["revert B", "revert A"]);
+        // Stash the uncommitted changes to discard them.
+        history.stash();
+        expect.verifySteps(["revert 1"], { message: "The change was reverted." });
+        expect(history.getStaged("data1")).toBe(undefined, { message: "The data was reset." });
+        expect(history.getStaged("meta1")).toBe(2, { message: "The metadata was preserved." });
     });
-    test("stash and unstash staged custom operations in order", async () => {
-        const { editor } = await setupEditor(`<p>[]</p>`);
-        let value = 0;
-        // 0 -> 1.
-        editor.shared.history.stageCustomOperation({
-            apply: () => {
-                expect.step("apply A");
-                value = 1;
+
+    test("replayed metadata can stage the values of the commit it records", async () => {
+        let history;
+        const { editor } = await setupEditorWithHistoryProperties({
+            data: {
+                data1: {
+                    apply: (value) => expect.step(`apply data1 ${value}`),
+                    revert: (value) => expect.step(`revert data1 ${value}`),
+                },
             },
-            revert: () => {
-                expect.step("revert A");
-                value = 0;
+            metadata: {
+                meta1: {
+                    apply: (value, { ensureNewMutations }) => {
+                        expect.step(`apply meta1 ${value}`);
+                        ensureNewMutations && history.stage("meta1", value);
+                    },
+                    revert: (value, { ensureNewMutations }) => {
+                        expect.step(`revert meta1 ${value}`);
+                        ensureNewMutations && history.stage("meta2", value);
+                    },
+                },
+                meta2: {
+                    apply: (value, { ensureNewMutations }) => {
+                        expect.step(`apply meta2 ${value}`);
+                        ensureNewMutations && history.stage("meta2", value);
+                    },
+                    revert: (value, { ensureNewMutations }) => {
+                        expect.step(`revert meta2 ${value}`);
+                        ensureNewMutations && history.stage("meta1", value);
+                    },
+                },
             },
         });
-        expect(value).toBe(1);
-        expect.verifySteps(["apply A"]);
+        history = editor.shared.history;
+        const getLastMetadata = () => history.getCommits().at(-1).metadata;
 
-        // 1 -> 2.
-        editor.shared.history.stageCustomOperation({
-            apply: () => {
-                expect.step("apply B");
-                value = 2;
-            },
-            revert: () => {
-                expect.step("revert B");
-                value = 1;
-            },
+        // Stage metadata.
+        history.stage("meta1", 1);
+        expect(history.getStaged("meta1")).toBe(1, { message: "The metadata was staged." });
+
+        // Make a change and commit it.
+        history.apply("data1", 2);
+        expect.verifySteps(["apply data1 2"], { message: "The change was applied." });
+        history.commit();
+        expect(getLastMetadata().meta1).toBe(1, { message: "The metadata was committed." });
+        expect("meta2" in getLastMetadata()).toBe(false, {
+            message: "Unchanged metadata was not committed.",
         });
-        expect(value).toBe(2);
-        expect.verifySteps(["apply B"]);
 
-        // Call the second then first revert functions: 2 -> 1 -> 0.
-        editor.shared.history.stash();
-        expect(value).toBe(0);
-        expect(editor.shared.history.canRedo()).toBe(false);
-        expect.verifySteps(["revert B", "revert A"]);
+        // Staged after the commit: replaying the commit's absent meta2
+        // must replace it.
+        history.stage("meta1", 3);
+        expect(history.getStaged("meta1")).toBe(3, {
+            message: "The metadata was staged again.",
+        });
+        expect(getLastMetadata().meta1).toBe(1, { message: "The metadata wasn't changed." });
+        expect("meta2" in getLastMetadata()).toBe(false, {
+            message: "Unchanged metadata was not added.",
+        });
 
-        // Call the first then second apply functions: 0 -> 1 -> 2.
-        editor.shared.history.unstash();
-        expect(value).toBe(2);
-        expect(editor.shared.history.canUndo()).toBe(false);
-        expect.verifySteps(["apply A", "apply B"]);
+        history.undo();
+        expect.verifySteps(["revert data1 2", "revert meta1 1", "revert meta2 undefined"], {
+            message: "The changes were reverted.",
+        });
+        expect(history.getStaged("meta1")).toBe(undefined, {
+            message: "The metadata was reset.",
+        });
+        expect(history.getStaged("meta2")).toBe(undefined, {
+            message: "The metadata was reverted.",
+        });
+        expect("meta1" in getLastMetadata()).toBe(false, {
+            message: "Undo commit has reverted metadata.",
+        });
+        expect(getLastMetadata().meta2).toBe(1, { message: "Undo commit has reverted metadata." });
 
-        // Call the second then first revert functions: 2 -> 1 -> 0.
-        editor.shared.history.stash();
-        expect(value).toBe(0);
-        expect.verifySteps(["revert B", "revert A"]);
-
-        // Call the first then second apply functions: 0 -> 1 -> 2.
-        editor.shared.history.unstash();
-        expect(value).toBe(2);
-        expect.verifySteps(["apply A", "apply B"]);
-
-        // Once committed, stashing only affects pending changes.
-        editor.shared.history.commit();
-
-        // Do nothing.
-        editor.shared.history.stash();
-        expect(value).toBe(2);
-        expect.verifySteps([]);
-
-        // Call the second then first revert functions: 2 -> 1 -> 0.
-        undo(editor);
-        expect(value).toBe(0);
-        expect.verifySteps(["revert B", "revert A"]);
-
-        // Call the first then second apply functions: 0 -> 1 -> 2.
-        redo(editor);
-        expect(value).toBe(2);
-        expect.verifySteps(["apply A", "apply B"]);
+        history.redo();
+        expect.verifySteps(["apply data1 2", "revert meta1 undefined", "revert meta2 1"], {
+            message: "The change was applied again.",
+        });
+        expect(getLastMetadata().meta1).toBe(1);
+        expect("meta2" in getLastMetadata()).toBe(false);
     });
-    test("save points restore staged custom operations", async () => {
-        const { editor } = await setupEditor(`<p>[]</p>`);
-        let value = 0;
-        // 0 -> 1.
-        editor.shared.history.stageCustomOperation({
-            apply: () => {
-                expect.step("apply A");
-                value = 1;
-            },
-            revert: () => {
-                expect.step("revert A");
-                value = 0;
+
+    test("restoring a savepoint brings the draft back", async () => {
+        const { editor } = await setupEditorWithHistoryProperties({
+            content: `<p>[]x</p>`,
+            metadata: { bookmark: {}, later: {} },
+            data: {
+                changes: {
+                    apply: (label) => expect.step("apply " + label),
+                    revert: (label) => expect.step("revert " + label),
+                },
             },
         });
-        expect.verifySteps(["apply A"]);
+        const history = editor.shared.history;
+        history.stage("bookmark", "saved");
+        history.apply("changes", "saved");
+        const restore = history.makeSavePoint();
+        history.stage("bookmark", "changed");
+        history.stage("later", "staged after the savepoint");
+        history.apply("changes", "changed");
+        expect.verifySteps(["apply saved", "apply changed"]);
 
-        const restore = editor.shared.history.makeSavePoint();
-
-        // 1 -> 2.
-        editor.shared.history.stageCustomOperation({
-            apply: () => {
-                expect.step("apply B");
-                value = 2;
-            },
-            revert: () => {
-                expect.step("revert B");
-                value = 1;
-            },
-        });
-        expect.verifySteps(["apply B"]);
-
-        editor.shared.history.commit();
-
-        // Restore value at save point: 2 -> 1
         restore();
-        expect(value).toBe(1);
+        // Pending changes are discarded, then applied again up to the savepoint.
+        expect.verifySteps(["revert changed", "revert saved", "apply saved"]);
+        expect(history.getStaged("changes")).toEqual(["saved"]);
+        // Metadata is staged back.
+        expect(history.getStaged("bookmark")).toBe("saved");
+        expect(history.getStaged("later")).toBe(undefined);
+    });
+
+    test("data properties are discarded and replayed in resource order", async () => {
+        const { editor } = await setupEditorWithHistoryProperties({
+            content: `<p>[]x</p>`,
+            data: sequencedProperties((id) => ({
+                apply: () => expect.step("apply " + id),
+                revert: () => expect.step("revert " + id),
+            })),
+        });
+        const history = editor.shared.history;
+        for (const id of Object.keys(sequences)) {
+            history.apply(id, {});
+        }
         expect.verifySteps([
-            // The staged changes first are reverted.
-            "revert B",
-            "revert A",
-            // Then we apply changes up to the save point.
-            "apply A",
+            "apply late",
+            "apply first_default",
+            "apply early",
+            "apply second_default",
         ]);
-
-        // Stash the uncommitted changes -> restore initial value: 1 -> 0.
-        editor.shared.history.stash();
-        expect(value).toBe(0);
-        expect.verifySteps(["revert A"]);
-
-        // Unstash back to save point and no further: 0 -> 1.
-        editor.shared.history.unstash();
-        expect(value).toBe(1);
-        expect.verifySteps(["apply A"]);
+        history.stash();
+        expect.verifySteps([
+            "revert early",
+            "revert first_default",
+            "revert second_default",
+            "revert late",
+        ]);
+        history.unstash();
+        expect.verifySteps([
+            "apply early",
+            "apply first_default",
+            "apply second_default",
+            "apply late",
+        ]);
     });
-    test("staged callbacks run once per history operation", async () => {
-        const { editor } = await setupEditor(`<p>[]</p>`);
-        const result = editor.shared.history.stageCustomOperation({
-            apply: () => {
-                expect.step("apply");
-                return "result";
-            },
-            revert: () => expect.step("revert"),
+
+    test("unknown properties are rejected", async () => {
+        const { editor } = await setupEditorWithHistoryProperties({
+            content: `<p>[]x</p>`,
+            metadata: { label: {} },
         });
-        // The original operation was applied.
-        expect(result).toBe("result");
-        expect.verifySteps(["apply"]);
-
-        // Stashing reverts it.
-        editor.shared.history.stash();
-        expect.verifySteps(["revert"]);
-
-        // Unstashing re-applies it.
-        editor.shared.history.unstash();
-        expect.verifySteps(["apply"]);
-
-        // Committing doesn't re-apply anything.
-        editor.shared.history.commit();
-        expect.verifySteps([]);
-
-        // Undoing reverts the committed operation.
-        undo(editor);
-        expect.verifySteps(["revert"]);
-
-        // Redoing re-applies the committed operation.
-        redo(editor);
-        expect.verifySteps(["apply"]);
-
-        // Undoing again reverts the committed operation again.
-        undo(editor);
-        expect.verifySteps(["revert"]);
-
-        // Redoing again re-applies the committed operation again.
-        redo(editor);
-        expect.verifySteps(["apply"]);
+        const history = editor.shared.history;
+        expect(() => history.stage("unknown", 1)).toThrow("Unknown history property: unknown");
+        expect(() => history.apply("unknown", {})).toThrow(
+            "Unknown history data property: unknown"
+        );
+        expect(() => history.apply("label", {})).toThrow("Unknown history data property: label");
     });
-    test("operations are replayed after the DOM mutations of their commit", async () => {
-        const { editor, el } = await setupEditor(`<p>[]a</p>`);
-        const paragraph = editor.document.createElement("p");
 
-        // In the same commit, add a paragraph and stage an operation that
-        // depends on it.
-        el.append(paragraph);
-        editor.shared.history.stageCustomOperation({
-            apply: () => {
-                expect(paragraph.isConnected).toBe(true, {
-                    message: "Redo adds the paragraph again before applying the operation.",
-                });
-                expect.step("apply");
-            },
-            revert: () => {
-                expect(paragraph.isConnected).toBe(false, {
-                    message: "Undo removes the paragraph before reverting the operation.",
-                });
-                expect.step("revert");
-            },
+    describe("custom operations", () => {
+        async function setupEditorWithValueHistoryTesting(content = "<p>[]<br></p>") {
+            let value = 0;
+            const [apply, revert] = ["apply", "revert"].map(
+                (action) =>
+                    ({ before, after, label = "" }) => {
+                        expect.step(`${action} ${label}`.trim());
+                        value = action === "apply" ? after : before;
+                        return action;
+                    }
+            );
+            const data = { test_value: { apply, revert } };
+            const { el, editor } = await setupEditorWithHistoryProperties({ content, data });
+            const setValue = (after, label = "") =>
+                editor.shared.history.apply("test_value", { before: value, after, label });
+            return { el, editor, value: { set: setValue, get: () => value } };
+        }
+
+        test("undo and redo custom operations without mutations", async () => {
+            const { el, editor, value } = await setupEditorWithValueHistoryTesting("<p>[]c</p>");
+            // Perform and commit a mutation.
+            await insertText(editor, "a");
+
+            // 0 -> 1.
+            value.set(1);
+            expect(value.get()).toBe(1);
+            expect.verifySteps(["apply"]);
+            editor.shared.history.commit();
+
+            // Call the revert function: 1 -> 0.
+            undo(editor);
+            expect(value.get()).toBe(0);
+            expect(getContent(el)).toBe(`<p>a[]c</p>`);
+            expect.verifySteps(["revert"]);
+
+            // Call the apply function: 0 -> 1.
+            redo(editor);
+            expect(value.get()).toBe(1);
+            expect.verifySteps(["apply"]);
+
+            // Call the revert function: 1 -> 0.
+            undo(editor);
+            expect(value.get()).toBe(0);
+            expect(getContent(el)).toBe(`<p>a[]c</p>`);
+            expect.verifySteps(["revert"]);
+
+            // Revert the mutation.
+            undo(editor);
+            expect(getContent(el)).toBe(`<p>[]c</p>`);
+            // The value shouldn't have changed.
+            expect(value.get()).toBe(0);
+            expect.verifySteps([]);
         });
-        expect.verifySteps(["apply"]);
-        editor.shared.history.commit();
+        test("undo custom operations in reverse order", async () => {
+            const { editor, value } = await setupEditorWithValueHistoryTesting();
+            // 0 -> 1.
+            value.set(1, "A");
+            expect(value.get()).toBe(1);
+            expect.verifySteps(["apply A"]);
 
-        editor.shared.history.undo();
-        expect.verifySteps(["revert"]);
+            // 1 -> 2.
+            value.set(2, "B");
+            expect(value.get()).toBe(2);
+            expect.verifySteps(["apply B"]);
+            editor.shared.history.commit();
 
-        editor.shared.history.redo();
-        expect.verifySteps(["apply"]);
+            // Call the second then first revert functions: 2 -> 1 -> 0.
+            undo(editor);
+            expect(value.get()).toBe(0);
+            expect.verifySteps(["revert B", "revert A"]);
+
+            // Call the first then second apply functions: 0 -> 1 -> 2.
+            redo(editor);
+            expect(value.get()).toBe(2);
+            expect.verifySteps(["apply A", "apply B"]);
+
+            // Call the second then first revert functions again: 2 -> 1 -> 0.
+            undo(editor);
+            expect(value.get()).toBe(0);
+            expect.verifySteps(["revert B", "revert A"]);
+        });
+        test("stash and unstash staged custom operations in order", async () => {
+            const { editor, value } = await setupEditorWithValueHistoryTesting();
+            // 0 -> 1.
+            value.set(1, "A");
+            expect(value.get()).toBe(1);
+            expect.verifySteps(["apply A"]);
+
+            // 1 -> 2.
+            value.set(2, "B");
+            expect(value.get()).toBe(2);
+            expect.verifySteps(["apply B"]);
+
+            // Call the second then first revert functions: 2 -> 1 -> 0.
+            editor.shared.history.stash();
+            expect(value.get()).toBe(0);
+            expect(editor.shared.history.canRedo()).toBe(false);
+            expect.verifySteps(["revert B", "revert A"]);
+
+            // Call the first then second apply functions: 0 -> 1 -> 2.
+            editor.shared.history.unstash();
+            expect(value.get()).toBe(2);
+            expect(editor.shared.history.canUndo()).toBe(false);
+            expect.verifySteps(["apply A", "apply B"]);
+
+            // Call the second then first revert functions: 2 -> 1 -> 0.
+            editor.shared.history.stash();
+            expect(value.get()).toBe(0);
+            expect.verifySteps(["revert B", "revert A"]);
+
+            // Call the first then second apply functions: 0 -> 1 -> 2.
+            editor.shared.history.unstash();
+            expect(value.get()).toBe(2);
+            expect.verifySteps(["apply A", "apply B"]);
+
+            // Once committed, stashing only affects pending changes.
+            editor.shared.history.commit();
+
+            // Do nothing.
+            editor.shared.history.stash();
+            expect(value.get()).toBe(2);
+            expect.verifySteps([]);
+
+            // Call the second then first revert functions: 2 -> 1 -> 0.
+            undo(editor);
+            expect(value.get()).toBe(0);
+            expect.verifySteps(["revert B", "revert A"]);
+
+            // Call the first then second apply functions: 0 -> 1 -> 2.
+            redo(editor);
+            expect(value.get()).toBe(2);
+            expect.verifySteps(["apply A", "apply B"]);
+        });
+        test("save points restore staged custom operations", async () => {
+            const { editor, value } = await setupEditorWithValueHistoryTesting();
+            // 0 -> 1.
+            value.set(1, "A");
+            expect.verifySteps(["apply A"]);
+
+            const restore = editor.shared.history.makeSavePoint();
+
+            // 1 -> 2.
+            value.set(2, "B");
+            expect.verifySteps(["apply B"]);
+
+            editor.shared.history.commit();
+
+            // Restore value at save point: 2 -> 1
+            restore();
+            expect(value.get()).toBe(1);
+            expect.verifySteps([
+                // The staged changes first are reverted.
+                "revert B",
+                "revert A",
+                // Then we apply changes up to the save point.
+                "apply A",
+            ]);
+
+            // Stash the uncommitted changes -> restore initial value: 1 -> 0.
+            editor.shared.history.stash();
+            expect(value.get()).toBe(0);
+            expect.verifySteps(["revert A"]);
+
+            // Unstash back to save point and no further: 0 -> 1.
+            editor.shared.history.unstash();
+            expect(value.get()).toBe(1);
+            expect.verifySteps(["apply A"]);
+        });
+        test("staged operations run once per history operation", async () => {
+            const { editor, value } = await setupEditorWithValueHistoryTesting();
+            const result = value.set(1);
+            // The original operation was applied.
+            expect(result).toBe("apply");
+            expect.verifySteps(["apply"]);
+
+            // Stashing reverts it.
+            editor.shared.history.stash();
+            expect.verifySteps(["revert"]);
+
+            // Unstashing re-applies it.
+            editor.shared.history.unstash();
+            expect.verifySteps(["apply"]);
+
+            // Committing doesn't re-apply anything.
+            editor.shared.history.commit();
+            expect.verifySteps([]);
+
+            // Undoing reverts the committed operation.
+            undo(editor);
+            expect.verifySteps(["revert"]);
+
+            // Redoing re-applies the committed operation.
+            redo(editor);
+            expect.verifySteps(["apply"]);
+
+            // Undoing again reverts the committed operation again.
+            undo(editor);
+            expect.verifySteps(["revert"]);
+
+            // Redoing again re-applies the committed operation again.
+            redo(editor);
+            expect.verifySteps(["apply"]);
+        });
+        test("operations are replayed after the DOM mutations of their commit", async () => {
+            let paragraph;
+            const version = {
+                apply: () => {
+                    expect(paragraph.isConnected).toBe(true, {
+                        message: "Redo adds the paragraph again before applying the operation.",
+                    });
+                    expect.step("apply");
+                },
+                revert: () => {
+                    expect(paragraph.isConnected).toBe(false, {
+                        message: "Undo removes the paragraph before reverting the operation.",
+                    });
+                    expect.step("revert");
+                },
+            };
+            const { editor, el } = await setupEditorWithHistoryProperties({
+                content: `<p>[]a</p>`,
+                data: { version },
+            });
+            paragraph = editor.document.createElement("p");
+
+            // In the same commit, add a paragraph and apply an operation that
+            // depends on it.
+            el.append(paragraph);
+            editor.shared.history.apply("version", {});
+            expect.verifySteps(["apply"]);
+            editor.shared.history.commit();
+
+            editor.shared.history.undo();
+            expect.verifySteps(["revert"]);
+
+            editor.shared.history.redo();
+            expect.verifySteps(["apply"]);
+        });
+        test("operations stage a serializable copy of their data", async () => {
+            const { editor } = await setupEditorWithValueHistoryTesting();
+            const data = { before: 0, after: 1, label: "" };
+            editor.shared.history.apply("test_value", data);
+            expect.verifySteps(["apply"]);
+            data.after = 99;
+            const commit = editor.shared.history.commit();
+            expect(commit.data.test_value).toEqual([{ before: 0, after: 1, label: "" }]);
+            expect(JSON.parse(JSON.stringify(commit.data.test_value))).toEqual(
+                commit.data.test_value
+            );
+        });
+        test("operations are replayed field by field", async () => {
+            const { editor } = await setupEditorWithHistoryProperties({
+                data: {
+                    first: {
+                        apply: ({ label }) => expect.step("apply " + label),
+                        revert: ({ label }) => expect.step("revert " + label),
+                    },
+                    second: {
+                        apply: ({ label }) => expect.step("apply " + label),
+                        revert: ({ label }) => expect.step("revert " + label),
+                    },
+                },
+            });
+            const history = editor.shared.history;
+            history.apply("second", { label: "second A" });
+            history.apply("first", { label: "first" });
+            history.apply("second", { label: "second B" });
+            expect.verifySteps(["apply second A", "apply first", "apply second B"]);
+            history.commit();
+
+            // Fields are replayed in resource order, and the operations of a
+            // field are reverted last first.
+            undo(editor);
+            expect.verifySteps(["revert first", "revert second B", "revert second A"]);
+            redo(editor);
+            expect.verifySteps(["apply first", "apply second A", "apply second B"]);
+        });
+        test("replay serializable operations after resetting from commits", async () => {
+            const { editor, value } = await setupEditorWithValueHistoryTesting();
+            value.set(1);
+            editor.shared.history.commit();
+            const commits = JSON.parse(JSON.stringify(editor.shared.history.getCommits()));
+            expect.verifySteps(["apply"]);
+            editor.shared.history.reset(commits);
+            expect(value.get()).toBe(1);
+            expect.verifySteps(["apply"]);
+            undo(editor);
+            expect(value.get()).toBe(0);
+            expect.verifySteps(["revert"]);
+            redo(editor);
+            expect(value.get()).toBe(1);
+            expect.verifySteps(["apply"]);
+        });
+        test("undo and redo commits replay the data of the commit they reverse", async () => {
+            const { editor, value } = await setupEditorWithValueHistoryTesting();
+            const history = editor.shared.history;
+            value.set(1);
+            history.commit();
+            undo(editor);
+            redo(editor);
+            undo(editor);
+            expect.verifySteps(["apply", "revert", "apply", "revert"]);
+            expect(value.get()).toBe(0);
+            expect("test_value" in history.getCommits().at(-1).data).toBe(false);
+
+            // Replaying the history goes through the commits they reverse.
+            const commits = JSON.parse(JSON.stringify(history.getCommits()));
+            history.reset(commits);
+            expect.verifySteps(["apply", "revert", "apply", "revert"]);
+            expect(value.get()).toBe(0);
+            redo(editor);
+            expect(value.get()).toBe(1);
+            expect.verifySteps(["apply"]);
+        });
+        test("restore commits replay the data of the commits they revert", async () => {
+            const { editor, value } = await setupEditorWithValueHistoryTesting();
+            const history = editor.shared.history;
+            const restore = history.makeSavePoint();
+            value.set(1, "A");
+            const commitA = history.commit();
+            value.set(2, "B");
+            const commitB = history.commit();
+            restore();
+            expect.verifySteps(["apply A", "apply B", "revert B", "revert A"]);
+            expect(value.get()).toBe(0);
+            const restoreCommit = history.getCommits().at(-1);
+            expect(restoreCommit.type).toBe(HISTORY_COMMIT_TYPES.RESTORE);
+            expect("test_value" in restoreCommit.data).toBe(false);
+            expect(restoreCommit.metadata.reverted_commit_ids).toEqual([commitB.id, commitA.id]);
+
+            const commits = JSON.parse(JSON.stringify(history.getCommits()));
+            history.reset(commits);
+            expect.verifySteps(["apply A", "apply B", "revert B", "revert A"]);
+            expect(value.get()).toBe(0);
+        });
+        test("replaying a commit whose related commit is not in the history skips its data", async () => {
+            const { editor, value } = await setupEditorWithValueHistoryTesting("<p>[]<br></p>");
+            const history = editor.shared.history;
+            value.set(1);
+            history.commit();
+            undo(editor);
+            expect.verifySteps(["apply", "revert"]);
+
+            // A history reset from a collaboration snapshot starts after the
+            // commits the snapshot replaces.
+            const [snapshot, , undoCommit] = JSON.parse(JSON.stringify(history.getCommits()));
+            history.reset([snapshot, undoCommit]);
+            expect.verifySteps([]);
+        });
     });
 });
 
@@ -1605,13 +1902,15 @@ describe("grouped undo/redo", () => {
 
 describe("normalization on undo/redo", () => {
     test("should not grow the commits during undo and redo", async () => {
-        const { el, editor } = await setupEditor('<p><a href="#">link</a>[]b</p>');
+        const { el, editor, plugins } = await setupEditor('<p><a href="#">link</a>[]b</p>');
+        const historyPlugin = plugins.get("history");
         await insertText(editor, "a");
         // An undo/redo commit is the reverse of the commit it relates to, so
         // it must hold the same number of mutations.
         const expectSameSizeAsRelatedCommit = () => {
-            const { data } = editor.shared.history.getCommits().at(-1);
-            expect(data.mutations).toHaveLength(data.relatedCommit.data.mutations.length);
+            const { data, metadata } = editor.shared.history.getCommits().at(-1);
+            const relatedCommit = historyPlugin.getCommit(metadata.related_commit_id);
+            expect(data.mutations).toHaveLength(relatedCommit.data.mutations.length);
         };
         undo(editor);
         expectSameSizeAsRelatedCommit();

@@ -13,6 +13,10 @@ const HISTORY_SNAPSHOT_BUFFER_TIME = 1000 * 10;
  */
 
 /**
+ * @typedef { CollaborationPluginConfig["peerId"] } peer_id
+ */
+
+/**
  * @typedef { Object } CollaborationShared
  * @property { CollaborationPlugin['getBranchIds'] } getBranchIds
  * @property { CollaborationPlugin['getSnapshotCommits'] } getSnapshotCommits
@@ -31,7 +35,7 @@ export class CollaborationPlugin extends Plugin {
     static dependencies = ["history", "domObserver", "selection", "sanitize"];
     /** @type {import("plugins").EditorResources} */
     resources = {
-        history_commit_data_properties: ["peerId"],
+        history_metadata_properties: { peer_id: {} },
 
         /** Handlers */
         on_will_reset_history_handlers: this.onWillResetHistory.bind(this),
@@ -40,9 +44,12 @@ export class CollaborationPlugin extends Plugin {
         /** Overrides */
         set_attribute_overrides: this.setAttribute.bind(this),
 
-        pending_history_commit_data_processors: (data) => ({ ...data, peerId: this.peerId }),
+        pending_history_commit_metadata_processors: (metadata) => ({
+            ...metadata,
+            peer_id: this.peerId,
+        }),
         is_history_commit_reversible_predicates: (commit) => {
-            if (commit.data.peerId !== this.peerId) {
+            if (commit.metadata.peer_id !== this.peerId) {
                 return false;
             }
         },
@@ -174,7 +181,7 @@ export class CollaborationPlugin extends Plugin {
      */
     getCommitInsertionIndex(commits, newCommit) {
         let index = commits.length - 1;
-        while (index >= 0 && commits[index].id !== newCommit.data.previousCommitId) {
+        while (index >= 0 && commits[index].id !== newCommit.metadata.previous_commit_id) {
             // Skip commits that are already in the list.
             if (commits[index].id === newCommit.id) {
                 return;
@@ -182,12 +189,12 @@ export class CollaborationPlugin extends Plugin {
             index--;
         }
 
-        // When the previousCommitId is not present in the commits it
+        // When the previous_commit_id is not present in the commits it
         // could be either:
-        // - the previousCommitId is before a snapshot of the same history
-        // - the previousCommitId has not been received because peers were
+        // - the previous_commit_id is before a snapshot of the same history
+        // - the previous_commit_id has not been received because peers were
         //   disconnected at that time
-        // - the previousCommitId is in another history (in case two totally
+        // - the previous_commit_id is in another history (in case two totally
         //   differents `commits` (but it should not arise)).
         if (index < 0) {
             const historyCommits = commits;
@@ -196,7 +203,7 @@ export class CollaborationPlugin extends Plugin {
             // peer has. It could either be a commit that has the same
             // peerId or the first commit.
             while (index !== 0) {
-                if (historyCommits[index].data.peerId === newCommit.data.peerId) {
+                if (historyCommits[index].metadata.peer_id === newCommit.metadata.peer_id) {
                     break;
                 }
                 index--;
@@ -212,14 +219,18 @@ export class CollaborationPlugin extends Plugin {
         let concurentCommits = [];
         index++;
         while (index < commits.length) {
-            if (commits[index].data.previousCommitId === newCommit.data.previousCommitId) {
-                if (commits[index].data.authorTimestamp > newCommit.data.authorTimestamp) {
+            if (
+                commits[index].metadata.previous_commit_id === newCommit.metadata.previous_commit_id
+            ) {
+                if (
+                    commits[index].metadata.author_timestamp > newCommit.metadata.author_timestamp
+                ) {
                     break;
                 } else {
                     concurentCommits = [commits[index].id];
                 }
             } else {
-                if (concurentCommits.includes(commits[index].data.previousCommitId)) {
+                if (concurentCommits.includes(commits[index].metadata.previous_commit_id)) {
                     concurentCommits.push(commits[index].id);
                 } else {
                     break;

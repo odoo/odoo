@@ -126,9 +126,14 @@ import { omit } from "@web/core/utils/objects";
  *     }
  */
 
+/**
+ * @typedef { import("@html_editor/core/dom_reference_map_plugin").NodeId | false | null } current_target
+ * @typedef { import("@html_editor/core/dom_reference_map_plugin").NodeId | false | null } next_target
+ */
+
 export class BuilderOptionsPlugin extends Plugin {
     static id = "builderOptions";
-    static dependencies = ["operation", "domObserver", "history"];
+    static dependencies = ["operation", "domObserver", "history", "domReferenceMap"];
     static shared = [
         "checkElement",
         "closestWithOption",
@@ -147,10 +152,6 @@ export class BuilderOptionsPlugin extends Plugin {
     ];
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        history_commit_data_properties: ["currentTarget", "nextTarget"],
-        on_will_reset_history_handlers: () => {
-            this.targetState = {};
-        },
         on_committed_to_history_handlers: this.onHistoryCommitted.bind(this),
         on_history_commit_undone_handlers: this.restoreContainers.bind(this),
         on_history_commit_redone_handlers: this.restoreContainers.bind(this),
@@ -184,31 +185,37 @@ export class BuilderOptionsPlugin extends Plugin {
             }
             return buttons;
         },
-        on_revert_history_commit_handlers: (commit) => {
-            this.targetState = { current: commit.data.nextTarget, next: commit.data.currentTarget };
-        },
-        on_apply_history_commit_handlers: (commit) => {
-            this.targetState = { current: commit.data.currentTarget, next: commit.data.nextTarget };
-        },
-        pending_history_commit_data_processors: (data) => ({
-            ...data,
-            currentTarget: this.targetState.current,
-            nextTarget: this.targetState.next,
-        }),
-        save_point_history_commit_data_processors: (data) => ({
-            ...data,
-            targetState: { ...this.targetState },
-        }),
-        on_savepoint_restored_handlers: (savePoint) => {
-            if ("targetState" in savePoint.data) {
-                this.targetState = { ...savePoint.data.targetState };
-            }
+        // Commits recorded from a replayed commit keep its targets, swapped
+        // when it is reverted.
+        history_metadata_properties: {
+            current_target: {
+                apply: (targetId, { ensureNewMutations }) => {
+                    if (ensureNewMutations) {
+                        this.dependencies.history.stage("current_target", targetId);
+                    }
+                },
+                revert: (targetId, { ensureNewMutations }) => {
+                    if (ensureNewMutations) {
+                        this.dependencies.history.stage("next_target", targetId);
+                    }
+                },
+            },
+            next_target: {
+                apply: (targetId, { ensureNewMutations }) => {
+                    if (ensureNewMutations) {
+                        this.dependencies.history.stage("next_target", targetId);
+                    }
+                },
+                revert: (targetId, { ensureNewMutations }) => {
+                    if (ensureNewMutations) {
+                        this.dependencies.history.stage("current_target", targetId);
+                    }
+                },
+            },
         },
     };
 
     setup() {
-        /** @type { current?: Node, next?: Node } */
-        this.targetState = {};
         this.builderOptions = this.computeBuilderOptionsFromTemplate();
         this.builderOptionsContext = new Map();
         this.builderOptionsDependencies = new Map();
@@ -316,7 +323,10 @@ export class BuilderOptionsPlugin extends Plugin {
             const connectedContainers = this.lastContainers.filter((c) => c.element.isConnected);
             this.target = connectedContainers.at(-1)?.element;
         }
-        this.targetState.current = this.target;
+        this.dependencies.history.stage(
+            "current_target",
+            (this.target && this.dependencies.domReferenceMap.register(this.target, false)) ?? null
+        );
 
         const newContainers = this.computeContainers(this.target);
         if (newContainers.length === 0 && this.lastContainers.length === 0) {
@@ -355,7 +365,7 @@ export class BuilderOptionsPlugin extends Plugin {
 
     deactivateContainers() {
         this.target = null;
-        this.targetState.current = false;
+        this.dependencies.history.stage("current_target", false);
         this.lastContainers = [];
         this.trigger("on_current_options_containers_changed_handlers", this.lastContainers);
     }
@@ -547,14 +557,18 @@ export class BuilderOptionsPlugin extends Plugin {
             }
         }
         // Store the next target to activate in the current step.
-        this.targetState.next = targetEl;
+        this.dependencies.history.stage(
+            "next_target",
+            (targetEl && this.dependencies.domReferenceMap.register(targetEl, false)) ?? null
+        );
     }
 
     onHistoryCommitted(commit) {
-        this.targetState = {};
         // If a target is specified, activate its containers, otherwise simply
         // update them.
-        const nextTargetEl = commit.data.nextTarget;
+        const nextTarget = commit.metadata.next_target;
+        const nextTargetEl =
+            nextTarget && this.dependencies.domReferenceMap.getNodeById(nextTarget);
         if (nextTargetEl) {
             this.updateContainers(nextTargetEl, { forceUpdate: true });
         } else if (nextTargetEl === false) {
@@ -570,8 +584,9 @@ export class BuilderOptionsPlugin extends Plugin {
      * @param {Object} lastCommitReversed the last commit to have been reversed
      */
     restoreContainers(lastCommitReversed) {
-        const targetEl =
-            lastCommitReversed.data.currentTarget ?? lastCommitReversed.data.nextTarget;
+        const { current_target: currentTarget, next_target: nextTarget } =
+            lastCommitReversed.metadata;
+        const targetEl = this.dependencies.domReferenceMap.getNodeById(currentTarget ?? nextTarget);
         if (targetEl) {
             this.trigger("on_will_restore_containers_handlers", targetEl);
             this.updateContainers(targetEl, { forceUpdate: true });

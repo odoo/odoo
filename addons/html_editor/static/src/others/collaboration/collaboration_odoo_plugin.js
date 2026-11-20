@@ -683,13 +683,13 @@ export class CollaborationOdooPlugin extends Plugin {
      */
     async processMissingCommits(missingCommits) {
         // If missing commits === -1, it means that either:
-        // - the commit.data.peerId has a stale document
-        // - the commit.data.peerId has a snapshot and does not includes the commit in
+        // - the commit.metadata.peer_id has a stale document
+        // - the commit.metadata.peer_id has a snapshot and does not includes the commit in
         //   its history
         // - if another share history id
-        //   - because the commit.data.peerId has reset from the server and
-        //     commit.data.peerId is not synced with this peer
-        //   - because the commit.data.peerId is in a network partition
+        //   - because the commit.metadata.peer_id has reset from the server and
+        //     commit.metadata.peer_id is not synced with this peer
+        //   - because the commit.metadata.peer_id is in a network partition
         if (missingCommits === -1 || !missingCommits.length) {
             return false;
         }
@@ -812,7 +812,7 @@ export class CollaborationOdooPlugin extends Plugin {
             return;
         }
         const missingCommits = await this.requestPeer(
-            commit.data.peerId,
+            commit.metadata.peer_id,
             "get_missing_commits",
             {
                 fromCommitId,
