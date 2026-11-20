@@ -1311,3 +1311,38 @@ test("chatter: pinned messages can be fetched again after a failure", async () =
     await waitForNone(".o-mail-pinnedMessages-error");
     await waitFor(".o-mail-pinnedMessages .o-mail-Message:has(:text('Pinned message')):count(1)");
 });
+
+test("chatter: section toggles can be used with the keyboard", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Armstrong" });
+    pyEnv["mail.message"].create({
+        body: "Pinned message",
+        model: "res.partner",
+        pinned_at: "2025-01-01 00:00:00",
+        res_id: partnerId,
+    });
+    pyEnv["mail.activity"].create({ res_id: partnerId, res_model: "res.partner" });
+    pyEnv["mail.scheduled.message"].create({
+        body: "<p>Scheduled message</p>",
+        model: "res.partner",
+        res_id: partnerId,
+        scheduled_date: "2100-01-01 00:00:00",
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains(
+        ".o-mail-pinnedMessages button[aria-expanded='false']:contains('Pinned Messages'):count(1)"
+    ).press("Enter");
+    await waitFor(".o-mail-pinnedMessages button[aria-expanded='true']:count(1)");
+    await waitFor(".o-mail-pinnedMessages .o-mail-Message:count(1)");
+    await contains(
+        ".o-mail-ActivityList button[aria-expanded='true']:contains('Planned Activities'):count(1)"
+    ).press("Enter");
+    await waitFor(".o-mail-ActivityList button[aria-expanded='false']:count(1)");
+    await waitForNone(".o-mail-ActivityList .o-mail-Activity");
+    await contains(
+        ".o-mail-ScheduledMessagesList button[aria-expanded='true']:contains('Scheduled Messages'):count(1)"
+    ).press("Enter");
+    await waitFor(".o-mail-ScheduledMessagesList button[aria-expanded='false']:count(1)");
+    await waitForNone(".o-mail-ScheduledMessagesList .o-mail-Scheduled-Message");
+});

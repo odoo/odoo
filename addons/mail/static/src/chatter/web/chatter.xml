@@ -130,11 +130,11 @@
     <div class="o-mail-pinnedMessages bg-inherit">
         <div class="d-flex pt-2 px-2 cursor-pointer fw-bold" t-on-click="this.togglePinnedMessages">
             <hr class="flex-grow-1 fs-3"/>
-            <div class="d-flex align-items-center px-3">
+            <button type="button" class="btn d-flex align-items-center px-3 py-0 border-0 fw-bold" t-att-aria-expanded="this.state.showPinnedMessages ? 'true' : 'false'">
                 <i class="oi oi-fw" t-att-data-icon="this.state.showPinnedMessages ? 'arrow_drop_down' : 'arrow_right'"/>
                 Pinned Messages
                 <span t-if="!this.state.showPinnedMessages" class="badge rounded-pill ms-2 text-bg-success" t-out="this.state.thread.pinnedMessagesCount"/>
-            </div>
+            </button>
             <hr class="flex-grow-1 fs-3"/>
         </div>
         <div t-if="this.state.showPinnedMessages" class="d-flex flex-column">
@@ -154,12 +154,12 @@
     <div class="o-mail-ActivityList">
         <div class="d-flex pt-2 px-2 cursor-pointer fw-bold" t-on-click="this.toggleActivities">
             <hr class="flex-grow-1 fs-3"/>
-            <div class="d-flex align-items-center px-3">
+            <button type="button" class="btn d-flex align-items-center px-3 py-0 border-0 fw-bold" t-att-aria-expanded="this.state.showActivities ? 'true' : 'false'">
                 <i class="oi oi-fw" t-att-data-icon="this.state.showActivities ? 'arrow_drop_down' : 'arrow_right'"/>
                 Planned Activities
                 <span t-if="!this.state.showActivities" class="badge rounded-pill ms-2 text-bg-success"><t t-out="this.activities.length"/></span>
-            </div>
-            <hr class="flex-grow-1 fe-3"/>
+            </button>
+            <hr class="flex-grow-1 fs-3"/>
         </div>
         <t t-if="this.state.showActivities">
             <t t-foreach="this.activities" t-as="activity" t-key="activity.id">
@@ -173,12 +173,12 @@
     <div class="o-mail-ScheduledMessagesList">
         <div class="d-flex pt-2 cursor-pointer fw-bold" t-on-click="this.toggleScheduledMessages">
             <hr class="flex-grow-1 fs-3"/>
-            <div class="d-flex align-items-center px-3">
+            <button type="button" class="btn d-flex align-items-center px-3 py-0 border-0 fw-bold" t-att-aria-expanded="this.state.showScheduledMessages ? 'true' : 'false'">
                 <i class="oi oi-fw" t-att-data-icon="this.state.showScheduledMessages ? 'arrow_drop_down' : 'arrow_right'"/>
                 Scheduled Messages
                 <span t-if="!this.state.showScheduledMessages" class="badge rounded-pill ms-2 text-bg-success" t-out="this.scheduledMessages.length"/>
-            </div>
-            <hr class="flex-grow-1 fe-3"/>
+            </button>
+            <hr class="flex-grow-1 fs-3"/>
         </div>
         <div t-if="this.state.showScheduledMessages">
             <t t-foreach="this.scheduledMessages" t-as="scheduledMessage" t-key="scheduledMessage.id">
