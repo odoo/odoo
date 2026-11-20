@@ -878,6 +878,86 @@ class TestUpdateEvents(TestCommon):
             "The added attendee should only be on the modified occurrence",
         )
 
+    @freeze_time('2026-10-01')
+    @patch.object(MicrosoftCalendarService, 'get_events')
+    def test_attendee_sync_of_recurrence_with_exception_across_dst(self, mock_get_events):
+        """
+        A weekly recurrence at 9:00 Europe/Brussels crosses the end of DST, and one occurrence
+        after the DST change is moved 1h later in Outlook. Once the organizer has imported it,
+        the attendee syncs the same recurrence, whose Outlook ids are specific to its own calendar.
+        This must neither delete and recreate events, nor change the time zone of the recurrence.
+        """
+        self.organizer_user.tz = 'Europe/Brussels'
+        # 9:00 Brussels is 7:00 UTC before 25 Oct 2026 and 8:00 UTC after
+        starts = [
+            datetime(2026, 10, 13, 7), datetime(2026, 10, 20, 7), datetime(2026, 10, 27, 8),
+            datetime(2026, 11, 3, 9), datetime(2026, 11, 10, 8), datetime(2026, 11, 17, 8),
+        ]
+
+        def outlook_events(prefix, is_organizer, last_modified=None):
+            common_values = {
+                'subject': 'weekly_dst', 'body': {'content': '', 'contentType': 'text'},
+                'attendees': [{
+                    'type': 'required',
+                    'status': {'response': 'none', 'time': '0001-01-01T00:00:00Z'},
+                    'emailAddress': {'name': self.attendee_user.display_name, 'address': self.attendee_user.email},
+                }],
+                'organizer': {'emailAddress': {
+                    'address': self.organizer_user.email, 'name': self.organizer_user.display_name,
+                }},
+                'isAllDay': False, 'isCancelled': False, 'isOnlineMeeting': False, 'isOrganizer': is_organizer,
+                'isReminderOn': False, 'reminderMinutesBeforeStart': 0, 'location': {'displayName': ''},
+                'sensitivity': 'normal', 'showAs': 'busy', 'lastModifiedDateTime': last_modified,
+            }
+
+            def time_values(start):
+                return {
+                    'start': {'dateTime': start.strftime("%Y-%m-%dT%H:%M:%S.0000000"), 'timeZone': 'UTC'},
+                    'end': {'dateTime': (start + timedelta(hours=1)).strftime("%Y-%m-%dT%H:%M:%S.0000000"), 'timeZone': 'UTC'},
+                }
+
+            master = dict(
+                common_values, **time_values(starts[0]),
+                id=f'{prefix}_DST_MASTER', iCalUId='DST_MASTER_UID', type='seriesMaster', seriesMasterId=None,
+                recurrence={
+                    'pattern': {
+                        'type': 'weekly', 'interval': 1, 'month': 0, 'dayOfMonth': 0, 'index': 'first',
+                        'daysOfWeek': ['tuesday'], 'firstDayOfWeek': 'monday',
+                    },
+                    'range': {
+                        'type': 'endDate', 'startDate': '2026-10-13', 'endDate': '2026-11-17',
+                        'recurrenceTimeZone': 'Romance Standard Time', 'numberOfOccurrences': 0,
+                    },
+                },
+            )
+            return MicrosoftEvent([master] + [
+                dict(
+                    common_values, **time_values(start),
+                    id=f'{prefix}_DST_EVENT_{i}', iCalUId=f'DST_EVENT_UID_{i}', seriesMasterId=master['id'],
+                    type='exception' if i == 3 else 'occurrence',
+                )
+                for i, start in enumerate(starts)
+            ])
+
+        mock_get_events.return_value = (outlook_events('ORGANIZER', True), None)
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
+
+        recurrence = self.env['calendar.recurrence'].search([('ms_universal_event_id', '=', 'DST_MASTER_UID')])
+        events = recurrence.calendar_event_ids.sorted('start')
+        self.assertEqual(events.mapped('start'), starts)
+        self.assertEqual(recurrence.event_tz, 'Europe/Brussels')
+        uids = events.mapped('ms_universal_event_id')
+
+        mock_get_events.return_value = (
+            outlook_events('ATTENDEE', False, _modified_date_in_the_future(recurrence)), None,
+        )
+        self.attendee_user.with_user(self.attendee_user).sudo()._sync_microsoft_calendar()
+
+        self.assertEqual(recurrence.calendar_event_ids, events, "No event should have been deleted or recreated")
+        self.assertEqual(events.mapped('start'), starts)
+        self.assertEqual(events.mapped('ms_universal_event_id'), uids)
+        self.assertEqual(recurrence.event_tz, 'Europe/Brussels')
+
     @patch.object(MicrosoftSync, '_write_from_microsoft', autospec=True)
     def test_recreate_recurrence_when_only_serialized_dtstart_changes(self, mock_write_from_microsoft):
         recurrence = self.recurrence.with_context(dont_notify=True)
