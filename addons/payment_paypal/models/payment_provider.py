@@ -31,7 +31,9 @@ class PaymentProvider(models.Model):
     paypal_client_secret = fields.Char(
         string="PayPal Client Secret", copy=False, groups="base.group_system"
     )
-    paypal_webhook_id = fields.Char(string="PayPal Webhook ID", copy=False)
+    paypal_webhook_id = fields.Char(
+        string="PayPal Webhook ID", required_if_provider="paypal", copy=False
+    )
 
     paypal_seller_nonce = fields.Char(copy=False)
     paypal_is_oauth_onboarded = fields.Boolean(copy=False)

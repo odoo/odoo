@@ -99,12 +99,12 @@ class PaypalOnboardingController(Controller):
             "paypal_client_secret": response_content.get("client_secret"),
             "paypal_account_id": response_content.get("payer_id"),
             "paypal_is_oauth_onboarded": True,
-            "is_published": True,
         })
         provider._paypal_update_onboarding_status()
 
         # Create the webhook without blocking the onboarding if it fails
         try:
             provider.action_paypal_create_webhook()
+            provider.write({"is_published": True})
         except ValidationError as e:
             _logger.warning(e)

@@ -38,6 +38,7 @@ class PaymentProvider(models.Model):
         help="If a webhook is enabled on your Stripe account, this signing secret must be set to"
         " authenticate the messages sent from Stripe to Odoo.",
         copy=False,
+        required_if_provider="stripe",
         groups="base.group_system",
     )
 
