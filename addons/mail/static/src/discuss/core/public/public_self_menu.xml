@@ -14,6 +14,7 @@
                     t-ref="this.guestNameRef"
                     class="o-mail-PublicSelfMenu-guestName form-control form-control-sm bg-view rounded-3"
                     type="text"
+                    autocomplete="name"
                     t-att-value="this.store.self_guest.name"
                     t-on-change="(ev) => this.renameGuest(ev.target.value)"
                     t-on-keydown="this.onKeydownGuestName"

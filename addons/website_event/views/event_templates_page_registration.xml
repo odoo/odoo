@@ -361,6 +361,7 @@
     <t t-if="question.question_type in ['name', 'email', 'phone', 'company_name']">
         <input class="form-control" t-att-type="input_type_by_question_type[question.question_type]"
                t-attf-name="#{registration_index}-#{question.question_type}-#{question.id}"
+               t-att-autocomplete="'section-attendee%s %s' % (registration_index, {'name': 'name', 'email': 'email', 'phone': 'tel', 'company_name': 'organization'}[question.question_type])"
                t-att-required="question.is_mandatory_answer" t-att-value="default_first_attendee.get(question.question_type, '') if counter in (0,1) else ''"/>
     </t>
     <t t-elif="question.question_type == 'simple_choice'">
