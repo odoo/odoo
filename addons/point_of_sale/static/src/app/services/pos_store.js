@@ -2819,12 +2819,13 @@ export class PosStore extends WithLazyGetterTrap {
 
     getProductsBySearchWord(searchWord, products) {
         const query = normalize(searchWord);
+        const wordsToFind = query.split(/\s+/).filter(Boolean);
         const matches = [];
 
         for (const product of products) {
             const searchStr = product.searchString;
 
-            if (searchStr.includes(query)) {
+            if (wordsToFind.every((word) => searchStr.includes(word))) {
                 const normName = product.normalizedName;
                 matches.push({
                     product: product,

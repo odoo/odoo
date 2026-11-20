@@ -259,8 +259,26 @@ test("PosCustomerAllFieldsDisplayed: partner fields displayed and searchable", a
     const store = await setupAndMountPosApp();
 
     store.models["res.partner"].create({
+        id: 9311,
+        name: "Alice Doe",
+        street: "1 Alberto street",
+        city: "Acity",
+        zip: "26432685463",
+        phone: false,
+        email: false,
+        barcode: false,
+        lang: "en_US",
+        write_date: "2025-07-03 12:38:12",
+        property_product_pricelist: false,
+        parent_name: false,
+        address: "1 Alberto street Acity 26432685463",
+        invoice_emails: "",
+        fiscal_position_id: false,
+    });
+
+    store.models["res.partner"].create({
         id: 9310,
-        name: "John Doe",
+        name: "John Alberto Doe",
         street: "1 street of astreet",
         city: "Acity",
         zip: "26432685463",
@@ -280,7 +298,7 @@ test("PosCustomerAllFieldsDisplayed: partner fields displayed and searchable", a
     await waitFor(".partner-list");
 
     const partnerInfo = [...document.querySelectorAll(".partner-info")].find((el) =>
-        el.textContent.includes("John Doe")
+        el.textContent.includes("John Alberto Doe")
     );
     expect(partnerInfo).not.toBe(null);
     expect(partnerInfo.textContent).toInclude("1 street of astreet");
@@ -297,26 +315,53 @@ test("PosCustomerAllFieldsDisplayed: partner fields displayed and searchable", a
         await animationFrame();
     }
 
-    await contains(".partner-list input, .modal-dialog .input-group input").edit("John Doe");
+    await contains(".partner-list input, .modal-dialog .input-group input").edit(
+        "John Alberto Doe"
+    );
     await animationFrame();
     const result1 = [...document.querySelectorAll(".partner-info")].find((el) =>
-        el.textContent.includes("John Doe")
+        el.textContent.includes("John Alberto Doe")
     );
     expect(result1).not.toBe(null);
 
     await contains(".partner-list input, .modal-dialog .input-group input").edit("9898989899");
     await animationFrame();
     const result2 = [...document.querySelectorAll(".partner-info")].find((el) =>
-        el.textContent.includes("John Doe")
+        el.textContent.includes("John Alberto Doe")
     );
     expect(result2).not.toBe(null);
 
-    await contains(".partner-list input, .modal-dialog .input-group input").edit("j%hn d%e");
+    await contains(".partner-list input, .modal-dialog .input-group input").edit(
+        "j%hn a%berto d%e"
+    );
     await animationFrame();
     const result3 = [...document.querySelectorAll(".partner-info")].find((el) =>
-        el.textContent.includes("John Doe")
+        el.textContent.includes("John Alberto Doe")
     );
     expect(result3).not.toBe(null);
+
+    await contains(".partner-list input, .modal-dialog .input-group input").edit("nobody");
+    await animationFrame();
+    expect(
+        [...document.querySelectorAll(".partner-info")].find((el) => el.textContent.includes("Doe"))
+    ).toBe(undefined);
+
+    await contains(".partner-list input, .modal-dialog .input-group input").edit("john doe");
+    await animationFrame();
+    expect(
+        [...document.querySelectorAll(".partner-info")].find((el) =>
+            el.textContent.includes("John Alberto Doe")
+        )
+    ).not.toBe(undefined);
+
+    await contains(".partner-list input, .modal-dialog .input-group input").edit("alberto doe");
+    await animationFrame();
+    const names = [...document.querySelectorAll(".partner-info")].map((el) => el.textContent);
+    const johnIndex = names.findIndex((name) => name.includes("John Alberto Doe"));
+    const aliceIndex = names.findIndex((name) => name.includes("Alice Doe"));
+    expect(johnIndex).not.toBe(-1);
+    expect(aliceIndex).not.toBe(-1);
+    expect(johnIndex).toBeLessThan(aliceIndex);
 });
 
 test("customer_display_shows_qr_popup: customer display QR code popup", async () => {
