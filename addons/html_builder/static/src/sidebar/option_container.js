@@ -1,12 +1,26 @@
 import { getSnippetName, useOptionsSubEnv } from "@html_builder/utils/utils";
-import { computed, onMounted, signal, t, useListener, useProps } from "@odoo/owl";
+import {
+    computed,
+    onMounted,
+    onWillDestroy,
+    providePlugins,
+    signal,
+    t,
+    useListener,
+    useProps,
+} from "@odoo/owl";
 import { user } from "@web/core/user";
 import { unique } from "@web/core/utils/arrays";
 import { uniqueId } from "@web/core/utils/functions";
 import { useAsyncComputed, useService } from "@web/core/utils/hooks";
 import { BaseOptionComponent } from "../core/base_option_component";
 import { useOperation } from "../core/operation_plugin";
-import { useApplyVisibility, useGetItemValue, useVisibilityObserver } from "../core/utils";
+import {
+    OptionsContainerPlugin,
+    useApplyVisibility,
+    useGetItemValue,
+    useVisibilityObserver,
+} from "../core/utils";
 
 const HIGHLIGHT_DURATION = 2000;
 
@@ -55,6 +69,16 @@ export class OptionsContainer extends BaseOptionComponent {
 
     setup() {
         useOptionsSubEnv(() => [this.props.editingElement]);
+        const container = {
+            getTitle: () => this.title,
+            getElement: this.rootRef,
+            getEditingElement: () => this.props.editingElement,
+            rows: new Set(),
+        };
+        const removeContainer =
+            this.env.editor.shared.builderOptions.registerOptionsContainer(container);
+        onWillDestroy(removeContainer);
+        providePlugins([OptionsContainerPlugin], { container });
         super.setup();
         this.containerId = uniqueId("option-container-");
         this.notification = useService("notification");

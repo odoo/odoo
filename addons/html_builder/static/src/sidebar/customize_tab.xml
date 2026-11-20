@@ -11,7 +11,7 @@
         </t>
         <t t-else="">
             <div t-ref="this.contentRef" class="d-flex flex-column h-100">
-                <t t-foreach="currentOptionsContainers" t-as="optionsContainer" t-key="optionsContainer.id">
+                <t t-foreach="currentOptionsContainers" t-as="optionsContainer" t-key="optionsContainer.id + '-' + this.optionsDisplay.renderId">
                     <OptionsContainer
                         toggleOverlayPreview.bind="this.toggleOverlayPreview"
                         folded="optionsContainer.folded"

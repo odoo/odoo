@@ -4,9 +4,11 @@ import {
     onMounted,
     onWillDestroy,
     onWillStart,
+    Plugin,
     proxy,
     t,
     toRaw,
+    useConfig,
     useEffect,
     useListener,
     useOnChange,
@@ -219,6 +221,46 @@ export function useBuilderComponent(props) {
  * @param {any} item
  * @param {{ onReady?: () => Promise<any> }} [options]
  */
+/** Gives the rows of an options container the object they register in. */
+export class OptionsContainerPlugin extends Plugin {
+    setup() {
+        this.container = useConfig("container");
+    }
+}
+
+/** Gives the controls of an options row the object they register in. */
+export class OptionsRowPlugin extends Plugin {
+    setup() {
+        this.row = useConfig("row");
+    }
+}
+
+/**
+ * @returns {Plugin | null} null if no parent component provides the plugin,
+ *   where `usePlugin` throws
+ */
+export function findPlugin(PluginClass) {
+    return useScope().pluginManager.getPlugin(PluginClass);
+}
+
+/**
+ * Declares the control of the component in its options row, for code that
+ * lists or triggers the sidebar controls from outside the sidebar.
+ *
+ * @param {Partial<import("./builder_options_plugin").BuilderControl>} control
+ * @param {Set} [controls] where to declare it, the row by default
+ */
+export function useBuilderControl(control, controls = findPlugin(OptionsRowPlugin)?.row.controls) {
+    if (controls) {
+        control.mounted = true;
+        controls.add(control);
+        onWillDestroy(() => {
+            control.mounted = false;
+            controls.delete(control);
+        });
+    }
+}
+
 export function useDependencyDefinition(props, item, { onReady } = {}) {
     const env = useEnv();
     const scope = useScope();
@@ -403,9 +445,22 @@ export function useSelectableComponent(props, { onItemChange, extraContext = {} 
         }
     }
 
+    const choices = new Set();
+    useBuilderControl({
+        kind: "choice",
+        // A select mounts its items twice while it is open, the second time
+        // in its dropdown.
+        getChoices: () => {
+            const mounted = [...choices];
+            const alwaysMounted = mounted.filter((choice) => choice.isAlwaysMounted);
+            return alwaysMounted.length ? alwaysMounted : mounted;
+        },
+    });
+
     useSubEnv({
         selectableContext: {
             cleanSelectedItem,
+            choices,
             addSelectableItem: (item) => {
                 selectableItems.push(item);
             },
@@ -450,8 +505,8 @@ export function useSelectableComponent(props, { onItemChange, extraContext = {} 
  * @param {DefaultBuilderProps} props
  * @param {{ getLabel?: () => any }} [options]
  */
-export function useSelectableItemComponent(props, { getLabel = () => {} } = {}) {
-    const { operation, isApplied, getActions, priority, clean, onReady } =
+export function useSelectableItemComponent(props, { getLabel = () => {}, getElement } = {}) {
+    const { operation, isApplied, getActions, priority, clean, onReady, reload, canTimeout } =
         useClickableBuilderComponent(props);
     const env = useEnv();
 
@@ -509,6 +564,20 @@ export function useSelectableItemComponent(props, { getLabel = () => {} } = {}) 
             },
             { onReady }
         );
+    }
+    const control = {
+        kind: env.selectableContext ? "choice" : "toggle",
+        getLabel: () => getElement?.()?.textContent.trim() || props.label || props.title,
+        getElement,
+        isActive: () => state.isActive,
+        commit: operation.commit,
+        reload,
+        isAlwaysMounted: !!env.ignoreBuilderItem,
+    };
+    // An action that cannot time out waits for the user, e.g. in a dialog.
+    if (canTimeout) {
+        // An item of a group is one of its choices.
+        useBuilderControl(control, env.selectableContext?.choices);
     }
 
     return { state, operation };
@@ -839,6 +908,8 @@ export function useClickableBuilderComponent(props) {
         priority: getPriority(),
         getActions: getAllActions,
         onReady,
+        reload: !!reload,
+        canTimeout,
     };
 }
 
@@ -1172,6 +1243,7 @@ export function useInputBuilderComponent(
             { onReady }
         );
     }
+    useBuilderControl({ kind: "value", getValue: () => state.value, commit, reload: !!reload });
     // Specifies the actions to clean up when the input is used to set a custom
     // value for other components.
     env.selectableContext?.addCustomInputConfig?.(getAllActions());

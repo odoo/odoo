@@ -45,6 +45,7 @@ export class BuilderSelectItemInternal extends Component {
 
         const { state, operation } = useSelectableItemComponent(this.props, {
             getLabel,
+            getElement: this.itemRef,
         });
         this.state = state;
         this.operation = operation;

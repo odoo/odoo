@@ -1,4 +1,4 @@
-import { Component, t, useProps, xml } from "@odoo/owl";
+import { Component, signal, t, useProps, xml } from "@odoo/owl";
 import { Image } from "../img";
 import {
     clickableBuilderComponentProps,
@@ -34,9 +34,13 @@ export class BuilderButtonInternal extends Component {
         iconImgStyle: t.string().optional(""),
     });
 
+    buttonRef = signal.ref();
+
     setup() {
         this.info = useActionInfo(this.props);
-        const { state, operation } = useSelectableItemComponent(this.props);
+        const { state, operation } = useSelectableItemComponent(this.props, {
+            getElement: this.buttonRef,
+        });
         this.state = state;
         this.onClick = operation.commit;
         this.onPointerEnter = operation.preview;

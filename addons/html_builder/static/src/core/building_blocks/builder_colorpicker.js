@@ -14,6 +14,7 @@ import {
     hasPreview,
     revertPreview,
     useBuilderComponent,
+    useBuilderControl,
     useDomState,
 } from "../utils";
 import { BuilderComponent } from "./builder_component";
@@ -187,6 +188,13 @@ export class BuilderColorPicker extends Component {
             this.props
         );
         this.state = state;
+        useBuilderControl({
+            kind: "color",
+            getLabel: () => this.props.title,
+            getValue: () => this.state.selectedColor,
+            commit: onApply,
+            reload: false,
+        });
 
         this.colorPickerConfig = {
             props: {
