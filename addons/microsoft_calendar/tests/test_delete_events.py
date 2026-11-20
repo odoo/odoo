@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 from unittest.mock import patch, ANY, call
-from datetime import timedelta
+from datetime import datetime, time, timedelta
 
 from odoo import fields
 
 from odoo.exceptions import UserError
+from odoo.tests import HttpCase, tagged
+from odoo.addons.microsoft_calendar.models.microsoft_sync import MicrosoftSync
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
 from odoo.addons.microsoft_calendar.models.res_users import User
@@ -356,3 +358,38 @@ class TestDeleteEvents(TestCommon):
         self.assertFalse(self.env['calendar.event'].with_user(self.organizer_user)._check_microsoft_sync_status())
         self.recurrent_events[1].with_user(self.organizer_user).unlink()
         self.assertFalse(self.recurrent_events[1].exists(), "Recurrent event must be deleted after unlink with sync off.")
+
+
+@tagged('post_install', '-at_install')
+class TestDeleteEventsTour(HttpCase):
+
+    @patch.object(MicrosoftSync, '_microsoft_delete', autospec=True)
+    def test_delete_synced_event_from_popover(self, mock_delete):
+        """ The organizer deletes an Outlook synced event from the calendar
+        popover: the event must be deleted, not archived, so that its meeting
+        activity is removed too, and the deletion is sent to Outlook.
+        """
+        user_admin = self.env.ref('base.user_admin')
+        today = fields.Date.today()
+        event = self.env['calendar.event'].with_user(user_admin).create({
+            'name': 'Test Event',
+            'start': datetime.combine(today, time(9)),
+            'stop': datetime.combine(today, time(12)),
+            'microsoft_id': 'test_microsoft_id',
+            'ms_universal_event_id': 'test_ms_universal_event_id',
+            'need_sync_m': False,
+        })
+        activity = self.env['mail.activity'].create({
+            'activity_type_id': self.env.ref('mail.mail_activity_data_meeting').id,
+            'calendar_event_id': event.id,
+            'res_id': user_admin.partner_id.id,
+            'res_model_id': self.env['ir.model']._get_id('res.partner'),
+            'user_id': user_admin.id,
+        })
+
+        action = self.env.ref('calendar.action_calendar_event')
+        self.start_tour(f'/odoo/action-{action.id}', 'test_calendar_delete_tour', login='admin')
+
+        self.assertFalse(event.exists(), "The synced event should be deleted, not archived")
+        self.assertFalse(activity.exists(), "The meeting activity should be deleted with its event")
+        mock_delete.assert_called_once_with(event, user_admin, 'test_microsoft_id')
