@@ -23,8 +23,6 @@ export const ProjectTaskAnalysisRendererMixin = (T) => class ProjectTaskAnalysis
             target: "current",
             type: "ir.actions.act_window",
             views,
-        }, {
-            viewType: "list",
         });
     }
 }
