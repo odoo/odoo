@@ -282,6 +282,16 @@ class TestOrmCacheSignaling(BaseCase):
             ["INFO:odoo.registry:Invalidating caches after database signaling: ['assets', 'default', 'templates.cached_values']"],
         )
 
+
+class TestOrmCacheSignalingRaw(BaseCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # do not retry, these tests must always succeed the first time and avoid
+        # an autoretry hidding errors
+        cls._retry = False
+        cls.registry = Registry(common.get_db_name())
+
     def test_signaling_after_hooks(self):
         """ The transaction following a commit or a rollback starts after the
         hooks, so that it sees what they committed in other cursors, including
