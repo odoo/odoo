@@ -31,7 +31,9 @@ class MailPoll(models.Model):
         ongoing_polls = self.filtered(lambda poll: not poll.end_message_id)
         ongoing_polls.winning_option_id = None
         for poll in self - ongoing_polls:
-            max_vote = max(option.vote_percentage for option in poll.option_ids)
+            max_vote = max(
+                (option.vote_percentage for option in poll.option_ids), default=0
+            )
             winners = [
                 option
                 for option in poll.option_ids

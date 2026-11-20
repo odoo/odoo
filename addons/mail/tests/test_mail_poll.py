@@ -171,3 +171,21 @@ class TestMailPoll(MailCommon, HttpCase):
         end_message = poll.end_message_id
         self.env["mail.poll"]._end_expired_polls()
         self.assertEqual(end_message, poll.end_message_id)
+
+    def test_end_poll_without_options(self):
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        poll_id = self.make_jsonrpc_request(
+            "/mail/poll/create",
+            {
+                "duration": 0,
+                "option_labels": [],
+                "question": "What is your favorite food?",
+                "thread_id": self.test_record.id,
+                "thread_model": self.test_record._name,
+            },
+        )
+        poll = self.env["mail.poll"].browse(poll_id)
+        self.assertFalse(poll.option_ids)
+        self.env["mail.poll"]._end_expired_polls()
+        self.assertTrue(poll.end_message_id.exists())
+        self.assertFalse(poll.winning_option_id)
