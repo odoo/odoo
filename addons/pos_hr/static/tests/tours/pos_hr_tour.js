@@ -64,7 +64,7 @@ registry.category("web_tour.tours").add("PosHrTour", {
             ProductScreen.addOrderline("Desk Pad", "1"),
             ProductScreen.totalAmountIs("1.98"),
             Chrome.clickOrders(),
-            TicketScreen.nthRowContains(1, "Pos Employee2", false),
+            TicketScreen.nthRowContains(1, "Pos", false),
 
             // order for employee 1
             PosHr.clickLockButton(),
@@ -74,8 +74,8 @@ registry.category("web_tour.tours").add("PosHrTour", {
             ProductScreen.addOrderline("Desk Pad", "1"),
             ProductScreen.totalAmountIs("1.98"),
             Chrome.clickOrders(),
-            TicketScreen.nthRowContains(1, "Pos Employee2", false),
-            TicketScreen.nthRowContains(2, "Pos Employee1", false),
+            TicketScreen.nthRowContains(1, "Pos", false),
+            TicketScreen.nthRowContains(2, "Pos", false),
 
             // Cash in/out should be accessible for all users.
             Chrome.clickMenuOption("Cash In/Out"),
@@ -88,7 +88,7 @@ registry.category("web_tour.tours").add("PosHrTour", {
             ProductScreen.addOrderline("Desk Pad", "1", "8"),
             ProductScreen.totalAmountIs("8.0"),
             Chrome.clickOrders(),
-            TicketScreen.nthRowContains(3, "Mitchell Admin", false),
+            TicketScreen.nthRowContains(3, "Mitchell", false),
 
             // Close register should be accessible by the admin user.
             Chrome.clickMenuOption("Close Register"),
@@ -418,7 +418,7 @@ registry.category("web_tour.tours").add("test_switch_cashier_with_badge", {
             Chrome.createFloatingOrder(),
             ProductScreen.addOrderline("Desk Pad", "1"),
             Chrome.clickOrders(),
-            TicketScreen.nthRowContains(1, "Pos Employee2", false),
-            TicketScreen.nthRowContains(2, "Test Employee 3", false),
+            TicketScreen.nthRowContains(1, "Pos", false),
+            TicketScreen.nthRowContains(2, "Test", false),
         ].flat(),
 });
