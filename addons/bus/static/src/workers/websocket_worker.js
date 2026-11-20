@@ -78,8 +78,9 @@ export class WebsocketWorker {
         this.currentDB = null;
         /** @type {number|false|null} null when not known yet. */
         this.currentUID = null;
-        this.firstSubscribeResolver = Promise.withResolvers();
         this.isReconnecting = false;
+        /** Whether the current websocket sent its first subscription. */
+        this.isSubscribed = false;
         this.lastChannelSubscription = null;
         this.lastNotificationId = null;
         /** @type {?{force: boolean, minId: number|null}} */
@@ -351,7 +352,7 @@ export class WebsocketWorker {
         this._logDebug("_onWebsocketClose", code, reason);
         this._updateState(WORKER_STATE.DISCONNECTED);
         this.lastChannelSubscription = null;
-        this.firstSubscribeResolver = Promise.withResolvers();
+        this.isSubscribed = false;
         if (IMMEDIATE_RECONNECT_CLOSE_CODES.includes(code)) {
             this.connectRetryDelay = 0;
         }
@@ -442,8 +443,8 @@ export class WebsocketWorker {
     }
 
     /**
-     * Triggered on websocket open. Send message that were waiting for
-     * the connection to open.
+     * Triggered on websocket open. Schedule the subscription of the new
+     * connection, which sends the queued messages.
      */
     _onWebsocketOpen() {
         this._logDebug("_onWebsocketOpen");
@@ -453,13 +454,6 @@ export class WebsocketWorker {
         this.connectRetryDelay = this.INITIAL_RECONNECT_DELAY;
         this.connectTimeout = null;
         this.isReconnecting = false;
-        this.firstSubscribeResolver.promise.then(() => {
-            if (!this.websocket) {
-                return;
-            }
-            this.messageWaitQueue.forEach((msg) => this.websocket.send(msg));
-            this.messageWaitQueue = [];
-        });
         this._restartConnectionCheckInterval();
     }
 
@@ -513,32 +507,33 @@ export class WebsocketWorker {
     }
 
     /**
-     * Send a message to the server through the websocket connection.
-     * If the websocket is not open, enqueue the message and send it
-     * upon the next reconnection.
+     * Send a message to the server through the websocket connection. Until
+     * the websocket is open and subscribed, enqueue the message: the first
+     * subscription of the next connection sends it. A subscription is never
+     * enqueued, as each new connection subscribes on open.
      *
      * @param {{event_name: string, data: any }} message Message to send to the server.
      */
     _sendToServer(message) {
         this._logDebug("_sendToServer", message);
-        const payload = JSON.stringify(message);
-        if (this.websocket?.readyState !== WebSocket.OPEN) {
-            if (message["event_name"] === "subscribe") {
-                this.messageWaitQueue = this.messageWaitQueue.filter(
-                    (msg) => JSON.parse(msg).event_name !== "subscribe"
-                );
-                this.messageWaitQueue.unshift(payload);
-            } else {
-                this.messageWaitQueue.push(payload);
+        const isOpen = this.websocket?.readyState === WebSocket.OPEN;
+        if (message["event_name"] === "subscribe") {
+            if (!isOpen) {
+                return;
             }
+            this.websocket.send(JSON.stringify(message));
+            this.isSubscribed = true;
+            for (const queuedMessage of this.messageWaitQueue) {
+                this.websocket.send(JSON.stringify(queuedMessage));
+            }
+            this.messageWaitQueue = [];
+        } else if (isOpen && this.isSubscribed) {
+            this.websocket.send(JSON.stringify(message));
         } else {
-            if (message["event_name"] === "subscribe") {
-                this.websocket.send(payload);
-            } else {
-                this.firstSubscribeResolver.promise.then(() => this.websocket.send(payload));
-            }
-            this._restartConnectionCheckInterval();
+            this.messageWaitQueue.push(message);
+            return;
         }
+        this._restartConnectionCheckInterval();
     }
 
     _removeWebsocketListeners() {
@@ -587,6 +582,7 @@ export class WebsocketWorker {
         clearTimeout(this._connectionCheckPongTimeout);
         this.connectRetryDelay = this.INITIAL_RECONNECT_DELAY;
         this.isReconnecting = false;
+        this.isSubscribed = false;
         this.lastChannelSubscription = null;
         const shouldBroadcastClose =
             this.websocket && this.websocket.readyState !== WebSocket.CLOSED;
@@ -605,6 +601,10 @@ export class WebsocketWorker {
     _debouncedUpdateChannels = debounce(() => {
         const { force, minId } = this.nextSubscribeData;
         this.nextSubscribeData = null;
+        if (this.websocket?.readyState !== WebSocket.OPEN) {
+            // The next connection subscribes on open.
+            return;
+        }
         const allTabsChannels = [
             ...new Set([].concat.apply([], [...this.channelsByClient.values()])),
         ].sort();
@@ -622,7 +622,6 @@ export class WebsocketWorker {
                     last: minId,
                 },
             });
-            this.firstSubscribeResolver.resolve();
         }
     }, WebsocketWorker.OUTGOING_BATCH_DELAY);
 
