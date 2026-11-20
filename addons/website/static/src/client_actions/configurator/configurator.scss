@@ -109,22 +109,6 @@
             transform: rotate3d(0, 1, 1, 1deg) scale(0.94) translateX(10%);
         }
 
-        $o-configurator-showcase-slots: (
-                0: (5.5s, 0.55s, -2.5px, 6px),   1: (6.5s, .4s, 3px, 8px),
-                2: (6s, .8s, -2px, 5px),         3: (7s, .275s, 2.5px, 7px),
-                4: (5.75s, 1.2s, -3px, 9px),     5: (6.75s, .6s, 2px, 5.5px),
-                6: (6.25s, .3s, -3.5px, 7.5px),  7: (7.25s, 1s, 3px, 4.5px),
-                8: (6s, .5s, -2.5px, 8.5px),
-        );
-        @each $i, $v in $o-configurator-showcase-slots {
-            .o_configurator_showcase_slot_#{$i} {
-                --o-configurator-showcase-float-duration: #{nth($v, 1)};
-                --o-configurator-showcase-float-delay: #{nth($v, 2)};
-                --o-configurator-showcase-float-x: #{nth($v, 3)};
-                --o-configurator-showcase-float-y: #{nth($v, 4)};
-            }
-        }
-
         .o_configurator_showcase_img {
             animation:
                     o-configurator-showcase-float
