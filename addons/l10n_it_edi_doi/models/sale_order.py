@@ -82,7 +82,7 @@ class SaleOrder(models.Model):
             order.l10n_it_edi_doi_warning = ''
             declaration = order.l10n_it_edi_doi_id
 
-            show_warning = declaration and order.state != 'cancelled'
+            show_warning = declaration and order.state != 'cancel'
             if not show_warning:
                 continue
 
