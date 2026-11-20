@@ -421,17 +421,26 @@ export class ProductScreen extends Component {
 
     getProductsBySearchWord(searchWord) {
         const words = unaccent(searchWord.toLowerCase(), false);
+        const wordsToFind = words.split(/\s+/).filter(Boolean);
         const products = this.pos.selectedCategory?.id
             ? this.getProductsByCategory(this.pos.selectedCategory)
             : this.products;
 
-        const filteredProducts = products.filter((p) => unaccent(p.searchString).includes(words));
-        return filteredProducts.sort((a, b) => {
-            const nameA = unaccent(a.searchString);
-            const nameB = unaccent(b.searchString);
-            // Sort by match index, push non-matching items to the end, and use alphabetical order as a tiebreaker
-            return nameA.indexOf(words) - nameB.indexOf(words) || nameA.localeCompare(nameB);
-        });
+        const filteredProducts = products
+            .map((product) => {
+                const name = unaccent(product.searchString);
+                return { product, name, index: name.indexOf(words) };
+            })
+            .filter(({ name }) => wordsToFind.every((word) => name.includes(word)));
+
+        return filteredProducts
+            .sort(
+                (a, b) =>
+                    (a.index === -1) - (b.index === -1) ||
+                    a.index - b.index ||
+                    a.name.localeCompare(b.name)
+            )
+            .map(({ product }) => product);
     }
 
     addMainProductsToDisplay(products) {

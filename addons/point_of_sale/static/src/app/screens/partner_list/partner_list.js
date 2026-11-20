@@ -85,29 +85,37 @@ export class PartnerList extends Component {
         const isSearchWordNumber = /^[0-9]+$/.test(numberString);
 
         const patternBase = isSearchWordNumber ? numberString : searchWord;
-        // Build a RegExp that mimics SQL ILIKE behavior:
+        // Build RegExp that mimics SQL ILIKE behavior:
         // 1) Escape all RegExp metacharacters so user input is treated literally
         //    (e.g. '.', '+', '[', ']' should not change regex meaning or cause errors)
         // 2) Replace SQL wildcard '%' with RegExp wildcard '.*'
-        const regex = new RegExp(
-            patternBase
-                .replace(/[.*+?^${}()|[\]\\]/g, "\\$&") // escape regex special characters
-                .replace(/%/g, ".*") // convert SQL wildcard to regex wildcard
-        );
+        const toRegex = (pattern) =>
+            new RegExp(pattern.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/%/g, ".*"));
+        const phraseRegex = toRegex(patternBase);
+        const wordRegexes = patternBase.split(/\s+/).filter(Boolean).map(toRegex);
 
-        const availablePartners = searchWord
-            ? partners.filter((p) => regex.test(unaccent(p.searchString))).slice(0, 200)
-            : partners
-                  .slice(0, 1000)
-                  .toSorted((a, b) =>
-                      this.props.partner?.id === a.id
-                          ? -1
-                          : this.props.partner?.id === b.id
-                          ? 1
-                          : (a.name || "").localeCompare(b.name || "")
-                  );
-
-        return availablePartners;
+        if (searchWord) {
+            const phraseMatches = [];
+            const wordMatches = [];
+            for (const partner of partners) {
+                const searchString = unaccent(partner.searchString);
+                if (phraseRegex.test(searchString)) {
+                    phraseMatches.push(partner);
+                } else if (wordRegexes.every((regex) => regex.test(searchString))) {
+                    wordMatches.push(partner);
+                }
+            }
+            return [...phraseMatches, ...wordMatches].slice(0, 200);
+        }
+        return partners
+            .slice(0, 1000)
+            .toSorted((a, b) =>
+                this.props.partner?.id === a.id
+                    ? -1
+                    : this.props.partner?.id === b.id
+                    ? 1
+                    : (a.name || "").localeCompare(b.name || "")
+            );
     }
     get isBalanceDisplayed() {
         return false;
