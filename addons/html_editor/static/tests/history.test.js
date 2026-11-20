@@ -280,6 +280,28 @@ describe("redo", () => {
         await press(["ctrl", "y"]);
         expect(getContent(el)).toBe("<p>aA</p><p>bB[]</p>", { message: "redo insert B" });
     });
+
+    test("should revert the changes that plugins made while undoing", async () => {
+        let p;
+        const { el, editor } = await setupEditor("<p>[]a</p>", {
+            config: {
+                resources: {
+                    on_revert_history_commit_handlers: (commit) => {
+                        if (commit.type === HISTORY_COMMIT_TYPES.STANDARD) {
+                            p.dataset.undone = "true";
+                        }
+                    },
+                },
+            },
+        });
+        p = el.querySelector("p");
+        await insertText(editor, "b");
+        undo(editor);
+        expect(getContent(el)).toBe('<p data-undone="true">[]a</p>');
+        // The undo commit holds the change made while undoing.
+        redo(editor);
+        expect(getContent(el)).toBe("<p>b[]a</p>");
+    });
 });
 
 describe("selection", () => {
@@ -583,6 +605,29 @@ describe("makeSavePoint", () => {
         restore();
         expect(getContent(el)).toBe("<p>a</p>");
         expect(document.getSelection().anchorNode).toBe(null);
+    });
+    test("makeSavePoint records the changes that plugins make while restoring it", async () => {
+        let p;
+        const { el, editor } = await setupEditor("<p>[]a</p>", {
+            config: {
+                resources: {
+                    on_revert_history_commit_handlers: () => {
+                        p.dataset.restored = "true";
+                    },
+                },
+            },
+        });
+        p = el.querySelector("p");
+        const restore = editor.shared.history.makeSavePoint();
+        await insertText(editor, "b");
+        restore();
+        expect(getContent(el)).toBe('<p data-restored="true">[]a</p>');
+        // The restore commit holds the change made while restoring.
+        const { type, data } = editor.shared.history.getCommits().at(-1);
+        expect(type).toBe(HISTORY_COMMIT_TYPES.RESTORE);
+        expect(data.mutations.some(({ attributeName }) => attributeName === "data-restored")).toBe(
+            true
+        );
     });
 });
 
