@@ -25,7 +25,7 @@ import {
     serverState,
 } from "@web/../tests/web_test_helpers";
 
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { WebClientOfflinePlugin } from "@web/webclient/offline/webclient_offline_plugin";
 import { registry } from "@web/core/registry";
 import { NavBar } from "@web/webclient/navbar/navbar";
 
@@ -577,7 +577,7 @@ test("Do not execute adapt when navbar is destroyed", async () => {
 test.tags("desktop");
 test("[Offline] unavailable menus are disabled", async () => {
     const setOffline = mockOffline();
-    patchWithCleanup(OfflinePlugin.prototype, {
+    patchWithCleanup(WebClientOfflinePlugin.prototype, {
         isAvailableOffline(actionId) {
             return [2, 10, 121].includes(actionId);
         },

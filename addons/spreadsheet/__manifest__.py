@@ -37,6 +37,7 @@
             'web/static/src/model/**/*.js',
             'web/static/src/views/**/*.js',
             'web/static/src/search/**/*.js',
+            'web/static/src/webclient/offline/**/*.js',
             'web/static/src/core/commands/command_hook.js',
             'web/static/src/webclient/menus/menu_helpers.js',
             ('remove', 'spreadsheet/static/src/ir_ui_menu/spreadsheet_link_service.js'),

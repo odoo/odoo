@@ -10,7 +10,7 @@ import { CARD_ATTRIBUTE } from "./card_arch_parser";
 import { CardCompiler } from "./card_compiler";
 
 import { Component, computed, onWillUpdateProps, usePlugin, proxy, t, useProps } from "@odoo/owl";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { WebClientOfflinePlugin } from "@web/webclient/offline/webclient_offline_plugin";
 
 const formatters = registry.category("formatters");
 
@@ -97,7 +97,7 @@ export class CardRenderer extends Component {
         this.action = useService("action");
         this.dialog = useService("dialog");
         this.notification = useService("notification");
-        this.offlinePlugin = usePlugin(OfflinePlugin);
+        this.offlinePlugin = usePlugin(WebClientOfflinePlugin);
 
         const { Compiler, archInfo } = this.props;
         const ViewCompiler = Compiler || this.constructor.Compiler;

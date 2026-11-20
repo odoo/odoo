@@ -8,7 +8,7 @@
             disabled="!this.offlinePlugin.hasScheduledCalls">
             <div
                 t-if="this.uiService.isSmall"
-                t-on-click="() => this.offlinePlugin.checkConnection()"
+                t-on-click="() => this.connectionPlugin.checkConnection()"
                 class="o_nav_entry o_offline_systray">
                     <i t-attf-class="oi me-1" t-att-data-icon="this.labelIcon"
                     role="img"
@@ -18,7 +18,7 @@
             <button t-else=""
                 t-attf-class="o_nav_entry px-2 o_tag {{ this.labelColor }} o_offline_systray"
                 data-available-offline=""
-                t-on-click="() => this.offlinePlugin.checkConnection()"
+                t-on-click="() => this.connectionPlugin.checkConnection()"
                 data-tooltip="Click to check connection and Sync">
                 <i t-attf-class="oi me-1" t-att-data-icon="this.labelIcon"/><t t-out="this.labelText"></t><i t-if="this.offlinePlugin.hasScheduledCalls" class="oi ms-2" data-icon="arrow_drop_down"/>
             </button>

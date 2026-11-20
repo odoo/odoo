@@ -27,7 +27,7 @@ import { GlobalBusPlugin } from "@web/core/global_bus_plugin";
 import { _t } from "@web/core/l10n/translation";
 import { rpc, rpcBus } from "@web/core/network/rpc";
 import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { WebClientOfflinePlugin } from "@web/webclient/offline/webclient_offline_plugin";
 import { UPDATE_METHODS } from "@web/core/orm_plugin";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
@@ -158,7 +158,7 @@ export class ActionPlugin extends Plugin {
     );
     #scope = useScope();
     #debugMode = usePlugin(DebugModePlugin);
-    #offline = usePlugin(OfflinePlugin);
+    #offline = usePlugin(WebClientOfflinePlugin);
     #bus = usePlugin(GlobalBusPlugin).bus;
     #dialogPlugin = usePlugin(DialogPlugin);
     #effect = usePlugin(EffectPlugin);
@@ -1867,7 +1867,6 @@ export class ActionPlugin extends Plugin {
         }
         await this.#updateUI(newController, { newWindow, index });
     }
-
 
     /**
      * @param {string} jsId

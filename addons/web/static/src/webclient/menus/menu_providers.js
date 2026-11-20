@@ -3,7 +3,7 @@ import { registry } from "@web/core/registry";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { computeAppsAndMenuItems } from "@web/webclient/menus/menu_helpers";
 import { defaultCommandItemProps } from "@web/core/commands/command_palette";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { WebClientOfflinePlugin } from "@web/webclient/offline/webclient_offline_plugin";
 import { Component, usePlugin, t, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
@@ -31,7 +31,7 @@ const commandProviderRegistry = registry.category("command_provider");
 commandProviderRegistry.add("menu", {
     namespace: "/",
     provide(options) {
-        const offlinePlugin = usePlugin(OfflinePlugin);
+        const offlinePlugin = usePlugin(WebClientOfflinePlugin);
         const result = [];
         const menuService = useService("menu");
         let { apps, menuItems } = computeAppsAndMenuItems(menuService.getMenuAsTree("root"));

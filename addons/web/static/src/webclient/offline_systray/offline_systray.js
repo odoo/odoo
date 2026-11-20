@@ -1,6 +1,7 @@
 import { Component, computed, usePlugin } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { WebClientOfflinePlugin } from "@web/webclient/offline/webclient_offline_plugin";
 import { useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -23,7 +24,8 @@ class OfflineSystray extends Component {
     static components = { Dropdown, DropdownItem };
 
     setup() {
-        this.offlinePlugin = usePlugin(OfflinePlugin);
+        this.offlinePlugin = usePlugin(WebClientOfflinePlugin);
+        this.connectionPlugin = usePlugin(OfflinePlugin);
         this.actionService = useService("action");
         this.dialogService = useService("dialog");
         this.uiService = useService("ui");

@@ -123,6 +123,7 @@
             "account/static/src/helpers/*.js",
             "web/static/src/model/**/*",
             "web/static/src/search/**/*",
+            "web/static/src/webclient/offline/**/*",
             "web/static/src/views/fields/parsers.js",
 
             # Related models from point_of_sale

@@ -19,7 +19,7 @@ import {
     t,
     useProps,
 } from "@odoo/owl";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { WebClientOfflinePlugin } from "@web/webclient/offline/webclient_offline_plugin";
 import { EmbeddedActionsPanel, useEmbeddedActions } from "./embedded_actions";
 
 const STICKY_CLASS = "o_mobile_sticky";
@@ -46,7 +46,7 @@ export class ControlPanel extends Component {
     setup() {
         this.embeddedPanelState = useEmbeddedActions();
         this.actionService = useService("action");
-        this.offlinePlugin = usePlugin(OfflinePlugin);
+        this.offlinePlugin = usePlugin(WebClientOfflinePlugin);
         this.uiService = useService("ui");
         this.pagerProps = this.env.config.pagerProps
             ? proxy(this.env.config.pagerProps)

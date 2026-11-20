@@ -14,7 +14,7 @@ import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownGroup } from "@web/core/dropdown/dropdown_group";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { WebClientOfflinePlugin } from "@web/webclient/offline/webclient_offline_plugin";
 import { registry } from "@web/core/registry";
 import { Transition } from "@web/core/transition";
 import { ErrorHandler } from "@web/core/utils/components";
@@ -52,7 +52,7 @@ export class NavBar extends Component {
         this.currentAppSectionsExtra = [];
         this.actionService = useService("action");
         this.menuService = useService("menu");
-        this.offlinePlugin = usePlugin(OfflinePlugin);
+        this.offlinePlugin = usePlugin(WebClientOfflinePlugin);
         this.pwa = useService("pwa");
         const debouncedAdapt = debounce(this.adapt.bind(this), 250);
         onWillDestroy(() => debouncedAdapt.cancel());

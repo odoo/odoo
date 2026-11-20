@@ -10,7 +10,7 @@ import {
 } from "@odoo/owl";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { WebClientOfflinePlugin } from "@web/webclient/offline/webclient_offline_plugin";
 import { evaluateBooleanExpr, evaluateExpr } from "@web/core/py_js/py";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
@@ -74,7 +74,7 @@ export class ListController extends Component {
         this.dialogService = useService("dialog");
         this.uiService = useService("ui");
         this.orm = useService("orm");
-        this.offlinePlugin = usePlugin(OfflinePlugin);
+        this.offlinePlugin = usePlugin(WebClientOfflinePlugin);
 
         this.archInfo = this.props.archInfo;
         this.activeActions = this.archInfo.activeActions;

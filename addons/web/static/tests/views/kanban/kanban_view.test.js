@@ -82,7 +82,7 @@ import {
 
 import { browser } from "@web/core/browser/browser";
 import { FileInput } from "@web/core/file_input/file_input";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { WebClientOfflinePlugin } from "@web/webclient/offline/webclient_offline_plugin";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
@@ -9345,7 +9345,7 @@ test("add o-navigable to buttons with dropdown-item class and view buttons", asy
 test.tags("desktop");
 test(`[Offline] disable unavailable records when offline`, async () => {
     const setOffline = mockOffline();
-    patchWithCleanup(OfflinePlugin.prototype, {
+    patchWithCleanup(WebClientOfflinePlugin.prototype, {
         isAvailableOffline(actionId, viewType, resId) {
             if (actionId === 234 && viewType === "form") {
                 return [2, 3].includes(resId);
@@ -9709,7 +9709,7 @@ test("[Offline] create record when offline (quickCreate)", async () => {
     // go online and save the record.
     await setOffline(false);
 
-    expect(getService(OfflinePlugin).isOffline()).toBe(false);
+    expect(getService(WebClientOfflinePlugin).isOffline()).toBe(false);
     await expect.waitForSteps(["web_save"]); // We sync when the connection returns
     //The current view is not updated when the offline is sync.
     //In this case we don't see the newly created record, until the view is reloaded.
@@ -9788,7 +9788,7 @@ test("[Offline] create record when offline (form view)", async () => {
     // go online and save the record.
     await setOffline(false);
 
-    expect(getService(OfflinePlugin).isOffline()).toBe(false);
+    expect(getService(WebClientOfflinePlugin).isOffline()).toBe(false);
     await expect.waitForSteps(["web_save"]); // We sync when the connection returns
     //The current view is not updated when the offline is sync.
     //In this case we don't see the newly created record, until the view is reloaded.

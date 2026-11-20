@@ -48,7 +48,7 @@ import {
     usePlugin,
     useProps,
 } from "@odoo/owl";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { WebClientOfflinePlugin } from "@web/webclient/offline/webclient_offline_plugin";
 import { FetchRecordError } from "@web/model/relational_model/errors";
 
 const viewRegistry = registry.category("views");
@@ -160,7 +160,7 @@ export class FormController extends Component {
         this.orm = useService("orm");
         this.viewService = useService("view");
         this.ui = useService("ui");
-        this.offlinePlugin = usePlugin(OfflinePlugin);
+        this.offlinePlugin = usePlugin(WebClientOfflinePlugin);
         useBus(this.ui.bus, "resize", () => render(this));
 
         this.archInfo = this.props.archInfo;

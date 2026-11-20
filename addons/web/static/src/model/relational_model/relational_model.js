@@ -25,7 +25,7 @@ import {
     getId,
     makeActiveField,
 } from "./utils";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { WebClientOfflinePlugin } from "@web/webclient/offline/webclient_offline_plugin";
 
 /**
  * @typedef {import("@web/core/context").Context} Context
@@ -128,7 +128,7 @@ export class RelationalModel extends Model {
     static DEFAULT_OPEN_GROUP_LIMIT = 10; // TODO: remove ?
     static withCache = true;
 
-    offlinePlugin = usePlugin(OfflinePlugin);
+    offlinePlugin = usePlugin(WebClientOfflinePlugin);
 
     /**
      * @param {RelationalModelParams} params

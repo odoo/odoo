@@ -10,6 +10,7 @@ import { rpcBus } from "@web/core/network/rpc";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { OverlayPlugin } from "@web/core/overlay/overlay_plugin";
 import { MenuPlugin } from "@web/webclient/menus/menu_plugin";
+import { WebClientOfflinePlugin } from "@web/webclient/offline/webclient_offline_plugin";
 import { ClickbotOverlay } from "@web/webclient/clickbot/clickbot_overlay";
 
 export const SUCCESS_SIGNAL = "clickbot test succeeded";
@@ -75,6 +76,7 @@ class Clickbot {
         this.menuPlugin = usePlugin(MenuPlugin);
         this.bus = usePlugin(GlobalBusPlugin).bus;
         this.offlinePlugin = usePlugin(OfflinePlugin);
+        this.webClientOfflinePlugin = usePlugin(WebClientOfflinePlugin);
         this.state = proxy(currentState);
         this._actionCount = 0;
         this._calledRPC = {};
@@ -90,7 +92,7 @@ class Clickbot {
         return (
             !this.state.testingOffline ||
             !menu.actionID ||
-            this.offlinePlugin.isAvailableOffline(menu.actionID)
+            this.webClientOfflinePlugin.isAvailableOffline(menu.actionID)
         );
     }
 
@@ -188,7 +190,7 @@ class Clickbot {
         window.XMLHttpRequest = FakeOfflineXHR;
 
         this.offlinePlugin.setOffline(true);
-        await this.offlinePlugin.getVisitedStatus();
+        await this.webClientOfflinePlugin.getVisitedStatus();
 
         return this._start();
     }

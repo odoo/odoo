@@ -8,7 +8,7 @@ import {
     t,
     useProps,
 } from "@odoo/owl";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { WebClientOfflinePlugin } from "@web/webclient/offline/webclient_offline_plugin";
 import { useSetupAction } from "@web/search/action_hook";
 import { useEnv } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
@@ -27,7 +27,7 @@ export class SearchBarToggler extends Component {
 export class OfflineSearchBarToggler extends SearchBarToggler {
     static template = "web.SearchBar.Toggler.Offline";
     setup() {
-        const offlinePlugin = usePlugin(OfflinePlugin);
+        const offlinePlugin = usePlugin(WebClientOfflinePlugin);
         onWillStart(async () => {
             const { actionId, viewType } = this.env.config;
             const availableSearches = await offlinePlugin.getAvailableSearches(actionId, viewType);

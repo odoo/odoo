@@ -2,7 +2,7 @@ import { Component, onWillStart, proxy, t, usePlugin, useProps } from "@odoo/owl
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { WebClientOfflinePlugin } from "@web/webclient/offline/webclient_offline_plugin";
 import { user } from "@web/core/user";
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
@@ -30,7 +30,7 @@ export class ProjectTaskTemplateDropdown extends Component {
     setup() {
         this.action = useService("action");
         this.orm = useService("orm");
-        this.offlinePlugin = usePlugin(OfflinePlugin);
+        this.offlinePlugin = usePlugin(WebClientOfflinePlugin);
         this.addDialog = useOwnedDialogs();
         this.navigationOptions = templateButtonsNavigationOptions;
         this.displayTasksLimit = 10;

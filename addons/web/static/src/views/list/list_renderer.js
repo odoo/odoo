@@ -47,7 +47,7 @@ import {
 import { getCurrencyRates } from "@web/core/currency";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { _t } from "@web/core/l10n/translation";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { WebClientOfflinePlugin } from "@web/webclient/offline/webclient_offline_plugin";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { user } from "@web/core/user";
 import { odoomark } from "@web/core/utils/html";
@@ -193,7 +193,7 @@ export class ListRenderer extends Component {
 
     setup() {
         this.uiService = useService("ui");
-        this.offlinePlugin = usePlugin(OfflinePlugin);
+        this.offlinePlugin = usePlugin(WebClientOfflinePlugin);
         this.notificationService = useService("notification");
         this.orm = useService("orm");
         const key = this.createViewKey();

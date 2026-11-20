@@ -1,11 +1,11 @@
 import { Component, onWillStart, usePlugin } from "@odoo/owl";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { WebClientOfflinePlugin } from "@web/webclient/offline/webclient_offline_plugin";
 
 export class OfflineActionHelper extends Component {
     static template = "web.OfflineActionHelper";
 
     setup() {
-        const offlinePlugin = usePlugin(OfflinePlugin);
+        const offlinePlugin = usePlugin(WebClientOfflinePlugin);
 
         this.searches = null;
         onWillStart(async () => {

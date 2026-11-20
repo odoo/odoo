@@ -14,7 +14,7 @@ import { makeContext } from "@web/core/context";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { WebClientOfflinePlugin } from "@web/webclient/offline/webclient_offline_plugin";
 import { ORM } from "@web/core/orm_plugin";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { SIZES } from "@web/core/ui/ui_utils";
@@ -231,7 +231,7 @@ export class Many2XAutocomplete extends Component {
 
     setup() {
         this.orm = useService("orm");
-        this.offlinePlugin = usePlugin(OfflinePlugin);
+        this.offlinePlugin = usePlugin(WebClientOfflinePlugin);
         this.uiService = useService("ui");
 
         const { activeActions, resModel, update, isToMany, fieldString } = this.props;

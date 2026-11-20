@@ -160,10 +160,10 @@ export function getMockEnv() {
  * Retrieves a service by its registered name, or a plugin by its class.
  *
  * Passing a string returns the matching entry from the "services" registry
- * (this includes legacy compatibility services such as "offline"). Passing a
- * plugin class returns the running instance of that plugin from the plugin
- * manager, which is the preferred way to access converted plugins in tests
- * (e.g. `getService(OfflinePlugin)` instead of `getService("offline")`).
+ * (this includes legacy compatibility services). Passing a plugin class
+ * returns the running instance of that plugin from the plugin manager, which
+ * is the preferred way to access converted plugins in tests
+ * (e.g. `getService(OfflinePlugin)`).
  *
  * @overload
  * @template {keyof Services} T

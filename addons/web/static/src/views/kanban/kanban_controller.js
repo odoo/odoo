@@ -36,7 +36,7 @@ import {
     useEffect,
     useProps,
 } from "@odoo/owl";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { WebClientOfflinePlugin } from "@web/webclient/offline/webclient_offline_plugin";
 import { QuickCreateState } from "./kanban_record_quick_create";
 
 const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection", "many2many"];
@@ -79,7 +79,7 @@ export class KanbanController extends Component {
         this.actionService = useService("action");
         this.dialog = useService("dialog");
         this.uiService = useService("ui");
-        this.offlinePlugin = usePlugin(OfflinePlugin);
+        this.offlinePlugin = usePlugin(WebClientOfflinePlugin);
         const { Model, archInfo } = this.props;
 
         class KanbanSampleModel extends Model {
