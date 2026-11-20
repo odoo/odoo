@@ -132,3 +132,8 @@ and calling the method of its direction.
   ones propagate to the framework. To recover from framework exceptions, wrap the
   work in `with self.env.cr.savepoint():` (note: >64 savepoints per transaction
   degrades PostgreSQL, so bound batch sizes).
+- A `try` that goes on after a Python exception (an `AccessError`, a
+  `UserError`) puts its writes in a savepoint, or undoes them: without that,
+  what the block wrote before the exception (a record created, a field
+  written) stays in the database, and the request commits it. This is a
+  common bug in controllers.
