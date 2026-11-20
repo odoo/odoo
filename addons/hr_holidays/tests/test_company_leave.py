@@ -292,3 +292,49 @@ class TestCompanyLeave(TransactionCase):
 
         leaves = self.env['hr.leave'].search([('holiday_status_id', '=', self.bank_holiday.id)])
         self.assertEqual(len(leaves), 101)
+
+    def test_leave_whole_company_employee_hours_outside_company_day(self):
+        # The company calendar is in UTC but the employee works in the evening in
+        # Mexico City (UTC-6): the 17th of February from 18:00 to 22:00 is
+        # the 18th of February from 00:00 to 04:00 in UTC. The employee has to get
+        # the time off even if the working hours do not fall in the day of the company.
+        company = self.env['res.company'].create({'name': 'UTC company'})
+        company.resource_calendar_id.tz = 'UTC'
+        evening_calendar = self.env['resource.calendar'].create({
+            'name': 'Evening schedule',
+            'tz': 'America/Mexico_City',
+            'company_id': company.id,
+            'attendance_ids': [Command.clear()] + [Command.create({
+                'name': 'Day %s' % day,
+                'dayofweek': str(day),
+                'hour_from': 18,
+                'hour_to': 22,
+            }) for day in range(5)],
+        })
+        employee = self.env['hr.employee'].create({
+            'name': 'Evening employee',
+            'company_id': company.id,
+            'tz': 'America/Mexico_City',
+            'resource_calendar_id': evening_calendar.id,
+        })
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Bank Holiday',
+            'company_id': company.id,
+            'requires_allocation': 'no',
+            'leave_validation_type': 'no_validation',
+        })
+
+        # Monday
+        self.env['hr.leave.generate.multi.wizard'].create({
+            'name': 'Company leave',
+            'allocation_mode': 'company',
+            'company_id': company.id,
+            'holiday_status_id': leave_type.id,
+            'date_from': date(2025, 2, 17),
+            'date_to': date(2025, 2, 17),
+        }).action_generate_time_off()
+
+        leave = self.env['hr.leave'].search([('employee_id', '=', employee.id)])
+        self.assertEqual(len(leave), 1)
+        self.assertEqual(leave.date_from, datetime(2025, 2, 18, 0, 0))
+        self.assertEqual(leave.date_to, datetime(2025, 2, 18, 4, 0))
