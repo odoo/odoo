@@ -233,3 +233,51 @@ class TestMailPoll(MailCommon, HttpCase):
         end_message = poll.end_message_id
         self.env["mail.poll"]._end_expired_polls()
         self.assertEqual(end_message, poll.end_message_id)
+
+    def test_create_poll_requires_two_options(self):
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        poll_values = {
+            "duration": 1,
+            "question": "What is your favorite food?",
+            "thread_id": self.test_record.id,
+            "thread_model": self.test_record._name,
+        }
+        for options in ([], self.POLL_OPTIONS[:1]):
+            with self.subTest(options=options):
+                with (
+                    self.assertRaises(JsonRpcException) as error_catcher,
+                    self.assertLogs("odoo.http", level="WARNING") as log_catcher,
+                ):
+                    self.make_jsonrpc_request(
+                        "/mail/poll/create",
+                        {**poll_values, "options": options},
+                    )
+                self.assertEqual(error_catcher.exception.args[0], "odoo.exceptions.ValidationError")
+                self.assertIn(
+                    "WARNING:odoo.http:At least two options are required",
+                    log_catcher.output,
+                )
+        poll_id = self.make_jsonrpc_request(
+            "/mail/poll/create",
+            {**poll_values, "options": self.POLL_OPTIONS[:2]},
+        )
+        poll = self.env["mail.poll"].browse(poll_id)
+        self.assertEqual(poll.option_ids.mapped("option_label"), ["Burger", "Pizza"])
+
+    def test_end_expired_polls_without_options(self):
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        poll_id = self.make_jsonrpc_request(
+            "/mail/poll/create",
+            {
+                "duration": 0,
+                "options": self.POLL_OPTIONS[:2],
+                "question": "What is your favorite food?",
+                "thread_id": self.test_record.id,
+                "thread_model": self.test_record._name,
+            },
+        )
+        poll = self.env["mail.poll"].browse(poll_id)
+        poll.option_ids.unlink()  # Deleting the options bypasses the constraint
+        self.env["mail.poll"]._end_expired_polls()
+        self.assertTrue(poll.end_message_id)
+        self.assertFalse(poll.winning_option_id)
