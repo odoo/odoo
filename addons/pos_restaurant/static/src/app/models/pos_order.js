@@ -130,23 +130,13 @@ patch(PosOrder.prototype, {
         }
     },
     get courses() {
-        // Sort courses first by thier sequences, then by their index.
-        // Course that have sequence are backend created ones.
         return this.course_ids.toSorted((a, b) => {
-            const aHasSeq = a.course_id?.sequence !== undefined;
-            const bHasSeq = b.course_id?.sequence !== undefined;
-
-            if (aHasSeq && bHasSeq) {
-                return a.course_id.sequence - b.course_id.sequence || a.index - b.index;
-            }
-
-            // If only one has sequence, keep original order (don't force top/bottom)
-            if (aHasSeq !== bHasSeq) {
-                return a.index - b.index;
-            }
-
-            // Neither has sequence sort by index
-            return a.index - b.index;
+            const bothHaveSequence =
+                a.course_id?.sequence !== undefined && b.course_id?.sequence !== undefined;
+            return (
+                (bothHaveSequence && a.course_id.sequence - b.course_id.sequence) ||
+                a.index - b.index
+            );
         });
     },
     get isTippedAfterPayment() {

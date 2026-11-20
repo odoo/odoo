@@ -611,6 +611,40 @@ describe("restaurant pos_store.js", () => {
         expect(restoredOrder.lines).toHaveLength(2);
     });
 
+    test("linking tables merges courses matching their backend course", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        store.config.use_course_allocation = true;
+        const table1 = models["restaurant.table"].get(2);
+        const table2 = models["restaurant.table"].get(3);
+        const addProduct = async (order, productId) => {
+            store.setOrder(order);
+            const product = models["product.template"].get(productId);
+            const allocation = store.autoCourseAllocation(product);
+            const line = await store.addLineToCurrentOrder({ product_tmpl_id: product });
+            store.cleanAutoCourseAllocation(line, allocation);
+        };
+        // Product 5 belongs to "Default Course 1", product 6 to "Default Course 2".
+        // Each course gets the next index of its own order, so the indexes differ.
+        const order1 = store.addNewOrder({ table_id: table1 });
+        await addProduct(order1, 5);
+        await addProduct(order1, 6);
+        const order2 = store.addNewOrder({ table_id: table2 });
+        await addProduct(order2, 6);
+
+        const linkedOrder = await store.mergeTableOrders(order1.uuid, table2);
+
+        // Both product 6 lines end up in the same course, so they are merged into one
+        const productsByCourse = linkedOrder.courses.map((course) => [
+            course.name,
+            course.lines.map((line) => [line.product_id.product_tmpl_id.id, line.qty]),
+        ]);
+        expect(productsByCourse).toEqual([
+            ["Default Course 1", [[5, 1]]],
+            ["Default Course 2", [[6, 2]]],
+        ]);
+    });
+
     test("mergeOrders keeps kitchen sent quantities when merging identical products", async () => {
         const store = await setupPosEnv();
         const table6 = store.models["restaurant.table"].get(2);

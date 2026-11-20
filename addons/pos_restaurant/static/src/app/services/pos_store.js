@@ -383,9 +383,11 @@ patch(PosStore.prototype, {
             return;
         }
         const result = {}; // Contains the required info to restore merge courses in the original table
+        const getCourseKey = (course) =>
+            course.course_id ? `course_${course.course_id.id}` : `index_${course.index}`;
         const courseMap = new Map();
         sourceOrder.course_ids.forEach((course) => {
-            courseMap.set(course.index, course);
+            courseMap.set(getCourseKey(course), course);
             result[course.uuid] = {
                 table_id: sourceOrder.table_id?.id,
                 lines: course.line_ids.map((l) => l.uuid),
@@ -397,11 +399,12 @@ patch(PosStore.prototype, {
             };
         });
 
-        // Add courses from the target, merging lines if course numbers match
+        // Add courses from the target, merging lines if the courses match
         destOrder.course_ids?.forEach((targetCourse) => {
-            if (courseMap.has(targetCourse.index)) {
+            const key = getCourseKey(targetCourse);
+            if (courseMap.has(key)) {
                 // If the course already exists, merge the lines
-                const sourceCourse = courseMap.get(targetCourse.index);
+                const sourceCourse = courseMap.get(key);
                 if (sourceCourse) {
                     const sourceCourseLines = [...sourceCourse.line_ids];
                     sourceCourseLines.forEach((source_line) => {
@@ -414,7 +417,7 @@ patch(PosStore.prototype, {
                     delete result[sourceCourse.uuid];
                 }
             }
-            courseMap.set(targetCourse.index, targetCourse);
+            courseMap.set(key, targetCourse);
         });
 
         // Ensures all courses are assigned to the target order

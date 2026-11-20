@@ -16,6 +16,9 @@ export class RestaurantOrderCourse extends Base {
     isReadyToFire() {
         return !this.fired && !this.isEmpty();
     }
+    get position() {
+        return this.order_id.courses.indexOf(this);
+    }
 }
 
 registry
