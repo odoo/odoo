@@ -202,12 +202,15 @@ class NumberBuffer extends EventBus {
     }
     _onInput(keyAccessor) {
         return (manualCapture = false) => {
-            // Manual call to NumberBuffer.capture() should allow handling more than 2 items in the buffer.
-            // This is useful in tour test that make very fast screen numpad presses (clicks).
+            // More than 2 fast keys is treated as a barcode scan and dropped. capture() keeps them
+            // only for screen numpad clicks: a scanner types as a keyboard.
+            const fromScreenNumpad = this.eventsBuffer.every(
+                (event) => !(event instanceof KeyboardEvent)
+            );
             if (
-                manualCapture ||
+                (manualCapture && fromScreenNumpad) ||
                 session.test_mode ||
-                (!manualCapture && this.eventsBuffer.length <= 2)
+                this.eventsBuffer.length <= 2
             ) {
                 // Check first the buffer if its contents are all valid
                 // number input.
