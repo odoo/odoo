@@ -625,7 +625,7 @@
                                     </p>
                                     <hr/>
                                     <p>1. Enter your password to confirm you own this account</p>
-                                    <input name="password" type="password" required="1"
+                                    <input name="password" type="password" autocomplete="current-password" required="1"
                                         t-attf-class="form-control #{'is-invalid' if deactivate_error == 'password' else ''}"
                                         placeholder="Password"/>
                                     <div t-if="deactivate_error == 'password'" class="invalid-feedback">
