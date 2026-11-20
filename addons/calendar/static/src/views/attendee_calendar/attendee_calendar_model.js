@@ -117,7 +117,8 @@ export class AttendeeCalendarModel extends CalendarModel {
     }
 
     /**
-     * Load the filter section and add both 'user' and 'everybody' filters to the context.
+     * Load the filter section and keep the state of the 'user' and 'everybody' filters
+     * for the list view.
      * @override
      */
     async loadFilterSection(fieldName, filterInfo, previousSection) {
@@ -133,12 +134,10 @@ export class AttendeeCalendarModel extends CalendarModel {
         }
         if (result?.fieldName === "partner_ids") {
             if (result?.filters) {
-                user.updateContext({
-                    calendar_filters: {
-                        all: result?.filters?.find((f) => f.type === "all")?.active ?? false,
-                        user: result?.filters?.find((f) => f.type === "user")?.active ?? false,
-                    },
-                });
+                this.selectedFilters = {
+                    all: result?.filters?.find((f) => f.type === "all")?.active ?? false,
+                    user: result?.filters?.find((f) => f.type === "user")?.active ?? false,
+                };
             }
             result.filters = result?.filters?.filter(f => f.type !== "user");
         }
