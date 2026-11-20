@@ -118,6 +118,7 @@ class Project(models.Model):
 
         if section_name == 'other_purchase_costs':
             action = self.env["ir.actions.actions"]._for_xml_id("account.action_move_in_invoice_type")
+            action.pop('id', None)
             action['domain'] = domain or []
             if res_id:
                 action['views'] = [(False, 'form')]

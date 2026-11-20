@@ -111,3 +111,13 @@ class TestProjectAccountProfitability(TestProjectProfitabilityCommon):
             },
             'Lines from different analytic plans should count towards project profitability'
         )
+
+    def test_vendor_bills_profitability_action_keeps_domain_on_reload(self):
+        """ The web client reloads an action from the server when the URL holds its id, which would
+            replace the project domain by the one of the generic Bills action on page reload.
+        """
+        domain = [('id', 'in', [1, 2])]
+        action = self.project.action_profitability_items('other_purchase_costs', domain)
+        self.assertNotIn('id', action)
+        self.assertEqual(action['res_model'], 'account.move')
+        self.assertEqual(action['domain'], domain)
