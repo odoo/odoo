@@ -467,6 +467,54 @@ class TestMailMail(MailCommon):
         self.assertEqual(mails.mapped('state'), ['sent', 'sent'])
         self.assertFalse(any(mails.mapped('failure_reason')))
 
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    @users('admin')
+    def test_mail_mail_send_access_failure(self):
+        """ Admin can send emails without access to their document, failure
+        post-processing included, even with a cold cache (e.g. queue commits). """
+        mail = self._create_mails_restricted('outgoing')[1]
+        notification = self.env['mail.notification'].sudo().create({
+            'mail_mail_id': mail.id,
+            'mail_message_id': mail.mail_message_id.id,
+            'notification_type': 'email',
+            'res_partner_id': self.partner_employee.id,
+        })
+        mail = mail.sudo(False).with_company(self.company_admin)
+        self.assertFalse(mail.mail_message_id.has_access('read'))
+
+        def _send_email_failure(*args, **kwargs):
+            self.env.invalidate_all()
+            raise MailDeliveryException('Delivery failed')
+
+        with self.mock_mail_gateway(), \
+             patch.object(self.env.registry['ir.mail_server'], 'send_email', side_effect=_send_email_failure):
+            mail.send()
+        self.assertEqual(mail.state, 'exception')
+        self.assertEqual(notification.notification_status, 'exception')
+
+    @users('admin')
+    def test_mail_mail_send_access_recipients(self):
+        """ Admin can send emails to recipients they cannot access (e.g. other
+        company): none of them should be skipped. """
+        partners = self.env['res.partner'].sudo().create([
+            {'company_id': self.company_2.id, 'email': 'restricted@test.example.com', 'name': 'Restricted'},
+            {'email': 'public@test.example.com', 'name': 'Public'},
+        ])
+        mail = self.env['mail.mail'].sudo().create({
+            'body_html': '<p>Body</p>',
+            'recipient_ids': partners.ids,
+        }).sudo(False).with_company(self.company_admin)
+        self.assertEqual(partners.with_env(mail.env)._filtered_access('read'), partners[1])
+
+        self.env.invalidate_all()  # queue sends with a cold cache, as it commits after each email
+        with self.mock_mail_gateway():
+            mail.send()
+        self.assertEqual(mail.state, 'sent')
+        self.assertEqual(
+            sorted(email for sent in self._mails for email in sent['email_to']),
+            sorted(partners.mapped('email_formatted')),
+        )
+
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.tests')
     def test_mail_mail_send_configuration(self):
         """ Test configuration and control of email queue """

@@ -63,6 +63,33 @@ class TestWebsiteMassMailing(WebsiteMassMailingMultiCompanyCommon, MassMailCommo
                 email['headers']['List-Unsubscribe'],
             )
 
+    @users('user_marketing')
+    def test_mailing_send_access_multi_company_partner(self):
+        """ Admin sending queued emails while working in another company than
+        their recipients: links are still built on recipients' website, sending
+        not depending on access to recipients. """
+        self.env['ir.config_parameter'].sudo().set_int('mail.mail.force.send.limit', 0)  # use queue
+        test_mailing = self.env['mailing.mailing'].create({
+            'body_html': '<p>Hello <a href="/unsubscribe_from_list">UNSUBSCRIBE</a></p>',
+            'mailing_model_id': self.env['ir.model']._get('res.partner').id,
+            'mailing_domain': [('id', '=', self.test_contact_b.id)],
+            'mailing_type': 'mail',
+            'subject': 'Test',
+        })
+        test_mailing.action_send_mail()
+        mail = self.env['mail.mail'].sudo().search([('mailing_id', '=', test_mailing.id)])
+        self.assertEqual(mail.state, 'outgoing')
+
+        admin_env = self.env(user=self.user_admin, context={'allowed_company_ids': self.company_admin.ids})
+        self.assertFalse(self.test_contact_b.with_env(admin_env).has_access('read'))
+        self.env.invalidate_all()  # queue sends with a cold cache, as it commits after each email
+        with self.mock_mail_gateway(mail_unlink_sent=False):
+            mail.with_env(admin_env).send()
+        self.assertEqual(mail.state, 'sent')
+        email = self._find_sent_email_wemail(self.test_contact_b.email_formatted)
+        self.assertIn(f'http://website-b.test/mailing/{test_mailing.id}/confirm_unsubscribe', email['body'])
+        self.assertIn('http://website-b.test/mail/track/', email['body'])
+
 
 @tagged('mass_mailing', 'post_install', '-at_install')
 class TestWebsiteMassMailingControllers(WebsiteMassMailingMultiCompanyCommon, MassMailCommon, HttpCase):

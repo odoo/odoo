@@ -727,12 +727,16 @@ class MailMail(models.Model):
                 are possible
             :return: True
         """
+        # Access is checked when splitting emails (read). Then they are throttled,
+        # sent and post-processed as sudo, as the queue does: sending should not
+        # depend on access to messages, documents or recipients (record rules
+        # would e.g. silently filter out recipients of other companies).
         for mail_server_id, alias_domain_id, smtp_from, batch_ids in self._split_by_mail_configuration():
             mail_server = self.env["ir.mail_server"].browse(mail_server_id)
 
             if mail_server and mail_server.owner_user_id:
                 # Throttle the sending that use personal mail servers
-                batch_ids = self.browse(batch_ids)._split_by_delayed_batch(mail_server).ids
+                batch_ids = self.browse(batch_ids).sudo()._split_by_delayed_batch(mail_server).ids
                 if not batch_ids:
                     continue
 
@@ -745,11 +749,11 @@ class MailMail(models.Model):
                     # exceptions, it is encapsulated into an Odoo MailDeliveryException
                     raise MailDeliveryException(_('Unable to connect to SMTP Server'), exc)
                 else:
-                    batch = self.browse(batch_ids)
+                    batch = self.browse(batch_ids).sudo()
                     batch.write({'state': 'exception', 'failure_reason': tools.exception_to_unicode(exc)})
                     batch._postprocess_sent_message(success_pids=[], success_emails=[], failure_type="mail_smtp")
             else:
-                self.browse(batch_ids)._send(
+                self.browse(batch_ids).sudo()._send(
                     auto_commit=auto_commit,
                     raise_exception=raise_exception,
                     smtp_session=smtp_session,
