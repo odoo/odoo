@@ -11,6 +11,7 @@
                         t-att-title="card.title"
                         class="o_dashboard_card btn flex-grow-1 d-md-flex d-lg-block align-items-md-baseline justify-content-md-center gap-md-1 py-2 px-4 lh-sm"
                         t-att-class="this.getDashboardCardAdditionalClass(card.key)"
+                        t-att-style="this.getDashboardCardStyle(card.key)"
                         t-on-click="this.handleCardClick"
                         t-att-card_name="card.key"
                     >
