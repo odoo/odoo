@@ -27,7 +27,7 @@
                 'd-flex': this.showingActions.isOpen or this.store.useMobileView,
             }">
                 <Dropdown state="this.showingActions" position="'bottom-end'" menuClass="'my-1 ' + this.store.discussDropdownMenuClass(this.ancestors)">
-                    <button class="btn o-discuss-ellipsisButton o-mail-DiscussApp-sidebarBgColor" title="Member Actions"/>
+                    <button class="btn oi o-discuss-ellipsisButton o-mail-DiscussApp-sidebarBgColor" title="Member Actions"/>
                     <t t-set-slot="content">
                         <ActionList actions="this.actions.actionsComputed" dropdown="true"/>
                     </t>
