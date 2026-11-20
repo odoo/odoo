@@ -1,5 +1,10 @@
 import { test, describe, expect, queryOne, click } from "@odoo/hoot";
-import { mountWithCleanup, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    mountWithCleanup,
+    onRpc,
+    patchWithCleanup,
+    contains,
+} from "@web/../tests/web_test_helpers";
 import { PaymentPage } from "@pos_self_order/app/pages/payment_page/payment_page";
 import { setupSelfPosEnv, getFilledSelfOrder } from "../utils";
 import { definePosSelfModels } from "../data/generate_model_definitions";
@@ -108,8 +113,7 @@ const clickPaymentMethod = async (paymentMethod) => {
 };
 
 const clickBackButton = async () => {
-    const backButton = queryOne(`button:text(Back)`);
-    await click(backButton);
+    await contains("button:contains('Back')").click();
 };
 
 describe("startPayment", () => {
