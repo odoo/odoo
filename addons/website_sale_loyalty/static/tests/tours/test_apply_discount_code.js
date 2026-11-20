@@ -12,11 +12,11 @@ registry.category("web_tour.tours").add('website_sale_loyalty.apply_discount_cod
         ...submitCouponCode('12345'),
         {
             content: 'check reward',
-            trigger: '.alert:contains("10% on Super Chair")',
+            trigger: 'form[name=claim_reward]:contains("10% on Super Chair")',
         },
         {
             content: 'claim reward',
-            trigger: '.alert:contains("10% on Super Chair") .btn:contains("Claim")',
+            trigger: 'form[name=claim_reward]:contains("10% on Super Chair") .btn:contains("Choose")',
             run: "click",
             expectUnloadPage: true,
         },
