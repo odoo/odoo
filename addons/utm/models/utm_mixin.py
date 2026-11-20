@@ -103,7 +103,11 @@ class UtmMixin(models.AbstractModel):
                 [('id', 'not in', skip_record_ids)],
                 search_domain
             ])
-        existing_names = {vals['name'] for vals in self.env[model_name].search_read(search_domain, ['name'])}
+        # Archived records keep their name and the unique constraint still applies to them
+        existing_names = {
+            vals['name']
+            for vals in self.env[model_name].with_context(active_test=False).search_read(search_domain, ['name'])
+        }
 
         # Counter for each names, based on the names list given in argument
         # and the record names in database
