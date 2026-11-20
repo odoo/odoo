@@ -177,3 +177,72 @@ class TestFECExport(AccountTestInvoicingCommon):
             f'MISC|Miscellaneous Operations|MISC/2020/06/0001|20200601|121000|Account Receivable|{self.partner_a.id}|partner_a|-|20200601|partner_a - MISC/2020/06/0001| 000000000000050,00|0,00|||20200601| 000000000000050,00|USD\r\n'
             'MISC|Miscellaneous Operations|MISC/2020/06/0001|20200601|400000|Product Sales|||-|20200601|MISC/2020/06/0001|0,00| 000000000000050,00|||20200601|-000000000000050,00|USD'
         )
+
+
+@tagged('post_install_l10n', 'post_install', '-at_install')
+class TestFECExportFR(AccountTestInvoicingCommon):
+    @classmethod
+    @AccountTestInvoicingCommon.setup_country('fr')
+    def setUpClass(self):
+        super().setUpClass()
+
+    def test_fec_foreign_currency_mismatch_amount_currency_and_currency_id(self):
+        """According to the law of France, the absence of an amount should lead to an absence
+        of the currency. Both columns in the FEC must be either empty of filled.
+        https://bofip.impots.gouv.fr/bofip/9028-PGP.html/identifiant%3DBOI-CF-IOR-60-40-20-20170607#III._Donnees_devant_figurer_12
+        """
+        # 0. Set up dates
+        dates = {
+            "january-start": '2026-01-01',
+            "invoice-date": '2026-01-10',
+            "statement-date": '2026-01-15',
+            "january-end": '2026-01-31',
+        }
+        # 1. Set up exchange rates
+        usd = self.setup_other_currency('USD', rates=[
+            (dates["invoice-date"], 1),
+            (dates["statement-date"], 0.5),
+        ])
+        # 2. Create an invoice in USD (INV)
+        invoice = self._create_invoice(
+            invoice_date=dates["invoice-date"],
+            currency_id=usd,
+            invoice_line_ids=[
+                self._prepare_invoice_line(price_unit=100, tax_ids=self.env['account.tax']),
+            ],
+            post=True,
+        )
+        invoice_receivable_line = invoice.line_ids.filtered(lambda line: line.display_type == 'payment_term')
+        # 3. Create a bank statement line (BNK)
+        statement_line = self.env['account.bank.statement.line'].create({
+            'journal_id': self.company_data['default_journal_bank'].id,
+            'amount': 200,
+            'foreign_currency_id': usd.id,
+            'amount_currency': 100.0,
+            'date': dates["statement-date"],
+            'payment_ref': invoice.name,
+            'partner_id': self.partner_a.id,
+        })
+        # 4. Reconcile (EXCH)
+        _, statement_suspense_line, _ = statement_line._seek_for_lines()
+        statement_suspense_line.account_id = invoice_receivable_line.account_id
+        (statement_suspense_line + invoice_receivable_line).reconcile()
+        self.assertTrue(statement_line.is_reconciled)
+        self.assertEqual(invoice.payment_state, 'paid')
+        full_reconcile_id = invoice_receivable_line.full_reconcile_id.id
+        # 5. Export the FEC
+        fec_export = self.env['l10n_fr.fec.export.wizard'].create({
+            'date_from': dates["january-start"],
+            'date_to': dates["january-end"],
+        })
+        result = fec_export.with_context(fec_test_mode=True).generate_fec()
+        self.assertEqual(
+            b''.join(result['file_content']).decode(),
+            'JournalCode|JournalLib|EcritureNum|EcritureDate|CompteNum|CompteLib|CompAuxNum|CompAuxLib|PieceRef|PieceDate|EcritureLib|Debit|Credit|EcritureLet|DateLet|ValidDate|Montantdevise|Idevise\r\n'
+            'INV|Sales|INV/2026/00001|20260110|707000|Sales of goods|||-|20260110|INV/2026/00001|0,00| 000000000000100,00|||20260110|-000000000000100,00|USD\r\n'
+            f'INV|Sales|INV/2026/00001|20260110|411100|Customers - Sales of goods or services|{self.partner_a.id}|partner_a|-|20260110|INV/2026/00001| 000000000000100,00|0,00|{full_reconcile_id}|20261116|20260110| 000000000000100,00|USD\r\n'
+            'BNK1|Bank|BNK1/2026/00001|20260115|512001|Bank|||-|20260115|INV/2026/00001| 000000000000200,00|0,00|||20260115| 000000000000200,00|EUR\r\n'
+            f'BNK1|Bank|BNK1/2026/00001|20260115|411100|Customers - Sales of goods or services|{self.partner_a.id}|partner_a|-|20260115|INV/2026/00001|0,00| 000000000000200,00|{full_reconcile_id}|20261116|20260115|-000000000000100,00|USD\r\n'
+            f'EXCH|Exchange Difference|EXCH/2026/01/0001|20260131|411100|Customers - Sales of goods or services|{self.partner_a.id}|partner_a|-|20260131|Currency exchange rate difference| 000000000000100,00|0,00|{full_reconcile_id}|20261116|20260131||\r\n'
+            'EXCH|Exchange Difference|EXCH/2026/01/0001|20260131|766000|Exchange gains|||-|20260131|Currency exchange rate difference|0,00| 000000000000100,00|||20260131||',
+        )
