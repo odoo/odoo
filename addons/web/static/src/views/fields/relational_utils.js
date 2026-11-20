@@ -919,6 +919,7 @@ export function useOpenX2ManyRecord({
     saveRecord,
     isMany2Many,
     getAddContext,
+    position,
 }) {
     const viewService = useService("view");
     const ui = useService("ui");
@@ -965,6 +966,7 @@ export function useOpenX2ManyRecord({
         } else {
             params.context = makeContext([list.context, context]);
             params.withoutParent = isMany2Many;
+            params.position = position;
         }
         record = await list.extendRecord(params, record);
 
@@ -1027,7 +1029,7 @@ export function useOpenX2ManyRecord({
     };
 }
 
-export function useX2ManyCrud(getList, isMany2Many) {
+export function useX2ManyCrud(getList, isMany2Many, position) {
     let saveRecord; // FIXME: isn't this "createRecord" instead?
     if (isMany2Many) {
         saveRecord = async (object) => {
@@ -1041,7 +1043,7 @@ export function useX2ManyCrud(getList, isMany2Many) {
             }
         };
     } else {
-        saveRecord = async (record) => getList().validateExtendedRecord(record);
+        saveRecord = async (record) => getList().validateExtendedRecord(record, position);
     }
 
     const updateRecord = async (record) => {
