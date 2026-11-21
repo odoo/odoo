@@ -139,7 +139,7 @@ class RatingRating(models.Model):
 
     def unlink(self):
         # OPW-2181568: Delete the chatter message too
-        self.env['mail.message'].search([('rating_ids', 'in', self.ids)]).unlink()
+        self.message_id._filtered_access("read").unlink()
         return super().unlink()
 
     def _find_parent_data(self, values):

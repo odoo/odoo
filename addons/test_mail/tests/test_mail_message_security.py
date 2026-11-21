@@ -2,10 +2,11 @@ from markupsafe import Markup
 from unittest.mock import patch
 
 from odoo import SUPERUSER_ID
+from odoo.addons.mail.models import mail_message as mail_message_module
 from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.test_mail.models.mail_test_access import MailTestAccess
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
 from odoo.tools import mute_logger
 from odoo.tests import HttpCase, tagged
@@ -841,6 +842,11 @@ class TestMailMessageAccess(MessageAccessCommon):
             subtype_id=self.ref('mail.mt_comment'),
         ))
 
+        self.patch(
+            mail_message_module,
+            "MAX_SEARCH_LIMIT",
+            self.env["mail.message"].search_count([("subject", "like", "_ZTest")]) + 1,
+        )
         for (test_user, add_domain), exp_messages in zip([
             (self.user_public, []),
             (self.user_portal, []),
@@ -859,7 +865,11 @@ class TestMailMessageAccess(MessageAccessCommon):
         ]):
             with self.subTest(test_user=test_user.name, add_domain=add_domain):
                 self.env.invalidate_all()
-                domain = [('subject', 'like', '_ZTest')] + add_domain
+                domain = [
+                    ("model", "in", [False, "mail.test.access"]),
+                    ("subject", "like", "_ZTest"),
+                    *add_domain,
+                ]
                 self.assertEqual(self.env['mail.message'].with_user(test_user).search(domain), exp_messages)
 
     def test_search_customized(self):
@@ -878,14 +888,21 @@ class TestMailMessageAccess(MessageAccessCommon):
                 )
                 messages_all += new.sudo()
 
+        self.patch(mail_message_module, "MAX_SEARCH_LIMIT", len(messages_all) + 1)
         found_emp = self.env['mail.message'].with_user(self.user_employee).search([
-            ('body', 'ilike', 'AnchorForSearch')
+            ('model', '=', 'mail.test.access.custo'),
+            ('body', 'ilike', 'AnchorForSearch'),
         ])
         self.assertEqual(found_emp, messages_all)
         found_por = self.env['mail.message'].with_user(self.user_portal).search([
-            ('body', 'ilike', 'AnchorForSearch')
+            ('model', '=', 'mail.test.access.custo'),
+            ('body', 'ilike', 'AnchorForSearch'),
         ])
         self.assertEqual(found_por, messages_all)
+        with self.assertRaises(UserError):
+            self.env["mail.message"].with_user(self.user_employee).search(
+                [("body", "ilike", "AnchorForSearch")]
+            )
 
         # lock -> locked records need 'write' access, as defined in '_get_mail_message_access'
         # hence messages are out of search, symmetrical to reading therm
@@ -893,12 +910,14 @@ class TestMailMessageAccess(MessageAccessCommon):
         records[2].flush_recordset()
         self.env.transaction.invalidate_access_cache()
         found_emp = self.env['mail.message'].with_user(self.user_employee).search([
-            ('body', 'ilike', 'AnchorForSearch')
+            ('model', '=', 'mail.test.access.custo'),
+            ('body', 'ilike', 'AnchorForSearch'),
         ])
         self.assertEqual(found_emp, messages_all.filtered(lambda m: m.res_id != records[2].id), 'Should filter like read')
         found_emp.read(['subject'])
         found_por = self.env['mail.message'].with_user(self.user_portal).search([
-            ('body', 'ilike', 'AnchorForSearch')
+            ('model', '=', 'mail.test.access.custo'),
+            ('body', 'ilike', 'AnchorForSearch'),
         ])
         self.assertEqual(found_por, messages_all.filtered(lambda m: m.res_id != records[2].id), 'Should filter like read')
         found_por.read(['subject'])
