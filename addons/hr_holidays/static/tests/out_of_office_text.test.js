@@ -13,7 +13,7 @@ import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer"
 import { defineHrHolidaysModels } from "@hr_holidays/../tests/hr_holidays_test_helpers";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { press, waitFor } from "@odoo/hoot-dom";
-import { mockDate } from "@odoo/hoot-mock";
+import { mockDate, mockTimeZone } from "@odoo/hoot-mock";
 
 describe.current.tags("desktop");
 defineHrHolidaysModels();
@@ -107,6 +107,24 @@ test("Discuss Sidebar shows out of office indication", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-NotificationItem .text-warning", { text: "Back on Apr 11" });
+});
+
+test("Show 'back at' when back later today", async () => {
+    mockDate("2025-04-08 10:00:00");
+    mockTimeZone("Asia/Kolkata");
+    const pyEnv = await startServer();
+    pyEnv["hr.employee"].create({
+        user_id: serverState.userId,
+        leave_back_datetime: "2025-04-08 12:00:00",
+        leave_date_to: "2025-04-08",
+    });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
+        channel_type: "chat",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-NotificationItem .text-warning", { text: "Back at 5:30 PM" });
 });
 
 test("CTRL+K command shows out of office indication", async () => {
