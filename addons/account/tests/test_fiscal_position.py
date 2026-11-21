@@ -218,6 +218,15 @@ class TestFiscalPosition(common.TransactionCase):
             'name': 'US NO VAT',
             'country_id': self.us.id,
         })
+        partner_fr_vat = self.env['res.partner'].create({
+            'name': 'FR VAT',
+            'vat': 'FR23334175221',
+            'country_id': self.fr.id,
+        })
+        partner_fr_no_vat = self.env['res.partner'].create({
+            'name': 'FR NO VAT',
+            'country_id': self.fr.id,
+        })
 
         # Case : 1
         # Billing (VAT/country) : BE/BE
@@ -271,6 +280,42 @@ class TestFiscalPosition(common.TransactionCase):
         self.assertEqual(
             self.env['account.fiscal.position']._get_fiscal_position(partner_us_no_vat, partner_us_no_vat),
             fp_eu_extra
+        )
+
+        # Case : 7
+        # Billing (VAT/country) : FR/FR
+        # Delivery (VAT/country) : FR/FR
+        # Expected FP : Régime Intra-Communautaire
+        self.assertEqual(
+            self.env['account.fiscal.position']._get_fiscal_position(partner_fr_vat, partner_fr_vat),
+            fp_eu_intra
+        )
+
+        # Case : 8
+        # Billing (VAT/country) : FR/FR
+        # Delivery (VAT/country) : None/FR
+        # Expected FP : Régime Intra-Communautaire
+        self.assertEqual(
+            self.env['account.fiscal.position']._get_fiscal_position(partner_fr_vat, partner_fr_no_vat),
+            fp_eu_intra
+        )
+
+        # Case : 9
+        # Billing (VAT/country) : None/FR
+        # Delivery (VAT/country) : FR/FR
+        # Expected FP : EU privé
+        self.assertEqual(
+            self.env['account.fiscal.position']._get_fiscal_position(partner_fr_no_vat, partner_fr_vat),
+            fp_eu_priv
+        )
+
+        # Case : 10
+        # Billing (VAT/country) : None/FR
+        # Delivery (VAT/country) : None/FR
+        # Expected FP : EU privé
+        self.assertEqual(
+            self.env['account.fiscal.position']._get_fiscal_position(partner_fr_no_vat, partner_fr_no_vat),
+            fp_eu_priv
         )
 
     def test_fiscal_position_constraint(self):
