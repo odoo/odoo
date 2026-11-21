@@ -8,6 +8,7 @@ from . import hr_user_work_entry_employee
 from . import resource_calendar
 from . import resource_calendar_attendance
 from . import resource_calendar_leaves
+from . import resource_resource
 from . import hr_employee
 from . import hr_version
 from . import res_config_settings
