@@ -77,7 +77,7 @@ class ProjectProject(models.Model):
         )
         timesheet_time_dict = {project.id: unit_amount_sum for project, unit_amount_sum in timesheets_read_group}
         for project in self:
-            project.effective_hours = round(timesheet_time_dict.get(project.id, 0.0), 2)
+            project.effective_hours = float_round(timesheet_time_dict.get(project.id, 0.0), precision_digits=2)
             project.remaining_hours = project.allocated_hours - project.effective_hours
             project.is_project_overtime = project.remaining_hours < 0
 
@@ -241,7 +241,7 @@ class ProjectProject(models.Model):
     def _convert_project_uom_to_timesheet_encode_uom(self, time):
         uom_from = self.company_id.project_time_mode_id
         uom_to = self.env.company.timesheet_encode_uom_id
-        return round(uom_from._compute_quantity(time, uom_to, raise_if_failure=False), 2)
+        return float_round(uom_from._compute_quantity(time, uom_to, raise_if_failure=False), precision_digits=2)
 
     def action_project_timesheets(self):
         action = self.env['ir.actions.act_window']._for_xml_id('hr_timesheet.act_hr_timesheet_line_by_project')
