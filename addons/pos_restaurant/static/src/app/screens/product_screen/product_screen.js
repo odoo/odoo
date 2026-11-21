@@ -77,10 +77,4 @@ patch(ProductScreen.prototype, {
         const res = this.pos.findTable(buffer);
         this.state.isValidBuffer = Boolean(res);
     },
-    async addProductToOrder(product) {
-        const allocation = this.pos.autoCourseAllocation(product);
-        const result = await super.addProductToOrder(product);
-        this.pos.cleanAutoCourseAllocation(result, allocation);
-        return result;
-    },
 });
