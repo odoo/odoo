@@ -531,6 +531,13 @@ export class Message extends Record {
         this.notification_ids.filter((notification) => notification.isFailure)
     );
 
+    /** @param {number} partnerId */
+    getPartnerNotification(partnerId) {
+        return this.notification_ids.find(
+            (notification) => notification.res_partner_id?.id === partnerId
+        );
+    }
+
     get scheduledDateSimple() {
         return this.scheduledDatetime.toLocaleString(DateTime.TIME_SIMPLE, {
             locale: user.lang,
