@@ -71,6 +71,7 @@ class AccountMove(models.Model):
         real_invoices = set(other_so_lines.invoice_lines.move_id)
         for so_dpl in downpayment_lines:
             so_dpl.price_unit = so_dpl._get_downpayment_line_price_unit(real_invoices)
+            so_dpl.discount = so_dpl._get_downpayment_line_discount(real_invoices)
             so_dpl.tax_id = so_dpl.invoice_lines.tax_ids
 
         return res
@@ -93,6 +94,7 @@ class AccountMove(models.Model):
         real_invoices = set(other_so_lines.invoice_lines.move_id)
         for so_dpl in downpayment_lines:
             so_dpl.price_unit = so_dpl._get_downpayment_line_price_unit(real_invoices)
+            so_dpl.discount = so_dpl._get_downpayment_line_discount(real_invoices)
 
         return res
 

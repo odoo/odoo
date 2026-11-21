@@ -1505,11 +1505,28 @@ class SaleOrderLine(models.Model):
             })
 
     def _get_downpayment_line_price_unit(self, invoices):
+        # the order line mirrors a single discount, so a line charged with a different one brings
+        # its price net of it and the order still deducts what the down payments charged
+        discount = self._get_downpayment_line_discount(invoices)
         return sum(
-            l.price_unit if l.move_id.move_type == 'out_invoice' else -l.price_unit
+            (l.price_unit if l.discount == discount else l.price_unit * (1 - l.discount / 100))
+            * (1 if l.move_id.move_type == 'out_invoice' else -1)
             for l in self.invoice_lines
             if l.move_id.state == 'posted' and l.move_id not in invoices  # don't recompute with the final invoice
         )
+
+    def _get_downpayment_line_discount(self, invoices):
+        """Return the discount the down payment invoices charged, to mirror it on the order line.
+
+        The order line holds a single discount, so it can only mirror one the down payment
+        invoice lines share; otherwise the price unit carries the net amount.
+        """
+        discounts = {
+            l.discount
+            for l in self.invoice_lines
+            if l.move_id.state == 'posted' and l.move_id not in invoices  # don't recompute with the final invoice
+        }
+        return discounts.pop() if len(discounts) == 1 else 0.0
 
     #=== CORE METHODS OVERRIDES ===#
 
