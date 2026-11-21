@@ -71,6 +71,54 @@ class TestVatNumbers(TransactionCase):
         with self.assertRaises(ValidationError):
             test_partner.write({'vat': "136695978"})
 
+<<<<<<< 2002292336cd8368fb085920070d010c58044093:odoo/addons/base/tests/test_vat_numbers.py
+||||||| 532869dbbd88a1a2797e43bad3f36c89f8a69cfe:addons/base_vat/tests/test_vat_numbers.py
+    def test_no_vies_revalidation_when_creating_company_from_contact(self):
+        # Test that we don't revalidate the VAT when create a company from a contact where it's already validated
+        self.env.user.company_id.vat_check_vies = True
+        with patch('odoo.addons.base_vat.models.res_partner.ResPartner._check_vies_iap', TestStructure._check_vies_iap):
+            partner = self.env["res.partner"].create({
+                'name': 'Dummy Partner',
+                'company_name': 'My Company',
+                'country_id': self.env.ref("base.be").id,
+            })
+            partner.vat = 'BE0477472701'
+            self.assertEqual(partner.vies_valid, True)
+
+        with patch('odoo.addons.base_vat.models.res_partner.ResPartner._check_vies_iap',
+                   side_effect=Exception('should not call _check_vies_iap()')):
+            partner.create_company()
+            self.assertEqual(partner.vies_valid, True)
+            self.assertEqual(partner.parent_id.name, 'My Company')
+            self.assertEqual(partner.parent_id.vies_valid, True)
+
+=======
+    def test_no_vies_revalidation_when_creating_company_from_contact(self):
+        # Test that we don't revalidate the VAT when create a company from a contact where it's already validated
+        self.env.user.company_id.vat_check_vies = True
+        with patch('odoo.addons.base_vat.models.res_partner.ResPartner._check_vies_iap', TestStructure._check_vies_iap):
+            partner = self.env["res.partner"].create({
+                'name': 'Dummy Partner',
+                'company_name': 'My Company',
+                'country_id': self.env.ref("base.be").id,
+            })
+            partner.vat = 'BE0477472701'
+            self.assertEqual(partner.vies_valid, True)
+
+        with patch('odoo.addons.base_vat.models.res_partner.ResPartner._check_vies_iap',
+                   side_effect=Exception('should not call _check_vies_iap()')):
+            partner.create_company()
+            self.assertEqual(partner.vies_valid, True)
+            self.assertEqual(partner.parent_id.name, 'My Company')
+            self.assertEqual(partner.parent_id.vies_valid, True)
+
+    def test_vies_valid_propagates_to_children(self):
+        company = self.env['res.partner'].create({'name': 'Company', 'vat': 'BE0477472701'})
+        contact = self.env['res.partner'].create({'name': 'Contact', 'parent_id': company.id})
+        company.vies_valid = True
+        self.assertTrue(contact.vies_valid)
+
+>>>>>>> 4b691d2d925a221ccfe4c95e6869f07b2092d17f:addons/base_vat/tests/test_vat_numbers.py
     def test_rut_uy(self):
         test_partner = self.env["res.partner"].create({"name": "UY Company", "country_id": self.env.ref("base.uy").id})
         # Set a valid Number
