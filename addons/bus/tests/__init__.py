@@ -13,4 +13,5 @@ from . import (
     test_websocket_dispatching,
     test_websocket_rate_limiting,
     test_websocket_timeouts,
+    test_websocket_update_subscriptions,
 )
