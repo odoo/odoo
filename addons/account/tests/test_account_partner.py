@@ -186,3 +186,12 @@ class TestAccountPartner(AccountTestInvoicingCommon):
             'partner_id': partner.id,
             'partner_bank_id': bank_account.id,
         })
+
+    def test_duplicate_multiple_uz_partners(self):
+        uz = self.env.ref('base.uz')
+        partners = self.env['res.partner'].create([
+            {'name': 'UZ Company', 'is_company': True, 'country_id': uz.id, 'vat': '123456789'},
+            {'name': 'UZ Company 2', 'is_company': True, 'country_id': uz.id, 'vat': '987654321'},
+        ])
+        duplicate_partners = partners.copy()
+        self.assertEqual(len(duplicate_partners), 2)
