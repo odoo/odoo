@@ -17,6 +17,12 @@ class TestArManual(common.TestArCommon):
         cls.partner = cls.res_partner_adhoc
         cls._create_test_invoices_like_demo()
 
+    def test_journal_pos_number_not_copied(self):
+        """ The ARCA POS number is assigned by ARCA to a single POS: it must not be silently reused when duplicating
+        a journal. Duplicating must not fail, the copies are created without POS number until the user sets one """
+        copies = self.journal.copy() | self.journal.copy()
+        self.assertEqual(copies.mapped('l10n_ar_afip_pos_number'), [0, 0])
+
     def test_01_create_invoice(self):
         """ Create and validate an invoice for a Responsable Inscripto
 
