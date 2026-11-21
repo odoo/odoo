@@ -29,6 +29,7 @@ class PdpRegistration(models.TransientModel):
         compute="_compute_pdp_identifier",
         store=True,
         readonly=False,
+        clean=lambda identifier: identifier and ''.join(char for char in identifier if char == '_' or char.isalnum()),
         help="The identifier starts with the SIREN, the part after the SIREN is optional. The expected format of the identifier is: SIREN, SIREN_SIRET, SIREN_SIRET_CodeRoutage or SIREN_SuffixeAdressage",
     )
     # DEPRECATED - was for the pre-prod phase
@@ -81,12 +82,6 @@ class PdpRegistration(models.TransientModel):
     # -------------------------------------------------------------------------
     # ONCHANGE METHODS
     # -------------------------------------------------------------------------
-
-    @api.onchange('pdp_identifier')
-    def _onchange_pdp_identifier(self):
-        for wizard in self:
-            if wizard.pdp_identifier:
-                wizard.pdp_identifier = ''.join(char for char in wizard.pdp_identifier if char == '_' or char.isalnum())
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS

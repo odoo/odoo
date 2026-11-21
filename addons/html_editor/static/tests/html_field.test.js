@@ -793,6 +793,36 @@ test("edit an html field during an onchange", async () => {
     expect("[name='txt'] .odoo-editor-editable").toHaveInnerHTML("<p>Yop Hello first </p>");
 });
 
+test("onchange modifying the edited html field updates the editor", async () => {
+    Partner._onChanges = {
+        txt(record) {
+            record.txt = record.txt.replace("colour", "color");
+        },
+    };
+    onRpc("partner", "onchange", ({ args }) => {
+        expect.step(`onchange: ${args[1].txt}`);
+    });
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="name"/>
+                <field name="txt" widget="html"/>
+            </form>`,
+    });
+
+    setSelectionInHtmlField();
+    await insertText(htmlEditor, "colour ");
+    expect("[name='txt'] .odoo-editor-editable").toHaveInnerHTML("<p>colour first </p>");
+
+    await contains("[name='name'] input").click();
+    await animationFrame();
+    expect.verifySteps(["onchange: <p>colour first</p>"]);
+    expect("[name='txt'] .odoo-editor-editable").toHaveInnerHTML("<p>color first</p>");
+});
+
 test("click on next/previous page", async () => {
     await mountView({
         type: "form",

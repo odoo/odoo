@@ -119,19 +119,7 @@ export class HtmlField extends Component {
             // Reset Wysiwyg when we discard or onchange value
             const newValue = fixInvalidHTML(record.data[this.props.name]);
             if (!this.isDirty) {
-                let value;
-                this.state.forceCodeView = !canRenderAsHTML(newValue);
-                if (this.state.forceCodeView) {
-                    value = newValue;
-                    this.state.showCodeView = true;
-                } else {
-                    value = normalizeHTML(newValue, this.clearElementToCompare.bind(this));
-                }
-                if (this.lastValue !== value) {
-                    this.state.key++;
-                    this.state.containsComplexHTML = computeContainsComplexHTML(newValue);
-                    this.lastValue = value;
-                }
+                this.resetValue(newValue);
             }
             if (key === this.state.key && record.resId !== this.props.record.resId) {
                 // Ensure key is reset for 2 different records with identical html values
@@ -198,6 +186,27 @@ export class HtmlField extends Component {
         return this.props.record.isFieldTranslatable(this.props.name);
     }
 
+    /**
+     * Reset the editor with the given value if it differs from the last one.
+     *
+     * @param {string} newValue
+     */
+    resetValue(newValue) {
+        let value;
+        this.state.forceCodeView = !canRenderAsHTML(newValue);
+        if (this.state.forceCodeView) {
+            value = newValue;
+            this.state.showCodeView = true;
+        } else {
+            value = normalizeHTML(newValue, this.clearElementToCompare.bind(this));
+        }
+        if (this.lastValue !== value) {
+            this.state.key++;
+            this.state.containsComplexHTML = computeContainsComplexHTML(newValue);
+            this.lastValue = value;
+        }
+    }
+
     clearElementToCompare(element) {
         if (this.props.isCollaborative) {
             stripHistoryIds(element);
@@ -217,6 +226,10 @@ export class HtmlField extends Component {
             () => {
                 if (this.lastChangeId === changeId) {
                     this.isDirty = false;
+                    // the update may have modified the value (e.g. an onchange
+                    // returning its cleaned value), which the record observer
+                    // ignored while the field was dirty
+                    this.resetValue(fixInvalidHTML(this.props.record.data[this.props.name]));
                 }
             },
             () => {}

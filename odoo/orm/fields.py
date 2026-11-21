@@ -48,6 +48,11 @@ PYTHON_INEQUALITY_OPERATOR = {'<': pyoperator.lt, '>': pyoperator.gt, '<=': pyop
 _logger = logging.getLogger('odoo.fields')
 
 
+def _default_false(model: BaseModel) -> typing.Literal[False]:
+    """ Empty default of fields whose ``clean`` changes the empty value. """
+    return False
+
+
 def resolve_mro(model: BaseModel, name: str, predicate) -> list[typing.Any]:
     """ Return the list of successively overridden values of attribute ``name``
         in mro order on ``model`` that satisfy ``predicate``.  Model registry
@@ -155,6 +160,24 @@ class Field[T, C]:
 
     :param bool default_export_compatible: whether the field must be exported
         by default in an import-compatible export
+
+    :param callable clean: a function ``record_value -> write_value`` that
+        returns the canonical form of a value. It is applied to the values
+        assigned to the field by create, write, compute, onchange or default.
+
+        The function receives the value in record format, before validation.
+        It must not modify its argument, must be idempotent (a value may be
+        cleaned more than once), and must support the empty value (``False``,
+        or ``0`` on numeric fields).
+
+        Supported on char, text, html, integer, float, monetary, date,
+        datetime and json fields; other field types raise an error at setup.
+        On translated fields, each translation is cleaned separately. See
+        :class:`~odoo.fields.Html` for the specifics of html fields.
+
+        .. code-block:: python
+
+            vat = fields.Char(clean=lambda vat: vat and vat.replace(' ', '').upper())
 
     :param str search: name of a method that implements search on the field.
         The method takes an operator and value. Basic domain optimizations are
@@ -276,6 +299,8 @@ class Field[T, C]:
     # Database column type (ident, spec) for non-company-dependent fields.
     # Company-dependent fields are stored as jsonb (see column_type_ident).
     _column_type: tuple[str, str] | None = None
+    # Whether the field type supports parameter ``clean``; field types opt in.
+    _clean_supported: bool = False
 
     _args__: dict[str, typing.Any] | None = None  # the parameters given to __init__()
     _module: str | None = None          # the field's module name
@@ -305,6 +330,7 @@ class Field[T, C]:
     compute_sql: str | Callable[[BaseModel, TableSQL], SQL] | None = None      # compute_sql(model, alias, query) that gets the SQL for the field
     inverse: str | Callable[[BaseModel], None] | None = None  # inverse(recs) inverses field on recs
     search: str | Callable[[BaseModel, str, typing.Any], DomainType] | None = None  # search(recs, operator, value) searches on self
+    clean: Callable[[T], T] | None = None  # clean(value) returns the canonical form of value
     related: str | None = None          # sequence of field names, for related fields
     company_dependent: bool = False     # whether ``self`` is company-dependent (property field)
     default: Callable[[BaseModel], T] | T | None = None  # default(recs) returns the default value
@@ -561,6 +587,8 @@ class Field[T, C]:
 
     def prepare_setup(self) -> None:
         self._setup_done = False
+        # may depend on attributes determined by setup, like 'clean' on related fields
+        self.__dict__.pop('_must_clean', None)
 
     def setup(self, model: BaseModel) -> None:
         """ Perform the complete setup of a field. """
@@ -638,6 +666,30 @@ class Field[T, C]:
 
     def _setup(self, model: BaseModel) -> None:
         """Implementation of the setup of the field."""
+        if self.clean is not None:
+            if not self._clean_supported:
+                raise TypeError(f"{self}: clean is not supported on {self.type} fields")
+            # A value omitted at creation must be cleaned like an empty value.
+            # When cleaning changes the empty value (False, or 0 on numeric
+            # fields), give the field an empty default, which is cleaned like
+            # any default.  This is not needed on computed and related fields,
+            # whose values are always assigned.
+            empty = self.convert_to_record(None, model)
+            if (
+                self.store and not (self.compute or self.related)
+                and self.clean(empty) != empty
+            ):
+                if self.company_dependent:
+                    # Limitation: no empty default here, because field.default
+                    # takes precedence over ir.default at creation, and would
+                    # replace the fallback by the cleaned empty value.
+                    self._setup_warning(
+                        "company-dependent fields do not support a clean "
+                        f"function that changes the empty value {empty!r}"
+                    )
+                elif self.default is None:
+                    self.default = _default_false
+
         if not self.related:
             return
 
@@ -890,6 +942,7 @@ class Field[T, C]:
     _related_help = property(attrgetter('help'))
     _related_groups = property(attrgetter('groups'))
     _related_aggregator = property(attrgetter('aggregator'))
+    _related_clean = property(attrgetter('clean'))
 
     @functools.cached_property
     def column_type(self) -> tuple[str, str] | None:
@@ -1201,6 +1254,42 @@ class Field[T, C]:
         """
         return False if value is None else value
 
+    @functools.cached_property
+    def _must_clean(self) -> bool:
+        """ Whether the values assigned to the field go through :meth:`_clean_value`. """
+        return self.clean is not None
+
+    def _clean_value(self, value, records):
+        """ Return the cleaned form of ``value`` before it is assigned to
+        ``records``.  This hook is called on the values given to
+        :meth:`write`, :meth:`~odoo.models.BaseModel.create`, and on validated
+        values put in cache (e.g. by onchange), when :attr:`_must_clean`
+        is true.  Cleaning applies parameter ``clean``, and may be extended
+        by field types, e.g. to sanitize html values.  The whole cleaning
+        must be idempotent, as a value may be cleaned more than once.
+
+        :param value: a value in the record format
+        :return: a value in the write format
+        """
+        # empty values are cleaned, too: an omitted value must be cleaned
+        # like an empty value, see _setup()
+        if self.clean is not None:
+            value = self.clean(value)
+        return value
+
+    def convert_to_cleaned_cache(self, value, records, validate=True):
+        """ Convert ``value`` from the ``write`` format to the cache format,
+        and clean it with :meth:`_clean_value` in the record format.
+
+        When ``validate`` is false, the value is not validated, and is only
+        cleaned by parameter ``clean``, without the cleaning specific to the
+        field type, like html sanitization.
+        """
+        if self._must_clean if validate else self.clean is not None:
+            value = self.convert_to_record(self.convert_to_cache(value, records, validate=False), records)
+            value = self._clean_value(value, records) if validate else self.clean(value)
+        return self.convert_to_cache(value, records, validate)
+
     def convert_to_read(self, value: T, record: BaseModel, use_display_name: bool = True) -> typing.Any:
         """ Convert ``value`` from the record format to the format returned by
         method :meth:`BaseModel.read`.
@@ -1260,6 +1349,8 @@ class Field[T, C]:
         if initialize_column and not column and not self.init_storage and self.default:
             value = self.default(model)
             value = self.convert_to_write(value, model)
+            if self._must_clean:
+                value = self.convert_to_cleaned_cache(value, model)
             init_value = self.convert_to_column_insert(value, model)
             initialize_column = init_value is None
 
@@ -1344,6 +1435,8 @@ class Field[T, C]:
             if value is not None and to_compute == 'default':  # we have a default, do not recompute fields
                 to_compute = False
             value = self.convert_to_write(value, model)
+            if self._must_clean:
+                value = self.convert_to_cleaned_cache(value, model)
             value = self.convert_to_column_insert(value, model)
         else:
             value = None
@@ -1708,7 +1801,7 @@ class Field[T, C]:
         records.env.remove_to_compute(self, records)
 
         # discard the records that are not modified
-        cache_value = self.convert_to_cache(value, records)
+        cache_value = self.convert_to_cleaned_cache(value, records)
         records = self._filter_not_equal(records, cache_value)
         if not records:
             return

@@ -39,7 +39,8 @@ class Blueprint(models.Model):
         index=True,
         help="Blueprint to inherit from. Use XPath expressions in definition_xml to modify the parent.",
     )
-    definition_xml = fields.Char("Raw XML Definition", prefetch=DEFINITION_PREFETCH_GROUP)
+    definition_xml = fields.Char("Raw XML Definition", prefetch=DEFINITION_PREFETCH_GROUP,
+                                 clean=lambda definition_xml: definition_xml and xml.ensure_root(definition_xml))
     definition_json = fields.Json("Raw JSON Definition", prefetch=DEFINITION_PREFETCH_GROUP)
     definition = fields.Json(
         string="JSON Definition",
@@ -194,16 +195,7 @@ class Blueprint(models.Model):
             else:
                 blueprint.definition = blueprint.definition_json
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            if definition_xml := vals.get('definition_xml'):
-                vals['definition_xml'] = xml.ensure_root(definition_xml)
-        return super().create(vals_list)
-
     def write(self, vals):
-        if definition_xml := vals.get('definition_xml'):
-            vals['definition_xml'] = xml.ensure_root(definition_xml)
         result = super().write(vals)
         if {'definition_xml', 'definition_json', 'inherit_id'} & vals.keys():
             # Import dependencies live in the raw XML, so the ORM cannot infer

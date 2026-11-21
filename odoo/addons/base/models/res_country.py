@@ -58,7 +58,8 @@ class ResCountry(models.CachedModel):
         string='Country Code',
         size=2,
         required=True,
-        help='The ISO country code in two chars. \nYou can use this field for quick search.')
+        help='The ISO country code in two chars. \nYou can use this field for quick search.',
+        clean=lambda code: code and code.upper())
     address_format = fields.Text(string="Layout in Reports",
         help="Display format to use for addresses belonging to this country.\n\n"
              "You can use python-style string pattern with all the fields of the address "
@@ -139,16 +140,7 @@ class ResCountry(models.CachedModel):
                 return phone_code
         return False
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            if vals.get('code'):
-                vals['code'] = vals['code'].upper()
-        return super().create(vals_list)
-
     def write(self, vals):
-        if vals.get('code'):
-            vals['code'] = vals['code'].upper()
         res = super().write(vals)
         if 'address_view_id' in vals:
             # Changing the address view of the company must invalidate the view cached for res.partner
@@ -194,7 +186,7 @@ class ResCountryGroup(models.Model):
     _description = "Country Group"
 
     name = fields.Char(required=True, translate=True)
-    code = fields.Char(string="Code")
+    code = fields.Char(string="Code", clean=lambda code: code and code.upper())
     country_ids = fields.Many2many('res.country', 'res_country_res_country_group_rel',
                                    'res_country_group_id', 'res_country_id', string='Countries')
 
@@ -202,18 +194,6 @@ class ResCountryGroup(models.Model):
         'unique(code)',
         'The country group code must be unique!',
     )
-
-    def _sanitize_vals(self, vals):
-        if code := vals.get('code'):
-            vals['code'] = code.upper()
-        return vals
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        return super().create([self._sanitize_vals(vals) for vals in vals_list])
-
-    def write(self, vals):
-        return super().write(self._sanitize_vals(vals))
 
 
 class ResCountryState(models.Model):

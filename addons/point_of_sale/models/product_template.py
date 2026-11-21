@@ -3,7 +3,6 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from collections import defaultdict
 from odoo.tools import SQL, is_html_empty, sql
-from odoo.tools.translate import adapt_translated_field_value
 from datetime import date
 from odoo.fields import Domain
 
@@ -38,7 +37,10 @@ class ProductTemplate(models.Model):
         help="Category used in the Point of Sale.")
     public_description = fields.Html(
         string="Product Description",
-        translate=True
+        translate=True,
+        # Clear empty content to avoid side-effects on product page when there
+        # is no content to display anyway.
+        clean=lambda description: '' if description and is_html_empty(description) else description,
     )
     pos_optional_product_ids = fields.Many2many(
         comodel_name='product.template',
@@ -61,16 +63,6 @@ class ProductTemplate(models.Model):
             product_tmpl = self.browse(int(tmpl_id))
             if product_tmpl.exists():
                 product_tmpl.pos_sequence = sequence
-
-    def write(self, vals):
-        # Clear empty public description content to avoid side-effects on product page
-        # when there is no content to display anyway.
-        if (public_description := vals.get('public_description')):
-            vals['public_description'] = adapt_translated_field_value(
-                self.env, self._fields["public_description"], public_description,
-                lambda lang, v: '' if is_html_empty(v) else v,
-            )
-        return super().write(vals)
 
     @api.depends('pos_categ_ids')
     def _compute_color(self):
