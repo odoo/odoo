@@ -1080,6 +1080,64 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             for record in records:
                 self.check_monetary(record, amount, currency, 'multi write(amount)')
 
+    def test_20_monetary_in_company_search(self):
+        """ Test that .in_company property correctly converts and sorts monetary fields using _search """
+        Model = self.env['test_orm.mixed']
+        curr_1 = self.env['res.currency'].create({'name': 'C1', 'symbol': 'C1'})
+        curr_2 = self.env['res.currency'].create({'name': 'C2', 'symbol': 'C2'})
+        curr_3 = self.env['res.currency'].create({'name': 'C3', 'symbol': 'C3'})
+        self.env['res.currency.rate'].create([
+            {'name': '2026-01-01', 'rate': 1.0, 'currency_id': curr_1.id, 'company_id': self.env.company.id},
+            {'name': '2026-01-01', 'rate': 0.5, 'currency_id': curr_2.id, 'company_id': self.env.company.id},
+            {'name': '2026-01-01', 'rate': 2.0, 'currency_id': curr_3.id, 'company_id': self.env.company.id},
+        ])
+        rec1 = Model.create({'currency_id': curr_1.id, 'amount': 100})
+        rec2 = Model.create({'currency_id': curr_2.id, 'amount': 60})
+        rec3 = Model.create({'currency_id': curr_3.id, 'amount': 160})
+        self.env['res.currency']._current_rate_sql(None)
+        with self.assertQueries([
+            """
+            SELECT "res_currency"."id"
+            FROM "res_currency"
+            ORDER BY COALESCE("res_currency"."active", FALSE) DESC, "res_currency"."name"
+            """,
+            """
+            SELECT "res_currency"."id",
+                   COALESCE(
+                       (SELECT "res_currency_rate"."rate"
+                        FROM "res_currency_rate"
+                        WHERE (("res_currency_rate"."company_id" IN %s OR "res_currency_rate"."company_id" IS NULL)
+                          AND "res_currency_rate"."name" <= %s)
+                          AND "res_currency_rate"."currency_id" = "res_currency"."id"
+                        ORDER BY "res_currency_rate"."company_id", "res_currency_rate"."name" DESC
+                        LIMIT %s),
+                       (SELECT "res_currency_rate"."rate"
+                        FROM "res_currency_rate"
+                        WHERE ("res_currency_rate"."company_id" IN %s OR "res_currency_rate"."company_id" IS NULL)
+                          AND "res_currency_rate"."currency_id" = "res_currency"."id"
+                        ORDER BY "res_currency_rate"."company_id", "res_currency_rate"."name" ASC
+                        LIMIT %s),
+                       1.0
+                   )
+            FROM "res_currency"
+            WHERE "res_currency"."id" IN %s
+            """,
+            """
+            SELECT "test_orm_mixed"."id"
+            FROM "test_orm_mixed"
+            WHERE "test_orm_mixed"."id" IN %s
+            ORDER BY ("test_orm_mixed"."amount" / COALESCE((
+                SELECT rate FROM UNNEST(%s, %s) AS v(currency_id, rate)
+                WHERE v.currency_id = "test_orm_mixed"."currency_id"
+            ), 1.0)) ASC
+            """,
+        ]):
+            records = Model.search(
+                [('id', 'in', (rec1 + rec2 + rec3).ids)],
+                order='amount.in_company ASC',
+            )
+        self.assertEqual(records.ids, [rec3.id, rec1.id, rec2.id])
+
     def test_20_monetary_opw_2223134(self):
         """ test monetary fields with cache override """
         model = self.env['test_orm.monetary_order']

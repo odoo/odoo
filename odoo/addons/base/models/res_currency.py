@@ -117,6 +117,28 @@ class ResCurrency(models.Model):
         if self.env['res.company'].search_count([('currency_id', 'in', currencies.ids)], limit=1):
             raise UserError(self.env._("This currency is set on a company and therefore cannot be deactivated."))
 
+    @api.model
+    def _current_rate_sql(self, currency_sql):
+        company = self.env.company
+        today = fields.Date.context_today(self)
+        currencies = self.with_context(active_test=False).search([])
+        all_rates = currencies._get_rates(company, today)
+        company_currency_id = company.currency_id.id
+        company_rate = all_rates.get(company_currency_id, 1.0)
+        sql_rates = {
+            c: r / company_rate
+            for c, r in all_rates.items()
+            if r != company_rate
+        }
+        if not sql_rates:
+            return SQL("1.0")
+        return SQL("""
+            COALESCE((
+                SELECT rate FROM UNNEST(%s, %s) AS v(currency_id, rate)
+                WHERE v.currency_id = %s
+            ), 1.0)
+        """, list(sql_rates.keys()), list(sql_rates.values()), currency_sql)
+
     def _get_rates(self, company, date):
         if not self.ids:
             return {}
