@@ -1,0 +1,11 @@
+.o-discuss-ScreenAnnotationOverlay {
+    /* Lets clicks reach the card (to focus or pin it) until drawing is enabled. */
+    pointer-events: none;
+
+    &.o-isDrawing {
+        pointer-events: auto;
+        cursor: crosshair;
+        /* Keeps a touch drag drawing instead of scrolling the page. */
+        touch-action: none;
+    }
+}
