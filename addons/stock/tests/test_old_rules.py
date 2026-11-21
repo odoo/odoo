@@ -12,7 +12,7 @@ from odoo.addons.stock.tests.common import TestStockCommon
 class TestOldRules(TestStockCommon):
 
     _test_user_groups = (
-        'product.group_product_manager',  # FIXME: use base.group_user
+        'product.group_product_manager',
         'stock.group_stock_user',
     )
 

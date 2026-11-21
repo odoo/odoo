@@ -11,7 +11,7 @@ from odoo import Command, fields
 @tagged('at_install', '-post_install')  # LEGACY at_install Fails in post install
 class TestStockFlow(TestStockCommon):
     _test_user_groups = (
-        'product.group_product_manager',  # FIXME: use base.group_user
+        'product.group_product_manager',
         'stock.group_stock_user',
     )
 
@@ -2736,12 +2736,11 @@ class TestStockFlow(TestStockCommon):
 class TestStockFlowTourPostInstall(TestStockCommon, HttpCase):
 
     _test_user_groups = (
-        'product.group_product_manager',  # FIXME: use base.group_user
+        'stock.group_stock_user',
     )
 
-    _test_user_name = 'Test Product Manager'
+    _test_user_name = 'Test Stock User'
 
-    @users('pauline')  # pauline is the login of the basic stock_user
     def test_basic_stock_flow_with_minimal_access_rights(self):
         """
         Test that a stock user with minimal access rights can open both the
@@ -2782,11 +2781,11 @@ class TestStockFlowTourPostInstall(TestStockCommon, HttpCase):
 class TestStockFlowPostInstall(TestStockCommon):
 
     _test_user_groups = (
-        'product.group_product_manager',  # FIXME: use base.group_user
-        'stock.group_stock_manager',
+        'product.group_product_manager',
+        'stock.group_stock_user',
     )
 
-    _test_user_name = 'Test Product Manager'
+    _test_user_name = 'Test Stock User & Product Manager'
 
     def test_last_delivery_partner_field_on_lot(self):
         partner = self.env['res.partner'].sudo().create({'name': 'Super Partner'})
@@ -2860,7 +2859,7 @@ class TestStockFlowPostInstall(TestStockCommon):
         when changing picking_type_id of a stock.picking, should change the name too
         """
         stock_location_1 = self.stock_location
-        stock_location_2 = stock_location_1.copy()
+        stock_location_2 = stock_location_1.sudo().copy()
         picking_type_1 = self.env['stock.picking.type'].sudo().create({
             'name': 'new_picking_type_1',
             'code': 'internal',
@@ -2898,6 +2897,8 @@ class TestStockFlowPostInstall(TestStockCommon):
         picking.picking_type_id = picking_type_1
         self.assertEqual(picking.name, "PT1/00002")
 
+    # Creating locations requires the Inventory Administrator rights.
+    @users('julie')
     def test_name_create_location(self):
         """
         e.g., from .csv/.xlsx import:

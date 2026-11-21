@@ -1,11 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.fields import Command
-from odoo.tests import HttpCase, tagged
+from odoo.tests import HttpCase, new_test_user, tagged
 
 
 @tagged('-at_install', 'post_install')
 class TestStockReportTour(HttpCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.stock_user = new_test_user(cls.env, login='stock_user', groups='stock.group_stock_user')
 
     def _get_report_url(self):
         return '/odoo/action-stock.product_template_action_product'
@@ -39,7 +44,7 @@ class TestStockReportTour(HttpCase):
         })
         url = self._get_report_url()
 
-        self.start_tour(url, 'test_stock_route_diagram_report', login='admin', timeout=180)
+        self.start_tour(url, 'test_stock_route_diagram_report', login='stock_user', timeout=180)
 
     def test_context_from_warehouse_filter(self):
         """
@@ -62,7 +67,7 @@ class TestStockReportTour(HttpCase):
             'company_id': self.env.user.company_id.id,
         })
 
-        self.start_tour(self._get_report_url(), 'test_context_from_warehouse_filter', login='admin', timeout=180)
+        self.start_tour(self._get_report_url(), 'test_context_from_warehouse_filter', login='stock_user', timeout=180)
 
     def test_forecast_replenishment(self):
         """
@@ -93,4 +98,4 @@ class TestStockReportTour(HttpCase):
             'is_favorite': True,
             'route_ids': [Command.link(lovely_route.id)],
         })
-        self.start_tour(self._get_report_url(), 'test_forecast_replenishment', login='admin', timeout=180)
+        self.start_tour(self._get_report_url(), 'test_forecast_replenishment', login='stock_user', timeout=180)

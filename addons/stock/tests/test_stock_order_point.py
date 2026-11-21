@@ -6,11 +6,11 @@ from odoo.addons.stock.tests.common import TestStockCommon
 @tagged("post_install", "-at_install")
 class TestStockOrderpointActivity(TestStockCommon):
     _test_user_groups = (
-        'product.group_product_manager',  # FIXME: use base.group_user
-        'stock.group_stock_manager',  # FIXME: stock.group_stock_user
+        'product.group_product_manager',
+        'stock.group_stock_user',
     )
 
-    _test_user_name = 'Test Product & Inventory Manager'
+    _test_user_name = 'Test Stock User & Product Manager'
 
     def test_orderpoint_activity_portal_context_leak(self):
 
@@ -23,7 +23,7 @@ class TestStockOrderpointActivity(TestStockCommon):
 
         warehouse_b = self.env["stock.warehouse"].search([("company_id", "=", company_b.id)], limit=1)
         if not warehouse_b:
-            warehouse_b = self.env["stock.warehouse"].create(
+            warehouse_b = self.env["stock.warehouse"].sudo().create(
                 {
                     "name": "Website WH",
                     "code": "WWH",
@@ -52,11 +52,11 @@ class TestStockOrderpointActivity(TestStockCommon):
         )
 
         # Ensure procurement is guaranteed to fail by deactivating matching stock rules
-        self.env["stock.rule"].search(
+        self.env["stock.rule"].sudo().search(
             [("location_dest_id", "=", warehouse_b.lot_stock_id.id)]
         ).write({"active": False})
 
-        orderpoint = self.env["stock.warehouse.orderpoint"].create(
+        orderpoint = self.env["stock.warehouse.orderpoint"].sudo().create(
             {
                 "name": "Failing Routing Rule",
                 "product_id": shared_product.id,
