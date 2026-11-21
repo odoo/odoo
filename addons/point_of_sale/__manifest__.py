@@ -104,8 +104,8 @@
         'web.assets_backend': [
             'point_of_sale/static/src/scss/pos_dashboard.css',
             'point_of_sale/static/src/backend/tours/point_of_sale.js',
-            'point_of_sale/static/src/backend/pos_kanban_view/*',
-            ('remove', 'point_of_sale/static/src/backend/pos_kanban_view/*.dark.css'),
+            'point_of_sale/static/src/backend/pos_onboarding_scenarios/*',
+            ('remove', 'point_of_sale/static/src/backend/pos_onboarding_scenarios/*.dark.css'),
             'point_of_sale/static/src/backend/lna_checklist/*',
             'point_of_sale/static/src/backend/pos_payment_provider_cards/*',
             'point_of_sale/static/src/app/hooks/hooks.js',
@@ -126,7 +126,7 @@
         ],
         "web.assets_web_dark": [
             'point_of_sale/static/src/scss/pos_dashboard.dark.css',
-            'point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.dark.css',
+            'point_of_sale/static/src/backend/pos_onboarding_scenarios/pos_onboarding_scenarios.dark.css',
         ],
         'web.assets_tests': [
             'point_of_sale/static/tests/pos/tours/**/*',

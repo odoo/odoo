@@ -1,14 +1,10 @@
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { registry } from "@web/core/registry";
-import { cookie } from "@web/core/browser/cookie";
-import { kanbanView } from "@web/views/kanban/kanban_view";
-import { onWillStart, useProps, proxy, t } from "@odoo/owl";
-import { KanbanRenderer, kanbanRendererProps } from "@web/views/kanban/kanban_renderer";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
 import { _t } from "@web/core/l10n/translation";
-import { KanbanController } from "@web/views/kanban/kanban_controller";
 
 async function updatePosKanbanViewState(orm, stateObj) {
     const result = await orm
@@ -17,32 +13,24 @@ async function updatePosKanbanViewState(orm, stateObj) {
     Object.assign(stateObj, result);
 }
 
-export class PosKanbanController extends KanbanController {
-    static template = "point_of_sale.PosKanbanController";
+/**
+ * Onboarding scenarios to create a first point of sale, displayed by the help
+ * view of the point of sale dashboard (see `pos_config_view_help`).
+ */
+export class PosOnboardingScenarios extends Component {
+    static template = "point_of_sale.PosOnboardingScenarios";
+
     setup() {
-        super.setup();
         this.orm = useService("orm");
         this.action = useService("action");
-        this.initialPosState = {
+        this.dialog = useService("dialog");
+        this.posState = proxy({
             has_pos_config: true,
             has_chart_template: true,
             is_restaurant_installed: true,
-            show_predefined_scenarios: true,
             is_main_company: true,
-        };
-        onWillStart(() => updatePosKanbanViewState(this.orm, this.initialPosState));
-    }
-}
-
-export class PosKanbanRenderer extends KanbanRenderer {
-    static template = "point_of_sale.PosKanbanRenderer";
-    props = useProps({ ...kanbanRendererProps, initialPosState: t.object() });
-
-    setup() {
-        super.setup();
-        this.orm = useService("orm");
-        this.action = useService("action");
-        this.posState = proxy(this.props.initialPosState);
+        });
+        onWillStart(() => updatePosKanbanViewState(this.orm, this.posState));
         this.loadScenario = useTrackedAsync(
             async ({ functionName, isRestaurant }) =>
                 await this.callWithViewUpdate(async () => {
@@ -68,14 +56,6 @@ export class PosKanbanRenderer extends KanbanRenderer {
         if (this.loadScenario.status == "error") {
             throw this.loadScenario.result;
         }
-    }
-
-    get showPredefinedScenarios() {
-        return this.props.list.count === 0;
-    }
-
-    get isDarkTheme() {
-        return cookie.get("color_scheme") === "dark";
     }
 
     async callWithViewUpdate(func) {
@@ -151,21 +131,8 @@ export class PosKanbanRenderer extends KanbanRenderer {
             iconFile: "retail-icon.svg",
         };
     }
-
-    showTopBorder() {
-        const { model } = this.props.list;
-        return model.hasData();
-    }
-
-    get showNoContentHelper() {
-        return false;
-    }
 }
 
-export const PosKanbanView = {
-    ...kanbanView,
-    Renderer: PosKanbanRenderer,
-    Controller: PosKanbanController,
-};
-
-registry.category("views").add("pos_config_kanban_view", PosKanbanView);
+registry.category("view_widgets").add("pos_onboarding_scenarios", {
+    component: PosOnboardingScenarios,
+});

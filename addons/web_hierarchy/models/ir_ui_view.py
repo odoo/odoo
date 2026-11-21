@@ -8,6 +8,7 @@ HIERARCHY_VALID_ATTRIBUTES = {
     '__validate__',                     # ir.ui.view implementation detail
     'class',
     'js_class',
+    'help_id',
     'string',
     'create',
     'edit',

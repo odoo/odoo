@@ -6,7 +6,7 @@ import { SearchBar } from "@web/search/search_bar/search_bar";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 import { CogMenu } from "@web/search/cog_menu/cog_menu";
 import { Widget } from "@web/views/widgets/widget";
-import { ActionHelper } from "@web/views/action_helper";
+import { ActionHelper } from "@web/views/help/action_helper";
 
 import { Component, signal, t, useProps } from "@odoo/owl";
 
