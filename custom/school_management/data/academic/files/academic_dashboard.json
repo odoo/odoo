@@ -1,0 +1,404 @@
+{
+  "version": "18.5.10",
+  "sheets": [
+    {
+      "id": "sheet1",
+      "name": "Academic Analytics",
+      "colNumber": 9,
+      "rowNumber": 40,
+      "rows": {
+        "0": {
+          "size": 36
+        },
+        "1": {
+          "size": 24
+        },
+        "3": {
+          "size": 28
+        },
+        "4": {
+          "size": 28
+        },
+        "17": {
+          "size": 28
+        },
+        "18": {
+          "size": 28
+        }
+      },
+      "cols": {
+        "0": {
+          "size": 140
+        },
+        "1": {
+          "size": 180
+        },
+        "2": {
+          "size": 200
+        },
+        "3": {
+          "size": 200
+        },
+        "4": {
+          "size": 120
+        },
+        "5": {
+          "size": 120
+        },
+        "6": {
+          "size": 140
+        },
+        "7": {
+          "size": 120
+        }
+      },
+      "merges": [
+        "A1:H1",
+        "A2:H2"
+      ],
+      "cells": {
+        "A1": "HARVARD UNIVERSITY - EXECUTIVE ACADEMIC & STUDENT PERFORMANCE DASHBOARD",
+        "A2": "Institutional overview of enrolled student achievement, degree distribution, and course examination results.",
+        "A4": "TOP STUDENTS BY CUMULATIVE GPA & ACADEMIC STANDING",
+        "A5": "=ODOO.LIST.HEADER(1, \"student_id\", _t(\"Student ID\"))",
+        "B5": "=ODOO.LIST.HEADER(1, \"name\", _t(\"Student Name\"))",
+        "C5": "=ODOO.LIST.HEADER(1, \"program_id\", _t(\"Degree Program\"))",
+        "D5": "=ODOO.LIST.HEADER(1, \"department_id\", _t(\"Department\"))",
+        "E5": "=ODOO.LIST.HEADER(1, \"gpa\", _t(\"GPA\"))",
+        "F5": "=ODOO.LIST.HEADER(1, \"attendance_rate\", _t(\"Attendance %\"))",
+        "G5": "=ODOO.LIST.HEADER(1, \"status\", _t(\"Status\"))",
+        "A18": "COURSE EXAMINATIONS & CLASS PERFORMANCE OVERVIEW",
+        "A19": "=ODOO.LIST.HEADER(2, \"name\", _t(\"Examination Title\"))",
+        "B19": "=ODOO.LIST.HEADER(2, \"subject_id\", _t(\"Course / Subject\"))",
+        "C19": "=ODOO.LIST.HEADER(2, \"section_id\", _t(\"Class Section\"))",
+        "D19": "=ODOO.LIST.HEADER(2, \"teacher_id\", _t(\"Instructor\"))",
+        "E19": "=ODOO.LIST.HEADER(2, \"exam_type\", _t(\"Type\"))",
+        "F19": "=ODOO.LIST.HEADER(2, \"exam_date\", _t(\"Exam Date\"))",
+        "G19": "=ODOO.LIST.HEADER(2, \"average_score\", _t(\"Class Average\"))",
+        "H19": "=ODOO.LIST.HEADER(2, \"state\", _t(\"Status\"))",
+        "A6": "=ODOO.LIST(1, 1, \"student_id\")",
+        "B6": "=ODOO.LIST(1, 1, \"name\")",
+        "C6": "=ODOO.LIST(1, 1, \"program_id\")",
+        "D6": "=ODOO.LIST(1, 1, \"department_id\")",
+        "E6": "=ODOO.LIST(1, 1, \"gpa\")",
+        "F6": "=ODOO.LIST(1, 1, \"attendance_rate\")",
+        "G6": "=ODOO.LIST(1, 1, \"status\")",
+        "A7": "=ODOO.LIST(1, 2, \"student_id\")",
+        "B7": "=ODOO.LIST(1, 2, \"name\")",
+        "C7": "=ODOO.LIST(1, 2, \"program_id\")",
+        "D7": "=ODOO.LIST(1, 2, \"department_id\")",
+        "E7": "=ODOO.LIST(1, 2, \"gpa\")",
+        "F7": "=ODOO.LIST(1, 2, \"attendance_rate\")",
+        "G7": "=ODOO.LIST(1, 2, \"status\")",
+        "A8": "=ODOO.LIST(1, 3, \"student_id\")",
+        "B8": "=ODOO.LIST(1, 3, \"name\")",
+        "C8": "=ODOO.LIST(1, 3, \"program_id\")",
+        "D8": "=ODOO.LIST(1, 3, \"department_id\")",
+        "E8": "=ODOO.LIST(1, 3, \"gpa\")",
+        "F8": "=ODOO.LIST(1, 3, \"attendance_rate\")",
+        "G8": "=ODOO.LIST(1, 3, \"status\")",
+        "A9": "=ODOO.LIST(1, 4, \"student_id\")",
+        "B9": "=ODOO.LIST(1, 4, \"name\")",
+        "C9": "=ODOO.LIST(1, 4, \"program_id\")",
+        "D9": "=ODOO.LIST(1, 4, \"department_id\")",
+        "E9": "=ODOO.LIST(1, 4, \"gpa\")",
+        "F9": "=ODOO.LIST(1, 4, \"attendance_rate\")",
+        "G9": "=ODOO.LIST(1, 4, \"status\")",
+        "A10": "=ODOO.LIST(1, 5, \"student_id\")",
+        "B10": "=ODOO.LIST(1, 5, \"name\")",
+        "C10": "=ODOO.LIST(1, 5, \"program_id\")",
+        "D10": "=ODOO.LIST(1, 5, \"department_id\")",
+        "E10": "=ODOO.LIST(1, 5, \"gpa\")",
+        "F10": "=ODOO.LIST(1, 5, \"attendance_rate\")",
+        "G10": "=ODOO.LIST(1, 5, \"status\")",
+        "A11": "=ODOO.LIST(1, 6, \"student_id\")",
+        "B11": "=ODOO.LIST(1, 6, \"name\")",
+        "C11": "=ODOO.LIST(1, 6, \"program_id\")",
+        "D11": "=ODOO.LIST(1, 6, \"department_id\")",
+        "E11": "=ODOO.LIST(1, 6, \"gpa\")",
+        "F11": "=ODOO.LIST(1, 6, \"attendance_rate\")",
+        "G11": "=ODOO.LIST(1, 6, \"status\")",
+        "A12": "=ODOO.LIST(1, 7, \"student_id\")",
+        "B12": "=ODOO.LIST(1, 7, \"name\")",
+        "C12": "=ODOO.LIST(1, 7, \"program_id\")",
+        "D12": "=ODOO.LIST(1, 7, \"department_id\")",
+        "E12": "=ODOO.LIST(1, 7, \"gpa\")",
+        "F12": "=ODOO.LIST(1, 7, \"attendance_rate\")",
+        "G12": "=ODOO.LIST(1, 7, \"status\")",
+        "A13": "=ODOO.LIST(1, 8, \"student_id\")",
+        "B13": "=ODOO.LIST(1, 8, \"name\")",
+        "C13": "=ODOO.LIST(1, 8, \"program_id\")",
+        "D13": "=ODOO.LIST(1, 8, \"department_id\")",
+        "E13": "=ODOO.LIST(1, 8, \"gpa\")",
+        "F13": "=ODOO.LIST(1, 8, \"attendance_rate\")",
+        "G13": "=ODOO.LIST(1, 8, \"status\")",
+        "A14": "=ODOO.LIST(1, 9, \"student_id\")",
+        "B14": "=ODOO.LIST(1, 9, \"name\")",
+        "C14": "=ODOO.LIST(1, 9, \"program_id\")",
+        "D14": "=ODOO.LIST(1, 9, \"department_id\")",
+        "E14": "=ODOO.LIST(1, 9, \"gpa\")",
+        "F14": "=ODOO.LIST(1, 9, \"attendance_rate\")",
+        "G14": "=ODOO.LIST(1, 9, \"status\")",
+        "A15": "=ODOO.LIST(1, 10, \"student_id\")",
+        "B15": "=ODOO.LIST(1, 10, \"name\")",
+        "C15": "=ODOO.LIST(1, 10, \"program_id\")",
+        "D15": "=ODOO.LIST(1, 10, \"department_id\")",
+        "E15": "=ODOO.LIST(1, 10, \"gpa\")",
+        "F15": "=ODOO.LIST(1, 10, \"attendance_rate\")",
+        "G15": "=ODOO.LIST(1, 10, \"status\")",
+        "A20": "=ODOO.LIST(2, 1, \"name\")",
+        "B20": "=ODOO.LIST(2, 1, \"subject_id\")",
+        "C20": "=ODOO.LIST(2, 1, \"section_id\")",
+        "D20": "=ODOO.LIST(2, 1, \"teacher_id\")",
+        "E20": "=ODOO.LIST(2, 1, \"exam_type\")",
+        "F20": "=ODOO.LIST(2, 1, \"exam_date\")",
+        "G20": "=ODOO.LIST(2, 1, \"average_score\")",
+        "H20": "=ODOO.LIST(2, 1, \"state\")",
+        "A21": "=ODOO.LIST(2, 2, \"name\")",
+        "B21": "=ODOO.LIST(2, 2, \"subject_id\")",
+        "C21": "=ODOO.LIST(2, 2, \"section_id\")",
+        "D21": "=ODOO.LIST(2, 2, \"teacher_id\")",
+        "E21": "=ODOO.LIST(2, 2, \"exam_type\")",
+        "F21": "=ODOO.LIST(2, 2, \"exam_date\")",
+        "G21": "=ODOO.LIST(2, 2, \"average_score\")",
+        "H21": "=ODOO.LIST(2, 2, \"state\")",
+        "A22": "=ODOO.LIST(2, 3, \"name\")",
+        "B22": "=ODOO.LIST(2, 3, \"subject_id\")",
+        "C22": "=ODOO.LIST(2, 3, \"section_id\")",
+        "D22": "=ODOO.LIST(2, 3, \"teacher_id\")",
+        "E22": "=ODOO.LIST(2, 3, \"exam_type\")",
+        "F22": "=ODOO.LIST(2, 3, \"exam_date\")",
+        "G22": "=ODOO.LIST(2, 3, \"average_score\")",
+        "H22": "=ODOO.LIST(2, 3, \"state\")",
+        "A23": "=ODOO.LIST(2, 4, \"name\")",
+        "B23": "=ODOO.LIST(2, 4, \"subject_id\")",
+        "C23": "=ODOO.LIST(2, 4, \"section_id\")",
+        "D23": "=ODOO.LIST(2, 4, \"teacher_id\")",
+        "E23": "=ODOO.LIST(2, 4, \"exam_type\")",
+        "F23": "=ODOO.LIST(2, 4, \"exam_date\")",
+        "G23": "=ODOO.LIST(2, 4, \"average_score\")",
+        "H23": "=ODOO.LIST(2, 4, \"state\")",
+        "A24": "=ODOO.LIST(2, 5, \"name\")",
+        "B24": "=ODOO.LIST(2, 5, \"subject_id\")",
+        "C24": "=ODOO.LIST(2, 5, \"section_id\")",
+        "D24": "=ODOO.LIST(2, 5, \"teacher_id\")",
+        "E24": "=ODOO.LIST(2, 5, \"exam_type\")",
+        "F24": "=ODOO.LIST(2, 5, \"exam_date\")",
+        "G24": "=ODOO.LIST(2, 5, \"average_score\")",
+        "H24": "=ODOO.LIST(2, 5, \"state\")",
+        "A25": "=ODOO.LIST(2, 6, \"name\")",
+        "B25": "=ODOO.LIST(2, 6, \"subject_id\")",
+        "C25": "=ODOO.LIST(2, 6, \"section_id\")",
+        "D25": "=ODOO.LIST(2, 6, \"teacher_id\")",
+        "E25": "=ODOO.LIST(2, 6, \"exam_type\")",
+        "F25": "=ODOO.LIST(2, 6, \"exam_date\")",
+        "G25": "=ODOO.LIST(2, 6, \"average_score\")",
+        "H25": "=ODOO.LIST(2, 6, \"state\")",
+        "A26": "=ODOO.LIST(2, 7, \"name\")",
+        "B26": "=ODOO.LIST(2, 7, \"subject_id\")",
+        "C26": "=ODOO.LIST(2, 7, \"section_id\")",
+        "D26": "=ODOO.LIST(2, 7, \"teacher_id\")",
+        "E26": "=ODOO.LIST(2, 7, \"exam_type\")",
+        "F26": "=ODOO.LIST(2, 7, \"exam_date\")",
+        "G26": "=ODOO.LIST(2, 7, \"average_score\")",
+        "H26": "=ODOO.LIST(2, 7, \"state\")",
+        "A27": "=ODOO.LIST(2, 8, \"name\")",
+        "B27": "=ODOO.LIST(2, 8, \"subject_id\")",
+        "C27": "=ODOO.LIST(2, 8, \"section_id\")",
+        "D27": "=ODOO.LIST(2, 8, \"teacher_id\")",
+        "E27": "=ODOO.LIST(2, 8, \"exam_type\")",
+        "F27": "=ODOO.LIST(2, 8, \"exam_date\")",
+        "G27": "=ODOO.LIST(2, 8, \"average_score\")",
+        "H27": "=ODOO.LIST(2, 8, \"state\")",
+        "A28": "=ODOO.LIST(2, 9, \"name\")",
+        "B28": "=ODOO.LIST(2, 9, \"subject_id\")",
+        "C28": "=ODOO.LIST(2, 9, \"section_id\")",
+        "D28": "=ODOO.LIST(2, 9, \"teacher_id\")",
+        "E28": "=ODOO.LIST(2, 9, \"exam_type\")",
+        "F28": "=ODOO.LIST(2, 9, \"exam_date\")",
+        "G28": "=ODOO.LIST(2, 9, \"average_score\")",
+        "H28": "=ODOO.LIST(2, 9, \"state\")",
+        "A29": "=ODOO.LIST(2, 10, \"name\")",
+        "B29": "=ODOO.LIST(2, 10, \"subject_id\")",
+        "C29": "=ODOO.LIST(2, 10, \"section_id\")",
+        "D29": "=ODOO.LIST(2, 10, \"teacher_id\")",
+        "E29": "=ODOO.LIST(2, 10, \"exam_type\")",
+        "F29": "=ODOO.LIST(2, 10, \"exam_date\")",
+        "G29": "=ODOO.LIST(2, 10, \"average_score\")",
+        "H29": "=ODOO.LIST(2, 10, \"state\")"
+      },
+      "styles": {
+        "A1": 1,
+        "A2": 2,
+        "A4": 3,
+        "A5:G5": 4,
+        "A18": 3,
+        "A19:H19": 4
+      },
+      "formats": {},
+      "borders": {
+        "A1:H1": 1,
+        "A5:G5": 2,
+        "A19:H19": 2
+      },
+      "conditionalFormats": [],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [
+        {
+          "range": "A5:G15",
+          "type": "static",
+          "config": {
+            "hasFilters": false,
+            "totalRow": false,
+            "firstColumn": false,
+            "lastColumn": false,
+            "numberOfHeaders": 1,
+            "bandedRows": true,
+            "bandedColumns": false,
+            "automaticAutofill": true,
+            "styleId": "None"
+          }
+        },
+        {
+          "range": "A19:H29",
+          "type": "static",
+          "config": {
+            "hasFilters": false,
+            "totalRow": false,
+            "firstColumn": false,
+            "lastColumn": false,
+            "numberOfHeaders": 1,
+            "bandedRows": true,
+            "bandedColumns": false,
+            "automaticAutofill": true,
+            "styleId": "None"
+          }
+        }
+      ],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "comments": {}
+    }
+  ],
+  "styles": {
+    "1": {
+      "fontSize": 14,
+      "bold": true,
+      "fillColor": "#1B365D",
+      "textColor": "#FFFFFF",
+      "align": "center",
+      "verticalAlign": "middle"
+    },
+    "2": {
+      "fontSize": 10,
+      "italic": true,
+      "fillColor": "#F1F5F9",
+      "textColor": "#475569",
+      "align": "center",
+      "verticalAlign": "middle"
+    },
+    "3": {
+      "fontSize": 11,
+      "bold": true,
+      "textColor": "#1B365D",
+      "verticalAlign": "middle"
+    },
+    "4": {
+      "fontSize": 10,
+      "bold": true,
+      "fillColor": "#F8FAFC",
+      "textColor": "#1E293B",
+      "verticalAlign": "middle"
+    }
+  },
+  "formats": {},
+  "borders": {
+    "1": {
+      "bottom": {
+        "style": "thick",
+        "color": "#1B365D"
+      }
+    },
+    "2": {
+      "bottom": {
+        "style": "thin",
+        "color": "#CBD5E1"
+      },
+      "top": {
+        "style": "thin",
+        "color": "#CBD5E1"
+      }
+    }
+  },
+  "revisionId": "START_REVISION",
+  "uniqueFigureIds": true,
+  "settings": {
+    "locale": {
+      "name": "English (US)",
+      "code": "en_US",
+      "thousandsSeparator": ",",
+      "decimalSeparator": ".",
+      "dateFormat": "mm/dd/yyyy",
+      "timeFormat": "hh:mm:ss",
+      "formulaArgSeparator": ",",
+      "weekStart": 7
+    }
+  },
+  "pivots": {},
+  "pivotNextId": 1,
+  "globalFilters": [],
+  "lists": {
+    "1": {
+      "columns": [
+        "student_id",
+        "name",
+        "program_id",
+        "department_id",
+        "gpa",
+        "attendance_rate",
+        "status"
+      ],
+      "domain": [],
+      "model": "university.student",
+      "context": {},
+      "orderBy": [
+        {
+          "name": "gpa",
+          "desc": true
+        }
+      ],
+      "id": "1",
+      "name": "Top Students by GPA"
+    },
+    "2": {
+      "columns": [
+        "name",
+        "subject_id",
+        "section_id",
+        "teacher_id",
+        "exam_type",
+        "exam_date",
+        "average_score",
+        "state"
+      ],
+      "domain": [],
+      "model": "university.exam",
+      "context": {},
+      "orderBy": [
+        {
+          "name": "exam_date",
+          "desc": true
+        }
+      ],
+      "id": "2",
+      "name": "Course Examinations"
+    }
+  },
+  "listNextId": 3,
+  "chartOdooMenusReferences": {}
+}

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="demo_current_semester_year" model="university.academic.year">
+        <field name="name" eval="'Demo Current Semester %s' % datetime.now().year"/>
+        <field name="date_start" eval="(datetime.now().date() - timedelta(days=180)).strftime('%Y-%m-%d')"/>
+        <field name="date_end" eval="(datetime.now().date() + timedelta(days=180)).strftime('%Y-%m-%d')"/>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="demo_current_semester" model="university.semester">
+        <field name="academic_year_id" ref="demo_current_semester_year"/>
+        <field name="semester_type">semester_1</field>
+        <field name="date_start" eval="(datetime.now().date() - timedelta(days=56)).strftime('%Y-%m-%d')"/>
+        <field name="date_end" eval="(datetime.now().date() + timedelta(days=56)).strftime('%Y-%m-%d')"/>
+        <field name="is_current" eval="True"/>
+    </record>
+</odoo>

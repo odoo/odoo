@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="school_dashboard_default" model="school.dashboard">
+        <field name="name">School Dashboard</field>
+    </record>
+
+    <!-- Initial Notice Board Announcements -->
+    <record id="notice_datesheet_announcement" model="university.notice.board">
+        <field name="name">Datesheet Announcement</field>
+        <field name="date">2025-10-08</field>
+        <field name="content">&lt;p&gt;Official examination datesheet announced for all undergraduate and graduate departments.&lt;/p&gt;</field>
+        <field name="active" eval="True"/>
+    </record>
+
+    <record id="notice_faculty_assembly" model="university.notice.board">
+        <field name="name">Faculty General Assembly</field>
+        <field name="date">2025-10-05</field>
+        <field name="content">&lt;p&gt;All faculty members are requested to attend the semester kickoff assembly in Auditorium B.&lt;/p&gt;</field>
+        <field name="active" eval="True"/>
+    </record>
+
+    <record id="notice_midterm_schedule" model="university.notice.board">
+        <field name="name">Midterm Examination Schedule</field>
+        <field name="date">2025-10-02</field>
+        <field name="content">&lt;p&gt;Midterm examinations will commence next month. Check syllabus coverage with course instructors.&lt;/p&gt;</field>
+        <field name="active" eval="True"/>
+    </record>
+
+    <record id="notice_spring_reg" model="university.notice.board">
+        <field name="name">Spring Semester Course Registration</field>
+        <field name="date">2025-09-28</field>
+        <field name="content">&lt;p&gt;Course registration is open for next semester courses.&lt;/p&gt;</field>
+        <field name="active" eval="True"/>
+    </record>
+</odoo>

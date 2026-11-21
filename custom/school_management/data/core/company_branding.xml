@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="0">
+    <record id="base.main_company" model="res.company">
+        <field name="name">Harvard University</field>
+        <field name="logo" type="base64" file="school_management/static/src/img/university_logo.png"/>
+    </record>
+
+    <record id="config_param_deans_list_min_gpa" model="ir.config_parameter">
+        <field name="key">school_management.deans_list_min_gpa</field>
+        <field name="value">3.5</field>
+    </record>
+
+    <record id="config_param_deans_list_min_credits" model="ir.config_parameter">
+        <field name="key">school_management.deans_list_min_credits</field>
+        <field name="value">12</field>
+    </record>
+</odoo>

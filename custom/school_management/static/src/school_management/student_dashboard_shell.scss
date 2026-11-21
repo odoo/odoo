@@ -1,0 +1,3199 @@
+.o_student_dashboard {
+    // Design Tokens & Elevated Alerts / Cards matching Admin Executive Dashboard
+    --radius-card: 14px;
+    --radius-sm: 8px;
+    --shadow-subtle: 0 1px 3px rgba(15, 23, 42, 0.05), 0 1px 2px rgba(15, 23, 42, 0.03);
+    --shadow-elevated: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.03);
+
+    .o_alert_banner {
+        border-radius: var(--radius-card);
+        padding: 14px 18px;
+        transition: all 0.2s ease;
+
+        &.o_alert_danger {
+            background: linear-gradient(135deg, #fff1f2 0%, #ffffff 100%);
+            border: 1px solid #fecdd3;
+            border-left: 4px solid #e11d48;
+        }
+        &.o_alert_warning {
+            background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%);
+            border: 1px solid #fde68a;
+            border-left: 4px solid #d97706;
+        }
+        &.o_alert_attendance_risk {
+            background: linear-gradient(135deg, #fff1f2 0%, #ffffff 100%);
+            border: 1px solid #fecdd3;
+            border-left: 4px solid #dc2626 !important;
+            box-shadow: 0 4px 14px rgba(220, 38, 38, 0.08);
+        }
+        &.o_alert_info {
+            background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);
+            border: 1px solid #bfdbfe;
+            border-left: 4px solid #2563eb;
+        }
+    }
+
+    // Elevated KPI Cards
+    .o_kpi_card_elevated {
+        background: #ffffff;
+        border-radius: var(--radius-card);
+        padding: 16px 20px;
+        border: 1px solid #e2e8f0;
+        box-shadow: var(--shadow-subtle);
+        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        position: relative;
+        overflow: hidden;
+
+        &::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+
+        &.o_kpi_border_blue::before {
+            background: linear-gradient(90deg, #2563eb, #38bdf8);
+        }
+        &.o_kpi_border_emerald::before {
+            background: linear-gradient(90deg, #059669, #34d399);
+        }
+        &.o_kpi_border_indigo::before {
+            background: linear-gradient(90deg, #4f46e5, #818cf8);
+        }
+        &.o_kpi_border_amber::before {
+            background: linear-gradient(90deg, #d97706, #fbbf24);
+        }
+        &.o_kpi_border_danger::before {
+            background: linear-gradient(90deg, #dc2626, #f87171);
+        }
+
+        &.o_kpi_warning_pulse {
+            border-color: #fca5a5;
+            background: linear-gradient(180deg, #fffbfb 0%, #ffffff 100%);
+        }
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-elevated);
+            border-color: #cbd5e1;
+        }
+
+        .o_kpi_card_eyebrow {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .o_kpi_card_value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            margin-bottom: 3px;
+        }
+
+        .o_kpi_card_sub {
+            font-size: 0.775rem;
+        }
+    }
+
+    background: #f8fafc;
+    color: #1e293b;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+    .o_student_dashboard_header {
+        background: #ffffff;
+        padding: 1.25rem 2rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .o_student_header_avatar_wrap {
+        width: 48px;
+        height: 48px;
+    }
+
+    .o_student_header_avatar {
+        width: 48px;
+        height: 48px;
+        object-fit: cover;
+        border: 2px solid #e2e8f0;
+    }
+
+    .o_student_header_avatar_placeholder {
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+        border: 2px solid #e2e8f0;
+
+        .o_student_header_avatar_letter {
+            color: #ffffff;
+            font-size: 1.4rem;
+            font-weight: 700;
+            line-height: 1;
+            user-select: none;
+        }
+    }
+
+    .o_student_dashboard_empty {
+        min-height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem;
+        text-align: center;
+    }
+
+    // Modern Top Stat Cards
+    .o_student_stat_card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 1.25rem;
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .o_stat_icon_box {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+    }
+
+    // Profile card avatar
+    .o_student_avatar_wrap {
+        width: 96px;
+        height: 96px;
+    }
+
+    .o_student_avatar {
+        width: 96px;
+        height: 96px;
+        object-fit: cover;
+        border: 3px solid #e2e8f0;
+    }
+
+    .o_student_avatar_placeholder {
+        width: 96px;
+        height: 96px;
+        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+        border: 3px solid #e2e8f0;
+        box-shadow: 0 4px 12px rgba(30, 58, 138, 0.15);
+
+        .o_student_avatar_letter {
+            color: #ffffff;
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1;
+            user-select: none;
+        }
+    }
+
+    .o_student_profile_card {
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        background: #ffffff;
+
+        .card-footer {
+            background: transparent;
+        }
+    }
+
+    .o_student_hub_card {
+        border-radius: 14px;
+        border: 1px solid #e2e8f0;
+        background: #ffffff;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+
+        .card-header {
+            background: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0.25rem 0.5rem 0 0.5rem;
+        }
+
+        .card-header-tabs {
+            display: flex;
+            flex-wrap: nowrap !important;
+            overflow-x: auto !important;
+            overflow-y: hidden !important;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            gap: 0.25rem;
+            margin: 0 !important;
+            border-bottom: none;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+
+            .nav-item {
+                flex-shrink: 0;
+            }
+
+            .nav-link {
+                border: none;
+                border-bottom: 3px solid transparent;
+                border-radius: 0;
+                font-size: 0.875rem;
+                font-weight: 600;
+                color: #64748b;
+                padding: 0.75rem 1rem;
+                white-space: nowrap;
+                background: transparent;
+                transition: all 0.15s ease-in-out;
+                display: inline-flex;
+                align-items: center;
+
+                &:hover {
+                    color: #1e293b;
+                    background: #f8fafc;
+                    border-bottom-color: #cbd5e1;
+                }
+
+                &.active {
+                    color: #2563eb !important;
+                    border-bottom-color: #2563eb !important;
+                    background: transparent;
+                }
+            }
+        }
+    }
+
+    .o_student_class_card {
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        background: #ffffff;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08) !important;
+        }
+    }
+
+    .o_student_classroom_badge {
+        background-color: #f8fafc;
+        border-left: 3px solid #2563eb !important;
+        border-radius: 6px;
+    }
+
+    // Weekly Schedule Learning Time Calendar Styles
+    .o_schedule_calendar_grid {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 0.75rem;
+
+        @media (max-width: 1200px) {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        @media (max-width: 768px) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .o_calendar_day_col {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        min-height: 320px;
+        overflow: hidden;
+
+        &.is_today {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 1px #3b82f6;
+
+            .o_day_col_header {
+                background: #eff6ff;
+                border-bottom: 2px solid #3b82f6;
+                color: #1d4ed8;
+            }
+        }
+
+        .o_day_col_header {
+            background: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0.65rem 0.75rem;
+            text-align: center;
+        }
+
+        .o_day_col_body {
+            padding: 0.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+    }
+
+    .o_calendar_slot_card {
+        background: #ffffff;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+        border-left-width: 4px;
+        padding: 0.65rem 0.75rem;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+        cursor: pointer;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        &.o_slot_palette_sapphire {
+            border-left-color: #2563eb;
+            .o_slot_accent { color: #2563eb; }
+        }
+        &.o_slot_palette_emerald {
+            border-left-color: #059669;
+            .o_slot_accent { color: #059669; }
+        }
+        &.o_slot_palette_indigo {
+            border-left-color: #6366f1;
+            .o_slot_accent { color: #6366f1; }
+        }
+        &.o_slot_palette_amber {
+            border-left-color: #d97706;
+            .o_slot_accent { color: #d97706; }
+        }
+        &.o_slot_palette_teal {
+            border-left-color: #0d9488;
+            .o_slot_accent { color: #0d9488; }
+        }
+        &.o_slot_palette_rose {
+            border-left-color: #e11d48;
+            .o_slot_accent { color: #e11d48; }
+        }
+    }
+
+    .very-small {
+        font-size: 0.75rem;
+    }
+
+    .cursor-pointer {
+        cursor: pointer;
+    }
+
+    // Staff Preview Mode Banner
+    .o_student_preview_banner {
+        background: #e0f2fe;
+        border-bottom: 2px solid #38bdf8 !important;
+        color: #0369a1;
+
+        select {
+            background-color: #ffffff;
+            border-color: #bae6fd;
+            color: #0369a1;
+            font-weight: 500;
+        }
+    }
+
+    // Notice item in widget card
+    .o_notice_item {
+        transition: background-color 0.15s ease, transform 0.15s ease;
+        cursor: pointer;
+
+        &:hover {
+            background-color: #f1f5f9 !important;
+            transform: translateX(3px);
+        }
+    }
+
+    // Notice modal content reader
+    .o_notice_modal_content {
+        line-height: 1.6;
+        color: #334155;
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        p:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    // ==========================================
+    // Two-Column Grid Dashboard Layout & Sidebar
+    // ==========================================
+    .o_student_dashboard_grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 340px;
+        gap: 1.5rem;
+        align-items: start;
+
+        @media (max-width: 1199.98px) {
+            grid-template-columns: minmax(0, 1fr) 290px;
+            gap: 1rem;
+        }
+
+        @media (max-width: 767.98px) {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+
+            .o_student_dashboard_main_content {
+                grid-column: 1;
+                order: 1;
+            }
+
+            .o_student_schedule_sidebar {
+                grid-column: 1;
+                order: 2;
+                position: static;
+                max-height: none;
+            }
+        }
+    }
+
+    .o_student_dashboard_main_content {
+        grid-column: 1;
+        min-width: 0;
+
+        .o_student_dashboard_header {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.25rem 1.75rem;
+            margin-bottom: 1.5rem;
+        }
+    }
+
+    // Right Column Sidebar (340px)
+    .o_student_schedule_sidebar {
+        grid-column: 2;
+        position: sticky;
+        top: 1rem;
+        min-height: 580px;
+        max-height: calc(100vh - 2rem);
+        overflow-y: auto;
+        overflow-x: hidden;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 1.25rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+        &::-webkit-scrollbar {
+            width: 5px;
+        }
+        &::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+        &::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        &::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .o_cal_widget_header {
+            background: #ffffff;
+        }
+
+        .o_cal_icon_wrap {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: #eff6ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+        }
+
+        // Mini Calendar Week Strip
+        .o_cal_mini_strip {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            background: #f8fafc;
+            padding: 6px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .o_cal_strip_item {
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            padding: 4px 2px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.15s ease;
+            user-select: none;
+            min-height: 48px;
+
+            .o_cal_strip_day_name {
+                font-size: 0.65rem;
+                font-weight: 600;
+                color: #64748b;
+                text-transform: uppercase;
+                line-height: 1;
+                margin-bottom: 3px;
+            }
+
+            .o_cal_strip_day_num {
+                font-size: 0.85rem;
+                font-weight: 700;
+                color: #1e293b;
+                line-height: 1;
+            }
+
+            .o_cal_strip_dot {
+                position: absolute;
+                bottom: 3px;
+                width: 5px;
+                height: 5px;
+                border-radius: 50%;
+                background: #2563eb;
+            }
+
+            &.has_events {
+                .o_cal_strip_day_num {
+                    color: #1d4ed8;
+                }
+            }
+
+            &:hover {
+                background: #ffffff;
+                border-color: #cbd5e1;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            }
+
+            &.is_today {
+                background: #eff6ff;
+                border-color: #bfdbfe;
+
+                .o_cal_strip_day_name {
+                    color: #2563eb;
+                }
+
+                .o_cal_strip_day_num {
+                    color: #1d4ed8;
+                }
+            }
+
+            &.is_active {
+                background: #2563eb !important;
+                border-color: #1d4ed8 !important;
+                box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3) !important;
+
+                .o_cal_strip_day_name,
+                .o_cal_strip_day_num {
+                    color: #ffffff !important;
+                }
+
+                .o_cal_strip_dot {
+                    background: #ffffff !important;
+                }
+            }
+
+            &.o_cal_strip_all {
+                .o_cal_strip_day_name {
+                    font-size: 0.6rem;
+                }
+            }
+        }
+
+        // Calendar Daily Timeline / Agenda Sections
+        .o_cal_day_section {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 0.75rem;
+            transition: all 0.15s ease;
+
+            &.is_today {
+                border-color: #93c5fd;
+                background: #fbfdff;
+                box-shadow: 0 1px 4px rgba(37, 99, 235, 0.06);
+            }
+
+            &.is_empty:not(.is_today) {
+                background: #f8fafc;
+                border-color: #f1f5f9;
+                padding: 0.45rem 0.65rem;
+                opacity: 0.85;
+
+                .o_cal_day_header {
+                    margin-bottom: 0 !important;
+                }
+
+                &:hover {
+                    opacity: 1;
+                    background: #ffffff;
+                    border-color: #cbd5e1;
+                }
+            }
+        }
+
+        .o_cal_day_badge {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+
+        // Event Card in Calendar View
+        .o_cal_event_card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid #2563eb;
+            border-radius: 10px;
+            padding: 0.75rem;
+            cursor: pointer;
+            position: relative;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+            transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+
+            &:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            }
+
+            &.o_slot_palette_sapphire { border-left-color: #2563eb; }
+            &.o_slot_palette_emerald { border-left-color: #059669; }
+            &.o_slot_palette_indigo { border-left-color: #6366f1; }
+            &.o_slot_palette_amber { border-left-color: #d97706; }
+            &.o_slot_palette_teal { border-left-color: #0d9488; }
+            &.o_slot_palette_rose { border-left-color: #e11d48; }
+
+            .o_cal_time_chip {
+                font-size: 0.72rem;
+                font-weight: 700;
+                color: #1d4ed8;
+                background: #eff6ff;
+                padding: 2px 7px;
+                border-radius: 6px;
+                display: inline-flex;
+                align-items: center;
+            }
+
+            .o_cal_event_title {
+                font-size: 0.88rem;
+                font-weight: 700;
+                color: #0f172a;
+                line-height: 1.3;
+                margin-top: 4px;
+            }
+
+            .o_cal_event_meta_list {
+                display: flex;
+                flex-direction: column;
+                gap: 3px;
+                margin-top: 5px;
+            }
+
+            .o_cal_event_meta {
+                font-size: 0.73rem;
+                color: #64748b;
+                line-height: 1.2;
+                display: flex;
+                align-items: center;
+            }
+        }
+
+        .o_cal_empty_day {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            text-align: center;
+            padding: 0.5rem 0;
+            font-style: italic;
+        }
+
+        .o_cal_empty_day_compact {
+            background: #f8fafc;
+            border: 1px dashed #e2e8f0;
+            padding: 0.35rem 0.65rem;
+            cursor: pointer;
+            transition: all 0.15s ease;
+
+            &:hover {
+                background: #ffffff;
+                border-color: #cbd5e1;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            }
+
+            .o_cal_day_badge_minimal {
+                font-size: 0.68rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.02em;
+            }
+        }
+
+        // View Switcher in Schedule Sidebar
+        .o_cal_view_switcher {
+            .btn {
+                font-size: 0.75rem;
+                font-weight: 600;
+                border-radius: 6px;
+                transition: all 0.15s ease;
+            }
+        }
+
+        // List View in Schedule Sidebar
+        .o_cal_list_view {
+            .o_cal_list_item {
+                border-left: 3px solid #2563eb;
+                transition: background-color 0.15s ease, transform 0.15s ease;
+
+                &:hover {
+                    background-color: #f8fafc;
+                    transform: translateX(2px);
+                }
+            }
+        }
+
+        // Kanban Card View in Schedule Sidebar
+        .o_cal_kanban_view {
+            .o_cal_kanban_card {
+                border-radius: 10px;
+                border-left-width: 4px;
+                transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+                &:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+                }
+
+                &.o_slot_palette_sapphire { border-left-color: #2563eb; }
+                &.o_slot_palette_emerald { border-left-color: #059669; }
+                &.o_slot_palette_indigo { border-left-color: #6366f1; }
+                &.o_slot_palette_amber { border-left-color: #d97706; }
+                &.o_slot_palette_teal { border-left-color: #0d9488; }
+                &.o_slot_palette_rose { border-left-color: #e11d48; }
+            }
+        }
+
+    }
+
+    @keyframes sidebarPulse {
+        0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4); }
+        70% { box-shadow: 0 0 0 10px rgba(37, 99, 235, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+    }
+
+    .o_sidebar_highlight_pulse {
+        animation: sidebarPulse 1.2s ease-out;
+        border-color: #2563eb !important;
+    }
+
+    // University Purple Theme Accents
+    .text-purple {
+        color: #6f42c1 !important;
+    }
+    .bg-purple {
+        background-color: #6f42c1 !important;
+    }
+    .bg-purple-subtle {
+        background-color: #f3e8ff !important;
+    }
+
+    // Pulsing live dot indicator
+    @keyframes pulseDot {
+        0% { transform: scale(0.9); opacity: 0.7; }
+        50% { transform: scale(1.3); opacity: 1; }
+        100% { transform: scale(0.9); opacity: 0.7; }
+    }
+
+    .o_pulse_dot {
+        display: inline-block;
+        animation: pulseDot 1.4s infinite ease-in-out;
+    }
+
+    // Dedicated Next / Current Class Card in Schedule Sidebar
+    .o_next_class_hero_card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-left: 4px solid #2563eb !important;
+        border-radius: var(--radius-sm);
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+        }
+    }
+
+    // Modern Course Card in Enrolled Classes Tab
+    .o_student_course_card {
+        border-radius: 14px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        border: 1px solid #e2e8f0;
+        background: #ffffff;
+        position: relative;
+        overflow: hidden;
+
+        &::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, #2563eb 0%, #6366f1 100%);
+        }
+
+        &:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+            border-color: #cbd5e1;
+        }
+
+        .o_course_meta_box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+        }
+    }
+
+    // Next class strip fallback
+    .o_next_class_strip {
+        background: #fdf4ff;
+        border: 1px solid #e9d5ff !important;
+        border-radius: 8px;
+        transition: all 0.15s ease;
+
+        &:hover {
+            background: #fae8ff;
+            border-color: #d8b4fe !important;
+        }
+    }
+
+    // Agenda View Rows & Status Bars
+    .o_cal_agenda_view {
+        .o_agenda_day_group {
+            &.is_today {
+                .o_agenda_day_title {
+                    color: #6f42c1 !important;
+                }
+            }
+        }
+
+        .o_agenda_day_header {
+            padding: 0.15rem 0.25rem;
+        }
+
+        .o_agenda_session_row {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+            transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+
+            &:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+                border-color: #cbd5e1;
+            }
+
+            .o_agenda_status_bar {
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: 4px;
+                background-color: #94a3b8;
+                border-top-left-radius: 6px;
+                border-bottom-left-radius: 6px;
+            }
+
+            &.status-completed {
+                opacity: 0.85;
+                .o_agenda_status_bar {
+                    background-color: #64748b; // neutral slate for completed
+                }
+            }
+
+            &.status-upcoming {
+                .o_agenda_status_bar {
+                    background-color: #3b82f6; // blue primary
+                }
+            }
+
+            &.status-live,
+            &.status-ongoing {
+                border-color: #fca5a5;
+                background-color: #fffbfb !important;
+                box-shadow: 0 2px 8px rgba(220, 38, 38, 0.08);
+                .o_agenda_status_bar {
+                    background-color: #dc2626; // vivid red for live now
+                }
+            }
+
+            &.status-cancelled {
+                opacity: 0.7;
+                background-color: #fef2f2 !important;
+                border-color: #fecaca;
+                .o_agenda_status_bar {
+                    background-color: #ef4444; // red
+                }
+            }
+        }
+
+        .o_agenda_empty_today {
+            border-color: #e9d5ff !important;
+            background-color: #faf5ff !important;
+        }
+
+        .o_agenda_empty_day_row {
+            border: 1px dashed #e2e8f0;
+            background-color: #f8fafc;
+            color: #94a3b8;
+        }
+    }
+
+    // Embedded Interactive Schedule in Dashboard Tab
+    .o_dashboard_embedded_schedule {
+        .o_university_schedule_wrapper {
+            height: 720px !important;
+            min-height: 600px;
+        }
+        .o_schedule_split_container {
+            height: calc(720px - 110px) !important;
+        }
+    }
+
+}
+
+/* Student portal alignment: use the same faculty/admin blue system while
+   retaining student-specific labels and actions. */
+.o_student_portal_root {
+    --student-accent: #2563eb;
+    --student-accent-dark: #1d4ed8;
+    --student-border: #e2e8f0;
+    --student-surface: #ffffff;
+    --student-muted-surface: #f8fafc;
+
+    .o_student_navbar {
+        border-bottom-color: var(--student-border);
+
+        .o_student_avatar_placeholder {
+            background: linear-gradient(135deg, #1e3a8a 0%, var(--student-accent) 100%);
+            color: #ffffff;
+            border-color: #bfdbfe;
+        }
+
+        .o_student_nav_pills button.nav-link {
+            background: var(--student-muted-surface);
+            border-color: var(--student-border);
+
+            &:hover {
+                color: var(--student-accent-dark);
+                background: #eff6ff;
+                border-color: #bfdbfe;
+            }
+
+            &.active {
+                background: var(--student-accent) !important;
+                border-color: var(--student-accent) !important;
+                box-shadow: 0 2px 4px rgba(37, 99, 235, 0.25);
+            }
+        }
+    }
+
+    .btn-teal {
+        background-color: var(--student-accent);
+        border-color: var(--student-accent);
+
+        &:hover,
+        &:focus {
+            background-color: var(--student-accent-dark);
+            border-color: var(--student-accent-dark);
+        }
+    }
+
+    .o_student_sessions_card {
+        border-color: var(--student-border) !important;
+        background: var(--student-surface);
+    }
+
+    .o_student_sessions_table {
+        min-width: 900px;
+
+        thead th {
+            font-size: 0.68rem;
+            letter-spacing: 0.06em;
+            font-weight: 700;
+            white-space: nowrap;
+            color: #64748b;
+            border-bottom-color: var(--student-border);
+        }
+
+        tbody td {
+            border-color: #eef2f7;
+            color: #334155;
+            font-size: 0.82rem;
+        }
+
+        .o_student_session_row {
+            transition: background-color 0.15s ease, box-shadow 0.15s ease;
+
+            &:hover {
+                background: #eff6ff;
+                box-shadow: inset 3px 0 0 var(--student-accent);
+            }
+
+            &:focus-within {
+                outline: 2px solid #93c5fd;
+                outline-offset: -2px;
+            }
+        }
+    }
+}
+
+// =========================================================================
+// NEW MODERN SAAS STUDENT REDESIGN (Follows media_1792478296284_776a205a)
+// =========================================================================
+
+.o_student_portal_root {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    background-color: #f8fafc;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+    // Clean Modern Light Sidebar System (Matching Design Mockup)
+    .o_student_sidebar {
+        width: 256px;
+        min-width: 256px;
+        max-width: 256px;
+        height: 100%;
+        background-color: #ffffff;
+        color: #475569;
+        display: flex;
+        flex-direction: column;
+        border-right: 1px solid #e2e8f0;
+        z-index: 20;
+        transition: width 0.2s cubic-bezier(0.4, 0, 0.2, 1), min-width 0.2s cubic-bezier(0.4, 0, 0.2, 1), max-width 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+        &.o_sidebar_collapsed {
+            width: 68px;
+            min-width: 68px;
+            max-width: 68px;
+        }
+
+        .o_sidebar_header {
+            padding: 16px 14px 12px;
+
+            .o_brand_icon {
+                width: 32px;
+                height: 32px;
+                background-color: #0e7569;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #ffffff;
+                flex-shrink: 0;
+            }
+
+            .o_brand_title {
+                font-size: 15px;
+                font-weight: 700;
+                color: #0f172a;
+                letter-spacing: -0.01em;
+            }
+
+            .o_btn_sidebar_toggle {
+                border: none;
+                background: transparent;
+                color: #94a3b8;
+                border-radius: 6px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.15s ease;
+
+                &:hover {
+                    background-color: #f1f5f9;
+                    color: #0f172a;
+                }
+            }
+        }
+
+        .o_sidebar_search {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            transition: all 0.15s ease;
+
+            &:hover {
+                border-color: #cbd5e1;
+                background-color: #f1f5f9;
+            }
+
+            .o_kbd_shortcut {
+                background-color: #ffffff;
+                border: 1px solid #e2e8f0;
+                border-radius: 4px;
+                padding: 1px 5px;
+                font-size: 10px;
+                font-weight: 600;
+                color: #64748b;
+                box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+            }
+        }
+
+        .o_student_sidebar_nav {
+            padding: 0 8px;
+
+            .o_nav_group {
+                margin-bottom: 6px;
+
+                .o_nav_group_label {
+                    font-size: 10.5px;
+                    font-weight: 600;
+                    color: #94a3b8;
+                    letter-spacing: 0.03em;
+                    margin-bottom: 4px;
+                    margin-top: 10px;
+                }
+            }
+
+            .o_sidebar_nav_item {
+                display: flex;
+                align-items: center;
+                border-radius: 8px;
+                color: #475569;
+                font-size: 13.5px;
+                font-weight: 500;
+                text-align: left;
+                background: transparent;
+                border: none;
+                cursor: pointer;
+                transition: all 0.15s ease;
+                position: relative;
+
+                &:hover {
+                    background-color: #f8fafc;
+                    color: #0f172a;
+                }
+
+                &.active {
+                    background-color: #e6f7f5;
+                    color: #0e7569;
+                    font-weight: 600;
+
+                    &::before {
+                        content: "";
+                        position: absolute;
+                        left: 0;
+                        top: 6px;
+                        bottom: 6px;
+                        width: 3px;
+                        background-color: #0d9488;
+                        border-radius: 0 2px 2px 0;
+                    }
+
+                    svg {
+                        stroke: #0e7569;
+                    }
+                }
+
+                .o_nav_icon_wrap {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 20px;
+
+                    svg {
+                        stroke: currentColor;
+                    }
+                }
+
+                .o_collapsed_badge_dot {
+                    width: 7px;
+                    height: 7px;
+                    border: 1.5px solid #ffffff;
+
+                    &.o_dot_red { background-color: #ef4444; }
+                    &.o_dot_amber { background-color: #f59e0b; }
+                    &.o_dot_teal { background-color: #0d9488; }
+                    &.o_dot_gray { background-color: #94a3b8; }
+                }
+            }
+
+            .o_sidebar_badge {
+                font-size: 11px;
+                font-weight: 600;
+                padding: 2px 7px;
+                border-radius: 9999px;
+
+                &.o_badge_red {
+                    background-color: #fee2e2;
+                    color: #ef4444;
+                }
+                &.o_badge_amber {
+                    background-color: #fef3c7;
+                    color: #b45309;
+                }
+                &.o_badge_teal {
+                    background-color: #ccfbf1;
+                    color: #0f766e;
+                }
+                &.o_badge_teal_solid {
+                    background-color: #0f766e;
+                    color: #ffffff;
+                }
+                &.o_badge_plain {
+                    background-color: #f1f5f9;
+                    color: #64748b;
+                }
+            }
+        }
+
+        .o_student_sidebar_footer {
+            background-color: #ffffff;
+
+            .o_btn_help {
+                color: #64748b;
+                border-radius: 8px;
+                font-size: 13px;
+
+                &:hover {
+                    background-color: #f8fafc;
+                    color: #0f172a;
+                }
+            }
+
+            .o_sidebar_profile_card {
+                background-color: #ffffff;
+                border: 1px solid #e2e8f0;
+                transition: all 0.15s ease;
+
+                &:hover {
+                    background-color: #f8fafc;
+                    border-color: #cbd5e1;
+                }
+
+                .o_profile_avatar {
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 50%;
+                    background-color: #0e7569;
+                    color: #ffffff;
+                    font-weight: 700;
+                    font-size: 11.5px;
+                }
+
+                .o_profile_name {
+                    font-size: 12.5px;
+                    font-weight: 600;
+                    color: #0f172a;
+                    line-height: 1.25;
+                }
+
+                .o_profile_role {
+                    font-size: 11px;
+                    color: #64748b;
+                    line-height: 1.2;
+                }
+            }
+        }
+    }
+
+    // Top Navigation & Identity Bar (Sticky)
+    .o_student_navbar {
+        background-color: #ffffff;
+        border-bottom: 1px solid #e2e8f0;
+        position: sticky;
+        top: 0;
+        z-index: 1020;
+        backdrop-filter: blur(8px);
+
+        .o_student_header_avatar_wrap {
+            .o_student_header_avatar {
+                width: 44px;
+                height: 44px;
+                object-fit: cover;
+                border: 2px solid #e2e8f0;
+            }
+
+            .o_student_avatar_placeholder {
+                width: 44px;
+                height: 44px;
+                font-size: 16px;
+                background-color: #e6f4f2;
+                color: #0e7569;
+                border: 2px solid #ccfbf1;
+            }
+        }
+
+        .o_student_nav_pills {
+            button.nav-link {
+                background: #f8fafc;
+                border: 1px solid #e2e8f0;
+                color: #475569;
+                font-size: 13px;
+                font-weight: 600;
+                transition: all 0.15s ease;
+                padding: 6px 14px;
+                cursor: pointer;
+
+                &:hover {
+                    color: #0e7569;
+                    background-color: #f0fdf4;
+                    border-color: #a7f3d0;
+                }
+
+                &.active {
+                    background-color: #0e7569 !important;
+                    color: #ffffff !important;
+                    border-color: #0e7569 !important;
+                    box-shadow: 0 2px 4px rgba(14, 117, 105, 0.25);
+
+                    .badge {
+                        background-color: rgba(255, 255, 255, 0.25) !important;
+                        color: #ffffff !important;
+                        border-color: transparent !important;
+                    }
+                }
+            }
+        }
+    }
+
+    .o_student_welcome_hero {
+        background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+    }
+
+    .btn-teal {
+        background-color: #0e7569;
+        border-color: #0e7569;
+        color: #ffffff;
+        &:hover {
+            background-color: #0b5c52;
+            border-color: #0b5c52;
+            color: #ffffff;
+        }
+    }
+
+    .text-teal {
+        color: #0e7569 !important;
+    }
+
+    .bg-teal-subtle {
+        background-color: #e6f4f2 !important;
+    }
+
+    .very-small {
+        font-size: 0.72rem;
+    }
+
+    .shadow-xs {
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+
+    .cursor-pointer {
+        cursor: pointer;
+    }
+
+    // Scrollable Main Workspace Area
+    .o_student_main_area {
+        flex: 1;
+        height: 100%;
+        overflow-y: auto;
+        background-color: #f8fafc;
+    }
+
+    // Mockup Dashboard Main View
+    .o_student_mockup_dashboard {
+        max-width: 1600px;
+        margin: 0 auto;
+
+        h1 {
+            font-size: 26px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .o_badge_active_status {
+            background-color: #e6f7ef;
+            color: #16a34a;
+            font-weight: 600;
+            font-size: 11.5px;
+            padding: 3px 10px;
+            border-radius: 9999px;
+        }
+
+        .o_btn_curriculum_pdf {
+            background-color: #ffffff;
+            border: 1px solid #d1d5db;
+            color: #1e293b;
+            font-weight: 600;
+            font-size: 13px;
+            border-radius: 8px;
+            padding: 7px 16px;
+
+            &:hover {
+                background-color: #f8fafc;
+                border-color: #94a3b8;
+            }
+        }
+
+        .o_btn_request_transcript {
+            background-color: #0e7569;
+            border: 1px solid #0e7569;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 13px;
+            border-radius: 8px;
+            padding: 7px 16px;
+
+            &:hover {
+                background-color: #115e59;
+                border-color: #115e59;
+                color: #ffffff;
+            }
+        }
+
+        // Two Alert Banners
+        .o_alert_attendance_card {
+            background-color: #fef2f2;
+            border: 1px solid #fee2e2;
+            border-radius: 14px;
+            padding: 14px 18px;
+        }
+
+        .o_alert_tuition_card {
+            background-color: #fffbeb;
+            border: 1px solid #fef3c7;
+            border-radius: 14px;
+            padding: 14px 18px;
+        }
+
+        .o_alert_icon_circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 15px;
+            font-weight: 700;
+            flex-shrink: 0;
+
+            &.o_alert_icon_red {
+                background-color: #dc2626;
+                color: #ffffff;
+            }
+
+            &.o_alert_icon_amber {
+                background-color: #b45309;
+                color: #ffffff;
+            }
+        }
+
+        .o_alert_title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .o_alert_btn {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            color: #1e293b;
+            font-size: 12.5px;
+            font-weight: 600;
+            border-radius: 6px;
+            padding: 6px 14px;
+
+            &:hover {
+                background-color: #f8fafc;
+                color: #0f172a;
+            }
+        }
+
+        .o_btn_pay_now {
+            background-color: #0e7569;
+            border: none;
+            color: #ffffff;
+            font-size: 12.5px;
+            font-weight: 600;
+            border-radius: 6px;
+            padding: 6px 16px;
+
+            &:hover {
+                background-color: #115e59;
+                color: #ffffff;
+            }
+        }
+
+        // 4 KPI Cards
+        .o_kpi_card_white {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 16px 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+            &:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 18px -4px rgba(0, 0, 0, 0.06);
+            }
+
+            .h3 {
+                font-size: 26px;
+                font-weight: 700;
+                color: #0f172a;
+                line-height: 1.1;
+                margin-bottom: 8px;
+            }
+
+            .o_kpi_pill_track {
+                background-color: #fef3c7;
+                color: #b45309;
+                font-weight: 600;
+                font-size: 11px;
+                padding: 3px 10px;
+                border-radius: 9999px;
+            }
+
+            .o_kpi_pill_due {
+                background-color: #fee2e2;
+                color: #dc2626;
+                font-weight: 600;
+                font-size: 11px;
+                padding: 3px 10px;
+                border-radius: 9999px;
+            }
+
+            .o_progress_bar_teal {
+                background-color: #0d9488 !important;
+                border-radius: 9999px;
+            }
+        }
+
+        // Enrolled Classes Card
+        .o_enrolled_classes_card {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 22px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+
+            .o_filter_pill {
+                background-color: #f1f5f9;
+                color: #475569;
+                font-size: 12px;
+                font-weight: 600;
+                border-radius: 9999px;
+                padding: 5px 14px;
+                border: none;
+                cursor: pointer;
+                transition: all 0.15s ease;
+
+                &:hover {
+                    background-color: #e2e8f0;
+                    color: #0f172a;
+                }
+
+                &.active {
+                    background-color: #0f172a;
+                    color: #ffffff;
+                }
+            }
+
+            .o_course_search_input {
+                border: 1px solid #e2e8f0;
+                border-radius: 8px;
+                padding: 6px 12px;
+                font-size: 12.5px;
+                width: 220px;
+                background-color: #ffffff;
+
+                &:focus {
+                    border-color: #0d9488;
+                    box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.15);
+                    outline: none;
+                }
+            }
+
+            .o_course_row {
+                transition: background-color 0.15s ease;
+                padding: 14px 4px;
+
+                &:hover {
+                    background-color: #f8fafc;
+                }
+
+                .o_course_abbr_badge {
+                    width: 44px;
+                    height: 44px;
+                    min-width: 44px;
+                    background-color: #e6f4f2;
+                    color: #0d9488;
+                    font-weight: 700;
+                    font-size: 12.5px;
+                    border-radius: 10px;
+                }
+
+                .o_course_title {
+                    font-size: 14px;
+                    font-weight: 700;
+                    color: #0f172a;
+                }
+
+                .o_course_instructor_room {
+                    font-size: 12px;
+                    color: #64748b;
+                    margin-top: 2px;
+                }
+
+                .o_badge_risk {
+                    background-color: #fee2e2;
+                    color: #dc2626;
+                    font-weight: 600;
+                    font-size: 11px;
+                    padding: 3px 10px;
+                    border-radius: 9999px;
+                }
+
+                .o_badge_enrolled {
+                    background-color: #dcfce7;
+                    color: #16a34a;
+                    font-weight: 600;
+                    font-size: 11px;
+                    padding: 3px 10px;
+                    border-radius: 9999px;
+                }
+
+                .o_badge_watch {
+                    background-color: #fef3c7;
+                    color: #d97706;
+                    font-weight: 600;
+                    font-size: 11px;
+                    padding: 3px 10px;
+                    border-radius: 9999px;
+                }
+
+                .o_btn_course_action {
+                    background-color: #ffffff;
+                    border: 1px solid #e2e8f0;
+                    color: #334155;
+                    font-size: 12px;
+                    font-weight: 600;
+                    border-radius: 6px;
+                    padding: 5px 12px;
+
+                    &:hover {
+                        background-color: #f1f5f9;
+                        color: #0f172a;
+                        border-color: #cbd5e1;
+                    }
+                }
+            }
+
+            .o_btn_toggle_courses {
+                color: #0d9488;
+                font-size: 13px;
+                font-weight: 600;
+                cursor: pointer;
+
+                &:hover {
+                    color: #0f766e;
+                    text-decoration: underline;
+                }
+            }
+        }
+
+        // Right Column: Today Card
+        .o_today_card {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+
+            .o_day_picker_btn {
+                background: transparent;
+                border: none;
+                border-radius: 8px;
+                padding: 6px 8px;
+                width: 44px;
+                text-align: center;
+                color: #64748b;
+                cursor: pointer;
+                transition: all 0.15s ease;
+
+                &:hover {
+                    background-color: #f1f5f9;
+                    color: #0f172a;
+                }
+
+                &.active {
+                    background-color: #0e7569;
+                    color: #ffffff;
+                }
+
+                .o_dp_name {
+                    font-size: 10px;
+                    text-transform: uppercase;
+                    font-weight: 600;
+                    letter-spacing: 0.04em;
+                    display: block;
+                }
+
+                .o_dp_num {
+                    font-size: 14px;
+                    font-weight: 700;
+                    display: block;
+                    margin-top: 1px;
+                }
+            }
+
+            .o_today_slot_item {
+                display: flex;
+                align-items: center;
+                border-radius: 8px;
+                padding: 10px 12px;
+                margin-bottom: 8px;
+                background-color: #ffffff;
+                transition: background-color 0.15s ease;
+
+                &.o_today_slot_active {
+                    background-color: #f0fdf9;
+                }
+
+                .o_slot_time_col {
+                    min-width: 44px;
+                    font-size: 11px;
+                    color: #64748b;
+                    font-weight: 600;
+                    line-height: 1.3;
+                    text-align: right;
+                    padding-right: 12px;
+                }
+
+                .o_slot_bar {
+                    width: 3px;
+                    height: 28px;
+                    background-color: #0d9488;
+                    border-radius: 2px;
+                    margin-right: 12px;
+                    flex-shrink: 0;
+                }
+
+                .o_slot_info_box {
+                    min-width: 0;
+
+                    .o_slot_title {
+                        font-size: 13px;
+                        font-weight: 700;
+                        color: #0f172a;
+                        line-height: 1.3;
+                    }
+
+                    .o_slot_room {
+                        font-size: 11.5px;
+                        color: #64748b;
+                        margin-top: 2px;
+                        line-height: 1.2;
+                    }
+                }
+            }
+
+            .o_link_full_calendar {
+                color: #0d9488;
+                font-size: 13px;
+                font-weight: 600;
+                cursor: pointer;
+
+                &:hover {
+                    color: #0f766e;
+                    text-decoration: underline;
+                }
+            }
+        }
+
+        // Right Column: Campus Notices Card
+        .o_notices_card {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+
+            .o_link_view_all_notices {
+                color: #0d9488;
+                font-size: 12.5px;
+                font-weight: 600;
+                cursor: pointer;
+
+                &:hover {
+                    color: #0f766e;
+                    text-decoration: underline;
+                }
+            }
+
+            .o_notice_row_item {
+                padding: 10px 0;
+                border-bottom: 1px solid #f1f5f9;
+                transition: opacity 0.15s ease;
+
+                &:last-child {
+                    border-bottom: none;
+                }
+
+                &:hover {
+                    opacity: 0.8;
+                }
+            }
+
+            .o_badge_notice_new {
+                background-color: #fee2e2;
+                color: #ef4444;
+                font-size: 10px;
+                font-weight: 700;
+                padding: 2px 7px;
+                border-radius: 9999px;
+            }
+        }
+    }
+}
+
+
+// ==========================================
+// DEDICATED "MY CLASSES" PAGE (MATCHING REFERENCE DESIGN)
+// ==========================================
+.o_my_classes_page {
+    background-color: #f8fafc;
+    min-height: calc(100vh - 64px);
+
+    .o_classes_header {
+        h1 {
+            font-size: 26px;
+            font-weight: 700;
+            color: #0f172a;
+            letter-spacing: -0.02em;
+        }
+        .btn-outline-secondary {
+            background: #ffffff;
+            border-color: #e2e8f0;
+            color: #334155;
+            font-size: 13px;
+            &:hover {
+                background: #f1f5f9;
+                border-color: #cbd5e1;
+                color: #0f172a;
+            }
+        }
+    }
+
+    // Dual Notification Banners
+    .o_classes_banner_card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+        border-radius: 12px;
+        min-height: 82px;
+
+        &.o_classes_upnext_card {
+            background: #f0fdf4;
+            border-color: #bbf7d0;
+        }
+
+        &.o_classes_alert_card {
+            background: #fef2f2;
+            border-color: #fecdd3;
+        }
+
+        .o_banner_icon_circle {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+
+            &.o_icon_circle_teal {
+                background-color: #d1fae5;
+                color: #059669;
+            }
+
+            &.o_icon_circle_red {
+                background-color: #fee2e2;
+                color: #dc2626;
+            }
+        }
+
+        .o_banner_tag {
+            font-size: 11px;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+            &.text-teal {
+                color: #059669 !important;
+            }
+        }
+
+        .o_banner_title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #0f172a;
+            line-height: 1.25;
+        }
+
+        .o_banner_sub {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .btn-teal {
+            background-color: #0d9488;
+            color: #ffffff;
+            border: none;
+            font-size: 12px;
+            padding: 6px 14px;
+            font-weight: 600;
+            &:hover {
+                background-color: #0f766e;
+                color: #ffffff;
+            }
+        }
+    }
+
+    // Filter pills toolbar
+    .o_classes_toolbar {
+        .o_classes_filter_pill {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 9999px;
+            padding: 6px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #475569;
+            transition: all 0.15s ease;
+            cursor: pointer;
+
+            span {
+                color: #64748b;
+                font-weight: 500;
+            }
+
+            &:hover {
+                background: #f1f5f9;
+                color: #0f172a;
+            }
+
+            &.active {
+                background: #0f172a;
+                border-color: #0f172a;
+                color: #ffffff;
+
+                span {
+                    color: #94a3b8;
+                }
+            }
+        }
+
+        .o_classes_search_input {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            font-size: 13px;
+            height: 36px;
+            &:focus {
+                border-color: #0d9488;
+                box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.12);
+            }
+        }
+    }
+
+    // Class card grid
+    .o_my_class_card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 1px 2px rgba(15, 23, 42, 0.02);
+        transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+            border-color: #cbd5e1;
+        }
+
+        .o_card_chip {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 6px;
+
+            &.o_chip_code {
+                background-color: #f1f5f9;
+                color: #334155;
+            }
+
+            &.o_chip_slot {
+                background-color: #e0f2fe;
+                color: #0369a1;
+                border-radius: 9999px;
+                font-weight: 600;
+            }
+        }
+
+        .o_card_status_badge {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 9999px;
+
+            &.o_badge_risk {
+                background-color: #fee2e2;
+                color: #dc2626;
+            }
+
+            &.o_badge_watch {
+                background-color: #fef3c7;
+                color: #d97706;
+            }
+
+            &.o_badge_enrolled {
+                background-color: #ecfdf5;
+                color: #059669;
+            }
+
+            &.o_badge_finished {
+                background-color: #ede9fe;
+                color: #6d28d9;
+            }
+        }
+
+        .o_card_course_title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #0f172a;
+            line-height: 1.35;
+            min-height: 42px;
+        }
+
+        .o_card_teacher_avatar {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background-color: #e2e8f0;
+            color: #334155;
+            font-size: 11px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .o_card_att_track {
+            background-color: #f1f5f9;
+        }
+
+        .o_card_action_btn {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            color: #334155;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.15s ease;
+
+            &:hover {
+                background-color: #f8fafc;
+                border-color: #cbd5e1;
+                color: #0f172a;
+            }
+        }
+    }
+}
+
+/* Keep the final student controls aligned with the teacher/admin blue system. */
+.o_student_portal_root .o_student_navbar .o_student_nav_pills button.nav-link.active {
+    background-color: #2563eb !important;
+    border-color: #2563eb !important;
+    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.25);
+}
+
+.o_student_portal_root .btn-teal,
+.o_student_portal_root .btn-teal:hover,
+.o_student_portal_root .btn-teal:focus {
+    background-color: #2563eb;
+    border-color: #2563eb;
+}
+
+/* Student overview follows the same executive dashboard composition as the
+   administrator view: compact canvas, action center, KPI strip, then detail. */
+.o_student_admin_dashboard {
+    background: #f8fafc;
+
+    .o_student_navbar {
+        display: none;
+    }
+
+    .o_student_exec_canvas {
+        width: 100%;
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 1rem 1.25rem 2rem !important;
+    }
+
+    .o_student_exec_header_card {
+        padding: 1.1rem 1.25rem !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 0.75rem !important;
+        background: #ffffff;
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06) !important;
+
+        h2 {
+            font-size: 1.15rem;
+            letter-spacing: -0.01em;
+        }
+
+        .badge {
+            font-size: 0.65rem;
+            letter-spacing: 0.02em;
+        }
+
+        .btn {
+            min-height: 30px;
+            border-radius: 0.35rem;
+            font-size: 0.72rem;
+        }
+    }
+
+    .o_student_action_center {
+        margin-right: 0;
+        margin-left: 0;
+        padding: 0.55rem 0.75rem;
+        border: 1px solid #f1d982;
+        border-radius: 0.65rem;
+        background: #fff8d6;
+        box-shadow: 0 1px 4px rgba(146, 112, 18, 0.08);
+
+        > [class*="col-"] {
+            padding-right: 0.35rem;
+            padding-left: 0.35rem;
+        }
+
+        .o_alert_card,
+        .card {
+            min-height: 52px;
+            padding: 0.55rem 0.7rem !important;
+            border: 0 !important;
+            border-radius: 0.4rem !important;
+            background: transparent !important;
+            box-shadow: none !important;
+        }
+
+        .o_alert_title,
+        .fw-bold {
+            font-size: 0.72rem;
+        }
+
+        .text-muted {
+            font-size: 0.66rem;
+        }
+
+        .o_alert_icon_circle {
+            width: 28px;
+            height: 28px;
+            flex: 0 0 28px;
+        }
+
+        .btn {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.68rem;
+            white-space: nowrap;
+        }
+    }
+
+    .o_student_kpi_summary {
+        margin-right: 0;
+        margin-left: 0;
+
+        > [class*="col-"] {
+            padding-right: 0.35rem;
+            padding-left: 0.35rem;
+        }
+
+        .o_kpi_card_white {
+            position: relative;
+            min-height: 112px;
+            padding: 0.8rem 0.9rem !important;
+            overflow: hidden;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 0.65rem !important;
+            box-shadow: 0 2px 7px rgba(15, 23, 42, 0.05);
+
+            &::before {
+                position: absolute;
+                top: 0;
+                right: 0;
+                left: 0;
+                height: 3px;
+                content: "";
+                background: #2563eb;
+            }
+
+            .h3 {
+                font-size: 1.25rem;
+            }
+
+            .small,
+            .very-small {
+                font-size: 0.68rem;
+            }
+        }
+
+        > [class*="col-"]:nth-child(2) .o_kpi_card_white::before { background: #0f9d8a; }
+        > [class*="col-"]:nth-child(3) .o_kpi_card_white::before { background: #3b82f6; }
+        > [class*="col-"]:nth-child(4) .o_kpi_card_white::before { background: #eab308; }
+        > [class*="col-"]:nth-child(5) .o_kpi_card_white::before { background: #ef4444; }
+    }
+
+    .o_student_dashboard_workspace {
+        .card {
+            border-color: #e2e8f0 !important;
+            border-radius: 0.7rem !important;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.045);
+        }
+
+        .o_course_row {
+            transition: background-color 0.15s ease, padding 0.15s ease;
+
+            &:hover {
+                background: #f8fbff;
+            }
+        }
+    }
+}
+
+@media (min-width: 1200px) {
+    .o_student_admin_dashboard .o_student_kpi_summary > [class*="col-"] {
+        flex: 1 0 0;
+        width: auto;
+        max-width: none;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .o_student_admin_dashboard .o_student_exec_canvas {
+        padding-right: 0.75rem !important;
+        padding-left: 0.75rem !important;
+    }
+
+    .o_student_admin_dashboard .o_student_action_center .o_alert_card,
+    .o_student_admin_dashboard .o_student_action_center .card {
+        align-items: flex-start !important;
+    }
+}
+
+/* Keep the schedule page visually connected to the overview dashboard. */
+.o_student_portal_root {
+    .o_student_subtab_view {
+        max-width: 1600px;
+        margin: 0 auto;
+    }
+
+    .o_student_section_eyebrow {
+        margin-bottom: 0.25rem;
+        color: #2563eb;
+        font-size: 0.68rem;
+        font-weight: 800;
+        letter-spacing: 0.09em;
+        line-height: 1.2;
+    }
+
+    .o_dashboard_schedule_tab_content {
+        .o_student_sessions_card {
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05) !important;
+
+            .card-header {
+                border-bottom: 1px solid #e2e8f0;
+            }
+        }
+
+        .o_student_sessions_table {
+            tbody tr {
+                min-height: 58px;
+            }
+
+            td {
+                vertical-align: middle;
+            }
+        }
+    }
+
+}
+
+/* Student schedule redesign: a weekly board with a focused daily brief. */
+.o_student_schedule_page {
+    .o_student_week_board {
+        border: 1px solid #e2e8f0 !important;
+        background: #ffffff;
+    }
+
+    .o_student_week_board_header {
+        min-height: 42px;
+        background: #f8fafc;
+    }
+
+    .o_student_week_columns {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(125px, 1fr));
+        min-width: 875px;
+    }
+
+    .o_student_week_day {
+        min-height: 365px;
+        background: #ffffff;
+        border-right: 1px solid #e2e8f0;
+
+        &:last-child {
+            border-right: 0;
+        }
+
+        &.is_today {
+            background: #f8fbff;
+        }
+    }
+
+    .o_student_week_day_header {
+        display: flex;
+        width: 100%;
+        min-height: 66px;
+        padding: 0.7rem 0.55rem;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
+        gap: 0.15rem;
+        border: 0;
+        border-bottom: 1px solid #e2e8f0;
+        background: #ffffff;
+        color: #475569;
+        cursor: pointer;
+        transition: background-color 0.15s ease, color 0.15s ease;
+
+        &:hover,
+        &.is_today {
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+
+        .o_student_week_day_name {
+            font-size: 0.72rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .o_student_week_day_date {
+            color: #64748b;
+            font-size: 0.72rem;
+            font-weight: 600;
+        }
+
+        .badge {
+            font-size: 0.56rem;
+            letter-spacing: 0.04em;
+        }
+    }
+
+    .o_student_week_day_body {
+        display: flex;
+        min-height: 298px;
+        padding: 0.55rem;
+        flex-direction: column;
+        gap: 0.55rem;
+    }
+
+    .o_student_week_session {
+        display: block;
+        width: 100%;
+        padding: 0.65rem 0.6rem;
+        border: 1px solid #bfdbfe;
+        border-left: 4px solid #2563eb;
+        border-radius: 0.5rem;
+        background: #eff6ff;
+        color: #1e293b;
+        text-align: left;
+        cursor: pointer;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+        &:hover,
+        &:focus {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.14);
+            outline: 0;
+        }
+
+        &.o_subject_color_green,
+        &.o_color_green {
+            border-color: #bbf7d0;
+            border-left-color: #16a34a;
+            background: #f0fdf4;
+        }
+
+        &.o_subject_color_yellow,
+        &.o_color_yellow {
+            border-color: #fde68a;
+            border-left-color: #ca8a04;
+            background: #fefce8;
+        }
+
+        &.o_subject_color_purple,
+        &.o_color_purple {
+            border-color: #e9d5ff;
+            border-left-color: #9333ea;
+            background: #faf5ff;
+        }
+
+        &.o_slot_palette_emerald {
+            border-color: #bbf7d0;
+            border-left-color: #059669;
+            background: #f0fdf4;
+        }
+
+        &.o_slot_palette_indigo {
+            border-color: #c7d2fe;
+            border-left-color: #6366f1;
+            background: #eef2ff;
+        }
+
+        &.o_slot_palette_amber {
+            border-color: #fde68a;
+            border-left-color: #d97706;
+            background: #fffbeb;
+        }
+
+        &.o_slot_palette_teal {
+            border-color: #99f6e4;
+            border-left-color: #0d9488;
+            background: #f0fdfa;
+        }
+
+        &.o_slot_palette_rose {
+            border-color: #fecdd3;
+            border-left-color: #e11d48;
+            background: #fff1f2;
+        }
+    }
+
+    .o_student_week_session_time {
+        color: #475569;
+        font-size: 0.64rem;
+        font-weight: 700;
+    }
+
+    .o_student_week_session .badge {
+        padding: 0.2rem 0.35rem;
+        font-size: 0.55rem;
+    }
+
+    .o_student_week_session_title {
+        margin-top: 0.35rem;
+        font-size: 0.78rem;
+        font-weight: 800;
+        line-height: 1.25;
+    }
+
+    .o_student_week_session_meta {
+        overflow: hidden;
+        margin-top: 0.25rem;
+        color: #64748b;
+        font-size: 0.62rem;
+        line-height: 1.25;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .o_student_week_empty {
+        margin-top: auto;
+        margin-bottom: auto;
+        padding: 0.65rem 0.25rem;
+        border: 1px dashed #cbd5e1;
+        border-radius: 0.45rem;
+        color: #94a3b8;
+        font-size: 0.68rem;
+        font-style: italic;
+        text-align: center;
+    }
+
+    .o_student_schedule_brief,
+    .o_student_schedule_actions {
+        border: 1px solid #e2e8f0 !important;
+    }
+
+    .o_student_next_class_badge {
+        display: inline-flex;
+        padding: 0.25rem 0.45rem;
+        border: 1px solid #bfdbfe;
+        border-radius: 999px;
+        background: #eff6ff;
+        color: #2563eb;
+        font-size: 0.6rem;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+    }
+
+    .o_student_schedule_actions .btn {
+        border-radius: 0.4rem;
+        font-weight: 600;
+    }
+}
+
+/* The academic hub now owns the student schedule. Remove the older dashboard
+   sidebar/quick-link implementation so it cannot render a second schedule. */
+.o_student_legacy_quick_links,
+.o_student_legacy_schedule_sidebar {
+    display: none !important;
+}
+
+.o_student_legacy_grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+}
+
+/* The subpage title/back bar is intentionally removed from every student tab. */
+.o_student_subtab_view > .d-flex.align-items-center.justify-content-between.bg-white {
+    display: none !important;
+}
+
+@media (max-width: 1199.98px) {
+    .o_student_schedule_page .o_student_week_board {
+        overflow-x: auto;
+    }
+}
+
+.o_student_schedule_page {
+    --student-ink: var(--o-main-text-color, #172033);
+    --student-muted: var(--o-muted-color, #718096);
+    --student-line: var(--o-border-color, #e7ebf2);
+    --student-paper: var(--o-view-background-color, #fff);
+
+    .o_student_timetable_header {
+        display: flex;
+        justify-content: space-between;
+        gap: 1.5rem;
+        align-items: flex-end;
+        margin-bottom: 1.5rem;
+        padding: 1.25rem 1.5rem;
+        border: 1px solid var(--student-line);
+        border-radius: 1rem;
+        background: linear-gradient(135deg, var(--student-paper), #f5f8ff);
+    }
+
+    .o_student_timetable_greeting { margin: 0.2rem 0 0.35rem; color: var(--student-ink); font-size: 1.45rem; font-weight: 800; }
+    .o_student_timetable_identity { color: var(--student-muted); font-size: 0.78rem; }
+    .o_student_timetable_filters { display: flex; gap: 0.6rem; align-items: flex-end; }
+    .o_student_timetable_filters label { min-width: 9.5rem; color: var(--student-muted); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+    .o_student_timetable_filters select { margin-top: 0.25rem; font-size: 0.78rem; text-transform: none; }
+
+    .o_student_timetable_grid {
+        display: grid;
+        grid-template-columns: 9.5rem repeat(6, minmax(155px, 1fr));
+        min-width: 1040px;
+        border-top: 1px solid var(--student-line);
+        border-left: 1px solid var(--student-line);
+    }
+    .o_student_timetable_corner,
+    .o_student_timetable_day_header,
+    .o_student_timetable_time,
+    .o_student_timetable_cell { border-right: 1px solid var(--student-line); border-bottom: 1px solid var(--student-line); }
+    .o_student_timetable_corner { display: flex; align-items: center; padding: 0.8rem; color: var(--student-muted); background: #f8fafc; font-size: 0.64rem; font-weight: 800; letter-spacing: 0.08em; }
+    .o_student_timetable_day_header { min-height: 4.5rem; padding: 0.7rem; border-top: 0; background: var(--student-paper); color: var(--student-ink); font-size: 0.75rem; font-weight: 800; text-align: left; }
+    .o_student_timetable_day_header.is_today { background: #eef5ff; color: #2563eb; }
+    .o_student_timetable_day_header small { display: block; margin-top: 0.3rem; color: #2563eb; font-size: 0.52rem; letter-spacing: 0.05em; }
+    .o_student_timetable_time { display: flex; align-items: flex-start; justify-content: flex-end; padding: 0.85rem 0.75rem; background: #fbfcfe; color: var(--student-muted); font-size: 0.68rem; font-weight: 700; text-align: right; }
+    .o_student_timetable_cell { min-height: 9.5rem; padding: 0.55rem; background: var(--student-paper); }
+    .o_student_timetable_cell.is_today { background: #f7fbff; }
+    .o_student_session_card { position: relative; min-height: 8.2rem; padding: 0.75rem 0.7rem; border-width: 1px 1px 1px 4px; border-radius: 0.75rem; }
+    .o_student_session_icon { display: inline-flex; width: 1.55rem; height: 1.55rem; align-items: center; justify-content: center; margin-bottom: 0.45rem; border-radius: 0.45rem; background: rgba(255,255,255,0.7); color: currentColor; }
+    .o_student_session_code { display: block; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.04em; }
+    .o_student_session_code_label { display: block; margin-top: 0.08rem; color: var(--student-muted); font-size: 0.56rem; }
+    .o_student_session_completed { position: absolute; top: 0.65rem; right: 0.65rem; display: inline-flex; width: 1.35rem; height: 1.35rem; align-items: center; justify-content: center; border-radius: 50%; background: #16a34a; color: #fff; font-size: 0.62rem; }
+    .o_student_session_card .o_student_week_session_title { display: block; margin-top: 0.35rem; color: var(--student-ink); font-size: 0.78rem; }
+    .o_student_session_card .o_student_week_session_meta { display: block; margin-top: 0.27rem; }
+    .o_student_week_empty { text-transform: uppercase; letter-spacing: 0.08em; }
+
+    .o_student_mini_calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.12rem; text-align: center; }
+    .o_student_mini_weekday { padding: 0.25rem 0; color: var(--student-muted); font-size: 0.6rem; font-weight: 800; }
+    .o_student_mini_day { display: grid; min-height: 1.65rem; place-items: center; color: var(--student-ink); font-size: 0.65rem; }
+    .o_student_mini_day.is_muted { color: #c3cad5; }
+    .o_student_mini_day.is_today { width: 1.65rem; margin: auto; border-radius: 50%; background: #2563eb; color: #fff; font-weight: 800; }
+}
+
+@media (max-width: 767.98px) {
+    .o_student_schedule_page .o_student_timetable_header { align-items: stretch; flex-direction: column; }
+    .o_student_schedule_page .o_student_timetable_filters { flex-wrap: wrap; }
+    .o_student_schedule_page .o_student_timetable_filters label { flex: 1 1 9rem; }
+    .o_student_schedule_page .o_student_timetable_grid { overflow-x: auto; }
+}
+.o_student_admin_dashboard {
+  background: #f8f9fb;
+
+  // Cards (same as admin)
+  .o_admin_card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+  }
+  .o_admin_greeting { font-size: 1.75rem; font-weight: 600; color: #111827; }
+  .o_admin_subtitle { font-size: .875rem; color: #6b7280; }
+  .o_admin_card_title { font-size: 1.05rem; font-weight: 600; color: #111827; }
+  .o_admin_card_sub { font-size: .8rem; color: #6b7280; }
+
+  // KPI cards (no colored borders)
+  .o_admin_kpi_card { padding: 1rem 1.25rem; }
+  .o_kpi_label { font-size: .8rem; color: #6b7280; }
+  .o_kpi_icon { color: #d1d5db; font-size: .9rem; }
+  .o_kpi_value { font-size: 2rem; font-weight: 600; color: #111827; line-height: 1.2; margin: .35rem 0; }
+  .o_kpi_value_suffix { font-size: .95rem; font-weight: 400; color: #6b7280; }
+  .o_kpi_sub { font-size: .78rem; color: #6b7280; }
+  .o_kpi_progress { height: 4px; background: #e5e7eb; }
+  .o_progress_bar_indigo { background: #6366f1; }
+
+  // Alert boxes (same as admin yellow / blue boxes)
+  .o_alert_box {
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    padding: 1rem 1.25rem; border-radius: 8px;
+  }
+  .o_alert_warning { background: #fefce8; border: 1px solid #fde68a; }
+  .o_alert_info    { background: #eff6ff; border: 1px solid #bfdbfe; }
+  .o_alert_title { font-weight: 600; color: #111827; font-size: .9rem; }
+  .o_alert_text  { color: #6b7280; font-size: .82rem; }
+  .o_alert_btn {
+    background: #fff; color: #111827; border: 1px solid #111827;
+    border-radius: 4px; font-weight: 500; white-space: nowrap;
+  }
+
+  // Course code badge instead of repeated "CS"
+  .o_course_abbr_badge {
+    min-width: 52px; height: 40px; padding: 0 .5rem; border-radius: 8px;
+    background: #eef2ff; color: #4f46e5; font-size: .72rem; font-weight: 600;
+  }
+
+  // Replace teal with indigo
+  .o_day_picker_btn.active { background: #6366f1; color: #fff; }
+  .o_link_full_calendar, .o_link_view_all_notices, .o_btn_toggle_courses { color: #6366f1; }
+}
+
+/* ==========================================================================
+   UNIVERSITY STUDENT PORTAL - EXECUTIVE ADMIN LAYOUT ALIGNMENT
+   ========================================================================== */
+.o_student_portal_root {
+    background-color: #f8fafc;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+    .o_executive_dashboard_container {
+        background-color: #f8fafc;
+        color: #1e293b;
+    }
+
+    .o_dashboard_canvas {
+        max-width: 1720px;
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    // 1. Executive Header Card
+    .o_exec_header_card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.02);
+
+        .o_student_header_avatar_wrap {
+            width: 48px;
+            height: 48px;
+        }
+
+        .o_student_header_avatar {
+            width: 48px;
+            height: 48px;
+            object-fit: cover;
+            border: 2px solid #e2e8f0;
+        }
+
+        .o_student_avatar_placeholder {
+            width: 48px;
+            height: 48px;
+            font-size: 1.15rem;
+        }
+
+        .o_exec_title {
+            font-size: 1.45rem;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.025em;
+            line-height: 1.2;
+        }
+
+        .o_exec_subtitle {
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .o_btn_refresh {
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            background-color: #f8fafc;
+            color: #475569;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            padding: 6px 14px;
+            transition: all 0.15s ease;
+
+            &:hover {
+                background-color: #ffffff;
+                color: #4f46e5;
+                border-color: #4f46e5;
+                box-shadow: 0 2px 6px rgba(79, 70, 229, 0.12);
+            }
+
+            &.is-refreshing i {
+                animation: spin 1s infinite linear;
+            }
+        }
+    }
+
+    // 2. KPI Five Section
+    .o_kpi_five_section {
+        .o_kpi_five_row {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 1rem;
+
+            @media (max-width: 1399.98px) {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+            @media (max-width: 991.98px) {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+            @media (max-width: 575.98px) {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .o_kpi_metric_card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            min-height: 130px;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 2px 6px rgba(15, 23, 42, 0.02);
+            transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+            cursor: pointer;
+
+            &:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08) !important;
+                border-color: #cbd5e1;
+            }
+
+            .o_kpi_metric_label {
+                font-size: 0.8125rem;
+                font-weight: 600;
+                color: #64748b;
+            }
+
+            .o_kpi_metric_value {
+                font-size: 1.85rem;
+                font-weight: 800;
+                color: #0f172a;
+                line-height: 1.15;
+                letter-spacing: -0.025em;
+            }
+
+            .o_kpi_icon_bubble {
+                width: 36px;
+                height: 36px;
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 0.95rem;
+
+                &.bg-indigo-subtle { background-color: #eef2ff !important; color: #4f46e5 !important; }
+                &.bg-teal-subtle { background-color: #ccfbf1 !important; color: #0f766e !important; }
+                &.bg-purple-subtle { background-color: #f3e8ff !important; color: #7c3aed !important; }
+                &.bg-amber-subtle { background-color: #fef3c7 !important; color: #d97706 !important; }
+                &.bg-emerald-subtle { background-color: #dcfce7 !important; color: #16a34a !important; }
+            }
+        }
+    }
+
+    // 3. Chart and Detail Cards
+    .o_chart_card,
+    .o_detail_card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 2px 6px rgba(15, 23, 42, 0.02);
+
+        .o_card_title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #0f172a;
+            letter-spacing: -0.015em;
+        }
+
+        .o_card_subtitle {
+            font-size: 0.8rem;
+        }
+    }
+
+    // 4. Weekly Timetable Grid
+    .o_weekly_calendar_wrapper {
+        min-width: 640px;
+        overflow-x: auto;
+    }
+
+    .o_week_headers_row {
+        display: grid;
+        grid-template-columns: 55px repeat(7, 1fr);
+        border-bottom: 1px solid #e2e8f0;
+        margin-bottom: 6px;
+        padding-bottom: 8px;
+
+        .o_week_time_corner {
+            color: #94a3b8;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .o_week_day_header {
+            .o_day_name {
+                color: #64748b;
+                font-size: 0.7rem;
+                font-weight: 700;
+                letter-spacing: 0.04em;
+                margin-bottom: 3px;
+            }
+
+            .o_day_number {
+                color: #0f172a;
+                font-size: 0.95rem;
+                font-weight: 700;
+                width: 28px;
+                height: 28px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto;
+                border-radius: 50%;
+            }
+
+            &.is_today {
+                .o_day_name {
+                    color: #4f46e5;
+                    font-weight: 800;
+                }
+
+                .o_today_circle {
+                    background: #4f46e5 !important;
+                    color: #ffffff !important;
+                    font-weight: 800;
+                    box-shadow: 0 2px 6px rgba(79, 70, 229, 0.35);
+                }
+            }
+        }
+    }
+
+    .o_week_grid_body {
+        display: grid;
+        grid-template-columns: 55px repeat(7, 1fr);
+        height: 560px;
+        position: relative;
+
+        .o_time_gutter {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+            padding: 4px 0;
+
+            .o_time_marker {
+                color: #94a3b8;
+                font-size: 0.7rem;
+                font-weight: 600;
+                text-align: right;
+                padding-right: 10px;
+                line-height: 1;
+                transform: translateY(-50%);
+            }
+        }
+
+        .o_week_columns_container {
+            grid-column: 2 / -1;
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            height: 100%;
+            position: relative;
+        }
+
+        .o_week_day_column {
+            position: relative;
+            height: 100%;
+            border-right: 1px solid #f1f5f9;
+            padding: 0 3px;
+
+            &:last-child {
+                border-right: none;
+            }
+
+            &.is_today {
+                background: rgba(79, 70, 229, 0.02);
+            }
+
+            .o_column_grid_lines {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                pointer-events: none;
+
+                .o_grid_line {
+                    width: 100%;
+                    border-top: 1px dashed #f1f5f9;
+                }
+            }
+        }
+
+        .o_schedule_slot_card {
+            position: absolute;
+            left: 3px;
+            right: 3px;
+            border-radius: 8px;
+            padding: 6px 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: transform 0.15s ease, box-shadow 0.15s ease, z-index 0.1s ease;
+            z-index: 2;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            border-left-width: 4px;
+            cursor: pointer;
+
+            &:hover {
+                transform: scale(1.02);
+                z-index: 10;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+
+            .o_slot_code {
+                font-size: 0.74rem;
+                line-height: 1.15;
+            }
+
+            .o_slot_title {
+                font-size: 0.76rem;
+                line-height: 1.2;
+            }
+
+            .o_slot_time {
+                font-size: 0.65rem;
+                color: #475569;
+            }
+
+            .o_slot_room,
+            .o_slot_instructor {
+                font-size: 0.65rem;
+                color: #64748b;
+            }
+
+            // Subject Palettes
+            &.o_slot_palette_purple {
+                background: #f5f3ff;
+                border-left-color: #7c3aed;
+                color: #4c1d95;
+            }
+            &.o_slot_palette_sapphire {
+                background: #eff6ff;
+                border-left-color: #3b82f6;
+                color: #1e3a8a;
+            }
+            &.o_slot_palette_emerald {
+                background: #ecfdf5;
+                border-left-color: #10b981;
+                color: #065f46;
+            }
+            &.o_slot_palette_indigo {
+                background: #eef2ff;
+                border-left-color: #6366f1;
+                color: #312e81;
+            }
+            &.o_slot_palette_amber {
+                background: #fffbeb;
+                border-left-color: #f59e0b;
+                color: #78350f;
+            }
+            &.o_slot_palette_teal {
+                background: #f0fdfa;
+                border-left-color: #14b8a6;
+                color: #134e4a;
+            }
+            &.o_slot_palette_rose {
+                background: #fff1f2;
+                border-left-color: #f43f5e;
+                color: #881337;
+            }
+        }
+    }
+
+    // 5. Month Calendar Grid
+    .o_month_calendar_wrapper {
+        overflow-x: auto;
+    }
+
+    .o_month_headers_row {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        border-bottom: 1px solid #e2e8f0;
+        padding-bottom: 6px;
+        margin-bottom: 6px;
+
+        .o_month_header {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+    }
+
+    .o_month_grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 4px;
+
+        .o_month_day_cell {
+            min-height: 72px;
+            padding: 6px;
+            border: 1px solid #f1f5f9;
+            border-radius: 8px;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+
+            &.is_muted {
+                background: #f8fafc;
+                opacity: 0.5;
+            }
+
+            &.is_today {
+                border-color: #c7d2fe;
+                background: #eef2ff;
+            }
+
+            .o_month_day_num {
+                font-size: 0.8rem;
+                font-weight: 700;
+                color: #1e293b;
+                width: 22px;
+                height: 22px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .o_month_session_badge {
+                cursor: pointer;
+                transition: transform 0.15s ease;
+                &:hover {
+                    transform: scale(1.04);
+                }
+            }
+
+            .o_month_no_class {
+                color: #94a3b8;
+                font-size: 0.68rem;
+            }
+        }
+    }
+
+    // 6. List View
+    .o_schedule_list_item {
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+        &:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+        }
+    }
+
+    // 7. Quick Actions
+    .o_quick_action_tile {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 14px;
+        transition: all 0.15s ease;
+        cursor: pointer;
+
+        &:hover {
+            background: #ffffff;
+            border-color: #cbd5e1;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px -4px rgba(15, 23, 42, 0.08);
+
+            .o_tile_title {
+                color: #4f46e5 !important;
+            }
+        }
+
+        .o_op_icon_wrap {
+            width: 36px;
+            height: 36px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+
+            &.bg-purple-subtle { background-color: #f3e8ff !important; color: #7c3aed !important; }
+            &.bg-primary-subtle { background-color: #dbeafe !important; color: #2563eb !important; }
+            &.bg-success-subtle { background-color: #dcfce7 !important; color: #16a34a !important; }
+            &.bg-warning-subtle { background-color: #fef3c7 !important; color: #d97706 !important; }
+            &.bg-info-subtle { background-color: #e0f2fe !important; color: #0284c7 !important; }
+        }
+
+        .o_tile_title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            line-height: 1.2;
+            transition: color 0.15s ease;
+        }
+    }
+}

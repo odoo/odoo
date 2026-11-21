@@ -536,7 +536,10 @@ class Cursor(BaseCursor):
         # advanced stats only at logging.DEBUG level
         self.print_log()
 
-        self._obj.close()
+        try:
+            self._obj.close()
+        except Exception:
+            pass
 
         # This force the cursor to be freed, and thus, available again. It is
         # important because otherwise we can overload the server very easily
@@ -546,7 +549,10 @@ class Cursor(BaseCursor):
         del self._obj
 
         # Clean the underlying connection, and run rollback hooks.
-        self.rollback()
+        try:
+            self.rollback()
+        except Exception:
+            pass
 
         self._closed = True
 
@@ -554,7 +560,14 @@ class Cursor(BaseCursor):
             self._cnx.leaked = True  # type: ignore
         else:
             chosen_template = tools.config['db_template']
-            keep_in_pool = self.dbname not in ('template0', 'template1', 'postgres', chosen_template)
+            configured_dbs = tools.config.get('db_name')
+            if isinstance(configured_dbs, (list, tuple, set)):
+                is_configured_db = bool(self.dbname and self.dbname in configured_dbs)
+            elif isinstance(configured_dbs, str):
+                is_configured_db = bool(self.dbname and self.dbname in [d.strip() for d in configured_dbs.split(',') if d.strip()])
+            else:
+                is_configured_db = False
+            keep_in_pool = (is_configured_db or self.dbname not in ('template0', 'template1', 'postgres', chosen_template)) and not self._cnx.closed
             self.__pool.give_back(self._cnx, keep_in_pool=keep_in_pool)
 
     def commit(self) -> None:
@@ -665,7 +678,7 @@ class ConnectionPool:
             if not cnx._pool_in_use and self._dsn_equals(cnx.dsn, connection_info):
                 try:
                     cnx.reset()
-                except psycopg2.OperationalError:
+                except (psycopg2.OperationalError, psycopg2.InterfaceError):
                     self._debug('Cannot reset connection at index %d: %r', i, cnx.dsn)
                     # psycopg2 2.4.4 and earlier do not allow closing a closed connection
                     if not cnx.closed:
@@ -712,7 +725,7 @@ class ConnectionPool:
         except ValueError:
             raise PoolError('This connection does not belong to the pool')
 
-        if keep_in_pool:
+        if keep_in_pool and not connection.closed:
             # Release the connection and record the last time used
             connection._pool_in_use = False
             connection._pool_last_used = time.time()
@@ -720,7 +733,11 @@ class ConnectionPool:
         else:
             cnx = self._connections.pop(index)
             self._debug('Forgot connection to %r', cnx.dsn)
-            cnx.close()
+            if not cnx.closed:
+                try:
+                    cnx.close()
+                except Exception:
+                    pass
 
     @locked
     def close_all(self, dsn: dict | str | None = None):
@@ -802,7 +819,14 @@ def connection_info_for(db_or_uri: str, readonly=False) -> tuple[str, dict]:
             db_name = us.hostname
         return db_name, {'dsn': db_or_uri, 'application_name': app_name}
 
-    connection_info = {'database': db_or_uri, 'application_name': app_name}
+    connection_info = {
+        'database': db_or_uri,
+        'application_name': app_name,
+        'keepalives': 1,
+        'keepalives_idle': 30,
+        'keepalives_interval': 10,
+        'keepalives_count': 3,
+    }
     for p in ('host', 'port', 'user', 'password', 'sslmode'):
         cfg = tools.config['db_' + p]
         if readonly:

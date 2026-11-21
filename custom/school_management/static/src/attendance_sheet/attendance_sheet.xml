@@ -1,0 +1,632 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="school_management.AttendanceSheet">
+        <t t-set="tally" t-value="counts"/>
+
+        <div class="o_att_sheet" t-ref="root">
+            <!-- 1. Breadcrumb & Top Bar -->
+            <nav class="o_att_breadcrumb d-flex align-items-center justify-content-between" aria-label="Breadcrumb">
+                <div class="d-flex align-items-center gap-2">
+                    <button type="button" class="o_att_breadcrumb_link" t-on-click="onBack" title="Back to Attendance List">
+                        <i class="fa fa-arrow-left" aria-hidden="true"/> Student Attendance
+                    </button>
+                    <span aria-hidden="true">/</span>
+                    <span class="o_att_breadcrumb_record" aria-current="page" t-esc="recordLabel"/>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <button type="button" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1"
+                            t-on-click="onPrint" title="Print Attendance Sheet">
+                        <i class="fa fa-print" aria-hidden="true"/> Print
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-primary d-flex align-items-center gap-1"
+                            t-on-click="openAttendanceReport" title="View Full Attendance Records">
+                        <i class="fa fa-line-chart" aria-hidden="true"/> Report
+                    </button>
+                </div>
+            </nav>
+            <div class="o_att_layout">
+            <div class="o_att_shell">
+
+                <!-- ==================== Header ==================== -->
+                <header class="o_att_hdr">
+                    <div class="o_att_hdr_main">
+                        <div class="o_att_title_row">
+                        <h1 class="o_att_h1">Student Attendance</h1>
+                            <span t-att-class="'o_att_badge ' + (state.taken ? 'o_att_badge--recorded' : 'o_att_badge--pending')">
+                                <span class="o_att_badge_dot" aria-hidden="true"/>
+                                <span t-esc="state.taken ? 'Recorded' : 'Not recorded'"/>
+                            </span>
+                        </div>
+                        <p class="o_att_meta">
+                            <t t-if="state.lastSaved">
+                                <i class="fa fa-check-circle text-success me-1"/> Last saved at <strong t-esc="state.lastSaved"/>
+                            </t>
+                            <t t-else="">
+                                <i class="fa fa-clock-o text-muted me-1"/> Not saved yet
+                            </t>
+                        </p>
+                    </div>
+                </header>
+
+                <section class="o_att_info" aria-label="Session information">
+                    <div class="o_att_info_group">
+                        <h2 class="o_att_section_heading">Session Information</h2>
+                        <div class="o_att_info_row" t-if="state.departments &amp;&amp; state.departments.length &gt; 1">
+                            <label for="att_dept">Department</label>
+                            <select id="att_dept" class="o_att_select_clean" t-on-change="onDepartmentFilterChange"
+                                    t-att-disabled="state.loading || state.saving">
+                                <option value="all" t-att-selected="state.departmentId === 'all'">All Departments</option>
+                                <option t-foreach="state.departments" t-as="dept" t-key="dept.id"
+                                        t-att-value="dept.id" t-att-selected="state.departmentId == dept.id"
+                                        t-esc="dept.display_name || dept.name"/>
+                            </select>
+                        </div>
+                        <div class="o_att_info_row">
+                            <label for="att_section">Class Section</label>
+                            <select id="att_section" class="o_att_select_clean" t-on-change="onSectionChange"
+                                    t-att-disabled="state.loading || state.saving">
+                                <option value="" t-att-selected="!state.sectionId">Select section...</option>
+                                <option t-foreach="filteredSections" t-as="section" t-key="section.id"
+                                        t-att-value="section.id" t-att-selected="section.id === state.sectionId"
+                                        t-esc="section.display_name"/>
+                            </select>
+                        </div>
+                        <div class="o_att_info_row" t-if="state.session.subject">
+                            <span class="o_att_info_label">Subject</span>
+                            <span t-esc="state.session.subject"/>
+                        </div>
+                        <div class="o_att_info_row">
+                            <span class="o_att_info_label">Teacher</span>
+                            <span t-esc="state.session.teacher || 'Not assigned'"/>
+                        </div>
+                    </div>
+                    <div class="o_att_info_group">
+                        <h2 class="o_att_section_heading">Schedule</h2>
+                        <div class="o_att_info_row">
+                            <label for="att_date">Date</label>
+                            <div class="d-flex align-items-center gap-1 w-100">
+                                <button type="button" class="btn btn-sm btn-outline-secondary py-1 px-2" t-on-click="onPrevDay" title="Previous Day" t-att-disabled="state.loading || state.saving">
+                                    <i class="fa fa-chevron-left" aria-hidden="true"/>
+                                </button>
+                                <input id="att_date" type="date" class="o_att_input_clean flex-grow-1" t-att-value="state.date"
+                                       t-att-disabled="state.loading || state.saving" t-on-change="onDateChange"/>
+                                <button type="button" class="btn btn-sm btn-outline-secondary py-1 px-2" t-on-click="onNextDay" title="Next Day" t-att-disabled="state.loading || state.saving">
+                                    <i class="fa fa-chevron-right" aria-hidden="true"/>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary py-1 px-2" t-on-click="onToday" title="Jump to Today" t-att-disabled="state.loading || state.saving">
+                                    Today
+                                </button>
+                            </div>
+                        </div>
+                        <div class="o_att_info_row">
+                            <span class="o_att_info_label">Semester</span>
+                            <span t-esc="state.session.semester || '-'"/>
+                        </div>
+                        <div class="o_att_info_row">
+                            <span class="o_att_info_label">Academic Year</span>
+                            <span t-esc="state.session.academic_year || '-'"/>
+                        </div>
+                    </div>
+                </section>
+
+                <div t-if="state.error" class="o_att_error shadow-sm mb-4" role="alert">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fa fa-exclamation-triangle fa-lg text-danger" aria-hidden="true"/>
+                        <span class="fw-medium text-danger" t-esc="state.error"/>
+                    </div>
+                </div>
+
+                <!-- ==================== Schedule-style KPI strip ==================== -->
+                <section class="o_att_kpi_row d-flex flex-wrap align-items-stretch gap-2 mb-4" aria-label="Attendance summary">
+                    <div class="o_att_kpi_card flex-grow-1">
+                        <div class="o_att_kpi_label">
+                            <span>Present</span>
+                            <i class="fa fa-check-circle text-success" aria-hidden="true"/>
+                        </div>
+                        <div class="o_att_kpi_value_row">
+                            <span class="o_att_kpi_value text-success" t-esc="tally.present"/>
+                            <span class="o_att_kpi_pct" t-esc="statusPercent('present') + '%'"/>
+                        </div>
+                        <div class="o_att_kpi_track" aria-hidden="true">
+                            <div class="o_att_kpi_bar o_att_kpi_bar--present" t-att-style="'width: ' + statusPercent('present') + '%'"/>
+                        </div>
+                    </div>
+                    <div class="o_att_kpi_card flex-grow-1">
+                        <div class="o_att_kpi_label">
+                            <span>Late</span>
+                            <i class="fa fa-clock-o text-warning" aria-hidden="true"/>
+                        </div>
+                        <div class="o_att_kpi_value_row">
+                            <span class="o_att_kpi_value text-warning" t-esc="tally.late"/>
+                            <span class="o_att_kpi_pct" t-esc="statusPercent('late') + '%'"/>
+                        </div>
+                        <div class="o_att_kpi_track" aria-hidden="true">
+                            <div class="o_att_kpi_bar o_att_kpi_bar--late" t-att-style="'width: ' + statusPercent('late') + '%'"/>
+                        </div>
+                    </div>
+                    <div class="o_att_kpi_card flex-grow-1">
+                        <div class="o_att_kpi_label">
+                            <span>Absent</span>
+                            <i class="fa fa-times-circle text-danger" aria-hidden="true"/>
+                        </div>
+                        <div class="o_att_kpi_value_row">
+                            <span class="o_att_kpi_value text-danger" t-esc="tally.absent"/>
+                            <span class="o_att_kpi_pct" t-esc="statusPercent('absent') + '%'"/>
+                        </div>
+                        <div class="o_att_kpi_track" aria-hidden="true">
+                            <div class="o_att_kpi_bar o_att_kpi_bar--absent" t-att-style="'width: ' + statusPercent('absent') + '%'"/>
+                        </div>
+                    </div>
+                    <div class="o_att_kpi_card flex-grow-1">
+                        <div class="o_att_kpi_label">
+                            <span>Excused</span>
+                            <i class="fa fa-info-circle text-secondary" aria-hidden="true"/>
+                        </div>
+                        <div class="o_att_kpi_value_row">
+                            <span class="o_att_kpi_value text-secondary" t-esc="tally.excused"/>
+                            <span class="o_att_kpi_pct" t-esc="statusPercent('excused') + '%'"/>
+                        </div>
+                        <div class="o_att_kpi_track" aria-hidden="true">
+                            <div class="o_att_kpi_bar o_att_kpi_bar--excused" t-att-style="'width: ' + statusPercent('excused') + '%'"/>
+                        </div>
+                    </div>
+                    <div class="o_att_kpi_card o_att_kpi_card--rate flex-grow-1">
+                        <div class="o_att_kpi_label">
+                            <span>Attendance rate</span>
+                            <i class="fa fa-users text-purple" aria-hidden="true"/>
+                        </div>
+                        <div class="o_att_kpi_value_row">
+                            <span class="o_att_kpi_value text-purple" t-esc="attendanceRate + '%'"/>
+                            <span class="o_att_kpi_pct"><t t-esc="tally.total"/> enrolled</span>
+                        </div>
+                        <div class="o_att_kpi_track" aria-hidden="true">
+                            <div class="o_att_kpi_bar o_att_kpi_bar--rate" t-att-style="'width: ' + attendanceRate + '%'"/>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="o_att_tabs" role="tablist" aria-label="Attendance session" t-on-keydown="onTabKeydown">
+                    <button id="att_students_tab" type="button" role="tab" class="o_att_tab" data-tab="attendance"
+                            t-att-aria-selected="state.tab === 'attendance' ? 'true' : 'false'"
+                            t-att-tabindex="state.tab === 'attendance' ? 0 : -1" aria-controls="att_students_panel"
+                            t-on-click="() =&gt; this.setTab('attendance')">Student Attendance</button>
+                    <button id="att_details_tab" type="button" role="tab" class="o_att_tab" data-tab="details"
+                            t-att-aria-selected="state.tab === 'details' ? 'true' : 'false'"
+                            t-att-tabindex="state.tab === 'details' ? 0 : -1" aria-controls="att_details_panel"
+                            t-on-click="() =&gt; this.setTab('details')">Session Details</button>
+                </div>
+
+                <section t-if="state.tab === 'attendance'" id="att_students_panel" class="o_att_card"
+                         role="tabpanel" aria-labelledby="att_students_tab">
+                    <!-- Toolbar: search, filters, Agenda/List switcher (mirrors Scheduled Sessions) -->
+                    <div class="o_att_toolbar d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
+                        <div class="d-flex flex-wrap align-items-center gap-2 flex-grow-1">
+                            <div class="o_att_search">
+                                <i class="fa fa-search o_att_search_icon" aria-hidden="true"/>
+                                <input type="search" t-att-value="state.query"
+                                       class="o_att_search_input"
+                                       placeholder="Search student by name or ID..."
+                                       aria-label="Search students by name or student ID"
+                                       t-on-input="onSearchInput"/>
+                            </div>
+                            <div class="o_att_filter" role="group" aria-label="Filter students">
+                                <button t-foreach="filters" t-as="option" t-key="option.value"
+                                        type="button"
+                                        t-att-class="'o_att_filter_btn' + (state.filter === option.value ? ' o_att_filter_btn--active' : '')"
+                                        t-att-data-filter="option.value"
+                                        t-att-aria-pressed="state.filter === option.value ? 'true' : 'false'"
+                                        t-on-click="() =&gt; this.setFilter(option.value)">
+                                    <span t-esc="option.label"/>
+                                    <span class="o_att_filter_count" t-esc="filterCount(option.value)"/>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="btn-group btn-group-sm shadow-none" role="group" aria-label="Attendance view switcher">
+                            <button type="button"
+                                    t-att-class="'btn btn-sm py-1 px-2 ' + (state.viewMode === 'kanban' ? 'btn-purple text-white shadow-sm' : 'btn-outline-secondary')"
+                                    t-on-click="() =&gt; this.setViewMode('kanban')"
+                                    title="Status columns like Scheduled Sessions">
+                                <i class="fa fa-th-large me-1"/>Agenda
+                            </button>
+                            <button type="button"
+                                    t-att-class="'btn btn-sm py-1 px-2 ' + (state.viewMode === 'list' ? 'btn-purple text-white shadow-sm' : 'btn-outline-secondary')"
+                                    t-on-click="() =&gt; this.setViewMode('list')"
+                                    title="Tabular roster">
+                                <i class="fa fa-list me-1"/>List
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ==================== AGENDA KANBAN (schedule sessions layout) ==================== -->
+                    <section t-if="state.viewMode === 'kanban' &amp;&amp; visibleLines.length"
+                             class="o_att_kanban_pane mb-4" aria-label="Student attendance agenda">
+                        <div class="row g-3">
+                            <t t-foreach="kanbanGroups" t-as="group" t-key="group.key">
+                                <div class="col-12 col-md-6 col-xl-3">
+                                    <div class="o_att_kanban_column card h-100 border-0 shadow-sm bg-white rounded-3">
+                                        <div class="card-header bg-white border-bottom py-2 px-3 d-flex align-items-center justify-content-between">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <span t-att-class="group.badgeClass + ' fw-semibold px-2 py-1 rounded-pill'"
+                                                      t-esc="group.label"/>
+                                                <span class="badge bg-light text-muted border rounded-pill"
+                                                      t-esc="group.lines.length"/>
+                                            </div>
+                                            <span class="o_att_column_pct text-muted"
+                                                  t-esc="statusPercent(group.key) + '%'"/>
+                                        </div>
+                                        <div class="card-body p-2 d-flex flex-column gap-2 o_att_kanban_column_body">
+                                            <t t-if="!group.lines.length">
+                                                <div class="o_att_kanban_empty text-center text-muted py-4 px-2">
+                                                    <i class="fa fa-inbox mb-2 d-block opacity-50"/>
+                                                    <span class="very-small">No students</span>
+                                                </div>
+                                            </t>
+                                            <t t-foreach="group.lines" t-as="line" t-key="line.student_id">
+                                                <div t-att-class="'card border shadow-xs rounded-3 p-3 bg-white o_att_session_card cursor-pointer o_att_session_card--' + line.status + (line.student_id === state.activeId ? ' o_att_session_card--active' : '')"
+                                                     t-on-click="() =&gt; this.setActive(line)"
+                                                     role="button"
+                                                     tabindex="0"
+                                                     t-on-keydown="(ev) =&gt; this.onCardKeyDown(line, ev)">
+                                                    <!-- Header: name + status pill (like session subject + status) -->
+                                                    <div class="d-flex justify-content-between align-items-start mb-2 gap-2">
+                                                        <div class="d-flex align-items-center gap-2 min-w-0">
+                                                            <div class="position-relative flex-shrink-0 o_att_session_avatar">
+                                                                <t t-if="line.has_image">
+                                                                    <img class="rounded-circle object-fit-cover w-100 h-100 border"
+                                                                         t-att-src="studentImageUrl(line)" alt=""
+                                                                         onerror="this.src='/web/static/img/placeholder.png'"/>
+                                                                </t>
+                                                                <t t-else="">
+                                                                    <span t-att-class="'rounded-circle d-flex align-items-center justify-content-center w-100 h-100 fw-bold border o_att_avatar--' + studentTone(line)"
+                                                                          t-esc="studentInitial(line)"/>
+                                                                </t>
+                                                                <span class="position-absolute bottom-0 end-0 bg-white rounded-circle d-flex align-items-center justify-content-center shadow-sm o_att_status_dot">
+                                                                    <i class="fa fa-circle" t-att-class="getStatusIconClass(line.status)"
+                                                                       role="img" t-att-aria-label="line.status"/>
+                                                                </span>
+                                                            </div>
+                                                            <button type="button"
+                                                                    class="btn btn-link p-0 text-start text-dark fw-bold text-truncate text-decoration-none fs-6"
+                                                                    t-on-click.stop="() =&gt; this.openStudent(line.student_id)"
+                                                                    t-att-title="line.name">
+                                                                <t t-esc="line.name"/>
+                                                            </button>
+                                                        </div>
+                                                        <span t-att-class="getStatusBadgeClass(line.status) + ' rounded-pill flex-shrink-0'">
+                                                            <span class="text-capitalize" t-esc="line.status"/>
+                                                        </span>
+                                                    </div>
+
+                                                    <!-- Meta: code · section (like section · teacher on sessions) -->
+                                                    <div class="d-flex align-items-center gap-1 text-muted small mb-2 text-truncate">
+                                                        <span t-if="line.code" class="fw-semibold text-dark">
+                                                            <i class="fa fa-id-badge text-secondary me-1"/>
+                                                            <t t-esc="line.code"/>
+                                                        </span>
+                                                        <span t-if="line.code and line.section_name">·</span>
+                                                        <span t-if="line.section_name" class="text-truncate">
+                                                            <i class="fa fa-users text-muted me-1"/>
+                                                            <t t-esc="line.section_name"/>
+                                                        </span>
+                                                    </div>
+
+                                                    <!-- Quick status chips -->
+                                                    <div class="o_att_status_chips btn-group w-100" role="group"
+                                                         t-att-aria-label="'Set status for ' + line.name"
+                                                         t-on-click.stop="">
+                                                        <button type="button"
+                                                                t-att-class="'btn btn-sm o_att_seg__btn ' + (line.status === 'present' ? 'btn-success text-white fw-bold' : 'btn-outline-success bg-white')"
+                                                                t-att-data-student="line.student_id"
+                                                                data-status="present"
+                                                                t-on-click="() =&gt; this.setStatus(line, 'present')"
+                                                                t-on-keydown="(ev) =&gt; this.onSegKeydown(line, ev)"
+                                                                t-att-disabled="state.loading || state.saving"
+                                                                title="Present (P)">P</button>
+                                                        <button type="button"
+                                                                t-att-class="'btn btn-sm o_att_seg__btn ' + (line.status === 'late' ? 'btn-warning text-dark fw-bold' : 'btn-outline-warning bg-white')"
+                                                                t-att-data-student="line.student_id"
+                                                                data-status="late"
+                                                                t-on-click="() =&gt; this.setStatus(line, 'late')"
+                                                                t-on-keydown="(ev) =&gt; this.onSegKeydown(line, ev)"
+                                                                t-att-disabled="state.loading || state.saving"
+                                                                title="Late (L)">L</button>
+                                                        <button type="button"
+                                                                t-att-class="'btn btn-sm o_att_seg__btn ' + (line.status === 'absent' ? 'btn-danger text-white fw-bold' : 'btn-outline-danger bg-white')"
+                                                                t-att-data-student="line.student_id"
+                                                                data-status="absent"
+                                                                t-on-click="() =&gt; this.setStatus(line, 'absent')"
+                                                                t-on-keydown="(ev) =&gt; this.onSegKeydown(line, ev)"
+                                                                t-att-disabled="state.loading || state.saving"
+                                                                title="Absent (A)">A</button>
+                                                        <button type="button"
+                                                                t-att-class="'btn btn-sm o_att_seg__btn ' + (line.status === 'excused' ? 'btn-secondary text-white fw-bold' : 'btn-outline-secondary bg-white')"
+                                                                t-att-data-student="line.student_id"
+                                                                data-status="excused"
+                                                                t-on-click="() =&gt; this.setStatus(line, 'excused')"
+                                                                t-on-keydown="(ev) =&gt; this.onSegKeydown(line, ev)"
+                                                                t-att-disabled="state.loading || state.saving"
+                                                                title="Excused (E)">E</button>
+                                                    </div>
+
+                                                    <!-- Footer: remark (like room / capacity on sessions) -->
+                                                    <div class="d-flex align-items-center justify-content-between pt-2 mt-2 border-top text-muted very-small"
+                                                         t-on-click.stop="">
+                                                        <div t-if="state.openNoteId === line.student_id" class="d-flex align-items-center gap-1 w-100">
+                                                            <input type="text" class="form-control form-control-sm flex-grow-1 o_att_note_input"
+                                                                   t-att-value="line.remark"
+                                                                   placeholder="Add note..."
+                                                                   t-on-input="(ev) =&gt; this.updateRemark(line, ev)"
+                                                                   t-on-keydown="(ev) =&gt; this.onNoteKeydown(line, ev)"/>
+                                                            <button type="button" class="btn btn-sm btn-outline-secondary py-0 px-2"
+                                                                    t-on-click="() =&gt; this.closeRemark()">Done</button>
+                                                        </div>
+                                                        <t t-else="">
+                                                            <span t-if="line.remark" class="text-truncate cursor-pointer"
+                                                                  t-att-title="line.remark"
+                                                                  t-on-click="() =&gt; this.toggleRemark(line)">
+                                                                <i class="fa fa-commenting text-purple me-1"/>
+                                                                <t t-esc="line.remark"/>
+                                                            </span>
+                                                            <span t-else="" class="fst-italic cursor-pointer"
+                                                                  t-on-click="() =&gt; this.toggleRemark(line)">
+                                                                <i class="fa fa-comment-o me-1"/>Add note
+                                                            </span>
+                                                            <button type="button" class="btn btn-sm btn-link text-decoration-none p-0 text-muted"
+                                                                    t-on-click="() =&gt; this.toggleRemark(line)"
+                                                                    title="Edit note">
+                                                                <i class="fa fa-pencil" aria-hidden="true"/>
+                                                            </button>
+                                                        </t>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </section>
+
+                    <!-- ==================== LIST VIEW (Clean Table Layout) ==================== -->
+                    <t t-if="state.viewMode === 'list'">
+                        <div t-if="visibleLines.length" class="table-responsive bg-white rounded-3 border shadow-sm mb-4">
+                            <table class="table table-hover align-middle mb-0 o_att_tabular_list">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="text-center py-2 text-muted fw-bold" style="width: 45px;">#</th>
+                                        <th class="py-2 fw-bold text-dark" style="min-width: 220px;">Student</th>
+                                        <th class="py-2 fw-bold text-dark" style="min-width: 140px;">Class Section</th>
+                                        <th class="text-center py-2 fw-bold text-dark" style="min-width: 120px;">Status</th>
+                                        <th class="text-center py-2 fw-bold text-dark" style="min-width: 260px;">Take Attendance</th>
+                                        <th class="py-2 fw-bold text-dark" style="min-width: 200px;">Note</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="visibleLines" t-as="line" t-key="line.student_id">
+                                        <tr t-att-class="line.student_id === state.activeId ? 'table-active' : ''"
+                                            t-on-click="() =&gt; this.setActive(line)">
+                                            <td class="text-center text-muted fw-semibold small" t-esc="line_index + 1"/>
+                                            <td>
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <div class="position-relative flex-shrink-0" style="width: 36px; height: 36px;">
+                                                        <t t-if="line.has_image">
+                                                            <img class="rounded-circle object-fit-cover w-100 h-100 border shadow-sm"
+                                                                 t-att-src="studentImageUrl(line)" alt=""
+                                                                 onerror="this.src='/web/static/img/placeholder.png'"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <span t-att-class="'rounded-circle d-flex align-items-center justify-content-center w-100 h-100 text-white fw-bold shadow-sm o_att_avatar--' + studentTone(line)"
+                                                                  style="font-size: 11px;"
+                                                                  t-esc="studentInitial(line)"/>
+                                                        </t>
+                                                        <span class="position-absolute bottom-0 end-0 bg-white rounded-circle d-flex align-items-center justify-content-center shadow-sm"
+                                                              style="width: 12px; height: 12px; transform: translate(15%, 15%);">
+                                                            <i class="fa fa-circle"
+                                                               t-att-class="getStatusIconClass(line.status)"
+                                                               style="font-size: 8px;"
+                                                               role="img"
+                                                               t-att-title="line.status"/>
+                                                        </span>
+                                                    </div>
+                                                    <div class="d-flex flex-column text-truncate min-w-0">
+                                                        <button type="button" class="btn btn-link p-0 text-start text-dark fw-bold text-truncate text-decoration-none"
+                                                                t-on-click="() =&gt; this.openStudent(line.student_id)"
+                                                                t-att-title="line.name + ' - Click to view profile'">
+                                                            <t t-esc="line.name"/>
+                                                        </button>
+                                                        <span class="text-muted small text-truncate" t-if="line.code" t-esc="line.code"/>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="badge text-bg-light border text-muted small" t-if="line.section_name" t-esc="line.section_name"/>
+                                                <span class="text-muted small" t-else="">-</span>
+                                            </td>
+                                            <td class="text-center">
+                                                <span t-att-class="getStatusBadgeClass(line.status)">
+                                                    <i class="fa fa-circle me-1" t-att-class="getStatusIconClass(line.status)" aria-hidden="true"/>
+                                                    <span class="text-capitalize" t-esc="line.status"/>
+                                                </span>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="btn-group btn-group-sm shadow-sm o_att_status_chips" role="group" t-att-aria-label="'Set status for ' + line.name">
+                                                    <button type="button"
+                                                            t-att-class="'btn btn-sm o_att_seg__btn ' + (line.status === 'present' ? 'btn-success text-white fw-bold' : 'btn-outline-success bg-white')"
+                                                            t-att-data-student="line.student_id"
+                                                            data-status="present"
+                                                            t-on-click="() =&gt; this.setStatus(line, 'present')"
+                                                            t-on-keydown="(ev) =&gt; this.onSegKeydown(line, ev)"
+                                                            t-att-disabled="state.loading || state.saving"
+                                                            title="Present (P)">P</button>
+                                                    <button type="button"
+                                                            t-att-class="'btn btn-sm o_att_seg__btn ' + (line.status === 'late' ? 'btn-warning text-dark fw-bold' : 'btn-outline-warning bg-white')"
+                                                            t-att-data-student="line.student_id"
+                                                            data-status="late"
+                                                            t-on-click="() =&gt; this.setStatus(line, 'late')"
+                                                            t-on-keydown="(ev) =&gt; this.onSegKeydown(line, ev)"
+                                                            t-att-disabled="state.loading || state.saving"
+                                                            title="Late (L)">L</button>
+                                                    <button type="button"
+                                                            t-att-class="'btn btn-sm o_att_seg__btn ' + (line.status === 'absent' ? 'btn-danger text-white fw-bold' : 'btn-outline-danger bg-white')"
+                                                            t-att-data-student="line.student_id"
+                                                            data-status="absent"
+                                                            t-on-click="() =&gt; this.setStatus(line, 'absent')"
+                                                            t-on-keydown="(ev) =&gt; this.onSegKeydown(line, ev)"
+                                                            t-att-disabled="state.loading || state.saving"
+                                                            title="Absent (A)">A</button>
+                                                    <button type="button"
+                                                            t-att-class="'btn btn-sm o_att_seg__btn ' + (line.status === 'excused' ? 'btn-secondary text-white fw-bold' : 'btn-outline-secondary bg-white')"
+                                                            t-att-data-student="line.student_id"
+                                                            data-status="excused"
+                                                            t-on-click="() =&gt; this.setStatus(line, 'excused')"
+                                                            t-on-keydown="(ev) =&gt; this.onSegKeydown(line, ev)"
+                                                            t-att-disabled="state.loading || state.saving"
+                                                            title="Excused (E)">E</button>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div t-if="state.openNoteId === line.student_id" class="d-flex align-items-center gap-1">
+                                                    <input type="text" class="form-control form-control-sm o_att_note_input"
+                                                           t-att-value="line.remark"
+                                                           placeholder="Add note..."
+                                                           t-on-input="(ev) =&gt; this.updateRemark(line, ev)"
+                                                           t-on-keydown="(ev) =&gt; this.onNoteKeydown(line, ev)"/>
+                                                    <button type="button" class="btn btn-sm btn-outline-secondary py-0 px-2"
+                                                            t-on-click="() =&gt; this.closeRemark()">
+                                                        Done
+                                                    </button>
+                                                </div>
+                                                <div t-else="" class="d-flex align-items-center justify-content-between gap-1">
+                                                    <span t-if="line.remark" class="text-muted small text-truncate cursor-pointer"
+                                                          t-att-title="line.remark"
+                                                          t-on-click="() =&gt; this.toggleRemark(line)">
+                                                        <i class="fa fa-commenting text-primary me-1" aria-hidden="true"/>
+                                                        <span t-esc="line.remark"/>
+                                                    </span>
+                                                    <span t-else="" class="text-muted small fst-italic cursor-pointer"
+                                                          t-on-click="() =&gt; this.toggleRemark(line)">
+                                                        <i class="fa fa-comment-o me-1 text-muted" aria-hidden="true"/>Add note
+                                                    </span>
+                                                    <button type="button" class="btn btn-sm btn-link text-decoration-none p-0 text-muted"
+                                                            t-on-click="() =&gt; this.toggleRemark(line)"
+                                                            title="Edit note">
+                                                        <i class="fa fa-pencil" aria-hidden="true"/>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+
+                    <!-- ==================== Polished Empty States ==================== -->
+                    <div t-if="state.loading" class="o_att_empty py-5">
+                        <div class="spinner-border text-primary mb-3" role="status" style="width: 2.5rem; height: 2.5rem;"/>
+                        <p class="o_att_empty_title mb-1">Loading attendance data...</p>
+                        <p class="text-muted small">Retrieving student roster and records</p>
+                    </div>
+                    <div t-elif="isEmpty" class="o_att_empty py-5">
+                        <div class="o_empty_icon_box rounded-circle mx-auto mb-3 bg-light d-flex align-items-center justify-content-center" style="width: 64px; height: 64px;">
+                            <i class="fa fa-users fa-2x text-muted" aria-hidden="true"/>
+                        </div>
+                        <h5 class="o_att_empty_title fw-bold text-dark mb-1">Select a Class Section</h5>
+                        <p class="text-muted small mb-0">Choose a class section from the dropdown above to view students and track attendance.</p>
+                    </div>
+                    <div t-elif="noStudents" class="o_att_empty py-5">
+                        <div class="o_empty_icon_box rounded-circle mx-auto mb-3 bg-light d-flex align-items-center justify-content-center" style="width: 64px; height: 64px;">
+                            <i class="fa fa-user-plus fa-2x text-muted" aria-hidden="true"/>
+                        </div>
+                        <h5 class="o_att_empty_title fw-bold text-dark mb-1">No Enrolled Students</h5>
+                        <p class="text-muted small mb-3" style="max-width: 420px; margin: 0 auto;">
+                            There are currently no active students enrolled in section <strong class="text-dark" t-esc="currentSectionName"/>.
+                        </p>
+                    </div>
+                    <div t-elif="hasNoMatch" class="o_att_empty py-5">
+                        <div class="o_empty_icon_box rounded-circle mx-auto mb-3 bg-light d-flex align-items-center justify-content-center" style="width: 64px; height: 64px;">
+                            <i class="fa fa-search fa-2x text-muted" aria-hidden="true"/>
+                        </div>
+                        <h5 class="o_att_empty_title fw-bold text-dark mb-1">No Students Match Your Filter</h5>
+                        <p class="text-muted small mb-3">Try searching with a different name or reset your search query.</p>
+                        <button type="button" class="btn btn-sm btn-outline-secondary" t-on-click="() =&gt; { this.state.query = ''; this.state.filter = 'all'; }">
+                            <i class="fa fa-times me-1"/> Clear Filters
+                        </button>
+                    </div>
+                </section>
+
+                <section t-if="state.tab === 'details'" id="att_details_panel" class="o_att_details"
+                         role="tabpanel" aria-labelledby="att_details_tab">
+                    <h2 class="o_att_section_heading">Location &amp; Timing</h2>
+                    <div class="o_att_info_row" t-if="state.session.classroom">
+                        <span class="o_att_info_label">Classroom</span><span t-esc="state.session.classroom"/>
+                    </div>
+                    <div class="o_att_session_slots" t-if="state.session.slots?.length">
+                        <table class="o_att_slots_table">
+                            <thead><tr><th>Subject</th><th>Teacher</th><th>Time</th><th>Location</th></tr></thead>
+                            <tbody>
+                                <tr t-foreach="state.session.slots" t-as="slot" t-key="slot.id">
+                                    <td t-esc="slot.subject"/>
+                                    <td t-esc="slot.teacher"/>
+                                    <td><t t-esc="formatSessionTime(slot.start_time)"/> - <t t-esc="formatSessionTime(slot.end_time)"/></td>
+                                    <td t-esc="slot.location || '-'"/>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p t-else="" class="text-muted">No timetable session scheduled for this date.</p>
+                    <div class="o_att_info_row" t-if="state.session.recorded_by">
+                        <span class="o_att_info_label">Last Recorded By</span><span t-esc="state.session.recorded_by"/>
+                    </div>
+                    <div class="o_att_info_row" t-if="state.session.recorded_at">
+                        <span class="o_att_info_label">Last Recorded At</span><span t-esc="formatSessionTime(state.session.recorded_at)"/>
+                    </div>
+                    <label class="o_att_section_heading" for="att_session_notes">Session Notes</label>
+                    <textarea id="att_session_notes" class="o_att_session_notes" rows="4" t-model="state.notes"
+                              t-att-disabled="state.loading || state.saving"/>
+                </section>
+
+                <!-- ==================== Sticky Action Bar ==================== -->
+                <footer class="o_att_actionbar">
+                    <p t-att-class="'o_att_hint ' + (isDirty ? 'o_att_hint--dirty' : 'o_att_hint--clean')" aria-live="polite">
+                        <span class="o_att_hint_dot" aria-hidden="true"/>
+                        <span t-if="isDirty">Unsaved changes</span>
+                        <span t-elif="state.lastSaved">All changes saved</span>
+                        <span t-else="">Draft (not saved)</span>
+                    </p>
+                    <div class="o_att_actions">
+                        <button type="button" class="btn btn-sm btn-outline-secondary o_att_btn--ghost"
+                                title="Set every student in this section to Present"
+                                t-att-disabled="!state.lines.length || state.loading || state.saving"
+                                t-on-click="markAllPresent">
+                            <i class="fa fa-check-square-o me-1" aria-hidden="true"/> Mark all present
+                        </button>
+                        <button type="button" class="btn btn-sm btn-primary o_att_btn--primary"
+                                t-att-disabled="!state.lines.length || state.loading || state.saving"
+                                t-on-click="saveAttendance">
+                            <t t-if="state.saving">
+                                <span class="spinner-border spinner-border-sm me-1" aria-hidden="true"/>
+                                Saving...
+                            </t>
+                            <t t-else="">
+                                <i class="fa fa-floppy-o me-1" aria-hidden="true"/> Save attendance
+                            </t>
+                        </button>
+                    </div>
+                </footer>
+            </div>
+            <aside class="o_att_chatter" aria-label="Session messages and activities">
+                <Chatter t-if="state.session.session_id &amp;&amp; !state.loading"
+                         t-key="state.session.session_id + '-' + state.chatterRevision"
+                         threadModel="'university.attendance.session'"
+                         threadId="state.session.session_id"/>
+                <div t-else="" class="o_att_chatter_empty">
+                    <i class="fa fa-comments-o" aria-hidden="true"/>
+                    <span t-if="state.loading">Loading session...</span>
+                    <span t-else="">Save attendance to start the session log.</span>
+                </div>
+            </aside>
+            </div>
+        </div>
+    </t>
+</templates>

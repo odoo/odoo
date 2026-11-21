@@ -1,0 +1,410 @@
+<odoo>
+
+    <!-- ==================== FORM VIEW ==================== -->
+    <record id="view_school_dashboard_form" model="ir.ui.view">
+        <field name="name">school.dashboard.form</field>
+        <field name="model">school.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="Dashboard" edit="false" delete="false" class="o_school_dashboard">
+                <field name="currency_id" invisible="1"/>
+                <div class="d-flex flex-row w-100 h-100 o_school_dashboard_layout">
+
+                    <!-- Main Content Wrapper (Header + Dashboard) -->
+                    <div class="flex-grow-1 d-flex flex-column" style="min-width: 0;">
+
+                        <!-- Top Header -->
+                        <div class="px-4 py-3 d-flex justify-content-between align-items-center sticky-top z-1 dashboard-header">
+                            <div class="d-flex align-items-center">
+
+                                <div>
+                                    <h3 class="fw-bold mb-0 dashboard-title">Harvard University</h3>
+                                    <div class="text-muted small d-none d-md-block">Overview of academic structure, people, subjects, and operations</div>
+                                </div>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button name="action_create_student" type="object" class="btn btn-sm px-3 btn-brand-primary">
+                                    <i class="fa fa-user-plus me-1" aria-hidden="true"></i><span class="d-none d-md-inline">New Student</span>
+                                </button>
+                                <button name="action_create_enrollment" type="object" class="btn btn-sm px-3 btn-brand-outline d-none d-md-inline-block">
+                                    <i class="fa fa-check-square-o me-1" aria-hidden="true"></i>Enroll Student
+                                </button>
+                                <button name="action_create_fee" type="object" class="btn btn-sm px-3 btn-brand-outline d-none d-md-inline-block">
+                                    <i class="fa fa-money me-1" aria-hidden="true"></i>New Fee Invoice
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Dashboard Content Area -->
+                        <div class="p-4 pt-4 flex-grow-1 overflow-auto dashboard-canvas">
+                            <!-- Design tokens + overrides -->
+                            <style>
+                                .o_school_dashboard_layout {
+                                    --brand-900: #1b2a4a;
+                                    --brand-700: #29385c;
+                                    --brand-600: #34456e;
+                                    --accent: #b8863f;
+                                    --accent-soft: #f6ead4;
+                                    --bg: #f6f5f2;
+                                    --surface: #ffffff;
+                                    --border: #e6e2d8;
+                                    --ink: #1f2430;
+                                    background-color: var(--bg);
+                                }
+                                .o_school_dashboard .o_form_sheet_bg { padding: 0 !important; background: none !important; }
+                                .o_school_dashboard .o_form_sheet { padding: 0 !important; max-width: 100% !important; margin: 0 !important; border: none !important; }
+
+                                /* Header */
+                                .dashboard-header { background-color: var(--surface); border-bottom: 1px solid var(--border); }
+                                .dashboard-title { color: var(--ink); }
+                                .btn-brand-primary { background-color: var(--brand-900); border: 1px solid var(--brand-900); color: #fff; }
+                                .btn-brand-primary:hover { background-color: var(--brand-700); border-color: var(--brand-700); color: #fff; }
+                                .btn-brand-outline { background-color: transparent; border: 1px solid var(--border); color: var(--brand-900); }
+                                .btn-brand-outline:hover { background-color: var(--accent-soft); border-color: var(--accent); color: var(--brand-900); }
+
+                                /* Cards - one consistent language: hairline border, quiet shadow, single radius */
+                                .dashboard-canvas .panel {
+                                    background-color: var(--surface);
+                                    border: 1px solid var(--border);
+                                    border-radius: 10px;
+                                }
+                                .dashboard-canvas .panel-header {
+                                    border-bottom: 1px solid var(--border);
+                                }
+                                .dashboard-canvas .kpi-card {
+                                    background-color: var(--surface);
+                                    border: 1px solid var(--border);
+                                    border-top: 3px solid var(--kpi-accent, var(--accent));
+                                    border-radius: 10px;
+                                    transition: box-shadow 0.15s ease, transform 0.15s ease;
+                                }
+                                .dashboard-canvas .kpi-card:hover,
+                                .dashboard-canvas .stat-card:hover {
+                                    box-shadow: 0 6px 16px rgba(27,42,74,0.08);
+                                    transform: translateY(-2px);
+                                }
+                                .dashboard-canvas .stat-card {
+                                    background-color: var(--surface);
+                                    border: 1px solid var(--border);
+                                    border-radius: 10px;
+                                    transition: box-shadow 0.15s ease, transform 0.15s ease;
+                                }
+                                .dashboard-canvas .kpi-icon {
+                                    width: 44px; height: 44px; border-radius: 8px;
+                                    background-color: var(--kpi-accent-soft, var(--accent-soft));
+                                    color: var(--kpi-accent, var(--accent));
+                                }
+                                .dashboard-canvas .section-title { color: var(--ink); }
+                                .dashboard-canvas .section-link { color: var(--brand-900); font-weight: 600; }
+                                .dashboard-canvas .section-link:hover { color: var(--accent); }
+                                .dashboard-canvas .quick-op-btn {
+                                    background-color: var(--bg);
+                                    border: 1px solid transparent;
+                                    border-radius: 8px;
+                                    transition: border-color 0.15s ease, background-color 0.15s ease;
+                                }
+                                .dashboard-canvas .quick-op-btn:hover {
+                                    border-color: var(--border);
+                                    background-color: var(--surface);
+                                }
+                            </style>
+
+
+                    <!-- 1. PRIMARY METRICS (CLICKABLE KPI CARDS) -->
+                    <div class="row g-3 mb-4">
+                        <!-- Students -->
+                        <div class="col-12 col-sm-6 col-xl-3">
+                            <button name="action_open_students" type="object" class="btn p-0 text-start w-100 h-100 border-0 bg-transparent">
+                                <div class="card shadow-sm h-100 kpi-card" style="--kpi-accent:#1b2a4a; --kpi-accent-soft:#e8eaf0;">
+                                    <div class="card-body p-3 d-flex align-items-center justify-content-between">
+                                        <div>
+                                            <span class="text-muted fw-semibold small d-block mb-1">Students</span>
+                                            <div class="fs-2 fw-bold section-title"><field name="student_count"/></div>
+                                        </div>
+                                        <div class="kpi-icon d-flex align-items-center justify-content-center">
+                                            <i class="fa fa-graduation-cap fa-lg" title="Students" aria-hidden="true"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+
+                        <!-- Teachers -->
+                        <div class="col-12 col-sm-6 col-xl-3">
+                            <button name="action_open_teachers" type="object" class="btn p-0 text-start w-100 h-100 border-0 bg-transparent">
+                                <div class="card shadow-sm h-100 kpi-card" style="--kpi-accent:#1f7a5c; --kpi-accent-soft:#e3f2ec;">
+                                    <div class="card-body p-3 d-flex align-items-center justify-content-between">
+                                        <div>
+                                            <span class="text-muted fw-semibold small d-block mb-1">Teachers</span>
+                                            <div class="fs-2 fw-bold section-title"><field name="teacher_count"/></div>
+                                        </div>
+                                        <div class="kpi-icon d-flex align-items-center justify-content-center">
+                                            <i class="fa fa-user fa-lg" title="Teachers" aria-hidden="true"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+
+                        <!-- Programs -->
+                        <div class="col-12 col-sm-6 col-xl-3">
+                            <button name="action_open_programs" type="object" class="btn p-0 text-start w-100 h-100 border-0 bg-transparent">
+                                <div class="card shadow-sm h-100 kpi-card" style="--kpi-accent:#b8863f; --kpi-accent-soft:#f6ead4;">
+                                    <div class="card-body p-3 d-flex align-items-center justify-content-between">
+                                        <div>
+                                            <span class="text-muted fw-semibold small d-block mb-1">Programs</span>
+                                            <div class="fs-2 fw-bold section-title"><field name="program_count"/></div>
+                                        </div>
+                                        <div class="kpi-icon d-flex align-items-center justify-content-center">
+                                            <i class="fa fa-certificate fa-lg" title="Programs" aria-hidden="true"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+
+                        <!-- Departments -->
+                        <div class="col-12 col-sm-6 col-xl-3">
+                            <button name="action_open_departments" type="object" class="btn p-0 text-start w-100 h-100 border-0 bg-transparent">
+                                <div class="card shadow-sm h-100 kpi-card" style="--kpi-accent:#3a6ea5; --kpi-accent-soft:#e6eef7;">
+                                    <div class="card-body p-3 d-flex align-items-center justify-content-between">
+                                        <div>
+                                            <span class="text-muted fw-semibold small d-block mb-1">Departments</span>
+                                            <div class="fs-2 fw-bold section-title"><field name="department_count"/></div>
+                                        </div>
+                                        <div class="kpi-icon d-flex align-items-center justify-content-center">
+                                            <i class="fa fa-building fa-lg" title="Departments" aria-hidden="true"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 2. SECONDARY ACADEMIC CARDS (4 COMPACT STATS) -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-6 col-md-3">
+                            <button name="action_open_faculties" type="object" class="btn p-0 text-start w-100 border-0 bg-transparent">
+                                <div class="card shadow-sm stat-card p-3 d-flex flex-row align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fa fa-university text-muted me-2" aria-hidden="true"></i>
+                                        <span class="text-muted small fw-semibold">Faculties</span>
+                                    </div>
+                                    <span class="fs-5 fw-bold section-title"><field name="faculty_count"/></span>
+                                </div>
+                            </button>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <button name="action_open_subjects" type="object" class="btn p-0 text-start w-100 border-0 bg-transparent">
+                                <div class="card shadow-sm stat-card p-3 d-flex flex-row align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fa fa-book text-muted me-2" aria-hidden="true"></i>
+                                        <span class="text-muted small fw-semibold">Subjects</span>
+                                    </div>
+                                    <span class="fs-5 fw-bold section-title"><field name="subject_count"/></span>
+                                </div>
+                            </button>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <button name="action_open_sections" type="object" class="btn p-0 text-start w-100 border-0 bg-transparent">
+                                <div class="card shadow-sm stat-card p-3 d-flex flex-row align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fa fa-users text-muted me-2" aria-hidden="true"></i>
+                                        <span class="text-muted small fw-semibold">Class Sections</span>
+                                    </div>
+                                    <span class="fs-5 fw-bold section-title"><field name="section_count"/></span>
+                                </div>
+                            </button>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <button name="action_open_classrooms" type="object" class="btn p-0 text-start w-100 border-0 bg-transparent">
+                                <div class="card shadow-sm stat-card p-3 d-flex flex-row align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fa fa-th text-muted me-2" aria-hidden="true"></i>
+                                        <span class="text-muted small fw-semibold">Classrooms</span>
+                                    </div>
+                                    <span class="fs-5 fw-bold section-title"><field name="classroom_count"/></span>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 3. STUDENT STATISTICS BREAKDOWN -->
+                    <div class="card panel mb-4">
+                        <div class="card-header bg-white py-3 panel-header d-flex align-items-center justify-content-between">
+                            <h5 class="mb-0 fw-bold section-title">
+                                <i class="fa fa-pie-chart me-2" style="color: var(--accent);" aria-hidden="true"></i>Student Academic Status Breakdown
+                            </h5>
+                            <button name="action_open_students" type="object" class="btn btn-sm btn-link text-decoration-none p-0 section-link">
+                                View All Students <i class="fa fa-arrow-right ms-1" aria-hidden="true" title="View"></i>
+                            </button>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="row g-4 text-center">
+                                <div class="col-6 col-md-3 border-end">
+                                    <button name="action_open_students" type="object" class="btn p-0 text-center w-100 border-0 bg-transparent">
+                                        <div class="text-muted small fw-semibold mb-2">
+                                            <span class="badge rounded-pill bg-success-subtle text-success me-1 px-2">●</span>Active
+                                        </div>
+                                        <div class="fs-3 fw-bold text-success"><field name="active_student_count"/></div>
+                                    </button>
+                                </div>
+                                <div class="col-6 col-md-3 border-end">
+                                    <button name="action_open_students" type="object" class="btn p-0 text-center w-100 border-0 bg-transparent">
+                                        <div class="text-muted small fw-semibold mb-2">
+                                            <span class="badge rounded-pill bg-info-subtle text-info me-1 px-2">●</span>Graduated
+                                        </div>
+                                        <div class="fs-3 fw-bold text-info"><field name="graduated_student_count"/></div>
+                                    </button>
+                                </div>
+                                <div class="col-6 col-md-3 border-end">
+                                    <button name="action_open_students" type="object" class="btn p-0 text-center w-100 border-0 bg-transparent">
+                                        <div class="text-muted small fw-semibold mb-2">
+                                            <span class="badge rounded-pill bg-warning-subtle text-warning me-1 px-2">●</span>Suspended
+                                        </div>
+                                        <div class="fs-3 fw-bold text-warning"><field name="suspended_student_count"/></div>
+                                    </button>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <button name="action_open_students" type="object" class="btn p-0 text-center w-100 border-0 bg-transparent">
+                                        <div class="text-muted small fw-semibold mb-2">
+                                            <span class="badge rounded-pill bg-danger-subtle text-danger me-1 px-2">●</span>Dropped
+                                        </div>
+                                        <div class="fs-3 fw-bold text-danger"><field name="dropped_student_count"/></div>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4. FEE STATUS -->
+                    <div class="card panel mb-4">
+                        <div class="card-header bg-white py-3 panel-header d-flex align-items-center justify-content-between">
+                            <h5 class="mb-0 fw-bold section-title">
+                                <i class="fa fa-money me-2" style="color: var(--accent);" aria-hidden="true"></i>Fee Status
+                            </h5>
+                            <button name="action_open_fees" type="object" class="btn btn-sm btn-link text-decoration-none p-0 section-link">
+                                View All Invoices <i class="fa fa-arrow-right ms-1" aria-hidden="true" title="View"></i>
+                            </button>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="row g-4 text-center">
+                                <div class="col-6 col-md-3 border-end">
+                                    <div class="text-muted small fw-semibold mb-2">Invoices</div>
+                                    <div class="fs-3 fw-bold section-title"><field name="fee_count"/></div>
+                                </div>
+                                <div class="col-6 col-md-3 border-end">
+                                    <button name="action_open_payments" type="object" class="btn p-0 text-center w-100 border-0 bg-transparent">
+                                        <div class="text-muted small fw-semibold mb-2">Paid</div>
+                                        <div class="fs-3 fw-bold text-success"><field name="total_paid_fees" widget="monetary"/></div>
+                                    </button>
+                                </div>
+                                <div class="col-6 col-md-3 border-end">
+                                    <button name="action_open_unpaid_fees" type="object" class="btn p-0 text-center w-100 border-0 bg-transparent">
+                                        <div class="text-muted small fw-semibold mb-2">Unpaid</div>
+                                        <div class="fs-3 fw-bold text-danger"><field name="total_unpaid_fees" widget="monetary"/></div>
+                                    </button>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="text-muted small fw-semibold mb-2">Scholarship</div>
+                                    <div class="fs-3 fw-bold text-info">
+                                        <field name="total_scholarships" widget="monetary"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 5. BOTTOM ROW: OPERATIONS & ROADMAP -->
+                    <div class="row g-4">
+                        <!-- Quick Academic Operations -->
+                        <div class="col-12 col-md-6">
+                            <div class="card panel h-100">
+                                <div class="card-header bg-white py-3 panel-header">
+                                    <h5 class="mb-0 fw-bold section-title">
+                                        <i class="fa fa-bolt me-2" style="color: var(--accent);" aria-hidden="true"></i>Quick Operations
+                                    </h5>
+                                </div>
+                                <div class="card-body p-3">
+                                    <div class="d-grid gap-2">
+                                        <button name="action_open_academic_years" type="object" class="btn text-start d-flex justify-content-between align-items-center py-2 px-3 quick-op-btn">
+                                            <span><i class="fa fa-calendar-check-o me-2" style="color: var(--brand-900);" aria-hidden="true"></i>Academic Years &amp; Semesters</span>
+                                            <i class="fa fa-chevron-right text-muted small" title="Open" aria-hidden="true"></i>
+                                        </button>
+                                        <button name="action_open_sections" type="object" class="btn text-start d-flex justify-content-between align-items-center py-2 px-3 quick-op-btn">
+                                            <span><i class="fa fa-users me-2" style="color: var(--brand-900);" aria-hidden="true"></i>Class Sections &amp; Schedules</span>
+                                            <i class="fa fa-chevron-right text-muted small" title="Open" aria-hidden="true"></i>
+                                        </button>
+                                        <button name="action_open_enrollments" type="object" class="btn text-start d-flex justify-content-between align-items-center py-2 px-3 quick-op-btn">
+                                            <span><i class="fa fa-list-alt me-2" style="color: var(--brand-900);" aria-hidden="true"></i>Student Enrollments</span>
+                                            <i class="fa fa-chevron-right text-muted small" title="Open" aria-hidden="true"></i>
+                                        </button>
+                                        <button name="action_open_fees" type="object" class="btn text-start d-flex justify-content-between align-items-center py-2 px-3 quick-op-btn">
+                                            <span><i class="fa fa-money me-2" style="color: var(--brand-900);" aria-hidden="true"></i>Fee Invoices &amp; Payments</span>
+                                            <i class="fa fa-chevron-right text-muted small" title="Open" aria-hidden="true"></i>
+                                        </button>
+                                        <button name="action_open_course_registrations" type="object" class="btn text-start d-flex justify-content-between align-items-center py-2 px-3 quick-op-btn">
+                                            <span><i class="fa fa-pencil-square-o me-2" style="color: var(--brand-900);" aria-hidden="true"></i>Course Registrations</span>
+                                            <i class="fa fa-chevron-right text-muted small" title="Open" aria-hidden="true"></i>
+                                        </button>
+                                        <button name="action_open_service_requests" type="object" class="btn text-start d-flex justify-content-between align-items-center py-2 px-3 quick-op-btn">
+                                            <span><i class="fa fa-life-ring me-2" style="color: var(--brand-900);" aria-hidden="true"></i>Student Service Requests</span>
+                                            <i class="fa fa-chevron-right text-muted small" title="Open" aria-hidden="true"></i>
+                                        </button>
+                                        <button name="action_open_course_evaluations" type="object" class="btn text-start d-flex justify-content-between align-items-center py-2 px-3 quick-op-btn">
+                                            <span><i class="fa fa-star me-2" style="color: var(--brand-900);" aria-hidden="true"></i>Course Evaluations</span>
+                                            <i class="fa fa-chevron-right text-muted small" title="Open" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- System Modules Status -->
+                        <div class="col-12 col-md-6">
+                            <div class="card panel h-100">
+                                <div class="card-header bg-white py-3 panel-header">
+                                    <h5 class="mb-0 fw-bold section-title">
+                                        <i class="fa fa-cubes me-2" style="color: var(--accent);" aria-hidden="true"></i>System Capabilities
+                                    </h5>
+                                </div>
+                                <div class="card-body p-3">
+                                    <ul class="list-group list-group-flush small">
+                                        <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 py-2">
+                                            <span><i class="fa fa-check-circle text-success me-2" aria-hidden="true"></i>Structure (Faculties, Depts, Programs)</span>
+                                            <span class="badge bg-success">Active</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 py-2">
+                                            <span><i class="fa fa-check-circle text-success me-2" aria-hidden="true"></i>Academic Calendar &amp; Class Sections</span>
+                                            <span class="badge bg-success">Active</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 py-2">
+                                            <span><i class="fa fa-clock-o text-muted me-2" aria-hidden="true"></i>Attendance &amp; Examination System</span>
+                                            <span class="badge bg-secondary">Next Phase</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 py-2">
+                                            <span><i class="fa fa-check-circle text-success me-2" aria-hidden="true"></i>Fees, Invoicing &amp; Payments</span>
+                                            <span class="badge bg-success">Active</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- ==================== WINDOW ACTION ==================== -->
+    <record id="action_school_dashboard" model="ir.actions.act_window">
+        <field name="name">Dashboard</field>
+        <field name="res_model">school.dashboard</field>
+        <field name="view_mode">form</field>
+        <field name="limit">10</field>
+        <field name="res_id" ref="school_dashboard_default"/>
+        <field name="target">current</field>
+    </record>
+</odoo>

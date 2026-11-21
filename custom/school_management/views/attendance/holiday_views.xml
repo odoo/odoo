@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_university_holiday_list" model="ir.ui.view">
+        <field name="name">university.holiday.list</field>
+        <field name="model">university.holiday</field>
+        <field name="arch" type="xml">
+            <list limit="10" string="Holidays &amp; Breaks">
+                <field name="name"/>
+                <field name="academic_year_id"/>
+                <field name="faculty_id"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_university_holiday_form" model="ir.ui.view">
+        <field name="name">university.holiday.form</field>
+        <field name="model">university.holiday</field>
+        <field name="arch" type="xml">
+            <form string="Holiday">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="academic_year_id"/>
+                        <field name="faculty_id"/>
+                        <field name="date_start"/>
+                        <field name="date_end"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_university_holiday_search" model="ir.ui.view">
+        <field name="name">university.holiday.search</field>
+        <field name="model">university.holiday</field>
+        <field name="arch" type="xml">
+            <search string="Search Holidays">
+                <field name="name"/>
+                <field name="academic_year_id"/>
+                <field name="faculty_id"/>
+                <filter string="University-wide" name="filter_university" domain="[('faculty_id', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+    <record id="action_university_holiday" model="ir.actions.act_window">
+        <field name="name">Holidays &amp; Breaks</field>
+        <field name="res_model">university.holiday</field>
+        <field name="view_mode">list,form</field>
+        <field name="limit">10</field>
+        <field name="search_view_id" ref="view_university_holiday_search"/>
+    </record>
+</odoo>

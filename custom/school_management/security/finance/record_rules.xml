@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="rule_student_own_fees" model="ir.rule">
+        <field name="name">Student: own fees</field>
+        <field name="model_id" ref="model_university_fee" />
+        <field name="groups" eval="[(4, ref('group_school_student'))]" />
+        <field name="domain_force">[('student_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+    <record id="rule_admin_all_fees" model="ir.rule">
+        <field name="name">Admin: all fees</field>
+        <field name="model_id" ref="model_university_fee" />
+        <field name="groups" eval="[(4, ref('group_school_admin'))]" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="True" />
+    </record>
+    <record id="rule_registrar_all_fees" model="ir.rule">
+        <field name="name">Registrar: all fees</field>
+        <field name="model_id" ref="model_university_fee" />
+        <field name="groups" eval="[(4, ref('group_school_registrar'))]" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+    <record id="rule_student_own_fee_lines" model="ir.rule">
+        <field name="name">Student: own fee lines</field>
+        <field name="model_id" ref="model_university_fee_line" />
+        <field name="groups" eval="[(4, ref('group_school_student'))]" />
+        <field name="domain_force">[('fee_id.student_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+    <record id="rule_admin_all_fee_lines" model="ir.rule">
+        <field name="name">Admin: all fee lines</field>
+        <field name="model_id" ref="model_university_fee_line" />
+        <field name="groups" eval="[(4, ref('group_school_admin'))]" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="True" />
+    </record>
+    <record id="rule_registrar_all_fee_lines" model="ir.rule">
+        <field name="name">Registrar: all fee lines</field>
+        <field name="model_id" ref="model_university_fee_line" />
+        <field name="groups" eval="[(4, ref('group_school_registrar'))]" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+    <record id="rule_student_own_payments" model="ir.rule">
+        <field name="name">Student: own payments</field>
+        <field name="model_id" ref="model_university_payment" />
+        <field name="groups" eval="[(4, ref('group_school_student'))]" />
+        <field name="domain_force">[('student_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+    <record id="rule_admin_all_payments" model="ir.rule">
+        <field name="name">Admin: all payments</field>
+        <field name="model_id" ref="model_university_payment" />
+        <field name="groups" eval="[(4, ref('group_school_admin'))]" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="True" />
+    </record>
+    <record id="rule_registrar_all_payments" model="ir.rule">
+        <field name="name">Registrar: all payments</field>
+        <field name="model_id" ref="model_university_payment" />
+        <field name="groups" eval="[(4, ref('group_school_registrar'))]" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+</odoo>

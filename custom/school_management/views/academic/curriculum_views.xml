@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ==================== CURRICULUM MASTER VIEWS ==================== -->
+
+    <!-- Search View: Curriculum -->
+    <record id="view_university_curriculum_search" model="ir.ui.view">
+        <field name="name">university.curriculum.search</field>
+        <field name="model">university.curriculum</field>
+        <field name="arch" type="xml">
+            <search string="Search Curriculums">
+                <field name="name"/>
+                <field name="program_id"/>
+                <field name="session_id"/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter string="Program" name="group_program" context="{'group_by': 'program_id'}"/>
+                    <filter string="Academic Session" name="group_session" context="{'group_by': 'session_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- List View: Curriculum -->
+    <record id="view_university_curriculum_list" model="ir.ui.view">
+        <field name="name">university.curriculum.list</field>
+        <field name="model">university.curriculum</field>
+        <field name="arch" type="xml">
+            <list limit="10" string="Curriculums">
+                <field name="name"/>
+                <field name="program_id"/>
+                <field name="session_id"/>
+                <field name="active" widget="boolean_toggle" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View: Curriculum -->
+    <record id="view_university_curriculum_form" model="ir.ui.view">
+        <field name="name">university.curriculum.form</field>
+        <field name="model">university.curriculum</field>
+        <field name="arch" type="xml">
+            <form string="Curriculum">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Curriculum Name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Computer Science - 2025-2026"/>
+                        </h1>
+                    </div>
+                    <div class="alert alert-warning mb-3" role="alert" invisible="not credit_load_warning">
+                        <i class="fa fa-exclamation-triangle me-2" title="Warning"/>
+                        <strong>Credit Load Warning:</strong>
+                        <field name="credit_load_warning" readonly="1" nolabel="1" class="d-block mt-1"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="program_id" options="{'no_create': True, 'no_create_edit': True}"/>
+                            <field name="session_id" options="{'no_create': True, 'no_create_edit': True}"/>
+                        </group>
+                        <group>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Curriculum Subjects" name="lines">
+                            <field name="line_ids">
+                                <list limit="10" string="Subjects" editable="bottom" default_order="year_level, semester_number, sequence, id">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="year_level"/>
+                                    <field name="semester_number"/>
+                                    <field name="subject_id" options="{'no_create': True, 'no_create_edit': True}" domain="parent.program_id and [('program_ids', 'in', [parent.program_id])] or []"/>
+                                    <field name="credits" sum="Total Credits"/>
+                                    <field name="required"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action: Curriculums -->
+    <record id="action_university_curriculum" model="ir.actions.act_window">
+        <field name="name">Curriculums</field>
+        <field name="res_model">university.curriculum</field>
+        <field name="view_mode">list,form</field>
+        <field name="limit">10</field>
+        <field name="search_view_id" ref="view_university_curriculum_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Define your academic curriculum!
+            </p>
+            <p>
+                Organize program subjects across Year 1 through Year 4, Semester 1 and Semester 2.
+            </p>
+        </field>
+    </record>
+
+    <!-- ==================== CURRICULUM LINE VIEWS ==================== -->
+
+    <!-- Search View: Curriculum Lines -->
+    <record id="view_university_curriculum_line_search" model="ir.ui.view">
+        <field name="name">university.curriculum.line.search</field>
+        <field name="model">university.curriculum.line</field>
+        <field name="arch" type="xml">
+            <search string="Search Curriculum">
+                <field name="program_id" string="Program"/>
+                <field name="subject_id" string="Subject"/>
+                <field name="year_level" string="Year Level"/>
+                <field name="semester_number" string="Semester"/>
+                <separator/>
+                <filter string="Year 1" name="filter_y1" domain="[('year_level', '=', '1')]"/>
+                <filter string="Year 2" name="filter_y2" domain="[('year_level', '=', '2')]"/>
+                <filter string="Year 3" name="filter_y3" domain="[('year_level', '=', '3')]"/>
+                <filter string="Year 4" name="filter_y4" domain="[('year_level', '=', '4')]"/>
+                <separator/>
+                <filter string="Semester 1" name="filter_sem1" domain="[('semester_number', '=', '1')]"/>
+                <filter string="Semester 2" name="filter_sem2" domain="[('semester_number', '=', '2')]"/>
+                <group>
+                    <filter string="Program" name="group_program" context="{'group_by': 'program_id'}"/>
+                    <filter string="Year Level" name="group_year" context="{'group_by': 'year_level'}"/>
+                    <filter string="Semester" name="group_semester" context="{'group_by': 'semester_number'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Editable List View: Curriculum Lines -->
+    <record id="view_university_curriculum_line_list" model="ir.ui.view">
+        <field name="name">university.curriculum.line.list</field>
+        <field name="model">university.curriculum.line</field>
+        <field name="arch" type="xml">
+            <list string="Academic Curriculum" editable="bottom" limit="10" default_order="program_id, year_level, semester_number, sequence, id">
+                <field name="sequence" widget="handle"/>
+                <field name="program_id"/>
+                <field name="year_level"/>
+                <field name="semester_number"/>
+                <field name="subject_id" options="{'no_create': True, 'no_create_edit': True}"/>
+                <field name="credits" sum="Total Credits"/>
+                <field name="is_current_student_year" column_invisible="1"/>
+                <field name="enrollment_status" string="Enrollment" widget="badge"
+                       decoration-success="enrollment_status == 'Enrolled'"
+                       decoration-info="enrollment_status == 'Completed'"
+                       decoration-muted="enrollment_status == 'Not enrolled'"
+                       optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View: Curriculum Line -->
+    <record id="view_university_curriculum_line_form" model="ir.ui.view">
+        <field name="name">university.curriculum.line.form</field>
+        <field name="model">university.curriculum.line</field>
+        <field name="arch" type="xml">
+            <form string="Curriculum Subject">
+                <sheet>
+                    <group>
+                        <group string="Program &amp; Academic Placement">
+                            <field name="curriculum_id" options="{'no_create': True, 'no_create_edit': True}"/>
+                            <field name="program_id" options="{'no_create': True, 'no_create_edit': True}"/>
+                            <field name="year_level"/>
+                            <field name="semester_number"/>
+                            <field name="sequence"/>
+                        </group>
+                        <group string="Subject Details">
+                            <field name="subject_id" options="{'no_create': True, 'no_create_edit': True}"/>
+                            <field name="credits"/>
+                            <field name="required"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action: Academic Setup Curriculum Lines -->
+    <record id="action_university_curriculum_line" model="ir.actions.act_window">
+        <field name="name">Curriculum Subjects</field>
+        <field name="res_model">university.curriculum.line</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_university_curriculum_line_search"/>
+        <field name="limit">10</field>
+        <field name="context">{'search_default_group_program': 1, 'search_default_group_year': 1, 'search_default_group_semester': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Define your academic curriculum subjects!
+            </p>
+            <p>
+                Organize program subjects across Year 1 through Year 4, Semester 1 and Semester 2.
+            </p>
+        </field>
+    </record>
+
+    <!-- Student Read-Only List View: Curriculum Lines -->
+    <record id="view_university_curriculum_line_student_list" model="ir.ui.view">
+        <field name="name">university.curriculum.line.student.list</field>
+        <field name="model">university.curriculum.line</field>
+        <field name="arch" type="xml">
+            <list limit="10" string="My Degree Curriculum" create="false" edit="false" delete="false" default_order="year_level, semester_number, sequence, id">
+                <field name="year_level" string="Year Level"/>
+                <field name="semester_number" string="Semester"/>
+                <field name="subject_id"/>
+                <field name="credits" sum="Total Program Credits"/>
+                <field name="enrollment_status" string="Enrollment Status" widget="badge"
+                       decoration-success="enrollment_status == 'Enrolled'"
+                       decoration-info="enrollment_status == 'Completed'"
+                       decoration-muted="enrollment_status == 'Not enrolled'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Action: Student-facing My Curriculum -->
+    <record id="action_university_curriculum_student" model="ir.actions.act_window">
+        <field name="name">My Curriculum</field>
+        <field name="res_model">university.curriculum.line</field>
+        <field name="view_mode">list</field>
+        <field name="limit">10</field>
+        <field name="view_id" ref="view_university_curriculum_line_student_list"/>
+        <field name="domain">[('program_id.student_ids.user_id', '=', uid)]</field>
+        <field name="search_view_id" ref="view_university_curriculum_line_search"/>
+        <field name="context">{'search_default_group_year': 1, 'search_default_group_semester': 1, 'create': False, 'edit': False, 'delete': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Your program curriculum is being configured.
+            </p>
+            <p>
+                Here you can view the complete roadmap of subjects for your degree program.
+            </p>
+        </field>
+    </record>
+
+</odoo>

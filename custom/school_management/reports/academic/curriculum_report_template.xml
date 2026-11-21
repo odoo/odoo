@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_curriculum_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="curriculum">
+                <t t-set="program" t-value="curriculum.program_id"/>
+                <t t-call="web.external_layout">
+                    <div class="page" style="position: relative; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; color: #1e293b;">
+                        
+                        <!-- Watermark -->
+                        <div style="position: absolute; top: 35%; left: 8%; font-size: 85px; color: rgba(15, 23, 42, 0.025); transform: rotate(-35deg); pointer-events: none; white-space: nowrap; font-weight: 900; z-index: -1; letter-spacing: 2px;">
+                            OFFICIAL CURRICULUM
+                        </div>
+
+                        <!-- ── Academic Header & University Masthead ── -->
+                        <div class="row align-items-center mb-4 pb-3" style="border-bottom: 2px solid #0284c7;">
+                            <div class="col-8">
+                                <div class="d-flex align-items-center gap-2 mb-1">
+                                    <span class="badge" style="background-color: #0369a1; color: #ffffff; font-size: 0.75rem; letter-spacing: 1px; text-transform: uppercase; padding: 4px 10px; border-radius: 4px;">
+                                        Academic Affairs &amp; Registry
+                                    </span>
+                                    <span class="badge" style="background-color: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; font-size: 0.75rem; padding: 4px 10px; border-radius: 4px;">
+                                        <i class="fa fa-check-circle me-1"/> Accredited Program
+                                    </span>
+                                </div>
+                                <h1 style="font-weight: 800; color: #0f172a; margin: 4px 0 0 0; font-size: 1.85rem; letter-spacing: -0.5px;">
+                                    Degree Curriculum &amp; Study Plan
+                                </h1>
+                                <p style="color: #64748b; margin: 4px 0 0 0; font-size: 1rem; font-weight: 500;">
+                                    <t t-esc="(program.department_id and program.department_id.faculty_id and program.department_id.faculty_id.name) or 'Faculty of Science &amp; Technology'"/>
+                                    <span style="color: #cbd5e1; margin: 0 6px;">›</span>
+                                    <span style="color: #0284c7; font-weight: 600;">
+                                        <t t-esc="(program.department_id and program.department_id.name) or 'Academic Department'"/>
+                                    </span>
+                                </p>
+                            </div>
+                            <div class="col-4 text-end">
+                                <div style="display: inline-block; text-align: right; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px 14px;">
+                                    <div style="font-size: 0.75rem; color: #64748b; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Document Ref</div>
+                                    <div style="font-family: monospace; font-weight: 700; color: #0f172a; font-size: 0.95rem;">CURR-<t t-esc="curriculum.id"/>-2026</div>
+                                    <div style="font-size: 0.75rem; color: #64748b; margin-top: 2px;">
+                                        <i class="fa fa-calendar me-1"/> <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d %B %Y')"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ── Program Executive Profile Dashboard ── -->
+                        <div class="row g-2 mb-4">
+                            <!-- Card 1: Degree & Program -->
+                            <div class="col-6">
+                                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; height: 100%; border-top: 4px solid #0284c7; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="badge" style="background-color: #e0f2fe; color: #0369a1; font-weight: 700; font-size: 0.8rem; padding: 4px 8px;">
+                                            <t t-esc="program.code or 'PROG'"/>
+                                        </span>
+                                        <span class="badge" style="background-color: #f1f5f9; color: #475569; font-size: 0.8rem; text-transform: capitalize;">
+                                            <t t-esc="(program.degree_type or 'undergraduate').capitalize()"/> Degree
+                                        </span>
+                                    </div>
+                                    <h3 style="margin: 0; font-size: 1.25rem; font-weight: 700; color: #0f172a; line-height: 1.3;">
+                                        <t t-esc="program.name or curriculum.name"/>
+                                    </h3>
+                                    <div class="mt-3 pt-2 border-top d-flex justify-content-between align-items-center" style="font-size: 0.85rem; color: #64748b;">
+                                        <span><i class="fa fa-clock-o me-1"/> <strong>Session:</strong> <t t-esc="curriculum.session_id.name if curriculum.session_id else 'Active Session'"/></span>
+                                        <span><i class="fa fa-university me-1"/> <strong>Faculty Code:</strong> <t t-esc="(program.department_id and program.department_id.faculty_id and program.department_id.faculty_id.code) or 'UNIV'"/></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Card 2: Academic Statistics -->
+                            <div class="col-6">
+                                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; height: 100%; border-top: 4px solid #0f172a; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                                    <div class="row text-center h-100 align-items-center">
+                                        <div class="col-4 border-end">
+                                            <div style="font-size: 0.75rem; text-transform: uppercase; color: #64748b; font-weight: 700; letter-spacing: 0.5px;">Graduation Req</div>
+                                            <div style="font-size: 1.6rem; font-weight: 800; color: #0369a1; margin: 4px 0 0 0;">
+                                                <t t-esc="program.total_credits or sum(curriculum.line_ids.mapped('credits'))"/>
+                                            </div>
+                                            <div style="font-size: 0.7rem; color: #94a3b8; font-weight: 600;">Total Credits</div>
+                                        </div>
+                                        <div class="col-4 border-end">
+                                            <div style="font-size: 0.75rem; text-transform: uppercase; color: #64748b; font-weight: 700; letter-spacing: 0.5px;">Planned Courses</div>
+                                            <div style="font-size: 1.6rem; font-weight: 800; color: #0f172a; margin: 4px 0 0 0;">
+                                                <t t-esc="len(curriculum.line_ids)"/>
+                                            </div>
+                                            <div style="font-size: 0.7rem; color: #94a3b8; font-weight: 600;">Total Subjects</div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div style="font-size: 0.75rem; text-transform: uppercase; color: #64748b; font-weight: 700; letter-spacing: 0.5px;">Standard Span</div>
+                                            <div style="font-size: 1.6rem; font-weight: 800; color: #166534; margin: 4px 0 0 0;">
+                                                <t t-if="program.degree_type == 'master'">2 Years</t>
+                                                <t t-else="">4 Years</t>
+                                            </div>
+                                            <div style="font-size: 0.7rem; color: #94a3b8; font-weight: 600;">
+                                                <t t-if="program.degree_type == 'master'">4 Semesters</t>
+                                                <t t-else="">8 Semesters</t>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ── Course Breakdown By Year & Semester ── -->
+                        <t t-set="lines" t-value="curriculum.line_ids.sorted(key=lambda l: (l.year_level, l.semester_number, l.sequence, l.subject_id.code if l.subject_id else ''))"/>
+
+                        <t t-if="lines">
+                            <t t-set="years" t-value="sorted(set(lines.mapped('year_level')))"/>
+                            <t t-foreach="years" t-as="year_level">
+                                <t t-set="year_lines" t-value="lines.filtered(lambda l: l.year_level == year_level)"/>
+                                
+                                <!-- Year Header Section -->
+                                <div class="mt-4 mb-2 pb-1 d-flex justify-content-between align-items-center" style="border-bottom: 2px solid #e2e8f0;">
+                                    <h4 style="margin: 0; font-weight: 800; color: #0f172a; font-size: 1.15rem; text-transform: uppercase; letter-spacing: 0.5px;">
+                                        <i class="fa fa-bookmark text-primary me-2"/> ACADEMIC YEAR <t t-esc="year_level"/>
+                                    </h4>
+                                    <span style="font-size: 0.85rem; color: #64748b; font-weight: 600;">
+                                        Year Subtotal: <strong style="color: #0369a1;"><t t-esc="sum(year_lines.mapped('credits'))"/> Credits</strong> (<t t-esc="len(year_lines)"/> Courses)
+                                    </span>
+                                </div>
+
+                                <t t-set="semesters" t-value="sorted(set(year_lines.mapped('semester_number')))"/>
+                                <t t-foreach="semesters" t-as="semester">
+                                    <t t-set="sem_lines" t-value="year_lines.filtered(lambda l: l.semester_number == semester)"/>
+
+                                    <div class="mb-3" style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
+                                        <!-- Semester Heading Bar -->
+                                        <div style="background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 8px 16px; display: flex; justify-content: space-between; align-items: center;">
+                                            <div>
+                                                <strong style="font-size: 0.95rem; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px;">
+                                                    <i class="fa fa-calendar-check-o text-primary me-1"/> Year <t t-esc="year_level"/> &amp;bullet; Semester <t t-esc="semester"/>
+                                                </strong>
+                                            </div>
+                                            <div>
+                                                <span class="badge" style="background-color: #0369a1; color: white; padding: 4px 10px; font-weight: 600; font-size: 0.8rem; border-radius: 4px;">
+                                                    <t t-esc="sum(sem_lines.mapped('credits'))"/> Credits
+                                                </span>
+                                                <span class="badge" style="background-color: #f1f5f9; color: #334155; padding: 4px 8px; font-weight: 600; font-size: 0.8rem; border-radius: 4px; margin-left: 4px;">
+                                                    <t t-esc="len(sem_lines)"/> Courses
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Subject Rows Table -->
+                                        <table class="table table-sm table-hover align-middle mb-0" style="font-size: 0.88rem;">
+                                            <thead style="background: #ffffff; color: #64748b; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0;">
+                                                <tr>
+                                                    <th style="width: 14%; padding-left: 16px;">Course Code</th>
+                                                    <th style="width: 48%;">Course Name</th>
+                                                    <th style="width: 18%;">Department</th>
+                                                    <th style="width: 10%; text-align: center;">Credits</th>
+                                                    <th style="width: 10%; text-align: center;">Type</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-foreach="sem_lines" t-as="line">
+                                                    <tr style="border-bottom: 1px solid #f1f5f9;">
+                                                        <td style="padding-left: 16px;">
+                                                            <span class="badge" style="background: #f1f5f9; color: #0f172a; font-family: monospace; font-size: 0.85rem; font-weight: 700; border: 1px solid #cbd5e1; padding: 3px 6px;">
+                                                                <t t-esc="(line.subject_id and line.subject_id.code) or '—'"/>
+                                                            </span>
+                                                        </td>
+                                                        <td style="font-weight: 600; color: #0f172a;">
+                                                            <t t-esc="(line.subject_id and line.subject_id.name) or 'Unnamed Subject'"/>
+                                                        </td>
+                                                        <td style="color: #64748b; font-size: 0.82rem;">
+                                                            <t t-esc="(line.subject_id and line.subject_id.department_id and line.subject_id.department_id.name) or 'Department'"/>
+                                                        </td>
+                                                        <td style="text-align: center;">
+                                                            <span class="badge rounded-pill" style="background-color: #e0f2fe; color: #0369a1; font-weight: 700; padding: 3px 8px;">
+                                                                <t t-esc="line.credits"/>
+                                                            </span>
+                                                        </td>
+                                                        <td style="text-align: center;">
+                                                            <t t-if="line.required">
+                                                                <span class="badge" style="background-color: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; font-size: 0.75rem; padding: 3px 8px; border-radius: 4px;">
+                                                                    Core
+                                                                </span>
+                                                            </t>
+                                                            <t t-else="">
+                                                                <span class="badge" style="background-color: #fefce8; color: #854d0e; border: 1px solid #fef08a; font-size: 0.75rem; padding: 3px 8px; border-radius: 4px;">
+                                                                    Elective
+                                                                </span>
+                                                            </t>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </t>
+                            </t>
+                        </t>
+                        <t t-else="">
+                            <div class="alert alert-info mt-4" role="alert" style="background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; border-radius: 8px;">
+                                <i class="fa fa-info-circle me-2"/> No subjects have been enrolled in this curriculum yet.
+                            </div>
+                        </t>
+
+                        <!-- ── Curriculum Summary & Graduation Check ── -->
+                        <t t-if="lines">
+                            <div class="mt-4 pt-3 pb-3 px-4" style="background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 8px; page-break-inside: avoid;">
+                                <div class="row align-items-center">
+                                    <div class="col-7">
+                                        <div style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.5px;">Curriculum Audit &amp; Progression Summary</div>
+                                        <div style="font-size: 1.15rem; font-weight: 800; color: #0f172a; margin-top: 2px;">
+                                            <i class="fa fa-graduation-cap text-primary me-2"/> Total Earned Load: 
+                                            <span style="color: #0369a1;"><t t-esc="sum(lines.mapped('credits'))"/> Credits</span> across <t t-esc="len(lines)"/> Courses
+                                        </div>
+                                        <div style="font-size: 0.8rem; color: #64748b; margin-top: 4px;">
+                                            • Core Requirements: <strong><t t-esc="sum(lines.filtered(lambda l: l.required).mapped('credits'))"/> Credits</strong> | 
+                                            • Elective Specializations: <strong><t t-esc="sum(lines.filtered(lambda l: not l.required).mapped('credits'))"/> Credits</strong>
+                                        </div>
+                                    </div>
+                                    <div class="col-5 text-end">
+                                        <span class="badge" style="background-color: #dcfce7; color: #15803d; border: 1px solid #86efac; font-size: 0.95rem; padding: 8px 16px; border-radius: 6px;">
+                                            <i class="fa fa-check-circle me-1"/> Complete &amp; Fully Validated
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+
+                        <!-- ── Academic Sign-off Endorsements ── -->
+                        <div class="row mt-5 pt-4 page-break-inside-avoid text-center" style="border-top: 1px solid #cbd5e1; font-size: 0.85rem;">
+                            <div class="col-4">
+                                <div style="margin-top: 40px; border-top: 1px dashed #64748b; width: 80%; margin-left: auto; margin-right: auto; padding-top: 6px;">
+                                    <strong style="color: #0f172a;">Head of Department</strong><br/>
+                                    <span style="color: #64748b;">Academic Department</span>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div style="margin-top: 40px; border-top: 1px dashed #64748b; width: 80%; margin-left: auto; margin-right: auto; padding-top: 6px;">
+                                    <strong style="color: #0f172a;">Dean of Faculty</strong><br/>
+                                    <span style="color: #64748b;">Faculty Board Approval</span>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div style="margin-top: 40px; border-top: 1px dashed #64748b; width: 80%; margin-left: auto; margin-right: auto; padding-top: 6px;">
+                                    <strong style="color: #0f172a;"><t t-out="o.env.company.name"/> Registrar</strong><br/>
+                                    <span style="color: #64748b;">Official University Seal</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

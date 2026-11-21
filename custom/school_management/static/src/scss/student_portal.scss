@@ -1,0 +1,306 @@
+/* Student Portal Dashboard Modern Styling
+   Universities / Canvas-like Academic Interface
+   Design System: Neutral dark slate (#1E293B), Light grey background (#F8FAFC), 16px cards
+*/
+
+:root {
+  --student-slate-900: #0F172A;
+  --student-slate-800: #1E293B;
+  --student-slate-700: #334155;
+  --student-slate-600: #475569;
+  --student-slate-500: #64748B;
+  --student-slate-400: #94A3B8;
+  --student-slate-200: #E2E8F0;
+  --student-slate-100: #F1F5F9;
+  --student-slate-50:  #F8FAFC;
+
+  --student-primary: #4F46E5;
+  --student-primary-hover: #4338CA;
+  --student-primary-subtle: #EEF2FF;
+  --student-primary-border: #C7D2FE;
+
+  --student-success: #10B981;
+  --student-success-subtle: #ECFDF5;
+  --student-success-border: #A7F3D0;
+
+  --student-warning: #F59E0B;
+  --student-warning-subtle: #FFFBEB;
+  --student-warning-border: #FDE68A;
+
+  --student-danger: #EF4444;
+  --student-danger-subtle: #FEF2F2;
+  --student-danger-border: #FECACA;
+
+  --student-radius-lg: 16px;
+  --student-radius-md: 12px;
+  --student-radius-sm: 8px;
+  --student-radius-pill: 9999px;
+
+  --student-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --student-shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+  --student-shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+}
+
+/* Page Background Wrapper */
+.student-portal-wrapper {
+  background-color: var(--student-slate-50) !important;
+  color: var(--student-slate-800);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  min-height: 100vh;
+}
+
+.student-dashboard-container {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+/* 1. Top Header Hero Banner */
+.student-hero-banner {
+  background: linear-gradient(135deg, #1E293B 0%, #0F172A 60%, #312E81 100%);
+  border-radius: var(--student-radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.25);
+}
+
+.student-hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: radial-gradient(circle at 80% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
+                    radial-gradient(circle at 10% 80%, rgba(16, 185, 129, 0.08) 0%, transparent 35%);
+  pointer-events: none;
+}
+
+.student-hero-avatar-box {
+  width: 76px;
+  height: 76px;
+}
+
+.student-hero-avatar {
+  width: 76px;
+  height: 76px;
+  object-fit: cover;
+  border-color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.student-hero-avatar-initials {
+  width: 76px;
+  height: 76px;
+  background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+  color: #ffffff;
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.student-hero-name {
+  color: #FFFFFF;
+  letter-spacing: -0.02em;
+}
+
+.student-hero-subtext {
+  color: var(--student-slate-200);
+}
+
+/* Hero Action Buttons */
+.btn-hero-primary {
+  background-color: #FFFFFF;
+  color: var(--student-slate-900);
+  border: 1px solid #FFFFFF;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #F8FAFC;
+    color: var(--student-primary);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.btn-hero-secondary {
+  background-color: rgba(255, 255, 255, 0.12);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(4px);
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.22);
+    color: #FFFFFF;
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-1px);
+  }
+}
+
+/* 2. Critical Risk Alert Banner */
+.student-alert-banner {
+  background-color: var(--student-warning-subtle) !important;
+  border: 1px solid var(--student-warning-border) !important;
+  border-left: 6px solid var(--student-danger) !important;
+}
+
+/* 3. KPI Summary Cards */
+.student-kpi-card {
+  border-radius: var(--student-radius-lg) !important;
+  box-shadow: var(--student-shadow-card) !important;
+  border: 1px solid var(--student-slate-200) !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--student-shadow-hover) !important;
+  }
+}
+
+.student-kpi-icon-wrap {
+  width: 44px;
+  height: 44px;
+  font-size: 1.25rem;
+}
+
+.student-kpi-label {
+  letter-spacing: 0.05em;
+  color: var(--student-slate-500);
+}
+
+.student-kpi-value {
+  color: var(--student-slate-800);
+  line-height: 1;
+}
+
+/* 4. Enrolled Courses Section */
+.student-course-card {
+  border-radius: var(--student-radius-lg) !important;
+  box-shadow: var(--student-shadow-card) !important;
+  border: 1px solid var(--student-slate-200) !important;
+  transition: all 0.2s ease;
+
+  &:hover {
+    box-shadow: var(--student-shadow-hover) !important;
+    border-color: var(--student-primary-border) !important;
+  }
+}
+
+.student-course-accent-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 5px;
+  background: linear-gradient(180deg, var(--student-primary) 0%, #818CF8 100%);
+}
+
+/* 5. Right Sidebar & Live Now / Agenda */
+.student-sidebar-card {
+  border-radius: var(--student-radius-lg) !important;
+  box-shadow: var(--student-shadow-card) !important;
+  border: 1px solid var(--student-slate-200) !important;
+}
+
+.student-live-card {
+  background: linear-gradient(135deg, #F8FAFC 0%, #EEF2FF 100%);
+  border: 1.5px solid var(--student-primary-border) !important;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.08);
+}
+
+/* Live Now Pulsing Status Indicator */
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+
+.live-pulse-badge {
+  animation: pulseGlow 1.8s infinite;
+}
+
+.animate-pulse {
+  animation: opacityPulse 1.2s infinite ease-in-out;
+}
+
+@keyframes opacityPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* Vertical Timeline Structure */
+.student-timeline {
+  position: relative;
+}
+
+.student-timeline-line {
+  position: absolute;
+  left: 6px;
+  top: 8px;
+  bottom: 12px;
+  width: 2px;
+  background-color: var(--student-slate-200);
+}
+
+.student-timeline-item {
+  position: relative;
+
+  &:last-child {
+    margin-bottom: 0 !important;
+  }
+}
+
+.student-timeline-node {
+  position: absolute;
+  left: -2px;
+  top: 4px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: #FFFFFF;
+  border: 3px solid var(--student-slate-400);
+  z-index: 2;
+
+  &.node-live {
+    border-color: var(--student-danger);
+    background-color: var(--student-danger);
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.25);
+  }
+
+  &.node-completed {
+    border-color: var(--student-success);
+    background-color: var(--student-success);
+  }
+
+  &.node-upcoming {
+    border-color: var(--student-primary);
+    background-color: #FFFFFF;
+  }
+
+  &.node-cancelled {
+    border-color: var(--student-slate-400);
+    background-color: var(--student-slate-400);
+  }
+}
+
+/* Utility Helpers */
+.fs-7 {
+  font-size: 0.925rem;
+}
+
+.fs-8 {
+  font-size: 0.825rem;
+}
+
+.tracking-wider {
+  letter-spacing: 0.05em;
+}
+
+.shadow-xs {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+}

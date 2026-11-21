@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_university_res_config_settings" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.school.management</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app
+                    name="university"
+                    string="University"
+                    data-string="University"
+                    logo="/school_management/static/description/icon.png"
+                    groups="base.group_system"
+                >
+                    <block title="University Identity &amp; Branding" id="university_branding_block">
+                        <setting
+                            id="university_branding_setting"
+                            string="University Logo &amp; Name"
+                            help="Configure the official name and logo of the university for dashboards, report cards, and student portals."
+                        >
+                            <div class="d-flex align-items-center gap-3 mt16">
+                                <field name="university_logo" widget="image" class="o_avatar bg-view shadow-sm rounded border p-1" style="width: 80px; height: 80px; object-fit: contain;"/>
+                                <div class="flex-grow-1">
+                                    <label for="university_name" string="University Name" class="o_light_label fw-bold mb-1 d-block"/>
+                                    <field name="university_name" placeholder="e.g. Royal University of Phnom Penh" class="w-100"/>
+                                    <div class="text-muted small mt-1">
+                                        This logo and name appear on administrative dashboards, student transcripts, fee receipts, and academic reports.
+                                    </div>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+                    <block title="Academic Period">
+                        <setting
+                            id="university_current_period"
+                            string="Current Academic Period"
+                            help="Choose the academic year and semester currently used by the University application."
+                        >
+                            <div class="row mt16">
+                                <label
+                                    for="current_academic_year_id"
+                                    string="Academic Year"
+                                    class="col-lg-4 o_light_label"
+                                />
+                                <field name="current_academic_year_id" class="col-lg-8"
+                                       options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"
+                                       required="1"/>
+                            </div>
+                            <div class="row mt16">
+                                <label
+                                    for="current_semester_id"
+                                    string="Semester"
+                                    class="col-lg-4 o_light_label"
+                                />
+                                <field name="current_semester_id" class="col-lg-8"
+                                       domain="[('active', '=', True), ('academic_year_id', '=', current_academic_year_id)]"
+                                       options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"
+                                       required="1"/>
+                            </div>
+                            <div class="text-muted mt16">
+                                Changing this period updates the current-year marker only; existing records keep their original academic period.
+                            </div>
+                        </setting>
+                    </block>
+                    <block title="Teaching &amp; Schedule">
+                        <setting
+                            id="university_min_teaching_weeks"
+                            string="Minimum Teaching Weeks"
+                            help="Minimum required teaching weeks per department term. Terms shorter than this will display a warning."
+                        >
+                            <div class="row mt16">
+                                <label
+                                    for="min_teaching_weeks"
+                                    string="Minimum Weeks"
+                                    class="col-lg-4 o_light_label"
+                                />
+                                <field name="min_teaching_weeks" class="col-lg-4"/>
+                            </div>
+                        </setting>
+                    </block>
+                    <block title="Staff Attendance">
+                        <setting
+                            id="university_staff_attendance_policy"
+                            string="Working Hours &amp; Lateness Policy"
+                            help="Configure expected daily staff check-in/out times and grace period before arrival is considered late."
+                        >
+                            <div class="row mt16">
+                                <label
+                                    for="staff_expected_check_in"
+                                    string="Expected Check-In"
+                                    class="col-lg-5 o_light_label"
+                                />
+                                <div class="col-lg-4">
+                                    <field name="staff_expected_check_in" widget="float_time"/>
+                                </div>
+                            </div>
+                            <div class="row mt16">
+                                <label
+                                    for="staff_expected_check_out"
+                                    string="Expected Check-Out"
+                                    class="col-lg-5 o_light_label"
+                                />
+                                <div class="col-lg-4">
+                                    <field name="staff_expected_check_out" widget="float_time"/>
+                                </div>
+                            </div>
+                            <div class="row mt16">
+                                <label
+                                    for="staff_late_grace_minutes"
+                                    string="Late Grace Period"
+                                    class="col-lg-5 o_light_label"
+                                />
+                                <div class="col-lg-4 d-flex align-items-center gap-2">
+                                    <field name="staff_late_grace_minutes"/>
+                                    <span class="text-muted">minutes</span>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+                    <block title="Student Academic Risk Thresholds">
+                        <setting
+                            id="university_student_risk_thresholds"
+                            string="GPA &amp; Attendance Risk Thresholds"
+                            help="Configure risk thresholds used to identify students at academic or attendance risk."
+                        >
+                            <div class="row mt16">
+                                <label
+                                    for="risk_gpa_threshold"
+                                    string="Minimum GPA Threshold"
+                                    class="col-lg-5 o_light_label"
+                                />
+                                <div class="col-lg-4">
+                                    <field name="risk_gpa_threshold"/>
+                                </div>
+                            </div>
+                            <div class="row mt16">
+                                <label
+                                    for="risk_attendance_threshold"
+                                    string="Minimum Attendance Rate"
+                                    class="col-lg-5 o_light_label"
+                                />
+                                <div class="col-lg-4 d-flex align-items-center gap-2">
+                                    <field name="risk_attendance_threshold"/>
+                                    <span class="text-muted">%</span>
+                                </div>
+                            </div>
+                            <div class="row mt16">
+                                <label
+                                    for="attendance_edit_window_days"
+                                    string="Attendance Editing Window"
+                                    class="col-lg-5 o_light_label"
+                                />
+                                <div class="col-lg-4 d-flex align-items-center gap-2">
+                                    <field name="attendance_edit_window_days"/>
+                                    <span class="text-muted">days</span>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+                    <block title="Transcript Request Settings">
+                        <setting
+                            id="university_transcript_request_settings"
+                            string="Financial Hold Balance Threshold"
+                            help="Minimum overdue student account balance required to trigger a financial hold on transcript requests."
+                        >
+                            <div class="row mt16">
+                                <label
+                                    for="transcript_hold_min_balance"
+                                    string="Minimum Balance Threshold"
+                                    class="col-lg-5 o_light_label"
+                                />
+                                <div class="col-lg-4">
+                                    <field name="transcript_hold_min_balance"/>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_university_settings" model="ir.actions.act_window">
+        <field name="name">University Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_id" ref="view_university_res_config_settings"/>
+        <field name="view_mode">form</field>
+        <field name="limit">10</field>
+        <field name="context">{'module': 'university', 'bin_size': False}</field>
+    </record>
+</odoo>

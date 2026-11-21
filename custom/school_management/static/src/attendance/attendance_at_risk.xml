@@ -1,0 +1,608 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="school_management.AttendanceAtRisk">
+        <div class="o_att_at_risk p-4 bg-light h-100">
+            <!-- ==================== TOP CONTROL PANEL / BREADCRUMB HEADER ==================== -->
+            <div class="o_att_toolbar d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+                <div>
+                    <!-- Breadcrumb Navigation -->
+                    <nav class="d-flex align-items-center gap-2 mb-1" aria-label="Breadcrumb">
+                        <button type="button" class="btn btn-link p-0 text-decoration-none text-muted fw-semibold small d-flex align-items-center gap-1"
+                                t-on-click="onBack" title="Back to Attendance Management">
+                            <i class="fa fa-arrow-left" aria-hidden="true"/> Attendance
+                        </button>
+                        <span class="text-muted small">/</span>
+                        <span class="text-dark fw-bold small">At-Risk Attendance</span>
+                    </nav>
+
+                    <div class="d-flex align-items-center gap-2">
+                        <h1 class="o_att_title h3 fw-bold mb-0 text-dark d-flex align-items-center gap-2">
+                            <i class="fa fa-exclamation-triangle text-danger" title="At-Risk Attendance" aria-hidden="true"/>
+                            <span>At-Risk Attendance</span>
+                        </h1>
+                        <span class="badge rounded-pill bg-danger-subtle text-danger fs-6 border border-danger-subtle px-2 py-1 ms-1"
+                              t-if="state.data">
+                            <t t-esc="summary.totalAtRisk"/> Students
+                        </span>
+                    </div>
+                    <p class="text-muted small mb-0 mt-1">
+                        Students falling below institutional attendance threshold of
+                        <strong class="text-dark"><t t-esc="summary.threshold"/>%</strong>
+                    </p>
+                </div>
+
+                <div class="d-flex flex-wrap align-items-center gap-2">
+                    <!-- Month Selector -->
+                    <div class="input-group input-group-sm" style="width: auto;">
+                        <span class="input-group-text bg-white text-muted">
+                            <i class="fa fa-calendar me-1" aria-hidden="true"/>Month
+                        </span>
+                        <select class="form-select form-select-sm" t-on-change="onMonthChange" t-att-disabled="state.loading">
+                            <option t-foreach="[1,2,3,4,5,6,7,8,9,10,11,12]" t-as="m" t-key="m"
+                                    t-att-value="m" t-att-selected="state.month === m"
+                                    t-esc="m"/>
+                        </select>
+                    </div>
+
+                    <!-- Year Selector -->
+                    <div class="input-group input-group-sm" style="width: auto;">
+                        <span class="input-group-text bg-white text-muted">Year</span>
+                        <input type="number" min="2000" max="2100" class="form-control form-control-sm" style="width: 85px;"
+                               t-att-value="state.year"
+                               t-on-change="onYearChange"
+                               t-att-disabled="state.loading"/>
+                    </div>
+
+                    <!-- Department Filter -->
+                    <select class="form-select form-select-sm" style="width: auto; max-width: 200px;"
+                            t-on-change="onDepartmentFilterChange"
+                            t-att-disabled="state.loading">
+                        <option value="all">All Departments</option>
+                        <option t-foreach="departments" t-as="dept" t-key="dept"
+                                t-att-value="dept"
+                                t-att-selected="state.departmentFilter === dept"
+                                t-esc="dept"/>
+                    </select>
+
+                    <!-- Search Input with Clear Button -->
+                    <div class="input-group input-group-sm" style="width: 220px;">
+                        <span class="input-group-text bg-white text-muted">
+                            <i class="fa fa-search" aria-hidden="true"/>
+                        </span>
+                        <input type="text" class="form-control form-control-sm"
+                               placeholder="Search student..."
+                               t-att-value="state.searchQuery"
+                               t-on-input="onSearchInput"
+                               t-att-disabled="state.loading"/>
+                        <button t-if="state.searchQuery" class="btn btn-outline-secondary btn-sm" type="button"
+                                t-on-click="clearSearch" title="Clear Search">
+                            <i class="fa fa-times" aria-hidden="true"/>
+                        </button>
+                    </div>
+
+                    <!-- View Switcher (Kanban vs Table) -->
+                    <div class="btn-group btn-group-sm" role="group">
+                        <button type="button"
+                                t-att-class="'btn ' + (state.viewMode === 'kanban' ? 'btn-primary' : 'btn-outline-secondary') package_btn"
+                                t-on-click="() => this.setViewMode('kanban')"
+                                title="Kanban View" aria-label="Kanban View">
+                            <i class="fa fa-th-large me-1" aria-hidden="true"/>Kanban
+                        </button>
+                        <button type="button"
+                                t-att-class="'btn ' + (state.viewMode === 'table' ? 'btn-primary' : 'btn-outline-secondary')"
+                                t-on-click="() => this.setViewMode('table')"
+                                title="Table View" aria-label="Table View">
+                            <i class="fa fa-table me-1" aria-hidden="true"/>Table
+                        </button>
+                    </div>
+
+                    <!-- Refresh Button -->
+                    <button class="btn btn-sm btn-outline-secondary" t-on-click="refresh" t-att-disabled="state.loading"
+                            title="Refresh" aria-label="Refresh">
+                        <i class="fa fa-refresh me-1" t-att-class="state.loading ? 'fa-spin' : ''" aria-hidden="true"/>
+                        Refresh
+                    </button>
+                </div>
+            </div>
+
+            <!-- ERROR ALERT -->
+            <div class="alert alert-danger d-flex align-items-center mb-4" t-if="state.error" role="alert">
+                <i class="fa fa-exclamation-triangle me-2 fs-5" aria-hidden="true"/>
+                <span t-esc="state.error"/>
+            </div>
+
+            <!-- LOADING SPINNER -->
+            <div class="text-center py-5" t-if="state.loading and !state.data">
+                <i class="fa fa-spinner fa-spin fa-2x text-muted" aria-hidden="true"/>
+                <div class="text-muted mt-2">Analyzing student attendance records...</div>
+            </div>
+
+            <!-- MAIN CONTENT -->
+            <t t-if="state.data">
+                <!-- ==================== ODOO KANBAN HEADER / KPI DASHBOARD ==================== -->
+                <div class="row g-3 mb-4 o_kanban_dashboard" aria-label="At-Risk Kanban Header">
+                    <!-- KPI 1: TOTAL AT-RISK -->
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <div t-att-class="'card shadow-sm h-100 rounded-3 bg-white att_container p-3 cursor-pointer ' + (state.severityFilter === 'all' ? 'border-primary border-2 shadow-sm' : 'border')"
+                             t-on-click="() => this.setSeverityFilter('all')"
+                             title="Click to show all at-risk students">
+                            <div class="d-flex align-items-center justify-content-between mb-1">
+                                <span class="text-muted small fw-bold text-uppercase">Total At-Risk</span>
+                                <span class="badge rounded-pill bg-primary-subtle text-primary border border-primary-subtle px-2 py-1"
+                                      t-if="state.severityFilter === 'all'">
+                                    <i class="fa fa-check me-1" aria-hidden="true"/>Active
+                                </span>
+                                <div class="rounded-circle p-2 bg-primary-subtle text-primary d-flex align-items-center justify-content-center"
+                                     style="width: 32px; height: 32px;" t-else="">
+                                    <i class="fa fa-users" aria-hidden="true"/>
+                                </div>
+                            </div>
+                            <div class="fs-2 fw-bold text-dark mt-1">
+                                <t t-esc="summary.totalAtRisk"/>
+                                <span class="fs-6 fw-normal text-muted ms-1">Students</span>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between text-muted small mt-2 pt-1 border-top">
+                                <span><i class="fa fa-info-circle me-1" aria-hidden="true"/>Target threshold</span>
+                                <strong class="text-dark">&lt; <t t-esc="summary.threshold"/>%</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- KPI 2: CRITICAL RISK (< 50%) -->
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <div t-att-class="'card shadow-sm h-100 rounded-3 bg-white att_container p-3 cursor-pointer ' + (state.severityFilter === 'critical' ? 'border-danger border-2 shadow-sm' : 'border')"
+                             t-on-click="() => this.setSeverityFilter('critical')"
+                             title="Click to filter critical risk students (&lt; 50%)">
+                            <div class="d-flex align-items-center justify-content-between mb-1">
+                                <span class="text-danger small fw-bold text-uppercase">Critical Risk (&lt; 50%)</span>
+                                <span class="badge rounded-pill bg-danger text-white px-2 py-1"
+                                      t-if="state.severityFilter === 'critical'">
+                                    <i class="fa fa-check me-1" aria-hidden="true"/>Active
+                                </span>
+                                <div class="rounded-circle p-2 bg-danger-subtle text-danger d-flex align-items-center justify-content-center"
+                                     style="width: 32px; height: 32px;" t-else="">
+                                    <i class="fa fa-bolt" aria-hidden="true"/>
+                                </div>
+                            </div>
+                            <div class="fs-2 fw-bold text-danger mt-1">
+                                <t t-esc="summary.criticalCount"/>
+                                <span class="fs-6 fw-normal text-muted ms-1">Students</span>
+                            </div>
+                            <!-- Mini Progress Bar -->
+                            <div class="progress mt-2" style="height: 6px;">
+                                <div class="progress-bar bg-danger" role="progressbar"
+                                     t-att-style="'width: ' + summary.criticalPct + '%;'"
+                                     t-att-aria-valuenow="summary.criticalPct"
+                                     aria-valuemin="0" aria-valuemax="100"/>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between text-muted small mt-1">
+                                <span>Urgent intervention</span>
+                                <strong class="text-danger"><t t-esc="summary.criticalPct"/>%</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- KPI 3: MODERATE RISK (50-74%) -->
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <div t-att-class="'card shadow-sm h-100 rounded-3 bg-white att_container p-3 cursor-pointer ' + (state.severityFilter === 'moderate' ? 'border-warning border-2 shadow-sm' : 'border')"
+                             t-on-click="() => this.setSeverityFilter('moderate')"
+                             title="Click to filter moderate risk students (50-74%)">
+                            <div class="d-flex align-items-center justify-content-between mb-1">
+                                <span class="text-warning-emphasis small fw-bold text-uppercase">Moderate Risk (50-74%)</span>
+                                <span class="badge rounded-pill bg-warning text-dark px-2 py-1"
+                                      t-if="state.severityFilter === 'moderate'">
+                                    <i class="fa fa-check me-1" aria-hidden="true"/>Active
+                                </span>
+                                <div class="rounded-circle p-2 bg-warning-subtle text-warning d-flex align-items-center justify-content-center"
+                                     style="width: 32px; height: 32px;" t-else="">
+                                    <i class="fa fa-clock-o" aria-hidden="true"/>
+                                </div>
+                            </div>
+                            <div class="fs-2 fw-bold text-warning-emphasis mt-1">
+                                <t t-esc="summary.moderateCount"/>
+                                <span class="fs-6 fw-normal text-muted ms-1">Students</span>
+                            </div>
+                            <!-- Mini Progress Bar -->
+                            <div class="progress mt-2" style="height: 6px;">
+                                <div class="progress-bar bg-warning" role="progressbar"
+                                     t-att-style="'width: ' + summary.moderatePct + '%;'"
+                                     t-att-aria-valuenow="summary.moderatePct"
+                                     aria-valuemin="0" aria-valuemax="100"/>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between text-muted small mt-1">
+                                <span>Warning &amp; monitor</span>
+                                <strong class="text-warning-emphasis"><t t-esc="summary.moderatePct"/>%</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- KPI 4: AVERAGE AT-RISK RATE -->
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <div class="card shadow-sm border h-100 rounded-3 bg-white att_container p-3">
+                            <div class="d-flex align-items-center justify-content-between mb-1">
+                                <span class="text-info-emphasis small fw-bold text-uppercase">Avg At-Risk Rate</span>
+                                <div class="rounded-circle p-2 bg-info-subtle text-info d-flex align-items-center justify-content-center"
+                                     style="width: 32px; height: 32px;">
+                                    <i class="fa fa-tachometer" aria-hidden="true"/>
+                                </div>
+                            </div>
+                            <div class="fs-2 fw-bold text-dark mt-1">
+                                <t t-esc="summary.avgRate"/>%
+                            </div>
+                            <!-- Mini Progress Bar -->
+                            <div class="progress mt-2" style="height: 6px;">
+                                <div class="progress-bar bg-info" role="progressbar"
+                                     t-att-style="'width: ' + summary.avgRate + '%;'"
+                                     t-att-aria-valuenow="summary.avgRate"
+                                     aria-valuemin="0" aria-valuemax="100"/>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between text-muted small mt-1">
+                                <span>Institutional target</span>
+                                <strong class="text-dark">&gt;= <t t-esc="summary.threshold"/>%</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ACTIVE FILTER CHIPS BAR -->
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3 pb-2 border-bottom">
+                    <div class="d-flex flex-wrap align-items-center gap-2">
+                        <span class="text-muted small fw-semibold">Filtered by:</span>
+                        <span t-att-class="'badge rounded-pill ' + (state.severityFilter === 'all' ? 'bg-primary' : (state.severityFilter === 'critical' ? 'bg-danger' : 'bg-warning text-dark'))">
+                            <t t-if="state.severityFilter === 'all'">All Severities (<t t-esc="summary.totalAtRisk"/>)</t>
+                            <t t-elif="state.severityFilter === 'critical'">Critical &lt; 50% (<t t-esc="summary.criticalCount"/>)</t>
+                            <t t-else="">Moderate 50-74% (<t t-esc="summary.moderateCount"/>)</t>
+                        </span>
+                        <span class="badge rounded-pill bg-light text-dark border" t-if="state.departmentFilter !== 'all'">
+                            <i class="fa fa-building me-1 text-muted" aria-hidden="true"/>
+                            <t t-esc="state.departmentFilter"/>
+                        </span>
+                        <span class="badge rounded-pill bg-light text-dark border" t-if="state.searchQuery">
+                            <i class="fa fa-search me-1 text-muted" aria-hidden="true"/>
+                            "<t t-esc="state.searchQuery"/>"
+                        </span>
+                    </div>
+
+                    <div class="text-muted small">
+                        Showing <strong class="text-dark"><t t-esc="filteredStudents.length"/></strong> of
+                        <strong class="text-dark"><t t-esc="summary.totalAtRisk"/></strong> at-risk students
+                    </div>
+                </div>
+
+                <!-- EMPTY STATE -->
+                <div class="card shadow-sm border-0 rounded-3 p-5 text-center my-4" t-if="!filteredStudents.length">
+                    <div class="rounded-circle bg-success-subtle text-success d-inline-flex align-items-center justify-content-center mx-auto mb-3"
+                         style="width: 64px; height: 64px;">
+                        <i class="fa fa-check-circle fa-2x" aria-hidden="true"/>
+                    </div>
+                    <h4 class="h5 fw-bold text-dark">No Students Found</h4>
+                    <p class="text-muted mb-0">
+                        <t t-if="!summary.totalAtRisk">
+                            All students are currently meeting or exceeding the attendance threshold of <t t-esc="summary.threshold"/>%.
+                        </t>
+                        <t t-else="">
+                            No students match the active severity, department, or search filters.
+                        </t>
+                    </p>
+                </div>
+
+                <!-- ==================== KANBAN VIEW MODE (WITH COLUMN HEADERS) ==================== -->
+                <t t-if="state.viewMode === 'kanban' and filteredStudents.length">
+                    <!-- CASE 1: ALL SEVERITIES -> TWO ODOO KANBAN COLUMNS -->
+                    <t t-if="state.severityFilter === 'all'">
+                        <div class="row g-4 mb-4">
+                            <!-- COLUMN 1: CRITICAL RISK -->
+                            <div class="col-12 col-xl-6">
+                                <div class="o_kanban_group bg-transparent">
+                                    <!-- Column Header -->
+                                    <div class="o_kanban_header p-3 bg-white rounded-3 shadow-sm border border-danger-subtle mb-3 d-flex align-items-center justify-content-between">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="rounded-circle p-2 bg-danger-subtle text-danger d-flex align-items-center justify-content-center"
+                                                 style="width: 32px; height: 32px;">
+                                                <i class="fa fa-bolt" aria-hidden="true"/>
+                                            </div>
+                                            <div>
+                                                <h3 class="h6 fw-bold text-danger mb-0">Critical Risk (&lt; 50%)</h3>
+                                                <small class="text-muted">Urgent academic intervention required</small>
+                                            </div>
+                                        </div>
+                                        <span class="badge bg-danger rounded-pill fs-6 px-3 py-1">
+                                            <t t-esc="criticalStudents.length"/>
+                                        </span>
+                                    </div>
+
+                                    <!-- Column Cards Grid -->
+                                    <div class="row row-cols-1 row-cols-md-2 g-3" t-if="criticalStudents.length">
+                                        <t t-foreach="criticalStudents" t-as="student" t-key="student.id">
+                                            <t t-call="school_management.AttendanceAtRisk.StudentCard"/>
+                                        </t>
+                                    </div>
+                                    <div class="card p-4 text-center border-0 rounded-3 bg-white text-muted shadow-sm" t-else="">
+                                        <i class="fa fa-check text-success mb-2 fs-4" aria-hidden="true"/>
+                                        <span>No students in critical risk status.</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- COLUMN 2: MODERATE RISK -->
+                            <div class="col-12 col-xl-6">
+                                <div class="o_kanban_group bg-transparent">
+                                    <!-- Column Header -->
+                                    <div class="o_kanban_header p-3 bg-white rounded-3 shadow-sm border border-warning-subtle mb-3 d-flex align-items-center justify-content-between">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="rounded-circle p-2 bg-warning-subtle text-warning d-flex align-items-center justify-content-center"
+                                                 style="width: 32px; height: 32px;">
+                                                <i class="fa fa-clock-o" aria-hidden="true"/>
+                                            </div>
+                                            <div>
+                                                <h3 class="h6 fw-bold text-warning-emphasis mb-0">Moderate Risk (50-74%)</h3>
+                                                <small class="text-muted">Attendance warning and monitoring</small>
+                                            </div>
+                                        </div>
+                                        <span class="badge bg-warning text-dark rounded-pill fs-6 px-3 py-1">
+                                            <t t-esc="moderateStudents.length"/>
+                                        </span>
+                                    </div>
+
+                                    <!-- Column Cards Grid -->
+                                    <div class="row row-cols-1 row-cols-md-2 g-3" t-if="moderateStudents.length">
+                                        <t t-foreach="moderateStudents" t-as="student" t-key="student.id">
+                                            <t t-call="school_management.AttendanceAtRisk.StudentCard"/>
+                                        </t>
+                                    </div>
+                                    <div class="card p-4 text-center border-0 rounded-3 bg-white text-muted shadow-sm" t-else="">
+                                        <i class="fa fa-check text-success mb-2 fs-4" aria-hidden="true"/>
+                                        <span>No students in moderate risk status.</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+
+                    <!-- CASE 2: FILTERED TO A SINGLE SEVERITY -> FULL RESPONSIVE GRID WITH KANBAN HEADER -->
+                    <t t-else="">
+                        <div class="mb-4">
+                            <!-- Column Header for filtered selection -->
+                            <div t-att-class="'o_kanban_header p-3 bg-white rounded-3 shadow-sm border mb-3 d-flex align-items-center justify-content-between ' + (state.severityFilter === 'critical' ? 'border-danger-subtle' : 'border-warning-subtle')">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div t-att-class="'rounded-circle p-2 d-flex align-items-center justify-content-center ' + (state.severityFilter === 'critical' ? 'bg-danger-subtle text-danger' : 'bg-warning-subtle text-warning') + ''"
+                                         style="width: 36px; height: 36px;">
+                                        <i t-att-class="'fa ' + (state.severityFilter === 'critical' ? 'fa-bolt' : 'fa-clock-o')" aria-hidden="true"/>
+                                    </div>
+                                    <div>
+                                        <h3 t-att-class="'h6 fw-bold mb-0 ' + (state.severityFilter === 'critical' ? 'text-danger' : 'text-warning-emphasis')">
+                                            <t t-if="state.severityFilter === 'critical'">Critical Risk Students (&lt; 50%)</t>
+                                            <t t-else="">Moderate Risk Students (50-74%)</t>
+                                        </h3>
+                                        <small class="text-muted">
+                                            <t t-if="state.severityFilter === 'critical'">Immediate advisor / department intervention required</t>
+                                            <t t-else="">Active attendance watch and communication recommended</t>
+                                        </small>
+                                    </div>
+                                </div>
+                                <span t-att-class="'badge rounded-pill fs-6 px-3 py-1 ' + (state.severityFilter === 'critical' ? 'bg-danger' : 'bg-warning text-dark')">
+                                    <t t-esc="filteredStudents.length"/> Students
+                                </span>
+                            </div>
+
+                            <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3">
+                                <t t-foreach="filteredStudents" t-as="student" t-key="student.id">
+                                    <t t-call="school_management.AttendanceAtRisk.StudentCard"/>
+                                </t>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+
+                <!-- ==================== TABLE VIEW MODE ==================== -->
+                <t t-if="state.viewMode === 'table' and filteredStudents.length">
+                    <div class="card shadow-sm border rounded-3 mb-4 overflow-hidden bg-white">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th style="width: 40px;" class="text-center">#</th>
+                                        <th>Student</th>
+                                        <th>Code</th>
+                                        <th>Department / Program</th>
+                                        <th class="text-center">Present</th>
+                                        <th class="text-center">Absent</th>
+                                        <th class="text-center">Late</th>
+                                        <th class="text-center">Excused</th>
+                                        <th class="text-center">Total</th>
+                                        <th style="width: 180px;">Rate</th>
+                                        <th class="text-end">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="filteredStudents" t-as="student" t-key="student.id">
+                                        <td class="text-center text-muted" t-esc="student_index + 1"/>
+                                        <td>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <img t-att-src="'/web/image/university.student/' + student.id + '/avatar_128'"
+                                                     class="rounded-circle object-fit-cover border"
+                                                     style="width: 32px; height: 32px;"
+                                                     alt="Student Avatar"
+                                                     onerror="this.src='/web/static/img/placeholder.png'"/>
+                                                <div>
+                                                    <a href="#" class="fw-bold text-dark text-decoration-none"
+                                                       t-on-click.prevent="() => this.openStudent(student.id)"
+                                                       t-esc="student.name"/>
+                                                    <div class="text-muted small" t-if="student.email" t-esc="student.email"/>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge text-bg-light border" t-esc="student.code || '-'"/>
+                                        </td>
+                                        <td>
+                                            <div class="small fw-semibold text-dark" t-esc="student.department || '-'"/>
+                                            <div class="small text-muted" t-if="student.program and student.program !== student.department" t-esc="student.program"/>
+                                        </td>
+                                        <td class="text-center text-success fw-bold" t-esc="student.counts.present"/>
+                                        <td class="text-center text-danger fw-bold" t-esc="student.counts.absent"/>
+                                        <td class="text-center text-warning fw-bold" t-esc="student.counts.late"/>
+                                        <td class="text-center text-secondary" t-esc="student.counts.excused"/>
+                                        <td class="text-center fw-semibold text-dark" t-esc="student.total"/>
+                                        <td>
+                                            <div class="d-flex align-items-center justify-content-between mb-1 small">
+                                                <span t-att-class="getRiskBadgeClass(student.rate)"
+                                                      t-esc="getRiskLabel(student.rate)"/>
+                                                <strong t-att-class="student.rate &lt; 50 ? 'text-danger' : 'text-warning'"
+                                                        t-esc="student.rate + '%'"/>
+                                            </div>
+                                            <div class="progress" style="height: 6px;">
+                                                <div t-att-class="'progress-bar ' + getProgressBarClass(student.rate)"
+                                                     role="progressbar"
+                                                     t-att-style="'width: ' + barWidth(student) + ';'"/>
+                                            </div>
+                                        </td>
+                                        <td class="text-end">
+                                            <div class="btn-group btn-group-sm">
+                                                <button type="button" class="btn btn-outline-secondary py-1 px-2"
+                                                        t-on-click="() => this.openAttendance(student.id, student.name)"
+                                                        title="Attendance Log History">
+                                                    <i class="fa fa-list" aria-hidden="true"/>
+                                                </button>
+                                                <a t-if="student.email" t-att-href="'mailto:' + student.email"
+                                                   class="btn btn-outline-info py-1 px-2" title="Email Student">
+                                                    <i class="fa fa-envelope" aria-hidden="true"/>
+                                                </a>
+                                                <button type="button" class="btn btn-outline-primary py-1 px-2"
+                                                        t-on-click="() => this.openStudent(student.id)"
+                                                        title="Student Profile">
+                                                    <i class="fa fa-user" aria-hidden="true"/>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </div>
+    </t>
+
+    <!-- ==================== SUB-TEMPLATE: STUDENT KANBAN CARD ==================== -->
+    <t t-name="school_management.AttendanceAtRisk.StudentCard">
+        <div class="col">
+            <div t-att-class="'card h-100 shadow-sm rounded-3 o_att_student_card bg-white position-relative border-start border-4 ' + (student.rate &lt; 50 ? 'border-danger' : 'border-warning')">
+                <div class="card-body p-3 d-flex flex-column justify-content-between">
+                    <div>
+                        <!-- Card Top: Avatar, Name, Program, Badges -->
+                        <div class="d-flex align-items-start gap-3 mb-3">
+                            <!-- Student Avatar with status ring -->
+                            <div class="position-relative flex-shrink-0" style="width: 52px; height: 52px;">
+                                <img t-att-src="'/web/image/university.student/' + student.id + '/avatar_128'"
+                                     class="rounded-circle object-fit-cover w-100 h-100 border shadow-sm"
+                                     alt="Student Avatar"
+                                     onerror="this.src='/web/static/img/placeholder.png'"/>
+                                <span t-att-class="'position-absolute bottom-0 end-0 p-1 rounded-circle border border-white ' + (student.rate &lt; 50 ? 'bg-danger' : 'bg-warning')"
+                                      style="width: 12px; height: 12px;"
+                                      t-att-title="student.rate &lt; 50 ? 'Critical Risk' : 'Moderate Risk'"/>
+                            </div>
+
+                            <!-- Student Info -->
+                            <div class="flex-grow-1 min-w-0">
+                                <div class="d-flex align-items-center justify-content-between gap-1 mb-1">
+                                    <h5 class="card-title fw-bold text-dark text-truncate mb-0 fs-6 cursor-pointer"
+                                        t-att-title="student.name"
+                                        t-on-click="() => this.openStudent(student.id)">
+                                        <t t-esc="student.name"/>
+                                    </h5>
+                                    <span t-att-class="getRiskBadgeClass(student.rate)"
+                                          t-esc="getRiskLabel(student.rate)"/>
+                                </div>
+
+                                <div class="d-flex align-items-center gap-2 mb-1">
+                                    <span class="badge text-bg-light border text-muted small" t-if="student.code">
+                                        <t t-esc="student.code"/>
+                                    </span>
+                                    <span class="text-muted small text-truncate" t-if="student.department" t-att-title="student.department">
+                                        <i class="fa fa-building me-1 text-primary" aria-hidden="true"/>
+                                        <t t-esc="student.department"/>
+                                    </span>
+                                </div>
+
+                                <div class="text-muted small text-truncate" t-if="student.program and student.program !== student.department" t-att-title="student.program">
+                                    <i class="fa fa-graduation-cap me-1 text-info" aria-hidden="true"/>
+                                    <t t-esc="student.program"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Attendance Rate Progress Gauge -->
+                        <div class="p-2 mb-3 rounded-2 bg-light border">
+                            <div class="d-flex align-items-center justify-content-between mb-1">
+                                <span class="text-muted small fw-semibold">Attendance Rate</span>
+                                <span class="fw-bold fs-6"
+                                      t-att-class="student.rate &lt; 50 ? 'text-danger' : 'text-warning'"
+                                      t-esc="student.rate + '%'"/>
+                            </div>
+                            <div class="progress" style="height: 8px;">
+                                <div t-att-class="'progress-bar progress-bar-striped progress-bar-animated ' + getProgressBarClass(student.rate)"
+                                     role="progressbar"
+                                     t-att-style="'width: ' + barWidth(student) + ';'"
+                                     t-att-aria-valuenow="student.rate"
+                                     aria-valuemin="0" aria-valuemax="100"/>
+                            </div>
+                        </div>
+
+                        <!-- Attendance Breakdown Badges -->
+                        <div class="d-flex flex-wrap align-items-center gap-1 mb-2">
+                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle" title="Absent">
+                                <i class="fa fa-times me-1" aria-hidden="true"/>
+                                <t t-esc="student.counts.absent"/> Absent
+                            </span>
+                            <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle" title="Late">
+                                <i class="fa fa-clock-o me-1" aria-hidden="true"/>
+                                <t t-esc="student.counts.late"/> Late
+                            </span>
+                            <span class="badge bg-success-subtle text-success border border-success-subtle" title="Present">
+                                <i class="fa fa-check me-1" aria-hidden="true"/>
+                                <t t-esc="student.counts.present"/> Present
+                            </span>
+                            <span class="badge bg-secondary-subtle text-secondary border" title="Excused">
+                                <i class="fa fa-info me-1" aria-hidden="true"/>
+                                <t t-esc="student.counts.excused"/> Excused
+                            </span>
+                        </div>
+
+                        <!-- Enrolled Sections info -->
+                        <div class="text-muted small text-truncate mb-1" t-if="student.sections" t-att-title="student.sections">
+                            <i class="fa fa-book me-1 text-primary" aria-hidden="true"/>
+                            <span class="fw-semibold">Sections:</span> <t t-esc="student.sections"/>
+                        </div>
+                    </div>
+
+                    <!-- Card Footer: Quick Action Buttons -->
+                    <div class="mt-3 pt-2 border-top d-flex align-items-center justify-content-between">
+                        <button type="button"
+                                class="btn btn-sm btn-outline-secondary py-1 px-2"
+                                t-on-click="() => this.openAttendance(student.id, student.name)"
+                                title="Attendance Log History">
+                            <i class="fa fa-list me-1" aria-hidden="true"/>History
+                        </button>
+
+                        <div class="d-flex align-items-center gap-1">
+                            <a t-if="student.email"
+                               t-att-href="'mailto:' + student.email"
+                               class="btn btn-sm btn-outline-info py-1 px-2"
+                               title="Send Email">
+                                <i class="fa fa-envelope" aria-hidden="true"/>
+                            </a>
+                            <button type="button"
+                                    class="btn btn-sm btn-outline-primary py-1 px-2"
+                                    t-on-click="() => this.openStudent(student.id)"
+                                    title="Open Student Profile">
+                                <i class="fa fa-user me-1" aria-hidden="true"/>Profile
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

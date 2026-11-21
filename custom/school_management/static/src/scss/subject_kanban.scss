@@ -1,0 +1,330 @@
+// University Management System - Subject Kanban & Filter Sidebar Polish
+// Strictly scoped to body.o_school_management_active and subject views
+// Ensures zero visual leakage to standard Odoo apps (/odoo/apps, Sales, CRM, etc.)
+
+body.o_school_management_active {
+    // -----------------------------------------------------------------------
+    // 1. Left DEPARTMENT Filter Sidebar for Subjects (Light Theme Polish)
+    // -----------------------------------------------------------------------
+    .o_content:has(.o_university_subject_kanban),
+    .o_action:has(.o_university_subject_kanban),
+    .o_view_controller:has(.o_university_subject_kanban),
+    .o_university_subject_kanban,
+    &:has(.o_university_subject_card),
+    &:has(.o_university_subject_kanban) {
+        .o_search_panel {
+            background-color: #f8f9fa !important;
+            border-right: 1px solid #e2e8f0 !important;
+            color: #334155 !important;
+            --bs-list-group-bg: transparent !important;
+            --bs-list-group-border-color: transparent !important;
+
+            .list-group {
+                background-color: transparent !important;
+                border: none !important;
+            }
+
+            .list-group-item {
+                background-color: transparent !important;
+                border-color: transparent !important;
+            }
+
+            // Section header (e.g. DEPARTMENT)
+            .o_search_panel_section_header {
+                color: #64748b !important;
+                font-size: 0.72rem !important;
+                font-weight: 700 !important;
+                letter-spacing: 0.06em !important;
+                text-transform: uppercase !important;
+
+                i, .fa, .o_search_panel_section_icon {
+                    color: #714b67 !important;
+                    font-size: 0.85rem !important;
+                    margin-right: 6px !important;
+                }
+
+                b {
+                    font-weight: 700 !important;
+                    color: #1e293b !important;
+                }
+            }
+
+            // Category rows (Department items)
+            .o_search_panel_category_value {
+                border: none !important;
+                border-radius: 6px !important;
+                margin-bottom: 2px !important;
+                padding: 0 !important;
+                background-color: transparent !important;
+
+                > header {
+                    border-radius: 6px !important;
+                    padding: 6px 10px !important;
+                    background-color: transparent !important;
+                    border: 1px solid transparent !important;
+                    color: #475569 !important;
+                    transition: background-color 0.15s ease, color 0.15s ease !important;
+
+                    &:hover {
+                        background-color: #f1ecf6 !important;
+                        color: #514474 !important;
+                    }
+
+                    // Selected filter row with soft purple background + left accent bar
+                    &.active {
+                        background-color: #ede7f6 !important;
+                        border-left: 3px solid #714b67 !important;
+                        border-radius: 0 6px 6px 0 !important;
+                        color: #514474 !important;
+                        font-weight: 600 !important;
+                        padding-left: 7px !important;
+
+                        .o_search_panel_label_title {
+                            color: #514474 !important;
+                            font-weight: 600 !important;
+                        }
+
+                        .o_search_panel_counter {
+                            color: #714b67 !important;
+                            background-color: #ded5ec !important;
+                            font-weight: 700 !important;
+                        }
+                    }
+                }
+
+                .o_search_panel_label_title {
+                    color: inherit !important;
+                    font-size: 0.84rem !important;
+                }
+
+                .o_search_panel_counter {
+                    color: #64748b !important;
+                    font-size: 0.75rem !important;
+                    font-weight: 600 !important;
+                    background-color: #e8e5ef !important;
+                    border-radius: 10px !important;
+                    padding: 1px 7px !important;
+                    margin-left: auto !important;
+                }
+            }
+
+            // Filter values (if any)
+            .o_search_panel_filter_value {
+                border: 1px solid transparent !important;
+                border-radius: 6px !important;
+                background-color: transparent !important;
+                color: #334155 !important;
+                padding: 4px 8px !important;
+                margin-bottom: 2px !important;
+                transition: background-color 0.15s ease !important;
+
+                &:hover {
+                    background-color: #f1ecf6 !important;
+                }
+
+                &.active,
+                &:has(input:checked) {
+                    background-color: #f7f4fb !important;
+                }
+
+                input[type="checkbox"] {
+                    accent-color: #714b67 !important;
+                    background-color: #ffffff !important;
+                    border: 1px solid #cbd5e1 !important;
+                    border-radius: 4px !important;
+                    cursor: pointer !important;
+
+                    &:checked {
+                        background-color: #714b67 !important;
+                        border-color: #714b67 !important;
+                    }
+                }
+            }
+
+            // All / Empty State button
+            .o_search_panel_empty_state .btn {
+                background-color: #ede7f6 !important;
+                color: #514474 !important;
+                border: 1px solid #d9d1ed !important;
+                border-radius: 6px !important;
+                font-size: 0.84rem !important;
+                font-weight: 600 !important;
+                padding: 5px 10px !important;
+
+                &:hover {
+                    background-color: #e2dbef !important;
+                }
+            }
+
+            // Toggle / fold button
+            button.btn-light {
+                background-color: #ffffff !important;
+                border: 1px solid #e2e8f0 !important;
+                color: #64748b !important;
+                border-radius: 6px !important;
+                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+
+                &:hover {
+                    background-color: #f1ecf6 !important;
+                    border-color: #d9d1ed !important;
+                    color: #714b67 !important;
+                }
+            }
+        }
+    }
+
+    // -----------------------------------------------------------------------
+    // 2. Subjects Kanban Card & Pills Styling
+    // -----------------------------------------------------------------------
+    .o_university_subject_kanban {
+        .o_kanban_record {
+            padding: 0 !important;
+        }
+
+        .o_university_subject_card {
+            min-height: 155px;
+            border: 1px solid #e4e7ec;
+            border-radius: 8px;
+            background-color: #ffffff;
+            color: #1f2937;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.04);
+            transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+
+            // Requirement 5: Subtle shadow lift on hover
+            &:hover,
+            &:focus-within {
+                box-shadow: 0 8px 20px rgba(16, 24, 40, 0.08);
+                transform: translateY(-2px);
+                border-color: #d1d5db;
+            }
+        }
+
+        .o_kanban_record_title {
+            color: #111827;
+            font-weight: 700;
+        }
+
+        .o_kanban_record_top .text-muted {
+            color: #9ca3af !important;
+        }
+
+        // Requirement 4: Icons in muted gray (#9CA3AF range)
+        .o_subject_meta_line {
+            display: flex;
+            align-items: center;
+            min-width: 0;
+            margin-top: 0.5rem;
+            color: #4b5563;
+            font-size: 0.82rem;
+            line-height: 1.35;
+
+            .o_subject_meta_icon,
+            i.fa,
+            .fa {
+                flex: 0 0 16px;
+                width: 16px;
+                margin-right: 0.45rem;
+                color: #9ca3af !important;
+                font-size: 0.88rem;
+                text-align: center;
+            }
+        }
+
+        // Requirement 3: Program pill in light purple tint background (#EDE9F5) + dark purple text (#514474)
+        .o_subject_program_line {
+            .o_field_many2many_tags {
+                min-width: 0;
+            }
+
+            .o_tag,
+            .badge {
+                max-width: 100%;
+                overflow: hidden;
+                color: #514474 !important;
+                background-color: #ede9f5 !important;
+                border: 1px solid #d9d1ed !important;
+                border-radius: 4px !important;
+                padding: 0.2rem 0.55rem !important;
+                font-size: 0.76rem !important;
+                font-weight: 600 !important;
+                text-overflow: ellipsis;
+                vertical-align: middle;
+            }
+        }
+
+        .o_subject_department_line .o_field_widget,
+        .o_subject_department_line span {
+            min-width: 0;
+            overflow: hidden;
+            color: #4b5563;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        // Requirement 3: Semester and Credits pills in neutral light gray (#F3F4F6) with dark text (#4B5563)
+        .o_subject_academic_meta {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-top: 0.75rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid #f1f5f9;
+            color: #4b5563;
+            font-size: 0.78rem;
+
+            .o_subject_meta_pill {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.25rem;
+                background-color: #f3f4f6;
+                color: #4b5563;
+                border: 1px solid #e5e7eb;
+                border-radius: 4px;
+                padding: 0.15rem 0.5rem;
+                font-weight: 500;
+                font-size: 0.76rem;
+
+                .o_field_widget,
+                span {
+                    color: inherit;
+                    font-weight: 600;
+                }
+            }
+
+            .o_subject_meta_separator {
+                color: #9ca3af;
+                font-weight: 700;
+            }
+
+            // Fallback for direct span elements
+            > span:not(.o_subject_meta_separator):not(.o_subject_meta_pill) {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.25rem;
+                background-color: #f3f4f6;
+                color: #4b5563;
+                border: 1px solid #e5e7eb;
+                border-radius: 4px;
+                padding: 0.15rem 0.5rem;
+                font-weight: 500;
+                font-size: 0.76rem;
+            }
+        }
+    }
+
+    // -----------------------------------------------------------------------
+    // Requirement 6: Primary action button (New / Create) in purple #6F5F9E
+    // -----------------------------------------------------------------------
+    .o_content:has(.o_university_subject_kanban) ~ .o_control_panel,
+    .o_action:has(.o_university_subject_kanban) .btn-primary,
+    &:has(.o_university_subject_kanban) .btn-primary {
+        background-color: #6f5f9e !important;
+        border-color: #6f5f9e !important;
+        color: #ffffff !important;
+
+        &:hover, &:focus {
+            background-color: #5b4b8a !important;
+            border-color: #5b4b8a !important;
+        }
+    }
+}

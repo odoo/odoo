@@ -1,0 +1,582 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ==================== ACADEMIC YEAR ==================== -->
+    <record id="view_university_academic_year_list" model="ir.ui.view">
+        <field name="name">university.academic.year.list</field>
+        <field name="model">university.academic.year</field>
+        <field name="arch" type="xml">
+            <list limit="10" string="Academic Years" sample="1" class="o_university_academic_year_list">
+                <field name="name" decoration-bf="1"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="state" widget="badge"
+                       decoration-info="state in ('draft', 'open')"
+                       decoration-success="state == 'running'"
+                       decoration-muted="state in ('closed', 'archived')"/>
+                <field name="semester_count"/>
+                <field name="curriculum_count" string="Curriculums" optional="show"/>
+                <field name="timetable_slot_count" string="Sessions"/>
+                <field name="classroom_count" string="Rooms"/>
+                <field name="enrollment_count" string="Enrolled"/>
+                <field name="conflict_count" string="Conflicts" decoration-danger="conflict_count &gt; 0"/>
+                <field name="current" widget="boolean_toggle"/>
+                <field name="active" widget="boolean_toggle" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_university_academic_year_form" model="ir.ui.view">
+        <field name="name">university.academic.year.form</field>
+        <field name="model">university.academic.year</field>
+        <field name="arch" type="xml">
+            <form string="Academic Year">
+                <header>
+                    <button name="action_create_semesters"
+                            string="Create Semesters"
+                            type="object"
+                            class="oe_highlight"
+                            invisible="semester_count &gt; 0"/>
+                    <button name="action_open_registration"
+                            string="Open Registration"
+                            type="object"
+                            class="oe_highlight"
+                            invisible="state != 'draft'"/>
+                    <button name="action_start_year"
+                            string="Start Year"
+                            type="object"
+                            class="oe_highlight"
+                            invisible="state not in ['draft', 'open']"/>
+                    <button name="action_close_year"
+                            string="Close Year"
+                            type="object"
+                            invisible="state != 'running'"/>
+                    <button name="action_archive_year"
+                            string="Archive"
+                            type="object"
+                            invisible="state in ['draft', 'archived']"/>
+                    <button name="action_reset_draft"
+                            string="Reset to Draft"
+                            type="object"
+                            groups="school_management.group_school_admin,school_management.group_academic_year_manager"
+                            invisible="state == 'draft'"/>
+                    <button name="action_open_rollover"
+                            string="Roll Over Year"
+                            type="object"
+                            invisible="state not in ['closed', 'running']"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,open,running,closed,archived"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_semesters"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-bookmark-o">
+                            <field name="semester_count" widget="statinfo" string="Semesters"/>
+                        </button>
+                        <button name="action_view_curriculums"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-book">
+                            <field name="curriculum_count" widget="statinfo" string="Curriculums"/>
+                        </button>
+                        <button name="action_view_timetable_slots"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-calendar">
+                            <field name="timetable_slot_count" widget="statinfo" string="Sessions"/>
+                        </button>
+                        <button name="action_view_enrollments"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-user-graduate">
+                            <field name="enrollment_count" widget="statinfo" string="Students"/>
+                        </button>
+                        <button name="action_view_schedule"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-tasks">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Timetable</span>
+                                <span class="o_stat_text">Schedule UI</span>
+                            </div>
+                        </button>
+                        <button name="action_view_room_occupancy"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-building">
+                            <field name="classroom_count" widget="statinfo" string="Rooms Used"/>
+                        </button>
+                        <button name="action_view_conflicts"
+                                type="object"
+                                class="oe_stat_button text-danger"
+                                icon="fa-exclamation-triangle"
+                                invisible="conflict_count == 0">
+                            <field name="conflict_count" widget="statinfo" string="Conflicts"/>
+                        </button>
+                        <button name="action_view_conflicts"
+                                type="object"
+                                class="oe_stat_button text-success"
+                                icon="fa-check-circle"
+                                invisible="conflict_count &gt; 0">
+                            <div class="o_stat_info">
+                                <span class="o_stat_value text-success">0</span>
+                                <span class="o_stat_text text-success">No Conflicts</span>
+                            </div>
+                        </button>
+                        <button name="action_view_timeslots"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-clock-o">
+                            <field name="timeslot_count" widget="statinfo" string="Timeslots"/>
+                        </button>
+                    </div>
+
+                    <widget name="web_ribbon" title="Current" bg_color="text-bg-success" invisible="not current"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="active" invisible="1"/>
+
+                    <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_1920'}"/>
+
+                    <div class="oe_title">
+                        <label for="name" string="Academic Year"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. 2026-2027" required="1"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group string="Duration">
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                        </group>
+                        <group string="Status">
+                            <field name="state"/>
+                            <field name="current" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Semesters" name="semesters_tab">
+                            <div class="mb-2" invisible="semester_count &gt; 0">
+                                <button name="action_create_semesters"
+                                        string="Create Semesters"
+                                        type="object"
+                                        class="btn btn-primary btn-sm"/>
+                            </div>
+                            <field name="semester_ids">
+                                <list limit="10" editable="bottom">
+                                    <field name="name" readonly="1"/>
+                                    <field name="semester_type"/>
+                                    <field name="date_start"/>
+                                    <field name="date_end"/>
+                                    <field name="is_current" widget="boolean_toggle"/>
+                                    <field name="week_count"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Holidays" name="holidays_tab">
+                            <field name="holiday_ids">
+                                <list limit="10" editable="bottom">
+                                    <field name="name"/>
+                                    <field name="faculty_id"/>
+                                    <field name="date_start"/>
+                                    <field name="date_end"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_university_academic_year_search" model="ir.ui.view">
+        <field name="name">university.academic.year.search</field>
+        <field name="model">university.academic.year</field>
+        <field name="arch" type="xml">
+            <search string="Search Academic Years">
+                <field name="name"/>
+                <separator/>
+                <filter string="Current Year" name="filter_current" domain="[('current', '=', True)]"/>
+                <separator/>
+                <filter string="Open" name="filter_open" domain="[('state', '=', 'open')]"/>
+                <filter string="Running" name="filter_running" domain="[('state', '=', 'running')]"/>
+                <filter string="Draft" name="filter_draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Closed" name="filter_closed" domain="[('state', '=', 'closed')]"/>
+                <filter string="Archived State" name="filter_archived_state" domain="[('state', '=', 'archived')]"/>
+                <separator/>
+                <filter string="Active" name="filter_active" domain="[('active', '=', True)]"/>
+                <filter string="Archived" name="filter_inactive" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter string="Status" name="group_by_state" context="{'group_by': 'state'}"/>
+                </group>
+                <searchpanel class="o_university_academic_year_searchpanel">
+                    <field name="state" icon="fa-tasks" enable_counters="1" select="multi"/>
+                    <field name="semester_status" icon="fa-calendar" enable_counters="1" select="multi"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <!-- KANBAN VIEW -->
+    <record id="view_university_academic_year_kanban" model="ir.ui.view">
+        <field name="name">university.academic.year.kanban</field>
+        <field name="model">university.academic.year</field>
+        <field name="arch" type="xml">
+            <kanban limit="10" sample="1" class="o_university_academic_year_kanban">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="image_1920"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="current"/>
+                <field name="state"/>
+                <field name="semester_count"/>
+                <field name="curriculum_count"/>
+                <field name="timetable_slot_count"/>
+                <field name="classroom_count"/>
+                <field name="enrollment_count"/>
+                <field name="conflict_count"/>
+                <templates>
+                    <t t-name="card" class="o_academic_year_kanban_card">
+                        <main class="o_academic_year_card_body p-3 shadow-sm rounded-3 border bg-white mb-2">
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <div class="d-flex align-items-center gap-2">
+                                    <t t-if="record.image_1920.raw_value">
+                                        <img t-attf-src="/web/image/university.academic.year/#{record.id.raw_value}/image_1920"
+                                             alt="Academic Year Banner"
+                                             class="rounded object-fit-cover shadow-sm flex-shrink-0"
+                                             style="width: 44px; height: 44px;"/>
+                                    </t>
+                                    <t t-else="">
+                                        <div class="o_academic_year_icon_wrap p-2 rounded-3 text-white d-flex align-items-center justify-content-center"
+                                             style="width: 42px; height: 42px; background: linear-gradient(135deg, #0d6efd, #0b5ed7);">
+                                            <i class="fa fa-calendar-check-o fs-5" title="Academic Year" aria-hidden="true"/>
+                                        </div>
+                                    </t>
+                                    <div>
+                                        <strong class="fs-5 o_kanban_record_title text-dark"><field name="name"/></strong>
+                                        <div class="mt-1" t-if="record.current.raw_value">
+                                            <span class="badge text-bg-success px-2 py-1"><i class="fa fa-check-circle me-1" title="Current"/>Current Active Year</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <field name="state" widget="badge"
+                                           decoration-info="state in ('draft', 'open')"
+                                           decoration-success="state == 'running'"
+                                           decoration-muted="state in ('closed', 'archived')"/>
+                                </div>
+                            </div>
+                            <div class="p-2 rounded-2 bg-light border d-flex align-items-center justify-content-between text-muted small my-2">
+                                <div>
+                                    <i class="fa fa-calendar text-primary me-2" title="Period"/>
+                                    <span><field name="date_start"/> &amp;rarr; <field name="date_end"/></span>
+                                </div>
+                                <span class="badge text-bg-light border text-muted">Academic Term</span>
+                            </div>
+
+                            <!-- Interactive Quick-Access Metric Chips -->
+                            <div class="d-flex flex-wrap gap-2 mt-2 pt-2 border-top">
+                                <button type="object" name="action_view_semesters" class="btn btn-sm btn-light border py-1 px-2 d-flex align-items-center gap-1 shadow-sm" title="Semesters" aria-label="Semesters">
+                                    <i class="fa fa-bookmark-o text-secondary" title="Semesters" aria-label="Semesters"/>
+                                    <span><field name="semester_count"/> Semesters</span>
+                                </button>
+                                <button type="object" name="action_view_curriculums" class="btn btn-sm btn-light border py-1 px-2 d-flex align-items-center gap-1 shadow-sm" title="Curriculums" aria-label="Curriculums">
+                                    <i class="fa fa-book text-warning" title="Curriculums" aria-label="Curriculums"/>
+                                    <span><field name="curriculum_count"/> Curriculums</span>
+                                </button>
+                                <button type="object" name="action_view_timetable_slots" class="btn btn-sm btn-light border py-1 px-2 d-flex align-items-center gap-1 shadow-sm" title="Sessions" aria-label="Sessions">
+                                    <i class="fa fa-calendar text-primary" title="Sessions" aria-label="Sessions"/>
+                                    <span><field name="timetable_slot_count"/> Sessions</span>
+                                </button>
+                                <button type="object" name="action_view_enrollments" class="btn btn-sm btn-light border py-1 px-2 d-flex align-items-center gap-1 shadow-sm" title="Enrolled Students" aria-label="Students">
+                                    <i class="fa fa-user-graduate text-success" title="Enrolled Students" aria-label="Students"/>
+                                    <span><field name="enrollment_count"/> Students</span>
+                                </button>
+                                <button type="object" name="action_view_room_occupancy" class="btn btn-sm btn-light border py-1 px-2 d-flex align-items-center gap-1 shadow-sm" title="Rooms" aria-label="Rooms">
+                                    <i class="fa fa-building text-info" title="Rooms" aria-label="Rooms"/>
+                                    <span><field name="classroom_count"/> Rooms</span>
+                                </button>
+                                <button t-if="record.conflict_count.raw_value &gt; 0" type="object" name="action_view_conflicts" class="btn btn-sm btn-danger py-1 px-2 d-flex align-items-center gap-1 text-white shadow-sm" title="Conflicts" aria-label="Conflicts">
+                                    <i class="fa fa-exclamation-triangle" title="Conflicts" aria-label="Conflicts"/>
+                                    <span><field name="conflict_count"/> Conflicts</span>
+                                </button>
+                                <button t-else="" type="object" name="action_view_conflicts" class="btn btn-sm btn-outline-success py-1 px-2 d-flex align-items-center gap-1 shadow-sm" title="No Conflicts" aria-label="No Conflicts">
+                                    <i class="fa fa-check-circle" title="No Conflicts" aria-label="No Conflicts"/>
+                                    <span>0 Conflicts</span>
+                                </button>
+                            </div>
+
+                            <div class="o_academic_year_footer d-flex align-items-center justify-content-between mt-3 pt-2 border-top small">
+                                <div class="d-flex align-items-center gap-2">
+                                    <button type="object" name="action_view_timetable_slots" class="btn btn-link btn-sm p-0 text-primary text-decoration-none small" title="Sessions Kanban" aria-label="Sessions Kanban">
+                                        <i class="fa fa-th-large me-1" title="Sessions Kanban" aria-label="Sessions Kanban"/>Sessions
+                                    </button>
+                                    <span class="text-muted small">&#183;</span>
+                                    <button type="object" name="action_view_schedule" class="btn btn-link btn-sm p-0 text-purple text-decoration-none small" title="Timetable UI" aria-label="Timetable UI">
+                                        <i class="fa fa-calendar-check-o me-1" title="Timetable UI" aria-label="Timetable UI"/>Schedule UI
+                                    </button>
+                                    <span class="text-muted small">&#183;</span>
+                                    <button type="object" name="action_view_room_occupancy" class="btn btn-link btn-sm p-0 text-info text-decoration-none small" title="Rooms Kanban" aria-label="Rooms Kanban">
+                                        <i class="fa fa-building-o me-1" title="Rooms Kanban" aria-label="Rooms Kanban"/>Rooms
+                                    </button>
+                                </div>
+                                <a type="open" role="button" class="btn btn-link btn-sm p-0 text-dark fw-bold text-decoration-none">
+                                    Details <i class="fa fa-arrow-right ms-1 text-primary" title="Details" aria-label="Details"/>
+                                </a>
+                            </div>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="action_university_academic_year" model="ir.actions.act_window">
+        <field name="name">Academic Years</field>
+        <field name="res_model">university.academic.year</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="limit">10</field>
+        <field name="search_view_id" ref="view_university_academic_year_search"/>
+    </record>
+
+    <!-- ==================== SEMESTER ==================== -->
+    <record id="view_university_semester_list" model="ir.ui.view">
+        <field name="name">university.semester.list</field>
+        <field name="model">university.semester</field>
+        <field name="arch" type="xml">
+            <list limit="10" string="Semesters" sample="1">
+                <field name="name" decoration-bf="1"/>
+                <field name="academic_year_id"/>
+                <field name="semester_type" widget="badge"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="is_current" widget="boolean_toggle"/>
+                <field name="week_count"/>
+                <field name="subject_count" string="Subjects"/>
+                <field name="section_count" string="Sections"/>
+                <field name="enrollment_count" string="Students"/>
+                <field name="timetable_slot_count" string="Sessions"/>
+                <field name="active" widget="boolean_toggle" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_university_semester_form" model="ir.ui.view">
+        <field name="name">university.semester.form</field>
+        <field name="model">university.semester</field>
+        <field name="arch" type="xml">
+            <form string="Semester">
+                <header>
+                    <button name="action_generate_department_terms"
+                            string="Generate Department Terms"
+                            type="object"
+                            class="oe_highlight"/>
+                    <button name="action_export_department_terms"
+                            string="Export Department Terms"
+                            type="object"
+                            class="btn-secondary"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_subjects" type="object" class="oe_stat_button" icon="fa-book">
+                            <field name="subject_count" widget="statinfo" string="Subjects"/>
+                        </button>
+                        <button name="action_view_sections" type="object" class="oe_stat_button" icon="fa-th-list">
+                            <field name="section_count" widget="statinfo" string="Sections"/>
+                        </button>
+                        <button name="action_view_enrollments" type="object" class="oe_stat_button" icon="fa-user-graduate">
+                            <field name="enrollment_count" widget="statinfo" string="Students"/>
+                        </button>
+                        <button name="action_view_timetable_slots" type="object" class="oe_stat_button" icon="fa-calendar">
+                            <field name="timetable_slot_count" widget="statinfo" string="Sessions"/>
+                        </button>
+                    </div>
+
+                    <div class="oe_title">
+                        <label for="name" string="Semester Name"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="academic_year_id" options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
+                            <field name="semester_type"/>
+                        </group>
+                        <group>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="is_current"/>
+                            <field name="week_count" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Offered Subjects" name="offered_subjects_tab">
+                            <field name="semester_subject_ids">
+                                <list limit="10" editable="bottom">
+                                    <field name="subject_id"/>
+                                    <field name="department_id"/>
+                                    <field name="credits"/>
+                                    <field name="active" widget="boolean_toggle"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <page string="Department Schedule" name="department_schedule_tab">
+                            <field name="department_term_ids">
+                                <list limit="10" editable="bottom" decoration-warning="is_below_min_weeks">
+                                    <field name="is_below_min_weeks" column_invisible="True"/>
+                                    <field name="faculty_id" readonly="1"/>
+                                    <field name="department_id"/>
+                                    <field name="date_start"/>
+                                    <field name="date_end"/>
+                                    <field name="teaching_weeks" optional="show" decoration-warning="is_below_min_weeks"/>
+                                    <field name="state"
+                                           widget="badge"
+                                           readonly="1"
+                                           decoration-info="state == 'planned'"
+                                           decoration-success="state == 'running'"
+                                           decoration-muted="state == 'ended'"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- KANBAN VIEW -->
+    <record id="view_university_semester_kanban" model="ir.ui.view">
+        <field name="name">university.semester.kanban</field>
+        <field name="model">university.semester</field>
+        <field name="arch" type="xml">
+            <kanban limit="10" sample="1" default_group_by="academic_year_id" quick_create="false" class="o_university_semester_kanban">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="academic_year_id"/>
+                <field name="semester_type"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="week_count"/>
+                <field name="is_active"/>
+                <field name="subject_count"/>
+                <field name="section_count"/>
+                <field name="enrollment_count"/>
+                <field name="timetable_slot_count"/>
+                <field name="classroom_count"/>
+                <templates>
+                    <t t-name="card">
+                        <main class="o_semester_kanban_card p-3 shadow-sm rounded-3 border bg-white mb-2">
+                            <!-- Card Header -->
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="o_semester_icon_wrap p-2 rounded-3 text-white d-flex align-items-center justify-content-center"
+                                         t-attf-style="background: #{record.semester_type.raw_value == 'semester_1' ? 'linear-gradient(135deg, #0d6efd, #0b5ed7)' : (record.semester_type.raw_value == 'semester_2' ? 'linear-gradient(135deg, #198754, #157347)' : 'linear-gradient(135deg, #fd7e14, #d66408)')}; width: 38px; height: 38px;">
+                                        <i t-attf-class="fa #{record.semester_type.raw_value == 'semester_1' ? 'fa-bookmark' : (record.semester_type.raw_value == 'semester_2' ? 'fa-graduation-cap' : 'fa-sun-o')} fs-6" title="Semester Icon"/>
+                                    </div>
+                                    <div>
+                                        <strong class="fs-6 o_kanban_record_title text-dark d-block">
+                                            <field name="name"/>
+                                        </strong>
+                                        <span class="text-muted small" t-if="record.academic_year_id.value">
+                                            <i class="fa fa-calendar-o me-1 text-secondary" title="Academic Year"/>
+                                            <field name="academic_year_id"/>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <t t-if="record.is_active.raw_value">
+                                        <span class="badge text-bg-success px-2 py-1 shadow-sm">
+                                            <i class="fa fa-dot-circle-o me-1" title="Active Status"/>Active Now
+                                        </span>
+                                    </t>
+                                    <t t-else="">
+                                        <span class="badge text-bg-light border px-2 py-1 text-secondary">
+                                            <field name="semester_type"/>
+                                        </span>
+                                    </t>
+                                </div>
+                            </div>
+
+                            <!-- Date Period Box -->
+                            <div class="p-2 rounded-2 bg-light border d-flex align-items-center justify-content-between small text-muted my-2">
+                                <div class="d-flex align-items-center">
+                                    <i class="fa fa-calendar-check-o text-primary me-2" title="Period"/>
+                                    <span>
+                                        <field name="date_start"/> &amp;rarr; <field name="date_end"/>
+                                    </span>
+                                </div>
+                                <span class="badge text-bg-secondary-subtle text-secondary border">
+                                    <field name="week_count"/> Weeks
+                                </span>
+                            </div>
+
+                            <!-- Interactive Metric Chips -->
+                            <div class="d-flex flex-wrap gap-2 mt-2 pt-2 border-top">
+                                <button type="object" name="action_view_subjects" class="btn btn-sm btn-light border py-1 px-2 d-flex align-items-center gap-1 shadow-sm" title="Offered Subjects">
+                                    <i class="fa fa-book text-primary" title="Subjects"/>
+                                    <span class="fw-bold text-dark"><field name="subject_count"/></span>
+                                    <span class="text-muted small">Subjects</span>
+                                </button>
+                                <button type="object" name="action_view_sections" class="btn btn-sm btn-light border py-1 px-2 d-flex align-items-center gap-1 shadow-sm" title="Class Sections">
+                                    <i class="fa fa-th-list text-info" title="Sections"/>
+                                    <span class="fw-bold text-dark"><field name="section_count"/></span>
+                                    <span class="text-muted small">Sections</span>
+                                </button>
+                                <button type="object" name="action_view_enrollments" class="btn btn-sm btn-light border py-1 px-2 d-flex align-items-center gap-1 shadow-sm" title="Enrolled Students">
+                                    <i class="fa fa-user-graduate text-success" title="Students"/>
+                                    <span class="fw-bold text-dark"><field name="enrollment_count"/></span>
+                                    <span class="text-muted small">Students</span>
+                                </button>
+                                <button type="object" name="action_view_timetable_slots" class="btn btn-sm btn-light border py-1 px-2 d-flex align-items-center gap-1 shadow-sm" title="Sessions">
+                                    <i class="fa fa-clock-o text-purple" title="Sessions"/>
+                                    <span class="fw-bold text-dark"><field name="timetable_slot_count"/></span>
+                                    <span class="text-muted small">Sessions</span>
+                                </button>
+                            </div>
+
+                            <!-- Card Footer Links -->
+                            <div class="d-flex align-items-center justify-content-between mt-3 pt-2 border-top small">
+                                <div class="d-flex align-items-center gap-2">
+                                    <button type="object" name="action_view_subjects" class="btn btn-link btn-sm p-0 text-primary text-decoration-none small">
+                                        <i class="fa fa-list me-1" title="Offerings"/>Offerings
+                                    </button>
+                                    <span class="text-muted">&#183;</span>
+                                    <button type="object" name="action_view_sections" class="btn btn-link btn-sm p-0 text-info text-decoration-none small">
+                                        <i class="fa fa-users me-1" title="Sections"/>Sections
+                                    </button>
+                                    <span class="text-muted">&#183;</span>
+                                    <button type="object" name="action_view_timetable_slots" class="btn btn-link btn-sm p-0 text-secondary text-decoration-none small">
+                                        <i class="fa fa-calendar me-1" title="Timetable"/>Timetable
+                                    </button>
+                                </div>
+                                <a type="open" role="button" class="btn btn-link btn-sm p-0 text-dark fw-bold text-decoration-none">
+                                    Details <i class="fa fa-arrow-right ms-1 text-primary" title="Details"/>
+                                </a>
+                            </div>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="action_university_semester" model="ir.actions.act_window">
+        <field name="name">Semesters</field>
+        <field name="res_model">university.semester</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="limit">10</field>
+    </record>
+
+    <record id="action_export_department_terms_server" model="ir.actions.server">
+        <field name="name">Export Department Terms</field>
+        <field name="model_id" ref="model_university_semester"/>
+        <field name="state">code</field>
+        <field name="code">action = records.action_export_department_terms()</field>
+    </record>
+
+</odoo>

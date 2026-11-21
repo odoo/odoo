@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_university_notice_board_form_inherit_holiday" model="ir.ui.view">
+        <field name="name">university.notice.board.form.inherit.holiday</field>
+        <field name="model">university.notice.board</field>
+        <field name="inherit_id" ref="school_management.view_university_notice_board_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='academic_year_id']" position="after">
+                <field name="holiday_id" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_university_notice_board_list_inherit_holiday" model="ir.ui.view">
+        <field name="name">university.notice.board.list.inherit.holiday</field>
+        <field name="model">university.notice.board</field>
+        <field name="inherit_id" ref="school_management.view_university_notice_board_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='notice_type']" position="after">
+                <field name="holiday_id" optional="show" string="Public Holiday"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_university_notice_board_search_inherit_holiday" model="ir.ui.view">
+        <field name="name">university.notice.board.search.inherit.holiday</field>
+        <field name="model">university.notice.board</field>
+        <field name="inherit_id" ref="school_management.view_university_notice_board_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='cat_holiday']" position="after">
+                <filter string="Public Holidays" name="filter_public_holiday" domain="['|', ('holiday_id', '!=', False), ('notice_type', '=', 'holiday')]"/>
+            </xpath>
+            <xpath expr="//filter[@name='group_by_type']" position="after">
+                <filter string="Public Holiday" name="group_by_holiday" context="{'group_by': 'holiday_id'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

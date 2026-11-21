@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!--
+        Deterministic demo attendance for the four seeded class sections so
+        every role has data to explore:
+
+          * teacher/dashboard student  -> B202 / DBMS-A101 / R2 / GM-Y1-A
+          * dean (faculty scope)       -> DBMS-A101, R2
+          * HOD (department scope)     -> B202
+
+        The seed is a plain <function> (no id) so it re-runs on every demo
+        load; _seed_attendance_demo() only creates missing records and never
+        overwrites existing attendance.
+    -->
+    <function model="university.attendance" name="_seed_attendance_demo"/>
+</odoo>

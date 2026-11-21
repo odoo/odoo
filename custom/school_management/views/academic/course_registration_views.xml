@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ==================== COURSE REGISTRATION SEARCH VIEW ==================== -->
+    <record id="view_university_course_registration_search" model="ir.ui.view">
+        <field name="name">university.course.registration.search</field>
+        <field name="model">university.course.registration</field>
+        <field name="arch" type="xml">
+            <search string="Search Course Registrations">
+                <field name="name" string="Registration Ref"/>
+                <field name="student_id" string="Student"/>
+                <field name="program_id" string="Major / Degree"/>
+                <field name="semester_id" string="Semester"/>
+                <field name="academic_year_id" string="Academic Year"/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Submitted" name="submitted" domain="[('state', '=', 'submitted')]"/>
+                <filter string="Approved / Enrolled" name="approved" domain="[('state', '=', 'approved')]"/>
+                <group>
+                    <filter string="Status" name="group_by_state" context="{'group_by': 'state'}"/>
+                    <filter string="Semester" name="group_by_semester" context="{'group_by': 'semester_id'}"/>
+                    <filter string="Student" name="group_by_student" context="{'group_by': 'student_id'}"/>
+                </group>
+                <searchpanel>
+                    <field name="semester_id" icon="fa-calendar" enable_counters="1"/>
+                    <field name="state" icon="fa-filter" enable_counters="1" select="multi"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <!-- ==================== COURSE REGISTRATION LIST VIEW ==================== -->
+    <record id="view_university_course_registration_list" model="ir.ui.view">
+        <field name="name">university.course.registration.list</field>
+        <field name="model">university.course.registration</field>
+        <field name="arch" type="xml">
+            <list limit="10" string="Course Registrations" sample="1">
+                <field name="name" string="Reference" decoration-bf="1"/>
+                <field name="student_id" string="Student"/>
+                <field name="program_id" string="Major"/>
+                <field name="academic_year_id" string="Academic Year" optional="show"/>
+                <field name="semester_id" string="Semester"/>
+                <field name="registration_date" string="Date"/>
+                <field name="total_credits" string="Credits" decoration-bf="1"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'approved'"
+                       decoration-info="state == 'submitted'"
+                       decoration-muted="state == 'draft'"
+                       decoration-danger="state in ('rejected', 'cancelled')"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ==================== COURSE REGISTRATION KANBAN VIEW ==================== -->
+    <record id="view_university_course_registration_kanban" model="ir.ui.view">
+        <field name="name">university.course.registration.kanban</field>
+        <field name="model">university.course.registration</field>
+        <field name="arch" type="xml">
+            <kanban limit="10" sample="1" default_group_by="state" quick_create="false">
+                <field name="name"/>
+                <field name="student_id"/>
+                <field name="semester_id"/>
+                <field name="total_credits"/>
+                <field name="registration_date"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="card">
+                        <main class="p-3">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <strong class="fs-6 text-primary"><field name="name"/></strong>
+                                <span class="badge rounded-pill"
+                                      t-att-class="record.state.raw_value == 'approved' ? 'text-bg-success' : (record.state.raw_value == 'submitted' ? 'text-bg-info text-white' : 'text-bg-secondary')">
+                                    <field name="state"/>
+                                </span>
+                            </div>
+                            <div class="text-dark fw-bold small mt-1" t-if="record.student_id.value">
+                                <i class="fa fa-graduation-cap text-primary me-1" title="Student"/>
+                                <field name="student_id"/>
+                            </div>
+                            <div class="text-muted small mt-1" t-if="record.semester_id.value">
+                                <i class="fa fa-calendar-o text-secondary me-1" title="Semester"/>
+                                <field name="semester_id"/>
+                            </div>
+                            <div class="mt-3 pt-2 border-top d-flex justify-content-between align-items-center small">
+                                <span class="badge text-bg-light border text-muted">
+                                    <i class="fa fa-clock-o me-1" title="Registration Date"/>Date: <field name="registration_date"/>
+                                </span>
+                                <span class="badge text-bg-primary text-white">
+                                    <field name="total_credits"/> Credits
+                                </span>
+                            </div>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ==================== COURSE REGISTRATION FORM VIEW ==================== -->
+    <record id="view_university_course_registration_form" model="ir.ui.view">
+        <field name="name">university.course.registration.form</field>
+        <field name="model">university.course.registration</field>
+        <field name="arch" type="xml">
+            <form string="Course Registration (Add / Drop)">
+                <header>
+                    <button name="action_validate_eligibility"
+                            type="object"
+                            string="Check Eligibility &amp; Conflicts"
+                            class="btn-secondary"
+                            icon="fa-check-square-o"
+                            invisible="state != 'draft'"/>
+                    <button name="action_confirm_registration"
+                            type="object"
+                            string="Confirm &amp; Enroll"
+                            class="oe_highlight"
+                            icon="fa-graduation-cap"
+                            invisible="state not in ('draft', 'submitted')"/>
+                    <button name="action_cancel"
+                            type="object"
+                            string="Cancel Registration"
+                            class="btn-outline-danger"
+                            icon="fa-ban"
+                            invisible="state in ('cancelled', 'approved')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Registration Reference"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Student Placement">
+                            <field name="student_id" readonly="state != 'draft'"/>
+                            <field name="program_id"/>
+                            <field name="registration_date"/>
+                        </group>
+                        <group string="Target Term &amp; Academic Load">
+                            <field name="academic_year_id" readonly="state != 'draft'"/>
+                            <field name="semester_id" readonly="state != 'draft'"/>
+                            <field name="total_credits" class="fw-bold fs-5 text-primary"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Courses to Add / Drop" name="lines_page">
+                            <field name="line_ids" readonly="state in ('approved', 'cancelled')">
+                                <list limit="10" editable="bottom">
+                                    <field name="action_type" widget="badge"
+                                           decoration-success="action_type == 'add'"
+                                           decoration-danger="action_type == 'drop'"/>
+                                    <field name="section_id" string="Class Section"
+                                           domain="[('semester_id', '=?', parent.semester_id), ('active', '=', True)]"/>
+                                    <field name="subject_id" string="Course"/>
+                                    <field name="teacher_id" string="Instructor" optional="show"/>
+                                    <field name="classroom_id" string="Room" optional="show"/>
+                                    <field name="schedule_summary" string="Timeslot" optional="show"/>
+                                    <field name="credits" sum="Total Credits"/>
+                                    <field name="available_seats" string="Open Seats"
+                                           decoration-success="available_seats &gt; 0"
+                                           decoration-danger="available_seats == 0"/>
+                                    <field name="validation_status" widget="badge"
+                                           decoration-success="validation_status == 'valid'"
+                                           decoration-danger="validation_status in ('full', 'conflict', 'prereq_missing')"
+                                           decoration-warning="validation_status == 'already_enrolled'"/>
+                                    <field name="validation_message" optional="show"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Advisor Notes &amp; Remarks" name="notes_page">
+                            <field name="notes" placeholder="Notes or remarks regarding course prerequisites, overload approval, or special schedule arrangements..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ==================== ACTIONS ==================== -->
+    <record id="action_university_course_registration" model="ir.actions.act_window">
+        <field name="name">Course Registrations</field>
+        <field name="res_model">university.course.registration</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="limit">10</field>
+        <field name="search_view_id" ref="view_university_course_registration_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No course registration records found.</p>
+            <p>Students can add or drop sections during the active enrollment window.</p>
+        </field>
+    </record>
+
+    <record id="action_university_course_registration_student" model="ir.actions.act_window">
+        <field name="name">Course Registration (Add / Drop)</field>
+        <field name="res_model">university.course.registration</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="limit">10</field>
+        <field name="domain">[('student_id.user_id', '=', uid)]</field>
+        <field name="search_view_id" ref="view_university_course_registration_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Register for Courses!</p>
+            <p>Select your class sections for the upcoming term. Validate prerequisites, capacity, and timetable overlap before submitting.</p>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- University About Us (/aboutus) -->
+    <template id="about_page_template" name="About Harvard University">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty harvard-about-wrapper bg-light">
+                <!-- Header Hero Banner with Campus Backdrop -->
+                <section class="harvard-about-hero" style="background-image: url('/school_website/static/src/img/harvard_campus_hero.jpg');">
+                    <div class="harvard-about-hero-overlay"></div>
+                    <div class="container harvard-about-hero-content text-center py-4">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb justify-content-center mb-2 small">
+                                <li class="breadcrumb-item"><a href="/" class="text-white-50 text-decoration-none">Home</a></li>
+                                <li class="breadcrumb-item active text-white" aria-current="page">About Us</li>
+                            </ol>
+                        </nav>
+                        <span class="badge bg-danger text-uppercase px-3 py-2 fw-semibold mb-3 shadow-sm">
+                            Truth • Excellence • Discovery
+                        </span>
+                        <h1 class="display-3 fw-bold mb-3 text-white">About Harvard University</h1>
+                        <p class="lead text-white-50 mx-auto mb-4" style="max-width: 760px; line-height: 1.8;">
+                            Dedicated to excellence in teaching, learning, and research, and to developing leaders in many disciplines who make a positive difference in the world.
+                        </p>
+                        <div class="d-flex justify-content-center align-items-center gap-3 flex-wrap text-white-50 small">
+                            <span class="bg-white bg-opacity-10 px-3 py-2 rounded-pill border border-white border-opacity-25">
+                                <i class="fa fa-history text-danger me-1"/> Founded 1636
+                            </span>
+                            <span class="bg-white bg-opacity-10 px-3 py-2 rounded-pill border border-white border-opacity-25">
+                                <i class="fa fa-map-marker text-danger me-1"/> Cambridge, Massachusetts
+                            </span>
+                            <span class="bg-white bg-opacity-10 px-3 py-2 rounded-pill border border-white border-opacity-25">
+                                <i class="fa fa-graduation-cap text-danger me-1"/> 24+ Degree Programs
+                            </span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Mission, Heritage & Leadership Section -->
+                <section class="py-5 bg-white">
+                    <div class="container py-4">
+                        <div class="row align-items-center g-5">
+                            <!-- Left: Heritage Story -->
+                            <div class="col-lg-6">
+                                <span class="badge bg-danger-subtle text-danger px-3 py-2 rounded-pill fw-bold text-uppercase mb-3">
+                                    Our Heritage • Since 1636
+                                </span>
+                                <h2 class="display-6 fw-bold text-dark mb-4">A Legacy of Learning, Leadership &amp; Discovery</h2>
+                                <p class="text-muted lead mb-4" style="line-height: 1.8;">
+                                    Harvard University is devoted to excellence in teaching, learning, and research, and to developing leaders across disciplines who make an enduring positive difference worldwide.
+                                </p>
+                                <p class="text-muted mb-4" style="line-height: 1.8;">
+                                    From its founding in 1636 as the oldest institution of higher learning in the United States, Harvard has expanded from a single college to a comprehensive research university with world-renowned faculties, groundbreaking laboratories, and a global alumni community.
+                                </p>
+
+                                <!-- Veritas Motto Quote Box -->
+                                <div class="harvard-veritas-card p-4 rounded-3 border mb-4 shadow-sm">
+                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                        <span class="badge bg-danger text-white px-2 py-1 small fw-bold">VERITAS</span>
+                                        <span class="text-muted small fw-bold text-uppercase">The University Motto</span>
+                                    </div>
+                                    <p class="mb-0 text-dark fst-italic small" style="line-height: 1.6;">
+                                        "To cultivate knowledge, uphold truth, and empower scholars to address the world’s most consequential challenges with integrity and courage."
+                                    </p>
+                                </div>
+
+                                <div class="d-flex gap-3 flex-wrap">
+                                    <a href="/courses" class="btn btn-danger btn-lg px-4 py-3 fw-bold harvard-btn-crimson shadow-sm">
+                                        <i class="fa fa-compass me-2"/> Explore Programs
+                                    </a>
+                                    <a href="/admission/apply" class="btn btn-outline-dark btn-lg px-4 py-3 fw-bold">
+                                        <i class="fa fa-pencil-square-o me-2"/> Apply Online
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Right: Modern Feature Cards -->
+                            <div class="col-lg-6">
+                                <div class="d-flex flex-column gap-3">
+                                    <div class="p-4 rounded-4 shadow-sm border bg-white harvard-feature-item">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="p-3 bg-danger text-white rounded-3 shadow-sm">
+                                                <i class="fa fa-graduation-cap fa-2x"/>
+                                            </div>
+                                            <div>
+                                                <h4 class="h5 fw-bold text-dark mb-1">Academic Distinction</h4>
+                                                <p class="text-muted small mb-0">Undergraduate, Master’s, and Doctoral programs recognized globally as the gold standard of higher education.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="p-4 rounded-4 shadow-4 border bg-white harvard-feature-item">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="p-3 bg-dark text-white rounded-3 shadow-sm">
+                                                <i class="fa fa-globe fa-2x"/>
+                                            </div>
+                                            <div>
+                                                <h4 class="h5 fw-bold text-dark mb-1">Global Community</h4>
+                                                <p class="text-muted small mb-0">Scholars, faculty, and researchers representing over 120 nations fostering diverse perspectives and cultural dialogue.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="p-4 rounded-4 shadow-sm border bg-white harvard-feature-item">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="p-3 bg-danger text-white rounded-3 shadow-sm">
+                                                <i class="fa fa-flask fa-2x"/>
+                                            </div>
+                                            <div>
+                                                <h4 class="h5 fw-bold text-dark mb-1">Pioneering Research</h4>
+                                                <p class="text-muted small mb-0">State-of-the-art research centers advancing solutions in medicine, quantum science, renewable energy, and human rights.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="p-4 rounded-4 shadow-sm border bg-white harvard-feature-item">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="p-3 bg-danger-subtle text-danger rounded-3 shadow-sm">
+                                                <i class="fa fa-heart fa-2x"/>
+                                            </div>
+                                            <div>
+                                                <h4 class="h5 fw-bold text-dark mb-1">Need-Blind Financial Aid</h4>
+                                                <p class="text-muted small mb-0">Committed to meeting 100% of demonstrated financial need for all admitted students, ensuring access for every talent.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Pillars of Excellence (4-Column Cards) -->
+                <section class="py-5 bg-light border-top border-bottom">
+                    <div class="container py-4">
+                        <div class="text-center mb-5">
+                            <span class="text-uppercase fw-bold text-danger small">Why Harvard</span>
+                            <h2 class="display-6 fw-bold text-dark mt-1">Pillars of Institutional Excellence</h2>
+                            <p class="text-muted lead mx-auto" style="max-width: 650px;">
+                                An environment meticulously designed to cultivate curiosity, rigorous inquiry, and lifelong intellectual growth.
+                            </p>
+                        </div>
+
+                        <div class="row g-4">
+                            <div class="col-md-6 col-lg-3">
+                                <div class="harvard-pillar-card">
+                                    <div class="harvard-pillar-icon">
+                                        <i class="fa fa-users"/>
+                                    </div>
+                                    <h4 class="h5 fw-bold text-dark mb-2">World-Class Faculty</h4>
+                                    <p class="text-muted small mb-0">Learn alongside Nobel laureates, Pulitzer recipients, and leading scholars who actively mentor and conduct research.</p>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-lg-3">
+                                <div class="harvard-pillar-card">
+                                    <div class="harvard-pillar-icon">
+                                        <i class="fa fa-book"/>
+                                    </div>
+                                    <h4 class="h5 fw-bold text-dark mb-2">Unrivaled Libraries</h4>
+                                    <p class="text-muted small mb-0">Access Widener Library and over 70 specialized university libraries holding more than 20 million volumes and archives.</p>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-lg-3">
+                                <div class="harvard-pillar-card">
+                                    <div class="harvard-pillar-icon">
+                                        <i class="fa fa-lightbulb-o"/>
+                                    </div>
+                                    <h4 class="h5 fw-bold text-dark mb-2">Interdisciplinary Innovation</h4>
+                                    <p class="text-muted small mb-0">Cross-register across Harvard schools and collaborative labs to forge innovative solutions across traditional boundaries.</p>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-lg-3">
+                                <div class="harvard-pillar-card">
+                                    <div class="harvard-pillar-icon">
+                                        <i class="fa fa-globe"/>
+                                    </div>
+                                    <h4 class="h5 fw-bold text-dark mb-2">Global Alumni Network</h4>
+                                    <p class="text-muted small mb-0">Join an active network of over 375,000 alumni leading in government, enterprise, arts, and philanthropy in 200+ countries.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- University Stats Bar -->
+                <section class="py-5 text-white position-relative" style="background: linear-gradient(135deg, #0d1726 0%, #101c30 100%);">
+                    <div class="container py-3">
+                        <t t-set="stats" t-value="website.get_university_stats()"/>
+                        <div class="row text-center g-4">
+                            <div class="col-6 col-md-3">
+                                <span class="d-block text-danger small fw-bold text-uppercase mb-1">Tradition</span>
+                                <h3 class="display-5 fw-bold text-white mb-1">380+</h3>
+                                <p class="text-white-50 mb-0">Years of Heritage</p>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <span class="d-block text-danger small fw-bold text-uppercase mb-1">Curriculum</span>
+                                <h3 class="display-5 fw-bold text-white mb-1"><t t-esc="stats.get('programs_count', 24)"/>+</h3>
+                                <p class="text-white-50 mb-0">Degree Programs</p>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <span class="d-block text-danger small fw-bold text-uppercase mb-1">Leadership</span>
+                                <h3 class="display-5 fw-bold text-white mb-1"><t t-esc="stats.get('teachers_count', 50)"/>+</h3>
+                                <p class="text-white-50 mb-0">Faculty Members</p>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <span class="d-block text-danger small fw-bold text-uppercase mb-1">Student Body</span>
+                                <h3 class="display-5 fw-bold text-white mb-1"><t t-esc="stats.get('students_count', 1200)"/>+</h3>
+                                <p class="text-white-50 mb-0">Enrolled Students</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Academic Departments Grid -->
+                <section class="py-5 bg-white" t-if="departments">
+                    <div class="container py-4">
+                        <div class="row align-items-end mb-5">
+                            <div class="col-lg-8">
+                                <span class="text-uppercase fw-bold text-danger small">Academic Network</span>
+                                <h2 class="display-6 fw-bold text-dark mt-1">Departments &amp; Faculties</h2>
+                                <p class="text-muted lead mb-0">Explore our multidisciplinary departments fostering breakthrough learning and research.</p>
+                            </div>
+                            <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                                <a href="/courses" class="btn btn-outline-danger px-4 py-2 fw-bold">All Academic Offerings <i class="fa fa-arrow-right ms-1"/></a>
+                            </div>
+                        </div>
+
+                        <div class="row g-4">
+                            <t t-foreach="departments" t-as="dept">
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="harvard-card h-100 p-4 d-flex flex-column justify-content-between shadow-sm">
+                                        <div>
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <span class="badge bg-danger"><t t-esc="dept.code or 'DEPT'"/></span>
+                                                <i class="fa fa-university text-muted"/>
+                                            </div>
+                                            <h4 class="h5 fw-bold text-dark mb-2" t-esc="dept.name"/>
+                                            <p class="text-muted small mb-0">
+                                                <i class="fa fa-book me-1"/> <t t-esc="dept.program_count"/> Programs • <i class="fa fa-user me-1"/> <t t-esc="dept.teacher_count"/> Faculty
+                                            </p>
+                                        </div>
+                                        <div class="mt-4 pt-3 border-top d-flex justify-content-between align-items-center">
+                                            <a href="/courses" class="text-danger fw-bold small text-decoration-none">
+                                                Explore Programs <i class="fa fa-chevron-right small ms-1"/>
+                                            </a>
+                                            <a t-attf-href="/contactus?subject=Inquiry regarding Department of #{dept.name}" class="btn btn-sm btn-outline-secondary">Contact</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Call to Action Banner -->
+                <section class="harvard-cta-section py-5 text-center text-white position-relative overflow-hidden">
+                    <div class="harvard-cta-pattern position-absolute top-0 start-0 end-0 bottom-0"></div>
+                    <div class="container py-4 position-relative" style="z-index: 2;">
+                        <span class="badge bg-white text-danger px-3 py-2 rounded-pill fw-bold text-uppercase mb-3 shadow-sm">
+                            <i class="fa fa-graduation-cap me-1"/> Begin Your Harvard Journey
+                        </span>
+                        <h2 class="display-5 fw-bold mb-3 text-white">Join the Harvard Community</h2>
+                        <p class="lead mb-4 mx-auto text-white-50" style="max-width: 650px;">
+                            Applications for the upcoming academic year are now open. Start your application online or connect with our admissions counselors today.
+                        </p>
+                        <div class="d-flex justify-content-center gap-3 flex-wrap mb-4">
+                            <a href="/admission/apply" class="btn btn-light btn-lg px-4 py-3 fw-bold text-danger shadow-sm harvard-btn-cta-primary">
+                                <i class="fa fa-pencil-square-o me-2"/> Apply for Admission
+                            </a>
+                            <a href="/contactus" class="btn btn-outline-light btn-lg px-4 py-3 fw-bold harvard-btn-cta-secondary">
+                                <i class="fa fa-envelope me-2"/> Contact Admissions
+                            </a>
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center gap-4 flex-wrap text-white-50 small">
+                            <span><i class="fa fa-check-circle text-warning me-1"/> 100% Online Application</span>
+                            <span><i class="fa fa-check-circle text-warning me-1"/> Need-Blind Financial Aid</span>
+                            <span><i class="fa fa-check-circle text-warning me-1"/> Global Degree Recognition</span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+</odoo>

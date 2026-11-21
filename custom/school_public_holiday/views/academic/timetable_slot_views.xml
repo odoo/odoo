@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- EXTEND TIMETABLE SLOT FORM -->
+    <record id="view_university_timetable_slot_form_inherit_holiday" model="ir.ui.view">
+        <field name="name">university.timetable.slot.form.inherit.holiday</field>
+        <field name="model">university.timetable.slot</field>
+        <field name="inherit_id" ref="school_management.view_university_timetable_slot_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_cancel_session']" position="before">
+                <button name="action_open_reschedule_wizard" type="object" string="Reschedule" class="btn-outline-primary" invisible="state == 'cancelled'" groups="school_management.group_school_teacher,school_management.group_school_admin"/>
+                <button name="action_cancel_for_holiday" type="object" string="Cancel (Holiday)" class="btn-outline-warning" invisible="state == 'cancelled' or not on_holiday" groups="school_management.group_school_teacher,school_management.group_school_admin" confirm="Are you sure you want to cancel this session due to the public holiday?"/>
+            </xpath>
+
+            <xpath expr="//div[hasclass('oe_title')]" position="inside">
+                <div class="mb-2" invisible="not on_holiday">
+                    <span class="badge text-bg-warning">
+                        <i class="fa fa-sun-o me-1" title="Public Holiday" aria-label="Public Holiday"/> Holiday: <field name="holiday_name" readonly="1"/>
+                    </span>
+                </div>
+            </xpath>
+
+            <xpath expr="//notebook" position="before">
+                <group string="Public Holiday Policy" invisible="not on_holiday and not allow_on_holiday">
+                    <field name="on_holiday" invisible="1"/>
+                    <field name="allow_on_holiday" groups="school_management.group_school_admin,base.group_system"/>
+                    <field name="holiday_override_reason" invisible="not allow_on_holiday" required="allow_on_holiday" groups="school_management.group_school_admin,base.group_system"/>
+                </group>
+                <group string="Cancellation Reason" invisible="state != 'cancelled'">
+                    <field name="cancel_reason" readonly="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- EXTEND TIMETABLE SLOT LIST -->
+    <record id="view_university_timetable_slot_tree_inherit_holiday" model="ir.ui.view">
+        <field name="name">university.timetable.slot.tree.inherit.holiday</field>
+        <field name="model">university.timetable.slot</field>
+        <field name="inherit_id" ref="school_management.view_university_timetable_slot_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='status']" position="before">
+                <field name="holiday_name" string="Public Holiday" optional="show"/>
+                <field name="on_holiday" widget="boolean_toggle" optional="hide" string="Holiday?"/>
+                <field name="cancel_reason" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- EXTEND TIMETABLE SLOT CALENDAR VIEW -->
+    <record id="view_university_timetable_slot_calendar_inherit_holiday" model="ir.ui.view">
+        <field name="name">university.timetable.slot.calendar.inherit.holiday</field>
+        <field name="model">university.timetable.slot</field>
+        <field name="inherit_id" ref="school_management.view_university_timetable_slot_calendar"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="after">
+                <field name="holiday_name"/>
+                <field name="on_holiday"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- EXTEND TIMETABLE SLOT KANBAN VIEW -->
+    <record id="view_university_timetable_slot_kanban_inherit_holiday" model="ir.ui.view">
+        <field name="name">university.timetable.slot.kanban.inherit.holiday</field>
+        <field name="model">university.timetable.slot</field>
+        <field name="inherit_id" ref="school_management.view_university_timetable_slot_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='is_this_week']" position="after">
+                <field name="on_holiday"/>
+                <field name="holiday_name"/>
+            </xpath>
+            <xpath expr="//main" position="attributes">
+                <attribute name="t-attf-class">p-3 #{record.on_holiday.raw_value or record.is_holiday_conflict.raw_value ? 'o_slot_holiday_card' : ''}</attribute>
+            </xpath>
+            <xpath expr="//span[@t-if='record.is_holiday.raw_value']" position="replace">
+                <span t-if="record.on_holiday.raw_value or record.is_holiday_conflict.raw_value" class="badge text-bg-danger" t-att-title="record.holiday_name.value ? 'Public Holiday: ' + record.holiday_name.value : 'Public Holiday'">
+                    <i class="fa fa-sun-o me-1" title="Public Holiday" aria-label="Public Holiday"/><t t-if="record.holiday_name.value"><t t-esc="record.holiday_name.value"/></t><t t-else="">Holiday</t>
+                </span>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- EXTEND TIMETABLE GENERATION WIZARD FORM -->
+    <record id="view_university_timetable_generation_wizard_form_inherit_holiday" model="ir.ui.view">
+        <field name="name">university.timetable.generation.wizard.form.inherit.holiday</field>
+        <field name="model">university.timetable.generation.wizard</field>
+        <field name="inherit_id" ref="school_management.view_university_timetable_generation_wizard_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='replace_existing_drafts']" position="after">
+                <field name="skip_public_holidays"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

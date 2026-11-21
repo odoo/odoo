@@ -1,0 +1,184 @@
+// University Management System - Classroom UI Polish
+// Scoped to classroom views to prevent leakage
+
+$classroom-colors: (
+    1: #ee2d2d,
+    2: #dc8534,
+    3: #e8bb1d,
+    4: #5794dd,
+    5: #9f628f,
+    6: #db8865,
+    7: #41a9a2,
+    8: #304be0,
+    9: #ee2f8a,
+    10: #61c36e,
+    11: #9872e6,
+);
+
+.o_university_classroom_kanban {
+    .o_classroom_thumb { width: 52px; height: 52px; }
+    .o_room_type_icon { padding: 14px; }
+    .o_classroom_kanban_card {
+        border-radius: 10px !important;
+        border: 1px solid #e2e8f0 !important;
+        border-left: 5px solid #e2e8f0 !important;
+        background-color: #ffffff;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+            border-color: #cbd5e1 !important;
+        }
+
+        .o_room_type_icon {
+            width: 38px;
+            height: 38px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.05rem;
+        }
+
+        .o_kanban_record_title {
+            color: #0f172a;
+            font-weight: 700;
+        }
+
+        .o_facility_badge {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            color: #475569;
+            border-radius: 9999px;
+
+            i {
+                font-size: 0.72rem;
+            }
+        }
+    }
+
+    // Dynamic color highlights for classroom kanban cards
+    @each $index, $color in $classroom-colors {
+        .o_kanban_record.o_kanban_color_#{$index} .o_classroom_kanban_card,
+        .o_classroom_kanban_card.o_kanban_color_#{$index} {
+            border-left: 5px solid $color !important;
+        }
+    }
+}
+
+.o_classroom_form {
+    .o_classroom_eyebrow {
+        color: #64748b;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+    }
+
+    .oe_title {
+        h1 {
+            color: #0f172a;
+            font-weight: 700;
+            font-size: 1.75rem;
+        }
+
+        // Subtitle chips polish: avoid input styling leakage inside badges
+        .badge {
+            font-size: 0.8rem;
+            font-weight: 500;
+            padding: 5px 10px;
+            border-radius: 6px;
+            line-height: 1.3;
+
+            .o_field_widget,
+            .o_field_char {
+                display: inline-flex !important;
+                width: auto !important;
+                min-width: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                border: none !important;
+                background: transparent !important;
+                box-shadow: none !important;
+                color: inherit !important;
+                font-weight: 600;
+
+                input {
+                    display: inline !important;
+                    width: auto !important;
+                    min-width: 0 !important;
+                    border: none !important;
+                    background: transparent !important;
+                    padding: 0 !important;
+                    color: inherit !important;
+                    font-size: inherit !important;
+                    font-weight: inherit !important;
+                    box-shadow: none !important;
+                }
+            }
+        }
+    }
+
+    // Color Picker UI Polish
+    .o_field_color_picker {
+        display: inline-flex;
+        align-items: center;
+
+        .o_colorlist {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin: 0;
+            padding: 2px 0;
+        }
+
+        .o_colorlist_toggler {
+            width: 26px;
+            height: 26px;
+            min-width: 26px;
+            border-radius: 50% !important;
+            cursor: pointer;
+            position: relative;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.15);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+            &:hover {
+                transform: scale(1.15);
+                box-shadow: 0 2px 6px rgba(15, 23, 42, 0.25);
+            }
+
+            // Universal "No Color / None" indicator with subtle diagonal slash
+            &.o_colorlist_item_color_0 {
+                background: linear-gradient(135deg, #f8fafc 44%, #dc2626 47%, #dc2626 53%, #f8fafc 56%) !important;
+                border: 1.5px solid #cbd5e1 !important;
+            }
+        }
+
+        // Expanded palette buttons
+        button:not(.o_colorlist_toggler) {
+            width: 24px;
+            height: 24px;
+            min-width: 24px;
+            border-radius: 50% !important;
+            cursor: pointer;
+            transition: transform 0.15s ease;
+
+            &:hover {
+                transform: scale(1.15);
+            }
+
+            &.active {
+                box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #4f46e5 !important;
+            }
+        }
+    }
+
+    .o_facility_checkbox_group {
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 12px;
+    }
+}

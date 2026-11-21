@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- FEE STRUCTURE: LIST VIEW -->
+    <record id="view_university_fee_structure_list" model="ir.ui.view">
+        <field name="name">university.fee.structure.list</field>
+        <field name="model">university.fee.structure</field>
+        <field name="arch" type="xml">
+            <list limit="10" string="Fee Structures" class="o_university_fee_structure_list">
+                <field name="name" decoration-bf="1"/>
+                <field name="program_id"/>
+                <field name="academic_year_id"/>
+                <field name="semester_id"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="total_amount" widget="monetary" sum="Total" decoration-bf="1"/>
+                <field name="active" widget="boolean_toggle" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- FEE STRUCTURE: KANBAN VIEW -->
+    <record id="view_university_fee_structure_kanban" model="ir.ui.view">
+        <field name="name">university.fee.structure.kanban</field>
+        <field name="model">university.fee.structure</field>
+        <field name="arch" type="xml">
+            <kanban limit="10" sample="1" class="o_university_fee_structure_kanban">
+                <field name="name"/>
+                <field name="program_id"/>
+                <field name="academic_year_id"/>
+                <field name="semester_id"/>
+                <field name="total_amount"/>
+                <templates>
+                    <t t-name="card">
+                        <main class="p-3 border rounded shadow-sm bg-white ms-1">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <strong class="fs-6 text-dark text-truncate"><field name="name"/></strong>
+                                <span class="badge text-bg-primary fs-7 px-2 py-1">
+                                    <field name="total_amount" widget="monetary"/>
+                                </span>
+                            </div>
+                            <div class="small text-muted mb-1" t-if="record.program_id.value">
+                                <i class="fa fa-graduation-cap me-1 text-secondary" title="Program"/>
+                                <field name="program_id"/>
+                            </div>
+                            <div class="small text-muted mb-1" t-if="record.academic_year_id.value">
+                                <i class="fa fa-calendar me-1 text-secondary" title="Academic Year"/>
+                                <field name="academic_year_id"/>
+                            </div>
+                            <div class="small text-muted" t-if="record.semester_id.value">
+                                <i class="fa fa-clock-o me-1 text-secondary" title="Semester"/>
+                                <field name="semester_id"/>
+                            </div>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- FEE STRUCTURE: FORM VIEW -->
+    <record id="view_university_fee_structure_form" model="ir.ui.view">
+        <field name="name">university.fee.structure.form</field>
+        <field name="model">university.fee.structure</field>
+        <field name="arch" type="xml">
+            <form string="Fee Structure">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Structure Title"/>
+                        <h1><field name="name" placeholder="e.g. Undergraduate Standard Tuition &amp; Fees"/></h1>
+                    </div>
+                    <group>
+                        <group string="Academic Association">
+                            <field name="program_id" options="{'no_create': True}"/>
+                            <field name="academic_year_id" options="{'no_create': True}"/>
+                            <field name="semester_id" options="{'no_create': True}"/>
+                        </group>
+                        <group string="Configuration">
+                            <field name="active" widget="boolean_toggle"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Fee Components &amp; Line Items" name="fee_structure_lines">
+                            <field name="line_ids">
+                                <list limit="10" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name" string="Fee Description" placeholder="e.g. Tuition Fee / Technology Fee"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="amount" sum="Total" widget="monetary"/>
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right">
+                                <field name="currency_id" invisible="1"/>
+                                <field name="total_amount" widget="monetary" class="oe_subtotal_footer_separator"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- FEE STRUCTURE: WINDOW ACTION -->
+    <record id="action_university_fee_structure" model="ir.actions.act_window">
+        <field name="name">Fee Structures</field>
+        <field name="res_model">university.fee.structure</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="limit">10</field>
+    </record>
+
+    <!-- FEE INVOICE: LIST VIEW -->
+    <record id="view_university_fee_list" model="ir.ui.view">
+        <field name="name">university.fee.list</field>
+        <field name="model">university.fee</field>
+        <field name="arch" type="xml">
+            <list string="Fee Invoices" multi_edit="1" limit="10" default_order="is_overdue desc, date desc" class="o_university_fee_list">
+                <field name="name" decoration-bf="1"/>
+                <field name="student_id" decoration-bf="1"/>
+                <field name="academic_year_id" optional="show"/>
+                <field name="semester_id" optional="show"/>
+                <field name="date" optional="show"/>
+                <field name="due_date" optional="show" decoration-danger="is_overdue" decoration-bf="is_overdue"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="total_amount" sum="Total" widget="monetary"/>
+                <field name="paid_amount" sum="Paid" widget="monetary" decoration-success="paid_amount &gt; 0"/>
+                <field name="balance" sum="Total Balance" widget="monetary" decoration-danger="balance &gt; 0" decoration-bf="balance &gt; 0"/>
+                <field name="is_overdue" column_invisible="1"/>
+                <field name="payment_state"
+                       widget="badge"
+                       decoration-danger="payment_state == 'overdue'"
+                       decoration-warning="payment_state == 'not_paid'"
+                       decoration-info="payment_state == 'partial'"
+                       decoration-success="payment_state == 'paid'"/>
+                <field name="state"
+                       widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state == 'paid'"
+                       decoration-warning="state == 'posted'"
+                       decoration-danger="state == 'canceled'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- FEE INVOICE: FORM VIEW -->
+    <record id="view_university_fee_form" model="ir.ui.view">
+        <field name="name">university.fee.form</field>
+        <field name="model">university.fee</field>
+        <field name="arch" type="xml">
+            <form string="Fee Invoice">
+                <header>
+                    <button name="action_print_invoice" string="Print Invoice" type="object" invisible="state == 'canceled'" class="oe_highlight"/>
+                    <button name="action_register_payment" string="Register Payment" type="object" invisible="state != 'posted' or balance &lt;= 0" class="oe_highlight btn-success"/>
+                    <button name="action_send_payment_reminder" string="Send Payment Alert" type="object" invisible="state != 'posted' or balance &lt;= 0" class="btn-outline-danger"/>
+                    <button name="action_post" string="Confirm Invoice" type="object" invisible="state != 'draft'" class="oe_highlight"/>
+                    <button name="action_request_signature" string="Request Signature" type="object" invisible="state != 'posted'" class="btn-outline-secondary" groups="base.group_system,school_management.group_school_admin"/>
+                    <button name="action_print_receipt" string="Print Receipt" type="object" invisible="state != 'paid'" class="oe_highlight"/>
+                    <button name="action_cancel" string="Cancel" type="object" invisible="state == 'canceled'"/>
+                    <button name="action_draft" string="Reset to Draft" type="object" invisible="state != 'canceled'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,posted,paid"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_payments" type="object" class="oe_stat_button" icon="fa-credit-card">
+                            <field name="payment_count" widget="statinfo" string="Payments"/>
+                        </button>
+                        <button name="action_view_student" type="object" class="oe_stat_button" icon="fa-user">
+                            <span class="o_stat_text">Student Profile</span>
+                        </button>
+                        <button name="action_view_signatures" type="object" class="oe_stat_button" icon="fa-pencil-square-o" groups="base.group_system,school_management.group_school_admin">
+                            <field name="signature_count" widget="statinfo" string="Signatures"/>
+                        </button>
+                    </div>
+
+                    <!-- CRITICAL OVERDUE ALERT BANNER -->
+                    <field name="is_overdue" invisible="1"/>
+                    <div class="alert alert-danger d-flex align-items-center mb-3 shadow-sm rounded-3" role="alert" invisible="not is_overdue">
+                        <i class="fa fa-exclamation-triangle fa-2x me-3 text-danger" title="Overdue Alert"/>
+                        <div class="flex-grow-1">
+                            <h5 class="alert-heading text-danger mb-1 font-weight-bold" role="status">
+                                <i class="fa fa-bell me-1" title="Alert"/>CRITICAL OVERDUE PAYMENT ALERT
+                            </h5>
+                            <div>
+                                This tuition invoice is <strong><field name="days_overdue"/> days past due</strong>!
+                                Outstanding balance: <field name="balance" widget="monetary" class="fw-bold text-danger"/>.
+                                Urgent settlement is required to avoid suspension of academic privileges.
+                            </div>
+                        </div>
+                        <button name="action_register_payment" type="object" string="Settle Invoice Now" class="btn btn-danger btn-sm ms-3 shadow-sm"/>
+                        <button name="action_send_payment_reminder" type="object" string="Send Urgent Alert" class="btn btn-outline-danger btn-sm ms-2"/>
+                    </div>
+
+                    <!-- PENDING PAYMENT NOTICE -->
+                    <div class="alert alert-warning d-flex align-items-center mb-3 shadow-sm rounded-3" role="status" invisible="state != 'posted' or is_overdue or balance &lt;= 0">
+                        <i class="fa fa-clock-o fa-2x me-3 text-warning" title="Payment Pending"/>
+                        <div class="flex-grow-1">
+                            <strong class="text-dark">TUITION PAYMENT PENDING:</strong>
+                            <div>
+                                Payment has not yet been received. Total balance of <field name="balance" widget="monetary" class="fw-bold text-dark"/> is due by <field name="due_date" class="fw-bold"/>.
+                            </div>
+                        </div>
+                        <button name="action_register_payment" type="object" string="Register Payment" class="btn btn-primary btn-sm ms-3 shadow-sm"/>
+                    </div>
+
+                    <!-- PAID IN FULL BANNER -->
+                    <div class="alert alert-success d-flex align-items-center mb-3 shadow-sm rounded-3" role="status" invisible="state != 'paid'">
+                        <i class="fa fa-check-circle fa-2x me-3 text-success" title="Settled"/>
+                        <div>
+                            <strong class="text-success">INVOICE FULLY SETTLED:</strong>
+                            <div>All tuition and fee components have been paid in full. Receipt is available for printing.</div>
+                        </div>
+                    </div>
+
+                    <div class="oe_title mb-3">
+                        <span class="badge text-bg-primary px-3 py-1 fs-6 mb-2 rounded-pill">
+                            <field name="name"/>
+                        </span>
+                        <h1 class="mt-1">
+                            <field name="student_id" placeholder="Select Student..." required="1" options="{'no_create': True}"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group string="Invoice Details">
+                            <field name="fee_structure_id" options="{'no_create': True}"/>
+                            <field name="academic_year_id" options="{'no_create': True}"/>
+                            <field name="semester_id" options="{'no_create': True}"/>
+                            <field name="admission_application_id" options="{'no_create': True}"/>
+                        </group>
+                        <group string="Schedule &amp; Dates">
+                            <field name="date"/>
+                            <field name="due_date"/>
+                            <field name="payment_state" widget="badge"
+                                   decoration-danger="payment_state == 'overdue'"
+                                   decoration-warning="payment_state == 'not_paid'"
+                                   decoration-info="payment_state == 'partial'"
+                                   decoration-success="payment_state == 'paid'"/>
+                            <field name="reminder_count" string="Alert Reminders Sent" readonly="1" invisible="reminder_count == 0"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Fee Lines &amp; Breakdown" name="fee_lines">
+                            <field name="line_ids">
+                                <list limit="10" editable="bottom">
+                                    <field name="name" string="Description" placeholder="e.g. Semester 1 Tuition Fee"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="amount" sum="Total" widget="monetary"/>
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right">
+                                <field name="currency_id" invisible="1"/>
+                                <field name="total_amount" widget="monetary"/>
+                                <field name="paid_amount" widget="monetary" decoration-success="paid_amount &gt; 0"/>
+                                <field name="balance" class="oe_subtotal_footer_separator" widget="monetary" decoration-danger="balance &gt; 0" decoration-bf="1"/>
+                            </group>
+                        </page>
+
+                        <page string="Payment History" name="payments">
+                            <field name="payment_ids">
+                                <list limit="10" default_order="date desc">
+                                    <field name="name" string="Receipt Reference" decoration-bf="1"/>
+                                    <field name="date"/>
+                                    <field name="payment_method"/>
+                                    <field name="reference" string="Transaction / Wire Ref"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="amount" sum="Total Payments" widget="monetary" decoration-bf="1"/>
+                                    <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'posted'" decoration-danger="state == 'canceled'"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- FEE INVOICE: KANBAN VIEW -->
+    <record id="view_university_fee_kanban" model="ir.ui.view">
+        <field name="name">university.fee.kanban</field>
+        <field name="model">university.fee</field>
+        <field name="arch" type="xml">
+            <kanban sample="1" default_group_by="payment_state" quick_create="false" limit="10" class="o_university_fee_kanban">
+                <field name="name"/>
+                <field name="student_id"/>
+                <field name="total_amount"/>
+                <field name="paid_amount"/>
+                <field name="balance"/>
+                <field name="due_date"/>
+                <field name="is_overdue"/>
+                <field name="payment_state"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="card">
+                        <main class="ms-1 p-3 border rounded shadow-sm bg-white">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <strong class="fs-6 text-dark text-truncate"><field name="name"/></strong>
+                                <span t-if="record.payment_state.raw_value == 'overdue'" class="badge text-bg-danger fw-bold">
+                                    <i class="fa fa-exclamation-triangle me-1" title="Overdue"/>Overdue
+                                </span>
+                                <span t-elif="record.payment_state.raw_value == 'paid'" class="badge text-bg-success">
+                                    Paid
+                                </span>
+                                <span t-elif="record.payment_state.raw_value == 'partial'" class="badge text-bg-info">
+                                    Partial
+                                </span>
+                                <span t-else="" class="badge text-bg-warning">
+                                    Unpaid
+                                </span>
+                            </div>
+                            <div class="text-muted small mb-2 text-truncate">
+                                <i class="fa fa-user me-1 text-secondary" title="Student"/>
+                                <span class="fw-bold text-dark"><field name="student_id"/></span>
+                            </div>
+                            <div class="d-flex justify-content-between text-muted small mb-1">
+                                <span>Total: <field name="total_amount" widget="monetary"/></span>
+                                <span>Paid: <field name="paid_amount" widget="monetary"/></span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center pt-2 border-top mt-2">
+                                <span t-if="record.due_date.value" class="small text-muted">
+                                    <i class="fa fa-calendar me-1" title="Due Date"/>Due: <field name="due_date"/>
+                                </span>
+                                <span class="badge text-bg-secondary ms-auto">
+                                    Bal: <field name="balance" widget="monetary"/>
+                                </span>
+                            </div>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- FEE INVOICE: SEARCH VIEW -->
+    <record id="view_university_fee_search" model="ir.ui.view">
+        <field name="name">university.fee.search</field>
+        <field name="model">university.fee</field>
+        <field name="arch" type="xml">
+            <search string="Search Fees">
+                <field name="name"/>
+                <field name="student_id"/>
+                <field name="academic_year_id"/>
+                <separator/>
+                <filter string="Overdue Alert" name="filter_overdue" domain="[('is_overdue', '=', True)]"/>
+                <filter string="Unpaid / Pending" name="filter_unpaid" domain="[('balance', '&gt;', 0), ('state', '=', 'posted')]"/>
+                <filter string="Fully Paid" name="filter_paid" domain="[('state', '=', 'paid')]"/>
+                <filter string="Draft Invoices" name="filter_draft" domain="[('state', '=', 'draft')]"/>
+                <group>
+                    <filter string="Student" name="student" context="{'group_by': 'student_id'}"/>
+                    <filter string="Payment Status" name="group_payment_state" context="{'group_by': 'payment_state'}"/>
+                    <filter string="Academic Year" name="group_academic_year" context="{'group_by': 'academic_year_id'}"/>
+                    <filter string="Status" name="status" context="{'group_by': 'state'}"/>
+                </group>
+                <searchpanel>
+                    <field name="academic_year_id" icon="fa-calendar" enable_counters="1"/>
+                    <field name="payment_state" icon="fa-credit-card" enable_counters="1" select="multi"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <!-- FEE INVOICE: WINDOW ACTION -->
+    <record id="action_university_fee" model="ir.actions.act_window">
+        <field name="name">Fee Invoices</field>
+        <field name="res_model">university.fee</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="view_university_fee_search"/>
+        <field name="limit">10</field>
+        <field name="context">{'search_default_filter_unpaid': 1}</field>
+    </record>
+
+    <record id="action_university_fee_student" model="ir.actions.act_window">
+        <field name="name">My Fees</field>
+        <field name="res_model">university.fee</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('student_id.user_id', '=', uid)]</field>
+        <field name="limit">10</field>
+        <field name="context">{'create': False, 'edit': False, 'delete': False}</field>
+    </record>
+
+</odoo>

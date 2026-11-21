@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_university_populate_class_wizard_form" model="ir.ui.view">
+        <field name="name">university.populate.class.wizard.form</field>
+        <field name="model">university.populate.class.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Populate Class">
+                <group>
+                    <group>
+                        <field name="section_id"/>
+                        <field name="program_id"/>
+                        <field name="academic_year_id"/>
+                        <field name="semester_id"/>
+                        <field name="available_seats"/>
+                    </group>
+                    <group>
+                        <field name="eligible_enrollment_ids" widget="many2many_tags" readonly="1"/>
+                    </group>
+                </group>
+                <field name="enrollment_ids">
+                    <list limit="10">
+                        <field name="student_id"/>
+                        <field name="program_id"/>
+                        <field name="academic_year_id"/>
+                        <field name="semester_id"/>
+                    </list>
+                </field>
+                <footer>
+                    <button name="action_select_all_eligible" type="object" string="Select Eligible" class="btn-secondary"/>
+                    <button name="action_populate_class" type="object" string="Populate Class" class="btn-primary"/>
+                    <button string="Cancel" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_university_populate_class_wizard" model="ir.actions.act_window">
+        <field name="name">Populate Class</field>
+        <field name="res_model">university.populate.class.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="limit">10</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

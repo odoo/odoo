@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- QWeb PDF Report Action — bound to university.program -->
+    <record id="action_report_curriculum" model="ir.actions.report">
+        <field name="name">Semester Curriculum</field>
+        <field name="model">university.curriculum</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">school_management.report_curriculum_document</field>
+        <field name="report_file">school_management.report_curriculum_document</field>
+        <field name="print_report_name">'Curriculum - ' + object.name</field>
+        <field name="binding_model_id" ref="model_university_curriculum"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!--
+        Server action: "Print Curriculum (≥5 Students)"
+        ──────────────────────────────────────────────────
+        Bound to university.enrollment list view (action toolbar).
+        Delegates to university.program.action_print_curriculum_5plus().
+    -->
+    <record id="action_print_curriculum_5plus" model="ir.actions.server">
+        <field name="name">Print Curriculum (≥5 Students)</field>
+        <field name="model_id" ref="model_university_program"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = model.action_print_curriculum_5plus()
+        </field>
+        <field name="binding_model_id" ref="model_university_enrollment"/>
+        <field name="binding_type">action</field>
+    </record>
+
+</odoo>
+

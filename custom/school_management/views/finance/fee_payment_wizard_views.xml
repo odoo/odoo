@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ==================== ONLINE TUITION PAYMENT WIZARD ==================== -->
+    <record id="view_university_fee_payment_wizard_form" model="ir.ui.view">
+        <field name="name">university.fee.payment.wizard.form</field>
+        <field name="model">university.fee.payment.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Online Tuition &amp; Fee Settlement">
+                <sheet>
+                    <div class="alert alert-primary d-flex align-items-center mb-3" role="status">
+                        <i class="fa fa-university fa-2x me-3 text-primary" title="University Bursar"/>
+                        <div>
+                            <h5 class="alert-heading mb-1 fw-bold" role="status">Official University Bursar Payment Portal</h5>
+                            <div>Select your payment method and installment plan to settle your academic fee balance securely.</div>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group string="Tuition Invoice Breakdown">
+                            <field name="student_id" readonly="1"/>
+                            <field name="fee_id" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="total_fee" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="already_paid" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="outstanding_balance" widget="monetary" options="{'currency_field': 'currency_id'}" class="fw-bold fs-5 text-danger"/>
+                            <field name="scholarship_discount" widget="monetary" options="{'currency_field': 'currency_id'}" invisible="scholarship_discount == 0" class="text-success"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="Payment Amount &amp; Terms">
+                            <field name="installment_plan" widget="radio"/>
+                            <field name="amount_to_pay" widget="monetary" options="{'currency_field': 'currency_id'}" class="fw-bold fs-5 text-primary"/>
+                            <field name="balance_after_payment" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="payment_method" widget="radio"/>
+                        </group>
+                    </group>
+
+                    <!-- KHQR Dynamic Instructions -->
+                    <div class="border rounded p-3 bg-light text-center mb-3 shadow-sm" invisible="payment_method != 'qr_code'">
+                        <h6 class="fw-bold text-dark mb-2">
+                            <i class="fa fa-qrcode me-1 text-danger" title="KHQR"/>KHQR Mobile Banking Scan &amp; Pay
+                        </h6>
+                        <div class="d-flex justify-content-center align-items-center gap-3">
+                            <div class="p-2 bg-white border rounded shadow-sm" style="width: 140px; height: 140px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fa fa-qrcode fa-5x text-dark" title="Scan KHQR Code"/>
+                            </div>
+                            <div class="text-start">
+                                <p class="mb-1 text-muted small">1. Open any supported banking app (ABA Mobile, Wing, ACLEDA, Canadia, etc.).</p>
+                                <p class="mb-1 text-muted small">2. Scan the dynamic KHQR code or transfer the exact amount.</p>
+                                <p class="mb-0 text-success small fw-semibold">3. Transaction will verify and post to your student account instantly.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bank Wire Details -->
+                    <div class="border rounded p-3 bg-light mb-3" invisible="payment_method != 'bank_transfer'">
+                        <h6 class="fw-bold text-dark mb-2">
+                            <i class="fa fa-bank me-1 text-primary" title="Bank Wire"/>Bank Wire Transfer Details
+                        </h6>
+                        <field name="bank_details" readonly="1" class="text-monospace small"/>
+                        <group class="mt-2">
+                            <field name="transaction_ref" placeholder="Enter bank wire reference number (e.g. ABA-TXN-123456)"/>
+                        </group>
+                    </div>
+
+                    <!-- Credit / Debit Card -->
+                    <div class="border rounded p-3 bg-light mb-3" invisible="payment_method != 'credit_card'">
+                        <h6 class="fw-bold text-dark mb-2">
+                            <i class="fa fa-credit-card me-1 text-success" title="Credit Card"/>Credit / Debit Card (Visa / Mastercard)
+                        </h6>
+                        <group>
+                            <field name="card_holder" placeholder="Name as embossed on card"/>
+                            <field name="card_number" placeholder="Card Number (last 4 digits for receipt)"/>
+                        </group>
+                    </div>
+
+                    <footer>
+                        <button name="action_confirm_payment"
+                                type="object"
+                                string="Confirm &amp; Settle Payment"
+                                class="btn-success text-white shadow-sm"
+                                icon="fa-lock"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ACTION FOR WIZARD -->
+    <record id="action_university_fee_payment_wizard" model="ir.actions.act_window">
+        <field name="name">Online Tuition Payment</field>
+        <field name="res_model">university.fee.payment.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="limit">10</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

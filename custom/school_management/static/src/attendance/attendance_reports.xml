@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="school_management.AttendanceReports">
+        <div class="o_attendance_reports h-100 d-flex flex-column">
+            <nav class="navbar navbar-light bg-white border-bottom px-3">
+                <span class="navbar-brand mb-0 h5">Attendance Reports</span>
+                <div class="btn-group btn-group-sm" role="tablist" aria-label="Attendance report views">
+                    <button type="button" class="btn"
+                            t-att-class="state.tab === 'sheet' ? 'btn-primary' : 'btn-outline-primary'"
+                            t-on-click="() => this.setTab('sheet')">Sheet</button>
+                    <button type="button" class="btn"
+                            t-att-class="state.tab === 'grid' ? 'btn-primary' : 'btn-outline-primary'"
+                            t-on-click="() => this.setTab('grid')">Grid</button>
+                    <button type="button" class="btn"
+                            t-att-class="state.tab === 'pivot' ? 'btn-primary' : 'btn-outline-primary'"
+                            t-on-click="() => this.setTab('pivot')">Pivot</button>
+                    <button type="button" class="btn"
+                            t-att-class="state.tab === 'at_risk' ? 'btn-primary' : 'btn-outline-primary'"
+                            t-on-click="() => this.setTab('at_risk')">At-Risk Students</button>
+                </div>
+            </nav>
+            <div class="flex-grow-1 overflow-auto">
+                <AttendanceSheet t-if="state.tab === 'sheet'"/>
+                <AttendanceGrid t-if="state.tab === 'grid'"/>
+                <AttendanceComparison t-if="state.tab === 'pivot'"/>
+                <AttendanceAtRisk t-if="state.tab === 'at_risk'"/>
+            </div>
+        </div>
+    </t>
+</templates>

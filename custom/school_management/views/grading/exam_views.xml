@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ==================== EXAM VIEWS ==================== -->
+
+    <!-- Exam List View -->
+    <record id="view_university_exam_list" model="ir.ui.view">
+        <field name="name">university.exam.list</field>
+        <field name="model">university.exam</field>
+        <field name="arch" type="xml">
+                    <list string="Exams &amp; Quizzes" sample="1" limit="10" class="o_university_exam_list">
+                <header>
+                    <button name="%(action_university_exam_score)d" string="Result of Exam and Quiz" type="action" class="btn-primary" icon="fa-list-alt"/>
+                </header>
+                <field name="name"/>
+                <field name="exam_type"
+                       widget="badge"
+                       decoration-info="exam_type == 'quiz'"
+                       decoration-warning="exam_type == 'midterm'"
+                       decoration-danger="exam_type == 'final'"/>
+                <field name="subject_id"/>
+                <field name="section_id"/>
+                <field name="department_id" optional="show"/>
+                <field name="program_id" optional="hide"/>
+                <field name="teacher_id"/>
+                <field name="exam_date"/>
+                <field name="average_score" string="Avg Score"/>
+                <field name="scored_count" string="Graded"/>
+                <field name="student_count" string="Total"/>
+                <field name="state"
+                       widget="badge"
+                       decoration-success="state == 'published'"
+                       decoration-info="state == 'open'"
+                       decoration-warning="state in ('scheduled', 'grading')"
+                       decoration-muted="state in ('draft', 'closed', 'cancelled')"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Exam Form View -->
+    <record id="view_university_exam_form" model="ir.ui.view">
+        <field name="name">university.exam.form</field>
+        <field name="model">university.exam</field>
+        <field name="arch" type="xml">
+            <form string="Examination">
+                <header>
+                    <button name="action_populate_students"
+                            string="Populate Students"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state in ('published', 'cancelled')"/>
+                    <button name="action_mark_all_present"
+                            string="Mark All Present"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="state in ('published', 'cancelled')"/>
+                    <button name="action_schedule"
+                            string="Schedule"
+                            type="object"
+                            invisible="state != 'draft'"/>
+                    <button name="action_open"
+                            string="Open for Submissions"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state not in ('draft', 'scheduled')"/>
+                    <button name="action_close"
+                            string="Close Exam"
+                            type="object"
+                            invisible="state != 'open'"/>
+                    <button name="action_start_grading"
+                            string="Grade Exam"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'closed'"/>
+                    <button name="action_publish"
+                            string="Publish Scores"
+                            type="object"
+                            class="btn-success"
+                            invisible="state in ('published', 'cancelled')"/>
+                    <button name="action_reset_draft"
+                            string="Reset to Draft"
+                            type="object"
+                            invisible="state not in ('published', 'cancelled')"/>
+                    <button name="action_view_exam_scores"
+                            string="Result of Exam and Quiz"
+                            type="object"
+                            class="btn-outline-primary"
+                            icon="fa-bar-chart"
+                            invisible="state == 'draft'"/>
+                    <button name="action_download_marksheet"
+                            string="Export Excel"
+                            type="object"
+                            class="btn-secondary"
+                            icon="fa-file-excel-o"
+                            invisible="state == 'draft'"/>
+                    <button name="action_print_marksheet_pdf"
+                            string="Print PDF"
+                            type="object"
+                            class="btn-secondary"
+                            icon="fa-file-pdf-o"
+                            invisible="state == 'draft'"/>
+                    <button name="action_cancel"
+                            string="Cancel"
+                            type="object"
+                            invisible="state in ('published', 'cancelled')"/>
+                    <field name="state"
+                           widget="statusbar"
+                           statusbar_visible="draft,scheduled,open,closed,grading,published"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_exam_scores"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-check-square-o">
+                            <field name="scored_count" widget="statinfo" string="Results &amp; Scores"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Midterm – Database Systems"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Academic Information">
+                            <field name="exam_type"
+                                   widget="badge"
+                                   decoration-info="exam_type == 'quiz'"
+                                   decoration-warning="exam_type == 'midterm'"
+                                   decoration-danger="exam_type == 'final'"/>
+                            <field name="subject_id"/>
+                            <field name="section_id"/>
+                            <field name="teacher_id"/>
+                        </group>
+                        <group string="Schedule &amp; Grading Rules">
+                            <field name="exam_date"/>
+                            <field name="semester_id"/>
+                            <field name="academic_year_id"/>
+                            <field name="max_score"/>
+                            <field name="weight_percent"/>
+                        </group>
+                    </group>
+
+                    <!-- Summary KPI Stat Row -->
+                    <div class="row g-2 mb-3">
+                        <div class="col-6 col-md-3">
+                            <div class="card p-2 text-center bg-light border">
+                                <span class="text-muted small text-uppercase fw-semibold">Class Average</span>
+                                <h4 class="mb-0 fw-bold text-primary"><field name="average_score"/> / <field name="max_score" nolabel="1"/></h4>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="card p-2 text-center bg-light border">
+                                <span class="text-muted small text-uppercase fw-semibold">Graded Progress</span>
+                                <h4 class="mb-0 fw-bold text-dark"><field name="scored_count"/> / <field name="student_count" nolabel="1"/></h4>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="card p-2 text-center bg-light border">
+                                <span class="text-muted small text-uppercase fw-semibold">Pass Rate</span>
+                                <h4 class="mb-0 fw-bold text-success"><field name="pass_count"/> Passed</h4>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="card p-2 text-center bg-light border">
+                                <span class="text-muted small text-uppercase fw-semibold">Fail Rate</span>
+                                <h4 class="mb-0 fw-bold text-danger"><field name="fail_count"/> Failed</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <notebook>
+                        <page string="Student Scores" name="scores_tab">
+                            <field name="score_ids">
+                                <list limit="10" editable="bottom"
+                                      decoration-muted="is_absent"
+                                      decoration-danger="not is_absent and not is_passed and score &gt; 0"
+                                      decoration-success="is_passed">
+                                    <field name="student_code" string="ID"/>
+                                    <field name="student_id" domain="[('enrollment_ids.section_id', '=', parent.section_id)]"/>
+                                    <field name="is_absent" string="Absent"/>
+                                    <field name="score" string="Raw Score" readonly="is_absent"/>
+                                    <field name="submitted_at" optional="hide"/>
+                                    <field name="is_late" string="Late" widget="boolean" optional="show"/>
+                                    <field name="penalty_applied" optional="hide"/>
+                                    <field name="final_score" string="Final Score" readonly="1"/>
+                                    <field name="percentage" string="%" readonly="1"/>
+                                    <field name="is_passed" string="Pass" widget="boolean" readonly="1"/>
+                                    <field name="remark" string="Remark"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Schedule &amp; Timing Details" name="timing_tab">
+                            <group>
+                                <group string="Exam Time Window">
+                                    <field name="start_time"/>
+                                    <field name="end_time"/>
+                                    <field name="duration_minutes"/>
+                                </group>
+                                <group string="Late Policies &amp; Origin">
+                                    <field name="late_submission_allowed"/>
+                                    <field name="late_penalty_percent" invisible="not late_submission_allowed"/>
+                                    <field name="auto_close"/>
+                                    <field name="auto_created"/>
+                                    <field name="timetable_slot_id" invisible="not timetable_slot_id"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Exam Search View -->
+    <record id="view_university_exam_search" model="ir.ui.view">
+        <field name="name">university.exam.search</field>
+        <field name="model">university.exam</field>
+        <field name="arch" type="xml">
+            <search string="Search Exams &amp; Quizzes">
+                <field name="name"/>
+                <field name="subject_id"/>
+                <field name="section_id"/>
+                <field name="department_id"/>
+                <field name="program_id"/>
+                <field name="teacher_id"/>
+                <separator/>
+                <filter string="Quizzes" name="filter_quiz" domain="[('exam_type', '=', 'quiz')]"/>
+                <filter string="Midterms" name="filter_midterm" domain="[('exam_type', '=', 'midterm')]"/>
+                <filter string="Finals" name="filter_final" domain="[('exam_type', '=', 'final')]"/>
+                <separator/>
+                <filter string="Open for Submission" name="filter_open" domain="[('state', '=', 'open')]"/>
+                <filter string="Ready for Grading" name="filter_closed" domain="[('state', '=', 'closed')]"/>
+                <filter string="Grading in Progress" name="filter_grading" domain="[('state', '=', 'grading')]"/>
+                <filter string="Published" name="filter_published" domain="[('state', '=', 'published')]"/>
+                <group>
+                    <filter string="Department" name="group_by_department" context="{'group_by': 'department_id'}"/>
+                    <filter string="Program" name="group_by_program" context="{'group_by': 'program_id'}"/>
+                    <filter string="Subject" name="group_by_subject" context="{'group_by': 'subject_id'}"/>
+                    <filter string="Section" name="group_by_section" context="{'group_by': 'section_id'}"/>
+                    <filter string="Exam Type" name="group_by_exam_type" context="{'group_by': 'exam_type'}"/>
+                    <filter string="Teacher" name="group_by_teacher" context="{'group_by': 'teacher_id'}"/>
+                    <filter string="Semester" name="group_by_semester" context="{'group_by': 'semester_id'}"/>
+                    <filter string="Status" name="group_by_state" context="{'group_by': 'state'}"/>
+                </group>
+                <searchpanel class="o_university_exam_searchpanel">
+                    <field name="department_id" icon="fa-building" enable_counters="1"/>
+                    <field name="subject_id" icon="fa-book" enable_counters="1"/>
+                    <field name="exam_type" icon="fa-pencil-square-o" enable_counters="1" select="multi"/>
+                    <field name="state" icon="fa-filter" enable_counters="1" select="multi"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <!-- Exam Pivot View -->
+    <record id="view_university_exam_pivot" model="ir.ui.view">
+        <field name="name">university.exam.pivot</field>
+        <field name="model">university.exam</field>
+        <field name="arch" type="xml">
+            <pivot string="Exam Analytics">
+                <field name="subject_id" type="row"/>
+                <field name="exam_type" type="row"/>
+                <field name="semester_id" type="col"/>
+                <field name="average_score" type="measure"/>
+                <field name="scored_count" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Exam Graph View -->
+    <record id="view_university_exam_graph" model="ir.ui.view">
+        <field name="name">university.exam.graph</field>
+        <field name="model">university.exam</field>
+        <field name="arch" type="xml">
+            <graph string="Exam Performance Comparison" type="bar">
+                <field name="subject_id"/>
+                <field name="exam_type"/>
+                <field name="average_score" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- ==================== EXAM SCORE VIEWS ==================== -->
+
+    <!-- Exam Score List View -->
+    <record id="view_university_exam_score_list" model="ir.ui.view">
+        <field name="name">university.exam.score.list</field>
+        <field name="model">university.exam.score</field>
+        <field name="arch" type="xml">
+            <list string="Results of Exam and Quiz" sample="1" limit="10">
+                <field name="student_code" string="Student ID"/>
+                <field name="student_id"/>
+                <field name="exam_id" string="Exam / Quiz"/>
+                <field name="exam_type"
+                       widget="badge"
+                       decoration-info="exam_type == 'quiz'"
+                       decoration-warning="exam_type == 'midterm'"
+                       decoration-danger="exam_type == 'final'"/>
+                <field name="subject_id"/>
+                <field name="section_id" optional="show"/>
+                <field name="department_id" optional="hide"/>
+                <field name="program_id" optional="hide"/>
+                <field name="exam_date"/>
+                <field name="score" string="Raw Score"/>
+                <field name="max_score" string="Max" optional="show"/>
+                <field name="final_score" string="Final Score" decoration-bf="1"/>
+                <field name="percentage" string="%" decoration-bf="1"/>
+                <field name="is_passed" widget="boolean" string="Passed"/>
+                <field name="is_absent" string="Absent" widget="boolean" optional="show"/>
+                <field name="is_late" widget="boolean" string="Late" optional="hide"/>
+                <field name="state"
+                       widget="badge"
+                       decoration-success="state == 'published'"
+                       decoration-info="state == 'open'"
+                       decoration-warning="state in ('scheduled', 'grading')"
+                       decoration-muted="state in ('draft', 'closed', 'cancelled')"/>
+                <field name="remark" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Exam Score Pivot View -->
+    <record id="view_university_exam_score_pivot" model="ir.ui.view">
+        <field name="name">university.exam.score.pivot</field>
+        <field name="model">university.exam.score</field>
+        <field name="arch" type="xml">
+            <pivot string="Exam &amp; Quiz Results Summary">
+                <field name="subject_id" type="row"/>
+                <field name="exam_type" type="col"/>
+                <field name="final_score" type="measure"/>
+                <field name="percentage" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Exam Score Graph View -->
+    <record id="view_university_exam_score_graph" model="ir.ui.view">
+        <field name="name">university.exam.score.graph</field>
+        <field name="model">university.exam.score</field>
+        <field name="arch" type="xml">
+            <graph string="Exam &amp; Quiz Performance" type="bar" sample="1">
+                <field name="subject_id"/>
+                <field name="percentage" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Exam Score Search View -->
+    <record id="view_university_exam_score_search" model="ir.ui.view">
+        <field name="name">university.exam.score.search</field>
+        <field name="model">university.exam.score</field>
+        <field name="arch" type="xml">
+            <search string="Search Exam Scores">
+                <field name="student_id"/>
+                <field name="student_code"/>
+                <field name="exam_id"/>
+                <field name="subject_id"/>
+                <field name="department_id"/>
+                <field name="program_id"/>
+                <separator/>
+                <filter string="Quizzes" name="filter_quiz" domain="[('exam_type', '=', 'quiz')]"/>
+                <filter string="Midterms" name="filter_midterm" domain="[('exam_type', '=', 'midterm')]"/>
+                <filter string="Finals" name="filter_final" domain="[('exam_type', '=', 'final')]"/>
+                <separator/>
+                <filter string="Passed" name="filter_passed" domain="[('is_passed', '=', True)]"/>
+                <filter string="Failed" name="filter_failed" domain="[('is_passed', '=', False), ('is_absent', '=', False)]"/>
+                <filter string="Absent" name="filter_absent" domain="[('is_absent', '=', True)]"/>
+                <filter string="Late" name="filter_late" domain="[('is_late', '=', True)]"/>
+                <group>
+                    <filter string="Exam" name="group_by_exam" context="{'group_by': 'exam_id'}"/>
+                    <filter string="Exam Type" name="group_by_exam_type" context="{'group_by': 'exam_type'}"/>
+                    <filter string="Subject" name="group_by_subject" context="{'group_by': 'subject_id'}"/>
+                    <filter string="Student" name="group_by_student" context="{'group_by': 'student_id'}"/>
+                    <filter string="Program" name="group_by_program" context="{'group_by': 'program_id'}"/>
+                    <filter string="Department" name="group_by_department" context="{'group_by': 'department_id'}"/>
+                    <filter string="Status" name="group_by_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ==================== ACTIONS ==================== -->
+
+    <record id="action_university_exam" model="ir.actions.act_window">
+        <field name="name">Exams &amp; Quizzes</field>
+        <field name="res_model">university.exam</field>
+        <field name="view_mode">list,form,pivot,graph</field>
+        <field name="search_view_id" ref="view_university_exam_search"/>
+        <field name="limit">10</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create your first examination or quiz!</p>
+            <p>Define quizzes, midterm exams, and final exams for your class sections.</p>
+        </field>
+    </record>
+
+    <record id="action_university_exam_score" model="ir.actions.act_window">
+        <field name="name">Results of Exam and Quiz</field>
+        <field name="res_model">university.exam.score</field>
+        <field name="view_mode">list,pivot,graph</field>
+        <field name="search_view_id" ref="view_university_exam_score_search"/>
+        <field name="limit">10</field>
+        <field name="context">{'search_default_group_by_exam': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No exam or quiz results found.</p>
+            <p>Publish exam scores to view and analyze quiz and exam performance across all students and departments.</p>
+        </field>
+    </record>
+
+    <!-- Student View: My Exams & Scores (Published Only) -->
+    <record id="action_university_exam_score_student" model="ir.actions.act_window">
+        <field name="name">My Exam Results</field>
+        <field name="res_model">university.exam.score</field>
+        <field name="view_mode">list</field>
+        <field name="domain">[('state', '=', 'published')]</field>
+        <field name="search_view_id" ref="view_university_exam_score_search"/>
+        <field name="limit">10</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No published exam results available yet.</p>
+        </field>
+    </record>
+</odoo>

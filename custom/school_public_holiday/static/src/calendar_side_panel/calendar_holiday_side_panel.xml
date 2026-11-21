@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-inherit="web.CalendarSidePanel" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_calendar_sidebar')]/DatePicker" position="after">
+            <div t-if="showHolidayPanel" class="o_calendar_holiday_panel border-top mt-3 pt-2 px-2">
+                <!-- Header -->
+                <div class="d-flex align-items-center justify-content-between mb-2 px-1">
+                    <div class="d-flex align-items-center gap-1">
+                        <i class="fa fa-flag text-danger small" title="Public Holidays"/>
+                        <span class="fw-bold small text-uppercase text-secondary" style="letter-spacing: 0.5px; font-size: 0.72rem;">
+                            Public Holidays
+                        </span>
+                    </div>
+                    <span t-if="holidayState.monthHolidays.length" class="badge rounded-pill bg-danger-subtle text-danger border border-danger-subtle px-2 py-1" style="font-size: 0.68rem;">
+                        <t t-esc="holidayState.monthHolidays.length"/> <t t-if="holidayState.monthHolidays.length == 1">Holiday</t><t t-else="">Holidays</t>
+                    </span>
+                </div>
+
+                <!-- Holiday Cards List -->
+                <div t-if="holidayState.monthHolidays.length" class="d-flex flex-column gap-2 mb-3">
+                    <t t-foreach="holidayState.monthHolidays" t-as="h" t-key="h.id">
+                        <div class="o_calendar_holiday_card p-2 rounded-2 border"
+                             t-att-class="{
+                                 'is_selected border-danger shadow-sm': isHolidaySelected(h),
+                                 'is_today border-start border-4 border-danger': isHolidayToday(h),
+                                 'bg-white border-secondary-subtle': !isHolidaySelected(h)
+                             }"
+                             role="button"
+                             tabindex="0"
+                             t-att-title="'Click to view ' + h.name + ' on calendar'"
+                             t-on-click="() => this.onHolidayClick(h)">
+                            <div class="d-flex align-items-center justify-content-between gap-1 mb-1">
+                                <span class="badge text-bg-danger fw-semibold px-2 py-1" style="font-size: 0.68rem;">
+                                    <i class="fa fa-calendar-check-o me-1"/>
+                                    <t t-esc="this.formatHolidayDate(h)"/>
+                                </span>
+                                <span t-if="isHolidayToday(h)" class="badge bg-danger text-white px-2 py-1 pulse-badge" style="font-size: 0.62rem;">
+                                    Today
+                                </span>
+                                <span t-elif="h.number_of_days &gt; 1" class="badge bg-light text-muted border px-1" style="font-size: 0.62rem;">
+                                    <t t-esc="h.number_of_days"/> days
+                                </span>
+                            </div>
+                            <div class="fw-bold text-dark text-truncate small" t-att-title="h.name">
+                                <t t-esc="h.name"/>
+                            </div>
+                            <div t-if="h.name_km" class="text-muted text-truncate" style="font-size: 0.7rem; font-family: 'Kantumruy Pro', 'Hanuman', 'Khmer OS', sans-serif;">
+                                <t t-esc="h.name_km"/>
+                            </div>
+                            <!-- Notice Board / Detail Quick Links -->
+                            <div class="mt-1 pt-1 border-top d-flex align-items-center justify-content-between">
+                                <a href="#" class="text-decoration-none small text-muted d-inline-flex align-items-center"
+                                   style="font-size: 0.68rem;"
+                                   title="View Holiday Details"
+                                   t-on-click="(ev) => this.openHoliday(h.id, ev)">
+                                    <i class="fa fa-info-circle me-1"/>Details
+                                </a>
+                                <a t-if="h.notice_id" href="#" class="text-decoration-none small text-primary d-inline-flex align-items-center fw-semibold"
+                                   style="font-size: 0.68rem;"
+                                   title="Open Notice Board Announcement"
+                                   t-on-click="(ev) => this.openNotice(h.notice_id, ev)">
+                                    <i class="fa fa-bullhorn me-1"/>Notice
+                                </a>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+
+                <!-- Empty State (No holidays in selected month) -->
+                <div t-elif="!holidayState.loading" class="text-center py-3 px-2 rounded-2 bg-light border border-dashed text-muted mb-3">
+                    <i class="fa fa-sun-o fa-2x mb-2 text-warning opacity-75"/>
+                    <div class="small fw-semibold text-secondary">No holidays in <t t-esc="activeMonthName"/></div>
+                    <div t-if="holidayState.nextHoliday" class="mt-2 pt-2 border-top text-start" style="font-size: 0.75rem;">
+                        <span class="text-muted d-block small" style="font-size: 0.68rem;">Upcoming next:</span>
+                        <a href="#" class="fw-bold text-danger text-decoration-none d-block text-truncate mt-1"
+                           t-att-title="'Jump to ' + holidayState.nextHoliday.name"
+                           t-on-click="() => this.onHolidayClick(holidayState.nextHoliday)">
+                            <i class="fa fa-arrow-circle-right me-1 text-danger"/>
+                            <t t-esc="holidayState.nextHoliday.name"/> (<t t-esc="this.formatHolidayDate(holidayState.nextHoliday)"/>)
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Loading State -->
+                <div t-if="holidayState.loading" class="text-center py-2 text-muted small">
+                    <i class="fa fa-circle-o-notch fa-spin me-1"/> Loading holidays...
+                </div>
+            </div>
+        </xpath>
+    </t>
+
+</templates>

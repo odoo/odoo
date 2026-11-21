@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mail_template_payment_receipt" model="mail.template">
+        <field name="name">Payment Receipt</field>
+        <field name="model_id" ref="model_university_payment"/>
+        <field name="subject">Payment receipt - {{ object.fee_id.name }}</field>
+        <field name="email_from">{{ object.fee_id.student_id.user_id.email or 'receipts@example.com' }}</field>
+        <field name="email_to">{{ object.fee_id.student_id.email }}</field>
+        <field name="report_template_ids" eval="[(6, 0, [ref('school_management.action_report_university_payment_receipt')])]"/>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 14px; color: #4c4c4c;">
+                <p>Dear <t t-out="object.fee_id.student_id.name or 'Student'"/>,</p>
+                <p>
+                    We are pleased to inform you that your payment has been received and your
+                    fee invoice has been fully settled.
+                </p>
+                <p>
+                    Please find attached your payment receipt (<b><t t-out="object.name"/></b>)
+                    for your records. Kindly reach out to the finance office if you have any
+                    questions regarding this payment.
+                </p>
+                <table style="border-collapse: separate; border-spacing: 0px; border-radius: 6px; border-color: #e1e1e1; border-style: solid; border-width: 1px; width: 60%;">
+                    <tbody>
+                        <tr>
+                            <td style="color:#7c7bad; font-weight:bold; padding: 8px 12px;">Invoice</td>
+                            <td style="padding: 8px 12px;"><t t-out="object.fee_id.name"/></td>
+                        </tr>
+                        <tr>
+                            <td style="color:#7c7bad; font-weight:bold; padding: 8px 12px;">Payment</td>
+                            <td style="padding: 8px 12px;"><t t-out="object.currency_id.symbol or ''"/> <t t-out="object.amount"/></td>
+                        </tr>
+                        <tr>
+                            <td style="color:#7c7bad; font-weight:bold; padding: 8px 12px;">Paid</td>
+                            <td style="padding: 8px 12px;"><t t-out="object.fee_id.currency_id.symbol or ''"/> <t t-out="object.fee_id.paid_amount"/></td>
+                        </tr>
+                        <tr>
+                            <td style="color:#7c7bad; font-weight:bold; padding: 8px 12px;">Balance</td>
+                            <td style="padding: 8px 12px;"><t t-out="object.fee_id.currency_id.symbol or ''"/> <t t-out="object.fee_id.balance"/></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>
+                    Thank you for your payment.
+                </p>
+                <p>Best regards,<br/>University Finance Office</p>
+            </div>
+        </field>
+    </record>
+
+    <!-- Transcript Request Templates -->
+    <record id="mail_template_transcript_request_submitted" model="mail.template">
+        <field name="name">Transcript Request: Received</field>
+        <field name="model_id" ref="model_university_transcript_request"/>
+        <field name="subject">Transcript Request Received - {{ object.name }}</field>
+        <field name="email_to">{{ object.student_id.email }}</field>
+        <field name="body_html" type="html">
+            <div style="font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 14px; color: #333333;">
+                <p>Dear <t t-out="object.student_id.name or 'Student'"/>,</p>
+                <p>We have successfully received your request for an <b><t t-out="object.request_type"/> transcript</b> (Reference: <b><t t-out="object.name"/></b>).</p>
+                <p>Our registrar office is currently reviewing your academic record and active holds. You will receive an email update once your request is processed.</p>
+                <p>Best regards,<br/>University Registrar Office</p>
+            </div>
+        </field>
+    </record>
+
+    <record id="mail_template_transcript_request_approved" model="mail.template">
+        <field name="name">Transcript Request: Approved</field>
+        <field name="model_id" ref="model_university_transcript_request"/>
+        <field name="subject">Transcript Request Approved - {{ object.name }}</field>
+        <field name="email_to">{{ object.student_id.email }}</field>
+        <field name="body_html" type="html">
+            <div style="font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 14px; color: #333333;">
+                <p>Dear <t t-out="object.student_id.name or 'Student'"/>,</p>
+                <p>Your transcript request (<b><t t-out="object.name"/></b>) has been <b>approved</b> by the Registrar Office.</p>
+                <p>Your official academic transcript is being prepared and will be issued shortly.</p>
+                <p>Best regards,<br/>University Registrar Office</p>
+            </div>
+        </field>
+    </record>
+
+    <record id="mail_template_transcript_request_rejected" model="mail.template">
+        <field name="name">Transcript Request: Rejected</field>
+        <field name="model_id" ref="model_university_transcript_request"/>
+        <field name="subject">Transcript Request Notice - {{ object.name }}</field>
+        <field name="email_to">{{ object.student_id.email }}</field>
+        <field name="body_html" type="html">
+            <div style="font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 14px; color: #333333;">
+                <p>Dear <t t-out="object.student_id.name or 'Student'"/>,</p>
+                <p>Your transcript request (<b><t t-out="object.name"/></b>) could not be approved at this time.</p>
+                <p><b>Reason:</b> <t t-out="object.reject_reason"/></p>
+                <p>Please resolve any outstanding academic or bursar matters and submit a new request or contact the registrar office.</p>
+                <p>Best regards,<br/>University Registrar Office</p>
+            </div>
+        </field>
+    </record>
+
+    <record id="mail_template_transcript_request_issued" model="mail.template">
+        <field name="name">Transcript Request: Issued</field>
+        <field name="model_id" ref="model_university_transcript_request"/>
+        <field name="subject">Your Official Transcript is Ready - {{ object.name }}</field>
+        <field name="email_to">{{ object.student_id.email }}</field>
+        <field name="body_html" type="html">
+            <div style="font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 14px; color: #333333;">
+                <p>Dear <t t-out="object.student_id.name or 'Student'"/>,</p>
+                <p>Your official academic transcript has been <b>issued</b>!</p>
+                <p>
+                    <b>Transcript Reference:</b> <t t-out="object.transcript_id.name or 'Official Transcript'"/><br/>
+                    <b>Verification Security Code:</b> <code><t t-out="object.verification_code"/></code><br/>
+                    <b>Delivery Method:</b> <t t-out="object.delivery_method"/>
+                </p>
+                <p>You may view or download your transcript directly from your student portal dashboard.</p>
+                <p>Best regards,<br/>University Registrar Office</p>
+            </div>
+        </field>
+    </record>
+</odoo>

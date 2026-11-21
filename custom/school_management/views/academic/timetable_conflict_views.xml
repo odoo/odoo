@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- KANBAN VIEW -->
+    <record id="view_university_timetable_conflict_kanban" model="ir.ui.view">
+        <field name="name">university.timetable.conflict.kanban</field>
+        <field name="model">university.timetable.conflict</field>
+        <field name="arch" type="xml">
+            <kanban sample="1" default_group_by="conflict_type" quick_create="false" limit="10">
+                <field name="name"/>
+                <field name="conflict_type"/>
+                <field name="severity"/>
+                <field name="date"/>
+                <field name="time_range"/>
+                <field name="teacher_id"/>
+                <field name="classroom_id"/>
+                <field name="section_id"/>
+                <field name="description"/>
+                <field name="status"/>
+                <templates>
+                    <t t-name="card">
+                        <main class="p-3 border-start border-4 border-danger">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span t-if="record.conflict_type.raw_value == 'teacher'" class="badge text-bg-danger fs-6 px-2 py-1">
+                                    <i class="fa fa-user-times me-1"/>Teacher Conflict
+                                </span>
+                                <span t-elif="record.conflict_type.raw_value == 'classroom'" class="badge text-bg-danger fs-6 px-2 py-1">
+                                    <i class="fa fa-building me-1"/>Classroom Conflict
+                                </span>
+                                <span t-elif="record.conflict_type.raw_value == 'duplicate'" class="badge text-bg-danger fs-6 px-2 py-1">
+                                    <i class="fa fa-clone me-1"/>Duplicate Schedule
+                                </span>
+                                <span t-elif="record.conflict_type.raw_value == 'capacity'" class="badge text-bg-warning fs-6 px-2 py-1">
+                                    <i class="fa fa-users me-1"/>Capacity Problem
+                                </span>
+                                <span t-elif="record.conflict_type.raw_value == 'holiday'" class="badge text-bg-warning fs-6 px-2 py-1">
+                                    <i class="fa fa-calendar-times-o me-1"/>Holiday Conflict
+                                </span>
+                                <span t-else="" class="badge text-bg-secondary fs-6 px-2 py-1">
+                                    <i class="fa fa-exclamation-triangle me-1"/>Timeslot Conflict
+                                </span>
+                                <span t-if="record.status.raw_value == 'resolved'" class="badge bg-success-subtle text-success border">
+                                    Resolved
+                                </span>
+                                <span t-else="" class="badge bg-danger-subtle text-danger border">
+                                    Unresolved
+                                </span>
+                            </div>
+
+                            <div class="fw-bold fs-6 text-dark mb-1">
+                                <field name="name"/>
+                            </div>
+
+                            <div t-if="record.time_range.value" class="text-primary small fw-semibold mb-2">
+                                <i class="fa fa-clock-o me-1" title="Time Range"/>
+                                <field name="time_range"/>
+                            </div>
+
+                            <div class="text-muted small mb-2">
+                                <span t-if="record.date.value" class="me-3">
+                                    <i class="fa fa-calendar me-1" title="Date"/>
+                                    <field name="date"/>
+                                </span>
+                                <span t-if="record.semester_id.value">
+                                    <i class="fa fa-book me-1" title="Academic Term"/>
+                                    <field name="semester_id"/>
+                                </span>
+                            </div>
+
+                            <div class="d-flex flex-column gap-1 text-muted small border-top pt-2 mb-2">
+                                <div t-if="record.teacher_id.value">
+                                    <i class="fa fa-user-circle text-secondary me-1" title="Teacher"/>
+                                    <strong class="text-dark"><field name="teacher_id"/></strong>
+                                </div>
+                                <div t-if="record.classroom_id.value">
+                                    <i class="fa fa-map-marker text-danger me-1" title="Room"/>
+                                    <strong class="text-dark"><field name="classroom_id"/></strong>
+                                </div>
+                                <div t-if="record.section_id.value">
+                                    <i class="fa fa-graduation-cap text-info me-1" title="Section"/>
+                                    <strong class="text-dark"><field name="section_id"/></strong>
+                                </div>
+                            </div>
+
+                            <div class="text-secondary small fst-italic mb-3 bg-light p-2 rounded">
+                                <field name="description"/>
+                            </div>
+
+                            <div class="border-top pt-2 d-flex justify-content-between align-items-center">
+                                <button name="action_view_slots" type="object" class="btn btn-sm btn-outline-primary" string="View Sessions">
+                                    <i class="fa fa-calendar me-1"/>View Sessions
+                                </button>
+                                <button t-if="record.status.raw_value == 'unresolved'" name="action_mark_resolved" type="object" class="btn btn-sm btn-outline-success" string="Resolve" groups="school_management.group_school_admin,base.group_system">
+                                    <i class="fa fa-check me-1"/>Resolve
+                                </button>
+                            </div>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- LIST VIEW -->
+    <record id="view_university_timetable_conflict_list" model="ir.ui.view">
+        <field name="name">university.timetable.conflict.list</field>
+        <field name="model">university.timetable.conflict</field>
+        <field name="arch" type="xml">
+            <list string="Schedule Conflicts" sample="1" limit="10" decoration-danger="severity == 'danger'" decoration-warning="severity == 'warning'">
+                <header>
+                    <button name="action_rescan" type="object" string="Rescan Conflicts" class="btn-primary" icon="fa-refresh" groups="school_management.group_school_admin,base.group_system"/>
+                </header>
+                <field name="name" decoration-bf="1"/>
+                <field name="conflict_type" widget="badge"
+                       decoration-danger="conflict_type in ('teacher', 'classroom', 'duplicate', 'timeslot')"
+                       decoration-warning="conflict_type in ('capacity', 'holiday')"/>
+                <field name="severity" widget="badge"
+                       decoration-danger="severity == 'danger'"
+                       decoration-warning="severity == 'warning'"/>
+                <field name="academic_year_id" optional="show"/>
+                <field name="semester_id" optional="show"/>
+                <field name="date"/>
+                <field name="time_range"/>
+                <field name="teacher_id"/>
+                <field name="classroom_id"/>
+                <field name="section_id"/>
+                <field name="holiday_id" optional="hide"/>
+                <field name="description" optional="hide"/>
+                <field name="status" widget="badge"
+                       decoration-success="status == 'resolved'"
+                       decoration-danger="status == 'unresolved'"/>
+                <button name="action_view_slots" type="object" string="View Sessions" icon="fa-arrow-right"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- FORM VIEW -->
+    <record id="view_university_timetable_conflict_form" model="ir.ui.view">
+        <field name="name">university.timetable.conflict.form</field>
+        <field name="model">university.timetable.conflict</field>
+        <field name="arch" type="xml">
+            <form string="Schedule Conflict">
+                <header>
+                    <button name="action_view_slots" type="object" string="Inspect Conflicting Sessions" class="btn-primary" icon="fa-calendar"/>
+                    <button name="action_mark_resolved" type="object" string="Mark as Resolved" class="btn-secondary" invisible="status == 'resolved'" groups="school_management.group_school_admin,base.group_system"/>
+                    <button name="action_rescan" type="object" string="Rescan Conflicts" class="btn-secondary" icon="fa-refresh" groups="school_management.group_school_admin,base.group_system"/>
+                    <field name="status" widget="statusbar" statusbar_visible="unresolved,resolved"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <span class="badge text-bg-danger fs-5 mb-2" invisible="severity != 'danger'">Critical Conflict</span>
+                        <span class="badge text-bg-warning fs-5 mb-2" invisible="severity != 'warning'">Warning</span>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Conflict Classification">
+                            <field name="conflict_type"/>
+                            <field name="severity"/>
+                            <field name="academic_year_id"/>
+                            <field name="semester_id"/>
+                        </group>
+                        <group string="Schedule &amp; Resources">
+                            <field name="date"/>
+                            <field name="time_range"/>
+                            <field name="teacher_id"/>
+                            <field name="classroom_id"/>
+                            <field name="section_id"/>
+                            <field name="holiday_id" invisible="not holiday_id"/>
+                        </group>
+                    </group>
+                    <group string="Conflict Details">
+                        <field name="description" nolabel="1" placeholder="Details of the conflict..."/>
+                    </group>
+                    <notebook>
+                        <page string="Conflicting Sessions" name="sessions_tab">
+                            <field name="slot_ids">
+                                <list limit="10" string="Conflicting Sessions">
+                                    <field name="name"/>
+                                    <field name="section_id"/>
+                                    <field name="subject_id"/>
+                                    <field name="teacher_id"/>
+                                    <field name="classroom_id"/>
+                                    <field name="start_time"/>
+                                    <field name="end_time"/>
+                                    <field name="generation_state" widget="badge"/>
+                                    <field name="state" widget="badge"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- SEARCH VIEW -->
+    <record id="view_university_timetable_conflict_search" model="ir.ui.view">
+        <field name="name">university.timetable.conflict.search</field>
+        <field name="model">university.timetable.conflict</field>
+        <field name="arch" type="xml">
+            <search string="Search Schedule Conflicts">
+                <field name="name"/>
+                <field name="academic_year_id"/>
+                <field name="teacher_id"/>
+                <field name="classroom_id"/>
+                <field name="section_id"/>
+                <field name="semester_id"/>
+                <field name="conflict_type"/>
+                <field name="severity"/>
+                <field name="status"/>
+                <field name="date"/>
+                <field name="holiday_id"/>
+                <field name="description"/>
+                <separator/>
+                <filter string="Unresolved" name="filter_unresolved" domain="[('status', '=', 'unresolved')]"/>
+                <filter string="Resolved" name="filter_resolved" domain="[('status', '=', 'resolved')]"/>
+                <filter string="Critical" name="filter_critical" domain="[('severity', '=', 'danger')]"/>
+                <filter string="Warning" name="filter_warning" domain="[('severity', '=', 'warning')]"/>
+                <separator/>
+                <filter string="Teacher Conflict" name="filter_teacher" domain="[('conflict_type', '=', 'teacher')]"/>
+                <filter string="Classroom Conflict" name="filter_classroom" domain="[('conflict_type', '=', 'classroom')]"/>
+                <filter string="Duplicate Class" name="filter_duplicate" domain="[('conflict_type', '=', 'duplicate')]"/>
+                <filter string="Capacity Problem" name="filter_capacity" domain="[('conflict_type', '=', 'capacity')]"/>
+                <filter string="Holiday Conflict" name="filter_holiday" domain="[('conflict_type', '=', 'holiday')]"/>
+                <filter string="Timeslot Conflict" name="filter_timeslot" domain="[('conflict_type', '=', 'timeslot')]"/>
+                <group>
+                    <filter string="Academic Year" name="group_by_academic_year" context="{'group_by': 'academic_year_id'}"/>
+                    <filter string="Conflict Type" name="group_by_type" context="{'group_by': 'conflict_type'}"/>
+                    <filter string="Academic Term" name="group_by_semester" context="{'group_by': 'semester_id'}"/>
+                    <filter string="Severity" name="group_by_severity" context="{'group_by': 'severity'}"/>
+                    <filter string="Date" name="group_by_date" context="{'group_by': 'date'}"/>
+                    <filter string="Teacher" name="group_by_teacher" context="{'group_by': 'teacher_id'}"/>
+                    <filter string="Classroom" name="group_by_classroom" context="{'group_by': 'classroom_id'}"/>
+                </group>
+                <searchpanel>
+                    <field name="academic_year_id" icon="fa-calendar" enable_counters="1"/>
+                    <field name="conflict_type" icon="fa-exclamation-triangle" enable_counters="1"/>
+                    <field name="severity" icon="fa-bell" enable_counters="1"/>
+                    <field name="status" icon="fa-check-circle" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <!-- SERVER ACTION TO DETECT & OPEN CONFLICTS -->
+    <record id="action_university_schedule_conflicts" model="ir.actions.server">
+        <field name="name">Schedule Conflicts</field>
+        <field name="model_id" ref="model_university_timetable_conflict"/>
+        <field name="state">code</field>
+        <field name="code">
+                action = model.action_open_conflicts_view()
+        </field>
+    </record>
+
+</odoo>

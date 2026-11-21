@@ -1,0 +1,876 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ================================================================= -->
+    <!-- UNIVERSITY REPORT CARD TEMPLATE (STRUCTURED TRANSCRIPT STYLE)    -->
+    <!-- ================================================================= -->
+    <template id="report_university_report_card_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="card">
+                <t t-call="web.basic_layout">
+                    <div class="page" style="font-family: Arial, Helvetica, sans-serif; font-size: 10.5px; color: #263238; line-height: 1.4; padding: 12px 8px 10px; background: #ffffff;">
+
+                        <!-- Top Header: Institution Info & Title -->
+                        <table style="width: 100%; border-collapse: separate; border-spacing: 0; border-bottom: 3px solid #a51c30; margin-bottom: 10px; padding-bottom: 8px;">
+                            <tr>
+                                <td style="width: 14%; vertical-align: top;">
+                                    <img t-if="res_company.logo" t-att-src="image_data_uri(res_company.logo)" style="max-height: 64px; max-width: 78px;"/>
+                                </td>
+                                <td style="width: 48%; vertical-align: top; padding-left: 6px;">
+                                    <div style="font-weight: bold; font-size: 13px; color: #a51c30; letter-spacing: 0.3px; text-transform: uppercase;"><t t-out="res_company.name"/></div>
+                                    <div style="font-size: 10px; color: #5f6b76; margin-top: 2px;"><t t-out="card.program_id.name or 'Undergraduate Degree Program'"/></div>
+                                    <div style="font-size: 15px; color: #1f2933; font-weight: bold; margin-top: 5px; letter-spacing: 0.2px;">Student Academic Report Card</div>
+                                </td>
+                                <td style="width: 38%; vertical-align: top; text-align: right; font-size: 9.5px; color: #5f6b76; line-height: 1.4;">
+                                    <div style="font-weight: bold; color: #1f2933;"><t t-out="res_company.name"/></div>
+                                    <div t-if="res_company.street"><t t-out="res_company.street"/></div>
+                                    <div>
+                                        <t t-if="res_company.city"><t t-out="res_company.city"/>, </t>
+                                        <t t-if="res_company.state_id"><t t-out="res_company.state_id.name"/> </t>
+                                        <t t-if="res_company.zip"><t t-out="res_company.zip"/> </t>
+                                        <t t-if="res_company.country_id"><t t-out="res_company.country_id.name"/></t>
+                                    </div>
+                                    <div t-if="res_company.website"><t t-out="res_company.website"/></div>
+                                    <div t-if="res_company.vat">Tax ID: <t t-out="res_company.vat"/></div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Date Issued -->
+                        <div style="font-weight: bold; font-size: 10.5px; color: #1f2933; background: #f7f2f3; border-left: 4px solid #a51c30; padding: 7px 10px; margin-bottom: 12px;">
+                            Date Issued: <span t-out="context_timestamp(datetime.datetime.now()).strftime('%B %d, %Y')"/>
+                        </div>
+
+                        <!-- Demographics & Student Information (2 Columns) -->
+                        <table style="width: 100%; border-collapse: collapse; border: 1px solid #d8dee6; font-size: 10.5px; margin-bottom: 12px; line-height: 1.45;">
+                            <tr>
+                                <td style="width: 16%; color: #687582;">Name:</td>
+                                <td style="width: 34%; color: #1f2933; font-weight: bold;"><t t-out="card.student_id.name"/></td>
+                                <td style="width: 18%; color: #687582;">Date Graduated:</td>
+                                <td style="width: 32%; color: #1f2933; font-weight: bold;">
+                                    <t t-if="card.evaluation_status == 'completed'">Completed</t>
+                                    <t t-else="">In Progress</t>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="color: #222;">RPS ID:</td>
+                                <td style="font-weight: bold;"><t t-out="card.student_id.student_id or 'â€”'"/></td>
+                                <td style="color: #222;">Guardian:</td>
+                                <td style="font-weight: bold;"><t t-out="card.student_id.emergency_contact_name or 'â€”'"/></td>
+                            </tr>
+                            <tr>
+                                <td style="color: #687582;">Birthdate:</td>
+                                <td><t t-out="card.student_id.date_of_birth.strftime('%b %d, %Y') if card.student_id.date_of_birth else 'â€”'"/></td>
+                                <td style="color: #687582;">Address:</td>
+                                <td><t t-out="card.student_id.address or 'â€”'"/></td>
+                            </tr>
+                            <tr>
+                                <td style="color: #687582;">Gender:</td>
+                                <td>
+                                    <t t-if="card.student_id.gender == 'male'">Male</t>
+                                    <t t-elif="card.student_id.gender == 'female'">Female</t>
+                                    <t t-else="">Other</t>
+                                </td>
+                                <td style="color: #687582;">Academic Standing:</td>
+                                <td style="color: #1f2933; font-weight: bold;">
+                                    <span t-if="card.academic_standing == 'dean_list'">Dean's List</span>
+                                    <span t-elif="card.academic_standing == 'good'">Good Standing</span>
+                                    <span t-else="">Academic Probation</span>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Requirements, Attendance & Weighted Credit Value Legend -->
+                        <table style="width: 100%; border-collapse: collapse; border: 1px solid #d8dee6; background: #fbfcfe; font-size: 10px; margin-bottom: 14px; line-height: 1.4;">
+                            <tr>
+                                <td style="width: 50%; vertical-align: top; padding-right: 15px;">
+                                    <div style="font-weight: bold; color: #a51c30; letter-spacing: 0.4px; text-transform: uppercase; margin-bottom: 4px;">Requirements</div>
+                                    <div>Program: <t t-out="card.program_id.name or 'Academic Degree'"/></div>
+                                    <div>Passing Grade: Minimum C (2.00) / 60% for graduation</div>
+                                    <div style="font-style: italic; margin-top: 2px;">
+                                        A minimum of 120 total credits is required for degree completion.
+                                    </div>
+
+                                    <div style="font-weight: bold; color: #a51c30; letter-spacing: 0.4px; text-transform: uppercase; margin-top: 7px; margin-bottom: 3px;">Attendance</div>
+                                    <div>Regular Academic Standing: Good Standing</div>
+                                </td>
+                                <td style="width: 50%; vertical-align: top; padding-left: 10px;">
+                                    <div style="font-weight: bold; color: #a51c30; letter-spacing: 0.4px; text-transform: uppercase; text-align: right; margin-bottom: 4px;">Weighted Credit Value</div>
+                                    <table style="width: 100%; border-collapse: collapse; font-size: 10px; text-align: right;">
+                                        <thead>
+                                            <tr style="border-bottom: 1px solid #111;">
+                                                <th style="text-align: left; padding: 1px 2px;">Grade</th>
+                                                <th style="padding: 1px 2px;">Standard</th>
+                                                <th style="padding: 1px 2px;">Honors</th>
+                                                <th style="padding: 1px 2px;">Range (%)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td style="text-align: left; font-weight: bold; padding: 1px 2px;">A</td>
+                                                <td style="padding: 1px 2px;">4.00</td>
+                                                <td style="padding: 1px 2px;">5.00</td>
+                                                <td style="padding: 1px 2px;">90 - 100%</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="text-align: left; font-weight: bold; padding: 1px 2px;">B</td>
+                                                <td style="padding: 1px 2px;">3.00</td>
+                                                <td style="padding: 1px 2px;">4.00</td>
+                                                <td style="padding: 1px 2px;">75 - 89%</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="text-align: left; font-weight: bold; padding: 1px 2px;">C</td>
+                                                <td style="padding: 1px 2px;">2.00</td>
+                                                <td style="padding: 1px 2px;">3.00</td>
+                                                <td style="padding: 1px 2px;">60 - 74%</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="text-align: left; font-weight: bold; padding: 1px 2px;">D</td>
+                                                <td style="padding: 1px 2px;">1.00</td>
+                                                <td style="padding: 1px 2px;">2.00</td>
+                                                <td style="padding: 1px 2px;">45 - 59%</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="text-align: left; font-weight: bold; padding: 1px 2px;">F</td>
+                                                <td style="padding: 1px 2px;">0.00</td>
+                                                <td style="padding: 1px 2px;">0.00</td>
+                                                <td style="padding: 1px 2px;">0 - 44%</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- ACADEMIC YEAR BOXES (Side-by-side semesters like Image 2) -->
+                        <t t-set="student" t-value="card.student_id"/>
+                        <t t-set="all_student_cards" t-value="student.report_card_ids.filtered(lambda c: c.state in ('generated', 'approved') or c.id == card.id).sorted(lambda c: (c.academic_year_id.date_start or c.academic_year_id.name, c.semester_id.name))"/>
+                        <t t-set="years" t-value="all_student_cards.mapped('academic_year_id')"/>
+
+                        <t t-foreach="years" t-as="year">
+                            <t t-set="year_cards" t-value="all_student_cards.filtered(lambda c: c.academic_year_id == year)"/>
+                            <t t-set="sem1_card" t-value="year_cards.filtered(lambda c: '1' in (c.semester_id.name or '') or 'First' in (c.semester_id.name or ''))[:1]"/>
+                            <t t-set="sem2_card" t-value="year_cards.filtered(lambda c: '2' in (c.semester_id.name or '') or 'Second' in (c.semester_id.name or ''))[:1]"/>
+                            <t t-if="not sem1_card and not sem2_card and year_cards">
+                                <t t-set="sem1_card" t-value="year_cards[:1]"/>
+                                <t t-set="sem2_card" t-value="year_cards[1:2] if len(year_cards) &gt; 1 else False"/>
+                            </t>
+
+                            <div style="border: 1px solid #b9c3d0; border-radius: 5px; overflow: hidden; margin-bottom: 14px; page-break-inside: avoid;">
+                                <!-- Year Header Box (e.g. Freshman Year / Academic Year 2026-2027) -->
+                                <div style="border-bottom: 2px solid #a51c30; padding: 7px 0; text-align: center; font-weight: bold; font-size: 11px; color: #7c1728; background: #f7f2f3; letter-spacing: 0.2px;">
+                                    <t t-if="year_index == 0">Freshman Year - <t t-out="year.name"/></t>
+                                    <t t-elif="year_index == 1">Sophomore Year - <t t-out="year.name"/></t>
+                                    <t t-elif="year_index == 2">Junior Year - <t t-out="year.name"/></t>
+                                    <t t-elif="year_index == 3">Senior Year - <t t-out="year.name"/></t>
+                                    <t t-else="">Academic Year: <t t-out="year.name"/></t>
+                                </div>
+
+                                <!-- Side by Side Semesters -->
+                                <table style="width: 100%; border-collapse: collapse; font-size: 10px;">
+                                    <tr>
+                                        <!-- First Semester Column -->
+                                        <td style="width: 50%; vertical-align: top; border-right: 1px solid #d8dee6; padding: 8px 10px;">
+                                            <div style="font-weight: bold; color: #1f2933; margin-bottom: 5px;">First Semester</div>
+                                            <table style="width: 100%; border-collapse: collapse; font-size: 10px;">
+                                                <thead>
+                                                    <tr style="border-bottom: 1px solid #c8d0db; color: #687582;">
+                                                        <th style="text-align: left; padding: 3px 0;">Course</th>
+                                                        <th style="text-align: center; width: 14%; padding: 3px 0;">Grade</th>
+                                                        <th style="text-align: right; width: 16%; padding: 3px 0;">Credits</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <t t-if="sem1_card and sem1_card.line_ids">
+                                                        <t t-foreach="sem1_card.line_ids" t-as="l">
+                                                            <tr>
+                                                                <td style="padding: 3px 0;">
+                                                                    <t t-if="l.subject_id.code"><t t-out="l.subject_id.code"/> - </t>
+                                                                    <t t-out="l.subject_id.name"/>
+                                                                </td>
+                                                                <td style="text-align: center; color: #a51c30; font-weight: bold; padding: 3px 0;">
+                                                                    <t t-out="l.grade or '-'"/>
+                                                                </td>
+                                                                <td style="text-align: right; padding: 3px 0;">
+                                                                    <t t-out="'%.2f' % (l.credits or 0.0)"/>
+                                                                </td>
+                                                            </tr>
+                                                        </t>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <tr>
+                                                            <td colspan="3" style="font-style: italic; color: #777; padding: 3px 0;">
+                                                                -- Not Enrolled / Completed --
+                                                            </td>
+                                                        </tr>
+                                                    </t>
+                                                </tbody>
+                                            </table>
+
+                                            <!-- First Semester Totals -->
+                                            <div style="margin-top: 9px; border-top: 1px dashed #c8d0db; padding-top: 5px; font-size: 10px; color: #687582;">
+                                                <div style="display: flex; justify-content: space-between;">
+                                                    <span>Semester GPA:</span>
+                                                        <span style="color: #1f2933; font-weight: bold;">
+                                                        <t t-if="sem1_card"><t t-out="'%.2f' % sem1_card.gpa"/></t>
+                                                        <t t-else="">--</t>
+                                                    </span>
+                                                </div>
+                                                <div style="display: flex; justify-content: space-between;">
+                                                    <span>Cumulative GPA:</span>
+                                                        <span style="color: #1f2933; font-weight: bold;">
+                                                        <t t-if="sem1_card"><t t-out="'%.2f' % sem1_card.gpa"/> &amp;nbsp;&amp;nbsp; <t t-out="'%.2f' % sem1_card.total_credits"/></t>
+                                                        <t t-else="">--</t>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        <!-- Second Semester Column -->
+                                        <td style="width: 50%; vertical-align: top; padding: 8px 10px;">
+                                            <div style="font-weight: bold; color: #1f2933; margin-bottom: 5px;">Second Semester</div>
+                                            <table style="width: 100%; border-collapse: collapse; font-size: 10px;">
+                                                <thead>
+                                                    <tr style="border-bottom: 1px solid #c8d0db; color: #687582;">
+                                                        <th style="text-align: left; padding: 3px 0;">Course</th>
+                                                        <th style="text-align: center; width: 14%; padding: 3px 0;">Grade</th>
+                                                        <th style="text-align: right; width: 16%; padding: 3px 0;">Credits</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <t t-if="sem2_card and sem2_card.line_ids">
+                                                        <t t-foreach="sem2_card.line_ids" t-as="l">
+                                                            <tr>
+                                                                <td style="padding: 3px 0;">
+                                                                    <t t-if="l.subject_id.code"><t t-out="l.subject_id.code"/> - </t>
+                                                                    <t t-out="l.subject_id.name"/>
+                                                                </td>
+                                                                <td style="text-align: center; color: #a51c30; font-weight: bold; padding: 3px 0;">
+                                                                    <t t-out="l.grade or '-'"/>
+                                                                </td>
+                                                                <td style="text-align: right; padding: 3px 0;">
+                                                                    <t t-out="'%.2f' % (l.credits or 0.0)"/>
+                                                                </td>
+                                                            </tr>
+                                                        </t>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <tr>
+                                                            <td colspan="3" style="font-style: italic; color: #777; padding: 3px 0;">
+                                                                -- Not Enrolled / In Progress --
+                                                            </td>
+                                                        </tr>
+                                                    </t>
+                                                </tbody>
+                                            </table>
+
+                                            <!-- Second Semester Totals -->
+                                            <div style="margin-top: 9px; border-top: 1px dashed #c8d0db; padding-top: 5px; font-size: 10px; color: #687582;">
+                                                <div style="display: flex; justify-content: space-between;">
+                                                    <span>Semester GPA:</span>
+                                                        <span style="color: #1f2933; font-weight: bold;">
+                                                        <t t-if="sem2_card"><t t-out="'%.2f' % sem2_card.gpa"/></t>
+                                                        <t t-else="">--</t>
+                                                    </span>
+                                                </div>
+                                                <div style="display: flex; justify-content: space-between;">
+                                                    <span>Cumulative GPA:</span>
+                                                        <span style="color: #1f2933; font-weight: bold;">
+                                                        <t t-if="sem2_card"><t t-out="'%.2f' % sem2_card.gpa"/> &amp;nbsp;&amp;nbsp; <t t-out="'%.2f' % sem2_card.total_credits"/></t>
+                                                        <t t-else="">--</t>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </t>
+
+                        <!-- Bottom Section: Academic Information, Seal, Signature -->
+                        <table style="width: 100%; border-collapse: collapse; border: 1px solid #d8dee6; background: #fbfcfe; font-size: 10px; margin-top: 16px; page-break-inside: avoid;">
+                            <tr>
+                                <td style="width: 45%; vertical-align: top;">
+                                    <div style="font-weight: bold; color: #a51c30; letter-spacing: 0.4px; margin-bottom: 5px; text-transform: uppercase;">Academic Information</div>
+                                    <table style="width: 95%; border-collapse: collapse; font-size: 10px; line-height: 1.5;">
+                                        <tr>
+                                            <td style="width: 65%;">Cumulative Weighted GPA</td>
+                                            <td style="width: 35%; text-align: right; font-weight: bold;">
+                                                <t t-out="'%.2f' % card.gpa"/> / 4.00
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Cumulative Unweighted GPA</td>
+                                            <td style="text-align: right; font-weight: bold;">
+                                                <t t-out="'%.2f' % card.gpa"/> / 4.00
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Total Units / Credits Earned</td>
+                                            <td style="text-align: right; font-weight: bold;">
+                                                <t t-out="'%.2f' % sum(all_student_cards.mapped('passed_credits'))"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Academic Standing</td>
+                                            <td style="text-align: right; font-weight: bold;">
+                                                <span t-if="card.academic_standing == 'dean_list'">Dean's List</span>
+                                                <span t-elif="card.academic_standing == 'good'">Good Standing</span>
+                                                <span t-else="">Probation</span>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                    <div style="font-weight: bold; margin-top: 10px; margin-bottom: 2px;">Notes / Activities</div>
+                                    <div style="color: #444;">Official Academic Record</div>
+                                    <div style="color: #444;">Verification: <strong style="font-family: monospace;"><t t-out="card.verification_code or 'OFFICIAL-ACADEMIC-RECORD'"/></strong></div>
+                                </td>
+
+                                <td style="width: 25%; vertical-align: bottom; text-align: center; padding: 8px 0 7px;">
+                                    <div style="font-weight: bold; color: #a51c30; margin-bottom: 5px; font-size: 10px; text-align: center;">Seal:</div>
+                                    <div style="width: 80px; height: 80px; border: 1.5px dashed #a51c30; border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 9px; font-weight: bold; color: #7c1728; line-height: 1.2; padding-top: 24px;">
+                                        OFFICIAL<br/>SEAL
+                                    </div>
+                                </td>
+
+                                <td style="width: 30%; vertical-align: bottom; text-align: center;">
+                                    <div style="border-bottom: 1.5px solid #a51c30; width: 100%; margin-bottom: 5px;"></div>
+                                    <div style="font-weight: bold; color: #1f2933; font-size: 11px;">Executive Director</div>
+                                    <div style="font-size: 9px; color: #687582;"><t t-out="res_company.name"/></div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Page 1 of 1 -->
+                        <div style="text-align: center; font-size: 9px; color: #687582; border-top: 1px solid #e1e6ec; padding-top: 7px; margin-top: 14px;">
+                            1 of 1
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- ================================================================= -->
+    <!-- UNIVERSITY ACADEMIC TRANSCRIPT TEMPLATE                           -->
+    <!-- ================================================================= -->
+    <template id="report_university_transcript_legacy">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="transcript">
+                <t t-call="web.basic_layout">
+                    <div class="page" style="font-family: 'Lucida Console', 'Courier New', Courier, monospace; font-size: 11px; color: #111; line-height: 1.35; padding: 10px 5px; background: #ffffff;">
+
+                        <!-- Top Header: Institution Info & Title -->
+                        <table style="width: 100%; border-collapse: collapse; margin-bottom: 8px;">
+                            <tr>
+                                <td style="width: 14%; vertical-align: top;">
+                                    <img t-if="res_company.logo" t-att-src="image_data_uri(res_company.logo)" style="max-height: 70px; max-width: 85px;"/>
+                                </td>
+                                <td style="width: 48%; vertical-align: top; padding-left: 6px;">
+                                    <div style="font-weight: bold; font-size: 12px; text-transform: uppercase;"><t t-out="res_company.name"/></div>
+                                    <div style="font-size: 10px; color: #333;"><t t-out="transcript.program_id.name or 'High School / Undergraduate Degree Program'"/></div>
+                                    <div style="font-size: 12px; font-weight: bold; margin-top: 4px; letter-spacing: 0.3px;">Official Academic Transcript of Student Progress</div>
+                                </td>
+                                <td style="width: 38%; vertical-align: top; text-align: right; font-size: 10px; line-height: 1.35;">
+                                    <div style="font-weight: bold;"><t t-out="res_company.name"/></div>
+                                    <div t-if="res_company.street"><t t-out="res_company.street"/></div>
+                                    <div>
+                                        <t t-if="res_company.city"><t t-out="res_company.city"/>, </t>
+                                        <t t-if="res_company.state_id"><t t-out="res_company.state_id.name"/> </t>
+                                        <t t-if="res_company.zip"><t t-out="res_company.zip"/> </t>
+                                        <t t-if="res_company.country_id"><t t-out="res_company.country_id.name"/></t>
+                                    </div>
+                                    <div t-if="res_company.website"><t t-out="res_company.website"/></div>
+                                    <div t-if="res_company.vat">Tax ID: <t t-out="res_company.vat"/></div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Date Issued -->
+                        <div style="font-weight: bold; font-size: 11px; margin-bottom: 10px;">
+                            Date Issued: <span t-out="context_timestamp(datetime.datetime.now()).strftime('%B %d, %Y')"/>
+                        </div>
+
+                        <!-- Demographics & Student Information (2 Columns) -->
+                        <table style="width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 12px; line-height: 1.45;">
+                            <tr>
+                                <td style="width: 16%; color: #222;">Name:</td>
+                                <td style="width: 34%; font-weight: bold;"><t t-out="transcript.student_id.name"/></td>
+                                <td style="width: 18%; color: #222;">Date Graduated:</td>
+                                <td style="width: 32%; font-weight: bold;">
+                                    <t t-if="transcript.state == 'approved'">Graduated / Approved</t>
+                                    <t t-else="">Official Record</t>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="color: #222;">RPS ID:</td>
+                                <td style="font-weight: bold;"><t t-out="transcript.student_id.student_id or 'â€”'"/></td>
+                                <td style="color: #222;">Guardian:</td>
+                                <td style="font-weight: bold;"><t t-out="transcript.student_id.emergency_contact_name or 'â€”'"/></td>
+                            </tr>
+                            <tr>
+                                <td style="color: #222;">Birthdate:</td>
+                                <td><t t-out="transcript.student_id.date_of_birth.strftime('%b %d, %Y') if transcript.student_id.date_of_birth else 'â€”'"/></td>
+                                <td style="color: #222;">Address:</td>
+                                <td><t t-out="transcript.student_id.address or 'â€”'"/></td>
+                            </tr>
+                            <tr>
+                                <td style="color: #222;">Gender:</td>
+                                <td>
+                                    <t t-if="transcript.student_id.gender == 'male'">Male</t>
+                                    <t t-elif="transcript.student_id.gender == 'female'">Female</t>
+                                    <t t-else="">Other</t>
+                                </td>
+                                <td style="color: #222;">Reference:</td>
+                                <td style="font-weight: bold;"><t t-out="transcript.name"/></td>
+                            </tr>
+                        </table>
+
+                        <!-- Requirements, Attendance & Weighted Credit Value Legend -->
+                        <table style="width: 100%; border-collapse: collapse; font-size: 10px; margin-bottom: 12px; line-height: 1.35;">
+                            <tr>
+                                <td style="width: 50%; vertical-align: top; padding-right: 15px;">
+                                    <div style="font-weight: bold; margin-bottom: 3px;">Requirements</div>
+                                    <div>Program: <t t-out="transcript.program_id.name or 'Degree Program'"/></div>
+                                    <div>Passing Grade: Minimum C (2.00) / 60%</div>
+                                    <div style="font-style: italic; margin-top: 2px;">
+                                        A minimum of 120 total credits is required for degree completion.
+                                    </div>
+
+                                    <div style="font-weight: bold; margin-top: 6px; margin-bottom: 2px;">Attendance</div>
+                                    <div>Official Record: Good Standing</div>
+                                </td>
+                                <td style="width: 50%; vertical-align: top; padding-left: 10px;">
+                                    <div style="font-weight: bold; text-align: right; margin-bottom: 3px;">Weighted Credit Value</div>
+                                    <table style="width: 100%; border-collapse: collapse; font-size: 10px; text-align: right;">
+                                        <thead>
+                                            <tr style="border-bottom: 1px solid #111;">
+                                                <th style="text-align: left; padding: 1px 2px;">Grade</th>
+                                                <th style="padding: 1px 2px;">Standard</th>
+                                                <th style="padding: 1px 2px;">Honors</th>
+                                                <th style="padding: 1px 2px;">Range (%)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td style="text-align: left; font-weight: bold; padding: 1px 2px;">A</td>
+                                                <td style="padding: 1px 2px;">4.00</td>
+                                                <td style="padding: 1px 2px;">5.00</td>
+                                                <td style="padding: 1px 2px;">90 - 100%</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="text-align: left; font-weight: bold; padding: 1px 2px;">B</td>
+                                                <td style="padding: 1px 2px;">3.00</td>
+                                                <td style="padding: 1px 2px;">4.00</td>
+                                                <td style="padding: 1px 2px;">75 - 89%</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="text-align: left; font-weight: bold; padding: 1px 2px;">C</td>
+                                                <td style="padding: 1px 2px;">2.00</td>
+                                                <td style="padding: 1px 2px;">3.00</td>
+                                                <td style="padding: 1px 2px;">60 - 74%</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="text-align: left; font-weight: bold; padding: 1px 2px;">D</td>
+                                                <td style="padding: 1px 2px;">1.00</td>
+                                                <td style="padding: 1px 2px;">2.00</td>
+                                                <td style="padding: 1px 2px;">45 - 59%</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="text-align: left; font-weight: bold; padding: 1px 2px;">F</td>
+                                                <td style="padding: 1px 2px;">0.00</td>
+                                                <td style="padding: 1px 2px;">0.00</td>
+                                                <td style="padding: 1px 2px;">0 - 44%</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- ACADEMIC YEAR BOXES (Side-by-side semesters like Image 2) -->
+                        <t t-set="lines" t-value="transcript.line_ids"/>
+                        <t t-set="t_years" t-value="lines.mapped('academic_year_id')"/>
+
+                        <t t-foreach="t_years" t-as="year">
+                            <t t-set="y_lines" t-value="lines.filtered(lambda l: l.academic_year_id == year)"/>
+                            <t t-set="s1_lines" t-value="y_lines.filtered(lambda l: '1' in (l.semester_id.name or '') or 'First' in (l.semester_id.name or ''))"/>
+                            <t t-set="s2_lines" t-value="y_lines.filtered(lambda l: '2' in (l.semester_id.name or '') or 'Second' in (l.semester_id.name or ''))"/>
+                            <t t-if="not s1_lines and not s2_lines and y_lines">
+                                <t t-set="distinct_sems" t-value="y_lines.mapped('semester_id')"/>
+                                <t t-set="s1_lines" t-value="y_lines.filtered(lambda l: l.semester_id == distinct_sems[:1])"/>
+                                <t t-set="s2_lines" t-value="y_lines.filtered(lambda l: l.semester_id in distinct_sems[1:2])"/>
+                            </t>
+
+                            <div style="border: 1.5px solid #000; margin-bottom: 12px; page-break-inside: avoid;">
+                                <!-- Year Header Box -->
+                                <div style="border-bottom: 1.5px solid #000; padding: 3px 0; text-align: center; font-weight: bold; font-size: 11px; background: #fff;">
+                                    <t t-if="year_index == 0">Freshman Year - <t t-out="year.name"/></t>
+                                    <t t-elif="year_index == 1">Sophomore Year - <t t-out="year.name"/></t>
+                                    <t t-elif="year_index == 2">Junior Year - <t t-out="year.name"/></t>
+                                    <t t-elif="year_index == 3">Senior Year - <t t-out="year.name"/></t>
+                                    <t t-else="">Academic Year: <t t-out="year.name"/></t>
+                                </div>
+
+                                <!-- Side by Side Semesters -->
+                                <table style="width: 100%; border-collapse: collapse; font-size: 10px;">
+                                    <tr>
+                                        <!-- First Semester Column -->
+                                        <td style="width: 50%; vertical-align: top; border-right: 1.5px solid #000; padding: 4px 6px;">
+                                            <div style="font-weight: bold; margin-bottom: 3px;">First Semester</div>
+                                            <table style="width: 100%; border-collapse: collapse; font-size: 10px;">
+                                                <thead>
+                                                    <tr style="border-bottom: 1px solid #999;">
+                                                        <th style="text-align: left; padding: 1px 0;">Course</th>
+                                                        <th style="text-align: center; width: 14%; padding: 1px 0;">Grade</th>
+                                                        <th style="text-align: right; width: 16%; padding: 1px 0;">Credits</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <t t-if="s1_lines">
+                                                        <t t-foreach="s1_lines" t-as="l">
+                                                            <tr>
+                                                                <td style="padding: 1px 0;">
+                                                                    <t t-if="l.subject_id.code"><t t-out="l.subject_id.code"/> - </t>
+                                                                    <t t-out="l.subject_id.name"/>
+                                                                </td>
+                                                                <td style="text-align: center; font-weight: bold; padding: 1px 0;">
+                                                                    <t t-out="l.grade or '-'"/>
+                                                                </td>
+                                                                <td style="text-align: right; padding: 1px 0;">
+                                                                    <t t-out="'%.2f' % (l.credits or 0.0)"/>
+                                                                </td>
+                                                            </tr>
+                                                        </t>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <tr>
+                                                            <td colspan="3" style="font-style: italic; color: #777; padding: 3px 0;">
+                                                                -- Not Enrolled / Completed --
+                                                            </td>
+                                                        </tr>
+                                                    </t>
+                                                </tbody>
+                                            </table>
+
+                                            <!-- First Semester Totals -->
+                                            <t t-set="s1_credits" t-value="sum(s1_lines.mapped('credits'))"/>
+                                            <t t-set="s1_pts" t-value="sum(l.credits * l.grade_point for l in s1_lines)"/>
+                                            <t t-set="s1_gpa" t-value="(s1_pts / s1_credits) if s1_credits else 0.0"/>
+
+                                            <div style="margin-top: 8px; border-top: 1px dashed #aaa; padding-top: 3px; font-size: 10px;">
+                                                <div style="display: flex; justify-content: space-between;">
+                                                    <span>Semester GPA:</span>
+                                                    <span style="font-weight: bold;"><t t-out="'%.2f' % s1_gpa if s1_lines else '--'"/></span>
+                                                </div>
+                                                <div style="display: flex; justify-content: space-between;">
+                                                    <span>Cumulative GPA:</span>
+                                                    <span style="font-weight: bold;">
+                                                        <t t-if="s1_lines"><t t-out="'%.2f' % s1_gpa"/> &amp;nbsp;&amp;nbsp; <t t-out="'%.2f' % s1_credits"/></t>
+                                                        <t t-else="">--</t>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        <!-- Second Semester Column -->
+                                        <td style="width: 50%; vertical-align: top; padding: 4px 6px;">
+                                            <div style="font-weight: bold; margin-bottom: 3px;">Second Semester</div>
+                                            <table style="width: 100%; border-collapse: collapse; font-size: 10px;">
+                                                <thead>
+                                                    <tr style="border-bottom: 1px solid #999;">
+                                                        <th style="text-align: left; padding: 1px 0;">Course</th>
+                                                        <th style="text-align: center; width: 14%; padding: 1px 0;">Grade</th>
+                                                        <th style="text-align: right; width: 16%; padding: 1px 0;">Credits</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <t t-if="s2_lines">
+                                                        <t t-foreach="s2_lines" t-as="l">
+                                                            <tr>
+                                                                <td style="padding: 1px 0;">
+                                                                    <t t-if="l.subject_id.code"><t t-out="l.subject_id.code"/> - </t>
+                                                                    <t t-out="l.subject_id.name"/>
+                                                                </td>
+                                                                <td style="text-align: center; font-weight: bold; padding: 1px 0;">
+                                                                    <t t-out="l.grade or '-'"/>
+                                                                </td>
+                                                                <td style="text-align: right; padding: 1px 0;">
+                                                                    <t t-out="'%.2f' % (l.credits or 0.0)"/>
+                                                                </td>
+                                                            </tr>
+                                                        </t>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <tr>
+                                                            <td colspan="3" style="font-style: italic; color: #777; padding: 3px 0;">
+                                                                -- Not Enrolled / In Progress --
+                                                            </td>
+                                                        </tr>
+                                                    </t>
+                                                </tbody>
+                                            </table>
+
+                                            <!-- Second Semester Totals -->
+                                            <t t-set="s2_credits" t-value="sum(s2_lines.mapped('credits'))"/>
+                                            <t t-set="s2_pts" t-value="sum(l.credits * l.grade_point for l in s2_lines)"/>
+                                            <t t-set="s2_gpa" t-value="(s2_pts / s2_credits) if s2_credits else 0.0"/>
+
+                                            <div style="margin-top: 8px; border-top: 1px dashed #aaa; padding-top: 3px; font-size: 10px;">
+                                                <div style="display: flex; justify-content: space-between;">
+                                                    <span>Semester GPA:</span>
+                                                    <span style="font-weight: bold;"><t t-out="'%.2f' % s2_gpa if s2_lines else '--'"/></span>
+                                                </div>
+                                                <div style="display: flex; justify-content: space-between;">
+                                                    <span>Cumulative GPA:</span>
+                                                    <span style="font-weight: bold;">
+                                                        <t t-if="s2_lines"><t t-out="'%.2f' % s2_gpa"/> &amp;nbsp;&amp;nbsp; <t t-out="'%.2f' % s2_credits"/></t>
+                                                        <t t-else="">--</t>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </t>
+
+                        <!-- Bottom Section: Academic Information, Seal, Signature -->
+                        <table style="width: 100%; border-collapse: collapse; font-size: 10px; margin-top: 15px; page-break-inside: avoid;">
+                            <tr>
+                                <td style="width: 45%; vertical-align: top;">
+                                    <div style="font-weight: bold; margin-bottom: 4px; text-transform: uppercase;">Academic Information</div>
+                                    <table style="width: 95%; border-collapse: collapse; font-size: 10px; line-height: 1.5;">
+                                        <tr>
+                                            <td style="width: 65%;">Cumulative Weighted GPA</td>
+                                            <td style="width: 35%; text-align: right; font-weight: bold;">
+                                                <t t-out="'%.2f' % transcript.cumulative_gpa"/> / 4.00
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Cumulative Unweighted GPA</td>
+                                            <td style="text-align: right; font-weight: bold;">
+                                                <t t-out="'%.2f' % transcript.cumulative_gpa"/> / 4.00
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Total Units / Credits Earned</td>
+                                            <td style="text-align: right; font-weight: bold;">
+                                                <t t-out="'%.2f' % transcript.total_credits"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Academic Standing</td>
+                                            <td style="text-align: right; font-weight: bold;">
+                                                <span t-if="transcript.cumulative_gpa &gt;= 3.5">Dean's List</span>
+                                                <span t-elif="transcript.cumulative_gpa &gt;= 2.0">Good Standing</span>
+                                                <span t-else="">Probation</span>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                    <div style="font-weight: bold; margin-top: 10px; margin-bottom: 2px;">Notes / Activities</div>
+                                    <div style="color: #444;">Official Academic Record</div>
+                                    <div style="color: #444;">Verification: <strong style="font-family: monospace;"><t t-out="transcript.verification_code or 'OFFICIAL-ACADEMIC-RECORD'"/></strong></div>
+                                </td>
+
+                                <td style="width: 25%; vertical-align: bottom; text-align: center; padding-bottom: 5px;">
+                                    <div style="font-weight: bold; margin-bottom: 5px; font-size: 10px; text-align: center;">Seal:</div>
+                                    <div style="width: 80px; height: 80px; border: 1.5px dashed #444; border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 9px; font-weight: bold; color: #444; line-height: 1.2; padding-top: 24px;">
+                                        OFFICIAL<br/>SEAL
+                                    </div>
+                                </td>
+
+                                <td style="width: 30%; vertical-align: bottom; text-align: center;">
+                                    <div style="border-bottom: 1.5px solid #000; width: 100%; margin-bottom: 4px;"></div>
+                                    <div style="font-weight: bold; font-size: 11px;">Executive Director</div>
+                                    <div style="font-size: 9px; color: #444;"><t t-out="res_company.name"/></div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Page 1 of 1 -->
+                        <div style="text-align: center; font-size: 10px; color: #555; margin-top: 15px;">
+                            1 of 1
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_university_transcript_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="transcript">
+                <t t-set="o" t-value="transcript"/>
+                <t t-call="web.basic_layout">
+                    <div class="page" style="color: #111; line-height: 1.35; padding: 10px 5px; background: #fff;">
+                        <style type="text/css">
+                            .page { font-family: 'Noto Sans', 'Noto Sans Khmer', Arial, sans-serif; font-size: 11px; }
+                            .page table { border-collapse: collapse; }
+                            .transcript-watermark { position: fixed; top: 38%; left: 20%; z-index: 0; color: #666; opacity: 0.10; font-size: 86px; font-weight: bold; -webkit-transform: rotate(-32deg); transform: rotate(-32deg); }
+                            .transcript-content { position: relative; z-index: 1; }
+                        </style>
+                        <div t-if="transcript.state != 'approved'" class="transcript-watermark">DRAFT</div>
+                        <div class="transcript-content">
+                            <table style="width: 100%; margin-bottom: 8px;">
+                                <tr>
+                                    <td style="width: 14%; vertical-align: top;"><img src="/school_management/static/src/img/university_logo.png" style="max-height: 70px; max-width: 85px;"/></td>
+                                    <td style="width: 56%; vertical-align: top; padding-left: 6px;">
+                                        <div style="font-weight: bold; font-size: 13px; text-transform: uppercase;"><t t-out="o.company_id.name or res_company.name"/></div>
+                                        <div style="font-size: 12px; font-weight: bold; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Academic Transcript</div>
+                                        <div style="font-size: 10px; color: #444; margin-top: 2px;">Program: <t t-out="transcript.program_id.name or 'Degree Program'"/></div>
+                                    </td>
+                                    <td style="width: 30%; vertical-align: top; text-align: right; font-size: 10px; line-height: 1.35;">
+                                        <div style="font-weight: bold;"><t t-out="o.company_id.name or res_company.name"/></div>
+                                        <div t-if="company_address"><t t-out="company_address"/></div>
+                                        <div t-elif="o.company_id.city or res_company.city"><t t-out="o.company_id.city or res_company.city"/>, <t t-out="(o.company_id.country_id or res_company.country_id).name or ''"/></div>
+                                        <div t-if="o.company_id.website or res_company.website"><t t-out="o.company_id.website or res_company.website"/></div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <div style="font-weight: bold; font-size: 11px; margin-bottom: 10px;">Date Issued: <span t-out="context_timestamp(datetime.datetime.now()).strftime('%B %d, %Y')"/></div>
+
+                            <table style="width: 100%; font-size: 11px; margin-bottom: 12px; line-height: 1.45;">
+                                <tr>
+                                    <td style="width: 16%; color: #222;">Name:</td>
+                                    <td style="width: 34%; font-weight: bold;"><t t-out="transcript.student_id.name"/></td>
+                                    <td style="width: 18%; color: #222;">Date Graduated:</td>
+                                    <td style="width: 32%; font-weight: bold;"><t t-out="graduation_date.strftime('%B %d, %Y') if graduation_date else 'In progress'"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="color: #222;">Student ID:</td>
+                                    <td style="font-weight: bold;"><t t-out="transcript.student_id.student_id or ''"/></td>
+                                    <td style="color: #222;">Emergency Contact:</td>
+                                    <td style="font-weight: bold;"><t t-out="transcript.student_id.emergency_contact_name or '—'"/></td>
+                                </tr>
+                                <tr t-if="transcript.student_id.date_of_birth or transcript.student_id.address">
+                                    <td style="color: #222;">Birthdate:</td><td><t t-out="transcript.student_id.date_of_birth.strftime('%b %d, %Y') if transcript.student_id.date_of_birth else '—'"/></td>
+                                    <td style="color: #222;">Address:</td><td><t t-out="transcript.student_id.address or '—'"/></td>
+                                </tr>
+                                <tr t-if="transcript.student_id.gender">
+                                    <td style="color: #222;">Gender:</td>
+                                    <td><t t-if="transcript.student_id.gender == 'male'">Male</t><t t-elif="transcript.student_id.gender == 'female'">Female</t><t t-else="">Other</t></td>
+                                    <td style="color: #222;">Reference:</td>
+                                    <td style="font-weight: bold;"><t t-out="transcript.name"/></td>
+                                </tr>
+                                <tr t-if="not transcript.student_id.gender">
+                                    <td style="color: #222;">Reference:</td>
+                                    <td colspan="3" style="font-weight: bold;"><t t-out="transcript.name"/></td>
+                                </tr>
+                            </table>
+
+                            <table style="width: 100%; font-size: 10px; margin-bottom: 12px; line-height: 1.35;">
+                                <tr>
+                                    <td style="width: 50%; vertical-align: top; padding-right: 15px;">
+                                        <div style="font-weight: bold; margin-bottom: 3px;">Requirements</div>
+                                        <div>Program: <t t-out="transcript.program_id.name or 'Degree Program'"/></div>
+                                        <div t-if="passing_line">Passing Grade: Minimum <t t-out="passing_line.name"/> (<t t-out="'%.2f' % passing_line.grade_point"/>) / <t t-out="'%.2f' % passing_line.min_score"/>%</div>
+                                        <div t-else="">Passing Grade: Not configured</div>
+                                        <div style="font-style: italic; margin-top: 2px;">Degree Requirement: Minimum <t t-out="'%d' % credits_required"/> credits required for completion.</div>
+                                        <div style="font-weight: bold; margin-top: 4px;">Degree Progress: <t t-out="'%.2f' % total_credits"/> / <t t-out="'%d' % credits_required"/> credits earned</div>
+                                        <t t-if="attendance_rate is not False"><div style="font-weight: bold; margin-top: 6px; margin-bottom: 2px;">Attendance</div><div>Attendance: <t t-out="'%.1f' % attendance_rate"/>%</div></t>
+                                        <t t-else=""><div style="font-weight: bold; margin-top: 6px; margin-bottom: 2px;">Academic Standing</div><div><t t-if="transcript.academic_standing == 'dean_list'">Dean's List</t><t t-elif="transcript.academic_standing == 'good'">Good Standing</t><t t-else="">Academic Probation</t></div></t>
+                                    </td>
+                                    <td style="width: 50%; vertical-align: top; padding-left: 10px;">
+                                        <div style="font-weight: bold; text-align: right; margin-bottom: 3px;">Grading Scale</div>
+                                        <table style="width: 100%; font-size: 10px; text-align: right;">
+                                            <thead><tr style="border-bottom: 1px solid #111;"><th style="text-align: left; padding: 2px 3px;">Grade</th><th style="padding: 2px 3px;">Standard</th><th t-if="has_honors_grade_point" style="padding: 2px 3px;">Honors</th><th style="padding: 2px 3px;">Range (%)</th></tr></thead>
+                                            <tbody><t t-foreach="grade_lines" t-as="grade_line"><tr><td style="text-align: left; font-weight: bold; padding: 2px 3px;"><t t-out="grade_line.name"/></td><td style="padding: 2px 3px;"><t t-out="'%.2f' % grade_line.grade_point"/></td><td t-if="has_honors_grade_point" style="padding: 2px 3px;"><t t-out="'%.2f' % grade_line.honors_grade_point"/></td><td style="padding: 2px 3px;"><t t-out="'%.2f - %.2f' % (grade_line.min_score, grade_line.max_score)"/>%</td></tr></t></tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <t t-foreach="years_data" t-as="y_info">
+                                <div style="border: 1.5px solid #000; margin-bottom: 12px; page-break-inside: avoid;">
+                                    <div style="border-bottom: 1.5px solid #000; padding: 4px 0; text-align: center; font-weight: bold; font-size: 11px;"><t t-out="'Year %d - %s' % (y_info['year_number'], y_info['year'].name)"/></div>
+                                    <table style="width: 100%; table-layout: fixed; font-size: 10px; border-collapse: collapse;"><tr>
+                                        <td style="width: 50%; vertical-align: top; border-right: 1.5px solid #000; padding: 8px 10px;">
+                                            <div style="font-weight: bold; margin-bottom: 4px;">First Semester</div>
+                                            <table style="width: 100%; table-layout: fixed; font-size: 10px; border-collapse: collapse;"><thead><tr style="border-bottom: 1px solid #999;"><th style="text-align: left; padding: 2px 3px;">Course</th><th style="text-align: center; width: 14%; padding: 2px 3px;">Grade</th><th style="text-align: right; width: 20%; padding: 2px 3px;">Credits</th></tr></thead><tbody>
+                                                <t t-if="y_info['s1_lines']"><t t-foreach="y_info['s1_lines']" t-as="l"><tr style="line-height: 1.35;"><td style="padding: 2px 3px; vertical-align: middle;"><t t-if="l.subject_id.code"><t t-out="l.subject_id.code"/> - </t><t t-out="l.subject_id.name"/><t t-if="l.id in repeated_line_ids"><span style="font-size: 9px; color: #555;"> (R)</span></t></td><td style="text-align: center; font-weight: bold; padding: 2px 3px; vertical-align: middle;"><t t-out="l.grade or '-'"/></td><td style="text-align: right; padding: 2px 3px; vertical-align: middle;"><t t-out="'%.2f' % (l.credits or 0.0)"/></td></tr></t></t>
+                                                <t t-else=""><tr><td colspan="3" style="font-style: italic; color: #555; padding: 6px 3px; text-align: center;">-- <t t-out="y_info['s1_status']"/> --</td></tr></t>
+                                            </tbody></table>
+                                            <table style="width: 100%; margin-top: 8px; border-top: 1px dashed #aaa; padding-top: 3px; font-size: 10px;">
+                                                <tr>
+                                                    <td style="text-align: left; padding: 1px 0;">Semester GPA: </td>
+                                                    <td style="text-align: right; font-weight: bold; padding: 1px 0;"><t t-out="'%.2f' % y_info['s1_gpa'] if y_info['s1_lines'] else '--'"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="text-align: left; padding: 1px 0;">Semester Credits: </td>
+                                                    <td style="text-align: right; font-weight: bold; padding: 1px 0;"><t t-out="'%.2f' % y_info['s1_credits']"/></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td style="width: 50%; vertical-align: top; padding: 8px 10px;">
+                                            <div style="font-weight: bold; margin-bottom: 4px;">Second Semester</div>
+                                            <table style="width: 100%; table-layout: fixed; font-size: 10px; border-collapse: collapse;"><thead><tr style="border-bottom: 1px solid #999;"><th style="text-align: left; padding: 2px 3px;">Course</th><th style="text-align: center; width: 14%; padding: 2px 3px;">Grade</th><th style="text-align: right; width: 20%; padding: 2px 3px;">Credits</th></tr></thead><tbody>
+                                                <t t-if="y_info['s2_lines']"><t t-foreach="y_info['s2_lines']" t-as="l"><tr style="line-height: 1.35;"><td style="padding: 2px 3px; vertical-align: middle;"><t t-if="l.subject_id.code"><t t-out="l.subject_id.code"/> - </t><t t-out="l.subject_id.name"/><t t-if="l.id in repeated_line_ids"><span style="font-size: 9px; color: #555;"> (R)</span></t></td><td style="text-align: center; font-weight: bold; padding: 2px 3px; vertical-align: middle;"><t t-out="l.grade or '-'"/></td><td style="text-align: right; padding: 2px 3px; vertical-align: middle;"><t t-out="'%.2f' % (l.credits or 0.0)"/></td></tr></t></t>
+                                                <t t-else=""><tr><td colspan="3" style="font-style: italic; color: #555; padding: 6px 3px; text-align: center;">-- <t t-out="y_info['s2_status']"/> --</td></tr></t>
+                                            </tbody></table>
+                                            <table style="width: 100%; margin-top: 8px; border-top: 1px dashed #aaa; padding-top: 3px; font-size: 10px;">
+                                                <tr>
+                                                    <td style="text-align: left; padding: 1px 0;">Semester GPA: </td>
+                                                    <td style="text-align: right; font-weight: bold; padding: 1px 0;"><t t-out="'%.2f' % y_info['s2_gpa'] if y_info['s2_lines'] else '--'"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="text-align: left; padding: 1px 0;">Semester Credits: </td>
+                                                    <td style="text-align: right; font-weight: bold; padding: 1px 0;"><t t-out="'%.2f' % y_info['s2_credits']"/></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr></table>
+                                </div>
+                            </t>
+
+                            <table style="width: 100%; font-size: 10px; margin-top: 15px; page-break-inside: avoid;"><tr>
+                                <td style="width: 45%; vertical-align: top;">
+                                    <div style="font-weight: bold; margin-bottom: 4px; text-transform: uppercase;">Academic Information</div>
+                                    <table style="width: 95%; font-size: 10px; line-height: 1.5;">
+                                        <tr t-if="has_honors_grade_point">
+                                            <td style="width: 65%;">Cumulative Weighted GPA</td>
+                                            <td style="width: 35%; text-align: right; font-weight: bold;"><t t-out="'%.2f' % weighted_gpa"/> / <t t-out="'%.2f' % weighted_max"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 65%;">Cumulative GPA</td>
+                                            <td style="width: 35%; text-align: right; font-weight: bold;"><t t-out="'%.2f' % unweighted_gpa"/> / <t t-out="'%.2f' % unweighted_max"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Degree Progress</td>
+                                            <td style="text-align: right; font-weight: bold;"><t t-out="'%.2f' % total_credits"/> / <t t-out="'%d' % credits_required"/> credits earned</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Academic Standing</td>
+                                            <td style="text-align: right; font-weight: bold;">
+                                                <span t-if="transcript.academic_standing == 'dean_list'">Dean's List</span>
+                                                <span t-elif="transcript.academic_standing == 'good'">Good Standing</span>
+                                                <span t-else="">Academic Probation</span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <div style="font-weight: bold; margin-top: 8px; margin-bottom: 2px;">Record Verification</div>
+                                    <div style="color: #444; font-size: 9px;">Official academic transcript generated from certified institution records.</div>
+                                    <div style="color: #444; font-size: 10px; margin-top: 2px;">Verification Code: <strong style="letter-spacing: 1px;"><t t-out="transcript.verification_code or 'ACADEMIC-RECORD'"/></strong></div>
+                                </td>
+                                <td style="width: 25%; vertical-align: bottom; text-align: center; padding-bottom: 5px;"><div style="font-weight: bold; margin-bottom: 5px; font-size: 10px;">Seal:</div><div style="width: 80px; height: 80px; border: 1.5px dashed #444; border-radius: 50%; margin: 0 auto; text-align: center; font-size: 9px; font-weight: bold; color: #444; line-height: 1.2; padding-top: 24px;">SAMPLE<br/>SEAL</div></td>
+                                <td style="width: 30%; vertical-align: bottom; text-align: center;"><div style="font-size: 9px; color: #444; margin-bottom: 4px;">Signature</div><div style="border-bottom: 1.5px solid #000; width: 100%; margin-bottom: 4px;"></div><div style="font-weight: bold; font-size: 11px;">Executive Director</div><div style="font-size: 9px; color: #444;"><t t-out="o.company_id.name or res_company.name"/></div></td>
+                            </tr></table>
+                            <t t-if="has_honors_grade_point">
+                                <div style="text-align: center; font-size: 10px; color: #444; margin-top: 8px;">Grading legend: Standard GPA on 4.00 scale; Honors courses weighted up to <t t-out="'%.2f' % weighted_max"/>. Passing grade defined per academic program. (R) indicates repeated course.</div>
+                            </t>
+                            <t t-else="">
+                                <div style="text-align: center; font-size: 10px; color: #444; margin-top: 8px;">Grading legend: Standard GPA on 4.00 scale. Passing grade defined per academic program. (R) indicates repeated course.</div>
+                            </t>
+                            <div style="text-align: center; font-size: 10px; color: #222; margin-top: 4px; font-weight: bold; letter-spacing: 0.5px;">SAMPLE DOCUMENT - NOT AN OFFICIAL RECORD</div>
+                            <div style="text-align: center; font-size: 10px; color: #555; margin-top: 6px;">1 of 1</div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

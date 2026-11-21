@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ==================== ASSIGNMENT KANBAN VIEW ==================== -->
+    <record id="view_university_assignment_kanban" model="ir.ui.view">
+        <field name="name">university.assignment.kanban</field>
+        <field name="model">university.assignment</field>
+        <field name="arch" type="xml">
+            <kanban limit="10" class="o_university_schedule_kanban" sample="1" default_group_by="due_date:week" quick_create="false">
+                <field name="name"/>
+                <field name="subject_id"/>
+                <field name="section_id"/>
+                <field name="teacher_id"/>
+                <field name="student_id"/>
+                <field name="assignment_type"/>
+                <field name="due_date"/>
+                <field name="submission_count"/>
+                <field name="max_score"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="card">
+                        <main class="p-3">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <strong class="fs-6 text-primary"><field name="name"/></strong>
+                                <span class="badge rounded-pill"
+                                      t-attf-class="#{record.state.raw_value == 'approved' ? 'text-bg-success' : 'text-bg-secondary'}">
+                                    <field name="state"/>
+                                </span>
+                            </div>
+                            <div class="text-dark fw-bold small mt-1" t-if="record.student_id.value">
+                                <i class="fa fa-graduation-cap text-primary me-1" title="Assigned Student"/>
+                                <field name="student_id"/>
+                            </div>
+                            <div class="text-muted small mt-1" t-if="record.subject_id.value">
+                                <i class="fa fa-book text-secondary me-1" title="Subject"/>
+                                <field name="subject_id"/>
+                            </div>
+                            <div class="text-muted small mt-1" t-if="record.section_id.value">
+                                <i class="fa fa-users text-secondary me-1" title="Section / Grade"/>
+                                <field name="section_id"/>
+                            </div>
+                            <div class="text-muted small mt-1" t-if="record.teacher_id.value">
+                                <i class="fa fa-user-circle text-primary me-1" title="Teacher"/>
+                                <field name="teacher_id"/>
+                            </div>
+                            <div class="mt-3 pt-2 border-top d-flex justify-content-between align-items-center small">
+                                <span t-if="record.due_date.value" class="badge text-bg-light border text-dark">
+                                    <i class="fa fa-calendar me-1 text-danger" title="Due Date"/>
+                                    <field name="due_date"/>
+                                </span>
+                                <span class="badge text-bg-info text-white" groups="school_management.group_school_teacher,school_management.group_school_admin">
+                                    <i class="fa fa-inbox me-1" title="Submissions"/>
+                                    <field name="submission_count"/> Submissions
+                                </span>
+                            </div>
+                            <div class="mt-2 d-flex justify-content-between align-items-center" groups="school_management.group_school_student">
+                                <span class="small text-muted">Max: <field name="max_score"/> pts</span>
+                                <button name="action_student_submit_work" type="object" class="btn btn-sm btn-outline-primary" invisible="state != 'approved'">
+                                    <i class="fa fa-upload me-1" title="Submit"/> Submit Work
+                                </button>
+                            </div>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ==================== ASSIGNMENT LIST VIEW ==================== -->
+    <record id="view_university_assignment_tree" model="ir.ui.view">
+        <field name="name">university.assignment.tree</field>
+        <field name="model">university.assignment</field>
+        <field name="arch" type="xml">
+            <list limit="10" string="Assignments" sample="1">
+                <field name="name"/>
+                <field name="assignment_type"/>
+                <field name="student_id" optional="show"/>
+                <field name="subject_id"/>
+                <field name="section_id"/>
+                <field name="teacher_id"/>
+                <field name="due_date"/>
+                <field name="submission_count" string="Submissions" groups="school_management.group_school_teacher,school_management.group_school_admin"/>
+                <field name="state" widget="badge" decoration-success="state == 'approved'" decoration-info="state == 'draft'"/>
+                <button name="action_student_submit_work" type="object" string="Submit Work" icon="fa-upload" invisible="state != 'approved'" groups="school_management.group_school_student"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ==================== ASSIGNMENT FORM VIEW ==================== -->
+    <record id="view_university_assignment_form" model="ir.ui.view">
+        <field name="name">university.assignment.form</field>
+        <field name="model">university.assignment</field>
+        <field name="arch" type="xml">
+            <form string="Assignment">
+                <header>
+                    <button name="action_approve" type="object" string="Approve" class="oe_highlight" invisible="state == 'approved'" groups="school_management.group_school_teacher,school_management.group_school_admin"/>
+                    <button name="action_draft" type="object" string="Reset to Draft" invisible="state == 'draft'" groups="school_management.group_school_teacher,school_management.group_school_admin"/>
+                    <button name="action_student_submit_work" type="object" string="Submit Work / Upload Files" class="btn-primary" icon="fa-upload" invisible="state != 'approved'" groups="school_management.group_school_student"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_submissions" type="object" class="oe_stat_button" icon="fa-inbox" groups="school_management.group_school_teacher,school_management.group_school_admin">
+                            <field name="submission_count" widget="statinfo" string="Submissions"/>
+                        </button>
+                        <button name="action_student_submit_work" type="object" class="oe_stat_button" icon="fa-upload" invisible="state != 'approved'" groups="school_management.group_school_student">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">My Submission</span>
+                                <field name="my_submission_state" widget="badge" 
+                                       decoration-info="my_submission_state == 'submitted' or my_submission_state == 'reviewing'" 
+                                       decoration-success="my_submission_state == 'approved' or my_submission_state == 'evaluated'" 
+                                       decoration-warning="my_submission_state == 'rejected' or my_submission_state == 'returned'"/>
+                            </div>
+                        </button>
+                    </div>
+                    <field name="my_submission_state" invisible="1"/>
+                    <field name="my_submission_score" invisible="1"/>
+                    <div class="alert alert-info d-flex align-items-center justify-content-between mb-3" role="alert" invisible="not my_submission_state" groups="school_management.group_school_student">
+                        <div>
+                            <strong>My Submission Status: </strong>
+                            <field name="my_submission_state" widget="badge" 
+                                   decoration-info="my_submission_state == 'submitted' or my_submission_state == 'reviewing'" 
+                                   decoration-success="my_submission_state == 'approved' or my_submission_state == 'evaluated'" 
+                                   decoration-warning="my_submission_state == 'rejected' or my_submission_state == 'returned'"/>
+                            <span invisible="my_submission_state != 'approved' and my_submission_state != 'evaluated'" class="ms-3">
+                                <strong>Score: </strong><field name="my_submission_score"/> / <field name="max_score"/>
+                            </span>
+                        </div>
+                        <button name="action_student_submit_work" type="object" string="View My Submission" class="btn btn-sm btn-outline-primary"/>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Assignment Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="section_id" string="Grade/Section"/>
+                            <field name="subject_id"/>
+                            <field name="assignment_type"/>
+                        </group>
+                        <group>
+                            <field name="teacher_id"/>
+                            <field name="due_date"/>
+                            <field name="category_id"/>
+                            <field name="max_score"/>
+                            <field name="student_id" invisible="assignment_type == 'class'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description" name="description">
+                            <field name="description"/>
+                        </page>
+                        <page string="Submissions" name="submissions" groups="school_management.group_school_teacher,school_management.group_school_admin">
+                            <field name="submission_ids" readonly="1">
+                                <list limit="10">
+                                    <field name="student_id"/>
+                                    <field name="submitted_on"/>
+                                    <field name="score"/>
+                                    <field name="state" widget="badge" 
+                                           decoration-info="state == 'submitted' or state == 'reviewing'" 
+                                           decoration-success="state == 'approved' or state == 'evaluated'" 
+                                           decoration-warning="state == 'rejected' or state == 'returned'"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ==================== ASSIGNMENT SEARCH VIEW ==================== -->
+    <record id="view_university_assignment_search" model="ir.ui.view">
+        <field name="name">university.assignment.search</field>
+        <field name="model">university.assignment</field>
+        <field name="arch" type="xml">
+            <search string="Search Assignments">
+                <field name="name"/>
+                <field name="student_id"/>
+                <field name="subject_id"/>
+                <field name="section_id"/>
+                <field name="teacher_id"/>
+                <filter string="Class Assignments" name="assignment_type_class" domain="[('assignment_type', '=', 'class')]"/>
+                <filter string="Individual Assignments" name="assignment_type_student" domain="[('assignment_type', '=', 'student')]"/>
+                <filter string="Approved" name="approved" domain="[('state', '=', 'approved')]"/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Due This Week" name="due_this_week" domain="[('is_due_this_week', '=', True)]"/>
+                <group>
+                    <filter string="Due Week" name="group_by_due_week" context="{'group_by': 'due_date:week'}"/>
+                    <filter string="Status" name="group_by_state" context="{'group_by': 'state'}"/>
+                    <filter string="Student" name="group_by_student" context="{'group_by': 'student_id'}"/>
+                    <filter string="Subject" name="group_by_subject" context="{'group_by': 'subject_id'}"/>
+                    <filter string="Teacher" name="group_by_teacher" context="{'group_by': 'teacher_id'}"/>
+                    <filter string="Grade/Section" name="group_by_section" context="{'group_by': 'section_id'}"/>
+                    <filter string="Assignment Type" name="group_by_assignment_type" context="{'group_by': 'assignment_type'}"/>
+                </group>
+                <searchpanel>
+                    <field name="subject_id" icon="fa-book" enable_counters="1" limit="5"/>
+                    <field name="state" icon="fa-filter" enable_counters="1" select="multi"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <!-- ==================== ASSIGNMENT WINDOW ACTIONS ==================== -->
+    <record id="action_university_assignment" model="ir.actions.act_window">
+        <field name="name">Assignments</field>
+        <field name="res_model">university.assignment</field>
+        <field name="view_mode">kanban,calendar,list,form</field>
+        <field name="limit">10</field>
+        <field name="search_view_id" ref="view_university_assignment_search"/>
+        <field name="context">{'search_default_due_this_week': 1}</field>
+    </record>
+
+    <record id="view_university_assignment_calendar" model="ir.ui.view">
+        <field name="name">university.assignment.calendar</field>
+        <field name="model">university.assignment</field>
+        <field name="arch" type="xml">
+            <calendar string="Deadlines" date_start="due_date" color="subject_id" mode="month" event_open_popup="true">
+                <field name="name"/>
+                <field name="subject_id"/>
+                <field name="section_id"/>
+                <field name="teacher_id"/>
+                <field name="state"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="action_university_assignment_my" model="ir.actions.act_window">
+        <field name="name">My Assignments</field>
+        <field name="res_model">university.assignment</field>
+        <field name="view_mode">kanban,calendar,list,form</field>
+        <field name="limit">10</field>
+        <field name="domain">['|', ('student_id.user_id', '=', uid), ('section_id.enrollment_ids.student_id.user_id', '=', uid)]</field>
+        <field name="search_view_id" ref="view_university_assignment_search"/>
+        <field name="context">{'create': False, 'edit': False, 'delete': False, 'search_default_due_this_week': 1}</field>
+    </record>
+
+    <record id="action_university_assignment_my_calendar_view" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="view_university_assignment_calendar"/>
+        <field name="act_window_id" ref="action_university_assignment_my"/>
+    </record>
+
+    <!-- ==================== SUBMISSION KANBAN VIEW ==================== -->
+    <record id="view_university_assignment_submission_kanban" model="ir.ui.view">
+        <field name="name">university.assignment.submission.kanban</field>
+        <field name="model">university.assignment.submission</field>
+        <field name="arch" type="xml">
+            <kanban limit="10" sample="1" default_group_by="state" quick_create="false">
+                <field name="name"/>
+                <field name="assignment_id"/>
+                <field name="student_id"/>
+                <field name="subject_id"/>
+                <field name="section_id"/>
+                <field name="submitted_on"/>
+                <field name="score"/>
+                <field name="max_score"/>
+                <field name="state"/>
+                <field name="is_evaluated"/>
+                <templates>
+                    <t t-name="card">
+                        <main class="p-3">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <strong class="fs-6 text-primary"><field name="assignment_id"/></strong>
+                                <span class="badge rounded-pill"
+                                      t-att-class="record.is_evaluated.raw_value ? 'text-bg-success' : (record.state.raw_value == 'submitted' or record.state.raw_value == 'reviewing' ? 'text-bg-info text-white' : (record.state.raw_value == 'rejected' or record.state.raw_value == 'returned' ? 'text-bg-danger' : 'text-bg-secondary'))">
+                                    <field name="state"/>
+                                </span>
+                            </div>
+                            <div class="text-dark fw-bold small mt-1" t-if="record.student_id.value">
+                                <i class="fa fa-graduation-cap text-primary me-1" title="Student"/>
+                                <field name="student_id"/>
+                            </div>
+                            <div class="text-muted small mt-1" t-if="record.subject_id.value">
+                                <i class="fa fa-book text-secondary me-1" title="Subject"/>
+                                <field name="subject_id"/>
+                            </div>
+                            <div class="text-muted small mt-1" t-if="record.section_id.value">
+                                <i class="fa fa-users text-secondary me-1" title="Section / Grade"/>
+                                <field name="section_id"/>
+                            </div>
+                            <div class="mt-3 pt-2 border-top d-flex justify-content-between align-items-center small">
+                                <span t-if="record.submitted_on.value" class="text-muted">
+                                    <i class="fa fa-clock-o me-1 text-secondary" title="Submitted On"/>
+                                    <field name="submitted_on"/>
+                                </span>
+                                <span t-if="record.is_evaluated.raw_value" class="badge text-bg-success">
+                                    <i class="fa fa-check-circle me-1"/>Score: <field name="score"/> / <field name="max_score"/>
+                                </span>
+                                <span t-else="" class="badge text-bg-warning text-dark">
+                                    <i class="fa fa-hourglass-half me-1"/>Pending Review
+                                </span>
+                            </div>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ==================== SUBMISSION LIST VIEW ==================== -->
+    <record id="view_university_assignment_submission_list" model="ir.ui.view">
+        <field name="name">university.assignment.submission.list</field>
+        <field name="model">university.assignment.submission</field>
+        <field name="arch" type="xml">
+            <list limit="10" string="Assignment Submissions" sample="1">
+                <field name="assignment_id"/>
+                <field name="student_id"/>
+                <field name="section_id"/>
+                <field name="subject_id"/>
+                <field name="teacher_id"/>
+                <field name="submitted_on"/>
+                <field name="score"/>
+                <field name="state" widget="badge" 
+                       decoration-info="state == 'submitted' or state == 'reviewing'" 
+                       decoration-success="state == 'approved' or state == 'evaluated'" 
+                       decoration-warning="state == 'rejected' or state == 'returned'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ==================== SUBMISSION SEARCH VIEW ==================== -->
+    <record id="view_university_assignment_submission_search" model="ir.ui.view">
+        <field name="name">university.assignment.submission.search</field>
+        <field name="model">university.assignment.submission</field>
+        <field name="arch" type="xml">
+            <search string="Search Submissions">
+                <field name="assignment_id"/>
+                <field name="student_id"/>
+                <field name="subject_id"/>
+                <field name="section_id"/>
+                <field name="teacher_id"/>
+                <filter string="Draft" name="filter_draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Submitted" name="filter_submitted" domain="[('state', '=', 'submitted')]"/>
+                <filter string="Reviewing" name="filter_reviewing" domain="[('state', '=', 'reviewing')]"/>
+                <filter string="Approved" name="filter_approved" domain="[('state', 'in', ('approved', 'evaluated'))]"/>
+                <filter string="Rejected" name="filter_rejected" domain="[('state', 'in', ('rejected', 'returned'))]"/>
+                <group>
+                    <filter string="Status" name="group_by_state" context="{'group_by': 'state'}"/>
+                    <filter string="Assignment" name="group_by_assignment" context="{'group_by': 'assignment_id'}"/>
+                    <filter string="Student" name="group_by_student" context="{'group_by': 'student_id'}"/>
+                    <filter string="Subject" name="group_by_subject" context="{'group_by': 'subject_id'}"/>
+                    <filter string="Grade/Section" name="group_by_section" context="{'group_by': 'section_id'}"/>
+                </group>
+                <searchpanel>
+                    <field name="subject_id" icon="fa-book" enable_counters="1"/>
+                    <field name="state" icon="fa-filter" enable_counters="1" select="multi"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <!-- ==================== SUBMISSION FORM VIEW ==================== -->
+    <record id="view_university_assignment_submission_form" model="ir.ui.view">
+        <field name="name">university.assignment.submission.form</field>
+        <field name="model">university.assignment.submission</field>
+        <field name="arch" type="xml">
+            <form string="Assignment Submission">
+                <header>
+                    <button name="action_submit" type="object" string="Submit to Teacher" class="btn-primary" icon="fa-paper-plane" invisible="state not in ('draft', 'rejected', 'returned')" groups="school_management.group_school_student"/>
+                    <button name="action_start_review" type="object" string="Start Review" class="btn-secondary" icon="fa-eye" invisible="state != 'submitted'" groups="school_management.group_school_teacher,school_management.group_school_admin"/>
+                    <button name="action_approve" type="object" string="Approve" class="oe_highlight" icon="fa-check" invisible="state not in ('submitted', 'reviewing', 'rejected', 'returned')" groups="school_management.group_school_teacher,school_management.group_school_admin"/>
+                    <button name="action_reject" type="object" string="Reject" class="btn-danger" icon="fa-times" invisible="state not in ('submitted', 'reviewing')" groups="school_management.group_school_teacher,school_management.group_school_admin"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,reviewing,approved"/>
+                </header>
+                <sheet>
+                    <field name="can_edit_status" invisible="1"/>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Assignment Details">
+                            <field name="assignment_id" readonly="state != 'draft'"/>
+                            <field name="student_id" readonly="1"/>
+                            <field name="section_id"/>
+                            <field name="subject_id"/>
+                        </group>
+                        <group string="Review &amp; Scoring">
+                            <field name="state" string="Submission Status" readonly="not can_edit_status"/>
+                            <field name="teacher_id"/>
+                            <field name="category_id"/>
+                            <field name="submitted_on" readonly="1"/>
+                            <field name="score" groups="school_management.group_school_teacher,school_management.group_school_admin" readonly="state in ('approved', 'evaluated')"/>
+                            <field name="max_score"/>
+                            <field name="assessment_result_id" readonly="1" groups="school_management.group_school_teacher,school_management.group_school_admin"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Student Work &amp; Uploads" name="submission">
+                            <group string="Answer / Explanation">
+                                <field name="answer_text" placeholder="Type your answers, explanation, or notes here..." readonly="state not in ('draft', 'rejected', 'returned')"/>
+                            </group>
+                            <group string="Uploaded Files (Homework / Solution Documents)">
+                                <field name="attachment_ids" widget="many2many_binary" readonly="state not in ('draft', 'rejected', 'returned')"/>
+                            </group>
+                        </page>
+                        <page string="Teacher Feedback" name="feedback">
+                            <field name="feedback" placeholder="Teacher feedback will appear here..." readonly="not can_edit_status"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ==================== SUBMISSION WINDOW ACTIONS ==================== -->
+    <record id="action_university_assignment_submission" model="ir.actions.act_window">
+        <field name="name">Assignment Submissions</field>
+        <field name="res_model">university.assignment.submission</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="limit">10</field>
+        <field name="search_view_id" ref="view_university_assignment_submission_search"/>
+    </record>
+
+    <record id="action_university_assignment_submission_student" model="ir.actions.act_window">
+        <field name="name">My Submissions</field>
+        <field name="res_model">university.assignment.submission</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="limit">10</field>
+        <field name="search_view_id" ref="view_university_assignment_submission_search"/>
+        <field name="domain">['|', ('student_id.user_id', '=', uid), ('student_id', '=', context.get('default_student_id'))]</field>
+        <field name="context">{'delete': False}</field>
+    </record>
+</odoo>
