@@ -420,7 +420,7 @@ class AccountAccount(models.Model):
         path_table = table._make_alias('path_table')
         ancestor_table = TableSQL('ancestor', self.with_company(self.env.company.root_id).sudo(), path_table._query)
         table._query.add_join(
-            'LEFT JOIN',
+            'LEFT JOIN LATERAL',
             path_table,
             SQL("""(
                     SELECT child.id AS id,
@@ -432,13 +432,15 @@ class AccountAccount(models.Model):
                       FROM account_account child
         CROSS JOIN LATERAL UNNEST(STRING_TO_ARRAY(RTRIM(child.parent_path, '/'), '/')) WITH ORDINALITY AS t(id, ord)
                       JOIN account_account ancestor ON ancestor.id = t.id::int
+                     WHERE child.id = %(account_id)s
                   GROUP BY child.id
                 )""",
                 ancestors_ids=ancestor_table.id,
                 ancestors_codes=ancestor_table.code,
                 ancestors_names=ancestor_table.name,
+                account_id=table.id,
             ),
-            SQL('%(path_table_id)s = %(account_id)s', path_table_id=path_table.id, account_id=table.id),
+            SQL('TRUE'),
         )
         return path_table[f'{fname}_path']
 
