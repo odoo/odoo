@@ -52,6 +52,9 @@ const messagingMenuPatch = {
     get isEmpty() {
         return super.isEmpty && !this.channels().length;
     },
+    rowKeys() {
+        return [...super.rowKeys(), ...this.channels().map((c) => c.localId)];
+    },
     /** @param {import("models").DiscussChannel} channel */
     async onClickChannel(channel) {
         this.onOpenConversation();

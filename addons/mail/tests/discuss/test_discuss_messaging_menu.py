@@ -63,3 +63,25 @@ class TestDiscussMessagingMenu(MailCommon, HttpCase):
             tab["id"]: tab["init_counter_ids"] for tab in data["MessagingMenuTab"]
         }
         self.assertEqual(set(counter_ids_by_tab["channel"]) & test_ids, set(tab_channels.ids))
+
+    @users("employee")
+    def test_messaging_menu_load_more_drafts_first(self):
+        self.authenticate(self.env.user.login, self.env.user.login)
+        draft, recent = self.env["discuss.channel"].with_user(self.user_admin).create(
+            [{"name": name, "channel_type": "channel"} for name in ("draft", "recent")],
+        )
+        (draft | recent)._add_members(users=self.env.user)
+        draft.sudo().last_interest_dt = "2020-01-01 00:00:00"
+        recent.message_post(body="Hey", message_type="comment")
+        params = {"tab_id": "channel", "limit": 1}
+        data = self.make_jsonrpc_request(
+            "/mail/store",
+            {"fetch_params": [["/mail/messaging_menu/discuss.channel/load_more", params]]},
+        )
+        self.assertEqual([channel["id"] for channel in data["discuss.channel"]], recent.ids)
+        params["draft_ids"] = draft.ids
+        data = self.make_jsonrpc_request(
+            "/mail/store",
+            {"fetch_params": [["/mail/messaging_menu/discuss.channel/load_more", params]]},
+        )
+        self.assertEqual([channel["id"] for channel in data["discuss.channel"]], draft.ids)
