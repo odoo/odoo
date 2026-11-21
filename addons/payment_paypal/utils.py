@@ -42,15 +42,10 @@ def format_shipping_address(tx_sudo):
     """
     address_vals = {}
 
-    if "sale_order_ids" in tx_sudo and tx_sudo.sale_order_ids:
-        order = tx_sudo.sale_order_ids[0]
-        partner_shipping = order.partner_shipping_id
-    elif "invoice_ids" in tx_sudo and tx_sudo.invoice_ids:
-        invoice = tx_sudo.invoice_ids[0]
-        partner_shipping = invoice.partner_shipping_id
-    else:
+    if not tx_sudo.delivery_partner_id:
         return address_vals
 
+    partner_shipping = tx_sudo.delivery_partner_id
     if (
         partner_shipping.street
         and partner_shipping.city

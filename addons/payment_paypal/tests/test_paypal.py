@@ -308,7 +308,10 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
         })
         paypal_pm = self.env.ref("payment_paypal.payment_method_paypal").id
         tx = self._create_transaction(
-            flow="direct", sale_order_ids=[Command.set(order.ids)], payment_method_id=paypal_pm
+            flow="direct",
+            sale_order_ids=[Command.set(order.ids)],
+            payment_method_id=paypal_pm,
+            delivery_partner_id=self.partner.id,
         )
         with patch(
             "odoo.addons.payment.utils.generate_access_token", new=self._generate_test_access_token
