@@ -72,6 +72,7 @@ export class PublishSystrayItem extends Component {
 
         // TODO: website service should share a reactive
         useBus(websiteSystrayRegistry, "CONTENT-UPDATED", this.updateState.bind(this));
+        useBus(websiteSystrayRegistry, "PUBLISHED-UPDATED", this.updateState.bind(this));
     }
 
     get label() {
@@ -99,6 +100,7 @@ export class PublishSystrayItem extends Component {
                 [mainObject.id],
             ]);
             this.state.published = published;
+            this.website.setPublishedState(published);
             if (published && this.website.currentWebsite.metadata.canOptimizeSeo) {
                 const seo_data = await rpc("/website/get_seo_data", {
                     res_id: mainObject.id,
