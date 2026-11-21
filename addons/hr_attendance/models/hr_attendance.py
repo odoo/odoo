@@ -124,7 +124,7 @@ class HrAttendance(models.Model):
     # time rule engine output fields
     time_rule_id = fields.Many2one('hr.time.rule', index=True)
     source_attendance_id = fields.Many2one('hr.attendance', index=True)
-    overtime_attendance_ids = fields.One2many('hr.attendance', 'source_attendance_id')
+    overtime_attendance_ids = fields.One2many('hr.attendance', 'source_attendance_id', domain=[('time_rule_id', '!=', False)])
     # set to True on surviving output records when their source is modified or deleted
     source_stale = fields.Boolean(default=False, copy=False, export_string_translation=False)
     # dry run of the daily overtime rules, shown as a banner on the form
@@ -313,17 +313,21 @@ class HrAttendance(models.Model):
                 periods[-1][1] = max(periods[-1][1], stop)
             else:
                 periods.append([start, stop])
+        # outputs share their source's time window by design; exclude them from overlap checks
+        source_field = self._time_rule_source_field
+        own_ids = set(self.ids)
         candidates = self.env['hr.attendance'].search_fetch(
             Domain('employee_id', 'in', self.employee_id.ids) & (
                 Domain.OR(Domain('check_in', '<=', stop) & Domain('check_out', '>=', start) for start, stop in periods)
                 | Domain('check_out', '=', False)
             ),
-            ['employee_id', 'check_in', 'check_out'],
+            ['employee_id', 'check_in', 'check_out', source_field],
             order='check_in, id',
         )
+        candidates = candidates.filtered(lambda c: c[source_field].id not in own_ids)
         candidates_by_employee = candidates.grouped('employee_id')
         for employee, attendances in self.grouped('employee_id').items():
-            employee_candidates = list(candidates_by_employee[employee])
+            employee_candidates = list(candidates_by_employee.get(employee, []))
             check_ins = [candidate.check_in for candidate in employee_candidates]
             open_candidates = [candidate for candidate in employee_candidates if not candidate.check_out]
             for attendance in attendances:
@@ -373,7 +377,7 @@ class HrAttendance(models.Model):
         if stale_targets:
             stale_targets.exists().with_context(skip_time_rules=True).write({'source_stale': True})
         if 'check_out' in vals and not self.env.context.get('skip_time_rules') and 'state' not in vals:
-            self._update_tolerance_state()
+            self.exists()._update_tolerance_state()
         return result
 
     @api.ondelete(at_uninstall=False)
@@ -687,6 +691,7 @@ class HrAttendance(models.Model):
             })
 
         technical_attendances = self.env['hr.attendance'].create(technical_attendances_vals)
+        technical_attendances._trigger_time_rules(include_deficit=True)
         to_unlink = technical_attendances.filtered(lambda a: not a.overtime_attendance_ids)
         body = _('This attendance was automatically created to cover an unjustified absence on that day.')
         for technical_attendance in technical_attendances:
@@ -830,6 +835,7 @@ class HrAttendance(models.Model):
             'check_in': df,
             'check_out': dt,
             'source_attendance_id': self.id,
+            'state': self.state,
         }
 
     def _get_source_extra_fields_domain(self):
@@ -955,20 +961,31 @@ class HrAttendance(models.Model):
             if not summary:
                 continue
             parts = self.browse([part['attendance_id'] for part in summary['parts']])
-            title = self.env._(
-                "%(summary)s by the time rules (%(rules)s)",
-                summary=summary['title'],
-                rules=', '.join(parts.time_rule_id.mapped('name')),
-            )
+            rule_names = ', '.join(parts.time_rule_id.mapped('name'))
             if len(parts) == 1:
-                body = Markup("<p>%s.</p>") % title
+                part_lines = Markup('')
             else:
-                lines = Markup().join(
+                part_lines = Markup("<ul>%s</ul>") % Markup().join(
                     Markup("<li>%s</li>") % self.browse(part['attendance_id'])._get_html_link(title=part['label'])
                     for part in summary['parts']
                 )
-                body = Markup("<p>%s:</p><ul>%s</ul>") % (title, lines)
-            source._message_log(body=body)
+            # archived source: "was archived and split ..."
+            source_title = self.env._(
+                "%(summary)s and archived by the time rules (%(rules)s)",
+                summary=summary['title'],
+                rules=rule_names,
+            )
+            source._message_log(body=Markup("<p>%s.</p>%s") % (source_title, part_lines))
+            # visible parts: "split from [source] ..."
+            source_link = source._get_html_link()
+            parts_title = self.env._(
+                "Split from %(origin)s by the time rules (%(rules)s)",
+                origin=source_link,
+                rules=rule_names,
+            )
+            parts_body = Markup("<p>%s.</p>%s") % (parts_title, part_lines)
+            for part in parts:
+                part._message_log(body=parts_body)
 
     def _get_time_rule_split_summary(self):
         """Return what the time rules made, or will make, of the attendance.
@@ -994,14 +1011,18 @@ class HrAttendance(models.Model):
         source = (self.source_attendance_id or self).sudo()
         if source.state == 'refused':
             return False
-        outputs = source.overtime_attendance_ids.filtered(
+        # archive+create: source is archived, remainders and rule outputs are new children
+        children = self.env['hr.attendance'].sudo().search([
+            ('source_attendance_id', '=', source.id),
+        ])
+        visible_parts = children.filtered(
             lambda att: att.time_rule_id.threshold_operator != 'less_than'
         )
-        if outputs or source.time_rule_id:
+        if visible_parts:
             pending = False
             split = [
                 (part.work_entry_type_id, part.worked_hours, part.id)
-                for part in (source | outputs).sorted('check_in')
+                for part in visible_parts.sorted('check_in')
             ]
         else:
             pending = True
@@ -1137,3 +1158,6 @@ class HrAttendance(models.Model):
         employee_id = self.env.context.get('employee_id', False)
         employee = self.env['hr.employee'].browse(employee_id) if employee_id else self.env.user.employee_id
         return employee.sudo(False)._get_unusual_days(date_from, date_to)
+
+    def action_reprocess_time_rules(self):
+        return self.env['hr.time.rule.regenerate.wizard'].action_open_from_records(self)
