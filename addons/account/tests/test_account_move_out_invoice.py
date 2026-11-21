@@ -8,6 +8,7 @@ from odoo.tests.common import RecordCapturer
 from collections import defaultdict
 from datetime import timedelta
 from freezegun import freeze_time
+from unittest.mock import patch
 
 
 @tagged('post_install', '-at_install')
@@ -22,6 +23,8 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
         cls.other_currency = cls.setup_other_currency('HRK', rounding=0.001)
         cls.company_data_2 = cls.setup_other_company()
+        cls.bank_journal = cls.company_data['default_journal_bank']
+        cls.outstanding_account = cls.inbound_payment_method_line.payment_account_id
 
         cls.invoice = cls.init_invoice('out_invoice', products=cls.product_a+cls.product_b)
 
@@ -5473,3 +5476,317 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         wizard.user_ids.action_grant_access()
         self.env.flush_all()
         self.assertEqual(invoice.invoice_partner_display_name, 'partner_a')
+
+    def register_payment(self, move, amount, date='2017-01-01', is_community=False, reconcile_payment=False, currency=None, **wizard_vals):
+        def patched_get_invoice_in_payment_state(self):
+            return 'paid' if is_community else 'in_payment'
+
+        self.bank_journal.inbound_payment_method_line_ids.payment_account_id = self.outstanding_account if reconcile_payment else False
+        with patch.object(self.env.registry['account.move'], '_get_invoice_in_payment_state', patched_get_invoice_in_payment_state):
+            payment = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=move.ids).create({
+                'journal_id': self.bank_journal.id,
+                'amount': amount,
+                'payment_date': date,
+                'currency_id': (currency or move.currency_id).id,
+                **wizard_vals,
+            })._create_payments()
+
+            return payment
+
+    def test_amount_residual_after_payments_unreconciled_partial_payment(self):
+        invoice = self._create_invoice_one_line(
+            price_unit=1000.0,
+            partner_id=self.partner_a,
+            date='2017-01-01',
+            post=True,
+        )
+        self.assertRecordValues(invoice, [{
+            'payment_state': 'not_paid',
+            'amount_residual': 1000.0,
+            'amount_residual_after_payments': 1000.0,
+        }])
+
+        self.register_payment(invoice, 300)
+        self.assertRecordValues(invoice, [{
+            'payment_state': 'in_payment',
+            'amount_residual': 1000.0,
+            'amount_residual_after_payments': 700.0,
+        }])
+
+    def test_amount_residual_after_payments_reconciled_partial_payment(self):
+        invoice = self._create_invoice_one_line(
+            price_unit=1000.0,
+            partner_id=self.partner_a,
+            date='2017-01-01',
+            post=True,
+        )
+        self.assertRecordValues(invoice, [{
+            'payment_state': 'not_paid',
+            'amount_residual': 1000.0,
+            'amount_residual_after_payments': 1000.0,
+        }])
+
+        self.register_payment(invoice, 300, reconcile_payment=True)
+        self.assertRecordValues(invoice, [{
+            'payment_state': 'partial',
+            'amount_residual': 700.0,
+            'amount_residual_after_payments': 700.0,
+        }])
+
+    def test_amount_residual_after_payments_unreconciled_full_payment(self):
+        invoice = self._create_invoice_one_line(
+            price_unit=1000.0,
+            partner_id=self.partner_a,
+            date='2017-01-01',
+            post=True,
+        )
+        self.assertRecordValues(invoice, [{
+            'payment_state': 'not_paid',
+            'amount_residual': 1000.0,
+            'amount_residual_after_payments': 1000.0,
+        }])
+
+        self.register_payment(invoice, 1000)
+        self.assertRecordValues(invoice, [{
+            'payment_state': 'in_payment',
+            'amount_residual': 1000.0,
+            'amount_residual_after_payments': 0.0,
+        }])
+
+    def test_amount_residual_after_payments_unreconciled_overpayment(self):
+        """ An overpayment must not lead to a negative amount left to pay. """
+        invoice = self._create_invoice_one_line(
+            price_unit=1000.0,
+            partner_id=self.partner_a,
+            date='2017-01-01',
+            post=True,
+        )
+
+        self.register_payment(invoice, 1200.0)
+        self.assertRecordValues(invoice, [{
+            'payment_state': 'in_payment',
+            'amount_residual': 1000.0,
+            'amount_residual_after_payments': 0.0,
+        }])
+
+    def test_amount_residual_after_payments_reconciled_payments(self):
+        invoice = self._create_invoice_one_line(
+            price_unit=1000.0,
+            partner_id=self.partner_a,
+            date='2017-01-01',
+            post=True,
+        )
+        self.assertRecordValues(invoice, [{
+            'payment_state': 'not_paid',
+            'amount_residual': 1000.0,
+            'amount_residual_after_payments': 1000.0,
+        }])
+
+        self.register_payment(invoice, 300, reconcile_payment=True)
+        self.assertRecordValues(invoice, [{
+            'payment_state': 'partial',
+            'amount_residual': 700.0,
+            'amount_residual_after_payments': 700.0,
+        }])
+
+        self.register_payment(invoice, 700, reconcile_payment=True)
+        self.assertRecordValues(invoice, [{
+            'payment_state': 'in_payment',
+            'amount_residual': 0.0,
+            'amount_residual_after_payments': 0.0,
+        }])
+
+    def test_amount_residual_after_payments_mixed_payments(self):
+        invoice = self._create_invoice_one_line(
+            price_unit=1000.0,
+            partner_id=self.partner_a,
+            date='2017-01-01',
+            post=True,
+        )
+        self.assertRecordValues(invoice, [{
+            'payment_state': 'not_paid',
+            'amount_residual': 1000.0,
+            'amount_residual_after_payments': 1000.0,
+        }])
+
+        self.register_payment(invoice, 300, reconcile_payment=True)
+        self.assertRecordValues(invoice, [{
+            'payment_state': 'partial',
+            'amount_residual': 700.0,
+            'amount_residual_after_payments': 700.0,
+        }])
+
+        self.register_payment(invoice, 300)
+        self.assertRecordValues(invoice, [{
+            'payment_state': 'in_payment',
+            'amount_residual': 700.0,
+            'amount_residual_after_payments': 400.0,
+        }])
+
+    def test_amount_residual_after_payments_unreconciled_partial_payment_other_currency(self):
+        """ The unreconciled payments are converted in the invoice's currency at the payment date
+        (rate of 2.0 for other_currency in 2017).
+        """
+        invoice = self._create_invoice_one_line(
+            price_unit=1200.0,
+            partner_id=self.partner_a,
+            date='2017-01-01',
+            currency_id=self.other_currency.id,
+            post=True,
+        )
+        self.assertRecordValues(invoice, [{
+            'payment_state': 'not_paid',
+            'amount_residual': 1200.0,
+            'amount_residual_after_payments': 1200.0,
+        }])
+
+        # 300 in company currency = 600 in other_currency.
+        self.register_payment(invoice, 300.0, currency=self.company_data['currency'])
+        self.assertRecordValues(invoice, [{
+            'amount_residual': 1200.0,
+            'amount_residual_after_payments': 600.0,
+        }])
+
+        self.register_payment(invoice, 100.0, currency=self.other_currency)
+        self.assertRecordValues(invoice, [{
+            'amount_residual': 1200.0,
+            'amount_residual_after_payments': 500.0,
+        }])
+
+    def test_amount_residual_after_payments_canceled_payment(self):
+        """ A canceled payment is not a payment anymore. No invalidation on purpose: the field must
+        be recomputed through its dependencies.
+        """
+        invoice = self._create_invoice_one_line(
+            price_unit=1000.0,
+            partner_id=self.partner_a,
+            date='2017-01-01',
+            post=True,
+        )
+
+        payment = self.register_payment(invoice, 400.0)
+        self.assertEqual(invoice.amount_residual_after_payments, 600.0)
+
+        payment.action_cancel()
+        self.assertRecordValues(invoice, [{
+            'payment_state': 'not_paid',
+            'amount_residual': 1000.0,
+            'amount_residual_after_payments': 1000.0,
+        }])
+
+    def test_amount_residual_after_payments_community_behavior(self):
+        invoice = self._create_invoice_one_line(
+            price_unit=1000.0,
+            partner_id=self.partner_a,
+            date='2017-01-01',
+            post=True,
+        )
+
+        self.register_payment(invoice, 400.0, is_community=True)
+        self.assertRecordValues(invoice, [{
+            'payment_state': 'partial',
+            'amount_residual': 600.0,
+            'amount_residual_after_payments': 600.0,
+        }])
+
+    def test_wizard_amount_several_invoices(self):
+        invoice1 = self._create_invoice_one_line(
+            price_unit=1000.0,
+            partner_id=self.partner_a,
+            date='2017-01-01',
+            post=True,
+        )
+        self.register_payment(invoice1, 400)
+
+        invoice2 = self._create_invoice_one_line(
+            price_unit=2000.0,
+            partner_id=self.partner_a,
+            date='2017-01-01',
+            post=True,
+        )
+        self.register_payment(invoice2, 1500)
+
+        wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=(invoice1 + invoice2).ids).create({})
+        self.assertEqual(wizard.amount, 1100.0)
+
+    def test_wizard_amount_after_partial_payment_and_early_discount_payment(self):
+        """
+        For an early payment discount, the desired behavior if partial payment is:
+            * For the payment wizard, the suggested amount is the remaining amount without
+            the discount, whatever the payment date. But paying the discounted remaining
+            amount before the deadline still applies the discount and fully pays the invoice.
+            * For the email sent (so the field `amount_residual_after_payments`), we do
+            not apply the discount, because a customer might read the email after the
+            deadline.
+        """
+        early_payment_term = self.env['account.payment.term'].create({
+            'name': '20% Early Payment',
+            'early_discount': True,
+            'early_pay_discount_computation': 'included',
+            'discount_percentage': 2.0,
+            'discount_days': 10,
+            'line_ids': [
+                Command.create({
+                    'value': 'percent',
+                    'value_amount': 100.0,
+                    'nb_days': 30,
+                })
+            ],
+        })
+        invoice = self._create_invoice_one_line(
+            price_unit=1000.0,
+            partner_id=self.partner_a,
+            date='2017-01-01',
+            invoice_payment_term_id=early_payment_term,
+            post=True,
+        )
+        self.register_payment(invoice, 500)
+
+        wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+            'payment_date': '2017-01-01',
+        })
+        self.assertRecordValues(wizard, [{
+            'amount': 500.0,
+            'early_payment_discount_mode': False,
+            'payment_difference': 0.0,
+        }])
+        self.assertEqual(invoice.amount_residual_after_payments, 500)
+
+        # The user pays the discounted remaining amount before the deadline.
+        wizard.amount = 480.0
+        self.assertRecordValues(wizard, [{
+            'early_payment_discount_mode': True,
+            'payment_difference': 20.0,
+        }])
+
+        wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+            'payment_date': '2017-01-20',
+        })
+        self.assertEqual(wizard.amount, 500)
+        self.assertEqual(invoice.amount_residual_after_payments, 500)
+
+        self.register_payment(invoice, 480, date='2017-01-05')
+        self.assertRecordValues(invoice, [{
+            'payment_state': 'in_payment',
+            'amount_residual_after_payments': 0.0,
+        }])
+
+    def test_wizard_amount_other_currency_after_partial_payment(self):
+        """ The amount already paid is converted in the wizard's currency (rate of 2.0 for other_currency in 2017). """
+        invoice = self._create_invoice_one_line(
+            price_unit=1000.0,
+            partner_id=self.partner_a,
+            date='2017-01-01',
+            post=True,
+        )
+        self.register_payment(invoice, 400)
+
+        wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+            'payment_date': '2017-01-01',
+            'currency_id': self.other_currency.id,
+        })
+        self.assertRecordValues(wizard, [{
+            'unreconciled_paid_amount': 800.0,
+            'amount': 1200.0,
+            'payment_difference': 0.0,
+        }])

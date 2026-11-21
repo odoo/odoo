@@ -621,7 +621,7 @@ class AccountPaymentRegister(models.TransientModel):
     def _compute_actionable_errors(self):
         for wizard in self:
             actionable_errors = {}
-            if unreconciled_matched_payments := wizard.line_ids.move_id.reconciled_payment_ids.filtered(lambda p: not p.is_reconciled and not p.is_matched and p.state == 'paid'):
+            if unreconciled_matched_payments := wizard.line_ids.move_id._get_unreconciled_paid_payments().sudo(False):
                 actionable_errors['unreconciled_matched_payments'] = {
                     'message': self.env._("%(amount).2f %(currency)s already paid.",
                         amount=wizard.unreconciled_paid_amount,
@@ -783,10 +783,12 @@ class AccountPaymentRegister(models.TransientModel):
                 wizard.amount = wizard.amount
             else:
                 total_amount_values = wizard._get_total_amounts_to_pay(wizard._get_batches())
-                if total_amount_values['epd_applied']:
-                    wizard.amount = total_amount_values['amount_by_default']
-                else:
-                    wizard.amount = max(0.0, total_amount_values['amount_by_default'] - wizard.unreconciled_paid_amount)
+                amount_to_pay = total_amount_values['amount_by_default']
+                if wizard.unreconciled_paid_amount and total_amount_values['epd_applied']:
+                    # Part of the invoice is already paid: suggest the remaining amount without the early payment discount.
+                    # Paying the discounted remaining amount still applies the discount (see _compute_early_payment_discount_mode).
+                    amount_to_pay = total_amount_values['amount_for_difference']
+                wizard.amount = max(0.0, amount_to_pay - wizard.unreconciled_paid_amount)
 
     @api.depends('amount')
     def _compute_installments_mode(self):
@@ -857,7 +859,7 @@ class AccountPaymentRegister(models.TransientModel):
                         'btn_end': markupsafe.Markup('</span>'),
                     }
 
-    @api.depends('can_edit_wizard', 'payment_date', 'currency_id', 'amount')
+    @api.depends('can_edit_wizard', 'payment_date', 'currency_id', 'amount', 'unreconciled_paid_amount')
     def _compute_early_payment_discount_mode(self):
         for wizard in self:
             if not wizard.journal_id or not wizard.currency_id or not wizard.payment_date:
@@ -867,22 +869,22 @@ class AccountPaymentRegister(models.TransientModel):
                 wizard.early_payment_discount_mode = (
                     total_amount_values['epd_applied']
                     and (
-                        wizard.currency_id.compare_amounts(wizard.amount, total_amount_values['amount_by_default']) == 0
-                        or wizard.currency_id.compare_amounts(wizard.amount, total_amount_values['full_amount']) == 0
+                        wizard.currency_id.compare_amounts(wizard.amount + wizard.unreconciled_paid_amount, total_amount_values['amount_by_default']) == 0
+                        or wizard.currency_id.compare_amounts(wizard.amount + wizard.unreconciled_paid_amount, total_amount_values['full_amount']) == 0
                     )
                 )
 
-    @api.depends('can_edit_wizard', 'amount', 'installments_mode')
+    @api.depends('can_edit_wizard', 'amount', 'installments_mode', 'unreconciled_paid_amount')
     def _compute_payment_difference(self):
         for wizard in self:
             if wizard.payment_date:
                 total_amount_values = wizard._get_total_amounts_to_pay(wizard._get_batches())
                 if wizard.installments_mode in ('overdue', 'next', 'before_date'):
-                    wizard.payment_difference = total_amount_values['amount_for_difference'] - wizard.amount
+                    wizard.payment_difference = total_amount_values['amount_for_difference'] - wizard.amount - wizard.unreconciled_paid_amount
                 elif wizard.installments_mode == 'full':
-                    wizard.payment_difference = total_amount_values['full_amount_for_difference'] - wizard.amount
+                    wizard.payment_difference = total_amount_values['full_amount_for_difference'] - wizard.amount - wizard.unreconciled_paid_amount
                 else:
-                    wizard.payment_difference = total_amount_values['amount_for_difference'] - wizard.amount
+                    wizard.payment_difference = total_amount_values['amount_for_difference'] - wizard.amount - wizard.unreconciled_paid_amount
             else:
                 wizard.payment_difference = 0.0
 
@@ -951,25 +953,24 @@ class AccountPaymentRegister(models.TransientModel):
         for wizard in self:
             wizard.is_register_payment_on_draft = any(l.parent_state == 'draft' for l in wizard.line_ids)
 
-    @api.depends('line_ids.move_id.reconciled_payment_ids', 'company_id', 'currency_id')
+    @api.depends('line_ids.move_id.unreconciled_paid_amount', 'company_id', 'currency_id')
+    @api.depends_context('force_payment_move')
     def _compute_unreconciled_paid_amount(self):
         for wizard in self:
-            paid_payments = wizard.line_ids.move_id.reconciled_payment_ids.filtered(
-                lambda p: (
-                    not p.is_reconciled
-                    and not p.is_matched
-                    and p.state == 'paid'
+            if self.env.context.get('force_payment_move'):
+                # The payment being created replaces the existing unreconciled ones (e.g. bank reconciliation with EPD and exchange difference).
+                wizard.unreconciled_paid_amount = 0.0
+            else:
+                wizard.unreconciled_paid_amount = sum(
+                    payment.currency_id._convert(
+                        payment.amount,
+                        wizard.currency_id,
+                        wizard.company_id,
+                        payment.date,
+                    )
+                    for move in wizard.line_ids.move_id
+                    for payment in move._get_unreconciled_paid_payments()
                 )
-            )
-            wizard.unreconciled_paid_amount = sum(
-                payment.currency_id._convert(
-                    payment.amount,
-                    wizard.currency_id,
-                    wizard.company_id,
-                    payment.date
-                )
-                for payment in paid_payments
-            )
 
     @api.depends('company_currency_id', 'source_currency_id', 'currency_id', 'payment_date', 'company_id')
     def _compute_exchange_rate(self):
