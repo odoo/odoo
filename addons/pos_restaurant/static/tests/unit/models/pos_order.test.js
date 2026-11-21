@@ -324,10 +324,19 @@ describe("pos.order restaurant patches", () => {
         const order = await getFilledOrder(store);
         order.config_id.set_tip_after_payment = true;
         order.state = "paid";
+        order.is_tipped = true;
         order.amount_paid = order.priceIncl - 1;
         expect(order.isTippedAfterPayment).toBe(true);
+        // Edit Payment hidden, but the order itself stays editable
+        expect(store.canEditPayment(order)).toBe(false);
+        expect(order.canEditPayment).toBe(true);
+        expect(() => order.assertEditable()).not.toThrow();
 
         order.amount_paid = order.priceIncl;
+        expect(order.isTippedAfterPayment).toBe(false);
+
+        order.is_tipped = false;
+        order.amount_paid = order.priceIncl - 1;
         expect(order.isTippedAfterPayment).toBe(false);
     });
 

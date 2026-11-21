@@ -20,6 +20,9 @@
         'web.assets_tests': [
             'l10n_es_edi_verifactu_pos/static/tests/tours/**/*',
         ],
+        'web.assets_unit_tests': [
+            'l10n_es_edi_verifactu_pos/static/tests/unit/**/*',
+        ],
     },
     'auto_install': True,
     'author': 'Odoo S.A.',
