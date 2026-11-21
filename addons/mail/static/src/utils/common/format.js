@@ -513,7 +513,8 @@ export function inlineElement(element) {
 
     /** @param {HTMLElement} [node] */
     const isBlock = (node) =>
-        node?.nodeType === Node.ELEMENT_NODE && ["DIV", "P"].includes(node?.tagName);
+        node?.nodeType === Node.ELEMENT_NODE &&
+        ["DIV", "LI", "OL", "P", "UL"].includes(node?.tagName);
 
     /**
      * @param {HTMLElement} parent
