@@ -2,8 +2,6 @@ import os
 import re
 import sys
 
-import jinja2
-
 from . import Command
 
 
@@ -19,6 +17,15 @@ class Scaffold(Command):
 
     def run(self, cmdargs):
         # TODO: bash completion file
+        try:
+            import jinja2  # ruff: ignore[import-outside-top-level]
+        except ImportError:
+            sys.exit('Jinja2 is required for the scaffold command but was not found')
+
+        env = jinja2.Environment()
+        env.filters['snake'] = snake
+        env.filters['pascal'] = pascal
+
         parser = self.parser
         parser.add_argument(
             '-t', '--template', type=template, default=template('default'),
@@ -36,6 +43,7 @@ class Scaffold(Command):
         args.template.render_to(
             snake(args.name),
             directory(args.dest, create=True),
+            env,
             {'name': args.name})
 
 builtins = lambda *args: os.path.join(
@@ -70,9 +78,6 @@ def directory(p, create=False):
         sys.exit("%s is not a directory" % p)
     return expanded
 
-env = jinja2.Environment()
-env.filters['snake'] = snake
-env.filters['pascal'] = pascal
 class template(object):
     def __init__(self, identifier):
         # TODO: archives (zipfile, tarfile)
@@ -98,7 +103,7 @@ class template(object):
                 path = os.path.join(root, f)
                 yield path, open(path, 'rb').read()
 
-    def render_to(self, modname, directory, params=None):
+    def render_to(self, modname, directory, env, params=None):
         """ Render this module template to ``dest`` with the provided
          rendering parameters
         """

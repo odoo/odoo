@@ -19,12 +19,13 @@
         'account_edi_proxy_client',
         'account_edi_ubl_cii',
     ],
-    'external_dependencies': {
-        'python': ['phonenumbers'],
-        'apt': {
-            'phonenumbers': 'python3-phonenumbers',
+    'external_dependencies': [
+        {
+            'pypi': 'phonenumbers',
+            'apt': 'python3-phonenumbers',
+            'custom_install': 'Odoo maintained package: https://packages.odoo.com/pub/python3-phonenumbers_8.12.57-5+odoo2_all.deb'
         },
-    },
+    ],
     'data': [
         'data/cron.xml',
         'data/mail_templates_email_layouts.xml',
