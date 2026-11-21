@@ -218,15 +218,7 @@ class Website(models.Model):
 
     wishlist_opt_products_design_classes = fields.Char(
         string="Wishlist Page Design Class",
-        help="CSS class for wishlist page design",
-        default=(
-            "o_wsale_products_opt_layout_catalog o_wsale_products_opt_design_thumbs "
-            "o_wsale_products_opt_name_color_regular "
-            "o_wsale_products_opt_thumb_cover o_wsale_products_opt_img_secondary_show "
-            "o_wsale_products_opt_img_hover_zoom_out_light o_wsale_products_opt_has_cta "
-            "o_wsale_products_opt_actions_inline o_wsale_products_opt_has_description "
-            "o_wsale_products_opt_actions_promote o_wsale_products_opt_cc1 "
-        ),
+        help="CSS class for wishlist page design. Defaults to the shop design if not set.",
     )
 
     wishlist_grid_columns = fields.Integer(
@@ -242,7 +234,8 @@ class Website(models.Model):
     )
 
     wishlist_gap = fields.Char(
-        string="Wishlist Grid Gap", help="Gap between products on the wishlist page", default="16px"
+        string="Wishlist Grid Gap",
+        help="Gap between products on the wishlist page. Defaults to the shop gap if not set.",
     )
 
     prevent_sale = fields.Boolean(string="Hide Add To Cart")
@@ -1242,6 +1235,18 @@ class Website(models.Model):
         parsed = urlsplit(base_url)
         query = urlencode([*parse_qsl(parsed.query), ("subject", subject)])
         return parsed._replace(query=query).geturl()
+
+    def _get_wishlist_design_classes(self):
+        """Return the wishlist design classes, falling back on the shop design.
+
+        On-hover actions are replaced by inline ones, so that the wishlist's main
+        actions (add to cart, remove) are always visible.
+        """
+        if self.wishlist_opt_products_design_classes:
+            return self.wishlist_opt_products_design_classes
+        return (self.shop_opt_products_design_classes or "").replace(
+            "o_wsale_products_opt_actions_onhover", "o_wsale_products_opt_actions_inline"
+        )
 
     def _get_shop_products_design_classes(self):
         """Return the website's design classes for the product cards, as configured on the
