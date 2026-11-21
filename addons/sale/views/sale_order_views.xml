@@ -418,13 +418,14 @@
                         <field name="invoice_count" widget="statinfo" string="Invoices"/>
                     </button>
                     <button
-                        name="action_view_payment_transaction"
+                        name="action_view_payments"
                         type="object"
                         class="oe_stat_button"
                         icon="payments"
-                        invisible="not transaction_count"
-                        groups="account.group_account_invoice,base.group_no_one">
-                        <field name="transaction_count" widget="statinfo" string="Payments"/>
+                        invisible="not payment_count"
+                        groups="account.group_account_invoice"
+                    >
+                        <field name="payment_count" widget="statinfo" string="Payments"/>
                     </button>
                 </div>
                 <div

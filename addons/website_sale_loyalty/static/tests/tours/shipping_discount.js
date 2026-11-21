@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 import * as wsTourUtils from "@website_sale/js/tours/tour_utils";
-import { assertRewardAmounts } from "@website_sale_loyalty/../tests/tours/tour_utils";
+import { assertRewardAmounts, payWithEWallet } from "@website_sale_loyalty/../tests/tours/tour_utils";
 
 registry.category("web_tour.tours").add("website_sale_loyalty.check_shipping_discount", {
     steps: () => [
@@ -19,23 +19,20 @@ registry.category("web_tour.tours").add("website_sale_loyalty.check_shipping_dis
             total: "304.00", // $100 per Plumbus, plus discounted delivery
         }),
         ...assertRewardAmounts({ shipping: "- 6.00" }),
-        {
-            content: "pay with eWallet",
-            trigger: "form[name=claim_reward] button[name='o_loyalty_claim']:contains('Use')",
-            run: "click",
-            expectUnloadPage: true,
-        },
-        ...assertRewardAmounts({ discount: "- 304.00" }),
-        wsTourUtils.waitForInteractionToLoad(),
         wsTourUtils.selectDeliveryCarrier("delivery1"),
-        ...wsTourUtils.assertCartAmounts({ delivery: "5.00" }),
-        ...assertRewardAmounts({ discount: "- 300.00", shipping: "- 5.00" }),
+        ...wsTourUtils.assertCartAmounts({ delivery: "5.00", total: "300.00" }),
+        ...assertRewardAmounts({ shipping: "- 5.00" }),
         {
             content: "confirm delivery method",
             trigger: ".o_total_card a[name=website_sale_main_button]",
             run: "click",
             expectUnloadPage: true,
         },
-        ...wsTourUtils.pay({ expectUnloadPage: true }),
+        // The eWallet pays the order: it is a payment, not a discount on the order.
+        ...payWithEWallet("300.00"),
+        {
+            content: "The order is paid",
+            trigger: 'div h3:contains("Thank you for your order.")',
+        },
     ],
 });

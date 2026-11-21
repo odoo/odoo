@@ -586,6 +586,9 @@ class LoyaltyProgram(models.Model):
         else:
             res = super().write(vals)
 
+        if {"active", "program_type", "company_id"} & vals.keys():
+            self.env["payment.provider"]._recompute_loyalty_publication()
+
         # Propagate active state to children
         if "active" in vals:
             for program in self.with_context(active_test=False):
@@ -761,4 +764,14 @@ class LoyaltyProgram(models.Model):
             ]:
                 del vals["trigger_product_ids"]
 
-        return super().create(vals_list)
+        programs = super().create(vals_list)
+        if any(program.is_payment_program for program in programs):
+            self.env["payment.provider"]._recompute_loyalty_publication()
+        return programs
+
+    def unlink(self):
+        has_payment_programs = any(program.is_payment_program for program in self)
+        res = super().unlink()
+        if has_payment_programs:
+            self.env["payment.provider"]._recompute_loyalty_publication()
+        return res

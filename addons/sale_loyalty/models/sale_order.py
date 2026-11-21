@@ -651,7 +651,6 @@ class SaleOrder(models.Model):
 
         reward_applies_on = reward.discount_applicability
         reward_product = reward.discount_line_product_id
-        reward_program = reward.program_id
         reward_currency = reward.currency_id
         sequence = (
             max(
@@ -681,18 +680,6 @@ class SaleOrder(models.Model):
             discountable, discountable_per_tax = self._discountable_cheapest(reward)
 
         if not discountable:
-            if not reward_program.is_payment_program and any(
-                line.reward_id.program_id.is_payment_program for line in self.order_line
-            ):
-                return [
-                    {
-                        **base_reward_line_values,
-                        "name": self.env._("TEMPORARY DISCOUNT LINE"),
-                        "price_unit": 0,
-                        "product_uom_qty": 0,
-                        "points_cost": 0,
-                    }
-                ]
             raise UserError(self.env._("There is nothing to discount"))
 
         max_discount = reward_currency._convert(
@@ -702,9 +689,8 @@ class SaleOrder(models.Model):
         max_discount = min(self.amount_total, max_discount)
         if reward.discount_mode == "per_point":
             points = self._get_real_points_for_coupon(coupon)
-            if not reward_program.is_payment_program:
-                # Rewards cannot be partially offered to customers
-                points = points // reward.required_points * reward.required_points
+            # Rewards cannot be partially offered to customers
+            points = points // reward.required_points * reward.required_points
             max_discount = min(
                 max_discount,
                 reward_currency._convert(
@@ -731,34 +717,6 @@ class SaleOrder(models.Model):
                 min(max_discount, discountable), reward_currency, self.company_id
             )
             point_cost = coupon.currency_id.round(converted_discount / reward.discount)
-
-        if reward_program.is_payment_program:  # Gift card / eWallet
-            reward_line_values = {
-                **base_reward_line_values,
-                "price_unit": -min(max_discount, discountable),
-                "points_cost": point_cost,
-            }
-
-            if reward_program.program_type == "gift_card":
-                # For gift cards, the SOL should consider the discount product taxes
-                taxes_to_apply = reward_product.taxes_id._filter_taxes_by_company(self.company_id)
-                if taxes_to_apply:
-                    mapped_taxes = self.fiscal_position_id.map_tax(taxes_to_apply)
-                    price_incl_taxes = mapped_taxes.filtered("price_include")
-                    tax_res = mapped_taxes.with_context(
-                        force_price_include=True, round=False, round_base=False
-                    ).compute_all(reward_line_values["price_unit"], currency=self.currency_id)
-                    new_price = tax_res["total_excluded"]
-                    new_price += sum(
-                        tax_data["amount"]
-                        for tax_data in tax_res["taxes"]
-                        if tax_data["id"] in price_incl_taxes.ids
-                    )
-                    reward_line_values.update({
-                        "price_unit": new_price,
-                        "tax_ids": [Command.set(mapped_taxes.ids)],
-                    })
-            return [reward_line_values]
 
         discount_factor = min(1, (max_discount / discountable)) if discountable else 1
         reward_dict = {}
@@ -1085,6 +1043,8 @@ class SaleOrder(models.Model):
         NOTE: A call to `_update_programs_and_rewards` is expected to reorder the discounts.
         """
         self.ensure_one()
+        if reward.program_id.is_payment_program:
+            return {"error": self._get_payment_program_error_message()}
         # Use the old lines before creating new ones. These should already be in a 'reset' state.
         old_reward_lines = kwargs.get("old_lines", self.env["sale.order.line"])
         if reward.is_global_discount:
@@ -1115,6 +1075,12 @@ class SaleOrder(models.Model):
         reward_vals = self._get_reward_line_values(reward, coupon, **kwargs)
         self._write_vals_from_reward_vals(reward_vals, old_reward_lines)
         return {}
+
+    def _get_payment_program_error_message(self):
+        return self.env._(
+            "Gift cards and eWallets cannot be applied as a discount. Select them as payment method"
+            " when paying instead."
+        )
 
     def _get_claimable_rewards(self, forced_coupons=None):
         """Fetch all rewards that are currently claimable from all concerned coupons, meaning
@@ -1149,6 +1115,9 @@ class SaleOrder(models.Model):
             if coupon.program_id.applies_on == "future" and coupon.order_id == self:
                 continue
             if coupon.expiration_date and coupon.expiration_date < check_date:
+                continue
+            # Gift cards and eWallets are used as payment methods, not as rewards.
+            if coupon.program_id.is_payment_program:
                 continue
             points = self._get_real_points_for_coupon(coupon)
             for reward in coupon.program_id.reward_ids:
@@ -1196,15 +1165,13 @@ class SaleOrder(models.Model):
         # |       STEP 1: Retrieve all applicable programs    |
         # +===================================================+
 
-        # Automatically load in eWallet and loyalty cards coupons with previously received points
+        # Automatically load in loyalty cards coupons with previously received points. Gift cards
+        # and eWallets are not loaded as they are used as payment methods, not as rewards.
         if self._allow_nominative_programs():
             loyalty_card = self.env["loyalty.card"].search([
                 ("id", "not in", self.applied_coupon_ids.ids),
                 ("partner_id", "=", self.partner_id.id),
                 ("points", ">", 0),
-                "|",
-                ("program_id.program_type", "=", "ewallet"),
-                "&",
                 ("program_id.program_type", "=", "loyalty"),
                 ("program_id.applies_on", "!=", "current"),
             ])
@@ -1355,32 +1322,25 @@ class SaleOrder(models.Model):
         )._reset_loyalty()
         seen_rewards = set()
         line_rewards = []
-        # gift_card and ewallet are considered as payments and should always be applied last.
-        payment_rewards = []
         for line in self.order_line:
             if (
                 line.reward_identifier_code in seen_rewards
                 or not line.reward_id
                 or not line.coupon_id
+                # Gift cards and eWallets are payment methods; their (legacy) reward lines are
+                # simply removed.
+                or line.reward_id.program_id.is_payment_program
             ):
                 continue
             seen_rewards.add(line.reward_identifier_code)
-            if line.reward_id.program_id.is_payment_program:
-                payment_rewards.append((
-                    line.reward_id,
-                    line.coupon_id,
-                    line.reward_identifier_code,
-                    line.product_id,
-                ))
-            else:
-                line_rewards.append((
-                    line.reward_id,
-                    line.coupon_id,
-                    line.reward_identifier_code,
-                    line.product_id,
-                ))
+            line_rewards.append((
+                line.reward_id,
+                line.coupon_id,
+                line.reward_identifier_code,
+                line.product_id,
+            ))
 
-        for reward_key in itertools.chain(line_rewards, payment_rewards):
+        for reward_key in line_rewards:
             coupon = reward_key[1]
             reward = reward_key[0]
             program = reward.program_id
@@ -1774,7 +1734,9 @@ class SaleOrder(models.Model):
 
         if not program or not program.active:
             return {"error": self.env._("This code is invalid (%s).", code), "not_found": True}
-        if program.program_type in ("loyalty", "ewallet"):
+        if program.is_payment_program:
+            return {"error": self._get_payment_program_error_message()}
+        if program.program_type == "loyalty":
             return {"error": self.env._("This program cannot be applied with code.")}
 
         # Lock the loyalty program row to block several processes that try to

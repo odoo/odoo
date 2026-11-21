@@ -2,7 +2,7 @@
 <odoo>
     <template id="website_sale_loyalty.sale_coupon_result" inherit_id="website_sale.coupon_form">
         <xpath expr="//form[@name='coupon_code']//input[@name='promo']" position="attributes">
-            <attribute name="placeholder">Gift card or discount code...</attribute>
+            <attribute name="placeholder">Discount code...</attribute>
         </xpath>
         <xpath expr="//t[@name='code_not_available']" position="replace"/>
     </template>
@@ -154,6 +154,31 @@
                 </td>
             </tr>
         </table>
+    </template>
+
+    <!-- Gift cards and eWallets are payment methods: detail the amounts already paid with them. -->
+    <template id="website_sale_loyalty.total_loyalty_payments" inherit_id="website_sale.total">
+        <tr id="amount_paid" position="before">
+            <t t-if="website_sale_order.amount_paid and not website_sale_order._is_paid()">
+                <tr t-foreach="website_sale_order._get_loyalty_payment_transactions()"
+                    t-as="loyalty_tx"
+                    name="o_order_loyalty_payment"
+                    class="text-muted"
+                >
+                    <td colspan="2" class="border-0 ps-0 pt-0 pb-2">
+                        <t t-out="loyalty_tx.provider_id.name"/>
+                        <small t-out="loyalty_tx.loyalty_card_id.code[-4:].rjust(14, '&#8902;')"/>
+                    </td>
+                    <td class="text-end border-0 px-0 pt-0 pb-2">
+                        <span
+                            t-out="loyalty_tx.amount"
+                            t-options="{'widget': 'monetary', 'display_currency': loyalty_tx.currency_id}"
+                            class="monetary_field"
+                        />
+                    </td>
+                </tr>
+            </t>
+        </tr>
     </template>
 
     <template id="website_sale_loyalty.layout" inherit_id="website.layout">

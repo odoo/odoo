@@ -264,6 +264,60 @@ class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
             card._adjust_points({card: 1000}, "Initial balance")
         self.start_tour("/shop", "website_sale_loyalty.ewallet", login="admin")
 
+        order = self.env["sale.order"].search(
+            [("partner_id", "=", self.env.ref("base.partner_admin").id)], order="id desc", limit=1
+        )
+        self.assertEqual(order.state, "sale")
+        self.assertFalse(order.order_line.filtered("is_reward_line"))
+        self.assertEqual(order.transaction_ids.loyalty_card_id, cards[0])
+        self.assertEqual(cards.mapped("points"), [950, 1000])
+
+    def test_04_shop_split_payment_gift_cards_tour(self):
+        self.env["product.product"].create({
+            "name": "TEST - Gift Card",
+            "list_price": 50,
+            "type": "service",
+            "is_published": True,
+            "sale_ok": True,
+            "public_categ_ids": [(4, self.public_category.id)],
+            "taxes_id": False,
+        })
+        # Disable any other program
+        self.env["loyalty.program"].search([]).write({"active": False})
+        gift_card_program = self.env["loyalty.program"].create({
+            "name": "Gift Cards",
+            "program_type": "gift_card",
+            "applies_on": "future",
+            "trigger": "auto",
+            "reward_ids": [
+                Command.create({
+                    "reward_type": "discount",
+                    "discount_mode": "per_point",
+                    "discount": 1,
+                    "discount_applicability": "order",
+                    "required_points": 1,
+                })
+            ],
+        })
+        gift_card_30, gift_card_100 = self.env["loyalty.card"].create([
+            {"program_id": gift_card_program.id, "code": "GIFT_CARD_30"},
+            {"program_id": gift_card_program.id, "code": "GIFT_CARD_100"},
+        ])
+        gift_card_30._adjust_points(30, "Initial balance")
+        gift_card_100._adjust_points(100, "Initial balance")
+
+        self.start_tour("/shop", "website_sale_loyalty.split_payment_gift_cards", login="admin")
+
+        order = self.env["sale.order"].search(
+            [("partner_id", "=", self.env.ref("base.partner_admin").id)], order="id desc", limit=1
+        )
+        self.assertEqual(order.state, "sale")
+        self.assertEqual(order.amount_total, 50)
+        self.assertFalse(order.order_line.filtered("is_reward_line"))
+        self.assertEqual(len(order.transaction_ids.payment_id), 2)
+        self.assertEqual(gift_card_30.points, 0)
+        self.assertEqual(gift_card_100.points, 80)
+
 
 @tagged("post_install", "-at_install")
 class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
