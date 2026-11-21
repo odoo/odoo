@@ -8,6 +8,73 @@ from odoo.addons.point_of_sale.tests.test_order_receipt import TestPosOrderRecei
 @tagged('post_install', '-at_install')
 class TestPosOrderReceiptRestaurant(TestPosOrderReceipt):
 
+    def test_service_fee_is_the_last_receipt_line_with_courses(self):
+        """
+        The PoS keeps the service fee in the last course, at the bottom of the order. The
+        receipt must list it last too, whatever the order the lines were created in.
+        """
+        preset = self.env['pos.preset'].create({
+            'name': 'Service fee preset',
+            'service_fee': True,
+            'service_fee_type': 'percent',
+            'service_fee_amount': 0.1,
+            'service_fee_based_on': 'pre_discount',
+        })
+        fee_product = preset.service_fee_product_id
+        starter_product = self.env['product.product'].create({
+            'name': 'Soup', 'available_in_pos': True, 'list_price': 8.0,
+        })
+        main_product = self.env['product.product'].create({
+            'name': 'Steak', 'available_in_pos': True, 'list_price': 25.0,
+        })
+        dessert_product = self.env['product.product'].create({
+            'name': 'Cake', 'available_in_pos': True, 'list_price': 6.0,
+        })
+        self.main_pos_config.write({'module_pos_restaurant': True})
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+
+        def line_values(product, qty=1, price=None, **values):
+            price = product.lst_price if price is None else price
+            return {
+                'product_id': product.id,
+                'qty': qty,
+                'price_unit': price,
+                'price_subtotal': price * qty,
+                'price_subtotal_incl': price * qty,
+                **values,
+            }
+
+        order = self.env['pos.order'].create({
+            'session_id': self.main_pos_config.current_session_id.id,
+            'company_id': self.env.company.id,
+            'preset_id': preset.id,
+            'amount_total': 0,
+            'amount_paid': 0,
+            'amount_tax': 0,
+            'amount_return': 0,
+            'lines': [Command.create(line_values(starter_product))],
+        })
+        starter, main = self.env['restaurant.order.course'].create([
+            {'name': 'Course 1', 'index': 1, 'order_id': order.id},
+            {'name': 'Course 2', 'index': 2, 'order_id': order.id},
+        ])
+        order.lines.course_id = starter
+        # The fee was created when the first course was alone, then moved to the last
+        # course as the second one came: its line predates the lines of that course.
+        self.env['pos.order.line'].create([
+            line_values(fee_product, price=3.3, order_id=order.id, course_id=main.id),
+            line_values(main_product, order_id=order.id, course_id=main.id),
+            line_values(dessert_product, order_id=order.id, course_id=main.id),
+        ])
+
+        receipt_lines = order._order_receipt_generate_line_data()
+
+        self.assertEqual(
+            [line['product_data']['display_name'] for line in receipt_lines],
+            ['Soup', 'Steak', 'Cake', fee_product.name],
+        )
+        self.assertTrue(receipt_lines[-1]['is_service_fee_line'])
+
     def test_split_per_product_preserves_course_grouping(self):
         """Test that split_per_product preserves course names on each split ticket."""
         category = self.env['pos.category'].create({'name': 'Food'})
