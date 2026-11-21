@@ -183,6 +183,12 @@ class IrUiView(models.Model):
                 record_from[name_field_from],
                 {lang: record_from.with_context(prefetch_langs=True, lang=lang)[name_field_from] for lang in langs if lang != lang_env}
             ))
+        term_converter = getattr(field_to.translate, 'term_converter', None)
+        if term_converter and field_from.translate is not field_to.translate:
+            extra_translation_dictionary = {
+                term_converter(term): values
+                for term, values in extra_translation_dictionary.items()
+            }
         for term, extra_translation_values in extra_translation_dictionary.items():
             existing_translation_values = existing_translation_dictionary.setdefault(term, {})
             # Update only default translation values that aren't customized by the user.
