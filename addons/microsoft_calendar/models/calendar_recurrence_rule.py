@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, Command
 from odoo.osv import expression
 
 
@@ -107,6 +107,9 @@ class RecurrenceRule(models.Model):
         vals['event_tz'] = microsoft_event.start.get('timeZone')
         super()._write_from_microsoft(microsoft_event, vals)
         new_event_values = self.env["calendar.event"]._microsoft_to_odoo_values(microsoft_event)
+        # applied event by event at the end, see _write_attendees_from_microsoft
+        attendee_commands = new_event_values.pop('attendee_ids', [])
+        partner_commands = new_event_values.pop('partner_ids', [])
         # Edge case:  if the base event was deleted manually in 'self_only' update, skip applying recurrence.
         # Also skip when the base event is an exception (follow_recurrence=False), because its
         # modified time will differ from the seriesMaster pattern without the master having changed,
@@ -150,6 +153,30 @@ class RecurrenceRule(models.Model):
             detached_events = self._apply_recurrence()
             detached_events.ms_universal_event_id = False
             detached_events.unlink()
+        self._write_attendees_from_microsoft(attendee_commands, partner_commands)
+
+    def _write_attendees_from_microsoft(self, attendee_commands, partner_commands):
+        """ Not written on all events at once: _attendees_values only creates the attendee
+        of a partner missing from every written event. """
+        events = self.calendar_event_ids.with_context(no_mail_to_attendees=True, dont_notify=True)
+        values = {'need_sync_m': False, 'recurrence_update': 'self_only'}
+        removed_ids = {command[1] for command in partner_commands if command[0] in (Command.DELETE, Command.UNLINK)}
+        events_to_clean = events.filtered(lambda e: removed_ids & set(e.partner_ids.ids))
+        if events_to_clean:
+            events_to_clean.write(dict(values, partner_ids=[Command.unlink(partner_id) for partner_id in removed_ids]))
+        for partner_id in {command[1] for command in partner_commands if command[0] == Command.LINK}:
+            events_to_add = events.filtered(lambda e: partner_id not in e.partner_ids.ids)
+            if events_to_add:
+                events_to_add.write(dict(values, partner_ids=[Command.link(partner_id)]))
+        state_by_partner = {
+            command[2]['partner_id']: command[2]['state']
+            for command in attendee_commands
+            if command[0] == Command.CREATE and 'state' in command[2]
+        }
+        for state in set(state_by_partner.values()):
+            events.attendee_ids.filtered(
+                lambda a: a.state != state and state_by_partner.get(a.partner_id.id) == state
+            ).write({'state': state})
 
     def _get_microsoft_sync_domain(self):
         # Do not sync Odoo recurrences with Outlook Calendar anymore.
