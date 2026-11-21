@@ -1997,20 +1997,41 @@ class Website(models.CachedModel):
             Returns a boolean, whether the page is considered to exist for the
             current website. This is a heuristic and is not perfectly reliable.
         """
-        # The page exists if there is a 'website.page' record with this url
-        if len(self._get_website_pages(domain=[('url', '=', page), ('view_id', '!=', False)], limit=1)) > 0:
-            return True
+        return self._is_page_redirected(page) or self._is_page_served(page)
 
-        # The page is considered to exist if there is a 'website.rewrite' record
-        # that does a redirect 301 or 302, for simplicity we do not check
-        # further whether the redirection points to an existing url.
-        redirects_domain = self.env.website.website_domain() & Domain(
+    def _is_page_redirected(self, page):
+        """
+            Returns a boolean, whether a 301 or 302 'website.rewrite' record of
+            the website redirects the page. For simplicity we do not check
+            further whether the redirection points to an existing url.
+        """
+        redirects_domain = self.website_domain() & Domain(
             [('url_from', '=', page), ('redirect_type', 'in', ('301', '302'))]
         )
-        if len(self.env['website.rewrite'].search(redirects_domain, limit=1)) > 0:
+        return len(self.env['website.rewrite'].search(redirects_domain, limit=1)) > 0
+
+    def _is_page_served(self, page, published=False):
+        """
+            Returns a boolean, whether the page is served by a 'website.page'
+            record or by a route, on the website or on any website if there is
+            none. This is a heuristic and is not perfectly reliable.
+
+            :param str page: the url of the page
+            :param bool published: whether the page must be visible by the
+                visitors, i.e. the 'website.page' record must be published and
+                the records in the url must be readable by the public user
+        """
+        # The page exists if there is a 'website.page' record with this url
+        page_domain = Domain([('url', '=ilike', page), ('view_id', '!=', False)])
+        if self:
+            page_domain &= self.website_domain()
+        if published:
+            page_domain &= Domain('is_published', '=', True)
+        if self.env['website.page'].sudo().search_count(page_domain, limit=1):
             return True
 
-        router = self.env['ir.http'].routing_map().bind('')
+        # The routes may differ per website (e.g. 'website.rewrite' 404 or 308)
+        router = self.env['ir.http'].with_context(website_id=self.id).routing_map().bind('')
         # If there is no rules matching this page, it does not exists
         if not router.test(path_info=page, method='GET'):
             return False
@@ -2023,6 +2044,7 @@ class Website(models.CachedModel):
             # further whether the redirection points to an existing url.
             return True
 
+        public_user = self.user_id or self.env.ref('base.public_user')
         try:
             # The rule may have restriction for some records that appear in its
             # url, these are checked by `rule.build`.
@@ -2032,7 +2054,11 @@ class Website(models.CachedModel):
                     args[arg] = args[arg].with_user(self.env.uid)
                     # For record that may be related to a website, we skip them
                     # if they are for a different website than the current one
-                    if hasattr(args[arg], 'website_id') and args[arg].website_id and args[arg].website_id != self:
+                    if self and hasattr(args[arg], 'website_id') and args[arg].website_id and args[arg].website_id != self:
+                        return False
+                    # The visitors can only see the records readable by the
+                    # public user of the website
+                    if published and not args[arg].with_user(public_user).with_context(website_id=self.id).has_access('read'):
                         return False
             rule.build(args, append_unknown=False)
         except MissingError:
