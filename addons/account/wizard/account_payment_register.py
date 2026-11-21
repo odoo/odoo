@@ -86,12 +86,11 @@ class AccountPaymentRegister(models.TransientModel):
     exchange_rate = fields.Float(
         compute="_compute_exchange_rate",
         digits=0,
-        readonly=True,
-        store=False
+        store=True, readonly=False,
     )
     exchange_rate_currency_id = fields.Many2one(
         comodel_name='res.currency',
-        compute="_compute_exchange_rate",
+        compute="_compute_exchange_rate_currency_id",
         store=False,
     )
 
@@ -975,7 +974,6 @@ class AccountPaymentRegister(models.TransientModel):
     def _compute_exchange_rate(self):
         for wizard in self:
             target_currency = wizard.currency_id if wizard.currency_id != wizard.company_currency_id else wizard.source_currency_id
-            wizard.exchange_rate_currency_id = target_currency
             if target_currency != wizard.company_currency_id:
                 wizard.exchange_rate = self.env['res.currency']._get_conversion_rate(
                     from_currency=wizard.company_currency_id,
@@ -985,6 +983,12 @@ class AccountPaymentRegister(models.TransientModel):
                 )
             else:
                 wizard.exchange_rate = 1.0
+
+    @api.depends('company_currency_id', 'source_currency_id', 'currency_id')
+    def _compute_exchange_rate_currency_id(self):
+        for wizard in self:
+            target_currency = wizard.currency_id if wizard.currency_id != wizard.company_currency_id else wizard.source_currency_id
+            wizard.exchange_rate_currency_id = target_currency
 
     def _fetch_duplicate_reference(self, matching_states=('draft', 'posted')):
         """ Retrieve move ids for possible duplicates of payments. Duplicates moves:
@@ -1084,6 +1088,7 @@ class AccountPaymentRegister(models.TransientModel):
             'journal_id': self.journal_id.id,
             'company_id': self.company_id.id,
             'currency_id': self.currency_id.id,
+            'currency_rate': self.exchange_rate,
             'partner_id': self._get_payment_display_partner(self.line_ids, self.partner_id.id),
             'partner_bank_id': self.partner_bank_id.id,
             'payment_method_line_id': self.payment_method_line_id.id,
@@ -1130,7 +1135,7 @@ class AccountPaymentRegister(models.TransientModel):
                         'partner_id': self.partner_id.commercial_partner_id.id,
                         'currency_id': self.currency_id.id,
                         'amount_currency': write_off_amount_currency,
-                        'balance': self.currency_id._convert(write_off_amount_currency, self.company_id.currency_id, self.company_id, self.payment_date),
+                        'balance': round(write_off_amount_currency / self.exchange_rate) if self.exchange_rate else self.currency_id._convert(write_off_amount_currency, self.company_id.currency_id, self.company_id, self.payment_date),
                     })
 
         return payment_vals
@@ -1157,6 +1162,7 @@ class AccountPaymentRegister(models.TransientModel):
             'journal_id': self.journal_id.id,
             'company_id': self.company_id.id,
             'currency_id': batch_values['source_currency_id'],
+            'currency_rate': self.exchange_rate,
             'partner_id': self._get_payment_display_partner(batch_result['lines'], batch_values['partner_id']),
             'payment_method_line_id': payment_method_line.id,
             'destination_account_id': batch_result['lines'][0].account_id.id,

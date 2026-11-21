@@ -2378,6 +2378,40 @@ class TestAccountPaymentRegister(AccountTestInvoicingWithBanksCommon, PaymentCom
         self.assertEqual(wizard.exchange_rate, invoice.invoice_currency_rate)
         self.assertAlmostEqual(1 / wizard.exchange_rate, 3194.44, places=2)
 
+        # The wizard exchange_rate is editable. Overriding it flows through to the
+        # payment's currency_rate and the journal entry balance reflects the custom rate.
+        # other_currency (EUR) rates: 2017-01-01 = 2.0 → 300 EUR / 2.0 = 150 USD at system rate.
+        invoice_eur = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'date': '2017-01-01',
+            'invoice_date': '2017-01-01',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.other_currency.id,
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 300.0,
+                'tax_ids': [],
+            })],
+        })
+        invoice_eur.action_post()
+
+        wizard_eur = self.env['account.payment.register'].with_context(
+            active_model='account.move',
+            active_ids=invoice_eur.ids,
+        ).create({'payment_date': '2017-01-01'})
+
+        # System rate is 2.0.
+        self.assertAlmostEqual(wizard_eur.exchange_rate, 2.0)
+
+        # Custom rate 2.5 → 300 EUR / 2.5 = 120 USD.
+        wizard_eur.exchange_rate = 2.5
+        payment = wizard_eur._create_payments()
+
+        self.assertAlmostEqual(payment.currency_rate, 2.5)
+        liquidity_lines, counterpart_lines, _ = payment._seek_for_lines()
+        self.assertAlmostEqual(liquidity_lines.balance, 120.0)
+        self.assertAlmostEqual(counterpart_lines.balance, -120.0)
+
     def test_register_payments_multi_partner_same_currency(self):
         """ Verify registering payment for multiple vendors with identical invoice
         currencies retains the invoice currency on the wizard.

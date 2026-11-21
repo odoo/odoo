@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import Command
+from odoo import Command, fields
 from odoo.tests import tagged
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
@@ -230,6 +230,55 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
             expected_exchange_info=expected_exchange_info,
         )
 
+        # Same invoice but with a custom rate of 2.5 on the payment.
+        # Invoice: 300 GOL at rate 3.0 → 100 USD.
+        # Payment: 300 GOL at custom rate 2.5 → 120 USD.
+        # Exchange difference: 120 - 100 = 20 USD (gain).
+        out_invoice_custom = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'date': '2016-01-01',
+            'invoice_date': '2016-01-01',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.curr_2.id,
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 300,
+                'tax_ids': [],
+            })],
+        })
+        out_invoice_custom.action_post()
+
+        payment_custom = self.env['account.payment'].create({
+            'amount': 300.0,
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.curr_2.id,
+            'journal_id': self.company_data['default_journal_bank'].id,
+            'date': fields.Date.from_string('2016-01-01'),
+        })
+        payment_custom.currency_rate = 2.5
+        payment_custom.action_post()
+
+        inv_recv = out_invoice_custom.line_ids.filtered(lambda l: l.account_type == 'asset_receivable')
+        pay_cpart = payment_custom.move_id.line_ids.filtered(lambda l: l.account_type == 'asset_receivable')
+        (inv_recv + pay_cpart).reconcile()
+
+        rec_exch_lines_custom = (inv_recv.matched_debit_ids | inv_recv.matched_credit_ids).exchange_move_id.line_ids.filtered(
+            lambda l: l.account_type == 'asset_receivable'
+        )
+        expected_amounts_custom = {payment_custom.move_id.id: 300.0}
+        expected_exchange_info_custom = {
+            'line_ids': rec_exch_lines_custom.ids,
+            'exchange_amount': 20.0,
+        }
+
+        self.assert_invoice_outstanding_reconciled_widget(
+            invoice=out_invoice_custom,
+            expected_amounts=expected_amounts_custom,
+            expected_exchange_info=expected_exchange_info_custom,
+        )
+
     def test_payments_with_exchange_difference_invoice(self):
         ''' Test the payments widget on invoices having a foreign currency that triggers an exchange difference on the invoice. '''
 
@@ -340,6 +389,58 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
             expected_amounts=expected_amounts,
             expected_exchange_info=expected_exchange_info,
         )
+
+        # Same scenario with a custom rate on the payment.
+        # Invoice: 330 GOL at rate 3.0 (2016) → base 100 USD, tax 10 USD = 110 USD total
+        # Payment: 330 GOL at custom rate 2.5  → 132 USD
+        # payment_rate = 330 / 132 = 2.5 (derived from journal line balances)
+        # CABA tax balance  = 30 / 2.5 = 12 USD  (not 15 at system rate 2.0)
+        # CABA base balance = 300 / 2.5 = 120 USD (not 150 at system rate 2.0)
+        invoice_custom = self._create_invoice(
+            date='2016-01-01',
+            partner_id=self.partner_a,
+            currency_id=self.curr_2,
+            invoice_line_ids=[
+                self._prepare_invoice_line(
+                    product_id=self.product_a,
+                    price_unit=300,
+                    tax_ids=self.cash_basis_tax,
+                ),
+            ],
+            post=True,
+        )
+
+        payment_custom = self.env['account.payment'].create({
+            'amount': 330.0,
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.curr_2.id,
+            'journal_id': self.company_data['default_journal_bank'].id,
+            'date': fields.Date.from_string('2016-01-01'),
+        })
+        payment_custom.currency_rate = 2.5
+        payment_custom.action_post()
+
+        inv_recv = invoice_custom.line_ids.filtered(lambda l: l.account_type == 'asset_receivable')
+        pay_cpart = payment_custom.move_id.line_ids.filtered(lambda l: l.account_type == 'asset_receivable')
+        (inv_recv + pay_cpart).reconcile()
+
+        caba_move = self.env['account.move'].search([
+            ('tax_cash_basis_origin_move_id', '=', invoice_custom.id),
+        ])
+        self.assertTrue(caba_move, "A CABA move should be created for the custom-rate payment.")
+
+        caba_tax_line = caba_move.line_ids.filtered(lambda l: l.tax_repartition_line_id)
+        self.assertAlmostEqual(abs(caba_tax_line.balance), 12.0,
+            msg="CABA tax balance should use the custom rate (30 / 2.5 = 12), not the system rate (30 / 2.5 ≠ 15).")
+
+        caba_base_line = caba_move.line_ids.filtered(
+            lambda l: l.account_id == self.env.company.account_cash_basis_base_account_id
+            and l.balance > 0
+        )
+        self.assertAlmostEqual(caba_base_line.balance, 120.0,
+            msg="CABA base balance should use the custom rate (300 / 2.5 = 120), not the system rate (300 / 2.0 = 150).")
 
     def test_outstanding_payments_branch_and_companies(self):
         """ Test the outstanding payments widget on invoices of a branch
