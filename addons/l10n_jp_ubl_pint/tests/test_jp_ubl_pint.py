@@ -43,6 +43,7 @@ class TestJpUBLPint(AccountTestInvoicingCommon):
         cls.startClassPatcher(freeze_time(cls.fakenow))
 
     def test_invoice(self):
+        self.product_a.lst_price = 500.0  # 1000 USD
         invoice = self.init_invoice('out_invoice', currency=self.other_currency, products=self.product_a)
         invoice.action_post()
 

@@ -444,12 +444,12 @@ class TestSalePrices(SaleCommon):
 
         product_1_ctxt = product_1.with_user(user_in_other_company)
         product_2_ctxt = product_2.with_user(user_in_other_company)
-        self.assertEqual(product_1_ctxt.currency_id, main_curr)
-        self.assertEqual(product_2_ctxt.currency_id, main_curr)
+        self.assertEqual(product_1_ctxt.currency_id, other_curr)
+        self.assertEqual(product_2_ctxt.currency_id, other_curr)
         self.assertEqual(product_1_ctxt.cost_currency_id, other_curr)
         self.assertEqual(product_2_ctxt.cost_currency_id, other_curr)
 
-        product_1.lst_price = 100.0
+        product_1_ctxt.lst_price = 100.0  # sales price is company_dependent
         product_2_ctxt.standard_price = 10.0  # cost is company_dependent
 
         pricelist = self.env["product.pricelist"].create({
@@ -478,7 +478,7 @@ class TestSalePrices(SaleCommon):
 
         # CASE 1:
         # company currency = so currency
-        # product_1.currency != so currency
+        # product_1.currency = so currency
         # product_2.cost_currency_id = so currency
         sales_order = product_1_ctxt.env["sale.order"].create({
             "partner_id": user_in_other_company.partner_id.id,
@@ -492,13 +492,13 @@ class TestSalePrices(SaleCommon):
         so_line_1 = sales_order.order_line[0]
         so_line_2 = sales_order.order_line[1]
         self.assertEqual(so_line_1.discount, 20)
-        self.assertEqual(so_line_1.price_unit, 50.0)
+        self.assertEqual(so_line_1.price_unit, 100.0)
         self.assertEqual(so_line_2.discount, 10)
         self.assertEqual(so_line_2.price_unit, 10)
 
         # CASE 2
         # company currency != so currency
-        # product_1.currency == so currency
+        # product_1.currency != so currency
         # product_2.cost_currency_id != so currency
         pricelist.currency_id = main_curr
         sales_order = product_1_ctxt.env["sale.order"].create({
@@ -514,7 +514,7 @@ class TestSalePrices(SaleCommon):
         so_line_1 = sales_order.order_line[0]
         so_line_2 = sales_order.order_line[1]
         self.assertEqual(so_line_1.discount, 20)
-        self.assertEqual(so_line_1.price_unit, 100.0)
+        self.assertEqual(so_line_1.price_unit, 200.0)
         self.assertEqual(so_line_2.discount, 10)
         self.assertEqual(so_line_2.price_unit, 20)
 
@@ -903,6 +903,7 @@ class TestSalePrices(SaleCommon):
             "account_fiscal_country_id": self.env.company.account_fiscal_country_id.id,
         })
         self.env.user.company_ids += branch_company
+        self.product.with_company(branch_company).list_price = 110.0
         order = self._create_so(
             company_id=branch_company.id, fiscal_position_id=fpos.id, user_id=False, team_id=False
         ).with_company(branch_company)
