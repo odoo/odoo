@@ -302,6 +302,17 @@ class TestTranslateUrl(TestLangUrl):
         self.assertEqual(r.status_code, 200)
         self.assertEqual(r.url, self.base + '/fr' + self.name_page_fr)
 
+    def test_access_translated_url_without_cookie(self):
+        # Trying to access the english url of a page with the french lang in
+        # the url should redirect to the french url of this page, with the
+        # lang kept in it, even for a client that does not follow the lang
+        # cookie, such as a crawler: the url is all it has.
+        headers = {'User-Agent': 'Googlebot/2.1 (+http://www.google.com/bot.html)'}
+        r = self.url_open('/fr' + self.name_page_en, headers=headers)
+        self.assertEqual(r.history[0].status_code, 303)
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.url, self.base + '/fr' + self.name_page_fr)
+
     def test_access_translated_homepage(self):
         # From the homepage, changing the language of the website should
         # redirect to the french url of the specific homepage (as it is the
