@@ -32,7 +32,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-10-14 12:51+0000\n"
+"PO-Revision-Date: 2026-11-20 10:32+0000\n"
 "Last-Translator: Burkay Yıldızhan <seyil@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-2/"
 "website_event_track/tr/>\n"
@@ -41,7 +41,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: website_event_track
 #. odoo-python
@@ -154,29 +154,29 @@ msgstr ""
 "<div>\n"
 "    Sayın <t t-out=\"object.partner_id.name or object.partner_name or ''\">"
 "Brandon Freeman</t><br/>\n"
-"    \" <t t-out=\"object.name or ''\">\" başlıklı önerinizin</t> \"What This "
-"Event Is All About\" başlıklı etkinliğimiz <t t-out=\"object.event_id.name "
-"or ''\">\"OpenWood Collection Online Reveal\" etkinliği</t> için kabul "
-"edildiğini ve onaylandığını bildirmekten memnuniyet duyarız.\n"
-"   <br/> \n"
-"    Daha fazla ayrıntıya buradan ulaşabilirsiniz:\n"
-"   <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"    <t t-out=\"object.name or ''\">What This Event Is All About</t> "
+"önerinizin <t t-out=\"object.event_id.name or ''\">OpenWood Collection "
+"Online Reveal</t> etkinliği için kabul edildiğini ve onaylandığını "
+"bildirmekten memnuniyet duyarız.\n"
+"    <br/>\n"
+"    Daha fazla ayrıntıyı burada bulabilirsiniz:\n"
+"    <div style=\"margin: 16px 0px 16px 0px;\">\n"
 "        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ "
 "object.id }}\" t-attf-style=\"padding: 8px 16px 8px 16px; font-size: 14px; "
 "color: {{object.company_id.email_primary_color or '#FFFFFF'}}; text-"
 "decoration: none !important; background-color: {"
-"{object.company_id.email_secondary_color or '#875A7B'}}; border-"
-"radius:3px\"> \n"
+"{object.company_id.email_secondary_color or '#875A7B'}}; border-radius:3px\">"
+"\n"
 "            Konuşmayı Görüntüle\n"
-"       </a>\n"
-"    </div> \n"
-"   <br/><br/> \n"
-"    Teşekkür ederiz,\n"
-"   <t t-if=\"user.signature\">\n"
-"        <br/> \n"
-"       <div data-o-mail-quote=\"1\"> --<br data-o-mail-quote=\"1\"/><t t-"
+"        </a>\n"
+"    </div>\n"
+"    <br/><br/>\n"
+"    Teşekkürler,\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br/>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
 "out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
-"   </t>\n"
+"    </t>\n"
 "</div>"
 
 #. module: website_event_track
@@ -1100,7 +1100,7 @@ msgstr "Etkinlik İstisna Dekorasyonu"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_plans_ids
 msgid "Activity Plans"
-msgstr ""
+msgstr "Aktivite Planları"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_state
@@ -1278,12 +1278,12 @@ msgstr "Takipçi"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__publish_on
 msgid "Auto publish on"
-msgstr ""
+msgstr "Otomatik yayınlama tarihi"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__publish_on
 msgid "Automatically publish the page on the chosen date and time."
-msgstr ""
+msgstr "Sayfayı seçilen tarih ve saatte otomatik olarak yayınlayın."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__allowed_track_tag_ids
@@ -2655,7 +2655,7 @@ msgstr "Yayınlandı"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__published_date
 msgid "Published date"
-msgstr ""
+msgstr "Yayın tarihi"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track10
@@ -3681,10 +3681,10 @@ msgstr "başlangıç tarihi"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
 msgid "track"
-msgstr ""
+msgstr "oturum"
 
 #. module: website_event_track
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/website_event_pwa.xml:0
 msgid "x"
-msgstr ""
+msgstr "x"

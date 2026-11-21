@@ -8,7 +8,7 @@
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
 # Martin Trigaux, 2022
 # Cozmin Candea <office@terrabit.ro>, 2023
-# Dorin Hongu <dhongu@gmail.com>, 2023, 2025.
+# Dorin Hongu <dhongu@gmail.com>, 2023, 2025, 2026.
 # Fenyedi Levente, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Ciocoiu Beatrice-Flavia <ciocoiuflavia008@gmail.com>, 2025.
@@ -18,17 +18,17 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-30 17:37+0000\n"
-"PO-Revision-Date: 2025-12-09 14:05+0000\n"
-"Last-Translator: Alin Ilie <alin.ilie@logit-solutions.com>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/payment/"
-"ro/>\n"
+"PO-Revision-Date: 2026-11-20 10:31+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-2/"
+"payment/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.availability_report_records
@@ -1551,7 +1551,7 @@ msgstr "Mesaje"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__minimum_amount
 msgid "Minimum Amount"
-msgstr ""
+msgstr "Cantitatea minimă"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_momo
@@ -1832,12 +1832,12 @@ msgstr "Plătește mai târziu"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__pay_later_label
 msgid "Pay Later Label"
-msgstr ""
+msgstr "Etichetă pentru plata ulterioară"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__pay_now_label
 msgid "Pay Now Label"
-msgstr ""
+msgstr "Etichetă pentru plata imediată"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_paybright
@@ -2115,7 +2115,7 @@ msgstr "Vă rugăm să așteptați..."
 #. module: payment
 #: model:ir.model,name:payment.model_portal_entry
 msgid "Portal Entry"
-msgstr ""
+msgstr "Înregistrare în portal"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -2685,6 +2685,7 @@ msgid ""
 "The label to be displayed on the payment buttons for 'Pay Later' payment "
 "methods."
 msgstr ""
+"Eticheta afișată pe butoanele metodelor de plată de tip „Plătește ulterior”."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_res_company__pay_now_label
@@ -2692,6 +2693,7 @@ msgid ""
 "The label to be displayed on the payment buttons for 'Pay Now' payment "
 "methods."
 msgstr ""
+"Eticheta afișată pe butoanele metodelor de plată de tip „Plătește acum”."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__supported_country_ids
@@ -2770,6 +2772,8 @@ msgid ""
 "The minimum payment amount that this payment provider is available for. "
 "Leave blank to make it available for any payment amount."
 msgstr ""
+"Suma minimă a plății pentru care este disponibil acest furnizor. Lasă câmpul "
+"necompletat pentru a-l face disponibil indiferent de sumă."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__support_manual_capture
@@ -2978,7 +2982,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/controllers/portal.py:0
 msgid "This payment provider is not available."
-msgstr ""
+msgstr "Acest furnizor de plăți nu este disponibil."
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_tienphong
@@ -3512,7 +3516,7 @@ msgstr "Cod postal"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
 msgid "Zip Code"
-msgstr ""
+msgstr "Cod poștal"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cofidis
@@ -3605,6 +3609,8 @@ msgid ""
 "to make this\n"
 "                    payment."
 msgstr ""
+"pentru a efectua această\n"
+"                    plată."
 
 #. module: payment
 #. odoo-python

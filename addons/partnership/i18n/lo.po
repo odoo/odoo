@@ -6,10 +6,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.1a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"POT-Creation-Date: 2026-11-20 17:37+0000\n"
 "PO-Revision-Date: 2025-12-16 18:36+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -28,8 +29,7 @@ msgstr ""
 #. module: partnership
 #: model_terms:ir.actions.act_window,help:partnership.action_pricelist_partners
 msgid ""
-"Add this pricelist to a grade in order to assign it to a partner or a "
-"member."
+"Add this pricelist to a grade in order to assign it to a partner or a member."
 msgstr ""
 
 #. module: partnership
@@ -178,10 +178,8 @@ msgid "Name given to affiliates:"
 msgstr ""
 
 #. module: partnership
-#: model:ir.model.fields,help:partnership.field_product_pricelist__partners_label
 #: model:ir.model.fields,help:partnership.field_res_company__partnership_label
 #: model:ir.model.fields,help:partnership.field_res_config_settings__partnership_label
-#: model:ir.model.fields,help:partnership.field_res_partner_grade__partners_label
 msgid "Name used to refer to affiliates: partners, members, alumnis, etc..."
 msgstr ""
 
@@ -218,9 +216,13 @@ msgstr ""
 
 #. module: partnership
 #: model:ir.model.fields,field_description:partnership.field_product_pricelist__partners_label
+#: model:ir.model.fields,field_description:partnership.field_res_partner_grade__partners_label
+msgid "Partners Label"
+msgstr ""
+
+#. module: partnership
 #: model:ir.model.fields,field_description:partnership.field_res_company__partnership_label
 #: model:ir.model.fields,field_description:partnership.field_res_config_settings__partnership_label
-#: model:ir.model.fields,field_description:partnership.field_res_partner_grade__partners_label
 msgid "Partnership Label"
 msgstr ""
 
@@ -259,16 +261,16 @@ msgstr ""
 #. odoo-python
 #: code:addons/partnership/models/res_partner.py:0
 msgid ""
-"You are trying to assign two different pricelists (one directly and one from"
-" grade (%(grade_name)s))."
+"You are trying to assign two different pricelists (one directly and one from "
+"grade (%(grade_name)s))."
 msgstr ""
 
 #. module: partnership
 #. odoo-python
 #: code:addons/partnership/models/sale_order.py:0
 msgid ""
-"You cannot confirm Sale Order %(sale_order_name)s because there are products"
-" assigning different grades."
+"You cannot confirm Sale Order %(sale_order_name)s because there are products "
+"assigning different grades."
 msgstr ""
 
 #. module: partnership
