@@ -638,29 +638,54 @@ export function inlineElement(element) {
     return element;
 }
 
+const r = String.raw;
+
+const ADDRESS = r`<([^<>@]*@[^<>]*)>`;
 /**
- * Parses text to find email: Tagada <address@mail.fr> -> [Tagada, address@mail.fr] or False
+ * We want to use "<" as a delimiter to detect where the name ends and the email
+ * address starts. Problem: "<" and ">" are valid characters in a name if the
+ * name is quoted. Solution: first, try to match a quoted name, which is easy
+ * using unescaped quotes as delimiters. If there is no match, it's safe to
+ * proceed with a regex that uses "<" as a delimiter, because that character
+ * isn't allowed outside of a quoted name.
+ */
+const QUOTED_NAME = r`"((?:[^"\\]|\\.)*)"`;
+const UNQUOTED_NAME = r`([^<]*)`;
+const QUOTED_NAME_AND_ADDRESS = new RegExp(r`^${QUOTED_NAME}\s*${ADDRESS}`);
+const NAME_AND_ADDRESS = new RegExp(r`^${UNQUOTED_NAME}${ADDRESS}`);
+
+/**
+ * Parses a mailbox:
+ * "Tagada <tagada@example.com>" -> ["Tagada", "tagada@example.com"]
+ * https://www.rfc-editor.org/info/rfc5322/#section-3.4
+ *
+ * NOT intended for email validation.
  *
  * @param {string} text
- * @returns {[string,string|boolean]|false}
+ * @returns {[string, string]} [name, email], with email "" if text has no address
  */
 export function parseEmail(text) {
-    if (!text) {
-        return;
+    text = text ? text.trim() : "";
+    let match = text.match(QUOTED_NAME_AND_ADDRESS);
+    if (match) {
+        const name = match[1].replace(/\\(.)/g, "$1").trim();
+        const email = match[2].trim();
+        return [name || email, email];
     }
-    let result = text.match(/"?(.*?)"? <(.*@.*)>/);
-    if (result) {
-        const name = (result[1] || "").trim().replace(/(^"|"$)/g, "");
-        return [name, (result[2] || "").trim()];
+    match = text.match(NAME_AND_ADDRESS);
+    if (match) {
+        // remove spaces and stray quotes now, rather than in the regex, as
+        // skipping spaces in the regex would make it quadratic
+        const name = match[1].trim().replace(/(^"|"$)/g, "");
+        const email = match[2].trim();
+        return [name || email, email];
     }
-    result = text.match(/(.*@.*)/);
-    if (result) {
-        return [String(result[1] || "").trim(), String(result[1] || "").trim()];
+    if (text.includes("@")) {
+        return [text, text];
     }
-    return [text, false];
+    return [text, ""];
 }
 
-const r = String.raw;
 /**
  * Match Country Subdivision Flags.
  * Black Flag emoji + tag-encoded subdivision name + cancel tag
