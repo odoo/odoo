@@ -2775,3 +2775,55 @@ class Website(models.CachedModel):
     def _get_settings_to_copy_onto_new_default_website(self):
         # This list is extended by other modules
         return []
+
+    # -------------------------------------------------------------------------
+    # Website Builder / Branding API
+    # -------------------------------------------------------------------------
+
+    def update_branding(self, values):
+        """Save the name, favicon and logo from the website builder.
+
+        :param dict values: Supported keys: 'name' (str), 'favicon' (int|False), 'logo' (int).
+        :return: why each refused field was refused, e.g.
+            ``{"logo": "Invalid branding values."}``.
+        """
+        self.ensure_one()
+        self.check_access("write")
+        if not isinstance(values, dict):
+            raise ValidationError(self.env._("Invalid branding values."))
+
+        errors = {}
+        for field in ("name", "favicon", "logo"):
+            if field not in values:
+                continue
+            try:
+                with self.env.cr.savepoint():
+                    self.write({field: self._get_branding_value(field, values[field])})
+            except UserError as error:
+                errors[field] = error.args[0]
+
+        return errors
+
+    def _get_branding_value(self, field, value):
+        unexpected_value_error = self.env._("Invalid branding values.")
+        if field == "name":
+            if not isinstance(value, str) or not value.strip():
+                raise ValidationError(unexpected_value_error)
+            return value.strip()
+        if field == "favicon" and value is False:
+            return False
+
+        if not isinstance(value, int) or isinstance(value, bool):
+            raise ValidationError(unexpected_value_error)
+        attachment = self.env["ir.attachment"].browse(value).exists()
+        if not attachment or not attachment.has_access("read"):
+            raise ValidationError(unexpected_value_error)
+
+        if attachment.type == "url":
+            data = self.env["ir.qweb.field.image"].load_remote_url(attachment.url)
+            if not data:
+                raise ValidationError(self.env._("The image could not be downloaded from its URL."))
+            return data
+        if not attachment.raw or not (attachment.mimetype or "").startswith("image/"):
+            raise ValidationError(unexpected_value_error)
+        return attachment.raw
