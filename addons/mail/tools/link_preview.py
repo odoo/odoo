@@ -6,6 +6,8 @@ import chardet
 import requests
 from urllib3.exceptions import LocationParseError
 
+from odoo.tools.translate import _get_translation_source
+
 
 def get_link_preview_from_url(url, request_session=None):
     """
@@ -21,9 +23,12 @@ def get_link_preview_from_url(url, request_session=None):
     a session could be beneficial performance wise
     (e.g. a lot of url could have the same domain).
     """
-    # Some websites are blocking non browser user agent.
+    _module, lang = _get_translation_source(1)
+    # Some websites are blocking non browser user agent or showing better
+    # preview to social media bots
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101 Firefox/91.0',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101 Firefox/91.0 facebookexternalhit/1.1 Facebot Twitterbot/1.0',
+        'Accept-Language': lang.replace('_', '-'),
         'Odoo-Link-Preview': 'True',  # Used to identify coming from the link previewer
     }
     try:
