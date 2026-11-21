@@ -5,11 +5,13 @@ import {
     contains,
     MENU_ACTIVE_IDS,
     openDiscuss,
+    openMessagingMenu,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
+import { waitFor } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 
 import { getOrigin } from "@web/core/utils/urls";
@@ -26,6 +28,16 @@ test("meeting action is a dropdown offering to start or schedule a meeting", asy
     await contains(".o-dropdown-item", { count: 2 });
     await contains(".o-dropdown-item:text('Start Now')");
     await contains(".o-dropdown-item:text('Schedule for later')");
+});
+
+test("light user can only start a meeting right away", async () => {
+    serverState.isRegularUser = false;
+    await startServer();
+    await start();
+    await openMessagingMenu(MENU_ACTIVE_IDS.MEETING);
+    await click(".o-mail-MessagingMenu-searchRow .btn");
+    await waitFor(".o-dropdown-item:count(1)");
+    await waitFor(".o-dropdown-item:text('Start Now'):count(1)");
 });
 
 test("scheduling a meeting leaves for the calendar, video call in hand", async () => {
