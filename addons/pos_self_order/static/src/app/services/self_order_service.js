@@ -433,6 +433,13 @@ export class SelfOrder {
             comboValues
         );
         const newLine = this.models["pos.order.line"].create(values);
+        if (newLine.course_id) {
+            this.currentOrder.lines.forEach((line) => {
+                if (!line.course_id && line.uuid !== newLine.uuid) {
+                    line.course_id = newLine.course_id;
+                }
+            });
+        }
         const lineToMerge = this.currentOrder.lines.find(
             (l) => l.canBeMergedWith(newLine) && l.id !== newLine.id
         );
@@ -862,6 +869,9 @@ export class SelfOrder {
             const tableIdentifier = this.currentTableIdentifier;
             if (this.shouldUpdateLastOrderChange()) {
                 order.updateLastOrderChange();
+            }
+            if (this.currentOrder.course_ids.length) {
+                this.currentOrder.course_ids[0].fired = true;
             }
             const data = await rpc(
                 `/pos-self-order/process-order/${this.config.self_ordering_mode}`,
