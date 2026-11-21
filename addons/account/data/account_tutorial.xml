@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_tutorial" model="web_tutorial.tutorial">
+        <field name="name">account_tutorial</field>
+        <field name="action_id" ref="open_account_journal_dashboard_kanban"/>
+        <field name="title">Send your first invoice</field>
+        <field name="sequence">10</field>
+        <field name="group_ids" eval="[Command.link(ref('group_account_invoice'))]"/>
+        <field name="rainbow_man_message">Congratulations, your first invoice is ready to be sent!</field>
+    </record>
+
+    <record id="account_tutorial_chapter_journal_kanban" model="web_tutorial.chapter">
+        <field name="tutorial_id" ref="account_tutorial"/>
+        <field name="sequence">10</field>
+        <field name="model_id" ref="model_account_journal"/>
+        <field name="view_type">kanban</field>
+    </record>
+
+    <record id="account_tutorial_step_journal_kanban_action_create_new" model="web_tutorial.step">
+        <field name="chapter_id" ref="account_tutorial_chapter_journal_kanban"/>
+        <field name="sequence">10</field>
+        <field name="type">method</field>
+        <field name="name">action_create_new</field>
+        <field name="content">Ready to get paid? Create your first invoice.</field>
+    </record>
+
+    <record id="account_tutorial_chapter_invoice_form" model="web_tutorial.chapter">
+        <field name="tutorial_id" ref="account_tutorial"/>
+        <field name="sequence">20</field>
+        <field name="model_id" ref="model_account_move"/>
+        <field name="view_type">form</field>
+        <field name="context">{'default_move_type': 'out_invoice'}</field>
+    </record>
+
+    <record id="account_tutorial_step_invoice_form_partner_id" model="web_tutorial.step">
+        <field name="chapter_id" ref="account_tutorial_chapter_invoice_form"/>
+        <field name="sequence">10</field>
+        <field name="type">field</field>
+        <field name="name">partner_id</field>
+        <field name="content">Who are you invoicing? Type a few letters to find the customer, or create a new one.</field>
+    </record>
+
+    <record id="account_tutorial_step_invoice_form_invoice_payment_term_id" model="web_tutorial.step">
+        <field name="chapter_id" ref="account_tutorial_chapter_invoice_form"/>
+        <field name="sequence">20</field>
+        <field name="type">field</field>
+        <field name="name">invoice_payment_term_id</field>
+        <field name="content">When should your customer pay? Pick the payment terms.</field>
+    </record>
+
+    <record id="account_tutorial_step_invoice_form_invoice_line_ids" model="web_tutorial.step">
+        <field name="chapter_id" ref="account_tutorial_chapter_invoice_form"/>
+        <field name="sequence">30</field>
+        <field name="type">field</field>
+        <field name="name">invoice_line_ids</field>
+        <field name="content">Add a line for what you sell.</field>
+    </record>
+
+    <record id="account_tutorial_step_invoice_form_invoice_line_ids_label" model="web_tutorial.step">
+        <field name="chapter_id" ref="account_tutorial_chapter_invoice_form"/>
+        <field name="sequence">40</field>
+        <field name="type">field</field>
+        <field name="name">invoice_line_ids.label</field>
+        <field name="content">Describe the product or service you're invoicing.</field>
+    </record>
+
+    <record id="account_tutorial_step_invoice_form_invoice_line_ids_price_unit" model="web_tutorial.step">
+        <field name="chapter_id" ref="account_tutorial_chapter_invoice_form"/>
+        <field name="sequence">50</field>
+        <field name="type">field</field>
+        <field name="name">invoice_line_ids.price_unit</field>
+        <field name="content">How much does it cost? Enter its price.</field>
+    </record>
+
+    <record id="account_tutorial_step_invoice_form_action_post" model="web_tutorial.step">
+        <field name="chapter_id" ref="account_tutorial_chapter_invoice_form"/>
+        <field name="sequence">60</field>
+        <field name="type">method</field>
+        <field name="name">action_post</field>
+        <field name="content">Everything looks right? Confirm the invoice.</field>
+    </record>
+
+    <record id="account_tutorial_step_invoice_form_action_invoice_sent" model="web_tutorial.step">
+        <field name="chapter_id" ref="account_tutorial_chapter_invoice_form"/>
+        <field name="sequence">70</field>
+        <field name="type">method</field>
+        <field name="name">action_invoice_sent</field>
+        <field name="hint" eval="True"/>
+        <field name="content">From here, you can send the invoice to your customer by email.</field>
+    </record>
+</odoo>

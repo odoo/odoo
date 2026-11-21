@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_tutorial" model="web_tutorial.tutorial">
+        <field name="name">sale_tutorial</field>
+        <field name="action_id" ref="action_quotations_with_onboarding"/>
+        <field name="title">Send your first quotation</field>
+        <field name="sequence">20</field>
+        <field name="group_ids" eval="[Command.link(ref('sales_team.group_sale_salesman'))]"/>
+        <field name="rainbow_man_message">Congratulations, your first quotation is ready to be sent!</field>
+    </record>
+
+    <record id="sale_tutorial_chapter_quotation_list" model="web_tutorial.chapter">
+        <field name="tutorial_id" ref="sale_tutorial"/>
+        <field name="sequence">10</field>
+        <field name="model_id" ref="model_sale_order"/>
+        <field name="view_type">list</field>
+    </record>
+
+    <record id="sale_tutorial_step_quotation_list_new" model="web_tutorial.step">
+        <field name="chapter_id" ref="sale_tutorial_chapter_quotation_list"/>
+        <field name="sequence">10</field>
+        <field name="type">generic_button</field>
+        <field name="name">New</field>
+        <field name="content">Ready to sell? Build your first quotation right here.</field>
+    </record>
+
+    <record id="sale_tutorial_chapter_quotation_form" model="web_tutorial.chapter">
+        <field name="tutorial_id" ref="sale_tutorial"/>
+        <field name="sequence">20</field>
+        <field name="model_id" ref="model_sale_order"/>
+        <field name="view_type">form</field>
+    </record>
+
+    <record id="sale_tutorial_step_quotation_form_partner_id" model="web_tutorial.step">
+        <field name="chapter_id" ref="sale_tutorial_chapter_quotation_form"/>
+        <field name="sequence">10</field>
+        <field name="type">field</field>
+        <field name="name">partner_id</field>
+        <field name="content">Who is it for? Type a few letters to find your customer, or create a new one.</field>
+    </record>
+
+    <record id="sale_tutorial_step_quotation_form_order_line" model="web_tutorial.step">
+        <field name="chapter_id" ref="sale_tutorial_chapter_quotation_form"/>
+        <field name="sequence">20</field>
+        <field name="type">field</field>
+        <field name="name">order_line</field>
+        <field name="content">What are you selling? Add a line to your quotation.</field>
+    </record>
+
+    <record id="sale_tutorial_step_quotation_form_order_line_label" model="web_tutorial.step">
+        <field name="chapter_id" ref="sale_tutorial_chapter_quotation_form"/>
+        <field name="sequence">30</field>
+        <field name="type">field</field>
+        <field name="name">order_line.label</field>
+        <field name="content">Type a description, or search for an existing product.</field>
+    </record>
+
+    <record id="sale_tutorial_step_quotation_form_order_line_product_uom_qty" model="web_tutorial.step">
+        <field name="chapter_id" ref="sale_tutorial_chapter_quotation_form"/>
+        <field name="sequence">40</field>
+        <field name="type">field</field>
+        <field name="name">order_line.product_uom_qty</field>
+        <field name="content">How many? Set the quantity.</field>
+    </record>
+
+    <record id="sale_tutorial_step_quotation_form_order_line_price_unit" model="web_tutorial.step">
+        <field name="chapter_id" ref="sale_tutorial_chapter_quotation_form"/>
+        <field name="sequence">50</field>
+        <field name="type">field</field>
+        <field name="name">order_line.price_unit</field>
+        <field name="content">Check the price, and adjust it if needed.</field>
+    </record>
+
+    <record id="sale_tutorial_step_quotation_form_action_quotation_send" model="web_tutorial.step">
+        <field name="chapter_id" ref="sale_tutorial_chapter_quotation_form"/>
+        <field name="sequence">60</field>
+        <field name="type">method</field>
+        <field name="name">action_quotation_send</field>
+        <field name="hint" eval="True"/>
+        <field name="content">All set? From here, you can send the quotation to your customer by email.</field>
+    </record>
+</odoo>
