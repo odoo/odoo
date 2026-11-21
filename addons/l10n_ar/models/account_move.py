@@ -58,6 +58,21 @@ class AccountMove(models.Model):
         if not_invoices:
             raise ValidationError(_("The selected Journal can't be used in this transaction, please select one that doesn't use documents as these are just for Invoices."))
 
+    @api.constrains('company_id', 'journal_id', 'state')
+    def _check_afip_responsibility_on_new_invoices(self):
+        """ Prevent creation of new invoices when company has no AFIP responsibility configured """
+        new_invoices = self.filtered(
+            lambda x: x.company_id.account_fiscal_country_id.code == "AR" and
+            x.journal_id.l10n_latam_use_documents and
+            x.state == 'draft' and
+            not x.company_id.l10n_ar_afip_responsibility_type_id and
+            not x.posted_before  # Only block new invoices, not existing ones being reopened
+        )
+        if new_invoices:
+            action = self.env.ref('base.action_res_company_form')
+            msg = _('Cannot create invoices until you configure your company AFIP Responsibility and VAT.')
+            raise RedirectWarning(msg, action.id, _('Go to Companies'))
+
     @api.constrains('move_type', 'l10n_latam_document_type_id')
     def _check_invoice_type_document_type(self):
         """ LATAM module define that we are not able to use debit_note or invoice document types in an invoice refunds,
