@@ -7,6 +7,10 @@ export class GDriveVideo extends AbstractThirdPartyVideo {
     static urlMatcher =
         /^https:\/\/drive\.google\.com\/file\/d\/(?<id>.*?)\/.*?(?:\?[0-9a-z_\-=&]+)?$/i;
 
+    static optionsConfig = {
+        isVertical: { default: false, type: Boolean },
+    };
+
     /**
      * Returns the embed url for a Google Drive video.
      *
