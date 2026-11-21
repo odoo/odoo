@@ -1,4 +1,5 @@
 import * as urlUtils from "@html_editor/utils/url";
+import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { patch } from "@web/core/utils/patch";
 import { UrlAutoComplete } from "@website/components/autocomplete_with_pages/url_autocomplete";
@@ -274,6 +275,72 @@ export function generateGMapLink(dataset) {
         encodeURIComponent(dataset.mapZoom) +
         "&ie=UTF8&iwloc=&output=embed"
     );
+}
+
+/**
+ * Returns the name or the id of the Facebook page targeted by the given link.
+ *
+ * @param {string} url
+ * @returns {string|undefined}
+ */
+export function getFacebookPageId(url) {
+    // Patterns matched by the regex (all relate to existing pages,
+    // in spite of the URLs containing "profile.php" or "people"):
+    // - https://www.facebook.com/<pagewithaname>
+    // - http://www.facebook.com/<page.with.a.name>
+    // - www.facebook.com/<fbid>
+    // - facebook.com/profile.php?id=<fbid>
+    // - www.facebook.com/<name>-<fbid>  - NB: the name doesn't matter
+    // - www.fb.com/people/<name>/<fbid>  - same
+    // - m.facebook.com/p/<name>-<fbid>  - same
+    // The regex is kept as a huge one-liner for performance as it is
+    // compiled once on script load. The only way to split it on several
+    // lines is with the RegExp constructor, which is compiled on runtime.
+    const match = url
+        .trim()
+        .match(
+            /^(https?:\/\/)?((www\.)?(fb|facebook)|(m\.)?facebook)\.com\/(((profile\.php\?id=|people\/([^/?#]+\/)?|(p\/)?[^/?#]+-)(?<id>[0-9]{12,16}))|(?<nameid>[\w.]+))($|[/?# ])/
+        );
+    return match?.groups.nameid || match?.groups.id;
+}
+
+/**
+ * Returns the default accessible name from the iframe or map of the given
+ * snippet.
+ *
+ * @param {HTMLElement} snippetEl
+ * @returns {string}
+ */
+export function getDefaultAccessibleName(snippetEl) {
+    if (snippetEl.matches(".s_map")) {
+        return snippetEl.dataset.mapAddress
+            ? _t("Map of %(address)s", { address: snippetEl.dataset.mapAddress })
+            : _t("Map");
+    }
+    if (snippetEl.matches(".o_facebook_page")) {
+        const page = snippetEl.dataset.id || getFacebookPageId(snippetEl.dataset.href || "");
+        return page ? _t("Facebook page: %(page)s", { page }) : _t("Facebook page");
+    }
+    if (snippetEl.matches(".s_instagram_page")) {
+        return snippetEl.dataset.instagramPage
+            ? _t("Instagram account @%(handle)s", { handle: snippetEl.dataset.instagramPage })
+            : _t("Instagram account");
+    }
+    if (snippetEl.matches(".s_store_locator")) {
+        return _t("Map of locations");
+    }
+    return "";
+}
+
+/**
+ * Returns the accessible name of the content embedded in the given snippet: the
+ * one set by the user or the default.
+ *
+ * @param {HTMLElement} snippetEl
+ * @returns {string}
+ */
+export function getAccessibleName(snippetEl) {
+    return snippetEl.dataset.accessibleName || getDefaultAccessibleName(snippetEl);
 }
 
 /**
