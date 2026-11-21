@@ -1,64 +1,29 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
-import odoo
-from odoo.addons.mail.tests.common import mail_new_test_user
-from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
+from odoo.tests import tagged
 
-@odoo.tests.tagged('post_install', '-at_install')
-class TestPoSController(TestPointOfSaleHttpCommon):
+from odoo.addons.mail.tests.common import mail_new_test_user
+from odoo.addons.point_of_sale.tests.common import PosHttpCommon
+
+
+@tagged('post_install', '-at_install')
+class TestPoSController(PosHttpCommon):
     _test_user_groups = None  # FIXME list needed groups
 
-    def _pay_order(self, order):
-        payment = self.env['pos.make.payment'].with_context(
-            active_ids=[order.id], active_id=order.id,
-        ).create({
-            'amount': order.amount_total,
-            'payment_method_id': self.main_pos_config.payment_method_ids[0].id,
-        })
-        payment.with_context(active_id=order.id).check()
-        self.assertEqual(order.state, 'paid')
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.wall_shelf.list_price = 10
 
     def test_qr_code_receipt(self):
         """This test make sure that no user is created when a partner is set on the PoS order.
             It also makes sure that the invoice is correctly created.
         """
         self.authenticate(None, None)
-        self.new_partner = self.env['res.partner'].create({
-            'name': 'AAA Partner',
-            'zip': '12345',
-            'state_id': self.env.ref('base.state_us_1').id,
-            'country_id': self.env.ref('base.us').id,
-        })
-        self.product1 = self.env['product.product'].create({
-            'name': 'Test Product 1',
-            'is_storable': True,
-            'list_price': 10.0,
-            'taxes_id': False,
-        })
-        self.main_pos_config.open_ui()
-        self.pos_order = self.env['pos.order'].create({
-            'company_id': self.env.company.id,
-            'session_id': self.main_pos_config.current_session_id.id,
-            'partner_id': self.new_partner.id,
-            'access_token': '1234567890',
-            'lines': [(0, 0, {
-                'name': "OL/0001",
-                'product_id': self.product1.id,
-                'price_unit': 10,
-                'discount': 0.0,
-                'qty': 1.0,
-                'tax_ids': False,
-                'price_subtotal': 10,
-                'price_subtotal_incl': 10,
-            })],
-            'amount_tax': 10,
-            'amount_total': 10,
-            'amount_paid': 10.0,
-            'amount_return': 10.0,
-        })
-        self._pay_order(self.pos_order)
-        self.main_pos_config.current_session_id.close_session_from_ui()
+        self.new_partner = self.partner_full
+        self.open_new_session()
+        self.pos_order = self.create_pos_order([[self.wall_shelf.product_variant_id]], customer=self.new_partner)
+        self.close_pos_session()
         get_invoice_data = {
             'access_token': self.pos_order.access_token,
             'name': self.new_partner.name,
@@ -73,21 +38,14 @@ class TestPoSController(TestPointOfSaleHttpCommon):
             'csrf_token': self.csrf_token()
         }
         self.url_open(f'/pos/ticket/validate?access_token={self.pos_order.access_token}', data=get_invoice_data)
-        self.assertEqual(self.env['res.partner'].sudo().search_count([('name', '=', 'AAA Partner')]), 1)
+        self.assertEqual(self.env['res.partner'].sudo().search_count([('name', '=', self.new_partner.name)]), 1)
         self.assertTrue(self.pos_order.is_singly_invoiced, "The pos order should have an invoice")
         self.assertTrue(len(self.pos_order.pos_reference) >= 12, "The pos reference should not be less than 12 characters")
 
     def test_qr_code_receipt_user_connected(self):
         """This test make sure that when the user is already connected he correctly gets redirected to the invoice."""
-        self.partner_1 = self.env['res.partner'].create({
-            'name': 'Valid Lelitre',
-            'email': 'valid.lelitre@agrolait.com',
-            'street': 'Aroma Circle',
-            'city': 'Palanpur',
-            'country_id': self.env.company.country_id.id,
-            'state_id': self.env.company.country_id.state_ids[0].id,
-            'zip': 789456
-        })
+        self.partner_1 = self.partner_full
+        self.partner_1.phone = False
         self.partner_1_user = mail_new_test_user(
             self.env,
             name=self.partner_1.name,
@@ -98,34 +56,9 @@ class TestPoSController(TestPointOfSaleHttpCommon):
         )
         self.authenticate('partner_1', 'partner_1')
 
-        self.product1 = self.env['product.product'].create({
-            'name': 'Test Product 1',
-            'is_storable': True,
-            'list_price': 10.0,
-            'taxes_id': False,
-        })
-        self.main_pos_config.open_ui()
-        self.pos_order_1 = self.env['pos.order'].create({
-            'session_id': self.main_pos_config.current_session_id.id,
-            'company_id': self.env.company.id,
-            'access_token': '1234567890',
-            'lines': [(0, 0, {
-                'name': "OL/0001",
-                'product_id': self.product1.id,
-                'price_unit': 10,
-                'discount': 0.0,
-                'qty': 1.0,
-                'tax_ids': False,
-                'price_subtotal': 10,
-                'price_subtotal_incl': 10,
-            })],
-            'amount_tax': 10,
-            'amount_total': 10,
-            'amount_paid': 10.0,
-            'amount_return': 10.0,
-        })
-        self._pay_order(self.pos_order_1)
-        self.main_pos_config.current_session_id.close_session_from_ui()
+        self.open_new_session()
+        self.pos_order_1 = self.create_pos_order([[self.wall_shelf.product_variant_id]])
+        self.close_pos_session()
         res = self.url_open(f'/pos/ticket/validate?access_token={self.pos_order_1.access_token}', timeout=30000)
         # Invoice is not created because user does not contains required field phone
         self.assertIn('The Phone must be filled in your details.', res.content.decode('utf-8'))
@@ -133,28 +66,9 @@ class TestPoSController(TestPointOfSaleHttpCommon):
         self.assertFalse("my/invoices" in res.url)
 
         self.partner_1.phone = '+1 (555) 555-5555'
-        self.main_pos_config.open_ui()
-        self.pos_order_2 = self.env['pos.order'].create({
-            'session_id': self.main_pos_config.current_session_id.id,
-            'company_id': self.env.company.id,
-            'access_token': '1234567891',
-            'lines': [(0, 0, {
-                'name': "OL/0001",
-                'product_id': self.product1.id,
-                'price_unit': 10,
-                'discount': 0.0,
-                'qty': 1.0,
-                'tax_ids': False,
-                'price_subtotal': 10,
-                'price_subtotal_incl': 10,
-            })],
-            'amount_tax': 10,
-            'amount_total': 10,
-            'amount_paid': 10.0,
-            'amount_return': 10.0,
-        })
-        self._pay_order(self.pos_order_2)
-        self.main_pos_config.current_session_id.close_session_from_ui()
+        self.open_new_session()
+        self.pos_order_2 = self.create_pos_order([[self.wall_shelf.product_variant_id]])
+        self.close_pos_session()
         res = self.url_open(f'/pos/ticket/validate?access_token={self.pos_order_2.access_token}', timeout=30000)
         # Invoice will be created because user contains all required fields
         self.assertNotIn('The Phone must be filled in your details.', res.content.decode('utf-8'))
@@ -164,41 +78,13 @@ class TestPoSController(TestPointOfSaleHttpCommon):
     def test_qr_code_receipt_user_not_connected(self):
         """This test make sure that when the user is not connected (public user). Order should invoiced with public user data."""
 
-        self.product1 = self.env['product.product'].create({
-            'name': 'Test Product 1',
-            'is_storable': True,
-            'list_price': 10.0,
-            'taxes_id': False,
-        })
-        self.main_pos_config.open_ui()
-        self.pos_order = self.env['pos.order'].create({
-            'session_id': self.main_pos_config.current_session_id.id,
-            'company_id': self.env.company.id,
-            'access_token': '1234567890',
-            'lines': [(0, 0, {
-                'name': "Test Product 1",
-                'product_id': self.product1.id,
-                'price_unit': 10,
-                'tax_ids': False,
-                'price_subtotal': 10,
-                'price_subtotal_incl': 10,
-            })],
-            'amount_tax': 10,
-            'amount_total': 10,
-            'amount_paid': 10.0,
-            'amount_return': 10.0,
-            'pos_reference': '2500-002-00002',
-            'ticket_code': 'inPoS',
-            'date_order': datetime.today(),
-        })
-        context_make_payment = {"active_ids": [self.pos_order.id], "active_id": self.pos_order.id}
-        self.pos_make_payment = self.env['pos.make.payment'].with_context(context_make_payment).create({
-            'amount': 10.0,
-            'payment_method_id': self.main_pos_config.payment_method_ids[0].id,
-        })
-        context_payment = {'active_id': self.pos_order.id}
-        self.pos_make_payment.with_context(context_payment).check()
-        self.main_pos_config.current_session_id.close_session_from_ui()
+        self.open_new_session()
+        self.pos_order = self.create_pos_order(
+            [[self.wall_shelf.product_variant_id]],
+            pos_reference='2500-002-00002',
+            ticket_code='inPoS',
+        )
+        self.close_pos_session()
         self.start_tour('/pos/ticket', 'invoicePoSOrderWithSelfInvocing', login=None)
         self.assertTrue(self.pos_order.account_move, "The pos order should have an invoice after self invoicing")
         self.assertNotEqual(self.pos_order.account_move, self.pos_order.session_id.move_ids)
@@ -207,53 +93,15 @@ class TestPoSController(TestPointOfSaleHttpCommon):
         """This test make sure that when the user is not connected (public user) but
             the pos order has a partner, the invoice is correctly created.
             """
-        self.product1 = self.env['product.product'].create({
-            'name': 'Test Product 1',
-            'is_storable': True,
-            'list_price': 10.0,
-            'taxes_id': False,
-        })
-        self.new_partner = self.env['res.partner'].create({
-            'name': 'Rangilo Gujarati',
-            'zip': '654321',
-            'vat': '24AAGCC7144L6ZE',
-            'email': 'rangilo@gujarati.com',
-            'street': 'swapnpuri',
-            'phone': '1234567890',
-            'city': 'Ahmedabad',
-            'state_id': self.env.ref('base.state_in_gj').id,
-            'country_id': self.env.ref('base.in').id,
-        })
-        self.main_pos_config.open_ui()
-        self.pos_order = self.env['pos.order'].create({
-            'session_id': self.main_pos_config.current_session_id.id,
-            'company_id': self.env.company.id,
-            'partner_id': self.new_partner.id,
-            'access_token': '1234567890',
-            'lines': [(0, 0, {
-                'name': "Test Product 1",
-                'product_id': self.product1.id,
-                'price_unit': 10,
-                'tax_ids': False,
-                'price_subtotal': 10,
-                'price_subtotal_incl': 10,
-            })],
-            'amount_tax': 10,
-            'amount_total': 10,
-            'amount_paid': 10.0,
-            'amount_return': 10.0,
-            'pos_reference': '2500-002-00003',
-            'ticket_code': 'inPoS',
-            'date_order': datetime.today(),
-        })
-        context_make_payment = {"active_ids": [self.pos_order.id], "active_id": self.pos_order.id}
-        self.pos_make_payment = self.env['pos.make.payment'].with_context(context_make_payment).create({
-            'amount': 10.0,
-            'payment_method_id': self.main_pos_config.payment_method_ids[0].id,
-        })
-        context_payment = {'active_id': self.pos_order.id}
-        self.pos_make_payment.with_context(context_payment).check()
-        self.main_pos_config.current_session_id.close_session_from_ui()
+        self.new_partner = self.partner_full
+        self.open_new_session()
+        self.pos_order = self.create_pos_order(
+            [[self.wall_shelf.product_variant_id]],
+            customer=self.new_partner,
+            pos_reference='2500-002-00003',
+            ticket_code='inPoS',
+        )
+        self.close_pos_session()
         self.start_tour('/pos/ticket', 'invoicePoSOrderWithPartner', login=None)
         self.assertTrue(self.pos_order.account_move, "The pos order should have an invoice after self invoicing")
 
@@ -262,12 +110,13 @@ class TestPoSController(TestPointOfSaleHttpCommon):
         self.authenticate(None, None)
         self.new_partner_user = mail_new_test_user(
             self.env,
-            name='My Partner',
+            name=self.partner_full.name,
             login='my_partner',
-            email='original@test.com',
+            partner_id=self.partner_full.id,
+            email=self.partner_full.email,
             groups='base.group_portal',
         )
-        self.new_partner = self.new_partner_user.partner_id
+        self.new_partner = self.partner_full
         self.new_partner.write({
             'street': 'Original street',
             'city': 'Original City',
@@ -276,35 +125,11 @@ class TestPoSController(TestPointOfSaleHttpCommon):
             'state_id': self.env.ref('base.state_us_1').id,
             'country_id': self.env.ref('base.us').id,
         })
-        self.product1 = self.env['product.product'].create({
-            'name': 'Test Product 1',
-            'is_storable': True,
-            'list_price': 10.0,
-            'taxes_id': False,
-        })
-        self.main_pos_config.open_ui()
-        self.pos_order = self.env['pos.order'].create({
-            'company_id': self.env.company.id,
-            'session_id': self.main_pos_config.current_session_id.id,
-            'partner_id': self.new_partner.id,
-            'access_token': '1234567890',
-            'lines': [(0, 0, {
-                'name': "OL/0001",
-                'product_id': self.product1.id,
-                'price_unit': 10,
-                'discount': 0.0,
-                'qty': 1.0,
-                'tax_ids': False,
-                'price_subtotal': 10,
-                'price_subtotal_incl': 10,
-            })],
-            'amount_tax': 10,
-            'amount_total': 10,
-            'amount_paid': 10.0,
-            'amount_return': 10.0,
-        })
-        self._pay_order(self.pos_order)
-        self.main_pos_config.current_session_id.close_session_from_ui()
+        original_name = self.new_partner.name
+        original_email = self.new_partner.email
+        self.open_new_session()
+        self.pos_order = self.create_pos_order([[self.wall_shelf.product_variant_id]], customer=self.new_partner)
+        self.close_pos_session()
         form_data = {
             'access_token': self.pos_order.access_token,
             'name': 'new name',
@@ -318,8 +143,8 @@ class TestPoSController(TestPointOfSaleHttpCommon):
             'csrf_token': self.csrf_token(),
         }
         res = self.url_open(f'/pos/ticket/validate?access_token={self.pos_order.access_token}', data=form_data)
-        self.assertEqual(self.new_partner.name, 'My Partner')
-        self.assertEqual(self.new_partner.email, 'original@test.com')
+        self.assertEqual(self.new_partner.name, original_name)
+        self.assertEqual(self.new_partner.email, original_email)
         self.assertEqual(self.new_partner.street, 'Original street')
         self.assertEqual(self.new_partner.city, 'Original City')
         self.assertEqual(self.new_partner.zip, '12345')
@@ -330,69 +155,22 @@ class TestPoSController(TestPointOfSaleHttpCommon):
     def test_qr_code_receipt_user_updated(self):
         """This test make sure that when the user is already connected he correctly gets redirected to the invoice."""
         self.authenticate(None, None)
-        self.partner_1 = self.env['res.partner'].create({
-            'name': 'Valid Lelitre',
-            'email': 'valid.lelitre@agrolait.com',
-        })
+        self.partner_1 = self.partner_test_1
+        self.partner_1.email = 'valid.lelitre@agrolait.com'
 
-        self.product1 = self.env['product.product'].create({
-            'name': 'Test Product 1',
-            'is_storable': True,
-            'list_price': 10.0,
-            'taxes_id': False,
-        })
-        self.main_pos_config.open_ui()
+        self.open_new_session()
 
         # Invoice will be directly created if the public user and order has a partner
-        self.pos_order_1 = self.env['pos.order'].create({
-            'session_id': self.main_pos_config.current_session_id.id,
-            'company_id': self.env.company.id,
-            'partner_id': self.partner_1.id,
-            'access_token': '1234567890',
-            'lines': [(0, 0, {
-                'name': "OL/0001",
-                'product_id': self.product1.id,
-                'price_unit': 10,
-                'discount': 0.0,
-                'qty': 1.0,
-                'tax_ids': False,
-                'price_subtotal': 10,
-                'price_subtotal_incl': 10,
-            })],
-            'amount_tax': 10,
-            'amount_total': 10,
-            'amount_paid': 10.0,
-            'amount_return': 10.0,
-        })
-        self._pay_order(self.pos_order_1)
-        self.main_pos_config.current_session_id.close_session_from_ui()
+        self.pos_order_1 = self.create_pos_order([[self.wall_shelf.product_variant_id]], customer=self.partner_1)
+        self.close_pos_session()
         res = self.url_open(f'/pos/ticket/validate?access_token={self.pos_order_1.access_token}', timeout=30000)
         self.assertTrue(self.pos_order_1.is_singly_invoiced, "The pos order should have an invoice")
         self.assertTrue("my/invoices" in res.url)
 
         # Order without a customer should create a new partner using the submitted form data by public user.
-        self.main_pos_config.open_ui()
-        self.pos_order_2 = self.env['pos.order'].create({
-            'session_id': self.main_pos_config.current_session_id.id,
-            'company_id': self.env.company.id,
-            'access_token': '1234567891',
-            'lines': [(0, 0, {
-                'name': "OL/0001",
-                'product_id': self.product1.id,
-                'price_unit': 10,
-                'discount': 0.0,
-                'qty': 1.0,
-                'tax_ids': False,
-                'price_subtotal': 10,
-                'price_subtotal_incl': 10,
-            })],
-            'amount_tax': 10,
-            'amount_total': 10,
-            'amount_paid': 10.0,
-            'amount_return': 10.0,
-        })
-        self._pay_order(self.pos_order_2)
-        self.main_pos_config.current_session_id.close_session_from_ui()
+        self.open_new_session()
+        self.pos_order_2 = self.create_pos_order([[self.wall_shelf.product_variant_id]])
+        self.close_pos_session()
         get_invoice_data = {
             'access_token': self.pos_order_2.access_token,
             'name': 'New Customer',
@@ -401,9 +179,9 @@ class TestPoSController(TestPointOfSaleHttpCommon):
             'street': 'Test street',
             'city': 'Test City',
             'zipcode': '12345',
-            'country_id': self.company.country_id.id,
+            'country_id': self.partner_full.country_id.id,
             'phone': '123456789',
-            'state_id': self.env['res.country.state'].search([], limit=1).id,
+            'state_id': self.partner_full.state_id.id,
             'csrf_token': self.csrf_token()
         }
         self.url_open(f'/pos/ticket/validate?access_token={self.pos_order_2.access_token}', data=get_invoice_data, timeout=30000)
@@ -417,34 +195,13 @@ class TestPoSController(TestPointOfSaleHttpCommon):
     def test_self_invoicing_refused_on_unpaid_order(self):
         """An order that has not been paid yet must not be invoiceable from the customer portal"""
         self.authenticate(None, None)
-        self.product1 = self.env['product.product'].create({
-            'name': 'Test Product 1',
-            'is_storable': True,
-            'list_price': 10.0,
-            'taxes_id': False,
-        })
-        self.main_pos_config.open_ui()
-        self.pos_order = self.env['pos.order'].create({
-            'session_id': self.main_pos_config.current_session_id.id,
-            'company_id': self.env.company.id,
-            'access_token': 'unpaid_token_1234',
-            'lines': [(0, 0, {
-                'name': "Test Product 1",
-                'product_id': self.product1.id,
-                'price_unit': 10,
-                'qty': 1.0,
-                'tax_ids': False,
-                'price_subtotal': 10,
-                'price_subtotal_incl': 10,
-            })],
-            'amount_tax': 0,
-            'amount_total': 10,
-            'amount_paid': 0.0,
-            'amount_return': 0.0,
-            'pos_reference': '2500-002-00004',
-            'ticket_code': 'unpad',
-            'date_order': datetime.today(),
-        })
+        self.open_new_session()
+        self.pos_order = self.create_pos_order(
+            [[self.wall_shelf.product_variant_id]],
+            state='draft',
+            pos_reference='2500-002-00004',
+            ticket_code='unpad',
+        )
         self.assertEqual(self.pos_order.state, 'draft', "The order should not be paid yet")
 
         res = self.url_open(f'/pos/ticket/validate?access_token={self.pos_order.access_token}')
