@@ -3741,6 +3741,52 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertNotEqual(invoice_tax_matching, refund_tax_matching)
         self.assertTrue(all([invoice_tax_matching, refund_tax_matching, invoice_receivable_matching, refund_receivable_matching]))
 
+    def test_out_invoice_caba_on_partial_payment_then_refund_remaining(self):
+        self.env.company.tax_exigibility = True
+        tax_waiting_account = self.env['account.account'].create({
+            'name': 'TAX_WAIT',
+            'code': 'TWAIT',
+            'account_type': 'liability_current',
+            'reconcile': True,
+        })
+        caba_tax = self.env['account.tax'].create({
+            'name': 'cash basis 10%',
+            'type_tax_use': 'sale',
+            'amount': 10,
+            'tax_exigibility': 'on_payment',
+            'cash_basis_transition_account_id': tax_waiting_account.id,
+        })
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'price_unit': 1000.0,
+                    'tax_ids': [Command.set(caba_tax.ids)],
+                })
+            ],
+        })
+        invoice.invoice_line_ids.tax_ids = caba_tax
+        invoice.action_post()
+        # Pay half of the invoice.
+        self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=invoice.ids)\
+            .create({'amount': 550.0})\
+            ._create_payments()
+        self.assertRecordValues(invoice, [{'payment_state': 'partial', 'amount_residual': 550.0}])
+        credit_note = invoice._reverse_moves()
+        credit_note.invoice_line_ids.price_unit = 500.0
+        credit_note.action_post()
+        self.assertTrue(invoice.payment_state in ('in_payment', 'paid'))
+        # One CABA entry per partial on the invoice (payment + credit note), one on the credit note.
+        self.assertEqual(len(invoice.tax_cash_basis_created_move_ids), 2)
+        self.assertEqual(len(credit_note.tax_cash_basis_created_move_ids), 1)
+        caba_moves = invoice.tax_cash_basis_created_move_ids + credit_note.tax_cash_basis_created_move_ids
+        self.assertRecordValues(caba_moves.line_ids.filtered('tax_line_id'), [
+            {'move_id': caba_moves[0].id, 'balance': -50.0},
+            {'move_id': caba_moves[1].id, 'balance': -50.0},
+            {'move_id': caba_moves[2].id, 'balance': 50.0},
+        ])
 
     def test_tax_grid_remove_tax(self):
         # Add a tag to tax_sale_a
