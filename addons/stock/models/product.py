@@ -385,6 +385,17 @@ class Product(models.Model):
             return [('id', 'in', product_ids)]
         return self._search_product_quantity(operator, value, 'free_qty')
 
+    def _get_product_ids_with_quantities(self):
+        """ Ids of the products with a quant, a pending move or a move done after `to_date`. """
+        move_domain = [('state', 'in', ('waiting', 'confirmed', 'assigned', 'partially_available'))]
+        if to_date := self.env.context.get('to_date'):
+            move_domain = expression.OR([move_domain, [('state', '=', 'done'), ('date', '>', to_date)]])
+        return {
+            product.id
+            for model, domain in (('stock.quant', []), ('stock.move', move_domain))
+            for [product] in self.env[model].sudo()._read_group(domain, ['product_id'])
+        }
+
     def _search_product_quantity(self, operator, value, field):
         # TDE FIXME: should probably clean the search methods
         # to prevent sql injections
@@ -395,13 +406,13 @@ class Product(models.Model):
         if not isinstance(value, (float, int)):
             raise UserError(_("Invalid domain right operand '%s'. It must be of type Integer/Float", value))
 
-        # TODO: Still optimization possible when searching virtual quantities
-        ids = []
+        # Only compute the products that may have quantities, the others are at 0.
         # Order the search on `id` to prevent the default order on the product name which slows
         # down the search because of the join on the translation table to get the translated names.
-        for product in self.with_context(prefetch_fields=False).search([], order='id'):
-            if OPERATORS[operator](product[field], value):
-                ids.append(product.id)
+        products = self.with_context(prefetch_fields=False).search([('id', 'in', list(self._get_product_ids_with_quantities()))], order='id')
+        ids = [product.id for product in products if OPERATORS[operator](product[field], value)]
+        if OPERATORS[operator](0.0, value):
+            return [('id', 'not in', list(set(products.ids) - set(ids)))]
         return [('id', 'in', ids)]
 
     def _search_qty_available_new(self, operator, value, lot_id=False, owner_id=False, package_id=False):
