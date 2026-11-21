@@ -7,7 +7,7 @@ import json
 from markupsafe import Markup
 
 from odoo import _, api, fields, models, Command, tools
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import human_size
 from odoo.tools.mail import is_html_empty, email_normalize, email_split_and_format, html_remove_xpath
@@ -835,6 +835,12 @@ class MailComposeMessage(models.TransientModel):
     def action_update_message(self):
         self.ensure_one()
         message = self.env['mail.message'].browse(self.env.context['default_message_id'])
+        try:
+            is_author = message.author_id == self.env.user.partner_id
+        except MissingError:
+            raise UserError(_("This message has been deleted."))
+        if not (is_author or self.env.user._is_admin()):
+            raise AccessError(_("You can only edit your own messages."))
         record = self.env[message.model].browse(message.res_id)
         record._message_update_content(
             message,
