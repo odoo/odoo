@@ -1,6 +1,7 @@
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { isColorGradient } from "@web/core/utils/colors";
-import { isElement } from "./dom_info";
+import { isBlock } from "./blocks";
+import { isElement, isTableCell } from "./dom_info";
 
 export const COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES = [
     "primary",
@@ -161,6 +162,46 @@ export function hasAnyNodesColor(nodes, mode) {
         }
     }
     return false;
+}
+
+/**
+ * Returns the closest element applying a visible color (fore- or -background
+ * depending on the given mode) to the given node, if any.
+ *
+ * The color is not necessarily applied by the closest element: it can come
+ * from any inline ancestor (e.g. a <font> wrapping a <span>). The lookup is
+ * therefore done up to the closest block, or up to the closest list item
+ * ('color' mode) or table cell ('backgroundColor' mode), as those apply their
+ * color to their whole content. It is stopped by links, whose color is not a
+ * user defined one (@see hasColor), and by elements resetting the color of
+ * their content (`o_default_color`).
+ *
+ * @param {Node} node
+ * @param {string} mode 'color' or 'backgroundColor'
+ * @returns {Element|null}
+ */
+export function closestColoredElement(node, mode) {
+    // A list item applies its color, a table cell its background color, to
+    // their whole content.
+    const lookupLimit = closestElement(node, mode === "color" ? "li" : "td, th");
+    let coloredElement;
+    const element = closestElement(node, (el) => {
+        // The text color of a cell is a copy of the color it inherits
+        // (@see applyTableColor): look for the element it comes from.
+        if (mode === "color" && isTableCell(el)) {
+            return false;
+        }
+        if (hasColor(el, mode)) {
+            coloredElement = el;
+            return true;
+        }
+        return (
+            el.nodeName === "A" ||
+            (mode === "color" && el.classList.contains("o_default_color")) ||
+            (lookupLimit ? el === lookupLimit : isBlock(el))
+        );
+    });
+    return element === coloredElement ? element : null;
 }
 
 export function getTextColorOrClass(node) {

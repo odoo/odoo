@@ -1,13 +1,14 @@
 import { Plugin } from "@html_editor/plugin";
 import {
     BG_CLASSES_REGEX,
+    closestColoredElement,
     COLOR_COMBINATION_CLASSES_REGEX,
-    hasAnyNodesColor,
     hasColor,
     TEXT_CLASSES_REGEX,
 } from "@html_editor/utils/color";
 import { fillEmpty, removeClass, removeStyle, unwrapContents } from "@html_editor/utils/dom";
 import {
+    isContentEditable,
     isElement,
     isEmptyBlock,
     isIconElement,
@@ -16,6 +17,7 @@ import {
     isVisibleTextNode,
     isWhitespace,
     isZWS,
+    isZwnbsp,
     PROTECTED_QWEB_SELECTOR,
 } from "@html_editor/utils/dom_info";
 import {
@@ -80,11 +82,13 @@ export class ColorPlugin extends Plugin {
 
         /** Predicates */
         has_format_predicates: [
-            (node) => hasColor(closestElement(node), "color"),
-            (node) => hasColor(closestElement(node), "backgroundColor"),
+            (node) => this.hasRemovableColor(node, "color"),
+            (node) => this.hasRemovableColor(node, "backgroundColor"),
         ],
         format_class_predicates: (className) =>
-            TEXT_CLASSES_REGEX.test(className) || BG_CLASSES_REGEX.test(className),
+            className === "o_default_color" ||
+            TEXT_CLASSES_REGEX.test(className) ||
+            BG_CLASSES_REGEX.test(className),
         normalize_handlers: this.normalize.bind(this),
     };
 
@@ -118,6 +122,36 @@ export class ColorPlugin extends Plugin {
         };
     }
 
+    /**
+     * @param {Node} node
+     * @param {string} mode 'color' or 'backgroundColor'
+     * @returns {boolean} whether the color applied to the node can be removed
+     */
+    hasRemovableColor(node, mode) {
+        if (
+            isZwnbsp(node) ||
+            !(this.checkPredicates("is_formattable_node_predicates", node) ?? true) ||
+            !(
+                isTextNode(node) ||
+                isIconElement(node) ||
+                (!isContentEditable(node) &&
+                    !isBlock(node) &&
+                    !(isElement(node) && hasColor(node, mode))) ||
+                node.matches?.(`t, ${PROTECTED_QWEB_SELECTOR}`) ||
+                (mode === "backgroundColor" && node.classList?.contains("o_selected_td"))
+            )
+        ) {
+            return false;
+        }
+        const coloredElement = closestColoredElement(node, mode);
+        return (
+            !!coloredElement &&
+            (mode === "color" ||
+                coloredElement === node ||
+                !this.dependencies.split.isUnsplittable(coloredElement))
+        );
+    }
+
     removeAllColor() {
         const colorModes = ["color", "backgroundColor"];
         let someColorWasRemoved = true;
@@ -125,20 +159,14 @@ export class ColorPlugin extends Plugin {
             someColorWasRemoved = false;
             for (const mode of colorModes) {
                 let max = 40;
-                const hasAnySelectedNodeColor = (mode) => {
-                    const nodes = this.dependencies.selection
+                const hasAnySelectedNodeColor = (mode) =>
+                    this.dependencies.selection
                         .getTargetedNodes()
-                        .filter(
+                        .some(
                             (n) =>
-                                (isTextNode(n) ||
-                                    isIconElement(n) ||
-                                    n.matches?.(`t, ${PROTECTED_QWEB_SELECTOR}`) ||
-                                    (mode === "backgroundColor" &&
-                                        n.classList.contains("o_selected_td"))) &&
-                                this.dependencies.selection.isNodeEditable(n)
+                                this.dependencies.selection.isNodeEditable(n) &&
+                                this.hasRemovableColor(n, mode)
                         );
-                    return hasAnyNodesColor(nodes, mode);
-                };
                 while (hasAnySelectedNodeColor(mode) && max > 0) {
                     this.applyColor("", mode);
                     someColorWasRemoved = true;
@@ -292,7 +320,14 @@ export class ColorPlugin extends Plugin {
                 if (mode === "backgroundColor" && color) {
                     return !closestElement(node, "table.o_selected_table");
                 }
-                if (closestElement(node).classList.contains("o_default_color")) {
+                // `o_default_color` only resets the text color: the background
+                // color of such a node must still be removable, and a color
+                // must still be applicable on it.
+                if (
+                    !color &&
+                    mode === "color" &&
+                    closestElement(node).classList.contains("o_default_color")
+                ) {
                     return false;
                 }
                 const li = closestElement(node, "li");
@@ -317,7 +352,12 @@ export class ColorPlugin extends Plugin {
 
         const getFonts = (selectedNodes) =>
             selectedNodes.flatMap((node) => {
+                // When removing a color, the closest <font> is not necessarily
+                // the one applying it (e.g. a <font> with a background color
+                // nested in a <font> with a text color).
+                const coloredFont = color ? null : closestColoredElement(node, mode);
                 let font =
+                    (coloredFont?.nodeName === "FONT" && coloredFont) ||
                     closestElement(node, "font") ||
                     closestElement(
                         node,
@@ -485,7 +525,15 @@ export class ColorPlugin extends Plugin {
         // Color the selected <font>s and remove uncolored fonts.
         const fontsSet = new Set(fonts);
         for (const font of fontsSet) {
+            // A text color applied by an ancestor of the <font> can not be
+            // removed from it (e.g. a list item or an unsplittable element).
+            // reset it instead.
+            const coloredAncestor =
+                !color && mode === "color" ? closestColoredElement(font, mode) : null;
             this.colorElement(font, color, mode);
+            if (coloredAncestor && coloredAncestor !== font) {
+                font.classList.add("o_default_color");
+            }
             const attributeNames = font
                 .getAttributeNames()
                 .filter((name) => name !== "data-oe-zws-empty-inline");
@@ -549,6 +597,10 @@ export class ColorPlugin extends Plugin {
             (mode === "color" ? TEXT_CLASSES_REGEX : BG_CLASSES_REGEX).test(className)
         );
         classNamesToRemove.push("text-gradient");
+        if (color && mode === "color") {
+            // The element does not have the default color anymore.
+            classNamesToRemove.push("o_default_color");
+        }
         removeClass(element, ...classNamesToRemove);
 
         if (isColorGradient(color)) {
