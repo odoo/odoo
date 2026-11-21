@@ -16,6 +16,7 @@ export const paymentScreenPaymentLinesProps = {
     sendPaymentCancel: t.function(),
     sendPaymentRequest: t.function(),
     updateSelectedPaymentline: t.function(),
+    isPaymentLineLocked: t.function().optional(),
     isRefundOrder: t.boolean(),
 };
 export class PaymentScreenPaymentLines extends Component {
@@ -40,7 +41,7 @@ export class PaymentScreenPaymentLines extends Component {
 
     async selectLine(paymentline) {
         this.props.selectLine(paymentline.uuid);
-        if (this.ui.isSmall) {
+        if (this.ui.isSmall && !this.props.isPaymentLineLocked?.(paymentline)) {
             this.dialog.add(NumberPopup, {
                 title: _t("New amount"),
                 buttons: enhancedButtons(),
@@ -58,6 +59,14 @@ export class PaymentScreenPaymentLines extends Component {
 
     showQrCode(line) {
         this.pos.displayQrCode(line);
+    }
+
+    canShowQrCode(line) {
+        return line.useQr;
+    }
+
+    canDeleteLine(line) {
+        return !line.isDone() || !line.payment_status;
     }
 
     /**

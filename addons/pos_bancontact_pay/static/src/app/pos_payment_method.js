@@ -9,7 +9,7 @@ patch(PosPaymentMethod.prototype, {
         }
 
         // Check amount
-        if (paymentline && paymentline.getAmount() <= 0) {
+        if (paymentline && paymentline.getAmount() <= 0 && !paymentline.isBancontactRefund) {
             return {
                 status: false,
                 message: _t("The amount must be positive to use this payment method."),
