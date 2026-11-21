@@ -749,3 +749,37 @@ class TestPersonalServer(MailCommon):
         self.assertEqual(self.mail_server_1.owner_limit_count, 3)
         mails = self.env["mail.mail"].search([('mail_message_id', 'in', (mail.mail_message_id.id, other_mail.mail_message_id.id))])
         self.assertEqual(set(mails.mapped('state')), {'sent'})
+
+    @mute_logger('odoo.models.unlink', 'odoo.addons.base.models.ir_mail_server')
+    @patch.dict(config.options, {
+        "from_filter": "cli@example.com",
+        "smtp_server": "example.com",
+    })
+    def test_personal_mail_server_limit_many_recipient_access(self):
+        """ Admin sending an email split due to personal mail server limit:
+        recipients they cannot access (e.g. other company) should be kept. """
+        TEST_LIMIT = 5
+        self.env['ir.config_parameter'].set_int('mail.server.personal.limit.minutes', TEST_LIMIT)
+
+        partners = self.env['res.partner'].create([
+            {
+                'company_id': self.company_2.id if i % 4 == 0 else False,
+                'email': f'partner_{i}@test.com',
+                'name': f'Partner {i}',
+            } for i in range(8)
+        ])
+        mail = self.env["mail.mail"].with_user(self.user_employee).sudo().create({
+            'email_from': self.user_employee.email,
+            'recipient_ids': partners.ids,
+            'state': 'outgoing',
+        })
+        mail_admin = mail.with_user(self.user_admin).with_company(self.company_admin)
+        self.assertEqual(len(partners.with_env(mail_admin.env)._filtered_access('read')), 6)
+
+        self.env.invalidate_all()  # queue sends with a cold cache, as it commits after each email
+        with self.mock_smtplib_connection(), self.mock_datetime_and_now("2025-01-01 20:31:23"):
+            mail_admin.send()
+        mails = self.env["mail.mail"].search([('mail_message_id', '=', mail.mail_message_id.id)])
+        self.assertEqual(sorted(mails.mapped('state')), ['outgoing', 'sent'])
+        self.assertEqual(len(mails.filtered(lambda m: m.state == 'sent').recipient_ids), TEST_LIMIT)
+        self.assertEqual(mails.recipient_ids, partners)

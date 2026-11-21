@@ -174,7 +174,9 @@ class MailMail(models.Model):
         mail_msg_cascade_ids = [mail.mail_message_id.id for mail in self if not mail.is_notification]
         res = super(MailMail, self).unlink()
         if mail_msg_cascade_ids:
-            self.env['mail.message'].browse(mail_msg_cascade_ids).unlink()
+            # standalone messages only support their mail, whose deletion was just
+            # granted: do not depend on message access, based on related document
+            self.env['mail.message'].browse(mail_msg_cascade_ids).sudo().unlink()
         return res
 
     def action_retry(self):
@@ -355,12 +357,15 @@ class MailMail(models.Model):
         )
 
     def _filter_mail_mail_servers(self, mail_servers):
+        # message creators only drive server choice: do not depend on message
+        # access, based on related document, as mail.mail access is enough
+        creators = self.mail_message_id.sudo().create_uid
         if (
-            len(self.mail_message_id.create_uid) > 1 or  # multiple create_uids -> subset that's allowed for all
+            len(creators) > 1 or  # multiple create_uids -> subset that's allowed for all
             self.env['ir.config_parameter'].sudo().get_bool('mail.disable_personal_mail_servers')
         ):
             return mail_servers.filtered(lambda server: not server.owner_user_id)
-        return mail_servers.filtered(lambda server: server.owner_user_id in [self.env['res.users'], self.mail_message_id.create_uid])
+        return mail_servers.filtered(lambda server: server.owner_user_id in [self.env['res.users'], creators])
 
     def _prepare_outgoing_body(self):
         """Return a specific ir_email body. The main purpose of this method
@@ -722,12 +727,16 @@ class MailMail(models.Model):
                 are possible
             :return: True
         """
+        # Access is checked when splitting emails (read). Then they are throttled,
+        # sent and post-processed as sudo, as the queue does: sending should not
+        # depend on access to messages, documents or recipients (record rules
+        # would e.g. silently filter out recipients of other companies).
         for mail_server_id, alias_domain_id, smtp_from, batch_ids in self._split_by_mail_configuration():
             mail_server = self.env["ir.mail_server"].browse(mail_server_id)
 
             if mail_server and mail_server.owner_user_id:
                 # Throttle the sending that use personal mail servers
-                batch_ids = self.browse(batch_ids)._split_by_delayed_batch(mail_server).ids
+                batch_ids = self.browse(batch_ids).sudo()._split_by_delayed_batch(mail_server).ids
                 if not batch_ids:
                     continue
 
@@ -740,11 +749,11 @@ class MailMail(models.Model):
                     # exceptions, it is encapsulated into an Odoo MailDeliveryException
                     raise MailDeliveryException(_('Unable to connect to SMTP Server'), exc)
                 else:
-                    batch = self.browse(batch_ids)
+                    batch = self.browse(batch_ids).sudo()
                     batch.write({'state': 'exception', 'failure_reason': tools.exception_to_unicode(exc)})
                     batch._postprocess_sent_message(success_pids=[], success_emails=[], failure_type="mail_smtp")
             else:
-                self.browse(batch_ids)._send(
+                self.browse(batch_ids).sudo()._send(
                     auto_commit=auto_commit,
                     raise_exception=raise_exception,
                     smtp_session=smtp_session,
@@ -903,7 +912,11 @@ class MailMail(models.Model):
                             raise
                 if res:  # mail has been sent at least once, no major exception occurred
                     message_id = res
-                    mail.write({'state': 'sent', 'message_id': res, 'failure_type': False, 'failure_reason': False})
+                    mail.write({'state': 'sent', 'failure_type': False, 'failure_reason': False})
+                    if res != mail.message_id:
+                        # Message-Id is stored on mail.message, whose write access is based
+                        # on related document: do not depend on it, mail is already sent
+                        mail.mail_message_id.sudo().message_id = res
                     if not modules.module.current_test:
                         _logger.info(
                             "Mail (mail.mail) with ID %r and Message-Id %r from %r to (redacted) %s successfully sent",
