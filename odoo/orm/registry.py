@@ -42,7 +42,7 @@ if typing.TYPE_CHECKING:
     from collections.abc import Callable, Collection, Iterable, Iterator, MutableMapping
     from odoo.fields import Field
     from odoo.models import BaseModel
-    from odoo.sql_db import BaseCursor, Connection, Cursor
+    from odoo.sql_db import Connection, Cursor
     from odoo.modules import module_graph
 
 
@@ -308,7 +308,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         else:
             self._assertion_report = None
         self._ordinary_tables: set[str] | None = None  # cached names of regular tables
-        self._constraint_queue: dict[typing.Any, Callable[[BaseCursor], None]] = {}  # queue of functions to call on finalization of constraints
+        self._constraint_queue: dict[typing.Any, Callable[[Cursor], None]] = {}  # queue of functions to call on finalization of constraints
 
         # update context during loading modules
         self.loaded_xmlids: set[str] = set()           # loaded xmlids for IrModelData._process_end()
@@ -444,7 +444,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
         At the Python level, the modules are already loaded, but not yet on a
         per-registry level. This method populates a registry with the given
-        modules, i.e. it instantiates all the classes of a the given module
+        modules, i.e. it instantiates all the classes of the given module
         and registers them in the registry.
 
         In order to determine all the impacted models, one should invoke method
@@ -470,7 +470,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         return model_names
 
     @locked
-    def _setup_models__(self, cr: BaseCursor, model_names: Iterable[str] | None = None) -> None:  # noqa: PLW3201
+    def _setup_models__(self, cr: Cursor, model_names: Iterable[str] | None = None) -> None:  # noqa: PLW3201
         """ Perform the setup of models.
         This must be called after loading modules and before using the ORM.
 
@@ -847,7 +847,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         """ Register a function to call at the end of :meth:`~.init_models`. """
         self._post_init_queue.append(partial(func, *args, **kwargs))
 
-    def post_constraint(self, cr: BaseCursor, func: Callable[[BaseCursor], None], key) -> None:
+    def post_constraint(self, cr: Cursor, func: Callable[[Cursor], None], key) -> None:
         """ Call the given function, and delay it if it fails during an upgrade. """
         try:
             if key not in self._constraint_queue:
@@ -1188,7 +1188,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
             _logger.debug("Multiprocess load registry signaling: [Registry: %s] %s",
                           db_registry_sequence, ' '.join('[Cache %s: %s]' % cs for cs in db_cache_sequences.items()))
 
-    def get_sequences(self, cr: BaseCursor) -> tuple[int, dict[str, int]]:
+    def get_sequences(self, cr: Cursor) -> tuple[int, dict[str, int]]:
         signaling_tables = tuple(f'orm_signaling_{cache_name}' for cache_name in ['registry', *_CACHES_BY_KEY])
         signaling_selects = SQL(', ').join([SQL('( SELECT max(id) FROM %s)', SQL.identifier(signaling_table)) for signaling_table in signaling_tables])
         cr.execute(SQL("SELECT (now() AT TIME ZONE 'UTC'), %s", signaling_selects))
@@ -1200,7 +1200,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
             cr._now = now
         return registry_sequence, cache_sequences
 
-    def _signal_changes(self, cr: BaseCursor, names: Collection[str]) -> None:
+    def _signal_changes(self, cr: Cursor, names: Collection[str]) -> None:
         """ Notifies other processes if registry or cache has been invalidated. """
         if not names:
             return
@@ -1220,7 +1220,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         for cache_name in names:
             cr.execute(SQL("INSERT INTO %s DEFAULT VALUES", SQL.identifier(f'orm_signaling_{cache_name}')))
 
-    def cursor(self, /, readonly: bool = False) -> BaseCursor:
+    def cursor(self, /, readonly: bool = False) -> Cursor:
         """ Return a new cursor for the database. The cursor itself may be used
             as a context manager to commit/rollback and close automatically.
 

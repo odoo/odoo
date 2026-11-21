@@ -55,9 +55,11 @@ class Boolean(Field[bool, bool]):
 
 
 class Json(Field):
-    """ JSON Field that contain unstructured information in jsonb PostgreSQL column.
+    """ JSON Field that contains unstructured information in a jsonb PostgreSQL
+    column. Values must be JSON-serializable.
 
     Some features won't be implemented, including:
+
     * searching
     * indexing
     * mutating the values.

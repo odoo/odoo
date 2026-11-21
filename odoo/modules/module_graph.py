@@ -16,7 +16,7 @@ from .module import Manifest
 if typing.TYPE_CHECKING:
     from collections.abc import Collection, Iterable, Iterator, Mapping
     from typing import Literal
-    from odoo.sql_db import BaseCursor
+    from odoo.sql_db import Cursor
 
     STATES = Literal[
         'uninstallable',
@@ -209,12 +209,12 @@ class ModuleGraph:
     Sorted Odoo modules ordered by (module.phase, module.depth, module.name)
     """
 
-    def __init__(self, cr: BaseCursor, mode: Literal['load', 'update'] = 'load') -> None:
+    def __init__(self, cr: Cursor, mode: Literal['load', 'update'] = 'load') -> None:
         # mode 'load': for simply loading modules without updating them
         # mode 'update': for loading and updating modules
         self.mode: Literal['load', 'update'] = mode
         self._modules: dict[str, ModuleNode] = {}
-        self._cr: BaseCursor = cr
+        self._cr: Cursor = cr
 
     def __contains__(self, name: str) -> bool:
         return name in self._modules

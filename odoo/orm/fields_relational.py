@@ -1316,6 +1316,12 @@ class Many2many(_RelationalMulti):
         :meth:`~odoo.models.Model._check_company`. Add a default company
         domain depending on the field attributes.
 
+    :param bool bypass_search_access: whether access rights are bypassed on the
+        comodel (default: ``False``)
+
+    :param str ondelete: ``'cascade'`` (default) or ``'restrict'``, the policy
+        of the foreign key to the comodel in the relation table
+
     """
     type = 'many2many'
 

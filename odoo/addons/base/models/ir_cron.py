@@ -25,7 +25,7 @@ from odoo.tools.constants import GC_UNLINK_LIMIT
 if typing.TYPE_CHECKING:
     from collections.abc import Iterable
 
-    from odoo.sql_db import BaseCursor
+    from odoo.sql_db import Cursor
 
 _logger = logging.getLogger(__name__)
 
@@ -213,7 +213,7 @@ class IrCron(models.Model):
                 del threading.current_thread().dbname
 
     @staticmethod
-    def _process_jobs_loop(cron_cr: BaseCursor, *, job_ids: Iterable[int] = ()) -> None:
+    def _process_jobs_loop(cron_cr: Cursor, *, job_ids: Iterable[int] = ()) -> None:
         """ Process ready jobs to run on this database.
 
         The `cron_cr` is used to lock the currently processed job and relased
@@ -309,7 +309,7 @@ class IrCron(models.Model):
             raise BadModuleState()
 
     @staticmethod
-    def _get_ready_sql_condition(cr: BaseCursor) -> SQL:
+    def _get_ready_sql_condition(cr: Cursor) -> SQL:
         return SQL("""
             active IS TRUE
             AND (nextcall <= %(now)s
@@ -322,7 +322,7 @@ class IrCron(models.Model):
         """, now=cr.now())
 
     @staticmethod
-    def _get_all_ready_jobs(cr: BaseCursor) -> list[dict]:
+    def _get_all_ready_jobs(cr: Cursor) -> list[dict]:
         """ Return a list of all jobs that are ready to be executed """
         cr.execute(SQL("""
             SELECT *
@@ -333,7 +333,7 @@ class IrCron(models.Model):
         return cr.dictfetchall()
 
     @staticmethod
-    def _acquire_one_job(cr: BaseCursor, job_id: int, *, include_not_ready: bool = False) -> dict | None:
+    def _acquire_one_job(cr: Cursor, job_id: int, *, include_not_ready: bool = False) -> dict | None:
         """
         Acquire for update the job with id ``job_id``.
 
@@ -424,7 +424,7 @@ class IrCron(models.Model):
         _logger.warning(message)
 
     @classmethod
-    def _process_job(cls, cron_cr: BaseCursor, job, end_time: float = 0.0) -> None:
+    def _process_job(cls, cron_cr: Cursor, job, end_time: float = 0.0) -> None:
         """
         Execute the cron's server action in a dedicated transaction.
 

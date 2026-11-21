@@ -16,7 +16,7 @@ from weakref import ref as weakref
 from zoneinfo import ZoneInfo
 
 from odoo.exceptions import AccessError, UserError
-from odoo.sql_db import BaseCursor
+from odoo.sql_db import Cursor
 from odoo.tools import clean_context, frozendict, reset_cached_properties, OrderedSet, SQL
 from odoo.tools.func import deprecated
 from odoo.tools.lru import LRU
@@ -53,14 +53,14 @@ class Environment(Mapping[str, "BaseModel"]):
     structure to manage recomputations.
     """
 
-    cr: BaseCursor
+    cr: Cursor
     uid: int
     context: frozendict
     su: bool
     transaction: Transaction
 
-    def __new__(cls, cr: BaseCursor, uid: int, context: dict, su: bool = False):
-        assert isinstance(cr, BaseCursor)
+    def __new__(cls, cr: Cursor, uid: int, context: dict, su: bool = False):
+        assert isinstance(cr, Cursor)
         if uid == SUPERUSER_ID:
             su = True
 
@@ -125,7 +125,7 @@ class Environment(Mapping[str, "BaseModel"]):
 
     def __call__(
         self,
-        cr: BaseCursor | None = None,
+        cr: Cursor | None = None,
         user: IdType | BaseModel | None = None,
         context: dict | None = None,
         su: bool | None = None,
@@ -133,7 +133,6 @@ class Environment(Mapping[str, "BaseModel"]):
         """ Return an environment based on ``self`` with modified parameters.
 
         :param cr: optional database cursor to change the current cursor
-        :type cursor: :class:`~odoo.sql_db.Cursor`
         :param user: optional user/user id to change the current user
         :type user: int or :class:`res.users record<~odoo.addons.base.models.res_users.ResUsers>`
         :param dict context: optional context dictionary to change the current context
@@ -235,7 +234,7 @@ class Environment(Mapping[str, "BaseModel"]):
 
         :raise AccessError: invalid or unauthorized `allowed_company_ids` context key content.
         :return: current company (default=`self.user.company_id`), with the current environment
-        :rtype: :class:`res.company record<~odoo.addons.base.models.res_company.Company>`
+        :rtype: :class:`res.company record<~odoo.addons.base.models.res_company.ResCompany>`
 
         .. warning::
 
@@ -265,7 +264,7 @@ class Environment(Mapping[str, "BaseModel"]):
 
         :raise AccessError: invalid or unauthorized `allowed_company_ids` context key content.
         :return: current companies (default=`self.user.company_ids`), with the current environment
-        :rtype: :class:`res.company recordset<~odoo.addons.base.models.res_company.Company>`
+        :rtype: :class:`res.company recordset<~odoo.addons.base.models.res_company.ResCompany>`
 
         .. warning::
 
@@ -301,7 +300,7 @@ class Environment(Mapping[str, "BaseModel"]):
         """Return the current website (as an instance).
 
         :returns: current website (possibly empty)
-        :rtype: :class:`website record<~odoo.addons.base.models.website.Website>`
+        :rtype: :class:`website record<~odoo.addons.website.models.website.Website>`
         """
         return self['website'].browse(self.context.get('website_id'))
 
@@ -338,17 +337,17 @@ class Environment(Mapping[str, "BaseModel"]):
     def _(self, source: str | LazyGettext, *args, **kwargs) -> str:
         """Translate the term using current environment's language.
 
-        Usage:
+        Usage::
 
-        ```
-        self.env._("hello world")  # dynamically get module name
-        self.env._("hello %s", "test")
-        self.env._(LAZY_TRANSLATION)
-        ```
+            self.env._("hello world")  # dynamically get module name
+            self.env._("hello %s", "test")
+            self.env._(LAZY_TRANSLATION)
 
         :param source: String to translate or lazy translation
-        :param ...: args or kwargs for templating
-        :return: The transalted string
+        :param args: positional arguments for ``%`` formatting
+        :param kwargs: keyword arguments for ``%(name)s`` formatting
+            (use either ``args`` or ``kwargs``, not both)
+        :return: The translated string
         """
         lang = self.lang or 'en_US'
         if isinstance(source, str):
@@ -563,7 +562,7 @@ class Environment(Mapping[str, "BaseModel"]):
 
 
 class Transaction:
-    """ A object holding ORM data structures for a transaction.
+    """ An object holding ORM data structures for a transaction.
 
     Signaling summary:
 
@@ -726,7 +725,7 @@ class Transaction:
                 Environment(env.cr, public_user.id, {}).flush_all()
                 break
 
-    def _check_signaling(self, cr: BaseCursor) -> None:
+    def _check_signaling(self, cr: Cursor) -> None:
         """ Check the sequences in the database an invalidate accordingly.
 
         When the registry changed, create a new registry and rebind to it.
@@ -822,7 +821,7 @@ class Transaction:
 
         if _logger_signaling.isEnabledFor(logging.DEBUG):
             # log information about invalidation_cause
-            # could be interresting to log in info but this will need to minimize invalidation first,
+            # could be interesting to log in info but this will need to minimize invalidation first,
             # mainly in some setupclass and crons
             frame = inspect.currentframe().f_back
             code = frame.f_code
@@ -1101,16 +1100,16 @@ class CacheLayer(MutableMapping):
 
     @property
     def snapshot(self):
-        """ Compatibilty with the API of LRU for testing. See clear()."""
+        """ Compatibility with the API of LRU for testing. See clear()."""
         return dict(self)
 
     @property
     def count(self):
-        """ Compatibilty with the API of LRU for testing. See clear()."""
+        """ Compatibility with the API of LRU for testing. See clear()."""
         return 999999
 
     def clear(self):
-        """ Compatibilty with the API of LRU for testing.
+        """ Compatibility with the API of LRU for testing.
 
         This is need for tests which put a CacheLayer on the registry.
         See `odoo.tests.common.flushing_cursor()`.
