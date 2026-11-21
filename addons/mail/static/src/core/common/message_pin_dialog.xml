@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.MessagePinDialog">
-    <Dialog size="'md'" title="this.title" contentClass="'o-bg-body'">
+    <Dialog closeOnClickAway="true" size="'md'" title="this.title" contentClass="'o-bg-body'">
         <p class="mx-3 mb-0" t-out="this.prompt"/>
         <p class="mx-3 text-muted small" t-out="this.promptSecondary"/>
         <blockquote class="mx-3 fst-normal pe-none">
