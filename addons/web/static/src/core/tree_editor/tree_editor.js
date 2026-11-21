@@ -8,7 +8,7 @@ import {
     getDefaultValue,
     getValueEditorInfo,
 } from "@web/core/tree_editor/tree_editor_value_editors";
-import { getResModel } from "@web/core/tree_editor/utils";
+import { getResModel, adaptIdFieldDef } from "@web/core/tree_editor/utils";
 import { areEquivalentTrees } from "@web/core/tree_editor/virtual_operators";
 import { useService } from "@web/core/utils/hooks";
 import { shallowEqual } from "@web/core/utils/objects";
@@ -66,11 +66,12 @@ export class TreeEditor extends Component {
     }
 
     async prepareInfo(props) {
-        const [fieldDefs, getFieldDef] = await Promise.all([
+        const [rawFieldDefs, getFieldDef] = await Promise.all([
             this.fieldService.loadFields(props.resModel),
             this.treeProcessor.makeGetFieldDef(props.resModel, this.tree),
         ]);
         this.getFieldDef = getFieldDef;
+        const fieldDefs = { ...rawFieldDefs, id: adaptIdFieldDef(rawFieldDefs.id, props.resModel) };
         this.defaultCondition = props.getDefaultCondition(fieldDefs);
 
         if (props.readonly) {
@@ -183,7 +184,11 @@ export class TreeEditor extends Component {
     }
 
     async _updatePath(node, path) {
-        const { fieldDef } = await this.fieldService.loadFieldInfo(this.props.resModel, path);
+        const { fieldDef: rawFieldDef, resModel } = await this.fieldService.loadFieldInfo(
+            this.props.resModel,
+            path
+        );
+        const fieldDef = adaptIdFieldDef(rawFieldDef, resModel);
         node.path = path;
         node.negate = false;
         node.operator = this.props.getDefaultOperator(fieldDef);

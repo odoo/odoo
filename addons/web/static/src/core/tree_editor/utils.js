@@ -162,3 +162,17 @@ export function parseRelativeValue(val) {
     }
     return null;
 }
+
+/**
+ * The "id" is edited as a many2one on its own model so that it gets the record
+ * selector, dusplay names and m2o operators.
+ * Other field definitions are returned unchanged.
+ * @param {Object|null} fieldDef
+ * @param {string} resModel - The model the field belongs to
+ * @returns {Object|null}
+ */
+export function adaptIdFieldDef(fieldDef, resModel) {
+    return fieldDef?.name === "id"
+        ? { ...fieldDef, type: "many2one", relation: resModel }
+        : fieldDef;
+}

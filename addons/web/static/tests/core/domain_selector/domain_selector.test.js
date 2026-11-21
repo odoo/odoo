@@ -244,6 +244,50 @@ test("building a domain with an invalid path (2)", async () => {
     expect(getCurrentValue()).toBe("1");
 });
 
+test("id field: record selector with operator '='", async () => {
+    await makeDomainSelector({
+        domain: `[("id", "=", 1)]`,
+    });
+    expect(getCurrentPath()).toBe("Id");
+    expect(getCurrentValue()).toBe("first record");
+});
+
+test("id field: multi-record selector with operator 'in'", async () => {
+    await makeDomainSelector({
+        domain: `[("id", "in", [1, 2])]`,
+        update(domain) {
+            expect.step(domain);
+        },
+    });
+    expect(getCurrentPath()).toBe("Id");
+    expect(getCurrentOperator()).toBe(label("in", "many2one"));
+    expect(getCurrentValue()).toBe("first record second record");
+
+    await editValue("aa", { confirm: false });
+    await runAllTimers();
+    await contains(".dropdown-menu li").click();
+    expect(getCurrentValue()).toBe("first record second record aaa");
+    expect.verifySteps([`[("id", "in", [1, 2, 4])]`]);
+});
+
+test("id field: display names in readonly mode", async () => {
+    await makeDomainSelector({
+        domain: `[("id", "in", [1, 2, 9999])]`,
+        readonly: true,
+    });
+    expect(".o_tree_editor_condition").toHaveText(
+        "Id\n=\nfirst record\nor\nsecond record\nor\nMissing record"
+    );
+});
+
+test("id field on a related model: record selector on the related model", async () => {
+    await makeDomainSelector({
+        domain: `[("product_id.id", "in", [37])]`,
+    });
+    expect(getCurrentPath()).toBe("Product > Id");
+    expect(getCurrentValue()).toBe("xphone");
+});
+
 test("building a domain with an invalid path (3)", async () => {
     Partner._fields.user_id = fields.Many2one({
         string: "User",
@@ -543,7 +587,7 @@ test("parse -1", async () => {
             <DomainSelector resModel="'partner'" domain="this.domain" readonly="false"/>
         `;
         setup() {
-            this.domain = `[("id", "=", -1)]`;
+            this.domain = `[("int", "=", -1)]`;
         }
     }
     await mountWithCleanup(Parent);
@@ -2233,11 +2277,11 @@ test(`any/not any operator (readonly)`, async () => {
         },
         {
             domain: `[("product_id", "any", ["&", ("name", "in", ["JD7", "KDB"]), ("team_id", "not any", ["&", ("id", "=", 17), ("name", "ilike", "mancity")])])]`,
-            text: `Match\nall\nof the following rules:\nProduct\n:\nall\nof:\nProduct Name\n=\nJD7\nor\nKDB\nProduct Team\n: not\nall\nof:\nId\n=\n17\nTeam Name\ncontains\nmancity`,
+            text: `Match\nall\nof the following rules:\nProduct\n:\nall\nof:\nProduct Name\n=\nJD7\nor\nKDB\nProduct Team\n: not\nall\nof:\nId\n=\nMissing record\nTeam Name\ncontains\nmancity`,
         },
         {
             domain: `[("product_id", "any", ["|", ("name", "in", ["JD7", "KDB"]), ("team_id", "not any", ["|", ("id", "=", 17), ("name", "ilike", "mancity")])])]`,
-            text: `Match\nall\nof the following rules:\nProduct\n:\nany\nof:\nProduct Name\n=\nJD7\nor\nKDB\nProduct Team\n: not\nany\nof:\nId\n=\n17\nTeam Name\ncontains\nmancity`,
+            text: `Match\nall\nof the following rules:\nProduct\n:\nany\nof:\nProduct Name\n=\nJD7\nor\nKDB\nProduct Team\n: not\nany\nof:\nId\n=\nMissing record\nTeam Name\ncontains\nmancity`,
         },
     ];
     const parent = await makeDomainSelector({ readonly: true });
@@ -2264,7 +2308,7 @@ test("shorten descriptions of long lists", async () => {
         readonly: true,
     });
     expect(".o_tree_editor_condition").toHaveText(
-        `Id\n=\n${values.slice(0, 4).join("\nor\n")}\nor\n...`
+        "Id\n=\nMissing record\nor\nMissing record\nor\nMissing record\nor\nMissing record\nor\n..."
     );
 });
 

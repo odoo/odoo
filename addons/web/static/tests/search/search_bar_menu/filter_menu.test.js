@@ -1014,7 +1014,7 @@ test("consistent display of ! in debug mode", async () => {
     expect(SELECTORS.connectorValue).toHaveText("none");
 
     await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual([`! ( Foo = 1 or Id = 2 )`]);
+    expect(getFacetTexts()).toEqual([`! ( Foo = 1 or Id = Missing record )`]);
     expect(searchBar.env.searchModel.domain).toEqual(["!", "|", ["foo", "=", 1], ["id", "=", 2]]);
 });
 
@@ -1121,6 +1121,8 @@ test("display names in facets", async () => {
         { id: 1, name: "John" },
         { id: 2, name: "David" },
     ];
+    Foo._rec_name = "foo";
+    Foo._records = [{ id: 2, foo: "Paul" }];
 
     onRpc("/web/domain/validate", () => true);
     const searchBar = await mountWithSearch(SearchBar, {
@@ -1140,7 +1142,7 @@ test("display names in facets", async () => {
         "Bar = John",
         "Bar = David or Missing record",
         `Bar ${label("set")}`,
-        "Id = 2",
+        "Id = Paul",
     ]);
     expect(searchBar.env.searchModel.domain).toEqual([
         "&",
@@ -1301,7 +1303,9 @@ test("shorten descriptions of long lists", async function () {
         `[("id", "in", [${values}])]`
     );
     await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual([`Id = ${values.slice(0, 4).join(" or ")} or ...`]);
+    expect(getFacetTexts()).toEqual([
+        "Id = Missing record or Missing record or Missing record or Missing record or ...",
+    ]);
     expect(searchBar.env.searchModel.domain).toEqual([["id", "in", values]]);
 });
 
