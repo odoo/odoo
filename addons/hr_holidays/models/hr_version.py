@@ -125,7 +125,7 @@ class HrVersion(models.Model):
             # number_of_days and number_of_hours_display depend on each other and
             # the recomputation order is not guaranteed.
             allocations = self.env['hr.leave.allocation'].search([
-                ('employee_id', 'in', self.employee_id.ids),
+                ('employee_id', 'in', self.filtered('active').employee_id.ids),
             ])
             hour_allocations = allocations.filtered(lambda a: a.type_request_unit == 'hour')
             for allocation in hour_allocations:
