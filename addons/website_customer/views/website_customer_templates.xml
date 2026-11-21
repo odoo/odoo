@@ -256,13 +256,16 @@
             data-editor-message.translate="Drag blocks here to add them on all customers"/>
         <div class="container mb-3">
             <div class="row">
-                <div class="mt-4 mb-3" t-if="not edit_page">
+                <div class="mt-4 mb-3" t-if="not edit_page and back_url">
+                    <a t-attf-href="#{back_url}" aria-label="Back to partner"><i class="oi me-2" data-icon="chevron_backward" role="img" aria-hidden="true"/>Back</a>
+                </div>
+                <div class="mt-4 mb-3" t-elif="not edit_page">
                     <a t-attf-href="/customers" aria-label="Back to references list"><i class="oi me-2" data-icon="chevron_backward" role="img" aria-hidden="true"/>Back to references</a>
                 </div>
                 <t t-set="right_column">
                     <div id="right_column"><t t-call="website_customer.references_block"/></div>
                 </t>
-                <t t-call="website_partner.partner_detail" contact_details="True" is_customer_page="True" right_column="right_column"/>
+                <t t-call="website_partner.partner_detail" contact_details="True" right_column="right_column"/>
             </div>
         </div>
         <div class="oe_structure oe_empty" id="oe_structure_website_customer_details_2"
