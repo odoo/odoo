@@ -206,6 +206,7 @@ test("drag and drop reorders products", async () => {
     expect(products.get(6).pos_sequence).toBe(21);
 });
 
+<<<<<<< eedc4067655222d7bced965cc9371ad641c1e168
 test("multiplePrinter using mock records", async () => {
     const store = await setupPosEnv();
     const printer = store.ticketPrinter;
@@ -218,6 +219,23 @@ test("multiplePrinter using mock records", async () => {
     expect(defaultPrinter2.id).toBe(4);
 });
 
+||||||| b5a65c45ca9112693406786ab4188a93bb52b769
+=======
+test("fastValidate does not validate an empty order", async () => {
+    const store = await setupPosEnv();
+    store.addNewOrder();
+    const order = store.getOrder();
+    const productScreen = await mountWithCleanup(ProductScreen, {
+        props: { orderUuid: order.uuid },
+    });
+
+    await productScreen.fastValidate(order.config.fast_payment_method_ids[0]);
+
+    expect(order.state).toBe("draft");
+    expect(order.payment_ids.length).toBe(0);
+});
+
+>>>>>>> fd89a4539bcb625ae098a50f71b06d89e6f17440
 test("addProductToOrder presets the variant matched by default_code search", async () => {
     const store = await setupPosEnv();
     store.addNewOrder();
