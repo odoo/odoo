@@ -1,6 +1,10 @@
+import { base64Img } from "../_helpers/editor";
 import { describe, expect, test } from "@odoo/hoot";
-import { queryOne } from "@odoo/hoot-dom";
+import { click, dblclick, queryOne, waitFor } from "@odoo/hoot-dom";
 import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
+import { animationFrame } from "@odoo/hoot-mock";
+import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { MainComponentsContainer } from "@web/core/main_components_container";
 import { location } from "@web/core/browser/browser";
 
 setupInteractionWhiteList("html_editor.readonly_content");
@@ -75,5 +79,20 @@ describe("copy", () => {
         expect(clipboardData.getData("application/vnd.odoo.odoo-editor")).toBe(
             clipboardData.getData("text/html")
         );
+    });
+});
+
+describe("image preview", () => {
+    test.tags("desktop");
+    test("double-clicking a readonly image opens its preview", async () => {
+        await startInteractions(`<div class="o_readonly"><img src="${base64Img}"></div>`);
+        await mountWithCleanup(MainComponentsContainer);
+        const image = queryOne(".o_readonly img");
+        await dblclick(image);
+        await waitFor(".o-FileViewer-viewImage");
+        expect(".o-FileViewer-viewImage").toHaveAttribute("data-src", image.src);
+        await click(".o-FileViewer [aria-label='Close']");
+        await animationFrame();
+        expect(".o-FileViewer").toHaveCount(0);
     });
 });

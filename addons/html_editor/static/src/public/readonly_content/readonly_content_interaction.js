@@ -15,6 +15,7 @@ export class ReadonlyContentInteraction extends Interaction {
     dynamicContent = {
         _root: {
             "t-on-copy.noUpdate": fillClipboardWithSelection,
+            "t-on-dblclick.noUpdate": this.onImageDoubleClick,
         },
         "[data-oe-role]": {
             "t-att-role": (el) => el.dataset.oeRole,
@@ -23,6 +24,22 @@ export class ReadonlyContentInteraction extends Interaction {
             "t-att-aria-label": (el) => el.dataset.oeAriaLabel,
         },
     };
+
+    setup() {
+        this.fileViewer = this.services.fileViewer();
+    }
+
+    onImageDoubleClick({ target }) {
+        if (target.tagName === "IMG") {
+            this.fileViewer.open({
+                isImage: true,
+                isViewable: true,
+                name: target.src,
+                defaultSource: target.src,
+                downloadUrl: target.src,
+            });
+        }
+    }
 
     start() {
         for (const link of getLinksToRetarget(this.el)) {
