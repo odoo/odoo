@@ -53,7 +53,7 @@ const messagingMenuPatch = {
                 { newWindow }
             );
             thread.markAllMessagesAsRead();
-            this.close?.();
+            this.props.close?.();
         }
     },
 };

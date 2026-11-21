@@ -1,4 +1,5 @@
 import { Message } from "@mail/core/common/message";
+import { mergeProps } from "@mail/utils/common/hooks";
 
 import { useProps, t } from "@odoo/owl";
 
@@ -8,7 +9,7 @@ import { url } from "@web/core/utils/urls";
 patch(Message.prototype, {
     setup() {
         super.setup();
-        this.livechatProps = useProps({ isTypingMessage: t.boolean().optional() });
+        mergeProps(this.props, useProps({ isTypingMessage: t.boolean().optional() }));
         this.url = url;
     },
 

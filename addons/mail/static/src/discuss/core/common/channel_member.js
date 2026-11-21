@@ -2,7 +2,7 @@ import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { useChannelMemberActions } from "@mail/discuss/core/common/channel_member_actions";
 import { ChannelMemberContextMenu } from "@mail/discuss/core/common/channel_member_context_menu";
-import { propComputed, useRightClickMenu } from "@mail/utils/common/hooks";
+import { propComputed, usePropsPlus, useRightClickMenu } from "@mail/utils/common/hooks";
 
 import { Component, signal, t } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -28,12 +28,14 @@ export class ChannelMember extends Component {
         super.setup();
         this.ancestors = useAncestors();
         this.store = useService("mail.store");
-        this.member = propComputed("member", t.instanceOf(this.store["discuss.channel.member"]));
-        this.actions = useChannelMemberActions({ member: this.member });
+        this.props = usePropsPlus({
+            member: propComputed(t.instanceOf(this.store["discuss.channel.member"])),
+        });
+        this.actions = useChannelMemberActions({ member: this.props.member });
         this.showingActions = useDropdownState();
         this.rootRef = signal.ref(HTMLDivElement);
         this.rightClickMenu = useRightClickMenu(this.rootRef, {
-            extraMenuProps: () => ({ member: this.member() }),
+            extraMenuProps: () => ({ member: this.props.member() }),
             predicate: () => Boolean(this.actions.actions.length),
         });
     }
@@ -45,19 +47,19 @@ export class ChannelMember extends Component {
 
     get attClass() {
         return {
-            "cursor-pointer": this.isClickable(this.member()),
-            "o-offline": this.member().imStatusUI === "offline",
+            "cursor-pointer": this.isClickable(this.props.member()),
+            "o-offline": this.props.member().imStatusUI === "offline",
             "o-actions-open": this.showingActions.isOpen,
             "o-mobile": this.store.useMobileView,
         };
     }
 
     get showAdminIcon() {
-        return this.member().channel_role === "admin";
+        return this.props.member().channel_role === "admin";
     }
 
     get showOwnerIcon() {
-        return this.member().channel_role === "owner";
+        return this.props.member().channel_role === "owner";
     }
 
     /** @param {import("models").ChannelMember} member */

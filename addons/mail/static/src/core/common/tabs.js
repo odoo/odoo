@@ -1,5 +1,5 @@
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
-import { useChildRefs, useScrollState } from "@mail/utils/common/hooks";
+import { propStatic, useChildRefs, usePropsPlus, useScrollState } from "@mail/utils/common/hooks";
 import {
     Component,
     onMounted,
@@ -17,15 +17,12 @@ export class Tabs extends Component {
     static template = "mail.Tabs";
 
     setup() {
-        this.props = useProps({
+        this.props = usePropsPlus({
             direction: t.selection(["h", "v"]).optional("v"),
             initialTabId: t.or([t.string(), t.number()]).optional(),
+            /** Root element, either owned by the parent (`ref` prop) or local. */
+            ref: propStatic(t.signal(t.ref()).optional(() => signal.ref())),
         });
-        /** Root element, either owned by the parent (`ref` prop) or local. */
-        this.rootRef = useProps.static(
-            "ref",
-            t.signal(t.ref()).optional(() => signal.ref())
-        );
         this.activeHeaderId = signal(this.props.initialTabId);
         this.headerRefs = useChildRefs();
         this.navRef = signal();

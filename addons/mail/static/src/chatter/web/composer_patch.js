@@ -4,6 +4,7 @@ import { patch } from "@web/core/utils/patch";
 
 import { Composer } from "@mail/core/common/composer";
 import { RecipientsInput } from "@mail/core/web/recipients_input";
+import { mergeProps } from "@mail/utils/common/hooks";
 
 Object.assign(Composer.components, {
     RecipientsInput,
@@ -12,18 +13,21 @@ Object.assign(Composer.components, {
 patch(Composer.prototype, {
     setup() {
         super.setup(...arguments);
-        this.webComposerProps = useProps({
-            thread: t.instanceOf(this.store["mail.thread"]).optional(),
-            withMessageFields: t.boolean().optional(),
-        });
+        mergeProps(
+            this.props,
+            useProps({
+                thread: t.instanceOf(this.store["mail.thread"]).optional(),
+                withMessageFields: t.boolean().optional(),
+            })
+        );
         this.subjectInputRef = signal.ref();
         // fill in the "suggested subject" only when it differs from the default
         useOnChange(
             () => [
-                this.webComposerProps.withMessageFields,
-                this.webComposerProps.thread?.defaultSubject,
-                this.webComposerProps.thread?.suggestedSubject,
-                this.webComposerProps.thread?.showSubjectInSmallComposer,
+                this.props.withMessageFields,
+                this.props.thread?.defaultSubject,
+                this.props.thread?.suggestedSubject,
+                this.props.thread?.showSubjectInSmallComposer,
                 this.subjectInputRef(),
             ],
             (
@@ -54,8 +58,8 @@ patch(Composer.prototype, {
             isCcEnabled: false,
         });
         useEffect(() => {
-            const allRecipients = (this.webComposerProps.thread?.suggestedRecipients || []).concat(
-                this.webComposerProps.thread?.additionalRecipients || []
+            const allRecipients = (this.props.thread?.suggestedRecipients || []).concat(
+                this.props.thread?.additionalRecipients || []
             );
             if (allRecipients.some((r) => r.recipient_type === "cc")) {
                 this.chatterState.isCcEnabled = true;
@@ -66,8 +70,8 @@ patch(Composer.prototype, {
     async onClickFullComposerGetAction() {
         const res = await super.onClickFullComposerGetAction();
         if (
-            this.webComposerProps.withMessageFields &&
-            this.webComposerProps.thread.showSubjectInSmallComposer
+            this.props.withMessageFields &&
+            this.props.thread.showSubjectInSmallComposer
         ) {
             res.action.context.default_subject = this.subject;
         }

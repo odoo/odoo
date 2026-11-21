@@ -24,11 +24,11 @@ patch(Composer.prototype, {
     },
 
     get allowUpload() {
-        return super.allowUpload && !this.props.composer.portalComment;
+        return super.allowUpload && !this.props.composer().portalComment;
     },
 
     async editMessage() {
-        if (this.props.composer.portalComment) {
+        if (this.props.composer().portalComment) {
             await this.savePublisherComment();
             return;
         }
@@ -42,7 +42,7 @@ patch(Composer.prototype, {
         this.state.active = false;
         const data = await rpc("/website/rating/comment", {
             rating_id: this.message.rating_id.id,
-            publisher_comment: this.props.composer.composerText.trim(),
+            publisher_comment: this.props.composer().composerText.trim(),
         });
         this.message.rating_id = data;
         this.props.onPostCallback();
@@ -103,7 +103,7 @@ patch(Composer.prototype, {
 
     get wysiwygConfig() {
         const config = super.wysiwygConfig;
-        if (!this.props.composer.targetThread?.reviewChatter) {
+        if (!this.props.composer().targetThread?.reviewChatter) {
             return config;
         }
         return {

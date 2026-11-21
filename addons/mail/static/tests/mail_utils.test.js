@@ -1,5 +1,5 @@
 import { addLink, inlineElement, parseAndTransform } from "@mail/utils/common/format";
-import { useSequential } from "@mail/utils/common/hooks";
+import { mergeProps, useSequential } from "@mail/utils/common/hooks";
 import { createElementFromContent, getInnerHtml } from "@mail/utils/common/html";
 import {
     contains as mailContains,
@@ -12,7 +12,9 @@ import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer"
 
 import { describe, expect, test } from "@odoo/hoot";
 import { press, waitFor } from "@odoo/hoot-dom";
-import { markup } from "@odoo/owl";
+import { Component, markup, signal, t, useProps, xml } from "@odoo/owl";
+
+import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -252,6 +254,25 @@ test("useSequential aborts the signal of the ongoing call once a newer call is m
         });
     await Promise.all([call(), call()]);
     expect(signals.map((signal) => signal.aborted)).toEqual([true, false]);
+});
+
+test("mergeProps keeps a merged plain prop up to date", async () => {
+    class Child extends Component {
+        static template = xml`<span class="o-value" t-out="this.props.value"/>`;
+        setup() {
+            this.props = useProps({ label: t.string().optional() });
+            mergeProps(this.props, useProps({ value: t.number() }));
+        }
+    }
+    class Parent extends Component {
+        static components = { Child };
+        static template = xml`<Child value="this.value()"/>`;
+        value = signal(1);
+    }
+    const parent = await mountWithCleanup(Parent);
+    await waitFor(".o-value:text(1):count(1)");
+    parent.value.set(2);
+    await waitFor(".o-value:text(2):count(1)");
 });
 
 function inlineHtml(content) {
