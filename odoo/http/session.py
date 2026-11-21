@@ -10,7 +10,6 @@ import os
 import re
 import secrets
 import tempfile
-import threading
 import time
 import typing
 from collections.abc import MutableMapping
@@ -20,6 +19,7 @@ from http import HTTPStatus
 from zlib import adler32
 
 from odoo.api import Environment
+from odoo.netsvc import ExecutionInfo
 from odoo.tools import config, consteq, get_lang
 
 from . import request
@@ -587,7 +587,7 @@ class SessionStore:
         else:
             self.delete(session)
             session.sid = self.generate_key()
-            if req_ident := getattr(threading.current_thread(), 'req_ident', False):
+            if req_ident := ExecutionInfo.get().req_ident:
                 _logger.info(
                     'Session rotated: %s -> %s', req_ident[1], session.sid[:8]
                 )
