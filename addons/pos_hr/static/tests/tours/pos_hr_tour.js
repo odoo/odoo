@@ -157,13 +157,13 @@ registry.category("web_tour.tours").add("pos_hr_go_backend_opened_registered", {
             PosHr.clickCashierName(),
             CashierSelectionPopup.has("Pos Employee1", { run: "click" }),
             PosHr.enterPin("2580"),
-            Chrome.notExistMenuOption("Close Register"),
+            Chrome.existMenuOption("Close Register"),
             Chrome.notExistMenuOption("Backend"),
 
             // Employee without user --> 403
             PosHr.clickCashierName(),
             CashierSelectionPopup.has("Test Employee 3", { run: "click" }),
-            Chrome.notExistMenuOption("Close Register"),
+            Chrome.existMenuOption("Close Register"),
             Chrome.notExistMenuOption("Backend"),
 
             // Manager without user --> 403
