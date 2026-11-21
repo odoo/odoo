@@ -160,6 +160,7 @@ class EventTrackController(http.Controller):
             # event information
             'event': event,
             'main_object': event,
+            'structured_data': tracks_sudo.with_context(event_id=event.id)._render_jsonld(),
             # tracks display information
             'tracks': tracks_sudo,
             'tracks_by_day': tracks_by_day,
@@ -195,6 +196,11 @@ class EventTrackController(http.Controller):
             'tag': tag,
             'is_event_user': request.env.user.has_group('event.group_event_user'),
             'website_visitor_timezone': request.env['website.visitor']._get_visitor_timezone(),
+            # Only published tracks are described, and the agenda only shows
+            # those that are scheduled.
+            'structured_data': event.sudo().track_ids.filtered(
+                lambda track: track.is_published and track.date,
+            ).with_context(event_id=event.id, is_agenda_page=True)._render_jsonld(),
         }
 
         vals.update(self._prepare_calendar_values(event))
@@ -382,6 +388,7 @@ class EventTrackController(http.Controller):
             'event': event,
             'main_object': track,
             'track': track,
+            'structured_data': track._render_jsonld(is_detail_page=True),
             # sidebar
             'tracks_other': tracks_other,
             # options
