@@ -46,39 +46,40 @@ class TestMrpValuationOperationStandard(TestBomPriceOperationCommon):
             {'value': self.company.currency_id.round((PRICE + 20) * 0.12), 'price_unit': (PRICE + 20) / 100},
         ])
 
-    # def test_average_cost_unbuild_with_byproducts(self):
-    #     """ Ensures that an unbuild for a manufacturing order using avg cost products won't copy
-    #         the value of the main product for every byproduct line, regardless of their real value.
-    #     """
-    #     self.dining_table.categ_id = self.category_avco
-    #     self.glass.categ_id = self.category_avco
-    #     self.scrap_wood.categ_id = self.category_avco
-    #     byproduct_cost_share = 0.13
-    #
-    #     self._make_in_move(self.glass, 10)
-    #     production = self._create_mo(self.bom_1, 1)
-    #     self._produce(production)
-    #     production.button_mark_done()
-    #
-    #     self.assertEqual(self.scrap_wood.total_value, (PRICE + 10) * byproduct_cost_share)
-    #     self.assertRecordValues(production.move_finished_ids, [
-    #         {'product_id': self.dining_table.id, 'value': (PRICE + 10) * (1 - byproduct_cost_share)},
-    #         {'product_id': self.scrap_wood.id, 'value': (PRICE + 10) * 0.12},
-    #         {'product_id': self.scrap_wood.id, 'value': (PRICE + 10) * 0.1},
-    #     ])
-    #
-    #     action = production.button_unbuild()
-    #     wizard = Form(self.env[action['res_model']].with_context(action['context']))
-    #     wizard.product_qty = 1
-    #     unbuild = wizard.save()
-    #     unbuild.action_validate()
-    #
-    #     unbuild_move = self.env['stock.move'].search([('reference', '=', unbuild.name)])
-    #     self.assertRecordValues(unbuild_move, [
-    #         {'product_id': self.dining_table.id, 'value': (PRICE + 10) * (1 - byproduct_cost_share)},
-    #         {'product_id': self.scrap_wood.id, 'value': (PRICE + 10) * byproduct_cost_share},
-    #         {'product_id': self.glass.id, 'value': 10},
-    #     ])
+    def test_average_cost_unbuild_with_byproducts(self):
+        """ Ensures that an unbuild for a manufacturing order using avg cost products won't copy
+            the value of the main product for every byproduct line, regardless of their real value.
+        """
+        self.dining_table.categ_id = self.category_avco
+        self.glass.categ_id = self.category_avco
+        self.scrap_wood.categ_id = self.category_avco
+        byproduct_cost_share = 0.13
+
+        self._make_in_move(self.glass, 10)
+        production = self._create_mo(self.bom_1, 1)
+        self._produce(production)
+        production.button_mark_done()
+        self.assertEqual(self.scrap_wood.total_value, self.company.currency_id.round((PRICE + 100) * byproduct_cost_share))
+        self.assertRecordValues(production.move_finished_ids, [
+            {'product_id': self.dining_table.id, 'value': self.company.currency_id.round((PRICE + 100) * (1 - byproduct_cost_share))},
+            {'product_id': self.scrap_wood.id, 'value': self.company.currency_id.round((PRICE + 100) * 0.01)},
+            {'product_id': self.scrap_wood.id, 'value': self.company.currency_id.round((PRICE + 100) * 0.12)},
+        ])
+
+        action = production.button_unbuild()
+        wizard = Form(self.env[action['res_model']].with_context(action['context']))
+        wizard.product_qty = 1
+        unbuild = wizard.save()
+        unbuild.action_validate()
+
+        unbuild_move = self.env['stock.move'].search([('reference', '=', unbuild.name)])
+        filtered_moves = unbuild_move.filtered(lambda m: m.product_id in (self.dining_table | self.glass))
+        self.assertRecordValues(filtered_moves, [
+            {'product_id': self.dining_table.id, 'value': self.company.currency_id.round((PRICE + 100) * (1 - byproduct_cost_share))},
+            {'product_id': self.glass.id, 'value': self.company.currency_id.round(100)},
+        ])
+        scrap_wood_moves = unbuild_move.filtered(lambda m: m.product_id == self.scrap_wood)
+        self.assertEqual(sum(scrap_wood_moves.mapped('value')), self.company.currency_id.round((PRICE + 100) * byproduct_cost_share))
 
     def test_standard_finished_byproduct_price_unit(self):
         """Standard-cost byproducts use their own standard_price when the
