@@ -498,7 +498,7 @@ class ResUsers(models.Model):
 
     def _store_main_user_fields(self, res: Store.FieldList):
         res.extend(["active", "partner_id", "share"])
-        res.attr("status_message", internal=True)
+        res.for_internal_users(["status_message"])
 
     def _store_im_status_fields(self, res: Store.FieldList):
         res.attr("im_status", version=lambda u: u._get_im_status_version())
@@ -605,8 +605,12 @@ class ResUsers(models.Model):
         res.one("partner_id", "_store_avatar_card_fields")
         # Depends on the user groups: no write_date reflects it.
         res.attr("is_public", lambda u: u._is_public(), version=False)
-        res.attr("status_message", internal=True)
-        res.from_method("_store_im_status_fields", internal=True)
+        res.for_internal_users(
+            lambda res: (
+                res.attr("status_message"),
+                res.from_method("_store_im_status_fields"),
+            ),
+        )
 
     # ------------------------------------------------------------
     # Mail Servers
