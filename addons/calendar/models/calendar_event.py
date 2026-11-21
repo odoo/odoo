@@ -30,7 +30,7 @@ from odoo.addons.mail.tools.discuss import Store
 from odoo.tools.intervals import intervals_overlap
 from odoo.tools.translate import _
 from odoo.tools.misc import get_lang, babel_locale_parse
-from odoo.tools import html2plaintext, html_sanitize, is_html_empty, single_email_re, format_date, format_time
+from odoo.tools import clean_context, email_normalize, html2plaintext, html_sanitize, is_html_empty, single_email_re, format_date, format_time
 from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
@@ -132,6 +132,13 @@ class CalendarEvent(models.Model):
             defaults['res_id'] = context['active_id']
         if defaults.get('is_draft') and 'show_as' in fields and 'default_show_as' not in context:
             defaults['show_as'] = 'free'
+        # a meeting planned from a document gets a video call link, so that its call is logged
+        if 'videocall_location' in fields \
+                and (defaults.get('res_model') or context.get('default_res_model')) \
+                and not defaults.get('videocall_location'):
+            videocall_location = self.get_discuss_videocall_location()
+            defaults['access_token'] = videocall_location.split('/')[-1]
+            defaults['videocall_location'] = videocall_location
 
         return defaults
 
@@ -1042,7 +1049,16 @@ class CalendarEvent(models.Model):
                         new_partner_ids.append(command[1])
                     elif command[0] == Command.SET:
                         new_partner_ids.extend(set(command[2]) - set(self.partner_ids.ids))
-                self.videocall_channel_id._add_members(partners=self.env["res.partner"].browse(new_partner_ids))
+                self._add_videocall_channel_attendees(self.env["res.partner"].browse(new_partner_ids))
+                removed_partner_ids = set()
+                for command in values['partner_ids']:
+                    if command[0] in (Command.UNLINK, Command.DELETE):
+                        removed_partner_ids.add(command[1])
+                    elif command[0] == Command.SET:
+                        removed_partner_ids |= set(self.partner_ids.ids) - set(command[2])
+                    elif command[0] == Command.CLEAR:
+                        removed_partner_ids |= set(self.partner_ids.ids)
+                self._remove_videocall_channel_attendees(self.env["res.partner"].browse(removed_partner_ids))
 
         time_fields = self.env['calendar.event']._get_time_fields()
         if any([values.get(key) for key in time_fields]):
@@ -1419,7 +1435,58 @@ class CalendarEvent(models.Model):
         self.videocall_channel_id = self._create_videocall_channel_id(
             self.name, self.partner_ids.user_ids,
         )
+        self._add_videocall_channel_attendees(self.partner_ids - self.partner_ids.user_ids.partner_id)
         self.videocall_channel_id.channel_change_description(self._get_videocall_channel_description())
+
+    def _add_videocall_channel_attendees(self, partners):
+        """Add the attendees ``partners`` to the Discuss channel of the meetings: those without
+        a user as the guest of their email address."""
+        # the defaults of the meeting, e.g. the customer of a lead as `default_partner_id`,
+        # are not those of the members of its channel
+        channels = self.videocall_channel_id.with_context(clean_context(self.env.context))
+        with_user = partners.filtered("user_ids")
+        if with_user:
+            channels._add_members(partners=with_user)
+        name_by_email = {}
+        for partner in partners - with_user:
+            if email := email_normalize(partner.email):
+                name_by_email.setdefault(email, partner.name or email)
+        if not name_by_email:
+            return
+        known = self.env["mail.guest"].search_fetch(
+            [("email", "in", list(name_by_email))], ["email"],
+        ).grouped("email")
+        guests = self.env["mail.guest"].union(*(matches[:1] for matches in known.values()))
+        if to_create := [
+            {"email": email, "name": name}
+            for email, name in name_by_email.items()
+            if email not in known
+        ]:
+            # sudo: mail.guest: internal users only have read access on guests, and these
+            # attendees have no user to join the meeting as themselves.
+            guests |= self.env["mail.guest"].sudo().create(to_create).sudo(False)
+        channels._add_members(
+            guests=guests,
+            create_member_params={"invitation_sent_dt": fields.Datetime.now()},
+            post_joined_message=False,
+        )
+
+    def _remove_videocall_channel_attendees(self, partners, invited_only=False):
+        """Drop the members of the Discuss channel of the meetings that stand for the attendees
+        ``partners`` (see `_add_videocall_channel_attendees`), unless they still attend another
+        meeting of that channel to come, such as a following occurrence of a recurrence. With
+        ``invited_only``, those who already joined the conversation stay."""
+        channels = self.videocall_channel_id
+        partners -= (channels.calendar_event_ids - self).filtered(
+            lambda event: event.stop > fields.Datetime.now(),
+        ).attendee_ids.filtered(lambda attendee: attendee.state != "declined").partner_id
+        emails = {email_normalize(partner.email) for partner in partners - partners.filtered("user_ids")} - {False}
+        # sudo: discuss.channel.member: the attendees removed from, or declining, a meeting the user
+        # can edit no longer belong to its channel, whoever added them to it.
+        members = channels.sudo().meeting_invited_member_ids if invited_only else channels.sudo().channel_member_ids
+        members.filtered(
+            lambda member: member.partner_id in partners or member.guest_id.email in emails,
+        ).unlink()
 
     def _create_videocall_channel_id(self, name, users):
         videocall_channel = self.env["discuss.channel"]._create_group(
@@ -1626,6 +1693,35 @@ class CalendarEvent(models.Model):
                     activity_values['user_id'] = event.user_id.id
                 if activity_values.keys():
                     event.meeting_activity_ids.with_context(calendar_event_meeting_update=True).write(activity_values)
+
+    def _create_meeting_activity(self):
+        """ Create the activity a meeting linked to a document carries in the chatter of
+        that document, when it has none: only a meeting created from a document gets one
+        right away (see `create`), not one linked to it afterwards. """
+        self.ensure_one()
+        if not self.res_model or not self.res_id:
+            return self.env['mail.activity']
+        if self.res_model in self._get_activity_excluded_models():
+            return self.env['mail.activity']
+        if not self.env['ir.model']._get(self.res_model).sudo().is_mail_activity:
+            return self.env['mail.activity']
+        record = self.env[self.res_model].browse(self.res_id).exists()
+        if not record:
+            return self.env['mail.activity']
+        activity_type = self.env['mail.activity.type'].search(
+            [('category', '=', 'meeting'), ('res_model', 'in', (False, self.res_model))], limit=1,
+        )
+        if not activity_type:
+            return self.env['mail.activity']
+        return record.activity_schedule(
+            activity_type_id=activity_type.id,
+            automated=False,
+            calendar_event_id=self.id,
+            date_deadline=self._get_activity_deadline_from_start(self.start, self.allday),
+            note=self.description,
+            summary=self.name,
+            user_id=self.user_id.id,
+        )
 
     @api.model
     def _get_activity_deadline_from_start(self, start, allday):
@@ -2189,3 +2285,4 @@ class CalendarEvent(models.Model):
     def _store_calendar_event_fields(self, res: Store.FieldList):
         res.extend(["name", "start", "stop", "location", "videocall_location"])
         res.many("partner_ids", ["name"])
+        res.one("videocall_channel_id", [])
