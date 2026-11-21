@@ -19,6 +19,11 @@ class ProductProduct(models.Model):
     ]
     _website_track_field = "product_id"
     _mail_post_access = "read"
+    _clear_cache_on_fields = {
+        "active",
+        "product_template_attribute_value_ids",
+        "additional_product_tag_ids",
+    }
 
     variant_ribbon_id = fields.Many2one(string="Variant Ribbon", comodel_name="product.ribbon")
     website_id = fields.Many2one(related="product_tmpl_id.website_id", readonly=False)
@@ -106,7 +111,7 @@ class ProductProduct(models.Model):
     def _delete_extra(self):
         yield from super()._delete_extra()
 
-        if 'website_sale' in self.env.registry.uninstalling_modules:
+        if "website_sale" in self.env.registry.uninstalling_modules:
             return
         # delete variant images
         for product in self:
@@ -547,7 +552,10 @@ class ProductProduct(models.Model):
                 or website.company_id.email_formatted
             )
             email_template.with_user(website.salesperson_id).sudo().with_context(
-                customer_name=partner.name, lang=partner.lang, website_id=website.id, product_price=product_price,
+                customer_name=partner.name,
+                lang=partner.lang,
+                website_id=website.id,
+                product_price=product_price,
             ).send_mail(
                 product.id,
                 force_send=True,
