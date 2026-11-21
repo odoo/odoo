@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order_deposit.AttributeSelection" t-inherit="pos_self_order.AttributeSelection" t-inherit-mode="extension">
+        <xpath expr="//span[@t-out='value.name']" position="after">
+            <t t-set="deposit" t-value="this.selfOrder.getAttributeValueDepositProduct(this.props.productTemplate, value)"/>
+            <span t-if="deposit" class="text-muted small">
+                Incl. deposit <t t-out="this.selfOrder.getDepositDisplayPrice(deposit)"/>
+            </span>
+        </xpath>
+    </t>
+</templates>
