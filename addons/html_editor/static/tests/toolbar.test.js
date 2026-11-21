@@ -1851,6 +1851,25 @@ describe("toolbar open and close on user interaction", () => {
             expect(toolbarPlugin.getIsToolbarOpen()).toBe(false);
         });
 
+        test("deferred toolbar update after iframe removal does not crash", async () => {
+            const { el, editor, plugins } = await setupEditor("<p>[test]</p>", {
+                props: { iframe: true },
+            });
+            await waitFor(".o-we-toolbar");
+            const toolbarPlugin = plugins.get("toolbar");
+            // Selection captured while the iframe is alive, as carried by a
+            // pending toolbar update.
+            const selectionData = editor.shared.selection.getSelectionData();
+
+            // Website reloads the iframe before destroying the editor: the
+            // editor is still alive, but its document has no window anymore.
+            el.ownerDocument.defaultView.frameElement.remove();
+            expect(toolbarPlugin.isDestroyed).toBe(false);
+
+            toolbarPlugin.updateToolbar(selectionData);
+            await advanceTime(DELAY_TOOLBAR_OPEN);
+        });
+
         test("toolbar should close on mousedown", async () => {
             const { el } = await setupEditor("<p>[test]</p><p>text</p>");
             await waitFor(".o-we-toolbar");
