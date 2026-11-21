@@ -75,8 +75,12 @@ Print product labels with barcode.
         'web.report_assets_common': [
             'product/static/src/scss/report_label_sheet.scss',
         ],
+        'web.assets_unit_tests': [
+            'product/static/tests/**/*.test.js',
+        ],
         'web.qunit_suite_tests': [
             'product/static/tests/**/*',
+            ('remove', 'product/static/tests/**/*.test.js'),
         ],
     },
     'license': 'LGPL-3',
