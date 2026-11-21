@@ -84,12 +84,12 @@ export class ProductCard extends Component {
         }
 
         const isConfigurable = product.isConfigurableForSelfOrder;
-        if (this.selfOrder.ordering && !isConfigurable) {
+        if (this.selfOrder.ordering && !isConfigurable && !product.hasUoMs) {
             flyToCart(target);
             this.selfOrder.addToCart(product, 1);
         }
 
-        if (isConfigurable) {
+        if (isConfigurable || product.hasUoMs) {
             router.navigate("product", { id: product.id }, historyState);
         } else if (product.pos_optional_product_ids.length && !historyState.redirectPage) {
             router.navigate("optional_product", { id: product.id }, historyState);

@@ -15,15 +15,16 @@ patch(PosOrder.prototype, {
     setLinePriceFromPriceList(line, pricelist) {
         if (line.isLotTracked()) {
             const related_lines = [];
-            const price = line.product_id.product_tmpl_id.getPrice(
+            const price = line.product_id.product_tmpl_id.getUomPrice(
                 pricelist,
                 line.getQuantity(),
+                line.product_uom_id,
                 line.getPriceExtra(),
-                false,
                 line.product_id,
                 line,
                 related_lines
             );
+            line.setUnitPrice(price);
             related_lines
                 .filter((line) => line.price_type === "original")
                 .forEach((line) => line.setUnitPrice(price));

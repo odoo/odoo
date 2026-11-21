@@ -74,10 +74,11 @@ export function getOrderLineValues(
     customer_note,
     selectedValues = {},
     customValues = {},
-    comboValues = {}
+    comboValues = {},
+    uom = null
 ) {
     const product = productTemplate.product_variant_ids[0];
-    const productPrice = selfOrder.getProductPriceInfo(productTemplate, product);
+    const productPrice = selfOrder.getProductPriceInfo(productTemplate, product, uom, qty);
     const { models, currentOrder } = selfOrder;
 
     const values = {
@@ -89,6 +90,7 @@ export function getOrderLineValues(
         price_unit: productPrice.pricelist_price,
         price_extra: 0,
         price_type: "original",
+        product_uom_id: uom || product.uom_id,
     };
 
     if (Object.entries(selectedValues).length > 0) {
@@ -101,7 +103,9 @@ export function getOrderLineValues(
         if (productVariant) {
             const productVariantPrice = selfOrder.getProductPriceInfo(
                 productTemplate,
-                productVariant
+                productVariant,
+                uom,
+                qty
             );
 
             Object.assign(values, {
@@ -182,15 +186,13 @@ export function getOrderLineValues(
     }
 
     if (values.price_extra > 0) {
-        const price = values.product_id.getPrice(
+        values.price_unit = productTemplate.getUomPrice(
             currentOrder.pricelist_id,
             values.qty,
+            uom,
             values.price_extra,
-            false,
             values.product_id
         );
-
-        values.price_unit = price;
     }
     return values;
 }
