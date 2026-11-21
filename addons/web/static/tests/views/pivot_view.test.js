@@ -23,7 +23,7 @@ import {
     toggleMenu,
     toggleMenuItem,
     toggleMenuItemOption,
-    toggleSaveFavorite,
+    waitForSaveFavorite,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
 import { download } from "@web/core/network/download";
@@ -1515,7 +1515,7 @@ test("correctly save measures and groupbys to favorite", async () => {
         pivot_row_groupby: [],
     };
     await toggleSearchBarMenu();
-    await toggleSaveFavorite();
+    await waitForSaveFavorite();
     await editFavoriteName("Fav1");
     await saveFavorite();
 
@@ -1529,7 +1529,7 @@ test("correctly save measures and groupbys to favorite", async () => {
         pivot_row_groupby: [],
     };
     await toggleSearchBarMenu();
-    await toggleSaveFavorite();
+    await waitForSaveFavorite();
     await editFavoriteName("Fav2");
     await saveFavorite();
 
@@ -1543,7 +1543,7 @@ test("correctly save measures and groupbys to favorite", async () => {
         pivot_row_groupby: ["product_id"],
     };
     await toggleSearchBarMenu();
-    await toggleSaveFavorite();
+    await waitForSaveFavorite();
     await editFavoriteName("Fav3");
     await saveFavorite();
 });
@@ -1600,7 +1600,7 @@ test("correctly remove pivot_ keys from the context", async () => {
         pivot_row_groupby: ["product_id"],
     };
     await toggleSearchBarMenu();
-    await toggleSaveFavorite();
+    await waitForSaveFavorite();
     await editFavoriteName("1");
     await saveFavorite();
 
@@ -1613,7 +1613,7 @@ test("correctly remove pivot_ keys from the context", async () => {
         pivot_row_groupby: [],
     };
     await toggleSearchBarMenu();
-    await toggleSaveFavorite();
+    await waitForSaveFavorite();
     await editFavoriteName("2");
     await saveFavorite();
 
@@ -1627,7 +1627,7 @@ test("correctly remove pivot_ keys from the context", async () => {
         pivot_row_groupby: [],
     };
     await toggleSearchBarMenu();
-    await toggleSaveFavorite();
+    await waitForSaveFavorite();
     await editFavoriteName("3");
     await saveFavorite();
 
@@ -1641,7 +1641,7 @@ test("correctly remove pivot_ keys from the context", async () => {
         pivot_row_groupby: ["product_id"],
     };
     await toggleSearchBarMenu();
-    await toggleSaveFavorite();
+    await waitForSaveFavorite();
     await editFavoriteName("4");
     await saveFavorite();
 
@@ -1655,7 +1655,7 @@ test("correctly remove pivot_ keys from the context", async () => {
         pivot_row_groupby: ["product_id"],
     };
     await toggleSearchBarMenu();
-    await toggleSaveFavorite();
+    await waitForSaveFavorite();
     await editFavoriteName("5");
     await saveFavorite();
 });
@@ -1907,7 +1907,7 @@ test("Reload, group by columns, reload", async () => {
         pivot_measures: ["__count"],
         pivot_row_groupby: [],
     };
-    await toggleSaveFavorite();
+    await waitForSaveFavorite();
     await editFavoriteName("My favorite 1");
     await saveFavorite();
 
@@ -1926,7 +1926,7 @@ test("Reload, group by columns, reload", async () => {
         pivot_measures: ["__count"],
         pivot_row_groupby: [],
     };
-    await toggleSaveFavorite();
+    await waitForSaveFavorite();
     await editFavoriteName("My favorite 2");
     await saveFavorite();
 });
@@ -2014,7 +2014,7 @@ test("Empty results keep groupbys", async () => {
     await toggleMenuItem("My Filter 1");
     expect("table").toHaveCount(0);
 
-    await toggleSaveFavorite();
+    await waitForSaveFavorite();
     await editFavoriteName("My favorite 1");
     await saveFavorite();
 
@@ -2026,7 +2026,7 @@ test("Empty results keep groupbys", async () => {
     await toggleMenuItem("My Filter 2");
     expect("table").toHaveCount(1);
 
-    await toggleSaveFavorite();
+    await waitForSaveFavorite();
     await editFavoriteName("My favorite 2");
     await saveFavorite();
 });
@@ -2400,7 +2400,7 @@ test("Row and column groupbys plus a domain", async () => {
     expect("tbody .o_pivot_header_cell_closed").toHaveText("xpad");
 
     // Save current search to favorite
-    await toggleSaveFavorite();
+    await waitForSaveFavorite();
     await editFavoriteName("My favorite");
     await saveFavorite();
 });
@@ -3382,7 +3382,7 @@ test("pivot_row_groupby should be also used after first load", async () => {
     await contains(".o-dropdown--menu .o_menu_item").click(); // select "Product"
     expect(queryAllTexts("th").slice(3)).toEqual(["Total", "xphone", "xpad"]);
     await toggleSearchBarMenu();
-    await toggleSaveFavorite();
+    await waitForSaveFavorite();
     await editFavoriteName("Favorite");
     await saveFavorite();
     expect(queryAllTexts("th").slice(3)).toEqual(["Total", "xphone", "xpad"]);
@@ -3405,7 +3405,7 @@ test("pivot_row_groupby should be also used after first load", async () => {
     await contains(".o-dropdown--menu .o_menu_item:eq(1)").click(); // select "Customer"
     expect(queryAllTexts("th").slice(3)).toEqual(["Total", "First", "Second"]);
     await toggleSearchBarMenu();
-    await toggleSaveFavorite();
+    await waitForSaveFavorite();
     await editFavoriteName("Favorite 2");
     await saveFavorite();
     expect(queryAllTexts("th").slice(3)).toEqual(["Total", "First", "Second"]);
@@ -3548,7 +3548,7 @@ test("favorite pivot_measures should be used even if found also in global contex
     expect(getFacetTexts()).toEqual([]);
     expect(queryAllTexts("th").slice(1, 3)).toEqual(["Total", "Computed and not stored"]);
     await toggleSearchBarMenu();
-    await toggleSaveFavorite();
+    await waitForSaveFavorite();
     await editFavoriteName("Favorite");
     await saveFavorite();
     expect(getFacetTexts()).toEqual(["Favorite"]);

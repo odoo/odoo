@@ -18,11 +18,7 @@ registry.category("web_tour.tours").add("test_favorite_management", {
             run: "click",
         },
         {
-            trigger: ".o_favorite_menu .o_accordion > .o_menu_item",
-            run: "click",
-        },
-        {
-            trigger: ".o_favorite_menu .o_accordion_values .o_input",
+            trigger: ".o_favorite_menu .o_custom_favorite_item .form-control",
             run: "edit Apps1",
         },
         {
@@ -40,7 +36,7 @@ registry.category("web_tour.tours").add("test_favorite_management", {
             trigger: ".o_kanban_header:contains(Account Charts)",
         },
         {
-            trigger: ".o_favorite_menu .o_accordion_values .o_input",
+            trigger: ".o_favorite_menu .o_custom_favorite_item .form-control",
             run: "edit Apps2",
         },
         {
