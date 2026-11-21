@@ -24,6 +24,11 @@ class CalendarEvent(models.Model):
         'Guests Event Modification Permission', default=False)
     videocall_source = fields.Selection(selection_add=[('google_meet', 'Google Meet')], ondelete={'google_meet': 'set discuss'})
 
+    _google_id_uniq = models.UniqueIndex(
+        "(google_id) WHERE google_id IS NOT NULL AND active",
+        "This Google event is already synchronized with another event in Odoo.",
+    )
+
     def _get_calendar_id_domain(self):
         domain = super()._get_calendar_id_domain()
         return Domain.AND([domain, [("is_import_pending", "=", False)]])

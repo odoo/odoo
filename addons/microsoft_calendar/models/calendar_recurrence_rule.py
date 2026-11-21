@@ -12,6 +12,11 @@ class CalendarRecurrence(models.Model):
     # Don't sync by default. Sync only when the recurrence is applied
     need_sync_m = fields.Boolean(default=False)
 
+    _ms_universal_event_id_uniq = models.UniqueIndex(
+        "(ms_universal_event_id) WHERE ms_universal_event_id IS NOT NULL AND active",
+        "This Outlook recurrence is already synchronized with another recurrence in Odoo.",
+    )
+
     def _inverse_rrule(self):
         # Note: 'need_sync_m' is set to False to avoid syncing the updated recurrence with
         # Outlook, as this update mainly comes from Outlook (the 'rrule' field is not directly

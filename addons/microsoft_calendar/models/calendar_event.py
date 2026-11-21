@@ -5,13 +5,14 @@ import re
 from datetime import datetime, UTC
 from zoneinfo import ZoneInfo
 
+import psycopg2
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
-from odoo.tools import email_normalize
+from odoo.tools import email_normalize, mute_logger
 
 ATTENDEE_CONVERTER_O2M = {
     'needsAction': 'notresponded',
@@ -41,6 +42,11 @@ class CalendarEvent(models.Model):
 
     microsoft_recurrence_master_id = fields.Char('Microsoft Recurrence Master Id')
     microsoft_sync_active = fields.Boolean('Microsoft Sync Active', compute='_compute_microsoft_sync_active')
+
+    _ms_universal_event_id_uniq = models.UniqueIndex(
+        "(ms_universal_event_id) WHERE ms_universal_event_id IS NOT NULL AND active",
+        "This Outlook event is already synchronized with another event in Odoo.",
+    )
 
     @api.depends('user_id.microsoft_calendar_rtoken', 'user_id.microsoft_synchronization_stopped')
     def _compute_microsoft_sync_active(self):
@@ -423,6 +429,33 @@ class CalendarEvent(models.Model):
             'stop': stop,
         })
         return values
+
+    @api.model
+    def _create_from_microsoft(self, microsoft_event, vals_list):
+        """ Create the events, skipping the ones a concurrent synchronization already imported. """
+        try:
+            with self.env.cr.savepoint(), mute_logger('odoo.sql_db'):
+                return super()._create_from_microsoft(microsoft_event, vals_list)
+        except psycopg2.errors.UniqueViolation as error:
+            if not self._is_ms_universal_event_id_conflict(error):
+                raise
+
+        # Create the events one at a time to skip the conflicting ones
+        created = self.browse()
+        for vals in vals_list:
+            try:
+                with self.env.cr.savepoint(), mute_logger('odoo.sql_db'):
+                    record = super()._create_from_microsoft(microsoft_event, [vals])
+            except psycopg2.errors.UniqueViolation as error:
+                if not self._is_ms_universal_event_id_conflict(error):
+                    raise
+                _logger.info(
+                    "Outlook event %s already imported by a concurrent synchronization, skipping.",
+                    vals.get('ms_universal_event_id'),
+                )
+                continue
+            created |= record
+        return created
 
     @api.model
     def _odoo_attendee_commands_m(self, microsoft_event):
