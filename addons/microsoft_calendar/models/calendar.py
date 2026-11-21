@@ -700,4 +700,8 @@ class Meeting(models.Model):
     def _is_microsoft_insertion_blocked(self, sender_user):
         self.ensure_one()
         has_different_owner = self.user_id and self.user_id != sender_user
-        return has_different_owner
+        # An occurrence of an Outlook recurrence is owned by Outlook: inserting it
+        # would create a new meeting organized by the syncing user and Outlook
+        # would send invitations to every attendee.
+        is_outlook_occurrence = bool(self.microsoft_recurrence_master_id)
+        return has_different_owner or is_outlook_occurrence
