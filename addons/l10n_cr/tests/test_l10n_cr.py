@@ -1,3 +1,4 @@
+from odoo.exceptions import ValidationError
 from odoo.tests import Form, tagged
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
@@ -44,3 +45,23 @@ class TestL10nCr(AccountTestInvoicingCommon):
             self.assertFalse(partner_form.city_id)
             self.assertFalse(partner_form.l10n_cr_district_id)
             self.assertEqual(partner_form.state_id, self.env.ref('base.state_SJ'))
+
+    def test_nite(self):
+        """A NITE has 10 digits: 3-120 for foreign individuals, 3-130 for entities without legal personality."""
+        cr = self.env.ref('base.cr')
+        individual = self.env['res.partner'].create({
+            'name': 'Foreign Consultant',
+            'country_id': cr.id,
+            'additional_identifiers': {'CR_NITE': '3-120-123456'},
+        })
+        entity = self.env['res.partner'].create({
+            'name': 'Consorcio Ejemplo',
+            'country_id': cr.id,
+            'additional_identifiers': {'CR_NITE': '3130654321'},
+        })
+        self.assertEqual(individual._get_additional_identifier('CR_NITE'), '3120123456')
+        self.assertFalse(individual.is_company)
+        self.assertTrue(entity.is_company)
+        for wrong_nite in ('2000000000', '312012345', '3120A23456'):
+            with self.subTest(nite=wrong_nite), self.assertRaises(ValidationError):
+                individual._set_additional_identifier('CR_NITE', wrong_nite)
