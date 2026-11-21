@@ -3,12 +3,7 @@ import { useMessageActions } from "@mail/core/common/message_actions";
 import { Priority } from "@mail/core/common/priority";
 import { MessagingMenuItemContextMenu } from "@mail/core/public_web/messaging_menu/messaging_menu_item_context_menu";
 import { NotificationItem } from "@mail/core/public_web/notification_item";
-import {
-    propStatic,
-    useLongPress,
-    usePropsPlus,
-    useRightClickMenu,
-} from "@mail/utils/common/hooks";
+import { useLongPress, useRightClickMenu } from "@mail/utils/common/hooks";
 import { computedShallowEqual } from "@mail/utils/common/signal";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
@@ -52,19 +47,16 @@ export class MessagingMenuItem extends Component {
             useSubEnv({ [DROPDOWN_NESTING]: boundary });
         }
         this.store = useService("mail.store");
-        this.message = useProps.static(
-            "message",
-            types.instanceOf(this.store["mail.message"]).optional()
-        );
-        this.props = usePropsPlus({
-            activeTab: propStatic(types.signal(types.instanceOf(this.store["MessagingMenuTab"]))),
+        this.props = useProps({
+            activeTab: types.signal(types.instanceOf(this.store["MessagingMenuTab"])),
+            message: types.instanceOf(this.store["mail.message"]).optional().static(),
+            onClick: types.function().static(),
         });
-        this.onClick = useProps.static("onClick", types.function());
         this.hasTouch = hasTouch;
         this.isActive = computed(() => this._isActive);
         this.messageActions = useMessageActions({
-            message: () => this.message,
-            thread: () => this.message?.thread,
+            message: () => this.props.message,
+            thread: () => this.props.message?.thread,
         });
         this.messageDropdownState = useDropdownState();
         if (isMobileOS()) {
@@ -89,7 +81,7 @@ export class MessagingMenuItem extends Component {
     get _isActive() {
         return (
             this.store.discuss.isActive &&
-            Boolean(this.message?.thread?.eq(this.store.discuss.thread))
+            Boolean(this.props.message?.thread?.eq(this.store.discuss.thread))
         );
     }
 
@@ -150,11 +142,11 @@ export class MessagingMenuItem extends Component {
     }
 
     get itemName() {
-        return this.message?.thread?.displayName ?? this.message?.authorName;
+        return this.props.message?.thread?.displayName ?? this.props.message?.authorName;
     }
 
     get itemPreviewText() {
-        const message = this.notificationItemProps?.message ?? this.message;
+        const message = this.notificationItemProps?.message ?? this.props.message;
         if (!message) {
             return _t("This is the start of your conversation");
         }
@@ -165,12 +157,12 @@ export class MessagingMenuItem extends Component {
     }
 
     get itemPreviewThread() {
-        return this.message?.thread;
+        return this.props.message?.thread;
     }
 
     get notificationItemProps() {
         const menu = this.store.messagingMenu;
-        const message = this.message;
+        const message = this.props.message;
         const activeTab = this.props.activeTab();
         // Distinct `eq()` instead of `in()` as `notificationTab` can be missing,
         // according to user preferences (i.e. "Handle by email").
@@ -187,19 +179,20 @@ export class MessagingMenuItem extends Component {
                 textClassName: "text-truncate",
                 onSwipeRight: isNotificationTab
                     ? {
-                          action: () => this.message?.setDone(),
+                          action: () => this.props.message?.setDone(),
                           icon: "check_circle",
                           bgColor: "bg-success",
                       }
                     : undefined,
-                onClick: (isMarkAsRead, isMiddleClick) => this.onClick(message, { isMiddleClick }),
+                onClick: (isMarkAsRead, isMiddleClick) =>
+                    this.props.onClick(message, { isMiddleClick }),
             };
         }
         return null;
     }
 
     get showActions() {
-        return Boolean(this.message);
+        return Boolean(this.props.message);
     }
 
     get swipeLeft() {
