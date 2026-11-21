@@ -33,3 +33,15 @@ class StockLocation(models.Model):
         """
         self.ensure_one()
         return bool(self.company_id) and self.company_id == self.env.company and self.usage in ['internal', 'transit']
+
+    def _get_valuation_account(self, company=None):
+        """ Return the valuation account set on the location, falling back to the
+        company's Cost of Production account for production locations.
+        """
+        self.ensure_one()
+        if self.valuation_account_id:
+            return self.valuation_account_id
+        if self.usage == 'production':
+            company = company or self.company_id or self.env.company
+            return company.valuation_account_id
+        return self.env['account.account']
