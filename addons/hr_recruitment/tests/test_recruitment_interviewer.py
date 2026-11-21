@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields
+from odoo import Command, fields
 from odoo.exceptions import AccessError, UserError
 from odoo.tests.common import new_test_user
 
@@ -161,3 +161,83 @@ class TestRecruitmentInterviewer(MailCase):
         self.job.write({'recruiter_id': new_manager_employee.id})
         self.assertEqual(ongoing_application.recruiter_id, new_manager_employee)
         self.assertEqual(hired_application.recruiter_id, self.manager_employee)
+
+    def _new_recruitment_user(self, login, group):
+        return new_test_user(self.env, login,
+            groups=f'base.group_user,hr_recruitment.{group}',
+            name=login, email=f'{login}@example.com', create_employee=True)
+
+    def _remove_group(self, users, xmlid):
+        users.write({'group_ids': [Command.unlink(self.env.ref(xmlid).id)]})
+
+    def test_lost_officer_rights_clears_recruiter(self):
+        officer = self._new_recruitment_user('lost_officer', 'group_hr_recruitment_manager')
+        other_officer = self._new_recruitment_user('other_officer', 'group_hr_recruitment_user')
+        employee = officer.employee_id
+        job = self.env['hr.job'].create({'name': 'job', 'recruiter_id': employee.id})
+        other_job = self.env['hr.job'].create({'name': 'other job', 'recruiter_id': other_officer.employee_id.id})
+        archived_job = self.env['hr.job'].create({'name': 'archived job', 'recruiter_id': employee.id, 'active': False})
+        applicant_on_job = self.env['hr.applicant'].create({'partner_name': 'on job', 'job_id': job.id})
+        # recruiter differs from the job's recruiter: not covered by the job propagation
+        applicant_diverging = self.env['hr.applicant'].create({
+            'partner_name': 'diverging',
+            'job_id': other_job.id,
+            'recruiter_id': employee.id,
+        })
+        refuse_reason = self.env['hr.applicant.refuse.reason'].create({'name': 'Not a fit'})
+        refused_applicant = self.env['hr.applicant'].create({
+            'partner_name': 'refused',
+            'job_id': job.id,
+            'refuse_reason_id': refuse_reason.id,
+            'active': False,
+        })
+        self.assertTrue(employee)
+        self.assertEqual(applicant_on_job.recruiter_id, employee)
+        self.assertEqual(refused_applicant.recruiter_id, employee)
+
+        # the officer right is implied by the manager group
+        self._remove_group(officer, 'hr_recruitment.group_hr_recruitment_manager')
+
+        self.assertFalse(job.recruiter_id)
+        self.assertFalse(archived_job.recruiter_id)
+        self.assertFalse(applicant_on_job.recruiter_id)
+        self.assertFalse(applicant_diverging.recruiter_id)
+        self.assertFalse(refused_applicant.recruiter_id)
+        self.assertEqual(other_job.recruiter_id, other_officer.employee_id)
+
+    def test_officer_downgraded_to_interviewer(self):
+        officer = self._new_recruitment_user('downgraded', 'group_hr_recruitment_user')
+        job = self.env['hr.job'].create({
+            'name': 'downgrade job',
+            'recruiter_id': officer.employee_id.id,
+            'interviewer_ids': officer.ids,
+        })
+        self.assertEqual(job.recruiter_id, officer.employee_id)
+
+        officer.write({'group_ids': [
+            Command.unlink(self.env.ref('hr_recruitment.group_hr_recruitment_user').id),
+            Command.link(self.env.ref('hr_recruitment.group_hr_recruitment_interviewer').id),
+        ]})
+
+        self.assertFalse(job.recruiter_id)
+        self.assertEqual(job.interviewer_ids, officer)
+
+    def test_lost_interviewer_rights_removes_interviewer(self):
+        self.job.interviewer_ids = self.interviewer_user + self.simple_user
+        applicant = self.env['hr.applicant'].create({
+            'partner_name': 'toto',
+            'job_id': self.job.id,
+            'interviewer_ids': (self.interviewer_user + self.simple_user).ids,
+        })
+        archived_applicant = self.env['hr.applicant'].create({
+            'partner_name': 'archived',
+            'job_id': self.job.id,
+            'interviewer_ids': self.interviewer_user.ids,
+            'active': False,
+        })
+
+        self._remove_group(self.interviewer_user, 'hr_recruitment.group_hr_recruitment_interviewer')
+
+        self.assertEqual(self.job.interviewer_ids, self.simple_user)
+        self.assertEqual(applicant.interviewer_ids, self.simple_user)
+        self.assertFalse(archived_applicant.interviewer_ids)
