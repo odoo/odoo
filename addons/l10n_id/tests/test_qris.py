@@ -1,5 +1,6 @@
 from markupsafe import Markup
 
+from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon, AccountTestInvoicingHttpCommon
 from odoo.tests import tagged
@@ -94,6 +95,11 @@ class TestQrisCommon(AccountTestInvoicingCommon):
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestQris(TestQrisCommon):
     """ Test QRIS QR generation on invoices and auto-payment registration"""
+
+    def test_qris_trusted_lock(self):
+        for fname in ('l10n_id_qris_api_key', 'l10n_id_qris_mid'):
+            with self.assertRaisesRegex(UserError, "has been trusted"), self.cr.savepoint():
+                self.acc_qris_id[fname] = 'other'
 
     @freeze_time("2024-02-27 04:15:00")
     def test_qris_qr_code_generation(self):
@@ -269,7 +275,7 @@ class TestQris(TestQrisCommon):
         self.assertTrue(webhook_url.endswith(f'/l10n_id/qris/webhook/{token}'))
         self.assertEqual(Bank._l10n_id_get_bank_from_qris_webhook_token(token), self.acc_qris_id)
         # The token is kept when the API key changes, so that the webhook URL registered on QRIS remains valid
-        self.acc_qris_id.l10n_id_qris_api_key = 'new_apikey'
+        self.acc_qris_id.write({'allow_out_payment': False, 'l10n_id_qris_api_key': 'new_apikey'})
         self.assertEqual(self.acc_qris_id.l10n_id_qris_webhook_url, webhook_url)
 
         # Renewing the token invalidates the previous one

@@ -2,7 +2,7 @@
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 
 MERCHANT_NAME_MM = 'ကုမ္ပဏီ'
 MERCHANT_CITY_MM = 'ရန်ကုန်'
@@ -143,7 +143,36 @@ class TestL10nMMEmvQrCode(AccountTestInvoicingCommon):
         with self.assertRaises(UserError, msg="The proxy type of an MMQR code must be a Merchant ID."):
             self.emv_qr_invoice._generate_qr_code()
 
+    def test_mm_trusted_lock(self):
+        for fname, value in (('proxy_value', '6543210987654321'), ('l10n_mm_terminal_id', '1')):
+            with self.assertRaisesRegex(UserError, "has been trusted"), self.cr.savepoint():
+                self.acc_emv_mm[fname] = value
+
+    def test_mm_trusted_lock_form(self):
+        """ The QR settings are only locked once the trust is saved, so a rejected value can still be corrected """
+        self.acc_emv_mm.allow_out_payment = False
+
+        # Trusting the account with an invalid Merchant ID is rejected on save.
+        bank_form = Form(self.acc_emv_mm)
+        bank_form.allow_out_payment = True
+        bank_form.proxy_value = '123456789012345'
+        with self.assertRaisesRegex(ValidationError, "16 digits long"), self.cr.savepoint():
+            bank_form.save()
+
+        # The trust is not saved yet: the Merchant ID can still be corrected.
+        bank_form.proxy_value = '6543210987654321'
+        bank_form.save()
+        self.assertRecordValues(self.acc_emv_mm, [{'allow_out_payment': True, 'proxy_value': '6543210987654321'}])
+
+        # Once the trust is saved, the QR settings are locked.
+        bank_form = Form(self.acc_emv_mm)
+        for fname in ('proxy_value', 'l10n_mm_terminal_id'):
+            with self.assertRaisesRegex(AssertionError, "can't write on readonly field"):
+                bank_form[fname] = '1'
+
     def test_mm_proxy_constraints(self):
+        self.acc_emv_mm.allow_out_payment = False
+
         with self.assertRaises(ValidationError, msg="The Merchant ID of an MMQR code must be 16 digits long."):
             self.acc_emv_mm.proxy_value = '123456789012345'
         self.acc_emv_mm.invalidate_recordset()
