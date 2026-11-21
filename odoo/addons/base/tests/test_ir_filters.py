@@ -3,8 +3,11 @@
 import ast
 import logging
 
+from odoo.exceptions import AccessError
+from odoo.fields import Command
+from odoo.tests.common import TransactionCase, ADMIN_USER_ID, new_test_user, tagged
+
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
-from odoo.tests.common import TransactionCase, ADMIN_USER_ID, tagged
 
 _logger = logging.getLogger(__name__)
 
@@ -82,6 +85,24 @@ class TestGetFilters(FiltersCase):
             dict(name='a', is_default=False, user_ids=[], domain='[]', context='{}', sort='[]'),
             dict(name='c', is_default=False, user_ids=[self.USER_NG[0]], domain='[]', context='{}', sort='[]'),
         ])
+
+
+@tagged('at_install', '-post_install')
+class TestWriteFilters(FiltersCase):
+
+    def test_leave_shared_filter(self):
+        shared_filter = self.env['ir.filters'].create({'name': 'a', 'user_ids': [self.USER_ID, ADMIN_USER_ID], 'model_id': 'ir.filters'})
+        shared_filter.with_user(self.USER_ID).write({'user_ids': [Command.unlink(self.USER_ID)]})
+        self.assertEqual(shared_filter.user_ids.ids, [ADMIN_USER_ID])
+
+    def test_portal_cannot_make_shared_filter_global(self):
+        # the portal user must be able to read the other user (same commercial partner)
+        customer = self.env['res.partner'].create({'name': 'Customer', 'is_company': True})
+        portal_user = new_test_user(self.env, login='portal_filter_user', groups='base.group_portal', parent_id=customer.id)
+        colleague = new_test_user(self.env, login='portal_filter_colleague', groups='base.group_portal', parent_id=customer.id)
+        shared_filter = self.env['ir.filters'].create({'name': 'a', 'user_ids': [portal_user.id, colleague.id], 'model_id': 'ir.filters'})
+        with self.assertRaises(AccessError):
+            shared_filter.with_user(portal_user).write({'user_ids': [Command.clear()]})
 
 
 @tagged('post_install', '-at_install', 'migration')
