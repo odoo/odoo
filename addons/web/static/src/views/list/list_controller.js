@@ -345,7 +345,12 @@ export class ListController extends Component {
             }
             await list.leaveEditMode();
             if (!list.editedRecord) {
-                await (group || list).addNewRecord(this.editable === "top");
+                const isTop = this.editable === "top";
+                if (group) {
+                    await group.addNewRecord({}, isTop);
+                } else {
+                    await list.addNewRecord(isTop);
+                }
             }
             this.render();
         } else {
