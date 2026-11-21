@@ -1,6 +1,13 @@
 import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
 import { FormRenderer } from "@web/views/form/form_renderer";
+<<<<<<< 5c6f3526e192fed5af597e447224a1c70e12328f
+||||||| 639e8f5f072bb7525659e41fe19930ee5a698e7b
+import { useRef, useEffect } from "@odoo/owl";
+=======
+import { useRef, useEffect } from "@odoo/owl";
+import { SIZES } from "@web/core/ui/ui_service";
+>>>>>>> cebf0ab40e9ceeca555846d224de2cf853207a0c
 
 export class FormRendererWithHtmlExpander extends FormRenderer {
     static props = {
@@ -41,7 +48,15 @@ export class FormRendererWithHtmlExpander extends FormRenderer {
                             parseInt(paddingBottom);
                         const minHeight =
                             document.documentElement.clientHeight - top - nonEditableHeight;
-                        elementToResize.style.minHeight = `${minHeight}px`;
+                        if (editor) {
+                            descriptionField.classList.add("o_resource_html_expander");
+                            descriptionField.style.setProperty(
+                                "--HtmlExpander__editable-min-height",
+                                `${minHeight}px`
+                            );
+                        } else {
+                            elementToResize.style.minHeight = `${minHeight}px`;
+                        }
                     }
                 }
                 this.props.notifyHtmlExpander();
@@ -59,6 +74,6 @@ export class FormRendererWithHtmlExpander extends FormRenderer {
     }
 
     _canExpandHTMLField(size) {
-        return size === 6;
+        return size === SIZES.XXL;
     }
 }
