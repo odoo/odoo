@@ -4,6 +4,7 @@ import re
 from collections import OrderedDict
 
 from odoo import models
+from odoo.tools import SQL
 from odoo.http import request
 from odoo.addons.website.tools import add_form_signature
 
@@ -49,6 +50,18 @@ class IrQweb(models.AbstractModel):
     def _get_template_cache_keys(self):
         """ Return the list of context keys to use for caching ``_compile``. """
         return super()._get_template_cache_keys() + ['website_id', 'cookies_allowed']
+
+    def _get_template_cache_version_data(self, views):
+        version_data = super()._get_template_cache_version_data(views)
+        version_data['website_id'] = self.env.context.get('website_id') or None
+        return version_data
+
+    def _get_template_cache_version_sql_parts(self):
+        # the compiled code also depends on the website of `version_data`
+        return super()._get_template_cache_version_sql_parts() + [SQL(
+            "(SELECT write_date FROM website WHERE id = (entry.version_data->>'website_id')::int)",
+            to_flush=self.env['website']._fields['write_date'],
+        )]
 
     def _pre_processing_att(self, attrib):
         self._copy_translate_attributes(attrib)
@@ -124,3 +137,8 @@ class IrQweb(models.AbstractModel):
         if isinstance(atts.get('style'), str) and 'background-image' in atts['style']:
             atts['style'] = re_background_image.sub(lambda m: '%s%s' % (m[1], url_adapter(m[2])), atts['style'])
         return atts
+
+    def _pregenerate_view_caches(self):
+        super(IrQweb, self.with_context(website_id=None))._pregenerate_view_caches()
+        for website in self.env['website'].get_all():
+            super(IrQweb, self.with_context(website_id=website.id))._pregenerate_view_caches()
