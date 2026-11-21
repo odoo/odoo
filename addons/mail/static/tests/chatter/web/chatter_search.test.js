@@ -147,14 +147,10 @@ test("Posting after jumping to a searched message loads the newest messages", as
         ".o-mail-Thread .o-mail-Message:eq(1) .o-mail-Message-content:text('Message 99'):count(1)"
     );
     // The jump to the present waits for the fetch of new messages started by the post.
-    const [ownMessageId] = pyEnv["mail.message"].search([["body", "ilike", "my own note"]]);
     await waitStoreFetch([
         [
             "/mail/thread/messages",
-            {
-                ...threadParams,
-                fetch_params: { limit: 30, after: messageIds[40], exclude_ids: [ownMessageId] },
-            },
+            { ...threadParams, fetch_params: { limit: 30, after: messageIds[40] } },
         ],
         ["/mail/thread/messages", { ...threadParams, fetch_params: { limit: 30 } }],
     ]);

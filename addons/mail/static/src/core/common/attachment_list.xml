@@ -20,6 +20,7 @@
                         'o-inChatter': this.ancestors.inChatter,
                         'o-isImage': attachment.isImage,
                         'o-isUploading opacity-25': attachment.uploading,
+                        'o-isUploadFailed border-danger': attachment.uploadError,
                         'o-viewable': attachment.isViewable and !this.props.isSelecting,
                     }"
                         tabindex="0"
@@ -181,6 +182,10 @@
                             title="Uploading">
                             <i class="oi oi-spin" data-icon="autorenew" />
                         </div>
+                        <span t-elif="attachment.uploadError"
+                            class="o-mail-Attachment-uploadError position-absolute top-0 start-0 m-1 badge text-bg-danger pe-none">
+                            <i class="oi" data-icon="error" /> <t t-out="this.uploadErrorText(attachment)" />
+                        </span>
                     </div>
                 </t>
             </div>

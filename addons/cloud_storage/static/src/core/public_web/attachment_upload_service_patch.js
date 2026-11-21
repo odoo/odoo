@@ -1,3 +1,4 @@
+import { UPLOAD_ERROR } from "@mail/core/common/attachment_model";
 import { AttachmentUploadService } from "@mail/core/common/attachment_upload_service";
 
 import { patch } from "@web/core/utils/patch";
@@ -8,8 +9,10 @@ patch(AttachmentUploadService.prototype, {
     setup(env, services) {
         super.setup(env, services);
         this.uploadingCloudFiles = new Map();
-        window.addEventListener('beforeunload', () =>
-            this.abortByAttachmentId.forEach(abort => abort())
+        // Abort on pagehide rather than beforeunload, as the user can still
+        // decide to stay on the page.
+        window.addEventListener("pagehide", () =>
+            this.abortByAttachmentId.forEach((abort) => abort())
         );
     },
 
@@ -29,6 +32,7 @@ patch(AttachmentUploadService.prototype, {
         this.abortByAttachmentId.set(tmpId, xhr.abort.bind(xhr));
         const file = this.uploadingCloudFiles.get(tmpId);
 
+        xhr.upload.addEventListener("progress", (ev) => super._onUploadProgress(tmpId, ev));
         xhr.open(upload_info.method, upload_info.url);
         for (const [key, value] of Object.entries(upload_info.headers || {})) {
             xhr.setRequestHeader(key, value);
@@ -45,19 +49,27 @@ patch(AttachmentUploadService.prototype, {
                     { type: "danger" }
                 );
                 removeAttachment();
-                resolveUpload();
-                this._cleanupUploading(tmpId);
+                this._failUpload(tmpId, UPLOAD_ERROR.FAILED);
                 return;
             }
             // google returns 200, azure returns 201
             if (xhr.status !== upload_info.response_status) {
                 this.notificationService.add(_t("Cloud storage error"), { type: "danger" });
                 removeAttachment();
-                resolveUpload();
-                this._cleanupUploading(tmpId);
+                this._failUpload(tmpId, UPLOAD_ERROR.FAILED);
                 return;
             }
-            super._processLoaded(...arguments);
+            // the upload may have been detached from its composer meanwhile
+            const { composer: currentComposer } = this.targetsByTmpId.get(tmpId);
+            super._processLoaded(
+                thread,
+                currentComposer,
+                { data, upload_info },
+                tmpId,
+                resolveUpload
+            );
+            // the server only received a dummy file
+            this.store["ir.attachment"].get(data.attachment_id).file_size = file.size;
         };
 
         xhr.onerror = () => {
@@ -67,19 +79,39 @@ patch(AttachmentUploadService.prototype, {
             // usually it is because the CORS config for PUT is disallowed for the cloud storage
             this.notificationService.add(_t("Cloud storage error"), { type: "danger" });
             removeAttachment();
-            this._cleanupUploading(tmpId);
+            this._failUpload(tmpId, UPLOAD_ERROR.FAILED);
         };
 
         xhr.onabort = () => {
             removeAttachment();
-            this._cleanupUploading(tmpId);
+            // Since cancelled uploads are no longer tracked, this one was aborted by leaving the page.
+            if (this.uploadingAttachmentIds.has(tmpId)) {
+                this._failUpload(tmpId, UPLOAD_ERROR.FAILED);
+            }
         };
 
         xhr.send(file);
     },
 
+    _onUploadProgress(tmpId) {
+        // the request to the server only contains a dummy file: the progress is
+        // the one of the actual upload to the cloud storage
+        if (!this.uploadingCloudFiles.has(tmpId)) {
+            super._onUploadProgress(...arguments);
+        }
+    },
+
+    _makeAttachmentData(_upload, tmpId) {
+        const attachmentData = super._makeAttachmentData(...arguments);
+        const file = this.uploadingCloudFiles.get(tmpId);
+        if (file) {
+            attachmentData.file_size = file.size;
+        }
+        return attachmentData;
+    },
+
     _cleanupUploading(tmpId) {
-        super._cleanupUploading(tmpId);
+        super._cleanupUploading(...arguments);
         this.uploadingCloudFiles.delete(tmpId);
     },
 
