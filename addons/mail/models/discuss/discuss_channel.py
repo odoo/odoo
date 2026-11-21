@@ -1628,6 +1628,15 @@ class DiscussChannel(models.Model):
                 'see_all_pins': _('See all pinned messages.'),
             }
             self.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
+        elif result:
+            # Neutralize the old pin notification so it no longer links to the unpinned message.
+            old = self.env['mail.message'].sudo().search([
+                ('model', '=', self._name), ('res_id', '=', self.id), ('message_type', '=', 'notification'),
+                ('body', 'ilike', f'data-oe-type="highlight" data-oe-id="{int(message_id)}"'),
+            ])
+            old.write({'body': Markup('<div class="o_mail_notification">%s</div>') % _(
+                "%(user_name)s unpinned a message from this channel.", user_name=self.self_member_id._get_html_link_title())})
+            Store(bus_channel=self).add(old, ['body'])
         return result
 
     def _find_or_create_member_for_self(self):
