@@ -22,7 +22,7 @@ export class AnimatedNumber extends BaseAnimation {
         this.startValue = parseInteger(dataset.startValue, 0);
         this.endValue = parseInteger(dataset.endValue, 1000);
 
-        const style = window.getComputedStyle(this.el);
+        const style = this.window.getComputedStyle(this.el);
         this.startAfter = parseFloat(style.animationDelay) * 1000 || 0;
         this.duration = parseFloat(style.animationDuration) * 1000 || 1000;
 

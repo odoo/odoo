@@ -55,7 +55,7 @@ export class HoverableDropdown extends Interaction {
     onMouseEnter(ev) {
         const focusedEl =
             this.el.ownerDocument.querySelector(":focus") ||
-            window.frameElement?.ownerDocument.querySelector(":focus");
+            this.window.frameElement?.ownerDocument.querySelector(":focus");
 
         // The user must click on the dropdown if he is on mobile (no way to
         // hover) or if the dropdown is the (or in the) extra menu ('+').

@@ -25,7 +25,7 @@ export class NoBackdropPopup extends Interaction {
         this.removeModalNoBackdropEvents();
         // After destroying the interaction, we need to trigger a resize event
         // so that the scrollbar can adjust to its default behavior.
-        window.dispatchEvent(new Event("resize"));
+        this.window.dispatchEvent(new Event("resize"));
     }
 
     updateScrollbar() {
@@ -51,7 +51,7 @@ export class NoBackdropPopup extends Interaction {
     addModalNoBackdropEvents() {
         this.updateScrollbar();
         this.removeResizeListener = this.addListener(
-            window,
+            this.window,
             "resize",
             this.throttledUpdateScrollbar
         );

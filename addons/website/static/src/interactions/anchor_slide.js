@@ -19,7 +19,7 @@ export class AnchorSlide extends Interaction {
          * matches the hash.
          */
         const hash = window.location.hash.substring(1);
-        const anchorEl = hash ? document.getElementById(hash) : null;
+        const anchorEl = hash ? this.document.getElementById(hash) : null;
         if (anchorEl && anchorEl.classList.contains("accordion-item")) {
             this.handleAccordionAnchor(anchorEl);
         }

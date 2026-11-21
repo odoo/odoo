@@ -8,7 +8,7 @@ export class OdooTracker extends Interaction {
     static selector = "#wrapwrap";
 
     start() {
-        const { trackingEnabled, mainObject } = document.documentElement.dataset;
+        const { trackingEnabled, mainObject } = this.document.documentElement.dataset;
         const matches = mainObject?.match(recordRE);
         if (trackingEnabled && matches) {
             this.waitForTimeout(() => {

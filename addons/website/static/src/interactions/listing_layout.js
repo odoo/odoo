@@ -35,7 +35,7 @@ export class ListingLayout extends Interaction {
         await this.waitFor(
             rpc("/website/save_session_layout_mode", {
                 layout_mode: this.isList ? "list" : "grid",
-                view_id: document.querySelector(".listing_layout_switcher").dataset.viewId,
+                view_id: this.document.querySelector(".listing_layout_switcher").dataset.viewId,
             })
         );
 

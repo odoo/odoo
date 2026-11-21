@@ -113,7 +113,7 @@ export class TableOfContent extends Interaction {
     getScrollHeight() {
         return (
             this.scrollElement.scrollHeight ||
-            Math.max(document.body.scrollHeight, document.documentElement.scrollHeight)
+            Math.max(this.document.body.scrollHeight, this.document.documentElement.scrollHeight)
         );
     }
 
@@ -127,7 +127,7 @@ export class TableOfContent extends Interaction {
         targets
             .map((element) => {
                 const targetSelector = getSelector(element);
-                const target = targetSelector ? document.querySelector(targetSelector) : null;
+                const target = targetSelector ? this.document.querySelector(targetSelector) : null;
                 if (target) {
                     const targetBCR = target.getBoundingClientRect();
 
@@ -153,7 +153,7 @@ export class TableOfContent extends Interaction {
      * @param {string} target
      */
     activate(target) {
-        const element = document.querySelector(`[href="${target}"]`);
+        const element = this.document.querySelector(`[href="${target}"]`);
         if (!element || !isVisible(element)) {
             return;
         }

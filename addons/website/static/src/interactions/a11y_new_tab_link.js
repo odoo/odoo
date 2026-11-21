@@ -21,7 +21,7 @@ export class A11yNewTabLink extends Interaction {
 
     start() {
         if (!this.el.hasAttribute("aria-label")) {
-            const newTabIndicatorEl = document.createElement("span");
+            const newTabIndicatorEl = this.document.createElement("span");
             newTabIndicatorEl.textContent = ` ${this.openInNewTab}`;
             newTabIndicatorEl.classList.add("visually-hidden");
 

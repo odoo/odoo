@@ -66,7 +66,7 @@ export class AddOtherOption extends Interaction {
      * when the "Other" option is selected.
      */
     createOtherInput() {
-        const otherInputEl = Object.assign(document.createElement("input"), {
+        const otherInputEl = Object.assign(this.document.createElement("input"), {
             type: "text",
             name: this.selectOrRadioEl.name || this.selectOrRadioEl.dataset.name,
             placeholder: this.el.dataset.otherOptionPlaceholder || "",

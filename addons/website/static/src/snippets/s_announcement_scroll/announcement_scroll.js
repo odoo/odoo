@@ -89,10 +89,10 @@ export class AnnouncementScroll extends Interaction {
         // movement.
         const PARALLAX_AMOUNT = 50;
         const rect = this.el.getBoundingClientRect();
-        const startScroll = window.scrollY + rect.top - window.innerHeight;
-        const endScroll = window.scrollY + rect.bottom;
+        const startScroll = this.window.scrollY + rect.top - this.window.innerHeight;
+        const endScroll = this.window.scrollY + rect.bottom;
         const progress = Math.min(
-            Math.max((window.scrollY - startScroll) / (endScroll - startScroll), 0),
+            Math.max((this.window.scrollY - startScroll) / (endScroll - startScroll), 0),
             1
         );
         if (this.el.classList.contains("s_announcement_scroll_direction_right")) {
@@ -135,7 +135,7 @@ export class AnnouncementScroll extends Interaction {
         for (let i = 0; i < cloneCount; i++) {
             const cloneEl = this.marqueeItemEl.cloneNode(true);
             cloneEl.classList.add("s_announcement_scroll_marquee_item_clone");
-            cloneEl.prepend(document.createTextNode("\u00A0")); // NBSP
+            cloneEl.prepend(this.document.createTextNode("\u00A0")); // NBSP
             this.marqueeContainerEl.appendChild(cloneEl);
         }
     }

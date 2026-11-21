@@ -30,8 +30,8 @@ export class BaseAnimation extends Interaction {
     offsetMin = 10; // Minimum offset for small elements (in pixels)
 
     setup() {
-        this.wrapwrapEl = document.querySelector("#wrapwrap");
-        this.windowUnlessDropdown = this.el.closest(".dropdown") ? [] : window;
+        this.wrapwrapEl = this.document.querySelector("#wrapwrap");
+        this.windowUnlessDropdown = this.el.closest(".dropdown") ? [] : this.window;
         this.scrollingElement = this.findScrollingElement();
         this.scrollingTarget = isScrollableY(this.scrollingElement)
             ? this.scrollingElement
@@ -73,7 +73,7 @@ export class BaseAnimation extends Interaction {
         if (el.classList.contains("o_animate_in_dropdown")) {
             return { visible: false };
         }
-        const windowsHeight = window.innerHeight;
+        const windowsHeight = this.window.innerHeight;
         const elHeight = el.offsetHeight;
         const elOffset = this.isAnimateOnScroll
             ? 0

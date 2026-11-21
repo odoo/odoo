@@ -69,7 +69,7 @@ export class BaseHeader extends Interaction {
         this.hideEl = this.el.querySelector(".o_header_hide_on_scroll");
         this.hideElHeight = this.hideEl?.getBoundingClientRect().height;
 
-        this.scrollingElement = document.scrollingElement;
+        this.scrollingElement = this.document.scrollingElement;
         const navbarEl = this.el.querySelector(".navbar");
         const navBreakpoint = navbarEl
             ? Object.keys(SIZES).find((size) =>
@@ -109,7 +109,7 @@ export class BaseHeader extends Interaction {
 
     onResize() {
         this.adjustScrollbar();
-        if (document.body.classList.contains("overflow-hidden") && !this.isSmall()) {
+        if (this.document.body.classList.contains("overflow-hidden") && !this.isSmall()) {
             const offCanvasEls = this.el.querySelectorAll(".offcanvas.show");
             for (const offCanvasEl of offCanvasEls) {
                 this.bootstrap.getOrCreateInstance(Offcanvas, offCanvasEl).hide();

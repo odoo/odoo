@@ -51,7 +51,7 @@ export class Share extends Interaction {
         const titleParamFound = titleParams.find((param) => modifiedUrl.searchParams.has(param));
         if (titleParamFound) {
             // We don't need to encode the title as searchParams.set does it.
-            const currentTitle = document.title;
+            const currentTitle = this.document.title;
             if (aEl.classList.contains("s_share_whatsapp")) {
                 // WhatsApp does not support the "url" GET parameter.
                 // Instead we need to include the url within the passed "text"
@@ -72,7 +72,7 @@ export class Share extends Interaction {
 
         const mediaParamFound = mediaParams.find((param) => modifiedUrl.searchParams.has(param));
         if (mediaParamFound) {
-            const ogImageEl = document.querySelector("meta[property='og:image']");
+            const ogImageEl = this.document.querySelector("meta[property='og:image']");
             // Some pages (/profile/user/ID) don't have an image to share.
             if (ogImageEl) {
                 // We don't need to encode the media as searchParams does it.

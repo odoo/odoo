@@ -35,7 +35,7 @@ export class ImagePopUp extends Interaction {
             getIndicatorLabel: (itemPosition, total) =>
                 _t("Slide %(itemPosition)s of %(total)s", { itemPosition, total }),
         })[0];
-        this.insert(this.modalEl, document.body);
+        this.insert(this.modalEl, this.document.body);
         const modal = this.bootstrap.getOrCreateInstance(Modal, this.modalEl, {
             keyboard: true,
             backdrop: true,

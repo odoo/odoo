@@ -39,7 +39,7 @@ export class SharedPopup extends Interaction {
             // '_hideBottomFixedElements' method and re-display any bottom fixed
             // elements that may have been hidden (e.g. the live chat button
             // hidden when the cookies bar is open).
-            window.dispatchEvent(new Event("scroll"));
+            this.window.dispatchEvent(new Event("scroll"));
         }
         this.popupShown = false;
     }
