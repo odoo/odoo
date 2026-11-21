@@ -17,6 +17,9 @@ is enforced.
 - A variable holding a model class is PascalCase (`Partner =
   self.env['res.partner']`). Suffix a var holding a record id / list of ids
   with `_id` / `_ids` (don't name a `res.partner` record `partner_id`).
+- A name says what the value is, as the `_id` suffix does: a date formatted as
+  a string is `date_str`, not `date`; a boolean named for a state or a check
+  (`is_published`, `can_edit`) is true in that case only.
 - Method-name patterns: compute `_compute_<field>`, search `_search_<field>`,
   default `_default_<field>`, selection `_selection_<field>`, onchange
   `_onchange_<field>`, constraint `_check_<name>`, object action `action_*`
