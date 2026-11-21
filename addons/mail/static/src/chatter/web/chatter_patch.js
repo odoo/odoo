@@ -363,6 +363,7 @@ const chatterPatch = {
         if (!thread?.id || !this.state.thread?.eq(thread)) {
             return;
         }
+        await thread.fetchThreadData(requestList.filter((r) => r !== "messages"));
         this.updateRecipients(this.webChatterProps.record);
     },
 
@@ -439,7 +440,7 @@ const chatterPatch = {
 
     onCloseFullComposerCallback(isDiscard) {
         this.toggleComposer();
-        super.onCloseFullComposerCallback();
+        this.load(this.thread(), this.thread().fullComposerCloseRequestList);
         if (!isDiscard) {
             this.reloadParentView();
         }

@@ -1,5 +1,5 @@
 import { Chatter } from "@mail/chatter/web_portal_project/chatter";
-import { t, usePlugin, useProps } from "@odoo/owl";
+import { t, useOnChange, usePlugin, useProps } from "@odoo/owl";
 import { ORM } from "@web/core/orm_plugin";
 import { patch } from "@web/core/utils/patch";
 
@@ -14,6 +14,22 @@ patch(Chatter.prototype, {
             isFollower: this.projectSharingProps.isFollower,
         });
         this.orm = usePlugin(ORM);
+        useOnChange(
+            () => [this.thread()],
+            (thread) => {
+                if (!thread.id) {
+                    return;
+                }
+                this.store.fetchStoreData("/portal/chatter_init", {
+                    thread_id: thread.id,
+                    thread_model: thread.model,
+                    access_params: {
+                        project_sharing_id: this.ancestors.projectSharingId,
+                    },
+                });
+            },
+            { initialRun: false }
+        );
     },
 
     async toggleIsFollower() {
