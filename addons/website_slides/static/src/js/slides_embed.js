@@ -59,14 +59,17 @@ export class SlidesEmbed extends Interaction {
         "#zoomout": {
             "t-on-click": this.zoomOut,
             "t-att-class": () => ({ disabled: this.zoom <= this.MIN_ZOOM }),
+            "t-att-disabled": () => this.zoom <= this.MIN_ZOOM,
         },
         "#zoomin": {
             "t-on-click": this.zoomIn,
             "t-att-class": () => ({ disabled: this.zoom >= this.MAX_ZOOM }),
+            "t-att-disabled": () => this.zoom >= this.MAX_ZOOM,
         },
         "#previous": {
             "t-on-click": () => this.changePage(this.currentPage - 1),
             "t-att-class": () => ({ disabled: this.currentPage < 2 && !this.showSuggestions }),
+            "t-att-disabled": () => this.currentPage < 2 && !this.showSuggestions,
         },
         "#next": {
             "t-on-click": () => this.changePage(this.currentPage + 1),
@@ -75,18 +78,23 @@ export class SlidesEmbed extends Interaction {
                     this.currentPage >= this.pageCount &&
                     (!this.hasSuggestions || this.showSuggestions),
             }),
+            "t-att-disabled": () =>
+                this.currentPage >= this.pageCount &&
+                (!this.hasSuggestions || this.showSuggestions),
         },
         "#first": {
             "t-on-click": () => this.changePage(1),
             "t-att-class": () => ({
                 disabled: this.currentPage < 2 && !this.showSuggestions,
             }),
+            "t-att-disabled": () => this.currentPage < 2 && !this.showSuggestions,
         },
         "#last": {
             "t-on-click": () => this.changePage(this.pageCount),
             "t-att-class": () => ({
                 disabled: this.currentPage >= this.pageCount,
             }),
+            "t-att-disabled": () => this.currentPage >= this.pageCount,
         },
         "#fullscreen": { "t-on-click": this.onFullScreenToggleClick },
         "#fullscreen > i": {

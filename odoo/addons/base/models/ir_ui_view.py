@@ -2227,10 +2227,9 @@ actual arch.
 
     def _validate_tag_a(self, node, name_manager, node_info):
         # ('calendar', 'form', 'graph', 'kanban', 'pivot', 'search', 'list', 'activity')
-        if node_info['validate'] and any('btn' in node.get(cl, '') for cl in att_names('class')):
-            if node.get('role') != 'button':
-                msg = '"<a>" tag with "btn" class must have "button" role'
-                self._log_view_warning(msg, node)
+        if node_info['validate'] and node.get('href') is None and node.get('role') == 'button':
+            msg = '"<a>" tag with role "button" must have an href attribute or be replaced by a <button>'
+            self._log_view_warning(msg, node)
 
     def _validate_tag_ul(self, node, name_manager, node_info):
         if node_info['validate']:

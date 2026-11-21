@@ -3,8 +3,8 @@ import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 import { location } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
+import { addLoadingEffect } from "@web/core/utils/ui";
 import { verifyHttpsUrl } from "@website/utils/misc";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { BlogNavSheet } from "./components/blog_nav_sheet";
 
 export class WebsiteBlog extends Interaction {
@@ -15,7 +15,6 @@ export class WebsiteBlog extends Interaction {
         },
         ".o_wblog_next_button": {
             "t-on-click.prevent": this.onNextBlogClick,
-            "t-on-keydown": this.onNextBlogKeydown,
         },
         ".o_twitter, .o_facebook, .o_linkedin, .o_google, .o_twitter_complete, .o_facebook_complete, .o_linkedin_complete, .o_google_complete":
             {
@@ -61,6 +60,7 @@ export class WebsiteBlog extends Interaction {
      * @param {MouseEvent} ev
      */
     async onNextBlogClick(ev) {
+        addLoadingEffect(ev.currentTarget);
         const blogNextContainerEl = ev.currentTarget.closest("#o_wblog_next_container");
         const nextInfo = blogNextContainerEl.querySelector("#o_wblog_next_post_info").dataset;
         const recordCoverContainerEl = blogNextContainerEl.querySelector(
@@ -78,15 +78,6 @@ export class WebsiteBlog extends Interaction {
         this.insert(placeholder, this.el.querySelector("#o_wblog_next_container"), "beforeend");
         const nextUrl = verifyHttpsUrl(nextInfo.url);
         await this.forumScrollAction(blogNextContainerEl, 300, () => (location.href = nextUrl));
-    }
-    /**
-     * @param {KeyboardEvent} ev
-     */
-    onNextBlogKeydown(ev) {
-        const hotkey = getActiveHotkey(ev);
-        if (hotkey === "enter" || hotkey === "space") {
-            return this.onNextBlogClick(ev);
-        }
     }
 
     /**
@@ -121,6 +112,7 @@ export class WebsiteBlog extends Interaction {
      */
     async forumScrollAction(el, duration, callback) {
         await this.waitFor(scrollTo(el, { duration }));
+        document.body.style.overflow = "hidden";
         callback();
     }
 

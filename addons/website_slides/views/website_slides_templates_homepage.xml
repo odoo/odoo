@@ -59,10 +59,10 @@
                         </div>
                     </div>
                     <div t-if="not channel.completed" class="col-2 d-flex flex-row-reverse align-items-center">
-                        <a t-if="not channel.completion" role="button" class="btn btn-sm btn-primary" t-attf-href="/slides/#{slug(channel)}">
+                        <a t-if="not channel.completion" class="btn btn-sm btn-primary" t-attf-href="/slides/#{slug(channel)}">
                             <span class="d-none d-md-inline me-2 me-md-0">Start now</span><i class="oi d-md-none" data-icon="east" role="img" aria-hidden="true"/>
                         </a>
-                        <a t-else="" role="button" class="align-items-center" t-attf-href="/slides/#{slug(channel)}">
+                        <a t-else="" class="align-items-center" t-attf-href="/slides/#{slug(channel)}">
                             <span class="me-2 d-none d-md-inline">Continue</span><i class="oi" data-icon="east" role="img" aria-hidden="true"/>
                         </a>
                     </div>
@@ -188,15 +188,16 @@
                     <t t-foreach="tag_groups" t-as="tag_group">
                         <t t-set="group_frontend_tags" t-value="tag_group.tag_ids.filtered(lambda tag: tag.color)"/>
                         <li class="dropdown" t-if="group_frontend_tags">
-                            <a t-att-class="'btn btn-light dropdown-toggle %s' % ('active' if tag_group in search_tag_groups else '')"
-                                href="/slides"
-                                t-att-data-bs-target="'#navToogleTagGroup%s' % tag_group.id"
-                                role="button" data-bs-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false"
+                            <button type="button" t-att-class="'btn btn-light dropdown-toggle %s' % ('active' if tag_group in search_tag_groups else '')"
+                                t-att-id="'navToggleTagGroup%s' % tag_group.id"
+                                t-att-data-bs-target="'#navMenuTagGroup%s' % tag_group.id"
+                                data-bs-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false" t-att-aria-controls="'navMenuTagGroup%s' % tag_group.id"
+                                t-att-aria-label="'Filter by %s' % tag_group.name"
                                 t-out="tag_group.name"/>
-                            <div class="dropdown-menu" t-att-id="'navToogleTagGroup%s' % tag_group.id">
+                            <div class="dropdown-menu" t-att-id="'navMenuTagGroup%s' % tag_group.id" role="menu" t-att-aria-labelledby="'navToggleTagGroup%s' % tag_group.id">
                                 <t t-foreach="group_frontend_tags" t-as="tag">
-                                    <span t-att-class="'post_link cursor-pointer dropdown-item %s' % ('active' if tag in search_tags else '')"
+                                    <button type="button" role="menuitemcheckbox" t-att-aria-checked="'true' if tag in search_tags else 'false'" t-att-class="'post_link cursor-pointer dropdown-item %s' % ('active' if tag in search_tags else '')"
                                         t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), my=search_my, search=search_term, slide_category=search_slide_category, prevent_redirect=True)"
                                         t-out="tag.name"/>
                                 </t>
@@ -237,10 +238,10 @@
                         class="position-absolute top-0 start-100 translate-middle border border-light rounded-circle bg-danger p-1"
                     />
                 </button>
-                <a t-if="not env.user._is_public()" class="btn d-block d-lg-none p-0" data-bs-toggle="offcanvas" href="#o_wslides_overview_offcanvas" role="button" aria-controls="o_wslides_overview_offcanvas">
+                <button t-if="not env.user._is_public()" class="btn d-block d-lg-none p-0" data-bs-toggle="offcanvas" data-bs-target="#o_wslides_overview_offcanvas" type="button" aria-controls="o_wslides_overview_offcanvas">
                     <t t-call="website_slides.slides_misc_user_image"
                         img_class.f="o_wslides_user_avatar rounded-circle"/>
-                </a>
+                </button>
             </div>
         </div>
     </div>
@@ -251,24 +252,24 @@
           <span class="align-items-baseline border d-inline-flex ps-2 rounded mb-2">
           <i class="oi me-2 text-muted" data-icon="label" role="img" aria-hidden="true"/>
           My Courses
-          <span t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids), search=search_term, prevent_redirect=True)"
-             class="post_link cursor-pointer btn border-0 py-1">×</span>
+          <button type="button" t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids), search=search_term, prevent_redirect=True)"
+             class="post_link cursor-pointer btn border-0 py-1">×</button>
         </span>
     </t>
     <t t-if="search_term">
           <span class="align-items-baseline border d-inline-flex ps-2 rounded mb-2">
           <i class="oi me-2 text-muted" data-icon="label" role="img" aria-hidden="true"/>
           <t t-out="search_term"/>
-          <span t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids), my=search_my, slide_category=search_slide_category, prevent_redirect=True)"
-                         class="post_link cursor-pointer btn border-0 py-1">×</span>
+          <button type="button" t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids), my=search_my, slide_category=search_slide_category, prevent_redirect=True)"
+                         class="post_link cursor-pointer btn border-0 py-1">×</button>
         </span>
     </t>
     <t t-foreach="search_tags" t-as="tag">
         <span class="align-items-baseline border d-inline-flex ps-2 rounded mb-2">
             <i class="oi me-2 text-muted" data-icon="label" role="img" aria-hidden="true"/>
             <t t-out="tag.display_name"/>
-            <span t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids, tag.id), my=search_my, search=search_term, slide_category=search_slide_category, prevent_redirect=True)"
-                         class="post_link cursor-pointer btn border-0 py-1">×</span>
+            <button type="button" t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids, tag.id), my=search_my, search=search_term, slide_category=search_slide_category, prevent_redirect=True)"
+                         class="post_link cursor-pointer btn border-0 py-1">×</button>
         </span>
     </t>
 </template>
@@ -326,11 +327,11 @@
                 <div t-if="channel_frontend_tags" class="small o_line_clamp">
                     <t t-foreach="channel_frontend_tags" t-as="tag">
                         <t t-if="search_tags">
-                            <span t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), my=search_my, search=search_term, slide_category=search_slide_category, prevent_redirect=True)"
+                            <button type="button" t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), my=search_my, search=search_term, slide_category=search_slide_category, prevent_redirect=True)"
                                 t-attf-class="post_link cursor-pointer badge o_badge_clickable #{'o_color_'+str(tag.color) if tag in search_tags else 'o_wslides_channel_tag o_color_0'}" t-out="tag.name"/>
                         </t>
                         <t t-else="">
-                            <span t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), my=search_my, search=search_term, slide_category=search_slide_category, prevent_redirect=True)"
+                            <button type="button" t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), my=search_my, search=search_term, slide_category=search_slide_category, prevent_redirect=True)"
                                 t-attf-class="post_link cursor-pointer badge o_badge_clickable o_wslides_channel_tag #{'o_color_'+str(tag.color)}" t-out="tag.name"/>
                         </t>
                     </t>
