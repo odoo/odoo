@@ -153,7 +153,7 @@ class HrApplicant(models.Model):
     applicant_properties = fields.Properties('Properties', definition='company_id.applicant_properties_definition', precompute=False, copy=True)
     applicant_notes = fields.Html()
     refuse_date = fields.Datetime('Refuse Date')
-    talent_pool_ids = fields.Many2many(comodel_name="hr.talent.pool", string="Talent Pools")
+    talent_pool_ids = fields.Many2many(comodel_name="hr.talent.pool", string="Candidate Pools")
     pool_applicant_id = fields.Many2one("hr.applicant", index='btree_not_null')
     linked_applicant_ids = fields.One2many('hr.applicant', 'pool_applicant_id', 'Applications')
     is_pool_applicant = fields.Boolean(compute="_compute_is_pool")
@@ -407,9 +407,9 @@ class HrApplicant(models.Model):
             Domain("pool_applicant_id", "in", [pool_applicant.id for pool_applicant in self.mapped("pool_applicant_id") if pool_applicant]),
         ])
         if ignore_talent:
-            domain &= Domain("talent_pool_ids", "=", False)
+            domain &= Domain("job_id", "=", False)
         if only_talent:
-            domain &= Domain("talent_pool_ids", "!=", False)
+            domain &= Domain("job_id", "!=", False)
         return domain
 
     @api.depends(

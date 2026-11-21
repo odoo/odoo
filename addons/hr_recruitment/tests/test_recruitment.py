@@ -339,11 +339,11 @@ class TestRecruitment(MailCase, TransactionCase):
 
     def test_applicant_refuse_duplicates_keeps_talent(self):
         refuse_reason = self.env['hr.applicant.refuse.reason'].create([{'name': 'Fired'}])
-        pool = self.env['hr.talent.pool'].create({'name': 'Developers'})
+        job = self.env['hr.job'].create({'name': 'Test Job'})
         talent = self.env['hr.applicant'].create({
             'partner_name': 'Faruk Demo',
             'email_from': 'refuse.duplicates@example.com',
-            'talent_pool_ids': [Command.set(pool.ids)],
+            'job_id': job.id,
         })
         applicant, duplicate = self.env['hr.applicant'].create([{
             'partner_name': 'Faruk Demo',

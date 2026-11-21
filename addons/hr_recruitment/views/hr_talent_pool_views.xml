@@ -75,13 +75,13 @@
                             </div>
                             <div class="col d-flex justify-content-end align-items-end mb-1">
                                 <button class="btn btn-primary" name="action_talent_pool_add_talents" type="object">
-                                    New Talent
+                                    New Candidate
                                 </button>
                             </div>
                         </div>
                         <footer class="justify-content-end">
                             <field name="no_of_talents"/>
-                            <span>Talents</span>
+                            <span>Candidates</span>
                         </footer>
                     </t>
                 </templates>
@@ -90,7 +90,7 @@
     </record>
 
     <record id="action_hr_talent_pool" model="ir.actions.act_window">
-        <field name="name">Talent Pool</field>
+        <field name="name">Candidate Pools</field>
         <field name="path">talent-pool</field>
         <field name="res_model">hr.talent.pool</field>
         <field name="view_mode">kanban,list,form</field>
