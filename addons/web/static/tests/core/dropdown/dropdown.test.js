@@ -1124,6 +1124,36 @@ test("multi-level dropdown: parent closing modes on item selection", async () =>
     expect(DROPDOWN_MENU).toHaveCount(0);
 });
 
+test("multi-level dropdown: closing all parents stops at a dropdown not closing its parents", async () => {
+    class Parent extends Component {
+        static components = { Dropdown, DropdownItem };
+        static template = xml`
+            <Dropdown>
+                <button class="dropdown-a">Dropdown A</button>
+                <t t-set-slot="content">
+                    <Dropdown closeParents="false">
+                        <button class="dropdown-b">Dropdown B</button>
+                        <t t-set-slot="content">
+                            <DropdownItem class="'item'" closingMode="'all'">Item</DropdownItem>
+                        </t>
+                    </Dropdown>
+                </t>
+            </Dropdown>
+        `;
+    }
+    await mountWithCleanup(Parent);
+    await click(".dropdown-a");
+    await animationFrame();
+    await click(".dropdown-b");
+    await animationFrame();
+    expect(DROPDOWN_MENU).toHaveCount(2);
+
+    await click(".item");
+    await animationFrame();
+    expect(DROPDOWN_MENU).toHaveCount(1);
+    expect(".dropdown-b").toBeVisible();
+});
+
 test("multi-level dropdown: recursive template can be rendered", async () => {
     class Parent extends Component {
         static template = xml`<t t-call="recursive.Template" name="this.name" items="this.items"/>`;

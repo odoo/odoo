@@ -60,12 +60,12 @@
 
     <t t-name="discuss.NotificationSettings.unMuteSttings">
         <t t-if="this.props.channel.self_member_id?.mute_until_dt">
-            <button class="dropdown-item w-100 d-flex mb-3" t-on-click="()=>this.setMute(false)">
+            <DropdownItem tag="'button'" class="'w-100 d-flex mb-3'" onSelected="()=>this.setMute(false)">
                 <div class="d-flex flex-column flex-grow-1 w-100 rounded">
                     <span class="fs-6 fw-bold text-wrap text-start text-break">Unmute Conversation</span>
                     <span class="fw-normal smaller text-start text-muted" t-out="this.store.settings.getMuteUntilText(this.props.channel.self_member_id?.mute_until_dt)"/>
                 </div>
-            </button>
+            </DropdownItem>
         </t>
     </t>
 
