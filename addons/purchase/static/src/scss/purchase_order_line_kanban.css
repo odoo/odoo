@@ -1,0 +1,20 @@
+/* The x2many control panel (create buttons) is always rendered before the */
+/* record list by the framework (see X2ManyField.xml's `o_x2m_control_panel`), */
+/* regardless of arch order. Reorder visually so the "Add product"/"Add section"/ */
+/* "Add note" controls appear after the order lines, as in sale. */
+.o_purchase_order_line_o2m {
+    > div {
+        display: flex;
+        flex-direction: column;
+
+        .o_x2m_control_panel {
+            order: 2;
+            /* mt-1/mb-4 assume the panel sits above the records */
+            margin-bottom: 0 !important;
+        }
+
+        .o_kanban_renderer {
+            order: 1;
+        }
+    }
+}
