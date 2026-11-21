@@ -179,13 +179,14 @@ class ProjectProject(models.Model):
             project.display_sales_stat_buttons = project.allow_billable and project.partner_id
 
     def _compute_real_cost(self):
+        domain = self._get_real_margin_domain() & Domain('account_id', 'in', self.account_id.ids)
         cost_per_account = dict(self.env['account.analytic.line']._read_group(
-            domain=[('account_id', 'in', self.account_id.ids), ('amount', '<', 0)],
+            domain=domain & Domain('amount', '<', 0),
             groupby=['account_id'],
             aggregates=['amount:sum'],
         ))
         revenue_per_account = dict(self.env['account.analytic.line']._read_group(
-            domain=[('account_id', 'in', self.account_id.ids), ('amount', '>=', 0)],
+            domain=domain & Domain('amount', '>=', 0),
             groupby=['account_id'],
             aggregates=['amount:sum'],
         ))
@@ -543,6 +544,10 @@ class ProjectProject(models.Model):
             'from_sale_order_action',
         ]
 
+    def _get_real_margin_domain(self):
+        action = self.env.ref('sale_project.action_analytic_reporting_inherit_sale_project').sudo()
+        return Domain(ast.literal_eval(action.domain or '[]'))
+
     def action_real_margin(self):
         self.ensure_one()
         embedded_action_context = self.env.context.get('from_embedded_action', False)
@@ -560,7 +565,7 @@ class ProjectProject(models.Model):
                 for view_id, view_type in action['views']
             ]
         action['display_name'] = self.env._("%(name)s's Margins", name=self.name)
-        action['domain'] = [('account_id', 'in', self.account_id.ids)]
+        action['domain'] = self._get_real_margin_domain() & Domain('account_id', 'in', self.account_id.ids)
         action['context'] = {
             **ast.literal_eval(action.get('context', '{}')),
             'from_embedded_action': embedded_action_context,
