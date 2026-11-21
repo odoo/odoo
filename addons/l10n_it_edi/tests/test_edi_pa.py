@@ -4,6 +4,7 @@ import datetime
 from odoo.addons.l10n_it_edi.tests.common import TestItEdi
 from odoo.tests.common import tagged
 from odoo import Command
+from odoo.exceptions import UserError
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestItEdiPa(TestItEdi):
@@ -63,3 +64,11 @@ class TestItEdiPa(TestItEdi):
         credit_note = self.env['account.move'].browse(action['res_id'])
         credit_note.action_post()
         self._assert_export_invoice(credit_note, 'split_payment_cn.xml')
+
+    def test_split_payment_reverse_charge_exemption(self):
+        split_payment_tax = self.split_payment_tax.children_tax_ids.filtered(lambda tax: tax._l10n_it_is_split_payment())
+        with self.assertRaises(UserError):
+            split_payment_tax.write({
+                'l10n_it_exempt_reason': 'N6.1',
+                'l10n_it_law_reference': 'Reverse charge',
+            })

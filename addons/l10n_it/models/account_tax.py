@@ -45,7 +45,7 @@ class AccountTax(models.Model):
             if tax.country_id.code == 'IT':
                 if tax.amount_type == 'percent' and tax.amount == 0 and not (tax.l10n_it_exempt_reason and tax.l10n_it_law_reference):
                     raise ValidationError(_("If the tax amount is 0%, you must enter the exoneration code and the related law reference."))
-                if tax.l10n_it_exempt_reason == 'N6' and tax._l10n_it_is_split_payment():
+                if tax.l10n_it_exempt_reason and tax.l10n_it_exempt_reason.startswith('N6') and tax._l10n_it_is_split_payment():
                     raise UserError(_("Split Payment is not compatible with exoneration of kind 'N6'"))
 
     def _l10n_it_filter_kind(self, kind):
