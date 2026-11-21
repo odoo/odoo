@@ -1314,3 +1314,49 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         bill.action_post()
         new_svl = self.env['stock.valuation.layer'].search([]) - prev_svl
         self.assertEqual(len(new_svl), 0)
+
+    def test_subcontracting_partial_receipts_billed_before_receipt(self):
+        """ Bill a subcontracted product before receiving it, then receive it in
+        several backorders, each one smaller than the billed quantity still to
+        receive. Every production must take the purchase price as subcontracting
+        cost: the value of the previous receipts is on their productions, not on
+        the receipt moves. """
+        product_category_all = self.env.ref('product.product_category_all')
+        product_category_all.property_cost_method = 'average'
+        product_category_all.property_valuation = 'real_time'
+        self._setup_category_stock_journals()
+        self.finished.purchase_method = 'purchase'
+        self.comp1.standard_price = 10.0
+        self.comp2.standard_price = 20.0
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'order_line': [Command.create({
+                'name': self.finished.name,
+                'product_id': self.finished.id,
+                'product_qty': 10.0,
+                'product_uom': self.finished.uom_id.id,
+                'price_unit': 100.0,
+            })],
+        })
+        po.button_confirm()
+
+        # bill 6 units before receiving anything
+        bill = self.env['account.move'].browse(po.action_create_invoice()['res_id'])
+        bill.invoice_date = Date.today()
+        bill.invoice_line_ids.quantity = 6
+        bill.action_post()
+
+        receipt = po.picking_ids
+        for qty in (2, 2):
+            receipt.move_ids.quantity = qty
+            Form.from_action(self.env, receipt.button_validate()).save().process()
+            receipt = receipt.backorder_ids
+        receipt.move_ids.quantity = 6
+        receipt.button_validate()
+
+        productions = self.env['mrp.production'].search([('product_id', '=', self.finished.id)])
+        self.assertEqual(productions.mapped('state'), ['done'] * 3)
+        self.assertEqual(productions.mapped('extra_cost'), [100.0] * 3)
+        # 10 units received at 100 (service) + 10 + 20 (components)
+        self.assertEqual(self.finished.standard_price, 130.0)
