@@ -1,7 +1,7 @@
 import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, queryAll, queryFirst } from "@odoo/hoot-dom";
+import { animationFrame, queryAll, queryFirst, queryOne, waitUntil } from "@odoo/hoot-dom";
 
 setupInteractionWhiteList("website.text_highlight");
 
@@ -84,4 +84,20 @@ test("[rtl] SVG positionned inside highlighted text", async () => {
     expect(relativePosition(items[1], items[0])).toBe("afterRight,afterBottom");
     // in RTL with LTR content, highlight of previous line is top right
     expect(relativePosition(items[3], items[2])).toBe("beforeLeft,afterBottom");
+});
+
+test("one SVG per line of a centered multi-line highlight", async () => {
+    await startInteractions(`
+        <h2 style="width: 300px; text-align: center;">
+            <span class="o_text_highlight o_text_highlight_underline" style="--text-highlight-width: 2px;">This is an example of an unusually long title that exists purely to test multi-line wrapping</span>
+        </h2>
+    `);
+    const highlightEl = queryOne(".o_text_highlight");
+    const range = document.createRange();
+    range.selectNodeContents(
+        [...highlightEl.childNodes].find((node) => node.nodeType === Node.TEXT_NODE)
+    );
+    const lineCount = new Set([...range.getClientRects()].map((rect) => Math.round(rect.top))).size;
+    expect(lineCount).toBeGreaterThan(1);
+    await waitUntil(() => queryAll(".o_text_highlight svg").length === lineCount);
 });
