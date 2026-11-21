@@ -3,6 +3,7 @@
 from freezegun import freeze_time
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
+from odoo.tests.common import new_test_user
 
 
 @tagged('post_install', '-at_install')
@@ -44,3 +45,17 @@ class TestAccountFleet(AccountTestInvoicingCommon):
         result_action = wizard.do_action()
         transfer_moves = self.env['account.move'].search(result_action['domain'])
         self.assertEqual(transfer_moves.line_ids.filtered(lambda l: l.account_id == expense_account).vehicle_id, car_1, "Vehicle info is missing")
+
+    def test_bill_count_invoicing_user(self):
+        brand = self.env["fleet.vehicle.model.brand"].sudo().create({"name": "Audi"})
+        model = self.env["fleet.vehicle.model"].sudo().create({"brand_id": brand.id, "name": "A3"})
+        car = self.env["fleet.vehicle"].sudo().create({"model_id": model.id})
+        bill = self.init_invoice('in_invoice', products=self.product_a, invoice_date='2021-09-01')
+        bill.invoice_line_ids.vehicle_id = car
+
+        invoicing_user = new_test_user(self.env, 'invoicing_user', groups='account.group_account_invoice,fleet.fleet_group_manager')
+        fleet_user = new_test_user(self.env, 'fleet_user', groups='fleet.fleet_group_manager')
+        self.assertEqual(car.with_user(invoicing_user).bill_count, 1)
+        # The count depends on the user, so drop the value computed for the invoicing user.
+        car.invalidate_recordset(['bill_count'])
+        self.assertEqual(car.with_user(fleet_user).bill_count, 0)
