@@ -140,6 +140,34 @@ class TestL10nFrPdpXmlCii(TestL10nFrPdpCommon):
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_profile_id_mixed')
 
+    def test_invoice_profile_id_without_pdp(self):
+        """
+        A French company must have the business process type (BT-23, cardinality 1..1,
+        rules G1.02, G1.60 and G6.08) included in the exported Factur-X CII XML,
+        even if it isn't connected to the PDP proxy.
+        The profile ID computation itself is covered by `test_invoice_profile_id`.
+        """
+        self.env.company._reset_peppol_configuration()
+        # To be able to generate the same XML as in `test_invoice_profile_id`
+        self.env.company.write({
+            'peppol_eas': '0225',
+            'peppol_endpoint': '968515759_96851575905899',
+        })
+        # Simulate a company that isn't connected to the PDP proxy at all
+        self.proxy_user.unlink()
+
+        invoice = self._create_invoice_one_line(
+            partner_id=self.partner_a,
+            product_id=self.product,
+            tax_ids=self.percent_tax(20.0, tax_scope='consu'),
+            partner_bank_id=self.recipient_bank,
+            narration="Test narration",
+            post=True,
+        )
+
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_profile_id_goods')
+
     def test_export_downpayments_partner_fr(self):
         self.product_b.taxes_id = self.percent_tax(20.0).ids
         order = self._create_sale_order()
