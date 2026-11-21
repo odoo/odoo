@@ -1062,6 +1062,7 @@ class TestHrVersion(TestHrCommon):
         self.assertEqual(version_1.date_end, date(2023, 12, 31))
         self.assertEqual(version_2.date_start, date(2024, 1, 1))
         self.assertFalse(version_2.date_end)
+<<<<<<< 539bbd462c4506b52a89136d155b672b43b67a68
 
 
 @tagged('post_install', '-at_install')
@@ -1165,3 +1166,35 @@ class TestHrVersionTracking(TestHrCommon, MailCase):
         msg = self._write_and_get_employee_msgs(employee, {'private_city': 'C'})
         self.assertEqual(len(msg), 1)
         self.assertTracking(msg, [('private_city', 'char', 'B', 'C')], strict=True)
+||||||| 5dcff8c0e0d5e97bc6897ba1806c4ea8747670e2
+=======
+
+    def test_work_address_follows_work_location(self):
+        """The work address of a version is the address of its work location (the company's address without one)."""
+        company_address = self.env.company.partner_id
+        other_address = self.env['res.partner'].create({'name': 'Second site', 'parent_id': company_address.id})
+        other_location = self.env['hr.work.location'].create({
+            'name': 'Second site',
+            'address_id': other_address.id,
+            'location_type': 'office',
+        })
+        employee = self.env['hr.employee'].create({'name': 'Site worker', 'work_location_id': other_location.id})
+        self.assertEqual(employee.version_id.address_id, other_address)
+
+        employee.version_id.work_location_id = self.work_location
+        self.assertEqual(employee.version_id.address_id, self.work_location.address_id)
+
+        previous_address = self.work_location.address_id
+        third_address = self.env['res.partner'].create({'name': 'Third site', 'parent_id': company_address.id})
+        self.work_location.address_id = third_address
+        # the versions keep their work address: a site moving is a new version from the date of the move
+        self.assertEqual(employee.version_id.address_id, previous_address)
+        employee.version_id.work_location_id = other_location
+        employee.version_id.work_location_id = self.work_location
+        self.assertEqual(employee.version_id.address_id, third_address)
+
+        employee.version_id.work_location_id = False
+        self.assertEqual(employee.version_id.address_id, third_address)
+        no_location = self.env['hr.employee'].create({'name': 'No location'})
+        self.assertEqual(no_location.version_id.address_id.commercial_partner_id, company_address)
+>>>>>>> 839c872e47d07ba68e258ac516b561c368cae982
