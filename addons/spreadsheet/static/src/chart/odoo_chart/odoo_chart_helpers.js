@@ -100,6 +100,20 @@ export function onTreemapOdooChartItemClick(getters, chartId) {
     });
 }
 
+export function onHeatmapOdooChartItemClick(getters, chartId) {
+    return navigateInOdooMenuOnClick(getters, chartId, (chartJsItem, chartData, chartJSChart) => {
+        const { datasets, labels } = chartData;
+        const rowLabel = chartJSChart.data.datasets[chartJsItem.datasetIndex].label;
+        const columnLabel = chartJSChart.data.labels[chartJsItem.index];
+        const dataset = datasets.find((ds) => ds.label === rowLabel);
+        const domain = dataset.domains[labels.indexOf(columnLabel)];
+        if (!domain.length) {
+            return {};
+        }
+        return { name: `${columnLabel} / ${rowLabel}`, domain };
+    });
+}
+
 function navigateInOdooMenuOnClick(getters, chartId, getDomainFromChartItem) {
     return async (event, items, chartJSChart) => {
         const env = getters.getOdooEnv();
