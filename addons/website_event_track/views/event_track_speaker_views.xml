@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="event_track_speaker_view_form" model="ir.ui.view">
+        <field name="name">event.track.speaker.view.form</field>
+        <field name="model">event.track.speaker</field>
+        <field name="arch" type="xml">
+            <form string="Speaker">
+                <sheet>
+                    <field name="image" widget="image" class="oe_avatar"/>
+                    <group>
+                        <group>
+                            <field name="partner_id" context="{'default_email': email, 'default_phone': phone}"/>
+                            <field name="name" required="1"/>
+                            <field name="email"/>
+                            <field name="phone" class="o_force_ltr"/>
+                        </group>
+                        <group>
+                            <field name="function"/>
+                            <field name="company_name"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="biography" placeholder='e.g. "Jane Doe was born in..."'/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

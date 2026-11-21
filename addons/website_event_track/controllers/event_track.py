@@ -11,7 +11,7 @@ import babel.dates
 from werkzeug.exceptions import Forbidden, NotFound
 
 from odoo import _, fields, http, tools
-from odoo.fields import Domain
+from odoo.fields import Command, Domain
 from odoo.http import request
 from odoo.http.stream import content_disposition
 from odoo.tools import BinaryBytes, is_html_empty, plaintext2html
@@ -95,7 +95,7 @@ class EventTrackController(http.Controller):
         if searches.get('search'):
             search_domain = Domain.AND([
                 search_domain,
-                ['|', ('name', 'ilike', searches['search']), ('partner_name', 'ilike', searches['search'])]
+                ['|', ('name', 'ilike', searches['search']), ('speaker_ids.name', 'ilike', searches['search'])]
             ])
 
         # search on tags
@@ -480,6 +480,7 @@ class EventTrackController(http.Controller):
         # and contact_email must be filled. Email is verified. If the post tries to create contact with no valid entry,
         # raise exception. If normalized email is the same as logged partner, use its partner_id on track instead.
         # This prevents contact duplication. Otherwise, create new contact with contact additional info of post.
+        valid_speaker_email = tools.email_normalize(post.get('speaker_email'))
         if post.get('add_contact_information'):
             valid_contact_email = tools.email_normalize(post.get('contact_email'))
             # Here, the phone is not formatted. To format it, one needs a country. Based on a country, from geoip for instance.
@@ -496,27 +497,40 @@ class EventTrackController(http.Controller):
                     })
             else:
                 return json.dumps({'error': 'invalidFormInputs'})
+            contact_email, contact_phone = contact.email, contact.phone
         # If the speaker email is the same as logged user's, then also uses its partner on track, same as above.
+        # Otherwise the speaker details are the only way to reach the proposer: they become the contact details of
+        # the track, as the speaker itself only describes the talk and is never written to.
         else:
-            valid_speaker_email = tools.email_normalize(post['partner_email'])
-            if visitor_partner and valid_speaker_email == visitor_partner.email_normalized:
+            if visitor_partner and valid_speaker_email and valid_speaker_email == visitor_partner.email_normalized:
                 contact = visitor_partner
+            contact_email = contact.email or post.get('speaker_email') or False
+            contact_phone = contact.phone or post.get('speaker_phone') or False
+
+        speaker_vals = {
+            'name': post.get('speaker_name'),
+            'email': post.get('speaker_email'),
+            'phone': post.get('speaker_phone'),
+            'function': post.get('speaker_function'),
+            'biography': plaintext2html(post['speaker_biography']) if post.get('speaker_biography') else False,
+            'image': BinaryBytes(post['speaker_image'].read()) if post.get('speaker_image') else False,
+        }
+        # a speaker having the email of the logged visitor reuses its contact for its default values
+        if visitor_partner and valid_speaker_email and valid_speaker_email == visitor_partner.email_normalized:
+            speaker_vals['partner_id'] = visitor_partner.id
+        # empty values are left to the contact of the speaker
+        speaker_vals = {fname: value for fname, value in speaker_vals.items() if value}
 
         track = request.env['event.track'].with_context({'mail_create_nosubscribe': True}).sudo().create({
             'name': post['track_name'],
             'partner_id': contact.id,
-            'partner_name': post['partner_name'],
-            'partner_email': post['partner_email'],
-            'partner_phone': post['partner_phone'],
-            'partner_function': post['partner_function'],
-            'contact_phone': contact.phone,
-            'contact_email': contact.email,
+            'contact_phone': contact_phone,
+            'contact_email': contact_email,
             'event_id': event.id,
             'tag_ids': [(6, 0, valid_tag_indices)],
             'description': plaintext2html(post['description']),
-            'partner_biography': plaintext2html(post['partner_biography']),
+            'speaker_ids': [Command.create(speaker_vals)] if speaker_vals else [],
             'user_id': False,
-            'image': BinaryBytes(post['image'].read()) if post.get('image') else False,
         })
 
         if request.env.user != self.env.website.user_id:

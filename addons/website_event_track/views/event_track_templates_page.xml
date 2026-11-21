@@ -37,20 +37,20 @@
 <!-- ============================================================ -->
 
 <template id="event_track_content_partner_info">
-    <div class="mb-1 align-items-baseline text-break" t-if="track.partner_function">
-        <i class="oi me-2" data-icon="work" role="img" aria-hidden="true"/><span t-out="track.partner_function"/>
-        <t t-if="track.partner_company_name">
-            <span> at </span><span t-out="track.partner_company_name"/>
+    <div class="mb-1 align-items-baseline text-break" t-if="speaker.function">
+        <i class="oi me-2" data-icon="work" role="img" aria-hidden="true"/><span t-out="speaker.function"/>
+        <t t-if="speaker.company_name">
+            <span> at </span><span t-out="speaker.company_name"/>
         </t>
     </div>
-    <div class="mb-1 align-items-baseline text-break" t-if="track.partner_id.website">
-        <i class="oi me-2" data-icon="public" role="img" aria-hidden="true"/><a t-att-href="track.partner_id.website"><span t-field="track.partner_id.website"/></a>
+    <div class="mb-1 align-items-baseline text-break" t-if="speaker.partner_id.website">
+        <i class="oi me-2" data-icon="public" role="img" aria-hidden="true"/><a t-att-href="speaker.partner_id.website"><span t-field="speaker.partner_id.website"/></a>
     </div>
-    <div class="mb-1 align-items-baseline text-break" t-if="track.partner_email">
-        <i class="oi oi-filled me-2" data-icon="mail" role="img" aria-hidden="true"/><a t-att-mailto="track.partner_email"><span t-field="track.partner_email"/></a>
+    <div class="mb-1 align-items-baseline text-break" t-if="speaker.email">
+        <i class="oi oi-filled me-2" data-icon="mail" role="img" aria-hidden="true"/><a t-att-mailto="speaker.email"><span t-field="speaker.email"/></a>
     </div>
-    <div class="mb-1 align-items-baseline text-break" t-if="track.partner_phone">
-        <i class="oi oi-filled me-2" data-icon="phone" role="img" aria-hidden="true"/><span t-field="track.partner_phone"/>
+    <div class="mb-1 align-items-baseline text-break" t-if="speaker.phone">
+        <i class="oi oi-filled me-2" data-icon="phone" role="img" aria-hidden="true"/><span t-field="speaker.phone"/>
     </div>
 </template>
 
@@ -126,27 +126,25 @@
                 </div>
             </div>
 
-            <!-- ABOUT AUTHOR -->
-            <t t-set="track_fields" t-value="['image', 'partner_name', 'partner_function', 'partner_email', 'partner_phone']"/>
-            <!-- Avoid rendering a section for track information if we don't have anything to display -->
-            <t t-if="any(track[track_field] for track_field in track_fields) or track.partner_id.website or not is_html_empty(track.partner_biography)">
-                <div>
+            <!-- ABOUT SPEAKERS -->
+            <t t-if="track.speaker_ids">
+                <div t-foreach="track.speaker_ids" t-as="speaker" class="o_wevent_track_speaker">
                     <div class="mt-2 mb-2 d-flex">
-                        <div t-if="track.image" t-field="track.image"
+                        <div t-if="speaker.image" t-field="speaker.image"
                              t-options="{'widget': 'image', 'class': 'rounded-circle me-2', 'max_width': '96'}"/>
                         <div class="d-none d-md-flex flex-grow-1 flex-column ps-2 pe-0 pe-md-2">
-                            <div t-if="track.partner_name" t-field="track.partner_name" class="mb-2 fw-bold"/>
+                            <div t-if="speaker.name" t-field="speaker.name" class="mb-2 fw-bold"/>
                             <t t-call="website_event_track.event_track_content_partner_info"/>
                         </div>
                     </div>
                     <div class="d-flex d-md-none flex-grow-1 flex-column mt-3 mb-3 ps-2 pe-0 pe-md-2">
-                        <div t-if="track.partner_name" t-field="track.partner_name" class="mb-2 fw-bold"/>
+                        <div t-if="speaker.name" t-field="speaker.name" class="mb-2 fw-bold"/>
                         <t t-call="website_event_track.event_track_content_partner_info"/>
                     </div>
-                    <div t-if="not is_html_empty(track.partner_biography)" t-field="track.partner_biography"
+                    <div t-if="not is_html_empty(speaker.biography)" t-field="speaker.biography"
                          class="oe_no_empty"/>
-                    <hr t-if="not is_html_empty(track.description)" class="mt-2 pb-1 mb-1"/>
                 </div>
+                <hr t-if="not is_html_empty(track.description)" class="mt-2 pb-1 mb-1"/>
             </t>
 
             <!-- Description -->
@@ -208,7 +206,7 @@
                 <div class="tab-pane fade show active" id="track_list" role="tabpanel">
                     <ul class="list-group list-group-flush">
                         <li t-foreach="tracks_other" t-as="track_other" class="list-group-item list-group-item-action">
-                            <a t-if="not (is_html_empty(track_other.description) and is_html_empty(track_other.partner_biography)) and (is_event_user or track_other.is_published)"
+                            <a t-if="not (is_html_empty(track_other.description) and all(is_html_empty(biography) for biography in track_other.speaker_ids.mapped('biography'))) and (is_event_user or track_other.is_published)"
                                 t-att-data-publish="track_other.website_published and 'on' or 'off'"
                                 class="d-flex flex-column flex-wrap flex-md-nowrap text-decoration-none text-reset"
                                 t-att-href="track_other.website_url">
@@ -231,7 +229,7 @@
     <t t-if="not track_other.website_published and user_event_manager" t-call="website.unpublished_badge"/>
     <span t-out="track_other.name" class="fw-bold"/>
     <div class="d-flex flex-column flex-lg-row flex-wrap justify-content-between align-items-start mt-1">
-        <small class="opacity-75" t-out="track_other.partner_name"/>
+        <small class="opacity-75" t-out="', '.join(name for name in track_other.speaker_ids.mapped('name') if name)"/>
         <div class="d-inline-block o_wesession_track_aside_info text-truncate">
             <small t-if="track_other.is_track_today and track_other.track_start_remaining"
                 class="badge text-bg-info">

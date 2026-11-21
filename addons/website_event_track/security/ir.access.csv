@@ -13,3 +13,6 @@ access_event_track_stage_public,event.track.stage,event.track.stage,base.group_e
 access_event_track_stage_manager,event.track.stage.manager,event.track.stage,event.group_event_manager,crud,
 access_event_track_visitor_manager,event.track.visitor.manager,event.track.visitor,event.group_event_manager,crud,
 access_event_track_tag_category_user,event.track.tag.category.user,event.track.tag.category,event.group_event_user,crud,
+event_track_speaker_public,Event Track Speaker: public/portal: published track,event.track.speaker,base.group_everyone,r,"[('track_id.website_published', '=', True)]"
+access_event_track_speaker_employee,event.track.speaker,event.track.speaker,base.group_user,r,
+access_event_track_speaker_user,event.track.speaker.user,event.track.speaker,event.group_event_user,crud,

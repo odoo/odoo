@@ -10,7 +10,7 @@
         <field name="email_layout_xmlid">mail.mail_notification_light</field>
         <field name="body_html" type="html">
 <div>
-    Dear <t t-out="object.partner_id.name or object.partner_name or ''">Brandon Freeman</t><br/>
+    Dear <t t-out="object.partner_id.name or ', '.join(name for name in object.speaker_ids.mapped('name') if name)">Brandon Freeman</t><br/>
     We are pleased to inform you that your proposal <t t-out="object.name or ''">What This Event Is All About</t> has been accepted and confirmed for the event <t t-out="object.event_id.name or ''">OpenWood Collection Online Reveal</t>.
     <br/>
     You will find more details here:
@@ -74,7 +74,7 @@
                                     Hello<t t-if="not user_id.is_public" t-out="' ' + user_id.name"/>,
                                     <br/><br/>
                                     You recently showed interest for the talk
-                                    <a t-if="object.description or object.partner_biography" t-attf-href="{{ object.get_base_url() }}{{ object.website_url }}" style="font-weight:bold;color:#875A7B;text-decoration:none;" t-out="object.name or ''">OpenWood Collection Online Reveal</a>
+                                    <a t-if="object.description or object.speaker_ids" t-attf-href="{{ object.get_base_url() }}{{ object.website_url }}" style="font-weight:bold;color:#875A7B;text-decoration:none;" t-out="object.name or ''">OpenWood Collection Online Reveal</a>
                                     <span t-else="" style="font-weight:bold;" t-out="object.name or ''">OpenWood Collection Online Reveal</span>.
                                 </div>
                                 <div t-if="agenda_urls">

@@ -8,6 +8,7 @@
         <field name="location_id" ref="website_event_track.event_track_location5"/>
         <field name="duration" eval="1"/>
         <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_2')})]"/>
         <field name="stage_id" ref="event_track_stage0"/>
         <field name="kanban_state">blocked</field>
         <field name="user_id" ref="base.user_admin"/>
@@ -20,6 +21,7 @@
         <field name="location_id" ref="website_event_track.event_track_location5"/>
         <field name="duration" eval="0.25"/>
         <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_3')})]"/>
         <field name="stage_id" ref="event_track_stage1"/>
         <field name="kanban_state">done</field>
         <field name="user_id" ref="base.user_admin"/>
@@ -32,6 +34,7 @@
         <field name="location_id" ref="website_event_track.event_track_location5"/>
         <field name="duration" eval="0.3"/>
         <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_4')})]"/>
         <field name="stage_id" ref="event_track_stage1"/>
         <field name="user_id" ref="base.user_admin"/>
     </record>
@@ -43,6 +46,7 @@
         <field name="location_id" ref="website_event_track.event_track_location5"/>
         <field name="duration" eval="0.5"/>
         <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_2')})]"/>
         <field name="stage_id" ref="event_track_stage3"/>
         <field name="user_id" ref="base.user_admin"/>
     </record>
@@ -54,6 +58,7 @@
         <field name="location_id" ref="website_event_track.event_track_location6"/>
         <field name="duration" eval="0.5"/>
         <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_4')})]"/>
         <field name="stage_id" ref="event_track_stage2"/>
         <field name="user_id" ref="base.user_admin"/>
     </record>
@@ -65,6 +70,7 @@
         <field name="location_id" ref="website_event_track.event_track_location6"/>
         <field name="duration" eval="0.5"/>
         <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_3')})]"/>
         <field name="stage_id" ref="event_track_stage2"/>
         <field name="user_id" ref="base.user_admin"/>
     </record>
@@ -76,6 +82,7 @@
         <field name="location_id" ref="website_event_track.event_track_location6"/>
         <field name="duration" eval="1"/>
         <field name="partner_id" ref="base.res_partner_1"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_1')})]"/>
         <field name="stage_id" ref="event_track_stage3"/>
         <field name="user_id" ref="base.user_admin"/>
     </record>
@@ -87,6 +94,7 @@
         <field name="location_id" ref="website_event_track.event_track_location7"/>
         <field name="duration" eval="0.5"/>
         <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_4')})]"/>
         <field name="stage_id" ref="event_track_stage3"/>
         <field name="kanban_state">blocked</field>
         <field name="user_id" ref="base.user_admin"/>
@@ -100,6 +108,7 @@
         <field name="location_id" ref="website_event_track.event_track_location7"/>
         <field name="duration" eval="1"/>
         <field name="partner_id" ref="base.res_partner_12"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_12')})]"/>
         <field name="stage_id" ref="event_track_stage3"/>
         <field name="user_id" ref="base.user_admin"/>
     </record>
@@ -121,6 +130,7 @@
         <field name="location_id" ref="website_event_track.event_track_location7"/>
         <field name="duration" eval="0.5"/>
         <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_4')})]"/>
         <field name="stage_id" ref="event_track_stage1"/>
         <field name="user_id" ref="base.user_admin"/>
     </record>
@@ -132,6 +142,7 @@
         <field name="location_id" ref="website_event_track.event_track_location7"/>
         <field name="duration" eval="0.5"/>
         <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_2')})]"/>
         <field name="stage_id" ref="event_track_stage2"/>
         <field name="user_id" ref="base.user_admin"/>
     </record>
@@ -143,6 +154,7 @@
         <field name="location_id" ref="website_event_track.event_track_location8"/>
         <field name="duration" eval="0.25"/>
         <field name="partner_id" ref="base.res_partner_12"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_12')})]"/>
         <field name="stage_id" ref="event_track_stage3"/>
         <field name="user_id" ref="base.user_admin"/>
     </record>
@@ -154,6 +166,7 @@
         <field name="location_id" ref="website_event_track.event_track_location8"/>
         <field name="duration" eval="0.5"/>
         <field name="partner_id" ref="base.res_partner_10"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_10')})]"/>
         <field name="stage_id" ref="event_track_stage3"/>
         <field name="user_id" ref="base.user_admin"/>
     </record>
@@ -165,6 +178,7 @@
         <field name="location_id" ref="website_event_track.event_track_location8"/>
         <field name="duration" eval="0.5"/>
         <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_3')})]"/>
         <field name="stage_id" ref="event_track_stage3"/>
         <field name="user_id" ref="base.user_admin"/>
     </record>
@@ -176,6 +190,7 @@
         <field name="location_id" ref="website_event_track.event_track_location8"/>
         <field name="duration" eval="0.5"/>
         <field name="partner_id" ref="base.res_partner_12"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_12')})]"/>
         <field name="stage_id" ref="event_track_stage0"/>
         <field name="user_id" ref="base.user_admin"/>
     </record>
@@ -187,6 +202,7 @@
         <field name="location_id" ref="website_event_track.event_track_location9"/>
         <field name="duration" eval="0.5"/>
         <field name="partner_id" ref="base.res_partner_10"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_10')})]"/>
         <field name="stage_id" ref="event_track_stage0"/>
         <field name="user_id" ref="base.user_admin"/>
     </record>
@@ -198,6 +214,7 @@
         <field name="location_id" ref="website_event_track.event_track_location9"/>
         <field name="duration" eval="0.5"/>
         <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_2')})]"/>
         <field name="stage_id" ref="event_track_stage1"/>
         <field name="user_id" ref="base.user_admin"/>
     </record>
@@ -209,6 +226,7 @@
         <field name="location_id" ref="website_event_track.event_track_location9"/>
         <field name="duration" eval="0.5"/>
         <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_4')})]"/>
         <field name="stage_id" ref="event_track_stage1"/>
         <field name="user_id" ref="base.user_admin"/>
     </record>
@@ -220,6 +238,7 @@
         <field name="location_id" ref="website_event_track.event_track_location9"/>
         <field name="duration" eval="0.5"/>
         <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_3')})]"/>
         <field name="stage_id" ref="event_track_stage1"/>
         <field name="user_id" ref="base.user_admin"/>
     </record>
@@ -241,6 +260,7 @@
         <field name="location_id" ref="website_event_track.event_track_location9"/>
         <field name="duration" eval="0.5"/>
         <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_3')})]"/>
         <field name="stage_id" ref="event_track_stage0"/>
         <field name="user_id" ref="base.user_admin"/>
     </record>
@@ -252,6 +272,7 @@
         <field name="location_id" ref="website_event_track.event_track_location9"/>
         <field name="duration" eval="0.5"/>
         <field name="partner_id" ref="base.res_partner_1"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_1')})]"/>
         <field name="stage_id" ref="event_track_stage3"/>
         <field name="user_id" ref="base.user_admin"/>
     </record>
@@ -263,6 +284,7 @@
         <field name="location_id" ref="website_event_track.event_track_location10"/>
         <field name="duration" eval="1.5"/>
         <field name="partner_id" ref="base.res_partner_18"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_18')})]"/>
         <field name="stage_id" ref="event_track_stage3"/>
         <field name="user_id" ref="base.user_admin"/>
     </record>
@@ -274,6 +296,7 @@
         <field name="location_id" ref="website_event_track.event_track_location10"/>
         <field name="duration" eval="3.5"/>
         <field name="partner_id" ref="base.res_partner_18"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_18')})]"/>
         <field name="stage_id" ref="event_track_stage3"/>
         <field name="user_id" ref="base.user_admin"/>
     </record>
@@ -284,6 +307,7 @@
         <field name="date" eval="(DateTime.now() + timedelta(days=1, hours=3, minutes=5)).strftime('%Y-%m-%d %H:%M:%S')"></field>
         <field name="duration" eval="1"/>
         <field name="partner_id" ref="base.res_partner_1"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_1')})]"/>
         <field name="stage_id" ref="event_track_stage3"/>
         <field name="user_id" ref="base.user_admin"/>
     </record>
@@ -294,6 +318,7 @@
         <field name="date" eval="(DateTime.now() + timedelta(days=1, hours=4, minutes=5)).strftime('%Y-%m-%d %H:%M:%S')"></field>
         <field name="duration" eval="0.5"/>
         <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_2')})]"/>
         <field name="stage_id" ref="event_track_stage2"/>
         <field name="user_id" ref="base.user_admin"/>
     </record>
@@ -304,6 +329,7 @@
         <field name="date" eval="(DateTime.now() + timedelta(days=2, hours=1, minutes=5)).strftime('%Y-%m-%d %H:%M:%S')"></field>
         <field name="duration" eval="0.25"/>
         <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_2')})]"/>
         <field name="stage_id" ref="event_track_stage2"/>
         <field name="user_id" ref="base.user_admin"/>
     </record>
@@ -344,6 +370,10 @@
         <field name="duration">2</field>
         <field name="user_id" ref="base.user_admin"/>
         <field name="partner_id" ref="base.res_partner_address_15"/>
+        <field name="speaker_ids" eval="[
+            Command.clear(),
+            Command.create({'partner_id': ref('base.res_partner_address_15')}),
+            Command.create({'partner_id': ref('base.res_partner_address_28')})]"/>
         <field name="website_cta" eval="True"/>
         <field name="website_cta_title">Try Now</field>
         <field name="website_cta_url">http://www.example.com</field>
@@ -365,6 +395,7 @@
         <field name="duration">1</field>
         <field name="user_id" ref="base.user_admin"/>
         <field name="partner_id" ref="base.res_partner_address_28"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_address_28')})]"/>
     </record>
     <!-- Location 1 -->
     <record id="event_7_track_3" model="event.track">
@@ -379,6 +410,7 @@
         <field name="duration">2.5</field>
         <field name="user_id" ref="base.user_admin"/>
         <field name="partner_id" ref="base.res_partner_address_16"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_address_16')})]"/>
     </record>
     <record id="event_7_track_4" model="event.track">
         <field name="name">Life at Home Around the World: William’s Story</field>
@@ -392,6 +424,7 @@
         <field name="duration">1</field>
         <field name="user_id" ref="base.user_admin"/>
         <field name="partner_id" ref="base.res_partner_address_15"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_address_15')})]"/>
         <field name="website_cta" eval="True"/>
         <field name="website_cta_title">Try Now</field>
         <field name="website_cta_url">http://www.example.com</field>
@@ -409,6 +442,7 @@
         <field name="duration">1</field>
         <field name="user_id" ref="base.user_admin"/>
         <field name="partner_id" ref="base.res_partner_address_3"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_address_3')})]"/>
     </record>
     <!-- Location 2 -->
     <record id="event_7_track_6" model="event.track">
@@ -423,6 +457,7 @@
         <field name="duration">1.5</field>
         <field name="user_id" ref="base.user_admin"/>
         <field name="partner_id" ref="base.res_partner_address_28"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_address_28')})]"/>
     </record>
     <record id="event_7_track_7" model="event.track">
         <field name="name">Woodworking: How I got started!</field>
@@ -436,6 +471,7 @@
         <field name="duration">1.5</field>
         <field name="user_id" ref="base.user_admin"/>
         <field name="partner_id" ref="base.res_partner_address_15"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_address_15')})]"/>
     </record>
     <record id="event_7_track_8" model="event.track">
         <field name="name">Dealing with OpenWood Furniture</field>
@@ -449,6 +485,7 @@
         <field name="duration">2</field>
         <field name="user_id" ref="base.user_admin"/>
         <field name="partner_id" ref="base.res_partner_address_3"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_address_3')})]"/>
     </record>
     <record id="event_7_track_9" model="event.track">
         <field name="name">Kitchens for the Future</field>
@@ -462,6 +499,7 @@
         <field name="duration">1</field>
         <field name="user_id" ref="base.user_admin"/>
         <field name="partner_id" ref="base.res_partner_address_4"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_address_4')})]"/>
     </record>
     <!-- Location 3 -->
     <record id="event_7_track_l3_1" model="event.track">
@@ -476,6 +514,7 @@
         <field name="duration">2</field>
         <field name="user_id" ref="base.user_admin"/>
         <field name="partner_id" ref="base.res_partner_address_31"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_address_31')})]"/>
     </record>
     <record id="event_7_track_l3_2" model="event.track">
         <field name="name">Who's OpenWood anyway?</field>
@@ -489,6 +528,7 @@
         <field name="is_published" eval="True"/>
         <field name="user_id" ref="base.user_admin"/>
         <field name="partner_id" ref="base.res_partner_address_18"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_address_18')})]"/>
     </record>
 
     <!-- DAY 2 -->
@@ -508,6 +548,7 @@
         <field name="duration">1.5</field>
         <field name="user_id" ref="base.user_admin"/>
         <field name="partner_id" ref="base.res_partner_address_28"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_address_28')})]"/>
     </record>
     <record id="event_7_track_11" model="event.track">
         <field name="name">Day 2 Wrapup</field>
@@ -524,6 +565,7 @@
         <field name="duration">1</field>
         <field name="user_id" ref="base.user_admin"/>
         <field name="partner_id" ref="base.res_partner_address_16"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_address_16')})]"/>
     </record>
     <!-- Location 1 -->
     <record id="event_7_track_12" model="event.track">
@@ -538,6 +580,7 @@
         <field name="duration">3</field>
         <field name="user_id" ref="base.user_admin"/>
         <field name="partner_id" ref="base.res_partner_address_15"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_address_15')})]"/>
     </record>
     <record id="event_7_track_13" model="event.track">
         <field name="name">Log House Building</field>
@@ -552,6 +595,7 @@
         <field name="duration">1.5</field>
         <field name="user_id" ref="base.user_admin"/>
         <field name="partner_id" ref="base.res_partner_address_16"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_address_16')})]"/>
     </record>
     <record id="event_7_track_14" model="event.track">
         <field name="name">Building a DIY cabin from the ground up</field>
@@ -565,6 +609,7 @@
         <field name="duration">1.5</field>
         <field name="user_id" ref="base.user_admin"/>
         <field name="partner_id" ref="base.res_partner_address_3"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_address_3')})]"/>
     </record>
     <!-- Location 2 -->
     <record id="event_7_track_15" model="event.track">
@@ -579,6 +624,7 @@
         <field name="duration">1</field>
         <field name="user_id" ref="base.user_admin"/>
         <field name="partner_id" ref="base.res_partner_address_31"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_address_31')})]"/>
     </record>
     <record id="event_7_track_16" model="event.track">
         <field name="name">Pretty. Ugly. Lovely.</field>
@@ -592,6 +638,7 @@
         <field name="duration">2</field>
         <field name="user_id" ref="base.user_admin"/>
         <field name="partner_id" ref="base.res_partner_address_16"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_address_16')})]"/>
     </record>
     <record id="event_7_track_17" model="event.track">
         <field name="name">10 DIY Furniture Ideas For Absolute Beginners</field>
@@ -606,6 +653,7 @@
         <field name="duration">1</field>
         <field name="user_id" ref="base.user_admin"/>
         <field name="partner_id" ref="base.res_partner_address_31"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_address_31')})]"/>
     </record>
     <record id="event_7_track_18" model="event.track">
         <field name="name">6 Woodworking tips and tricks for beginners</field>
@@ -619,6 +667,7 @@
         <field name="duration">1</field>
         <field name="user_id" ref="base.user_admin"/>
         <field name="partner_id" ref="base.res_partner_address_17"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_address_17')})]"/>
     </record>
     <record id="event_7_track_19" model="event.track">
         <field name="name">DIY Timber Cladding Project</field>
@@ -632,6 +681,7 @@
         <field name="duration">1</field>
         <field name="user_id" ref="base.user_admin"/>
         <field name="partner_id" ref="base.res_partner_address_3"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_address_3')})]"/>
     </record>
     <!-- Location 3 -->
     <record id="event_7_track_l3_10" model="event.track">
@@ -646,6 +696,7 @@
         <field name="is_published" eval="True"/>
         <field name="user_id" ref="base.user_admin"/>
         <field name="partner_id" ref="base.res_partner_address_31"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_address_31')})]"/>
     </record>
     <record id="event_7_track_l3_11" model="event.track">
         <field name="name">Happy with OpenWood</field>
@@ -659,6 +710,7 @@
         <field name="is_published" eval="True"/>
         <field name="user_id" ref="base.user_admin"/>
         <field name="partner_id" ref="base.res_partner_address_3"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_address_3')})]"/>
     </record>
 
     <!-- DAY 3 -->
@@ -677,6 +729,7 @@
         <field name="duration">1.5</field>
         <field name="user_id" ref="base.user_admin"/>
         <field name="partner_id" ref="base.res_partner_address_28"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_address_28')})]"/>
     </record>
     <record id="event_7_track_21" model="event.track">
         <field name="name">Event Wrapup</field>
@@ -693,6 +746,7 @@
         <field name="duration">1.5</field>
         <field name="user_id" ref="base.user_admin"/>
         <field name="partner_id" ref="base.res_partner_address_3"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_address_3')})]"/>
     </record>
     <!-- Location 1 -->
     <record id="event_7_track_22" model="event.track">
@@ -707,6 +761,7 @@
         <field name="duration">2</field>
         <field name="user_id" ref="base.user_admin"/>
         <field name="partner_id" ref="base.res_partner_address_4"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_address_4')})]"/>
     </record>
     <record id="event_7_track_23" model="event.track">
         <field name="name">Restoring Old Woodworking Tools</field>
@@ -720,6 +775,7 @@
         <field name="duration">1.5</field>
         <field name="user_id" ref="base.user_admin"/>
         <field name="partner_id" ref="base.res_partner_address_4"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_address_4')})]"/>
     </record>
     <!-- Location 2 -->
     <record id="event_7_track_24" model="event.track">
@@ -734,6 +790,7 @@
         <field name="duration">1</field>
         <field name="user_id" ref="base.user_admin"/>
         <field name="partner_id" ref="base.res_partner_address_17"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_address_17')})]"/>
     </record>
     <!-- Location 3 -->
     <record id="event_7_track_25" model="event.track">
@@ -748,6 +805,7 @@
         <field name="duration">3</field>
         <field name="user_id" ref="base.user_admin"/>
         <field name="partner_id" ref="base.res_partner_address_18"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_address_18')})]"/>
     </record>
     <record id="event_7_track_26" model="event.track">
         <field name="name">Less Furniture is More Furniture</field>
@@ -761,6 +819,7 @@
         <field name="duration">0.75</field>
         <field name="user_id" ref="base.user_admin"/>
         <field name="partner_id" ref="base.res_partner_address_17"/>
+        <field name="speaker_ids" eval="[Command.clear(), Command.create({'partner_id': ref('base.res_partner_address_17')})]"/>
     </record>
 
 </odoo>

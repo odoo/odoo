@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+from collections import defaultdict
 from datetime import timedelta, UTC
 from random import randint
 from textwrap import shorten
@@ -12,7 +13,7 @@ from markupsafe import Markup
 from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.fields import Domain
-from odoo.tools.mail import email_normalize, html_to_inner_content, is_html_empty
+from odoo.tools.mail import html_to_inner_content, is_html_empty
 from odoo.tools.translate import _, html_translate
 
 _logger = logging.getLogger(__name__)
@@ -81,33 +82,14 @@ class EventTrack(models.Model):
         string='Kanban State Label', compute='_compute_kanban_state_label', store=True,
         tracking=True)
     partner_id = fields.Many2one('res.partner', 'Contact', index='btree_not_null')
-    # speaker information
-    partner_name = fields.Char(
-        string='Name', compute='_compute_partner_name',
-        readonly=False, store=True, tracking=10)
-    partner_email = fields.Char(
-        string='Email', compute='_compute_partner_email',
-        readonly=False, store=True, tracking=20)
-    partner_phone = fields.Char(
-        string='Phone', compute='_compute_partner_phone',
-        readonly=False, store=True, tracking=30)
-    partner_biography = fields.Html(
-        string='Biography', compute='_compute_partner_biography',
-        sanitize_attributes=False,
-        readonly=False, store=True)
-    partner_function = fields.Char(
-        'Job Position', compute='_compute_partner_function',
-        store=True, readonly=False)
-    partner_company_name = fields.Char(
-        'Company Name', compute='_compute_partner_company_name',
-        readonly=False, store=True)
-    partner_tag_line = fields.Char(
-        'Tag Line', compute='_compute_partner_tag_line',
-        help='Description of the partner (name, job title and company name)')
-    image = fields.Image(
-        string="Speaker Photo", compute="_compute_partner_image",
-        readonly=False, store=True,
-        max_width=256, max_height=256)
+    # speakers, all equal, their sequence being the display order; they only
+    # describe the talk, the contact of the track is its partner
+    speaker_ids = fields.One2many(
+        'event.track.speaker', 'track_id', string='Speakers', copy=True)
+    speaker_count = fields.Integer('# Speakers', compute='_compute_speaker_count')
+    speaker_tag_line = fields.Char(
+        'Speakers Tag Line', compute='_compute_speaker_tag_line', compute_sudo=True,
+        help='Description of every speaker (name, job title and company name)')
     # contact information
     contact_email = fields.Char(
         string='Contact Email', compute='_compute_contact_email',
@@ -120,6 +102,14 @@ class EventTrack(models.Model):
     date = fields.Datetime('Track Date', compute='_compute_date', inverse="_inverse_date", store=True)
     date_end = fields.Datetime('Track End Date', compute='_compute_end_date', inverse="_inverse_end_date", store=True)
     duration = fields.Float('Duration', default=0.5)
+    # conflicts
+    conflicting_track_ids = fields.Many2many(
+        'event.track', string='Conflicting Tracks', compute='_compute_conflicts')
+    conflict_count = fields.Integer('# Conflicts', compute='_compute_conflicts')
+    has_conflict = fields.Boolean(
+        'Has Conflict', compute='_compute_conflicts', search='_search_has_conflict')
+    has_location_conflict = fields.Boolean('Location Double-Booked', compute='_compute_conflicts')
+    has_speaker_conflict = fields.Boolean('Speaker Double-Booked', compute='_compute_conflicts')
     is_track_live = fields.Boolean(
         'Is Track Live', compute='_compute_track_time_data')
     is_track_soon = fields.Boolean(
@@ -196,76 +186,17 @@ class EventTrack(models.Model):
 
     # SPEAKER
 
-    @api.depends('partner_id')
-    def _compute_partner_name(self):
+    @api.depends('speaker_ids')
+    def _compute_speaker_count(self):
         for track in self:
-            if track.partner_id and not track.partner_name:
-                track.partner_name = track.partner_id.name
+            track.speaker_count = len(track.speaker_ids)
 
-    @api.depends('partner_id')
-    def _compute_partner_email(self):
+    @api.depends('speaker_ids.sequence', 'speaker_ids.tag_line')
+    def _compute_speaker_tag_line(self):
         for track in self:
-            if track.partner_id and not track.partner_email:
-                track.partner_email = track.partner_id.email
-
-    @api.depends('partner_id')
-    def _compute_partner_phone(self):
-        for track in self:
-            if track.partner_id and not track.partner_phone:
-                track.partner_phone = track.partner_id.phone
-
-    @api.depends('partner_id')
-    def _compute_partner_biography(self):
-        for track in self:
-            if not track.partner_biography:
-                track.partner_biography = track.partner_id.website_description
-            elif track.partner_id and is_html_empty(track.partner_biography) and \
-                not is_html_empty(track.partner_id.website_description):
-                track.partner_biography = track.partner_id.website_description
-
-    @api.depends('partner_id')
-    def _compute_partner_function(self):
-        for track in self:
-            if track.partner_id and not track.partner_function:
-                track.partner_function = track.partner_id.function
-
-    @api.depends('partner_id', 'partner_id.is_company')
-    def _compute_partner_company_name(self):
-        for track in self:
-            if track.partner_id.is_company:
-                track.partner_company_name = track.partner_id.name
-            elif not track.partner_company_name:
-                track.partner_company_name = track.partner_id.parent_id.name
-
-    @api.depends('partner_name', 'partner_function', 'partner_company_name')
-    def _compute_partner_tag_line(self):
-        for track in self:
-            if not track.partner_name:
-                track.partner_tag_line = False
-                continue
-
-            tag_line = track.partner_name
-            if track.partner_function:
-                if track.partner_company_name:
-                    tag_line = _('%(name)s, %(function)s at %(company)s',
-                                 name=track.partner_name,
-                                 function=track.partner_function,
-                                 company=track.partner_company_name
-                                )
-                else:
-                    tag_line = '%s, %s' % (track.partner_name, track.partner_function)
-            elif track.partner_company_name:
-                tag_line = _('%(name)s from %(company)s',
-                             name=tag_line,
-                             company=track.partner_company_name
-                            )
-            track.partner_tag_line = tag_line
-
-    @api.depends('partner_id')
-    def _compute_partner_image(self):
-        for track in self:
-            if not track.image:
-                track.image = track.partner_id.image_256
+            # sorted as the cached order is not updated when a sequence changes
+            tag_lines = track.speaker_ids.sorted().mapped('tag_line')
+            track.speaker_tag_line = ' / '.join(filter(None, tag_lines)) or False
 
     # CONTACT
 
@@ -311,9 +242,88 @@ class EventTrack(models.Model):
             if track.date and track.date_end:
                 track.duration = (track.date_end - track.date).total_seconds() / 3600
 
+    @api.depends('date', 'date_end', 'active', 'stage_id.is_cancel', 'location_id', 'speaker_ids.partner_id')
+    def _compute_conflicts(self):
+        conflicts = self._get_conflict_data()
+        for track in self:
+            other_ids, same_location, same_speaker = conflicts.get(track, (set(), False, False))
+            others = self.env['event.track'].browse(sorted(other_ids))
+            track.conflicting_track_ids = others
+            track.conflict_count = len(others)
+            track.has_conflict = bool(others)
+            track.has_location_conflict = same_location
+            track.has_speaker_conflict = same_speaker
+
+    def _search_has_conflict(self, operator, value):
+        if operator != 'in' or list(value) != [True]:
+            return NotImplemented
+        tracks = self.env['event.track'].search(
+            Domain('date', '!=', False)
+            & Domain('date_end', '>', fields.Datetime.now())
+            & Domain('stage_id.is_cancel', '=', False)
+            & (Domain('location_id', '!=', False) | Domain('speaker_ids.partner_id', '!=', False)),
+        )
+        conflicts = self._conflict_sweep(tracks.filtered(lambda track: track._is_conflict_candidate()))
+        return Domain('id', 'in', [track.id for track, data in conflicts.items() if data[0]])
+
+    def _is_conflict_candidate(self):
+        self.ensure_one()
+        return bool(
+            self.active
+            and self.date and self.date_end and self.date_end > self.date
+            and self.date_end > fields.Datetime.now()
+            and not self.stage_id.is_cancel,
+        )
+
+    @api.model
+    def _conflict_sweep(self, tracks):
+        """ Return {track: [set(conflicting ids), same_location, same_speaker]}
+        for the given tracks, compared with each other. A location is booked
+        per event, a speaker across all events. Only the speakers linked to a
+        contact are checked: a speaker typed as a name cannot be told apart. """
+        bookings = defaultdict(list)  # resource -> [track]
+        for track in tracks:
+            if track.location_id:
+                bookings['location', track.event_id.id, track.location_id.id].append(track)
+            for partner in track.speaker_ids.partner_id:
+                bookings['speaker', partner.id].append(track)
+
+        result = defaultdict(lambda: [set(), False, False])
+        for (kind, *_res_ids), booked_tracks in bookings.items():
+            booked_tracks.sort(key=lambda track: track.date)
+            running = []  # tracks still going on while sweeping in start order
+            for track in booked_tracks:
+                running = [other for other in running if other.date_end > track.date]
+                for other in running:
+                    for first, second in ((track, other), (other, track)):
+                        data = result[first]
+                        # for an unsaved record, report the stored id of the other one
+                        data[0].add(second._origin.id or second.id)
+                        data[1 if kind == 'location' else 2] = True
+                running.append(track)
+        return result
+
+    def _get_conflict_data(self):
+        candidates = self.filtered(lambda track: track._is_conflict_candidate())
+        if not candidates or not (candidates.location_id or candidates.speaker_ids.partner_id):
+            return {}
+        same_location = (
+            Domain('location_id', 'in', candidates.location_id.ids)
+            & Domain('event_id', 'in', candidates.event_id.ids)
+        )
+        others = self.env['event.track'].search(
+            Domain('date', '<', max(candidates.mapped('date_end')))
+            & Domain('date_end', '>', max(min(candidates.mapped('date')), fields.Datetime.now()))
+            & Domain('stage_id.is_cancel', '=', False)
+            & Domain('id', 'not in', candidates._origin.ids)
+            & (same_location | Domain('speaker_ids.partner_id', 'in', candidates.speaker_ids.partner_id.ids)),
+        )
+        pool = candidates | others.filtered(lambda track: track._is_conflict_candidate())
+        return self._conflict_sweep(pool)
+
     # FRONTEND DESCRIPTION
 
-    @api.depends('image', 'partner_id.image_256')
+    @api.depends('website_image')
     def _compute_website_image_url(self):
         for track in self:
             if track.website_image:
@@ -512,14 +522,14 @@ class EventTrack(models.Model):
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
             'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
-            'search_item_metadata': {'name': 'partner_name', 'type': 'text', 'html': True, 'match': True},
+            'search_item_metadata': {'name': 'speaker_tag_line', 'type': 'text', 'match': True},
             'description': {'name': 'description', 'type': 'text', 'truncate': True, 'html': True, 'match': True},
         }
         return {
             'model': 'event.track',
             'base_domain': [domain],
-            'search_fields': ['name', 'partner_name'],
-            'fetch_fields': ['name', 'website_url', 'partner_name', 'description'],
+            'search_fields': ['name', 'speaker_ids.name'],
+            'fetch_fields': ['name', 'website_url', 'speaker_tag_line', 'description'],
             'mapping': mapping,
             'icon': 'mic',
             'order': order,
@@ -533,31 +543,23 @@ class EventTrack(models.Model):
     def _mail_get_timezone(self):
         return self.event_id._mail_get_timezone() or super()._mail_get_timezone()
 
-    def _message_add_default_recipients(self):
-        recipients = super()._message_add_default_recipients()
-        for track in self.filtered(lambda t: not t.partner_id.email_normalized and not email_normalize(t.contact_email) and t.partner_email):
-            info = recipients[track.id]
-            info['email_to_lst'] = tools.mail.email_split_and_format_normalize(track.partner_email) or [track.partner_email]
-        return recipients
-
     def _message_post_after_hook(self, message):
         #  OVERRIDE
         #  If no partner is set on track when sending a message, then we create one from suggested contact selected.
         #  If one or more have been created from chatter (Suggested Recipients) we search for the expected one and write the partner_id on track.
-        if message.partner_ids and not self.partner_id:
+        if message.partner_ids and not self.partner_id and self.contact_email:
             #  Contact(s) created from chatter set on track : we verify if at least one is the expected contact
-            #  linked to the track. (created from contact_email if any, then partner_email if any)
-            main_email = self.contact_email or self.partner_email
+            #  linked to the track, created from its contact_email. The speakers are not contacts of the track.
+            main_email = self.contact_email
             main_email_normalized = tools.email_normalize(main_email)
             new_partner = message.partner_ids.filtered(
                 lambda partner: partner.email == main_email or (main_email_normalized and partner.email_normalized == main_email_normalized)
             )
             if new_partner:
-                mail_email_fname = 'contact_email' if self.contact_email else 'partner_email'
                 if new_partner[0].email_normalized:
-                    email_domain = (mail_email_fname, 'in', [new_partner[0].email, new_partner[0].email_normalized])
+                    email_domain = ('contact_email', 'in', [new_partner[0].email, new_partner[0].email_normalized])
                 else:
-                    email_domain = (mail_email_fname, '=', new_partner[0].email)
+                    email_domain = ('contact_email', '=', new_partner[0].email)
                 self.search([
                     ('partner_id', '=', False), email_domain, ('stage_id.is_cancel', '=', False),
                 ]).write({'partner_id': new_partner[0].id})
@@ -589,11 +591,25 @@ class EventTrack(models.Model):
     def open_track_speakers_list(self):
         return {
             'name': _('Speakers'),
-            'domain': [('id', 'in', self.mapped('partner_id').ids)],
+            'domain': [('id', 'in', self.speaker_ids.partner_id.ids)],
             'view_mode': 'kanban,form',
             'res_model': 'res.partner',
             'view_id': False,
             'type': 'ir.actions.act_window',
+        }
+
+    def action_view_conflicting_tracks(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': self.env._('Conflicts for %s', self.name),
+            'res_model': 'event.track',
+            'view_mode': 'list,calendar,form',
+            'domain': [('id', 'in', (self | self.conflicting_track_ids).ids)],
+            'context': {
+                'initial_date': fields.Datetime.to_string(self.date) if self.date else False,
+                'create': False,
+            },
         }
 
     def get_backend_menu_id(self):
