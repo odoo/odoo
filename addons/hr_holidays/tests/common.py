@@ -18,7 +18,7 @@ class TestHrHolidaysCommon(common.TransactionCase):
         cls.env.user.tz = 'Europe/Brussels'
         cls.env.user.company_id.tz = "Europe/Brussels"
 
-        cls.company = cls.add_class_company('base.test_company', {'name': 'Test company'})
+        cls.company = cls.add_class_company('base.test_company', {'name': 'Test company', 'tz': 'Europe/Brussels'})
         cls.external_company = cls.add_class_company('base.test_company_template', {'name': 'External Test company'})
 
         cls.company.resource_calendar_id = cls.env['resource.calendar'].create({
