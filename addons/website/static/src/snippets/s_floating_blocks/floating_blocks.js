@@ -44,7 +44,9 @@ export class FloatingBlocks extends Interaction {
             this.services.website_menus.registerCallback(this.adaptToHeaderChange.bind(this))
         );
 
-        if (this.boxesEls.length >= 2) {
+        // With reduced motion, blocks are not sticky (see 000.scss): do not
+        // zoom them either.
+        if (this.boxesEls.length >= 2 && !this.prefersReducedMotion()) {
             // The last block does not need to be animated
             this.boxesToAnimate = Array.from(this.boxesEls).slice(0, -1);
 
@@ -62,6 +64,13 @@ export class FloatingBlocks extends Interaction {
             this.onScroll();
             this.updateContent();
         }
+    }
+
+    /**
+     * @returns {boolean} true if the user prefers reduced motion
+     */
+    prefersReducedMotion() {
+        return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     }
 
     /**
@@ -182,7 +191,8 @@ export class FloatingBlocks extends Interaction {
      */
     onKeydown(ev) {
         const hotkey = getActiveHotkey(ev);
-        if (hotkey === "shift+tab") {
+        // Blocks are not stacked with reduced motion: native scroll is enough.
+        if (hotkey === "shift+tab" && !this.prefersReducedMotion()) {
             this.addListener(ev.currentTarget, "focusout", this.onShiftTabFocusout.bind(this), {
                 once: true,
             });
