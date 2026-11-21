@@ -17,16 +17,16 @@ class L10n_It_Edi_DoiDeclaration_Of_Intent(models.Model):
          ('revoked', 'Revoked'),
          ('terminated', 'Terminated'),
         ],
-        string="State",
+        string="Status",
         tracking=True,
         default='draft',
         required=True,
         readonly=True,
-        help="The state of this Declaration of Intent. \n"
-        "- 'Draft' means that the Declaration of Intent still needs to be confirmed before being usable. \n"
-        "- 'Active' means that the Declaration of Intent is usable. \n"
-        "- 'Terminated' designates that the Declaration of Intent has been marked as not to use anymore without invalidating usages of it. \n"
-        "- 'Revoked' means the Declaration of Intent should not have been used. You will probably need to revert previous usages of it, if any.\n")
+        help="The status of this Declaration of Intent.\n"
+        '- "Draft": the Declaration of Intent must be confirmed before it can be used.\n'
+        '- "Active": the Declaration of Intent can be used.\n'
+        '- "Terminated": the Declaration of Intent must no longer be used, but its past usages remain valid.\n'
+        '- "Revoked": the Declaration of Intent should never have been used. You will probably need to revert its past usages, if any.\n')
 
     company_id = fields.Many2one(
         comodel_name='res.company',

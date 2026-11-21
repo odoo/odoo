@@ -48,7 +48,7 @@
         <field name="inherit_id" ref="point_of_sale.view_pos_order_filter"/>
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='status']" position="before">
-                <filter string="ETA Receipt State" name="l10n_eg_edi_pos_state" context="{'group_by': 'l10n_eg_edi_pos_state'}"/>
+                <filter string="ETA Receipt Status" name="l10n_eg_edi_pos_state" context="{'group_by': 'l10n_eg_edi_pos_state'}"/>
             </xpath>
         </field>
     </record>

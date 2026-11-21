@@ -67,7 +67,7 @@
             <field name="inherit_id" ref="account.view_account_invoice_filter"/>
             <field name="arch" type="xml">
                 <filter name="group_by_company" position="after">
-                    <filter string="ZATCA State" name="group_by_l10n_sa_edi_state" domain="[]" context="{'group_by': 'l10n_sa_edi_state'}"/>
+                    <filter string="ZATCA Status" name="group_by_l10n_sa_edi_state" domain="[]" context="{'group_by': 'l10n_sa_edi_state'}"/>
                 </filter>
                 <filter name="late" position="after">
                     <separator/>

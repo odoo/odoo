@@ -244,7 +244,7 @@ class PaymentProvider(models.Model):
     # === MODULE FIELDS === #
 
     module_id = fields.Many2one(string="Corresponding Module", comodel_name="ir.module.module")
-    module_state = fields.Selection(string="Installation State", related="module_id.state")
+    module_state = fields.Selection(string="Installation Status", related="module_id.state")
     module_to_buy = fields.Boolean(string="Odoo Enterprise Module", related="module_id.to_buy")
 
     # === COMPUTE METHODS === #

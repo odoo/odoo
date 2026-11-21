@@ -22,7 +22,7 @@ class AccountLock_Exception(models.Model):
             ('revoked', 'Revoked'),
             ('expired', 'Expired'),
         ],
-        string="State",
+        string="Status",
         compute='_compute_state',
         search='_search_state'
     )

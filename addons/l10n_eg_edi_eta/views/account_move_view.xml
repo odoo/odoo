@@ -91,7 +91,7 @@
             <field name="inherit_id" ref="account.view_account_invoice_filter"/>
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='group_by_company']" position="after">
-                    <filter name="eg_submission_state" string="ETA State" context="{'group_by': 'l10n_eg_edi_submission_state'}"/>
+                    <filter name="eg_submission_state" string="ETA Status" context="{'group_by': 'l10n_eg_edi_submission_state'}"/>
                 </xpath>
                 <filter name="late" position="after">
                     <separator/>

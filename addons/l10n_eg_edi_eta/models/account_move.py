@@ -47,7 +47,7 @@ class AccountMove(models.Model):
     l10n_eg_edi_api_mode = fields.Selection(related='company_id.l10n_eg_edi_api_mode', string='ETA Mode')
     l10n_eg_edi_submission_state = fields.Selection(
         selection=ETA_INVOICE_SUBMISSION_STATES,
-        string="ETA State",
+        string="ETA Status",
         compute='_compute_l10n_eg_edi_submission_values',
         store=True,
     )

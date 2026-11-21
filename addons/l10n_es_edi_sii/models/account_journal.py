@@ -15,6 +15,7 @@ class AccountJournal(models.Model):
             ('error', "Error"),
             ('urgent', "Urgent"),
         ],
+        string="SII Kanban Status",
         compute='_compute_l10n_es_sii_pending_count',
     )
 

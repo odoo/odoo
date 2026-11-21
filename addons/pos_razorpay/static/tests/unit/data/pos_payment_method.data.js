@@ -49,7 +49,7 @@ patch(PosPaymentMethod.prototype, {
     },
 
     razorpay_cancel_payment_request(ids, data) {
-        return { error: "Razorpay POS transaction canceled successfully" };
+        return { error: "Razorpay POS transaction cancelled successfully" };
     },
 
     razorpay_make_refund_request(ids, data) {

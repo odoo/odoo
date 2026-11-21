@@ -20,7 +20,7 @@ class L10nEgEdiEtaSubmission(models.Model):
     eta_submission_id = fields.Char(string="Submission ID")
     state = fields.Selection(
         selection=ETA_SUBMISSION_STATES,
-        string="State",
+        string="Status",
     )
     message = fields.Char(string="Response Message")
     eta_json_filename = fields.Char(string="File")
