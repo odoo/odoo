@@ -311,6 +311,12 @@ class Website(models.Model):
             lambda menu: re.search(r"[/](([^/=?&]+-)?[0-9]+)([/]|$)", menu.url) or menu.sudo().group_ids
         ))
 
+    @api.model
+    def name_create(self, name):
+        if 'import_file' in self.env.context:
+            raise UserError(_("Websites cannot be created from an import file. Please create them from the Website settings."))
+        return super().name_create(name)
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
