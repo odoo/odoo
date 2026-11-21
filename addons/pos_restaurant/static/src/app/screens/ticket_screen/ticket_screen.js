@@ -22,6 +22,8 @@ patch(TicketScreen.prototype, {
     _getSearchFields() {
         const res = super._getSearchFields(...arguments);
         if (this.pos.config.module_pos_restaurant) {
+            const { repr } = res.REFERENCE;
+            res.REFERENCE.repr = (order) => [repr(order), order.table_id?.table_number].flat();
             res.REFERENCE.modelFields.push("table_id.table_number");
         }
         return res;

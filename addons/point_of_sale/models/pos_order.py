@@ -15,7 +15,6 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ConcurrencyError, UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import (
-    SQL,
     float_compare,
     float_is_zero,
     float_repr,
@@ -1223,56 +1222,41 @@ class PosOrder(models.Model):
         return orders.ids
 
     @api.model
-    def search_order_ids(self, config_id, domain, limit, offset, state_filter='paid'):
-        """Search for orders that satisfy the given domain, limit and offset.
+    def search_order_ids(self, config_id, domain, limit, offset, focus_order_id=False):
+        """Search one page of orders matching the domain, most recent first.
 
-        state_filter: 'paid' for non-draft/non-cancelled orders, 'cancelled' for cancelled orders.
+        :param limit: 0 returns no order, only the count (the page is full of unsynced orders).
+        :param focus_order_id: if given, also returns its index among the orders (`focusIndex`).
         """
         pos_config = self.env['pos.config'].browse(config_id)
-        if state_filter == 'cancelled':
-            state_domain = Domain('state', '=', 'cancel')
+        order_domain = Domain(domain) & Domain('config_id.currency_id', '=', pos_config.currency_id.id) & pos_config._get_paid_orders_config_domain()
+        focus_index = False
+        if focus_order_id:
+            focus_order = self.browse(focus_order_id).exists().filtered_domain(order_domain)
+            if focus_order:
+                focus_index = self.search_count(order_domain & (
+                    Domain('date_order', '>', focus_order.date_order)
+                    | (Domain('date_order', '=', focus_order.date_order) & Domain('id', '>', focus_order.id))
+                ))  # same keys as the sort below
+        if limit == 0:
+            orders = self.browse()
         else:
-            state_domain = Domain([
-                '|',
-                ('state', 'not in', ['cancel', 'draft']),
-                '&',
-                ('state', '!=', 'draft'),
-                ('is_refund', '=', True),
-            ])
-        order_domain = state_domain & Domain(domain) & Domain(
-            'config_id.currency_id', '=', pos_config.currency_id.id
-        ) & pos_config._get_paid_orders_config_domain()
-        orders = self.search(order_domain, limit=limit, offset=offset, order='create_date desc')
-        PosOrderLineModel = self.env['pos.order.line']
-        line_queries = [
-            PosOrderLineModel._search([('order_id', 'in', orders.ids)]),
-            PosOrderLineModel._search([('refunded_orderline_id.order_id', 'in', orders.ids)]),
-        ]
-        orderlines = PosOrderLineModel.browse(
-            row[0] for row in self.env.execute_query(
-                SQL(' UNION ').join(line_query.subselect() for line_query in line_queries)
-            )
-        )
+            orders = self.search(order_domain, limit=limit, offset=offset, order='date_order desc, id desc')
 
         # We will return to the frontend the ids and the date of their last modification
         # so that it can compare to the last time it fetched the orders and can ask to fetch
         # orders that are not up-to-date.
-        # The date of their last modification is either the last time one of its orderline has changed,
-        # or the last time a refunded orderline related to it has changed.
-        orders_info = {order.id: order.write_date for order in orders}
-        for line in orderlines:
-            affected_order_id = line.order_id.id
-            if affected_order_id not in orders_info:
-                affected_order_id = line.refunded_orderline_id.order_id.id
-
-            orders_info[affected_order_id] = max(
-                orders_info[affected_order_id],
-                line.write_date,
-            )
+        # A refund doesn't write on the refunded order: count the refund lines too.
+        orders_info = {}
+        for order in orders:
+            lines = order.lines | order.lines.refund_orderline_ids
+            write_dates = [order.write_date, *lines.mapped('write_date')]
+            orders_info[order.id] = max(write_dates)
 
         return {
             'ordersInfo': list(orders_info.items()),
             'totalCount': self.search_count(order_domain),
+            'focusIndex': focus_index,
         }
 
     def _should_send_to_preparation(self):

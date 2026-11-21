@@ -87,6 +87,19 @@ export const makeOrder = (store, overrides = {}) => {
     return order;
 };
 
+/** A paid order as loaded from the server (numeric id, not waiting to be sent). */
+export const makeSyncedOrder = (store, id, overrides = {}) => {
+    const order = store.createNewOrder({ id });
+    Object.assign(order, {
+        state: "paid",
+        date_order: DateTime.now(),
+        write_date: DateTime.now(),
+        pos_reference: `Order ${id}`,
+        ...overrides,
+    });
+    return order;
+};
+
 export async function waitUntilOrdersSynced(store, options) {
     await waitUntil(() => !store.syncingOrders.size, options);
     await tick();
