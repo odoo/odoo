@@ -466,6 +466,88 @@ class TestHttpStatic(TestHttpStaticCommon):
         self.assertEqual(res.headers['Date'].count(' GMT'), 1,
             "There must be only 1 Date header, not 2")
 
+<<<<<<< cf3a5c31a2c93b1335c2d07d1ff372c9fba30a74
+||||||| 76c0dec9c4910520f7ba222290cfbbf4603f972a
+    def test_static25_binary_non_base64(self):
+        self.authenticate('admin', 'admin')
+
+        # need a Binary(attachment=False) field
+        # TODO: master, add such a field on test_http.stargate
+        record = self.env['ir.mail_server'].create({
+            'name': 'dummy test_http test_static server',
+            'smtp_host': 'localhost',
+        })
+
+        record.smtp_ssl_certificate = b'non base64 value'
+        self.assertDownload(
+            f'/web/content/ir.mail_server/{record.id}/smtp_ssl_certificate',
+            headers={},
+            assert_status_code=200,
+            assert_headers={},
+            assert_content=b'non base64 value',
+        )
+
+=======
+    def test_static25_binary_non_base64(self):
+        self.authenticate('admin', 'admin')
+
+        # need a Binary(attachment=False) field
+        # TODO: master, add such a field on test_http.stargate
+        record = self.env['ir.mail_server'].create({
+            'name': 'dummy test_http test_static server',
+            'smtp_host': 'localhost',
+        })
+
+        record.smtp_ssl_certificate = b'non base64 value'
+        self.assertDownload(
+            f'/web/content/ir.mail_server/{record.id}/smtp_ssl_certificate',
+            headers={},
+            assert_status_code=200,
+            assert_headers={},
+            assert_content=b'non base64 value',
+        )
+
+    def test_static26_content_from_db_datas_with_url(self):
+        self.env['ir.config_parameter'].set_str('ir_attachment.location', 'db')
+        attachment = self.env.ref('test_http.gizeh_png')
+        attachment._migrate()
+        self.assertFalse(attachment.store_fname)
+        self.assertTrue(attachment.db_datas)
+        self.assertTrue(attachment.url)
+
+        for url in ('/web/content/test_http.gizeh_png', attachment.url):
+            with self.subTest('content is served, not redirected to its url', url=url):
+                self.assertDownloadGizeh(url)
+
+        with self.subTest('attachment without content is redirected to its url'):
+            res = self.db_url_open('/web/content/test_http.rickroll')
+            self.assertEqual(res.status_code, 301)
+            self.assertURLEqual(
+                res.headers.get('Location'),
+                'https://www.youtube.com/watch?v=dQw4w9WgXcQ')
+
+    def test_static27_web_assets_from_db_datas(self):
+        self.env['ir.config_parameter'].set_str('ir_attachment.location', 'db')
+        attachment = self.env['ir.attachment'].search([
+            ('url', 'like', '%/web.assets_frontend_minimal.min.js'),
+        ], limit=1)
+        attachment._migrate()
+        self.assertFalse(attachment.store_fname)
+        self.assertTrue(attachment.db_datas)
+
+        self.assertDownload(
+            attachment.url,
+            headers={},
+            assert_status_code=200,
+            assert_headers={
+                'Content-Length': str(attachment.file_size),
+                'Content-Type': 'application/javascript; charset=utf-8',
+                'Content-Disposition': 'inline; filename=web.assets_frontend_minimal.min.js',
+            },
+            assert_content=attachment.raw,
+        )
+
+>>>>>>> 2638a8a7d681cc90eb92d155d7c3ee4dbc408b1e
 
 @tagged('post_install', '-at_install')
 class TestHttpStaticLogo(TestHttpStaticCommon):
