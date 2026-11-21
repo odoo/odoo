@@ -80,3 +80,28 @@ class AccountTax(models.Model):
         if not base_line.get('calculate_withholding_taxes'):
             base_line['filter_tax_function'] = lambda t: not t.is_withholding_tax
         super()._add_tax_details_in_base_line(base_line, company, rounding_method=rounding_method)
+
+    @api.model
+    def _prepare_withholding_base_line(self, base_line, company):
+        """ Return a copy of the base line ready to compute the withholding taxes.
+
+        With special_mode='total_included' (e.g. expenses paid by an employee), the price unit includes the regular
+        taxes but never the withholding ones. Keeping that mode would treat the withholding taxes as included too,
+        and dropping it would compute them on the tax included amount. Express the price as a regular one instead.
+        """
+        withholding_base_line = {**base_line, 'calculate_withholding_taxes': True}
+        if base_line['special_mode'] == 'total_included':
+            regular_base_line = {**base_line, 'calculate_withholding_taxes': False}
+            self._add_tax_details_in_base_line(regular_base_line, company)
+            tax_details = regular_base_line['tax_details']
+            regular_price = tax_details['raw_total_excluded_currency'] + sum(
+                tax_data['raw_tax_amount_currency']
+                for tax_data in tax_details['taxes_data']
+                if tax_data['original_price_include']
+            )
+            withholding_base_line.update({
+                'price_unit': regular_price / (base_line['quantity'] or 1.0),
+                'discount': 0.0,
+                'special_mode': False,
+            })
+        return withholding_base_line
