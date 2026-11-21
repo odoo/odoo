@@ -1344,6 +1344,7 @@ class ProductProduct(models.Model):
         """ Hook to handle an UoM modification. Avoid recomputation and just replace the
         many2one field on the impacted models."""
         return True
+<<<<<<< d8e4e4aeea47e29f1ce6c3ec21ec99d0537729e5
 
     def _has_multiple_uoms(self):
         if self.type == 'combo':
@@ -1359,3 +1360,13 @@ class ProductProduct(models.Model):
 
     def _get_main_uom(self):
         return self.product_tmpl_id._get_main_uom()
+||||||| 017fb8e103d3b9cae408a31a43925a4d55495a96
+=======
+
+    @api.model
+    def search_panel_select_range(self, field_name, **kwargs):
+        result = super().search_panel_select_range(field_name, **kwargs)
+        if field_name == 'categ_id' and self.env.context.get('product_catalog_order_model') and 'values' in result:
+            result['values'].sort(key=lambda v: v.get('display_name', ''))
+        return result
+>>>>>>> 9aa383c5d13a22f51b33d3e3ce68687dd6303c3e
