@@ -123,28 +123,24 @@ export function useIsChildLarger(containerRef) {
         let acc = 0;
         let nbrItems = 0;
         let anyChildLarger = false;
-        const containerWidth = el.clientWidth - 10;
+        const containerWidth = el.getBoundingClientRect().width;
+        const gap = parseFloat(getComputedStyle(el).columnGap) || 0;
 
         for (const child of el.children) {
-            acc += child.clientWidth;
-            if (acc < containerWidth) {
-                nbrItems++;
-            } else {
+            acc += child.getBoundingClientRect().width;
+            if (acc > containerWidth) {
                 anyChildLarger = true;
                 break;
             }
+            nbrItems++;
+            acc += gap;
         }
 
         isLarger.set(anyChildLarger);
-        maxItems.set(nbrItems);
-        if (isLarger()) {
-            maxItems.set(Math.max(0, maxItems() - 1));
-        }
+        maxItems.set(anyChildLarger ? Math.max(0, nbrItems - 1) : nbrItems);
     };
 
-    useListener(window, "resize", () => {
-        computeSize();
-    });
+    useListener(window, "resize", computeSize);
 
     return {
         get isLarger() {
@@ -153,8 +149,6 @@ export function useIsChildLarger(containerRef) {
         get maxItems() {
             return maxItems();
         },
-        reload: () => {
-            computeSize();
-        },
+        reload: computeSize,
     };
 }
