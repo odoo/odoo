@@ -1116,9 +1116,6 @@
                                        groups="account.group_delivery_invoice_address"
                                        invisible="move_type not in ('out_invoice', 'out_refund', 'out_receipt')"
                                        readonly="state != 'draft'"/>
-                                <field name="quick_edit_total_amount" class="w-50"
-                                       invisible="move_type == 'entry' or not quick_edit_mode"
-                                       readonly="state != 'draft'"/>
                                 <label for="ref" string="Bill Reference"
                                        invisible="move_type not in ('in_invoice', 'in_receipt', 'in_refund')" />
                                 <field name="ref" default_focus="1" nolabel="1" invisible="move_type not in ('in_invoice', 'in_receipt', 'in_refund')"/>
@@ -1151,7 +1148,7 @@
                                        readonly="state != 'draft'"/>
 
                                 <field name="date" string="Accounting Date"
-                                       invisible="move_type in ('out_invoice', 'out_refund', 'out_receipt') and not quick_edit_mode and not (state == 'posted' and date != invoice_date)"
+                                       invisible="move_type in ('out_invoice', 'out_refund', 'out_receipt') and not accounting_date_editable and not (state == 'posted' and date != invoice_date)"
                                        readonly="state != 'draft'"/>
                                 <field name="payment_reference"
                                        invisible="move_type not in ('in_invoice', 'in_refund', 'in_receipt')"
@@ -1258,7 +1255,6 @@
                                            'default_partner_id': commercial_partner_id,
                                            'default_currency_id': currency_id or company_currency_id,
                                            'default_display_type': 'product',
-                                           'quick_encoding_vals': quick_encoding_vals,
                                            'from_invoice_tab': True,
                                        }" readonly="state != 'draft'"
                                        aggregated_fields="price_subtotal,price_total"
@@ -1479,7 +1475,7 @@
                                             invisible="move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt') or payment_state == 'invoicing_legacy'">
 
                                             <field name="tax_totals" widget="account-tax-totals-field" nolabel="1" colspan="2" class="mb-3 mb-md-0"
-                                                   readonly="state != 'draft' or (move_type not in ('in_invoice', 'in_refund', 'in_receipt') and not quick_edit_mode)"/>
+                                                   readonly="state != 'draft' or move_type not in ('in_invoice', 'in_refund', 'in_receipt')"/>
 
                                             <field name="invoice_payments_widget" colspan="2" nolabel="1" widget="payment" class="mb-3 mb-md-0" invisible="not invoice_payments_widget"/>
                                             <div class="d-flex justify-content-end gap-3" colspan="2">

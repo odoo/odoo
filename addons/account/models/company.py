@@ -261,14 +261,7 @@ class ResCompany(models.Model):
     )
 
     # Fiduciary mode
-    quick_edit_mode_enabled = fields.Boolean(string="Quick encoding")
-    quick_edit_mode = fields.Selection(
-        selection=[
-            ('out_invoices', 'Customer Invoices'),
-            ('in_invoices', 'Vendor Bills'),
-            ('out_and_in_invoices', 'Customer Invoices and Vendor Bills')],
-        default='out_and_in_invoices',
-    )
+    accounting_date_editable = fields.Boolean(string="Customer Invoice Accounting Date editable")
     document_sequence_editable = fields.Boolean(string="Editable Document Sequence")
     set_to_review_documents = fields.Boolean(string="Review data")
 
