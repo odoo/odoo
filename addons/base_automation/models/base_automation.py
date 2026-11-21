@@ -1029,6 +1029,7 @@ class BaseAutomation(models.Model):
                 for automation in automations.with_context(old_values=None):
                     with _keep_to_compute(self.env, self.env._protected):
                         records = automation._filter_pre(self, feedback=True)
+                        records = automation._filter_post(records, feedback=True)
                         _logger.debug(
                             "Processing automation rule %s (#%s) on %s records (_message_post)",
                             automation.sudo().name, automation.sudo().id, len(records),
