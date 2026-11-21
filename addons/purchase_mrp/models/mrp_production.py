@@ -45,8 +45,28 @@ class MrpProduction(models.Model):
 
     def _get_purchase_orders(self):
         self.ensure_one()
+<<<<<<< 5c4072ce1a95108ee6c7695e54a4728fda96e612
         moves = self.move_raw_ids | self.move_raw_ids.move_orig_ids
         purchase_lines = moves.mapped('created_purchase_line_ids') | moves.mapped('purchase_line_id')
+||||||| 532869dbbd88a1a2797e43bad3f36c89f8a69cfe
+        moves = self.move_raw_ids | self.move_raw_ids.move_orig_ids
+        purchase_lines = moves.mapped('created_purchase_line_ids') | moves.mapped('purchase_line_id')
+        # MTSO: the PO line only shares the references, no move chain reaches it
+        purchase_lines |= self.reference_ids.purchase_ids.order_line.filtered(
+            lambda line: line.state != 'cancel'
+            and line.product_id in self.move_raw_ids.product_id
+            and not (line.move_dest_ids | line.move_ids.move_dest_ids).raw_material_production_id
+        )
+=======
+        moves = self.move_raw_ids.browse(self.move_raw_ids._rollup_move_origs())
+        purchase_lines = moves.created_purchase_line_ids | moves.purchase_line_id
+        # MTSO: the PO line only shares the references, no move chain reaches it
+        purchase_lines |= self.reference_ids.purchase_ids.order_line.filtered(
+            lambda line: line.state != 'cancel'
+            and line.product_id in self.move_raw_ids.product_id
+            and not (line.move_dest_ids | line.move_ids.move_dest_ids).raw_material_production_id
+        )
+>>>>>>> 585dafa6c69b4e48e5c3c222183acb7affb8aa9d
         return purchase_lines.mapped('order_id')
 
     def _prepare_merge_orig_links(self):
