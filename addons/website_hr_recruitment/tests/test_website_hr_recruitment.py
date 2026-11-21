@@ -111,3 +111,36 @@ class TestWebsiteHrRecruitmentForm(odoo.tests.HttpCase):
             ),
             "One message in the chatter should contain the extra information filled in by the applicant"
         )
+
+    def test_apply_job_sets_candidate_main_attachment(self):
+        """ Test that a website resume is set as the candidate's main
+        attachment, so mass digitization works without opening the application. """
+        self.env.company.recruitment_extract_show_ocr_option_selection = 'manual_send'
+        department = self.env['hr.department'].create({'name': 'R&D'})
+        job = self.env['hr.job'].create({
+            'name': 'Developer',
+            'is_published': True,
+            'department_id': department.id,
+        })
+        applicant_data = {
+            'partner_name': 'Website Candidate',
+            'email_from': 'candidate@test.com',
+            'partner_phone': '123456789',
+            'job_id': job.id,
+            'department_id': department.id,
+        }
+        dummy_pdf_content = (
+            b'%PDF-1.4\n'
+            b'1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj\n'
+            b'2 0 obj<</Type/Pages/Kids[]/Count 0>>endobj\n'
+            b'xref\n0 3\n0000000000 65535 f \n0000000009 00000 n \n0000000052 00000 n \n'
+            b'trailer<</Size 3/Root 1 0 R>>\nstartxref\n96\n%%EOF'
+        )
+        self.authenticate(None, None)
+        response = self.url_open('/website/form/hr.applicant', data=applicant_data,
+            files={'Resume': ('resume.pdf', dummy_pdf_content, 'application/pdf')},
+        )
+        applicant = self.env['hr.applicant'].browse(response.json().get('id'))
+        self.assertTrue(applicant.exists())
+        self.assertTrue(applicant.candidate_id.message_main_attachment_id, "Resume should be set as main attachment.")
+        self.assertEqual(applicant.candidate_id.message_main_attachment_id.name, 'resume.pdf')
