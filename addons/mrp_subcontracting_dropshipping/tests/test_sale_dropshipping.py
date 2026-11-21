@@ -16,6 +16,22 @@ class TestSaleDropshippingFlows(TestMrpSubcontractingCommon):
         cls.customer = cls.env["res.partner"].create({"name": "Customer"})
         cls.dropship_route = cls.env.ref('stock_dropshipping.route_drop_shipping')
 
+    def test_replenish_after_subcontracting_dropship_route_deleted(self):
+        self.env.ref("mrp_subcontracting_dropshipping.route_subcontracting_dropshipping").unlink()
+        replenish = Form(
+            self.env["product.replenish"].with_context(
+                default_product_tmpl_id=self.finished.product_tmpl_id.id,
+            ),
+        )
+        self.assertIn(
+            self.env.ref("purchase_stock.route_warehouse0_buy"),
+            replenish.allowed_route_ids,
+        )
+
+    def test_create_company_after_subcontracting_dropship_route_deleted(self):
+        self.env.ref("mrp_subcontracting_dropshipping.route_subcontracting_dropshipping").unlink()
+        self.env["res.company"].create({"name": "New Company"})
+
     def test_dropship_with_different_suppliers(self):
         """
         Suppose a kit with 3 components supplied by 3 vendors

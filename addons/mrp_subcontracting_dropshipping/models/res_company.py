@@ -45,7 +45,12 @@ class ResCompany(models.Model):
                 pick_type.company_id.dropship_subcontractor_pick_type_id = pick_type.id
 
     def _create_subcontracting_dropshipping_rules(self):
-        route = self.env.ref('mrp_subcontracting_dropshipping.route_subcontracting_dropshipping')
+        route = self.env.ref(
+            "mrp_subcontracting_dropshipping.route_subcontracting_dropshipping",
+            raise_if_not_found=False,
+        )
+        if not route:
+            return
         supplier_location = self.env.ref('stock.stock_location_suppliers')
         vals = []
         for company in self:

@@ -1050,7 +1050,11 @@ class Website(Home):
 
         # find the action_id: either an xml_id, the path, or an ID
         if isinstance(path_or_xml_id_or_id, str) and '.' in path_or_xml_id_or_id:
-            action = request.env.ref(path_or_xml_id_or_id, raise_if_not_found=False).sudo()
+            action = request.env.ref(path_or_xml_id_or_id, raise_if_not_found=False)
+            if action and action._name == "ir.actions.server":
+                action = action.sudo()
+            else:
+                action = None
         if not action:
             action = ServerActions.sudo().search(
                 [('website_path', '=', path_or_xml_id_or_id), ('website_published', '=', True)], limit=1)
