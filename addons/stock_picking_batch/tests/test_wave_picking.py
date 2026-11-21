@@ -538,6 +538,36 @@ class TestBatchPicking(TransactionCase):
         self.assertEqual([picking_1.state, picking_1.move_ids.quantity, picking_1.move_ids.picked], ['done', 2.0, True])
         self.assertEqual([picking_2.state, picking_2.move_ids.quantity, picking_2.move_ids.picked], ['assigned', 0.0, False])
 
+    def test_validate_batch_with_picked_zero_qty_move(self):
+        """
+        A batch holds a receipt for productA and productB, and a receipt for productA.
+        The second receipt is picked, and on the first one only the productB line is
+        picked, with its quantity set to 0. Validating the batch validates the second
+        receipt, and the first one stays ready with nothing picked and is removed from the batch.
+        """
+        (self.productA | self.productB).tracking = 'none'
+        receipt_1, receipt_2 = self.env['stock.picking'].create([{
+            'picking_type_id': self.picking_type_in,
+            'move_ids': [Command.create({'product_id': product.id, 'product_uom_qty': 1}) for product in products],
+        } for products in (self.productA | self.productB, self.productA)])
+        (receipt_1 | receipt_2).action_confirm()
+        batch = self.env['stock.picking.batch'].create({
+            'picking_ids': [Command.link(receipt_1.id), Command.link(receipt_2.id)],
+        })
+        batch.action_confirm()
+
+        receipt_2.move_ids.picked = True
+        move_line_b = receipt_1.move_line_ids.filtered(lambda ml: ml.product_id == self.productB)
+        move_line_b.quantity = 0.0
+        move_line_b.picked = True
+        batch.action_done()
+        self.assertRecordValues(batch, [{'state': 'done', 'picking_ids': receipt_2.ids}])
+        self.assertRecordValues(receipt_1 | receipt_2, [{'state': 'assigned'}, {'state': 'done'}])
+        self.assertRecordValues(receipt_1.move_ids, [
+            {'product_id': self.productA.id, 'quantity': 1.0, 'picked': False},
+            {'product_id': self.productB.id, 'quantity': 0.0, 'picked': False},
+        ])
+
     def test_add_partially_assigned_move_to_batch(self):
         """
             Checks that a picking is linked to the wave transfer in case all of its
