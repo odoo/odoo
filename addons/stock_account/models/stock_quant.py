@@ -48,6 +48,18 @@ class StockQuant(models.Model):
     def _compute_value(self):
         self.fetch(['company_id', 'location_id', 'owner_id', 'product_id', 'quantity', 'lot_id'])
         self.value = 0
+        valuation_products = self.env['product.product']._get_valuation_contexts(self.company_id)
+        allowed_companies = self.env['res.company'].browse(self.env.context.get('allowed_company_ids') or [])
+        if len(allowed_companies | self.company_id) > 1:
+            allowed_locations = self.env['stock.location'].with_context(
+                active_test=False, allowed_company_ids=allowed_companies.ids,
+            ).search([('is_valued_internal', '=', True)]) if allowed_companies else self.env['stock.location']
+            for company, products in valuation_products.items():
+                valuation_products[company] = self.env['product.product'].with_company(company).with_context(
+                    location=(allowed_locations | allowed_locations.browse(products.env.context['location'])).ids,
+                    owners=[False, company.partner_id.id],
+                    strict=True,
+                )
         for quant in self:
             if not quant.location_id or not quant.product_id or\
                     not quant.location_id._should_be_valued() or\
@@ -58,7 +70,7 @@ class StockQuant(models.Model):
                 quantity = quant.lot_id.with_company(quant.company_id).with_context(owners=[False, self.env.company.partner_id.id]).product_qty
                 value = quant.lot_id.with_company(quant.company_id).total_value
             else:
-                quantity = quant.product_id.with_company(quant.company_id)._with_valuation_context().qty_available
+                quantity = quant.product_id.with_env(valuation_products[quant.company_id].env).qty_available
                 value = quant.product_id.with_company(quant.company_id).total_value
             if quant.product_id.uom_id.is_zero(quantity):
                 continue

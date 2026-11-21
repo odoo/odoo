@@ -366,6 +366,20 @@ class ProductProduct(models.Model):
         )
         return self.with_context(location=valued_locations.ids, owners=[False, self.env.company.partner_id.id], strict=True)
 
+    @api.model
+    def _get_valuation_contexts(self, companies):
+        Location = self.env['stock.location'].with_context(active_test=False, allowed_company_ids=companies.ids)
+        locations_by_company = dict(Location._read_group([('is_valued_internal', '=', True)], ['company_id'], ['id:recordset']))
+        return {
+            company: self.with_context(
+                allowed_company_ids=company.ids,
+                location=locations_by_company.get(company, Location).ids,
+                owners=[False, company.partner_id.id],
+                strict=True,
+            )
+            for company in companies
+        }
+
     def _get_remaining_moves(self):
         moves_qty_by_product = {}
         for product in self:
