@@ -1690,3 +1690,64 @@ describe("Should not convert blacklisted class to inline styles", () => {
         expect(editable.querySelector("img.ms-auto").style.display).toBe("block");
     });
 });
+
+describe("Clean dynamic placeholders", () => {
+    beforeEach(() => {
+        editable = document.createElement("div");
+    });
+
+    test("strip editor metadata and keep the demo label as fallback content", async () => {
+        editable.innerHTML = `<p>Hello <t t-out="object.name" data-oe-expression-readable="Name" data-oe-demo="Customer"></t></p>`;
+        await toInline(editable, []);
+        const placeholder = editable.querySelector("t");
+        expect(placeholder.getAttributeNames()).toEqual(["t-out"]);
+        expect(placeholder.textContent).toBe("Customer");
+    });
+
+    test("keep the existing content of a placeholder", async () => {
+        editable.innerHTML = `<p><t t-out="object.name" data-oe-expression-readable="Name" data-oe-demo="Customer">Edited</t></p>`;
+        await toInline(editable, []);
+        const placeholder = editable.querySelector("t");
+        expect(placeholder.getAttributeNames()).toEqual(["t-out"]);
+        expect(placeholder.textContent).toBe("Edited");
+    });
+
+    test("handle t-field and t-esc placeholders", async () => {
+        editable.innerHTML =
+            `<p><span t-field="object.name" data-oe-demo="A"></span>` +
+            `<span t-esc="object.name" data-oe-expression-readable="B"></span></p>`;
+        await toInline(editable, []);
+        const [field, esc] = editable.querySelectorAll("span");
+        expect(field.getAttributeNames()).toEqual(["t-field"]);
+        expect(field.textContent).toBe("A");
+        expect(esc.getAttributeNames()).toEqual(["t-esc"]);
+        expect(esc.textContent).toBe("");
+    });
+
+    test("keep the HTML content of a placeholder without text", async () => {
+        editable.innerHTML = `<p><t t-out="object.name" data-oe-demo="Customer"><img src="/web/image/1"></t></p>`;
+        await toInline(editable, []);
+        const placeholder = editable.querySelector("t");
+        expect(placeholder.getAttributeNames()).toEqual(["t-out"]);
+        expect(placeholder.querySelector("img")).not.toBe(null);
+        expect(placeholder.textContent).toBe("");
+    });
+
+    test("replace a lone line break with the demo label", async () => {
+        editable.innerHTML = `<p t-out="object.name" data-oe-demo="Customer"><br></p>`;
+        await toInline(editable, []);
+        const placeholder = editable.querySelector("p");
+        expect(placeholder.innerHTML).toBe("Customer");
+    });
+
+    test("strip the metadata of non-placeholder elements without filling them", async () => {
+        editable.innerHTML = `<p data-oe-demo="demo" data-oe-expression-readable="readable">text</p><p data-oe-demo="demo"></p>`;
+        await toInline(editable, []);
+        const [withText, empty] = editable.querySelectorAll("p");
+        expect(withText.hasAttribute("data-oe-demo")).toBe(false);
+        expect(withText.hasAttribute("data-oe-expression-readable")).toBe(false);
+        expect(withText.textContent).toBe("text");
+        expect(empty.hasAttribute("data-oe-demo")).toBe(false);
+        expect(empty.textContent).toBe("");
+    });
+});
