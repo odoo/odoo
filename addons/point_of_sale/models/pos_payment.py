@@ -58,6 +58,7 @@ class PosPayment(models.Model):
     account_move_id = fields.Many2one('account.move', index='btree_not_null')
     uuid = fields.Char(string='Uuid', readonly=True, default=lambda self: str(uuid4()), copy=False)
     qr_code = fields.Char(string='QR Code', readonly=True, copy=False)
+    is_forced = fields.Boolean(string='Is this payment forced?', default=False)
 
     _unique_uuid = models.Constraint('unique (uuid)', 'A payment with this uuid already exists')
 

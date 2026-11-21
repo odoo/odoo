@@ -639,6 +639,10 @@ class PosOrder(models.Model):
                 message_list.append(_("Added %(payment_method)s with %(amount)s",
                     payment_method=payment_method_id.name,
                     amount=amount))
+                if new_pm[2].get('is_forced'):
+                    message_list.append(self.env._("Payment %(payment_method)s of %(amount)s was forced",
+                        payment_method=payment_method_id.name,
+                        amount=amount))
             elif orm_command == 1:
                 pm_id = self.env['pos.payment'].browse(new_pm[1])
                 old_pm = pm_id.payment_method_id.name
@@ -650,6 +654,11 @@ class PosOrder(models.Model):
                     new_payment_method = self.env['pos.payment.method'].browse(new_pm[2].get('payment_method_id'))
                 if new_pm[2].get('amount'):
                     new_amount = formatLang(self.env, new_pm[2].get('amount'), currency_obj=pm_id.currency_id)
+
+                if new_pm[2].get('is_forced') and not pm_id.is_forced:
+                    message_list.append(self.env._("Payment %(payment_method)s of %(amount)s was forced",
+                        payment_method=old_pm,
+                        amount=old_amount))
 
                 if new_payment_method and new_amount:
                     message_list.append(_("%(old_pm)s changed to %(new_pm)s and from %(old_amount)s to %(new_amount)s",

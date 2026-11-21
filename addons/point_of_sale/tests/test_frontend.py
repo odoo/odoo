@@ -1733,6 +1733,9 @@ class TestUi(TestPointOfSaleHttpCommon):
             'auto_validate_electronic_payment': True
         })
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_auto_validate_force_done', login="pos_user")
+        payment = self.main_pos_config.current_session_id.order_ids.payment_ids
+        self.assertEqual(len(payment), 1)
+        self.assertTrue(payment.is_forced, "The force-done payment should be flagged as forced")
 
     def test_pos_ui_round_globally(self):
         self.main_pos_config.company_id.tax_calculation_rounding_method = 'round_globally'

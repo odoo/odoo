@@ -72,7 +72,10 @@
                         <div class="col-4 text-muted small text-center">Amount</div>
                         <t t-foreach="order.payment_ids" t-as="payment" t-key="payment.id">
                             <div class="col-4 fw-medium text-center" t-out="this.formatDateTime(payment.payment_date) or ''"/>
-                            <div class="col-4 fw-medium text-center" t-out="payment.payment_method_id?.name or ''"/>
+                            <div class="col-4 fw-medium text-center">
+                                <t t-out="payment.payment_method_id?.name or ''"/>
+                                <span t-if="payment.is_forced" class="badge text-bg-warning ms-1">Forced</span>
+                            </div>
                             <div class="col-4 fw-medium text-center" t-out="payment.amount ? this.formatCurrency(payment.amount) : ''"/>
                         </t>
                     </div>
