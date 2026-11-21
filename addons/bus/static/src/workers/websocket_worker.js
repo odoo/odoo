@@ -3,7 +3,7 @@ import { BoundedSet, debounce, Logger } from "@bus/workers/bus_worker_utils";
 /**
  * Type of events that can be sent from the worker to its clients.
  *
- * @typedef { 'BUS:CONNECT' | 'BUS:RECONNECT' | 'BUS:DISCONNECT' | 'BUS:RECONNECTING' | 'BUS:NOTIFICATION' | 'BUS:INITIALIZED' | 'BUS:OUTDATED'| BUS:LAST_ID_RESET | 'BUS:WORKER_STATE_UPDATED' | 'BUS:PROVIDE_LOGS' } WorkerEvent
+ * @typedef { 'BUS:CONNECT' | 'BUS:RECONNECT' | 'BUS:DISCONNECT' | 'BUS:RECONNECTING' | 'BUS:NOTIFICATION' | 'BUS:INITIALIZED' | 'BUS:OUTDATED' | 'BUS:SUBSCRIPTION_OUTDATED' | 'BUS:WORKER_UPGRADE' | 'BUS:LEAVE_RESPONSE' | BUS:LAST_ID_RESET | 'BUS:WORKER_STATE_UPDATED' | 'BUS:PROVIDE_LOGS' } WorkerEvent
  */
 
 /**
@@ -89,6 +89,8 @@ export class WebsocketWorker {
         this.name = name;
         this.newestStartTs = undefined;
         this.state = WORKER_STATE.IDLE;
+        /** @type {?string} Version of the worker that replaces this one. */
+        this.upgradeVersion = null;
         this.websocketURL = "";
 
         this._debouncedSendToServer = debounce(
@@ -193,7 +195,7 @@ export class WebsocketWorker {
             case "BUS:STOP":
                 return this._stop();
             case "BUS:LEAVE":
-                return this._unregisterClient(client);
+                return this._leave(client);
             case "BUS:ADD_CHANNEL":
                 return this._addChannel(client, data);
             case "BUS:DELETE_CHANNEL":
@@ -236,7 +238,7 @@ export class WebsocketWorker {
     _onServerMessage({ type, payload }) {
         switch (type) {
             case "bus/subscription_outdated":
-                this.broadcast("BUS:OUTDATED", { unregisterMultiTab: false });
+                this.broadcast("BUS:SUBSCRIPTION_OUTDATED");
                 return;
             case "bus/last_id_reset": {
                 const newLastSeenId = payload;
@@ -284,11 +286,16 @@ export class WebsocketWorker {
     /**
      * Remove the given client from this worker client list as well as
      * its channels. If some of its channels are not used anymore,
-     * update the subscription on the server.
+     * update the subscription on the server. The client receives its state
+     * back, for the worker that might replace this one.
      *
      * @param {MessagePort} client
      */
-    _unregisterClient(client) {
+    _leave(client) {
+        this.sendToClient(client, "BUS:LEAVE_RESPONSE", {
+            channels: this.channelsByClient.get(client) ?? [],
+            lastNotificationId: this.lastNotificationId,
+        });
         this.channelsByClient.delete(client);
         this._scheduleUpdateChannels();
     }
@@ -308,6 +315,11 @@ export class WebsocketWorker {
      * @param {Number} param0.startTs Timestamp of start of bus service sender.
      */
     _initializeConnection(client, { db, lastNotificationId, uid, websocketURL, startTs }) {
+        if (this.upgradeVersion) {
+            this.sendToClient(client, "BUS:WORKER_STATE_UPDATED", this.state);
+            this.sendToClient(client, "BUS:WORKER_UPGRADE", this.upgradeVersion);
+            return;
+        }
         if (this.newestStartTs && this.newestStartTs > startTs) {
             this.sendToClient(client, "BUS:WORKER_STATE_UPDATED", this.state);
             this.sendToClient(client, "BUS:INITIALIZED");
@@ -333,7 +345,7 @@ export class WebsocketWorker {
         this.sendToClient(client, "BUS:WORKER_STATE_UPDATED", this.state);
         this.sendToClient(client, "BUS:INITIALIZED");
         if (!this.active) {
-            this.sendToClient(client, "BUS:OUTDATED", { unregisterMultiTab: true });
+            this.sendToClient(client, "BUS:OUTDATED");
         }
     }
 
@@ -374,7 +386,11 @@ export class WebsocketWorker {
             if (reason === "OUTDATED_VERSION") {
                 console.warn("Worker deactivated due to an outdated version.");
                 this.active = false;
-                this.broadcast("BUS:OUTDATED", { unregisterMultiTab: true });
+                this.broadcast("BUS:OUTDATED");
+            } else if (reason.startsWith("WORKER_UPGRADE:")) {
+                this.active = false;
+                this.upgradeVersion = reason.replace("WORKER_UPGRADE:", "");
+                this.broadcast("BUS:WORKER_UPGRADE", this.upgradeVersion);
             }
             // WebSocket was closed on purpose, do not try to reconnect.
             return;

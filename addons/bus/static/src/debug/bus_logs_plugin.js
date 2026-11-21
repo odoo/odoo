@@ -21,6 +21,9 @@ export class BusLogsPlugin extends Plugin {
         this.#workerService.workerInitPromise.then(() => {
             this.#busService.setLoggingEnabled(this.enabled());
         });
+        useListener(this.#workerService.bus, "upgraded", () =>
+            this.#busService.setLoggingEnabled(this.enabled())
+        );
         odoo.busLogging = {
             stop: () => this.disableLogging(),
             start: () => this.enableLogging(),

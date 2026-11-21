@@ -12,7 +12,7 @@ import {
     WORKER_STATE,
 } from "@bus/workers/websocket_worker";
 import { advanceTime, describe, expect, test } from "@odoo/hoot";
-import { manuallyDispatchProgrammaticEvent, runAllTimers } from "@odoo/hoot-dom";
+import { manuallyDispatchProgrammaticEvent, runAllTimers, waitUntil } from "@odoo/hoot-dom";
 import { mockWebSocket } from "@odoo/hoot-mock";
 import {
     getMockEnv,
@@ -32,6 +32,9 @@ import { session } from "@web/session";
 import { BusPlugin } from "@bus/services/bus_plugin";
 import { MultiTabPlugin } from "@bus/multi_tab_plugin";
 import { BusParametersPlugin } from "@bus/bus_parameters_plugin";
+import { WorkerPlugin } from "@bus/services/worker_plugin";
+import { BusLogsPlugin } from "@bus/debug/bus_logs_plugin";
+import { ElectionWorker } from "@bus/workers/election_worker";
 
 defineBusModels();
 describe.current.tags("desktop");
@@ -110,11 +113,11 @@ test("second tab still receives notifications after main pagehide", async () => 
     });
     const worker = getWebSocketWorker();
     patchWithCleanup(worker, {
-        _unregisterClient(client) {
+        _leave(client) {
             // Ensure that the worker does not receive any messages from the main tab
             // after pagehide, mimicking real-world behavior.
             client.onmessage = null;
-            super._unregisterClient(client);
+            super._leave(client);
         },
     });
     await makeTestApp({ forceNew: true });
@@ -478,6 +481,164 @@ test("remove from main tab candidates when version is outdated", async () => {
         "Worker deactivated due to an outdated version.",
         "BUS:DISCONNECT",
         "no_longer_main_tab",
+    ]);
+});
+
+test("switch to the new worker when only the worker is outdated", async () => {
+    addBusServiceListeners(["BUS:CONNECT", () => expect.step("BUS:CONNECT")]);
+    await makeTestApp();
+    const env = getMockEnv();
+    getService(MultiTabPlugin).bus.addEventListener("no_longer_main_tab", () =>
+        expect.step("no_longer_main_tab")
+    );
+    startBusService();
+    getService(BusPlugin).addChannel("lambda");
+    await waitForChannels(["lambda"]);
+    await expect.waitForSteps(["BUS:CONNECT"]);
+    expect(await getService(MultiTabPlugin).isOnMainTab()).toBe(true);
+    getService(BusLogsPlugin).enableLogging();
+    const oldWorker = getWebSocketWorker();
+    await waitUntil(() => oldWorker.loggingEnabled === true);
+    const lastId = MockServer.env["bus.bus"]._sendone("lambda", "notifType", "alpha");
+    await waitNotifications([env, "notifType", "alpha"]);
+    patchWithCleanup(WebsocketWorker.prototype, {
+        _initializeConnection(client, data) {
+            expect.step(`BUS:INITIALIZE_CONNECTION - ${data.websocketURL.split("?")[1]}`);
+            expect.step(`last id - ${data.lastNotificationId}`);
+            return super._initializeConnection(...arguments);
+        },
+    });
+    patchWithCleanup(ElectionWorker.prototype, {
+        handleMessage(ev) {
+            if (ev.data.action === "ELECTION:REGISTER") {
+                expect.step("ELECTION:REGISTER");
+            }
+            return super.handleMessage(...arguments);
+        },
+    });
+    stepWorkerActions(["BUS:ADD_CHANNEL", "BUS:START"]);
+    MockServer.env["bus.bus"]._simulateDisconnection(
+        WEBSOCKET_CLOSE_CODES.CLEAN,
+        "WORKER_UPGRADE:test.1"
+    );
+    await expect.waitForSteps([
+        "no_longer_main_tab",
+        "ELECTION:REGISTER",
+        "BUS:INITIALIZE_CONNECTION - version=test.1",
+        `last id - ${lastId}`,
+        "BUS:ADD_CHANNEL",
+        "BUS:START",
+        "BUS:CONNECT",
+    ]);
+    const newWorker = getWebSocketWorker();
+    expect(newWorker).not.toBe(oldWorker);
+    MockServer.env["bus.bus"]._sendone("lambda", "notifType", "beta");
+    await waitNotifications([env, "notifType", "beta"]);
+    await waitUntil(() => newWorker.loggingEnabled === true);
+    expect(await getService(MultiTabPlugin).isOnMainTab()).toBe(true);
+});
+
+test("channel changes during the worker switch wait for the new worker", async () => {
+    await makeTestApp();
+    const busService = getService(BusPlugin);
+    busService.addChannel("lambda");
+    await waitForChannels(["lambda"]);
+    const worker = getWebSocketWorker();
+    await waitUntil(() => worker.state === WORKER_STATE.CONNECTED);
+    // Flush the pending BUS:START: one would replace the close below by a 4004.
+    expect(await getService(MultiTabPlugin).isOnMainTab()).toBe(true);
+    patchWithCleanup(WebsocketWorker.prototype, {
+        _onClientMessage(_, { action, data }) {
+            if (action === "BUS:INITIALIZE_CONNECTION") {
+                expect.step(action);
+            } else if (["BUS:ADD_CHANNEL", "BUS:DELETE_CHANNEL"].includes(action)) {
+                expect.step(`${action} - ${data}`);
+            }
+            return super._onClientMessage(...arguments);
+        },
+    });
+    patchWithCleanup(getService(WorkerPlugin), {
+        upgrade() {
+            const result = super.upgrade(...arguments);
+            busService.deleteChannel("lambda");
+            busService.addChannel("beta");
+            return result;
+        },
+    });
+    MockServer.env["bus.bus"]._simulateDisconnection(
+        WEBSOCKET_CLOSE_CODES.CLEAN,
+        "WORKER_UPGRADE:test.1"
+    );
+    await expect.waitForSteps([
+        "BUS:INITIALIZE_CONNECTION",
+        "BUS:ADD_CHANNEL - lambda",
+        "BUS:DELETE_CHANNEL - lambda",
+        "BUS:ADD_CHANNEL - beta",
+    ]);
+    await waitForChannels(["beta"]);
+});
+
+test("channels sent to the old worker during the switch are kept", async () => {
+    await makeTestApp();
+    const busService = getService(BusPlugin);
+    const workerService = getService(WorkerPlugin);
+    busService.addChannel("lambda");
+    await waitForChannels(["lambda"]);
+    const oldWorker = getWebSocketWorker();
+    await waitUntil(() => oldWorker.state === WORKER_STATE.CONNECTED);
+    // Flush the pending BUS:START: one would replace the close below by a 4004.
+    expect(await getService(MultiTabPlugin).isOnMainTab()).toBe(true);
+    patchWithCleanup(WebsocketWorker.prototype, {
+        _onClientMessage(_, { action, data }) {
+            if (action === "BUS:ADD_CHANNEL") {
+                expect.step(`${this === oldWorker ? "old" : "new"} - ${data}`);
+            }
+            return super._onClientMessage(...arguments);
+        },
+    });
+    patchWithCleanup(busService, {
+        async handleMessage(ev) {
+            if (ev.data.type === "BUS:WORKER_UPGRADE") {
+                // Sent after the old worker asked to switch, before the page knows.
+                await workerService.send("BUS:ADD_CHANNEL", "beta");
+                // Waiting to be sent when the page starts the switch.
+                workerService.send("BUS:ADD_CHANNEL", "gamma");
+            }
+            return super.handleMessage(...arguments);
+        },
+    });
+    MockServer.env["bus.bus"]._simulateDisconnection(
+        WEBSOCKET_CLOSE_CODES.CLEAN,
+        "WORKER_UPGRADE:test.1"
+    );
+    await expect.waitForSteps(["old - beta", "new - gamma", "new - lambda", "new - beta"]);
+    await waitForChannels(["lambda", "beta", "gamma"]);
+});
+
+test("a page joining a replaced worker switches to the new worker", async () => {
+    await makeMockServer();
+    const oldVersion = session.bus_info.worker_version;
+    const worker = getWebSocketWorker();
+    // Make this page older than the last one: tests the early return of _initializeConnection.
+    worker.newestStartTs = Date.now() + 60_000;
+    worker._onWebsocketClose(
+        new CloseEvent("close", {
+            code: WEBSOCKET_CLOSE_CODES.CLEAN,
+            reason: "WORKER_UPGRADE:test.1",
+        })
+    );
+    patchWithCleanup(WebsocketWorker.prototype, {
+        _initializeConnection(client, data) {
+            expect.step(`BUS:INITIALIZE_CONNECTION - ${data.websocketURL.split("?")[1]}`);
+            return super._initializeConnection(...arguments);
+        },
+    });
+    await makeTestApp();
+    getService(BusPlugin).addChannel("lambda");
+    await waitForChannels(["lambda"]);
+    await expect.waitForSteps([
+        `BUS:INITIALIZE_CONNECTION - version=${oldVersion}`,
+        "BUS:INITIALIZE_CONNECTION - version=test.1",
     ]);
 });
 

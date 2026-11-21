@@ -815,10 +815,11 @@ class WebsocketConnectionHandler:
         'connection', 'host', 'sec-websocket-key',
         'sec-websocket-version', 'upgrade', 'origin',
     }
-    # Latest version of the websocket worker. This version should be incremented
-    # every time `websocket_worker.js` is modified to force the browser to fetch
-    # the new worker bundle.
-    _VERSION = "saas-19.5-1"
+    # Version of the websocket worker as "major.minor". On each change of the worker:
+    # - bump minor when its API doesn't change (tab <-> worker <-> server): the tabs
+    #   switch to the new worker silently.
+    # - bump major otherwise: the tabs must reload.
+    _VERSION = "saas-19.5-2.0"
 
     @classmethod
     def websocket_allowed(cls, request):
@@ -956,17 +957,15 @@ class WebsocketConnectionHandler:
         """
         Process incoming messages and dispatch them to the application.
         """
+        # Check user_agent as IoT devices do not send a version.
         if httprequest.user_agent and version != cls._VERSION:
-            # Close the connection from an outdated worker. We can't use a
-            # custom close code because the connection is considered successful,
-            # preventing exponential reconnect backoff. This would cause old
-            # workers to reconnect frequently, putting pressure on the server.
-            # Clean closes don't trigger reconnections, assuming they are
-            # intentional. The reason indicates to the origin worker not to
-            # reconnect, preventing old workers from lingering after updates.
-            # Non browsers are ignored since IOT devices do not provide the
-            # worker version.
-            websocket.close(CloseCode.CLEAN, "OUTDATED_VERSION")
+            # Clean close: this worker doesn't try to reconnect.
+            major, _sep, minor = cls._VERSION.rpartition(".")
+            client_major, _sep, client_minor = (version or "").rpartition(".")
+            if client_major != major or not client_minor.isdecimal():
+                websocket.close(CloseCode.CLEAN, "OUTDATED_VERSION")
+            elif int(client_minor) < int(minor):
+                websocket.close(CloseCode.CLEAN, f"WORKER_UPGRADE:{cls._VERSION}")
         for message in websocket.get_messages():
             if message == PING_PONG_MESSAGE:
                 websocket.send(PING_PONG_MESSAGE)

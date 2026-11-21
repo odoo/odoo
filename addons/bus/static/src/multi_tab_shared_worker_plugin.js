@@ -18,6 +18,7 @@ export class MultiTabSharedWorkerPlugin extends Plugin {
 
     setup() {
         useListener(browser, "pagehide", () => this.unregister());
+        useListener(this.#workerService.bus, "upgraded", () => this.#onWorkerUpgraded());
     }
 
     async isOnMainTab() {
@@ -67,6 +68,19 @@ export class MultiTabSharedWorkerPlugin extends Plugin {
         await this.#workerService.registerHandler((ev) => this.#messageHandler(ev));
         this.#workerService.send("ELECTION:REGISTER");
         this.#state.set(STATE.REGISTERED);
+    }
+
+    #onWorkerUpgraded() {
+        if ([STATE.INIT, STATE.UNREGISTERED].includes(this.#state())) {
+            return;
+        }
+        if (this.#state() === STATE.MASTER) {
+            this.#state.set(STATE.REGISTERED);
+            this.bus.trigger("no_longer_main_tab");
+        }
+        this.#isMasterTabPromWithResolvers?.resolve(false);
+        this.#isMasterTabPromWithResolvers = null;
+        this.#workerService.send("ELECTION:REGISTER");
     }
 
     unregister() {
