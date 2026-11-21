@@ -783,8 +783,8 @@ class StockMoveLine(models.Model):
             if not ml.product_id.is_storable or ml.uom_id.is_zero(ml.quantity_product_uom):
                 continue
             in_date = ml._synchronize_quant(-ml.quantity_product_uom, ml.location_dest_id, lot=ml.lot_id, package=ml.result_package_id)[1]
-            ml._synchronize_quant(ml.quantity_product_uom, ml.location_id, lot=ml.lot_id, in_date=in_date, package=ml.result_package_id)
-            ml._synchronize_quant(ml.quantity_product_uom, ml.location_id, action="reserved", lot=ml.lot_id, package=ml.result_package_id)
+            ml._synchronize_quant(ml.quantity_product_uom, ml.location_id, lot=ml.lot_id, in_date=in_date, package=ml.package_id)
+            ml._synchronize_quant(ml.quantity_product_uom, ml.location_id, action="reserved", lot=ml.lot_id, package=ml.package_id)
 
     def _get_similar_move_lines(self):
         self.ensure_one()
