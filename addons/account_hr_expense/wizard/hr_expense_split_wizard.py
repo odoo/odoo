@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, api, _
+from odoo import api, fields, models
 
 
 class HrExpenseSplitWizard(models.TransientModel):
@@ -15,29 +15,33 @@ class HrExpenseSplitWizard(models.TransientModel):
         currency_field='currency_id',
         help='Total amount of the original Expense that we are splitting',
     )
+
+    split_possible = fields.Boolean(help='The sum of after split shut remain the same', compute='_compute_split_possible')
+    currency_id = fields.Many2one(comodel_name='res.currency', related='expense_id.currency_id')
+
     tax_amount_currency = fields.Monetary(
         string='Taxes',
         currency_field='currency_id',
         compute='_compute_tax_amount_currency',
     )
-    split_possible = fields.Boolean(help='The sum of after split shut remain the same', compute='_compute_split_possible')
-    currency_id = fields.Many2one(comodel_name='res.currency', related='expense_id.currency_id')
 
     @api.depends('expense_split_line_ids.total_amount_currency')
     def _compute_total_amount_currency(self):
         for wizard in self:
             wizard.total_amount_currency = sum(wizard.expense_split_line_ids.mapped('total_amount_currency'))
 
+    @api.depends('total_amount_currency_original', 'total_amount_currency')
+    def _compute_split_possible(self):
+        for wizard in self:
+            wizard.split_possible = (
+                wizard.total_amount_currency_original
+                and wizard.currency_id.compare_amounts(wizard.total_amount_currency_original, wizard.total_amount_currency) == 0
+            )
+
     @api.depends('expense_split_line_ids.tax_amount_currency')
     def _compute_tax_amount_currency(self):
         for wizard in self:
             wizard.tax_amount_currency = sum(wizard.expense_split_line_ids.mapped('tax_amount_currency'))
-
-    @api.depends('total_amount_currency_original', 'total_amount_currency')
-    def _compute_split_possible(self):
-        for wizard in self:
-            wizard.split_possible = wizard.total_amount_currency_original \
-                    and wizard.currency_id.compare_amounts(wizard.total_amount_currency_original, wizard.total_amount_currency) == 0
 
     def action_split_expense(self):
         self.ensure_one()
@@ -66,4 +70,4 @@ class HrExpenseSplitWizard(models.TransientModel):
         (self.expense_id | copied_expenses).split_expense_origin_id = self.expense_id.split_expense_origin_id or self.expense_id
         all_related_expenses = copied_expenses | self.expense_id | split_expense_ids
 
-        return all_related_expenses._get_records_action(name=_("Split Expenses"))
+        return all_related_expenses._get_records_action(name=self.env._("Split Expenses"))

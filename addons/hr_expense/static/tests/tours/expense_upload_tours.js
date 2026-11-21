@@ -19,6 +19,14 @@ registry.category("web_tour.tours").add("hr_expense_test_tour", {
             trigger: ".o_button_upload_expense",
         },
         {
+            content: "Filter on the expenses waiting for their reimbursement from the dashboard",
+            trigger: ".o_expense_card:contains(Waiting Reimbursement)",
+            run: "click",
+        },
+        {
+            trigger: ".o_searchview .o_facet_value:contains(Waiting Reimbursement)",
+        },
+        {
             content: "Create a new expense",
             trigger: "button.o_list_button_add",
             run: "click",

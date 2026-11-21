@@ -29,7 +29,7 @@
                                     </div>
                                 </div>
                             </setting>
-                            <setting string="Reimburse in Payslip" help="Refund employees via their payslips." id="hr_payroll_accountant">
+                            <setting string="Reimburse in Payslip" help="Add non reimbursed expenses in pay runs." id="hr_payroll_accountant">
                                 <field name="module_hr_payroll_expense" widget="upgrade_boolean"/>
                             </setting>
                             <setting id="expense_extract_settings" string="Expense Digitalization (OCR)" company_dependent="1"
@@ -38,7 +38,8 @@
                                 <field name="module_hr_expense_extract" widget="upgrade_boolean"/>
                             </setting>
                             <setting string="Expense Card" company_dependent="True" id="expense_cards_stripe_issuing"
-                                     help="Create prepaid virtual and physical cards for both one-time and recurring expenses, integrated into Odoo through Stripe Issuing.">
+                                     help="Create prepaid virtual and physical cards for both one-time and recurring expenses,
+                                     integrated into Odoo through Stripe Issuing.">
                                 <field name="module_hr_expense_stripe" widget="upgrade_boolean"/>
                                 <div class="content-group" invisible="not module_hr_expense_stripe" name="expenses_stripe_issuing_container">
                                     <div class="text-warning mt16 mb4">
@@ -47,30 +48,7 @@
                                 </div>
                             </setting>
                         </block>
-                        <block title="Accounting">
-                            <setting company_dependent="1" help="Default accounting journal for expenses paid by employees."
-                                     string="Employee Expense Journal">
-                                <field name="expense_journal_id"
-                                       context="{'default_type': 'purchase', 'from_expense_employee_journal': True}"/>
-                            </setting>
-                            <setting company_dependent="1" string="Payment methods"
-                                     help="Payment method allowed for expenses paid by company.">
-                                <field name="company_expense_allowed_payment_method_line_ids" widget="many2many_tags"
-                                       placeholder="All payment methods allowed" options="{'no_create': True}"/>
-                            </setting>
-                        </block>
                     </app>
-                </xpath>
-            </field>
-        </record>
-
-        <record id="account_journal_view_form_inherit_hr_expense" model="ir.ui.view">
-            <field name="name">account.journal.form.inherit.hr.expense</field>
-            <field name="model">account.journal</field>
-            <field name="inherit_id" ref="account.view_account_journal_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='type']" position="attributes">
-                    <attribute name="readonly">context.get('from_expense_employee_journal')</attribute>
                 </xpath>
             </field>
         </record>

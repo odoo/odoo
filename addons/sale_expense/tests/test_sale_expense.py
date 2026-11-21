@@ -1,13 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import Command
-from odoo.addons.hr_expense.tests.common import TestExpenseCommon
+from odoo.addons.account_hr_expense.tests.common import TestAccountExpenseCommon
 from odoo.addons.sale.tests.common import TestSaleCommon
 from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
-class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
+class TestSaleExpense(TestAccountExpenseCommon, TestSaleCommon):
 
     _test_user_groups = None  # FIXME list needed groups
 

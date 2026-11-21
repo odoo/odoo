@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="hr_expense_view_expenses_analysis_tree_inherit" model="ir.ui.view">
+            <field name="name">hr.expense.view.list.inherit.account.hr.expense</field>
+            <field name="model">hr.expense</field>
+            <field name="inherit_id" ref="hr_expense.hr_expense_view_expenses_analysis_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_currency_id']" position="after">
+                    <field name="selectable_payment_method_line_ids" column_invisible="True"/> <!-- Domain of the payment method -->
+                    <field name="can_edit_account" column_invisible="True"/> <!-- Readonly condition of the account -->
+                    <field name="account_move_state" column_invisible="True"/> <!-- Visibility of the Pay button -->
+                </xpath>
+                <xpath expr="//field[@name='analytic_distribution']" position="attributes">
+                    <attribute name="readonly">not (is_editable or can_edit_account)</attribute>
+                </xpath>
+                <xpath expr="//field[@name='analytic_distribution']" position="after">
+                    <field name="account_id" optional="hide" groups="account.group_account_invoice"
+                           readonly="not (is_editable or can_edit_account)"/>
+                    <field name="journal_id" optional="hide" groups="account.group_account_invoice"
+                           readonly="True"/>
+                    <field name="payment_method_line_id" optional="hide" groups="account.group_account_invoice"
+                           readonly="not is_editable"/>
+                </xpath>
+                <xpath expr="//field[@name='quantity']" position="after">
+                    <field name="tax_ids" optional="hide" widget="many2many_tax_tags"
+                           groups="account.group_account_invoice" readonly="not is_editable or not product_has_cost"/>
+                    <field name="tax_amount" sum="Total Taxes" readonly="True" optional="hide" groups="account.group_account_invoice"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="hr_expense_view_form_inherit" model="ir.ui.view">
+            <field name="name">hr.expense.view.form.inherit.account.hr.expense</field>
+            <field name="model">hr.expense</field>
+            <field name="inherit_id" ref="hr_expense.hr_expense_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[hasclass('o_expense_pay_highlight')]" position="attributes">
+                    <attribute name="groups">account.group_account_invoice</attribute>
+                    <attribute name="invisible" add="account_move_state != 'posted' or (has_existing_bill and refund_in_payslip)" separator="or"/>
+                </xpath>
+                <xpath expr="//button[hasclass('o_expense_pay')]" position="attributes">
+                    <attribute name="groups">account.group_account_invoice</attribute>
+                    <attribute name="invisible" add="account_move_state != 'posted' or (has_existing_bill and refund_in_payslip)" separator="or"/>
+                </xpath>
+                <xpath expr="//button[hasclass('o_expense_refuse_manager')]" position="attributes">
+                    <attribute name="invisible">state not in ('submitted', 'approved') or account_move_state == 'posted'</attribute>
+                </xpath>
+                <xpath expr="//button[hasclass('o_expense_reset_employee')]" position="attributes">
+                    <attribute name="invisible">not can_reset or state not in ('submitted', 'approved', 'refused') or account_move_state == 'posted'</attribute>
+                </xpath>
+                <xpath expr="//button[hasclass('o_expense_reset_employee')]" position="after">
+                    <button name="action_split_wizard" string="Split" type="object" class="o_expense_split_manager"
+                            invisible="state in ('in_payment', 'paid', 'refused') or product_has_cost or account_move_id"
+                            groups="hr_expense.group_hr_expense_team_approver,account.group_account_invoice"/>
+                </xpath>
+                <xpath expr="//field[hasclass('o_expense_status_default')]" position="attributes">
+                    <attribute name="invisible">state in ('submitted', 'in_payment', 'refused')</attribute>
+                </xpath>
+                <xpath expr="//field[hasclass('o_expense_status_refused')]" position="before">
+                    <field name="state" widget="statusbar" statusbar_visible="draft,approved,in_payment"
+                           invisible="state != 'in_payment'" class="o_expense_status_in_payment"/>
+                </xpath>
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="action_open_split_expense"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="article"
+                        invisible="not split_expense_origin_id">
+                        <field string="Related" name="split_expense_count" widget="statinfo"/>
+                    </button>
+                    <button name="action_open_account_move"
+                        class="oe_stat_button"
+                        icon="menu"
+                        type="object"
+                        invisible="not account_move_id or payment_mode != 'own_account'"
+                        groups="account.group_account_invoice">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">Journal Entry</span>
+                        </div>
+                    </button>
+                    <button name="action_open_account_payment"
+                        class="oe_stat_button"
+                        icon="menu"
+                        type="object"
+                        invisible="not account_move_id or not account_payment_id"
+                        groups="account.group_account_invoice">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">Payment</span>
+                        </div>
+                    </button>
+                </xpath>
+                <xpath expr="//field[@name='currency_id']" position="after">
+                    <field name="selectable_payment_method_line_ids" invisible="1"/> <!-- Domain of the payment method -->
+                    <field name="can_edit_account" invisible="1"/> <!-- Readonly condition of the account -->
+                </xpath>
+                <xpath expr="//label[@for='employee_id']" position="before">
+                    <label for="tax_ids" groups="hr_expense.group_hr_expense_team_approver,account.group_account_invoice"/>
+                    <div class="o_row" groups="hr_expense.group_hr_expense_team_approver,account.group_account_invoice">
+                        <field name="tax_ids" force_save="1" widget="many2many_tax_tags" readonly="not is_editable"
+                               options="{'no_create': True}"/>
+                        <field name="tax_amount_currency"/>
+                    </div>
+                </xpath>
+                <!-- The accountants choose the employee too, as the approvers do -->
+                <xpath expr="//label[@for='employee_id']" position="attributes">
+                    <attribute name="groups">hr_expense.group_hr_expense_team_approver,account.group_account_invoice</attribute>
+                </xpath>
+                <xpath expr="//div[hasclass('o_expense_employee_field')]" position="attributes">
+                    <attribute name="groups">hr_expense.group_hr_expense_team_approver,account.group_account_invoice</attribute>
+                </xpath>
+                <xpath expr="//field[@name='employee_id'][@invisible='is_own_expense']" position="attributes">
+                    <attribute name="groups">!hr_expense.group_hr_expense_team_approver,!account.group_account_invoice</attribute>
+                </xpath>
+                <xpath expr="//div[@id='payment_mode']" position="after">
+                    <field name="payment_method_line_id" options="{'no_open': True, 'no_create': True}" readonly="not is_editable"
+                           invisible="payment_mode != 'company_account'" required="payment_mode == 'company_account'"/>
+                </xpath>
+                <xpath expr="//field[@name='vendor_id']" position="before">
+                    <label for="has_existing_bill" string="Bill"/>
+                    <div class="o_row">
+                        <field name="has_existing_bill" readonly="not is_editable or state not in ['draft', 'submitted']"/>
+                        <span class="text-muted">A bill is sent separately</span>
+                    </div>
+                </xpath>
+                <xpath expr="//field[@name='vendor_id']" position="attributes">
+                    <attribute name="placeholder">Unknown</attribute>
+                    <attribute name="invisible">payment_mode != 'company_account' and not has_existing_bill</attribute>
+                </xpath>
+                <xpath expr="//field[@name='analytic_distribution']" position="before">
+                    <field name="account_id" options="{'no_create': True}"
+                           domain = "
+                                has_existing_bill and [
+                                    ('account_type', '=', 'liability_payable'),
+                                    ('company_ids', 'parent_of', company_id)
+                                ]
+                                or [
+                                    ('account_type', 'not in', ('asset_receivable', 'liability_payable', 'asset_cash', 'liability_credit_card')),
+                                    ('company_ids', 'parent_of', company_id)
+                                ]
+                           "
+                           groups="account.group_account_invoice"
+                           readonly="not (is_editable or can_edit_account)"
+                           context="{'default_company_id': company_id}"/>
+                </xpath>
+                <xpath expr="//field[@name='analytic_distribution']" position="attributes">
+                    <attribute name="options">{'product_field': 'product_id', 'account_field': 'account_id', 'business_domain': 'expense'}</attribute>
+                    <attribute name="readonly">not (is_editable or can_edit_account)</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="hr_expense_view_graph_inherit" model="ir.ui.view">
+            <field name="name">hr.expense.graph.inherit.account.hr.expense</field>
+            <field name="model">hr.expense</field>
+            <field name="inherit_id" ref="hr_expense.hr_expense_view_graph"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='total_amount']" position="after">
+                    <field name="tax_amount"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="hr_expense.hr_expense_actions_all" model="ir.actions.act_window">
+            <field name="context">{ 'searchpanel_default_state': ["draft", "submitted", "approved", "in_payment", "paid"] }</field>
+        </record>
+    </data>
+</odoo>

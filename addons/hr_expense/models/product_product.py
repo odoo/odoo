@@ -1,15 +1,8 @@
-from odoo import fields, models
+from odoo import models
 
 
 class ProductProduct(models.Model):
     _inherit = "product.product"
-
-    expense_job_position_limit_ids = fields.One2many(
-        comodel_name='hr.expense.product.job.position.limit',
-        inverse_name='product_id',
-        string="Job Position Limits",
-        copy=True,
-    )
 
     def get_standard_price_update_warning(self, new_standard_price):
         self.ensure_one()

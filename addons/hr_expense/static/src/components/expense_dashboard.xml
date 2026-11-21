@@ -12,7 +12,7 @@
                     <span t-out="this.renderMonetaryField(data['amount'], data['currency'])" class="fs-2"/>
                     <span t-out="data['description']"/>
                 </button>
-                <i t-if="name !== 'approved'" class="oi align-self-center text-muted" aria-hidden="true" data-icon="keyboard_arrow_right"/>
+                <i t-if="name !== 'to_pay'" class="oi align-self-center text-muted" aria-hidden="true" data-icon="keyboard_arrow_right"/>
             </t>
             <i t-if="this.debugMode.isActive()" class="oi align-self-center text-muted" data-icon="help_outline" data-tooltip="Numbers computed from your personal expenses."/>
         </div>

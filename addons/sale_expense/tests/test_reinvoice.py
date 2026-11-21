@@ -1,13 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
-from odoo.addons.hr_expense.tests.common import TestExpenseCommon
+from odoo.addons.account_hr_expense.tests.common import TestAccountExpenseCommon
 from odoo.addons.sale.tests.common import TestSaleCommon
 from odoo.tests import tagged
 
 
 @tagged('-at_install', 'post_install')
-class TestReInvoice(TestExpenseCommon, TestSaleCommon):
+class TestReInvoice(TestAccountExpenseCommon, TestSaleCommon):
     """
     Test that expenses, when linked to a sale order and invoiced are correctly re-invoiced on the sale order.
     It should cover the following rules:
