@@ -31,18 +31,26 @@ patch(OrderTrackerDropdown.prototype, {
         const externalOrderSummary = super.externalOrderSummary;
         if (this.pos.config.self_ordering_mode === "mobile") {
             const activeSnooze = this.pos.getActiveSnooze("self-ordering");
+            const doneOrderIds = new Set(this.pos.paidSelfOrderIds);
+            let ongoing = 0;
+            for (const order of this.pos.models["pos.order"].getAll()) {
+                if (order.source !== "mobile") {
+                    continue;
+                }
+                if (order.state === "draft") {
+                    ongoing++;
+                } else if (["paid", "done"].includes(order.state)) {
+                    doneOrderIds.add(order.id);
+                }
+            }
             return [
                 {
                     type: "SOURCE",
                     searchTerm: "mobile",
                     imageUrl: this.pos.config.receiptLogoUrl,
                     new: 0, // All self-orders are sent directly to the kitchen!
-                    ongoing: this.pos.models["pos.order"].filter(
-                        (o) => o.source == "mobile" && o.state == "draft"
-                    ).length,
-                    done: this.pos.models["pos.order"].filter(
-                        (o) => o.source == "mobile" && ["paid", "done"].includes(o.state)
-                    ).length,
+                    ongoing,
+                    done: doneOrderIds.size,
                     onToggle: () => this.snoozeSelfOrdering(),
                     isChecked: !activeSnooze?.id,
                     counter: this.selfSnoozeCountdown(),
