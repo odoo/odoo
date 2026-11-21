@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        CAMTEL User Warehouse Assignment View
+
+        Extends the user form to add warehouse assignment field.
+        Only visible to users who can manage user permissions.
+    -->
+
+    <!-- Extend User Form View -->
+    <record id="view_users_form_warehouse" model="ir.ui.view">
+        <field name="name">res.users.form.warehouse</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <!-- Add warehouse assignment field in Access Rights tab -->
+            <xpath expr="//page[@name='access_rights']" position="inside">
+                <group string="Warehouse Access" name="warehouse_access">
+                    <field name="warehouse_ids" widget="many2many_tags"
+                           options="{'no_create': True}"
+                           help="Select warehouses this user can access. Leave empty for no access. Warehouse Managers see all warehouses automatically."/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
