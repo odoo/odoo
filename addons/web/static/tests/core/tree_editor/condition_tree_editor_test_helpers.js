@@ -446,7 +446,7 @@ export function getModelFieldSelectorValues(root) {
 }
 
 export function getDisplayedFieldNames() {
-    return queryAllTexts(".o_model_field_selector_popover_item_name");
+    return queryAllTexts(".o_model_field_selector_popover_item_name span");
 }
 
 export function getTitle() {
@@ -466,7 +466,7 @@ export async function followRelation(index, target) {
 }
 
 export function getFocusedFieldName() {
-    return queryText(".o_model_field_selector_popover_item.active");
+    return queryText(".o_model_field_selector_popover_item.focus");
 }
 
 /**

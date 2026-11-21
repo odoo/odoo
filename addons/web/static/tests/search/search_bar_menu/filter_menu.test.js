@@ -1062,7 +1062,7 @@ test("relative date and datetime fields facets display", async () => {
     await toggleSearchBarMenu();
     await openAddCustomFilterDialog();
     await openModelFieldSelectorPopover();
-    await contains(".o_model_field_selector_popover_item_name:contains(create_date)").click();
+    await contains(".o_model_field_selector_popover_item_name:contains(Created on)").click();
     await selectValue("relativeRange");
 
     // First test -5 months labels
