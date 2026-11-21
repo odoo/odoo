@@ -68,9 +68,13 @@ export class CalendarFormController extends FormController {
      * @param {boolean} recurrenceUpdate - Indicates how the archive of a recurring event will be updated.
      */
     async _archiveRecord(id, recurrenceUpdate) {
-        await this.orm.call(this.model.root.resModel, "action_mass_archive", [
-            [id], recurrenceUpdate
-        ]);
+        if (this.model.root.data.recurrency) {
+            await this.orm.call(this.model.root.resModel, "action_mass_archive", [
+                [id], recurrenceUpdate
+            ]);
+        } else {
+            await this.orm.call(this.model.root.resModel, "action_archive", [[id]]);
+        }
         this.env.config.historyBack();
     }
 }
