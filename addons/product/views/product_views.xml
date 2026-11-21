@@ -315,7 +315,7 @@
         <field name="model">product.template</field>
         <field name="arch" type="xml">
             <search string="Product">
-                <field name="name" string="Product" filter_domain="['|', '|', '|', '|', ('default_code', 'ilike', self), ('product_variant_ids.default_code', 'ilike', self), ('name', 'ilike', self), ('barcode', 'ilike', self), ('display_name', '=', self)]"/>
+                <field name="name" string="Product" filter_domain="['|', '|', '|', '|', '|', ('attribute_line_ids.value_ids.name', 'ilike', self), ('default_code', 'ilike', self), ('product_variant_ids.default_code', 'ilike', self), ('name', 'ilike', self), ('barcode', 'ilike', self), ('display_name', '=', self)]"/>
                 <field name="categ_id" filter_domain="[('categ_id', 'child_of', raw_value)]"/>
                 <field name="product_tag_ids" string="Tags"/>
                 <separator/>
