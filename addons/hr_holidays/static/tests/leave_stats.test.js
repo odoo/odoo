@@ -1,6 +1,11 @@
 import { describe, test, expect, beforeEach } from "@odoo/hoot";
 import { click, edit, queryAll, queryOne } from "@odoo/hoot-dom";
-import { mountView, onRpc, selectFieldDropdownItem } from "@web/../tests/web_test_helpers";
+import {
+    mockService,
+    mountView,
+    onRpc,
+    selectFieldDropdownItem,
+} from "@web/../tests/web_test_helpers";
 import { defineHrHolidaysModels } from "@hr_holidays/../tests/hr_holidays_test_helpers";
 import { HrLeave } from "@hr_holidays/../tests/mock_server/mock_models/hr_leave";
 import { mockTimeZone } from "@odoo/hoot-mock";
@@ -94,6 +99,7 @@ test("leave stats render correctly", async () => {
                     "Legal Leave",
                     {
                         leaves_approved: 2,
+                        approved_leave_ids: [14],
                         max_leaves: 20,
                         remaining_leaves: 18,
                         unit_of_measure: "day",
@@ -106,6 +112,7 @@ test("leave stats render correctly", async () => {
                     "Unpaid Leave",
                     {
                         leaves_approved: 1,
+                        approved_leave_ids: [15, 16],
                         max_leaves: 5,
                         remaining_leaves: 4,
                         unit_of_measure: "hour",
@@ -159,6 +166,80 @@ test("leave stats render correctly", async () => {
         })
     ).toHaveCount(1);
     expect(queryAll("a:contains(View Overlaps)", { root: DepartmentLeaves })).toHaveCount(1);
+});
+
+test("leave stats lines open their approved leaves, except the current one", async () => {
+    onRpc(({ method, model }) => {
+        if (model === "hr.work.entry.type" && method === "get_allocation_data_request") {
+            return [
+                [
+                    "Legal Leave",
+                    {
+                        leaves_approved: 2,
+                        approved_leave_ids: [14],
+                        max_leaves: 20,
+                        remaining_leaves: 18,
+                        unit_of_measure: "day",
+                    },
+                    false,
+                    55,
+                ],
+                [
+                    "Unpaid Leave",
+                    {
+                        leaves_approved: 1,
+                        approved_leave_ids: [15],
+                        max_leaves: 5,
+                        remaining_leaves: 4,
+                        unit_of_measure: "day",
+                    },
+                    false,
+                    65,
+                ],
+                [
+                    "Sick Leave",
+                    {
+                        leaves_approved: 3,
+                        approved_leave_ids: [14, 15, 16],
+                        max_leaves: 0,
+                        remaining_leaves: 0,
+                        unit_of_measure: "day",
+                    },
+                    false,
+                    75,
+                ],
+            ];
+        }
+    });
+    mockService("action", {
+        doAction(action) {
+            expect.step(action.res_id ? `form ${action.res_id}` : `list ${action.domain[0][2]}`);
+        },
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "hr.leave",
+        resId: 14,
+        arch: `
+            <form string="Leave">
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <widget name="hr_leave_stats"/>
+            </form>`,
+    });
+
+    expect(".o_leave_stats_line").toHaveCount(3);
+    expect(".o_leave_stats_line.cursor-pointer").toHaveCount(2);
+    // only the leave being viewed => nothing to open
+    await click(".o_leave_stats_line:contains(Legal Leave)");
+    // a single other leave => its form view
+    await click(".o_leave_stats_line:contains(Unpaid Leave)");
+    // several other leaves => a list of them
+    await click(".o_leave_stats_line:contains(Sick Leave)");
+    expect.verifySteps(["form 15", "list 15,16"]);
 });
 
 test("leave stats reload when employee/department changes", async () => {

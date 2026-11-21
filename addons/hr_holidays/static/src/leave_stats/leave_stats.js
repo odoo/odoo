@@ -125,6 +125,30 @@ export class LeaveStatsComponent extends Component {
         });
     }
 
+    openLeaves(leave) {
+        if (!leave.leaveIds.length) {
+            return;
+        }
+        const action = {
+            name: leave.name,
+            type: "ir.actions.act_window",
+            res_model: "hr.leave",
+            target: "current",
+        };
+        if (leave.leaveIds.length === 1) {
+            Object.assign(action, { res_id: leave.leaveIds[0], views: [[false, "form"]] });
+        } else {
+            Object.assign(action, {
+                domain: [["id", "in", leave.leaveIds]],
+                views: [
+                    [false, "list"],
+                    [false, "form"],
+                ],
+            });
+        }
+        return this.action.doAction(action);
+    }
+
     async loadLeaves(employee) {
         if (!employee) {
             this.state.leaves = [];
@@ -152,6 +176,10 @@ export class LeaveStatsComponent extends Component {
                         name: name,
                         color: vals.color || 0,
                         id: id,
+                        // the leave being viewed is excluded to not redirect to itself
+                        leaveIds: vals.approved_leave_ids.filter(
+                            (leaveId) => leaveId !== this.props.record.resId
+                        ),
                     },
                     unit_of_measure: vals.unit_of_measure,
                     leaves_approved: format(vals.leaves_approved),
