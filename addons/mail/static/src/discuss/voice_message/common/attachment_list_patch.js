@@ -11,3 +11,10 @@ patch(AttachmentList, {
         VoicePlayer,
     },
 });
+
+patch(AttachmentList.prototype, {
+    /** @param {import("models").Attachment} attachment */
+    showCompactActions(attachment) {
+        return attachment.voice || super.showCompactActions(attachment);
+    },
+});
