@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="library_member_view_list" model="ir.ui.view">
+        <field name="name">library.member.list</field>
+        <field name="model">library.member</field>
+        <field name="arch" type="xml">
+            <list string="Members">
+                <field name="name"/>
+                <field name="email"/>
+                <field name="phone"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="library_member_view_form" model="ir.ui.view">
+        <field name="name">library.member.form</field>
+        <field name="model">library.member</field>
+        <field name="arch" type="xml">
+            <form string="Member">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. John Doe"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="email"/>
+                        <field name="phone"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="library_member_action" model="ir.actions.act_window">
+        <field name="name">Members</field>
+        <field name="res_model">library.member</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new library member
+            </p>
+        </field>
+    </record>
+</odoo>
