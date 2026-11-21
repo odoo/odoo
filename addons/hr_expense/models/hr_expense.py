@@ -827,7 +827,8 @@ class HrExpense(models.Model):
         move_lines.append(base_move_line)
         total_tax_line_balance = 0.0
         for tax_line_data in tax_data['tax_lines_to_add']:  # Add tax lines
-            tax_line_balance = self.company_currency_id.round(tax_line_data['tax_amount'] / rate)
+            # no rate is given to _compute_taxes, so 'tax_amount' is not in company currency
+            tax_line_balance = self.company_currency_id.round(tax_line_data['tax_amount_currency'] / rate)
             total_tax_line_balance += tax_line_balance
             tax_line = {
                 'name': self.env['account.tax'].browse(tax_line_data['tax_id']).name,
@@ -836,7 +837,7 @@ class HrExpense(models.Model):
                 'expense_id': self.id,
                 'tax_tag_ids': tax_line_data['tax_tag_ids'],
                 'balance': tax_line_balance,
-                'amount_currency': tax_line_data['tax_amount'],
+                'amount_currency': tax_line_data['tax_amount_currency'],
                 'tax_base_amount': self.company_currency_id.round(tax_line_data['base_amount'] / rate),
                 'currency_id': self.currency_id.id,
                 'tax_repartition_line_id': tax_line_data['tax_repartition_line_id'],
