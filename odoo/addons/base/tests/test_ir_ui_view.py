@@ -5080,7 +5080,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'account_sepa',
             'delivery_dhl',
             'delivery_easypost',
-            'delivery_fedex',
             'delivery_iot',
             'delivery_sendcloud',
             'delivery_shiprocket',
