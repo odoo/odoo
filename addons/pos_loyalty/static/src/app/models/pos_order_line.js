@@ -66,10 +66,15 @@ patch(PosOrderline.prototype, {
         );
     },
     isGlobalDiscountApplicable() {
-        if (this.isGiftCardOrEWalletReward()) {
+        if (this.isGiftCardOrEWalletReward() || this.isGiftCardOrEWalletTopUp()) {
             return false;
         }
         return super.isGlobalDiscountApplicable?.() ?? true;
+    },
+    isGiftCardOrEWalletTopUp() {
+        const programs =
+            this.models["loyalty.program"].getBy("trigger_product_ids", this.product_id.id) || [];
+        return programs.some((program) => ["gift_card", "ewallet"].includes(program.program_type));
     },
     isGiftCardOrEWalletReward() {
         const coupon = this.coupon_id;
