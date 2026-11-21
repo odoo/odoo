@@ -1214,6 +1214,34 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_export_sections_with_price_included_taxes')
 
+    def test_invoice_intracom_actual_delivery_date(self):
+        """ [BR-IC-11] For an intra-community supply, the Actual delivery date (BT-72) is mandatory:
+        the invoice delivery date must be used, falling back on the invoice date when not set.
+        """
+        tax_intracom = self.percent_tax(
+            0.0,
+            ubl_cii_tax_category_code='K',
+            ubl_cii_tax_exemption_reason_code='VATEX-EU-IC',
+        )
+        product = self._create_product(lst_price=100.0, taxes_id=tax_intracom)
+        invoice = self._create_invoice_one_line(
+            product_id=product,
+            partner_id=self.partner_nl,
+            invoice_date='2026-01-31',
+            delivery_date='2026-01-15',
+            post=True,
+        )
+
+        def get_actual_delivery_date():
+            xml_content = self.env['account.edi.xml.ubl_bis3']._export_invoice(invoice)[0]
+            xml_tree = etree.fromstring(xml_content)
+            return xml_tree.findtext('./cac:Delivery/cbc:ActualDeliveryDate', namespaces=self.ubl_namespaces)
+
+        self.assertEqual(get_actual_delivery_date(), '2026-01-15')
+
+        invoice.delivery_date = False
+        self.assertEqual(get_actual_delivery_date(), '2026-01-31')
+
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestBeExport(TestUblExportBis3BE):
