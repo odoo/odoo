@@ -155,3 +155,87 @@ registry.category("web_tour.tours").add("self_order_tip_amount_without_tax", {
         Utils.clickBtn("Pay"),
     ],
 });
+
+function selectTomorrowSlot(time) {
+    return [
+        {
+            content: "Wait for the time slot popup",
+            trigger: ".self_order_pills_selection_popup",
+        },
+        {
+            content: "Select tomorrow's slots",
+            trigger: ".self_order_pills_selection_popup .preset_date_buttons:contains('Tomorrow')",
+            run: "click",
+        },
+        {
+            // Today's slots stay rendered until the click is handled, wait for tomorrow's ones
+            content: "Tomorrow's slots are shown",
+            trigger:
+                ".self_order_pills_selection_popup .preset_date_buttons.btn-primary:contains('Tomorrow')",
+        },
+        {
+            content: `Slot ${time} must be selectable`,
+            trigger: `.self_order_pills_selection_popup .option-item:contains('${time}'):not(:disabled)`,
+            run: "click",
+        },
+        {
+            content: "Confirm the time slot",
+            trigger:
+                ".self_order_pills_selection_popup .btn-primary:contains('Confirm'):not(:disabled)",
+            run: "click",
+        },
+    ];
+}
+
+function orderCocaColaWithSlot(time) {
+    return [
+        Utils.clickBtn("Order Now"),
+        LandingPage.selectLocation("Test-Takeout"),
+        ProductPage.clickProduct("Coca-Cola"),
+        Utils.clickBtn("Checkout"),
+        CartPage.checkProduct("Coca-Cola", "2.53", "1"),
+        Utils.clickBtn("Pay"),
+        ...selectTomorrowSlot(time),
+        Utils.clickBtn("Continue"),
+    ];
+}
+
+// A: books the 12:00 slot and leaves on the online payment page without paying.
+registry.category("web_tour.tours").add("self_online_payment_slot_pending_order_a", {
+    steps: () => orderCocaColaWithSlot("12:00"),
+});
+
+// B: the 12:00 slot must still be available since A did not start its payment.
+registry.category("web_tour.tours").add("self_online_payment_slot_order_b", {
+    steps: () => orderCocaColaWithSlot("12:00"),
+});
+
+function changeSlot(fullSlot = null) {
+    const selectSlot = selectTomorrowSlot("12:30");
+    return [
+        Utils.clickBtn("My Order"),
+        CartPage.checkProduct("Coca-Cola", "2.53", "1"),
+        Utils.clickBtn("Pay"),
+        ...selectSlot.slice(0, 2),
+        ...(fullSlot
+            ? [
+                  {
+                      content: `Slot ${fullSlot} is full`,
+                      trigger: `.self_order_pills_selection_popup .option-item:contains('${fullSlot}'):disabled`,
+                  },
+              ]
+            : []),
+        ...selectSlot.slice(2),
+        Utils.clickBtn("Continue"),
+    ];
+}
+
+// C: back from A's failed payment, A picks another slot and pays again.
+registry.category("web_tour.tours").add("self_online_payment_slot_order_a_change_slot", {
+    steps: () => changeSlot(),
+});
+
+// C: back from A's failed payment, the 12:00 slot is full, A picks another slot and pays again.
+registry.category("web_tour.tours").add("self_online_payment_slot_order_a_change_full_slot", {
+    steps: () => changeSlot("12:00"),
+});

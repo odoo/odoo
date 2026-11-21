@@ -24,7 +24,8 @@
                             To Pay
                             <hr class="flex-grow-1 m-0"/>
                         </h4>
-                        <span t-if="not currency" class="alert alert-danger m-0">
+                        <span t-if="payment_error" class="alert alert-danger m-0" t-out="payment_error"/>
+                        <span t-elif="not currency" class="alert alert-danger m-0">
                             <strong>Error:</strong> The currency is missing or invalid.
                         </span>
                         <span t-elif="not amount" class="alert alert-info m-0">
