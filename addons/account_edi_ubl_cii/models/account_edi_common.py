@@ -197,6 +197,17 @@ class AccountEdiCommon(models.AbstractModel):
             'model': self,
         }
 
+    def _get_allowance_charge_line_sign(self, qty, price_unit):
+        """ If quantity is negative or net_price_unit is negative,
+        the tax amount would be negative for charges and positive for allowances.
+        This functions returns the correct line sign based on sign of qty and price_unit.
+        see - `test_invoice_with_fixed_tax_on_negative_line` for reference
+        """
+        rounding = self.env['decimal.precision'].precision_get('Product Unit')
+        is_qty_negative = float_compare(qty, 0.0, precision_digits=rounding) < 0
+        is_price_unit_negative = float_compare(price_unit, 0.0, precision_digits=self._get_currency_decimal_places(self.env.company.currency_id)) < 0
+        return ((is_qty_negative ^ is_price_unit_negative) == 0 and 1) or -1
+
     def _get_document_type(self, vals):
         return vals.get('_document_type', {}).get('name')
 
@@ -1548,7 +1559,12 @@ class AccountEdiCommon(models.AbstractModel):
             and (partner := collected_values.get('customer_values', {}).get('customer'))
         ):
             for line_collected_values in collected_values['lines_collected_values']:
-                taxes_values = line_collected_values['taxes_values']
+                # Ignore fixed taxes as they represent allowance/charge and not a real tax
+                taxes_values = [
+                    tax_values
+                    for tax_values in line_collected_values['taxes_values']
+                    if 'charge_indicator' not in tax_values
+                ]
                 line_domain = []
                 if len(taxes_values) == 1:
                     tax_domain = [
@@ -1656,10 +1672,10 @@ class AccountEdiCommon(models.AbstractModel):
     def _import_retrieve_taxes_search_plan(self, collected_values):
         AccountTax = self.env['account.tax']
         return [
+            AccountTax._import_retrieve_tax_from_fixed_allowance_charge,
             AccountTax._import_retrieve_tax_from_account_default_tax,
             AccountTax._import_retrieve_tax_from_predicted_tax,
             AccountTax._import_retrieve_tax_from_price_include_exclude,
-            AccountTax._import_retrieve_tax_from_fixed_allowance_charge,
         ]
 
     def _import_invoice_retrieve_taxes(self, collected_values):
@@ -1881,6 +1897,27 @@ class AccountEdiCommon(models.AbstractModel):
                 to_write['price_unit'] -= charge['amount'] / to_write['quantity']
                 new_price_subtotal_before_discount = to_write['price_unit'] * to_write['quantity']
                 to_write['discount'] = (1 - (price_subtotal_after / new_price_subtotal_before_discount)) * 100.0
+
+            # Extract allowances matched with a (negative) fixed tax.
+            for allowance in line_collected_values['allowances']:
+                attempt_tax_values = allowance.get('attempt_tax_values')
+                if not attempt_tax_values or not attempt_tax_values.get('tax'):
+                    continue
+
+                # Suppose price_unit = 20, quantity = 10, an allowance of 20 (discount = 10%)
+                # for a total of 200 (before discount) and 180 (after discount).
+                # We retrieve a fixed tax of -20 / 10 = -2, so the allowance must not be kept in the discount:
+                # price_subtotal_before = 180
+                # price_subtotal_after = 180 + 20 = 200
+                # discount = (1 - (200 / 200)) * 100 = 0%
+                # The fixed tax is giving an amount of -20.
+                # 200 - 20 = the original 180 we had at the beginning!
+                gross_price_subtotal = to_write['price_unit'] * to_write['quantity']
+                if not gross_price_subtotal:
+                    continue
+                price_subtotal_before = to_write['price_unit'] * to_write['quantity'] * (1.0 - to_write['discount'] / 100.0)
+                price_subtotal_after = price_subtotal_before + allowance['amount']
+                to_write['discount'] = (1 - (price_subtotal_after / gross_price_subtotal)) * 100.0
 
             # Product line.
             base_line_kwargs = self._import_invoice_line_get_product_base_line_kwargs(line_collected_values)
