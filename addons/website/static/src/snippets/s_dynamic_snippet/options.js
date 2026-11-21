@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { parseJSON } from "@website/js/utils";
 import options from "@web_editor/js/editor/snippets.options";
 import { rpc } from "@web/core/network/rpc";
 
@@ -61,7 +62,7 @@ const dynamicSnippetOptions = options.Class.extend({
      */
     async start() {
         await this._super(...arguments);
-        this.customTemplateData = JSON.parse(this.$target[0].dataset?.customTemplateData || "{}");
+        this.customTemplateData = parseJSON(this.$target[0].dataset.customTemplateData) || {};
     },
 
     //--------------------------------------------------------------------------
