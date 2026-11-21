@@ -240,7 +240,7 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
         for base_line in vals['base_lines']:
             line_vals = {
                 **vals,
-                'line_idx': line_idx,
+                'line_idx': base_line['id'] if self.env.context.get('intercompany_sync_ubl', False) else line_idx,
                 'base_line': base_line,
             }
             self._add_sale_order_line_vals(line_vals)
@@ -375,6 +375,8 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
         # adapt each line to sale.order.line
         for line in lines_vals:
             # remove invoice line fields
+            if self.env.context.get('intercompany_sync_ubl', False):
+                line['auto_purchase_order_line_id'] = int(line.pop('id'))
             line.pop('deferred_start_date', False)
             line.pop('deferred_end_date', False)
             if not line.get('product_id'):
@@ -384,18 +386,25 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
         lines_vals += allowance_charges_line_vals
 
         # Update order with lines excluding discounts
-        order_vals['order_line'] = [Command.create(line_vals) for line_vals in lines_vals]
+        order_vals['order_line'] = [self._prepare_line_command(line_vals, order) for line_vals in lines_vals]
         logs += partner_logs + delivery_logs + line_logs + allowance_charges_logs
 
         return order_vals, logs
 
+    def _prepare_line_command(self, line_vals, order):
+        existing_sol = order.order_line.filtered(lambda line: line.product_id.id == line_vals.get('product_id'))
+        if existing_sol:
+            return Command.update(existing_sol.id, line_vals)
+        return Command.create(line_vals)
+
     def _import_order_ubl(self, order, file_data, new):
         # Overriding the main method to recalculate the price unit and discount
         res = super()._import_order_ubl(order, file_data, new)
-        lines_with_products = order.order_line.filtered('product_id')
-        # Recompute product price and discount according to sale price
-        lines_with_products._compute_price_unit()
-        lines_with_products._compute_discount()
+        if not self.env.context.get('intercompany_sync_ubl', False):
+            lines_with_products = order.order_line.filtered('product_id')
+            # Recompute product price and discount according to sale price
+            lines_with_products._compute_price_unit()
+            lines_with_products._compute_discount()
 
         return res
 
