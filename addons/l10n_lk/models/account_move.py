@@ -128,22 +128,22 @@ class AccountMove(models.Model):
             and self.move_type != "out_refund"
         )
 
-    def _get_last_sequence(self, relaxed=False, with_prefix=None):
+    def _get_last_sequence(self, relaxed=False, with_format=None):
         """
         Override to fetch the last LK sequence using a custom regex pattern.
 
-        The standard method uses sequence_prefix for filtering, but LK sequences
+        The standard method uses sequence_format for filtering, but LK sequences
         use YYMMM_JOURNAL_SEQ format where the journal code is part of the name,
         not the prefix. We use a PSQL regex via _lk_sql_seq_regex to match
         LK-specific pattern and fetch the correct last sequence.
         """
         if not self._l10n_lk_use_tax_invoice_sequence():
-            return super()._get_last_sequence(relaxed=relaxed, with_prefix=with_prefix)
+            return super()._get_last_sequence(relaxed=relaxed, with_format=with_format)
         self.ensure_one()
         sequence_field = self._fields.get(self._sequence_field)
         if not sequence_field or not sequence_field.store:
             raise ValidationError(self.env._("%(field_name)s is not a stored field", field_name=self._sequence_field))
-        self.flush_model([self._sequence_field, "sequence_number", "sequence_prefix"])
+        self.flush_model([self._sequence_field, "sequence_number", "sequence_format"])
 
         query = Query(self.env["account.move"], alias="move", table=SQL.identifier(self._table))
         query.add_where(SQL("journal_id = %s", self.journal_id.id))
@@ -151,8 +151,8 @@ class AccountMove(models.Model):
 
         if self._origin.id:
             query.add_where(SQL("id != %s", self._origin.id))
-        if with_prefix is not None:
-            query.add_where(SQL("sequence_prefix = %s", with_prefix))
+        if with_format is not None:
+            query.add_where(SQL("sequence_format = %s", with_format))
         query.add_where(SQL("name ~ %s", self._lk_sql_seq_regex()))
 
         query.order = SQL("sequence_number DESC")
