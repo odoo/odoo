@@ -6,6 +6,7 @@ import json
 import logging
 import os
 
+import pytz
 import werkzeug.urls
 import werkzeug.utils
 from werkzeug.exceptions import BadRequest
@@ -133,6 +134,9 @@ class OAuthController(http.Controller):
 
         provider = state['p']
         request.update_context(**clean_context(state.get('c', {})))
+        tz = request.cookies.get('tz')
+        if tz in pytz.all_timezones:
+            request.update_context(signup_tz=tz)
         try:
             # auth_oauth may create a new user, the commit makes it
             # visible to authenticate()'s own transaction below

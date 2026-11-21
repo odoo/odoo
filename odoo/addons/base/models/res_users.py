@@ -941,7 +941,7 @@ class Users(models.Model):
                     user = user.with_user(user)
                     auth_info = user._check_credentials(credential, user_agent_env)
                     tz = request.cookies.get('tz') if request else None
-                    if tz in pytz.all_timezones and (not user.tz or not user.login_date):
+                    if tz in pytz.all_timezones and tz != user.tz and (not user.tz or not user.login_date):
                         # first login or missing tz -> set tz to browser tz
                         user.tz = tz
                     user._update_last_login()
@@ -2443,6 +2443,7 @@ class APIKeys(models.Model):
         self._check_expiration_date(expiration_date)
         # no need to clear the LRU when *adding* a key, only when removing
         k = binascii.hexlify(os.urandom(API_KEY_SIZE)).decode()
+        self.env.user.invalidate_recordset(['api_key_ids'])
         self.env.cr.execute("""
         INSERT INTO {table} (name, user_id, scope, expiration_date, key, index)
         VALUES (%s, %s, %s, %s, %s, %s)
