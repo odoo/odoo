@@ -1008,3 +1008,59 @@ class TestCreatePicking(ProductVariantsCommon):
         Picking = self.env['stock.picking'].with_context(restricted_picking_type_code='incoming')
         self.assertNotIn('purchase.purchase_form_action', Picking.with_user(stock_user).get_empty_list_help(''))
         self.assertIn('purchase.purchase_form_action', Picking.with_user(self.user_purchase_user).get_empty_list_help(''))
+
+    def test_receipt_extra_product_with_ordered_product_backordered(self):
+        """ Receive nothing of the ordered product but an extra product, and create a backorder.
+        The extra product is added to the PO and the receipt stays linked to the PO. """
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'order_line': [Command.create({'product_id': self.product_id_1.id, 'product_qty': 1.0})],
+        })
+        po.button_confirm()
+        receipt = po.picking_ids
+        receipt.move_ids.quantity = 0.0
+        receipt_form = Form(receipt)
+        with receipt_form.move_ids.new() as move:
+            move.product_id = self.product_id_2
+            move.quantity = 1.0
+        receipt = receipt_form.save()
+        Form.from_action(self.env, receipt.button_validate()).save().process()
+
+        self.assertEqual(po.picking_ids, receipt | receipt.backorder_ids)
+        self.assertRecordValues(po.order_line, [
+            {'product_id': self.product_id_1.id, 'product_qty': 1.0, 'qty_received': 0.0},
+            {'product_id': self.product_id_2.id, 'product_qty': 0.0, 'qty_received': 1.0},
+        ])
+
+    def test_backorder_extra_products_before_ordered_product(self):
+        """ Receive the first two of three ordered products and backorder the third one. On the
+        backorder, add the first ordered product and a new product, and receive everything.
+        The first PO line has 2 units received and the new product is added to the PO. """
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'order_line': [
+                Command.create({'product_id': product.id, 'product_qty': 1.0})
+                for product in (self.product_id_1, self.product_id_2, self.product_sofa_red)
+            ],
+        })
+        po.button_confirm()
+        receipt = po.picking_ids
+        receipt.move_ids[2].quantity = 0.0
+        Form.from_action(self.env, receipt.button_validate()).save().process()
+        backorder = receipt.backorder_ids
+        backorder_form = Form(backorder)
+        for product in (self.product_id_1, self.product_sofa_blue):
+            with backorder_form.move_ids.new() as move:
+                move.product_id = product
+                move.quantity = 1.0
+        backorder = backorder_form.save()
+        backorder.button_validate()
+
+        self.assertEqual(backorder.state, 'done')
+        self.assertEqual(po.picking_ids, receipt | backorder)
+        self.assertRecordValues(po.order_line, [
+            {'product_id': self.product_id_1.id, 'product_qty': 1.0, 'qty_received': 2.0},
+            {'product_id': self.product_id_2.id, 'product_qty': 1.0, 'qty_received': 1.0},
+            {'product_id': self.product_sofa_red.id, 'product_qty': 1.0, 'qty_received': 1.0},
+            {'product_id': self.product_sofa_blue.id, 'product_qty': 0.0, 'qty_received': 1.0},
+        ])
