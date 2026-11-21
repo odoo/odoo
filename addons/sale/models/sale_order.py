@@ -1,8 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import hashlib
 import json
 import logging
-
 from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby
@@ -18,12 +18,12 @@ from odoo.fields import Command
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import (
+    SQL,
     create_index,
     float_is_zero,
     format_amount,
     format_date,
     is_html_empty,
-    SQL,
 )
 from odoo.tools.mail import html_keep_url
 
@@ -1989,6 +1989,25 @@ class SaleOrder(models.Model):
             and self.require_signature
             and not self.signature
         )
+
+    def _get_portal_version(self):
+        """Return a fingerprint of the current version of the sale order.
+
+        It changes whenever the order or one of its lines is written (this
+        includes the recomputation of the amounts) and when a line is added or
+        removed. It is rendered in the portal page and sent back on acceptance,
+        so that the customer cannot sign an order that was modified after they
+        opened the page.
+
+        Note: self.ensure_one()
+
+        :return: The fingerprint of the sale order.
+        :rtype: str
+        """
+        self.ensure_one()
+        versions = [(self.id, self.write_date)]
+        versions += [(line.id, line.write_date) for line in self.order_line]
+        return hashlib.sha256(str(versions).encode()).hexdigest()
 
     def _has_to_be_paid(self):
         """A sale order has to be paid when:

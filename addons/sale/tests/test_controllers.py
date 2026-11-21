@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import json
+
+from lxml import html
+
+from odoo.fields import Command
 from odoo.tests import HttpCase, tagged
 from odoo.tools import mute_logger
 
@@ -110,3 +115,59 @@ class TestSaleSignature(HttpCaseWithUserPortal):
         )
 
         self.start_tour("/", 'sale_signature', login="portal")
+
+    def test_02_portal_sale_signature_modified_quotation(self):
+        """The customer must not be able to sign a quotation that was modified
+        after they opened it, as they would sign terms they have not seen."""
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_portal.id,
+            'require_signature': True,
+            'require_payment': False,
+            'order_line': [Command.create({
+                'product_id': self.env['product.product'].create({'name': 'A product'}).id,
+                'price_unit': 100.0,
+            })],
+        })
+        sale_order._portal_ensure_token()
+        signature = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='
+
+        def open_quotation():
+            """Open the quotation as the customer and return the accept url."""
+            self.authenticate(None, None)
+            res = self.url_open(sale_order.get_portal_url())
+            res.raise_for_status()
+            props = html.fromstring(res.content).xpath(
+                '//owl-component[@name="portal.signature_form"]/@props',
+            )[0]
+            return json.loads(props)['callUrl']
+
+        accept_url = open_quotation()
+
+        # Meanwhile, the salesperson changes the price in the backend.
+        self.authenticate('admin', 'admin')
+        self.make_jsonrpc_request('/web/dataset/call_kw/sale.order/write', {
+            'model': 'sale.order',
+            'method': 'write',
+            'args': [sale_order.ids, {
+                'order_line': [Command.update(sale_order.order_line.id, {'price_unit': 200.0})],
+            }],
+            'kwargs': {},
+        })
+
+        # The customer signs from the page they opened before the change.
+        self.authenticate(None, None)
+        result = self.make_jsonrpc_request(accept_url, {'name': 'Joel Willis', 'signature': signature})
+        self.assertIn('error', result)
+        sale_order.invalidate_recordset()
+        self.assertEqual(sale_order.order_line.price_unit, 200.0)
+        self.assertFalse(sale_order.signature)
+        self.assertEqual(sale_order.state, 'draft')
+
+        # Once the page is reloaded, the customer can sign the quotation.
+        accept_url = open_quotation()
+        result = self.make_jsonrpc_request(accept_url, {'name': 'Joel Willis', 'signature': signature})
+        self.assertNotIn('error', result)
+        sale_order.invalidate_recordset()
+        self.assertTrue(sale_order.signature)
+        self.assertEqual(sale_order.signed_by, 'Joel Willis')
+        self.assertEqual(sale_order.state, 'sale')
