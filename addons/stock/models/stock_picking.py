@@ -1226,8 +1226,12 @@ class StockPicking(models.Model):
         # moves and/or the context and never call `_action_done`.
         if not self.env.context.get('button_validate_picking_ids'):
             self = self.with_context(button_validate_picking_ids=self.ids)
+        not_picked_moves = self.move_ids.filtered(lambda m: not m.picked)
         res = self._pre_action_done_hook()
         if res is not True:
+            # The wizard can be discarded: undo the picking done by the hook,
+            # it will be done again when the wizard calls `button_validate`.
+            not_picked_moves.filtered('picked').picked = False
             return res
 
         # Call `_action_done`.
