@@ -786,6 +786,25 @@ class TestAccountAccount(TestAccountMergeCommon):
             {'account_id': account.id,              'balance': -1000.0, 'amount_currency': -2000.0},
         ])
 
+    @freeze_time('2018-01-01')
+    def test_account_opening_balance_any_order(self):
+        """ The balancing line must follow the typed balances whatever the order they are saved in. """
+        company = self.env.company
+        credit_account = self.company_data['default_account_payable']
+        debit_account = self.company_data['default_account_assets']
+        balancing_account = company.get_unaffected_earnings_account()
+
+        credit_account.opening_credit = 600
+        self.cr.precommit.run()
+        debit_account.opening_debit = 1000
+        self.cr.precommit.run()
+        self.assertRecordValues(company.account_opening_move_id.line_ids.sorted(), [
+            # pylint: disable=bad-whitespace
+            {'account_id': credit_account.id,       'balance': -600.0},
+            {'account_id': debit_account.id,        'balance': 1000.0},
+            {'account_id': balancing_account.id,    'balance': -400.0},
+        ])
+
     def test_unmerge(self):
         company_1 = self.company_data['company']
         company_2 = self.company_data_2['company']
