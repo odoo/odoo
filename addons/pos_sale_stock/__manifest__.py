@@ -2,7 +2,7 @@
     'name': 'POS - Sales Stock',
     'category': 'Sales/Point of Sale',
     'summary': 'Link module between PoS Stock and Sales',
-    'depends': ['pos_stock', 'pos_sale'],
+    'depends': ['pos_stock', 'pos_sale', 'sale_stock'],
     'data': [
         'views/stock_template.xml',
     ],

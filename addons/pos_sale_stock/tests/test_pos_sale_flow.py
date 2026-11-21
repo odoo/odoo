@@ -11,6 +11,24 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
 
     _test_user_groups = None  # FIXME list needed groups
 
+    def test_pos_initial_picking_date(self):
+        """The default shipping date of a settled sale order is the date of its first open delivery."""
+        product = self.env['product.product'].create({'name': 'Scheduled Product', 'is_storable': True})
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({'product_id': product.id, 'product_uom_qty': 2})],
+        })
+        sale_order.action_confirm()
+        picking = sale_order.picking_ids
+        picking.scheduled_date = fields.Datetime.to_datetime('2025-07-03 10:00:00')
+        self.assertEqual(sale_order.pos_initial_picking_date, fields.Date.to_date('2025-07-03'))
+
+        # Once the delivery is done, nothing is left to schedule.
+        picking.move_ids.quantity = 2
+        picking.button_validate()
+        self.assertEqual(picking.state, 'done')
+        self.assertFalse(sale_order.pos_initial_picking_date)
+
     def test_settle_order_with_kit(self):
         if not self.env["ir.module.module"].search([("name", "=", "mrp"), ("state", "=", "installed")]):
             self.skipTest("mrp module is required for this test")

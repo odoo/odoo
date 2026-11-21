@@ -1,14 +1,28 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
+from odoo import api, fields, models
 
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
+    pos_initial_picking_date = fields.Date(
+        compute='_compute_pos_initial_picking_date',
+        help="Scheduled date of the first delivery still to be done, used as default shipping date when the order is settled in the PoS.",
+    )
+
+    @api.depends('picking_ids.scheduled_date', 'picking_ids.state', 'picking_ids.picking_type_code')
+    def _compute_pos_initial_picking_date(self):
+        for order in self:
+            open_pickings = order.picking_ids.filtered(
+                lambda p: p.state not in ('done', 'cancel') and p.picking_type_code != 'incoming'
+            )
+            first_date = min(open_pickings.mapped('scheduled_date'), default=False)
+            order.pos_initial_picking_date = first_date and fields.Date.context_today(order, first_date)
+
     @api.model
     def _load_pos_data_fields(self, config):
-        return super()._load_pos_data_fields(config) + ['picking_ids']
+        return super()._load_pos_data_fields(config) + ['pos_initial_picking_date']
 
 
 class SaleOrderLine(models.Model):

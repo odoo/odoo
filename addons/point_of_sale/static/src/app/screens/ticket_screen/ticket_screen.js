@@ -608,11 +608,20 @@ export class TicketScreen extends Component {
             this.pos.screenState.ticketScreen.totalCount = orders.length;
             sortedOrders = sortOrders(orders, true);
         }
+        // Stable sort: orders keep their date order within the same priority.
+        sortedOrders.sort((a, b) => this.getOrderSortPriority(b) - this.getOrderSortPriority(a));
 
         return sortedOrders.slice(
             (this.state.page - 1) * this.state.nbrByPage,
             this.state.page * this.state.nbrByPage
         );
+    }
+    /**
+     * Orders with a higher priority are listed first.
+     * @returns {number}
+     */
+    getOrderSortPriority(order) {
+        return 0;
     }
     get buttonClasses() {
         return this.getHasItemsToRefund() ? "btn-primary" : "btn-secondary disabled";

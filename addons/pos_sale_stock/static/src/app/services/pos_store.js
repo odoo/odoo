@@ -3,7 +3,20 @@ import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { patch } from "@web/core/utils/patch";
 import { PosStore } from "@point_of_sale/app/services/pos_store";
 
+const { DateTime } = luxon;
+
 patch(PosStore.prototype, {
+    async settleSO(sale_order) {
+        const result = await super.settleSO(...arguments);
+        const order = this.getOrder();
+        const pickingDate = sale_order.pos_initial_picking_date;
+        if (this.config.ship_later && pickingDate && !order.shipping_date) {
+            // The goods are still to be delivered: keep the planned date, but never in the past.
+            const today = DateTime.now().startOf("day");
+            order.shipping_date = pickingDate < today ? today : pickingDate;
+        }
+        return result;
+    },
     async updateSOLines(line, convertedLine, newLine, newLineValues, state) {
         if (
             ["lot", "serial"].includes(newLine.getProduct().tracking) &&
