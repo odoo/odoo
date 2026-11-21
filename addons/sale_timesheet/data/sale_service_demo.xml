@@ -37,6 +37,7 @@
             <field name="work_contact_id" ref="sale_timesheet.work_contact_jjo"/>
             <field name="image_1920" type="bytes" file="sale_timesheet/static/img/employee_jjo-image.webp"/>
             <field name="create_date">2020-02-02 00:00:00</field>
+            <field name="hourly_cost">55</field>
             <field name="sex">female</field>
             <field name="hr_responsible_id" ref="base.user_admin"/>
             <field name="employee_type_id" ref="hr.contract_type_employee"/>
@@ -58,6 +59,7 @@
             <field name="work_contact_id" ref="sale_timesheet.work_contact_awa"/>
             <field name="image_1920" type="bytes" file="hr/static/img/employee_awa-image.webp"/>
             <field name="create_date">2020-01-01 00:00:00</field>
+            <field name="hourly_cost">45</field>
             <field name="sex">female</field>
             <field name="hr_responsible_id" ref="base.user_admin"/>
             <field name="employee_type_id" ref="hr.contract_type_employee"/>
@@ -79,6 +81,7 @@
             <field name="work_contact_id" ref="sale_timesheet.work_contact_jsm"/>
             <field name="image_1920" type="bytes" file="sale_timesheet/static/img/employee_jsm-image.webp"/>
             <field name="create_date">2020-02-02 00:00:00</field>
+            <field name="hourly_cost">28</field>
             <field name="sex">male</field>
             <field name="hr_responsible_id" ref="base.user_admin"/>
             <field name="employee_type_id" ref="hr.contract_type_employee"/>
@@ -1176,7 +1179,7 @@
         </record>
         <record id="sale_line_43_task_timesheet" model="account.analytic.line">
             <field name="name">House Interior Designing</field>
-            <field name="employee_id" ref="sale_timesheet.employee_jjo"/>
+            <field name="employee_id" ref="sale_timesheet.employee_awa"/>
             <field name="date" eval="(DateTime.now() + relativedelta(weekday=0,weeks=-4)).strftime('%Y-%m-%d')"/>
             <field name="unit_amount">8.00</field>
             <field name="task_id" search="[('sale_line_id', '=', ref('sale_line_construction_43'))]"/>
@@ -1185,7 +1188,7 @@
         </record>
         <record id="sale_line_44_task_timesheet" model="account.analytic.line">
             <field name="name">House Renovation</field>
-            <field name="employee_id" ref="sale_timesheet.employee_awa"/>
+            <field name="employee_id" ref="sale_timesheet.employee_jjo"/>
             <field name="date" eval="(DateTime.now() + relativedelta(weekday=0,weeks=-5)).strftime('%Y-%m-%d')"/>
             <field name="unit_amount">10.00</field>
             <field name="task_id" search="[('sale_line_id', '=', ref('sale_line_construction_44'))]"/>
@@ -1230,7 +1233,7 @@
         <!-- Vendor bill for sale_order_1 -->
         <record id="account_analytic_line_inv_1" model="account.analytic.line">
             <field name="name" model="account.analytic.line" eval="obj().env.ref('product.product_product_3').get_product_multiline_description_sale()"/>
-            <field name="account_id" search="[('partner_id', '=', ref('base.res_partner_2'))]"/>
+            <field name="account_id" search="[('project_ids.sale_line_id', '=', ref('sale_line_13'))]"/>
             <field name="partner_id" ref="base.partner_root"/>
             <field name="date" eval="(DateTime.now() + relativedelta(days=0)).strftime('%Y-%m-%d')"/>
             <field name="amount">-300.00</field>
@@ -1242,7 +1245,7 @@
         <!-- Expense bill for sale_order_1 -->
         <record id="account_analytic_line_exp_1" model="account.analytic.line">
             <field name="name" model="account.analytic.line" eval="obj().env.ref('product.expense_product').get_product_multiline_description_sale()"/>
-            <field name="account_id" search="[('partner_id', '=', ref('base.res_partner_2'))]"/>
+            <field name="account_id" search="[('project_ids.sale_line_id', '=', ref('sale_line_13'))]"/>
             <field name="partner_id" ref="base.partner_root"/>
             <field name="date" eval="(DateTime.now() + relativedelta(days=0)).strftime('%Y-%m-%d')"/>
             <field name="amount">-100.00</field>
@@ -1254,7 +1257,7 @@
         <!-- Vendor bill for sale_order_2 -->
         <record id="account_analytic_line_inv_2" model="account.analytic.line">
             <field name="name" model="account.analytic.line" eval="obj().env.ref('product.product_product_3').get_product_multiline_description_sale()"/>
-            <field name="account_id" search="[('partner_id', '=', ref('base.res_partner_4'))]"/>
+            <field name="account_id" search="[('project_ids.sale_line_id', '=', ref('sale_line_22'))]"/>
             <field name="partner_id" ref="base.partner_root"/>
             <field name="date" eval="(DateTime.now() + relativedelta(days=0)).strftime('%Y-%m-%d')"/>
             <field name="amount">-400.00</field>
@@ -1266,7 +1269,7 @@
         <!-- Expense bill for sale_order_2 -->
         <record id="account_analytic_line_exp_2" model="account.analytic.line">
             <field name="name" model="account.analytic.line" eval="obj().env.ref('product.expense_hotel').get_product_multiline_description_sale()"/>
-            <field name="account_id" search="[('partner_id', '=', ref('base.res_partner_4'))]"/>
+            <field name="account_id" search="[('project_ids.sale_line_id', '=', ref('sale_line_22'))]"/>
             <field name="partner_id" ref="base.partner_demo"/>
             <field name="date" eval="(DateTime.now() + relativedelta(days=0)).strftime('%Y-%m-%d')"/>
             <field name="amount">-75.00</field>

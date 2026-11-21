@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Kitchen cabinets manufactured in the workshop for the Home Construction project -->
+    <record id="product_product_oak_panel" model="product.product">
+        <field name="name">Oak Veneered Panel</field>
+        <field name="categ_id" ref="product.product_category_construction"/>
+        <field name="standard_price">58.00</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="weight">25.0</field>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+    </record>
+
+    <record id="product_product_cabinet_hinge" model="product.product">
+        <field name="name">Soft-Close Hinge</field>
+        <field name="categ_id" ref="product.product_category_construction"/>
+        <field name="standard_price">3.80</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="weight">0.1</field>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+    </record>
+
+    <record id="product_product_cabinet_handle" model="product.product">
+        <field name="name">Brushed Steel Handle</field>
+        <field name="categ_id" ref="product.product_category_construction"/>
+        <field name="standard_price">5.50</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="weight">0.15</field>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+    </record>
+
+    <record id="product_product_kitchen_cabinet" model="product.product">
+        <field name="name">Oak Kitchen Cabinet</field>
+        <field name="categ_id" ref="product.product_category_construction"/>
+        <field name="standard_price">215.00</field>
+        <field name="list_price">480.00</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="weight">55.0</field>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+    </record>
+
+    <record id="mrp_bom_kitchen_cabinet" model="mrp.bom">
+        <field name="product_tmpl_id" model="product.product" eval="obj().browse(ref('product_product_kitchen_cabinet')).product_tmpl_id.id"/>
+        <field name="bom_line_ids" eval="[
+            Command.create({'product_id': ref('product_product_oak_panel'), 'product_qty': 2}),
+            Command.create({'product_id': ref('product_product_cabinet_hinge'), 'product_qty': 2}),
+            Command.create({'product_id': ref('product_product_cabinet_handle'), 'product_qty': 1}),
+        ]"/>
+        <field name="operation_ids" eval="[Command.create({
+            'name': 'Cutting and assembly',
+            'workcenter_id': ref('mrp.mrp_workcenter_3'),
+            'time_cycle_manual': 150,
+        })]"/>
+    </record>
+
+    <record id="stock_quant_oak_panel" model="stock.quant">
+        <field name="product_id" ref="product_product_oak_panel"/>
+        <field name="inventory_quantity">40</field>
+        <field name="location_id" ref="stock.stock_location_stock"/>
+    </record>
+
+    <record id="stock_quant_cabinet_hinge" model="stock.quant">
+        <field name="product_id" ref="product_product_cabinet_hinge"/>
+        <field name="inventory_quantity">60</field>
+        <field name="location_id" ref="stock.stock_location_stock"/>
+    </record>
+
+    <record id="stock_quant_cabinet_handle" model="stock.quant">
+        <field name="product_id" ref="product_product_cabinet_handle"/>
+        <field name="inventory_quantity">30</field>
+        <field name="location_id" ref="stock.stock_location_stock"/>
+    </record>
+
+    <function model="stock.quant" name="action_apply_inventory" eval="[[ref('stock_quant_oak_panel'), ref('stock_quant_cabinet_hinge'), ref('stock_quant_cabinet_handle')]]"/>
+
+    <record id="mrp_production_kitchen_cabinet" model="mrp.production">
+        <field name="product_id" ref="product_product_kitchen_cabinet"/>
+        <field name="product_qty">4</field>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="bom_id" ref="mrp_bom_kitchen_cabinet"/>
+        <field name="project_id" ref="project.project_home_construction"/>
+    </record>
+
+    <function model="mrp.production" name="action_confirm" eval="[[ref('mrp_production_kitchen_cabinet')]]"/>
+    <function model="mrp.production" name="action_assign" eval="[[ref('mrp_production_kitchen_cabinet')]]"/>
+    <function model="mrp.production" name="button_mark_done" eval="[[ref('mrp_production_kitchen_cabinet')]]"/>
+</odoo>
