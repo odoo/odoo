@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, tools
+from odoo.tools.sql import SQL
 
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import ValidationError
@@ -84,6 +85,22 @@ class HrLeaveReportCalendar(models.Model):
             hl.state IN ('confirm', 'validate', 'validate1', 'refuse')
         );
         """)
+
+    @api.model
+    def _search(self, domain, offset=0, limit=None, order=None, *, bypass_access=False, **kwargs):
+        query = super()._search(domain, offset=offset, limit=limit, order=order, bypass_access=bypass_access, **kwargs)
+        if not (self.env.su or bypass_access or self.env.user.has_group('hr_holidays.group_hr_holidays_user')):
+            query.add_where(
+                SQL(
+                    """%s IN (
+                        SELECT hlt.id
+                        FROM hr_leave_type hlt
+                        WHERE hlt.time_type = 'leave'
+                    )""",
+                    SQL.identifier(query.table, 'holiday_status_id'),
+                )
+            )
+        return query
 
     def _compute_display_name(self):
         if self.env.context.get('hide_employee_name') and 'employee_id' in self.env.context.get('group_by', []):
