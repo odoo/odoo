@@ -446,6 +446,9 @@ class IncrementalPdfMerge:
         if hasattr(data.pdf, "stream") and data.pdf.stream.closed:
             raise ValueError(f"I/O operation on closed file: {data.pdf.stream.name}")
 
+        if data.pdf == pdf_reader:
+            return data, next_id
+
         real_obj = self._get_indirect_object_data(data, incremented_objects)
 
         if real_obj is None:
@@ -461,12 +464,9 @@ class IncrementalPdfMerge:
         if hash_value in idnum_hash:
             return idnum_hash[hash_value], next_id
 
-        if data.pdf == pdf_reader:
-            idnum_hash[hash_value] = IndirectObject(data.idnum, data.generation, pdf_reader)
-        else:  # This is new incremented object in this PDF
-            incremented_objects[next_id, 0] = real_obj
-            idnum_hash[hash_value] = IndirectObject(next_id, 0, None)
-            next_id += 1
+        incremented_objects[next_id, 0] = real_obj
+        idnum_hash[hash_value] = IndirectObject(next_id, 0, None)
+        next_id += 1
 
         return idnum_hash[hash_value], next_id
 
