@@ -47,6 +47,7 @@ SORT_ALIASES = {
 }
 
 RRULE_TYPE_SELECTION_UI = [
+    ('none', 'None'),
     ('daily', 'Daily'),
     ('weekly', 'Weekly'),
     ('monthly', 'Monthly'),
@@ -270,7 +271,7 @@ class CalendarEvent(models.Model):
         string='Reminders', ondelete="restrict",
         help="Notifications sent to all attendees to remind of the meeting.")
     # RECURRENCE FIELD
-    recurrency = fields.Boolean('Recurrent')
+    recurrency = fields.Boolean('Recurrent', compute="_compute_recurrency", store=True)
     recurrence_id = fields.Many2one(
         'calendar.recurrence', string="Recurrence Rule", index='btree_not_null')
     follow_recurrence = fields.Boolean(default=False) # Indicates if an event follows the recurrence, i.e. is not an exception
@@ -635,15 +636,18 @@ class CalendarEvent(models.Model):
         """
         return [True] * len(vals_list)
 
-    @api.depends('recurrence_id', 'recurrency')
-    def _compute_rrule_type_ui(self):
-        defaults = self.env["calendar.recurrence"].default_get(["interval", "rrule_type"])
+    @api.depends('recurrence_id', 'rrule_type_ui')
+    def _compute_recurrency(self):
         for event in self:
-            if event.recurrency:
-                if event.recurrence_id:
-                    event.rrule_type_ui = 'custom' if event.recurrence_id.interval != 1 else (event.recurrence_id.rrule_type)
-                else:
-                    event.rrule_type_ui = defaults["rrule_type"]
+            event.recurrency = event.rrule_type_ui != "none"
+
+    @api.depends('recurrence_id')
+    def _compute_rrule_type_ui(self):
+        for event in self:
+            if event.recurrence_id:
+                event.rrule_type_ui = 'custom' if event.recurrence_id.interval != 1 else (event.recurrence_id.rrule_type)
+            else:
+                event.rrule_type_ui = 'none'
 
     @api.depends('recurrence_id', 'recurrency', 'rrule_type_ui')
     def _compute_recurrence(self):
