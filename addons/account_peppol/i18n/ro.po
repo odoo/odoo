@@ -8,13 +8,14 @@
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
+# Dorin Hongu <dhongu@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-13 17:38+0000\n"
-"PO-Revision-Date: 2026-10-28 03:33+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-11-20 05:35+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-18/"
 "account_peppol/ro/>\n"
 "Language: ro\n"
@@ -23,13 +24,13 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid " (Customer not on %(network_name)s)"
-msgstr ""
+msgstr " (clientul nu este în rețeaua %(network_name)s)"
 
 #. module: account_peppol
 #. odoo-python
@@ -41,13 +42,13 @@ msgstr " (Demo)"
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid " (Missing %(eas)s)"
-msgstr ""
+msgstr " (lipsește %(eas)s)"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid " (Previously sent)"
-msgstr ""
+msgstr " (trimis anterior)"
 
 #. module: account_peppol
 #. odoo-python
@@ -115,12 +116,14 @@ msgid ""
 "A 0% tax cannot use Tax Category 'S' (Standard). Please update the Tax "
 "Category in the Advanced Options of the tax configuration."
 msgstr ""
+"O taxă de 0% nu poate folosi categoria fiscală „S” (Standard). Actualizați "
+"categoria fiscală în Opțiuni avansate din configurarea taxei."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "A connection to '%s' already exists."
-msgstr ""
+msgstr "Există deja o conexiune la „%s”."
 
 #. module: account_peppol
 #. odoo-python
@@ -281,6 +284,8 @@ msgstr "Anulează PEPPOL"
 #: code:addons/account_peppol/models/account_move.py:0
 msgid "Cannot cancel an entry that has already been sent via %(network_name)s"
 msgstr ""
+"Nu se poate anula o înregistrare care a fost deja trimisă prin %"
+"(network_name)s"
 
 #. module: account_peppol
 #. odoo-python
@@ -386,7 +391,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "Create, send, and receive e-invoices for free."
-msgstr ""
+msgstr "Creați, trimiteți și primiți facturi electronice gratuit."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__create_uid
@@ -487,7 +492,7 @@ msgstr "Utilizator EDI"
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "EDI user should be of one of the following types: %s"
-msgstr ""
+msgstr "Utilizatorul EDI trebuie să fie de unul dintre următoarele tipuri: %s"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_edi_identification
@@ -518,7 +523,7 @@ msgstr "Eroare"
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "Error importing %(proxy_type)s document (UUID: %(uuid)s):"
-msgstr ""
+msgstr "Eroare la importul documentului %(proxy_type)s (UUID: %(uuid)s):"
 
 #. module: account_peppol
 #. odoo-python
@@ -550,12 +555,15 @@ msgid ""
 "reason code is 'VATEX-EU-O'. You can change this in the Advanced Options of "
 "the tax configuration."
 msgstr ""
+"Pentru taxa/taxele %(taxes)s: trebuie folosită categoria fiscală „O” când "
+"codul motivului de scutire este „VATEX-EU-O”. Puteți modifica această setare "
+"în Opțiuni avansate din configurarea taxei."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 msgid "France - E-Invoicing (Approved Platform)"
-msgstr ""
+msgstr "Franța - facturare electronică (platformă aprobată)"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -573,7 +581,7 @@ msgstr "Complet automatizat"
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 msgid "Go to module"
-msgstr ""
+msgstr "Accesați modulul"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -603,6 +611,8 @@ msgid ""
 "If you are not subject to VAT, you should not have a VAT number on your "
 "company/contacts and your clients should not have one either."
 msgstr ""
+"Dacă nu sunteți plătitor de TVA, compania/contactele dumneavoastră nu "
+"trebuie să aibă un cod de TVA, iar nici clienții nu trebuie să aibă unul."
 
 #. module: account_peppol
 #. odoo-python
@@ -611,6 +621,8 @@ msgid ""
 "If you want to be invoiced via %(network_name)s, your configuration must be "
 "valid."
 msgstr ""
+"Dacă doriți să primiți facturi prin %(network_name)s, configurația trebuie "
+"să fie validă."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__in_verification
@@ -629,6 +641,8 @@ msgid ""
 "Invoice %(invoice_name)s exceeds the size limit of 64 MB to be sent via %"
 "(network_name)s."
 msgstr ""
+"Factura %(invoice_name)s depășește limita de 64 MB pentru trimiterea prin %"
+"(network_name)s."
 
 #. module: account_peppol
 #. odoo-python
@@ -637,6 +651,8 @@ msgid ""
 "Invoice lines using Tax Category 'O' cannot use a percentage-based tax. "
 "Please update the tax type in Advanced Options."
 msgstr ""
+"Liniile de factură care folosesc categoria fiscală „O” nu pot utiliza o taxă "
+"procentuală. Actualizați tipul taxei în Opțiuni avansate."
 
 #. module: account_peppol
 #. odoo-python
@@ -645,6 +661,9 @@ msgid ""
 "Invoice lines with Tax Category 'Exempt from VAT' must have a tax rate of 0. "
 "You can change this in the Advanced Options of the tax configuration."
 msgstr ""
+"Liniile de factură cu categoria fiscală „Scutit de TVA” trebuie să aibă o "
+"cotă de 0. Puteți modifica aceasta în Opțiuni avansate din configurarea "
+"taxei."
 
 #. module: account_peppol
 #. odoo-python
@@ -653,6 +672,9 @@ msgid ""
 "Invoice lines with Tax Category 'Reverse charge' must have a tax rate of 0. "
 "You can change this in the Advanced Options of the tax configuration."
 msgstr ""
+"Liniile de factură cu categoria fiscală „Taxare inversă” trebuie să aibă o "
+"cotă de 0. Puteți modifica aceasta în Opțiuni avansate din configurarea "
+"taxei."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__invoice_sending_method
@@ -712,6 +734,8 @@ msgid ""
 "Missing Buyer Country. Please add the Country Code to the client's contact "
 "information."
 msgstr ""
+"Lipsește țara cumpărătorului. Adăugați codul țării în informațiile de "
+"contact ale clientului."
 
 #. module: account_peppol
 #. odoo-python
@@ -720,6 +744,8 @@ msgid ""
 "Missing Invoiced Item VAT category code. Action Required: Install the module "
 "account_edi_ubl_cii_tax_extension."
 msgstr ""
+"Lipsește codul categoriei TVA pentru articolul facturat. Acțiune necesară: "
+"instalați modulul account_edi_ubl_cii_tax_extension."
 
 #. module: account_peppol
 #. odoo-python
@@ -728,6 +754,8 @@ msgid ""
 "Missing Reverse Charge details. Please set the Exemption Reason to 'Reverse "
 "charge' in the Advanced Options of the tax configuration."
 msgstr ""
+"Lipsesc detaliile pentru taxarea inversă. Setați motivul scutirii la „Taxare "
+"inversă” în Opțiuni avansate din configurarea taxei."
 
 #. module: account_peppol
 #. odoo-python
@@ -736,6 +764,8 @@ msgid ""
 "Missing VAT category code. Action Required: Install the module "
 "account_edi_ubl_cii_tax_extension."
 msgstr ""
+"Lipsește codul categoriei TVA. Acțiune necesară: instalați modulul "
+"account_edi_ubl_cii_tax_extension."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__phone_number
@@ -763,7 +793,7 @@ msgstr "ID-ul demo-ului Odoo"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "Odoo keeps you up to date with new regulations."
-msgstr ""
+msgstr "Odoo vă ține la curent cu noile reglementări."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_edi_proxy_client_user__proxy_type__peppol
@@ -810,7 +840,7 @@ msgstr "PEPPOL: actualizați starea participantului"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__parent_company_id
 msgid "Parent Company"
-msgstr "Companie principala"
+msgstr "Compania mamă"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid_format
@@ -821,7 +851,7 @@ msgstr "Partenerul nu poate primi formatul"
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid "Partner doesn't have a valid configuration for %(network_name)s."
-msgstr ""
+msgstr "Partenerul nu are o configurație validă pentru %(network_name)s."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid
@@ -859,12 +889,12 @@ msgstr "Peppol poate trimite"
 #. odoo-python
 #: code:addons/account_peppol/models/res_company.py:0
 msgid "Peppol EAS and/or Endpoint identifier"
-msgstr ""
+msgstr "EAS Peppol și/sau identificatorul punctului final"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_eas
 msgid "Peppol Eas"
-msgstr ""
+msgstr "EAS Peppol"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_endpoint
@@ -889,7 +919,7 @@ msgstr "ID-ul Peppol ar trebui să fie diferit de cel al companiei principale."
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_is_sent
 #: model:ir.model.fields,field_description:account_peppol.field_account_move__peppol_is_sent
 msgid "Peppol Is Sent"
-msgstr ""
+msgstr "Peppol este trimis"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_parent_company_id
@@ -904,7 +934,7 @@ msgstr "Denumirea companiei mamă Peppol"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_purchase_journal_required
 msgid "Peppol Purchase Journal Required"
-msgstr ""
+msgstr "Este necesar un jurnal de achiziții pentru Peppol"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_account_invoice_filter
@@ -943,6 +973,8 @@ msgstr "Folosește compania mamă Peppol"
 msgid ""
 "Peppol allows for complete automation of sending and receiving e-invoices."
 msgstr ""
+"Peppol permite automatizarea completă a trimiterii și primirii facturilor "
+"electronice."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.portal_my_details_fields
@@ -969,6 +1001,8 @@ msgstr ""
 msgid ""
 "Peppol is the secure standard for e-invoices used in EU and across the world."
 msgstr ""
+"Peppol este standardul securizat pentru facturi electronice, utilizat în UE "
+"și în întreaga lume."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_journal_dashboard_kanban_view
@@ -1005,6 +1039,8 @@ msgid ""
 "Please enter the mobile number in the correct international format.\n"
 "For example: +32123456789, where +32 is the country code."
 msgstr ""
+"Introduceți numărul de telefon mobil în format internațional corect.\n"
+"De exemplu: +32123456789, unde +32 este codul țării."
 
 #. module: account_peppol
 #. odoo-python
@@ -1031,7 +1067,7 @@ msgstr "Vă rugăm să instalați biblioteca phonenumbers."
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Please make sure the Contact email is a valid email address."
-msgstr ""
+msgstr "Asigurați-vă că adresa de e-mail a contactului este validă."
 
 #. module: account_peppol
 #. odoo-python
@@ -1206,7 +1242,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/controllers/portal.py:0
 msgid "That country is not available with %(network_name)s."
-msgstr ""
+msgstr "Țara respectivă nu este disponibilă prin %(network_name)s."
 
 #. module: account_peppol
 #. odoo-python
@@ -1221,6 +1257,9 @@ msgid ""
 "The Peppol endpoint is missing in the XML file. Action Required: Update the "
 "account and account_edi_ubl_cii modules to resolve this."
 msgstr ""
+"Punctul final Peppol lipsește din fișierul XML. Acțiune necesară: "
+"actualizați modulele account și account_edi_ubl_cii pentru a remedia "
+"problema."
 
 #. module: account_peppol
 #. odoo-python
@@ -1229,6 +1268,9 @@ msgid ""
 "The Tax Category must be 'AE' when using Exemption Reason code 'VATEX-EU-"
 "AE'. You can change this in the Advanced Options of the tax configuration."
 msgstr ""
+"Categoria fiscală trebuie să fie „AE” când se folosește codul motivului de "
+"scutire „VATEX-EU-AE”. Puteți modifica aceasta în Opțiuni avansate din "
+"configurarea taxei."
 
 #. module: account_peppol
 #. odoo-python
@@ -1261,6 +1303,8 @@ msgid ""
 "The exemption reason code is invalid. Action Required: Install the module "
 "account_edi_ubl_cii_tax_extension."
 msgstr ""
+"Codul motivului de scutire nu este valid. Acțiune necesară: instalați "
+"modulul account_edi_ubl_cii_tax_extension."
 
 #. module: account_peppol
 #. odoo-python
@@ -1385,6 +1429,8 @@ msgstr ""
 msgid ""
 "To use the Approved Platform for French E-Invoicing install the module '%s'."
 msgstr ""
+"Pentru a folosi platforma aprobată pentru facturarea electronică din Franța, "
+"instalați modulul „%s”."
 
 #. module: account_peppol
 #. odoo-python
@@ -1394,12 +1440,17 @@ msgid ""
 "'%s'.\n"
 "The module was not found. Please update the app list first."
 msgstr ""
+"Pentru a folosi platforma aprobată pentru facturarea electronică din Franța, "
+"instalați modulul „%s”.\n"
+"Modulul nu a fost găsit. Actualizați mai întâi lista de aplicații."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "To use the Approved Platform for French E-Invoicing, install the module"
 msgstr ""
+"Pentru a folosi platforma aprobată pentru facturarea electronică din Franța, "
+"instalați modulul"
 
 #. module: account_peppol
 #. odoo-python
@@ -1440,7 +1491,7 @@ msgstr "Actualizează"
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 msgid "Update App List"
-msgstr ""
+msgstr "Actualizează lista de aplicații"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__use_parent_connection
@@ -1496,25 +1547,25 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "What is Peppol and why is it great?"
-msgstr ""
+msgstr "Ce este Peppol și de ce este atât de util?"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Why should I use French E-Invoicing ?"
-msgstr ""
+msgstr "De ce să folosesc facturarea electronică franceză?"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Why should I use Peppol?"
-msgstr ""
+msgstr "De ce să folosesc Peppol?"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Why should you use it?"
-msgstr ""
+msgstr "De ce să îl folosiți?"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__wizard_id
@@ -1527,6 +1578,8 @@ msgid ""
 "You accept that any fraudulent activity or spam will result in immediate and "
 "permanent exclusion from the Peppol network."
 msgstr ""
+"Acceptați că orice activitate frauduloasă sau mesaj nesolicitat va duce la "
+"excluderea imediată și permanentă din rețeaua Peppol."
 
 #. module: account_peppol
 #. odoo-python
@@ -1551,6 +1604,8 @@ msgid ""
 "You authorize Odoo to act as your Peppol Service Provider to send and "
 "receive e-invoices on your behalf."
 msgstr ""
+"Autorizați Odoo să acționeze ca furnizor de servicii Peppol și să trimită și "
+"să primească facturi electronice în numele dumneavoastră."
 
 #. module: account_peppol
 #. odoo-python
@@ -1591,6 +1646,10 @@ msgid ""
 "Please change the journal used for Peppol reception before changing the type "
 "of this journal."
 msgstr ""
+"Nu puteți schimba tipul unui jurnal folosit pentru primirea facturilor "
+"Peppol cu un tip diferit de „Achiziție”.\n"
+"Schimbați jurnalul folosit pentru primirea facturilor Peppol înainte de a "
+"modifica tipul acestui jurnal."
 
 #. module: account_peppol
 #. odoo-python
@@ -1606,6 +1665,8 @@ msgid ""
 "You confirm that you are authorized to register this company on the Peppol "
 "network as a legal representative."
 msgstr ""
+"Confirmați că sunteți autorizat(ă), în calitate de reprezentant legal, să "
+"înregistrați această companie în rețeaua Peppol."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1625,6 +1686,8 @@ msgid ""
 "You remain fully responsible for the content, accuracy, and legal compliance "
 "of your invoices."
 msgstr ""
+"Rămâneți pe deplin responsabil(ă) pentru conținutul, exactitatea și "
+"conformitatea legală a facturilor dumneavoastră."
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1645,7 +1708,7 @@ msgstr ""
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Your Peppol ID"
-msgstr "ID-ul dvs. Peppol"
+msgstr "ID-ul tău Peppol"
 
 #. module: account_peppol
 #. odoo-python
@@ -1750,7 +1813,7 @@ msgstr "prin Peppol"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "could not be sent via"
-msgstr ""
+msgstr "nu a putut fi trimis prin"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1760,7 +1823,7 @@ msgstr "facturi și note de credit."
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "sent via"
-msgstr ""
+msgstr "trimis prin"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol

@@ -1,21 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* payment_adyen
+# * payment_adyen
 #
 # Translators:
 # Maria Muntean, 2024
 # Wil Odoo, 2024
 # Lyall Kindmurr, 2024
-# Dorin Hongu <dhongu@gmail.com>, 2025
+# Dorin Hongu <dhongu@gmail.com>, 2025, 2026.
 # Larisa_nexterp, 2025
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2026-10-20 11:13+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-11-20 12:08+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-18/"
 "payment_adyen/ro/>\n"
 "Language: ro\n"
@@ -24,7 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: payment_adyen
 #: model_terms:ir.ui.view,arch_db:payment_adyen.payment_provider_form
@@ -102,7 +101,7 @@ msgstr "Cheie HMAC"
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_capture_wizard__has_adyen_tx
 msgid "Has Adyen Tx"
-msgstr "Are tranzacție Adyen"
+msgstr "Are Tx Adyen"
 
 #. module: payment_adyen
 #. odoo-javascript
@@ -113,7 +112,7 @@ msgstr "Detalii de plată incorecte"
 #. module: payment_adyen
 #: model_terms:ir.ui.view,arch_db:payment_adyen.payment_provider_form
 msgid "Learn More"
-msgstr "Află mai multe"
+msgstr "Aflați mai multe"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_merchant_account
@@ -129,12 +128,12 @@ msgstr "Nu a fost găsită nicio tranzacție care să corespundă referinței %s
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_capture_wizard
 msgid "Payment Capture Wizard"
-msgstr "Asistent captură plată"
+msgstr "Asistent captare plată"
 
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_provider
 msgid "Payment Provider"
-msgstr "Furnizor de plăți"
+msgstr "Furnizor de plată"
 
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_token
@@ -144,7 +143,7 @@ msgstr "Token de plată"
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "Tranzacție de plată"
+msgstr "Tranzacție plată"
 
 #. module: payment_adyen
 #. odoo-javascript
@@ -204,13 +203,13 @@ msgid ""
 "The amount processed by Adyen for the transaction %s is different than the "
 "one requested. Another transaction is created with the correct amount."
 msgstr ""
-"Suma procesată de Adyen pentru tranzacția %s este diferită de cea "
-"solicitată. A fost creată o altă tranzacție cu suma corectă."
+"Valoarea procesată de Adyen pe tranzacție %s este diferită de cea cerută. A "
+"fost creată o nouă tranzacție cu valoarea corectă."
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_api_url_prefix
 msgid "The base URL for the API endpoints"
-msgstr "URL-ul de bază pentru endpoint-urile API"
+msgstr "URL de bază pentru terminale API"
 
 #. module: payment_adyen
 #. odoo-python
@@ -256,7 +255,7 @@ msgstr "Comunicarea cu API-ul a eșuat. Detalii: %s"
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__code
 msgid "The technical code of this payment provider."
-msgstr "Codul tehnic al acestui furnizor de plăți."
+msgstr "Cod tehnic al acestui procesator de plată"
 
 #. module: payment_adyen
 #. odoo-python

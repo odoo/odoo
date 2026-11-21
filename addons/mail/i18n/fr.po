@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 17:39+0000\n"
-"PO-Revision-Date: 2026-10-28 06:33+0000\n"
+"POT-Creation-Date: 2026-11-20 17:37+0000\n"
+"PO-Revision-Date: 2026-11-16 17:33+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-18/mail/fr/"
 ">\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: mail
 #. odoo-python
@@ -4970,6 +4970,8 @@ msgid ""
 "If you were using a Tenor API key, please replace it with a Klipy API key in "
 "the General Settings."
 msgstr ""
+"Si vous utilisiez une clé API Tenor, remplacez-la par une clé API Klipy dans "
+"les paramètres généraux."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
@@ -5546,7 +5548,7 @@ msgstr "Cordialement"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
 msgid "Klipy API key"
-msgstr ""
+msgstr "Clé API Klipy"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -5589,6 +5591,7 @@ msgstr "Langue"
 #: model:ir.model.fields,help:mail.field_mail_message_translation__target_lang
 msgid "Language code used as the target for the translation request."
 msgstr ""
+"Code de langue utilisé comme langue cible pour la demande de traduction."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__date
@@ -7957,6 +7960,7 @@ msgstr "Pièce-jointes pop-out"
 #: code:addons/mail/static/src/core/common/attachment_view.js:0
 msgid "Pop out is not supported on mobile."
 msgstr ""
+"L'ouverture dans une fenêtre séparée n'est pas prise en charge sur mobile."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__port
@@ -8893,7 +8897,7 @@ msgstr "Recherche des serveurs de messagerie entrants"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 msgid "Search Klipy"
-msgstr ""
+msgstr "Rechercher dans Klipy"
 
 #. module: mail
 #. odoo-javascript
@@ -10509,6 +10513,12 @@ msgid "Translation Failure"
 msgstr "Échec de la traduction"
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/controllers/google_translate.py:0
+msgid "Translation service unavailable"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__delay_from
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__triggered_next_type_id
 msgid "Trigger"
@@ -11570,7 +11580,7 @@ msgstr "Vous pouvez ignorer ce message en toute sécurité"
 #. odoo-python
 #: code:addons/mail/models/mail_alias_domain.py:0
 msgid "You cannot assign an empty domain name."
-msgstr ""
+msgstr "Vous ne pouvez pas attribuer un nom de domaine vide."
 
 #. module: mail
 #. odoo-python

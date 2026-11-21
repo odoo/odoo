@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-11-04 12:35+0000\n"
+"PO-Revision-Date: 2026-11-19 15:22+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-18/"
 "stock_account/sv/>\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: stock_account
 #. odoo-python
@@ -38,7 +38,7 @@ msgid ""
 "Affected valuation layers: %s"
 msgstr ""
 "\n"
-"Berörda värderingslager: %s"
+"Påverkade värderingslager: %s"
 
 #. module: stock_account
 #. odoo-python
@@ -50,14 +50,14 @@ msgstr " Produktkostnad uppdaterad från %(previous)s till %(new_cost)s."
 #. odoo-python
 #: code:addons/stock_account/models/stock_quant.py:0
 msgid " [Accounted on %s]"
-msgstr " [Redovisat på %s]"
+msgstr " [Bokfört den %s]"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid " lot/serial number cost updated from %(previous)s to %(new_cost)s."
 msgstr ""
-" kostnad för parti/serienummer uppdaterad från %(previous)s till %(new_cost)"
+" kostnad för parti-/serienummer uppdaterad från %(previous)s till %(new_cost)"
 "s."
 
 #. module: stock_account
@@ -75,7 +75,7 @@ msgid ""
 "(product)s\n"
 "%(reason)s"
 msgstr ""
-"%(user)s ändrade aktievärderingen från %(previous)s till %(new_value)s - %"
+"%(user)s ändrade lagervärderingen från %(previous)s till %(new_value)s - %"
 "(product)s\n"
 "%(reason)s"
 
@@ -93,7 +93,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "<b>Set other input/output accounts on specific </b>"
-msgstr "<b>Ställ in andra inmatnings-/utmatningskonton på specifik </b>"
+msgstr "<b>Ange andra inleverans-/utleveranskonton på specifika </b>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_picking
@@ -109,7 +109,7 @@ msgstr "<span>Produkt</span>"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "<span>Quantity</span>"
-msgstr "<span>Antal</span>"
+msgstr "<span>Mängd</span>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -119,12 +119,12 @@ msgstr "<span>SN/LN</span>"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_chart_template
 msgid "Account Chart Template"
-msgstr "Kontoplan"
+msgstr "Mall för kontoplan"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__account_move_ids
 msgid "Account Move"
-msgstr "Verifikat"
+msgstr "Verifikation"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
@@ -141,12 +141,12 @@ msgstr "Bokföringsdatum"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_move_form_inherit
 msgid "Accounting Entries"
-msgstr "Verifikat"
+msgstr "Verifikationer"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_location_form_inherit
 msgid "Accounting Information"
-msgstr "Konteringsinformation"
+msgstr "Bokföringsinformation"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
@@ -158,17 +158,18 @@ msgstr "Lägg till manuell värdering"
 msgid ""
 "Add additional cost (transport, customs, ...) in the value of the product."
 msgstr ""
-"Lägg till ytterligare kostnader (transport, tull, ...) i produktens värde."
+"Lägg till ytterligare kostnader (transporter, tullar, ...) i produktens "
+"värde."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid "Added Value"
-msgstr "Lägg Till Värde"
+msgstr "Mervärde"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__added_value
 msgid "Added value"
-msgstr "Lägg Till Värde"
+msgstr "Mervärde"
 
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.action_revalue_layers
@@ -182,23 +183,23 @@ msgid ""
 "Affect landed costs on reception operations and split them among products to "
 "update their cost price."
 msgstr ""
-"Påverka landade kostnader vid mottagningsoperationer och fördela dem mellan "
+"Påverka hemtagningskostnader vid inleveranser och fördela dem mellan "
 "produkter för att uppdatera deras kostnadspris."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_account
 msgid "Analytic Account"
-msgstr "Objektkonto"
+msgstr "Analytiskt konto"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__analytic_account_line_ids
 msgid "Analytic Account Line"
-msgstr "Objektkontorad"
+msgstr "Analytisk kontorad"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_plan
 msgid "Analytic Plans"
-msgstr "Objektscheman"
+msgstr "Analytiska planer"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__real_time
@@ -208,7 +209,7 @@ msgstr "Automatiserad"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__group_stock_accounting_automatic
 msgid "Automatic Stock Accounting"
-msgstr "Automatisk lagerredovisning"
+msgstr "Automatisk lagerbokföring"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__avg_cost
@@ -243,9 +244,8 @@ msgid ""
 "Cannot find a stock input account for the product %s. You must define one on "
 "the product category, or on the location, before processing this operation."
 msgstr ""
-"Det går inte att hitta ett lagerinmatningskonto för produkten %s. Du måste "
-"definiera ett för produktkategorin, eller för platsen, innan du utför denna "
-"åtgärd."
+"Kunde inte hitta ett konto för inleveranser för produkten %s. Du måste ange "
+"ett på produktkategorin, eller platsen, innan du kan genomföra operationen."
 
 #. module: stock_account
 #. odoo-python
@@ -255,9 +255,8 @@ msgid ""
 "on the product category, or on the location, before processing this "
 "operation."
 msgstr ""
-"Det går inte att hitta ett lagerutgångskonto för produkten %s. Du måste "
-"definiera ett på produktkategorin eller på platsen innan du bearbetar den "
-"här åtgärden."
+"Kunde inte hitta ett konto för utleveranser för produkten %s. Du måste ange "
+"ett på produktkategorin, eller platsen, innan du kan genomföra operationen."
 
 #. module: stock_account
 #. odoo-python
@@ -267,7 +266,7 @@ msgid ""
 "inventory valuation. Are you sure you want to make that change?"
 msgstr ""
 "Att byta kostnadsmetod är en viktig förändring som kommer att påverka din "
-"lagervärdering. Är du säker på att du vill göra den ändringen?"
+"lagervärdering. Är du säker på att du vill genomföra ändringen?"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quantity_history_inherit_stock_account
@@ -277,7 +276,7 @@ msgstr "Välj ett datum för att få värderingen vid det datumet"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line__cogs_origin_id
 msgid "Cogs Origin"
-msgstr "Koggars ursprung"
+msgstr "Cogs-ursprung"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_company
@@ -304,13 +303,13 @@ msgid ""
 "product or its category to process this operation."
 msgstr ""
 "Fel i konfigurationen. Vänligen konfigurera prisskillnadskontot på produkten "
-"eller dess kategori för att behandla denna åtgärd."
+"eller produktkategorin för att genomföra operationen."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "Correction of %s (modification of past move)"
-msgstr "Korrigering av %s (ändring av tidigare flytt)"
+msgstr "Korrigering av %s (ändring av tidigare transport)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__standard_price
@@ -332,13 +331,13 @@ msgid ""
 "Costing method change for product category %(category)s: from %(old_method)s "
 "to %(new_method)s."
 msgstr ""
-"Ändring av kalkylmetod för produktkategori %(category)s: från %(old_method)s "
-"till %(new_method)s."
+"Ändring av kalkyleringsmetod för produktkategorin %(category)s: från %"
+"(old_method)s till %(new_method)s."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_id
 msgid "Counterpart Account"
-msgstr "Motkonto"
+msgstr "Motsvarande konto"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_input_categ_id
@@ -348,10 +347,10 @@ msgid ""
 "                set on the source location. This is the default value for "
 "all products in this category. It can also directly be set on each product."
 msgstr ""
-"Motsvarande verifikat för alla inkommande lagerflyttar kommer att bokföras "
-"på detta konto, såvida det inte finns ett specifikt värderingskonto\n"
-"                värderat konto på källplatsen. Detta är standardvärdet för "
-"alla produkter i denna kategori. Det kan också ställas in direkt på varje "
+"Motsvarande verifikationsrader för alla inleveranser kommer att bokföras på "
+"kontot, såvida det inte finns ett specifikt värderingskonto\n"
+"                angivet för ursprungsplatsen. Detta är standardvärdet för "
+"alla produkter i den här kategorin. Det kan också anges direkt på varje "
 "produkt."
 
 #. module: stock_account
@@ -381,7 +380,7 @@ msgstr "Valuta"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__current_quantity_svl
 msgid "Current Quantity"
-msgstr "Aktuellt Antal"
+msgstr "Aktuell mängd"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__current_value_svl
@@ -402,13 +401,13 @@ msgid ""
 "Date at which the accounting entries will be created in case of automated "
 "inventory valuation. If empty, the inventory date will be used."
 msgstr ""
-"Datum då verifikaten kommer att skapas vid automatisk lagervärdering. Om det "
-"är tomt används inventeringsdatumet."
+"Datum då verifikationerna kommer att skapas vid automatisk lagervärdering. "
+"Om det är tomt används lagerdatumet."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__uom_id
 msgid "Default unit of measure used for all stock operations."
-msgstr "Standardmåttenhet som används för alla lageroperationer."
+msgstr "Standard måttenhet som används för alla lageroperationer."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__description
@@ -418,7 +417,7 @@ msgstr "Beskrivning"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__group_lot_on_invoice
 msgid "Display Lots & Serial Numbers on Invoices"
-msgstr "Visa parti- & serienummer på fakturor"
+msgstr "Visa parti- och serienummer på fakturor"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__display_name
@@ -429,7 +428,7 @@ msgstr "Visningsnamn"
 #. module: stock_account
 #: model:res.groups,name:stock_account.group_lot_on_invoice
 msgid "Display Serial & Lot Number on Invoices"
-msgstr "Visa serie- & partinummer på fakturor"
+msgstr "Visa serie- och partinummer på fakturor"
 
 #. module: stock_account
 #. odoo-python
@@ -439,9 +438,9 @@ msgid ""
 "(new_category)s), the costing method has changed for product %(product)s: "
 "from %(old_method)s to %(new_method)s."
 msgstr ""
-"På grund av en ändring av produktkategori (från %(old_category)s till %"
-"(new_category)s) har kalkylmetoden ändrats för produkt %(product)s: från %"
-"(old_method)s till %(new_method)s."
+"På grund av en ändrad produktkategori (från %(old_category)s till %"
+"(new_category)s) har kalkyleringsmetoden ändrats för produkten %(product)s: "
+"från %(old_method)s till %(new_method)s."
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
@@ -456,7 +455,7 @@ msgstr "Gruppera efter ..."
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Has Remaining Qty"
-msgstr "Har kvarvarande antal"
+msgstr "Har återstående mängd"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__id
@@ -469,7 +468,7 @@ msgstr "ID"
 #: model:ir.model.fields,help:stock_account.field_product_template__lot_valuated
 msgid "If checked, the valuation will be specific by Lot/Serial number."
 msgstr ""
-"Om markerad kommer värderingen att specificeras efter Lot/Serial-nummer."
+"Om markerad kommer värderingen att specificeras efter parti-/serienummer."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
@@ -479,7 +478,7 @@ msgstr "Inkommande"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
 msgid "Inventory Locations"
-msgstr "Inventeringsställe"
+msgstr "Lagerplatser"
 
 #. module: stock_account
 #. odoo-python
@@ -491,7 +490,7 @@ msgstr "Inventeringsställe"
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form_stock
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Inventory Valuation"
-msgstr "Värdering av lager"
+msgstr "Lagervärdering"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__account_move_line_id
@@ -501,7 +500,7 @@ msgstr "Fakturarad"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__price_diff_value
 msgid "Invoice value correction with invoice currency"
-msgstr "Korrigering av fakturavärde med fakturavaluta"
+msgstr "Korrigering av fakturavärde i fakturans valuta"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_journal_id
@@ -513,17 +512,17 @@ msgstr "Journal"
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__account_move_id
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 msgid "Journal Entry"
-msgstr "Verifikat"
+msgstr "Verifikation"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move_line
 msgid "Journal Item"
-msgstr "Journalpost"
+msgstr "Verifikationsrad"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__module_stock_landed_costs
 msgid "Landed Costs"
-msgstr "Totala kostnader"
+msgstr "Hemtagningskostnader"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__write_uid
@@ -540,7 +539,7 @@ msgstr "Senast uppdaterad den"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_valuation_layer_id
 msgid "Linked To"
-msgstr "Länkad till"
+msgstr "Kopplad till"
 
 #. module: stock_account
 #. odoo-python
@@ -549,6 +548,8 @@ msgid ""
 "Lot %(lot)s has a negative quantity in stock.\n"
 "Correct this quantity before enabling/disabling lot valuation."
 msgstr ""
+"Parti %(lot)s har negativ mängd i lager.\n"
+"Rätta mängden innan du aktiverar/avaktiverar partivärdering."
 
 #. module: stock_account
 #. odoo-python
@@ -559,25 +560,26 @@ msgstr "Partiets värde manuellt ändrat (från %(old)s till %(new)s)"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_lot
 msgid "Lot/Serial"
-msgstr "Parti/Serie"
+msgstr "Parti/serie"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__lot_id
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Lot/Serial Number"
-msgstr "Parti/Serienummer"
+msgstr "Parti-/serienummer"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_lot.py:0
 msgid "Lot/Serial number Revaluation"
-msgstr "Lot/serialnummer Omvärdering"
+msgstr "Omvärdering enligt parti-/serienummer"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move_line.py:0
 msgid "Lot/Serial number is mandatory for product valuated by lot"
-msgstr "Lot/Serialnummer är obligatoriskt för produkter som värderas per lot"
+msgstr ""
+"Parti-/serienummer är obligatoriskt för produkter som värderas per parti"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
@@ -587,7 +589,7 @@ msgstr "Parti- och serienummer kommer att visas på fakturan"
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__manual_periodic
 msgid "Manual"
-msgstr "Manual"
+msgstr "Manuell"
 
 #. module: stock_account
 #. odoo-python
@@ -620,7 +622,7 @@ msgstr "Nytt värde"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__new_value_by_qty
 msgid "New value by quantity"
-msgstr "Nytt värde per kvantitet"
+msgstr "Nytt värde per mängd"
 
 #. module: stock_account
 #. odoo-python
@@ -631,12 +633,12 @@ msgstr "Ingen anledning angiven"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
 msgid "Other Info"
-msgstr "Annan information"
+msgstr "Övrig information"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Outgoing"
-msgstr "Utgående"
+msgstr "Utleveranser"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
@@ -653,6 +655,10 @@ msgid ""
 "lot.\n"
 "Please assign lots to all your quantities before enabling lot valuation."
 msgstr ""
+"Produkten %(product)s har en mängd på den värderad platsen %(location)s utan "
+"något parti.\n"
+"Vänligen tilldela partier till alla mängder innan du aktiverar "
+"partivärdering."
 
 #. module: stock_account
 #. odoo-python
@@ -661,6 +667,8 @@ msgid ""
 "Product %(product)s is valuated by lot: an explicit Lot/Serial number is "
 "required."
 msgstr ""
+"Produkten %(product)s värderas per parti: ett specifikt parti-/serienummer "
+"krävs."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
@@ -672,7 +680,7 @@ msgstr "Produktkategori"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "Produktflyttar (lagerflyttsrad)"
+msgstr "Produkttransporter (Rad i lagertransport)"
 
 #. module: stock_account
 #. odoo-python
@@ -702,18 +710,18 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_company__account_production_wip_account_id
 msgid "Production WIP Account"
-msgstr "Produktion WIP-konto"
+msgstr "WIP-konto för produktion"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_company__account_production_wip_overhead_account_id
 msgid "Production WIP Overhead Account"
-msgstr "Produktion WIP Omkostnadskonto"
+msgstr "WIP-omkostnadskonto för produktion"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__quantity
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 msgid "Quantity"
-msgstr "Antal"
+msgstr "Mängd"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__quantity_svl
@@ -724,7 +732,7 @@ msgstr "Kvantitet Svl"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
 msgid "Quants"
-msgstr "Kvantiteter"
+msgstr "Mängder"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__reason
@@ -734,12 +742,12 @@ msgstr "Anledning"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__reason
 msgid "Reason of the revaluation"
-msgstr "Orsak till omvärdering"
+msgstr "Anledning till omvärderingen"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__warehouse_id
 msgid "Receipt WH"
-msgstr "Kvitto WH"
+msgstr "Inleverans lagerlokal"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__reference
@@ -754,12 +762,12 @@ msgstr "Relaterat parti-/serienummer"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__product_id
 msgid "Related product"
-msgstr "Liknande produkt"
+msgstr "Relaterad produkt"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__remaining_qty
 msgid "Remaining Qty"
-msgstr "Återstående antal"
+msgstr "Återstående mängd"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__remaining_value
@@ -769,13 +777,13 @@ msgstr "Återstående värde"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking_line
 msgid "Return Picking Line"
-msgstr "Retur Plockning Rad"
+msgstr "Rad för plockning av retur"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid "Revaluation of %(name)s (negative inventory)"
-msgstr ""
+msgstr "Omvärdering av%(name)s (negativt lager)"
 
 #. module: stock_account
 #. odoo-python
@@ -792,7 +800,7 @@ msgstr "Omvärdering"
 #. odoo-python
 #: code:addons/stock_account/models/stock_lot.py:0
 msgid "Select an existing lot/serial number to be reevaluated"
-msgstr "Välj ett befintligt parti/serienummer som ska omvärderas"
+msgstr "Välj ett befintligt parti-/serienummer som ska omvärderas"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__standard
@@ -813,28 +821,28 @@ msgid ""
 "that enter the company first will also leave it first.\n"
 "        "
 msgstr ""
-"Standardpris: Produkterna värderas till deras standardkostnad definierad på "
-"produkten.\n"
-"        Genomsnittskostnad (AVCO): Produkterna värderas till vägt "
-"genomsnittskostnad.\n"
-"        First In First Out (FIFO): Produkterna värderas med antagandet att "
-"de som kommer in i företaget först också kommer att lämna det först.\n"
+"Standardpris: Produkter värderas till deras standardkostnader som anges för "
+"varje enskild produkt.\n"
+"        Genomsnittlig kostnad (AVCO): Produkter värderas till enligt en "
+"viktad genomsnittlig kostnad.\n"
+"        Först in först ut (FIFO): Produkter värderas enligt antagandet att "
+"de som köps in först också skickas ut först.\n"
 "        "
 
 #. module: stock_account
 #: model:res.groups,name:stock_account.group_stock_accounting_automatic
 msgid "Stock Accounting Automatic"
-msgstr "Lagerredovisning Automatisk"
+msgstr "Automatisk lagerbokföring"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_account_input_categ_id
 msgid "Stock Input Account"
-msgstr "Lagerkonto inkommande"
+msgstr "Konto för inleveranser"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_journal
 msgid "Stock Journal"
-msgstr "Stock Journal"
+msgstr "Lagerjournal"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move
@@ -842,27 +850,27 @@ msgstr "Stock Journal"
 #: model:ir.model.fields,field_description:stock_account.field_account_move__stock_move_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_move_id
 msgid "Stock Move"
-msgstr "Lagerflytt"
+msgstr "Lagertransport"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_account_output_categ_id
 msgid "Stock Output Account"
-msgstr "Lagerkonto utgående"
+msgstr "Konto för utleveranser"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quantity_history
 msgid "Stock Quantity History"
-msgstr "Historik över lagerkvantitet"
+msgstr "Historik över lagermängd"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_forecasted_product_product
 msgid "Stock Replenishment Report"
-msgstr "Lagerpåfyllnadsrapport"
+msgstr "Lagerpåfyllningsrapport"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_request_count
 msgid "Stock Request an Inventory Count"
-msgstr "Lager Begär en inventering av lagret"
+msgstr "Begär en inventering av lagret"
 
 #. module: stock_account
 #. odoo-javascript
@@ -876,17 +884,17 @@ msgstr "Lagervärdering"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_valuation_account_id
 msgid "Stock Valuation Account"
-msgstr "Konto för värdering av lager"
+msgstr "Lagervärderingskonto"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_location__valuation_in_account_id
 msgid "Stock Valuation Account (Incoming)"
-msgstr "Lagervärderingskonto (inkommande)"
+msgstr "Konto för lagervärdering (Inleveranser)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_location__valuation_out_account_id
 msgid "Stock Valuation Account (Outgoing)"
-msgstr "Lagervärderingskonto  (Utgående)"
+msgstr "Lagervärderingskonto (Utleveranser)"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_valuation_layer
@@ -898,7 +906,7 @@ msgstr "Lagervärderingskonto  (Utgående)"
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__stock_valuation_layer_ids
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_valuation_layer_ids
 msgid "Stock Valuation Layer"
-msgstr "Lager Värderingsskikt"
+msgstr "Värderingslager för lagervärdering"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product__company_currency_id
@@ -906,7 +914,7 @@ msgid ""
 "Technical field to correctly show the currently selected company's currency "
 "that corresponds to the totaled value of the product's valuation layers"
 msgstr ""
-"Tekniskt fält för att korrekt visa den valda företagets valuta som motsvarar "
+"Tekniskt fält för att korrekt visa det valda företagets valuta som motsvarar "
 "det totala värdet av produktens värderingslager"
 
 #. module: stock_account
@@ -925,8 +933,8 @@ msgid ""
 "The Stock Input and/or Output accounts cannot be the same as the Stock "
 "Valuation account."
 msgstr ""
-"Lageringångs- och/eller utgångskonton kan inte vara samma som "
-"lagerutvärderingskonto."
+"Konton för in- eller utleveranser inte vara samma som kontot för "
+"lagervärdering."
 
 #. module: stock_account
 #. odoo-python
@@ -935,8 +943,8 @@ msgid ""
 "The action leads to the creation of a journal entry, for which you don't "
 "have the access rights."
 msgstr ""
-"Åtgärden leder till skapandet av en bokföringspost, för vilken du inte har "
-"åtkomsträttigheter."
+"Åtgärden leder till att en verifikation skapas, du har inte behörighet till "
+"detta."
 
 #. module: stock_account
 #. odoo-python
@@ -951,8 +959,8 @@ msgid ""
 "The move lines are not in a consistent state: some are entering and other "
 "are leaving the company."
 msgstr ""
-"Flyttrader är inte i ett konsekvent tillstånd: vissa kommer in och andra "
-"lämnar företaget."
+"Verifikationsrader är inte i ett enhetligt tillstånd: vissa är för "
+"inleveranser och andra för utleveranser."
 
 #. module: stock_account
 #. odoo-python
@@ -981,8 +989,8 @@ msgstr ""
 msgid ""
 "The stock accounts should be set in order to use the automatic valuation."
 msgstr ""
-"Aktiekontona måste vara inställda för att den automatiska värderingen ska "
-"kunna användas."
+"Lagerkonton måste vara angivna för att den automatiska värderingen ska kunna "
+"användas."
 
 #. module: stock_account
 #. odoo-python
@@ -993,6 +1001,10 @@ msgid ""
 "the locations in a way that changes the valuation logic defined during the "
 "initial processing."
 msgstr ""
+"Lagervärdering för en transport är baserat på typen av ursprungliga och "
+"slutgiltiga platser. Eftersom transporten redan har behandlats kan du inte "
+"ändra platserna på ett sätt som påverkar värderingens logik såsom den "
+"definierats under den ursprungliga behandlingen."
 
 #. module: stock_account
 #. odoo-python
@@ -1011,8 +1023,8 @@ msgid ""
 "There are no valuation layers. Valuation layers are created when there are "
 "product moves that impact the valuation of the stock."
 msgstr ""
-"Det finns inga värderingsskikt. Värderingsskikt skapas när det finns "
-"produktflyttningar som påverkar värderingen av lagret."
+"Det finns inga värderingslager. Värderingslager skapas när det finns "
+"produkttransporter som påverkar lagervärderingen."
 
 #. module: stock_account
 #. odoo-javascript
@@ -1021,8 +1033,8 @@ msgid ""
 "This operation might lead in a loss of data. Valuation will be identical for "
 "all lots/SN. Do you want to proceed ? "
 msgstr ""
-"Denna operation kan leda till förlust av data. Värderingen kommer att vara "
-"identisk för alla partier/SN. Vill du fortsätta? "
+"Operationen kan orsaka förlust av data. Värderingen kommer att vara identisk "
+"för alla partier/serienummer. Vill du fortsätta? "
 
 #. module: stock_account
 #. odoo-python
@@ -1031,8 +1043,8 @@ msgid ""
 "This product is valuated by lot/serial number. Changing the cost will update "
 "the cost of every lot/serial number in stock."
 msgstr ""
-"Denna produkt värderas per parti/serialnummer. Om du ändrar kostnaden "
-"uppdateras kostnaden för varje parti/serienummer i lager."
+"Produkten värderas per parti-/serienummer. Genom att ändra kostnaden "
+"uppdateras även kostnaden för varje parti-/serienummer på lagret."
 
 #. module: stock_account
 #. odoo-python
@@ -1041,17 +1053,19 @@ msgid ""
 "This product is valuated by lot: an explicit Lot/Serial number is required "
 "when adding quantity"
 msgstr ""
+"Produkten värderas per parti: ett specifikt parti-/serienummer krävs när man "
+"lägger till mängder"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 msgid "Total Moved Quantity"
-msgstr "Total flyttad kvantitet"
+msgstr "Total transporterad mängd"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_report_tree
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 msgid "Total Remaining Quantity"
-msgstr "Total återstående kvantitet"
+msgstr "Total återstående mängd"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_report_tree
@@ -1072,7 +1086,7 @@ msgstr "Totalt värde"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking
 msgid "Transfer"
-msgstr "Överföring"
+msgstr "Transport"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move__to_refund
@@ -1081,8 +1095,8 @@ msgid ""
 "Trigger a decrease of the delivered/received quantity in the associated Sale "
 "Order/Purchase Order"
 msgstr ""
-"Utlös en minskning av den levererade/mottagna kvantiteten i den tillhörande "
-"kundordern/inköpsordern"
+"Trigga en minskning av levererade/mottagna mängder i tillhörande "
+"försäljnings-/inköpsorder"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
@@ -1092,12 +1106,12 @@ msgstr "Enhet"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account
 msgid "Unit Cost"
-msgstr "Styckkostnad"
+msgstr "Kostnad per enhet"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__unit_cost
 msgid "Unit Value"
-msgstr "Enhetens värde"
+msgstr "Värde per enhet"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__uom_id
@@ -1109,13 +1123,13 @@ msgstr "Måttenhet"
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__to_refund
 #: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line__to_refund
 msgid "Update quantities on SO/PO"
-msgstr "Uppdatera kvantiteter på order/inköpsorder"
+msgstr "Uppdatera mängder i försäljnings-/inköpsordrar"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid "Updating lot valuation for product %s."
-msgstr "Uppdaterar varuvärderingen för produkt %s."
+msgstr "Uppdaterar partivärderingen för produkten %s."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_in_account_id
@@ -1126,11 +1140,11 @@ msgid ""
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
-"Används för realtids lagerutvärdering. När det är inställt på en virtuell "
-"plats (ej intern typ), kommer detta konto att användas för att hålla värdet "
-"på produkter som flyttas från en intern plats till denna plats, istället för "
-"det generiska lagerutgångskonto som är inställt på produkten. Detta har "
-"ingen effekt för interna platser."
+"Används för lagervärdering i realtid. När det är angivet på en virtuell "
+"plats (ej intern typ), kommer kontot att användas för att registrera värdet "
+"på produkter som flyttas från en intern plats och till denna plats, istället "
+"för det allmänna kontot för utleveranser som är angivet på produkten. Detta "
+"gäller inte för interna platser."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_out_account_id
@@ -1141,11 +1155,11 @@ msgid ""
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
-"Används för realtids lagerutvärdering. När det är inställt på en virtuell "
-"plats (ej intern typ), kommer detta konto att användas för att hålla värdet "
-"på produkter som flyttas ut från denna plats och in i en intern plats, "
-"istället för det generiska lagerutgångskonto som är inställt på produkten. "
-"Detta har ingen effekt för interna platser."
+"Används för lagervärdering i realtid. När det är angivet på en virtuell "
+"plats (ej intern typ), kommer kontot att användas för att registrera värdet "
+"på produkter som flyttas från denna plats och till en intern plats, istället "
+"för det allmänna kontot för utleveranser som är angivet på produkten. Detta "
+"gäller inte för interna platser."
 
 #. module: stock_account
 #: model:ir.ui.menu,name:stock_account.menu_valuation
@@ -1159,12 +1173,12 @@ msgstr "Värdering"
 #: model:ir.model.fields,field_description:stock_account.field_product_product__company_currency_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__company_currency_id
 msgid "Valuation Currency"
-msgstr "Värdering Valuta"
+msgstr "Värdering i valuta"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__adjusted_layer_ids
 msgid "Valuation Layers"
-msgstr "Värderingsskikt"
+msgstr "Värderingslager"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account
@@ -1181,7 +1195,7 @@ msgstr "Värdering vid datum"
 #: model:ir.model.fields,field_description:stock_account.field_product_product__lot_valuated
 #: model:ir.model.fields,field_description:stock_account.field_product_template__lot_valuated
 msgid "Valuation by Lot/Serial number"
-msgstr "Värdering per parti/serialnummer"
+msgstr "Värdering per parti-/serienummer"
 
 #. module: stock_account
 #. odoo-python
@@ -1190,13 +1204,13 @@ msgid ""
 "Valuation method change for product category %(category)s: from %"
 "(old_method)s to %(new_method)s."
 msgstr ""
-"Ändring av värderingsmetod för produktkategori %(category)s: från %"
-"(old_method)s till %(new_method)s."
+"Ändrad värderingsmetod för produktkategorin %(category)s: från %(old_method)"
+"s till %(new_method)s."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__adjusted_layer_ids
 msgid "Valuations layers being adjusted"
-msgstr "Värderingsskikt justeras"
+msgstr "Värderingslager justeras"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__value
@@ -1207,7 +1221,7 @@ msgstr "Värde"
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.xml:0
 msgid "Value On Hand:"
-msgstr "Värde på hand:"
+msgstr "Tillgängligt värde:"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__value_svl
@@ -1223,10 +1237,10 @@ msgid ""
 "inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
-"Varupartiets värde (beräknas automatiskt i AVCO).\n"
+"Partiets värde (beräknas automatiskt genom AVCO).\n"
 "        Används för att värdera produkten när inköpskostnaden inte är känd "
-"(t.ex. lagerjustering).\n"
-"        Används för att beräkna marginaler på försäljningsorder."
+"(t.ex. vid lagerkorrigering).\n"
+"        Används för att beräkna marginaler på försäljningsordrar."
 
 #. module: stock_account
 #. odoo-python
@@ -1273,20 +1287,20 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_valuation_layer_revaluation
 msgid "Wizard model to reavaluate a stock inventory for a product"
-msgstr "Guide för att omvärdera lagerinventering för en produkt"
+msgstr "Verktygsguide för att omvärdera en inventering av en produkt"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_lot.py:0
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "You cannot adjust the valuation of a layer with zero quantity"
-msgstr "Du kan inte justera värderingen av ett lager med noll kvantitet"
+msgstr "Det är inte möjligt att justera värderingen av ett lager med noll mängd"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "You cannot adjust valuation without a product"
-msgstr "Du kan inte justera värderingen utan en produkt"
+msgstr "Det är inte möjligt att ändra värderingen utan en produkt"
 
 #. module: stock_account
 #. odoo-python
@@ -1305,26 +1319,28 @@ msgid ""
 "You cannot change the product category of a product valuated by lot/serial "
 "number."
 msgstr ""
-"Du kan inte ändra produktkategori för en produkt som värderas efter lot/"
-"serialnummer."
+"Det är inte möjligt att ändra produktkategori på en produkt som värderas "
+"efter parti-/serienummer."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "You cannot revalue a product with a standard cost method."
-msgstr "Du kan inte omvärdera en produkt med en standardkostnadsmetod."
+msgstr ""
+"Det är inte möjligt att omvärdera en produkt med en standard kostnadsmetod."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "You cannot revalue a product with an empty or negative stock."
-msgstr "Du kan inte omvärdera en produkt med ett tomt eller negativt lager."
+msgstr ""
+"Det är inte möjligt att omvärdera en produkt med tomt eller negativt lager."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "You cannot revalue multiple products at once"
-msgstr "Du kan inte omvärdera flera produkter samtidigt"
+msgstr "Det är inte möjligt att omvärdera flera produkter samtidigt"
 
 #. module: stock_account
 #. odoo-python
@@ -1395,7 +1411,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_account/models/stock_valuation_layer.py:0
 msgid "You must set a counterpart account on your product category."
-msgstr "Du måste ange ett motkonto för din produktkategori."
+msgstr "Du måste ange ett motsvarande konto för produktkategorin."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
