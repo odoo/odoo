@@ -884,6 +884,41 @@ class TestPoSSale(PoSSaleSyncCommon, TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         self.start_pos_tour('test_full_down_payment_so_still_listed', login="accountman")
 
+    def test_zero_and_negative_so_listed(self):
+        """
+        Tests that Sale Orders with a zero or negative total are listed in the PoS, so they can be settled
+        """
+        product_a = self.env['product.product'].create({
+            'name': 'Product A',
+            'lst_price': 10.0,
+            'taxes_id': False,
+        })
+        partner = self.env['res.partner'].create({'name': 'Test Partner'})
+        zero_so, negative_so, return_so = self.env['sale.order'].sudo().create([{
+            'name': name,
+            'partner_id': partner.id,
+            'order_line': [(0, 0, {
+                'product_id': product_a.id,
+                'product_uom_qty': qty,
+                'price_unit': price_unit,
+                'tax_ids': False,
+            })],
+        } for name, qty, price_unit in [('Zero SO', 1, 0.0), ('Negative SO', 1, -10.0), ('Return SO', -1, 10.0)]])
+        (zero_so | negative_so | return_so).action_confirm()
+        self.main_pos_config.open_ui()
+        self.start_pos_tour('test_zero_and_negative_so_listed', login="accountman")
+
+        for sale_order, amount in [(zero_so, 0.0), (negative_so, -10.0), (return_so, -10.0)]:
+            pos_order = sale_order.order_line.pos_order_line_ids.order_id
+            self.assertEqual(pos_order.state, 'paid')
+            self.assertEqual(pos_order.amount_total, amount)
+            self.assertEqual(sum(pos_order.payment_ids.mapped('amount')), amount)
+            self.assertEqual(sale_order.invoice_status, 'invoiced')
+
+        session = self.main_pos_config.current_session_id
+        session.close_session_from_ui()
+        self.assertEqual(session.state, 'closed')
+
     def test_amount_to_invoice(self):
         """
         Checks that the amount to invoice is updated correctly when paying an order in the PoS
