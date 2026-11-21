@@ -62,6 +62,16 @@ class ProductWishlist(Controller):
             wish.unlink()
         return True
 
+    @route("/shop/wishlist/remove_product", type="jsonrpc", auth="public", website=True)
+    def remove_product_from_wishlist(self, product_id, **_kw):
+        wish = (
+            self
+            .env["product.wishlist"]
+            .current()
+            .filtered(lambda wish: wish.product_id.id == product_id)
+        )
+        return self.remove_from_wishlist(wish.id)
+
     @route(
         "/shop/wishlist/get_product_ids", type="jsonrpc", auth="public", website=True, replica=True
     )
