@@ -47,6 +47,7 @@ export class SetupEditorPlugin extends Plugin {
             .filter((el) => !el.hasAttribute("data-oe-sanitize-prevent-edition"));
         editableEls.concat(Array.from(this.editable.querySelectorAll(".o_editable")));
         editableEls.forEach((el) => el.classList.add("o_editable"));
+        this.handleDraggableLink(editableEls);
         if (this.delegateTo("after_setup_editor_handlers")) {
             return;
         }
@@ -72,7 +73,22 @@ export class SetupEditorPlugin extends Plugin {
         return editableEls;
     }
 
+    handleDraggableLink(editableEls) {
+        // On Firefox, the caret cannot be placed inside the editable content
+        // of a non-editable link, as the browser waits for a possible drag of
+        // the link instead.
+        for (const editableEl of editableEls) {
+            const linkEl = editableEl.parentElement.closest("a[href]");
+            if (linkEl && !linkEl.hasAttribute("draggable")) {
+                linkEl.setAttribute("draggable", "false");
+            }
+        }
+    }
+
     cleanForSave({ root }) {
+        root.querySelectorAll("a[href][draggable='false']:has(.o_editable)").forEach((el) => {
+            el.removeAttribute("draggable");
+        });
         root.classList.remove("o_editable");
         root.querySelectorAll(".o_editable").forEach((el) => {
             el.classList.remove("o_editable");
