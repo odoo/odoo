@@ -55,7 +55,7 @@ export class BuilderMany2One extends Component {
         this.domState = useDomState(async (el) => {
             const selectedString = getValue(el);
             const selected = selectedString && JSON.parse(selectedString);
-            if (selected && !("display_name" in selected && "name" in selected)) {
+            if (selected && !("display_name" in selected)) {
                 let value;
                 if (!selected.id) {
                     value = {
@@ -67,7 +67,7 @@ export class BuilderMany2One extends Component {
                         await this.cachedModel.ormRead(
                             this.props.model,
                             [selected.id],
-                            ["display_name", "name"]
+                            ["display_name"]
                         )
                     )[0];
                 }

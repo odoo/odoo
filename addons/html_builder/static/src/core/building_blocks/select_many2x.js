@@ -130,7 +130,7 @@ export class SelectMany2X extends Component {
         const results = await this.cachedModel.ormRead(
             this.props.model,
             tuples.map(([id, _name]) => id),
-            [...new Set(this.props.fields).add(this.props.displayNameField).add("name")]
+            [...new Set(this.props.fields).add(this.props.displayNameField)]
         );
         if (this.props.nullText && (!results.length || results[0].id)) {
             results.unshift({
@@ -154,13 +154,13 @@ export class SelectMany2X extends Component {
         const allRecords = await this.cachedModel.ormSearchRead(
             this.props.model,
             [],
-            ["id", "name"]
+            ["id", this.props.displayNameField]
         );
         const usedNames = [
             // Exclude existing names
-            ...allRecords.map((item) => item.name),
+            ...allRecords.map((item) => item[this.props.displayNameField]),
             // Exclude new names
-            ...this.props.selected.map((item) => item.name),
+            ...this.props.selected.map((item) => item[this.props.displayNameField]),
         ];
         return !usedNames.includes(name);
     }
