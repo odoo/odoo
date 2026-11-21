@@ -2,6 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 import { checkFileSize } from "@web/core/utils/files";
+import { isBrowserChrome } from "@web/core/browser/feature_detection";
 
 import { Component, proxy, signal, t, useProps } from "@odoo/owl";
 
@@ -34,12 +35,19 @@ export class FileUploader extends Component {
      * @param {Event} ev
      */
     async onFileChange(ev) {
-        const files = [...ev.target.files].filter((file) => this.validFileType(file));
+        await this.uploadFiles(Array.from(ev.target.files));
+        ev.target.value = null;
+    }
+
+    /**
+     * @param {File[]} files
+     */
+    async uploadFiles(files) {
+        const validFiles = files.filter((file) => this.validFileType(file));
         if (!files.length) {
             return;
         }
-        const { target } = ev;
-        for (const file of files) {
+        for (const file of validFiles) {
             if (this.props.checkSize && !checkFileSize(file.size, this.notification)) {
                 return null;
             }
@@ -63,7 +71,6 @@ export class FileUploader extends Component {
                 this.state.isUploading = false;
             }
         }
-        target.value = null;
         if (this.props.multiUpload && this.props.onUploadComplete) {
             this.props.onUploadComplete({});
         }
@@ -99,6 +106,12 @@ export class FileUploader extends Component {
                 return;
             }
         }
-        this.fileInputRef()?.click();
+        if (isBrowserChrome()) {
+            const pickerOpts = { multiple: this.props.multiUpload };
+            const fileHandles = await window.showOpenFilePicker(pickerOpts);
+            this.uploadFiles(await Promise.all(fileHandles.map((handle) => handle.getFile())));
+        } else {
+            this.fileInputRef()?.click();
+        }
     }
 }
