@@ -16,6 +16,7 @@ from . import test_model_attributes
 from . import test_override_signatures
 from . import test_override_translated_fields
 from . import test_routes
+from . import test_safe_eval
 from . import test_i18n
 from . import test_test_holes
 from . import test_security_files
