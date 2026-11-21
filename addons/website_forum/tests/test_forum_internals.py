@@ -102,6 +102,22 @@ class TestPostInternals(TestForumCommon):
         questions_post.with_user(self.user_employee).user_favourite = True
         self.assertEqual(self.user_employee.karma, 1)
 
+    def test_commentator_badge(self):
+        challenge = self.env.ref('website_forum.challenge_commentator')
+        badge = self.env.ref('website_forum.badge_p_2')
+        self.user_portal.karma = KARMA['com_all']
+        for idx in range(10):
+            self.post.with_user(self.user_portal)._post_comment(f'Comment {idx}')
+        challenge._update_all()
+        goal = self.env['gamification.goal'].search([
+            ('challenge_id', '=', challenge.id),
+            ('user_id', '=', self.user_portal.id),
+        ])
+        goal.update_goal()
+        self.assertEqual(goal.current, 10)
+        challenge._check_challenge_reward()
+        self.assertIn(badge, self.user_portal.badge_ids.badge_id)
+
 
 @tagged('forum_internals')
 class TestTags(TestForumCommon):
