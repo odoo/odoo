@@ -39,12 +39,10 @@ export class CustomFavoriteItem extends Component {
             return false;
         }
         const { isDefault } = this.state;
-        const embeddedActionId = this.env.config.currentEmbeddedActionId || false;
         const serverSideId = await this.env.searchModel.createNewFavorite({
             description,
             isDefault,
             isShared,
-            embeddedActionId,
         });
 
         Object.assign(this.state, {

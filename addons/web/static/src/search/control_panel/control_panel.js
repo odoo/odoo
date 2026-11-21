@@ -20,7 +20,7 @@ import {
     useProps,
 } from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
-import { EmbeddedActionsPanel, useEmbeddedActions } from "./embedded_actions";
+import { openHubItem, useHubItems, useToggleHubTabs } from "@web/search/hub_tabs/hub_utils";
 
 const STICKY_CLASS = "o_mobile_sticky";
 const DEFAULT_DISPLAY = {
@@ -35,7 +35,6 @@ export class ControlPanel extends Component {
         Dropdown,
         DropdownItem,
         Breadcrumbs,
-        EmbeddedActionsPanel,
     };
     props = useProps({
         display: t.object().optional(DEFAULT_DISPLAY),
@@ -44,7 +43,10 @@ export class ControlPanel extends Component {
     root = signal.ref();
 
     setup() {
-        this.embeddedPanelState = useEmbeddedActions();
+        if (this.env.config.hub) {
+            this.toggleHubTabs = useToggleHubTabs(this.env.config.hub);
+            this.hubItems = useHubItems(this.env.config.hub);
+        }
         this.actionService = useService("action");
         this.offlinePlugin = usePlugin(OfflinePlugin);
         this.uiService = useService("ui");
@@ -122,6 +124,13 @@ export class ControlPanel extends Component {
             }
         }
     });
+
+    openHubItem(item) {
+        const { resModel, resId } = this.env.config.hub;
+        openHubItem(this.actionService, item, { resModel, resId }, {
+            stackPosition: "replaceCurrentAction",
+        });
+    }
 
     getScrollingElement() {
         return this.root().parentElement;

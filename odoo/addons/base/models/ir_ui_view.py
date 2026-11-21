@@ -3102,9 +3102,7 @@ class Base(models.AbstractModel):
                             result['views'][view_type]['toolbar'].setdefault(key, []).append(action)
 
         if options.get('load_filters') and 'search' in result['views']:
-            result['views']['search']['filters'] = self.env['ir.filters'].get_filters(
-                self._name, options.get('action_id'), options.get('embedded_action_id'), options.get('embedded_parent_res_id')
-            )
+            result['views']['search']['filters'] = self.env['ir.filters'].get_filters(self._name, options.get('action_id'))
 
         return result
 

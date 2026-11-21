@@ -290,19 +290,15 @@ class ProjectProject(models.Model):
     def action_view_sos(self):
         self.ensure_one()
         all_sale_orders = self._fetch_sale_order_items({'project.task': [('is_closed', '=', False)]}).sudo().order_id
-        embedded_action_context = self.env.context.get('from_embedded_action', False)
         action_window = self._get_view_action()
         action_window["domain"] = self._get_sale_orders_domain(all_sale_orders)
         action_window['context'] = {
             **ast.literal_eval(action_window['context']),
-            "create": self.env.context.get("create_for_project_id", embedded_action_context),
             "show_sale": True,
             "default_partner_id": self.partner_id.id,
             "default_project_id": self.id,
-            "create_for_project_id": self.id if not embedded_action_context else False,
-            "from_embedded_action": embedded_action_context,
         }
-        if len(all_sale_orders) <= 1 and not embedded_action_context:
+        if self.env.context.get('form_when_one', True) and len(all_sale_orders) <= 1:
             action_window.update({
                 "res_id": all_sale_orders.id,
                 "views": [[False, "form"]],
@@ -354,7 +350,7 @@ class ProjectProject(models.Model):
             "project_id": self.id,
         }
         action["context"] = context
-        if len(invoice_ids) == 1 and not self.env.context.get('from_embedded_action', False):
+        if len(invoice_ids) == 1 and self.env.context.get('form_when_one', True):
             action['views'] = [[False, 'form']]
             action['res_id'] = invoice_ids[0]
         return action
@@ -506,7 +502,7 @@ class ProjectProject(models.Model):
             **ast.literal_eval(action_window["context"]),
             "project_id": self.id,
         }
-        if not self.env.context.get('from_embedded_action') and len(vendor_bill_ids) == 1:
+        if len(vendor_bill_ids) == 1 and self.env.context.get('form_when_one', True):
             action_window['views'] = [[False, 'form']]
             action_window['res_id'] = vendor_bill_ids[0]
         return action_window
@@ -556,7 +552,6 @@ class ProjectProject(models.Model):
                 (view_ids_per_type.get(view_type, view_id), view_type)
                 for view_id, view_type in action['views']
             ]
-        action['display_name'] = self.env._("%(name)s's Margins", name=self.name)
         action['domain'] = [('account_id', 'in', self.account_id.ids)]
         action['context'] = {
             **ast.literal_eval(action.get('context', '{}')),

@@ -3,7 +3,6 @@
 
     <t t-name="web.ControlPanel">
         <div class="o_control_panel d-flex flex-column gap-3 px-3 pt-2" t-ref="this.root" data-command-category="actions">
-            <EmbeddedActionsPanel t-if="!this.uiService.isSmall" state="this.embeddedPanelState"/>
             <div class="o_control_panel_main d-flex flex-wrap flex-lg-nowrap justify-content-between align-items-lg-start gap-2 gap-lg-3 flex-grow-1">
                 <div class="o_control_panel_breadcrumbs d-flex align-items-center gap-1 order-0 h-lg-100">
                     <div class="o_control_panel_main_buttons d-flex gap-1 d-empty-none d-print-none text-nowrap pe-1"
@@ -60,15 +59,15 @@
 
                 <div class="o_control_panel_navigation d-flex flex-wrap flex-md-nowrap justify-content-end gap-1 gap-xl-3 order-1 order-lg-2 flex-grow-1">
                     <t t-if="this.uiService.isSmall">
-                        <EmbeddedActionsPanel id="embedded-actions-panel-mobile" state="this.embeddedPanelState"/>
+                        <t t-call="web.HubItemsMobileDropdown"/>
                         <t t-call-slot="control-panel-additional-actions"/>
                     </t>
                     <div t-if="this.pagerProps and this.pagerProps.total > 0" class="o_cp_pager text-nowrap align-self-stretch" role="search">
                         <Pager t-props="this.pagerProps"/>
                     </div>
-                    <button t-if="this.embeddedPanelState.embeddedInfos.embeddedActions?.length and !this.uiService.isSmall" name="embedded_actions" class="btn btn-secondary"
-                            t-att-class="{active: this.embeddedPanelState.embeddedInfos.showEmbedded}"
-                            t-on-click="() => this.embeddedPanelState.onClickShowEmbedded()"
+                    <button t-if="this.env.config.hub and !this.uiService.isSmall" name="hub_tabs" class="btn btn-secondary"
+                            t-att-class="{active: this.env.config.hub.showTabs()}"
+                            t-on-click="() => this.toggleHubTabs()"
                             title="View related documents">
                         <i class="oi" data-icon="tune" />
                     </button>
@@ -112,5 +111,24 @@
                 </div>
             </div>
         </div>
+    </t>
+
+    <t t-name="web.HubItemsMobileDropdown">
+        <Dropdown t-if="this.env.config.hub and this.hubItems().length" menuClass="'o_hub_items_mobile_dropdown'">
+            <button class="btn btn-secondary" title="View related documents">
+                <i class="oi oi-fw" data-icon="tune" aria-hidden="true"/>
+            </button>
+            <t t-set-slot="content">
+                <t t-call="web.HubItemsMobileDropdownItems"/>
+            </t>
+        </Dropdown>
+    </t>
+
+    <t t-name="web.HubItemsMobileDropdownItems">
+        <DropdownItem t-foreach="this.hubItems()" t-as="item" t-key="item.id"
+            class="item.id === this.env.config.hub.activeItemId ? 'selected' : ''"
+            onSelected="() => this.openHubItem(item)">
+            <span t-out="item.display_name"/>
+        </DropdownItem>
     </t>
 </templates>

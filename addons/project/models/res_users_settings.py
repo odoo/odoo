@@ -4,33 +4,21 @@ from odoo import models
 class ResUsersSettings(models.Model):
     _inherit = 'res.users.settings'
 
-    def get_embedded_actions_settings(self):
-        embedded_actions_settings_dict = super().get_embedded_actions_settings()
-        res_model = self.env.context.get('res_model')
-        res_id = self.env.context.get('res_id')
-        if not (res_model == 'project.project' and res_id):
-            return embedded_actions_settings_dict
-
-        project_manager = self.env['project.project'].browse(res_id).user_id
-        if self.user_id == project_manager:
-            return embedded_actions_settings_dict
-
-        user_configs = self.env['res.users.settings.embedded.action'].search(
-            domain=[
-                ('user_setting_id', '=', self.id),
-                ('res_model', '=', res_model),
-                ('res_id', '=', res_id),
-            ],
-        )
-        manager_configs_sudo = self.env['res.users.settings.embedded.action'].sudo().search(
-            domain=[
-                ('user_setting_id', '=', project_manager.sudo().res_users_settings_id.id),
-                ('res_model', '=', res_model),
-                ('res_id', '=', res_id),
-                ('action_id', 'not in', user_configs.action_id.ids),
-            ],
-        )
-        if manager_configs_sudo:
-            embedded_actions_settings_dict.update(manager_configs_sudo.copy({'user_setting_id': self.id})._embedded_action_settings_format())
-
-        return embedded_actions_settings_dict
+    def get_default_hub_setting(self, hub_id, res_id):
+        """ Start from the pinned items of the project manager on a project. """
+        res = super().get_default_hub_setting(hub_id, res_id)
+        hub = self.env['ir.hub'].browse(hub_id)
+        if hub.res_model != 'project.project':
+            return res
+        project_manager = self.env['project.project'].browse(res_id).exists().user_id
+        if not project_manager or project_manager == self.user_id:
+            return res
+        # sudo: the settings of the project manager are not readable by the user
+        manager_setting_sudo = self.env['res.users.settings.hub'].sudo().search([
+            ('user_setting_id.user_id', '=', project_manager.id),
+            ('hub_id', '=', hub_id),
+            ('res_id', '=', res_id),
+        ], limit=1)
+        if manager_setting_sudo.pinned_item_ids:
+            res['pinned_item_ids'] = manager_setting_sudo.pinned_item_ids
+        return res
