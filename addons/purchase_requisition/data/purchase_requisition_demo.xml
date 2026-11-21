@@ -21,7 +21,7 @@
         <record id="rfq1" model="purchase.order">
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="user_id" ref="base.user_admin"/>
-            <field name="requisition_id" ref="bo_requisition"/>
+            <field name="requisition_id" eval="[(4, ref('bo_requisition'))]"/>
         </record>
 
         <record id="rfq1_line" model="purchase.order.line">
@@ -38,7 +38,7 @@
         <record id="rfq2" model="purchase.order">
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="user_id" ref="base.user_admin"/>
-            <field name="requisition_id" ref="bo_requisition"/>
+            <field name="requisition_id" eval="[(4, ref('bo_requisition'))]"/>
         </record>
 
         <record id="rfq2_line" model="purchase.order.line">
