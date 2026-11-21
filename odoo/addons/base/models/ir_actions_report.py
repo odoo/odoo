@@ -403,6 +403,9 @@ class IrActionsReport(models.Model):
             res_company=self.env.company,
             web_base_url=self.env['ir.config_parameter'].sudo().get_str('web.base.url'),
         )
+        # Without a given company, the layouts use the one of the printed record: ir.qweb must not
+        # default it to the current company.
+        values.setdefault('company', None)
         return view_obj._render_template(template, values).encode()
 
     def _handle_merge_pdfs_error(self, error=None, error_stream=None):

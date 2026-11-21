@@ -94,6 +94,40 @@ class TestReports(odoo.tests.HttpCase):
 
     @mute_logger('odoo.addons.base_report_wkhtmltox.models.ir_actions_report')
     @no_retry
+    def test_report_layout_of_record_company(self):
+        """ A record is printed in the document layout of its company, not the one of the current
+        company, unless the report gives the company. """
+        company_a, company_b = self.env['res.company'].create([{'name': 'Company A'}, {'name': 'Company B'}])
+        partner = self.env['res.partner'].create({'name': 'Partner B', 'company_id': company_b.id})
+        self.env['ir.ui.view'].create([{
+            'type': 'qweb',
+            'name': key,
+            'key': key,
+            'arch': f'''
+                <t t-call="web.html_container">
+                    <t t-foreach="docs" t-as="o">
+                        {company_line}
+                        <t t-call="web.external_layout"><div class="page" t-out="o.name"/></t>
+                    </t>
+                </t>''',
+        } for key, company_line in (
+            ('base.test_report_record_company', ''),
+            ('base.test_report_given_company', f'<t t-set="company" t-value="env[\'res.company\'].browse({company_a.id})"/>'),
+        )])
+        reports = self.env['ir.actions.report'].create([{
+            'name': key,
+            'report_name': key,
+            'model': 'res.partner',
+        } for key in ('base.test_report_record_company', 'base.test_report_given_company')])
+
+        Report = self.env['ir.actions.report'].with_company(company_a)
+        html = Report._render_qweb_html(reports[0].id, partner.ids)[0]
+        self.assertIn(f'o_company_{company_b.id}_layout'.encode(), html)
+        self.assertNotIn(f'o_company_{company_a.id}_layout'.encode(), html)
+
+        html = Report.with_company(company_b)._render_qweb_html(reports[1].id, partner.ids)[0]
+        self.assertIn(f'o_company_{company_a.id}_layout'.encode(), html)
+
     def test_report_error_cleanup(self):
         admin = self.env.ref('base.user_admin')
         self.env['ir.ui.view'].create({
