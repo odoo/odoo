@@ -27,6 +27,7 @@ except ImportError:
 
 SMTP_TIMEOUT = 5
 PASSWORD = 'secretpassword'
+NON_ASCII_PASSWORD = 'secretpa¿ssword'
 _openssl = shutil.which('openssl')
 _logger = logging.getLogger(__name__)
 
@@ -44,7 +45,10 @@ def _find_free_local_address():
 
 def _smtp_authenticate(server, session, enveloppe, mechanism, data):
     """ Callback method used by aiosmtpd to validate a login/password pair. """
-    result = aiosmtpd.smtp.AuthResult(success=data.password == PASSWORD.encode())
+    result = aiosmtpd.smtp.AuthResult(
+        success=data.password == PASSWORD.encode()
+        or data.password == NON_ASCII_PASSWORD.encode()
+    )
     _logger.debug("AUTH %s", "successfull" if result.success else "failed")
     return result
 
@@ -291,6 +295,7 @@ class TestIrMailServerSMTPD(TransactionCaseWithUserDemo):
 
         MISSING = ''
         INVALID = 'bad password'
+        INVALID_NON_ASCII = 'bad pa¿ssword'
         matrix = [
             # auth_required, password, error_pattern
             (False, MISSING, None),
@@ -301,7 +306,12 @@ class TestIrMailServerSMTPD(TransactionCaseWithUserDemo):
                 r"The server has closed the connection unexpectedly\. "
                 r"Check configuration served on this port number\.\n "
                 r"Connection unexpectedly closed:.* timed out"),
+            (True, INVALID_NON_ASCII, (
+                r"The server has closed the connection unexpectedly\. "
+                r"Check configuration served on this port number\.\n "
+                r"Connection unexpectedly closed:.* timed out")),
             (True, PASSWORD, None),
+            (True, NON_ASCII_PASSWORD, None),
         ]
 
         for encryption in ('none', 'starttls', 'ssl'):
