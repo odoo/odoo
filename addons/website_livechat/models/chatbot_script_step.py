@@ -15,6 +15,10 @@ class ChatbotScriptStep(models.Model):
                 values['email'] = visitor_sudo.email
             if not values.get('phone') and visitor_sudo.mobile:
                 values['phone'] = visitor_sudo.mobile
-            values['country'] = {'id': visitor_sudo.country_id} if visitor_sudo.country_id else False
 
         return values
+
+    def _chatbot_get_customer_country(self, discuss_channel):
+        # sudo - website.visitor: chat bot can access visitor information
+        visitor_country = discuss_channel.livechat_visitor_id.sudo().country_id
+        return visitor_country or super()._chatbot_get_customer_country(discuss_channel)

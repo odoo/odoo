@@ -11,7 +11,8 @@ class WebsiteCrmChatbotCase(MockVisitor, test_chatbot_lead.CrmChatbotCase):
     def test_chatbot_lead_website_public_user(self):
         """" Additionally test that we use the visitor data. """
         website_visitor = self.env['website.visitor'].sudo().create({
-            "access_token": "c8d20bd006c3bf46b875451defb5991d"
+            "access_token": "c8d20bd006c3bf46b875451defb5991d",
+            "country_id": self.env.ref("base.fr").id,
         })
         partner = self.env['res.partner'].sudo().create({"name": "Jean Michel Visitor"})
         website_visitor.partner_id = partner.id  # can't be set in create as compute overrides it
@@ -21,4 +22,5 @@ class WebsiteCrmChatbotCase(MockVisitor, test_chatbot_lead.CrmChatbotCase):
 
         self.assertEqual(created_lead.name, "Jean Michel Visitor's New Lead")
         self.assertEqual(created_lead.visitor_ids, website_visitor)
+        self.assertEqual(created_lead.country_id, website_visitor.country_id)
         self.assertEqual(created_lead.medium_id, self.env.ref("utm.utm_medium_website"))
