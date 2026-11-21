@@ -117,6 +117,7 @@ test("Check if opening form view from activity view does open with chatter visbl
     onRpc("get_activity_data", function () {
         return {
             activity_res_ids: [1],
+            can_schedule_activity: true,
             grouped_activities: {},
             activity_types: this.env["mail.activity.type"].map((type) => {
                 const templates = (type.mail_template_ids || []).map((template_id) => {
