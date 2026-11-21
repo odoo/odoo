@@ -57,3 +57,40 @@ class TestRecruitmentMail(MailCase):
             recipients_cc=[],
             subject='Application refused: Laurie Poiret',
         )
+
+    def test_refuse_mail_with_template_new_cc_keeps_contact(self):
+        """The contact created for a new email address of the template does not replace the
+        contact of the refused applicants."""
+        mail_template = self.env['mail.template'].create({
+            'name': 'Test template',
+            'model_id': self.env['ir.model']._get('hr.applicant').id,
+            'email_cc': 'cc@test.test',
+            'email_to': '{{ object.partner_id.email }}',
+            'use_default_to': False,
+            'subject': 'Application refused: {{ object.partner_name }}',
+        })
+        refuse_reason = self.env['hr.applicant.refuse.reason'].create({
+            'name': 'Not good',
+            'template_id': mail_template.id,
+        })
+        applicants = self.env['hr.applicant'].create([{
+            'partner_name': 'Laurie Poiret',
+            'email_from': 'laurie.poiret@aol.ru',
+        }, {
+            'partner_name': 'Jean Dupont',
+            'email_from': 'jean.dupont@aol.ru',
+        }])
+        partners = applicants.partner_id
+        # Refusing several applicants at once sends the mails through the template composer
+        action = applicants.archive_applicant()
+        applicant_get_refuse_reason = self.env[action['res_model']].with_context(action['context']).create({
+            'refuse_reason_id': refuse_reason.id,
+        })
+        self.assertTrue(applicant_get_refuse_reason.send_mail)
+
+        with self.mock_mail_gateway():
+            applicant_get_refuse_reason.action_refuse_reason_apply()
+
+        self.assertTrue(self.env['res.partner'].search([('email', '=', 'cc@test.test')]))
+        self.assertEqual(applicants.partner_id, partners)
+        self.assertEqual(applicants.mapped('email_from'), ['laurie.poiret@aol.ru', 'jean.dupont@aol.ru'])
