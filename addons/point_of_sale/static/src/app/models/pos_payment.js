@@ -190,6 +190,9 @@ export class PosPayment extends Base {
     updateRefundPaymentLine(refundedPaymentLine) {}
 
     canBeAdjusted() {
+        if (this.pos_order_id.isToInvoice()) {
+            return false;
+        }
         if (this.payment_interface) {
             return this.payment_interface.canBeAdjusted(this.uuid);
         }
@@ -197,9 +200,12 @@ export class PosPayment extends Base {
     }
 
     async adjustAmount(amount) {
-        if (this.payment_interface) {
-            this.amount += amount;
-            await this.payment_interface.sendPaymentAdjust(this.uuid);
+        this.amount += amount;
+        try {
+            await this.payment_interface?.sendPaymentAdjust(this.uuid);
+        } catch (error) {
+            this.amount -= amount;
+            throw error;
         }
     }
 }

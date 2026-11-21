@@ -1052,7 +1052,6 @@ export class TicketScreen extends Component {
     }
 
     async settleTips() {
-        const promises = [];
         for (const order of this.getFilteredOrderList()) {
             const amount = this.pos.parseValidFloat(order.uiState.TipScreen.inputTipAmount);
 
@@ -1065,42 +1064,9 @@ export class TicketScreen extends Component {
                 continue;
             }
 
-            order.state = "draft";
-            this.pos.selectedOrderUuid = order.uuid;
-            await this.pos.setTip(amount);
-            order.state = "paid";
             order.uiState.screen_data.value = { name: "", props: {} };
-
-            const serializedTipLine = order.getSelectedOrderline().serializeForORM();
-            order.getSelectedOrderline().delete();
-            delete serializedTipLine["record_dependencies"];
-            delete serializedTipLine["relations_uuid_mapping"];
-
-            promises.push(
-                new Promise((resolve) => {
-                    const fn = async () => {
-                        const tipLine = await this.pos.data.create("pos.order.line", [
-                            serializedTipLine,
-                        ]);
-                        const state = await this.pos.data.ormWrite("pos.order", [order.id], {
-                            is_tipped: true,
-                            tip_amount: tipLine[0].price_unit,
-                        });
-
-                        if (state) {
-                            order.update({
-                                is_tipped: true,
-                                tip_amount: tipLine[0].price_unit,
-                            });
-                        }
-                        resolve();
-                    };
-                    fn();
-                })
-            );
+            await this.pos.settleTip(order, amount);
         }
-
-        await Promise.all(promises);
     }
 
     getCurrentTimePreset(order) {

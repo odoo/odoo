@@ -1049,6 +1049,33 @@ export class PosStore extends WithLazyGetterTrap {
         line.setDiscount(val);
     }
 
+    async settleTip(order, amount) {
+        this.selectedOrderUuid = order.uuid;
+        order.state = "draft";
+        await this.setTip(amount);
+        order.state = "paid";
+        const line = order.lines.find((l) => l.isTipLine());
+        const payment = order.adjustableTipLine;
+        const tipAmount = (payment && line?.priceIncl) || 0;
+        let values = false;
+        if (tipAmount) {
+            await payment.adjustAmount(tipAmount);
+            values = {
+                ...line.serializeForORM(),
+                price_subtotal: line.priceExcl,
+                price_subtotal_incl: tipAmount,
+            };
+            delete values.record_dependencies;
+            delete values.relations_uuid_mapping;
+        }
+        line?.delete();
+        await this.data.callRelated("pos.order", "add_tip", [
+            [order.id],
+            payment?.id ?? false,
+            values,
+        ]);
+    }
+
     async setTip(tip, type = "fixed", value = false) {
         const currentOrder = this.getOrder();
         const tipProduct = this.config.tip_product_id;
