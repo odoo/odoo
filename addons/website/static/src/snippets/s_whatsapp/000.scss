@@ -90,6 +90,7 @@
     .s_whatsapp_chatbox {
         bottom: 100%;
         width: 320px;
+        max-width: calc(100vw - #{map-get($spacers, 4) * 2});
         background-color: var(--s_whatsapp-chat-bg);
         color: var(--s_whatsapp-text-color);
     }
@@ -107,6 +108,7 @@
     .s_whatsapp_messages {
         height: 22vh;
         min-height: 10rem;
+        overflow-y: auto;
 
         .s_whatsapp_agent_msg {
             background-color: var(--s_whatsapp-message-bg);
