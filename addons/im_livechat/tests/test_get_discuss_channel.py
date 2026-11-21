@@ -396,6 +396,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             partner_ids=self.operators[0].partner_id.ids
         )
         self.assertEqual(self_member.partner_id, self.operators[0].partner_id)
+<<<<<<< 5392ba4f1ad2c7689b3df1db95c0c11633ffb69a
 
     def test_livechat_conversation_history(self):
         self.authenticate(self.operators[0].login, self.password)
@@ -414,3 +415,20 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         channel.with_user(self.visitor_user).message_post(author_id=self.visitor_user.partner_id.id, body="Visitor Here")
         channel_history = channel._get_channel_history()
         self.assertEqual(channel_history, "Michel: Operator Here<br/>Rajesh: Visitor Here<br/>")
+||||||| 1a68f7671bd0bf7594eb07d809763f147ee92c5a
+=======
+
+    def test_visitor_leave_session_without_guest_context(self):
+        channel_info = self.make_jsonrpc_request(
+            "/im_livechat/get_session",
+            {"anonymous_name": "Visitor", "channel_id": self.livechat_channel.id},
+        )
+        channel = self.env["discuss.channel"].browse(channel_info["id"])
+        self.assertTrue(channel.livechat_active)
+        self.opener.cookies.pop("dgid", None)
+        # Must not raise when member record is not found.
+        self.make_jsonrpc_request(
+            "/im_livechat/visitor_leave_session", {"uuid": channel_info["uuid"]}
+        )
+        self.assertTrue(channel.livechat_active)
+>>>>>>> cecd05410210533c9ec966f7807f285df95a6b41
