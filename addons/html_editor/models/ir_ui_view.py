@@ -113,6 +113,9 @@ class IrUiView(models.Model):
         }
         vals.update(self._save_oe_structure_hook())
         oe_structure_view = self.env['ir.ui.view'].create(vals)
+        # Keep the translations of the terms of the zone, as any other edit of
+        # the view does.
+        self._copy_field_terms_translations(self, 'arch_db', oe_structure_view, 'arch_db')
         self._copy_custom_snippet_translations(oe_structure_view, 'arch_db')
 
         return True
