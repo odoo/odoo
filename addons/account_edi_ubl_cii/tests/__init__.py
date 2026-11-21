@@ -13,6 +13,7 @@ from . import test_cii_import_facturx_fr_retrieve_product
 from . import test_cii_import_facturx_fr_retrieve_tax
 from . import test_ubl_export_bis3_be
 from . import test_ubl_export_bis3_debit_note
+from . import test_ubl_export_bis3_dk
 from . import test_ubl_export_bis3_invoice_be_down_payment
 from . import test_ubl_import_bis3_invoice_be
 from . import test_ubl_import_bis3_invoice_be_auto_generate_pdf

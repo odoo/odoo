@@ -118,6 +118,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             if partner.country_id.code == 'DK':
                 # DK-R-014: For Danish Suppliers it is mandatory to specify schemeID as "0184" (DK CVR-number) when
                 # PartyLegalEntity/CompanyID is used for AccountingSupplierParty
+                vals['company_id'] = partner.company_registry
                 vals['company_id_attrs'] = {'schemeID': '0184'}
             if partner.country_code == 'SE' and partner.company_registry:
                 vals['company_id'] = ''.join(char for char in partner.company_registry if char.isdigit())
@@ -522,6 +523,15 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 constraints.update({
                     'PEPPOL-COMMON-R043_customer': _('%s should have a valid KBO/BCE number in the Company ID field', vals['customer'].display_name),
                 })
+
+        if vals['supplier'].country_id.code == 'DK':
+            # DK-R-014 / DK-R-017: the CVR number (Company ID) is used as PartyLegalEntity/CompanyID with schemeID "0184"
+            for role in ('supplier', 'customer'):
+                partner = vals[role].commercial_partner_id
+                if partner.country_id.code == 'DK' and not partner.company_registry:
+                    constraints[f'dk_r_cvr_{role}'] = _(
+                        "%s should have a CVR number in the Company ID field.", partner.display_name,
+                    )
         return constraints
 
     def _import_retrieve_partner_vals(self, tree, role):
@@ -851,4 +861,13 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 constraints.update({
                     'PEPPOL-COMMON-R043_customer': _('%s should have a valid KBO/BCE number in the Company ID field', vals['customer'].display_name),
                 })
+
+        if vals['supplier'].country_id.code == 'DK':
+            # DK-R-014 / DK-R-017: the CVR number (Company ID) is used as PartyLegalEntity/CompanyID with schemeID "0184"
+            for role in ('supplier', 'customer'):
+                partner = vals[role].commercial_partner_id
+                if partner.country_id.code == 'DK' and not partner.company_registry:
+                    constraints[f'dk_r_cvr_{role}'] = _(
+                        "%s should have a CVR number in the Company ID field.", partner.display_name,
+                    )
         return constraints
