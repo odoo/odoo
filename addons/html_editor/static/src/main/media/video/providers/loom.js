@@ -37,21 +37,4 @@ export class Loom extends AbstractThirdPartyVideo {
         const params = encodeOptionsToParams(options, Loom.optionsConfig);
         return `https://www.loom.com/embed/${videoId}${params ? "?" + params : ""}`;
     }
-
-    /**
-     * Example urls are used to test that the urlMatcher regular expression
-     * correctly identifies valid video urls and extracts the video ID.
-     * Every urls in this object should be parsable by the urlMatcher.
-     *
-     * The `base` Url is also used in media dialog unit tests.
-     *
-     * @see /addons/html_editor/static/tests/media/*.test.js
-     * */
-    static exampleUrls = {
-        base: "https://www.loom.com/share/e5b8c04bca094dd8a5507925ab887002",
-        embed: "https://www.loom.com/embed/e5b8c04bca094dd8a5507925ab887002",
-        Params: "loom.com/share/e5b8c04bca094dd8a5507925ab887002?autoplay=1&t=62",
-        embedParams:
-            "https://www.loom.com/embed/e5b8c04bca094dd8a5507925ab887002?autoplay=1&t=62s&hide_share=1&hideEmbedTopBar=0&hide_title=0&hide_owner=1&hide_speed=1&fullscreen=1",
-    };
 }

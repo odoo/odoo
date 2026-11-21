@@ -1,16 +1,10 @@
-import { session } from "@web/session";
-
 /**
- * This script, served with frontend pages, displays buttons in the top left
- * corner to provide the authenticated user an access to his odoo backend.
+ * This script, served with frontend pages for internal users, displays buttons
+ * in the top left corner to provide them an access to their odoo backend.
  * In the case of the page being viewed in the website_preview client action,
  * it will forward some events to its parent.
  */
 document.addEventListener("DOMContentLoaded", () => {
-    if (session.is_website_user) {
-        return;
-    }
-
     if (!window.frameElement) {
         const frontendToBackendNavEl = document.querySelector(".o_frontend_to_backend_nav");
         if (frontendToBackendNavEl) {
