@@ -3,4 +3,12 @@
 // No CSS hacks, variables overrides only
 .oe_seo_configuration {
     --seo__preview-title-color: #8ab4f8; // Google Search dark-mode color
+
+    // The link color is unreadable on the 'alert-info' background, use a
+    // lighter one that still stands out from the alert text.
+    .alert-info > .btn-link {
+        --btn-color: #{$link-hover-color};
+        --btn-hover-color: #{mix(#fff, $link-hover-color, 30%)};
+        --btn-active-color: #{mix(#fff, $link-hover-color, 30%)};
+    }
 }

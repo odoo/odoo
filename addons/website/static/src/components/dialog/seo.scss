@@ -171,4 +171,10 @@
     select.btn-outline-primary:focus option {
         color: var(--btn-color);
     }
+
+    // The 'text-info' color is unreadable on the 'alert-info' background,
+    // use the alert text color instead.
+    .alert-info > .text-info {
+        color: inherit !important;
+    }
 }
