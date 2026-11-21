@@ -245,7 +245,34 @@
                                     <field name="signature" options="{'codeview': true}"/>
                                 </group>
                             </page>
-                            <page string="Account Security" name="account_security" invisible="not id"/>
+                            <page string="Account Security" name="account_security" invisible="not id">
+                  <div class="d-flex" name="auth">
+                    <div class="col-7 col-sm-6 col-lg-3 d-flex flex-column">
+                      <span class="o_form_label">Change Password</span>
+                      <span class="text-muted">Update if compromised.</span>
+                    </div>
+                    <button name="preference_change_password" string="Change Password" type="object"
+                            invisible="id != uid" class="btn btn-secondary h-100 my-auto"/>
+                    <button invisible="id == uid" name="action_change_password_wizard" type="object"
+                            string="Change password" class="btn btn-secondary h-100 my-auto"/>
+                  </div>
+                  <div invisible="not id" class="d-md-flex mt-3">
+                    <div class="w-md-50 w-lg-25  d-flex flex-column">
+                      <label for="action_revoke_all_devices" string="Devices" class="o_form_label"/>
+                      <span class="text-muted">
+                        Check if they are yours.
+                      </span>
+                    </div>
+                    <div class="w-md-50 w-lg-75 d-flex flex-column my-auto">
+                      <field name="device_ids" mode="kanban"
+                             class="w-sm-75 w-md-100 w-lg-75 w-xl-50 o_base_devices_kanban_view"/>
+                      <div>
+                        <button name="action_revoke_all_devices" type="object" string="Log out from all devices"
+                                class="btn btn-secondary h-100"/>
+                      </div>
+                    </div>
+                  </div>
+                </page>
                         </notebook>
                     </sheet>
                 </form>
@@ -541,3 +568,4 @@
 
     </data>
 </odoo>
+
