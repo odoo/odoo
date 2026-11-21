@@ -203,6 +203,7 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/**/public_web/**/*',
             'mail/static/src/**/web_portal_project/**/*',
             'mail/static/src/**/web/**/*',
+            'mail/static/src/next/**/*',
             ('remove', 'mail/static/src/**/*.dark.scss'),
             ('remove', 'mail/static/src/**/*.dark.css'),
             # discuss (loaded last to fix dependencies)
