@@ -25,9 +25,9 @@
     <t t-set="breadcrumb_kind" t-valuef="base"/>
     <nav id="o_wforum_nav" t-attf-class="navbar d-flex gap-2 #{ 'mw-xl-75 mw-xxl-100' if _page_name == 'single_question' else '' } p-0" aria-label="breadcrumb">
         <t t-if="_page_name == 'single_question'">
-            <div class="flex-grow-1">
+            <div class="flex-grow-1 mw-100">
                 <div class="o_wforum_breadcrumb_root_single d-flex align-items-center mb-2">
-                    <a t-if="breadcrumb_kind == 'base'" t-attf-href="/forum/#{ _forum_slug }">
+                    <a t-if="breadcrumb_kind == 'base'" t-attf-href="/forum/#{ _forum_slug }" class="text-truncate">
                         <i class="oi d-inline-block me-2 small" data-icon="keyboard_arrow_left" role="img" aria-hidden="true"/><t t-out="_forum_name"/>
                     </a>
                     <button class="btn d-lg-none position-relative ms-auto p-2" data-bs-toggle="offcanvas" data-bs-target="#o_wforum_offcanvas">
@@ -35,7 +35,7 @@
                     </button>
                 </div>
                 <div class="d-flex gap-2 align-items-baseline">
-                    <h1 t-attf-class="col-lg-10 my-0 h3" t-out="question.name"/>
+                    <h1 t-attf-class="col-lg-10 my-0 h3 text-truncate text-wrap" t-out="question.name"/>
                     <div class="col d-flex justify-content-end align-items-center">
                         <i t-if="question.state == 'close'" class="oi ms-2 fs-4" data-icon="lock" role="img" aria-label="Closed" title="Closed" data-bs-toggle="tooltip" data-bs-placement="top"/>
                         <span t-elif="not question.active" class="badge text-bg-danger">
@@ -64,8 +64,8 @@
         </t>
         <t t-elif="_page_name == 'list_questions' or is_edit">
             <t t-set="target" t-value="post.parent_id if is_answer else post"/>
-            <div class="o_wforum_breadcrumb_root_list_or_edit d-flex align-items-center">
-                <h1 t-if="breadcrumb_kind=='base'" class="col-10 col-lg flex-grow-1 mb-0 h4">
+            <div class="o_wforum_breadcrumb_root_list_or_edit d-flex align-items-center mw-100">
+                <h1 t-if="breadcrumb_kind=='base'" class="col-10 col-lg flex-grow-1 mb-0 h4 text-truncate text-wrap">
                     <span t-if="not is_edit" class="mb-0" t-out="_forum_name"/>
                     <span t-elif="not is_answer" class="fw-bold mb-0">Edit Question</span>
                     <span t-else="is_answer" class="fw-bold mb-0">Edit Answer</span>
@@ -91,16 +91,16 @@
                     <span class="navbar-toggler-icon"/>
                 </button>
             </div>
-            <div t-if="tag or tags or search or question_count or page_name or website_forum_action" t-attf-class="d-flex justify-content-lg-end gap-2 flex-grow-1 flex-wrap flex-md-nowrap w-100 w-lg-auto #{'mw-xl-75' if search else 'mw-xl-50'}">
-                <span t-if="tag and not tags" class="btn btn-light rounded ps-2">
-                    <span t-if="tag"><i class="oi me-1 opacity-50" data-icon="label" role="img" aria-hidden="true"/><t t-out="tag.name"/></span>
+            <div t-if="tag or tags or search or question_count or page_name or website_forum_action" t-attf-class="d-flex justify-content-lg-end gap-2 flex-grow-1 flex-wrap flex-md-nowrap w-100 w-lg-auto mw-100 #{'mw-xl-75' if search else 'mw-xl-50'}">
+                <span t-if="tag and not tags" class="btn btn-light rounded ps-2 d-inline-flex align-items-center overflow-hidden">
+                    <span t-if="tag" class="text-truncate"><i class="oi me-1 opacity-50" data-icon="label" role="img" aria-hidden="true"/><t t-out="tag.name"/></span>
                     <a t-attf-href="#{ url_for('/forum') }/#{ _forum_slug }?#{ keep_query('search', 'sorting', 'my', 'create_uid') }"
                        class="p-1 text-decoration-none text-reset opacity-50" aria-label="Remove tag">
                        <i class="oi d-inline-block" data-icon="close_small" role="img" aria-hidden="true"/>
                     </a>
                 </span>
-                <span t-if="search" class="btn btn-light rounded ps-2">
-                    <em t-if="search" class="text-muted">"<t t-out="search"/>"</em>
+                <span t-if="search" class="btn btn-light rounded ps-2 d-inline-flex align-items-center overflow-hidden">
+                    <em t-if="search" class="text-muted text-truncate">"<t t-out="search"/>"</em>
                     <a t-attf-href="?#{ keep_query('sorting', 'my') }" class="p-1 text-decoration-none text-reset opacity-50" aria-label="Remove search">
                         <i class="oi d-inline-block" data-icon="close_small" role="img" aria-hidden="true"/>
                     </a>
@@ -227,7 +227,7 @@
 
 <!-- User sidebar -->
 <template id="user_sidebar">
-    <aside class="o_wforum_sidebar col-3 d-none d-lg-flex flex-column z-1">
+    <aside class="o_wforum_sidebar col-3 d-none d-lg-flex flex-column z-1 text-break">
         <div class="nav d-block px-2">
             <t t-call="website_forum.user_sidebar_header"/>
             <t t-call="website_forum.user_sidebar_body"/>
@@ -242,7 +242,7 @@
 
 <!-- Off canvas user sidebar on mobile -->
 <template id="user_sidebar_mobile">
-    <div id="o_wforum_offcanvas" class="o_website_offcanvas offcanvas offcanvas-end d-lg-none mw-75 p-0 overflow-visible">
+    <div id="o_wforum_offcanvas" class="o_website_offcanvas offcanvas offcanvas-end d-lg-none mw-75 p-0 overflow-visible text-break">
         <button type="button" class="btn-close mt-3 ms-auto me-3" data-bs-dismiss="offcanvas" aria-label="Close"/>
         <div class="offcanvas-header align-items-start px-0"><t t-call="website_forum.user_sidebar_header"/></div>
         <div class="offcanvas-body d-flex flex-column py-0 nav">
@@ -270,8 +270,8 @@
             class="btn w-100 py-1 text-start d-flex align-items-center" data-bs-toggle="tooltip" data-trigger="hover"
             title="My profile">
             <img class="o_wforum_avatar rounded-circle object-fit-cover" t-att-src="website.image_url(user, 'avatar_128', '60x60')" alt="Avatar"/>
-            <div class="d-flex flex-column justify-content-center ms-2">
-                <span class="mt-0 mb-1 h6-fs fw-bold" t-out="user_id.name"/>
+            <div class="d-flex flex-column justify-content-center ms-2 overflow-hidden">
+                <span class="mt-0 mb-1 h6-fs fw-bold text-truncate" t-out="user_id.name"/>
                 <span class="fs-6 text-reset opacity-50"><t t-out="user_id.karma"/> XP</span>
             </div>
         </a>
@@ -329,7 +329,7 @@
         </div>
         <a t-foreach="forum.tag_most_used_ids" t-as="tag"
             t-attf-href="#{ _forum_path }/tag/#{ slug(tag) }/questions?#{ keep_query( 'search', 'sorting', 'my', 'filters') }"
-            t-attf-class="nav-link my-1 py-1 text-reset">
+            t-attf-class="nav-link my-1 py-1 text-reset text-truncate">
             <i class="oi oi-fw small opacity-50" data-icon="label" role="img" aria-hidden="true"/>
             <t t-out="tag.name"/>
         </a>
@@ -337,7 +337,7 @@
     <div t-if="my_other_forums" class="o_wforum_sidebar_section pt-3">
         <div class="px-3 pb-1 fw-bold">My forums</div>
         <t t-foreach="my_other_forums.sorted(lambda f: f.name.casefold())" t-as="my_forum">
-            <a class="nav-link my-1 py-1 text-reset" t-attf-href="/forum/#{slug(my_forum)}">
+            <a class="nav-link my-1 py-1 text-reset text-truncate" t-attf-href="/forum/#{slug(my_forum)}">
                 <i class="oi oi-fw opacity-50" data-icon="description" role="img" aria-hidden="true"/>
                 <t t-out="my_forum.name"/>
             </a>
@@ -358,7 +358,7 @@
                 <div class="container s_allow_columns">
                     <div class="row" data-row-count="5">
                         <div class="o_colored_level offset-lg-3 col-lg-6">
-                            <div t-field="forum.welcome_message" class="container s_allow_columns"/>
+                            <div t-field="forum.welcome_message" class="container s_allow_columns text-break"/>
                         </div>
                     </div>
                 </div>

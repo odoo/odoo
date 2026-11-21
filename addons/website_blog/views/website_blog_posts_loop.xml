@@ -86,11 +86,11 @@ according to the enabled options.
                                         _link_classes.f="flex-basis-50 flex-shrink-0"
                                         _cover_classes.f="ratio ratio-4x3"/>
                                     <!-- Content column -->
-                                    <div class="d-flex flex-column justify-content-center flex-grow-1 p-4 p-md-5 p-xl-4">
+                                    <div class="d-flex flex-column justify-content-center flex-grow-1 p-4 p-md-5 p-xl-4 overflow-hidden">
                                         <!-- 'Unpublished' badge -->
                                         <t t-if="not opt_posts_loop_show_cover" t-call="website_blog.post_unpublished_badge" _badge_classes.f="align-self-end"/>
                                         <!-- Title, author and date -->
-                                        <a t-if="posts_list_show_parent_blog" t-attf-href="/blog/#{slug(blog_post.blog_id)}" t-field="blog_post.blog_id" class="d-block small fw-bold"/>
+                                        <a t-if="posts_list_show_parent_blog" t-attf-href="/blog/#{slug(blog_post.blog_id)}" t-field="blog_post.blog_id" class="d-block small fw-bold text-truncate"/>
                                         <t t-call="website_blog.post_heading" _heading_classes.f="h3"/>
                                         <t t-if="show_author_or_date" t-call="website_blog.post_published_info"
                                             _additionnal_classes.f="o_wblog_post_list_author o_list_cover align-items-center w-100"
@@ -187,7 +187,7 @@ according to the enabled options.
             <t t-if="not opt_posts_loop_show_cover" t-call="website_blog.post_unpublished_badge" _badge_classes.f="mb-2"/>
             <!-- Title, teaser and tags -->
             <t t-if="posts_list_show_parent_blog">
-                <a t-attf-href="/blog/#{slug(blog_post.blog_id)}" t-field="blog_post.blog_id" class="d-block small fw-bold"/>
+                <a t-attf-href="/blog/#{slug(blog_post.blog_id)}" t-field="blog_post.blog_id" class="d-block small fw-bold text-truncate"/>
             </t>
             <t t-call="website_blog.post_heading"/>
             <t t-if="opt_posts_loop_show_teaser" t-call="website_blog.post_teaser" _teaser_classes.f="small"/>
@@ -211,7 +211,7 @@ according to the enabled options.
         <t t-call="website_blog.post_unpublished_badge" _badge_classes.f="o_wblog_unpublished mt-2 me-2"/>
         <!-- Title, teaser, tags, stats, author and date -->
         <div t-attf-class="#{not opt_posts_loop_show_cover and 'position-relative p-4' or 'z-1'}">
-            <a t-if="posts_list_show_parent_blog" t-attf-href="/blog/#{slug(blog_post.blog_id)}" t-field="blog_post.blog_id" class="d-block small fw-bold text-white"></a>
+            <a t-if="posts_list_show_parent_blog" t-attf-href="/blog/#{slug(blog_post.blog_id)}" t-field="blog_post.blog_id" class="d-block small fw-bold text-white text-truncate"></a>
             <t t-call="website_blog.post_heading" _heading_classes.f="h1"/>
             <t t-if="opt_posts_loop_show_teaser" t-call="website_blog.post_teaser" _teaser_classes.f="lead"/>
             <t t-if="opt_posts_loop_show_tags" t-call="website_blog.post_tags" _tags_classes.f="mb-3"/>
@@ -240,7 +240,7 @@ according to the enabled options.
                     <t t-call="website_blog.post_unpublished_badge" _badge_classes.f="mb-2 #{opt_posts_loop_show_cover and 'd-md-none'}"/>
                     <!-- Title -->
                     <t t-if="posts_list_show_parent_blog">
-                        <a t-attf-href="/blog/#{slug(blog_post.blog_id)}" t-field="blog_post.blog_id" class="d-block small fw-bold"/>
+                        <a t-attf-href="/blog/#{slug(blog_post.blog_id)}" t-field="blog_post.blog_id" class="d-block small fw-bold text-truncate"/>
                     </t>
                     <t t-call="website_blog.post_heading"
                         _link_classes.f="flex-grow-1"
@@ -278,7 +278,7 @@ according to the enabled options.
                     </t>
 
                     <!-- Compact -->
-                    <div t-if="opt_blog_compact_list_view" t-attf-class="d-flex flex-grow-1 flex-wrap align-items-baseline gap-1 gap-lg-3 #{opt_blog_sidebar_show and 'flex-xl-nowrap' or 'flex-lg-nowrap'}">
+                    <div t-if="opt_blog_compact_list_view" t-attf-class="d-flex flex-grow-1 flex-wrap align-items-baseline gap-1 gap-lg-3 overflow-hidden #{opt_blog_sidebar_show and 'flex-xl-nowrap' or 'flex-lg-nowrap'}">
                         <!-- Title -->
                         <div t-attf-class="w-100 #{opt_posts_loop_show_tags and (opt_blog_sidebar_show and 'w-xl-75' or 'w-lg-75')}">
                             <t t-call="website_blog.post_heading" _heading_classes.f="h6" posts_list_show_parent_blog="False"/>
@@ -287,9 +287,9 @@ according to the enabled options.
                         <t t-if="opt_posts_loop_show_tags" t-call="website_blog.post_tags" _tags_classes.f="w-100 #{opt_blog_sidebar_show and 'justify-content-xl-end w-xl-25' or 'justify-content-lg-end w-lg-25'}"/>
                     </div>
                     <!-- Minimal -->
-                    <div t-elif="opt_blog_simple_list_view" class="d-flex flex-grow-1 justify-content-between align-items-baseline gap-3">
+                    <div t-elif="opt_blog_simple_list_view" class="d-flex flex-grow-1 justify-content-between align-items-baseline gap-3 overflow-hidden">
                         <!-- Title -->
-                        <t t-call="website_blog.post_heading" _heading_classes.f="h6 small mb-0" posts_list_show_parent_blog="False"/>
+                        <t t-call="website_blog.post_heading" _link_classes.f="overflow-hidden" _heading_classes.f="h6 small mb-0" posts_list_show_parent_blog="False"/>
                         <!-- Date -->
                         <small t-if="blog_post.publish_on" t-field="blog_post.publish_on" t-options="{'widget': 'date', 'format': 'dd.MM', 'date_only': True}" class="text-muted flex-shrink-0" t-attf-title="Will be published on #{blog_post.publish_on.strftime('%Y-%m-%d')}"/>
                         <small t-elif="blog_post.published_date" t-field="blog_post.published_date" t-options="{'widget': 'date', 'format': 'dd.MM', 'date_only': True}" class="text-muted flex-shrink-0"/>
@@ -307,7 +307,7 @@ according to the enabled options.
 <!-- ======   Sub-Template: Posts list : Posts Heading  =================== -->
 <template id="post_heading">
     <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/#{slug(blog_post)}" t-attf-class="o_blog_post_title text-reset #{_link_classes}">
-        <h2 t-field="blog_post.name" t-attf-class="text-wrap-pretty #{_heading_classes or 'h5'} #{posts_list_show_parent_blog and 'mt-1'}">
+        <h2 t-field="blog_post.name" t-attf-class="text-wrap-pretty text-truncate text-wrap #{_heading_classes or 'h5'} #{posts_list_show_parent_blog and 'mt-1'}">
             Untitled Post
         </h2>
     </a>
@@ -348,7 +348,7 @@ according to the enabled options.
     <div t-if="len(blog_post.tag_ids)" t-attf-class="d-flex flex-wrap gap-1 #{_tags_classes}">
         <t t-foreach="blog_post.tag_ids" t-as="one_tag">
             <a t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, one_tag.id))}"
-               t-attf-class="badge o_tag o_color_#{one_tag.color} post_link"
+               t-attf-class="badge text-truncate o_tag o_color_#{one_tag.color} post_link"
                t-att-rel="len(active_tag_ids) and 'nofollow'"
                t-out="one_tag.name"/>
         </t>

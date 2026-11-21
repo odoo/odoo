@@ -24,7 +24,7 @@
             <t t-foreach="description_lines" t-as="name_line">
                 <span
                     t-if="name_line"
-                    t-attf-class="d-block #{not name_line_last and 'mb-1'}"
+                    t-attf-class="d-block text-truncate #{not name_line_last and 'mb-1'}"
                     t-out="name_line"
                 />
             </t>
@@ -93,7 +93,7 @@
                                         <t t-call="website_sale.cart_line_product_link">
                                             <h6
                                                 t-out="line._get_line_header()"
-                                                class="text-wrap mb-1"
+                                                class="text-wrap mb-1 o_line_clamp text-break"
                                             />
                                         </t>
                                         <t t-set="combination_name" t-value="line._get_combination_name()"/>

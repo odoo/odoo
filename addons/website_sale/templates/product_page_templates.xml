@@ -46,8 +46,8 @@
                     t-att-data-name="combination_info['display_name']"
                 >
                     <div class="o_wsale_content_contained container d-flex flex-wrap align-items-center py-3">
-                        <div class="d-flex align-items-center flex-grow-1">
-                            <ol class="o_wsale_breadcrumb breadcrumb m-0 p-0">
+                        <div class="d-flex align-items-center flex-grow-1 mw-100">
+                            <ol class="o_wsale_breadcrumb breadcrumb m-0 p-0 overflow-hidden">
                                 <li class="breadcrumb-item d-none d-lg-inline-block">
                                     <a t-att-href="keep(shop_path)">
                                         <t t-call="website_sale.all_products_link_name"/>
@@ -55,7 +55,7 @@
                                 </li>
                                 <t t-foreach="category.parents_and_self" t-as="cat">
                                     <li
-                                        class="breadcrumb-item d-none d-lg-inline-block"
+                                        class="breadcrumb-item d-none d-lg-inline-block text-truncate"
                                     >
                                         <a
                                             class="py-2 py-lg-0"
@@ -69,10 +69,10 @@
                                         </a>
                                     </li>
                                 </t>
-                                <li class="breadcrumb-item d-none d-lg-inline-block active">
+                                <li class="breadcrumb-item d-none d-lg-inline-block active text-truncate">
                                     <span t-field="product.name" />
                                 </li>
-                                <li class="breadcrumb-item d-lg-none">
+                                <li class="breadcrumb-item d-lg-none text-truncate">
                                     <a t-att-href="keep(category.website_url or shop_path)">
                                         <i class="oi me-2" data-icon="chevron_backward" role="img" aria-hidden="true"/>
                                         <t t-if="category.name" t-out="category.name"/>
@@ -203,7 +203,7 @@
 
                     <!-- Used to customize layout if the only available attribute value is custom -->
                     <t t-set="single_and_custom" t-value="single and ptavs[0].is_custom"/>
-                    <div class="attribute_name mb-2 h6">
+                    <div class="attribute_name mb-2 h6 text-truncate text-wrap">
                         <span t-field="ptal.attribute_id.name"/>
                         <span t-if="attribute.display_type in ['color', 'image']" class="text-muted">
                             -
@@ -296,7 +296,7 @@
                                                 t-att-data-is-custom="ptav.is_custom"
                                                 t-att-data-slug="'%s/%s' % (slug(attribute), slug(ptav.product_attribute_value_id))"
                                             />
-                                            <div class="radio_input_value form-check-label">
+                                            <div class="radio_input_value form-check-label text-truncate text-wrap">
                                                 <span t-field="ptav.name"/>
                                                 <t t-call="website_sale.badge_extra_price"/>
                                             </div>
@@ -315,7 +315,7 @@
                             data-bs-toggle="buttons"
                         >
                             <t t-foreach="ptavs" t-as="ptav">
-                                <li t-attf-class="o_variant_pills js_attribute_value border btn m-0 cursor-pointer #{'active border-primary text-primary-emphasis bg-primary-subtle' if ptav in combination else ''}">
+                                <li t-attf-class="o_variant_pills js_attribute_value border btn m-0 cursor-pointer text-truncate #{'active border-primary text-primary-emphasis bg-primary-subtle' if ptav in combination else ''}">
                                     <input type="radio"
                                         t-attf-class="js_variant_change position-absolute #{attribute.create_variant} opacity-0 cursor-pointer"
                                         t-att-checked="ptav in combination"
@@ -496,7 +496,7 @@
             t-attf-class="o_wsale_product_details_content_section o_wsale_product_details_content_section_title {{'mb-3' if not product.description_ecommerce else ''}}"
         >
             <h1
-                t-attf-class="h3 {{'mb-3' if not product.description_ecommerce and not is_view_active('website_sale.product_comment') else ''}}"
+                t-attf-class="h3 text-truncate text-wrap {{'mb-3' if not product.description_ecommerce and not is_view_active('website_sale.product_comment') else ''}}"
                 t-field="product.name"
             >
                 Product Name
@@ -797,7 +797,7 @@
         <xpath expr="//div[@id='more_information_accordion_item']" position="inside">
             <div class="accordion-header my-0 h6">
                 <button
-                    class="accordion-button collapsed fw-medium"
+                    class="accordion-button collapsed fw-medium text-break"
                     type="button"
                     data-bs-toggle="collapse"
                     data-bs-target="#customizable_item"
@@ -828,7 +828,7 @@
                 t-foreach="visible_tags"
                 t-as="tag"
                 t-att-href="is_view_active('website_sale.filter_products_tags') and '/shop?tags=%s' % slug(tag) or None"
-                class="text-decoration-none d-inline-block"
+                class="text-decoration-none d-inline-block text-truncate"
             >
                 <span t-if="tag.image"
                       class="order-0"
@@ -1462,7 +1462,7 @@
                 <section class="pt32 pb32" id="product_full_spec">
                     <div class="container">
                         <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h2 class="m-0 h3">Specifications</h2>
+                            <h2 class="m-0 h3 text-break">Specifications</h2>
                         </div>
                         <div id="product_specifications">
                             <div class="row">
@@ -1496,7 +1496,7 @@
                         <div class="accordion-header my-0 h6">
                             <button
                                 t-out="category.name"
-                                class="accordion-button collapsed fw-medium"
+                                class="accordion-button collapsed fw-medium text-break"
                                 type="button"
                                 data-bs-toggle="collapse"
                                 t-attf-data-bs-target="#category_accordion_{{category_index}}"
@@ -1526,7 +1526,7 @@
         <table t-attf-class="table {{is_accordion and 'table-sm mb-0'}}">
             <t t-if="len(attrib_categories) > 1 and not is_accordion">
                 <tr>
-                    <th class="text-start" colspan="2">
+                    <th class="text-start text-break" colspan="2">
                         <span t-if="category" t-field="category.name"/>
                         <span t-else="">Others</span>
                     </th>
@@ -1540,10 +1540,10 @@
                     t-set="hide_border_bottom_classes"
                     t-value="'border-bottom-0' if ptal_last and is_accordion else ''"
                 />
-                <td t-attf-class="w-25 {{hide_border_bottom_classes}} ps-0">
+                <td t-attf-class="w-25 {{hide_border_bottom_classes}} ps-0 text-break">
                     <span t-field="ptal.attribute_id.name"/>
                 </td>
-                <td t-attf-class="w-75 {{hide_border_bottom_classes}} pe-0 text-muted text-end">
+                <td t-attf-class="w-75 {{hide_border_bottom_classes}} pe-0 text-muted text-end text-break">
                     <t t-foreach="ptal.value_ids" t-as="pav">
                         <span t-field="pav.name"/><t t-if="not pav_last">, </t>
                     </t>
@@ -1558,10 +1558,10 @@
                     t-set="hide_border_bottom_classes"
                     t-value="'border-bottom-0' if attribute_last and is_accordion else ''"
                 />
-                <td t-attf-class="w-25 {{hide_border_bottom_classes}} ps-0 ">
+                <td t-attf-class="w-25 {{hide_border_bottom_classes}} ps-0 text-break">
                     <span t-field="attribute.name"/>
                 </td>
-                <td t-attf-class="w-75 {{hide_border_bottom_classes}} pe-0 text-muted text-end">
+                <td t-attf-class="w-75 {{hide_border_bottom_classes}} pe-0 text-muted text-end text-break">
                     <t t-foreach="single_value_attributes[attribute]" t-as="ptal">
                         <span t-field="ptal.product_template_value_ids._only_active().name"/><t t-if="not ptal_last">, </t>
                     </t>

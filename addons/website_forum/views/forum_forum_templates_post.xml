@@ -19,7 +19,7 @@
                 data-icon="notifications"/>
             <a t-attf-href="/forum/#{slug(question.forum_id)}/#{slug(question)}#{ ('/#answer-%s' % answer.id) if answer else '' }"
                 t-attf-title="Read: #{question.name}"
-                t-attf-class="stretched-link text-body #{_link_classes}">
+                t-attf-class="stretched-link text-body o_line_clamp text-break #{_link_classes}">
                 <span t-out="question.name" t-if="question.name"/>
             </a>
             <span t-if="question.has_validated_answer and question.forum_id.mode == 'questions'"
@@ -41,7 +41,7 @@
                 t-value="'/forum/' + slug(question_tag.forum_id) + '/tag/' + slug(question_tag) + '/questions?' + keep_query( 'search', 'sorting', 'my', 'create_uid', filters='tag')"/>
 
             <a t-att-href="click_action"
-                t-attf-class="badge position-relative z-1 fw-normal o_tag o_color_#{question_tag.color}"
+                t-attf-class="badge position-relative z-1 fw-normal text-wrap text-break o_tag o_color_#{question_tag.color}"
                 t-field="question_tag.name"/>
         </t>
     </div>
@@ -163,7 +163,7 @@
     <div t-if="question.tag_ids" class="o_wforum_index_entry_tags ms-0">
         <a  t-foreach="question.tag_ids" t-as="question_tag"
             t-attf-href="/forum/#{slug(question_tag.forum_id)}/tag/#{slug(question_tag)}/questions?#{keep_query(filters='tag')}"
-            t-attf-class="badge #{'ms-1' if not question_tag_first else ''} fw-normal o_tag o_color_#{question_tag.color}"
+            t-attf-class="badge #{'ms-1' if not question_tag_first else ''} fw-normal text-wrap text-break o_tag o_color_#{question_tag.color}"
             t-field="question_tag.name"/>
     </div>
     <div class="d-flex">

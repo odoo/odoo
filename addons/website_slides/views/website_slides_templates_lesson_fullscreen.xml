@@ -61,7 +61,7 @@
                     <div class="o_wslides_fs_sidebar_content d-flex flex-column px-3 pt-3 h-100">
                         <div class="o_wslides_fs_sidebar_header mb-3">
                             <a class="d-block mb-1" t-attf-href="/slides/#{slug(slide.channel_id)}">
-                                <h1 class="h5" t-field="slide.channel_id.name"/>
+                                <h1 class="h5 text-truncate text-wrap" t-field="slide.channel_id.name"/>
                             </a>
                             <div t-if="not is_public_user">
                                 <span t-attf-class="o_wslides_channel_completion_completed badge text-bg-success #{'d-none' if not slide.channel_id.completed else ''}">
@@ -102,7 +102,7 @@
         <a t-if="category" class="text-uppercase text-500 py-1 small d-flex" t-attf-id="category-collapse-#{category.id if category else 0}"
             data-bs-toggle="collapse" role="button" t-att-aria-expanded="'true' if category_collapsed else 'false'"
             t-attf-href="#collapse-#{category.id if category else 0}" t-attf-aria-controls="collapse-#{category.id if category else 0}">
-            <b t-field="category.name"/>
+            <b class="text-truncate" t-field="category.name"/>
             <div class="flex-grow-1"/>
             <i class="oi oi-fw" data-icon="arrow_left" role="img" aria-hidden="true"/>
             <i class="oi oi-fw" data-icon="arrow_drop_down" role="img" aria-hidden="true"/>
@@ -152,10 +152,10 @@
                         <ul class="list-unstyled w-100 small fw-light" t-if="slide.sudo().slide_resource_ids or (slide.question_ids and not slide.slide_category =='quiz')" >
                             <t t-if="can_access_channel" t-foreach="slide.slide_resource_ids" t-as="resource">
                                 <li class="ps-1 mb-1">
-                                    <a t-if="resource.resource_type == 'url'" class="o_wslides_fs_slide_link" t-att-href="resource.link" target="_blank">
+                                    <a t-if="resource.resource_type == 'url'" class="o_wslides_fs_slide_link d-block text-truncate" t-att-href="resource.link" target="_blank">
                                         <i class="oi me-2" data-icon="link" role="img" aria-label="Link"/><span t-out="resource.name"/>
                                     </a>
-                                    <a t-else="" class="o_wslides_fs_slide_link ps-0" t-att-href="resource.download_url">
+                                    <a t-else="" class="o_wslides_fs_slide_link ps-0 d-block text-truncate" t-att-href="resource.download_url">
                                         <i class="oi me-2" data-icon="download" role="img" aria-label="Download"/><span t-out="resource.name"/>
                                     </a>
                                 </li>

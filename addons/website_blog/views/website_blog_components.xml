@@ -9,17 +9,17 @@
 
     <nav t-attf-class="py-4 #{additional_classes}" aria-label="Blog navigation">
         <div t-if="not blog and opt_blog_page_title" class="pb-2">
-            <h1 class="h4-fs">All blog posts</h1>
+            <h1 class="h4-fs text-break">All blog posts</h1>
         </div>
         <div t-attf-class="position-relative z-1 d-flex gap-2 flex-nowrap">
             <!-- Desktop menu -->
-            <ul t-if="len(blogs) > 1" class="o_wblog_category list-unstyled d-none d-lg-flex flex-wrap gap-2 mb-0">
+            <ul t-if="len(blogs) > 1" class="o_wblog_category list-unstyled d-none d-lg-flex flex-wrap gap-2 mb-0 overflow-hidden">
                 <li>
                     <a href="/blog" t-attf-class="btn btn-light #{(not blog) and 'active border-primary bg-primary-subtle text-primary-emphasis'}">All</a>
                 </li>
-                <li t-foreach="blogs" t-as="nav_blog">
+                <li t-foreach="blogs" t-as="nav_blog" class="mw-100">
                     <a t-attf-href="/blog/#{slug(nav_blog)}"
-                       t-attf-class="btn btn-light #{(blog and nav_blog.id == blog.id) and 'active border-primary bg-primary-subtle text-primary-emphasis'}">
+                       t-attf-class="btn btn-light text-truncate mw-100 #{(blog and nav_blog.id == blog.id) and 'active border-primary bg-primary-subtle text-primary-emphasis'}">
                         <span t-field="nav_blog.name"/>
                     </a>
                 </li>
@@ -152,13 +152,13 @@
 <!-- ======   Template: Post Breadcrumbs   =====================================
 ============================================================================ -->
 <template id="post_breadcrumbs">
-    <a t-if="single_breadcrumb" t-attf-href="#{blog_url(tag=None, date_begin=None, date_end=None)}" class="o_wblog_single_breadcrumb_item my-4">
+    <a t-if="single_breadcrumb" t-attf-href="#{blog_url(tag=None, date_begin=None, date_end=None)}" class="o_wblog_single_breadcrumb_item text-truncate my-4">
         <i class="oi me-1" data-icon="chevron_backward" role="img" aria-hidden="true"/><t t-out="blog.name"/>
     </a>
     <nav t-else="" aria-label="breadcrumb">
         <ol t-attf-class="breadcrumb my-4 p-0 o_not_editable #{additional_classes}">
             <li t-if="len(blogs) > 1" class="breadcrumb-item d-none d-lg-inline-block"><a href="/blog">All Blogs</a></li>
-            <li class="breadcrumb-item">
+            <li class="breadcrumb-item text-truncate">
                 <a t-attf-href="#{blog_url(tag=None, date_begin=None, date_end=None)}">
                     <i class="oi d-lg-none me-1" data-icon="chevron_backward" role="img" aria-hidden="true"/><t t-out="blog.name"/>
                 </a>
@@ -286,7 +286,7 @@ Display a sidebar beside the post content.
 <template id="opt_blog_post_author_avatar_display" name="Author" inherit_id="website_blog.blog_post_sidebar" active="False" priority="0">
     <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
         <div class="o_wblog_sidebar_block mb-2 pb-4">
-            <h2 class="small mb-3">Written by</h2>
+            <h2 class="small mb-3 text-break">Written by</h2>
             <t t-call="website_blog.post_published_info"
                 is_post_page.f="true"
                 _additionnal_classes.f="d-flex align-items-center"
@@ -301,7 +301,7 @@ Display a sidebar beside the post content.
 <template id="opt_blog_post_share_links_display" name="Share Links" inherit_id="website_blog.blog_post_sidebar" active="False" priority="2">
     <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
         <div class="o_wblog_sidebar_block mb-2 pb-4" t-ignore="true">
-            <h2 class="small mb-3">Share this post</h2>
+            <h2 class="small mb-3 text-break">Share this post</h2>
             <t t-snippet-call="website.s_share" string="Share"
                 _classes.f="no_icon_color oe_unremovable oe_unmovable"
                 _icon_classes.f="rounded-circle o_sm_custom_size shadow-sm"
@@ -316,15 +316,15 @@ Display a sidebar beside the post content.
 <template id="opt_blog_post_tags_display" name="Tags" inherit_id="website_blog.blog_post_sidebar" active="False" priority="3">
     <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
         <div t-if="blog_post.tag_ids" class="o_wblog_sidebar_block mb-2 pb-4">
-            <h2 class="small mb-3">Tags</h2>
+            <h2 class="small mb-3 text-break">Tags</h2>
             <div class="d-flex flex-wrap gap-1 small">
                 <t t-foreach="blog_post.tag_ids" t-as="one_tag">
-                    <a t-attf-class="badge post_link text-decoration-none o_tag o_color_#{one_tag.color}" t-attf-href="#{blog_url(tag=slug(one_tag))}" t-out="one_tag.name"/>
+                    <a t-attf-class="badge post_link text-decoration-none text-truncate o_tag o_color_#{one_tag.color}" t-attf-href="#{blog_url(tag=slug(one_tag))}" t-out="one_tag.name"/>
                 </t>
             </div>
         </div>
         <div t-else="" groups="website_blog.group_website_blog_manager" class="o_wblog_sidebar_block mb-2 pb-4">
-            <h2 class="small mb-3">Tags</h2>
+            <h2 class="small mb-3 text-break">Tags</h2>
             <div class="bg-light p-3 border rounded o_not_editable">
                 <h2 class="text-muted h6 mb-0"><em>No tags defined</em></h2>
                 <p class="css_editable_mode_hidden mt-2 mb-0">
@@ -340,10 +340,10 @@ Display a sidebar beside the post content.
 <template id="opt_blog_post_blogs_display" name="Blogs List" inherit_id="website_blog.blog_post_sidebar" active="False" priority="4">
     <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
         <div t-if="len(blogs) > 1" class="o_wblog_sidebar_block mb-2 pb-4">
-            <h2 class="small mb-3">Our blogs</h2>
+            <h2 class="small mb-3 text-break">Our blogs</h2>
             <ul class="list-unstyled small">
                 <li t-foreach="blogs" t-as="nav_blog" class="mb-2">
-                    <a t-attf-href="#{blog_url(blog=nav_blog, tag=False, date_begin=False, date_end=False)}" t-out="nav_blog.name"/>
+                    <a t-attf-href="#{blog_url(blog=nav_blog, tag=False, date_begin=False, date_end=False)}" class="d-block text-truncate" t-out="nav_blog.name"/>
                 </li>
             </ul>
         </div>
@@ -355,7 +355,7 @@ Display a sidebar beside the post content.
 <template id="opt_blog_post_archive_display" name="Archive" inherit_id="website_blog.blog_post_sidebar" active="False" priority="5">
     <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
         <div class="o_wblog_sidebar_block mb-2 pb-4">
-            <h2 class="small mb-3">Archive</h2>
+            <h2 class="small mb-3 text-break">Archive</h2>
             <t t-call="website_blog.date_selector"/>
         </div>
         <div class="oe_structure" id="oe_structure_blog_post_sidebar_6"/>
@@ -369,7 +369,7 @@ Display a sidebar beside the post content.
     </xpath>
     <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
         <div class="o_wblog_sidebar_block o_wblog_toc mb-2 pb-4">
-            <h2 class="small mb-3">On this page</h2>
+            <h2 class="small mb-3 text-break">On this page</h2>
             <!-- Placeholder when there is no content to display -->
             <div class="o_wblog_toc_placeholder d-none bg-light p-3 border rounded o_not_editable">
                 <h2 class="text-muted h6 mb-0"><em>No titles in the blog post</em></h2>

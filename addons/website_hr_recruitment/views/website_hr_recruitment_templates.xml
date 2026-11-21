@@ -10,7 +10,7 @@
                 draggable="false">
             <div class="card-body p-4">
                 <div class="mt0 d-flex justify-content-between align-items-center">
-                    <h3 t-field="job.name"/>
+                    <h3 class="text-truncate" t-field="job.name"/>
                     <span t-if="job.publish_on" class="badge pagination text-bg-warning mb8">scheduled</span>
                 </div>
                 <h5 t-if="job.no_of_recruitment &gt;= 1" class="text-reset">
@@ -31,11 +31,11 @@
                     <span t-field="job.address_id" class="fw-light" t-options='{"widget": "contact", "fields": ["city"], "no_tag_br": True, "null_text": remote_label}'/>
                     <div t-if="job.department_id"
                             class="d-inline-flex align-items-center">
-                        <i class="oi oi-fw" data-icon="account_tree" role="img" aria-label="Department"/><span t-field="job.department_id" class="fw-light" t-options='{"fields": ["name"], "no_tag_br": True}'/>
+                        <i class="oi oi-fw" data-icon="account_tree" role="img" aria-label="Department"/><span t-field="job.department_id" class="fw-light text-truncate" t-options='{"fields": ["name"], "no_tag_br": True}'/>
                     </div>
                     <div t-if="job.employee_type_id"
                             class="d-inline-flex align-items-center">
-                        <i class="oi oi-fw oi-filled" data-icon="work" title="Employment type" role="img" aria-label="Employment type"/><span t-field="job.employee_type_id" class="fw-light"/>
+                        <i class="oi oi-fw oi-filled" data-icon="work" title="Employment type" role="img" aria-label="Employment type"/><span t-field="job.employee_type_id" class="fw-light text-truncate"/>
                     </div>
                 </div>
             </div>
@@ -54,7 +54,7 @@
                 <!-- Topbar -->
                 <section class="o_wevent_index_topbar_filters row d-flex d-print-none align-items-center justify-content-lg-end flex-wrap mt-4 mb-3">
                     <div class="flex-grow-1 col-12 col-lg-8">
-                        <h1 class="mb-0 h4">Our Job Opportunities</h1>
+                        <h1 class="mb-0 h4 text-break">Our Job Opportunities</h1>
                     </div>
                     <!-- Customizations -->
                     <t t-call="website_hr_recruitment.topbar_customizations"/>
@@ -66,7 +66,7 @@
                             <t t-if="not jobs">
                                 <div class="col">
                                     <div t-if="search" class="alert alert-warning text-center" role="alert">
-                                        No results found for '<span t-out="search"/>'.
+                                        No results found for '<span class="text-break" t-out="search"/>'.
                                     </div>
                                     <div class="alert alert-info text-center text-muted" groups="hr_recruitment.group_hr_recruitment_manager">
                                         Create new job pages from the <strong>+ <i>New</i></strong> top-right button.
@@ -83,7 +83,7 @@
                             <t t-elif="search and original_search">
                                 <div class="col">
                                     <div class="alert alert-info text-center" role="alert">
-                                        No results found for '<span t-out="original_search"/>'. Showing results for '<span t-out="search"/>'.
+                                        No results found for '<span class="text-break" t-out="original_search"/>'. Showing results for '<span class="text-break" t-out="search"/>'.
                                         <t t-set="search" t-value="original_search"/>
                                     </div>
                                 </div>
@@ -133,7 +133,7 @@
                     <div class="mt32">
                         <div class="row">
                             <div class="col-md-9">
-                                <h1 t-field="job.name"/>
+                                <h1 class="text-truncate text-wrap" t-field="job.name"/>
                                 <t t-set='remote_label' t-valuef.translate="Remote"/>
                                 <h5 class="fw-light" t-field="job.address_id" t-options='{
                                     "widget": "contact",
@@ -157,16 +157,16 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-8 pb32">
-                            <div class="lead"
+                            <div class="lead text-break"
                                 t-field="job.description"/>
                         </div>
                         <div class="col-lg-3 offset-lg-1 pb32">
-                            <div t-field="job.website_rating"/>
+                            <div class="text-break" t-field="job.website_rating"/>
                         </div>
                     </div>
                 </div>
             </section>
-            <div t-field="job.website_description"/>
+            <div class="text-break" t-field="job.website_description"/>
             <div class="oe_structure">
                 <section class="o_job_bottom_bar mt24 mb48">
                     <div class="text-center">
@@ -187,14 +187,14 @@
             <nav aria-label="breadcrumb" class="mt-5">
                 <ol class="breadcrumb ps-0 mb-0 pb-1">
                     <li class="breadcrumb-item"><a href="/jobs">Jobs</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">
+                    <li class="breadcrumb-item active text-truncate" aria-current="page">
                         <a t-attf-href="/jobs/detail/#{slug(job)}">
                             <span t-field="job.name"/>
                         </a>
                     </li>
                 </ol>
             </nav>
-            <h1 class="mb-4">
+            <h1 class="mb-4 text-break">
                 Job Application Form
             </h1>
             <span class="hidden" data-for="hr_recruitment_form" t-att-data-values="{'company_id': job and job.company_id.id or '', 'department_id': job and job.department_id.id or '', 'job_id': job and job.id or ''}" />
@@ -354,7 +354,7 @@
                         </a>
                         <div t-if="job.name" class="d-flex flex-column align-items-baseline">
                             <span class="text-muted small">Job</span>
-                            <h6 t-field="job.name"/>
+                            <h6 class="text-truncate text-wrap mw-100" t-field="job.name"/>
                         </div>
                         <div class="d-flex flex-column align-items-baseline">
                             <span class="text-muted small">Location</span>
@@ -368,14 +368,14 @@
                         </div>
                         <div t-if="job.department_id" class="d-flex flex-column align-items-baseline">
                             <span class="text-muted small">Department</span>
-                            <h6 t-field="job.department_id"/>
+                            <h6 class="text-truncate mw-100" t-field="job.department_id"/>
                         </div>
                         <div t-if="job.employee_type_id" class="d-flex flex-column align-items-baseline">
                             <span class="text-muted small">Employment Type</span>
-                            <h6 t-field="job.employee_type_id"/>
+                            <h6 class="text-truncate mw-100" t-field="job.employee_type_id"/>
                         </div>
                         <hr t-if="job.job_details" class="w-50 my-3"/>
-                        <div t-field="job.job_details"/>
+                        <div class="text-break" t-field="job.job_details"/>
                     </section>
                 </div>
             </div>
