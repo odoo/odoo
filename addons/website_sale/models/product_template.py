@@ -1074,6 +1074,14 @@ class ProductTemplate(models.Model):
                 uom_price = pricelist._get_product_price(  # unit price in packaging UOM
                     product=product_or_template, quantity=quantity, uom=product_uom
                 )
+                if product_taxes:
+                    uom_price = product_or_template._apply_taxes_to_price(
+                        uom_price,
+                        currency,
+                        product_taxes=product_taxes,
+                        taxes=taxes,
+                        website=website,
+                    )
                 base_uom_price = product_uom._compute_price(  # convert packaging prices to base UOM
                     price=uom_price, to_unit=product_or_template.uom_id
                 )
