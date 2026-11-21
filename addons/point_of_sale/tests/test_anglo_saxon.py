@@ -532,6 +532,75 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
             {'product_id': product2.id, 'credit': 100.0},
         ])
 
+    def test_cogs_serial_product_without_serial_number(self):
+        """
+        Check that closing a session posts the COGS of a serial tracked product sold
+        without serial number, and that delivering it afterwards doesn't post them again
+        """
+        self.product.write({'tracking': 'serial', 'standard_price': 100})
+        product_in_stock = self.env['product.product'].create({
+            'name': 'Product in stock',
+            'categ_id': self.category.id,
+            'standard_price': 20,
+            'available_in_pos': True,
+            'is_storable': True,
+            'tracking': 'serial',
+        })
+        lot = self.env['stock.lot'].create({'name': 'SN2', 'product_id': product_in_stock.id})
+        self.env['stock.quant']._update_available_quantity(product_in_stock, self.warehouse.lot_stock_id, 1, lot_id=lot)
+        self.company.action_close_stock_valuation(auto_post=True)
+
+        self.pos_config.open_ui()
+        session = self.pos_config.current_session_id
+        session.set_opening_control(0, None)
+        pos_order = self.PosOrder.create({
+            'company_id': self.company.id,
+            'partner_id': self.partner.id,
+            'session_id': session.id,
+            'lines': [Command.create({
+                'product_id': self.product.id,
+                'price_unit': 200,
+                'qty': 1.0,
+                'price_subtotal': 200,
+                'price_subtotal_incl': 200,
+            }), Command.create({
+                'product_id': product_in_stock.id,
+                'price_unit': 100,
+                'qty': 1.0,
+                'price_subtotal': 100,
+                'price_subtotal_incl': 100,
+                'pack_lot_ids': [Command.create({'lot_name': 'SN2'})],
+            })],
+            'amount_total': 300,
+            'amount_tax': 0,
+            'amount_paid': 0,
+            'amount_return': 0,
+            'last_order_preparation_change': '{}',
+        })
+        context_make_payment = {"active_ids": [pos_order.id], "active_id": pos_order.id}
+        self.PosMakePayment.with_context(context_make_payment).create({
+            'amount': 300.0,
+            'payment_method_id': self.cash_payment_method.id,
+        }).with_context(active_id=pos_order.id).check()
+        session.post_closing_cash_details(300.0)
+        session.close_session_from_ui()
+
+        expense_line = session.move_id.line_ids.filtered(lambda l: l.account_id == self.category.property_account_expense_categ_id)
+        self.assertEqual(expense_line.debit, 120.0)
+
+        # set the serial number afterwards and deliver it
+        move = pos_order.picking_ids.move_ids.filtered(lambda m: m.product_id == self.product)
+        move.move_line_ids = [Command.create({
+            'product_id': self.product.id,
+            'lot_name': 'SN1',
+            'quantity': 1,
+            'location_id': move.location_id.id,
+            'location_dest_id': move.location_dest_id.id,
+        })]
+        move.picking_id.button_validate()
+        with self.assertRaisesRegex(UserError, "Everything is correctly closed"):
+            self.company.action_close_stock_valuation(auto_post=True)
+
     def test_cogs_with_ship_later_invoicing(self):
         # This test will check that the correct journal entries are created when an order use ship later and is invoiced
         self.pos_config.open_ui()
