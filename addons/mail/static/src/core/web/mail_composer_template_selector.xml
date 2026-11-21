@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates>
     <t t-name="mail.MailComposerTemplateSelector">
-        <Dropdown t-if="this.props.record.data.can_edit_body" menuClass="'mail-composer-template-dropdown d-flex flex-column'">
+        <Dropdown menuClass="'mail-composer-template-dropdown d-flex flex-column'">
             <button class="btn btn-light w-auto mail-composer-template-dropdown-btn" data-hotkey="t" title="Templates">
                 <i class="oi oi-fw" data-icon="more_vert"/>
             </button>
@@ -25,7 +25,7 @@
                 </div>
                 <t t-if="!this.state.hideMailTemplateManagementOptions">
                     <div class="dropdown-divider"/>
-                    <DropdownItem class="'px-3 d-flex align-items-center o-gap-1_5'" onSelected="() => this.onSaveTemplate()">
+                    <DropdownItem t-if="this.canSaveTemplate" class="'px-3 d-flex align-items-center o-gap-1_5'" onSelected="() => this.onSaveTemplate()">
                         <i class="oi oi-fw opacity-75" data-icon="save"/>Save as Template
                     </DropdownItem>
                     <DropdownItem class="'px-3 d-flex align-items-center o-gap-1_5'" onSelected="() => this.onManageTemplateBtnClick()">
