@@ -7856,6 +7856,7 @@ class AccountMove(models.Model):
             and not self.highlight_send_button
             and self.env.user.has_group('account.group_account_basic')
             and self.amount_residual > 0
+            and self.invoice_date_due
             and self.invoice_date_due < fields.Date.context_today(self)
         )
 
