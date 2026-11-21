@@ -745,3 +745,19 @@ class TestAttendanceValidationTimeRules(TransactionCase):
                 ('time_rule_id', '=', self.rule.id),
             ])
             self.assertAlmostEqual(sum(outputs.mapped('worked_hours')), 1.0, places=2, msg=tz)
+
+    def test_write_multi_attendance(self):
+        attendance_1 = self.env['hr.attendance'].create({
+            'employee_id': self.test_employee.id,
+            'check_in': '2024-01-15 08:00:00',
+        })
+        attendance_2 = self.env['hr.attendance'].create({
+            'employee_id': self.employee_kiosk.id,
+            'check_in': '2024-01-15 08:00:00',
+        })
+        (attendance_1 + attendance_2).write({'check_in': '2024-01-15 09:00:00'})
+        self.assertEqual(attendance_1.in_mode, "manual")
+        self.assertEqual(attendance_2.in_mode, "manual")
+        (attendance_1 + attendance_2).write({'check_out': '2024-01-15 10:00:00'})
+        self.assertEqual(attendance_1.out_mode, "manual")
+        self.assertEqual(attendance_2.out_mode, "manual")
