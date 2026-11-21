@@ -796,7 +796,7 @@ class SaleOrder(models.Model):
         # directly linked to the SO.
         for order in self:
             invoices = order.order_line.invoice_lines.move_id.filtered(
-                lambda r: r.move_type in ("out_invoice", "out_refund")
+                lambda r: r.move_type in ("out_invoice", "out_refund", "out_receipt")
             )
             order.invoice_ids = invoices
             order.invoice_count = len(invoices)
@@ -828,12 +828,13 @@ class SaleOrder(models.Model):
                     (
                         "order_line",
                         "not any",
-                        [("invoice_lines.move_id.move_type", "in", ("out_invoice", "out_refund"))],
+                        [("invoice_lines.move_id.move_type", "in", ("out_invoice", "out_refund", "out_receipt"))],
                     )
                 ]
                 if len(value) == 1:
                     return falsy_domain
             self.env.cr.execute(
+<<<<<<< c40402fab8c1509f3c68cd9cc5140f7790611d99
                 SQL(
                     """
                     SELECT array_agg(so.id)
@@ -848,6 +849,33 @@ class SaleOrder(models.Model):
                     """,
                     list(value),
                 )
+||||||| 707ef495cd90e3b4f9501bb4fa8e7b3d2aec0996
+                """
+                SELECT array_agg(so.id)
+                    FROM sale_order so
+                    JOIN sale_order_line sol ON sol.order_id = so.id
+                    JOIN sale_order_line_invoice_rel soli_rel ON soli_rel.order_line_id = sol.id
+                    JOIN account_move_line aml ON aml.id = soli_rel.invoice_line_id
+                    JOIN account_move am ON am.id = aml.move_id
+                WHERE
+                    am.move_type in ('out_invoice', 'out_refund') AND
+                    am.id = ANY(%s)
+            """,
+                (list(value),),
+=======
+                """
+                SELECT array_agg(so.id)
+                    FROM sale_order so
+                    JOIN sale_order_line sol ON sol.order_id = so.id
+                    JOIN sale_order_line_invoice_rel soli_rel ON soli_rel.order_line_id = sol.id
+                    JOIN account_move_line aml ON aml.id = soli_rel.invoice_line_id
+                    JOIN account_move am ON am.id = aml.move_id
+                WHERE
+                    am.move_type in ('out_invoice', 'out_refund', 'out_receipt') AND
+                    am.id = ANY(%s)
+            """,
+                (list(value),),
+>>>>>>> 751b9a8a4f3a7e9c335b4d0aab48eb913ee9e657
             )
             so_ids = self.env.cr.fetchone()[0] or []
             return [("id", "in", so_ids)] + falsy_domain
@@ -856,7 +884,7 @@ class SaleOrder(models.Model):
                 "order_line.invoice_lines",
                 "any",
                 [
-                    ("move_id.move_type", "in", ("out_invoice", "out_refund")),
+                    ("move_id.move_type", "in", ("out_invoice", "out_refund", "out_receipt")),
                     ("move_id", operator, value),
                 ],
             )
