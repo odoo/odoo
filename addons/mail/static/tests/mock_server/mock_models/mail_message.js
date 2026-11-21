@@ -134,7 +134,9 @@ export class MailMessage extends models.ServerModel {
             const thread = message.model && this.env[message.model].browse(message.res_id)[0];
             if (thread) {
                 const thread_data = { module_icon: "/base/static/description/icon.png" };
-                if (message.model !== "discuss.channel") {
+                if (message.model === "discuss.channel") {
+                    thread_data.active = thread.active;
+                } else {
                     thread_data.name = thread.name ?? thread.display_name;
                 }
                 if (for_current_user && add_followers) {
@@ -200,7 +202,10 @@ export class MailMessage extends models.ServerModel {
             ) {
                 data.linkedSubChannel = mailDataHelpers.Store.one(
                     DiscussChannel.browse(
-                        DiscussChannel.search([["from_message_id", "=", message.id]])
+                        DiscussChannel.search(
+                            [["from_message_id", "=", message.id]],
+                            makeKwArgs({ context: { ...this.env.context, active_test: false } })
+                        )
                     ),
                     makeKwArgs({ as_thread: true, only_id: true })
                 );

@@ -1,4 +1,5 @@
 import {
+    find_channel,
     mailDataHelpers,
     parseRequestParams,
     registerRoute,
@@ -112,13 +113,11 @@ async function visitor_leave_session(request) {
 registerRoute("/im_livechat/feedback", feedback);
 /** @type {RouteCallback} */
 async function feedback(request) {
-    /** @type {import("mock_models").DiscussChannel} */
-    const DiscussChannel = this.env["discuss.channel"];
     /** @type {import("mock_models").RatingRating} */
     const RatingRating = this.env["rating.rating"];
 
     const { channel_id, rate, reason } = await parseRequestParams(request);
-    let [channel] = DiscussChannel.search_read([["id", "=", channel_id]]);
+    const [channel] = find_channel(channel_id);
     if (!channel) {
         return false;
     }
@@ -136,7 +135,6 @@ async function feedback(request) {
     } else {
         RatingRating.write([channel.rating_ids[0]], values);
     }
-    [channel] = DiscussChannel.search_read([["id", "=", channel_id]]);
     return channel.rating_ids[0];
 }
 

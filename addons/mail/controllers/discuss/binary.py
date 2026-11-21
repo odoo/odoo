@@ -4,6 +4,7 @@ from werkzeug.exceptions import NotFound
 
 from odoo import http
 from odoo.http import request
+from odoo.addons.mail.controllers.discuss.channel import find_channel
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 from odoo.addons.web.controllers.binary import Binary
 
@@ -18,7 +19,7 @@ class BinaryController(Binary):
     )
     @add_guest_to_context
     def discuss_channel_attachment(self, channel_id, attachment_id, download=None, **kwargs):
-        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        channel = find_channel(channel_id)
         if not channel:
             raise NotFound()
         domain = [
@@ -44,7 +45,7 @@ class BinaryController(Binary):
     )
     @add_guest_to_context
     def fetch_image(self, channel_id, attachment_id, width=0, height=0, **kwargs):
-        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        channel = find_channel(channel_id)
         if not channel:
             raise NotFound()
         domain = [

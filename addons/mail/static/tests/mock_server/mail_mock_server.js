@@ -24,6 +24,18 @@ export const DISCUSS_ACTION_ID = 104;
 
 const { DateTime } = luxon;
 
+/** Same as a search by id, but archived channels are included. */
+export function find_channel(channelId) {
+    /** @type {import("mock_models").DiscussChannel} */
+    const DiscussChannel = MockServer.env["discuss.channel"];
+    return DiscussChannel.browse(
+        DiscussChannel.search(
+            [["id", "=", channelId]],
+            makeKwArgs({ context: { ...DiscussChannel.env.context, active_test: false } })
+        )
+    );
+}
+
 /** @param {import("./mock_model").MailGuest} guest */
 export const authenticateGuest = (guest) => {
     const { env } = MockServer;
@@ -163,6 +175,10 @@ async function load_attachments(request) {
         limit = 30,
         older_attachment_id = null,
     } = await parseRequestParams(request);
+    const channel = find_channel(channel_id);
+    if (!channel.length) {
+        return;
+    }
     const attachmentIds = IrAttachment.filter(
         ({ id, res_id, res_model }) =>
             res_id === channel_id &&
@@ -280,11 +296,8 @@ async function discuss_channel_fold(request) {
 registerRoute("/discuss/channel/info", discuss_channel_info);
 /** @type {RouteCallback} */
 async function discuss_channel_info(request) {
-    /** @type {import("mock_models").DiscussChannel} */
-    const DiscussChannel = this.env["discuss.channel"];
-
     const { channel_id } = await parseRequestParams(request);
-    const channel = DiscussChannel.search([["id", "=", channel_id]]);
+    const channel = find_channel(channel_id);
     if (!channel.length) {
         return;
     }
@@ -294,11 +307,12 @@ async function discuss_channel_info(request) {
 registerRoute("/discuss/channel/members", discuss_channel_members);
 /** @type {RouteCallback} */
 async function discuss_channel_members(request) {
-    /** @type {import("mock_models").DiscussChannel} */
-    const DiscussChannel = this.env["discuss.channel"];
-
     const { channel_id, known_member_ids } = await parseRequestParams(request);
-    return DiscussChannel._load_more_members([channel_id], known_member_ids);
+    const channel = find_channel(channel_id);
+    if (!channel.length) {
+        return;
+    }
+    return channel._load_more_members([channel_id], known_member_ids);
 }
 
 registerRoute("/discuss/channel/messages", discuss_channel_messages);
@@ -315,6 +329,10 @@ async function discuss_channel_messages(request) {
         limit = 30,
         search_term,
     } = await parseRequestParams(request);
+    const channel = find_channel(channel_id);
+    if (!channel.length) {
+        return;
+    }
     const domain = [
         ["res_id", "=", channel_id],
         ["model", "=", "discuss.channel"],
@@ -354,6 +372,10 @@ async function discuss_channel_sub_channel_fetch(request) {
     /** @type {import("mock_models").MailMessage} */
     const MailMessage = this.env["mail.message"];
     const { parent_channel_id, before, limit } = await parseRequestParams(request);
+    const [channel] = find_channel(parent_channel_id);
+    if (!channel) {
+        return;
+    }
     const domain = [["parent_channel_id", "=", parent_channel_id]];
     if (before) {
         domain.push(["id", "<", before]);
@@ -439,6 +461,10 @@ async function discuss_channel_pins(request) {
     const MailMessage = this.env["mail.message"];
 
     const { channel_id } = await parseRequestParams(request);
+    const channel = find_channel(channel_id);
+    if (!channel.length) {
+        return;
+    }
     const messageIds = MailMessage.search([
         ["model", "=", "discuss.channel"],
         ["res_id", "=", channel_id],

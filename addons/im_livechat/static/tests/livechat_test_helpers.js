@@ -15,6 +15,8 @@ import { ResPartner } from "./mock_server/mock_models/res_partner";
 import { ResUsers } from "./mock_server/mock_models/res_users";
 import { session } from "@web/session";
 
+export const ARCHIVED_BADGE_SELECTOR = ".o-mail-ChatWindow-header .badge";
+
 export function defineLivechatModels() {
     return defineModels(livechatModels);
 }

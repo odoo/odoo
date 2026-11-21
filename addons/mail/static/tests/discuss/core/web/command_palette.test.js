@@ -1,16 +1,18 @@
 import {
+    assertSteps,
     click,
     contains,
     defineMailModels,
     insertText,
     start,
     startServer,
+    step,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { registry } from "@web/core/registry";
 import { advanceTime } from "@odoo/hoot-mock";
-import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { Command, onRpc, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -129,4 +131,54 @@ test("only partners with dedicated users will be displayed in command palette", 
     await contains(".o_command_name", { text: "Mitchell Admin" });
     await contains(".o_command_name", { text: "OdooBot" });
     await contains(".o_command_name", { text: "test user", count: 0 });
+});
+
+test("open an archived channel from the command palette without joining it", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Mario" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        name: "General",
+    });
+    const messageId = pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "@Mitchell Admin",
+        model: "discuss.channel",
+        needaction: true,
+        res_id: channelId,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_type: "inbox",
+        res_partner_id: serverState.partnerId,
+    });
+    onRpc("discuss.channel", "add_members", () => step("add_members"));
+    await start();
+    triggerHotkey("control+k");
+    await insertText(".o_command_palette_search input", "#");
+    await contains(".o_command_name", { text: "General" });
+    triggerHotkey("Escape");
+    await contains(".o_command_palette", { count: 0 });
+    pyEnv["discuss.channel"].write([channelId], { active: false });
+    for (const [namespace, category] of [
+        ["@", "Mentions"],
+        ["#", "Recent"],
+    ]) {
+        triggerHotkey("control+k");
+        await insertText(".o_command_palette_search input", namespace, { replace: true });
+        await contains(".o_command_palette .o_command_category", {
+            contains: [
+                ["span.fw-bold", { text: category }],
+                [".o_command_name", { text: "General" }],
+            ],
+        });
+        await click(".o_command", { text: "General" });
+        await contains(".o-mail-ChatWindow", { text: "General" });
+        await click("[title*='Close Chat Window']");
+        await contains(".o-mail-ChatWindow", { count: 0 });
+    }
+    await assertSteps([]);
 });

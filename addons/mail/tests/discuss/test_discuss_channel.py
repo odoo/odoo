@@ -122,6 +122,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 ),
                                 "mail.thread": self._filter_threads_fields(
                                     {
+                                        "active": True,
                                         "id": channel.id,
                                         "model": "discuss.channel",
                                         "module_icon": "/mail/static/description/icon.png",
@@ -948,3 +949,9 @@ class TestChannelInternals(MailCommon, HttpCase):
         actual_member_ids = [m.partner_id.id if m.partner_id else m.guest_id.id for m in channel.channel_member_ids]
         expected_member_ids = [self.partner_employee.id, self.guest.id, self.env.user.partner_id.id]
         self.assertCountEqual(actual_member_ids, expected_member_ids)
+
+    def test_archived_channel(self):
+        channel = self.env["discuss.channel"].create({"name": "test", "active": False})
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        res = self.make_jsonrpc_request("/discuss/channel/messages", {"channel_id": channel.id})
+        self.assertEqual(res, {"data": {}, "messages": []})

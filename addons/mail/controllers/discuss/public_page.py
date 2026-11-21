@@ -6,6 +6,7 @@ from odoo import _, http
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools import consteq, replace_exceptions
+from odoo.addons.mail.controllers.discuss.channel import find_channel
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 from odoo.addons.mail.tools.discuss import Store
 
@@ -53,7 +54,7 @@ class PublicPageController(http.Controller):
     @add_guest_to_context
     def discuss_channel(self, channel_id, *, highlight_message_id=None):
         # highlight_message_id is used JS side by parsing the query string
-        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        channel = find_channel(channel_id)
         if request.env.user._is_public() and (
             not channel or not request.env["mail.guest"]._get_guest_from_context()
         ):
