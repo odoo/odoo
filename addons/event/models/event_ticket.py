@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import formatLang
 
 
@@ -50,6 +50,21 @@ class EventEventTicket(models.Model):
         help="Maximum of this product per order.\nSet to 0 to ignore this rule")
     is_sold_out = fields.Boolean(
         'Sold Out', compute='_compute_is_sold_out', help='Whether seats are not available for this ticket.')
+    event_slot_ids = fields.Many2many(
+        'event.slot', 'event_ticket_event_slot_rel', 'ticket_id', 'slot_id',
+        string='Valid Slots', copy=False,
+        ui_domain="[('event_id', '=', event_id)]",
+        help="Dates on which this ticket can be booked. Leave empty to make "
+             "the ticket valid for every slot of the event.")
+    # validity
+    date_begin = fields.Datetime(
+        "Valid From",
+        help="Date from which this ticket gives access to the event, e.g. a workshop held before "
+             "the event. Leave empty to use the event start date.")
+    date_end = fields.Datetime(
+        "Valid Until",
+        help="Date until which this ticket gives access to the event, e.g. a day pass. "
+             "Leave empty to use the event end date.")
     # reports
     color = fields.Char('Color', default="#875A7B")
 
@@ -119,12 +134,35 @@ class EventEventTicket(models.Model):
                 or ticket.event_id.event_registrations_sold_out
             )
 
+    def _is_valid_for_slot(self, slot):
+        """ Whether this ticket may be booked for the given slot. A ticket
+        without restriction, or a registration without slot, is always fine. """
+        self.ensure_one()
+        return not slot or not self.event_slot_ids or slot in self.event_slot_ids
+
+    def _get_validity_dates(self):
+        """ Dates during which this ticket gives access to its event, falling
+        back on the event dates. They may lie outside the event dates. """
+        self.ensure_one()
+        return self.date_begin or self.event_id.date_begin, self.date_end or self.event_id.date_end
+
     @api.constrains('start_sale_datetime', 'end_sale_datetime')
     def _constrains_dates_coherency(self):
         for ticket in self:
             if ticket.start_sale_datetime and ticket.end_sale_datetime and ticket.start_sale_datetime > ticket.end_sale_datetime:
                 raise UserError(_('The stop date cannot be earlier than the start date. '
                                   'Please check ticket %(ticket_name)s', ticket_name=ticket.name))
+
+    @api.constrains('date_begin', 'date_end', 'event_id')
+    def _check_validity_dates(self):
+        for ticket in self.filtered(lambda ticket: ticket.date_begin or ticket.date_end):
+            date_begin, date_end = ticket._get_validity_dates()
+            if date_begin and date_end and date_begin > date_end:
+                msg = self.env._(
+                    "The validity end of ticket %(ticket)s cannot be earlier than its validity start.",
+                    ticket=ticket.name,
+                )
+                raise ValidationError(msg)
 
     @api.constrains('limit_max_per_order', 'seats_max')
     def _constrains_limit_max_per_order(self):
@@ -138,6 +176,15 @@ class EventEventTicket(models.Model):
             if ticket.limit_max_per_order < 0:
                 raise UserError(_('The limit per order must be positive. '
                                   'Please check ticket %(ticket_name)s', ticket_name=ticket.name))
+
+    @api.constrains('event_id', 'event_slot_ids')
+    def _check_event_slot_ids(self):
+        for ticket in self:
+            if any(slot.event_id != ticket.event_id for slot in ticket.event_slot_ids):
+                raise ValidationError(self.env._(
+                    "Ticket %(ticket)s can only be restricted to slots of its own event.",
+                    ticket=ticket.name,
+                ))
 
     @api.constrains('entry_limit')
     def _constrains_entry_limit(self):
