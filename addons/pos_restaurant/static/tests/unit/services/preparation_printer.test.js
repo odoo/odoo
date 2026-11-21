@@ -1,4 +1,4 @@
-import { expect, test } from "@odoo/hoot";
+import { expect, test, waitUntil } from "@odoo/hoot";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
 import { getFilledOrder, setupPosEnv } from "@point_of_sale/../tests/unit/utils";
 
@@ -134,4 +134,59 @@ test("only printers with matching categories are used", async () => {
     });
     expect(result).toBe(true);
     expect(printedBy).toEqual(["Printer 1"]);
+});
+
+test("preparation printers print in parallel, each printer in order", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const kitchen = store.models["pos.printer"].create({
+        name: "Kitchen",
+        printer_type: "epson_epos",
+        product_categories_ids: [store.models["pos.category"].get(1)],
+    });
+    // 3 tickets for the kitchen: one per product unit
+    kitchen.is_split_per_product = true;
+    const bar = store.models["pos.printer"].create({
+        name: "Bar",
+        printer_type: "epson_epos",
+        product_categories_ids: [store.models["pos.category"].get(2)],
+    });
+    kitchen._instance = {};
+    bar._instance = {};
+
+    // Prints are on hold until released
+    let releasePrints;
+    const printsReleased = new Promise((resolve) => (releasePrints = resolve));
+    const printedBy = [];
+    let kitchenFailures = 1;
+    let errorMessage;
+    store.ticketPrinter.generateIframe = async () => ({});
+    store.ticketPrinter.setIframeSizeFromPrinter = () => {};
+    store.ticketPrinter.generateImage = async () => "mock-image";
+    store.ticketPrinter.print = async ({ printer }) => {
+        printedBy.push(printer.name);
+        await printsReleased;
+        if (printer === kitchen && kitchenFailures-- > 0) {
+            return { successful: false, message: { body: "Unreachable" } };
+        }
+        return { successful: true };
+    };
+    store.ticketPrinter.showPrinterErrorDialog = (message) => {
+        errorMessage = message.body;
+    };
+
+    const printPromise = store.ticketPrinter.printOrderChanges({
+        order,
+        printers: [kitchen, bar],
+    });
+    // The bar doesn't wait for the kitchen, but the kitchen waits for its first ticket
+    // to be printed before sending the next one
+    await waitUntil(() => printedBy.length === 2);
+    expect(printedBy).toEqual(["Kitchen", "Bar"]);
+
+    // The first kitchen ticket fails, the next ones are still sent
+    releasePrints();
+    expect(await printPromise).toBe(true);
+    expect(printedBy).toEqual(["Kitchen", "Bar", "Kitchen", "Kitchen"]);
+    expect(errorMessage).toBe("Kitchen: Unreachable");
 });
