@@ -132,6 +132,107 @@
             <field name="search_view_id" ref="view_message_search"/>
         </record>
 
+        <record id="mail_message_view_kanban_advanced_search" model="ir.ui.view">
+            <field name="name">mail.message.view.kanban.advanced.search</field>
+            <field name="model">mail.message</field>
+            <field name="arch" type="xml">
+                <kanban create="false" action="action_open_document" type="object" default_order="date desc, id desc"
+                        group_create="false" records_draggable="false" js_class="mail_message_search_kanban">
+                    <field name="attachment_ids"/>
+                    <templates>
+                        <t t-name="card">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <field name="author_id" widget="many2one_avatar_user" invisible="not author_id"/>
+                                <field name="author_id" class="fw-bold text-truncate" invisible="not author_id"/>
+                                <field name="email_from" class="fw-bold text-truncate" invisible="author_id"/>
+                                <field name="date" class="ms-auto text-muted small text-nowrap"/>
+                            </div>
+                            <field name="subject" class="fw-bold text-truncate" invisible="not subject"/>
+                            <field name="preview" class="text-muted text-break"/>
+                            <footer class="align-items-center pt-1">
+                                <span class="text-truncate">
+                                    <i class="oi oi-fw me-1" data-icon="description" title="Document"/>
+                                    <field name="record_model_name" class="text-muted"/>
+                                    <span class="text-muted mx-1">&#8226;</span>
+                                    <field name="record_name" class="fw-semibold"/>
+                                </span>
+                                <span t-if="record.attachment_ids.raw_value.length" class="ms-auto ps-2 text-nowrap text-muted">
+                                    <i class="oi" data-icon="attach_file" title="Attachments"/>
+                                    <t t-out="record.attachment_ids.raw_value.length"/>
+                                </span>
+                            </footer>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="mail_message_view_list_advanced_search" model="ir.ui.view">
+            <field name="name">mail.message.view.list.advanced.search</field>
+            <field name="model">mail.message</field>
+            <field name="priority">30</field>
+            <field name="arch" type="xml">
+                <list create="false" action="action_open_document" type="object" default_order="date desc, id desc">
+                    <field name="date"/>
+                    <field name="author_id" widget="many2one_avatar"/>
+                    <field name="email_from" optional="hide"/>
+                    <field name="subject" optional="show"/>
+                    <field name="preview" string="Content"/>
+                    <field name="message_type" optional="show"/>
+                    <field name="subtype_id" optional="hide"/>
+                    <field name="record_model_name" string="Document Type" optional="show"/>
+                    <field name="record_name" string="Document"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="mail_message_view_search_advanced_search" model="ir.ui.view">
+            <field name="name">mail.message.view.search.advanced.search</field>
+            <field name="model">mail.message</field>
+            <field name="priority">30</field>
+            <field name="arch" type="xml">
+                <search string="Search Messages">
+                    <!-- child_of: a company's messages include those of its contacts -->
+                    <field name="author_id" operator="child_of"/>
+                    <field name="body" string="Content" filter_domain="['|', ('subject', 'ilike', self), ('body', 'ilike', self)]"/>
+                    <!-- keep external authors' notifications, they are their own words, e.g. ratings -->
+                    <filter string="Hide System Messages" name="filter_hide_system"
+                            domain="[('message_type', '!=', 'out_of_office'), '|', ('message_type', 'not in', ('notification', 'tracking', 'user_notification')), ('author_id.partner_share', '=', True)]"/>
+                    <separator/>
+                    <!-- channels like SMS reach the customer even when logged with an internal subtype -->
+                    <filter string="Customer-Facing" name="filter_customer_facing"
+                            domain="['|', ('message_type', 'not in', ('comment', 'email')), '|', ('subtype_id', '=', False), ('subtype_id.internal', '=', False)]"/>
+                    <filter string="Internal Notes" name="filter_internal"
+                            domain="[('message_type', 'in', ('comment', 'email')), ('subtype_id.internal', '=', True)]"/>
+                    <separator/>
+                    <filter string="With Attachments" name="filter_attachments" domain="[('attachment_ids', '!=', False)]"/>
+                    <separator/>
+                    <filter string="Date" name="filter_date" date="date"/>
+                    <group>
+                        <filter string="Conversation" name="group_by_conversation" context="{'group_by': 'record_ref'}"/>
+                        <filter string="Author" name="group_by_author" context="{'group_by': 'author_id'}"/>
+                        <filter string="Date" name="group_by_date" context="{'group_by': 'date:month'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="mail_message_action_advanced_search" model="ir.actions.act_window">
+            <field name="name">Messages</field>
+            <field name="res_model">mail.message</field>
+            <field name="view_mode">kanban,list</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'kanban', 'view_id': ref('mail_message_view_kanban_advanced_search')}),
+                (0, 0, {'view_mode': 'list', 'view_id': ref('mail_message_view_list_advanced_search')})]"/>
+            <field name="search_view_id" ref="mail_message_view_search_advanced_search"/>
+            <field name="domain">[('model', '!=', False), ('res_id', '!=', False)]</field>
+            <field name="context">{'search_default_filter_hide_system': 1, 'search_default_group_by_conversation': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">No messages found</p>
+                <p>Messages written by this customer on any document you can access will show up here.</p>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="view_document_file_kanban">
             <field name="name">ir.attachment kanban</field>
             <field name="model">ir.attachment</field>
