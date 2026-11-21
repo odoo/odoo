@@ -54,7 +54,8 @@ sceptical colleague would; that pass finds most of the blocking defects.
    rounding, timezones, empty and multi-record calls, concurrency, the second
    run. Check that the commit message's claim is what the code does, that the
    tests would fail without the change, and what the change costs at scale.
-   Give this pass the same legwork as the rules pass.
+   Run the [Merits checks](#merits-checks) that match the change. Give this
+   pass the same legwork as the rules pass.
 6. **Report.** Each finding carries file and line, the defect, the concrete
    failure scenario, a fix, and the guideline section it applies, or
    *judgement* when it came from the merits pass. A finding that rests on
@@ -82,6 +83,51 @@ flagging or writing an API or attribute, confirm it exists in the revision
 under review (`git grep` the ORM source or a usage at that revision) rather
 than trusting a remembered API.
 
+## Merits checks
+
+Pick the checks that match the change. Each one says what to read again,
+usually code outside the diff.
+
+- **One of several siblings.** When the change fixes or reshapes one member
+  of a family that shares a pattern (the other actions of the same panel,
+  the twin field, the other reports of the same document), check the others
+  for the same defect. The ones that have it are fixed in the same change:
+  with the same small fix in a stable version, through the shared mechanism
+  in master. A change that moves one sibling off the shared pattern and
+  leaves the others on it is the wrong scope, not a follow-up: it is the
+  first finding of the report.
+- **A new guard, early return, or `return` inside a loop.** Read the rest of
+  the function and of the loop again. Work that every path still needs
+  (closing a dialog, sending a notification, the next records of the
+  recordset) must not be skipped. In master, a branch the guard leaves
+  unreachable is removed. A guard whose condition changes gets the same
+  read.
+- **A claim of no behaviour change** (refactor, typing, "unchanged"). Each
+  runtime line it touches keeps its old result for `None` or `undefined`, a
+  missing key, an empty value and invalid data (a bad date, a language
+  without data), and keeps when it runs and what it renders. A type check
+  or a green test suite proves the types and the tested paths only: ask for
+  a test or a probe that would fail on the difference.
+- **A special case at one call site.** When the change filters a value where
+  one caller reads it, list the other readers. In master, if every one needs
+  the same filter, filter where the value is produced, and say so in its
+  name or docstring. Otherwise keep the special case and name the readers
+  checked.
+- **A new parameter or prop.** One whose value the callee can compute from
+  what it already gets (its other arguments, the context, its parent
+  component) is dropped, unless computing it there costs a query or a loop
+  the caller already paid. Two that carry one decision become one value,
+  computed once where it enters.
+- **A rewritten domain**, a performance change most of all. Returning the
+  same records is not enough: read each condition against the others and
+  against the searches before it. Drop a condition that an earlier step
+  already guarantees. The step must run under the same user, `sudo()`,
+  companies, language and `active_test`. Keep a condition that is there for
+  an index only when a benchmark shows the gain. Two `any` on the same
+  many2one under an AND need no change: the ORM merges them. On an x2many,
+  do not merge them: one line that matches both differs from one line for
+  each.
+
 ## Code the diff never shows
 
 Odoo modules extend each other, including modules outside this repository
@@ -94,7 +140,10 @@ available and confirm they still hold.
 
 - Overrides: `git grep "def <name>("` and read them. Do they still call
   `super()` with valid arguments, and does the new behaviour hold with their
-  additions?
+  additions? When the return value changes, or callers start to read it,
+  each override and JavaScript patch returns it on every path, not only on
+  the one that returns early. When a method is split, renamed or moved, the
+  overrides of the old one are still reached.
 - Renamed or removed names: grep for them in Python, XML, and JavaScript. A
   stale reference in a view, a domain, an xpath, a `patch()`, or an import
   fails only at runtime, or only when that module is installed.
