@@ -345,7 +345,6 @@ export class PivotRenderer extends Component {
                 res_model: this.model.metaData.resModel,
                 search_view_id: this.env.config.views?.find((v) => v[1] === "search"),
                 views: views,
-                view_mode: "list",
                 target: "current",
                 context,
                 domain,
@@ -370,9 +369,15 @@ export class PivotRenderer extends Component {
             }
         });
 
-        // retrieve form and list view ids from the action
+        // retrieve list and form view ids from the action, preceded by kanban
+        // on small screens if the action defines a kanban view
         const { views = [] } = this.env.config;
-        this.views = ["list", "form"].map((viewType) => {
+        const actionHasKanban = views.some((view) => view[1] === "kanban");
+        const viewTypes = ["list", "form"];
+        if (this.uiService.isSmall && actionHasKanban) {
+            viewTypes.unshift("kanban");
+        }
+        this.views = viewTypes.map((viewType) => {
             const view = views.find((view) => view[1] === viewType);
             return [view ? view[0] : false, viewType];
         });
