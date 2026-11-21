@@ -802,23 +802,21 @@ export class Message extends Record {
     }
 
     /**
-     * @param {Object} owner
      * @param {import("@odoo/owl").Signal<HTMLElement>} [rootRef]
-     * @param {Readonly<Record<string, any>>} [ancestors] named ancestors of the owner, @see useAncestors
+     * @param {Readonly<Record<string, any>>} [ancestors] named ancestors of the caller, @see useAncestors
      */
-    showDeleteConfirm(owner, rootRef, ancestors) {
+    showDeleteConfirm(rootRef, ancestors) {
         this.store.env.services.dialog.add(
             discussComponentRegistry.get("MessageDeleteDialog"),
-            { message: this, onConfirm: () => this.onShowDeleteConfirm(owner, ancestors) },
+            { message: this, onConfirm: () => this.onShowDeleteConfirm(ancestors) },
             { rootRef }
         );
     }
 
     /**
-     * @param {Object} owner
-     * @param {Readonly<Record<string, any>>} [ancestors={}] named ancestors of the owner, @see useAncestors
+     * @param {Readonly<Record<string, any>>} [ancestors={}] named ancestors of the caller, @see useAncestors
      */
-    onShowDeleteConfirm(owner, ancestors = {}) {
+    onShowDeleteConfirm(ancestors = {}) {
         this.remove({ removeFromThread: this.shouldHideFromMessageListOnDelete(ancestors) });
     }
 

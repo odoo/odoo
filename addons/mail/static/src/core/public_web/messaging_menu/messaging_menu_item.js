@@ -64,6 +64,7 @@ export class MessagingMenuItem extends Component {
         this.isActive = computed(() => this._isActive);
         this.messageActions = useMessageActions({
             message: () => this.message,
+            messageActive: () => this.isActive(),
             thread: () => this.message?.thread,
         });
         this.messageDropdownState = useDropdownState();
