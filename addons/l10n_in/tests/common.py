@@ -38,16 +38,8 @@ class L10nInTestInvoicingCommon(AccountTestInvoicingCommon):
             'l10n_in_tds_feature': True,
             'l10n_in_tcs_feature': True,
         })
-
-        cls.outside_in_company = cls.env['res.company'].create({
-            'name': 'Outside India Company',
-            'country_id': cls.country_us.id,
-        })
-
-        cls.user.write({
-            'company_ids': [cls.default_company.id, cls.outside_in_company.id],
-            'company_id': cls.default_company.id,
-        })
+        # Drop cached tax copies that still reflect the previous GST registration.
+        cls.env['account.tax'].invalidate_model(['active'])
 
         cls.user_internal = cls._create_new_internal_user()
 

@@ -24,13 +24,16 @@ class TestMailAliasCommon(MailCommon):
             'alias_name': 'test.alias',
         })
 
-        cls.company_no_alias = cls.env['res.company'].create({
+        # base.test_company(_template) are already company_3 / company_2 (MailCommon)
+        cls.company_no_alias = cls.add_class_company('base.test_company_template2', {
             'alias_domain_id': False,
             'country_id': cls.env.ref('base.be').id,
             'currency_id': cls.env.ref('base.EUR').id,
             'email': 'company_no_alias@test.example.com',
             'name': 'No Alias Company',
         })
+        if cls.company_no_alias in cls.company_admin | cls.company_2 | cls.company_3:
+            raise AssertionError("Mail aliases need a separate company without an alias domain")
         cls.user_erp_manager.write({
             'company_ids': [(4, cls.company_no_alias.id)],
         })

@@ -18,7 +18,11 @@ class TestDigestCommon(mail_test.MailCommon):
         super().setUpClass()
 
         cls.company_1 = cls.env.company
-        cls.company_2 = cls.env['res.company'].create({'name': 'Digest Company 2'})
+        # not base.test_company_template: MailCommon._activate_multi_company() uses it
+        mail_company_2 = cls.company_2
+        cls.company_2 = cls.add_class_company('base.test_company_template2', {'name': 'Digest Company 2'})
+        if cls.company_2 in cls.company_1 | mail_company_2 | cls.company_3:
+            raise AssertionError("Digest needs a separate company from MailCommon")
 
         context = {
             'start_datetime': datetime.now() - relativedelta(days=1),

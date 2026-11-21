@@ -10,21 +10,24 @@ from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
 class TestSaleCouponMultiCompany(TestSaleCouponCommon):
     _test_user_groups = None  # FIXME list needed groups
 
-    def setUp(self):
-        super().setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
-        self.company_a = self.env.company
-        self.company_b = self.env["res.company"].create(dict(name="TEST"))
+        cls.company_a = cls.env.company
+        cls.company_b = cls.add_class_company('base.test_company_template', {"name": "TEST"})
+        if cls.company_a == cls.company_b:
+            raise AssertionError("The promotion needs a separate company")
 
-        self.immediate_promotion_program_c2 = self.env["loyalty.program"].create({
+        cls.immediate_promotion_program_c2 = cls.env["loyalty.program"].create({
             "name": "Buy A + 1 B, 1 B are free",
             "trigger": "auto",
             "program_type": "promotion",
             "applies_on": "current",
-            "company_id": self.company_b.id,
+            "company_id": cls.company_b.id,
             "rule_ids": [
                 Command.create({
-                    "product_ids": self.product_A,
+                    "product_ids": cls.product_A,
                     "reward_point_amount": 1,
                     "reward_point_mode": "order",
                 })
@@ -32,7 +35,7 @@ class TestSaleCouponMultiCompany(TestSaleCouponCommon):
             "reward_ids": [
                 Command.create({
                     "reward_type": "product",
-                    "reward_product_id": self.product_B.id,
+                    "reward_product_id": cls.product_B.id,
                     "reward_product_qty": 1,
                     "required_points": 1,
                 })
