@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
-from odoo.tools import float_is_zero
 
 
 class EventRegistration(models.Model):
@@ -22,13 +21,14 @@ class EventRegistration(models.Model):
     def _has_order(self):
         return super()._has_order() or self.sale_order_id
 
-    @api.depends('sale_order_id.state', 'sale_order_id.currency_id', 'sale_order_id.amount_total')
+    @api.depends('sale_order_id.state', 'sale_order_id.currency_id', 'sale_order_id.order_line.price_total')
     def _compute_registration_status(self):
         for sale_order, registrations in self.filtered('sale_order_id').grouped('sale_order_id').items():
             cancelled_so_registrations = registrations.filtered(lambda reg: reg.sale_order_id.state == 'cancel')
             cancelled_so_registrations.state = 'cancel'
             cancelled_registrations = cancelled_so_registrations | registrations.filtered(lambda reg: reg.state == 'cancel')
-            if float_is_zero(sale_order.amount_total, precision_rounding=sale_order.currency_id.rounding):
+            priced_lines = sale_order.order_line.filtered(lambda l: not l.display_type)
+            if all(sale_order.currency_id.is_zero(line.price_total) for line in priced_lines):
                 registrations.sale_status = 'free'
                 registrations.filtered(lambda reg: not reg.state or reg.state == 'draft').state = "open"
             else:
