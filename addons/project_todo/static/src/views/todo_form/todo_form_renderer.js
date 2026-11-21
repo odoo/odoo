@@ -1,15 +1,16 @@
 import { FormRendererWithHtmlExpander } from "@resource/views/form_with_html_expander/form_renderer_with_html_expander";
+import { SIZES } from "@web/core/ui/ui_service";
 import { useBus } from "@web/core/utils/hooks";
 
 export class TodoFormRenderer extends FormRendererWithHtmlExpander {
     setup() {
         super.setup();
         useBus(this.env.bus, "TODO:TOGGLE_CHATTER", this.toggleChatter);
-        this.sizeToExpandHTMLField = 1;
+        this.sizeToExpandHTMLField = SIZES.SM;
     }
 
     toggleChatter(ev) {
-        this.sizeToExpandHTMLField = ev.detail.displayChatter ? 6 : 1;
+        this.sizeToExpandHTMLField = ev.detail.displayChatter ? SIZES.XXL : SIZES.SM;
     }
 
     _canExpandHTMLField(size) {
