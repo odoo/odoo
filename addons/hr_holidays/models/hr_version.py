@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import date, UTC
+from datetime import UTC
 from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.exceptions import ValidationError
@@ -269,22 +269,16 @@ class HrVersion(models.Model):
         :rtype: tuple
         """
         last_version = overlapping_contracts[-1]
-        for overlapping_contract in overlapping_contracts:
-            new_request_date_from = max(leave.request_date_from, overlapping_contract.date_start)
-            new_request_date_to = min(leave.request_date_to, overlapping_contract.date_end or date.max)
-            new_leave_vals = leave.copy_data({
-                'request_date_from': new_request_date_from,
-                'request_date_to': new_request_date_to,
-                'state': leaves_state[leave.id] if overlapping_contract.id != last_version.id else 'confirm',
-            })[0]
-            new_leave = self.env['hr.leave'].new(new_leave_vals)
-            new_leave._compute_date_from_to()
-            new_leave._compute_duration()
+        for version, period_vals in leave._get_version_periods(overlapping_contracts):
+            new_leave_vals = self.env['hr.leave']._prepare_split_leave_vals(leave.copy_data({
+                **period_vals,
+                'state': leaves_state[leave.id] if version.id != last_version.id else 'confirm',
+            })[0])
             # Could happen for part-time contract, that time off is not necessary
             # anymore.
-            if new_leave.date_from < new_leave.date_to:
+            if new_leave_vals:
                 all_new_leave_origin.append(leave)
-                all_new_leave_vals.append(new_leave._convert_to_write(new_leave._cache))
+                all_new_leave_vals.append(new_leave_vals)
         return all_new_leave_origin, all_new_leave_vals
 
     def _create_all_new_leave(self, all_new_leave_origin, all_new_leave_vals):
@@ -292,13 +286,7 @@ class HrVersion(models.Model):
 
         Validated ones get their resource leaves; each one gets a link to its origin.
         """
-        # seems 'tracking_disable' is wanted to speedup leaves batch creation
-        new_leaves = self.env['hr.leave'].with_context(
-            tracking_disable=True,
-            mail_activity_automation_skip=True,
-            leave_fast_create=True,
-            leave_skip_state_check=True
-        ).create(all_new_leave_vals)
+        new_leaves = self.env['hr.leave']._create_split_leaves(all_new_leave_vals)
         new_leaves.filtered(lambda l: l.state in 'validate')._validate_leave_request()
         for index, new_leave in enumerate(new_leaves):
             new_leave.message_post_with_source(
