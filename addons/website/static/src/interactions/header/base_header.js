@@ -83,6 +83,11 @@ export class BaseHeader extends Interaction {
     }
 
     start() {
+        this.registerCleanup(
+            this.services.website_menus.registerTopFixedElement(this.el, () =>
+                this.getCoveredBottom()
+            )
+        );
         this.services.website_menus.triggerCallbacks();
         if (this.scrollingElement.scrollTop > 0) {
             this.adjustPosition();
@@ -233,6 +238,15 @@ export class BaseHeader extends Interaction {
 
     getHeaderHeight() {
         return this.el.getBoundingClientRect().height;
+    }
+
+    /**
+     * @returns {number} the bottom of the area of the viewport covered by the
+     *      header, followed on each frame of its animations (a hidden header
+     *      is translated above the viewport)
+     */
+    getCoveredBottom() {
+        return Math.max(0, this.el.getBoundingClientRect().bottom);
     }
 
     /**
