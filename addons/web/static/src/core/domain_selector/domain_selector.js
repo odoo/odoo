@@ -44,7 +44,15 @@ export class DomainSelector extends Component {
         this.includeArchived = false;
 
         onWillStart(() => this.onPropsUpdated(this.props));
-        onWillUpdateProps((np) => this.onPropsUpdated(np));
+        onWillUpdateProps((np) => {
+            if (
+                np.domain !== this.props.domain ||
+                np.resModel !== this.props.resModel ||
+                np.isDebugMode !== this.props.isDebugMode
+            ) {
+                return this.onPropsUpdated(np);
+            }
+        });
     }
 
     async onPropsUpdated(p) {

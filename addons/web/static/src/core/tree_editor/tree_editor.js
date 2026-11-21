@@ -43,7 +43,17 @@ export class TreeEditor extends Component {
         this.treeProcessor = useService("tree_processor");
         this.hasTouch = hasTouch();
         onWillStart(() => this.onPropsUpdated(this.props));
-        onWillUpdateProps((nextProps) => this.onPropsUpdated(nextProps));
+        onWillUpdateProps((nextProps) => {
+            if (
+                nextProps.tree !== this.props.tree ||
+                nextProps.resModel !== this.props.resModel ||
+                nextProps.readonly !== this.props.readonly ||
+                nextProps.isDebugMode !== this.props.isDebugMode ||
+                nextProps.defaultConnector !== this.props.defaultConnector
+            ) {
+                return this.onPropsUpdated(nextProps);
+            }
+        });
     }
 
     async onPropsUpdated(props) {
