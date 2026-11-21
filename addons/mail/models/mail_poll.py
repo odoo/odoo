@@ -4,6 +4,10 @@ from odoo import api, fields, models
 from odoo.addons.mail.tools.discuss import Store
 
 
+class PollValues(dict):
+    """Dict flagging context values as set by the server, so clients can't forge them"""
+
+
 class MailPoll(models.Model):
     _description = "Poll"
     _name = "mail.poll"

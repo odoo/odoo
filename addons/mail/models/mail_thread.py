@@ -30,6 +30,7 @@ from werkzeug import urls
 
 from odoo import _, api, Command, exceptions, fields, models, modules, tools
 from odoo.addons.mail.models.mail_message import SHARE_DOMAIN
+from odoo.addons.mail.models.mail_poll import PollValues
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tools.web_push import (
     push_to_end_point, DeviceUnreachableError,
@@ -2467,7 +2468,7 @@ class MailThread(models.AbstractModel):
         """ Hook to add custom behavior after having posted the message. Both
         message and computed value are given, to try to lessen query count by
         using already-computed values instead of having to rebrowse things. """
-        if poll_values := self.env.context.get("mail_create_poll_values"):
+        if isinstance(poll_values := self.env.context.get("mail_create_poll_values"), PollValues):
             # sudo: mail.poll - can create a poll on an accessible thread.
             self.env["mail.poll"].sudo().create({**poll_values, "start_message_id": message.id})
         elif poll := self.env.context.get("mail_end_poll"):
