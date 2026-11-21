@@ -88,22 +88,14 @@ class PosPaymentMethod(models.Model):
         if 'type' in vals:
             vals['type'] = 'online'
 
-        disabled_fields_name = ('receivable_account_id', 'outstanding_account_id', 'journal_id', 'payment_provider', 'qr_code_method')
+        disabled_fields_name = ('receivable_account_id', 'outstanding_account_id', 'journal_id', 'payment_provider', 'electronic_payment_id')
         if if_present:
             for name in disabled_fields_name:
                 if name in vals:
                     vals[name] = False
-            if 'payment_method_type' in vals:
-                vals['payment_method_type'] = 'none'
         else:
             for name in disabled_fields_name:
                 vals[name] = False
-            vals['payment_method_type'] = 'none'
-
-    def _get_provider_selection(self):
-        if len(self) == 1 and self.type == 'online':
-            return []
-        return super()._get_provider_selection()
 
     @api.model
     def _get_or_create_online_payment_method(self, company_id, pos_config_id):
@@ -129,11 +121,6 @@ class PosPaymentMethod(models.Model):
                         pos_config_id=pos_config_id,
                     ))
         return payment_method_id
-
-    @api.onchange('type')
-    def _onchange_type(self):
-        """Reset method to hide widget `pos_payment_provider_cards` in form view."""
-        self.payment_method_type = 'none'
 
     def _get_customer_required_providers_code(self):
         return ['aps', 'flutterwave']

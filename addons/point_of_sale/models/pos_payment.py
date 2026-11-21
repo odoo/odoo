@@ -51,6 +51,7 @@ class PosPayment(models.Model):
     payment_method_authcode = fields.Char(string='Payment APPR Code')
     payment_method_issuer_bank = fields.Char(string='Payment Issuer Bank')
     payment_method_payment_mode = fields.Char(string='Payment Mode')
+    payment_method_metadata = fields.Json(help='Additional data from the payment provider')
     transaction_id = fields.Char(string='Payment Transaction ID')
     payment_status = fields.Char(string='Payment Status')
     ticket = fields.Char(string='Payment Receipt Info')

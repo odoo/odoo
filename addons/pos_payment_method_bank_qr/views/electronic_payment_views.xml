@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="pos_electronic_payment_view_form_bank_qr" model="ir.ui.view">
+        <field name="name">pos.electronic.payment.form.inherit.bank_qr</field>
+        <field name="model">pos.electronic.payment</field>
+        <field name="inherit_id" ref="pos_payment_method.pos_electronic_payment_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <notebook invisible="payment_provider != 'bank_qr'">
+                    <page name="settings" string="Bank QR">
+                        <group>
+                            <field name="bank_journal_id" invisible="payment_provider != 'bank_qr'" required="payment_provider == 'bank_qr'"/>
+                            <field name="qr_code_method" invisible="payment_provider != 'bank_qr'" required="payment_provider == 'bank_qr'"/>
+                        </group>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -4,6 +4,7 @@ from . import ir_http
 from . import ir_ui_view
 from . import pos_category
 from . import pos_config
+from . import pos_electronic_payment
 from . import pos_order
 from . import pos_order_line
 from . import pos_restaurant

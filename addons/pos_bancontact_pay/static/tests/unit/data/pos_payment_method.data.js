@@ -48,7 +48,6 @@ PosPaymentMethod._records.push(
         type: "bank",
         image: false,
         sequence: 3,
-        default_qr: false,
         config_ids: [1],
     },
     {
@@ -62,7 +61,6 @@ PosPaymentMethod._records.push(
         type: "bank",
         image: false,
         sequence: 4,
-        default_qr: false,
         config_ids: [1],
     },
     {
@@ -76,7 +74,6 @@ PosPaymentMethod._records.push(
         type: "bank",
         image: false,
         sequence: 5,
-        default_qr: false,
         config_ids: [1],
     }
 );

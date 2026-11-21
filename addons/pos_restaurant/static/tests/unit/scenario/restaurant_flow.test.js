@@ -1334,7 +1334,6 @@ test("test_tip_after_payment: tip adjusts payment line based on remaining/change
     const bankPm = store.models["pos.payment.method"].create({
         name: "Bank",
         type: "bank",
-        payment_method_type: "none",
     });
     store.config.payment_method_ids = [...store.config.payment_method_ids, bankPm];
 

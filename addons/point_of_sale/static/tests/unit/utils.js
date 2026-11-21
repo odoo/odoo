@@ -15,7 +15,7 @@ import { expect } from "@odoo/hoot";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { ResCurrency } from "./data/res_currency.data";
 import { unmockedOrm } from "@web/../tests/_framework/module_set.hoot";
-import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
+import { PaymentMethod } from "@pos_payment_method/payment_method";
 
 const { DateTime } = luxon;
 
@@ -612,7 +612,7 @@ export function addTestTerminals(store, count = 2) {
             sequence: 10 + i,
         });
         terminal._payment_provider_name = "Test Provider";
-        terminal.payment_interface = new PaymentInterface(store, terminal);
+        terminal.payment_interface = new PaymentMethod(terminal.id);
         terminals.push(terminal);
     }
     store.config.payment_method_ids = [...store.config.payment_method_ids, ...terminals];

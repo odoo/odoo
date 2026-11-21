@@ -49,7 +49,7 @@
                                 </t>
                             </h1>
                             <div class="btn btn-light btn-lg w-100 py-5 border border-light shadow-sm">
-                                Remaining: <t t-out="this.selfOrder.formatMonetary(this.selfOrder.currentOrder.totalDue - this.selectedPaymentMethod.payment_interface.amountInserted)" />
+                                Remaining: <t t-out="this.selfOrder.formatMonetary(this.selfOrder.currentOrder.totalDue - this.selectedPaymentMethod.payment_interface.amountInserted())" />
                             </div>
                         </t>
                         <t t-else="">
