@@ -191,6 +191,39 @@ class TestCalendar(SavepointCaseWithUserDemo):
         self.assertEqual(event_from_activity.attendee_ids.partner_id, activity.user_id.partner_id)
         self.assertEqual(event_from_activity.user_id, activity.user_id)
 
+    def test_event_activity_recurrence_keeps_activity_type(self):
+        """ Recurring event created from a phonecall activity: every occurrence
+        should get an activity of the same (phonecall) type, not a meeting. """
+        call_type = self.env['mail.activity.type'].create({
+            'name': 'Call',
+            'category': 'phonecall',
+        })
+        partner = self.env['res.partner'].create({'name': 'Test Partner'})
+        activity = self.env['mail.activity'].create({
+            'summary': 'Call with Demo',
+            'activity_type_id': call_type.id,
+            'res_model_id': self.env['ir.model']._get_id('res.partner'),
+            'res_id': partner.id,
+            'user_id': self.user_demo.id,
+        })
+        action_context = activity.with_context(
+            default_res_model='res.partner', default_res_id=partner.id,
+        ).action_create_calendar_event()['context']
+        event = self.env['calendar.event'].with_context(action_context).create({
+            'start': '2022-07-27 14:30:00',
+            'stop': '2022-07-27 16:30:00',
+            'recurrency': True,
+            'rrule_type': 'weekly',
+            'interval': 1,
+            'wed': True,
+            'count': 3,
+            'end_type': 'count',
+        })
+        events = event.recurrence_id.calendar_event_ids
+        self.assertEqual(len(events), 3)
+        self.assertEqual(events.activity_ids.activity_type_id, call_type)
+        self.assertEqual(len(partner.activity_ids), 3)
+
     def test_activity_event_multiple_meetings(self):
         # Creating multiple meetings from an activity creates additional activities
         # ensure meeting activity type exists
