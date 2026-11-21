@@ -33,6 +33,7 @@
         <field name="arch" type="xml">
             <kanban highlight_color="color" default_group_by="stage_id" quick_create_view="website_event_track.event_track_view_form_quick_create">
                 <field name="website_url"/>
+                <field name="has_conflict"/>
                 <field name="legend_blocked"/>
                 <field name="legend_normal"/>
                 <field name="legend_done"/>
@@ -47,6 +48,11 @@
                     <t t-name="card">
                         <field name="name" class="fw-medium fs-5"/>
                         <div t-if="duration" class="d-flex"><field name="duration" widget="float_time"/>hours</div>
+                        <div t-if="record.has_conflict.raw_value">
+                            <span class="badge text-bg-danger">
+                                <field name="conflict_count"/> conflict(s)
+                            </span>
+                        </div>
                         <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                         <footer class="pt-0">
                             <div class="d-flex align-items-center">
@@ -76,6 +82,7 @@
                 <field name="event_id"/>
                 <field name="partner_id" avatar_field="avatar_128"/>
                 <field name="user_id" avatar_field="avatar_128"/>
+                <field name="conflict_count" string="Conflicts" invisible="not conflict_count"/>
             </calendar>
         </field>
     </record>
@@ -95,6 +102,7 @@
                 <field name="event_id"/>
                 <field name="stage_id"/>
                 <filter string="My Tracks" name="my_tracks" domain="[('user_id', '=', uid)]"/>
+                <filter string="Conflicts" name="conflicts" domain="[('has_conflict', '=', True)]"/>
                 <separator/>
                 <filter string="Published" name="filter_published" domain="[('website_published', '=', True)]"/>
                 <separator/>
@@ -145,6 +153,18 @@
                         <field name="is_published" widget="website_redirect_button"/>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="alert alert-warning mb-3" role="alert" invisible="not has_conflict">
+                        <div invisible="not has_location_conflict">
+                            This location is already booked by another track at the same time.
+                        </div>
+                        <div invisible="not has_speaker_conflict">
+                            This speaker is already scheduled for another track at the same time.
+                        </div>
+                        <button name="action_view_conflicting_tracks" type="object" class="btn-link p-0"
+                                icon="east">
+                            <field name="conflict_count" class="me-1"/> conflicting track(s)
+                        </button>
+                    </div>
                     <div class="d-flex gap-4 mb-3">
                         <div class="flex-grow-1">
                             <label for="name"/>
@@ -227,8 +247,10 @@
         <field name="name">event.track.list</field>
         <field name="model">event.track</field>
         <field name="arch" type="xml">
-            <list string="Event Track" multi_edit="1">
+            <list string="Event Track" multi_edit="1" decoration-danger="has_conflict">
                 <field name="name"/>
+                <field name="date" optional="show"/>
+                <field name="date_end" optional="hide"/>
                 <field name="partner_name" string="Speaker Name"/>
                 <field name="partner_id" optional="hide"/>
                 <field name="partner_email" optional="hide"/>
@@ -240,6 +262,9 @@
                 <field name="color" string="Color" widget="color_picker"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
                 <field name="location_id"/>
+                <field name="has_conflict" column_invisible="True"/>
+                <field name="conflict_count" string="Conflicts" optional="show"
+                    decoration-danger="conflict_count &gt; 0"/>
             </list>
         </field>
     </record>
