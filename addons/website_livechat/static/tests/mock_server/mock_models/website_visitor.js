@@ -67,29 +67,25 @@ export class WebsiteVisitor extends websiteModels.WebsiteVisitor {
     _store_visitor_history_fields(res) {
         /** @type {import("mock_models").WebsiteTrack} */
         const WebsiteTrack = this.env["website.track"];
-
+        const tracks = (visitor) =>
+            WebsiteTrack.search_read([
+                ["url", "!=", false],
+                ["visitor_id", "=", visitor.id],
+            ]).sort((a, b) => b.visit_datetime.localeCompare(a.visit_datetime) || b.id - a.id);
+        res.attr("track_count", (visitor) => tracks(visitor).length);
         res.many(
             "last_track_ids",
             (trackRes) => {
                 trackRes.one("page_id", ["name"]);
+                trackRes.attr("url");
                 trackRes.attr("visit_datetime");
             },
             {
-                sort: (a, b) => {
-                    if (a.visit_datetime === b.visit_datetime) {
-                        return a.id - b.id;
-                    }
-                    return a.visit_datetime < b.visit_datetime ? 1 : -1;
-                },
                 value: (visitor) =>
                     WebsiteTrack.browse(
-                        WebsiteTrack.search_read(
-                            [
-                                ["page_id", "!=", false],
-                                ["visitor_id", "=", visitor.id],
-                            ],
-                            { limit: 3 }
-                        ).map((t) => t.id)
+                        tracks(visitor)
+                            .slice(0, 3)
+                            .map((track) => track.id)
                     ),
             }
         );

@@ -1,16 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import json
 from datetime import timedelta
 from zoneinfo import ZoneInfo
 
 from markupsafe import Markup
 
-from odoo import _, api, fields, models, tools
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools import email_split, format_list, html2plaintext, is_html_empty
-from odoo.tools.mimetypes import get_extension
 from odoo.tools.sql import SQL
 from odoo.tools.translate import LazyTranslate
 
@@ -594,10 +592,24 @@ class DiscussChannel(models.Model):
         ])
         stale_sessions.livechat_end_dt = fields.Datetime.now()
 
-    def execute_command_history(self, **kwargs):
-        self._bus_send(
-            "im_livechat.history_command",
-            {"id": self.id, "partner_id": self.env.user.partner_id.id},
+    def request_browsing_history(self, request_id: str):
+        """Request browsing history for an ongoing livechat as the current agent.
+
+        :param request_id: Unique identifier used to match the response to this request.
+        """
+        self.ensure_one()
+        if (
+            self.channel_type != "livechat"
+            or self.livechat_end_dt
+            or self.self_member_id.livechat_member_type != "agent"
+        ):
+            return
+        visitor = self.channel_member_ids.filtered(
+            lambda member: member.livechat_member_type == "visitor",
+        )[:1]
+        visitor._bus_send(
+            "im_livechat.history/request",
+            {"id": self.id, "partner_id": self.env.user.partner_id.id, "request_id": request_id},
         )
 
     def _get_visitor_leave_message(self, correspondents=False, cancel=False):
@@ -686,77 +698,20 @@ class DiscussChannel(models.Model):
         })
         mail.send()
 
-    def _attachment_to_html(self, attachment):
-        if attachment.mimetype.startswith("image/"):
-            return Markup(
-                "<img src='%s?access_token=%s' alt='%s' style='max-width: 75%%; height: auto; padding: 5px;'>",
-            ) % (
-                attachment.image_src,
-                attachment.generate_access_token()[0],
-                attachment.name,
-            )
-        file_extension = get_extension(attachment.display_name or '')
-        attachment_data = {
-            "id": attachment.id,
-            "access_token": attachment.generate_access_token()[0],
-            "checksum": attachment.checksum,
-            "extension": file_extension.lstrip("."),
-            "mimetype": attachment.mimetype,
-            "filename": attachment.display_name or _('File'),
-            "url": attachment.url,
-        }
-        return Markup(
-            "<div data-embedded='file' data-oe-protected='true' contenteditable='false' data-embedded-props='%s'/>",
-        ) % json.dumps({"fileData": attachment_data})
-
-    def _get_channel_history(self):
-        """
-        Converting message body back to plaintext for correct data formatting in HTML field.
-        """
-        self.ensure_one()
-        previous_message_author = None
-        message_domain = Domain("message_type", "!=", "notification")
+    def _get_channel_history_message_domain(self):
+        message_domain = super()._get_channel_history_message_domain()
         # sudo - chatbot.message: visitors can access messages on chats they have access to
         if first_chatbot_message := self.sudo().chatbot_message_ids.sorted("id")[:1]:
             message_domain &= Domain("id", ">=", first_chatbot_message.mail_message_id.id)
-        # sudo - mail.message: getting empty/notification messages to exclude them is allowed.
-        filtered_messages = (
-            self.message_ids.sudo() - self.message_ids.sudo()._filter_empty()
-        ).filtered_domain(message_domain)
-        parts = []
-        for message in filtered_messages.sorted("id"):
-            message_author = message.author_id.sudo() or message.author_guest_id
-            if previous_message_author != message_author and parts:
-                parts.append(Markup(""))
-
-            parts.extend(self._get_channel_history_format_message(message, message.body, message_author, previous_message_author))
-            if not tools.is_html_empty(message.body) or message.attachment_ids:
-                previous_message_author = message_author
-
-        return Markup("<br/>").join(parts)
-
-    def _get_channel_history_format_message(self, message, message_body, message_author, previous_message_author):
-        # sudo - res.partner: accessing livechat username or name is allowed to visitor
-        parts = []
-        if previous_message_author != message_author:
-            parts.append(
-                Markup("<strong>%s:</strong>")
-                % self._get_channel_history_format_author(message_author),
-            )
-        if not tools.is_html_empty(message_body):
-            parts.append(html2plaintext(message_body))
-
-        for attachment in message.attachment_ids:
-            # sudo - ir.attachment: public user can read attachment metadata
-            parts.append(self._attachment_to_html(attachment.sudo()))
-        return parts
+        return message_domain
 
     def _get_channel_history_format_author(self, message_author):
-        self.ensure_one()
         return (
             username
-            if message_author._name == "res.partner" and (username := message_author.user_livechat_username)
-            else message_author.name
+            if self.channel_type == "livechat"
+            and message_author._name == "res.partner"
+            and (username := message_author.user_livechat_username)
+            else super()._get_channel_history_format_author(message_author)
         )
 
     def _store_livechat_extra_fields(self, res: Store.FieldList):

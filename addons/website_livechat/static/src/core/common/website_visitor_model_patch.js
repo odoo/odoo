@@ -10,6 +10,8 @@ const websiteVisitorPatch = {
         super.setup();
         this.discuss_channel_ids = fields.Many("discuss.channel");
         this.last_track_ids = fields.Many("website.track");
+        /** @type {number|undefined} */
+        this.track_count = undefined;
     },
 };
 patch(WebsiteVisitor.prototype, websiteVisitorPatch);

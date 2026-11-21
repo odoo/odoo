@@ -48,6 +48,7 @@
         'views/crm_lead_views.xml',
         'views/crm_team_member_views.xml',
         'views/digest_views.xml',
+        "views/discuss_channel_views.xml",
         'views/mail_activity_plan_views.xml',
         'views/mail_activity_views.xml',
         'views/res_config_settings_views.xml',

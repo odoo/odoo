@@ -4,8 +4,8 @@ import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 
 export class HistoryService {
-    static HISTORY_STORAGE_KEY = "im_livechat_history";
-    static HISTORY_LIMIT = 15;
+    static HISTORY_STORAGE_KEY = "im_livechat_history_20_1";
+    static HISTORY_LIMIT = 3;
 
     constructor(env, services) {
         /** @type {ReturnType<typeof import("@bus/services/bus_plugin").busService.start>} */
@@ -16,36 +16,46 @@ export class HistoryService {
 
     setup() {
         this.updateHistory();
-        this.busService.subscribe("im_livechat.history_command", async (payload) => {
+        this.busService.subscribe("im_livechat.history/request", async (payload) => {
             const channel = await this.store["discuss.channel"].getOrFetch(payload.id);
             if (channel?.channel_type !== "livechat") {
                 return;
             }
-            const data = expirableStorage.getItem(HistoryService.HISTORY_STORAGE_KEY);
-            const history = data ? JSON.parse(data) : [];
             rpc("/im_livechat/history", {
                 pid: payload.partner_id,
                 channel_id: channel.id,
-                page_history: history,
+                request_id: payload.request_id,
+                page_history: this.getHistory().slice(0, HistoryService.HISTORY_LIMIT),
             });
         });
     }
 
-    updateHistory() {
-        const page = location.href.replace(/^.*\/\/[^/]+/, "");
-        const pageHistory = expirableStorage.getItem(HistoryService.HISTORY_STORAGE_KEY);
-        const urlHistory = pageHistory ? JSON.parse(pageHistory) : [];
-        if (!urlHistory.includes(page)) {
-            urlHistory.push(page);
-            if (urlHistory.length > HistoryService.HISTORY_LIMIT) {
-                urlHistory.shift();
+    getHistory() {
+        const data = expirableStorage.getItem(HistoryService.HISTORY_STORAGE_KEY);
+        try {
+            const history = JSON.parse(data);
+            if (!Array.isArray(history)) {
+                return [];
             }
-            expirableStorage.setItem(
-                HistoryService.HISTORY_STORAGE_KEY,
-                JSON.stringify(urlHistory),
-                60 * 60 * 24 // kept for 1 day
-            );
+            return history;
+        } catch {
+            return [];
         }
+    }
+
+    updateHistory() {
+        const page = {
+            title: document.title,
+            url: location.href,
+            visit_datetime: new Date().toISOString(),
+        };
+        const history = this.getHistory().filter((visit) => visit?.url !== page.url);
+        history.unshift(page);
+        expirableStorage.setItem(
+            HistoryService.HISTORY_STORAGE_KEY,
+            JSON.stringify(history.slice(0, HistoryService.HISTORY_LIMIT)),
+            60 * 60 * 24 // kept for 1 day
+        );
     }
 }
 
