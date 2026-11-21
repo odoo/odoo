@@ -256,11 +256,10 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'tz': self.env.user.tz, 'resource_calendar_id': calendar.id,
         })
 
-    def _assert_position(self, leave, date_from, period_from, date_to, period_to, days):
+    def _assert_position(self, leave, date_from, date_to, duration, days):
         self.assertEqual(
-            (leave.request_date_from, leave.request_date_from_period,
-             leave.request_date_to, leave.request_date_to_period, leave.number_of_days),
-            (date_from, period_from, date_to, period_to, days),
+            (leave.request_date_from, leave.request_date_to, leave.request_duration, leave.number_of_days),
+            (date_from, date_to, duration, days),
         )
         computed_days, computed_hours = leave._get_durations()[leave.id]
         self.assertEqual(leave.number_of_days, computed_days, "stored number_of_days is stale")
@@ -816,8 +815,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'work_entry_type_id': work_entry_type.id,
             'request_date_from': fields.Datetime.from_string('2019-12-24'),
             'request_date_to': fields.Datetime.from_string('2019-12-24'),
-            'request_date_from_period': 'am',
-            'request_date_to_period': 'am',
+            'request_duration': 'am',
         })
 
         self.assertEqual(leave3.number_of_hours, 4)
@@ -1943,8 +1941,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'work_entry_type_id': self.holidays_type_half.id,
             'request_date_from': time.strftime('2024-04-01'),
             'request_date_to': time.strftime('2024-04-01'),
-            'request_date_from_period': 'am',
-            'request_date_to_period': 'am',
+            'request_duration': 'am',
         })
         self.assertEqual(leave_half_day_am.duration_display, '0.5 days')
 
@@ -1954,32 +1951,19 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'work_entry_type_id': self.holidays_type_half.id,
             'request_date_from': time.strftime('2024-04-02'),
             'request_date_to': time.strftime('2024-04-02'),
-            'request_date_from_period': 'pm',
-            'request_date_to_period': 'pm',
+            'request_duration': 'pm',
         })
         self.assertEqual(leave_half_day_pm.duration_display, '0.5 days')
 
-        leave_half_day_multi = self.env['hr.leave'].with_user(self.user_employee_id).create({
-            'name': 'Day and half starting Afternoon',
-            'employee_id': self.employee_emp_id,
-            'work_entry_type_id': self.holidays_type_half.id,
-            'request_date_from': time.strftime('2024-04-03'),
-            'request_date_to': time.strftime('2024-04-04'),
-            'request_date_from_period': 'pm',
-            'request_date_to_period': 'pm',
-        })
-        self.assertEqual(leave_half_day_multi.duration_display, '1.5 days')
-
-        leave_half_day_multi2 = self.env['hr.leave'].with_user(self.user_employee_id).create({
-            'name': 'Day and half starting Morning',
-            'employee_id': self.employee_emp_id,
-            'work_entry_type_id': self.holidays_type_half.id,
-            'request_date_from': time.strftime('2024-04-08'),
-            'request_date_to': time.strftime('2024-04-09'),
-            'request_date_from_period': 'am',
-            'request_date_to_period': 'am',
-        })
-        self.assertEqual(leave_half_day_multi2.duration_display, '1.5 days')
+        with self.assertRaises(ValidationError):
+            self.env['hr.leave'].with_user(self.user_employee_id).create({
+                'name': 'Day and half starting Afternoon',
+                'employee_id': self.employee_emp_id,
+                'work_entry_type_id': self.holidays_type_half.id,
+                'request_date_from': time.strftime('2024-04-03'),
+                'request_date_to': time.strftime('2024-04-04'),
+                'request_duration': 'pm',
+            })
 
         leave_half_day_multi3 = self.env['hr.leave'].with_user(self.user_employee_id).create({
             'name': '2 Days starting Morning',
@@ -1987,21 +1971,8 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'work_entry_type_id': self.holidays_type_half.id,
             'request_date_from': time.strftime('2024-04-10'),
             'request_date_to': time.strftime('2024-04-11'),
-            'request_date_from_period': 'am',
-            'request_date_to_period': 'pm',
         })
         self.assertEqual(leave_half_day_multi3.duration_display, '2 days')
-
-        leave_half_day_multi4 = self.env['hr.leave'].with_user(self.user_employee_id).create({
-            'name': '2 Days starting Afternoon',
-            'employee_id': self.employee_emp_id,
-            'work_entry_type_id': self.holidays_type_half.id,
-            'request_date_from': time.strftime('2024-04-12'),
-            'request_date_to': time.strftime('2024-04-16'),
-            'request_date_from_period': 'pm',
-            'request_date_to_period': 'am',
-        })
-        self.assertEqual(leave_half_day_multi4.duration_display, '2 days')
 
     @freeze_time('2026-03-16')
     def test_leave_duration_with_absence_attendances(self):
@@ -2050,49 +2021,14 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         employee.resource_calendar_id = self.irregular_calendar
         employee.tz = 'Europe/Brussels'
 
-        irregular_leave = self.env['hr.leave'].with_user(self.user_employee_id).create({
-            'name': 'Monday and Tuesday Morning',
-            'employee_id': self.employee_emp_id,
-            'work_entry_type_id': self.holidays_type_half.id,
-            'request_date_from': time.strftime('2024-04-01'),
-            'request_date_to': time.strftime('2024-04-02'),
-            'request_date_from_period': 'am',
-            'request_date_to_period': 'am',
-        })
-        self.assertEqual(irregular_leave.duration_display, '1 day')
-
-        irregular_leave2 = self.env['hr.leave'].with_user(self.user_employee_id).create({
-            'name': 'Tuesday Afternoon and Wednesday Morning',
-            'employee_id': self.employee_emp_id,
-            'work_entry_type_id': self.holidays_type_half.id,
-            'request_date_from': time.strftime('2024-04-02'),
-            'request_date_to': time.strftime('2024-04-03'),
-            'request_date_from_period': 'pm',
-            'request_date_to_period': 'am',
-        })
-        self.assertEqual(irregular_leave2.duration_display, '1.5 days')
-
         irregular_leave3 = self.env['hr.leave'].with_user(self.user_employee_id).create({
             'name': 'Thursday and Friday',
             'employee_id': self.employee_emp_id,
             'work_entry_type_id': self.holidays_type_half.id,
             'request_date_from': time.strftime('2024-04-04'),
             'request_date_to': time.strftime('2024-04-05'),
-            'request_date_from_period': 'am',
-            'request_date_to_period': 'pm',
         })
         self.assertEqual(irregular_leave3.duration_display, '1.5 days')
-
-        irregular_leave4 = self.env['hr.leave'].with_user(self.user_employee_id).create({
-            'name': 'Friday/Weekend/Monday Morning',
-            'employee_id': self.employee_emp_id,
-            'work_entry_type_id': self.holidays_type_half.id,
-            'request_date_from': time.strftime('2024-04-12'),
-            'request_date_to': time.strftime('2024-04-15'),
-            'request_date_from_period': 'am',
-            'request_date_to_period': 'am',
-        })
-        self.assertEqual(irregular_leave4.duration_display, '1 day')
 
     def test_unified_time_off_hours_scenarios(self):
         with self.assertRaises(UserError):
@@ -2315,16 +2251,14 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'date_to': date(2025, 12, 2),
             'employee_ids': (employee_1 + employee_2).ids,
         })
-        leave_wizard.date_from_period = 'am'
-        leave_wizard.date_to_period = 'am'
+        leave_wizard.request_duration = 'am'
         leave_wizard.action_generate_time_off()
         morning_leaves = self.env['hr.leave'].search([
             ('employee_id', 'in', (employee_1 + employee_2).ids),
             ('work_entry_type_id', '=', self.holidays_type_half.id),
         ])
         self.assertEqual(len(morning_leaves), 1, "Only 1 leave should be generated for the employee with regular calendar")
-        leave_wizard.date_from_period = 'pm'
-        leave_wizard.date_to_period = 'pm'
+        leave_wizard.request_duration = 'pm'
         leave_wizard.action_generate_time_off()
         afternoon_leaves = self.env['hr.leave'].search([
             ('employee_id', 'in', (employee_1 + employee_2).ids),
@@ -2358,10 +2292,8 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         leave_wizard = self.env['hr.leave.generate.multi.wizard'].create({
             'work_entry_type_id': self.holidays_type_half_with_alloc.id,
             'date_from': date(2025, 12, 2),
-            'date_to': date(2025, 12, 3),
+            'date_to': date(2025, 12, 2),
             'employee_ids': (employee_1 + employee_2).ids,
-            'date_from_period': 'am',
-            'date_to_period': 'am',
         })
         leave_wizard.action_generate_time_off()
         leaves = self.env['hr.leave'].search([
@@ -2401,8 +2333,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'date_from': date(2025, 12, 8),
             'date_to': date(2025, 12, 8),
             'employee_ids': (employee_1 + employee_2).ids,
-            'date_from_period': 'pm',
-            'date_to_period': 'pm',
+            'request_duration': 'pm',
         })
         leave_wizard.action_generate_time_off()
         leaves = self.env['hr.leave'].search([
@@ -2722,8 +2653,6 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'work_entry_type_id': self.holidays_type_half.id,
             'request_date_from': "2025-08-29",
             'request_date_to': "2025-08-29",
-            'request_date_from_period': 'am',
-            'request_date_to_period': 'pm',
         })
 
         leave = flex_leave._get_durations()
@@ -2963,15 +2892,14 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 {'request_date_to': self.tuesday},
                 datetime(2030, 9, 2, 0, 0), datetime(2030, 9, 4, 0, 0)),
             ("in half days, a full day", self.holidays_type_half,
-                {'request_date_from_period': 'am', 'request_date_to_period': 'pm'},
+                {},
                 datetime(2030, 9, 2, 0, 0), datetime(2030, 9, 3, 0, 0)),
             ("in half days, a morning", self.holidays_type_half,
-                {'request_date_from_period': 'am', 'request_date_to_period': 'am'},
+                {'request_duration': 'am'},
                 datetime(2030, 9, 2, 0, 0), datetime(2030, 9, 2, 12, 0)),
-            ("in half days, an afternoon to a morning", self.holidays_type_half,
-                {'request_date_to': self.tuesday,
-                 'request_date_from_period': 'pm', 'request_date_to_period': 'am'},
-                datetime(2030, 9, 2, 12, 0), datetime(2030, 9, 3, 12, 0)),
+            ("in half days, an afternoon", self.holidays_type_half,
+                {'request_duration': 'pm'},
+                datetime(2030, 9, 2, 12, 0), datetime(2030, 9, 3, 0, 0)),
             ("in hours, carries its hours", self.holidays_type_hours,
                 {'request_hour_from': 9, 'request_hour_to': 13},
                 datetime(2030, 9, 2, 9, 0), datetime(2030, 9, 2, 13, 0)),
@@ -2994,7 +2922,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
     def test_the_same_wall_clock_looks_the_same_everywhere(self):
         """ Two different instants, one position. """
         for work_entry_type, vals in [
-            (self.holidays_type_half, {'request_date_from_period': 'am', 'request_date_to_period': 'pm'}),
+            (self.holidays_type_half, {}),
             (self.holidays_type_hours, {'request_hour_from': 9, 'request_hour_to': 13}),
         ]:
             with self.subTest(work_entry_type.request_unit):
@@ -3005,8 +2933,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 self.assertEqual(brussels.request_date_hour_to, tokyo.request_date_hour_to)
 
     def test_position_follows_the_timezone_of_the_reader(self):
-        leave = self._leave(self.holidays_type_half,
-                            request_date_from_period='am', request_date_to_period='pm')
+        leave = self._leave(self.holidays_type_half)
         reader = self.user_hrmanager
         reader.tz = 'Asia/Tokyo'
         expected = datetime(2030, 9, 2, 0, 0).replace(tzinfo=ZoneInfo('Asia/Tokyo')) \
@@ -3039,24 +2966,24 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
     def test_moving(self):
         for label, work_entry_type, vals, move, expected in [
-            ("a day, by half a day", self.holidays_type_half,
-                {'request_date_from_period': 'am', 'request_date_to_period': 'pm'},
-                (datetime(2030, 9, 2, 12, 0), datetime(2030, 9, 3, 12, 0)),
-                (self.monday, 'pm', self.tuesday, 'am', 1)),
+            ("a day, onto its afternoon", self.holidays_type_half,
+                {},
+                (datetime(2030, 9, 2, 12, 0), datetime(2030, 9, 3, 0, 0)),
+                (self.monday, self.monday, 'pm', 0.5)),
+            # several days are whole days: half a day of move is a whole one
             ("two days, by half a day", self.holidays_type_half,
-                {'request_date_to': self.tuesday,
-                 'request_date_from_period': 'am', 'request_date_to_period': 'pm'},
+                {'request_date_to': self.tuesday},
                 (datetime(2030, 9, 2, 12, 0), datetime(2030, 9, 4, 12, 0)),
-                (self.monday, 'pm', self.wednesday, 'am', 2)),
+                (self.monday, self.wednesday, 'full', 3)),
             # days have no boundary inside a day: half a day of move is a whole one
             ("in days, by half a day", self.holidays_type_1,
                 {'request_date_to': self.tuesday},
                 (datetime(2030, 9, 2, 12, 0), datetime(2030, 9, 4, 12, 0)),
-                (self.tuesday, 'am', self.wednesday, 'pm', 2)),
+                (self.tuesday, self.wednesday, 'full', 2)),
             ("in days, by a whole day", self.holidays_type_1,
                 {'request_date_to': self.tuesday},
                 (datetime(2030, 9, 3, 0, 0), datetime(2030, 9, 5, 0, 0)),
-                (self.tuesday, 'am', self.wednesday, 'pm', 2)),
+                (self.tuesday, self.wednesday, 'full', 2)),
         ]:
             with self.subTest(label):
                 leave = self._leave(work_entry_type, **vals)
@@ -3079,31 +3006,29 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 self.assertEqual((leave.request_hour_from, leave.request_hour_to), expected_hours)
 
     def test_writing_one_bound_only(self):
-        leave = self._leave(self.holidays_type_half, request_date_to=self.tuesday,
-                            request_date_from_period='am', request_date_to_period='pm')
-        self._move(leave, wall_to=datetime(2030, 9, 3, 12, 0))
-        self._assert_position(leave, self.monday, 'am', self.tuesday, 'am', 1.5)
+        leave = self._leave(self.holidays_type_half)
+        self._move(leave, wall_to=datetime(2030, 9, 2, 12, 0))
+        self._assert_position(leave, self.monday, self.monday, 'am', 0.5)
+        self._move(leave, wall_to=datetime(2030, 9, 3, 0, 0))
+        self._assert_position(leave, self.monday, self.monday, 'full', 1)
         self._move(leave, wall_from=datetime(2030, 9, 2, 12, 0))
-        self._assert_position(leave, self.monday, 'pm', self.tuesday, 'am', 1)
+        self._assert_position(leave, self.monday, self.monday, 'pm', 0.5)
 
     def test_a_caller_that_resolves_the_request_fields_is_not_overridden(self):
         """ A form sends the fields it resolved along with the pair it got back. """
-        leave = self._leave(self.holidays_type_half,
-                            request_date_from_period='am', request_date_to_period='pm')
+        leave = self._leave(self.holidays_type_half)
         leave.write({
-            'request_date_to': self.tuesday,
-            'request_date_to_period': 'am',
+            'request_duration': 'am',
             'request_date_hour_from': self._utc(datetime(2030, 9, 2, 0, 0)),
-            'request_date_hour_to': self._utc(datetime(2030, 9, 3, 12, 0)),
+            'request_date_hour_to': self._utc(datetime(2030, 9, 2, 12, 0)),
         })
-        self._assert_position(leave, self.monday, 'am', self.tuesday, 'am', 1.5)
+        self._assert_position(leave, self.monday, self.monday, 'am', 0.5)
 
     def test_reading_back_what_was_written(self):
         """ Reciprocal, so a view never snaps a request away from the drop. """
-        leave = self._leave(self.holidays_type_half,
-                            request_date_from_period='am', request_date_to_period='pm')
+        leave = self._leave(self.holidays_type_half)
         for wall_from, wall_to in [
-            (datetime(2030, 9, 2, 12, 0), datetime(2030, 9, 3, 12, 0)),
+            (datetime(2030, 9, 2, 0, 0), datetime(2030, 9, 2, 12, 0)),
             (datetime(2030, 9, 4, 12, 0), datetime(2030, 9, 5, 0, 0)),
         ]:
             with self.subTest(wall_from=wall_from):
@@ -3118,9 +3043,9 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'employee_id': self.employee_emp.id,
             'work_entry_type_id': self.holidays_type_half.id,
             'request_date_hour_from': self._utc(datetime(2030, 9, 2, 12, 0)),
-            'request_date_hour_to': self._utc(datetime(2030, 9, 3, 12, 0)),
+            'request_date_hour_to': self._utc(datetime(2030, 9, 3, 0, 0)),
         })
-        self._assert_position(leave, self.monday, 'pm', self.tuesday, 'am', 1)
+        self._assert_position(leave, self.monday, self.monday, 'pm', 0.5)
 
     def test_the_form_syncs_the_request_fields_while_editing(self):
         """ No inverse on a draft record, so the form maps the pair itself. """
@@ -3175,39 +3100,30 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
     def test_the_duration_is_not_copied(self):
         """ A copied duration is wrong, and silences its own recompute. """
-        leave = self._leave(self.holidays_type_half, request_date_to=self.tuesday,
-                            request_date_from_period='am', request_date_to_period='pm')
+        leave = self._leave(self.holidays_type_half, request_date_to=self.tuesday)
         vals = leave.with_context(skip_copy_check=True).copy_data()[0]
         self.assertNotIn('number_of_hours', vals)
         self.assertNotIn('number_of_days', vals)
 
     def test_splitting(self):
         """ A split cuts on a day boundary, and both parts still add up. """
-        for label, date_to, periods, split_date, expected_left, expected_right, durations in [
-            ("one day made of two halves", self.tuesday, ('pm', 'am'), self.tuesday,
-                (self.monday, 'pm', self.monday, 'pm', 0.5),
-                (self.tuesday, 'am', self.tuesday, 'am', 0.5), ('pm', 'am')),
-            ("ending with a half day", self.wednesday, ('am', 'am'), self.wednesday,
-                (self.monday, 'am', self.tuesday, 'pm', 2),
-                (self.wednesday, 'am', self.wednesday, 'am', 0.5), ('full', 'am')),
-            ("starting with a half day", self.wednesday, ('pm', 'pm'), self.tuesday,
-                (self.monday, 'pm', self.monday, 'pm', 0.5),
-                (self.tuesday, 'am', self.wednesday, 'pm', 2), ('pm', 'full')),
-            ("cut on its own first day", self.wednesday, ('pm', 'pm'), self.monday,
+        for label, date_to, duration, split_date, expected_left, expected_right, durations in [
+            ("cut on its own first day", self.wednesday, 'full', self.monday,
                 None,
-                (self.monday, 'pm', self.wednesday, 'pm', 2.5), (None, 'full')),
-            ("cut on its own last day", self.wednesday, ('am', 'am'), self.wednesday,
-                (self.monday, 'am', self.tuesday, 'pm', 2),
-                (self.wednesday, 'am', self.wednesday, 'am', 0.5), ('full', 'am')),
-            ("whole days", self.wednesday, ('am', 'pm'), self.tuesday,
-                (self.monday, 'am', self.monday, 'pm', 1),
-                (self.tuesday, 'am', self.wednesday, 'pm', 2), ('full', 'full')),
+                (self.monday, self.wednesday, 'full', 3), (None, 'full')),
+            ("a half day", self.monday, 'pm', self.monday,
+                None,
+                (self.monday, self.monday, 'pm', 0.5), (None, 'pm')),
+            ("cut on its own last day", self.wednesday, 'full', self.wednesday,
+                (self.monday, self.tuesday, 'full', 2),
+                (self.wednesday, self.wednesday, 'full', 1), ('full', 'full')),
+            ("whole days", self.wednesday, 'full', self.tuesday,
+                (self.monday, self.monday, 'full', 1),
+                (self.tuesday, self.wednesday, 'full', 2), ('full', 'full')),
         ]:
             with self.subTest(label):
-                period_from, period_to = periods
                 leave = self._leave(self.holidays_type_half, request_date_to=date_to,
-                                    request_date_from_period=period_from,
-                                    request_date_to_period=period_to)
+                                    request_duration=duration)
                 total = leave.number_of_days
                 new_leaves = leave._split_leaves(split_date)
                 if expected_left is None:
@@ -3224,25 +3140,23 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 self.assertEqual(leave.number_of_days + new_leaves.number_of_days, total)
 
     def test_splitting_a_moved_request(self):
-        """ Two days moved by half a day, then split at both ends: 0.5 + 1 + 0.5. """
+        """ Three days, then split at both ends: 1 + 1 + 1. """
         for label, calendar in (("on clock hours", False),
                                 ("on durations", self._duration_based_calendar())):
             with self.subTest(label):
                 employee = self._employee_on(calendar) if calendar else None
                 leave = self._leave(self.holidays_type_half, employee=employee,
-                                    request_date_to=self.tuesday,
-                                    request_date_from_period='am', request_date_to_period='pm')
-                self._move(leave, self._wall(self.monday, 12), self._wall(self.wednesday, 12))
-                self._assert_position(leave, self.monday, 'pm', self.wednesday, 'am', 2)
+                                    request_date_to=self.wednesday)
+                self._assert_position(leave, self.monday, self.wednesday, 'full', 3)
 
                 first = leave._split_leaves(self.tuesday)
-                self._assert_position(leave, self.monday, 'pm', self.monday, 'pm', 0.5)
-                self._assert_position(first, self.tuesday, 'am', self.wednesday, 'am', 1.5)
+                self._assert_position(leave, self.monday, self.monday, 'full', 1)
+                self._assert_position(first, self.tuesday, self.wednesday, 'full', 2)
 
                 last = first._split_leaves(self.wednesday)
-                self._assert_position(first, self.tuesday, 'am', self.tuesday, 'pm', 1)
-                self._assert_position(last, self.wednesday, 'am', self.wednesday, 'am', 0.5)
-                self.assertEqual(leave.number_of_days + first.number_of_days + last.number_of_days, 2)
+                self._assert_position(first, self.tuesday, self.tuesday, 'full', 1)
+                self._assert_position(last, self.wednesday, self.wednesday, 'full', 1)
+                self.assertEqual(leave.number_of_days + first.number_of_days + last.number_of_days, 3)
 
     def test_splitting_a_non_working_part_off_a_request(self):
         """ The part left of the cut keeps its own days, working or not: an empty part
@@ -3256,13 +3170,12 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             with self.subTest(label):
                 employee = self._employee_on(calendar) if calendar else None
                 leave = self._leave(self.holidays_type_half, employee=employee,
-                                    request_date_from=date_from, request_date_to=self.tuesday,
-                                    request_date_from_period='am', request_date_to_period='pm')
+                                    request_date_from=date_from, request_date_to=self.tuesday)
                 rest = leave._split_leaves(self.monday)
                 self.assertEqual((leave.request_date_from, leave.request_date_to),
                                  (date_from, sunday), "the part left of the cut lost its place")
                 self.assertEqual(leave.number_of_days, 0, "a weekend holds no working day")
-                self._assert_position(rest, self.monday, 'am', self.tuesday, 'pm', 2)
+                self._assert_position(rest, self.monday, self.tuesday, 'full', 2)
 
     def test_the_hours_of_a_day_a_variable_schedule_leaves_out(self):
         """ A day the schedule plans for nobody borrows the nearest day it does plan. """
@@ -3386,8 +3299,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
     def test_a_pair_being_edited_is_not_several_days(self):
         """ The form must not snap a request being edited back onto whole days. """
-        leave = self._leave(self.holidays_type_half, request_date_to=self.tuesday,
-                            request_date_from_period='am', request_date_to_period='pm')
+        leave = self._leave(self.holidays_type_half, request_date_to=self.tuesday)
         self.assertTrue(leave.last_several_days, "premise: two days are several days")
 
         form = Form(leave)
@@ -3397,13 +3309,10 @@ class TestLeaveRequests(TestHrHolidaysCommon):
     def test_searching_agrees_with_the_position(self):
         window_start = self._utc(datetime(2030, 9, 3, 0, 0))
         window_stop = self._utc(datetime(2030, 9, 4, 0, 0))
-        full_days = {'request_date_from_period': 'am', 'request_date_to_period': 'pm'}
-        inside = self._leave(self.holidays_type_half, request_date_from=self.tuesday, **full_days)
-        ends_on_the_first_day = self._leave(
-            self.holidays_type_half, request_date_to=self.tuesday,
-            request_date_from_period='am', request_date_to_period='am')
-        before = self._leave(self.holidays_type_half, **full_days)
-        after = self._leave(self.holidays_type_half, request_date_from=self.thursday, **full_days)
+        inside = self._leave(self.holidays_type_half, request_date_from=self.tuesday)
+        ends_on_the_first_day = self._leave(self.holidays_type_half, request_date_to=self.tuesday)
+        before = self._leave(self.holidays_type_half)
+        after = self._leave(self.holidays_type_half, request_date_from=self.thursday)
 
         found = self.env['hr.leave'].search([
             ('id', 'in', (inside | ends_on_the_first_day | before | after).ids),
@@ -3421,10 +3330,8 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         morning_start = self._utc(self._wall(self.tuesday, 0))
         morning_stop = self._utc(self._wall(self.tuesday, 12))
         on_tuesday = {'request_date_from': self.tuesday}
-        am = self._leave(self.holidays_type_half, request_date_from_period='am',
-                         request_date_to_period='am', **on_tuesday)
-        pm = self._leave(self.holidays_type_half, request_date_from_period='pm',
-                         request_date_to_period='pm', **on_tuesday)
+        am = self._leave(self.holidays_type_half, request_duration='am', **on_tuesday)
+        pm = self._leave(self.holidays_type_half, request_duration='pm', **on_tuesday)
         early = self._leave(self.holidays_type_hours, request_hour_from=9,
                             request_hour_to=11, **on_tuesday)
         late = self._leave(self.holidays_type_hours, request_hour_from=14,

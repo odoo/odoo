@@ -52,8 +52,7 @@ export class TimeOffCalendarModel extends CalendarModel {
             }
         }
         if (rawRecord.work_entry_type_request_unit === "half_day") {
-            result.requestDateFromPeriod = rawRecord.request_date_from_period;
-            result.requestDateToPeriod = rawRecord.request_date_to_period;
+            result.requestDuration = rawRecord.request_duration;
         }
         const states = Object.fromEntries(this.fields.state.selection);
         result.stateLabel = states[rawRecord.state];
@@ -209,8 +208,7 @@ export class TimeOffCalendarModel extends CalendarModel {
             resModel === "hr.leave"
                 ? [
                       "work_entry_type_request_unit",
-                      "request_date_from_period",
-                      "request_date_to_period",
+                      "request_duration",
                       "state",
                       "validation_type",
                       "can_reschedule",
