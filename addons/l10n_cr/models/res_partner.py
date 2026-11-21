@@ -1,6 +1,6 @@
 from odoo import api, fields, models
 
-from odoo.addons.l10n_cr.tools.partner_identifiers import CR_ADDITIONAL_IDENTIFIERS_METADATA
+from odoo.addons.l10n_cr.tools.partner_identifiers import CR_ADDITIONAL_IDENTIFIERS_METADATA, NITE_INDIVIDUAL_PREFIX
 
 
 class ResPartner(models.Model):
@@ -18,10 +18,16 @@ class ResPartner(models.Model):
         cr_companies = self.filtered(
             lambda p: p.country_code == 'CR'
             and p.commercial_partner_id == p
-            and any(p._is_company_identifier(key) for key in p.additional_identifiers or {}),
+            and any(p._l10n_cr_is_company_identifier(key, value) for key, value in (p.additional_identifiers or {}).items()),
         )
         cr_companies.is_company = True
         super(ResPartner, self - cr_companies)._compute_is_company()
+
+    def _l10n_cr_is_company_identifier(self, identifier_key, value):
+        # A NITE identifies a foreign individual (3-120) or an entity without legal personality (3-130)
+        if identifier_key == 'CR_NITE':
+            return not (value or '').startswith(NITE_INDIVIDUAL_PREFIX)
+        return self._is_company_identifier(identifier_key)
 
     @api.onchange('l10n_cr_district_id')
     def _onchange_l10n_cr_district_id(self):

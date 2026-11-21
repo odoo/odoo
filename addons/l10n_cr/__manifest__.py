@@ -19,7 +19,6 @@ Base localization module for Costa Rica. Electronic invoicing is delivered separ
 * 2% income tax withholding applied by State entities.
 * Fiscal positions: Domestic, State institutions, Foreign (export) and Free Trade Zone.
 * Identification types: Cédula Física, Cédula Jurídica, DIMEX, NITE and No Contribuyente.
-* Document types for the ten Hacienda comprobantes; invoice, credit note and debit note are active.
 * Address data: 84 cantones and 492 distritos on top of the seven provinces provided by base.
     """,
     'depends': [
@@ -27,13 +26,11 @@ Base localization module for Costa Rica. Electronic invoicing is delivered separ
         'account_debit_note',
         'base_address_extended',
         'contacts',
-        'l10n_latam_invoice_document',
     ],
     'auto_install': ['account'],
     'data': [
         'views/res_partner_views.xml',
         'data/res_country_data.xml',
-        'data/l10n_latam.document.type.csv',
         'data/res.city.csv',
         'data/l10n_cr.res.city.district.csv',
         'views/portal_address_templates.xml',

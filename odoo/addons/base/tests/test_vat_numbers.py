@@ -220,6 +220,19 @@ class TestVatNumbers(TransactionCase):
         with self.assertRaisesRegex(ValidationError, msg):
             test_partner.write({'vat': '152-0000706-99'})
 
+    def test_vat_cr(self):
+        test_partner = self.env["res.partner"].create({"name": "CR Company", "country_id": self.env.ref("base.cr").id})
+        test_partner.write({"vat": "3-101-012009"})
+        self.assertEqual(test_partner.vat, "3101012009")
+        # Alphanumeric cédula jurídica of the Registro Nacional
+        test_partner.write({"vat": "3-101-a00001"})
+        self.assertEqual(test_partner.vat, "3101A00001")
+        msg = "The VAT number.*does not seem to be valid"
+        with self.assertRaisesRegex(ValidationError, msg):
+            test_partner.write({'vat': '3101A0000'})
+        with self.assertRaisesRegex(ValidationError, msg):
+            test_partner.write({'vat': '1101A00001'})
+
     def test_revised_nri_gstin_format(self):
         """Test valid NRI GSTIN number is accepted"""
         in_partner = self.env["res.partner"].create({"name": "IN Company", "country_id": self.env.ref("base.in").id})
