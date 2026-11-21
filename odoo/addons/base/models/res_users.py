@@ -845,11 +845,16 @@ class ResUsers(models.Model):
 
     @api.model
     def _get_login_domain(self, login):
-        return Domain('login', '=', login)
+        login_str = login or ""
+        return Domain('login', 'in', [login_str, login_str.strip()])
 
     @api.model
     def _get_email_domain(self, email):
-        return Domain('email', '=ilike', escape_like_value(email or ''))
+        email_str = email or ""
+        return Domain.OR([
+            Domain('email', '=ilike', escape_like_value(email_str)),
+            Domain('email', '=ilike', escape_like_value(email_str.strip()))
+        ])
 
     @api.model
     def _get_login_order(self):
