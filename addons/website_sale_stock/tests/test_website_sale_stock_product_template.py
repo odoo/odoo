@@ -121,3 +121,27 @@ class TestWebsiteSaleStockProductTemplate(HttpCase, WebsiteSaleStockCommon):
                 website=self.website,
             )
         self.assertEqual(combination_info['free_qty'], 1)
+
+    def test_website_show_quick_add_with_variants(self):
+        """Test Quick-add should show for a template with variants even when
+        some variants are sold out."""
+        size_attribute = self.env["product.attribute"].create({
+            "name": "Size",
+            "value_ids": [Command.create({"name": "Small"}), Command.create({"name": "Medium"})],
+        })
+        product_template = self.env["product.template"].create({
+            "name": "Test Product With Variants",
+            "is_storable": True,
+            "allow_out_of_stock_order": False,
+            "attribute_line_ids": [
+                Command.create({
+                    "attribute_id": size_attribute.id,
+                    "value_ids": [Command.set(size_attribute.value_ids.ids)],
+                })
+            ],
+        })
+        self._add_product_qty_to_wh(
+            product_template.product_variant_ids[1].id, 10, self.warehouse.lot_stock_id.id
+        )
+        with MockRequest(self.env, website=self.website):
+            self.assertTrue(product_template._website_show_quick_add())

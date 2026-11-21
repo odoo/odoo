@@ -44,9 +44,6 @@ class ProductProduct(models.Model):
         free_qty = self.env['website'].get_current_website()._get_product_available_qty(self.sudo())
         return free_qty <= 0
 
-    def _website_show_quick_add(self):
-        return not self._is_sold_out() and super()._website_show_quick_add()
-
     def _send_availability_email(self):
         website = self.env['website'].get_current_website()
         for product in self.search([('stock_notification_partner_ids', '!=', False)]):
