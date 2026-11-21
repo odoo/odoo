@@ -337,6 +337,48 @@ class TestAccountPayment(AccountPaymentCommon):
         self.assertNotEqual(self.partner.property_account_receivable_id, payment.destination_account_id)
         self.assertEqual(payment.destination_account_id, invoice.line_ids[-1].account_id)
 
+    def test_epd_payment_with_mixed_taxes_fully_pays_invoice(self):
+        """ Paying an invoice with an early payment discount must write off the discount on every
+        base line, not only the first one, when invoice lines have different taxes. """
+        payment_term = self.env['account.payment.term'].create({
+            'name': "early_payment_term",
+            'company_id': self.company_data['company'].id,
+            'discount_percentage': 10,
+            'discount_days': 10,
+            'early_discount': True,
+        })
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner.id,
+            'currency_id': self.currency.id,
+            'invoice_payment_term_id': payment_term.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'taxed line',
+                    'price_unit': 100.0,
+                    'tax_ids': [Command.set(self.company_data['default_tax_sale'].ids)],
+                }),
+                Command.create({
+                    'name': 'untaxed line',
+                    'price_unit': 100.0,
+                    'tax_ids': [Command.clear()],
+                }),
+            ],
+        })
+        invoice.action_post()
+
+        self._create_transaction(
+            reference='payment_epd_mixed_taxes',
+            flow='direct',
+            state='done',
+            amount=invoice._get_invoice_next_payment_values()['amount_due'],
+            invoice_ids=[invoice.id],
+            partner_id=self.partner.id,
+        )._create_payment()
+
+        self.assertTrue(invoice.currency_id.is_zero(invoice.amount_residual))
+        self.assertEqual(invoice.payment_state, "in_payment")
+
     def test_vendor_payment_name_remains_same_after_repost(self):
         """
         Test that modifying and reposting a vendor payment does not change its name, except when the journal is changed.
