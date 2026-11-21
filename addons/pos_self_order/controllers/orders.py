@@ -31,6 +31,8 @@ class PosSelfOrderController(http.Controller):
         pos_config, table = self._verify_authorization(access_token, table_identifier, order)
         if not pos_config.self_ordering_mode == device_type:
             raise Unauthorized("Invalid device type")
+        if order.get('partner_id') and not self._is_session_partner(pos_config, order['partner_id']):
+            order['partner_id'] = False
 
         # Create a safe copy of the order with only the necessary fields for order creation to
         # avoid potential security issues and to reduce the payload size
@@ -171,7 +173,7 @@ class PosSelfOrderController(http.Controller):
         existing_partner = POSOrder._get_self_partner_from_token(pos_config, partner_id)
         google_places_api_key = request.env['ir.config_parameter'].sudo().get_str('google_address_autocomplete.google_places_api_key') or None
 
-        if existing_partner and existing_partner.exists():
+        if self._is_session_partner(pos_config, partner_id):
             if google_places_api_key and preset and preset.exists() and preset.service_at == 'delivery':
                 error = self._check_delivery_address_for_partner(preset, existing_partner)
                 if error:
@@ -193,6 +195,7 @@ class PosSelfOrderController(http.Controller):
             'state_id': state_id.id if state_id else False,
             'company_id': pos_config.company_id.id,
         })
+        request.session['pos_self_order_partner_id'] = partner_sudo.id
         if google_places_api_key and preset and preset.exists() and preset.service_at == 'delivery':
             error = self._check_delivery_address_for_partner(preset, partner_sudo)
             if error:
@@ -224,6 +227,10 @@ class PosSelfOrderController(http.Controller):
                 'message': self.env._("Delivery isn't available for this address. You can still place your order using another method."),
             }
         return None
+
+    def _is_session_partner(self, pos_config, signed_partner):
+        partner = pos_config.env['pos.order']._get_self_partner_from_token(pos_config, signed_partner)
+        return bool(partner) and partner.id == request.session.get('pos_self_order_partner_id')
 
     @http.route('/pos-self-order/remove-order', auth='public', type='jsonrpc', website=True)
     def remove_order(self, access_token, order_id, order_access_token):
