@@ -1,8 +1,11 @@
 import { usePlugin, providePlugins, useScope } from "@odoo/owl";
 import { CalendarModel } from "@web/views/calendar/calendar_model";
 import { deserializeDate, serializeDate } from "@web/core/l10n/dates";
+import { Time } from "@web/core/l10n/time";
 import { _t } from "@web/core/l10n/translation";
 import { unique } from "@web/core/utils/arrays";
+import { formatFloatTime } from "@web/views/fields/formatters";
+import { getColor } from "@web/views/calendar/utils";
 import { ResourceCalendarPlugin } from "@resource/plugins/resource_calendar_plugin";
 
 export class ResourceCalendarAttendanceCalendarModel extends CalendarModel {
@@ -162,6 +165,125 @@ export class ResourceCalendarAttendanceCalendarModel extends CalendarModel {
         } finally {
             record.getChanges = originalGetChanges;
         }
+    }
+
+    /**
+     * Return the blocks used the most in the displayed period, to be easily added
+     * again in one click on selected days. The blocks that don't fit on any of the
+     * given dates are left out (see canFitQuickAddBlock)
+     * @param {DateTime[]} [dates] the selected days
+     */
+    getQuickAddBlocks(dates = []) {
+        const blocks = new Map();
+        for (const record of Object.values(this.records)) {
+            const values = this.getQuickAddBlockValues(record.rawRecord);
+            const key = JSON.stringify(values);
+            if (!blocks.has(key)) {
+                const color = getColor(record.colorIndex);
+                blocks.set(key, {
+                    key,
+                    values,
+                    count: 0,
+                    colorIndex: typeof color === "number" ? color : 0,
+                    title: this.getQuickAddBlockTitle(record),
+                    timeLabel: this.getQuickAddBlockTimeLabel(record),
+                });
+            }
+            blocks.get(key).count += 1 + record.rawRecord.other_dates.length;
+        }
+        const attendancesByDate = this.getAttendancesByDate();
+        return [...blocks.values()]
+            .filter(
+                (block) =>
+                    !dates.length ||
+                    dates.some((date) =>
+                        this.canFitQuickAddBlock(block, attendancesByDate[date.toISODate()])
+                    )
+            )
+            .sort((a, b) => b.count - a.count || a.values.hour_from - b.values.hour_from)
+            .slice(0, 4);
+    }
+
+    /**
+     * @returns {Object<string, Object[]>} the raw attendances of the displayed period, by
+     *      day (ISO date), each occurrence of a recurrent attendance being on its own day
+     */
+    getAttendancesByDate() {
+        const attendancesByDate = {};
+        for (const { rawRecord } of Object.values(this.records)) {
+            for (const date of [rawRecord.date, ...rawRecord.other_dates]) {
+                (attendancesByDate[date] ||= []).push(rawRecord);
+            }
+        }
+        return attendancesByDate;
+    }
+
+    /**
+     * returns whether the block can be added on a day holding the given attendances: the
+     * day can't exceed the hours per day of the schedule (24 hours when not set), nor mix
+     * duration based and time based attendances, and its time based attendances can't overlap
+     */
+    canFitQuickAddBlock(block, attendances = []) {
+        const { hour_from, hour_to, duration_hours } = block.values;
+        const durationBased = !hour_from && !hour_to;
+        const maxHours = this.resourceCalendarPlugin.record?.data.hours_per_day || 24;
+        const totalHours = attendances.reduce((total, att) => total + att.duration_hours, 0);
+        return (
+            totalHours + duration_hours <= maxHours + 1e-6 &&
+            attendances.every(
+                (att) =>
+                    att.duration_based === durationBased &&
+                    (durationBased || att.hour_to <= hour_from || att.hour_from >= hour_to)
+            )
+        );
+    }
+
+    /**
+     * Values identifying a block, copied on the attendances created by a quick add.
+     */
+    getQuickAddBlockValues(rawRecord) {
+        const { hour_from, hour_to, duration_hours } = rawRecord;
+        return { hour_from, hour_to, duration_hours };
+    }
+
+    getQuickAddBlockTitle(record) {
+        return "";
+    }
+
+    getQuickAddBlockTimeLabel(record) {
+        const { hour_from, hour_to, duration_hours } = record.rawRecord;
+        if (record.isAllDay) {
+            return formatFloatTime(duration_hours, { noLeadingZeroHour: true }).replace(
+                /(:00|:)/g,
+                "h"
+            );
+        }
+        const formatHour = (hour) => {
+            const minutes = Math.round(hour * 60);
+            return new Time({
+                hour: Math.floor(minutes / 60) % 24,
+                minute: minutes % 60,
+            }).toString();
+        };
+        return `${formatHour(hour_from)} - ${formatHour(hour_to)}`;
+    }
+
+    async quickAddRecords(block, dates) {
+        // only fill the days with room for the block
+        const attendancesByDate = this.getAttendancesByDate();
+        dates = dates.filter((date) =>
+            this.canFitQuickAddBlock(block, attendancesByDate[date.toISODate()])
+        );
+        if (!dates.length || !(await this.resourceCalendarPlugin.confirmAttendanceChanges())) {
+            return;
+        }
+        const { date_start } = this.meta.fieldMapping;
+        const records = dates.map((date) => ({
+            ...block.values,
+            [date_start]: serializeDate(date),
+        }));
+        await this.orm.create(this.meta.resModel, records, { context: this.meta.context });
+        await this.load();
     }
 
     async unlinkRecord(recordId) {
