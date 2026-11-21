@@ -2,7 +2,9 @@
 
 {
     "name": "Delivery Costs",
+    "summary": "Deliver orders with your own drivers.",
     "category": "Sales/Delivery",
+    "sequence": 1,  # First in the delivery providers kanban.
     "description": """
 Allows you to add delivery methods in sale orders.
 ==================================================

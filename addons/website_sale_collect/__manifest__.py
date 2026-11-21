@@ -2,7 +2,9 @@
 
 {
     "name": "Click & Collect",
+    "summary": "Let customers collect their online orders in your stores.",
     "category": "Website/Website",
+    "sequence": 2,  # Second in the delivery providers kanban.
     "description": """
 Allows customers to check in-store stock, pay on site, and pick up their orders at the shop.
 """,

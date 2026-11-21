@@ -2,6 +2,7 @@
 
 from . import (
     delivery_carrier,
+    ir_module_module,
     payment_method,
     payment_provider,
     payment_transaction,

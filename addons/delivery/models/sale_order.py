@@ -213,6 +213,10 @@ class SaleOrder(models.Model):
             weight += order_line.product_qty * order_line.product_id.weight
         return weight
 
+    def _get_delivery_pricelist(self):
+        self.ensure_one()
+        return self.pricelist_id
+
     def _update_order_line_info(self, *args, **kwargs):
         """Override of `sale` to recompute the delivery prices."""
         vals = super()._update_order_line_info(*args, **kwargs)
