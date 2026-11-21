@@ -44,8 +44,12 @@ export class MailComposerAttachmentSelector extends Component {
             let composer = syncAttachmentsToThreadComposer ? thread.composer : undefined;
             // Use an isolated composer object instead of thread.composer to
             // avoid pushing into the main thread's composer.attachments list,
-            // which is observed by the chatter.
-            if (this.props.record.resModel === "mail.scheduled.message") {
+            // which is observed by the chatter. Same when editing a message:
+            // the files belong to that message, not to the next one posted.
+            if (
+                this.props.record.resModel === "mail.scheduled.message" ||
+                this.props.record.context.default_message_id
+            ) {
                 composer = { attachments: [] };
             }
             const attachment = await this.attachmentUploadService.upload(thread, composer, file);
