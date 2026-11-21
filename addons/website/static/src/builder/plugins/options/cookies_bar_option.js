@@ -71,6 +71,10 @@ export class SelectLayoutAction extends BuilderAction {
 
         contentEl.replaceChildren(templateEl);
 
+        if (layout !== "popup") {
+            contentEl.classList.remove("rounded", "border");
+        }
+
         switch (layout) {
             case "discrete":
             case "classic":

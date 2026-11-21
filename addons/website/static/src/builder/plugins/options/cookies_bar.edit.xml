@@ -24,9 +24,6 @@
         <a href="#" id="cookies-consent-essential" role="button" data-name="Refuse optional cookies"
            class="js_close_popup o_cookies_bar_accept_essential o_cookies_bar_text_button_essential btn btn-outline-primary rounded-circle mb-2 px-2 py-1 me-1 oe_unremovable">Only allow essential cookies</a>
     </t>
-    <t t-name="website.cookies_bar.close_button">
-        <button type="button" class="s_popup_close o_cookies_bar_close border-0 p-0 o_we_no_overlay o_not_editable shadow-none" aria-label="Close">×</button>
-    </t>
     <t t-name="website.cookies_bar.discrete">
         <!-- When updating this template, do not forget to also update the
              backend `website.cookies_bar` template -->
@@ -47,7 +44,6 @@
                     </div>
                 </div>
             </div>
-            <t t-call="website.cookies_bar.close_button"/>
         </section>
     </t>
     <t t-name="website.cookies_bar.classic">
@@ -71,7 +67,6 @@
                     </div>
                 </div>
             </div>
-            <t t-call="website.cookies_bar.close_button"/>
         </section>
     </t>
     <t t-name="website.cookies_bar.popup">
@@ -88,7 +83,6 @@
                     </div>
                 </div>
             </div>
-            <t t-call="website.cookies_bar.close_button"/>
         </section>
     </t>
 </templates>
