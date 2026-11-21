@@ -1,6 +1,6 @@
 from collections import OrderedDict, defaultdict
 
-from odoo import api, models
+from odoo import api, fields, models
 from odoo.fields import Domain
 
 
@@ -163,6 +163,24 @@ class StockAllocationReport(models.AbstractModel):
             return Domain('picking_id', 'not in', records.ids)
         return Domain([])
 
+    def _get_covered_quantity(self, out_move):
+        """ Return the quantity the incoming moves allocated to `out_move` would give it if they
+        were validated with their current quantity: it is reserved for the most urgent moves first
+        (see `stock.move._action_done`), the rest would be unallocated. None if it isn't allocated
+        to incoming moves which are still to receive.
+        """
+        in_moves = out_move.move_orig_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
+        if not out_move.is_allocated or not in_moves:
+            return None
+        incoming_qty = sum(in_moves.mapped('quantity_product_uom'))
+        for move in in_moves.move_dest_ids.sorted(lambda m: (-int(m.priority), m.date, m.id)):
+            # Only what isn't reserved yet (e.g. from a previous receipt) is expected from them.
+            covered_qty = max(min(move.product_qty - move.quantity_product_uom, incoming_qty), 0)
+            if move == out_move:
+                return covered_qty
+            incoming_qty -= covered_qty
+        return None
+
     def _get_out_move_values(self, out_move):
         picking = out_move.picking_id
         source = out_move._get_source_document()
@@ -197,6 +215,8 @@ class StockAllocationReport(models.AbstractModel):
             'quantity': out_move.product_qty,
             'source': source_info,
             'uom': out_move.product_id.uom_id.read(['display_name', 'factor'])[0],
+            'assign_at_confirm': out_move._should_assign_at_confirm(),
+            'covered_quantity': self._get_covered_quantity(out_move),
         }
 
     # ACTIONS
@@ -283,6 +303,10 @@ class StockAllocationReport(models.AbstractModel):
                     # Split source move to allocate only needed quantity.
                     original_src_move_uom = self._convert_move_quantity(src_move)
                     new_move_vals = src_move._split(src_move.product_qty - linked_qty)
+                    # The part which isn't allocated goes to the operation's usual destination.
+                    default_dest_location = src_move.picking_id.location_dest_id or src_move.picking_type_id.default_location_dest_id
+                    for vals in new_move_vals:
+                        vals['location_dest_id'] = default_dest_location.id
                     new_move = self.env['stock.move'].create(new_move_vals)
                     if original_src_move_uom:
                         new_move.packaging_uom_id = original_src_move_uom
@@ -308,7 +332,8 @@ class StockAllocationReport(models.AbstractModel):
         merged_src_moves = src_moves._merge_moves()
         merged_src_moves.move_line_ids._merge_lines()
         return {
-            'in_moves': (src_moves | new_src_moves).ids,
+            # Source moves might have been merged (thus deleted) above.
+            'in_moves': (src_moves | new_src_moves).exists().ids,
             'out_moves': [self._get_out_move_values(out_move) for out_move in all_out_moves],
         }
 
@@ -321,8 +346,8 @@ class StockAllocationReport(models.AbstractModel):
             for (out_move_ids, quantity) in allocation_data:
                 updated_data = self.action_assign(update_src_move_ids, out_move_ids, quantity)
                 res[product_id]['in_moves'] = updated_data['in_moves']
-                # Update source move ids list in case a move was split.
-                update_src_move_ids.update(updated_data['in_moves'])
+                # Update source move ids list in case a move was split or merged.
+                update_src_move_ids = set(updated_data['in_moves'])
                 res[product_id]['out_moves'].append(updated_data['out_moves'])
         return res
 
@@ -400,7 +425,7 @@ class StockAllocationReport(models.AbstractModel):
                             move_line_id.move_id = out_move
                             reserved_amount_to_remain -= move_line_id.quantity_product_uom
                     (out_move | new_out)._compute_quantity()
-                out_move.move_orig_ids = False
+                out_move.write({'move_orig_ids': False, 'is_allocated': False})
                 new_out._recompute_state()
 
         # Check if out moves can be merged (they can have be split by previous allocation.)
@@ -418,7 +443,7 @@ class StockAllocationReport(models.AbstractModel):
         share reference across source documents."""
         allocated_location = in_move.picking_type_id.allocated_location_id
         in_move.move_dest_ids |= out_move
-        out_move.procure_method = 'make_to_order'
+        out_move.write({'procure_method': 'make_to_order', 'is_allocated': True})
         if (out_ref := out_move.reference_ids) and (in_source := in_move._get_source_document()):
             in_source._add_reference(out_ref)
         if (in_ref := in_move.reference_ids) and (out_source := out_move._get_source_document()):
@@ -444,6 +469,8 @@ class StockAllocationReport(models.AbstractModel):
         if in_ref := in_move.reference_ids:
             out_move._get_source_document()._remove_reference(in_ref)
         out_move._break_mto_link(in_move)
+        if not out_move.move_orig_ids:
+            out_move.is_allocated = False
         if allocated_location and in_move.state != 'done':
             # Reset in move's destination location to the default one.
             default_dest_location = in_move.picking_id.location_dest_id or in_move.picking_type_id.default_location_dest_id
@@ -475,3 +502,58 @@ class StockAllocationReport(models.AbstractModel):
             move.product_uom_qty *= original_uom.factor / product_uom.factor
             move.packaging_uom_id = original_uom
         return original_uom
+
+    @api.model
+    def _auto_allocate(self, pickings):
+        """ Allocate the free incoming quantities of the given pickings to the needs listed in their
+        allocation report (by priority), as long as the needs' reservation method allows to reserve
+        them now.
+        """
+        for picking in pickings:
+            for product_line in self._get_product_lines(picking).values():
+                product_uom = self.env['product.product'].browse(product_line['id']).uom_id
+                free_qty = product_line['free_qty']
+                allocation_data = []
+                for need in product_line['needs']:
+                    if not need['assign_at_confirm'] or need['is_reserved']:
+                        continue
+                    if product_uom.compare(free_qty, 0) <= 0:
+                        break
+                    # Only allocate what isn't already reserved from stock (the need is then split).
+                    quantity = min(free_qty, need['quantity'] - need['reserved_quantity'])
+                    if product_uom.compare(quantity, 0) <= 0:
+                        continue
+                    allocation_data.append(([need['id']], quantity))
+                    free_qty -= quantity
+                if allocation_data:
+                    # Prevent moves confirmed during the allocation (split moves) to trigger a new allocation.
+                    self.with_context(skip_auto_allocation=True).action_assign_all(
+                        [(product_line['move_ids'], allocation_data)]
+                    )
+
+    @api.model
+    def _run_auto_allocation(self, company_id=False):
+        """ Called by the stock scheduler to allocate incoming quantities to the needs whose
+        reservation date was reached since the receipts confirmation."""
+        # Only look at the receipts containing products that have needs which can be allocated now.
+        needs_domain = Domain([
+            ('company_id', '=?', company_id),
+            ('state', 'in', ('confirmed', 'partially_available', 'waiting')),
+            ('product_uom_qty', '>', 0),
+            ('move_orig_ids', '=', False),
+        ]) & (
+            Domain('reservation_date', '<=', fields.Date.today())
+            | Domain('picking_type_id.reservation_method', '=', 'at_confirm')
+        )
+        products = self.env['stock.move']._read_group(needs_domain, aggregates=['product_id:recordset'])[0][0]
+        if not products:
+            return
+        pickings = self.env['stock.picking'].search([
+            ('company_id', '=?', company_id),
+            ('state', 'not in', ('draft', 'done', 'cancel')),
+            ('picking_type_id.code', '=', 'incoming'),
+            ('picking_type_id.auto_show_allocation_report', '=', True),
+            ('picking_type_id.allocation_mode', '=', 'automatic'),
+            ('move_ids.product_id', 'in', products.ids),
+        ], order='scheduled_date, id')
+        self._auto_allocate(pickings)
