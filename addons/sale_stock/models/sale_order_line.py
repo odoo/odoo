@@ -420,7 +420,7 @@ class SaleOrderLine(models.Model):
     def _update_line_quantity(self, values):
         precision = self.env['decimal.precision'].precision_get('Product Unit')
         line_products = self.filtered(lambda l: l.product_id.type == 'consu')
-        if line_products.mapped('qty_delivered') and float_compare(values['product_uom_qty'], max(line_products.mapped('qty_delivered')), precision_digits=precision) == -1:
+        if line_products.mapped('qty_delivered') and float_compare(float(values['product_uom_qty']), max(line_products.mapped('qty_delivered')), precision_digits=precision) == -1:
             raise UserError(_('The ordered quantity of a sale order line cannot be decreased below the amount already delivered. Instead, create a return in your inventory.'))
         super(SaleOrderLine, self)._update_line_quantity(values)
 

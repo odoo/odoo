@@ -4,6 +4,7 @@ import logging
 import math
 from collections.abc import Iterable
 from datetime import date
+from decimal import Decimal, ROUND_HALF_UP
 
 from odoo import api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
@@ -285,10 +286,15 @@ class ResCurrency(models.CachedModel):
     def round(self, amount):
         """Return ``amount`` rounded  according to ``self``'s rounding rules.
 
-           :param float amount: the amount to round
-           :return: rounded float
+           :param float or Decimal amount: the amount to round
+           :return: rounded float or Decimal amount
         """
         self.ensure_one()
+
+        if isinstance(amount, Decimal):
+            # quantize() can't express rounding steps; it only rounds to a number of decimal places.
+            step = Decimal(str(self.rounding))
+            return (amount / step).quantize(Decimal(1), rounding=ROUND_HALF_UP) * step
         return tools.float_round(amount, precision_rounding=self.rounding)
 
     def compare_amounts(self, amount1, amount2):
@@ -322,11 +328,15 @@ class ResCurrency(models.CachedModel):
            computing the difference, while the latter will round before, giving
            different results for e.g. 0.006 and 0.002 at 2 digits precision.
 
-           :param float amount: amount to compare with currency's zero
+           :param float or Decimal amount: amount to compare with currency's zero
 
            With the new API, call it like: ``currency.is_zero(amount)``.
         """
         self.ensure_one()
+
+        if isinstance(amount, Decimal):
+            return self.round(amount).is_zero()
+
         return tools.float_is_zero(amount, precision_rounding=self.rounding)
 
     @api.model
