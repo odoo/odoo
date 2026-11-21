@@ -11,6 +11,14 @@ patch(GeneratePrinterData.prototype, {
         if (this.order.isInCompany) {
             data.conditions.code_in = this.order.isInCompany;
             data.extra_data.l10n_in_hsn_summary = this.order._prepareL10nInHsnSummary();
+
+            const orderlines = this.order.getOrderlines();
+            data.lines.forEach((lineData, index) => {
+                if (orderlines[index].combo_line_ids.length) {
+                    lineData.child_combo_lines =
+                        orderlines[index].getL10nInReceiptComboChildLines();
+                }
+            });
         }
 
         return data;
