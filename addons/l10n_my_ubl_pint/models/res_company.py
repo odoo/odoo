@@ -12,6 +12,5 @@ class ResCompany(models.Model):
 class BaseDocumentLayout(models.TransientModel):
     _inherit = 'base.document.layout'
 
-    account_fiscal_country_id = fields.Many2one(related="company_id.account_fiscal_country_id")
     sst_registration_number = fields.Char(related='company_id.sst_registration_number')
     ttx_registration_number = fields.Char(related='company_id.ttx_registration_number')
