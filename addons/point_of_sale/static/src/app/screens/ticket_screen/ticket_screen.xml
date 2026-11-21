@@ -228,7 +228,14 @@
                                 <BackButton t-if="this.ui.isSmall" onClick="() => this.pos.onClickBackButton()"/>
                                 <button aria-label="Reprint preparation tickets" class="button btn btn-secondary btn-lg d-flex flex-row align-items-center justify-content-center"
                                     t-on-click="() => this.onClickReprintAll(_selectedSyncedOrder)"
+<<<<<<< cb8cb6cab938adf94c3ccd2560a1130d3fc0a420
                                     t-if="this.pos.ticketPrinter.hasPreparationPrinters and _selectedSyncedOrder.prep_order_ids.length">
+||||||| c1ef83e9c43760afd21db514e87568298a3a00b0
+                                    t-if="this.pos.ticketPrinter.hasPreparationPrinters and _selectedSyncedOrder.lastPrints.length">
+=======
+                                    t-att-disabled="this.pos.isOrderDeleting(_selectedSyncedOrder, false)"
+                                    t-if="this.pos.ticketPrinter.hasPreparationPrinters and _selectedSyncedOrder.lastPrints.length">
+>>>>>>> a908ab8597a35f1e31b4e0e0dfa27036dda595d0
                                     <i class="oi" data-icon="restaurant" aria-hidden="true"/>
                                 </button>
                                 <button class="button validation load-order-button w-100 btn btn-lg btn-primary py-3"
