@@ -1261,6 +1261,12 @@ class Website(models.Model):
             )
         return design_classes
 
+    def _get_shop_products_grid_gap(self):
+        """Return the shop grid gap when its catalog design is reused by product snippets."""
+        if "o_wsale_products_opt_layout_catalog" in (self.shop_opt_products_design_classes or ""):
+            return self.shop_gap or "16px"
+        return "16px"
+
     def _get_product_image_ratio_classes(self):
         """Return the classes defining the product image aspect ratio from the website's design
         classes.
