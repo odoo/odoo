@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_hr_attendance.CashierSelectionPopup" t-inherit="pos_hr.CashierSelectionPopup" t-inherit-mode="extension">
+        <xpath expr="//span[hasclass('current-cashier-name')]" position="after">
+            <span t-if="this.pos.isEmployeeCheckedIn(cashier)" class="checked-in-badge badge text-bg-success align-self-start mt-1">Checked-in</span>
+        </xpath>
+        <xpath expr="//button[@t-foreach='this.displayableOptions']//span[hasclass('fw-bold')]" position="after">
+            <span t-if="this.pos.isEmployeeCheckedIn(employee)" class="checked-in-badge badge text-bg-success align-self-start mt-1">Checked-in</span>
+        </xpath>
+    </t>
+
+</templates>
