@@ -201,6 +201,20 @@ class TestChannelInternals(MailCommon, HttpCase):
                     },
                 ),
                 BusResult(
+                    (test_group, "internal_users"),
+                    "mail.record/insert",
+                    {
+                        "mail.message": [
+                            {
+                                "email_from": message.email_from,
+                                "id": message.id,
+                                "notification_ids": [],
+                                "reply_to": message.reply_to,
+                            },
+                        ],
+                    },
+                ),
+                BusResult(
                     test_group,
                     "mail.record/insert",
                     {
@@ -1103,6 +1117,7 @@ class TestChannelInternals(MailCommon, HttpCase):
         all_users = all_test_user + mentions_test_user + nothing_test_user
         notifications = [BusResult(user, "mail.message/notification") for user in all_users]
         notifications.append(BusResult(channel, "discuss.channel/new_message"))
+        notifications.append(BusResult((channel, "internal_users"), "mail.record/insert"))
         with self.assertBus(notifications):
             # sending mention message
             with self.with_user("employee"):
@@ -1517,6 +1532,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                         lambda member: [
                             close_window(eve, group),
                             BusResult(group, "discuss.channel/new_message"),
+                            BusResult((group, "internal_users"), "mail.record/insert"),
                             *store_notifications(group, leave(group, member)),
                         ],
                     ),
@@ -1527,6 +1543,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                         lambda member: [
                             close_window(john, group),
                             BusResult(group, "discuss.channel/new_message"),
+                            BusResult((group, "internal_users"), "mail.record/insert"),
                             *store_notifications(
                                 group,
                                 name_update(group, [self.env.user, bob, alice])
