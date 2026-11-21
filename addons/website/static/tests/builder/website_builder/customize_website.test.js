@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-dom";
+import { animationFrame, setInputFiles } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import {
     contains,
@@ -16,6 +16,7 @@ import {
 import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { ReplaceBgImageAction } from "@html_builder/plugins/background_option/background_image_option_plugin";
 import { renderToString } from "@web/core/utils/render";
+import { dummyBase64Img } from "@html_builder/../tests/helpers";
 
 defineWebsiteModels();
 
@@ -467,6 +468,95 @@ test("theme background image is properly set", async () => {
     await contains(".o_theme_tab button[data-action-id='toggleBodyBgImage']").click();
     await animationFrame();
     await expect.verifySteps(["scss_customization", "bundle_reload"]);
+});
+
+const bodyImageSrc = "/web/image/7-abcd1234/bg.png";
+const base64Data = dummyBase64Img.split("base64,")[1];
+
+function setupBodyImageMocks() {
+    const scssChanges = {};
+    const addDataParams = {};
+    onRpc("/html_editor/attachment/add_data", async (request) => {
+        const { params } = await request.json();
+        expect(params.is_image).toBe(true);
+        expect(params.data).toBe(base64Data);
+        Object.assign(addDataParams, params);
+        expect.step("attachment_add_data");
+        return {
+            id: 7,
+            name: "bg.png",
+            mimetype: "image/png",
+            image_src: bodyImageSrc,
+            access_token: false,
+            public: true,
+        };
+    });
+    class WebsiteAssets extends models.Model {
+        _name = "website.assets";
+        make_scss_customization(location, changes) {
+            expect(location).toBe("/website/static/src/scss/options/user_values.scss");
+            Object.assign(scssChanges, changes);
+            expect.step("scss_customization");
+        }
+    }
+    defineModels([WebsiteAssets]);
+    onRpc("/website/theme_customize_bundle_reload", () => {
+        expect.step("bundle_reload");
+        return { success: true };
+    });
+    return { scssChanges, addDataParams };
+}
+
+test("theme background image uploaded through the media dialog is saved as its attachment URL", async () => {
+    const pngBytes = Uint8Array.from(atob(base64Data), (char) => char.charCodeAt(0));
+    const { scssChanges, addDataParams } = setupBodyImageMocks();
+    onRpc("ir.attachment", "search_read", () => []);
+
+    await setupWebsiteBuilder(
+        `<h1 data-oe-model="blog.post" data-oe-id="3" data-oe-field="name">Title</h1>`,
+        { loadIframeBundles: true }
+    );
+    onRpc("/html_editor/get_image_info", () => ({
+        attachment: { id: 7 },
+        original: { id: 7, image_src: bodyImageSrc, mimetype: "image/png" },
+    }));
+    onRpc(bodyImageSrc, () => new Response(pngBytes, { headers: { "Content-Type": "image/png" } }));
+
+    // The cursor is in a record, but the body background must not be bound to it.
+    await contains(":iframe h1").click();
+    await contains("[data-name='theme']").click();
+    await contains(".o_theme_tab button[data-action-id='toggleBodyBgImage']").click();
+    await contains(".o_select_media_dialog .o_upload_media_button").click();
+    await setInputFiles([new File([pngBytes], "bg.png", { type: "image/png" })]);
+    await expect.waitForSteps(["attachment_add_data", "scss_customization", "bundle_reload"]);
+    // No record: the server attaches the image to ir.ui.view, so it is public.
+    expect(addDataParams.res_model).toBe(undefined);
+    expect(addDataParams.res_id).toBe(undefined);
+    expect(scssChanges["body-image"]).toBe(`'${bodyImageSrc}'`);
+    expect(scssChanges["body-image-type"]).toBe("'image'");
+});
+
+test("normalizeBodyBackgroundImage converts body-image variable before save", async () => {
+    const { scssChanges } = setupBodyImageMocks();
+    onRpc("ir.ui.view", "save", () => {
+        expect.step("websiteSave");
+        return true;
+    });
+
+    const { getEditor } = await setupWebsiteBuilder("<div>content</div>", {
+        styleContent: `
+            :root {
+                --body-image: '${dummyBase64Img}';
+                --body-image-type: 'pattern';
+            }
+        `,
+    });
+
+    getEditor().editable.querySelector("#wrap").classList.add("o_dirty");
+    await contains(".o-snippets-top-actions [data-action='save']").click();
+    await expect.waitForSteps(["websiteSave", "attachment_add_data", "scss_customization"]);
+    expect(scssChanges["body-image"]).toBe(`'${bodyImageSrc}'`);
+    expect(scssChanges["body-image-type"]).toBe(undefined);
 });
 
 test("BuilderButton with action “templatePreviewableWebsiteConfig”", async () => {

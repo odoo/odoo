@@ -99,14 +99,18 @@ export class BackgroundImageOptionPlugin extends Plugin {
         }
     }
     loadReplaceBackgroundImage({ editingElement }) {
+        const editableEl = editingElement?.closest(".o_savable") || this.editable;
         return new Promise((resolve) => {
-            const onClose = this.dependencies.media.openMediaDialog({
-                onlyImages: true,
-                node: editingElement,
-                save: async (imageEl) => {
-                    resolve(imageEl);
+            const onClose = this.dependencies.media.openMediaDialog(
+                {
+                    onlyImages: true,
+                    node: editingElement,
+                    save: async (imageEl) => {
+                        resolve(imageEl);
+                    },
                 },
-            });
+                editableEl
+            );
             onClose.then(resolve);
         });
     }

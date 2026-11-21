@@ -89,8 +89,36 @@ export class CustomizeWebsitePlugin extends Plugin {
                 return `o_cc${getCSSVariableValue(combination, style)}`;
             }
         }),
-        save_handlers: this.onSave.bind(this),
+        save_handlers: [this.onSave.bind(this), this.normalizeBodyBackgroundImage.bind(this)],
     };
+
+    async normalizeBodyBackgroundImage() {
+        // Some websites since 18.4 can have a base64 body background, this
+        // resolves it to an attachment URL.
+        if (!this.services.website.isDesigner) {
+            return;
+        }
+        const bodyImage = this.getWebsiteVariableValue("body-image");
+        if (!bodyImage.startsWith("data:image/")) {
+            return;
+        }
+        const attachment = await rpc("/html_editor/attachment/add_data", {
+            name: null,
+            data: bodyImage.split("base64,")[1],
+            is_image: true,
+        });
+        if (!attachment.error) {
+            // ReloadBundles set to false because it would restart the
+            // interactions, which are stopped before saving,
+            // and the page is reloaded after it anyway.
+            await this.customizeWebsiteVariables(
+                { "body-image": `'${attachment.image_src}'` },
+                "null",
+                false,
+                false
+            );
+        }
+    }
 
     async onSave() {
         if (this.viewsToEnableOnSave.size || this.viewsToDisableOnSave.size) {
@@ -540,7 +568,10 @@ export class ToggleBodyBgImageAction extends BuilderAction {
         if (!imageEl) {
             return;
         }
-        const newConfig = { type: currentType, image: imageEl.src };
+        const newConfig = {
+            type: currentType,
+            image: imageEl.dataset.originalSrc || imageEl.getAttribute("src"),
+        };
         await this.applyConfig(oldConfig, newConfig);
     }
     async clean() {
