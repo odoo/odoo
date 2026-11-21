@@ -1,0 +1,63 @@
+.popover:has(.o-IconPicker) {
+    max-width: calc(300px + 2 * var(--popover-border-width)) !important;
+}
+
+.o-IconPicker {
+    --IconPicker-active: color-mix(in srgb, var(--o-action) 15%, transparent);
+
+    width: 300px;
+    height: 365px;
+    border-radius: var(--popover-border-radius);
+    background-color: var(--gray-100);
+
+    .o-IconPicker-content {
+        padding-left: calc(var(--o-bs-spacer-1) * 3 / 2);
+        padding-right: calc(var(--o-bs-spacer-1) * 3 / 2);
+    }
+
+    .o-IconPicker-icon {
+        width: calc(100% / 7);
+        aspect-ratio: 1;
+        font-size: var(--o-bs-h3-font-size);
+
+        &:hover, &.o-active {
+            background-color: var(--IconPicker-active);
+        }
+
+        &.o-selected {
+            box-shadow: inset 0 0 0 2px var(--o-action);
+        }
+    }
+
+    .o-IconPicker-section {
+        z-index: 1;
+        background-color: var(--gray-100);
+    }
+
+    .o-IconPicker-empty {
+        flex-grow: 1;
+    }
+
+    .o-IconPicker-empty,
+    .o-IconPicker-search input:focus ~ [data-icon="search"] {
+        color: var(--o-bs-text-muted);
+    }
+
+    .o-IconPicker-search {
+        input {
+            &, &:focus {
+                background-color: var(--o-view-background-color);
+                box-shadow: none;
+            }
+
+            &::placeholder {
+                opacity: 50%;
+            }
+        }
+
+        .o-IconPicker-searchContour:focus-within {
+            --border-color: var(--o-bs-input-focus-border-color);
+            box-shadow: var(--o-bs-input-focus-box-shadow);
+        }
+    }
+}

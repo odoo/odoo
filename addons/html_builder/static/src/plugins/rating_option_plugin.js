@@ -6,7 +6,7 @@ import { clamp } from "@web/core/utils/numbers";
 
 export class RatingOptionPlugin extends Plugin {
     static id = "ratingOption";
-    static dependencies = ["history", "media", "builderActions"];
+    static dependencies = ["history", "builderActions"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
         so_content_addition_selectors: [".s_rating"],
@@ -54,27 +54,16 @@ export class SetIconsAction extends BuilderAction {
 }
 export class CustomIconAction extends BuilderAction {
     static id = "customIcon";
-    static dependencies = ["media"];
-    async load({ editingElement, params: { mainParam: customParam } }) {
-        return new Promise((resolve) => {
-            const isCustomActive = customParam === "customActiveIcon";
-            const media = document.createElement("i");
-            media.className = isCustomActive
+    static dependencies = ["icon"];
+    load({ editingElement, params: { mainParam: customParam } }) {
+        // The current custom icon, to highlight it in the picker.
+        const iconEl = document.createElement("i");
+        iconEl.className = "oi";
+        iconEl.dataset.icon =
+            customParam === "customActiveIcon"
                 ? getActiveCustomIcons(editingElement)
                 : getInactiveCustomIcons(editingElement);
-            const mediaDialogParams = {
-                visibleTabs: ["ICONS"],
-                media,
-                save: (icon) => {
-                    resolve(icon);
-                },
-            };
-            const onClose = this.dependencies.media.openMediaDialog(
-                mediaDialogParams,
-                this.editable
-            );
-            onClose.then(resolve);
-        });
+        return this.dependencies.icon.pickIcon({ target: editingElement, iconEl });
     }
     apply({ editingElement, loadResult: savedIconEl, params: { mainParam: customParam } }) {
         if (!savedIconEl) {

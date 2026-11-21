@@ -37,6 +37,7 @@ export class ImageToolOptionPlugin extends Plugin {
             CropImageAction,
             ResetCropAction,
             ReplaceMediaAction,
+            ReplaceWithIconAction,
             SetLinkAction,
             SetUrlAction,
             SetNewWindowAction,
@@ -162,6 +163,21 @@ export class ReplaceMediaAction extends BuilderAction {
 
     async apply({ editingElement: mediaEl }) {
         await this.dependencies.media_website.replaceMedia(mediaEl);
+    }
+}
+// TODO: temporary, for a demo to the PO of replacing an icon from the icon
+// picker, next to the Replace button that still opens the media dialog, so
+// that an icon can be replaced by an image or a video as well.
+export class ReplaceWithIconAction extends BuilderAction {
+    static id = "replaceWithIcon";
+    static dependencies = ["icon"];
+
+    setup() {
+        this.preview = false;
+    }
+
+    apply({ editingElement: iconEl }) {
+        this.dependencies.icon.openIconPicker({ iconEl });
     }
 }
 export class SetLinkAction extends BuilderAction {

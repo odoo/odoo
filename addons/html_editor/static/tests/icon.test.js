@@ -1,5 +1,5 @@
 import { describe, expect, press, test } from "@odoo/hoot";
-import { click, queryAll, waitFor, waitForNone } from "@odoo/hoot-dom";
+import { click, dblclick, queryAll, queryOne, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { animationFrame } from "@odoo/hoot-mock";
 import { getContent, setContent, setSelection } from "./_helpers/selection";
@@ -159,15 +159,16 @@ test("Can undo to 1x size after applying 2x size", async () => {
 test("Can replace icon using toolbar", async () => {
     const { editor } = await setupIcon("favorite", "oi-filled");
     await contains("button[name='icon_replace']").click();
-    await animationFrame();
-    expect("main.modal-body").toHaveCount(1);
-    expect("main.modal-body button.nav-link.active").toHaveText("Icons");
-    // Corresponding icon should be highlighted in dialog
-    expect("main.modal-body span[data-icon='favorite'].o_we_attachment_selected").toHaveCount(1);
+    await waitFor(".o-IconPicker");
+    expect(".modal").toHaveCount(0);
+    // The current icon is highlighted in the picker
+    expect(".o-IconPicker-icon.o-selected").toHaveCount(1);
+    expect(".o-IconPicker-icon.o-selected").toHaveAttribute("data-icon", "favorite");
+    expect(".o-IconPicker-icon.o-selected").toHaveClass("oi-filled");
 
-    await contains("main.modal-body span[data-icon='search']").click();
+    await contains(".o-IconPicker-icon[data-icon='search']").click();
     await animationFrame();
-    expect("main.modal-body").toHaveCount(0);
+    expect(".o-IconPicker").toHaveCount(0);
     expect("span[data-icon='search']").toHaveCount(1); // Replace icon
     expect("span[data-icon='favorite']").toHaveCount(0);
 
@@ -176,21 +177,41 @@ test("Can replace icon using toolbar", async () => {
     expect("span[data-icon='favorite']").toHaveCount(1);
 });
 
+test.tags("desktop");
+test("The Replace button references the icon picker it opens", async () => {
+    await setupIcon("favorite");
+    const button = ".o-we-toolbar button[name='icon_replace']";
+    expect(button).toHaveAttribute("aria-haspopup", "dialog");
+    expect(button).toHaveAttribute("aria-expanded", "false");
+    expect(button).not.toHaveAttribute("aria-controls");
+
+    await contains(button).click();
+    await waitFor(".o-IconPicker");
+    expect(button).toHaveAttribute("aria-expanded", "true");
+    const picker = queryOne(`#${queryOne(button).getAttribute("aria-controls")}`);
+    expect(picker).toHaveClass("o-IconPicker");
+    expect(picker).toHaveAttribute("role", "dialog");
+    expect(picker).toHaveAttribute("aria-label", queryOne(button).getAttribute("title"));
+
+    await press("Escape");
+    await animationFrame();
+    expect(".o-IconPicker").toHaveCount(0);
+    expect(button).toHaveAttribute("aria-expanded", "false");
+    expect(button).not.toHaveAttribute("aria-controls");
+});
+
 test("Styles should be preserved when replacing icon", async () => {
     await setupIcon("favorite", "oi-3x");
     await contains("button[name='icon_replace']").click();
-    await animationFrame();
-    await contains("main.modal-body span[data-icon='search']").click();
+    await contains(".o-IconPicker-icon[data-icon='search']").click();
     await animationFrame();
     expect("span[data-icon='search'].oi-3x").toHaveCount(1);
 });
 
 test("Should be able to replace a filled icon with the same unfilled version", async () => {
     await setupIcon("favorite", "oi-filled");
-
     await contains("button[name='icon_replace']").click();
-    await animationFrame();
-    await contains("main.modal-body span[data-icon='favorite']:not(.oi-filled)").click();
+    await contains(".o-IconPicker-icon[data-icon='favorite']:not(.oi-filled)").click();
     await animationFrame();
     expect("span[data-icon='favorite']:not(.oi-filled)").toHaveCount(1);
 });
@@ -198,8 +219,7 @@ test("Should be able to replace a filled icon with the same unfilled version", a
 test("Can replace a odoo icon", async () => {
     const { editor } = await setupIcon("add");
     execCommand(editor, "replaceIcon");
-    await animationFrame();
-    await contains("main.modal-body span[data-icon='search']").click();
+    await contains(".o-IconPicker-icon[data-icon='search']").click();
     await animationFrame();
     expect("span.oi[data-icon='search']").toHaveCount(1);
     expect("span[data-icon='add']").toHaveCount(0);
@@ -208,8 +228,7 @@ test("Can replace a odoo icon", async () => {
 test("Can replace a font awesome brand icon", async () => {
     const { editor } = await setupIcon("fa-opera", "fab");
     execCommand(editor, "replaceIcon");
-    await animationFrame();
-    await contains("main.modal-body span[data-icon='search']").click();
+    await contains(".o-IconPicker-icon[data-icon='search']").click();
     await animationFrame();
     expect("span.oi[data-icon='search']").toHaveCount(1);
     expect("span.oi[data-icon='search']").not.toHaveClass(["fab", "fa-opera"]);
@@ -218,8 +237,7 @@ test("Can replace a font awesome brand icon", async () => {
 test("Can replace a font awesome duotone icon", async () => {
     const { editor } = await setupIcon("fa-bus-alt", "fad");
     execCommand(editor, "replaceIcon");
-    await animationFrame();
-    await contains("main.modal-body span[data-icon='search']").click();
+    await contains(".o-IconPicker-icon[data-icon='search']").click();
     await animationFrame();
     expect("span.oi[data-icon='search']").toHaveCount(1);
     expect("span.oi[data-icon='search']").not.toHaveClass(["fad", "fa-bus-alt"]);
@@ -228,11 +246,32 @@ test("Can replace a font awesome duotone icon", async () => {
 test("Can replace a font awesome regular icon", async () => {
     const { editor } = await setupIcon("fa-money-bill-alt", "far");
     execCommand(editor, "replaceIcon");
-    await animationFrame();
-    await contains("main.modal-body span[data-icon='search']").click();
+    await contains(".o-IconPicker-icon[data-icon='search']").click();
     await animationFrame();
     expect("span.oi[data-icon='search']").toHaveCount(1);
     expect("span.oi[data-icon='search']").not.toHaveClass(["far", "fa-money-bill-alt"]);
+});
+
+test.tags("desktop");
+test("Can replace an icon by double-clicking it", async () => {
+    const { editor } = await setupIcon("favorite");
+    await dblclick("span[data-icon='favorite']");
+    await contains(".o-IconPicker-icon[data-icon='search']").click();
+    await animationFrame();
+    expect(".o-IconPicker").toHaveCount(0);
+    expect("span.oi[data-icon='search']").toHaveCount(1);
+    expect("span[data-icon='favorite']").toHaveCount(0);
+    undo(editor);
+    expect("span[data-icon='favorite']").toHaveCount(1);
+});
+
+test("Double-clicking a non-editable icon does not open the icon picker", async () => {
+    await setupEditor(
+        `<div contenteditable="false"><span class="oi" data-icon="favorite"></span></div>`
+    );
+    await dblclick("span[data-icon='favorite']");
+    await animationFrame();
+    expect(".o-IconPicker").toHaveCount(0);
 });
 
 test("Should be able to undo after adding spin effect to an icon", async () => {
@@ -448,15 +487,14 @@ test("should remove empty inline attribute when it contains visible content", as
         stepFunction: async (editor) => {
             await insertText(editor, "/icon");
             await expectElementCount(".o-we-powerbox", 1);
-            expect(".active .o-we-command-name").toHaveText("Media");
+            expect(".active .o-we-command-name").toHaveText("Icon");
             await press("enter");
 
-            await expectElementCount("main.modal-body", 1);
-            expect("main.modal-body button.nav-link.active").toHaveText("Icons");
+            await expectElementCount(".o-IconPicker", 1);
             expect("font").toHaveAttribute("data-oe-zws-empty-inline");
 
-            await contains("main.modal-body span[data-icon='search']").click();
-            await expectElementCount("main.modal-body", 0);
+            await contains(".o-IconPicker-icon[data-icon='search']").click();
+            await expectElementCount(".o-IconPicker", 0);
             expect("span.oi[data-icon='search']").toHaveCount(1);
             // A font with visible content should not have the empty inline attribute.
             expect("font").not.toHaveAttribute("data-oe-zws-empty-inline");

@@ -1,6 +1,7 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
 import { allowedToCreateLink } from "@html_editor/main/link/link_plugin";
+import { isIconElement } from "@html_editor/utils/dom_info";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
@@ -13,6 +14,8 @@ export class ReplaceMediaOption extends BaseOptionComponent {
             tooltipName: this.getTooltipName(editingElement),
             canSetLink: this.canSetLink(editingElement),
             hasHref: this.hasHref(editingElement),
+            // TODO: temporary, see `ReplaceWithIconAction`.
+            isIcon: isIconElement(editingElement),
         }));
     }
     canSetLink(editingElement) {

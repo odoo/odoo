@@ -14,16 +14,10 @@ class IconListOptionPlugin extends Plugin {
 
 export class ReplaceListIconAction extends BuilderAction {
     static id = "replaceListIcon";
-    static dependencies = ["media"];
+    static dependencies = ["icon"];
 
-    load() {
-        return new Promise((resolve) => {
-            const onClose = this.dependencies.media.openMediaDialog({
-                visibleTabs: ["ICONS"],
-                save: resolve,
-            });
-            onClose.then(() => resolve());
-        });
+    load({ editingElement }) {
+        return this.dependencies.icon.pickIcon({ target: editingElement });
     }
 
     apply({ editingElement, loadResult: savedIconEl }) {
