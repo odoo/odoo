@@ -31,6 +31,7 @@ declare module "models" {
     export interface Thread {
         activities: Activity[];
         follow: () => Promise<void>;
+        getFollowerRemovalDialogProps: (follower: Follower) => { title: string, body: string, confirmLabel?: string, cancelLabel?: string }|undefined;
         isDisplayedInDiscussAppDesktop: boolean;
         loadMoreFollowers: () => Promise<void>;
         loadMoreRecipients: () => Promise<void>;
