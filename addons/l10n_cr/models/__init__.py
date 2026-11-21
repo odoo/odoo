@@ -1,4 +1,3 @@
-from . import account_move
 from . import res_city
 from . import res_city_district
 from . import res_company

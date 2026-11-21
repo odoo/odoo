@@ -13,20 +13,6 @@ class TestL10nCr(AccountTestInvoicingCommon):
         super().setUpClass()
         cls.partner_a.country_id = cls.env.ref('base.cr')
 
-    def test_document_types_number_independently(self):
-        invoice = self.init_invoice('out_invoice', partner=self.partner_a, amounts=[100.0], post=True)
-        context = {'active_model': 'account.move', 'active_ids': invoice.ids}
-        reversal = self.env['account.move.reversal'].with_context(context).create({'journal_id': invoice.journal_id.id})
-        credit_note = self.env['account.move'].browse(reversal.refund_moves()['res_id'])
-        debit_note = self.env['account.move'].browse(
-            self.env['account.debit.note'].with_context(context).create({'copy_lines': True}).create_debit()['res_id'],
-        )
-        (credit_note | debit_note).action_post()
-        self.assertEqual(
-            (invoice | credit_note | debit_note).mapped('name'),
-            ['FE 00000001', 'NC 00000001', 'ND 00000001'],
-        )
-
     def test_district_onchange_fills_canton_and_province(self):
         san_rafael = self.env.ref('l10n_cr.district_cr_20108')
         with Form(self.env['res.partner']) as partner_form:
