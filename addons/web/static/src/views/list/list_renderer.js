@@ -584,7 +584,12 @@ export class ListRenderer extends Component {
         if (groupBy?.length > 1 || (groupByField && !this.isMovableField(groupByField))) {
             return false;
         }
-        return !orderBy.length || (orderBy.length && orderBy[0].name === handleField);
+        const order = orderBy[this.getResequenceOrderIndex()];
+        return !order || order.name === handleField;
+    }
+
+    getResequenceOrderIndex() {
+        return 0;
     }
 
     get fields() {
