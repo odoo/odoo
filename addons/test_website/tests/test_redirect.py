@@ -454,6 +454,64 @@ class TestRedirect(HttpCase):
         self.assertEqual(resp.status_code, 301)
         self.assertURLEqual(resp.headers.get('Location'), "/new-page-11?oups=1&bar=2")
 
+    def test_redirect_lang_prefix(self):
+        lang_en = self.env.ref('base.lang_en')
+        lang_es = self.env['res.lang']._activate_lang('es_ES')
+        lang_de = self.env['res.lang']._activate_lang('de_DE')
+        websites = self.env['website'].search([])
+        websites.language_ids = lang_en + lang_es + lang_de
+        websites.default_lang_id = lang_en
+        en, es, de = lang_en.url_code, lang_es.url_code, lang_de.url_code
+
+        # Test redirect from explicit default lang to implicit default lang page
+        self.env['website.rewrite'].create({
+            'name': 'Test 301 Redirect default lang',
+            'redirect_type': '301',
+            'url_from': f'/{en}/old-page',
+            'url_to': '/contactus',
+        })
+        resp = self.url_open(f'/{en}/old-page')
+        self.assertEqual(resp.status_code, 200)
+        self.assertURLEqual(resp.url, '/contactus')
+
+        # Test redirect specificity: redirects specific to the current lang have
+        # priority. Other langs use the following redirect
+        self.env['website.rewrite'].create({
+            'name': 'Test 301 Redirect any lang',
+            'redirect_type': '301',
+            'url_from': '/old-page',
+            'url_to': '/new-page',
+        })
+        resp = self.url_open(f'/{en}/old-page')
+        self.assertEqual(resp.status_code, 200)
+        self.assertURLEqual(resp.url, '/contactus')
+
+        resp = self.url_open(f'/{es}/old-page', allow_redirects=False)
+        self.assertEqual(resp.status_code, 301)
+        self.assertURLEqual(resp.headers.get('Location'), '/new-page')
+
+        # Test redirect from non-default explicit lang -> implicit default lang
+        self.env['website.rewrite'].create({
+            'name': 'Test 301 Redirect non-default lang',
+            'redirect_type': '301',
+            'url_from': f'/{es}/old-page',
+            'url_to': '/new-page-es',
+        })
+        resp = self.url_open(f'/{es}/old-page', allow_redirects=False)
+        self.assertEqual(resp.status_code, 301)
+        self.assertURLEqual(resp.headers.get('Location'), '/new-page-es')
+
+        # Test redirect from explicit lang -> explicit lang
+        self.env['website.rewrite'].create({
+            'name': 'Test 301 Redirect other lang',
+            'redirect_type': '301',
+            'url_from': f'/{es}/other-page',
+            'url_to': f'/{de}/contactus',
+        })
+        resp = self.url_open(f'/{es}/other-page')
+        self.assertEqual(resp.status_code, 200)
+        self.assertURLEqual(resp.url, f'/{de}/contactus')
+
 
 @tagged('-at_install', 'post_install')
 class TestRedirectPortal(HttpCase):
