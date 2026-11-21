@@ -15,9 +15,15 @@ from odoo.tests.common import tagged
 class TestRazorpayPaymentStatus(TestPointOfSaleHttpCommon):
 
     @classmethod
+    def setup_independent_company(cls):
+        return super().setup_independent_company(
+            company_xmlid="base.test_company_template",
+            currency_id=cls.env.ref("base.INR").id,
+        )
+
+    @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env.company.currency_id = cls.env.ref("base.INR")
         cls.razorpay_payment_method = cls.env["pos.payment.method"].create({
             "name": "Razorpay",
             "payment_method_type": "terminal",
