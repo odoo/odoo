@@ -1897,6 +1897,21 @@ class AccountMoveLine(models.Model):
                     lines_to_unreconcile += line
                     st_lines_to_unreconcile += (line.matched_debit_ids.debit_move_id + line.matched_credit_ids.credit_move_id).statement_line_id
 
+            # A draft invoice must not stay reconciled with lines of another commercial partner
+            # once its partner changes.
+            if (
+                line.matching_number
+                and line.parent_state == 'draft'
+                and line.move_id.is_invoice(include_receipts=True)
+                and self.env['account.move']._field_will_change(line, vals, 'partner_id')
+            ):
+                new_commercial_partner = self.env['res.partner'].browse(vals['partner_id']).commercial_partner_id
+                partials = line.matched_debit_ids + line.matched_credit_ids
+                counterparts = (partials.debit_move_id | partials.credit_move_id) - line
+                if counterparts.partner_id.commercial_partner_id - new_commercial_partner:
+                    lines_to_unreconcile += line
+                    st_lines_to_unreconcile += counterparts.statement_line_id
+
         lines_to_unreconcile.remove_move_reconcile()
         for st_line in st_lines_to_unreconcile:
             try:
