@@ -883,6 +883,9 @@ export class PosStore extends WithLazyGetterTrap {
                 await actionPosOrderCancelCall([
                     ...new Set(serverIds.filter((id) => typeof id === "number")),
                 ]);
+                for (const id of serverIds) {
+                    this.pendingOrder.delete.delete(id);
+                }
             }
         } finally {
             // Remove orders locally at the end to avoid reactivity during the async process
@@ -1789,7 +1792,13 @@ export class PosStore extends WithLazyGetterTrap {
 
         // Delete orders first
         if (orderIdsToDelete.length > 0) {
-            await this.deleteOrders([], orderIdsToDelete);
+            try {
+                await this.deleteOrders([], orderIdsToDelete);
+            } catch (error) {
+                if (options.throw || !(error instanceof ConnectionLostError)) {
+                    throw error;
+                }
+            }
         }
 
         // Allow us to force the sync of the orders In the case of
@@ -1850,6 +1859,7 @@ export class PosStore extends WithLazyGetterTrap {
                 }
 
                 if (error instanceof ConnectionLostError) {
+                    this.addPendingOrder([order.id]);
                     logPosMessage(
                         "Store",
                         "syncAllOrders",
