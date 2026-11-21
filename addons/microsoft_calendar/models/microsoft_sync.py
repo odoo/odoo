@@ -193,7 +193,7 @@ class MicrosoftCalendarSync(models.AbstractModel):
                 if recurrent_event.type == 'occurrence':
                     value = self.env['calendar.event']._microsoft_to_odoo_recurrence_values(recurrent_event, base_values)
                 else:
-                    value = self.env['calendar.event']._microsoft_to_odoo_values(recurrent_event, default_values)
+                    value = self.env['calendar.event']._microsoft_to_odoo_values(recurrent_event, default_values, with_ids=True)
 
                 to_create_values += [dict(value, need_sync_m=False)]
 
@@ -236,7 +236,9 @@ class MicrosoftCalendarSync(models.AbstractModel):
                         recurrent_event, {'need_sync_m': False}
                     )
                 else:
-                    value = self.env['calendar.event']._microsoft_to_odoo_values(recurrent_event, default_values)
+                    # Reconciliation may have recreated this occurrence without IDs.
+                    # Keep the exception's identity so the next sync cannot insert it.
+                    value = self.env['calendar.event']._microsoft_to_odoo_values(recurrent_event, default_values, with_ids=True)
                 existing_event = recurrence_id.calendar_event_ids.filtered(
                     lambda e: e._is_matching_timeslot(value['start'], value['stop'], recurrent_event.isAllDay)
                 )
@@ -244,7 +246,17 @@ class MicrosoftCalendarSync(models.AbstractModel):
                     continue
                 value.pop('start')
                 value.pop('stop')
-                existing_event._write_from_microsoft(recurrent_event, value)
+                if recurrent_event.type == 'exception':
+                    # Keep the event and master IDs from the same user's calendar.
+                    for event in existing_event:
+                        event._write_from_microsoft(recurrent_event, dict(
+                            value, microsoft_id=event.microsoft_id or recurrent_event.id,
+                            microsoft_recurrence_master_id=(
+                                event.microsoft_recurrence_master_id if event.microsoft_id else recurrent_event.seriesMasterId
+                            ),
+                        ))
+                else:
+                    existing_event._write_from_microsoft(recurrent_event, value)
                 updated_events |= existing_event
             new_recurrence |= recurrence_id
         return new_recurrence, updated_events
@@ -263,7 +275,7 @@ class MicrosoftCalendarSync(models.AbstractModel):
         update_events = self.env['calendar.event']
         for e in events_to_update:
             if e.type == "exception":
-                event_values = self.env['calendar.event']._microsoft_to_odoo_values(e)
+                event_values = self.env['calendar.event']._microsoft_to_odoo_values(e, with_ids=True)
             elif e.type == "occurrence":
                 event_values = self.env['calendar.event']._microsoft_to_odoo_recurrence_values(e)
             else:
@@ -279,6 +291,10 @@ class MicrosoftCalendarSync(models.AbstractModel):
                 odoo_event = self.env['calendar.event'].browse(e.odoo_id(self.env)).exists().with_context(
                     no_mail_to_attendees=True, mail_create_nolog=True
                 )
+                if e.type == 'exception' and odoo_event.microsoft_id:
+                    # Keep imported IDs in rec_values for recreated events only.
+                    event_values.pop('microsoft_id')
+                    event_values.pop('microsoft_recurrence_master_id', None)
                 odoo_event.with_context(dont_notify=True).write(dict(event_values, need_sync_m=False))
                 update_events |= odoo_event
 
@@ -353,6 +369,8 @@ class MicrosoftCalendarSync(models.AbstractModel):
 
                 if ms_event_updated_time >= odoo_event_updated_time and old_event_update_condition:
                     vals = dict(odoo_event._microsoft_to_odoo_values(mevent), need_sync_m=False)
+                    if mevent.type == 'exception' and odoo_event.microsoft_id:
+                        vals.pop('microsoft_recurrence_master_id', None)
                     odoo_event.with_context(dont_notify=True)._write_from_microsoft(mevent, vals)
 
                     if odoo_event._name == 'calendar.recurrence':
