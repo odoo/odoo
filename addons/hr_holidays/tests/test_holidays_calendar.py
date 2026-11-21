@@ -162,3 +162,15 @@ class TestHolidaysCalendar(HttpCase, TestHrHolidaysCommon):
         # Ensure that the length of the duration matches the start and stop times
         self.assertTrue(event.allday)
         self.assertEqual(event.duration, 105)
+
+    def test_calendar_event_availability(self):
+        """Ensure that calendar events are free for time off counted as working time."""
+        absence_type = self.default_work_entry_type.copy({
+            'name': 'Test Absence',
+            'code': 'Absence',
+            'count_as': 'absence',
+        })
+        working_time_off = self._create_leave(self.employee_emp, self.default_work_entry_type, date(2027, 7, 7), date(2027, 7, 7), validate=True)
+        self.assertEqual(working_time_off.meeting_id.show_as, 'free')
+        regular_time_off = self._create_leave(self.employee_emp, absence_type, date(2027, 7, 8), date(2027, 7, 8), validate=True)
+        self.assertEqual(regular_time_off.meeting_id.show_as, 'busy')
