@@ -143,9 +143,13 @@ class PaypalController(http.Controller):
         :rtype: None
         """
         order_id = tx_sudo.provider_reference
-        if tx_sudo.payment_method_code == "card":
+        if tx_sudo.payment_method_code in ("card", "google_pay"):
             order_details = tx_sudo._send_api_request("GET", f"/v2/checkout/orders/{order_id}")
-            card_info = order_details.get("payment_source", {}).get("card", {})
+            payment_source = order_details.get("payment_source", {})
+            if tx_sudo.payment_method_code == "card":
+                card_info = payment_source.get("card", {})
+            else:  # Google Pay nests the card under its own payment source.
+                card_info = payment_source.get("google_pay", {}).get("card", {})
             auth_result = card_info.get("authentication_result", {})
             if auth_result and auth_result.get("liability_shift") != "POSSIBLE":
                 tx_sudo._record({
