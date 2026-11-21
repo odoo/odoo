@@ -33,6 +33,7 @@ export class DonationOptionPlugin extends Plugin {
             SetMaximumAmountAction,
             SetSliderStepAction,
         },
+        is_unremovable_selector: ".s_donation_donate_btn",
         submit_button_selectors: [".s_donation_donate_btn"],
     };
 }
