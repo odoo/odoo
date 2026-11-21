@@ -8,3 +8,4 @@ from . import test_ir_attachment
 from . import test_icons
 from . import test_collaboration_bus
 from . import test_assets
+from . import test_favorite_colors

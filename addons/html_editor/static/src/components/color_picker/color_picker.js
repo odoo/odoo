@@ -72,10 +72,14 @@ export class ColorPicker extends Component {
     defaultColorSet = computed(() => this.getDefaultColorSet());
 
     setup() {
+        // The favorite colors are offered by every color picker.
+        const enabledTabs = [...this.props.enabledTabs, "favorite"];
+        // `isAvailable` is called during the setup, so that it can use hooks
+        // such as `usePlugin`.
         this.tabs = registry
             .category("color_picker_tabs")
             .getAll()
-            .filter((tab) => this.props.enabledTabs.includes(tab.id));
+            .filter((tab) => enabledTabs.includes(tab.id) && (tab.isAvailable?.() ?? true));
 
         this.DEFAULT_COLORS = DEFAULT_COLORS;
         this.grayscales = Object.assign({}, DEFAULT_GRAYSCALES, this.props.grayscales);
@@ -127,10 +131,11 @@ export class ColorPicker extends Component {
     }
 
     getDefaultTab() {
-        if (this.props.enabledTabs.includes(this.props.state.defaultTab)) {
+        const tabIds = this.tabs.map((tab) => tab.id);
+        if (tabIds.includes(this.props.state.defaultTab)) {
             return this.props.state.defaultTab;
         }
-        return this.props.enabledTabs[0];
+        return this.props.enabledTabs.find((tabId) => tabIds.includes(tabId)) ?? tabIds[0];
     }
 
     get selectedColor() {

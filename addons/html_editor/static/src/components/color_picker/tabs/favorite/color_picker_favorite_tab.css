@@ -1,0 +1,37 @@
+.o_color_picker_favorite_tab {
+    .o_favorite_color_remove {
+        display: none;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        font-size: 12px;
+        line-height: 14px;
+        color: #FFF;
+        background-color: rgba(0, 0, 0, .6);
+        /* Detach the button from the background of the color picker, on which */
+        /* it overflows, in both light and dark themes. */
+        box-shadow: 0 0 0 1px var(--o-color-picker-bg);
+        transform: translate(25%, -25%);
+        z-index: 2;
+    }
+
+    .o_favorite_color:hover, .o_favorite_color:focus-within {
+        .o_favorite_color_remove {
+            display: block;
+        }
+    }
+
+    .o_favorite_color_add {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        color: var(--body-color);
+        box-shadow: none;
+        border: 1px dashed rgba(var(--body-color-rgb), .5);
+
+        &:hover, &:focus-visible, &.active {
+            border-color: var(--o-color-picker-active-color, var(--o-enterprise-action-color));
+        }
+    }
+}

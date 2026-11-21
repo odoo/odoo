@@ -22,6 +22,15 @@ class IrHttp(models.AbstractModel):
         ctx = cls._get_editor_context()
         request.update_context(**ctx)
 
+    def session_info(self):
+        session_info = super().session_info()
+        if user_companies := session_info.get('user_companies'):
+            allowed_companies = user_companies['allowed_companies']
+            companies_sudo = self.env['res.company'].sudo().browse(list(allowed_companies))
+            for company in companies_sudo:
+                allowed_companies[company.id]['favorite_colors'] = company.favorite_colors or []
+        return session_info
+
     @classmethod
     def _get_translation_frontend_modules_name(cls):
         return ['html_editor', *super()._get_translation_frontend_modules_name()]

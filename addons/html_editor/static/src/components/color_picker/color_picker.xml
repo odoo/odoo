@@ -22,10 +22,13 @@
             </t>
             <t t-else="">
                 <t t-foreach="this.tabs" t-as="tab" t-key="tab.id">
-                    <button t-attf-class="btn btn-sm text-truncate btn-tab me-1 #{tab.id}-tab #{ this.isDarkTheme ? 'btn-secondary' : 'btn-light'} #{this.state.activeTab === tab.id ? 'active' : ''}"
+                    <button t-attf-class="btn btn-sm text-truncate btn-tab #{tab.icon ? 'o_btn_tab_icon' : ''} #{tab.id}-tab #{ this.isDarkTheme ? 'btn-secondary' : 'btn-light'} #{this.state.activeTab === tab.id ? 'active' : ''}"
                         role="tab"
+                        t-att-title="tab.icon and tab.name"
+                        t-att-aria-label="tab.icon and tab.name"
                         t-on-click="() => this.setTab(tab.id)">
-                        <t t-out="tab.name" />
+                        <i t-if="tab.icon" class="oi" t-att-data-icon="tab.icon" aria-hidden="true"/>
+                        <t t-else="" t-out="tab.name" />
                     </button>
                 </t>
             </t>

@@ -25,7 +25,7 @@ import { useThrottleForAnimation } from "@web/core/utils/timing";
 const ARROW_KEYS = ["arrowup", "arrowdown", "arrowleft", "arrowright"];
 const SLIDER_KEYS = [...ARROW_KEYS, "pageup", "pagedown", "home", "end"];
 
-const DEFAULT_COLOR = "#FF0000";
+export const DEFAULT_COLOR = "#FF0000";
 
 export class CustomColorPicker extends Component {
     static template = "html_editor.CustomColorPicker";
