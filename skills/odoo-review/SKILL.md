@@ -31,17 +31,19 @@ sceptical colleague would; that pass finds most of the blocking defects.
    source. How to obtain the checkout depends on the machine; do it before
    reading anything. Read each touched module's `__manifest__.py` for its
    purpose and `depends`, the commit messages, and the PR description and
-   comments when there is a PR. Note the target branch: master, or a stable
-   version. Find the other half of the change: a branch of the same name in
+   comments when there is a PR. Note the target: master, or a released
+   version, read from `odoo/release.py` as the
+   [odoo-stable-policy](../odoo-stable-policy/SKILL.md) skill says. Find the
+   other half of the change: a branch of the same name in
    the sibling repository (enterprise for community, and the reverse),
    whether local or remote; the two halves are one change, so check it out
    alongside.
 2. **Map.** List every changed file with the guideline sections that apply to
    it, taken from the sibling tables. Every file maps to at least one section:
    Python always gets Imports and Naming, anything under `static/` gets the web
-   guidelines, a `tests/` file gets Tests, and a stable target adds Changes in
-   a stable version to every file. A file left without a section is a mapping
-   mistake to fix, never a file without rules.
+   guidelines, a `tests/` file gets Tests, and a stable target adds the
+   odoo-stable-policy skill to every file. A file left without a section is a
+   mapping mistake to fix, never a file without rules.
 3. **Read.** Open every mapped section before writing the first finding. The
    files sit in the sibling `guidelines/` folders and are short; `cat` them
    whole.
@@ -68,7 +70,7 @@ section or its failure scenario.
 
 In a *stable* version, the existing file style supersedes the guidelines: keep
 the diff minimal, match the surrounding code, and check the change against
-[Changes in a stable version](../odoo-guidelines/guidelines/stable.md#changes-in-a-stable-version).
+the [odoo-stable-policy](../odoo-stable-policy/SKILL.md) skill.
 In *master*, apply guidelines to new code, or to existing code only when a file
 is under major change (do a separate *move* commit first).
 
@@ -105,4 +107,4 @@ available and confirm they still hold.
   change lands is a missing reference in the commit message, not a defect in
   the test.
 - In a stable version, treat a signature change as a bug on its own (see
-  [Changes in a stable version](../odoo-guidelines/guidelines/stable.md#changes-in-a-stable-version)).
+  [odoo-stable-policy](../odoo-stable-policy/SKILL.md)).
