@@ -224,7 +224,7 @@ test("'Author' field's type stays selected when you modify the option list", asy
                     <div data-name="Field" class="s_website_form_field s_website_form_required" data-type="many2one">
                         <div class="row">
                             <label class="s_website_form_label" for="oyeqnysxh10b">
-                                <span class="s_website_form_label_content">Author</span>
+                                <span class="s_website_form_label_content o_not_translate_inline">Author</span>
                             </label>
                         <select class="form-select s_website_form_input" required="" id="oyeqnysxh10b" name="author_id" />
                         </div>
@@ -283,7 +283,7 @@ test("empty placeholder selection input for selection field", async () => {
             <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="many2one">
                 <div class="row s_col_no_resize s_col_no_bgcolor">
                     <label class="col-form-label col-sm-auto s_website_form_label" for="ozp7022vqhe">
-                        <span class="s_website_form_label_content">Selection Field</span>
+                        <span class="s_website_form_label_content o_not_translate_inline">Selection Field</span>
                     </label>
                     <div class="col-sm">
                         <select class="form-select s_website_form_input" name="Phone Number" id="ozp7022vqhe">
@@ -321,7 +321,7 @@ test("selection field discards empty entries", async () => {
             <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="many2one">
                 <div class="row s_col_no_resize s_col_no_bgcolor">
                     <label class="col-form-label col-sm-auto s_website_form_label" for="ozp7022vqhe">
-                        <span class="s_website_form_label_content">Selection Field</span>
+                        <span class="s_website_form_label_content o_not_translate_inline">Selection Field</span>
                     </label>
                     <div class="col-sm">
                         <select class="form-select s_website_form_input" name="Phone Number" id="ozp7022vqhe">
@@ -411,7 +411,7 @@ const formWithCondition = `
      <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="char">
          <div class="row s_col_no_resize s_col_no_bgcolor">
              <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="first">
-                 <span class="s_website_form_label_content">a</span>
+                 <span class="s_website_form_label_content o_not_translate_inline">a</span>
              </label>
              <div class="col-sm">
                  <input class="form-control s_website_form_input" type="text" name="a" id="first"/>
@@ -421,7 +421,7 @@ const formWithCondition = `
      <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_field_hidden_if d-none" data-type="char" data-visibility-dependency="a" data-visibility-comparator="set">
          <div class="row s_col_no_resize s_col_no_bgcolor">
              <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="second">
-                 <span class="s_website_form_label_content">b</span>
+                 <span class="s_website_form_label_content o_not_translate_inline">b</span>
              </label>
              <div class="col-sm">
                  <input class="form-control s_website_form_input" type="text" name="b" id="second"/>
@@ -468,7 +468,7 @@ const formWithConditionOnChexbox = `
     <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="one2many">
         <div class="row s_col_no_resize s_col_no_bgcolor">
             <label class="col-sm-auto s_website_form_label" style="width: 200px" for="ofwe8fyqws37">
-                <span class="s_website_form_label_content">Custom Text</span>
+                <span class="s_website_form_label_content o_not_translate_inline">Custom Text</span>
             </label>
             <div class="col-sm">
                 <div class="row s_col_no_resize s_col_no_bgcolor s_website_form_multiple" data-name="Custom Text" data-display="horizontal">
@@ -497,7 +497,7 @@ const formWithConditionOnChexbox = `
      <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_field_hidden_if d-none" data-type="char" data-visibility-dependency="Custom Text" data-visibility-condition="Option 1" data-visibility-comparator="selected">
          <div class="row s_col_no_resize s_col_no_bgcolor">
              <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="second">
-                 <span class="s_website_form_label_content">b</span>
+                 <span class="s_website_form_label_content o_not_translate_inline">b</span>
              </label>
              <div class="col-sm">
                  <input class="form-control s_website_form_input" type="text" name="b" id="second"/>
@@ -558,7 +558,7 @@ test("Visibility dependency on radio field with 'Add other' option", async (fiel
     <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="one2many">
         <div class="row s_col_no_resize s_col_no_bgcolor">
             <label class="col-sm-auto s_website_form_label" style="width: 200px" for="oradio01">
-                <span class="s_website_form_label_content">Custom Text</span>
+                <span class="s_website_form_label_content o_not_translate_inline">Custom Text</span>
             </label>
             <div class="col-sm">
                 <div class="row s_col_no_resize s_col_no_bgcolor s_website_form_multiple" data-name="Custom Text" data-display="horizontal">
@@ -588,7 +588,7 @@ test("Visibility dependency on radio field with 'Add other' option", async (fiel
     <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_field_hidden_if d-none" data-type="char" data-visibility-dependency="Custom Text" data-visibility-comparator="selected">
         <div class="row s_col_no_resize s_col_no_bgcolor">
             <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="second">
-                <span class="s_website_form_label_content">b</span>
+                <span class="s_website_form_label_content o_not_translate_inline">b</span>
             </label>
             <div class="col-sm">
                 <input class="form-control s_website_form_input" type="text" name="b" id="second"/>
@@ -612,7 +612,7 @@ test("Changing max files number option updates file input 'multiple' attribute",
             <div class="s_website_form_rows">
                 <div data-name="Field" class="s_website_form_field s_website_form_custom" data-type="binary">
                     <label class="s_website_form_label" for="o3xe8o85w0ct">
-                        <span class="s_website_form_label_content">File Upload</span>
+                        <span class="s_website_form_label_content o_not_translate_inline">File Upload</span>
                     </label>
                     <input type="file" class="form-control s_website_form_input"
                         name="File Upload" required id="o3xe8o85w0ct"
@@ -718,7 +718,7 @@ test("Last list entry cannot be removed", async () => {
 			<div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="one2many">
 			    <div class="row s_col_no_resize s_col_no_bgcolor">
 			        <label class="col-sm-auto s_website_form_label" style="width: 200px" for="ofwe8fyqws37">
-			            <span class="s_website_form_label_content">Custom Text</span>
+			            <span class="s_website_form_label_content o_not_translate_inline">Custom Text</span>
 			        </label>
 			        <div class="col-sm">
 			            <div class="row s_col_no_resize s_col_no_bgcolor s_website_form_multiple" data-name="Custom Text" data-display="horizontal">
@@ -794,7 +794,7 @@ test("Can link states to a country", async () => {
             <div data-name="Country" class="s_website_form_field" data-type="many2one">
                 <div>
                     <label class="s_website_form_label" for="country">
-                        <span class="s_website_form_label_content">Country</span>
+                        <span class="s_website_form_label_content o_not_translate_inline">Country</span>
                     </label>
                     <div>
                         <select class="form-select s_website_form_input" name="country_id" id="country">
@@ -808,7 +808,7 @@ test("Can link states to a country", async () => {
             <div data-name="State" class="s_website_form_field" data-type="many2one">
                 <div>
                     <label class="s_website_form_label" for="state">
-                        <span class="s_website_form_label_content">State</span>
+                        <span class="s_website_form_label_content o_not_translate_inline">State</span>
                     </label>
                     <div>
                         <select class="form-select s_website_form_input" name="state_id" id="state">
@@ -850,7 +850,7 @@ test("Shouldn't have the 'Link to country' option if there's no country field", 
             <div data-name="State" class="s_website_form_field" data-type="many2one">
                 <div>
                     <label class="s_website_form_label" for="state">
-                        <span class="s_website_form_label_content">State</span>
+                        <span class="s_website_form_label_content o_not_translate_inline">State</span>
                     </label>
                     <div>
                         <select class="form-select s_website_form_input" name="state_id" id="state">
@@ -877,8 +877,8 @@ test("Min and max character limits should not contradict one another.", async ()
                     <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_required" data-type="char">
                         <div class="row s_col_no_resize s_col_no_bgcolor">
                             <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="ok0ney2v8rwf">
-                                <span class="s_website_form_label_content">name</span>
-                                <span class="s_website_form_mark"> *</span>
+                                <span class="s_website_form_label_content o_not_translate_inline">name</span>
+                                <span class="s_website_form_mark o_not_translate_inline"> *</span>
                             </label>
                             <div class="col-sm">
                                 <input class="form-control s_website_form_input" type="text" name="name" required="" value="" placeholder="" id="ok0ney2v8rwf" data-fill-with="name">
@@ -922,7 +922,7 @@ test("Only state fields have data-link-state-to-country attr", async () => {
             <div data-name="Country" class="s_website_form_field" data-type="many2one">
                 <div>
                     <label class="s_website_form_label" for="country">
-                        <span class="s_website_form_label_content">Country</span>
+                        <span class="s_website_form_label_content o_not_translate_inline">Country</span>
                     </label>
                     <div>
                         <select class="form-select s_website_form_input" name="country_id" id="country">
@@ -934,7 +934,7 @@ test("Only state fields have data-link-state-to-country attr", async () => {
             <div data-name="State" class="s_website_form_field" data-type="many2one">
                 <div>
                     <label class="s_website_form_label" for="state">
-                        <span class="s_website_form_label_content">State</span>
+                        <span class="s_website_form_label_content o_not_translate_inline">State</span>
                     </label>
                     <div>
                         <select class="form-select s_website_form_input" name="state_id" id="state">
@@ -970,7 +970,7 @@ test("Checkbox default value option stays visible when changing label position",
                     <div class="s_website_form_rows">
                         <div data-name="Field" class="s_website_form_field s_website_form_custom" data-type="boolean">
                             <label class="s_website_form_label" for="opftfejmju">
-                                <span class="s_website_form_label_content">My Field</span>
+                                <span class="s_website_form_label_content o_not_translate_inline">My Field</span>
                             </label>
                             <div class="form-check">
                                 <input type="checkbox" value="Yes" class="s_website_form_input form-check-input" name="My field" id="opftfejmju">
@@ -1035,7 +1035,7 @@ test("multiple conditional visibility value for 'contains'", async () => {
                 <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="one2many">
                     <div class="row s_col_no_resize s_col_no_bgcolor">
                         <label class="col-sm-auto s_website_form_label" style="width: 200px" for="ofwe8fyqws37">
-                            <span class="s_website_form_label_content">Custom Text</span>
+                            <span class="s_website_form_label_content o_not_translate_inline">Custom Text</span>
                         </label>
                         <div class="col-sm">
                             <div class="row s_col_no_resize s_col_no_bgcolor s_website_form_multiple" data-name="Custom Text" data-display="horizontal">
@@ -1064,7 +1064,7 @@ test("multiple conditional visibility value for 'contains'", async () => {
                 <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom d-none" data-type="char">
                     <div class="row s_col_no_resize s_col_no_bgcolor">
                         <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="second">
-                            <span class="s_website_form_label_content">b</span>
+                            <span class="s_website_form_label_content o_not_translate_inline">b</span>
                         </label>
                         <div class="col-sm">
                             <input class="form-control s_website_form_input" type="text" name="b" id="second"/>
@@ -1110,7 +1110,7 @@ test("contains conditional visibility value for 'record' field", async () => {
                 <div class="col-12 mb-0 py-2 s_website_form_field s_website_form_dnone" data-type="record" data-model="hr.job">
                     <div class="row s_col_no_resize s_col_no_bgcolor">
                         <label class="col-4 col-sm-auto s_website_form_label" style="width: 200px" for="recruitment7">
-                            <span class="s_website_form_label_content">Job</span>
+                            <span class="s_website_form_label_content o_not_translate_inline">Job</span>
                         </label>
                         <div class="col-sm">
                             <input id="recruitment7" type="hidden" class="form-control s_website_form_input" name="id" value="3">
@@ -1120,7 +1120,7 @@ test("contains conditional visibility value for 'record' field", async () => {
                 <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom d-none" data-type="char">
                     <div class="row s_col_no_resize s_col_no_bgcolor">
                         <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="second">
-                            <span class="s_website_form_label_content">b</span>
+                            <span class="s_website_form_label_content o_not_translate_inline">b</span>
                         </label>
                         <div class="col-sm">
                             <input class="form-control s_website_form_input" type="text" name="b" id="second"/>
@@ -1168,7 +1168,7 @@ describe("Many2one Field", () => {
                             <div data-name="Field" class="s_website_form_field s_website_form_required" data-type="many2one">
                                 <div class="row">
                                     <label class="s_website_form_label" for="oyeqnysxh10b">
-                                        <span class="s_website_form_label_content">Country</span>
+                                        <span class="s_website_form_label_content o_not_translate_inline">Country</span>
                                     </label>
                                     <select class="form-select s_website_form_input" required="" id="oyeqnysxh10b" name="country_id" >
                                         <option selected="selected" id="oyeqnysxh10b0" value="1">Belgium</option>
@@ -1509,7 +1509,7 @@ test("builderList re-renders when the field type changes (existing fields)", asy
                     <div data-name="Field" class="s_website_form_field s_website_form_required" data-type="many2one">
                         <div class="row">
                             <label class="s_website_form_label" for="oyeqnysxh10b">
-                                <span class="s_website_form_label_content">Author</span>
+                                <span class="s_website_form_label_content o_not_translate_inline">Author</span>
                             </label>
                         <select class="form-select s_website_form_input" required="" id="oyeqnysxh10b" name="author_id" />
                         </div>
@@ -1610,13 +1610,13 @@ test("Changing field type removes data-fill-with attribute", async () => {
         <form data-model_name="mail.mail">
             <div class="s_website_form_field" data-type="char">
                 <label class="s_website_form_label" for="field">
-                    <span class="s_website_form_label_content">Company</span>
+                    <span class="s_website_form_label_content o_not_translate_inline">Company</span>
                 </label>
                 <input id="field" class="s_website_form_input" type="text" data-fill-with="commercial_company_name"/>
             </div>
             <div class="s_website_form_field" data-type="char">
                 <label class="s_website_form_label" for="field1">
-                    <span class="s_website_form_label_content">Phone Number</span>
+                    <span class="s_website_form_label_content o_not_translate_inline">Phone Number</span>
                 </label>
                 <input id="field1" class="s_website_form_input" type="tel" data-fill-with="phone"/>
             </div>
@@ -1653,7 +1653,7 @@ test("Changing field type to existing field removes custom label", async () => {
         <form data-model_name="mail.mail">
             <div class="s_website_form_field" data-type="char">
                 <label class="s_website_form_label" for="field">
-                    <span class="s_website_form_label_content">Company</span>
+                    <span class="s_website_form_label_content o_not_translate_inline">Company</span>
                 </label>
                 <input id="field" class="s_website_form_input" type="text"/>
             </div>
@@ -1813,7 +1813,7 @@ test("single-choice field is displayed as a dropdown when it has more than five 
                     <div data-name="Field" class="s_website_form_field" data-type="many2one">
                         <div class="row">
                             <label class="s_website_form_label" for="oyeqnysxh10b">
-                                <span class="s_website_form_label_content">Author</span>
+                                <span class="s_website_form_label_content o_not_translate_inline">Author</span>
                             </label>
                         <select class="form-select s_website_form_input" id="oyeqnysxh10b" name="author_id" />
                         </div>
@@ -1895,7 +1895,7 @@ test("Changing field type from date to datetime removes value property (and attr
         `<form class="s_website_form" data-model_name="mail.mail">
             <div class="s_website_form_field" data-type="date">
                 <label class="s_website_form_label" for="field">
-                    <span class="s_website_form_label_content">Date</span>
+                    <span class="s_website_form_label_content o_not_translate_inline">Date</span>
                 </label>
                 <div class="s_website_form_date">
                     <input id="field" class="datetimepicker-input s_website_form_input" type="text"/>
