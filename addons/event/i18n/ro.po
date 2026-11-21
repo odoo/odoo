@@ -7,7 +7,7 @@
 # Martin Trigaux, 2022
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
 # Cozmin Candea <office@terrabit.ro>, 2023
-# Dorin Hongu <dhongu@gmail.com>, 2023, 2025.
+# Dorin Hongu <dhongu@gmail.com>, 2023, 2025, 2026.
 # Claudia Baisan, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
@@ -18,8 +18,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-30 17:38+0000\n"
-"PO-Revision-Date: 2026-08-31 14:39+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-11-20 10:13+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
 "event/ro/>\n"
 "Language: ro\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__event_count
@@ -1593,6 +1593,11 @@ msgid ""
 "(event_end_time)s\n"
 "Slot:\t%(slot_name)s"
 msgstr ""
+"Un interval nu poate fi programat în afara perioadei evenimentului.\n"
+"\n"
+"Eveniment:\t%(event_start_date)s, %(event_start_time)s - %(event_end_date)s, "
+"%(event_end_time)s\n"
+"Interval:\t%(slot_name)s"
 
 #. module: event
 #. odoo-python
@@ -1660,7 +1665,7 @@ msgstr "Activitate Excepție Decorare"
 #: model:ir.model.fields,field_description:event.field_event_event__activity_plans_ids
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_plans_ids
 msgid "Activity Plans"
-msgstr ""
+msgstr "Planuri de activitate"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_state
@@ -1716,6 +1721,11 @@ msgid ""
 "From:\t%(start)s - %(end)s\n"
 "To:\t\t%(new_start)s - %(new_end)s\n"
 msgstr ""
+"Adăugarea acestor intervale va ajusta automat perioada evenimentului pentru "
+"a le include.\n"
+"\n"
+"De la:\t%(start)s - %(end)s\n"
+"Până la:\t%(new_start)s - %(new_end)s\n"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_search
@@ -2157,7 +2167,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Close"
-msgstr ""
+msgstr "Închide"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__color
@@ -2254,13 +2264,13 @@ msgstr "Configurare"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Confirm attendance?"
-msgstr ""
+msgstr "Confirmați prezența?"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/views/event_slot/calendar/event_slot_calendar_controller.js:0
 msgid "Confirmation"
-msgstr ""
+msgstr "Confirmare"
 
 #. module: event
 #: model:ir.model,name:event.model_res_partner
@@ -2402,7 +2412,7 @@ msgstr "Târg de design Los Angeles"
 #. module: event
 #: model:ir.model,name:event.model_digest_digest
 msgid "Digest"
-msgstr ""
+msgstr "Rezumat"
 
 #. module: event
 #: model:event.event,subtitle:event.event_4
@@ -2478,7 +2488,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Edit Ticket"
-msgstr ""
+msgstr "Editează biletul"
 
 #. module: event
 #: model:event.question,title:event.event_question_email
@@ -2490,7 +2500,7 @@ msgstr "Email"
 #. module: event
 #: model:ir.model,name:event.model_mail_template
 msgid "Email Template"
-msgstr ""
+msgstr "Șablon email"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -2505,6 +2515,9 @@ msgid ""
 "- Set to 0 or 1 to disable.\n"
 "- Enter 2 or more to define the maximum number of allowed entries."
 msgstr ""
+"Activează biletele cu intrări multiple\n"
+"- Setează 0 sau 1 pentru dezactivare.\n"
+"- Introdu 2 sau mai multe pentru a defini numărul maxim de intrări permise."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_res_config_settings__use_event_barcode
@@ -2548,7 +2561,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__entry_limit
 msgid "Entry Limit"
-msgstr ""
+msgstr "Limită de intrări"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__mail_state__error
@@ -3291,7 +3304,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__ticket_entry_limit
 msgid "Initial Entry Limit"
-msgstr ""
+msgstr "Limită inițială de intrări"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -3437,7 +3450,7 @@ msgstr "Cheie"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_digest_digest__kpi_nbr_of_registrations_value
 msgid "Kpi Nbr Of Registrations Value"
-msgstr ""
+msgstr "Valoarea KPI pentru numărul de înscrieri"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__lang
@@ -3600,7 +3613,7 @@ msgstr "Fanta pentru corespondență"
 #: model:ir.model.fields,field_description:event.field_event_registration__main_registration_id
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Main Registration"
-msgstr ""
+msgstr "Înscriere principală"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -3750,6 +3763,8 @@ msgid ""
 "New attendance by this attendee created at %(attendance_datetime)s, see %"
 "(attendance_link)s"
 msgstr ""
+"Această persoană a participat pentru prima dată la %(attendance_datetime)s; "
+"vezi %(attendance_link)s"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_calendar_event_id
@@ -4222,6 +4237,10 @@ msgid ""
 "- there are seats available on event\n"
 "- the tickets are sellable (if ticketing is used)"
 msgstr ""
+"Înscrierile sunt deschise dacă:\n"
+"- evenimentul nu s-a încheiat și nu este anulat\n"
+"- există locuri disponibile la eveniment\n"
+"- biletele pot fi vândute (dacă se folosesc bilete)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_started
@@ -4233,7 +4252,7 @@ msgstr "Înregistrări începute"
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 #: model:ir.model.fields,field_description:event.field_event_registration__remaining_entries
 msgid "Remaining Entries"
-msgstr ""
+msgstr "Intrări rămase"
 
 #. module: event
 #. odoo-python
@@ -4358,7 +4377,7 @@ msgstr "Selectați participant"
 #. odoo-javascript
 #: code:addons/event/static/src/views/event_slot/calendar/event_slot_multi_selection_buttons.xml:0
 msgid "Select days to add slots"
-msgstr ""
+msgstr "Selectează zilele pentru a adăuga intervale"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_answer_view_tree
@@ -4675,6 +4694,8 @@ msgstr "Răspuns text"
 msgid ""
 "The Entry Limit of event tickets %(ticket_names)s cannot be lower than 0."
 msgstr ""
+"Limita de intrări pentru biletele evenimentului %(ticket_names)s nu poate fi "
+"mai mică decât 0."
 
 #. module: event
 #: model:event.event,subtitle:event.event_1
@@ -4738,6 +4759,9 @@ msgid ""
 "registrations linked to them:\n"
 "- %s"
 msgstr ""
+"Următoarele intervale nu pot fi șterse cât timp au una sau mai multe "
+"înscrieri asociate:\n"
+"- %s"
 
 #. module: event
 #. odoo-python
@@ -4787,6 +4811,8 @@ msgid ""
 "The offer may have expired or you may have reached the maximum number of "
 "entries allowed."
 msgstr ""
+"Este posibil ca oferta să fi expirat sau să fi atins numărul maxim de "
+"intrări permise."
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -4820,6 +4846,8 @@ msgid ""
 "There are not enough seats available for %(event_name)s:\n"
 "%(sold_out_info)s"
 msgstr ""
+"Nu sunt suficiente locuri disponibile pentru %(event_name)s:\n"
+"%(sold_out_info)s"
 
 #. module: event
 #. odoo-python
@@ -4843,12 +4871,14 @@ msgid ""
 "These events cannot have slots scheduled outside of their time range:\n"
 "%(event_names)s"
 msgstr ""
+"Aceste evenimente nu pot avea intervale programate în afara perioadei lor:\n"
+"%(event_names)s"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "This Card/Ticket is currently unavailable."
-msgstr ""
+msgstr "Acest card/bilet nu este disponibil momentan."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -4980,7 +5010,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Ticket was first scanned on"
-msgstr ""
+msgstr "Biletul a fost scanat pentru prima dată pe"
 
 #. module: event
 #. odoo-python
@@ -5064,7 +5094,7 @@ msgstr "Instructaj"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Transaction"
-msgstr ""
+msgstr "Tranzacție"
 
 #. module: event
 #: model:res.partner,website_short_description:event.res_partner_event_3
@@ -5138,7 +5168,7 @@ msgstr "Înțelegeți diversele module;"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Undo"
-msgstr ""
+msgstr "Anulare"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_unit
@@ -5165,7 +5195,7 @@ msgstr "Viitoare/În execuție"
 #. odoo-javascript
 #: code:addons/event/static/src/views/event_slot/calendar/event_slot_calendar_controller.js:0
 msgid "Update Event"
-msgstr ""
+msgstr "Actualizează evenimentul"
 
 #. module: event
 #. odoo-python
@@ -5313,6 +5343,8 @@ msgid ""
 "(registration_id)s. Please try again from the original registration of this "
 "attendee."
 msgstr ""
+"Nu puteți anula ultima prezență din subînscrierea cu ID-ul %(registration_id)"
+"s. Încercați din nou din înscrierea inițială a acestui participant."
 
 #. module: event
 #. odoo-python

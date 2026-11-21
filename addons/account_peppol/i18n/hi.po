@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-13 17:38+0000\n"
-"PO-Revision-Date: 2026-08-31 16:10+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-11-20 14:18+0000\n"
+"Last-Translator: \"Ujjawal Pathak (pauj)\" <pauj@odoo.com>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s19-4/"
 "account_peppol/hi/>\n"
 "Language: hi\n"
@@ -18,13 +18,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid " (Customer not on %(network_name)s)"
-msgstr ""
+msgstr " (ग्राहक %(network_name)s पर नहीं है)"
 
 #. module: account_peppol
 #. odoo-python
@@ -36,13 +36,13 @@ msgstr " (डेमो)"
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid " (Missing %(eas)s)"
-msgstr ""
+msgstr " (%(eas)s मौजूद नहीं)"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid " (Previously sent)"
-msgstr ""
+msgstr " (पहले भेजा गया)"
 
 #. module: account_peppol
 #. odoo-python
@@ -60,13 +60,13 @@ msgstr " (कोई वैट नहीं)"
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid " Expected format: %(expected_format)s."
-msgstr ""
+msgstr " अपेक्षित फ़ॉर्मैट: %(expected_format)s।"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "%(msg)s (EDI Proxy User Id client \"%(id_client)s\")"
-msgstr ""
+msgstr "'%(msg)s (EDI प्रॉक्सी यूज़र आईडी क्लाइंट \"%(id_client)s\")'"
 
 #. module: account_peppol
 #. odoo-python
@@ -80,13 +80,14 @@ msgstr "%(peppol_label)s%(disable_reason)s%(peppol_proxy_mode)s"
 msgid ""
 "%(processed)s Peppol document(s) processed, %(deleted)s document(s) deleted"
 msgstr ""
+"%(processed)s Peppol दस्तावेज़ प्रोसेस किए गए, %(deleted)s दस्तावेज़ हटाए गए"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 #: code:addons/account_peppol/tools/peppol_errors.py:0
 msgid "%s"
-msgstr ""
+msgstr "%s"
 
 #. module: account_peppol
 #. odoo-python
@@ -97,7 +98,7 @@ msgstr "%s ने Peppol पर इलेक्ट्रॉनिक इनव�
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "<b>Authenticate</b>"
-msgstr ""
+msgstr "<b>प्रमाणित करें</b>"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -117,21 +118,24 @@ msgid ""
 "                            But you are receiving your e-invoices via this "
 "Access Point:"
 msgstr ""
+"<br/>\n"
+"                            लेकिन आप इस ऐक्सेस पॉइंट के ज़रिए अपने ई-इनवॉइस प्राप्त "
+"कर रहे हैं:"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "<span><strong>Disconnected from Peppol!</strong></span>"
-msgstr ""
+msgstr "<span><strong>Peppol से डिस्कनेक्ट हो गया!</strong></span>"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_rejection_wizard_view_form
 msgid "<span>This information will be sent with your response.</span>"
-msgstr ""
+msgstr "<span>यह जानकारी आपकी प्रतिक्रिया के साथ भेजी जाएगी।</span>"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "<strong>Contact us</strong>"
-msgstr ""
+msgstr "<strong>हमसे संपर्क करें</strong>"
 
 #. module: account_peppol
 #: model:mail.template,body_html:account_peppol.mail_template_peppol_registration
@@ -315,6 +319,8 @@ msgid ""
 "A 0% tax cannot use Tax Category 'S' (Standard). Please update the Tax "
 "Category in the Advanced Options of the tax configuration."
 msgstr ""
+"0% टैक्स में टैक्स कैटगरी 'S' (स्टैंडर्ड) का इस्तेमाल नहीं किया जा सकता. कृपया टैक्स "
+"कॉन्फ़िगरेशन के एडवांस विकल्प में टैक्स कैटगरी अपडेट करें।"
 
 #. module: account_peppol
 #. odoo-python
@@ -323,6 +329,8 @@ msgid ""
 "A Peppol response declaring you %(status)s this document could not be sent "
 "to the Peppol Access Point."
 msgstr ""
+"यह बताने वाला Peppol रिस्पॉन्स कि आपने इस डॉक्यूमेंट को %(status)s किया है, Peppol "
+"ऐक्सेस पॉइंट पर नहीं भेजा जा सका।"
 
 #. module: account_peppol
 #. odoo-python
@@ -331,6 +339,8 @@ msgid ""
 "A Peppol response was sent to the Peppol Access Point declaring you %"
 "(status)s this document."
 msgstr ""
+"Peppol ऐक्सेस पॉइंट पर यह बताने वाला एक Peppol रिस्पॉन्स भेजा गया था कि आपने इस "
+"डॉक्यूमेंट को %(status)s किया है।"
 
 #. module: account_peppol
 #. odoo-python
@@ -360,7 +370,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "A connection to '%s' already exists."
-msgstr ""
+msgstr "'%s' के साथ कनेक्शन पहले से मौजूद है।"
 
 #. module: account_peppol
 #. odoo-python
@@ -453,7 +463,7 @@ msgstr "अकाउंट ईडीआई प्रॉक्सी यूज़
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_contact_email
 msgid "Account Peppol Contact Email"
-msgstr ""
+msgstr "अकाउंट Peppol कॉन्टैक्ट ईमेल"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_edi_user
@@ -469,12 +479,12 @@ msgstr "Peppol के लिए इस्तेमाल किया गया 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_response__response_code__ab
 msgid "Acknowledgement"
-msgstr ""
+msgstr "एकनॉलेजमेंट"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_rejection_wizard_view_form
 msgid "Actions to suggest"
-msgstr ""
+msgstr "सुझाव देने के लिए एक्शन"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -598,7 +608,7 @@ msgid ""
 msgstr ""
 "रूटिंग सिस्टम में एक नियम मिला जिसके अनुसार मैसेज को 'पुल' करने के लिए एक खास MPC (मैसेज "
 "प्रोसेसिंग कॉन्टेक्स्ट) को भेजा जाना था लेकिन, बीच में काम करने वाला एमएसएच उस मैसेज को उस "
-"MPC के साथ स्टोर नहीं कर पाया."
+"MPC के साथ स्टोर नहीं कर पाया"
 
 #. module: account_peppol
 #. odoo-python
@@ -619,6 +629,8 @@ msgid ""
 "An error occurred while responding to this invoice's expeditor.%(br)sStatus: "
 "%(status)s - %(error)s"
 msgstr ""
+"इस इनवॉइस के भेजने वाले को रिस्पॉन्स देते समय कोई गड़बड़ी आई.%(br)sस्टेटस: %(status)s - %"
+"(error)s"
 
 #. module: account_peppol
 #. odoo-python
@@ -651,37 +663,37 @@ msgstr "कोई अंदरूनी गड़बड़ी हुई"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_response__response_code__ap
 msgid "Approval"
-msgstr ""
+msgstr "अनुमति"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__ap
 msgid "Approved"
-msgstr ""
+msgstr "अनुमति मिल गई"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #: code:addons/account_peppol/wizard/peppol_rejection_wizard.py:0
 msgid "At least one reason must be given when rejecting a Peppol invoice."
-msgstr ""
+msgstr "Peppol इनवॉइस को अस्वीकार करते समय कम से कम एक वजह देनी होगी।"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
 msgid "Authentication canceled"
-msgstr ""
+msgstr "प्रमाणीकरण रद्द किया गया"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
 msgid "Authentication failed"
-msgstr ""
+msgstr "प्रमाणीकरण विफल रहा"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
 msgid "Authentication successful"
-msgstr ""
+msgstr "प्रमाणीकरण सफल"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__available_peppol_edi_formats
@@ -698,17 +710,17 @@ msgstr "उपलब्ध Peppol भेजने के तरीके"
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_ubl
 msgid "Base helpers for UBL"
-msgstr ""
+msgstr "UBL के लिए बेस हेल्पर"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_peppol_response
 msgid "Business Level Responses for Peppol"
-msgstr ""
+msgstr "Peppol के लिए बिज़नेस लेवल रिस्पॉन्स"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "By clicking the button below:"
-msgstr ""
+msgstr "नीचे दिए गए बटन पर क्लिक करके:"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__receiver
@@ -729,18 +741,19 @@ msgstr "भेज सकते हैं,"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "Cancel"
-msgstr ""
+msgstr "रद्द करें"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
 msgid "Cancel Peppol"
-msgstr ""
+msgstr "Peppol रद्द करें"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move.py:0
 msgid "Cannot cancel an entry that has already been sent via %(network_name)s"
 msgstr ""
+"%(network_name)s के ज़रिए पहले ही भेजी जा चुकी एंट्री को रद्द नहीं किया जा सकता"
 
 #. module: account_peppol
 #. odoo-python
@@ -749,6 +762,8 @@ msgid ""
 "Cannot initiate KYC for the selected scheme (unsupported, deprecated, or "
 "removed). Please select a different scheme."
 msgstr ""
+"चुनी गई स्कीम के लिए KYC शुरू नहीं किया जा सकता (अनसपोर्टेड, डेप्रिकेटेड या हटा दी गई है)"
+". कृपया कोई दूसरी स्कीम चुनें।"
 
 #. module: account_peppol
 #. odoo-python
@@ -766,13 +781,14 @@ msgstr "पार्टनर की जांच करें"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_clarification__code
 msgid "Code"
-msgstr ""
+msgstr "कोड"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_common
 msgid ""
 "Common functions for EDI documents: generate the data, the constraints, etc"
-msgstr "EDI डॉक्यूमेंट के मुख्य काम: डेटा बनाना, नियम तय करना, और ऐसे ही दूसरे काम."
+msgstr ""
+"EDI डॉक्यूमेंट के मुख्य काम: डेटा बनाना, नियम तय करना, और ऐसे ही दूसरे काम"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_res_company
@@ -789,7 +805,7 @@ msgstr "कंपनी का नाम"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_response__response_code__ca
 msgid "Conditionally accepted"
-msgstr ""
+msgstr "शर्तों के साथ स्वीकार किया गया"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_res_config_settings
@@ -811,7 +827,7 @@ msgstr "संपर्क के लिए ईमेल और फ़ोन नं
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Could not connect to Proxy Server."
-msgstr ""
+msgstr "प्रॉक्सी सर्वर से कनेक्ट नहीं किया जा सका।"
 
 #. module: account_peppol
 #. odoo-python
@@ -830,7 +846,7 @@ msgstr "ग्राहक बनाएं"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "Create, send, and receive e-invoices for free."
-msgstr ""
+msgstr "मुफ़्त में ई-इनवॉइस बनाएं, भेजें और प्राप्त करें।"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_clarification__create_uid
@@ -862,33 +878,33 @@ msgstr "डेमो"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_clarification__description
 msgid "Description"
-msgstr ""
+msgstr "विवरण"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Disconnect"
-msgstr ""
+msgstr "डिस्कनेक्ट करें"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Disconnect Peppol"
-msgstr ""
+msgstr "Peppol डिस्कनेक्ट करें"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Disconnect this database"
-msgstr ""
+msgstr "इस डेटाबेस को डिस्कनेक्ट करें"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 msgid "Disconnected this branch company peppol configuration from %s."
-msgstr ""
+msgstr "इस ब्रांच कंपनी के Peppol कॉन्फ़िगरेशन को %s से डिस्कनेक्ट किया गया।"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__display_itsme_login
 msgid "Display Itsme Login"
-msgstr ""
+msgstr "Itsme लॉगिन दिखाएं"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_common__display_name
@@ -912,30 +928,30 @@ msgstr "डिस्प्ले का नाम"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__display_no_auth_buttons
 msgid "Display No Auth Buttons"
-msgstr ""
+msgstr "बिना प्रमाणीकरण वाले बटन दिखाएं"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__display_use_parent_connection_selection
 msgid "Display Use Parent Connection Selection"
-msgstr ""
+msgstr "पैरेंट कनेक्शन इस्तेमाल करने का विकल्प दिखाएं"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "Do you want to proceed?"
-msgstr ""
+msgstr "क्या आप आगे बढ़ना चाहते हैं?"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Document cancelled successfully"
-msgstr ""
+msgstr "डॉक्यूमेंट सफलतापूर्वक रद्द किया गया"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Document reset to draft successfully"
-msgstr ""
+msgstr "डॉक्यूमेंट सफलतापूर्वक ड्राफ़्ट में रीसेट किया गया"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -945,6 +961,9 @@ msgid ""
 "\n"
 "Would you like to cancel this document instead?"
 msgstr ""
+"Peppol के ज़रिए भेजे/प्राप्त किए गए डॉक्यूमेंट्स डिलीट नहीं किए जा सकते.\n"
+"\n"
+"क्या आप इसके बजाय इस डॉक्यूमेंट को रद्द करना चाहेंगे?"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -954,11 +973,14 @@ msgid ""
 "\n"
 "Would you like to reset this document to draft instead?"
 msgstr ""
+"Peppol के ज़रिए भेजे/प्राप्त किए गए डॉक्यूमेंट्स डिलीट नहीं किए जा सकते.\n"
+"\n"
+"क्या आप इसके बजाय इस डॉक्यूमेंट को ड्राफ़्ट में रीसेट करना चाहेंगे?"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
 msgid "Does not support Invoice Responses"
-msgstr ""
+msgstr "इनवॉइस रिस्पॉन्स को सपोर्ट नहीं करता"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__done
@@ -991,7 +1013,7 @@ msgstr "ईडीआई यूज़र"
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "EDI user should be of one of the following types: %s"
-msgstr ""
+msgstr "EDI यूज़र इनमें से किसी एक टाइप का होना चाहिए: %s"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_edi_identification
@@ -1007,13 +1029,13 @@ msgstr "ईमेल"
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__error
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_response__peppol_state__error
 msgid "Error"
-msgstr "त्रुटि!"
+msgstr "गड़बड़ी"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "Error importing %(proxy_type)s document (UUID: %(uuid)s):"
-msgstr ""
+msgstr "%(proxy_type)s डॉक्यूमेंट (UUID: %(uuid)s) इंपोर्ट करने में गड़बड़ी:"
 
 #. module: account_peppol
 #. odoo-python
@@ -1025,7 +1047,7 @@ msgstr "ईडीआई दस्तावेज़ बनाते समय �
 #. odoo-python
 #: code:addons/account_peppol/tools/peppol_iap_connector.py:0
 msgid "Failed to connect to Odoo Peppol Proxy."
-msgstr ""
+msgstr "Odoo, Peppol प्रॉक्सी से कनेक्ट करने में असफल रहा।"
 
 #. module: account_peppol
 #. odoo-python
@@ -1036,6 +1058,9 @@ msgid ""
 "please go to Settings > Accounting > Peppol Settings and click on 'Reconnect "
 "this database'."
 msgstr ""
+"Peppol ऐक्सेस पॉइंट से कनेक्ट करने में असफल रहा. ऐसा तब हो सकता है जब आपने बैकअप से डेटाबेस "
+"रीस्टोर किया हो या बिना न्यूट्रलाइज़ेशन के उसे कॉपी किया हो. इसे ठीक करने के लिए, कृपया "
+"सेटिंग > अकाउंटिंग > Peppol सेटिंग पर जाएं और 'इस डेटाबेस को रीकनेक्ट करें' पर क्लिक करें।"
 
 #. module: account_peppol
 #. odoo-python
@@ -1045,12 +1070,14 @@ msgid ""
 "reason code is 'VATEX-EU-O'. You can change this in the Advanced Options of "
 "the tax configuration."
 msgstr ""
+"टैक्स %(taxes)s के लिए: जब छूट का कारण कोड 'VATEX-EU-O' हो, तो टैक्स कैटगरी 'O' का "
+"इस्तेमाल करना ज़रूरी है. आप इसे टैक्स कॉन्फ़िगरेशन के एडवांस विकल्प में बदल सकते हैं।"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 msgid "France - E-Invoicing (Approved Platform)"
-msgstr ""
+msgstr "फ़्रांस - ई-इनवॉइसिंग (मंज़ूर किया गया प्लेटफ़ॉर्म)"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1068,7 +1095,7 @@ msgstr "पूरी तरह से ऑटोमेटेड"
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 msgid "Go to module"
-msgstr ""
+msgstr "मॉड्यूल पर जाएं"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1102,11 +1129,13 @@ msgid ""
 "If you are not subject to VAT, you should not have a VAT number on your "
 "company/contacts and your clients should not have one either."
 msgstr ""
+"अगर आप पर VAT लागू नहीं होता है, तो आपकी कंपनी/कॉन्टैक्ट्स पर VAT नंबर नहीं होना चाहिए "
+"और आपके क्लाइंट्स के पास भी नहीं होना चाहिए।"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "If you don't have Itsme, please contact"
-msgstr ""
+msgstr "अगर आपके पास Itsme नहीं है, तो कृपया संपर्क करें"
 
 #. module: account_peppol
 #. odoo-python
@@ -1115,16 +1144,18 @@ msgid ""
 "If you want to be invoiced via %(network_name)s, your configuration must be "
 "valid."
 msgstr ""
+"अगर आप %(network_name)s के ज़रिए इनवॉइस प्राप्त करना चाहते हैं, तो आपका कॉन्फ़िगरेशन "
+"मान्य होना ज़रूरी है।"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_response__response_code__ip
 msgid "In Process"
-msgstr ""
+msgstr "प्रोसेस में है"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Incoming Accounting Journal"
-msgstr ""
+msgstr "इनकमिंग अकाउंटिंग जर्नल"
 
 #. module: account_peppol
 #. odoo-python
@@ -1133,6 +1164,8 @@ msgid ""
 "Invoice %(invoice_name)s exceeds the size limit of 64 MB to be sent via %"
 "(network_name)s."
 msgstr ""
+"%(network_name)s के ज़रिए भेजने के लिए इनवॉइस %(invoice_name)s का साइज़ 64 MB की "
+"लिमिट से ज़्यादा है।"
 
 #. module: account_peppol
 #. odoo-python
@@ -1141,6 +1174,8 @@ msgid ""
 "Invoice lines using Tax Category 'O' cannot use a percentage-based tax. "
 "Please update the tax type in Advanced Options."
 msgstr ""
+"टैक्स कैटगरी 'O' इस्तेमाल करने वाली इनवॉइस लाइनों में प्रतिशत पर आधारित टैक्स का इस्तेमाल "
+"नहीं किया जा सकता. कृपया एडवांस विकल्प में टैक्स टाइप अपडेट करें।"
 
 #. module: account_peppol
 #. odoo-python
@@ -1149,6 +1184,8 @@ msgid ""
 "Invoice lines with Tax Category 'Exempt from VAT' must have a tax rate of 0. "
 "You can change this in the Advanced Options of the tax configuration."
 msgstr ""
+"'वैट से छूट' टैक्स कैटगरी वाली इनवॉइस लाइनों का टैक्स रेट 0 होना ज़रूरी है. आप इसे टैक्स "
+"कॉन्फ़िगरेशन के ऐडवांस विकल्पों में बदल सकते हैं।"
 
 #. module: account_peppol
 #. odoo-python
@@ -1157,6 +1194,8 @@ msgid ""
 "Invoice lines with Tax Category 'Reverse charge' must have a tax rate of 0. "
 "You can change this in the Advanced Options of the tax configuration."
 msgstr ""
+"'रिवर्स चार्ज' टैक्स कैटगरी वाली इनवॉइस लाइनों का टैक्स रेट 0 होना ज़रूरी है. आप इसे टैक्स "
+"कॉन्फ़िगरेशन के ऐडवांस विकल्पों में बदल सकते हैं।"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__invoice_sending_method
@@ -1193,7 +1232,7 @@ msgstr "आखिरी बार अपडेट हुआ"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_clarification__list_identifier
 msgid "List identifier"
-msgstr ""
+msgstr "लिस्ट आइडेंटिफ़ायर"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__edi_mode__prod
@@ -1206,7 +1245,8 @@ msgstr "लाइव"
 msgid ""
 "Message properties were present in the fragment SOAP header that were not "
 "specified in %s"
-msgstr "मैसेज के छोटे हिस्से के SOAP हेडर में कुछ ऐसी जानकारी थी, जो %s  में बताई नहीं गई थीं"
+msgstr ""
+"मैसेज के छोटे हिस्से के SOAP हेडर में कुछ ऐसी जानकारी थी, जो %s में बताई नहीं गई थीं"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_migration_key
@@ -1218,7 +1258,7 @@ msgstr "माइग्रेशन की"
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "Miscellaneous:"
-msgstr ""
+msgstr "विविध:"
 
 #. module: account_peppol
 #. odoo-python
@@ -1227,6 +1267,7 @@ msgid ""
 "Missing Buyer Country. Please add the Country Code to the client's contact "
 "information."
 msgstr ""
+"खरीदार का देश मौजूद नहीं है. कृपया क्लाइंट की कॉन्टैक्ट जानकारी में कंट्री कोड जोड़ें।"
 
 #. module: account_peppol
 #. odoo-python
@@ -1235,6 +1276,8 @@ msgid ""
 "Missing Invoiced Item VAT category code. Action Required: Install the module "
 "account_edi_ubl_cii_tax_extension."
 msgstr ""
+"इनवॉइस किए गए आइटम का VAT कैटगरी कोड मौजूद नहीं है. ज़रूरी ऐक्शन: "
+"account_edi_ubl_cii_tax_extension मॉड्यूल इंस्टॉल करें।"
 
 #. module: account_peppol
 #. odoo-python
@@ -1243,6 +1286,8 @@ msgid ""
 "Missing Reverse Charge details. Please set the Exemption Reason to 'Reverse "
 "charge' in the Advanced Options of the tax configuration."
 msgstr ""
+"रिवर्स चार्ज की जानकारी मौजूद नहीं हैं. कृपया टैक्स कॉन्फ़िगरेशन के एडवांस विकल्पों में छूट का "
+"कारण 'रिवर्स चार्ज' सेट करें।"
 
 #. module: account_peppol
 #. odoo-python
@@ -1251,6 +1296,8 @@ msgid ""
 "Missing VAT category code. Action Required: Install the module "
 "account_edi_ubl_cii_tax_extension."
 msgstr ""
+"VAT कैटगरी कोड मौजूद नहीं है. ज़रूरी ऐक्शन: account_edi_ubl_cii_tax_extension मॉड्यूल "
+"इंस्टॉल करें।"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__phone_number
@@ -1273,12 +1320,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_rejection_wizard__move_ids
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_response__move_id
 msgid "Move"
-msgstr ""
+msgstr "मूव"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_clarification__name
 msgid "Name"
-msgstr ""
+msgstr "नाम"
 
 #. module: account_peppol
 #. odoo-python
@@ -1296,12 +1343,12 @@ msgstr "AS4 मैसेज भेजने-पाने के लिए को
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "No, Keep It"
-msgstr ""
+msgstr "नहीं, इसे रखें"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_response__peppol_state__not_serviced
 msgid "Not Serviced"
-msgstr ""
+msgstr "सेवा उपलब्ध नहीं"
 
 #. module: account_peppol
 #. odoo-python
@@ -1326,12 +1373,12 @@ msgstr "यह एक ईमेल है जो peppol रजिस्ट्र
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_clarification__list_identifier__opstatusaction
 msgid "OPStatusAction"
-msgstr ""
+msgstr "OPStatusAction"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_clarification__list_identifier__opstatusreason
 msgid "OPStatusReason"
-msgstr ""
+msgstr "OPStatusReason"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -1341,19 +1388,19 @@ msgstr "Odoo"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__routing_scheme__odemo
 msgid "Odoo Demo ID"
-msgstr ""
+msgstr "Odoo डेमो आईडी"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/tools/peppol_iap_connector.py:0
 msgid "Odoo Peppol Proxy returned an invalid response."
-msgstr ""
+msgstr "Odoo Peppol प्रॉक्सी से गलत रिस्पॉन्स मिला।"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "Odoo keeps you up to date with new regulations."
-msgstr ""
+msgstr "Odoo आपको नए नियमों के साथ अप-टू-डेट रखता है।"
 
 #. module: account_peppol
 #. odoo-python
@@ -1372,33 +1419,33 @@ msgstr "PEPPOL स्टेटस"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_response__response_code__pd
 msgid "Paid"
-msgstr ""
+msgstr "चुकाया गया"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__parent_company_id
 msgid "Parent Company"
-msgstr ""
+msgstr "पैरेंट कंपनी"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid_format
 msgid "Partner cannot receive format"
-msgstr ""
+msgstr "पार्टनर यह फ़ॉर्मैट प्राप्त नहीं कर सकता"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid "Partner doesn't have a valid configuration for %(network_name)s."
-msgstr ""
+msgstr "पार्टनर का %(network_name)s कॉन्फ़िगरेशन सही नहीं है।"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid
 msgid "Partner is not on Peppol"
-msgstr ""
+msgstr "पार्टनर Peppol पर नहीं है"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__valid
 msgid "Partner is on Peppol"
-msgstr ""
+msgstr "पार्टनर Peppol पर है"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__processing
@@ -1411,7 +1458,7 @@ msgstr "पेंडिंग रिसेप्शन"
 #: code:addons/account_peppol/models/res_company.py:0
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_edi_proxy_client_user__proxy_type__peppol
 msgid "Peppol"
-msgstr ""
+msgstr "Peppol"
 
 #. module: account_peppol
 #. odoo-python
@@ -1422,12 +1469,12 @@ msgstr "Peppol का पता दिया जाना चाहिए।"
 #. module: account_peppol
 #: model:ir.actions.client,name:account_peppol.action_peppol_auth_callback
 msgid "Peppol Auth Callback action"
-msgstr ""
+msgstr "Peppol ऑथ कॉलबैक ऐक्शन"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_can_connect_data
 msgid "Peppol Can Connect Data"
-msgstr ""
+msgstr "Peppol डेटा कनेक्ट कर सकता है"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_can_send
@@ -1438,41 +1485,41 @@ msgstr "Peppol के ज़रिए भेजा सकता है"
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_can_send_response
 #: model:ir.model.fields,field_description:account_peppol.field_account_move__peppol_can_send_response
 msgid "Peppol Can Send Response"
-msgstr ""
+msgstr "Peppol रिस्पॉन्स भेज सकता है"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Peppol Contact Email"
-msgstr ""
+msgstr "Peppol कॉन्टैक्ट ईमेल"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 msgid "Peppol Disconnected"
-msgstr ""
+msgstr "Peppol डिस्कनेक्ट हो गया"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "Peppol Documents Cannot Be Deleted"
-msgstr ""
+msgstr "Peppol डॉक्यूमेंट डिलीट नहीं किए जा सकते"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Peppol Documents: Cannot Delete Invoice"
-msgstr ""
+msgstr "Peppol डॉक्यूमेंट: इनवॉइस डिलीट नहीं की जा सकती"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_company.py:0
 msgid "Peppol EAS and/or Endpoint identifier"
-msgstr ""
+msgstr "Peppol EAS और/या एंडपॉइंट आइडेंटिफ़ायर"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_eas
 msgid "Peppol Eas"
-msgstr ""
+msgstr "Peppol EAS"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_endpoint
@@ -1484,7 +1531,7 @@ msgstr "Peppol एंडपॉइंट"
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Peppol Error"
-msgstr ""
+msgstr "Peppol एरर"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_external_provider
@@ -1502,39 +1549,39 @@ msgstr "Peppol आईडी"
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Peppol ID should be different from main company."
-msgstr ""
+msgstr "Peppol आईडी मुख्य कंपनी से अलग होनी चाहिए।"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_identifier
 msgid "Peppol Identifier"
-msgstr ""
+msgstr "Peppol आइडेंटिफ़ॉयर"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_is_sent
 #: model:ir.model.fields,field_description:account_peppol.field_account_move__peppol_is_sent
 msgid "Peppol Is Sent"
-msgstr ""
+msgstr "Peppol भेजा गया है"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_metadata
 msgid "Peppol Metadata"
-msgstr ""
+msgstr "Peppol मेटाडेटा"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_parent_company_id
 msgid "Peppol Parent Company"
-msgstr ""
+msgstr "Peppol पैरेंट कंपनी"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_parent_company_name
 msgid "Peppol Parent Company Name"
-msgstr ""
+msgstr "Peppol पैरेंट कंपनी का नाम"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_participation_role
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Peppol Participation Role"
-msgstr ""
+msgstr "Peppol पार्टिसिपेशन रोल"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_purchase_journal_id
@@ -1545,7 +1592,7 @@ msgstr "Peppol परचेज़ जर्नल"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_purchase_journal_required
 msgid "Peppol Purchase Journal Required"
-msgstr ""
+msgstr "Peppol परचेज़ जर्नल ज़रूरी है"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_account_invoice_filter
@@ -1560,61 +1607,61 @@ msgstr "Peppol रजिस्ट्रेशन"
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_peppol_rejection_wizard
 msgid "Peppol Rejection wizard"
-msgstr ""
+msgstr "Peppol रिजेक्शन विज़ॉर्ड"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_response_ids
 #: model:ir.model.fields,field_description:account_peppol.field_account_move__peppol_response_ids
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_response_view_form
 msgid "Peppol Response"
-msgstr ""
+msgstr "Peppol रिस्पॉन्स"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__peppol_response_support
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__peppol_response_support
 msgid "Peppol Response Service"
-msgstr ""
+msgstr "Peppol रिस्पॉन्स सर्विस"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move.py:0
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_response_view_list
 msgid "Peppol Responses"
-msgstr ""
+msgstr "Peppol रिस्पॉन्स"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_response__peppol_message_uuid
 msgid "Peppol UUID"
-msgstr ""
+msgstr "Peppol UUID"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_use_parent_company
 msgid "Peppol Use Parent Company"
-msgstr ""
+msgstr "Peppol पैरेंट कंपनी इस्तेमाल करें"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid ""
 "Peppol allows for complete automation of sending and receiving e-invoices."
-msgstr ""
+msgstr "Peppol ई-इनवॉइस भेजने और प्राप्त करने का पूरा ऑटोमेशन करने देता है।"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "Peppol business response error: %s"
-msgstr ""
+msgstr "Peppol बिज़नेस रिस्पॉन्स एरर: %s"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_peppol_clarification
 msgid "Peppol clarifications used for rejection"
-msgstr ""
+msgstr "अस्वीकार के लिए उपयोग किए गए Peppol के स्पष्टीकरण"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_common.py:0
 msgid "Peppol document UUID: %s"
-msgstr ""
+msgstr "Peppol डॉक्यूमेंट UUID: %s"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.portal_my_details
@@ -1624,13 +1671,13 @@ msgstr "Peppol ई-पता (EAS)"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
 msgid "Peppol info"
-msgstr ""
+msgstr "Peppol की जानकारी"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_common.py:0
 msgid "Peppol invoice received"
-msgstr ""
+msgstr "Peppol इनवॉइस प्राप्त हुई"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1638,17 +1685,19 @@ msgstr ""
 msgid ""
 "Peppol is the secure standard for e-invoices used in EU and across the world."
 msgstr ""
+"Peppol ई-इनवॉइस के लिए एक सुरक्षित स्टैंडर्ड है जिसका इस्तेमाल EU और दुनिया भर में किया "
+"जाता है।"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_message_uuid
 #: model:ir.model.fields,field_description:account_peppol.field_account_move__peppol_message_uuid
 msgid "Peppol message ID"
-msgstr ""
+msgstr "Peppol मैसेज आईडी"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_metadata_updated_at
 msgid "Peppol meta updated at"
-msgstr ""
+msgstr "Peppol मेटा इस समय अपडेट किया गया"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_move_state
@@ -1679,27 +1728,27 @@ msgstr "Peppol: रजिस्ट्रेशन अपडेट"
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_auto_register_services_ir_actions_server
 msgid "Peppol: auto register services"
-msgstr ""
+msgstr "Peppol: सर्विस ऑटो रजिस्टर करें"
 
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_get_new_documents_ir_actions_server
 msgid "Peppol: retrieve new documents"
-msgstr ""
+msgstr "Peppol: नए डॉक्यूमेंट प्राप्त करें"
 
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_get_message_status_ir_actions_server
 msgid "Peppol: update message status"
-msgstr ""
+msgstr "Peppol: मैसेज स्टेटस अपडेट करें"
 
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_get_participant_status_ir_actions_server
 msgid "Peppol: update participant status"
-msgstr ""
+msgstr "Peppol: पार्टिसिपेंट स्टेटस अपडेट करें"
 
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_webhook_keepalive_ir_actions_server
 msgid "Peppol: webhook keep alive"
-msgstr ""
+msgstr "Peppol: वेबहुक चालू रखें"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
@@ -1713,12 +1762,14 @@ msgid ""
 "Please enter the mobile number in the correct international format.\n"
 "For example: +32123456789, where +32 is the country code."
 msgstr ""
+"कृपया सही इंटरनेशनल फ़ॉर्मैट में मोबाइल नंबर दर्ज करें.\n"
+"उदाहरण के लिए: +32123456789, जहां +32 कंट्री कोड है।"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "Please fill in the company's routing identification."
-msgstr ""
+msgstr "कृपया कंपनी का रूटिंग आइडेंटिफ़िकेशन भरें।"
 
 #. module: account_peppol
 #. odoo-python
@@ -1730,13 +1781,13 @@ msgstr "कृपया फ़ोन नंबर लाइब्रेरी �
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Please make sure the Contact email is a valid email address."
-msgstr ""
+msgstr "कृपया पक्का करें कि कॉन्टैक्ट ईमेल एक मान्य ईमेल पता है।"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Please select a country for your company."
-msgstr ""
+msgstr "कृपया अपनी कंपनी के लिए एक देश चुनें।"
 
 #. module: account_peppol
 #. odoo-python
@@ -1760,6 +1811,9 @@ msgid ""
 "In particular, this email is used by Odoo to reconnect your Peppol account "
 "in case of database change."
 msgstr ""
+"Peppol कनेक्शन से जुड़े कम्युनिकेशन और नोटिफ़िकेशन के लिए प्राइमरी कॉन्टैक्ट ईमेल.\n"
+"खास तौर पर, डेटाबेस बदलने की स्थिति में आपके Peppol अकाउंट को फिर से कनेक्ट करने के लिए "
+"Odoo इस ईमेल का इस्तेमाल करता है।"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__proxy_type
@@ -1788,23 +1842,23 @@ msgstr "भेजने के लिए तैयार है"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_rejection_wizard_view_form
 msgid "Reasons"
-msgstr ""
+msgstr "कारण"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "Reasons:"
-msgstr ""
+msgstr "कारण:"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__ab
 msgid "Received"
-msgstr ""
+msgstr "मिल गया"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Reconnect this database"
-msgstr ""
+msgstr "इस डेटाबेस को रीकनेक्ट करें"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__smp_registration
@@ -1814,7 +1868,7 @@ msgstr "रिसीवर के तौर पर रजिस्टर कर�
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__use_parent_connection_selection__use_self
 msgid "Register this company on peppol"
-msgstr ""
+msgstr "इस कंपनी को Peppol पर रजिस्टर करें"
 
 #. module: account_peppol
 #. odoo-python
@@ -1827,7 +1881,7 @@ msgstr "रजिस्ट्रेशन रद्द किया गया।
 #: code:addons/account_peppol/models/account_move.py:0
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_rejection_wizard_view_form
 msgid "Reject Peppol Document"
-msgstr ""
+msgstr "Peppol डॉक्यूमेंट अस्वीकार करें"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__re
@@ -1838,55 +1892,55 @@ msgstr "अस्वीकार किया गया"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_response__response_code__re
 msgid "Rejection"
-msgstr ""
+msgstr "अस्वीकृति"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_rejection_wizard__action_ids
 msgid "Rejection actions"
-msgstr ""
+msgstr "रिजेक्शन एक्शन"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_rejection_wizard__reason_ids
 msgid "Rejection reasons"
-msgstr ""
+msgstr "अस्वीकृत करने की वजहें"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Reset to draft"
-msgstr ""
+msgstr "ड्राफ़्ट में रीसेट करें"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_response__response_code
 msgid "Response Code"
-msgstr ""
+msgstr "रिस्पॉन्स कोड"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__routing_endpoint
 msgid "Routing Endpoint"
-msgstr ""
+msgstr "रूटिंग एंडपॉइंट"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__routing_scheme
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__routing_scheme
 msgid "Routing ID"
-msgstr ""
+msgstr "रूटिंग आईडी"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__routing_scheme
 msgid "Routing Scheme"
-msgstr ""
+msgstr "रूटिंग स्कीम"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__selected_company_id
 msgid "Selected Company"
-msgstr ""
+msgstr "चुनी गई कंपनी"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Selected authentication method is not available."
-msgstr ""
+msgstr "चुना गया ऑथेंटिकेशन तरीका उपलब्ध नहीं है।"
 
 #. module: account_peppol
 #. odoo-python
@@ -1897,48 +1951,48 @@ msgstr "भेजें"
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_move_send_batch_wizard
 msgid "Send Invoice Batch Wizard"
-msgstr ""
+msgstr "इनवॉइस बैच भेजने का विज़ॉर्ड"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_move_send_wizard
 msgid "Send Invoice Wizard"
-msgstr ""
+msgstr "इनवॉइस विज़ॉर्ड भेजें"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_rejection_wizard_view_form
 msgid "Send Rejection"
-msgstr ""
+msgstr "अस्वीकृति भेजें"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "Send electronic invoices, and receive bills automatically via Peppol."
-msgstr ""
+msgstr "Peppol के ज़रिए इलेक्ट्रॉनिक इनवॉइस भेजें और बिल अपने आप प्राप्त करें।"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__use_parent_connection_selection__use_parent
 msgid "Send from parent company"
-msgstr ""
+msgstr "पैरेंट कंपनी से भेजें"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_config_settings__peppol_participation_role__sending_and_receiving
 msgid "Sending & Receiving"
-msgstr ""
+msgstr "भेजना और प्राप्त करना"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_config_settings__peppol_participation_role__sending_only
 msgid "Sending Only"
-msgstr ""
+msgstr "केवल भेजना"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_move_send
 msgid "Shared Send Invoice Wizard Functions"
-msgstr ""
+msgstr "शेयर किए गए सेंड इनवॉइस विज़ॉर्ड फ़ंक्शन"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Some attachments could not be sent with the XML:"
-msgstr ""
+msgstr "कुछ अटैचमेंट XML के साथ नहीं भेजे जा सके:"
 
 #. module: account_peppol
 #. odoo-python
@@ -1961,18 +2015,18 @@ msgstr "आपका अनुरोध पूरा नहीं हो पा�
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "Suggested actions:"
-msgstr ""
+msgstr "सुझाए गए एक्शन:"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__peppol_supported_documents
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__peppol_supported_documents
 msgid "Supported Peppol Documents"
-msgstr ""
+msgstr "सपोर्ट करने वाले Peppol डॉक्यूमेंट"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
 msgid "Supports Invoice Responses"
-msgstr ""
+msgstr "इनवॉइस रिस्पॉन्स को सपोर्ट करता है"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__edi_mode__test
@@ -1986,12 +2040,15 @@ msgid ""
 "                            By clicking the button below I accept that Odoo "
 "may process my e-invoices."
 msgstr ""
+"टेस्ट मोड टेस्ट Peppol नेटवर्क के माध्यम से ई-इनवॉइस भेजने की सुविधा देता है।<br/>\n"
+"                            नीचे दिए गए बटन पर क्लिक करके मैं स्वीकार करता हूं कि "
+"Odoo मेरे ई-इनवॉइस प्रोसेस कर सकता है।"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/controllers/portal.py:0
 msgid "That country is not available with %(network_name)s."
-msgstr ""
+msgstr "वह देश %(network_name)s के साथ उपलब्ध नहीं है।"
 
 #. module: account_peppol
 #. odoo-python
@@ -2053,6 +2110,8 @@ msgid ""
 "The Peppol endpoint is missing in the XML file. Action Required: Update the "
 "account and account_edi_ubl_cii modules to resolve this."
 msgstr ""
+"XML फ़ाइल में Peppol एंडपॉइंट मौजूद नहीं है. ज़रूरी एक्शन: इसे ठीक करने के लिए account और "
+"account_edi_ubl_cii मॉड्यूल अपडेट करें।"
 
 #. module: account_peppol
 #. odoo-python
@@ -2061,18 +2120,22 @@ msgid ""
 "The Peppol receiver of this document has rejected it with the following "
 "information:%(br)s%(rejection_message)s"
 msgstr ""
+"इस डॉक्यूमेंट के Peppol रिसीवर ने इसे नीचे दी गई जानकारी के साथ अस्वीकार कर दिया है:%"
+"(br)s%(rejection_message)s"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "The Peppol receiver of this document replied that he has accepted it."
 msgstr ""
+"इस डॉक्यूमेंट के Peppol रिसीवर ने जवाब दिया है कि उन्होंने इसे स्वीकार कर लिया है।"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "The Peppol receiver of this document replied that he has received it."
 msgstr ""
+"इस डॉक्यूमेंट के Peppol रिसीवर ने जवाब दिया है कि उन्हें यह प्राप्त हो गया है।"
 
 #. module: account_peppol
 #. odoo-python
@@ -2097,6 +2160,8 @@ msgid ""
 "The Tax Category must be 'AE' when using Exemption Reason code 'VATEX-EU-"
 "AE'. You can change this in the Advanced Options of the tax configuration."
 msgstr ""
+"छूट का कारण कोड 'VATEX-EU-AE' इस्तेमाल करते समय टैक्स कैटगरी 'AE' होनी ज़रूरी है. आप "
+"इसे टैक्स कॉन्फ़िगरेशन के एडवांस विकल्प में बदल सकते हैं।"
 
 #. module: account_peppol
 #. odoo-python
@@ -2129,12 +2194,15 @@ msgid ""
 "document to be accepted when sent again (eventually). These will be sent to "
 "the document's sender. Not mandatory."
 msgstr ""
+"दस्तावेज़ के प्रेषक को सुझाई जाने वाली कार्रवाइयां, ताकि दोबारा भेजे जाने पर (अंततः) "
+"दस्तावेज़ को स्वीकार किया जा सके. इन्हें दस्तावेज़ के प्रेषक को भेजा जाएगा. अनिवार्य नहीं है।"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "The database you are trying to connect to is not suitable for Peppol."
 msgstr ""
+"आप जिस डेटाबेस से कनेक्ट करने की कोशिश कर रहे हैं, वह Peppol के लिए सही नहीं है।"
 
 #. module: account_peppol
 #. odoo-python
@@ -2217,6 +2285,8 @@ msgid ""
 "The exemption reason code is invalid. Action Required: Install the module "
 "account_edi_ubl_cii_tax_extension."
 msgstr ""
+"छूट का कारण कोड अमान्य है. ज़रूरी एक्शन: account_edi_ubl_cii_tax_extension मॉड्यूल "
+"इंस्टॉल करें।"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -2226,6 +2296,9 @@ msgid ""
 "\n"
 "• %s"
 msgstr ""
+"नीचे दिए गए %s Peppol डॉक्यूमेंट को ड्राफ़्ट में रीसेट किया जाएगा:\n"
+"\n"
+"• %s"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -2237,6 +2310,10 @@ msgid ""
 "\n"
 "• %s"
 msgstr ""
+"नीचे दिए गए %s डॉक्यूमेंट Peppol / PDP के ज़रिए भेजे गए थे और इनमें कोई बदलाव नहीं किया "
+"जाएगा. अगर आपको इनमें बदलाव करना है, तो आपको क्रेडिट या डेबिट नोट जारी करना होगा:\n"
+"\n"
+"• %s"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -2246,6 +2323,9 @@ msgid ""
 "\n"
 "• %s"
 msgstr ""
+"नीचे दिए गए %s ड्राफ़्ट Peppol डॉक्यूमेंट रद्द किए जाएंगे:\n"
+"\n"
+"• %s"
 
 #. module: account_peppol
 #. odoo-python
@@ -2272,6 +2352,7 @@ msgid ""
 "The invoice has been sent to the Peppol Access Point. The following "
 "attachments were sent with the XML:"
 msgstr ""
+"इनवॉइस Peppol ऐक्सेस पॉइंट पर भेज दी गई है. XML के साथ नीचे दिए गए अटैचमेंट भेजे गए थे:"
 
 #. module: account_peppol
 #. odoo-python
@@ -2296,12 +2377,13 @@ msgid ""
 "The reasons to reject the received PEPPOL document. These will be sent to "
 "the document's sender."
 msgstr ""
+"प्राप्त हुए PEPPOL डॉक्यूमेंट को अस्वीकार करने की वजहें. ये डॉक्यूमेंट के सेंडर को भेजे जाएंगे।"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "The remaining %s document(s) will be deleted."
-msgstr ""
+msgstr "बचे हुए %s दस्तावेज़ हटा दिए जाएंगे।"
 
 #. module: account_peppol
 #. odoo-python
@@ -2371,7 +2453,8 @@ msgstr "जो मैसेज मिला है, उसमें कोई �
 msgid ""
 "There was an issue with the Hermes Migration Token Collection Interface "
 "(MTCI)."
-msgstr "हर्मीस के माइग्रेशन टोकन कलेक्शन इंटरफ़ेस (MTCI) में कोई दिक्कत आ गई थी"
+msgstr ""
+"हर्मीस के माइग्रेशन टोकन कलेक्शन इंटरफ़ेस (MTCI) में कोई दिक्कत आ गई थी।"
 
 #. module: account_peppol
 #. odoo-python
@@ -2382,14 +2465,14 @@ msgstr "Peppol में आपके पार्टनर के साथ क
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "This branch company will use the active Peppol connection found on"
-msgstr ""
+msgstr "यह ब्रांच कंपनी इस पर मौजूद एक्टिव Peppol कनेक्शन का इस्तेमाल करेगी"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid ""
 "This connection has been superseded by another database. Register again."
-msgstr ""
+msgstr "इस कनेक्शन की जगह किसी दूसरे डेटाबेस ने ले ली है. फिर से रजिस्टर करें।"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_is_token_out_of_sync
@@ -2398,6 +2481,9 @@ msgid ""
 "the proxy server. It is set to True when the token needs to be refreshed or "
 "updated."
 msgstr ""
+"इस फ़ील्ड का इस्तेमाल यह दिखाने के लिए किया जाता है कि EDI यूज़र टोकन प्रॉक्सी सर्वर के "
+"साथ सिंक में नहीं है. जब टोकन को रिफ़्रेश या अपडेट करने की ज़रूरत होती है, तो यह True पर "
+"सेट होता है।"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -2409,7 +2495,7 @@ msgstr "इस इनवॉइस"
 #: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_phone_number
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_phone_number
 msgid "This number is used for identification purposes only."
-msgstr ""
+msgstr "इस नंबर का इस्तेमाल केवल पहचान के मक़सद से किया जाता है।"
 
 #. module: account_peppol
 #. odoo-python
@@ -2440,6 +2526,7 @@ msgstr "इलेक्ट्रॉनिक बिल पूरी तरह �
 msgid ""
 "To use the Approved Platform for French E-Invoicing install the module '%s'."
 msgstr ""
+"फ़्रेंच ई-इनवॉइसिंग के लिए मंज़ूर किए गए प्लेटफ़ॉर्म इस्तेमाल करने के लिए '%s' मॉड्यूल इंस्टॉल करें।"
 
 #. module: account_peppol
 #. odoo-python
@@ -2449,17 +2536,20 @@ msgid ""
 "'%s'.\n"
 "The module was not found. Please update the app list first."
 msgstr ""
+"फ़्रेंच ई-इनवॉइसिंग के लिए स्वीकृत प्लेटफ़ॉर्म इस्तेमाल करने के लिए '%s' मॉड्यूल इंस्टॉल करें.\n"
+"मॉड्यूल नहीं मिला. कृपया पहले ऐप्लिकेशन सूची अपडेट करें।"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "To use the Approved Platform for French E-Invoicing, install the module"
 msgstr ""
+"फ़्रेंच ई-इनवॉइसिंग के लिए स्वीकृत प्लेटफ़ॉर्म का इस्तेमाल करने के लिए, मॉड्यूल इंस्टॉल करें"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_is_token_out_of_sync
 msgid "Token Out of Sync"
-msgstr ""
+msgstr "टोकन सिंक में नहीं है"
 
 #. module: account_peppol
 #. odoo-python
@@ -2470,12 +2560,12 @@ msgstr "डाइजेस्ट वैल्यू सही नहीं प�
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_verified
 msgid "Unchecked"
-msgstr ""
+msgstr "टोकन सिंक में नहीं है"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_response__response_code__uq
 msgid "Under query"
-msgstr ""
+msgstr "क्वेरी के तहत"
 
 #. module: account_peppol
 #. odoo-python
@@ -2493,23 +2583,23 @@ msgstr "Peppol में अज्ञात गड़बड़ी: %s"
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 msgid "Update App List"
-msgstr ""
+msgstr "ऐप लिस्ट अपडेट करें"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__use_parent_connection
 msgid "Use Parent Connection"
-msgstr ""
+msgstr "पैरेंट कनेक्शन इस्तेमाल करें"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__use_parent_connection_selection
 msgid "Use Parent Connection Selection"
-msgstr ""
+msgstr "पैरेंट कनेक्शन चुनने का विकल्प"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
 msgid "Verification pending"
-msgstr ""
+msgstr "वेरिफ़िकेशन पेंडिंग है"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
@@ -2524,7 +2614,7 @@ msgstr "Peppol में जानकारी की पुष्टि कर�
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
 msgid "Verify partner's Peppol endpoint"
-msgstr ""
+msgstr "पार्टनर का Peppol एंडपॉइंट की पुष्टि करें"
 
 #. module: account_peppol
 #. odoo-python
@@ -2550,37 +2640,37 @@ msgstr "Peppol पर स्वागत है"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "What is Peppol and why is it great?"
-msgstr ""
+msgstr "Peppol क्या है और यह इतना बेहतरीन क्यों है?"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Why should I use French E-Invoicing ?"
-msgstr ""
+msgstr "मुझे फ़्रेंच ई-इनवॉइसिंग का इस्तेमाल क्यों करना चाहिए ?"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Why should I use Peppol?"
-msgstr ""
+msgstr "मुझे Peppol का इस्तेमाल क्यों करना चाहिए?"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Why should you use it?"
-msgstr ""
+msgstr "आपको इसका इस्तेमाल क्यों करना चाहिए?"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Yes, Cancel It"
-msgstr ""
+msgstr "हां, इसे रद्द करें"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "Yes, Proceed"
-msgstr ""
+msgstr "हां, आगे बढ़ें"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
@@ -2588,6 +2678,8 @@ msgid ""
 "You accept that any fraudulent activity or spam will result in immediate and "
 "permanent exclusion from the Peppol network."
 msgstr ""
+"आप स्वीकार करते हैं कि किसी भी धोखाधड़ी वाली गतिविधि या स्पैम के कारण आपको Peppol "
+"नेटवर्क से तुरंत और हमेशा के लिए हटा दिया जाएगा।"
 
 #. module: account_peppol
 #. odoo-python
@@ -2597,17 +2689,19 @@ msgid ""
 "your Company Registry (BCE/KBO) first to be compliant with the new "
 "regulation."
 msgstr ""
+"आप अपने VAT नंबर से रजिस्टर करने वाले हैं. नए नियम का पालन करने के लिए पक्का करें कि आप "
+"पहले अपनी कंपनी रजिस्ट्री (BCE/KBO) से रजिस्टर करें।"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "You are not authorized to change the contact email."
-msgstr ""
+msgstr "आपके पास कॉन्टैक्ट ईमेल बदलने की अनुमति नहीं है।"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "You are sending from"
-msgstr ""
+msgstr "आप यहां से भेज रहे हैं"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
@@ -2615,6 +2709,8 @@ msgid ""
 "You authorize Odoo to act as your Peppol Service Provider to send and "
 "receive e-invoices on your behalf."
 msgstr ""
+"आप Odoo को अपनी तरफ़ से ई-इनवॉइस भेजने और प्राप्त करने के लिए अपने Peppol सर्विस "
+"प्रोवाइडर के रूप में काम करने का अधिकार देते हैं।"
 
 #. module: account_peppol
 #. odoo-python
@@ -2626,7 +2722,7 @@ msgstr "अब आप Peppol के ज़रिए इलेक्ट्रॉ�
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "You can now send electronic invoices via Peppol."
-msgstr "अब आप Peppol के ज़रिए इलेक्ट्रॉनिक इनवॉइस भेज सकते हैं"
+msgstr "अब आप Peppol के ज़रिए इलेक्ट्रॉनिक इनवॉइस भेज सकते हैं।"
 
 #. module: account_peppol
 #. odoo-python
@@ -2643,6 +2739,9 @@ msgid ""
 "Please change the journal used for Peppol reception before changing the type "
 "of this journal."
 msgstr ""
+"आप Peppol इनवॉइस प्राप्त करने के लिए इस्तेमाल होने वाले जर्नल का टाइप 'परचेज़' के अलावा "
+"किसी और टाइप में नहीं बदल सकते.\n"
+"इस जर्नल का टाइप बदलने से पहले कृपया Peppol रिसेप्शन के लिए इस्तेमाल होने वाला जर्नल बदलें।"
 
 #. module: account_peppol
 #. odoo-python
@@ -2651,6 +2750,8 @@ msgid ""
 "You cannot delete invoices that were sent via Peppol / PDP. If you need to "
 "modify them, you must issue a credit or debit note."
 msgstr ""
+"आप Peppol / PDP के ज़रिए भेजी गई इनवॉइस को डिलीट नहीं कर सकते. अगर आपको उनमें बदलाव "
+"करना है, तो आपको क्रेडिट या डेबिट नोट जारी करना होगा।"
 
 #. module: account_peppol
 #. odoo-python
@@ -2659,6 +2760,8 @@ msgid ""
 "You cannot reset to draft invoices that were sent via Peppol / PDP. If you "
 "need to modify them, you must issue a credit or debit note."
 msgstr ""
+"आप Peppol / PDP के ज़रिए भेजी गई इनवॉइस को ड्राफ़्ट में रीसेट नहीं कर सकते. अगर आपको "
+"उनमें बदलाव करना है, तो आपको क्रेडिट या डेबिट नोट जारी करना होगा।"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
@@ -2666,6 +2769,8 @@ msgid ""
 "You confirm that you are authorized to register this company on the Peppol "
 "network as a legal representative."
 msgstr ""
+"आप पुष्टि करते हैं कि आप एक कानूनी प्रतिनिधि के रूप में इस कंपनी को Peppol नेटवर्क पर "
+"रजिस्टर करने के लिए अधिकृत हैं।"
 
 #. module: account_peppol
 #. odoo-python
@@ -2687,7 +2792,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "You need to authenticate to continue."
-msgstr ""
+msgstr "जारी रखने के लिए आपको प्रमाणीकरण करना होगा।"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -2707,16 +2812,17 @@ msgid ""
 "You remain fully responsible for the content, accuracy, and legal compliance "
 "of your invoices."
 msgstr ""
+"आप अपनी इनवॉइस के कॉन्टेंट, सटीकता और कानूनी पालन के लिए पूरी तरह ज़िम्मेदार रहते हैं।"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Your Peppol ID"
-msgstr ""
+msgstr "आपकी Peppol आईडी"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Your Peppol identification is:"
-msgstr ""
+msgstr "आपकी Peppol पहचान है:"
 
 #. module: account_peppol
 #. odoo-python
@@ -2745,6 +2851,9 @@ msgid ""
 "database duplication or restoration.\n"
 "                                        <br/>"
 msgstr ""
+"आपका डेटाबेस अब Peppol से लिंक नहीं है. ऐसा डेटाबेस के डुप्लिकेट होने या रीस्टोर होने के "
+"कारण हो सकता है.\n"
+"                                        <br/>"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -2753,30 +2862,32 @@ msgid ""
 "Your details are being verified. There is nothing else to do on your end: "
 "your Peppol registration will be finalized automatically."
 msgstr ""
+"आपकी जानकारी की पुष्टि की जा रही हैं. आपकी तरफ़ से और कुछ करने की ज़रूरत नहीं है: आपका "
+"Peppol रजिस्ट्रेशन अपने आप पूरा हो जाएगा।"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Your identification has not been approved for this action yet"
-msgstr "इस काम को करने के लिए आपकी पहचान को अभी तक मंजूरी नहीं मिली है."
+msgstr "इस काम को करने के लिए आपकी पहचान को अभी तक मंजूरी नहीं मिली है"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Your identifier does not have a valid format.%s"
-msgstr ""
+msgstr "आपके आइडेंटिफ़ायर का फ़ॉर्मैट मान्य नहीं है.%s"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Your identifier is invalid."
-msgstr ""
+msgstr "आपका आइडेंटिफ़ायर अमान्य है।"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Your identifier you entered is invalid for Peppol."
-msgstr ""
+msgstr "आपने जो आइडेंटिफ़ायर दर्ज किया है, वह Peppol के लिए अमान्य है।"
 
 #. module: account_peppol
 #. odoo-python
@@ -2802,12 +2913,12 @@ msgstr "आपके अनुरोध पर अभी भी काम चल
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "accepted"
-msgstr ""
+msgstr "स्वीकार किया गया"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "and send invoices via Peppol on their behalf."
-msgstr ""
+msgstr "और उनकी तरफ़ से Peppol के ज़रिए इनवॉइस भेजें।"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__invoice_sending_method__peppol
@@ -2817,40 +2928,40 @@ msgstr "Peppol के ज़रिए"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "could not be sent via"
-msgstr ""
+msgstr "इसके ज़रिए नहीं भेजा जा सका"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move.py:0
 msgid "id"
-msgstr ""
+msgstr "आईडी"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "received"
-msgstr ""
+msgstr "प्राप्त किया गया"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "rejected"
-msgstr ""
+msgstr "अस्वीकार किया गया"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "sent via"
-msgstr ""
+msgstr "इसके ज़रिए भेजा गया"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "support"
-msgstr ""
+msgstr "सपोर्ट"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "to reconnect your database to Peppol."
-msgstr ""
+msgstr "अपने डेटाबेस को Peppol से फिर से कनेक्ट करने के लिए।"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol

@@ -47,7 +47,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 15:03+0000\n"
-"PO-Revision-Date: 2026-10-14 13:49+0000\n"
+"PO-Revision-Date: 2026-11-20 14:18+0000\n"
 "Last-Translator: Burkay Yıldızhan <seyil@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-4/base/"
 "tr/>\n"
@@ -56,7 +56,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -2159,6 +2159,18 @@ msgid ""
 "        - Operations through electronic interfaces (IED)\n"
 "        - Invoices done with KSef\n"
 msgstr ""
+"\n"
+"Accounting reports for Poland\n"
+"\n"
+"        This module also provides the possibility to generate the JPK_VAT in "
+"xml, for Poland.\n"
+"\n"
+"        Currently, does not report specific values for :\n"
+"        - Cash basis for entries with input tax (MK)\n"
+"        - Margin-based operations (MR_T/MR_UZ)\n"
+"        - Bills for agricultural products (VAT_RR)\n"
+"        - Operations through electronic interfaces (IED)\n"
+"        - Invoices done with KSef \n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pt_reports
@@ -6366,6 +6378,15 @@ msgid ""
 "- Configuration of withholding reasons and exemption reasons\n"
 "- Addition of Tax Offices.\n"
 msgstr ""
+"\n"
+"Nilvera'ya elektronik fatura göndermek ve almak içindir.\n"
+"\n"
+"Özellikler:\n"
+"\n"
+"- Fatura senaryoları desteği: Temel, İhracat ve Kamu\n"
+"- Fatura tipleri desteği: Satış, Tevkifat, İstisna ve İhraç Kayıtlı\n"
+"- Tevkifat ve istisna nedenlerinin yapılandırılması\n"
+"- Vergi dairelerinin eklenmesi.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_account_loans
@@ -7519,6 +7540,12 @@ msgid ""
 "original invoice.\n"
 "The wizard used is similar as the one for the credit note.\n"
 msgstr ""
+"\n"
+"Birçok ülkede, borç dekontu mevcut bir faturanın tutarlarını artırmak veya \n"
+"bazı özel durumlarda bir alacak dekontunu iptal etmek için kullanılır. \n"
+"Normal bir fatura gibidir, ancak orijinal fatura ile bağlantının takibini "
+"yapmamız gerekir.  \n"
+"Kullanılan sihirbaz, alacak dekontundakiyle benzerdir.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cn
@@ -7840,6 +7867,16 @@ msgid ""
 "case the sale orders should be\n"
 "split per delivery.\n"
 msgstr ""
+"\n"
+"Avatax için Stok Yönetimi\n"
+"=======================================\n"
+"Bu modül, avatax’tan vergi alınırken satır düzeyinde adreslere izin verir.\n"
+"\n"
+"Mevcut bir sınırlama, birden fazla stok hareketi içeren tek bir sipariş "
+"satırıdır (örneğin, \n"
+"ürün A’dan 10 birim; 2’si 1 numaralı depodan, 8’i 2 numaralı depodan sevk "
+"edilmiş).\n"
+"Bu durumda satış siparişleri teslimat başına bölünmelidir.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account
@@ -7980,6 +8017,17 @@ msgid ""
 "logic (Tiered deduction).\n"
 "- Includes \"Kuwait: Monthly Pay\" salary structure.\n"
 msgstr ""
+"\n"
+"Kuveyt Bordro ve Yerelleştirme\n"
+"=============================\n"
+"- Kuveyt bordrosu için temel kurulum (Şirket, Çalışanlar, Çizelge).\n"
+"- **Sosyal Sigorta:** Kuveyt Sosyal Güvenlik kesintisi ve şirket katkı payı "
+"kuralları.\n"
+"- **Hizmet Sonu:** Hizmet Sonu Ödeneği (Tazminat) ve Aylık Karşılık "
+"hesaplamaları.\n"
+"- **İzinler ve Karşılıklar:** Yıllık İzin karşılığı ve Kuveyt Hastalık İzni "
+"mantığı (Kademeli kesinti).\n"
+"- \"Kuveyt: Aylık Ödeme\" maaş yapısını içerir.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_landed_costs
@@ -11324,6 +11372,14 @@ msgid ""
 "project powered by Weblate.\n"
 "In the settings, a custom Weblate project can be targeted."
 msgstr ""
+"\n"
+"Çeviri modu, birden fazla dil yüklendiğinde kullanılabilir. Çevrilecek dili "
+"seçin,\n"
+"komut paletinden etkileşimli çeviri modunu etkinleştirin ve ardından "
+"çevrilecek ekranlara göz atın.\n"
+"Varsayılan olarak çeviri özelliği, Weblate destekli resmi Odoo çeviri "
+"projesine yönlendirir.\n"
+"Ayarlardan özel bir Weblate projesi hedeflenebilir."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_pos_cert
@@ -13667,6 +13723,18 @@ msgid ""
 "- Investigating technical issues\n"
 "- Supporting accounting or business process audits\n"
 msgstr ""
+"\n"
+"Bu modül, tartışmalarla ilgili verilerin teknik takibini\n"
+"etkinleştirmek için mail.message modelini genişletir.\n"
+"\n"
+"Mesajlar ve sistem değişikliği işlemleri tarafından oluşturulan\n"
+"izlenen değerleri yakalar ve saklar.\n"
+"İzlenen bilgiler denetim, hata ayıklama ve analiz\n"
+"amaçlarıyla kullanılabilir.\n"
+"\n"
+"Bu özellik özellikle şunlar için faydalıdır:\n"
+"- Teknik sorunları araştırma\n"
+"- Muhasebe veya iş süreci denetimlerini destekleme\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sms
@@ -17313,6 +17381,13 @@ msgid ""
 "driven and minimalist / suited for design agencies, branding studios, UX/UI "
 "consultancies, and creative tech firms"
 msgstr ""
+"Büyük boyutlu kayan metinli soyut gradyan giriş bölümü; editoryal bir "
+"tanıtım bloğuna, dönüşümlü bir görsel-metin satırına ve alt alta dizilmiş "
+"bir hizmet listesine, ardından açılır kapanır SSS bölümünden önce bir "
+"referanslar ızgarası ile müşteri yorumları döngüsüne açılır ve tekrarlayan "
+"görsel imza olarak büyük boyutlu tipografiyi taşır. Tipografi odaklı ve "
+"minimalist / tasarım ajansları, marka stüdyoları, UX/UI danışmanlıkları ve "
+"yaratıcı teknoloji şirketleri için uygundur"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -21931,6 +22006,13 @@ msgid ""
 "team driven / suited for medical clinics, dental practices, hospitals, and "
 "healthcare providers"
 msgstr ""
+"Afiş giriş bölümü; bir hikaye bloğuna, bir sayılar ızgarasına ve renk bloklu "
+"öne çıkan bir görsele açılır, ardından açılır kapanır SSS bölümünden önce "
+"ayrıntılı bir ekip ızgarası, temel görseller ile özellikler içeren bir "
+"mozaik blok ve bir müşteri yorumları duvarıyla devam eder; arka plan şekil "
+"süslemeleri olmadan sade ve fotoğraf odaklı bir yapıdadır. Yetkinlik ve ekip "
+"odaklı / tıp klinikleri, diş klinikleri, hastaneler ve sağlık hizmeti "
+"sağlayıcıları için uygundur"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_cobalt
@@ -21941,6 +22023,12 @@ msgid ""
 "and showcased work / suited for IT and software development studios, design "
 "agencies, and technology consultancies"
 msgstr ""
+"Afiş giriş bölümü; bölümler boyunca uzanan bağlantı çizgisi motifleriyle "
+"dönüşümlü görsel-metin satırlarına, ana görsellere, ayrıntılı ekip "
+"profillerine ve müşteri logoları için bir referans ızgarasına açılır. Yapısı "
+"ve sergilenen çalışmalarıyla güvenilirlik sunar / BT ve yazılım geliştirme "
+"stüdyoları, tasarım ajansları ve teknoloji danışmanlık firmaları için "
+"uygundur"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_kiddo
@@ -21952,6 +22040,13 @@ msgid ""
 "storytelling driven / suited for nurseries, childcare centers, kids activity "
 "programs, and family-oriented education services"
 msgstr ""
+"Afiş giriş bölümü; bir etkinlik metin-görsel bölümüne ve karma görsel kırpma "
+"şekillerine (dolgulu organik form, organik dış hatlı çerçeve, yuvarlatılmış "
+"kare) sahip üç temel hizmet sütununa açılır, ardından içerik satırları "
+"boyunca süzülen ve bağlantı çizgisi motifleriyle eşlik edilen bir hizmet "
+"simgeleri ızgarası ile bir eylem çağrısı gelir. Sıcak ve hizmet hikâyeciliği "
+"odaklı / kreşler, çocuk bakım merkezleri, çocuk etkinlik programları ve aile "
+"odaklı eğitim hizmetleri için uygundur"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_aviato
@@ -25015,6 +25110,12 @@ msgid ""
 "floating shape motifs. Image-and-narrative driven / suited for technology "
 "companies, IT services, computer stores, and virtual-reality product sites"
 msgstr ""
+"Kapak giriş bölümü; dönüşümlü metin ve görsel satırlarına, öne çıkan bir "
+"görsele, renk bloklu bilgilere ve bir medya listesine açılır — öne çıkan "
+"görsel ve medya görsellerindeki organik form kırpmaları görsel imzayı "
+"oluştururken, bunlar dalgalı çizgi ve süzülen şekil motiflerinin üzerine "
+"katmanlanır. Görsel ve anlatım odaklı / teknoloji şirketleri, BT hizmetleri, "
+"bilgisayar mağazaları ve sanal gerçeklik ürün siteleri için uygundur"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_monglia
@@ -25046,6 +25147,12 @@ msgid ""
 "suited for car dealerships, motorbike retailers, tire shops, mechanics, and "
 "vehicle repair services"
 msgstr ""
+"Kapak giriş bölümü; bir başlık bloğuna, üç sütunlu bir düzene, öne çıkan bir "
+"fotoğrafa, ana görsellere, grafikli KPI'lara ve bir medya listesine açılır; "
+"baştan sona sade ve fotoğraf odaklı bir yapı sunar. Teknik güvenilirlik "
+"sağlayan görsel ve istatistik öncelikli tasarım - otomobil bayileri, "
+"motosiklet satıcıları, lastikçiler, tamirciler ve araç bakım servisleri için "
+"uygundur"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_graphene
@@ -32869,6 +32976,12 @@ msgid ""
 "Image-forward and event-driven / suited for bands, music labels, concert "
 "venues, record stores, and artist showcases"
 msgstr ""
+"Giriş bölümü; her bölüm başlığında tekrarlanan altı çizili vurgularla "
+"birlikte görsel-metin anlatımına, üç sütunlu bir akışa, tam bir görsel "
+"duvarına, şekilli kırpılmış bir ekip bloğuna ve ardından güçlü bir harekete "
+"geçirici mesaja açılır. Görsel öncelikli ve etkinlik odaklı / müzik "
+"grupları, plak şirketleri, konser mekanları, plak mağazaları ve sanatçı "
+"vitrinleri için uygundur"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -33784,6 +33897,12 @@ msgid ""
 "Image-forward and emotion-driven / suited for wedding planners, love-themed "
 "services, photographers, and personal celebration sites"
 msgstr ""
+"Başlangıç giriş bölümü; bağlantı ve süzülen motiflerle vurgulanarak bir "
+"başlık bloğuna, öne çıkan bir ekibe, üst üste binen görsel-metin düzenine, "
+"bir özellik vurgusuna ve serbest ızgaraya açılır; ardından bir müşteri "
+"yorumları döngüsü ve harekete geçirici mesaja geçer. Görsel öncelikli ve "
+"duygu odaklı / düğün organizatörleri, aşk temalı hizmetler, fotoğrafçılar ve "
+"kişisel kutlama siteleri için uygundur"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_kiddo
@@ -36169,6 +36288,13 @@ msgid ""
 "visual signature. Editorial and image-forward, portfolio-driven / suited for "
 "architecture firms, photographers, design studios, and personal portfolios"
 msgstr ""
+"Minimal üst bilgi; büyük boyutlu tırnaklı tipografiyi sarı çerçeveli bir "
+"portreyle eşleştiren kişisel marka giriş bölümüne açılır, ardından tam "
+"görsel duvarı ve kapanış görsel eylem çağrısından önce bir ödül listesi, "
+"ortalanmış bir ifade ve asimetrik siyah beyaz görsel ızgaralarıyla devam "
+"eder ve tekrarlayan görsel imza olarak sarı vurgu detaylarını taşır. "
+"Editoryal ve görsel odaklı, portföy ağırlıklı / mimarlık firmaları, "
+"fotoğrafçılar, tasarım stüdyoları ve kişisel portföyler için uygundur"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pe
@@ -45300,6 +45426,13 @@ msgid ""
 "and-image driven / suited for florists, garden centers, beauty boutiques, "
 "and nature-led retail"
 msgstr ""
+"Başlangıç giriş bölümünün üzerinde yer alan satış odaklı üst bilgi; temel "
+"görsellere, bir süreç adımları anlatımına, bir serbest ızgara vitrinine, "
+"görsel-metin örtüşmeli bir düzene ve görsel duvarı ile referansların "
+"öncesinde yer alan temel bir ekip bloğuna açılır; bağlantı, organik form ve "
+"belirgin geometrik motiflerden oluşan zengin bir görsel dille vurgulanır. "
+"Süreç ve görsel odaklı / çiçekçiler, bahçe merkezleri, güzellik butikleri ve "
+"doğa odaklı perakendeciler için uygundur"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__user_id
@@ -52205,6 +52338,13 @@ msgid ""
 "suited for legal practices, business consultancies, technology companies, "
 "and professional services"
 msgstr ""
+"Bir afişi; renk bloklu bir bölüm, dönüşümlü metin ve görsel satırları, "
+"sayılar vitrini, temel ekip bloğu ve akordeon SSS ile bir araya getiren, "
+"giriş ve içerik satırları boyunca görsel imzasını taşıyan desenli ve çizgili "
+"görsel kırpma şekilleriyle (eskiz oval halka, nokta deseni, labirent) dikey "
+"ritimli bir düzen. Geniş boşluklu, metin odaklı ve bilgi yoğun / hukuk "
+"büroları, iş danışmanlıkları, teknoloji şirketleri ve profesyonel hizmetler "
+"için uygundur"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_veterinary_clinic
