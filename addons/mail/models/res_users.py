@@ -270,6 +270,14 @@ class ResUsers(models.Model):
 
         return write_res
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_activity_plans(self):
+        # without users, the plan would become visible to everyone
+        self.env['mail.activity.plan'].sudo().with_context(active_test=False).search([
+            ('user_ids', 'in', self.ids),
+            ('user_ids', 'not any', [('id', 'not in', self.ids)]),
+        ]).unlink()
+
     def action_archive(self):
         activities_sudo = self.env['mail.activity'].sudo().search_fetch(
             [('user_id', 'in', self.ids)],

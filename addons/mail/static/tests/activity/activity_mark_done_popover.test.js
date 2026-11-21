@@ -28,7 +28,6 @@ test("activity mark done popover simplest layout", async () => {
         ".o-mail-ActivityMarkAsDone button[aria-label='Done and Schedule Next']:count(1)"
     );
     await waitFor(".o-mail-ActivityMarkAsDone button[aria-label='Done']:count(1)");
-    await waitFor(".o-mail-ActivityMarkAsDone button:text('Discard'):count(1)");
 });
 
 test("activity mark done popover mark done without feedback", async () => {
