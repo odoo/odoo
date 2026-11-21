@@ -16,6 +16,9 @@ class ProductProduct extends models.Model {
         { id: 2, name: "name2", default_code: "AAAB", suggested_qty: 10 }, // suggested_qty to test display hiding on this record
         { id: 3, name: "name1", default_code: "AAAC" },
         { id: 4, name: "name2", default_code: "AAAD" },
+        { id: 5, name: "Pack product, vendor in Units", default_code: "AAAE" },
+        { id: 6, name: "Pack product, vendor in Units, suggested", default_code: "AAAF" },
+        { id: 7, name: "Unit product, vendor in Packs, suggested", default_code: "AAAG" },
     ];
 
     _views = {
@@ -84,6 +87,33 @@ const purchaseOrderLineInfo = {
         min_qty: 0.0, // We will test adding with min_qty = 0 works as expected (should add 1 not 0)
         suggested_qty: 1,
     },
+    5: {
+        quantity: 0,
+        productType: "consu",
+        uomDisplayName: "Units",
+        uomFactor: 1 / 6,
+        price: 10.0,
+        min_qty: 5.0, // Should add 5 Units, not 5 * 6 Units
+        suggested_qty: 0,
+    },
+    6: {
+        quantity: 0,
+        productType: "consu",
+        uomDisplayName: "Units",
+        uomFactor: 1 / 6,
+        price: 10.0,
+        min_qty: 5.0,
+        suggested_qty: 2, // 2 Packs of 6 = 12 Units > min_qty
+    },
+    7: {
+        quantity: 0,
+        productType: "consu",
+        uomDisplayName: "Pack of 6",
+        uomFactor: 6,
+        price: 60.0,
+        min_qty: 2.0,
+        suggested_qty: 15, // 15 Units = 3 Packs of 6 (rounded up) > min_qty
+    },
 };
 
 onRpc("/product/catalog/order_lines_info", () => purchaseOrderLineInfo);
@@ -142,11 +172,29 @@ test("Adding products from purchase catalog with suggestion feature ON.", async 
     await runAllTimers(); // for skipping the debounce delay
     expect(".o_kanban_record:nth-of-type(4) .o_product_catalog_quantity .o_input").toHaveValue(1); // Should add 1 not 0
 
+    // ---- 6: Test adding product with min_qty in vendor UoM != product UoM
+    await click(".o_kanban_record:nth-of-type(5)");
+    await runAllTimers(); // for skipping the debounce delay
+    expect(".o_kanban_record:nth-of-type(5) .o_product_catalog_quantity .o_input").toHaveValue(5); // min_qty is not converted
+
+    // ---- 7: Test adding product with suggested_qty (product UoM) converted to vendor UoM
+    await click(".o_kanban_record:nth-of-type(6)");
+    await runAllTimers(); // for skipping the debounce delay
+    expect(".o_kanban_record:nth-of-type(6) .o_product_catalog_quantity .o_input").toHaveValue(12);
+
+    // ---- 8: Test adding product with suggested_qty (product UoM) converted to vendor UoM
+    await click(".o_kanban_record:nth-of-type(7)");
+    await runAllTimers(); // for skipping the debounce delay
+    expect(".o_kanban_record:nth-of-type(7) .o_product_catalog_quantity .o_input").toHaveValue(3);
+
     expect.verifySteps([
         "product_id=1 quantity=1",
         "product_id=2 quantity=10",
         "product_id=2 quantity=11",
         "product_id=3 quantity=5",
         "product_id=4 quantity=1",
+        "product_id=5 quantity=5",
+        "product_id=6 quantity=12",
+        "product_id=7 quantity=3",
     ]);
 });
