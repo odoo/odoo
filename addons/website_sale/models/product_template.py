@@ -2026,6 +2026,7 @@ class ProductTemplate(models.Model):
         return data
 
     def _mail_get_operation_for_mail_message_operation(self, message_operation):
+<<<<<<< e1783807963264443d50da93d6ccd2cb5949d5b9
         if message_operation == "create" and not self.env.user._is_internal():
             website = self.env.website or self.env["website"].browse(
                 self.env.context.get("host_id")
@@ -2034,6 +2035,26 @@ class ProductTemplate(models.Model):
                 "website_sale.product_comment"
             ):
                 return [(Domain.TRUE, "write")]
+||||||| 504c97fe755d8296593b193f43f70bce461a2b1c
+        if (
+            message_operation == "create"
+            and not self.env.user._is_internal()
+        ):
+            website = self.env['website'].get_current_website()
+            if not website.with_context(website_id=website.id).is_view_active('website_sale.product_comment'):
+                return [(Domain.TRUE, 'write')]
+=======
+        if (
+            message_operation == "create"
+            and not self.env.user._is_internal()
+        ):
+            website = self.env['website'].get_current_website()
+            if (
+                self.env.user._is_public()
+                or not website.with_context(website_id=website.id).is_view_active('website_sale.product_comment')
+            ):
+                return [(Domain.TRUE, 'write')]
+>>>>>>> 8e351018cefd81164ef47c2615208078e492d369
         return super()._mail_get_operation_for_mail_message_operation(message_operation)
 
     @api.model
