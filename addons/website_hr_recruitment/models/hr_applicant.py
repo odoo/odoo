@@ -24,6 +24,7 @@ class HrApplicant(models.Model):
             stage = self.env['hr.recruitment.stage'].sudo().search([
                 ('fold', '=', False),
                 '|', ('job_ids', '=', False), ('job_ids', '=', values['job_id']),
+                ('company_id', 'in', [False, job.sudo().company_id.id]),
             ], order='sequence asc', limit=1)
             if stage:
                 values['stage_id'] = stage.id

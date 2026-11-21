@@ -256,7 +256,8 @@ class HrJob(models.Model):
         return self.env['hr.recruitment.stage'].search([
             '|',
             ('job_ids', '=', False),
-            ('job_ids', '=', self.id)], order='sequence asc', limit=1)
+            ('job_ids', '=', self.id),
+            ('company_id', 'in', [False, self.company_id.id])], order='sequence asc', limit=1)
 
     def _compute_new_application_count(self):
         self.env.cr.execute(
@@ -267,12 +268,13 @@ class HrJob(models.Model):
                  LEFT JOIN hr_job_hr_recruitment_stage_rel rel
                         ON rel.hr_job_id = j.id
                       JOIN hr_recruitment_stage s
-                        ON s.id = rel.hr_recruitment_stage_id
+                        ON (s.id = rel.hr_recruitment_stage_id
                         OR s.id NOT IN (
                                         SELECT "hr_recruitment_stage_id"
                                           FROM "hr_job_hr_recruitment_stage_rel"
                                          WHERE "hr_recruitment_stage_id" IS NOT NULL
-                                        )
+                                        ))
+                       AND (s.company_id IS NULL OR s.company_id = j.company_id)
                      WHERE j.id in %s
                   ORDER BY 1, 3 asc
                 )

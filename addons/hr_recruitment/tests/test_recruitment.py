@@ -4,6 +4,7 @@ from odoo import Command
 from odoo.fields import Domain
 from odoo.addons.mail.tests.common import MailCase
 from odoo.tests import tagged, TransactionCase, Form
+from odoo.tests.common import new_test_user
 
 
 @tagged('recruitment')
@@ -298,6 +299,49 @@ class TestRecruitment(MailCase, TransactionCase):
 
         applicant.stage_id = stage_new
         self.assertEqual(job.no_of_recruitment, 1)
+
+    def test_first_stage_of_job_company(self):
+        """ Applications start in a stage available to the company of their job, never in a
+        stage specific to another company. """
+        company_b = self.env['res.company'].create({'name': 'Company B'})
+        stage_a, stage_b, stage_b_second = self.env['hr.recruitment.stage'].create([{
+            'name': 'Company A First Stage',
+            'sequence': -2,
+            'company_id': self.company.id,
+        }, {
+            'name': 'Company B First Stage',
+            'sequence': -1,
+            'company_id': company_b.id,
+        }, {
+            'name': 'Company B Second Stage',
+            'sequence': 1,
+            'company_id': company_b.id,
+        }])
+        job_b = self.env['hr.job'].create({'name': 'Job B', 'company_id': company_b.id})
+        recruiter = new_test_user(
+            self.env, login='multi_company_recruiter', groups='hr_recruitment.group_hr_recruitment_manager',
+            company_id=self.company.id, company_ids=[Command.set((self.company | company_b).ids)],
+        )
+        recruiter_env = self.env(user=recruiter, context={'allowed_company_ids': (self.company | company_b).ids})
+
+        applicant = recruiter_env['hr.applicant'].create({'partner_name': 'Applicant B', 'job_id': job_b.id})
+        self.assertEqual(applicant.company_id, company_b)
+        self.assertEqual(applicant.stage_id, stage_b)
+        self.assertEqual(job_b._get_first_stage(), stage_b, "Stage of the applications received by email")
+
+        applicant.stage_id = stage_b_second
+        applicant.action_archive()
+        applicant.action_unarchive()
+        self.assertEqual(applicant.stage_id, stage_b, "A restored application goes back to the first stage")
+        self.env.flush_all()
+        self.assertEqual(recruiter_env['hr.job'].browse(job_b.id).new_application_count, 1)
+
+        new_applicant = self.env['job.add.applicants'].create({
+            'applicant_ids': applicant.ids,
+            'job_ids': job_b.ids,
+        })._add_applicants_to_job()
+        self.assertEqual(new_applicant.stage_id, stage_b)
+        self.assertNotIn(stage_a, (applicant | new_applicant).stage_id)
 
     def test_open_refuse_applicant_wizard_without_partner_name(self):
         """Test opening the refuse wizard when the applicant has no partner_name."""
