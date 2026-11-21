@@ -30,6 +30,25 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
         )
         return response.json()["result"]
 
+    def request_update_combination(self, product_template, ptav_ids=None, product_uom_id=None):
+        base_url = product_template.get_base_url()
+        response = self.url_open(
+            url=base_url + "/sale/product_configurator/update_combination",
+            json={
+                "params": {
+                    "product_template_id": product_template.id,
+                    "ptav_ids": ptav_ids,
+                    "currency_id": self.ref('base.USD'),
+                    "so_date": str(self.env.cr.now()),
+                    "quantity": 1.0,
+                    "product_uom_id": product_uom_id,
+                    "company_id": None,
+                    "pricelist_id": None,
+                }
+            },
+        )
+        return response.json()["result"]
+
     def create_product_template_with_2_attributes(self):
         return self.env["product.template"].create({
             "name": "Shirt",
@@ -420,3 +439,34 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
         self.assertIn("Color", attribute_names)
         # Count occurrences of 'Size' - should be 2 since we have two lines with the same attribute
         self.assertEqual(attribute_names.count("Size"), 2)
+
+    def test_update_combination_resets_uom_not_available_on_variant(self):
+        """
+        When switching to a variant that doesn't have the currently selected UoM (e.g. a
+        packaging only available on the previous variant), the price must be computed with the
+        main UoM of the new variant instead of the previous variant's packaging.
+        """
+        self._enable_uom()
+        self.product_sofa_blue.extra_uom_ids = self.uom_pack_6
+        self.product_sofa_red.extra_uom_ids = self.uom_dozen
+        self.authenticate("demo", "demo")
+
+        # Ensure Pack of 6 is kept when variant has it available: the price must be computed
+        # with the Pack of 6.
+        result = self.request_update_combination(
+            product_template=self.product_template_sofa,
+            ptav_ids=self.product_sofa_blue.product_template_attribute_value_ids.ids,
+            product_uom_id=self.uom_pack_6.id,
+        )
+        self.assertEqual(result["id"], self.product_sofa_blue.id)
+        self.assertAlmostEqual(result["price"], self.product_sofa_blue.lst_price * 6)
+
+        # The Pack of 6 isn't available on the red variant: the price must be computed with its
+        # main UoM instead.
+        result = self.request_update_combination(
+            product_template=self.product_template_sofa,
+            ptav_ids=self.product_sofa_red.product_template_attribute_value_ids.ids,
+            product_uom_id=self.uom_pack_6.id,
+        )
+        self.assertEqual(result["id"], self.product_sofa_red.id)
+        self.assertAlmostEqual(result["price"], self.product_sofa_red.lst_price)
