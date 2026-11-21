@@ -938,7 +938,8 @@ class Website(Home):
         :param is_view_data: True = "ir.ui.view", False = "ir.asset"
         :param enable: list of views/assets keys to enable
         :param disable: list of views/assets keys to disable
-        :param reset_view_arch: restore the default template after disabling
+        :param reset_view_arch: restore the default template when disabling or
+            re-enabling
         """
         if disable:
             records = self._get_customize_data(disable, is_view_data).filtered('active')
@@ -947,8 +948,13 @@ class Website(Home):
             records.write({'active': False})
 
         if enable:
-            records = self._get_customize_data(enable, is_view_data)
-            records.filtered(lambda x: not x.active).write({'active': True})
+            records = self._get_customize_data(enable, is_view_data).filtered(lambda x: not x.active)
+            if reset_view_arch:
+                # The editor saves its pending changes after the view has been
+                # disabled (and reset), writing them back on the inactive view.
+                # Reset it again so it is restored to its default template.
+                records.reset_arch(mode='hard')
+            records.write({'active': True})
 
     @http.route(['/website/theme_customize_bundle_reload'], type='json', auth='user', website=True, readonly=True)
     def theme_customize_bundle_reload(self):
