@@ -17,7 +17,6 @@ discount to a customer.
         'data/pos_discount_data.xml',
         'views/res_config_settings_views.xml',
         'views/pos_config_views.xml',
-        'views/pos_session_sales_details.xml',
         'receipt/pos_order_receipt.xml',
         ],
     'assets': {
