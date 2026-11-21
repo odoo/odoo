@@ -9,6 +9,33 @@ from odoo import api, models
 class WebsiteMenu(models.Model):
     _inherit = "website.menu"
 
+    def _can_be_edited_by_event_editor(self, parent_menus=None):
+        """ Determines if the current user can write these menus without having
+        designer rights, only if:
+
+        - The user is an event manager and a restricted editor
+        - All impacted menus are in the menu trees of events the user can write on
+        - The event menus themselves are not modified
+        """
+        if not (self.env.user.has_group('event.group_event_manager') and self.env.user.has_group('website.group_website_restricted_editor')):
+            return False
+
+        root_menus_sudo = self.sudo().browse()
+        for menu in self.sudo() | (parent_menus or self.browse()).sudo():
+            while menu.parent_id:
+                menu = menu.parent_id
+            root_menus_sudo |= menu
+
+        if not root_menus_sudo:
+            return False
+
+        events_sudo = self.env['event.event'].sudo().search([('menu_id', 'in', root_menus_sudo.ids)])
+        return (
+            events_sudo.menu_id == root_menus_sudo           # All menus are part of an event
+            and not (self & events_sudo.menu_id)             # The event menus themselves are not modified
+            and events_sudo.sudo(False).has_access('write')  # User can write on events without sudo
+        )
+
     def unlink(self):
         """ Override to synchronize event configuration fields with menu deletion. """
         event_updates = {}
@@ -67,6 +94,20 @@ class WebsiteMenu(models.Model):
 
          Once we have identified that, we force its URL to be part of the event pages, and we create
          a matching website.event.menu record for it. """
+
+        # Restricted editors bypass check
+        if not self.env.su:
+            to_save_menu_ids = {menu['id'] for menu in data['data'] if isinstance(menu['id'], int)}
+            to_delete_menu_ids = set(data.get('to_delete') or [])
+            modified_menu_ids = to_save_menu_ids | to_delete_menu_ids
+
+            # All new or modified menus must have a parent otherwise they are not part of an event
+            WebsiteMenuSudo = self.sudo()
+            parent_menu_ids = {menu.get('parent_id') for menu in data['data'] if 'parent_id' in menu or menu['id'] not in modified_menu_ids}
+            if all(parent_menu_ids) and WebsiteMenuSudo.browse(modified_menu_ids)._can_be_edited_by_event_editor(
+                parent_menus=WebsiteMenuSudo.browse([menu_id for menu_id in parent_menu_ids if isinstance(menu_id, int)]),
+            ):
+                return WebsiteMenuSudo.save(website_id, data)
 
         old_menu_ids = [menu['id'] for menu in data['data'] if isinstance(menu['id'], int)]
         has_new_menus = any(isinstance(menu['id'], str) for menu in data['data'])
