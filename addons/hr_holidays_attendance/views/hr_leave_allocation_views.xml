@@ -26,7 +26,7 @@
                 <attribute name="invisible">1</attribute>
             </div>
             <xpath expr="//field[@name='work_entry_type_id']" position="attributes">
-                <attribute name="domain">[('overtime_deductible', '=', True), ('requires_allocation', '=', True)]</attribute>
+                <attribute name="domain">[('id', 'in', allowed_work_entry_type_ids), ('overtime_deductible', '=', True)]</attribute>
                 <attribute name="options">{'no_create': True, 'no_open': True}</attribute>
             </xpath>
             <xpath expr="//sheet" position="after">
