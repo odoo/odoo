@@ -1035,6 +1035,13 @@ class SaleOrder(models.Model):
                 ]
         return vals_list
 
+    def copy_translations(self, new, excluded=()):
+        super().copy_translations(new, excluded={*excluded, 'order_line'})
+        if 'order_line' not in excluded:
+            old_lines = self._get_copiable_order_lines()
+            for old_line, new_line in zip(old_lines, new.order_line.sorted('id')):
+                old_line.copy_translations(new_line)
+
     @api.ondelete(at_uninstall=False)
     def _unlink_except_draft_or_cancel(self):
         for order in self:
