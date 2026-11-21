@@ -195,6 +195,9 @@ export class BaseNavtabsStyleOption extends BuilderAction {
             .querySelector(".s_tabs_nav")
             .classList.toggle(isTabsImages ? "col-md-3" : "col-sm-3", isVertical);
         editingElement
+            .querySelector("[role=tablist")
+            .setAttribute("aria-orientation", isVertical ? "vertical" : "horizontal");
+        editingElement
             .querySelector(".s_tabs_content")
             .classList.toggle(isTabsImages ? "col-md-9" : "col-sm-9", isVertical);
 
