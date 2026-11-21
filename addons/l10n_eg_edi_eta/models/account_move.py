@@ -227,11 +227,16 @@ class AccountMove(models.Model):
         fields_list.append('l10n_eg_eta_json_doc_file')
         return fields_list
 
+    def _l10n_eg_eta_should_print_qr_code(self):
+        if not self.l10n_eg_qr_code:
+            return False
+        return self.l10n_eg_edi_submission_state in {"test", "accepted"}
+
     def _l10n_eg_eta_qr_code(self):
-        if self.l10n_eg_edi_submission_state in {'test', 'accepted'}:
+        if self._l10n_eg_eta_should_print_qr_code():
             url_params = url_encode({
                 'barcode_type': 'QR',
-                'value': self.l10n_eg_qr_code or '',
+                'value': self.l10n_eg_qr_code,
                 'width': 130,
                 'height': 130,
                 'quiet': 0,
