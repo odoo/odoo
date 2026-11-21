@@ -1,4 +1,4 @@
-import { Component, onWillStart, signal } from "@odoo/owl";
+import { Component, onMounted, onWillStart, signal } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
 import { LanguagePopup } from "@pos_self_order/app/components/language_popup/language_popup";
@@ -22,9 +22,12 @@ export class LandingPage extends Component {
                 }
                 this.selfOrder.selectedOrderUuid = null;
                 this.selfOrder.computeAvailableCategories();
-                this.selfOrder.resetCategorySelection();
             }
             this.selfOrder.rpcLoading = false;
+        });
+
+        onMounted(() => {
+            this.selfOrder.resetCategorySelection();
         });
 
         if (this.selfOrder.config._self_ordering_image_home_ids.length > 1) {
