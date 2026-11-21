@@ -42,9 +42,16 @@ def get_notify_payload_max_length(default=8000):
 
 # max length in bytes for the NOTIFY query payload
 NOTIFY_PAYLOAD_MAX_LENGTH = get_notify_payload_max_length()
+<<<<<<< d8e4e4aeea47e29f1ce6c3ec21ec99d0537729e5
 # Sentinel used by `_prepare_payload` to indicate the notification
 # creation should be aborted.
 SKIP_NOTIFICATION = object()
+||||||| 520a344a8d4c59bd0510d99e61f374f69edf98f5
+=======
+FETCH_MAX_BYTES = 1_048_576  # 1 MiB
+# Unlike the byte cap (a running sum), the row cap lets PostgreSQL stop the window early.
+FETCH_MAX_ROWS = 2000
+>>>>>>> 1e684918e71bb256198c2b15d3625d09f501ab17
 
 
 def fetch_bus_notifications(cr, min_id_by_channel, ignore_ids=None):
@@ -57,6 +64,7 @@ def fetch_bus_notifications(cr, min_id_by_channel, ignore_ids=None):
     :return: List of notifications.
 
     """
+<<<<<<< d8e4e4aeea47e29f1ce6c3ec21ec99d0537729e5
     threshold = fields.Datetime.now() - datetime.timedelta(seconds=TIMEOUT)
     channels_by_id = defaultdict(list)
     for channel, min_id in min_id_by_channel.items():
@@ -66,10 +74,96 @@ def fetch_bus_notifications(cr, min_id_by_channel, ignore_ids=None):
         since = SQL("create_date > %s", threshold) if min_id == 0 else SQL("id > %s", min_id)
         channel_conditions.append(SQL("(channel IN %s AND %s)", tuple(channels), since))
     where = SQL(" OR ").join(channel_conditions)
+||||||| 520a344a8d4c59bd0510d99e61f374f69edf98f5
+    conditions = [
+        SQL("channel IN %s", tuple(json_dump(channel_with_db(cr.dbname, c)) for c in channels)),
+        SQL("create_date > %s", fields.Datetime.now() - datetime.timedelta(seconds=TIMEOUT))
+        if last == 0
+        else SQL("id > %s", last),
+    ]
+=======
+    notifications, _has_more_notifications = fetch_bus_notifications_batch(
+        cr,
+        channels,
+        last,
+        ignore_ids,
+        max_bytes=None,
+        max_rows=None,
+    )
+    return notifications
+
+
+def fetch_bus_notifications_batch(
+    cr,
+    channels,
+    last=0,
+    ignore_ids=None,
+    *,
+    max_bytes: int | None = FETCH_MAX_BYTES,
+    max_rows: int | None = FETCH_MAX_ROWS,
+):
+    """Return the notifications of the given ``channels`` after ``last``, capped by
+    ``max_bytes`` and ``max_rows`` (None: no cap). If the first notification exceeds
+    ``max_bytes``, return it alone.
+
+    :return: A tuple where the first item is the notification list
+    and the second a boolean indicating whether there is more to fetch.
+    :rtype: tuple[list, bool]
+    """
+    if not channels:
+        return [], False
+    conditions = [
+        SQL("channel IN %s", tuple(json_dump(channel_with_db(cr.dbname, c)) for c in channels)),
+        SQL("create_date > %s", fields.Datetime.now() - datetime.timedelta(seconds=TIMEOUT))
+        if last == 0
+        else SQL("id > %s", last),
+    ]
+>>>>>>> 1e684918e71bb256198c2b15d3625d09f501ab17
     if ignore_ids:
+<<<<<<< d8e4e4aeea47e29f1ce6c3ec21ec99d0537729e5
         where = SQL("(%s) AND id NOT IN %s", where, tuple(ignore_ids))
     cr.execute(SQL("SELECT id, message FROM bus_bus WHERE %s ORDER BY id", where))
     return [{"id": r[0], "message": orjson.loads(r[1])} for r in cr.fetchall()]
+||||||| 520a344a8d4c59bd0510d99e61f374f69edf98f5
+        conditions.append(SQL("id NOT IN %s", tuple(ignore_ids)))
+    where = SQL(" AND ").join(conditions)
+    cr.execute(SQL("SELECT id, message FROM bus_bus WHERE %s ORDER BY id", where))
+    return [{"id": r[0], "message": orjson.loads(r[1])} for r in cr.fetchall()]
+=======
+        conditions.append(SQL("id NOT IN %s", tuple(ignore_ids)))
+    cr.execute(
+        SQL(
+            """
+                WITH bus_with_size AS (
+                    SELECT id,
+                           message,
+                           SUM(octet_length(message)) OVER (ORDER BY id) AS size,
+                           ROW_NUMBER() OVER (ORDER BY id) AS position,
+                           LEAD(id) OVER (ORDER BY id) AS next_id
+                      FROM bus_bus
+                     WHERE %(where)s
+                  ORDER BY id
+                     LIMIT %(max_rows)s
+                )
+                SELECT id,
+                       message,
+                       next_id IS NOT NULL AS has_more_notifications
+                  FROM bus_with_size
+                 WHERE %(max_size)s IS NULL OR size <= %(max_size)s OR position = 1
+              ORDER BY id ASC
+            """,
+            where=SQL(" AND ").join(conditions),
+            max_rows=max_rows,
+            max_size=max_bytes,
+        ),
+    )
+    result = cr.fetchall()
+    notifications = [
+        {"id": id, "message": orjson.loads(message)} for id, message, _ in result
+    ]
+    has_more_notifications = bool(result and result[-1][2])
+    return notifications, has_more_notifications
+>>>>>>> 1e684918e71bb256198c2b15d3625d09f501ab17
 
 
 # ---------------------------------------------------------

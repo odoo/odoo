@@ -40,7 +40,7 @@ from odoo.service.server import CommonServer
 from odoo.sql_db import db_connect
 from odoo.tools import config
 
-from .models.bus import dispatch, fetch_bus_notifications
+from .models.bus import dispatch, fetch_bus_notifications_batch
 from .session_helpers import check_session, new_env
 from .tools import orjson
 
@@ -802,10 +802,18 @@ class Websocket:
     def _dispatch_bus_notifications(self):
         self._waiting_for_dispatch = False
         with acquire_cursor(self._session.db) as cr:
+<<<<<<< d8e4e4aeea47e29f1ce6c3ec21ec99d0537729e5
             notifications = fetch_bus_notifications(
                 cr,
                 self._min_id_by_channel,
                 [n[0] for n in self._notif_history],
+||||||| 520a344a8d4c59bd0510d99e61f374f69edf98f5
+            notifications = fetch_bus_notifications(
+                cr, self._channels, self._last_notif_sent_id, [n[0] for n in self._notif_history]
+=======
+            notifications, has_more_notifications = fetch_bus_notifications_batch(
+                cr, self._channels, self._last_notif_sent_id, [n[0] for n in self._notif_history]
+>>>>>>> 1e684918e71bb256198c2b15d3625d09f501ab17
             )
         if not notifications:
             return
@@ -846,6 +854,8 @@ class Websocket:
                     self._min_id_by_channel[channel] = new_min_id
             self._notif_history = self._notif_history[last_index + 1 :]
         self._send(notifications)
+        if has_more_notifications:
+            self.trigger_notification_dispatching()
 
 
 class TimeoutManager:
