@@ -162,6 +162,15 @@ class IrQweb(models.AbstractModel):
                 atts[name] = website.get_cdn_url(atts[name])
             if data_name in atts and atts[data_name] not in (False, None, ()):
                 atts[data_name] = website.get_cdn_url(atts[data_name])
+        if tagName == 'img' and atts.get('srcset'):
+            atts = OrderedDict(atts)
+            candidates = []
+            for candidate in re.split(r',\s+', str(atts['srcset']).strip()):
+                if not candidate:
+                    continue
+                url, *descriptors = candidate.split()
+                candidates.append(' '.join([website.get_cdn_url(url), *descriptors]))
+            atts['srcset'] = ', '.join(candidates)
         atts = self._adapt_style_background_image(atts, website.get_cdn_url)
 
         return atts
