@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, get_lang
+from odoo import Command, api, fields, models
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare, get_lang, float_is_zero
 
 
 class PurchaseOrder(models.Model):
@@ -103,28 +103,60 @@ class PurchaseOrder(models.Model):
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
+    requisition_line_id = fields.Many2one('purchase.requisition.line', string='Blanket Order Line')
+
     def _compute_price_unit_and_date_planned_and_name(self):
         po_lines_without_requisition = self.env['purchase.order.line']
         for pol in self:
-            if pol.display_type or pol.product_id.id not in pol.order_id.requisition_id.line_ids.product_id.ids:
+            if pol.display_type or not pol.requisition_line_id:
                 po_lines_without_requisition |= pol
                 continue
 
-            line = None
-            # Match the requisition line with exact UoM first, then product-only as fallback.
-            for req_line in pol.order_id.requisition_id.line_ids:
-                if req_line.product_id == pol.product_id:
-                    line = req_line
-                    if req_line.uom_id == pol.uom_id:
-                        break
-
+            line = pol.requisition_line_id
             pol.price_unit = line.uom_id._compute_price(line.price_unit, pol.uom_id)
             partner = pol.order_id.partner_id or pol.order_id.requisition_id.vendor_id
             if pol.selected_seller_id or not pol.date_planned:
                 pol.date_planned = pol._get_date_planned(pol.selected_seller_id._get_seller_info())
             product_ctx = {'seller_id': pol.selected_seller_id.id, 'lang': get_lang(pol.env, partner.lang).code}
-            name = pol._get_product_purchase_description(pol.product_id.with_context(product_ctx))
+
+            descriptions = []
+            product_purchase_description = pol._get_product_purchase_description(pol.product_id.with_context(product_ctx))
+            if product_purchase_description:
+                descriptions += product_purchase_description.split('\n')
+            if line.name:
+                descriptions += line.name.split('\n')
             if line.product_description_variants:
-                name += '\n' + line.product_description_variants
-            pol.name = name
+                descriptions.append(line.product_description_variants)
+            pol.name = '\n'.join(descriptions)
         super(PurchaseOrderLine, po_lines_without_requisition)._compute_price_unit_and_date_planned_and_name()
+
+    def create(self, vals_list):
+        """
+        If we create a purchase order line with a requisition_id, we link the purchase order lines to the requisition
+        lines.
+        :param vals_list:
+        :return:
+        """
+        res = super().create(vals_list)
+        results = self.env['purchase.order.line']
+        precision = self.env['decimal.precision'].precision_get('Product Unit')
+        for purchase_order, purchase_order_lines in res.grouped('order_id').items():
+            if not purchase_order.requisition_id or self.env.context.get('skip_requisition_match', False):
+                results |= purchase_order_lines
+                continue
+            product_requisition_line = purchase_order.requisition_id.line_ids.grouped('product_id')
+            for pol in purchase_order_lines.filtered(lambda pol: not pol.requisition_line_id and pol.product_id in product_requisition_line):
+                for requisition_line in product_requisition_line[pol.product_id]:
+                    remaining = requisition_line.product_qty - requisition_line.qty_ordered
+                    pol_quantity = requisition_line.uom_id._compute_quantity(pol.product_qty, pol.uom_id)
+                    if float_is_zero(remaining, precision):
+                        continue
+                    if float_compare(remaining, pol_quantity, precision) >= 0:
+                        pol.write(requisition_line._prepare_purchase_order_line("", pol_quantity, pol.price_unit, pol.tax_ids.ids))
+                        results |= pol
+                        break
+                    new_pol = pol.with_context(skip_requisition_match=True).copy()
+                    new_pol.write(requisition_line._prepare_purchase_order_line("", remaining, pol.price_unit, pol.tax_ids.ids))
+                    results |= new_pol
+                    pol.product_qty -= remaining
+        return results
