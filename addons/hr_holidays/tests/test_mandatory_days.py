@@ -404,6 +404,41 @@ class TestHrLeaveMandatoryDays(TransactionCase):
         self.assertTrue(leave_1.has_mandatory_day)
         self.assertFalse(leave_2.has_mandatory_day)
 
+    @freeze_time('2021-10-15')
+    def test_multi_company_mandatory_days(self):
+        """ A mandatory day of another company must not apply to the employee,
+        even when leaves of both companies are computed together. """
+        company_b = self.env['res.company'].create({'name': 'Company B'})
+        employee_b = self.env['hr.employee'].create({
+            'name': 'Company B Employee',
+            'company_id': company_b.id,
+        })
+        self.env['hr.leave.mandatory.day'].create({
+            'name': 'Company B Event',
+            'company_id': company_b.id,
+            'start_date': datetime(2021, 11, 3),
+            'end_date': datetime(2021, 11, 3),
+            'color': 5,
+        })
+
+        leave_a, leave_b = self.env['hr.leave'].with_context(leave_fast_create=True).create([{
+            'name': 'Company A leave',
+            'work_entry_type_id': self.work_entry_type.id,
+            'employee_id': self.employee_emp.id,
+            'request_date_from': datetime(2021, 11, 3),
+            'request_date_to': datetime(2021, 11, 3),
+        }, {
+            'name': 'Company B leave',
+            'work_entry_type_id': self.work_entry_type.id,
+            'employee_id': employee_b.id,
+            'request_date_from': datetime(2021, 11, 3),
+            'request_date_to': datetime(2021, 11, 3),
+        }])
+
+        (leave_a + leave_b).invalidate_recordset(['has_mandatory_day'])
+        self.assertFalse(leave_a.has_mandatory_day)
+        self.assertTrue(leave_b.has_mandatory_day)
+
     @freeze_time('2025-05-11')
     def test_cancel_leave_on_mandatory_days(self):
         """
