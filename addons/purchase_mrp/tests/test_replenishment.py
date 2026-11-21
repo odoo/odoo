@@ -2,6 +2,58 @@ from odoo.addons.stock.tests.common import TestStockCommon
 
 
 class TestReplenishment(TestStockCommon):
+    def test_batch_lead_days_respect_product_sellers(self):
+        """Batch lead-time computation must respect each product's sellers."""
+        self.env.company.horizon_days = 0
+        self.env.company.days_to_purchase = 0
+        warehouse = self.warehouse_1
+        warehouse.manufacture_steps = 'pbm'
+        # At Stock, prefer Buy when the product has a seller. Without a seller,
+        # the Buy route is unavailable and Manufacture is used instead.
+        warehouse.buy_pull_id.route_id.sequence = 1
+        warehouse.manufacture_pull_id.route_id.sequence = 100
+        # Normally the Stock-to-Pre-Production transfer stops the search for
+        # earlier supply rules. Make it propagate the demand back to Stock so
+        # the Buy-versus-Manufacture choice above becomes part of the lead time.
+        stock_to_preproduction_rule = warehouse.pbm_route_id.rule_ids.filtered(
+            lambda rule: rule.location_dest_id == warehouse.pbm_loc_id
+        )
+        stock_to_preproduction_rule.ensure_one()
+        stock_to_preproduction_rule.procure_method = 'make_to_order'
+
+        product_without_seller, product_with_seller = self.env['product.product'].create([{
+            'name': 'Manufactured without seller',
+            'is_storable': True,
+        }, {
+            'name': 'Manufactured with seller',
+            'is_storable': True,
+        }])
+        # Manufacture is a valid fallback only for products having a normal BoM.
+        self.env['mrp.bom'].create([{
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_qty': 1,
+        } for product in (product_without_seller, product_with_seller)])
+        self.env['product.supplierinfo'].create({
+            'product_id': product_with_seller.id,
+            'partner_id': self.partner_1.id,
+            'delay': 10,
+        })
+        orderpoints = self.env['stock.warehouse.orderpoint'].create([{
+            'product_id': product.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'route_id': warehouse.manufacture_pull_id.route_id.id,
+        } for product in (product_without_seller, product_with_seller)])
+
+        # Establish the lead time expected from each product's supply route.
+        for orderpoint in orderpoints:
+            orderpoint._compute_lead_days()
+        individual_lead_days = orderpoints.mapped('lead_days')
+        self.assertEqual(individual_lead_days, [0, 10])
+
+        # Computing both orderpoints together must give the same result.
+        orderpoints._compute_lead_days()
+        self.assertEqual(orderpoints.mapped('lead_days'), individual_lead_days)
+
     def test_effective_route(self):
         orderpoint = self.env['stock.warehouse.orderpoint'].create({
             'product_id': self.productA.id,
