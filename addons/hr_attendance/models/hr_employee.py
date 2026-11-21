@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import datetime
+from collections import defaultdict
 from datetime import time
 from zoneinfo import ZoneInfo
 
@@ -194,19 +195,37 @@ class HrEmployee(models.Model):
             is_users_employee = has_attendance_own_reader_group and employee in current_user.employee_ids
             employee.display_attendances = has_attendance_user_group or is_approver or is_users_employee
 
-    @api.depends('attendance_ids.worked_hours', 'attendance_ids.time_rule_id', 'attendance_ids.state')
-    def _compute_total_overtime(self):
-        overtime_by_employee = dict(self.env['hr.attendance']._read_group(
+    def _get_time_rule_hours(self, domain=None):
+        """Return the net hours of the time rule outputs of the employees.
+
+        The outputs of ``exceed`` rules count positively, those of ``less_than`` rules (missing
+        time) negatively. The outputs of archived rules still count.
+
+        :param list domain: extra domain on the ``hr.attendance`` outputs
+        :return: ``{employee: hours}``
+        :rtype: defaultdict
+        """
+        hours_by_employee = defaultdict(float)
+        for employee, rule, hours in self.env['hr.attendance']._read_group(
             domain=[
                 ('employee_id', 'in', self.ids),
                 ('time_rule_id', '!=', False),
-                ('state', '=', 'validated'),
+                *(domain or []),
             ],
-            groupby=['employee_id'],
+            groupby=['employee_id', 'time_rule_id'],
             aggregates=['worked_hours:sum'],
-        ))
+        ):
+            sign = -1 if rule.sudo().threshold_operator == 'less_than' else 1
+            hours_by_employee[employee] += sign * hours
+        return hours_by_employee
+
+    @api.depends('attendance_ids.worked_hours', 'attendance_ids.time_rule_id', 'attendance_ids.state')
+    def _compute_total_overtime(self):
+        """Compute ``total_overtime``: the net hours of the validated time rule outputs, see
+        :meth:`_get_time_rule_hours`. It is negative when the missing time exceeds the extra time."""
+        overtime_by_employee = self._get_time_rule_hours([('state', '=', 'validated')])
         for employee in self:
-            employee.total_overtime = overtime_by_employee.get(employee, 0.0)
+            employee.total_overtime = overtime_by_employee[employee]
 
     @api.depends('attendance_ids', 'attendance_ids.check_in', 'attendance_ids.check_out', 'attendance_ids.worked_hours', 'attendance_ids.time_rule_id')
     def _compute_hours_last_month(self):

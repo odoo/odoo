@@ -135,7 +135,7 @@ test("checkout greeting can continue to break entry", async () => {
     expect.verifySteps(["continue break"]);
 });
 
-test("check-out greeting hides the extra hours without overtime", async () => {
+test("check-out greeting shows the extra hours even without overtime", async () => {
     const employeeData = {
         ...getEmployeeData({
             check_in: "2026-07-21 09:30:00",
@@ -148,10 +148,12 @@ test("check-out greeting hides the extra hours without overtime", async () => {
     await mountWithCleanup(KioskGreetings, {
         props: { employeeData, kioskReturn: () => {} },
     });
-    expect(".o_hr_attendance_kiosk_card").not.toHaveText(/extra hours/i);
+    expect(".o_hr_attendance_kiosk_card").toHaveText(/extra hours/i);
+    expect(".o_hr_attendance_kiosk_card").toHaveText(/Today/);
+    expect(".o_hr_attendance_kiosk_card").toHaveText(/Total/);
 });
 
-test("check-out greeting shows the extra hours of the day", async () => {
+test("check-out greeting shows a negative total of extra hours", async () => {
     const employeeData = {
         ...getEmployeeData({
             check_in: "2026-07-21 09:30:00",
@@ -159,11 +161,11 @@ test("check-out greeting shows the extra hours of the day", async () => {
         }),
         display_overtime: true,
         overtime_today: 2,
-        total_overtime: 0,
+        total_overtime: -1.5,
     };
     await mountWithCleanup(KioskGreetings, {
         props: { employeeData, kioskReturn: () => {} },
     });
     expect(".o_hr_attendance_kiosk_card").toHaveText(/extra hours/i);
-    expect(".o_hr_attendance_kiosk_card").not.toHaveText(/Total/);
+    expect(".o_hr_attendance_kiosk_card").toHaveText(/Total\s*-1h\s*30m/);
 });

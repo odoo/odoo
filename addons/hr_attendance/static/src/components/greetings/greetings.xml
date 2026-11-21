@@ -55,7 +55,7 @@
                                         <strong><t t-out="this.hoursToday()"/></strong>
                                     </t>
                                 </div>
-                                <div t-if="this.attendance.check_out and this.overtimeToday()"
+                                <div t-if="this.attendance.check_out and this.props.employeeData.display_overtime"
                                     class="alert alert-warning d-flex flex-column gap-2 mb-0
                                     p-2 p-xl-2 border border-warning text-center">
                                     <div class="small fw-bolder text-uppercase">
@@ -66,7 +66,7 @@
                                             <span class="text-nowrap">Today</span>
                                             <span class="fs-6"><strong><t t-out="this.overtimeToday()"/></strong></span>
                                         </div>
-                                        <div t-if="this.totalOvertime()" class="d-flex flex-column w-100 mb-0">
+                                        <div class="d-flex flex-column w-100 mb-0">
                                             <span class="text-nowrap">Total</span>
                                             <span class="fs-6"><strong><t t-out="this.totalOvertime()"/></strong></span>
                                         </div>
