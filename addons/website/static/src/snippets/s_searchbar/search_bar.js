@@ -38,7 +38,9 @@ export class SearchBar extends Interaction {
         this.inputEl = this.el.querySelector(".search-query");
         this.buttonEl = this.el.querySelector(".oe_search_button");
         this.resultsEl = this.buttonEl.querySelector(".o_search_found_results");
-        this.iconEl = this.buttonEl.querySelector(".oi-search");
+        this.buttonContentEls = this.buttonEl.querySelectorAll(
+            ":scope > :not(.o_search_spinner, .o_search_found_results)"
+        );
         this.spinnerEl = this.buttonEl.querySelector(".o_search_spinner");
         this.searchInputGroup = this.el.querySelector(".o_search_input_group");
         this.menuEl = null;
@@ -157,13 +159,13 @@ export class SearchBar extends Interaction {
 
     hideLoadingSpinner() {
         this.resultsEl.classList.toggle("d-none", !this.hasDropdown);
-        this.iconEl.classList.toggle("d-none", this.hasDropdown);
+        this.buttonContentEls.forEach((el) => el.classList.toggle("d-none", this.hasDropdown));
         this.spinnerEl.classList.add("d-none");
     }
 
     showLoadingSpinner() {
         this.resultsEl.classList.add("d-none");
-        this.iconEl.classList.add("d-none");
+        this.buttonContentEls.forEach((el) => el.classList.add("d-none"));
         this.spinnerEl.classList.remove("d-none");
     }
 
