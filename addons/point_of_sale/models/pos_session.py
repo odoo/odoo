@@ -1491,6 +1491,7 @@ class PosSession(models.Model):
             'move_id': self.move_id.id,
             'tax_ids': [(6, 0, tax_ids)],
             'tax_tag_ids': [(6, 0, base_tag_ids)],
+            'tax_tag_invert': sign == 1,
             'product_id': product_id,
             'display_type': 'product',
             'product_uom_id': product_uom,
