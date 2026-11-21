@@ -1447,6 +1447,82 @@ test("MediaDialog contains 'Videos' tab when sanitize_tags = true and 'allowVide
     ]);
 });
 
+<<<<<<< eedc4067655222d7bced965cc9371ad641c1e168
+||||||| 6201a6d5054455d88db072fc2e4bfed7a8d28486
+test("Image should not be inserted in a formatted empty node", async () => {
+    Partner._records = [
+        {
+            id: 1,
+            txt: `<div class="o-paragraph"><strong>test</strong></div>
+                    <div class="o-paragraph">
+                        <strong data-oe-zws-empty-inline="">\u200b</strong><br />
+                    </div>`,
+        },
+    ];
+
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html"/>
+            </form>`,
+    });
+    setSelection({
+        anchorNode: queryOne("div.o-paragraph strong[data-oe-zws-empty-inline]"),
+        anchorOffset: 0,
+    });
+    await insertText(htmlEditor, "/media");
+    await waitFor(".o-we-powerbox");
+    expect(queryAllTexts(".o-we-command-name")[0]).toBe("Media");
+
+    await press("Enter");
+    await animationFrame();
+    await click(queryFirst(".o_existing_attachment_cell button"));
+    await animationFrame();
+    const img = htmlEditor.editable.querySelector("div.o-paragraph img");
+    expect(img.parentElement.nodeName).toBe("DIV");
+});
+
+=======
+test("Image should not be inserted in a formatted empty node", async () => {
+    Partner._records = [
+        {
+            id: 1,
+            txt: `<div class="o-paragraph"><strong>test</strong></div>
+                    <div class="o-paragraph">
+                        <strong data-oe-zws-empty-inline=""></strong><br />
+                    </div>`,
+        },
+    ];
+
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html"/>
+            </form>`,
+    });
+    setSelection({
+        anchorNode: queryOne("div.o-paragraph strong[data-oe-zws-empty-inline]"),
+        anchorOffset: 0,
+    });
+    await insertText(htmlEditor, "/media");
+    await waitFor(".o-we-powerbox");
+    expect(queryAllTexts(".o-we-command-name")[0]).toBe("Media");
+
+    await press("Enter");
+    await animationFrame();
+    await click(queryFirst(".o_existing_attachment_cell button"));
+    await animationFrame();
+    const img = htmlEditor.editable.querySelector("div.o-paragraph img");
+    expect(img.parentElement.nodeName).toBe("DIV");
+});
+
+>>>>>>> 3a58afa7de0685b7229614e92a8ff1291720859e
 test("'Media' command is available by default", async () => {
     await mountView({
         type: "form",
