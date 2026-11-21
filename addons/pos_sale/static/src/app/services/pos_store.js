@@ -68,10 +68,12 @@ patch(PosStore.prototype, {
         this.selectOrderLine(this.getOrder(), this.getOrder().lines.at(-1));
     },
     async _getSaleOrder(id) {
-        const result = await this.data.callRelated("sale.order", "load_sale_order_from_pos", [
-            id,
-            this.config.id,
-        ]);
+        const result = await this.data.callRelated(
+            "sale.order",
+            "load_sale_order_from_pos",
+            [id, this.config.id],
+            { context: { pos_data_server_date: this.config._data_server_date } }
+        );
         const sale_order = (await this.data.read("sale.order", [id]))[0];
         const orderlines = await this.data.read("sale.order.line", sale_order.raw.order_line);
         sale_order.order_line = orderlines;
