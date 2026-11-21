@@ -7,48 +7,38 @@ class Translator {
     }
 
     /**
-     * translate text to a given language, returns the translated text and
-     * indicates if there was an error
+     * Translate an HTML fragment to a given language.
      *
-     * @param {String} originalText the text needs to be translated
-     * @param {String} targetLang the destination language
+     * @param {string} originalHtml the HTML that needs to be translated
+     * @param {{ languageCode: string, languageName: string }} targetLang the
+     *        destination language
      *
-     * @returns {Object} { translatedText: String, isError: Boolean }
+     * @returns {Promise<{ translatedHtml: string } | { isError: true, message: string }>}
      */
-    async translate(originalText, targetLang) {
-        const translatedText = `Translated content`; // Placeholder for actual translation logic
-        return {
-            translatedText: translatedText,
-            isError: false,
-        };
+    async translate(originalHtml, targetLang) {
+        return { translatedHtml: originalHtml }; // Placeholder for actual translation logic
     }
 }
 
 export class GoogleTranslator extends Translator {
-    async translate(originalText, targetLang) {
-        const protectedCallback = (content) => {
+    async translate(originalHtml, targetLang) {
+        const protectedCallback = (result) => {
             delete this.pendingRpcPromise;
-            return {
-                translatedText: content.translated_text,
-                isError: content.isError || false,
-            };
+            return result;
         };
         const googleLanguageCode = targetLang.languageCode.replace("_", "-"); // Google Translate API expects language codes in the format "en-US"
         this.pendingRpcPromise = rpc(
             "/html_editor/google_translate",
             {
-                originalText,
+                originalHtml,
                 targetLang: googleLanguageCode,
             },
             { silent: true }
         );
         return await this.pendingRpcPromise
-            .then((content) => protectedCallback(content))
+            .then((content) => protectedCallback({ translatedHtml: content.translated_html }))
             .catch((error) =>
-                protectedCallback({
-                    translated_text: error.data?.message || error.message,
-                    isError: true,
-                })
+                protectedCallback({ isError: true, message: error.data?.message || error.message })
             );
     }
 }
@@ -60,11 +50,16 @@ export class ChatGPTTranslator extends Translator {
             {
                 role: "system",
                 content:
-                    "You are a translation assistant. You goal is to translate text while maintaining the original format and" +
-                    "respecting specific instructions. \n" +
-                    "Instructions: \n" +
-                    "- You must respect the format (wrapping the translated text between <generated_text> and </generated_text>)\n" +
-                    "- Do not write HTML.",
+                    "You are an HTML-aware translation assistant. Your goal is to translate the text content of the provided HTML into the target language while preserving the HTML structure exactly.\n" +
+                    "Instructions:\n" +
+                    "- Wrap the entire output between <generated_html> and </generated_html>. Output nothing outside these tags.\n" +
+                    "- The input is an HTML fragment. Translate only the human-readable text nodes (including text inside nested elements).\n" +
+                    "- Preserve every tag, attribute (names and values), attribute order, inline style, class, id, data-* attribute, and nesting exactly as given. Do not add, remove, reorder, or merge elements.\n" +
+                    "- Preserve whitespace, line breaks, and HTML entities (e.g. &nbsp;, &amp;) as in the input.\n" +
+                    "- Do not translate or alter: code/pre content, URLs.\n" +
+                    "- Keep the text flowing naturally in the target language; word order inside a sentence may change as long as the surrounding tags still wrap the equivalent words.\n" +
+                    "- Do not wrap the output in markdown code fences, do not add explanations, comments, or notes.\n" +
+                    "- If the input contains no translatable text, return it unchanged inside the tags.\n",
             },
         ];
     }
@@ -87,30 +82,27 @@ export class ChatGPTTranslator extends Translator {
             .catch((error) => protectedCallback(error.data?.message || error.message, true));
     }
 
-    async translate(originalText, targetLang) {
-        const query = `Translate <generated_text>${originalText}</generated_text> to ${targetLang.languageName}`;
+    async translate(originalHtml, targetLang) {
+        const query = `Translate <generated_html>${originalHtml}</generated_html> to ${targetLang.languageName}`;
         function contentCleaningCallback(content, isError) {
-            const translatedText = content
-                .replace(/^[\s\S]*<generated_text>/, "")
-                .replace(/<\/generated_text>[\s\S]*$/, "");
-            if (!isError) {
-                // There was no error, add the response to the history.
-                this.conversationHistory.push(
-                    {
-                        role: "user",
-                        content: query,
-                    },
-                    {
-                        role: "assistant",
-                        content,
-                    }
-                );
+            if (isError) {
+                return { isError: true, message: content };
             }
-
-            return {
-                translatedText,
-                isError,
-            };
+            const translatedHtml = content
+                .replace(/^[\s\S]*<generated_html>/, "")
+                .replace(/<\/generated_html>[\s\S]*$/, "");
+            // There was no error, add the response to the history.
+            this.conversationHistory.push(
+                {
+                    role: "user",
+                    content: query,
+                },
+                {
+                    role: "assistant",
+                    content,
+                }
+            );
+            return { translatedHtml };
         }
 
         return await this.generate(query, contentCleaningCallback.bind(this));
