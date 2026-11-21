@@ -31,6 +31,8 @@ function forceInstantScroll(args) {
 
 const animationChangeBus = new MockEventTarget();
 const animationChangeCleanups = [];
+/** @type {Set<Animation>} */
+const runningAnimations = new Set();
 
 let allowAnimations = true;
 let allowTransitions = false;
@@ -84,6 +86,18 @@ export function cleanupAnimations() {
     allowAnimations = true;
     allowTransitions = false;
 
+    // Running animations retain their target, and everything it references, until
+    // they end (in real time)
+    for (const animation of runningAnimations) {
+        try {
+            animation.finish();
+        } catch {
+            // Infinite animations cannot be finished
+            animation.cancel();
+        }
+    }
+    runningAnimations.clear();
+
     while (animationChangeCleanups.length) {
         animationChangeCleanups.pop()();
     }
@@ -115,7 +129,9 @@ export function enableTransitions(enable = true) {
 /** @type {Element["animate"]} */
 export function mockedAnimate(...args) {
     if (allowAnimations) {
-        return animate.call(this, ...args);
+        const animation = animate.call(this, ...args);
+        runningAnimations.add(animation);
+        return animation;
     }
 
     // Apply style properties immediatly
