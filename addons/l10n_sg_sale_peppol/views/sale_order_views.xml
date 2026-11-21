@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <record id="sale_order_form_inherit" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']//list//field[@name='analytic_distribution']" position="after">
+                <field name="l10n_sg_delivery_start"
+                       string="Requested Delivery"
+                       widget="daterange"
+                       options="{'end_date_field': 'l10n_sg_delivery_end'}"
+                       optional="show"/>
+                <field name="l10n_sg_line_note" optional="show"/>
+            </xpath>
+            <xpath expr="//header/*[1]" position="before">
+                <button name="action_apply_peppol_order_change"
+                        type="object"
+                        string="Accept Change"
+                        invisible="not l10n_sg_has_pending_order_change"
+                        groups="sales_team.group_sale_salesman,account.group_account_invoice"/>
+                <button name="action_reject_peppol_order_change"
+                        type="object"
+                        string="Reject Change"
+                        invisible="not l10n_sg_has_pending_order_change"
+                        groups="sales_team.group_sale_salesman,account.group_account_invoice"/>
+                <button name="action_apply_peppol_order_cancel"
+                        type="object"
+                        string="Accept Cancellation"
+                        invisible="not l10n_sg_has_pending_order_cancel"
+                        groups="sales_team.group_sale_salesman,account.group_account_invoice"/>
+                <button name="action_reject_peppol_order_cancel"
+                        type="object"
+                        string="Reject Cancellation"
+                        invisible="not l10n_sg_has_pending_order_cancel"
+                        groups="sales_team.group_sale_salesman,account.group_account_invoice"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="EDI Trackers" name="order_lines" groups="base.group_no_one,sales_team.group_sale_manager">
+                    <group>
+                        <field name="l10n_sg_peppol_buyer_endpoint"/>
+                    </group>
+                    <field
+                        name="l10n_sg_peppol_order_tx_ids"
+                        mode="list"
+                    >
+                        <list
+                            string="EDI Trackers"
+                            editable="bottom"
+                            limit="200"
+                        >
+                            <field name="sequence"/>
+                            <field name="document_type"/>
+                            <field name="state"/>
+                            <field name="attachment_id"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
