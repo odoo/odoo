@@ -315,7 +315,7 @@
     <div class="card w-100 h-100 text-decoration-none" t-att-data-publish="channel.website_published and 'on' or 'off'">
         <t t-if="not channel.website_published" t-call="website.unpublished_badge"/>
         <t t-set="channel_frontend_tags" t-value="channel.tag_ids.filtered(lambda tag: tag.color)"/>
-        <a t-attf-href="/slides/#{slug(channel)}" t-title="channel.name">
+        <a t-attf-href="/slides/#{slug(channel)}" t-title="channel.name" tabindex="-1" aria-hidden="true">
             <div t-field="channel.image_1920" t-options="{'widget': 'image', 'preview_image': 'image_512'}" class="o_wslides_background_image ratio ratio-16x9"/>
             <t t-if="channel.partner_has_new_content" t-call="website_slides.course_card_information"/>
         </a>

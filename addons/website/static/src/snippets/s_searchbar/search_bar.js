@@ -14,6 +14,7 @@ export class SearchBar extends Interaction {
     dynamicContent = {
         _root: {
             "t-on-focusout": this.debounced(this.onFocusOut, 100),
+            "t-on-keyup": this.onKeyup,
             "t-on-safarihack": (ev) => (this.linkHasFocus = ev.detail.linkHasFocus),
             "t-att-class": () => ({
                 dropdown: this.hasDropdown,
@@ -211,9 +212,6 @@ export class SearchBar extends Interaction {
         }
     }
 
-    /**
-     * @param {MouseEvent} ev
-     */
     onKeydown(ev) {
         switch (ev.key) {
             case "Escape":
@@ -235,9 +233,12 @@ export class SearchBar extends Interaction {
             case "Enter":
                 this.limit = 0; // prevent autocomplete
                 break;
-            case "Tab":
-                this.el.classList.add("o_keyboard_navigation");
-                break;
+        }
+    }
+
+    onKeyup(ev) {
+        if (ev.key === "Tab") {
+            this.el.classList.add("o_keyboard_navigation");
         }
     }
 

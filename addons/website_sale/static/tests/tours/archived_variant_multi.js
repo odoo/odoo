@@ -53,6 +53,7 @@ registry.category("web_tour.tours").add('website_sale.pills_variant', {
                     return style.display === "none" ||
                         style.visibility === "hidden" ||
                         style.opacity === "0" ||
+                        style.appearance === "none" ||
                         (style.width === "0px" && style.height === "0px")
                 }
 

@@ -231,11 +231,11 @@
                                 <label
                                     name="o_wsale_attribute_thumbnail_selector"
                                     t-attf-style="background-image: url(#{img_url}); background-size: cover;"
-                                    t-attf-class="css_attribute_thumbnail oe_img_bg o_bg_img_center position-relative d-block bg-body cursor-pointer #{'active' if ptav in combination else ''}"
+                                    t-attf-class="css_attribute_thumbnail oe_img_bg o_bg_img_center position-relative d-inline-block bg-body cursor-pointer #{'active' if ptav in combination else ''}"
                                 >
                                     <input
                                         type="radio"
-                                        t-attf-class="js_variant_change opacity-0 cursor-pointer #{attribute.create_variant}"
+                                        t-attf-class="js_variant_change cursor-pointer #{attribute.create_variant}"
                                         t-att-checked="ptav in combination"
                                         t-att-name="'ptal-%s' % ptal.id"
                                         t-att-value="ptav.id"
@@ -317,7 +317,7 @@
                             <t t-foreach="ptavs" t-as="ptav">
                                 <li t-attf-class="o_variant_pills js_attribute_value border btn m-0 cursor-pointer #{'active border-primary text-primary-emphasis bg-primary-subtle' if ptav in combination else ''}">
                                     <input type="radio"
-                                        t-attf-class="js_variant_change position-absolute #{attribute.create_variant} opacity-0 cursor-pointer"
+                                        t-attf-class="js_variant_change #{attribute.create_variant} cursor-pointer"
                                         t-att-checked="ptav in combination"
                                         t-att-name="'ptal-%s' % ptal.id"
                                         t-att-value="ptav.id"
@@ -355,7 +355,7 @@
                                 <label
                                     name="o_wsale_attribute_color_selector"
                                     t-attf-style="#{img_style or color_style}"
-                                    t-attf-class="css_attribute_color cursor-pointer #{'active' if ptav in combination else ''} #{'custom_value' if ptav.is_custom else ''} #{'transparent' if (not ptav.is_custom and not ptav.html_color) else ''}"
+                                    t-attf-class="css_attribute_color o_forced_colors_preserve cursor-pointer #{'active' if ptav in combination else ''} #{'custom_value' if ptav.is_custom else ''} #{'transparent' if (not ptav.is_custom and not ptav.html_color) else ''}"
                                 >
                                       <input type="radio"
                                         t-attf-class="js_variant_change cursor-pointer #{attribute.create_variant}"
@@ -389,7 +389,7 @@
                                 >
                                     <input
                                         type="radio"
-                                        t-attf-class="js_variant_change w-100 h-100 opacity-0 cursor-pointer #{attribute.create_variant}"
+                                        t-attf-class="js_variant_change cursor-pointer #{attribute.create_variant}"
                                         t-att-checked="ptav in combination"
                                         t-att-name="'ptal-%s' % ptal.id"
                                         t-att-value="ptav.id"
@@ -471,7 +471,7 @@
                             <t t-set="is_main_uom" t-value="uom.id == main_uom.id"/>
                             <li t-attf-class="o_packaging_button o_variant_pills border btn m-0 cursor-pointer #{'active border-primary text-primary-emphasis bg-primary-subtle' if is_main_uom else ''}">
                                 <input
-                                    class="position-absolute opacity-0 cursor-pointer"
+                                    class="cursor-pointer"
                                     type="radio"
                                     t-att-checked="is_main_uom"
                                     name="uom_id"
