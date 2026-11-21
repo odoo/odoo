@@ -4498,7 +4498,8 @@ class TestRequiredMany2one(TransactionCase):
         self.env.transaction.will_change_registry()
         self.patch(field, 'ondelete', 'set null')
 
-        with self.assertRaises(ValueError):
+        from odoo.orm.utils import RegistrySetupError  # noqa: PLC0415
+        with self.assertRaises(RegistrySetupError):
             field._setup(Model)
 
 
@@ -4521,7 +4522,8 @@ class TestRequiredMany2oneTransient(TransactionCase):
         self.env.transaction.will_change_registry()
         self.patch(field, 'ondelete', 'set null')
 
-        with self.assertRaises(ValueError):
+        from odoo.orm.utils import RegistrySetupError  # noqa: PLC0415
+        with self.assertRaises(RegistrySetupError):
             field._setup(Model)
 
 
@@ -4935,7 +4937,8 @@ class TestSelectionOndeleteAdvanced(TransactionCase):
 
         add_to_registry(self.registry, Foo)
 
-        with self.assertRaises(ValueError):
+        from odoo.orm.utils import RegistrySetupError  # noqa: PLC0415
+        with self.assertRaises(RegistrySetupError):
             self.registry._setup_models__(self.env.cr, [])  # incremental setup
 
     def test_ondelete_default_no_default(self):
@@ -4952,7 +4955,8 @@ class TestSelectionOndeleteAdvanced(TransactionCase):
 
         add_to_registry(self.registry, Foo)
 
-        with self.assertRaises(Exception):
+        from odoo.orm.utils import RegistrySetupError  # noqa: PLC0415
+        with self.assertRaises(RegistrySetupError):
             self.registry._setup_models__(self.env.cr, [])  # incremental setup
 
     def test_ondelete_value_no_valid(self):
@@ -4969,7 +4973,8 @@ class TestSelectionOndeleteAdvanced(TransactionCase):
 
         add_to_registry(self.registry, Foo)
 
-        with self.assertRaises(Exception):
+        from odoo.orm.utils import RegistrySetupError  # noqa: PLC0415
+        with self.assertRaises(RegistrySetupError):
             self.registry._setup_models__(self.env.cr, [])  # incremental setup
 
     def test_ondelete_required_null_explicit(self):
@@ -4986,7 +4991,8 @@ class TestSelectionOndeleteAdvanced(TransactionCase):
 
         add_to_registry(self.registry, Foo)
 
-        with self.assertRaises(ValueError):
+        from odoo.orm.utils import RegistrySetupError  # noqa: PLC0415
+        with self.assertRaises(RegistrySetupError):
             self.registry._setup_models__(self.env.cr, [])  # incremental setup
 
     def test_ondelete_required_null_implicit(self):
@@ -5003,7 +5009,8 @@ class TestSelectionOndeleteAdvanced(TransactionCase):
 
         add_to_registry(self.registry, Foo)
 
-        with self.assertRaises(ValueError):
+        from odoo.orm.utils import RegistrySetupError  # noqa: PLC0415
+        with self.assertRaises(RegistrySetupError):
             self.registry._setup_models__(self.env.cr, [])  # incremental setup
 
 
@@ -5322,7 +5329,8 @@ class TestWrongRelatedError(TransactionCase):
             "Field non_existing_field referenced in related field definition "
             "test_orm.wrong_related_path.foo_non_existing does not exist."
         )
-        with self.assertRaisesRegex(KeyError, errMsg):
+        from odoo.orm.utils import RegistrySetupError  # noqa: PLC0415
+        with self.assertRaisesRegex(RegistrySetupError, errMsg):
             self.registry._setup_models__(self.env.cr, [])  # incremental setup
 
 

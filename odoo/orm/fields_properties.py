@@ -9,7 +9,7 @@ import uuid
 from collections import abc, defaultdict
 from operator import attrgetter
 
-from odoo.exceptions import AccessError, UserError, MissingError
+from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.tools import SQL, OrderedSet, is_list_of, html_sanitize, sql
 from odoo.tools.misc import frozendict, has_list_types
 
@@ -18,7 +18,7 @@ from .fields import Field, _logger
 from .fields_temporal import BaseDate
 from .models import BaseModel
 from .query import Query
-from .utils import COLLECTION_TYPES, SQL_OPERATORS, parse_field_expr, regex_alphanumeric
+from .utils import COLLECTION_TYPES, SQL_OPERATORS, RegistrySetupError, parse_field_expr, regex_alphanumeric
 
 if typing.TYPE_CHECKING:
     from .query import FieldSQL, TableSQL
@@ -95,7 +95,8 @@ class Properties(Field['Property', dict]):
     def _setup_definition_attrs(self, model_class):
         if self.definition:
             # determine definition_record and definition_record_field
-            assert self.definition.count(".") == 1
+            if self.definition.count(".") != 1:
+                raise RegistrySetupError(f"{self}: definition={self.definition!r} should be of the form 'many2one_field.properties_definition_field'")
             self.definition_record, self.definition_record_field = self.definition.rsplit('.', 1)
 
             if not self.related:

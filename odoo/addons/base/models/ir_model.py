@@ -792,13 +792,13 @@ class IrModelFields(models.Model):
         for index, name in enumerate(names):
             field = self._get(model_name, name)
             if not field:
-                raise UserError(_(
+                raise ValidationError(_(
                     'Unknown field name "%(field_name)s" in related field "%(related_field)s"',
                     field_name=name,
                     related_field=self.related,
                 ))
             if index < last and not field.relation:
-                raise UserError(_(
+                raise ValidationError(_(
                     'Non-relational field name "%(field_name)s" in related field "%(related_field)s"',
                     field_name=name,
                     related_field=self.related,
@@ -810,7 +810,7 @@ class IrModelFields(models.Model):
                     and model_field._description_searchable
                 )
             ):
-                raise UserError(_(
+                raise ValidationError(_(
                     'Field "%(field_name)s" in related path "%(related_field)s" is not searchable. '
                     'Non-searchable fields cannot be used in related fields.',
                     field_name=name,
@@ -869,22 +869,22 @@ class IrModelFields(models.Model):
                 continue
             for seq in record.depends.split(","):
                 if not seq.strip():
-                    raise UserError(_("Empty dependency in “%s”", record.depends))
+                    raise ValidationError(_("Empty dependency in “%s”", record.depends))
                 model = self.env[record.model]
                 names = seq.strip().split(".")
                 last = len(names) - 1
                 for index, name in enumerate(names):
                     if name == 'id':
-                        raise UserError(_("Compute method cannot depend on field 'id'"))
+                        raise ValidationError(_("Compute method cannot depend on field 'id'"))
                     field = model._fields.get(name)
                     if field is None:
-                        raise UserError(_(
+                        raise ValidationError(_(
                             'Unknown field “%(field)s” in dependency “%(dependency)s”',
                             field=name,
                             dependency=seq.strip(),
                         ))
                     if index < last and not field.relational:
-                        raise UserError(_(
+                        raise ValidationError(_(
                             'Non-relational field “%(field)s” in dependency “%(dependency)s”',
                             field=name,
                             dependency=seq.strip(),
@@ -1376,6 +1376,7 @@ class IrModelFields(models.Model):
 
     def _reflect_fields(self, model_names):
         """ Reflect the fields of the given models. """
+        from odoo.orm.utils import setup_warning  # noqa: PLC0415
 
         for model_name in model_names:
             model = self.env[model_name]
@@ -1383,8 +1384,11 @@ class IrModelFields(models.Model):
             for field in model._fields.values():
                 if field.string in by_label:
                     other = by_label[field.string]
-                    _logger.warning('Two fields (%s, %s) of %s have the same label: %s. [Modules: %s and %s]',
-                                    field.name, other.name, model, field.string, field._module, other._module)
+                    setup_warning(
+                        field,
+                        f"same label as field {other.name}: {field.string!r} "
+                        f"[Modules: {field._module} and {other._module}]",
+                    )
                 else:
                     by_label[field.string] = field
 
@@ -1456,13 +1460,15 @@ class IrModelFields(models.Model):
         """
         if not model_names:
             return
+        from odoo.orm.utils import RegistrySetupError  # noqa: PLC0415
 
         def lookup_group(field, xmlid):
             try:
                 model, res_id = self.env['ir.model.data']._xmlid_lookup(xmlid)
-            except ValueError:
-                raise ValueError(f"{field} failed to lookup group xmlid {xmlid}")
-            assert model == 'res.groups' and res_id, "In"
+            except ValueError as e:
+                raise RegistrySetupError(f"{field}: failed to lookup group xmlid {xmlid}") from e
+            if model != 'res.groups':
+                raise RegistrySetupError(f"{field}: group xmlid {xmlid} is not a res.groups record")
             return res_id
 
         model_ids = [self.env['ir.model']._get_id(model_name) for model_name in model_names]
@@ -1787,13 +1793,14 @@ class IrModelFieldsSelection(models.Model):
         ]
         if not fields:
             return
+        from odoo.orm.utils import RegistrySetupError  # noqa: PLC0415
         if invalid_fields := OrderedSet(
             field for field in fields
             for selection in field.selection
             for value_label in selection
             if not isinstance(value_label, str)
         ):
-            raise ValidationError(_("Fields %s contain a non-str value/label in selection", invalid_fields))
+            raise RegistrySetupError(f"Fields {', '.join(map(str, invalid_fields))} contain a non-str value/label in selection")
 
         # determine expected and existing rows
         IMF = self.env['ir.model.fields']
@@ -2226,11 +2233,12 @@ class IrModelConstraint(models.Model):
 
     def _reflect_table_object(self, model):
         """ Reflect the _table_objects of the given model. """
+        from odoo.orm.utils import setup_warning  # noqa: PLC0415
         data_list = []
         for conname, cons in model._table_objects.items():
             module = cons._module
             if not conname or not module:
-                _logger.warning("Missing module or constraint name for %s", cons)
+                setup_warning(model._name, f"missing module or constraint name for {cons}")
                 continue
             definition = cons.get_definition(model.pool)
             message = cons.message

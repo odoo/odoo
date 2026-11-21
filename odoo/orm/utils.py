@@ -2,12 +2,13 @@ from __future__ import annotations
 
 import functools
 import re
+import warnings
 from collections.abc import Reversible
 from collections.abc import Set as AbstractSet
 
 import dateutil.relativedelta
 
-from odoo.exceptions import ValidationError
+from odoo.exceptions import RegistryError, ValidationError
 from odoo.tools import SQL, unique
 from odoo.tools.misc import freehash
 
@@ -68,6 +69,15 @@ SQL_OPERATORS = {
     "not =like": SQL(" NOT LIKE "),
     "not =ilike": SQL(" NOT ILIKE "),
 }
+
+
+class RegistrySetupError(RegistryError):
+    """Signal an invalid definition of models or fields, detected while
+    setting up the registry."""
+
+
+def setup_warning(obj, message: str, stacklevel: int = 1):
+    warnings.warn(f"{obj}: {message}", stacklevel=stacklevel + 1)
 
 
 def check_object_name(name):
