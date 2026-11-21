@@ -6,7 +6,6 @@ import { ProductCombo } from '@sale/js/models/product_combo';
 import {
     ProductConfiguratorDialog
 } from '@sale/js/product_configurator_dialog/product_configurator_dialog';
-import { getSelectedCustomPtav, serializeComboItem } from '@sale/js/sale_utils';
 import { browser } from '@web/core/browser/browser';
 import { serializeDateTime } from '@web/core/l10n/dates';
 import { rpc } from '@web/core/network/rpc';
@@ -15,7 +14,10 @@ import { redirect } from '@web/core/utils/urls';
 import {
     CartNotificationContainer
 } from '@website_sale/js/cart_notification/cart_notification_container/cart_notification_container';
-import wSaleUtils from "@website_sale/js/website_sale_utils";
+import wSaleUtils, {
+    serializeCartComboItem,
+    serializeCartProduct,
+} from "@website_sale/js/website_sale_utils";
 
 const { DateTime } = luxon;
 const AUTOCLOSE_NOTIFICATION_DELAY = 4000;
@@ -169,7 +171,7 @@ export class CartService {
                     quantity: remainingData.quantity,
                     uomId: uomId,
                     linked_products: preselectedComboItems.map(
-                        (comboItem) => this._serializeComboItem(
+                        (comboItem) => serializeCartComboItem(
                             comboItem, productTemplateId, remainingData.quantity
                         )
                     ),
@@ -308,7 +310,7 @@ export class CartService {
                         quantity: comboProductData.quantity,
                         // NOTE: no uom since not handled in combo configurator
                         linked_products: selectedComboItems.map(
-                            (comboItem) => this._serializeComboItem(
+                            (comboItem) => serializeCartComboItem(
                                 comboItem, productTemplateId, comboProductData.quantity
                             )
                         ),
@@ -365,7 +367,7 @@ export class CartService {
                 options,
                 ...additionalData,
                 save: async (mainProduct, optionalProducts, options) => {
-                    const product = this._serializeProduct(mainProduct);
+                    const product = serializeCartProduct(mainProduct);
                     resolve(this._makeRequest({
                         productTemplateId: product.product_template_id,
                         productId: product.product_id,
@@ -373,7 +375,7 @@ export class CartService {
                         uom_id: product.uom_id,
                         productCustomAttributeValues: product.product_custom_attribute_values,
                         noVariantAttributeValues: product.no_variant_attribute_value_ids,
-                        linked_products: optionalProducts.flatMap(p => this._serializeProduct(p)),
+                        linked_products: optionalProducts.flatMap(p => serializeCartProduct(p)),
                         shouldRedirectToCart: options.goToCart,
                         ...additionalData,
                     }));
@@ -381,79 +383,6 @@ export class CartService {
                 discard: () => resolve(0),
             });
         });
-    }
-
-    /**
-     * Serialize a product into a format understandable by the server.
-     *
-     * @param {Object} product - The product to serialize.
-     *
-     * @returns {Object|Object[]} - The serialized product, or an array containing the serialized
-     *     product followed by its serialized combo items if the product is an optional combo.
-     */
-    _serializeProduct(product) {
-        let serializedProduct = {
-            product_id: product.id,
-            product_template_id: product.product_tmpl_id,
-            parent_product_template_id: product.parent_product_tmpl_id,
-            quantity: product.quantity,
-            uom_id: product.uom.id,
-        }
-
-        if (!product.attribute_lines) {
-            return serializedProduct;
-        }
-
-        // Custom attributes.
-        serializedProduct.product_custom_attribute_values = [];
-        for (const ptal of product.attribute_lines) {
-            const selectedCustomPtav = getSelectedCustomPtav(ptal);
-            if (selectedCustomPtav) {
-                serializedProduct.product_custom_attribute_values.push({
-                    custom_product_template_attribute_value_id: selectedCustomPtav.id,
-                    custom_value: ptal.customValue ?? '',
-                });
-            }
-        }
-
-        // No variant attributes.
-        serializedProduct.no_variant_attribute_value_ids = product.attribute_lines
-            .filter(ptal => ptal.create_variant === 'no_variant')
-            .flatMap(ptal => ptal.selected_attribute_value_ids);
-
-        // If this optional product is a combo, also serialize its selected combo items so
-        // the server can create the corresponding cart lines linked to this product's line.
-        if (product.selectedComboItems?.length) {
-            return [
-                serializedProduct,
-                ...product.selectedComboItems.map(
-                    comboItem => this._serializeComboItem(
-                        comboItem, product.product_tmpl_id, product.quantity
-                    )
-                ),
-            ];
-        }
-
-        return serializedProduct;
-    }
-
-    /**
-     * Serialize a combo item into a format understandable by the server.
-     *
-     * @param {ProductComboItem} comboItem - The combo item to serialize.
-     * @param {Number} parentProductTemplateId - The parent's product template id, as a
-     *      `product.template` id.
-     * @param {Number} quantity - The quantity to add to the cart.
-     *
-     * @returns {Object} - The serialized combo item.
-     */
-    _serializeComboItem(comboItem, parentProductTemplateId, quantity) {
-        return {
-            product_template_id: comboItem.product.product_tmpl_id,
-            parent_product_template_id: parentProductTemplateId,
-            quantity: quantity,
-            ...serializeComboItem(comboItem),
-        };
     }
 
     //--------------------------------------------------------------------------
