@@ -9,5 +9,7 @@ export class MailMessageSubtype extends Record {
     id;
     /** @type {string} */
     name;
+    /** @type {number|false} */
+    parent_id;
 }
 MailMessageSubtype.register();
