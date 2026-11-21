@@ -601,7 +601,6 @@ class AccountAccount(models.Model):
             record.opening_credit = res['credit']
             record.opening_balance = res['balance']
 
-    @api.depends('code')
     def _compute_account_type(self):
         accounts_to_process = self.filtered(lambda account: account.code and not account.account_type)
         self._get_closest_parent_account(accounts_to_process, 'account_type', default_value='asset_current')
