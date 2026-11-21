@@ -69,6 +69,9 @@
 .o-mail-Thread-banner {
     z-index: $o-mail-NavigableList-zIndex - 1;
     --border-opacity: 0.5;
+    & + & {
+        margin-top: map-get($spacers, 1);
+    }
 }
 
 .o-mail-Thread-bannerHover:hover {
