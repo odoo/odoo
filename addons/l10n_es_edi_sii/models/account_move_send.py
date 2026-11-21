@@ -30,6 +30,23 @@ class AccountMoveSend(models.AbstractModel):
         })
         return res
 
+    @api.model
+    def _get_default_extra_edis(self, move):
+        extra_edis = super()._get_default_extra_edis(move)
+        if self._name == 'account.move.send.batch.wizard':
+            extra_edis = {
+                edi for edi in extra_edis
+                if edi not in ('es_edi_sii', 'es_edi_sii_resend')
+            }
+        return extra_edis
+
+    @api.model
+    def _get_default_sending_settings(self, move, from_cron=False, **custom_settings):
+        vals = super()._get_default_sending_settings(move, from_cron=from_cron, **custom_settings)
+        if 'extra_edis' not in custom_settings:
+            vals['extra_edis'] = {edi for edi in vals['extra_edis'] if edi not in ('es_edi_sii', 'es_edi_sii_resend')}
+        return vals
+
     # -------------------------------------------------------------------------
     # SENDING METHODS
     # -------------------------------------------------------------------------
@@ -51,16 +68,3 @@ class AccountMoveSend(models.AbstractModel):
                         'error_title': self.env._("Error while sending the invoice to SII"),
                         'errors': [invoice.l10n_es_edi_sii_error],
                     }
-
-
-class AccountMoveBatchSendWizard(models.TransientModel):
-    _inherit = 'account.move.send.batch.wizard'
-
-    @api.model
-    def _get_default_extra_edis(self, move):
-        extra_edis = super()._get_default_extra_edis(move)
-        extra_edis = [
-            edi for edi in extra_edis
-            if edi not in ('es_edi_sii', 'es_edi_sii_resend')
-        ]
-        return extra_edis
