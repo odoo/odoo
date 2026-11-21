@@ -122,11 +122,6 @@
         <field name="export_id" ref="hr_version_export_template"/>
         <field name="name">passport_expiration_date</field>
     </record>
-    <record id="hr_version_export_template_line_sex" model="ir.exports.line">
-        <field name="sequence">260</field>
-        <field name="export_id" ref="hr_version_export_template"/>
-        <field name="name">sex</field>
-    </record>
     <record id="hr_version_export_template_line_marital" model="ir.exports.line">
         <field name="sequence">270</field>
         <field name="export_id" ref="hr_version_export_template"/>
@@ -268,6 +263,11 @@
         <field name="sequence">130</field>
         <field name="export_id" ref="hr_employee_all_versions_export_template"/>
         <field name="name">birthday</field>
+    </record>
+    <record id="hr_emp_all_line_sex" model="ir.exports.line">
+        <field name="sequence">135</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">sex</field>
     </record>
     <record id="hr_emp_all_line_place_of_birth" model="ir.exports.line">
         <field name="sequence">140</field>
@@ -438,11 +438,6 @@
         <field name="sequence">530</field>
         <field name="export_id" ref="hr_employee_all_versions_export_template"/>
         <field name="name">version_ids/passport_expiration_date</field>
-    </record>
-    <record id="hr_emp_all_line_version_sex" model="ir.exports.line">
-        <field name="sequence">540</field>
-        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
-        <field name="name">version_ids/sex</field>
     </record>
     <record id="hr_emp_all_line_version_marital" model="ir.exports.line">
         <field name="sequence">550</field>
