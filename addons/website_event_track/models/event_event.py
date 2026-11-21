@@ -2,6 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
+
+DEFAULT_TRACK_STAGE_XMLIDS = [
+    f'website_event_track.event_track_stage{index}' for index in range(6)
+]
 
 
 class EventEvent(models.Model):
@@ -9,6 +14,10 @@ class EventEvent(models.Model):
 
     track_ids = fields.One2many('event.track', 'event_id', 'Tracks')
     track_count = fields.Integer('Track Count', compute='_compute_track_count')
+    track_stage_ids = fields.Many2many(
+        'event.track.stage', 'event_track_stage_event_rel', 'event_id', 'stage_id',
+        string='Track Stages', compute='_compute_track_stage_ids',
+        readonly=False, store=True)
     website_track = fields.Boolean(
         'Tracks on Website', compute='_compute_website_track',
         readonly=False, store=True)
@@ -34,6 +43,36 @@ class EventEvent(models.Model):
         result = {event.id: count for event, count in data}
         for event in self:
             event.track_count = result.get(event.id, 0)
+
+    @api.depends('event_type_id')
+    def _compute_track_stage_ids(self):
+        """ Propagate the event_type stages, keeping the stages still used by
+        the event tracks. Otherwise give default stages to events without any
+        stage. """
+        default_stages = None
+        for event in self:
+            type_stages = event.event_type_id.track_stage_ids
+            if type_stages:
+                used_stages = event.with_context(active_test=False).track_ids.stage_id
+                event.track_stage_ids = type_stages | used_stages
+            elif not event.track_stage_ids:
+                if default_stages is None:
+                    default_stages = self._get_default_track_stages()
+                event.track_stage_ids = default_stages
+
+    @api.constrains('track_stage_ids')
+    def _check_track_stage_ids(self):
+        if not self:
+            return
+        stage_data = self.env['event.track'].with_context(active_test=False)._read_group(
+            [('event_id', 'in', self.ids)], ['event_id', 'stage_id'], ['__count'])
+        for event, stage, count in stage_data:
+            if stage and stage not in event.track_stage_ids:
+                raise ValidationError(self.env._(
+                    'The stage "%(stage)s" cannot be removed from the event "%(event)s" '
+                    'as %(count)s track(s) are still in this stage. Move them to another stage first.',
+                    stage=stage.display_name, event=event.display_name, count=count,
+                ))
 
     @api.depends('event_type_id', 'website_menu')
     def _compute_website_track(self):
@@ -74,6 +113,21 @@ class EventEvent(models.Model):
             'domain': [('id', 'in', self.track_ids.location_id.ids)],
         })
         return action
+
+    @api.model
+    def _get_default_track_stages(self):
+        """ Stages given to events whose template defines none. Falls back on
+        the first stage when the standard ones were removed, so that tracks
+        always get a stage. """
+        stages = self.env['event.track.stage']
+        for xmlid in DEFAULT_TRACK_STAGE_XMLIDS:
+            stages |= self.env.ref(xmlid, raise_if_not_found=False) or stages
+        return stages or stages.search([], limit=1)
+
+    def _get_default_track_stage(self):
+        """ Stage given to new tracks of the event: the first unfolded one. """
+        self.ensure_one()
+        return self.track_stage_ids.sorted(lambda stage: (stage.fold, stage.sequence, stage.id))[:1]
 
     def _has_published_track(self):
         self.ensure_one()

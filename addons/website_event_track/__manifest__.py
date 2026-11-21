@@ -4,7 +4,7 @@
     'name': 'Advanced Events',
     'category': 'Marketing',
     'summary': 'Sponsors, Tracks, Agenda, Event News',
-    'version': '1.3',
+    'version': '1.4',
     'depends': ['website_event'],
     'data': [
         'data/event_data.xml',
@@ -59,6 +59,7 @@
             'website_event_track/static/src/website_builder/**/*',
         ],
     },
+    'post_init_hook': '_link_default_track_stages',
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

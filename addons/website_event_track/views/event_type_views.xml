@@ -16,6 +16,10 @@
                     <label for="website_track_proposal" string="Track Proposals Menu Item"/>
                 </span>
             </xpath>
+            <field name="tag_ids" position="after">
+                <field name="track_stage_ids" widget="many2many_tags" groups="base.group_no_one"
+                    placeholder="Default stages"/>
+            </field>
         </field>
     </record>
 
