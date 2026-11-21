@@ -13,16 +13,13 @@ from odoo.addons.payment_worldline.tests.common import WorldlineCommon
 @tagged("post_install", "-at_install")
 class TestProcessingFlows(WorldlineCommon, PaymentHttpCommon):
     @mute_logger("odoo.addons.payment_worldline.controllers.main")
-    def test_redirect_notification_triggers_processing(self):
+    def test_returning_from_payment_triggers_processing(self):
         tx = self._create_transaction("redirect")
         url = self._build_url(WorldlineController._return_url)
         self.payment_data["provider_id"] = tx.provider_id.id
         self.payment_data["hostedCheckoutId"] = ""
         with (
-            patch(
-                "odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request",
-                return_value=self.hostedcheckouts_response,
-            ),
+            self._mock_send_api_request(return_value=self.hostedcheckouts_response),
             patch(
                 "odoo.addons.payment.models.payment_transaction.PaymentTransaction._record"
             ) as record_mock,
