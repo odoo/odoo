@@ -75,7 +75,7 @@ class AccountEdiXmlUBLPINTMY(models.AbstractModel):
 
     def _get_tax_unece_codes(self, customer, supplier, tax):
         """
-        In malaysia, only the following codes can be used: T, E, O
+        In malaysia, only the following codes can be used: SA, SE, HVG, LVG, TTX, E, O
         https://docs.peppol.eu/poac/my/pint-my/bis/#_tax_category_code
         """
         # OVERRIDE account_edi_ubl_cii
@@ -91,7 +91,7 @@ class AccountEdiXmlUBLPINTMY(models.AbstractModel):
         if not supplier.sst_registration_number:
             codes['tax_category_code'] = 'O'
         elif tax.amount != 0:
-            codes['tax_category_code'] = 'T'
+            codes['tax_category_code'] = 'SE' if tax.tax_scope == 'service' else 'SA'
         else:
             codes['tax_category_code'] = 'E'
         return codes
@@ -142,10 +142,12 @@ class AccountEdiXmlUBLPINTMY(models.AbstractModel):
         if not supplier.sst_registration_number:
             grouping_key['tax_category_code'] = 'O'
         elif tax_data['tax'].amount != 0:
-            grouping_key['tax_category_code'] = 'T'
+            grouping_key['tax_category_code'] = 'SE' if tax_data['tax'].tax_scope == 'service' else 'SA'
         else:
             grouping_key['tax_category_code'] = 'E'
 
+        # [aligned-ibrp-047] Malaysian tax categories belong to the VAT scheme.
+        grouping_key['scheme_id'] = 'VAT'
         return grouping_key
 
     def _add_invoice_tax_total_nodes(self, document_node, vals):
