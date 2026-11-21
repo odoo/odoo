@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 import re
 from stdnum import get_cc_module, ean
 
@@ -11,6 +12,8 @@ from odoo.addons.account.models.company import PEPPOL_LIST
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPING
 from ..tools.peppol_iap_connector import PeppolIAPConnector
 from ..tools.demo_utils import handle_demo
+
+KYC_VERIFICATION_PARAM = 'account_peppol.kyc_verification.%s'  # % company.id
 
 try:
     import phonenumbers
@@ -112,6 +115,7 @@ class ResCompany(models.Model):
         """
         self.account_peppol_proxy_state = 'not_registered'
         self.sudo().account_peppol_migration_key = False
+        self._peppol_clear_kyc_verification()
         self.peppol_eas = False
         self.peppol_endpoint = False
         self.account_peppol_contact_email = False
@@ -415,6 +419,7 @@ class ResCompany(models.Model):
             webhook_url=base_url + '/peppol/authentication/webhook',
             connect_token=self._peppol_generate_connect_token(peppol_identifier),
             contact_email=self.account_peppol_contact_email,
+            country_code=self.country_code,
         )
 
     @api.model
@@ -437,6 +442,8 @@ class ResCompany(models.Model):
             return None
         if can_connect_vals.get('kyc_error'):
             raise UserError(_("Cannot initiate KYC for your selected scheme. Please try a different one"))
+        if can_connect_vals.get('kyc_error_missing_country_code'):
+            raise UserError(_("Cannot initiate KYC. The country is missing on your company."))
         available_auths = can_connect_vals.get('available_auths') or {}
         auth = available_auths.get('generic') or next(iter(available_auths.values()), None)
         if not auth or not auth.get('authorization_url'):
@@ -476,6 +483,45 @@ class ResCompany(models.Model):
         })
         self.account_peppol_proxy_state = response['peppol_state']
         self.sudo().account_peppol_migration_key = False
+        self._peppol_clear_kyc_verification()
         if not tools.config['test_enable'] and not modules.module.current_test:
             self.env.cr.commit()  # the user creation is not idempotent, it now exists and is commited on IAP
         return edi_user
+
+    def _peppol_get_kyc_verification(self):
+        """{'uuid': ..., 'status': ...} of the ongoing KYC, or {}"""
+        self.ensure_one()
+        raw = self.env['ir.config_parameter'].sudo().get_param(KYC_VERIFICATION_PARAM % self.id)
+        try:
+            return json.loads(raw) if raw else {}
+        except ValueError:
+            return {}
+
+    def _peppol_set_kyc_verification(self, kyc_request_uuid, status='processing'):
+        """
+        when we have kyc onging we set the value, otherwise remove it
+        """
+        self.ensure_one()
+        value = json.dumps({'uuid': kyc_request_uuid, 'status': status}) if kyc_request_uuid else False
+        self.env['ir.config_parameter'].sudo().set_param(KYC_VERIFICATION_PARAM % self.id, value)
+
+    def _peppol_clear_kyc_verification(self):
+        self.ensure_one()
+        self._peppol_set_kyc_verification(False)
+
+    def _peppol_cancel_kyc_verification(self):
+        self.ensure_one()
+        kyc = self._peppol_get_kyc_verification()
+        if not kyc:
+            return
+
+        if kyc.get('uuid') and self._get_peppol_edi_mode() != 'demo':
+            result = PeppolIAPConnector(self).kyc_cancel(
+                db_uuid=self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
+                kyc_request_uuid=kyc['uuid'],
+            )
+            if result.get('status') == 'verified':
+                # IAP already approved
+                raise UserError(_("Your verification has already been approved, your Peppol registration will be activated shortly."))
+
+        self._peppol_clear_kyc_verification()
