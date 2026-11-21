@@ -207,30 +207,35 @@ const chatterPatch = {
         if ((!partnerIds.length && !email) || mode !== "message" || status(this) === "destroyed") {
             return;
         }
+        const thread = this.state.thread;
         const recipients = await this.keepLastSuggestedRecipientsUpdate.add(
             rpc("/mail/thread/recipients/get_suggested_recipients", {
+<<<<<<< c1ef83e9c43760afd21db514e87568298a3a00b0
                 thread_model: this.thread().model,
                 thread_id: this.thread().id,
+||||||| cd217bb2e7af12f3392c1551d5db234739c9f072
+                thread_model: this.props.threadModel,
+                thread_id: this.props.threadId,
+=======
+                thread_model: thread.model,
+                thread_id: thread.id,
+>>>>>>> bd2af20cdc0e90e7ddae065daec661c1b4f15461
                 partner_ids: partnerIds,
                 main_email: email,
             })
         );
-        if (status(this) === "destroyed" && !this.state.thread) {
-            return;
-        }
-        this.state.thread.suggestedRecipients = recipients.map((result) => ({
+        thread.suggestedRecipients = recipients.map((result) => ({
             display_name: result.display_name,
             email: result.email,
             partner_id: result.partner_id,
             name: result.name || result.email,
             recipient_type: result.recipient_type,
         }));
-        this.state.thread.additionalRecipients = this.state.thread.additionalRecipients.filter(
-            (additionalRecipient) =>
-                this.state.thread.suggestedRecipients.every(
-                    (suggestedRecipient) =>
-                        suggestedRecipient.partner_id !== additionalRecipient.partner_id
-                )
+        thread.additionalRecipients = thread.additionalRecipients.filter((additionalRecipient) =>
+            thread.suggestedRecipients.every(
+                (suggestedRecipient) =>
+                    suggestedRecipient.partner_id !== additionalRecipient.partner_id
+            )
         );
     },
 
