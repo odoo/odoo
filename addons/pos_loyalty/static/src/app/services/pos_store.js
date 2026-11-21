@@ -77,7 +77,7 @@ patch(PosStore.prototype, {
         this.updateRewards();
         return line;
     },
-    async selectPreset(preset = false, order = this.getOrder(), presetSelection = false) {
+    async selectPreset(preset = false, order = this.getOrder()) {
         const res = await super.selectPreset(...arguments);
         if (order.serviceFeeLines.length > 0) {
             // A preset can change the pricelist / fiscal position / service fee, which
