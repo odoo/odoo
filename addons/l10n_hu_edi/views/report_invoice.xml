@@ -82,6 +82,9 @@
                 <div t-out="dict(o._fields['l10n_hu_payment_mode']._description_selection(o.env))[l10n_hu_payment_mode]"/>
             </div>
         </xpath>
+        <xpath expr="//div[@name='delivery_date']" position="attributes">
+            <attribute name="t-if">o.delivery_date and o.delivery_date != o.taxable_supply_date</attribute>
+        </xpath>
         <xpath expr="//table[@name='invoice_line_table']//span[@t-field='line.quantity']" position="attributes">
             <attribute name="t-field"/>
             <attribute name="t-out">line.quantity * sign if line.quantity != 0 else line.quantity</attribute>
