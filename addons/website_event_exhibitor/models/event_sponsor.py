@@ -32,7 +32,7 @@ class EventSponsor(models.Model):
         default=lambda self: self._default_sponsor_type_id(), required=True, bypass_search_access=True)
     url = fields.Char('Sponsor Website', compute='_compute_url', readonly=False, store=True)
     sequence = fields.Integer('Sequence')
-    active = fields.Boolean(default=True)
+    active = fields.Boolean(default=True, tracking=True)
     # description
     subtitle = fields.Char('Slogan')
     exhibitor_type = fields.Selection(

@@ -31,4 +31,12 @@
         </ul>
     </template>
 
+    <template id="event_booth_unbooked_template" technical_usage="mail_post_source">
+        <p>
+            Booth
+            <t t-out="booth._get_html_link(title=booth.name)"/>
+            has been unbooked
+        </p>
+    </template>
+
 </data></odoo>

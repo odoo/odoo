@@ -3,3 +3,4 @@
 
 from . import event_booth
 from . import event_booth_category
+from . import event_sponsor
