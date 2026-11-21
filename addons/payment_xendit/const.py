@@ -33,6 +33,10 @@ DEFAULT_PAYMENT_METHOD_CODES = {
     "vnptwallet",
     # SG
     "paynow",
+    # PH
+    "gcash",
+    "maya",
+    "qrph",
 }
 
 # FPX is an online payment method in Malaysia that allows customers to make payments directly from
@@ -97,6 +101,12 @@ PAYMENT_METHODS_MAPPING = {
     "vpb": "VPB_VIRTUAL_ACCOUNT",
     "woori": "WOORI_VIRTUAL_ACCOUNT",
     "bpi": "BPI_DIRECT_DEBIT",
+    "rcbc": "RCBC_DIRECT_DEBIT",
+    "bpi_eada": "BPI_RECURRING",
+    "unionbank": "UBP_DIRECT_DEBIT",
+    "unionbank_eada": "UBP_EADA",
+    "robinsons_bills": "ROBINSONS_BILLS_PAYMENT",
+    "sm_bills": "SM_BILLS_PAYMENT",
     "card": "CARDS",
     "maya": "PAYMAYA",
     "wechat_pay": "WECHATPAY",
@@ -105,7 +115,7 @@ PAYMENT_METHODS_MAPPING = {
     "bangkok_bank": "BBL_MOBILE_BANKING",
     "touch_n_go": "TOUCHNGO",
     "paynow": "SGQR",
-    "KFH": "KFH_FPX",
+    "kfh": "KFH_FPX",
 }
 
 # Mapping of transaction states to Xendit payment statuses.
