@@ -83,7 +83,10 @@ class SaleOrderLine(models.Model):
         if not self.currency_id.compare_amounts(computed_margin, self.margin):
             # Nothing to do, onchange was triggered because of the compute
             return
-        discount = self._get_discount()
+        if not (discount := self._get_discount()):
+            raise UserError(
+                self.env._("You cannot change the margin of a line with a 100% discount.")
+            )
         margin_per_qty = self.margin / product_qty
         computed_price = (margin_per_qty + self.purchase_price) / discount
         self._set_price_incl_taxes(computed_price)
