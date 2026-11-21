@@ -1,7 +1,7 @@
 import { HtmlUpgradeManager } from "@html_editor/html_migrations/html_upgrade_manager";
 import { useRootComponents } from "@html_editor/others/embedded_component_utils";
 import { TableOfContentManager } from "@html_editor/others/embedded_components/core/table_of_content/table_of_content_manager";
-import { fillHtmlTransferData } from "@html_editor/utils/clipboard";
+import { fillClipboardWithSelection } from "@html_editor/utils/clipboard";
 import { fixInvalidHTML, instanceofMarkup } from "@html_editor/utils/sanitize";
 import {
     Component,
@@ -17,10 +17,9 @@ import {
     useProps,
 } from "@odoo/owl";
 import { getBundle } from "@web/core/assets";
-import { location } from "@web/core/browser/browser";
 import { memoize } from "@web/core/utils/functions";
-import { TABLE_WRAPPER_SELECTOR, wrapTableInScrollContainer } from "@html_editor/utils/table";
-import { unwrapContents } from "@html_editor/utils/dom";
+import { unwrapTables, wrapTables } from "@html_editor/utils/table";
+import { getLinksToRetarget, retargetLinkToNewTab } from "@html_editor/utils/url";
 
 export class HtmlViewer extends Component {
     static template = "html_editor.HtmlViewer";
@@ -49,7 +48,10 @@ export class HtmlViewer extends Component {
             if (newValue.toString() !== this.state.value.toString()) {
                 // Owl removes the nodes it rendered from '.o_readonly' when the
                 // value changes, so the tables have to be back there first.
-                this.unwrapTables();
+                const readonlyEl = this.readonlyElementRef();
+                if (readonlyEl) {
+                    unwrapTables(readonlyEl);
+                }
                 this.state.value = newValue;
                 if (this.props.config.embeddedComponents) {
                     this.destroyComponents();
@@ -74,10 +76,13 @@ export class HtmlViewer extends Component {
                 iframe.after(iframe);
             });
         } else {
-            // onPatched re-applies only the idempotent attributes; the copy listener is
+            // onPatched re-applies only the idempotent processing, the copy listener is
             // attached once (onMounted) so it does not pile up on every patch.
             onMounted(() => this.processReadonlyContent(this.readonlyElementRef()));
-            onPatched(() => this.applyReadonlyAttributes(this.readonlyElementRef()));
+            onPatched(() => {
+                this.applyReadonlyAttributes(this.readonlyElementRef());
+                wrapTables(this.readonlyElementRef());
+            });
         }
 
         if (this.props.config.cssAssetId) {
@@ -152,41 +157,8 @@ export class HtmlViewer extends Component {
 
     processReadonlyContent(container) {
         this.applyReadonlyAttributes(container);
-        this.wrapTables(container);
-        this.addDomListener(container, "copy", this.onCopy);
-    }
-
-    /**
-     * The wrapper is not saved, so the viewer adds it like the editor does.
-     *
-     * @param {HTMLElement} container
-     */
-    wrapTables(container) {
-        for (const table of container.querySelectorAll(".o_table")) {
-            if (!table.closest(TABLE_WRAPPER_SELECTOR)) {
-                wrapTableInScrollContainer(table);
-            }
-        }
-    }
-
-    /**
-     * Remove the scroll containers added by 'wrapTables', putting the tables
-     * back where they were rendered.
-     */
-    unwrapTables() {
-        this.readonlyElementRef()?.querySelectorAll(TABLE_WRAPPER_SELECTOR).forEach(unwrapContents);
-    }
-
-    /**
-     * @param {ClipboardEvent} ev
-     */
-    onCopy(ev) {
-        ev.preventDefault();
-        const selection = ev.target.ownerDocument.defaultView.getSelection();
-        const clonedContents = selection.getRangeAt(0).cloneContents();
-        fillHtmlTransferData(ev, "clipboardData", clonedContents, {
-            textContent: selection.toString(),
-        });
+        wrapTables(container);
+        this.addDomListener(container, "copy", fillClipboardWithSelection);
     }
 
     /**
@@ -204,23 +176,17 @@ export class HtmlViewer extends Component {
 
     /**
      * Retarget links to open in a new tab.
-     * When inside an iframe, all links are retargeted.
-     * Otherwise, only external links (different origin) are retargeted.
+     *
+     * @param {HTMLElement} container
      */
     retargetLinks(container) {
-        const isInsideIframe = container.ownerDocument !== document;
-        const retargetSelector = isInsideIframe
-            ? "a"
-            : `a:not([href^="${location.origin}"]):not([href^="/"])`;
-
-        for (const link of container.querySelectorAll(retargetSelector)) {
+        for (const link of getLinksToRetarget(container)) {
             this.retargetLink(link);
         }
     }
 
     retargetLink(link) {
-        link.setAttribute("target", "_blank");
-        link.setAttribute("rel", "noreferrer");
+        retargetLinkToNewTab(link);
     }
 
     updateIframeContent(content) {

@@ -1,7 +1,7 @@
 import { Plugin, shared } from "@html_editor/plugin";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { isBlock } from "@html_editor/utils/blocks";
-import { removeClass, removeStyle, unwrapContents } from "@html_editor/utils/dom";
+import { removeClass, removeStyle } from "@html_editor/utils/dom";
 import {
     getDeepestPosition,
     isContentEditable,
@@ -33,9 +33,9 @@ import {
     getTableCells,
     getSelectedCellsMergeInfo,
     getTableRoot,
-    getTableWrapper,
     isTableWrapper,
-    wrapTableInScrollContainer,
+    unwrapTables,
+    wrapTables,
 } from "@html_editor/utils/table";
 import { isBrowserFirefox, isMacOS } from "@web/core/browser/feature_detection";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
@@ -175,7 +175,12 @@ export class TablePlugin extends Plugin {
         clean_for_save_processors: (root, { preserveSelection = false } = {}) => {
             if (!this.config.saveScrollableTables) {
                 // Wrappers are only needed while editing.
-                this.unwrapTables(root, { preserveSelection });
+                const cursors =
+                    preserveSelection && this.dependencies.selection.preserveSelection();
+                unwrapTables(root);
+                if (cursors) {
+                    cursors.restore();
+                }
             }
             this.deselectTable(root);
             return root;
@@ -185,7 +190,7 @@ export class TablePlugin extends Plugin {
         clipboard_content_processors: this.processContentForClipboard.bind(this),
         paste_odoo_editor_html_processors: (fragment) => {
             if (!this.config.allowScrollableTables) {
-                this.unwrapTables(fragment);
+                unwrapTables(fragment);
             }
             return fragment;
         },
@@ -287,25 +292,30 @@ export class TablePlugin extends Plugin {
     }
 
     /**
-     * Wraps the table in a scroll container so a wide table scrolls on its own.
-     * Nested, non-editable and protected tables are skipped.
+     * Wraps the editable tables of the given root, skipping nested and
+     * protected ones.
      *
-     * @param {HTMLTableElement} table
+     * @param {HTMLElement | DocumentFragment} root
      */
-    wrapTable(table) {
-        if (
-            !this.config.allowScrollableTables ||
-            getTableWrapper(table) ||
-            closestElement(table, isTableCell) ||
-            !isContentEditable(table) ||
-            isProtected(table) ||
-            isProtecting(table)
-        ) {
+    wrapEditorTables(root) {
+        if (!this.config.allowScrollableTables) {
             return;
         }
-        const cursors = this.dependencies.selection.preserveSelection();
-        wrapTableInScrollContainer(table);
-        cursors.restore();
+        let cursors;
+        wrapTables(root, (table) => {
+            if (
+                closestElement(table, isTableCell) ||
+                !isContentEditable(table) ||
+                isProtected(table) ||
+                isProtecting(table)
+            ) {
+                return false;
+            }
+            // Only preserve the selection if a table gets wrapped.
+            cursors ??= this.dependencies.selection.preserveSelection();
+            return true;
+        });
+        cursors?.restore();
     }
 
     /**
@@ -317,27 +327,8 @@ export class TablePlugin extends Plugin {
      * @returns {HTMLElement | DocumentFragment}
      */
     normalizeTable(root) {
-        for (const table of selectElements(root, "table")) {
-            this.wrapTable(table);
-        }
+        this.wrapEditorTables(root);
         return root;
-    }
-
-    /**
-     * Removes the scroll containers of the tables in the given root.
-     *
-     * @param {HTMLElement | DocumentFragment} root
-     * @param {Object} [options]
-     * @param {boolean} [options.preserveSelection=false]
-     */
-    unwrapTables(root, { preserveSelection = false } = {}) {
-        const cursors = preserveSelection && this.dependencies.selection.preserveSelection();
-        for (const wrapper of root.querySelectorAll(TABLE_WRAPPER_SELECTOR)) {
-            unwrapContents(wrapper);
-        }
-        if (cursors) {
-            cursors.restore();
-        }
     }
 
     processTableResizeTargets(item, neighbor, position, defaultMinSize) {
