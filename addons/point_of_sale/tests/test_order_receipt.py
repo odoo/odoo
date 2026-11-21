@@ -277,7 +277,7 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
             self.start_pos_tour("test_change_receipt_data")
             self.compare_change_receipt_data(data['frontend_data'], data['backend_data'])
 
-    def _get_service_fee_receipt_info(self, service_fee_type):
+    def _get_service_fee_receipt_line(self, service_fee_type):
         preset = self.env['pos.preset'].create({
             'name': 'Service fee preset',
             'service_fee': True,
@@ -314,26 +314,56 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
                 }),
             ],
         })
-        fee_line = next(
+        return next(
             line for line in order._order_receipt_generate_line_data()
-            if line['is_service_fee_line']
-        )
-        return fee_line['service_fee_display_info']
-
-    def test_service_fee_receipt_description_percent(self):
-        """
-        A percentage fee is taken from an order total, so the receipt says which.
-        """
-        self.assertEqual(
-            self._get_service_fee_receipt_info('percent')['description'],
-            " (before discount)",
+            if line['product_id'] == fee_product.id
         )
 
-    def test_service_fee_receipt_description_fixed(self):
+    def test_service_fee_receipt_line(self):
         """
-        `based on` has nothing to qualify on a flat amount.
+        A percentage fee shows its rate and the total it is taken from,
+        a fixed fee is shown like any other line.
         """
-        self.assertEqual(self._get_service_fee_receipt_info('fixed')['description'], "")
+        percent_line = self._get_service_fee_receipt_line('percent')
+        self.assertTrue(percent_line['is_percent_service_fee_line'])
+        self.assertEqual(percent_line['service_fee_display_info']['description'], " (before discount)")
+
+        fixed_line = self._get_service_fee_receipt_line('fixed')
+        self.assertFalse(fixed_line['is_percent_service_fee_line'])
+        self.assertNotIn('service_fee_display_info', fixed_line)
+
+    def test_receipt_combo_unit_price(self):
+        """ A combo's unit price is the total of its items for one combo. """
+        product_b, product_c = self.env['product.product'].create([{
+            'name': name,
+            'available_in_pos': True,
+            'list_price': price,
+            'taxes_id': [Command.clear()],
+        } for name, price in [('Product B', 5.0), ('Product C', 3.0)]])
+        combo = self.env['product.combo'].create({
+            'name': 'Test Combo',
+            'combo_item_ids': [
+                Command.create({'product_id': product_b.id}),
+                Command.create({'product_id': product_c.id}),
+            ],
+        })
+        combo_product = self.env['product.product'].create({
+            'name': 'Combo Product',
+            'type': 'combo',
+            'combo_ids': [Command.link(combo.id)],
+            'taxes_id': [Command.clear()],
+        })
+        order, _ = self.create_backend_pos_order({
+            'pos_config': self.main_pos_config,
+            'line_data': [
+                {'product_id': combo_product.id, 'qty': 2, 'price_unit': 0},
+                {'product_id': product_b.id, 'qty': 2},
+                {'product_id': product_c.id, 'qty': 2},
+            ],
+        })
+        order.lines[1:].combo_parent_id = order.lines[0]
+        parent_data = order._order_receipt_generate_line_data()[0]
+        self.assertEqual(parent_data['unit_price'], order._order_receipt_format_currency(8))  # (2 * 5 + 2 * 3) / 2
 
     def test_split_per_product_preserves_combo_children(self):
         """Test that split_per_product keeps combo parent + children on the same ticket."""
