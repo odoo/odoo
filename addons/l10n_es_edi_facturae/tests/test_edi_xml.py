@@ -468,6 +468,58 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
         self.assertXmlTreeEqual(lxml.etree.fromstring(generated_file), expected_xml)
 
     @freeze_time('2023-01-01')
+    def test_generate_with_child_administrative_centers(self):
+        """
+        This test covers Facturae XML for invoices addressed to a child contact.
+        Case 1 If the child has a FACe centre, the XML includes only that centre and its role.
+        Case 2 If the child has no FACe centre, the XML includes one node per role for the parent’s centre.
+        """
+        child = self.env['res.partner'].create({
+            'name': 'Department A',
+            'parent_id': self.partner_b.id,
+            'type': 'invoice',
+        })
+        parent_center = self.partner_b.child_ids.filtered(lambda partner: partner.type == 'facturae_ac')
+        parent_center.copy({
+            'parent_id': child.id,
+            'l10n_es_edi_facturae_ac_center_code': 'GE0002273',
+            'l10n_es_edi_facturae_ac_role_type_ids': [Command.set(
+                self.env.ref('l10n_es_edi_facturae.ac_role_type_01').ids,
+            )],
+        })
+        invoice = self._create_invoice_es(
+            partner_id=child.id,
+            move_type='out_invoice',
+            invoice_line_ids=[{'price_unit': 100.0, 'tax_ids': [self.tax.id]}],
+        )
+        invoice.action_post()
+        generated_file, errors = invoice._l10n_es_edi_facturae_render_facturae()
+        self.assertFalse(errors)
+        xml = lxml.etree.fromstring(generated_file)
+        centers = xml.xpath('.//BuyerParty/AdministrativeCentres/AdministrativeCentre')
+        self.assertEqual(len(centers), 1)
+        self.assertEqual(centers[0].findtext('CentreCode'), 'GE0002273')
+        self.assertEqual(centers[0].findtext('RoleTypeCode'), '01')
+
+        child_without_centers = self.env['res.partner'].create({
+            'name': 'Department B',
+            'parent_id': self.partner_b.id,
+            'type': 'invoice',
+        })
+        invoice = self._create_invoice_es(
+            partner_id=child_without_centers.id,
+            move_type='out_invoice',
+            invoice_line_ids=[{'price_unit': 100.0, 'tax_ids': [self.tax.id]}],
+        )
+        invoice.action_post()
+        generated_file, errors = invoice._l10n_es_edi_facturae_render_facturae()
+        self.assertFalse(errors)
+        xml = lxml.etree.fromstring(generated_file)
+        centers_path = './/BuyerParty/AdministrativeCentres/AdministrativeCentre'
+        self.assertCountEqual(xml.xpath(f'{centers_path}/CentreCode/text()'), ['L01281343'] * 3)
+        self.assertCountEqual(xml.xpath(f'{centers_path}/RoleTypeCode/text()'), ['01', '02', '03'])
+
+    @freeze_time('2023-01-01')
     def test_generate_with_invoice_period(self):
         invoice = self._create_invoice_es(
             partner_id=self.partner_a.id,
