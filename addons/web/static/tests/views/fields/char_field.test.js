@@ -221,7 +221,7 @@ test("char field in editable list view", async () => {
     });
     await fieldInput("name").edit("brolo", { confirm: false });
 
-    await contains(".o_list_button_save").click();
+    await contains(".o_form_button_save").click();
     expect(cellSelector).not.toHaveClass("o_selected_row", {
         message: "should not be in edit mode anymore",
     });

@@ -309,7 +309,7 @@ test("DatetimeField in editable list view", async () => {
     }
 
     // save
-    await click(".o_list_button_save");
+    await click(".o_form_button_save");
     await animationFrame();
     expect("tr.o_data_row td:not(.o_list_record_selector):first").toHaveText(
         "Apr 22, 2018, 8:25 AM",
