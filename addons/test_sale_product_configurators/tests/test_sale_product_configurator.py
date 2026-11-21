@@ -111,6 +111,7 @@ class TestProductConfiguratorUi(TestProductConfiguratorCommon):
         )
 
     def test_03_product_configurator_edition(self):
+<<<<<<< a498fc5465a2e11f87353c1566dde0f51c6332c6
         # Required to see `pricelist_id` in the view
         self.env.ref('base.group_user').write({'implied_ids': [(4, self.env.ref('product.group_product_pricelist').id)]})
         self.env['product.pricelist'].create({
@@ -125,6 +126,10 @@ class TestProductConfiguratorUi(TestProductConfiguratorCommon):
                 'compute_price': 'formula'
             })]
         })
+||||||| 2982b5f44af03fae6a9888f20632c1cc19f623ba
+=======
+        self.salesman.groups_id += self.env.ref('uom.group_uom')
+>>>>>>> c408caeb02cec2e5d39843993b53d959eeda7011
         self.start_tour("/odoo", 'sale_product_configurator_edition_tour', login='salesman')
 
     def test_04_product_configurator_single_custom_value(self):

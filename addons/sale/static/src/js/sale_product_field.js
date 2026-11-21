@@ -267,6 +267,7 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
             selectedComboItems: selectedComboItems,
             edit: edit,
             save: async (mainProduct, optionalProducts) => {
+<<<<<<< a498fc5465a2e11f87353c1566dde0f51c6332c6
                 // Don't add main product if it's a combo product as it has already been added
                 // from combo configurator
                 const proms = !selectedComboItems.length
@@ -286,6 +287,32 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
                 }
 
                 await Promise.all(proms);
+||||||| 2982b5f44af03fae6a9888f20632c1cc19f623ba
+                await Promise.all([
+                    applyProduct(this.props.record, mainProduct),
+                    ...optionalProducts.map(async product => {
+                        const line = await saleOrderRecord.data.order_line.addNewRecord({
+                            position: 'bottom', mode: 'readonly'
+                        });
+                        await applyProduct(line, product);
+                    }),
+                ]);
+=======
+                // Keep the line's UoM when editing, as the configurator works in that UoM.
+                const productUom = edit && saleOrderLine.product_uom;
+                await Promise.all([
+                    applyProduct(this.props.record, mainProduct),
+                    ...optionalProducts.map(async product => {
+                        const line = await saleOrderRecord.data.order_line.addNewRecord({
+                            position: 'bottom', mode: 'readonly'
+                        });
+                        await applyProduct(line, product);
+                    }),
+                ]);
+                if (productUom && productUom[0] !== this.props.record.data.product_uom[0]) {
+                    await this.props.record.update({ product_uom: productUom });
+                }
+>>>>>>> c408caeb02cec2e5d39843993b53d959eeda7011
                 this._onProductUpdate();
                 saleOrderRecord.data.order_line.leaveEditMode();
             },
