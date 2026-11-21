@@ -2,7 +2,7 @@
 
 import operator
 
-from odoo import Command, api, fields, models, _
+from odoo import Command, api, exceptions, fields, models, _
 
 
 class ProjectShareWizard(models.TransientModel):
@@ -23,6 +23,7 @@ class ProjectShareWizard(models.TransientModel):
         result = super(ProjectShareWizard, self.with_context(active_model=active_model, active_id=active_id)).default_get(fields)
         if result['res_model'] and result['res_id']:
             project = self.env[result['res_model']].browse(result['res_id'])
+            self._can_share_project(project)
             collaborator_vals_list = []
             for collaborator in project.collaborator_ids:
                 collaborator_vals_list.append({
@@ -102,6 +103,7 @@ class ProjectShareWizard(models.TransientModel):
     def action_share_record(self):
         # Confirmation dialog is only opened if new portal user(s) need to be created in a 'on invitation' website
         self.ensure_one()
+        self._can_share_project()
         if not self.collaborator_ids:
             return
         on_invite = self.env['res.users']._get_signup_invitation_scope() == 'b2b'
@@ -120,6 +122,7 @@ class ProjectShareWizard(models.TransientModel):
         }
 
     def action_send_mail(self):
+        self._can_share_project()
         result = {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
@@ -133,3 +136,15 @@ class ProjectShareWizard(models.TransientModel):
             self._send_signup_link(partners=partners_to_invite.with_context({'signup_valid': True}))
             self._log_share_message(partners_to_invite)
         return result
+
+    def _can_share_project(self, project=None):
+        """
+        Only the User assigned as Project Manager, as well as any general managers / admins should have the right to use the sharing wizard
+        """
+        if not project:
+            self.ensure_one()
+            project = self.env['project.project'].browse(self.res_id)
+        can_share = ((project.user_id == self.env.user) or self.env.user.has_group('project.group_project_manager'))
+        if not can_share:
+            raise exceptions.AccessError(_("Only this Project's Manager or a general manager / admin is allowed to share this project."))
+        return True

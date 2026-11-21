@@ -64,7 +64,7 @@ class TestPersonalStages(TestProjectCommon):
 
         self.task_1.user_ids += self.user_projectmanager
         self.task_1.with_user(self.user_projectmanager).personal_stage_type_id = self.manager_stages[1]
-        #Makes sure the personal stage for project manager is saved in the database
+        # Makes sure the personal stage for project manager is saved in the database
         self.env.flush_all()
         read_group_user = self.env['project.task'].with_context(read_group_expand=True).with_user(self.user_projectuser).formatted_read_group(
             [('user_ids', '=', self.user_projectuser.id)], aggregates=['sequence:avg', '__count'], groupby=['personal_stage_type_ids'])
