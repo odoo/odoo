@@ -1,0 +1,14 @@
+.o-mail-FollowerList-avatar {
+    --Avatar-size: 34px;
+}
+
+.o-mail-FollowerList-action {
+    --btn-hover-bg: var(--o-bs-dropdown-link-hover-bg);
+    --btn-border-color: var(--dropdown-border-color);
+    --btn-hover-border-color: var(--dropdown-border-color);
+
+    .o-mail-FollowerList-self & {
+        --btn-border-color: var(--o-gray-400);
+        --btn-hover-border-color: var(--o-gray-400);
+    }
+}
