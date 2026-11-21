@@ -7,6 +7,20 @@ const DynamicSnippetEdit = (I) =>
             super.setup();
             this.withSample = true;
         }
+
+        start() {
+            const contentEl = this.el.querySelector(".s_dynamic_snippet_content");
+            const hasSavedWarning = !!this.el.querySelector(".missing_option_warning");
+            if (!this.data.length && contentEl && !hasSavedWarning) {
+                this.renderAt(
+                    "website.s_dynamic_snippet.missing_option_warning",
+                    {},
+                    contentEl,
+                    "afterbegin"
+                );
+            }
+            super.start();
+        }
     };
 
 registry.category("public.interactions.edit").add("website.dynamic_snippet", {
