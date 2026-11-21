@@ -15,10 +15,6 @@ class PaymentProvider(models.Model):
     code = fields.Selection(
         selection_add=[("xendit", "Xendit")], ondelete={"xendit": "set default"}
     )
-    # Kept for backward compatibility with existing databases; no longer used or shown in the
-    # provider form since the inline card flow it configured was replaced by hosted redirect
-    # flows. Not removed, as dropping a field is not allowed in stable versions.
-    xendit_public_key = fields.Char(string="Xendit Public Key", copy=False)
     xendit_secret_key = fields.Char(
         string="Xendit Secret Key",
         required_if_provider="xendit",
@@ -75,18 +71,6 @@ class PaymentProvider(models.Model):
         if self.code == "xendit" and self.company_id.currency_id.name in const.SUPPORTED_CURRENCIES:
             return self.company_id.currency_id
         return super()._get_validation_currency()
-
-    def _get_redirect_form_view(self, is_validation=False):
-        """Override of `payment` kept for backward compatibility.
-
-        Validation operations used to skip the redirect form, as `Card` was implemented using a
-        direct flow. They now go through the redirect flow like any other operation.
-
-        :param bool is_validation: Whether the operation is a validation.
-        :return: The view of the redirect form template.
-        :rtype: ir.ui.view
-        """
-        return super()._get_redirect_form_view(is_validation=is_validation)
 
     # === REQUEST HELPERS ===#
 
