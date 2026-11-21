@@ -832,6 +832,12 @@
         grid-area: price;
     }
 
+    // TODO remove in master: only needed for databases where the snippet
+    // template is not updated with the `product_price` class on its price.
+    .o_wsale_product_sub > :not(.o_wsale_product_btn) {
+        grid-area: price;
+    }
+
     .o_wsale_attribute_previewer {
         grid-area: variations;
     }
