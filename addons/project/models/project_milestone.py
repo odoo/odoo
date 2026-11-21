@@ -129,6 +129,13 @@ class ProjectMilestone(models.Model):
                 milestone_mapping[old_milestone.id] = new_milestone.id
         return new_milestones
 
+    @api.model
+    def name_search(self, name='', domain=None, operator='ilike', limit=100):
+        project_id = self.env.context.get('default_project_id')
+        if self.env.context.get('import_file') and project_id:
+            domain = [*(domain or []), ('project_id', '=', project_id)]
+        return super().name_search(name, domain, operator, limit)
+
     @api.depends_context('formatted_display_name')
     def _compute_display_name(self):
         super()._compute_display_name()
