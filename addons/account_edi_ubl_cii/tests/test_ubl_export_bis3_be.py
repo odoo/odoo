@@ -13,6 +13,14 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
     _test_user_groups = None  # FIXME list needed groups
 
     @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.ubl_namespaces = {
+            'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
+            'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2",
+        }
+
+    @classmethod
     def subfolders(cls):
         subfolder_format, _subfolder_document, subfolder_country = super().subfolders()
         return subfolder_format, 'invoice', subfolder_country
@@ -1031,6 +1039,69 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
             test_file='test_invoice_customer_party_identifiers_partner_nl_vat_eas_oin_company_registry',
         )
 
+    def test_ubl_use_correct_vat(self):
+        """Test that UBL use the foreign VAT when available, else the company VAT."""
+        germany = self.env.ref("base.de")
+        tax_group = self.env['account.tax.group'].create({
+            'name': 'German Taxes',
+            'company_id': self.company.id,
+            'country_id': germany.id,
+        })
+        tax = self.env['account.tax'].create({
+            'name': 'DE VAT 19%',
+            'amount': 19,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+            'country_id': germany.id,
+            'tax_group_id': tax_group.id,
+        })
+
+        fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'German FP',
+            'vat_required': True,
+            'foreign_vat': 'DE123456788',
+            'country_id': germany.id,
+        })
+
+        invoice_with_fp = self.env['account.move'].create({
+            'partner_id': self.partner_be.id,
+            'move_type': 'out_invoice',
+            'fiscal_position_id': fiscal_position.id,
+            'invoice_date': fields.Date.from_string('2025-12-22'),
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'tax_ids': [Command.set(tax.ids)],
+            })],
+        })
+        local_invoice = self.env['account.move'].create({
+            'partner_id': self.partner_be.id,
+            'move_type': 'out_invoice',
+            'invoice_date': fields.Date.from_string('2025-12-22'),
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+            })],
+        })
+        invoice_with_fp.action_post()
+        local_invoice.action_post()
+
+        # Check XML for foreign VAT
+        self._generate_invoice_ubl_file(invoice_with_fp)
+        xml_tree = etree.fromstring(invoice_with_fp.ubl_cii_xml_id.raw.content)
+        node = xml_tree.xpath(
+            "//cac:AccountingSupplierParty//cac:PartyTaxScheme/cbc:CompanyID",
+            namespaces=self.ubl_namespaces,
+        )
+        self.assertEqual(node[0].text, fiscal_position.foreign_vat, "Foreign Fiscal Position VAT")
+
+        # Check XML for company VAT fallback
+        self._generate_invoice_ubl_file(local_invoice)
+        xml_tree = etree.fromstring(local_invoice.ubl_cii_xml_id.raw.content)
+        node = xml_tree.xpath(
+            "//cac:AccountingSupplierParty//cac:PartyTaxScheme/cbc:CompanyID",
+            namespaces=self.ubl_namespaces,
+        )
+        self.assertEqual(node[0].text, self.company.vat, "Company VAT fallback")
+
     def test_invoice_BR_E_08_line_extension_amount(self):
         """ [BR-E-08] In a VAT breakdown (BG-23) where the VAT category code (BT-118) is "Exempt from VAT"
             the VAT category taxable amount (BT-116) shall equal the sum of Invoice line net amounts (BT-131)
@@ -1221,10 +1292,6 @@ class TestBeExport(TestUblExportBis3BE):
     @TestUblExportBis3BE.setup_chart_template('be_comp')
     def setUpClass(cls):
         super().setUpClass()
-        cls.ubl_namespaces = {
-            'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
-            'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2",
-        }
 
     def test_invoice_cocontractant_tax_exemption_reason(self):
 
