@@ -134,6 +134,76 @@ registerWebsitePreviewTour(
     ]
 );
 
+registerWebsitePreviewTour("html_editor_changed_by", {}, () => [
+    {
+        content: "Wait for the page, with the inherited view applied",
+        trigger: ":iframe #changed_target.class_added",
+    },
+    {
+        content: "open site menu",
+        trigger: 'button[data-menu-xmlid="website.menu_site"]',
+        run: "click",
+    },
+    {
+        content: "open html editor",
+        trigger: 'a[data-menu-xmlid="website.menu_ace_editor"]',
+        run: "click",
+    },
+    {
+        content: "check that the view says it is modified by a view",
+        trigger: '.o_resource_editor_modified_by:contains("Modified by 1 view")',
+    },
+    {
+        content: "check that the page view only exists on the website",
+        trigger: '.o_resource_editor_website_status:contains("Website-only view")',
+    },
+    {
+        content: "edit the target view",
+        trigger: '.o_resource_editor .o_select_menu_toggler:contains("Changed Target")',
+        run() {
+            ace.edit(document.querySelector("#resource-editor div"))
+                .getSession()
+                .insert({ row: 1, column: 0 }, '<p class="target_edit">target edit</p>\n');
+        },
+    },
+    {
+        content: "save the html editor",
+        trigger:
+            'body:has(div.ace_line:contains("target_edit")) .o_resource_editor button:contains(Save)',
+        run: "click",
+    },
+    {
+        content: "check that the page has the modification",
+        trigger: ":iframe #wrapwrap .target_edit",
+    },
+    {
+        content: "check that the inherited view still applies",
+        trigger: ":iframe #changed_target.class_added",
+    },
+    {
+        content: "open the list of views modifying the view",
+        trigger: ".o_resource_editor_modified_by",
+        run: "click",
+    },
+    {
+        content: "open the inherited view, listed with the line of its target",
+        trigger: '.o-dropdown--menu .o-dropdown-item:contains("Add Class"):contains("line ")',
+        run: "click",
+    },
+    {
+        content: "check that the inherited view is opened",
+        trigger: '.o_resource_editor .o_select_menu_toggler:contains("Add Class")',
+    },
+    {
+        content: "check that the inherited view's arch is displayed",
+        trigger: '#resource-editor .ace_line:contains("class_added")',
+    },
+    {
+        content: "check that the inherited view is a base view",
+        trigger: '.o_resource_editor_website_status:contains("Base view")',
+    },
+]);
+
 registerWebsitePreviewTour("test_html_editor_scss", {}, () => [
     // 1. Open Html Editor and select a scss file
     {

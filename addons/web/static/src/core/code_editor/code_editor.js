@@ -95,6 +95,7 @@ export class CodeEditor extends Component {
             showLineNumbers: t.boolean().optional(true),
             lineWrapping: t.boolean().optional(),
             editorState: t.instanceOf(CodeEditorState).optional(),
+            onEditorReady: t.function().optional(),
         });
 
         this.state = proxy({
@@ -185,6 +186,16 @@ export class CodeEditor extends Component {
                     this._aceEditor.set(null);
                 };
             });
+        });
+
+        // Used to pass the aceEditor object to a parent component
+        useEffect(() => {
+            const aceEditor = this.aceEditor;
+            if (!aceEditor) {
+                return;
+            }
+            untrack(() => this.props.onEditorReady?.(aceEditor));
+            return () => untrack(() => this.props.onEditorReady?.(null));
         });
 
         useEffect(() => {
