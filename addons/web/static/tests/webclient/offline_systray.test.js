@@ -89,7 +89,7 @@ test("scheduledORM", async () => {
 
     getService("offline").scheduleORM(
         "partner",
-        "web_save",
+        "web_save_offline",
         [[]],
         {},
         {
@@ -105,7 +105,7 @@ test("scheduledORM", async () => {
     );
     getService("offline").scheduleORM(
         "partner",
-        "web_save",
+        "web_save_offline",
         [[22]],
         {},
         {
@@ -122,7 +122,7 @@ test("scheduledORM", async () => {
     );
     getService("offline").scheduleORM(
         "lead",
-        "web_save",
+        "web_save_offline",
         [[]],
         {},
         {
@@ -190,7 +190,7 @@ test("scheduledORM", async () => {
             options: {
                 clearBreadcrumbs: true,
                 props: {
-                    offlineId: "881ba65a",
+                    offlineId: "a351d2fe",
                     resId: undefined,
                 },
                 viewType: "form",
@@ -209,7 +209,7 @@ test("scheduledORM: inError", async () => {
 
     getService("offline").scheduleORM(
         "partner",
-        "web_save",
+        "web_save_offline",
         [[]],
         {},
         {
@@ -226,7 +226,7 @@ test("scheduledORM: inError", async () => {
 
     getService("offline").scheduleORM(
         "lead",
-        "web_save",
+        "web_save_offline",
         [[]],
         {},
         {
@@ -282,7 +282,7 @@ test("scheduledORM: mobile", async () => {
 
     getService("offline").scheduleORM(
         "partner",
-        "web_save",
+        "web_save_offline",
         [[]],
         {},
         {
@@ -298,7 +298,7 @@ test("scheduledORM: mobile", async () => {
     );
     getService("offline").scheduleORM(
         "partner",
-        "web_save",
+        "web_save_offline",
         [[22]],
         {},
         {
@@ -315,7 +315,7 @@ test("scheduledORM: mobile", async () => {
     );
     getService("offline").scheduleORM(
         "lead",
-        "web_save",
+        "web_save_offline",
         [[]],
         {},
         {
@@ -385,7 +385,7 @@ test("scheduledORM: mobile", async () => {
             options: {
                 clearBreadcrumbs: true,
                 props: {
-                    offlineId: "881ba65a",
+                    offlineId: "a351d2fe",
                     resId: undefined,
                 },
                 viewType: "form",
@@ -404,7 +404,7 @@ test("scheduledORM: inError mobile", async () => {
 
     getService("offline").scheduleORM(
         "partner",
-        "web_save",
+        "web_save_offline",
         [[]],
         {},
         {
@@ -421,7 +421,7 @@ test("scheduledORM: inError mobile", async () => {
 
     getService("offline").scheduleORM(
         "lead",
-        "web_save",
+        "web_save_offline",
         [[]],
         {},
         {

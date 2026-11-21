@@ -35,6 +35,7 @@ import {
 } from "./form_status_indicator/form_status_indicator";
 import { FormCogMenu } from "./form_cog_menu/form_cog_menu";
 
+<<<<<<< eedc4067655222d7bced965cc9371ad641c1e168
 import {
     Component,
     effect,
@@ -46,6 +47,11 @@ import {
     proxy,
     t,
 } from "@odoo/owl";
+||||||| 707ef495cd90e3b4f9501bb4fa8e7b3d2aec0996
+import { Component, onError, onMounted, onWillUnmount, status } from "@odoo/owl";
+=======
+import { Component, onError, onMounted, onWillUnmount, status, useEffect } from "@odoo/owl";
+>>>>>>> c80d1c6b8ce5250a917690eda95fd3cba08d7628
 import { FetchRecordError } from "@web/model/relational_model/errors";
 
 const viewRegistry = registry.category("views");
@@ -222,7 +228,20 @@ export class FormController extends Component {
                 this.props.updateActionState({ resId: this.model.root.resId });
             });
         });
+<<<<<<< eedc4067655222d7bced965cc9371ad641c1e168
         onWillDestroy(disposeEffect);
+||||||| 707ef495cd90e3b4f9501bb4fa8e7b3d2aec0996
+=======
+        const offlineState = useState(this.offlineService);
+        useEffect(
+            (isOffline) => {
+                if (!isOffline) {
+                    this.model.root.runPendingOnchanges();
+                }
+            },
+            () => [offlineState.offline]
+        );
+>>>>>>> c80d1c6b8ce5250a917690eda95fd3cba08d7628
 
         onError((error) => {
             const suggestedCompany = error.data?.context?.suggested_company;
