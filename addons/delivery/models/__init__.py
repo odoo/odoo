@@ -9,7 +9,6 @@ from . import (
     payment_method,
     payment_provider,
     payment_transaction,
-    product_category,
     res_partner,
     sale_order,
     sale_order_line,
