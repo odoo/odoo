@@ -218,6 +218,20 @@ registerCallAction("share-screen", {
         action.isActive ? ACTION_TAGS.SUCCESS : undefined,
     ],
 });
+registerCallAction("screen-annotation", {
+    condition: ({ channel, store }) =>
+        channel?.isSelfInCall && Boolean(store.rtc.screenAnnotation?.hasSharedScreen),
+    name: ({ store }) =>
+        store.rtc.screenAnnotation?.isDrawing
+            ? _t("Stop Drawing on Shared Screen")
+            : _t("Draw on Shared Screen"),
+    isActive: ({ store }) => Boolean(store.rtc.screenAnnotation?.isDrawing),
+    icon: "edit",
+    onSelected: ({ store }) => store.rtc.screenAnnotation?.toggle(),
+    sequence: 45,
+    sequenceGroup: 200,
+    tags: ({ action }) => (action.isActive ? [ACTION_TAGS.SUCCESS] : []),
+});
 registerCallAction("record-call", {
     condition: ({ channel, store }) =>
         Boolean(store.rtc?.channel) && channel?.eq(store.rtc.channel) && store.rtc.canRecord(),

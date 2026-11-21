@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="discuss.ScreenAnnotationOverlay">
+        <canvas class="o-discuss-ScreenAnnotationOverlay position-absolute top-0 start-0 w-100 h-100"
+            t-att-class="{ 'o-isDrawing': this.annotation.isDrawing }"
+            t-att-data-screen-session-id="this.props.session.id"
+            t-ref="this.canvas"
+            t-on-pointerdown="this.onPointerDown"
+            t-on-pointermove="this.onPointerMove"
+            t-on-pointerup="this.onPointerUp"
+            t-on-pointercancel="this.onPointerUp"
+            t-on-click.stop=""
+            t-on-mousedown.stop=""
+        />
+    </t>
+</templates>
