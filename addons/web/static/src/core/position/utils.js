@@ -155,10 +155,15 @@ function computePosition(
     // Boxes
     const popBox = popper.getBoundingClientRect();
     const targetBox = target.getBoundingClientRect();
-    const contBox = container.getBoundingClientRect();
     const iframeBox = iframe?.getBoundingClientRect() ?? { top: 0, left: 0 };
 
     const containerIsHTMLNode = container === container.ownerDocument.firstElementChild;
+    // The popper has a fixed positioning: when the container is the document
+    // element, it has to fit in the visible part of the document (the
+    // viewport), not in the whole (possibly scrolling) page.
+    const contBox = containerIsHTMLNode
+        ? { top: 0, left: 0, right: container.clientWidth, bottom: container.clientHeight }
+        : container.getBoundingClientRect();
     const containerIsInIframe =
         shouldAccountForIFrame && target.ownerDocument === container.ownerDocument;
 
@@ -195,22 +200,12 @@ function computePosition(
         const [directionSize, variantSize] = vertical
             ? [popBox.height, popBox.width]
             : [popBox.width, popBox.height];
-        let [directionMin, directionMax] = vertical
+        const [directionMin, directionMax] = vertical
             ? [contBox.top + topCompensation, contBox.bottom + topCompensation]
             : [contBox.left + leftCompensation, contBox.right + leftCompensation];
-        let [variantMin, variantMax] = vertical
+        const [variantMin, variantMax] = vertical
             ? [contBox.left + leftCompensation, contBox.right + leftCompensation]
             : [contBox.top + topCompensation, contBox.bottom + topCompensation];
-
-        if (containerIsHTMLNode) {
-            if (vertical) {
-                directionMin += container.scrollTop;
-                directionMax += container.scrollTop;
-            } else {
-                variantMin += container.scrollTop;
-                variantMax += container.scrollTop;
-            }
-        }
 
         // Compute overflows
         let directionOverflow = 0;
