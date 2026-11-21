@@ -192,9 +192,9 @@ class TestMailingSMSTest(TestMassSMSCommon, MockSmsTwilioApi):
         })
 
         for error_type, exp_state, exp_msg in [
-            (False, 'outgoing', '<ul><li>Test SMS successfully sent to +32456001122</li></ul>'),
+            (False, 'pending', '<ul><li>Test SMS successfully sent to +32456001122</li></ul>'),
             (
-                'wrong_number_format', 'outgoing',  # not sure why outgoing but hey
+                'wrong_number_format', 'error',
                 "<ul><li>Test SMS could not be sent to +32456001122: The number you're trying to reach is not correctly formatted</li></ul>"
             ),
         ]:
@@ -208,3 +208,23 @@ class TestMailingSMSTest(TestMassSMSCommon, MockSmsTwilioApi):
                 self.assertSMS(
                     self.env["res.partner"], '+32456001122', exp_state,
                 )
+
+    def test_mass_sms_test_queue(self):
+        """ Test SMS are sent by the wizard itself, the queue should not send them again """
+        mailing_test = self.env['mailing.sms.test'].with_user(self.user_marketing).create({
+            'numbers': '+32456001122',
+            'mailing_id': self.mailing_sms.id,
+        })
+        self.patch(
+            self.registry['ir.cron'],
+            '_commit_progress',
+            lambda cron_model, processed=0, remaining=None, **kwargs: 1,
+        )
+
+        with self.with_user('user_marketing'):
+            with self.mock_sms_twilio_gateway():
+                mailing_test.action_send_sms()
+                self.assertEqual(len(self._sms), 1)
+
+                self.env['sms.sms'].sudo()._process_queue()
+                self.assertEqual(len(self._sms), 1, 'Test SMS should be sent once, not queued for the cron to send again')
