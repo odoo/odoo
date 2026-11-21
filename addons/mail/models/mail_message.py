@@ -258,9 +258,7 @@ class MailMessage(models.Model):
         user = self.env.user
         guest = self.env['mail.guest']._get_guest_from_context()
         for message in self:
-            if not user._is_public() and (message.author_id and message.author_id == user.partner_id):
-                message.is_current_user_or_guest_author = True
-            elif message.author_guest_id and message.author_guest_id == guest:
+            if (not user._is_public() and (message.author_id and message.author_id == user.partner_id)) or (message.author_guest_id and message.author_guest_id == guest):
                 message.is_current_user_or_guest_author = True
             else:
                 message.is_current_user_or_guest_author = False
@@ -383,9 +381,7 @@ class MailMessage(models.Model):
         ))
         for id_, model, res_id, author_id, message_type, partner_id in self.env.cr.fetchall():
             ids.append(id_)
-            if author_id == pid:
-                allowed_ids.add(id_)
-            elif partner_id == pid:
+            if author_id == pid or partner_id == pid:
                 allowed_ids.add(id_)
             elif model and res_id and message_type != 'user_notification':
                 model_ids[model][res_id].add(id_)
