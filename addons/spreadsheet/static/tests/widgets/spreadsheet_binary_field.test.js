@@ -6,8 +6,10 @@ import { animationFrame } from "@odoo/hoot-mock";
 
 class TestSpreadsheet extends models.Model {
     _name = "test.spreadsheet";
-    spreadsheet_binary_data = fields.Binary();
-    _records = [{ spreadsheet_binary_data: "R0lGODlhDAMAKIFAF5LAP/zxANyuAP/gaP//wACH5BAEAUALAw" }];
+    spreadsheet_binary_data_computed = fields.Binary();
+    _records = [
+        { spreadsheet_binary_data_computed: "R0lGODlhDAMAKIFAF5LAP/zxANyuAP/gaP//wACH5BAEAUALAw" },
+    ];
 }
 
 defineMailModels();
@@ -24,13 +26,13 @@ test("Downloading dashboard json file should be disabled in list view", async ()
         type: "list",
         arch: `<list>
                     <field
-                        name="spreadsheet_binary_data"
+                        name="spreadsheet_binary_data_computed"
                         widget="binary_spreadsheet"
                         filename="dashboard.json"
                     />
                 </list>`,
     });
-    click(`.o_field_widget[name="spreadsheet_binary_data"]`);
+    click(`.o_field_widget[name="spreadsheet_binary_data_computed"]`);
     await animationFrame();
     expect.verifySteps([]);
 });
@@ -41,16 +43,15 @@ test("Download button for dashboard json file should be hidden in list view", as
         type: "list",
         arch: `<list>
                     <field
-                        name="spreadsheet_binary_data"
+                        name="spreadsheet_binary_data_computed"
                         widget="binary_spreadsheet"
                         filename="dashboard.json"
                     />
                 </list>`,
     });
-    expect(`.o_field_widget[name="spreadsheet_binary_data"] [data-icon="download"]`).toHaveCount(
-        0,
-        {
-            message: "The download button should be hidden",
-        }
-    );
+    expect(
+        `.o_field_widget[name="spreadsheet_binary_data_computed"] [data-icon="download"]`
+    ).toHaveCount(0, {
+        message: "The download button should be hidden",
+    });
 });
