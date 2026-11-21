@@ -401,6 +401,48 @@ class TestCIIFR(TestUBLCommon):
         )
         self._test_import_partner(invoice.ubl_cii_xml_id, self.partner_1, self.partner_2)
 
+    def test_import_partner_same_vat_facturx(self):
+        """
+        Test for when a child company share the same vat than its parent company
+        The one whose name matches the name in the document must be retrieved, ignoring supplier_rank
+        """
+        parent_company = self.env['res.partner'].create({
+            'name': 'Parent',
+            'is_company': True,
+            'vat': self.partner_1.vat,
+            'country_id': self.env.ref('base.fr').id,
+            'supplier_rank': 10,
+        })
+
+        branch_company = self.env['res.partner'].create({
+            'name': 'Branch',
+            'is_company': True,
+            'vat': parent_company.vat,
+            'country_id': self.env.ref('base.fr').id,
+            'supplier_rank': 1,
+            'peppol_eas': '9957',
+            'peppol_endpoint': parent_company.vat,
+            'invoice_edi_format': 'facturx',
+            'ref': 'ref_branch_company',
+            'bank_ids': [(0, 0, {'acc_number': 'FR15001559627299', 'allow_out_payment': True})],
+            'street': "Rue du Faubourg-Saint-Honoré, 55",
+            'zip': "75008",
+            'city': "Paris",
+            'phone': '+1 (650) 555-0111',
+            'email': "branch@yourcompany.com",
+        })
+
+        # Document issued with the branch company name in the XML
+        invoice = self._generate_move(
+            seller=branch_company,
+            buyer=self.partner_2,
+            move_type='out_invoice',
+            invoice_line_ids=[{'product_id': self.product_a.id}],
+        )
+
+        # Despite having a higher supplier rank, the Branch company is set as the partner as the name is matching in the XML
+        self._test_import_partner(invoice.ubl_cii_xml_id, branch_company, self.partner_2)
+
     def test_import_in_journal_facturx(self):
         invoice = self._generate_move(
             seller=self.partner_1,

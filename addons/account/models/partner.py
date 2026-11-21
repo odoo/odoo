@@ -911,30 +911,38 @@ class ResPartner(models.Model):
         if not vat or vat in ('/', 'na', 'NA'):
             return
 
+        name = (customer_values.get('name') or '').strip()
+
+        def vat_criterion(vat_domain):
+            if not name:
+                return {'domain': vat_domain}
+            return {
+                'search_method': self._import_retrieve_customer_from_vat_and_name,
+                'vat_domain': vat_domain,
+                'name': name,
+                'cache_key': f'vat_and_name:{vat_domain}:{name}',
+            }
+
         # Sometimes, the vat is specified with some whitespaces or dots.
         normalized_vat = vat.replace(' ', '').replace('.', '')
         country_prefix = re.match('^[a-zA-Z]{2}|^', vat).group()
 
         criteria = []
         if country_code := customer_values.get('country_code'):
-            criteria.append({'domain': [('vat', 'in', (normalized_vat, vat)), ('country_id.code', '=', country_code.upper())]})
-        criteria.append({'domain': [('vat', 'in', (normalized_vat, vat))]})
+            criteria.append(vat_criterion([('vat', 'in', (normalized_vat, vat)), ('country_id.code', '=', country_code.upper())]))
+        criteria.append(vat_criterion([('vat', 'in', (normalized_vat, vat))]))
         extra_vat_values = self._get_country_specific_vat_variants(normalized_vat, country_prefix)
         if extra_vat_values:
-            criteria.append({'domain': [('vat', 'in', extra_vat_values)]})
+            criteria.append(vat_criterion([('vat', 'in', extra_vat_values)]))
         if country_prefix:
-            criteria.append({
-                'domain': [
-                    ('vat', 'in', (normalized_vat[2:], vat[2:])),
-                    ('country_id.code', '=', country_prefix.upper()),
-                ],
-            })
-            criteria.append({
-                'domain': [
-                    ('vat', 'in', (normalized_vat[2:], vat[2:])),
-                    ('country_id.code', '=', False),
-                ],
-            })
+            criteria.append(vat_criterion([
+                ('vat', 'in', (normalized_vat[2:], vat[2:])),
+                ('country_id.code', '=', country_prefix.upper()),
+            ]))
+            criteria.append(vat_criterion([
+                ('vat', 'in', (normalized_vat[2:], vat[2:])),
+                ('country_id.code', '=', False),
+            ]))
 
         try:
             vat_only_numeric = str(int(re.sub(r'^\D{2}', '', normalized_vat) or 0))
@@ -969,6 +977,20 @@ class ResPartner(models.Model):
         return {
             'criteria': criteria,
         }
+
+    @api.model
+    def _import_retrieve_customer_from_vat_and_name(self, customer_values):
+        order = 'is_company DESC, supplier_rank DESC, company_id, parent_id DESC, id DESC'
+        domain = Domain.AND([customer_values['static_domain'], customer_values['vat_domain']])
+        partners = self.search(domain, order=order, limit=2)
+        if len(partners) > 1:
+            if partner_matching_name := self.search(
+                Domain.AND([domain, [('name', '=ilike', customer_values['name'])]]),
+                order=order,
+                limit=1,
+            ):
+                return partner_matching_name
+        return partners[:1]
 
     @api.model
     def _get_country_specific_vat_variants(self, normalized_vat, country_prefix):
