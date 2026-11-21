@@ -1,3 +1,5 @@
+import { closeStream } from "@mail/utils/common/misc";
+
 import { Component, onWillDestroy, onWillStart, useState } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
@@ -44,7 +46,21 @@ export class DeviceSelect extends Component {
     }
 
     async updateDevicesList() {
+        let stream;
+        if (
+            !isBrowserChrome() &&
+            this.isPermissionGranted(this.props.kind) &&
+            !this.store.rtc.selfSession
+        ) {
+            stream = await browser.navigator.mediaDevices.getUserMedia({
+                audio: this.props.kind !== "videoinput",
+                video: this.props.kind === "videoinput",
+            });
+        }
         this.state.userDevices = await browser.navigator.mediaDevices.enumerateDevices();
+        if (stream) {
+            closeStream(stream);
+        }
     }
 
     async setupEventListeners() {
