@@ -11,12 +11,13 @@
         </xpath>
         <xpath expr="//div[@id='right-elements']" position="after">
             <t t-set="l10n_in_einvoice_json" t-value="o._get_l10n_in_edi_response_json()"/>
-            <div t-attf-class="#{'col-5' if report_type != 'html' else 'ms-auto'} row avoid-page-break-inside" t-if="l10n_in_einvoice_json">
+            <div t-attf-class="#{'col-5' if report_type != 'html' else 'ms-auto'} mt-2 row avoid-page-break-inside" t-if="l10n_in_einvoice_json">
                 <div class="col-7 me-2" t-attf-style="#{'' if report_type != 'html' else 'padding: 0 !important;'}">
-                    <strong>IRN:</strong>
+                    <strong>E-Invoice IRN:</strong>
                     <span t-out="l10n_in_einvoice_json['Irn']"/>
                 </div>
-                <div class="col-3 mt-1">
+                <div class="col-3">
+                    <strong class="text-nowrap">E-Invoice QR Code:</strong>
                     <img t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;quiet=%s' %('QR', l10n_in_einvoice_json['SignedQRCode'], 500, 500, 0)" style="max-height: 155px"/>
                 </div>
             </div>
