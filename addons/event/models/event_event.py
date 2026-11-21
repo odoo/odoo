@@ -543,7 +543,11 @@ class EventEvent(models.Model):
             if event.event_type_id.event_type_ticket_ids:
                 command += [
                     Command.create({
-                        attribute_name: line[attribute_name] if not isinstance(line[attribute_name], models.BaseModel) else line[attribute_name].id
+                        attribute_name: (
+                            line[attribute_name].ids if line._fields[attribute_name].type == 'many2many'
+                            else line[attribute_name] if not isinstance(line[attribute_name], models.BaseModel)
+                            else line[attribute_name].id
+                        )
                         for attribute_name in self.env['event.type.ticket']._get_event_ticket_fields_whitelist()
                     }) for line in event.event_type_id.event_type_ticket_ids
                 ]

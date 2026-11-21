@@ -17,6 +17,7 @@
             </field>
             <field name="description" position="after">
                 <field name="price"/>
+                <field name="optional_product_ids" widget="many2many_tags" optional="show"/>
             </field>
         </field>
     </record>
@@ -36,6 +37,7 @@
             </field>
             <field name="description" position="after">
                 <field name="price"/>
+                <field name="optional_product_ids" widget="many2many_tags"/>
             </field>
         </field>
     </record>
@@ -64,6 +66,7 @@
                 <field name="currency_id" column_invisible="True"/> <!-- Used to get the currency symbol on the ticket price. -->
                 <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                 <field name="additional_product_ids" widget="many2many_tags" optional="hide"/>
+                <field name="optional_product_ids" widget="many2many_tags" optional="show"/>
                 <field name="total_price" optional="hide"/>
             </field>
         </field>
@@ -84,6 +87,7 @@
             </field>
             <field name="description" position="after">
                 <field name="price"/>
+                <field name="optional_product_ids" widget="many2many_tags"/>
             </field>
         </field>
     </record>

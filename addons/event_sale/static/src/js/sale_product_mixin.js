@@ -80,6 +80,22 @@ const eventSaleProductMixin = () => ({
                             });
                             this.props.record.model.root.data.order_line.leaveEditMode();
                         }
+                        if (eventTicketInfo?.ticket_option_product_ids?.currentIds.length) {
+                            // one line per option the salesperson ticked, for every attendee of the
+                            // ticket; attendees are then registered with these options on confirmation
+                            const quantity = this.props.record.data.product_uom_qty;
+                            const orderLines = this.props.record.model.root.data.order_line;
+                            for (const productId of eventTicketInfo.ticket_option_product_ids.currentIds) {
+                                const line = await orderLines.addNewRecord({ position: "bottom" });
+                                await line.update({
+                                    product_id: { id: productId },
+                                    product_uom_qty: quantity,
+                                    linked_virtual_id: soLineVirtualId,
+                                    is_event_ticket_option: true,
+                                });
+                                orderLines.leaveEditMode();
+                            }
+                        }
                     }
                 }
             }

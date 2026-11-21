@@ -39,6 +39,10 @@
                         required="event_id"
                         context="{'name_with_seats_availability': True}"
                         options="{'no_open': True, 'no_create': True}"/>
+                    <field name="optional_product_ids" invisible="1"/> <!-- domain of the options -->
+                    <field name="ticket_option_product_ids" widget="many2many_checkboxes"
+                        domain="[('id', 'in', optional_product_ids)]"
+                        invisible="not optional_product_ids"/>
                     <field name="product_id" invisible="1"/> <!-- used in the domain of event_id, event_ticket_id -->
                 </group>
                 <footer>

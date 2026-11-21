@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, models
+from odoo import Command, _, models
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -29,6 +29,16 @@ class SaleOrder(models.Model):
             event_ticket_id=event_ticket_id,
             **kwargs,
         )
+
+        if (
+            order_line.is_event_ticket_option
+            and not self.env.context.get('event_ticket_option_sync')
+            and new_qty > order_line.product_uom_qty
+        ):
+            # option quantities follow the attendees' choices
+            return order_line.product_uom_qty, _(
+                "Options are chosen per attendee: register a new attendee to add this option again.",
+            )
 
         if not event_ticket_id:
             if not order_line.event_ticket_id or new_qty < order_line.product_uom_qty:
@@ -96,6 +106,9 @@ class SaleOrder(models.Model):
 
     def _cart_update_order_line(self, order_line, quantity, **kwargs):
         old_qty = order_line.product_uom_qty
+        was_option = order_line.is_event_ticket_option
+        ticket_line = order_line.linked_line_id if was_option else order_line
+        product = order_line.product_id
 
         updated_line = super()._cart_update_order_line(order_line, quantity, **kwargs)
 
@@ -118,7 +131,32 @@ class SaleOrder(models.Model):
             )
             attendees.action_cancel()
 
+        if self.env.context.get('event_ticket_option_sync'):
+            return updated_line
+
+        if was_option and ticket_line.exists():
+            # Option lowered or removed in the cart: drop it from the attendees who registered
+            # last, so that registrations and order stay consistent.
+            remaining = int(updated_line.product_uom_qty) if updated_line else 0
+            holders = self._get_event_ticket_option_registrations(ticket_line).filtered(
+                lambda registration: product in registration.ticket_option_product_ids,
+            )
+            holders[remaining:].with_context(event_ticket_option_sync=True).write({
+                'ticket_option_product_ids': [Command.unlink(product.id)],
+            })
+
         return updated_line
+
+    def _create_event_ticket_option_line(self, ticket_line, product, quantity):
+        """ Override of `event_sale` to add the option to website carts like any cart line. """
+        if not self.website_id:
+            return super()._create_event_ticket_option_line(ticket_line, product, quantity)
+        values = self.with_context(event_ticket_option_sync=True)._cart_add(
+            product_id=product.id, quantity=quantity, linked_line_id=ticket_line.id,
+        )
+        line = self.env['sale.order.line'].browse(values['line_id'])
+        line.is_event_ticket_option = True
+        return line
 
     def _filter_can_send_abandoned_cart_followup(self):
         # Prevent carts with expired/sold out tickets from being subject of reminder emails
@@ -131,7 +169,11 @@ class SaleOrder(models.Model):
         registrations."""
         res = super()._needs_customer_address()
 
-        if self.order_line and all(line.event_ticket_id for line in self.order_line):
+        # service options are part of the registration; goods ones need the address to be delivered
+        if self.order_line and all(
+            line.event_ticket_id or (line.is_event_ticket_option and line.product_id.type == "service")
+            for line in self.order_line
+        ):
             return self.env["ir.config_parameter"].sudo().get_bool(
                     "website_event_sale.require_billing_details_for_events"
             )

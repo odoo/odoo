@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
@@ -57,3 +59,44 @@ class SaleOrder(models.Model):
 
     def _get_product_catalog_domain(self):
         return super()._get_product_catalog_domain() & Domain('service_tracking', '!=', 'event')
+
+    def _get_event_ticket_option_registrations(self, ticket_line):
+        return self.env['event.registration'].sudo().search([
+            ('sale_order_line_id', '=', ticket_line.id),
+            ('state', '!=', 'cancel'),
+        ], order='create_date asc, id asc')
+
+    def _sync_event_ticket_option_lines(self, ticket_lines):
+        """ Make the option lines match what the (non cancelled) attendees of each ticket line
+        chose: one option line per (ticket line, product), its quantity being the number of
+        attendees who picked the option. """
+        self.ensure_one()
+        order = self.with_context(event_ticket_option_sync=True)
+        for ticket_line in ticket_lines.exists():
+            wanted = defaultdict(int)
+            for registration in self._get_event_ticket_option_registrations(ticket_line):
+                for product in registration.ticket_option_product_ids:
+                    wanted[product.id] += 1
+
+            option_lines = ticket_line.linked_line_ids.filtered('is_event_ticket_option')
+            for line in option_lines:
+                quantity = wanted.pop(line.product_id.id, 0)
+                if not quantity and self.state in ('draft', 'sent'):
+                    line.unlink()
+                elif quantity != line.product_uom_qty:
+                    # a confirmed order keeps its lines: a quantity of 0 removes the option
+                    line.product_uom_qty = quantity
+            products = self.env['product.product'].browse(wanted)
+            for product in products:
+                order._create_event_ticket_option_line(ticket_line, product, wanted[product.id])
+
+    def _create_event_ticket_option_line(self, ticket_line, product, quantity):
+        """ Add the option line of a ticket line; overridden to go through the cart on websites. """
+        self.ensure_one()
+        return self.env['sale.order.line'].create({
+            'order_id': self.id,
+            'product_id': product.id,
+            'product_uom_qty': quantity,
+            'linked_line_id': ticket_line.id,
+            'is_event_ticket_option': True,
+        })

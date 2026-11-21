@@ -33,6 +33,12 @@ class EventTypeTicket(models.Model):
     additional_product_ids = fields.Many2many('product.product', string='Additional Products',
             domain=[('service_tracking', '!=', 'event')],
             help="Select products to include with each registration. They will also show up separately on Sale Orders.")
+    optional_product_ids = fields.Many2many(
+        'product.product', 'event_type_ticket_optional_product_rel', 'ticket_id', 'product_id',
+        string='Optional Products',
+        domain=[('service_tracking', '!=', 'event'), ('sale_ok', '=', True)],
+        help="Optional products each attendee may choose with this ticket (e.g. lunch, party), none of them selected by default. "
+             "Each chosen product is sold at its own price, on top of the ticket price.")
     total_price = fields.Float(string='Total Price', compute='_compute_total_price', min_display_digits='Product Price',
         help="Price at which this ticket will be sold, which takes into account the Ticket Price and the price of every Additional Product")
     total_price_reduce = fields.Float(string='Total Price Reduce', compute='_compute_price_reduce',
@@ -101,4 +107,4 @@ class EventTypeTicket(models.Model):
     @api.model
     def _get_event_ticket_fields_whitelist(self):
         """ Add sale specific fields to copy from template to ticket """
-        return super()._get_event_ticket_fields_whitelist() + ['product_id', 'price']
+        return super()._get_event_ticket_fields_whitelist() + ['product_id', 'price', 'optional_product_ids']

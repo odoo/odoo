@@ -1,15 +1,55 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
 from collections import defaultdict
+
+from odoo import Command
 from odoo.http import request, route
 from odoo.tools import float_is_zero
 
 from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.addons.website_event.controllers.main import WebsiteEventController
 
+# checkbox name in the attendee form: ticket_option_<attendee index>_<product id>
+OPTION_INPUT_RE = re.compile(r'ticket_option_(\d+)_(\d+)')
+
 
 class WebsiteEventSaleController(WebsiteEventController):
+
+    def _process_attendees_form(self, event, form_details):
+        """ Turn the ticked option checkboxes into ``ticket_option_product_ids`` on each
+        attendee's registration values.
+
+        Checkboxes are regrouped under a ``<index>-ticket_option_product_ids`` key so that the
+        core parser attaches them to the right attendee, then checked against the options really
+        offered by the attendee's ticket.
+        """
+        form_details = dict(form_details)
+        options_per_attendee = defaultdict(list)
+        for key, value in form_details.items():
+            match = OPTION_INPUT_RE.fullmatch(key)
+            if match and value:
+                options_per_attendee[match[1]].append(match[2])
+        # never trust a directly posted value for the field
+        for key in [key for key in form_details if key.endswith('-ticket_option_product_ids')]:
+            del form_details[key]
+        for index, product_ids in options_per_attendee.items():
+            form_details[f'{index}-ticket_option_product_ids'] = ','.join(product_ids)
+
+        registrations = super()._process_attendees_form(event, form_details)
+
+        tickets_sudo = request.env['event.event.ticket'].sudo()
+        for registration in registrations:
+            raw_ids = registration.pop('ticket_option_product_ids', '')
+            if not raw_ids:
+                continue
+            asked_ids = {int(product_id) for product_id in raw_ids.split(',')}
+            ticket = tickets_sudo.browse(registration.get('event_ticket_id') or [])
+            options = ticket.optional_product_ids.filtered(lambda product: product.id in asked_ids)
+            if options:
+                registration['ticket_option_product_ids'] = [Command.set(options.ids)]
+        return registrations
 
     def _process_tickets_form(self, event, form_details):
         """ Add price information on ticket order """
@@ -29,8 +69,13 @@ class WebsiteEventSaleController(WebsiteEventController):
             for event_ticket in request.env['event.event.ticket'].sudo().browse(event_ticket_ids)
         }
 
-        if all(event_ticket.total_price == 0 for event_ticket in event_ticket_by_id.values()) and not request.cart.id:
-            # all chosen tickets are free AND no existing SO -> skip SO and payment process
+        has_options = any(data.get('ticket_option_product_ids') for data in registration_data)
+        if (
+            all(event_ticket.total_price == 0 for event_ticket in event_ticket_by_id.values())
+            and not request.cart.id
+            and not has_options
+        ):
+            # all chosen tickets are free AND no existing SO AND no option -> skip SO and payment process
             return super()._create_attendees_from_registration_post(event, registration_data)
 
         order_sudo = request.cart or self.env.website._create_cart()
