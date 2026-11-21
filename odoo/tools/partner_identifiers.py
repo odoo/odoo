@@ -31,6 +31,7 @@ from odoo.tools.partner_identifier_validation import (
     it_cuc_validate,
     at_en_validate,
     at_steuernummer_validate,
+    kr_sub_business_number_validate,
 )
 
 from odoo.addons.base.models.res_country import (
@@ -751,6 +752,15 @@ ADDITIONAL_IDENTIFIERS_METADATA = {
         'label': _lt('Company ID'),
         'category': 'EN',
         'countries': ['KE'],
+    },
+    'KR_SUB_BUSINESS_NUMBER': {
+        'sequence': 20,
+        'label': _lt('Sub-Business Number'),
+        'help': _lt("4-digit number identifying a place of business registered under the head office's business registration number."),
+        'placeholder': '0000',
+        'category': 'EN',
+        'validation_function': kr_sub_business_number_validate,
+        'countries': ['KR'],
     },
     'LEI': {
         'sequence': 100,
