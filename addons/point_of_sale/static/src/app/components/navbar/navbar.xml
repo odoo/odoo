@@ -2,7 +2,12 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.Navbar">
-        <div class="pos-topheader position-relative d-flex align-items-center justify-content-between gap-1 p-2 m-0 bg-view border-bottom">
+        <!-- While the login screen is shown it covers the whole viewport, but the
+        navbar behind it stays in the DOM and its buttons remain focusable and
+        clickable, so keyboard navigation (Tab) could reach and activate them
+        without a PIN. Marking the navbar inert disables focus and interaction for
+        everything behind the login overlay until a cashier logs in again. -->
+        <div class="pos-topheader position-relative d-flex align-items-center justify-content-between gap-1 p-2 m-0 bg-view border-bottom" t-att-inert="this.pos.router.currentScreen() === 'LoginScreen'">
             <div class="pos-leftheader d-flex align-items-center flex-grow-1 overflow-auto min-w-0" t-att-class="{'d-none': this.ui.isSmall and this.state.searchBarOpen, 'mw-100': this.pos.getOrder()}">
                 <div class="d-flex flex-shrink-0 align-items-center gap-2 gap-lg-3 position-relative pe-2 min-w-0" t-att-class="{ 'w-100': !this.ui.isSmall }">
                     <div class="navbar-menu btn-group" role="group" aria-label="Navigation Menu">
