@@ -92,6 +92,10 @@ export class Chatbot extends Record {
      * @param {import("models").Message} message
      */
     async processAnswer(message) {
+        if (!message) {
+            this.isProcessingAnswer = false;
+            return;
+        }
         if (
             this.forwarded ||
             this.thread.notEq(message.thread) ||
