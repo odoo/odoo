@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-23 17:42+0000\n"
-"PO-Revision-Date: 2026-11-10 12:12+0000\n"
+"PO-Revision-Date: 2026-11-17 15:34+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-20/"
 "payment_authorize/es/>\n"
@@ -21,17 +21,17 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "ABA Routing Number"
-msgstr "Número de enrutamiento ABA"
+msgstr "Número de ruta ABA"
 
 #. module: payment_authorize
 #: model:payment.method,name:payment_authorize.payment_method_ach_direct_debit
 msgid "ACH Direct Debit"
-msgstr ""
+msgstr "Domiciliación bancaria ACH"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
@@ -61,7 +61,7 @@ msgstr "Número de cuenta"
 #. module: payment_authorize
 #: model:payment.method,name:payment_authorize.payment_method_amex
 msgid "American Express"
-msgstr ""
+msgstr "American Express"
 
 #. module: payment_authorize
 #: model:ir.module.module,summary:base.module_payment_authorize
@@ -71,27 +71,27 @@ msgstr "Un proveedor de pago que cubre los EE. UU., Australia y Canadá."
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_client_key
 msgid "Authorize API Client Key"
-msgstr ""
+msgstr "Clave de cliente de la API de Authorize"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_login
 msgid "Authorize API Login ID"
-msgstr ""
+msgstr "ID de inicio de sesión de la API de Authorize"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_signature_key
 msgid "Authorize API Signature Key"
-msgstr ""
+msgstr "Clave de firma de la API de Authorize"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_transaction_key
 msgid "Authorize API Transaction Key"
-msgstr ""
+msgstr "Clave de transacción de la API de Authorize"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_webhook_id
 msgid "Authorize Webhook ID"
-msgstr ""
+msgstr "ID del webhook de Authorize"
 
 #. module: payment_authorize
 #: model:ir.model.fields.selection,name:payment_authorize.selection__payment_provider__code__authorize
@@ -117,12 +117,12 @@ msgstr "Nombre del banco"
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Business Checking"
-msgstr ""
+msgstr "Cuenta corriente de empresa"
 
 #. module: payment_authorize
 #: model:payment.method,name:payment_authorize.payment_method_card
 msgid "Card"
-msgstr ""
+msgstr "Tarjeta"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -146,14 +146,14 @@ msgid ""
 "Could not fetch merchant details:\n"
 "%s"
 msgstr ""
-"No se pudieron obtener los detalles del comerciante:\n"
+"No se han podido obtener los detalles del comerciante:\n"
 "%s"
 
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/models/authorize_request.py:0
 msgid "Could not retrieve the transaction details."
-msgstr ""
+msgstr "No se han podido obtener los detalles de la transacción."
 
 #. module: payment_authorize
 #. odoo-python
@@ -162,18 +162,18 @@ msgid ""
 "Could not retrieve the transaction details. (error code: %(error_code)s; "
 "error_details: %(error_message)s)"
 msgstr ""
-"No fue posible obtener los detalles de la transacción. (Código de error: %"
-"(error_code)s; detalles del error: %(error_message)s)"
+"No ha sido posible obtener los detalles de la transacción. (Código de error: "
+"%(error_code)s; detalles del error: %(error_message)s)"
 
 #. module: payment_authorize
 #: model:payment.method,name:payment_authorize.payment_method_diners
 msgid "Diners Club International"
-msgstr ""
+msgstr "Diners Club International"
 
 #. module: payment_authorize
 #: model:payment.method,name:payment_authorize.payment_method_discover
 msgid "Discover"
-msgstr ""
+msgstr "Discover"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__display_name
@@ -205,7 +205,7 @@ msgstr "Generar clave de cliente"
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
 msgid "Generate Your Webhook"
-msgstr ""
+msgstr "Genera tu webhook"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__id
@@ -217,7 +217,7 @@ msgstr "ID"
 #. module: payment_authorize
 #: model:payment.method,name:payment_authorize.payment_method_jcb
 msgid "JCB"
-msgstr ""
+msgstr "JCB"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -227,18 +227,18 @@ msgstr "MM"
 #. module: payment_authorize
 #: model:payment.method,name:payment_authorize.payment_method_mastercard
 msgid "MasterCard"
-msgstr ""
+msgstr "Mastercard"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Name On Account"
-msgstr "Nombre en cuenta"
+msgstr "Nombre en la cuenta"
 
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_provider.py:0
 msgid "Only one currency can be selected by Authorize.Net account."
-msgstr "Solo puede seleccionar una moneda por cuenta de Authorize.Net."
+msgstr "Solo se puede seleccionar una moneda por cuenta de Authorize.net."
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_provider
@@ -269,17 +269,17 @@ msgstr "Error al procesar el pago"
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Personal Checking"
-msgstr ""
+msgstr "Cuenta corriente personal"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Personal Savings"
-msgstr ""
+msgstr "Cuenta de ahorro personal"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
 msgid "Re-generate Your Webhook"
-msgstr ""
+msgstr "Vuelve a generar tu webhook"
 
 #. module: payment_authorize
 #. odoo-python
@@ -287,30 +287,29 @@ msgstr ""
 msgid ""
 "Received data with status code \"%(status)s\" and error code \"%(error)s\"."
 msgstr ""
-"Datos recibidos con código de estado \"%(status)s\" y código de error \"%"
-"(error)s\"."
+"Datos recibidos con código de estado «%(status)s» y código de error «%(error)"
+"s»."
 
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/controllers/main.py:0
 msgid "Received tampered payment request data."
-msgstr "Datos de solicitud de pago manipulados recibidos."
+msgstr "Se han recibido datos manipulados en la solicitud de pago."
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
 msgid "Set Account Currency"
-msgstr "Establecer la moneda de la cuenta"
+msgstr "Definir la moneda de la cuenta"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_provider__authorize_webhook_id
 msgid "The ID of the webhook created in Authorize.net."
-msgstr ""
+msgstr "El ID del webhook creado en Authorize.net."
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_provider__authorize_login
 msgid "The ID solely used to identify the account with Authorize.Net"
-msgstr ""
-"El ID utilizado únicamente para identificar la cuenta con Authorize.Net"
+msgstr "El ID utilizado únicamente para identificar la cuenta con Authorize.Net"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_provider__authorize_client_key
@@ -318,13 +317,13 @@ msgid ""
 "The public client key. To generate directly from Odoo or from Authorize.Net "
 "backend."
 msgstr ""
-"La clave del cliente público. Para generar directamente desde Odoo o desde "
-"Authorize.Net backend."
+"La clave pública del cliente. Se puede generar directamente desde Odoo o "
+"desde el back-end de Authorize.net."
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_provider__code
 msgid "The technical code of this payment provider."
-msgstr "El código técnico de este proveedor de pagos."
+msgstr "El código técnico de este proveedor de pago."
 
 #. module: payment_authorize
 #. odoo-python
@@ -342,8 +341,8 @@ msgid ""
 "The unique reference for the partner/token combination in the Authorize.net "
 "backend."
 msgstr ""
-"La referencia única para la combinación de contacto y token en el backend de "
-"Authorize.Net."
+"La referencia única para la combinación de contacto y token en el back-end "
+"de Authorize.net."
 
 #. module: payment_authorize
 #. odoo-python
@@ -354,23 +353,23 @@ msgstr "No se ha encontrado la transacción."
 #. module: payment_authorize
 #: model:payment.method,name:payment_authorize.payment_method_visa
 msgid "VISA"
-msgstr ""
+msgstr "VISA"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
 msgid "Webhook ID"
-msgstr ""
+msgstr "ID del webhook"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "YY"
-msgstr "YY"
+msgstr "AA"
 
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_provider.py:0
 msgid "Your Authorize.Net webhook was successfully set up!"
-msgstr ""
+msgstr "Tu webhook de Authorize.Net se ha configurado correctamente."
 
 #~ msgid "How to get paid with Authorize.Net"
 #~ msgstr "Cómo recibir pagos con Authorize.Net"

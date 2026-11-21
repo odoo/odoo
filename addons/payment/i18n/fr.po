@@ -13,18 +13,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 17:39+0000\n"
-"PO-Revision-Date: 2026-09-09 14:04+0000\n"
+"POT-Creation-Date: 2026-11-20 17:38+0000\n"
+"PO-Revision-Date: 2026-11-18 08:33+0000\n"
 "Last-Translator: \"Cécile Collart (cco)\" <cco@odoo.com>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-master/"
-"payment/fr/>\n"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-20/payment/"
+"fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_method
@@ -95,7 +95,7 @@ msgstr "<small class=\"text-600\">Enregistrer mes données de paiement</small>"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.amount_input
 msgid "<small>Amount</small>"
-msgstr ""
+msgstr "<small>Montant</small>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -142,6 +142,10 @@ msgid ""
 "                            Test Mode\n"
 "                        </span>"
 msgstr ""
+"<span invisible=\"is_live\" class=\"badge rounded-pill text-bg-warning "
+"fs-6\">\n"
+"                            Mode test\n"
+"                        </span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
@@ -200,6 +204,10 @@ msgid ""
 "                        supported; please use the <em>Duplicate</em> action "
 "instead."
 msgstr ""
+"<strong>Avertissement :</strong> La création d'un fournisseur de paiement de "
+"toutes pièces n'est pas\n"
+"                        prise en charge ; veuillez plutôt utiliser l'action "
+"<em>Dupliquer</em>."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -239,7 +247,7 @@ msgstr "Actif"
 #. module: payment
 #: model:ir.actions.server,name:payment.action_add_payment_method
 msgid "Add a Payment Method"
-msgstr ""
+msgstr "Ajouter un mode de paiement"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_address
@@ -254,12 +262,12 @@ msgstr "Adyen"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "All Countries"
-msgstr ""
+msgstr "Tous les pays"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "All Currencies"
-msgstr ""
+msgstr "Toutes les devises"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__allow_express_checkout
@@ -275,6 +283,7 @@ msgstr "Autoriser l'enregistrement des modes de paiement"
 #: model:ir.model.fields,help:payment.field_payment_method__allow_amount_selection
 msgid "Allow splitting payments across several payment methods."
 msgstr ""
+"Autoriser la répartition des paiements entre plusieurs modes de paiement."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__captured_amount
@@ -303,7 +312,7 @@ msgstr "Montant"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__allow_amount_selection
 msgid "Amount Selection"
-msgstr ""
+msgstr "Sélection du montant"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__amount_to_capture
@@ -342,6 +351,8 @@ msgid ""
 "Are you sure you want to void the authorized transaction? "
 "This                                  action can't be undone."
 msgstr ""
+"Êtes-vous sûr de vouloir annuler la transaction autorisée ? "
+"Cette                                  action est irréversible."
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_asiapay
@@ -444,7 +455,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__child_transaction_count
 msgid "Child Transaction Count"
-msgstr ""
+msgstr "Nombre de transactions enfants"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__child_transaction_ids
@@ -561,7 +572,7 @@ msgstr "Créer un client"
 #: model_terms:ir.ui.view,arch_db:payment.payment_data_form
 #: model_terms:ir.ui.view,arch_db:payment.payment_data_list
 msgid "Created On"
-msgstr ""
+msgstr "Créé le"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__create_uid
@@ -690,7 +701,7 @@ msgstr "Erreur"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_data__error_traceback
 msgid "Error Traceback"
-msgstr ""
+msgstr "Trace de l'erreur"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__support_express_checkout
@@ -719,12 +730,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "Express checkout not supported"
-msgstr ""
+msgstr "Paiement rapide non pris en charge"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_data__errored
 msgid "Failed"
-msgstr ""
+msgstr "Échec"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
@@ -820,6 +831,9 @@ msgid ""
 "If live mode is disabled, a fake payment is processed through a test payment "
 "interface. This mode is advised when setting up the provider."
 msgstr ""
+"Si le mode réel est désactivé, un paiement fictif est traité via une "
+"interface de paiement de test. Ce mode est recommandé lors de la "
+"configuration du fournisseur."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__image
@@ -830,19 +844,19 @@ msgstr "Image"
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "Incompatible country"
-msgstr ""
+msgstr "Pays incompatible"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "Incompatible currency"
-msgstr ""
+msgstr "Devise incompatible"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "Incompatible website"
-msgstr ""
+msgstr "Site web incompatible"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__inline_form_view_id
@@ -873,7 +887,7 @@ msgstr "Installé"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_config_settings__installed_provider_id
 msgid "Installed Provider"
-msgstr ""
+msgstr "Fournisseur installé"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__is_amount_to_capture_valid
@@ -952,12 +966,12 @@ msgstr "Mis à jour le"
 #: model:ir.model.fields,field_description:payment.field_payment_provider__is_live
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
 msgid "Live"
-msgstr ""
+msgstr "Réel"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__image_128
 msgid "Logo"
-msgstr ""
+msgstr "Logo"
 
 #. module: payment
 #: model:portal.entry,description:payment.payment_methods_portal_entry
@@ -978,18 +992,18 @@ msgstr "Capture manuelle prise en charge"
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "Manual capture not supported"
-msgstr ""
+msgstr "Capture manuelle non prise en charge"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "Manually confirmed by the user."
-msgstr ""
+msgstr "Confirmé manuellement par l'utilisateur."
 
 #. module: payment
 #: model:ir.actions.server,name:payment.action_confirm_payment_transaction
 msgid "Mark as Confirmed"
-msgstr ""
+msgstr "Marquer comme confirmé"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__maximum_amount
@@ -1023,7 +1037,7 @@ msgstr "Messages"
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_list
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_list
 msgid "Method"
-msgstr ""
+msgstr "Mode"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__minimum_amount
@@ -1034,7 +1048,7 @@ msgstr "Montant minimum"
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "Minimum or maximum amount exceeded"
-msgstr ""
+msgstr "Montant minimum ou maximum dépassé"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_mollie
@@ -1134,12 +1148,12 @@ msgstr "Opération"
 #: code:addons/payment/models/payment_transaction.py:0
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Operations"
-msgstr ""
+msgstr "Opérations"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Options"
-msgstr ""
+msgstr "Options"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
@@ -1149,7 +1163,7 @@ msgstr "Autres modes de paiement"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Others"
-msgstr ""
+msgstr "Autres"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_manual_capture__partial
@@ -1187,7 +1201,7 @@ msgstr "Libellé \"Payer maintenant\""
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_pay_on_invoice
 msgid "Pay on Invoice"
-msgstr ""
+msgstr "Payer sur facture"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_paypal
@@ -1197,12 +1211,12 @@ msgstr "PayPal"
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_payu
 msgid "PayU"
-msgstr ""
+msgstr "PayU"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_data__payload
 msgid "Payload"
-msgstr ""
+msgstr "Données utiles"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -1223,7 +1237,7 @@ msgstr "Confirmation de paiement"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__payment_data_count
 msgid "Payment Data Count"
-msgstr ""
+msgstr "Nombre de données de paiement"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__payment_details
@@ -1233,13 +1247,13 @@ msgstr "Détails du paiement"
 #. module: payment
 #: model:ir.module.module,shortdesc:base.module_payment
 msgid "Payment Engine"
-msgstr ""
+msgstr "Moteur de paiement"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 msgid "Payment History"
-msgstr ""
+msgstr "Historique des paiements"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__link
@@ -1348,13 +1362,13 @@ msgstr "Mode de paiement"
 #. odoo-javascript
 #: code:addons/payment/static/src/interactions/payment_form.js:0
 msgid "Payment method unavailable"
-msgstr ""
+msgstr "Mode de paiement indisponible"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "Payment method with duplicate code"
-msgstr ""
+msgstr "Mode de paiement avec un code en double"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.availability_report
@@ -1386,16 +1400,20 @@ msgid ""
 "queue payment data for processing, or pass payment_safe_write=True to the "
 "context after ensuring that the update can tolerate a rollback."
 msgstr ""
+"Les transactions de paiement ne doivent pas être mises à jour directement. "
+"Utilisez _record() pour mettre les données de paiement en file d'attente en "
+"vue de leur traitement, ou transmettez payment_safe_write=True au contexte "
+"après vous être assuré que la mise à jour peut supporter une annulation."
 
 #. module: payment
 #: model:ir.actions.server,name:payment.post_processing_cron_ir_actions_server
 msgid "Payment: Run Post-processing"
-msgstr ""
+msgstr "Paiement : exécuter le post-traitement"
 
 #. module: payment
 #: model:ir.actions.server,name:payment.processing_cron_ir_actions_server
 msgid "Payment: Run Processing"
-msgstr ""
+msgstr "Paiement : exécuter le traitement"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_form
@@ -1425,12 +1443,12 @@ msgstr "Message en attente"
 #: model_terms:ir.ui.view,arch_db:payment.payment_data_list
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Pending Updates"
-msgstr ""
+msgstr "Mises à jour en attente"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_data
 msgid "Pending payment data payload to process"
-msgstr ""
+msgstr "Données de paiement en attente de traitement"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_phone
@@ -1441,12 +1459,12 @@ msgstr "Téléphone"
 #. odoo-javascript
 #: code:addons/payment/static/src/interactions/payment_form.js:0
 msgid "Please choose another payment method."
-msgstr ""
+msgstr "Veuillez choisir un autre mode de paiement."
 
 #. module: payment
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
 msgid "Please find the payment details below."
-msgstr ""
+msgstr "Veuillez trouver ci-dessous les détails du paiement."
 
 #. module: payment
 #. odoo-python
@@ -1477,7 +1495,7 @@ msgstr "Post-traitement"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Post-processed"
-msgstr ""
+msgstr "Post-traité"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__primary_payment_method_id
@@ -1488,12 +1506,12 @@ msgstr "Mode de paiement primaire"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__primary_payment_method_ids
 msgid "Primary Payment Methods"
-msgstr ""
+msgstr "Modes de paiement primaires"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__processed_amount
 msgid "Processed Amount"
-msgstr ""
+msgstr "Montant traité"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -1533,6 +1551,11 @@ msgstr "Référence fournisseur"
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
 msgid "Published"
 msgstr "Publié"
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_qfpay
+msgid "QFPay"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__onboarding_payment_module__razorpay
@@ -1606,7 +1629,7 @@ msgstr "Modèle de document associé"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Restrictions"
-msgstr ""
+msgstr "Restrictions"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -1697,7 +1720,7 @@ msgstr "Pris en charge par"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
 msgid "Test"
-msgstr ""
+msgstr "Test"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -1962,6 +1985,7 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_payment
 msgid "The payment engine used by payment provider modules."
 msgstr ""
+"Le moteur de paiement utilisé par les modules de fournisseurs de paiement."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__support_manual_capture
@@ -1994,13 +2018,13 @@ msgstr ""
 #. module: payment
 #: model:ir.model.constraint,message:payment.constraint_payment_method_provider_id_code_uniq
 msgid "The provider already has a payment method with this code."
-msgstr ""
+msgstr "Le fournisseur dispose déjà d'un mode de paiement portant ce code."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The provider must not be archived to make a request."
-msgstr ""
+msgstr "Le fournisseur ne doit pas être archivé pour effectuer une requête."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__provider_ref
@@ -2015,7 +2039,7 @@ msgstr "La référence du fournisseur de la transaction"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__provider_id
 msgid "The provider supporting this payment method."
-msgstr ""
+msgstr "Le fournisseur prenant en charge ce mode de paiement."
 
 #. module: payment
 #. odoo-python
@@ -2166,13 +2190,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/controllers/portal.py:0
 msgid "This payment method is not available."
-msgstr ""
+msgstr "Ce mode de paiement n'est pas disponible."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/controllers/portal.py:0
 msgid "This payment provider is not available."
-msgstr ""
+msgstr "Ce fournisseur de paiement n'est pas disponible."
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_provider
@@ -2188,12 +2212,12 @@ msgstr "Activez la société principale dans le sélecteur de société."
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_form
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_list
 msgid "Token"
-msgstr ""
+msgstr "Jeton"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__token_count
 msgid "Token Count"
-msgstr ""
+msgstr "Nombre de jetons"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__token_inline_form_view_id
@@ -2220,18 +2244,18 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "Tokenization not supported"
-msgstr ""
+msgstr "Tokenisation non prise en charge"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "Tokenization without payment no supported"
-msgstr ""
+msgstr "Tokenisation sans paiement non prise en charge"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Tokens"
-msgstr ""
+msgstr "Jetons"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_toss_payments
@@ -2247,7 +2271,7 @@ msgstr "Transaction"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__transaction_count
 msgid "Transaction Count"
-msgstr ""
+msgstr "Nombre de transactions"
 
 #. module: payment
 #. odoo-python
@@ -2262,7 +2286,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Transactions"
-msgstr ""
+msgstr "Transactions"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
@@ -2373,6 +2397,8 @@ msgid ""
 "You can't unarchive tokens linked to inactive payment methods or archived "
 "providers."
 msgstr ""
+"Vous ne pouvez pas désarchiver les jetons liés à des modes de paiement "
+"inactifs ou à des fournisseurs archivés."
 
 #. module: payment
 #. odoo-python
@@ -2396,6 +2422,8 @@ msgstr "Vous ne pouvez pas supprimer le mode de paiement par défaut."
 msgid ""
 "You cannot delete the payment provider %s; archive or uninstall it instead."
 msgstr ""
+"Vous ne pouvez pas supprimer le fournisseur de paiement %s ; archivez-le ou "
+"désinstallez-le à la place."
 
 #. module: payment
 #. odoo-python
@@ -2415,7 +2443,7 @@ msgstr ""
 #. module: payment
 #: model_terms:payment.provider,done_msg:payment.payment_provider_pay_on_invoice
 msgid "Your order is confirmed, you will receive your invoice shortly."
-msgstr ""
+msgstr "Votre commande est confirmée, vous recevrez bientôt votre facture."
 
 #. module: payment
 #. odoo-python
@@ -2437,6 +2465,7 @@ msgstr ""
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_paymob
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_paypal
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_payu
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_qfpay
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_sepa_direct_debit
@@ -2468,6 +2497,7 @@ msgstr "Votre paiement a été autorisé."
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_paymob
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_paypal
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_payu
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_qfpay
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_sepa_direct_debit
@@ -2499,6 +2529,7 @@ msgstr "Votre paiement a été annulé."
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_paymob
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_paypal
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_payu
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_qfpay
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sepa_direct_debit
@@ -2528,6 +2559,7 @@ msgstr "Votre paiement a été traité mais est en attente d’approbation."
 #: model_terms:payment.provider,done_msg:payment.payment_provider_paymob
 #: model_terms:payment.provider,done_msg:payment.payment_provider_paypal
 #: model_terms:payment.provider,done_msg:payment.payment_provider_payu
+#: model_terms:payment.provider,done_msg:payment.payment_provider_qfpay
 #: model_terms:payment.provider,done_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,done_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,done_msg:payment.payment_provider_sepa_direct_debit
@@ -2548,7 +2580,7 @@ msgstr "Votre paiement n'a pas encore été traité."
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
 msgid "Your payment is being processed."
-msgstr ""
+msgstr "Votre paiement est en cours de traitement."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
@@ -2565,7 +2597,7 @@ msgstr "Votre mode de paiement a été enregistré."
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "Your payment method has not been saved yet."
-msgstr ""
+msgstr "Votre mode de paiement n'a pas encore été enregistré."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
@@ -2591,7 +2623,7 @@ msgstr "Votre opération de paiement a été soumise avec succès."
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
 msgid "Zip Code"
-msgstr ""
+msgstr "Code postal"
 
 #. module: payment
 #. odoo-python
@@ -2608,7 +2640,7 @@ msgstr "fournisseur"
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "source_transaction_id"
-msgstr ""
+msgstr "source_transaction_id"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
@@ -2628,12 +2660,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "transaction_id"
-msgstr ""
+msgstr "transaction_id"
 
 #. module: payment
 #: model:ir.model,name:payment.model_ir_websocket
 msgid "websocket message handling"
-msgstr ""
+msgstr "traitement des messages WebSocket"
 
 #~ msgid "Zip"
 #~ msgstr "Code postal"

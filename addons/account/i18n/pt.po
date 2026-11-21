@@ -33,12 +33,13 @@
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
 # Cristina Paniagua Ramiro <crpan@odoo.com>, 2026.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:38+0000\n"
-"PO-Revision-Date: 2026-11-13 12:28+0000\n"
+"POT-Creation-Date: 2026-11-20 17:36+0000\n"
+"PO-Revision-Date: 2026-11-20 10:08+0000\n"
 "Last-Translator: Cristina Paniagua Ramiro <crpan@odoo.com>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-20/"
 "account/pt/>\n"
@@ -48,7 +49,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -369,6 +370,14 @@ msgid ""
 "- A rounding per line is advised if your prices are tax-included. That way, "
 "the sum of line subtotal equals the total with taxes."
 msgstr ""
+"- Recomenda-se o arredondamento por imposto se os seus preços não incluírem "
+"impostos. Isto minimiza os erros de arredondamento cumulativos, pois "
+"totaliza primeiro todos os montantes de imposto não arredondados e arredonda "
+"apenas uma vez o total final de impostos."
+"\\n                                                                                                                                                                                "
+"- Recomenda-se o arredondamento por linha se os seus preços incluírem "
+"impostos. Desta forma, a soma dos subtotais das linhas é igual ao total com "
+"impostos."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_kanban
@@ -1192,13 +1201,6 @@ msgid "<span> Bill</span>"
 msgstr "<span> Fatura</span>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
-msgid ""
-"<span> already exists for this period. Posting this entry will replace it.</"
-"span>"
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span> due on </span>"
 msgstr "<span> vence em </span>"
@@ -1236,11 +1238,6 @@ msgstr "<span>Montante na moeda</span>"
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Amount</span>"
 msgstr "<span>Montante</span>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
-msgid "<span>An accrual entry of </span>"
-msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -7880,7 +7877,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/controllers/download_docs.py:0
 msgid "Documents"
-msgstr ""
+msgstr "Documentos"
 
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_base_document_layout
@@ -9639,7 +9636,7 @@ msgstr "Comparação de crescimento"
 #. module: account
 #: model:ir.model,name:account.model_ir_http
 msgid "HTTP Routing"
-msgstr "Roteamento HTTP"
+msgstr "Encaminhamento HTTP"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__hard_lock_date
@@ -11581,7 +11578,7 @@ msgstr "Lançamentos de diário para hash"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_payment_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Journal Entry"
-msgstr "Lançamento de Diário"
+msgstr "Lançamento contabilístico"
 
 #. module: account
 #. odoo-javascript
@@ -15260,7 +15257,7 @@ msgstr "Unidade de medida do produto"
 #. module: account
 #: model:ir.model,name:account.model_product_product
 msgid "Product Variant"
-msgstr "Variante de Artigo"
+msgstr "Variante de produto"
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_printing_and_reproduction

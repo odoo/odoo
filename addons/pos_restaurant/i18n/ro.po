@@ -3,7 +3,7 @@
 # * pos_restaurant
 #
 # Translators:
-# Dorin Hongu <dhongu@gmail.com>, 2022, 2025.
+# Dorin Hongu <dhongu@gmail.com>, 2022, 2025, 2026.
 # Hongu Cosmin <cosmin513@gmail.com>, 2022
 # Cozmin Candea <office@terrabit.ro>, 2022
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
@@ -17,9 +17,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-13 17:38+0000\n"
-"PO-Revision-Date: 2026-08-31 15:25+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-21 09:33+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/"
 "pos_restaurant/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: pos_restaurant
 #: model:ir.module.module,description:base.module_pos_restaurant
@@ -42,12 +42,22 @@ msgid ""
 "bar printers\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Acest modul adaugă funcții în punctul de vânzare, specifice gestionării "
+"restaurantelor:\n"
+"- Imprimarea bonului: permite imprimarea bonului înainte de achitarea "
+"comenzii\n"
+"- Împărțirea bonului: permite împărțirea unei comenzi în mai multe comenzi\n"
+"- Imprimarea comenzilor pentru bucătărie: permite imprimarea actualizărilor "
+"comenzilor la imprimantele din bucătărie sau bar\n"
+"\n"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/models/restaurant_table.js:0
 msgid "%s'"
-msgstr ""
+msgstr "%s'"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -59,24 +69,24 @@ msgstr "%s, trimis în bucătărie"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/models/restaurant_table.js:0
 msgid "%sh"
-msgstr ""
+msgstr "%sh"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/models/restaurant_table.js:0
 msgid "%sh%s'"
-msgstr ""
+msgstr "%sh%s'"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_order_receipt_header
 msgid ", Guest"
-msgstr ""
+msgstr ", oaspete"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/payment_screen/payment_screen.xml:0
 msgid "/ Guest"
-msgstr ""
+msgstr "/ Vizitator"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.pos_food_cheeseburger_product_template
@@ -101,12 +111,12 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_order_change_receipt
 msgid "<span class=\"text-bold\">T </span>"
-msgstr ""
+msgstr "<span class=\"text-bold\">T </span>"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_restaurant_pos_category_kanban_view
 msgid "<span>Course:</span>"
-msgstr ""
+msgstr "<span>Fel:</span>"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
@@ -121,7 +131,7 @@ msgstr "<strong>Puncte de vânzare:</strong>"
 #. module: pos_restaurant
 #: model:ir.model.constraint,message:pos_restaurant.constraint_pos_course_name_unique
 msgid "A course with this name already exists"
-msgstr ""
+msgstr "Există deja un fel de mâncare cu acest nume"
 
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
@@ -144,13 +154,13 @@ msgstr "Activ"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/toolbar/toolbar.xml:0
 msgid "Add Decor"
-msgstr ""
+msgstr "Adaugă decor"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/toolbar/toolbar.xml:0
 msgid "Add Floor"
-msgstr ""
+msgstr "Adaugă etaj"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -166,19 +176,19 @@ msgstr "Adăugați un nou etaj de restaurant"
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_pos_course
 msgid "Add courses"
-msgstr ""
+msgstr "Adaugă feluri de mâncare"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/toolbar/toolbar.xml:0
 msgid "Add decor"
-msgstr ""
+msgstr "Adaugă decor"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/add_decor_popup/add_decor_popup.xml:0
 msgid "Add image"
-msgstr ""
+msgstr "Adaugă imagine"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -190,7 +200,7 @@ msgstr "Ajustați suma"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Alignment"
-msgstr ""
+msgstr "Aliniament"
 
 #. module: pos_restaurant
 #: model:product.attribute.value,name:pos_restaurant.pav_extras_pizza_anchovy
@@ -212,7 +222,7 @@ msgstr "Arhivat"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_floor/edit_floor.js:0
 msgid "Are you sure you want to delete this floor?"
-msgstr ""
+msgstr "Sigur vrei să ștergi acest plan al sălii?"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -223,7 +233,7 @@ msgstr "Alocă"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Assign categories to default course"
-msgstr ""
+msgstr "Atribuie categoriile felului implicit"
 
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_pos_course
@@ -231,11 +241,13 @@ msgid ""
 "Assign products to courses like starter, main or dessert to ensure dishes "
 "are prepared and served in the correct order."
 msgstr ""
+"Atribuie produsele unor feluri de mâncare precum aperitiv, fel principal sau "
+"desert pentru a te asigura că sunt pregătite și servite în ordinea corectă."
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Automatic course allocation"
-msgstr ""
+msgstr "Alocare automată a felurilor de mâncare"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -248,7 +260,7 @@ msgstr "Înapoi"
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_floor/edit_floor.xml:0
 msgid "Background"
-msgstr ""
+msgstr "Fundal"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_bacon_product_template
@@ -258,7 +270,7 @@ msgstr "Burger Bacon"
 #. module: pos_restaurant
 #: model:pos.config,name:pos_restaurant.pos_config_main_bar
 msgid "Bar"
-msgstr ""
+msgstr "Bară"
 
 #. module: pos_restaurant
 #: model:product.attribute.value,name:pos_restaurant.pav_sides_fries
@@ -280,7 +292,7 @@ msgstr "Măsline negre"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Bold"
-msgstr ""
+msgstr "Îngroșat"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -292,12 +304,12 @@ msgstr "Rezervați o masă"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Border"
-msgstr ""
+msgstr "Margine"
 
 #. module: pos_restaurant
 #: model:ir.model.fields.selection,name:pos_restaurant.selection__restaurant_table__parent_side__bottom
 msgid "Bottom"
-msgstr ""
+msgstr "Jos"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_old_fashioned_product_template
@@ -308,7 +320,7 @@ msgstr "Bourbon, bitter, zahăr și o coajă de citrice."
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Bring forward"
-msgstr ""
+msgstr "Adu în față"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.burger_drink_combo_product_template
@@ -318,7 +330,7 @@ msgstr "Meniu Burger Combo"
 #. module: pos_restaurant
 #: model:product.combo,name:pos_restaurant.burger_combo
 msgid "Burgers"
-msgstr ""
+msgstr "Burgeri"
 
 #. module: pos_restaurant
 #: model:pos.payment.method,name:pos_restaurant.payment_method
@@ -353,7 +365,7 @@ msgstr "Sandwich de pui cu curry"
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/add_table_popup/add_table_popup.xml:0
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/floor_plan_editor.xml:0
 msgid "Close"
-msgstr ""
+msgstr "Închide"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_club_product_template
@@ -387,7 +399,7 @@ msgstr "Setări de configurare"
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_table/edit_table.xml:0
 msgid "Corner rounding"
-msgstr ""
+msgstr "Rotunjirea colțurilor"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.product_cosmopolitan_product_template
@@ -409,13 +421,13 @@ msgstr "Curs"
 #: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.js:0
 #: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid "Course "
-msgstr ""
+msgstr "Fel "
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_course__name
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__name
 msgid "Course Name"
-msgstr ""
+msgstr "Nume Curs"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__course_id
@@ -460,7 +472,7 @@ msgstr "Creat în"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Dashed"
-msgstr ""
+msgstr "Întrerupt"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__default_screen
@@ -479,7 +491,7 @@ msgstr "Șterge"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_floor/edit_floor.xml:0
 msgid "Delete Floor"
-msgstr ""
+msgstr "Șterge planul sălii"
 
 #. module: pos_restaurant
 #: model:pos.preset,name:pos_restaurant.pos_delivery_preset
@@ -512,7 +524,7 @@ msgstr "Renunță"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/navbar/navbar.xml:0
 msgid "Discard all changes"
-msgstr ""
+msgstr "Renunță la toate modificările"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_category__display_name
@@ -535,7 +547,7 @@ msgstr "Nume afișat"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Dotted"
-msgstr ""
+msgstr "Punctat"
 
 #. module: pos_restaurant
 #: model:pos.category,name:pos_restaurant.drinks
@@ -548,12 +560,12 @@ msgstr "Băuturi"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/floor_plan_editor.xml:0
 msgid "Duplicate"
-msgstr ""
+msgstr "Duplicare"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__duration
 msgid "Duration"
-msgstr ""
+msgstr "Durată"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_preset
@@ -564,37 +576,37 @@ msgstr "Încărcați cu ușurință un set de opțiuni de configurare"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/toolbar/toolbar.xml:0
 msgid "Edit Floor"
-msgstr ""
+msgstr "Editează planul sălii"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.xml:0
 msgid "Edit Floor Plan"
-msgstr ""
+msgstr "Editează planul sălii"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/components/navbar/navbar.xml:0
 msgid "Edit Plan"
-msgstr ""
+msgstr "Editare plan"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Edit text"
-msgstr ""
+msgstr "Editează textul"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan/floor_plan.xml:0
 msgid "Edit your floor plan"
-msgstr ""
+msgstr "Editează planul sălii"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__use_course_allocation
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_use_course_allocation
 msgid "Enable Course Allocation"
-msgstr ""
+msgstr "Activează alocarea felurilor de mâncare"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -608,7 +620,7 @@ msgstr "Introduceți un număr de masă"
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/add_decor_popup/add_decor_popup.js:0
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.js:0
 msgid "Enter your text"
-msgstr ""
+msgstr "Introdu textul"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.espresso_product_template
@@ -632,6 +644,8 @@ msgid ""
 "Failed to read data from the server. If the order was updated by someone "
 "else, you might not have the latest changes."
 msgstr ""
+"Nu s-au putut citi datele de pe server. Dacă altcineva a actualizat comanda, "
+"este posibil să nu ai cele mai recente modificări."
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.fanta_product_template
@@ -677,12 +691,12 @@ msgstr "Plan etaj"
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__floor_plan_layout
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__floor_plan_layout
 msgid "Floor Plan Layout"
-msgstr ""
+msgstr "Aspectul planului sălii"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__floor_plan_settings
 msgid "Floor Plan Settings"
-msgstr ""
+msgstr "Setările planului sălii"
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,name:pos_restaurant.action_restaurant_floor_form
@@ -700,7 +714,7 @@ msgstr "Nume etaj"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/navbar/navbar.xml:0
 msgid "Floor plan editor"
-msgstr ""
+msgstr "Editorul planului sălii"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -727,7 +741,7 @@ msgstr "Mâncare"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_floor/edit_floor.js:0
 msgid "For the current display, an image a resolution of %s is recommended."
-msgstr ""
+msgstr "Pentru afișarea curentă, se recomandă o imagine cu rezoluția de %s."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_preset__use_guest
@@ -808,30 +822,30 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/floor_plan_editor.js:0
 msgid "If you proceed, your changes will be lost"
-msgstr ""
+msgstr "Dacă continuați, modificările dvs. se vor pierde"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/add_decor_popup/add_decor_popup.xml:0
 msgid "Images"
-msgstr ""
+msgstr "Imagini"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Include the products when printing a fired course ticket"
-msgstr ""
+msgstr "Include produsele la imprimarea bonului de preparare a felului"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Italic"
-msgstr ""
+msgstr "Înclinat"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/components/numpad_dropdown/numpad_dropdown.xml:0
 msgid "Jump"
-msgstr ""
+msgstr "Salt la"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_course__write_uid
@@ -853,12 +867,12 @@ msgstr "Ultima actualizare pe"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Layers"
-msgstr ""
+msgstr "Straturi"
 
 #. module: pos_restaurant
 #: model:ir.model.fields.selection,name:pos_restaurant.selection__restaurant_table__parent_side__left
 msgid "Left"
-msgstr ""
+msgstr "Stânga"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_maki_product_template
@@ -884,7 +898,7 @@ msgstr "Mai Tai"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/services/floor_plan/floor_plan_service.js:0
 msgid "Main Floor"
-msgstr ""
+msgstr "Sala principală"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.product_margarita_product_template
@@ -910,7 +924,7 @@ msgstr "Mojito"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/toolbar/toolbar.xml:0
 msgid "More"
-msgstr ""
+msgstr "Mai mult"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.product_moscow_mule_product_template
@@ -931,7 +945,7 @@ msgstr "Ciuperci"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_floor/edit_floor.xml:0
 msgid "Name"
-msgstr ""
+msgstr "Nume"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.product_negroni_product_template
@@ -960,25 +974,25 @@ msgstr "Comandă nouă"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_pos_category_form_inherit_course
 msgid "No default"
-msgstr ""
+msgstr "Fără valoare implicită"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan/floor_plan.xml:0
 msgid "No tables are available yet."
-msgstr ""
+msgstr "Încă nu sunt disponibile mese."
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.js:0
 msgid "Notes"
-msgstr ""
+msgstr "Note"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_table/edit_table.xml:0
 msgid "Number of Seats"
-msgstr ""
+msgstr "Număr de locuri"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.product_old_fashioned_product_template
@@ -999,12 +1013,12 @@ msgstr "Ref comandă"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/add_table_popup/add_table_popup.xml:0
 msgid "Oval"
-msgstr ""
+msgstr "Oval"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_course
 msgid "POS Course"
-msgstr ""
+msgstr "Fel POS"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_restaurant_order_course
@@ -1014,7 +1028,7 @@ msgstr "Curs de comandă în restaurantul POS"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__parent_side
 msgid "Parent Side"
-msgstr ""
+msgstr "Latura părinte"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__parent_id
@@ -1042,7 +1056,7 @@ msgstr "Plătește"
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
 #: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 msgid "Payment"
-msgstr ""
+msgstr "Plată"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.pos_food_4formaggi_product_template
@@ -1084,17 +1098,20 @@ msgid ""
 "this floor.\n"
 "Open session: %(session_names)s"
 msgstr ""
+"Închide și validează următoarea sesiune POS deschisă înainte de a modifica "
+"planul sălii.\n"
+"Sesiune deschisă: %(session_names)s"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/ticket_screen/order_details_dialog/order_details_dialog.js:0
 msgid "Point of Sale"
-msgstr ""
+msgstr "Punct de vânzare"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_category
 msgid "Point of Sale Category"
-msgstr ""
+msgstr "Categorie Punct de vânzare"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_config
@@ -1104,17 +1121,17 @@ msgstr "Configurarea Punctului de Vânzare"
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_order
 msgid "Point of Sale Order"
-msgstr ""
+msgstr "Comandă la punctul de vânzare"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_order_line
 msgid "Point of Sale Order Line"
-msgstr ""
+msgstr "Linie de comandă POS"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_order_receipt
 msgid "Point of Sale Order Receipt Generator"
-msgstr ""
+msgstr "Generator de bonuri pentru comenzi POS"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_session
@@ -1129,7 +1146,7 @@ msgstr "Punct de Vânzare"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_course__category_ids
 msgid "Pos Category"
-msgstr ""
+msgstr "Categorie POS"
 
 #. module: pos_restaurant
 #: model:product.attribute.value,name:pos_restaurant.pav_sides_potato_thyme
@@ -1139,13 +1156,13 @@ msgstr "Cartofi cu cimbru"
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_product_template
 msgid "Product"
-msgstr ""
+msgstr "Produs"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/floor_plan_editor.xml:0
 msgid "Properties"
-msgstr ""
+msgstr "Proprietăți"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_aperol_spritz_product_template
@@ -1156,7 +1173,7 @@ msgstr "Prosecco, aperol, sifon"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/add_table_popup/add_table_popup.xml:0
 msgid "Rectangular"
-msgstr ""
+msgstr "Dreptunghiular"
 
 #. module: pos_restaurant
 #: model:ir.model.fields.selection,name:pos_restaurant.selection__pos_config__default_screen__register
@@ -1179,13 +1196,13 @@ msgstr "Eliberează masa"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_floor/edit_floor.xml:0
 msgid "Remove Background Image"
-msgstr ""
+msgstr "Elimină imaginea de fundal"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
 msgid "Reprint"
-msgstr ""
+msgstr "Reimprimă"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1218,12 +1235,12 @@ msgstr "Masă Restaurant"
 #. module: pos_restaurant
 #: model:ir.module.module,summary:base.module_pos_restaurant
 msgid "Restaurant extensions for the Point of Sale "
-msgstr ""
+msgstr "Extensii pentru restaurante în punctul de vânzare "
 
 #. module: pos_restaurant
 #: model:ir.model.fields.selection,name:pos_restaurant.selection__restaurant_table__parent_side__right
 msgid "Right"
-msgstr ""
+msgstr "Dreapta"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1235,7 +1252,7 @@ msgstr "Rotund"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Rounded"
-msgstr ""
+msgstr "Rotunjit"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_mai_tai_product_template
@@ -1267,13 +1284,13 @@ msgstr "Locuri"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/add_table_popup/add_table_popup.xml:0
 msgid "Select Table Shape"
-msgstr ""
+msgstr "Selectează forma mesei"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/components/navbar/navbar.xml:0
 msgid "Select table to transfer order"
-msgstr ""
+msgstr "Selectați masa pentru a transfera comanda"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -1284,13 +1301,13 @@ msgstr "Selectați mai întâi masa sau după înregistrarea comenzii"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/ticket_screen/order_details_dialog/order_details_dialog.js:0
 msgid "Self-Order Kiosk"
-msgstr ""
+msgstr "Kiosk pentru comenzi proprii"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/ticket_screen/order_details_dialog/order_details_dialog.js:0
 msgid "Self-Order Mobile"
-msgstr ""
+msgstr "Comandă proprie de pe mobil"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1299,6 +1316,8 @@ msgid ""
 "Self-orders cannot be transferred or merged, whether they are the order "
 "being moved or the one receiving it."
 msgstr ""
+"Comenzile proprii nu pot fi transferate sau îmbinate, nici ca fiind mutate, "
+"nici ca destinație."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1311,19 +1330,19 @@ msgstr "Trimite"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Send backward"
-msgstr ""
+msgstr "Trimite în spate"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Send to back"
-msgstr ""
+msgstr "Trimite în fundal"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Send to front"
-msgstr ""
+msgstr "Adu în prim-plan"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_course__sequence
@@ -1336,25 +1355,25 @@ msgstr "Secvență"
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 #: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid "Set Order Name"
-msgstr ""
+msgstr "Setează numele comenzii"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
 msgid "Set Tab"
-msgstr ""
+msgstr "Setare filă"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
 msgid "Set Table"
-msgstr ""
+msgstr "Setați masa"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_floor/edit_floor.xml:0
 msgid "Set a Background Image"
-msgstr ""
+msgstr "Setează o imagine de fundal"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1366,35 +1385,36 @@ msgstr "Formă"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/add_decor_popup/add_decor_popup.xml:0
 msgid "Shapes"
-msgstr ""
+msgstr "Forme"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__use_show_items_on_course_ticket
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_use_show_items_on_course_ticket
 msgid "Show Items on Fired Course Ticket"
-msgstr ""
+msgstr "Afișează produsele pe bonul de preparare a felului"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__use_show_items_on_course_ticket
 #: model:ir.model.fields,help:pos_restaurant.field_res_config_settings__pos_use_show_items_on_course_ticket
 msgid "Show items again on the fired course ticket in preparation printer"
 msgstr ""
+"Afișează din nou produsele pe bonul de preparare, la imprimanta din bucătărie"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Show items on fired course ticket"
-msgstr ""
+msgstr "Afișează produsele pe bonul de preparare"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order__duration
 msgid "Shows how long the table has been occupied."
-msgstr ""
+msgstr "Afișează de cât timp este ocupată masa."
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Size"
-msgstr ""
+msgstr "Dimensiune"
 
 #. module: pos_restaurant
 #: model:product.attribute.value,name:pos_restaurant.pav_sides_smashed_sweet_potato
@@ -1410,13 +1430,13 @@ msgstr "Băuturi răcoritoare"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Solid"
-msgstr ""
+msgstr "Plin"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "Someone else just updated the order; please check it before paying."
-msgstr ""
+msgstr "Altcineva tocmai a actualizat comanda; verific-o înainte de plată."
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_tuna_product_template
@@ -1433,7 +1453,7 @@ msgstr "Separă"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 msgid "Split Order"
-msgstr ""
+msgstr "Împarte comanda"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1445,12 +1465,12 @@ msgstr "Pătrat"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Style"
-msgstr ""
+msgstr "Stil"
 
 #. module: pos_restaurant
 #: model:product.combo,name:pos_restaurant.sushi_choice
 msgid "Sushi"
-msgstr ""
+msgstr "Sushi"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.sushi_drink_combo_product_template
@@ -1466,7 +1486,7 @@ msgstr "Cartofi dulci prăjiți"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/components/navbar/navbar.xml:0
 msgid "Switch Floor View"
-msgstr ""
+msgstr "Schimbă afișarea etajelor"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1509,7 +1529,7 @@ msgstr "Tequila Jose Cuervo, suc de lime, zahăr din trestie, Cointreau"
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/add_decor_popup/add_decor_popup.xml:0
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Text"
-msgstr ""
+msgstr "Text simplu"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order__customer_count
@@ -1534,7 +1554,7 @@ msgstr "Masa părinte dacă această masă face parte dintr-un grup de mese"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__parent_side
 msgid "The parent table side where this table will be displayed"
-msgstr ""
+msgstr "Latura mesei părinte pe care va fi afișată această masă"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__floor_ids
@@ -1551,7 +1571,7 @@ msgstr "Masa la care a fost servită această comandă"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Thickness"
-msgstr ""
+msgstr "Grosime"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.pos_food_margherita_product_template
@@ -1561,13 +1581,13 @@ msgstr "Sos de roșii, mozzarella Agerola „fior di latte”, busuioc proaspăt
 #. module: pos_restaurant
 #: model:ir.model.fields.selection,name:pos_restaurant.selection__restaurant_table__parent_side__top
 msgid "Top"
-msgstr ""
+msgstr "Sus"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 msgid "Transfer"
-msgstr ""
+msgstr "Transferă"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1585,7 +1605,7 @@ msgstr "Transferă / Combină"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Transfer Course"
-msgstr ""
+msgstr "Transferă felul"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1598,19 +1618,19 @@ msgstr "Transferă toate produsele „%s” în:"
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_floor/edit_floor.xml:0
 msgid "Transparency"
-msgstr ""
+msgstr "Transparență"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Underline"
-msgstr ""
+msgstr "Subliniat"
 
 #. module: pos_restaurant
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 msgid "Uploaded image's format is not supported. Try with: %s"
-msgstr ""
+msgstr "Formatul imaginii încărcate nu este acceptat. Încercați cu: %s"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__uuid
@@ -1626,13 +1646,13 @@ msgstr "Vodka 42 Below, lime, zahăr, bere de ghimbir"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/add_decor_popup/add_decor_popup.xml:0
 msgid "Walls"
-msgstr ""
+msgstr "Pereți"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/services/floor_plan/floor_plan_service.js:0
 msgid "Warning"
-msgstr ""
+msgstr "Atenție"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.water_product_template
@@ -1663,7 +1683,7 @@ msgstr "Rom alb, zahăr, suc de lime, apă minerală și mentă."
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 msgid "With"
-msgstr ""
+msgstr "Cu"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1739,7 +1759,7 @@ msgstr "Nu puteți transfera o comandă către ea însăși"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 msgid "discount"
-msgstr ""
+msgstr "reducere"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1751,19 +1771,19 @@ msgstr "de exemplu, John"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid "fired"
-msgstr ""
+msgstr "Trimis la preparare"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "items"
-msgstr ""
+msgstr "articole"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 msgid "product(s) selected"
-msgstr ""
+msgstr "produs(e) selectat(e)"
 
 #~ msgid "Options"
 #~ msgstr "Opțiuni"

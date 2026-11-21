@@ -6,7 +6,7 @@
 # Hongu Cosmin <cosmin513@gmail.com>, 2022
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
 # Cozmin Candea <office@terrabit.ro>, 2023
-# Dorin Hongu <dhongu@gmail.com>, 2023
+# Dorin Hongu <dhongu@gmail.com>, 2023, 2026.
 # Martin Trigaux, 2023
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Alin Ilie <alin.ilie@logit-solutions.com>, 2025.
@@ -16,9 +16,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-13 17:38+0000\n"
-"PO-Revision-Date: 2026-08-31 16:32+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-21 09:54+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/"
 "hr_recruitment/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__no_of_talents
@@ -161,6 +161,100 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"    Bună,\n"
+"    <br><br>\n"
+"    Vă confirmăm că am primit candidatura dumneavoastră pentru postul\n"
+"    \"<a t-att-href=\"hasattr(object.job_id, 'website_url') and "
+"object.job_id.website_url or ''\" style=\"color:#9A6C8E;\"><strong t-"
+"out=\"object.job_id.name or ''\">Experienced Developer</strong></a>\" la "
+"<strong t-out=\"object.company_id.name or ''\">YourCompany</strong>.\n"
+"    <br><br>\n"
+"    Vă vom contacta în curând.\n"
+"\n"
+"    <div t-if=\"'website_url' in object.job_id and "
+"object.job_id.website_url\" style=\"padding: 16px 8px 16px 8px;\">\n"
+"        <a t-att-href=\"object.job_id.website_url\" t-attf-"
+"style=\"background-color: {{object.company_id.email_secondary_color or "
+"'#875A7B'}}; text-decoration: none; color: {"
+"{object.company_id.email_primary_color or '#FFFFFF'}}; padding: 8px 16px 8px "
+"16px; border-radius: 5px;\">Descrierea postului</a>\n"
+"    </div>\n"
+"\n"
+"    <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: "
+"medium none; clear: both; display: block; font-size: 0px; min-height: 1px; "
+"line-height: 0; margin: 16px 0px 16px 0px;\">\n"
+"    <t t-if=\"object.recruiter_id and object.recruiter_id.user_id\">\n"
+"        <h3 style=\"color:#9A6C8E;\"><strong>Persoana dumneavoastră de "
+"contact:</strong></h3>\n"
+"        <p>\n"
+"            <strong t-out=\"object.recruiter_id.name or ''\">Mitchell Admin</"
+"strong><br>\n"
+"            <span>E-mail: <t t-out=\"object.recruiter_id.work_email or ''\">"
+"admin@yourcompany.example.com</t></span><br>\n"
+"            <span>Telefon: <t t-out=\"object.recruiter_id.work_phone or ''\">"
+"+1 650-123-4567</t></span>\n"
+"        </p>\n"
+"        <hr width=\"97%\" style=\"background-color: rgb(204,204,204); "
+"border: medium none; clear: both; display: block; font-size: 0px; min-"
+"height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\">\n"
+"    </t>\n"
+"\n"
+"    <h3 style=\"color:#9A6C8E;\"><strong>Care este pasul următor?</strong></"
+"h3>\n"
+"    De obicei, <strong>răspundem candidaturilor în câteva zile.</strong><br>"
+"<br>\n"
+"    Ne puteți <strong>contacta dacă doriți un răspuns mai rapid</strong> sau "
+"dacă nu primiți vești de la noi suficient de curând (răspundeți la acest e-"
+"mail).\n"
+"\n"
+"    <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: "
+"medium none; clear: both; display: block; font-size: 0px; min-height: 1px; "
+"line-height: 0; margin: 17px 0px 16px 0px;\">\n"
+"    <t t-set=\"location\" t-value=\"''\"></t>\n"
+"    <t t-if=\"object.job_id.address_id.name\">\n"
+"        <strong t-out=\"object.job_id.address_id.name or ''\">Teksa SpA</"
+"strong><br>\n"
+"    </t>\n"
+"    <t t-if=\"object.job_id.address_id.street\">\n"
+"        <t t-out=\"object.job_id.address_id.street or ''\">Puerto Madero "
+"9710</t><br>\n"
+"        <t t-set=\"location\" t-value=\"object.job_id.address_id.street\"></"
+"t>\n"
+"    </t>\n"
+"    <t t-if=\"object.job_id.address_id.street2\">\n"
+"        <t t-out=\"object.job_id.address_id.street2 or ''\">Of A15, Santiago "
+"(RM)</t><br>\n"
+"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.street2)\"></t>\n"
+"    </t>\n"
+"    <t t-if=\"object.job_id.address_id.city\">\n"
+"        <t t-out=\"object.job_id.address_id.city or ''\">Pudahuel</t>,\n"
+"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.city)\"></t>\n"
+"    </t>\n"
+"    <t t-if=\"object.job_id.address_id.state_id.name\">\n"
+"        <t t-out=\"object.job_id.address_id.state_id.name or ''\">C1</t>,\n"
+"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.state_id.name)\"></t>\n"
+"    </t>\n"
+"    <t t-if=\"object.job_id.address_id.zip\">\n"
+"        <t t-out=\"object.job_id.address_id.zip or ''\">98450</t>\n"
+"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.zip)\"></t>\n"
+"    </t>\n"
+"    <br>\n"
+"    <t t-if=\"object.job_id.address_id.country_id.name\">\n"
+"        <t t-out=\"object.job_id.address_id.country_id.name or ''\">"
+"Argentina</t><br>\n"
+"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.country_id.name)\"></t>\n"
+"    </t>\n"
+"    <br>\n"
+"\n"
+"\n"
+"</div>\n"
+"        "
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_refuse
@@ -207,6 +301,49 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"    Bună,<br><br>\n"
+"    Vă mulțumim pentru interesul de a vă alătura echipei\n"
+"    <b><t t-out=\"object.company_id.name or ''\">YourCompany</t></b>. Echipa "
+"noastră a analizat candidatura, iar deși CV-ul\n"
+"    dumneavoastră este competitiv, am decis să <b>nu o selectăm pentru etapa "
+"următoare</b>.\n"
+"    <br><br>\n"
+"    Recrutarea este dificilă și putem face greșeli. Nu ezitați să răspundeți "
+"la acest e-mail dacă\n"
+"    credeți că am greșit sau dacă doriți mai multe informații\n"
+"    despre decizia noastră.\n"
+"    <br><br>\n"
+"    Vom păstra totuși CV-ul dumneavoastră și vă vom contacta\n"
+"    în legătură cu oportunități viitoare care s-ar putea potrivi\n"
+"    mai bine competențelor și experienței dumneavoastră.\n"
+"    <br><br>\n"
+"    Vă dorim mult succes în căutarea unui loc de muncă și sperăm\n"
+"    să avem ocazia să vă luăm în considerare pentru un alt post\n"
+"    în viitor.\n"
+"    <br><br>\n"
+"    Vă mulțumim,\n"
+"    <div style=\"font-size: 11px; color: grey;\">\n"
+"        <t t-if=\"object.recruiter_id\">\n"
+"            -- <br>\n"
+"            <strong t-out=\"object.recruiter_id.name or ''\">Mitchell Admin</"
+"strong><br>\n"
+"            E-mail: <t t-out=\"object.recruiter_id.work_email or ''\">"
+"admin@yourcompany.example.com</t><br>\n"
+"            Telefon: <t t-out=\"object.recruiter_id.work_phone or ''\">+1 "
+"650-123-4567</t>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            -- <br>\n"
+"            <t t-out=\"object.company_id.name or ''\">YourCompany</t><br>\n"
+"            Echipa de Resurse Umane\n"
+"        </t>\n"
+"    </div>\n"
+"\n"
+"\n"
+"\n"
+"</div>\n"
+"        "
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_not_interested
@@ -240,6 +377,35 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"        Stimate candidat,<br><br>\n"
+"        Vă mulțumim pentru interesul acordat și pentru timpul "
+"dumneavoastră.<br>\n"
+"        Vă dorim mult succes în proiectele viitoare.\n"
+"        <br><br>\n"
+"        Toate cele bune,<br>\n"
+"        <div style=\"font-size: 11px; color: grey;\">\n"
+"            <t t-if=\"object.recruiter_id and object.recruiter_id.user_id\">"
+"\n"
+"                -- <br>\n"
+"                <strong t-out=\"object.recruiter_id.name or ''\">Marc Demo</"
+"strong><br>\n"
+"                E-mail: <t t-out=\"object.recruiter_id.work_email or ''\">"
+"mark.brown23@example.com</t><br>\n"
+"                Telefon: <t t-out=\"object.recruiter_id.work_phone or ''\">"
+"+1 650-123-4567</t>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                -- <br>\n"
+"                <t t-out=\"object.company_id.name or ''\">YourCompany</t><br>"
+"\n"
+"                Echipa de Resurse Umane<br>\n"
+"            </t>\n"
+"        </div>\n"
+"    </div>\n"
+"</div>\n"
+"        "
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_interest
@@ -348,6 +514,112 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <div style=\"text-align: center\">\n"
+"        <h2>Felicitări!</h2>\n"
+"        <div style=\"color:grey;\">CV-ul dumneavoastră a fost evaluat "
+"pozitiv.</div>\n"
+"    </div>\n"
+"    <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"        Am analizat CV-ul dumneavoastră și ne-a atras\n"
+"        atenția. Considerăm că ați putea fi potrivit pentru\n"
+"        acest post, iar candidatura a fost selectată pentru\n"
+"        un apel sau un interviu.\n"
+"        <br><br>\n"
+"        <div t-if=\"'website_url' in object.job_id and "
+"object.job_id.website_url\" style=\"padding: 16px 8px 16px 8px;\">\n"
+"            <a t-att-href=\"object.job_id.website_url\" t-attf-"
+"style=\"background-color: {{object.company_id.email_secondary_color or "
+"'#875A7B'}}; text-decoration: none; color: {"
+"{object.company_id.email_primary_color or '#FFFFFF'}}; padding: 8px 16px 8px "
+"16px; border-radius: 5px;\">Descrierea postului</a>\n"
+"        </div>\n"
+"\n"
+"        <t t-if=\"object.recruiter_id and object.recruiter_id.user_id\">\n"
+"            Veți fi contactat în curând de:<br>\n"
+"            <strong t-out=\"object.recruiter_id.name or ''\">Mitchell Admin</"
+"strong><br>\n"
+"            <span>E-mail: <t t-out=\"object.recruiter_id.work_email or ''\">"
+"admin@yourcompany.example.com</t></span><br>\n"
+"            <span>Telefon: <t t-out=\"object.recruiter_id.work_phone or ''\">"
+"+1 650-123-4567</t></span>\n"
+"            <br><br>\n"
+"        </t>\n"
+"        Pe curând,\n"
+"        <div style=\"font-size: 11px; color: grey;\">\n"
+"            -- <br>\n"
+"            Echipa de Resurse Umane\n"
+"            <t t-if=\"'website_url' in object.job_id and hasattr"
+"(object.job_id, 'website_url') and object.job_id.website_url\">\n"
+"                Descoperiți <a href=\"/jobs\" style=\"text-"
+"decoration:none;color:#717188;\">toate posturile noastre</a>.<br>\n"
+"            </t>\n"
+"        </div>\n"
+"\n"
+"        <hr width=\"97%\" style=\"background-color: rgb(204,204,204); "
+"border: medium none; clear: both; display: block; font-size: 0px; min-"
+"height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\">\n"
+"        <h3 style=\"color:#9A6C8E;\"><strong>Care este pasul următor?</"
+"strong></h3>\n"
+"        De obicei, <strong>răspundem candidaturilor în câteva zile</strong>"
+".\n"
+"        <br><br>\n"
+"        The next step is either a call or a meeting in our offices.\n"
+"        <br>\n"
+"        Ne puteți <strong>contacta dacă doriți un răspuns mai rapid</strong> "
+"sau dacă nu primiți vești de la noi suficient de curând (răspundeți la acest "
+"e-mail).\n"
+"        <br>\n"
+"\n"
+"        <hr width=\"97%\" style=\"background-color: rgb(204,204,204); "
+"border: medium none; clear: both; display: block; font-size: 0px; min-"
+"height: 1px; line-height: 0; margin: 17px 0px 16px 0px;\">\n"
+"        <t t-set=\"location\" t-value=\"''\"></t>\n"
+"        <t t-if=\"object.job_id.address_id.name\">\n"
+"            <strong t-out=\"object.job_id.address_id.name or ''\">Teksa SpA</"
+"strong><br>\n"
+"        </t>\n"
+"        <t t-if=\"object.job_id.address_id.street\">\n"
+"            <t t-out=\"object.job_id.address_id.street or ''\">Puerto Madero "
+"9710</t><br>\n"
+"            <t t-set=\"location\" t-"
+"value=\"object.job_id.address_id.street\"></t>\n"
+"        </t>\n"
+"        <t t-if=\"object.job_id.address_id.street2\">\n"
+"            <t t-out=\"object.job_id.address_id.street2 or ''\">Of A15, "
+"Santiago (RM)</t><br>\n"
+"            <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.street2)\"></t>\n"
+"        </t>\n"
+"        <t t-if=\"object.job_id.address_id.city\">\n"
+"            <t t-out=\"object.job_id.address_id.city or ''\">Pudahuel</t>,\n"
+"            <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.city)\"></t>\n"
+"        </t>\n"
+"        <t t-if=\"object.job_id.address_id.state_id.name\">\n"
+"            <t t-out=\"object.job_id.address_id.state_id.name or ''\">C1</t>"
+",\n"
+"            <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.state_id.name)\"></t>\n"
+"        </t>\n"
+"        <t t-if=\"object.job_id.address_id.zip\">\n"
+"            <t t-out=\"object.job_id.address_id.zip or ''\">98450</t>\n"
+"            <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.zip)\"></t>\n"
+"        </t>\n"
+"        <br>\n"
+"        <t t-if=\"object.job_id.address_id.country_id.name\">\n"
+"            <t t-out=\"object.job_id.address_id.country_id.name or ''\">"
+"Argentina</t><br>\n"
+"            <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.country_id.name)\"></t>\n"
+"        </t>\n"
+"        <br>\n"
+"    </div>\n"
+"\n"
+"\n"
+"</div>\n"
+"        "
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -366,6 +638,8 @@ msgid ""
 "<i class=\"oi oi-2x\" data-icon=\"schedule\" role=\"img\" aria-"
 "label=\"Activities\"/>"
 msgstr ""
+"<i class=\"oi oi-2x\" data-icon=\"schedule\" role=\"img\" aria-"
+"label=\"Activități\"/>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -373,6 +647,8 @@ msgid ""
 "<i class=\"oi oi-filled flex-shrink-0 me-1 text-center\" data-icon=\"mail\" "
 "title=\"Email\"/>"
 msgstr ""
+"<i class=\"oi oi-filled flex-shrink-0 me-1 text-center\" data-icon=\"mail\" "
+"title=\"E-mail\"/>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -380,6 +656,8 @@ msgid ""
 "<i class=\"oi oi-filled\" data-icon=\"person\" "
 "title=\"new_applications_icon\" aria-hidden=\"true\"/>"
 msgstr ""
+"<i class=\"oi oi-filled\" data-icon=\"person\" "
+"title=\"new_applications_icon\" aria-hidden=\"true\"/>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -393,7 +671,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_employee_view_form_inherit_applicant_button
 msgid "<span class=\"o_stat_text\">Applicant</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Candidat</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -407,6 +685,9 @@ msgid ""
 "                                    All applications will lose their hired "
 "date and hired status."
 msgstr ""
+"<span class=\"oi pe-1\" data-icon=\"warning\"/>\n"
+"                                    Toate candidaturile își vor pierde data "
+"angajării și statutul de angajat."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
@@ -427,12 +708,12 @@ msgstr "<span invisible=\"not salary_proposed_extra\"> + </span>"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "<span> / </span>"
-msgstr ""
+msgstr "<span> / </span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "<span> new applications</span>"
-msgstr ""
+msgstr "<span> candidaturi noi</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
@@ -452,7 +733,7 @@ msgstr "<span>Raportare</span>"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_kanban
 msgid "<span>Talents</span>"
-msgstr ""
+msgstr "<span>Talente</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -462,7 +743,7 @@ msgstr "<span>Vizualizează</span>"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
 msgid "<span>days</span>"
-msgstr ""
+msgstr "<span>zile</span>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_defaults
@@ -476,7 +757,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "Acces Grupuri"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_needaction
@@ -610,7 +891,7 @@ msgstr "Adăugați note private despre acest candidat..."
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.job_add_applicants_view_form
 msgid "Add to New Job"
-msgstr ""
+msgstr "Adaugă la un post nou"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_tree_view_job
@@ -623,7 +904,7 @@ msgstr "Adăugați la rezervor"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.job_add_applicants_from_job_view_form
 msgid "Add to this Job"
-msgstr ""
+msgstr "Adaugă la acest post"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.mail_followers_edit_action_from_hr_recruitment
@@ -635,6 +916,7 @@ msgstr "Adăugați/eliminați urmăritori"
 #: code:addons/hr_recruitment/wizard/talent_pool_add_applicants.py:0
 msgid "Added the following talents to %(talent_pools)s: %(talent_names)s."
 msgstr ""
+"Au fost adăugate următoarele talente la %(talent_pools)s: %(talent_names)s."
 
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_manager
@@ -734,7 +1016,7 @@ msgstr "Candidat Angajat"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_employee__applicant_name
 msgid "Applicant Name"
-msgstr ""
+msgstr "Nume Candidat"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__applicant_notes
@@ -856,7 +1138,7 @@ msgstr "Aplicat în"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.job_add_applicants_from_job_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.job_add_applicants_view_form
 msgid "Apply"
-msgstr ""
+msgstr "Aplică"
 
 #. module: hr_recruitment
 #: model:ir.model,website_form_label:hr_recruitment.model_hr_applicant
@@ -870,7 +1152,7 @@ msgstr "Aplică pentru un loc de muncă"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_tree_view_job
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Apply to Jobs"
-msgstr ""
+msgstr "Candidează la posturi"
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -889,7 +1171,7 @@ msgstr "Arhivează"
 #: code:addons/hr_recruitment/static/src/views/recruitment_kanban_view.js:0
 #: code:addons/hr_recruitment/static/src/views/recruitment_list_controller.js:0
 msgid "Archive job position"
-msgstr ""
+msgstr "Arhivează postul"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__application_status__archived
@@ -951,7 +1233,7 @@ msgstr "Diploma de licenta"
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__schedule_pay__biweekly
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_job__payment_interval__biweekly
 msgid "Bi-Week"
-msgstr ""
+msgstr "Bilunar"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__is_blacklisted
@@ -1018,7 +1300,7 @@ msgstr "Campanie"
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_utm_campaigns
 msgid "Campaigns"
-msgstr ""
+msgstr "Campanii"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__can_edit_body
@@ -1068,7 +1350,7 @@ msgstr "Companie"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__company_partner_id
 msgid "Company Partner"
-msgstr ""
+msgstr "Partenerul companiei"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_res_config_settings
@@ -1232,7 +1514,7 @@ msgstr "Data creării"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__currency_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__currency_id
 msgid "Currency"
-msgstr ""
+msgstr "Moneda"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__no_of_employee
@@ -1248,7 +1530,7 @@ msgstr "Mesaj personalizat de respins"
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__schedule_pay__daily
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_job__payment_interval__daily
 msgid "Day"
-msgstr ""
+msgstr "Zi"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__rotting_threshold_days
@@ -1408,7 +1690,7 @@ msgstr "Digitalizați CV-ul pentru a extrage automat numele și e-mailul."
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_diploma
 msgid "Diploma"
-msgstr ""
+msgstr "Diplomă"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -1517,13 +1799,13 @@ msgstr "Număr duplicate"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.job_add_applicants_from_job_view_form
 msgid "Duplicates the selected Talent profile(s) for the selected Job Position"
-msgstr ""
+msgstr "Duplică profilurile de talent selectate pentru postul selectat"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.job_add_applicants_view_form
 msgid ""
 "Duplicates this Applicant/Talent profile for the selected Job Position(s)"
-msgstr ""
+msgstr "Duplică acest profil de candidat/talent pentru posturile selectate"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__email_from
@@ -1600,7 +1882,7 @@ msgstr "Nume angajat"
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_contract_type
 msgid "Employee Types"
-msgstr ""
+msgstr "Tipuri de angajați"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_hired_template
@@ -1663,7 +1945,7 @@ msgstr "Intervievator extins"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__favorite_recruiter_ids
 msgid "Favorite Recruiter"
-msgstr ""
+msgstr "Recrutor favorit"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__phone_sanitized
@@ -1687,7 +1969,7 @@ msgstr "Primul interviu"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
 msgid "Fold by Default"
-msgstr ""
+msgstr "Pliat implicit"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__fold
@@ -1714,7 +1996,7 @@ msgstr "Urmăritori (Parteneri)"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
 msgid "For all companies"
-msgstr ""
+msgstr "Pentru toate companiile"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -1770,7 +2052,7 @@ msgstr "Stadiu angajat"
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__schedule_pay__hourly
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_job__payment_interval__hourly
 msgid "Hour"
-msgstr ""
+msgstr "Ora"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__id
@@ -1909,6 +2191,8 @@ msgid ""
 "If you archive these job positions, all their applicants will be archived "
 "too. Are you sure?"
 msgstr ""
+"Dacă arhivați aceste posturi, toate candidaturile lor vor fi arhivate. Sigur "
+"doriți să continuați?"
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -1919,6 +2203,8 @@ msgid ""
 "If you archive this job position, all its applicants will be archived too. "
 "Are you sure?"
 msgstr ""
+"Dacă arhivați acest post, toate candidaturile sale vor fi arhivate. Sigur "
+"doriți să continuați?"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__kanban_state__normal
@@ -1937,6 +2223,9 @@ msgid ""
 "Incoming emails create applications automatically. Use it for direct "
 "applications or when posting job opportunities on LinkedIn, Monster, etc."
 msgstr ""
+"E-mailurile primite creează automat candidaturi. Folosiți această adresă "
+"pentru candidaturi directe sau când publicați posturi pe LinkedIn, Monster "
+"etc."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__phone_blacklisted
@@ -2052,7 +2341,7 @@ msgstr "Pagina de locuri de muncă"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_job_platform
 msgid "Job Platform"
-msgstr ""
+msgstr "Platformă de recrutare"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_job
@@ -2104,7 +2393,7 @@ msgstr "Specific locului de muncă"
 #: model:ir.actions.act_window,name:hr_recruitment.hr_job_tag_action
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_job_tag_menu
 msgid "Job Tags"
-msgstr ""
+msgstr "Etichete post"
 
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_5
@@ -2202,7 +2491,7 @@ msgstr "Să creăm un post de muncă"
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/views/recruitment_helper_view.xml:0
 msgid "Let's create a job position."
-msgstr ""
+msgstr "Haide să creăm a poziție de muncă."
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -2248,7 +2537,7 @@ msgstr "Încărcare date Demonstrative"
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/views/recruitment_helper_view.xml:0
 msgid "Load sample data"
-msgstr ""
+msgstr "Încarcă date de probă"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_incoming_local
@@ -2309,6 +2598,56 @@ msgid ""
 "allowing you to easily find for specific skills and build up a database of\n"
 "profiles.\n"
 msgstr ""
+"Gestionează recrutarea și candidaturile\n"
+"---------------------------------------\n"
+"\n"
+"Publicați, promovați și organizați ofertele de muncă folosind aplicația "
+"Odoo\n"
+"<a href=\"https://www.odoo.com/app/recruitment\">Open Source Recruitment "
+"Application</a>.\n"
+"\n"
+"Organizați pagina de cariere, promovați anunțurile de angajare și urmăriți\n"
+"cu ușurință candidaturile. Urmăriți fiecare candidat și creați o bază de "
+"date\n"
+"cu competențe și profiluri, folosind documente indexate.\n"
+"\n"
+"Publicați posturile pe cele mai bune platforme\n"
+"----------------------------------------------\n"
+"\n"
+"Conectați-vă automat la cele mai cunoscute platforme de recrutare: LinkedIn, "
+"Monster,\n"
+"Craigslist etc. Fiecărui post i se atribuie automat o nouă adresă de e-mail\n"
+"pentru a direcționa automat candidaturile către postul potrivit.\n"
+"\n"
+"Indiferent dacă solicitanții vă contactează prin e-mail sau printr-un "
+"formular online, toate\n"
+"datele sunt indexate automat (CV-uri, scrisori de motivație), iar "
+"dumneavoastră puteți răspunde\n"
+"cu un singur clic, folosind șabloane de răspuns.\n"
+"\n"
+"Personalizați procesul de recrutare\n"
+"-----------------------------------\n"
+"\n"
+"Folosiți vizualizarea Kanban și personalizați etapele procesului de "
+"recrutare:\n"
+"precalificare, primul interviu, al doilea interviu, negociere etc.\n"
+"\n"
+"Obțineți statistici exacte despre fluxul de recrutare și rapoarte pentru a "
+"compara\n"
+"rezultatele investițiilor în diferite platforme externe de recrutare.\n"
+"\n"
+"Simplificați procesul de recrutare\n"
+"----------------------------------\n"
+"\n"
+"Urmăriți candidații în procesul de recrutare cu vizualizarea Kanban "
+"inteligentă. Economisiți\n"
+"timp automatizând unele comunicări cu șabloane de e-mail.\n"
+"\n"
+"Documentele precum CV-urile și scrisorile de motivație sunt indexate "
+"automat,\n"
+"astfel încât să puteți căuta ușor competențe specifice și să creați o bază "
+"de date cu\n"
+"profiluri.\n"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_licenced
@@ -2319,18 +2658,18 @@ msgstr "Diploma de masterat"
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_job.py:0
 msgid "Matching Talents"
-msgstr ""
+msgstr "Potrivirea talentelor"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__activity_type_icon
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Pictogramă Material Symbols, de ex. checklist"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__salary_max
 msgid "Maximum Salary"
-msgstr ""
+msgstr "Salariu maxim"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__medium_id
@@ -2378,14 +2717,14 @@ msgstr "Mesaje"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__salary_min
 msgid "Minimum Salary"
-msgstr ""
+msgstr "Salariu minim"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__schedule_pay__monthly
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_job__payment_interval__monthly
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Month"
-msgstr ""
+msgstr "Luna"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -2502,7 +2841,7 @@ msgstr "Următoarea întâlnire"
 #. module: hr_recruitment
 #: model:res.groups.privilege,placeholder:hr_recruitment.res_groups_privilege_recruitment
 msgid "No"
-msgstr ""
+msgstr "Nu"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -2542,7 +2881,7 @@ msgstr "Nu există date încă!"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
 msgid "No email"
-msgstr ""
+msgstr "Fără email"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_platforms
@@ -2557,7 +2896,7 @@ msgstr "Nu există încă talente în bazinul de talente"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Non-Linked Talents"
-msgstr ""
+msgstr "Non-Linked Talente"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__0
@@ -2811,7 +3150,7 @@ msgstr "Salariul propus suplimentar"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Publish job opportunities on your website"
-msgstr ""
+msgstr "Publică posturi pe site-ul web"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
@@ -2828,7 +3167,7 @@ msgstr "Evaluări"
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__kanban_state__done
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Ready"
-msgstr ""
+msgstr "Pregătit"
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -2857,7 +3196,7 @@ msgstr "Recrutor"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__recruiter_email
 msgid "Recruiter Work Email"
-msgstr ""
+msgstr "E-mailul de serviciu al recrutorului"
 
 #. module: hr_recruitment
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment
@@ -2893,7 +3232,7 @@ msgstr "Planuri recrutare"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_stage
 msgid "Recruitment Stage"
-msgstr ""
+msgstr "Etapă de recrutare"
 
 #. module: hr_recruitment
 #: model:mail.template,name:hr_recruitment.email_template_data_applicant_congratulations
@@ -2918,7 +3257,7 @@ msgstr "Recrutare: Refuz"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Reference"
-msgstr ""
+msgstr "Referință"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
@@ -2969,7 +3308,7 @@ msgstr "Motive de refuz"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_applicant_refuse_single
 msgid "Refuse a single applicant"
-msgstr ""
+msgstr "Respinge un candidat"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__application_status__refused
@@ -3009,7 +3348,7 @@ msgstr "Regex"
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__model
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_refuse_single__model
 msgid "Related Document Model"
-msgstr ""
+msgstr "Modelul Documentului Asociat"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -3070,7 +3409,7 @@ msgstr "Putrezire"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
 msgid "Rotting in"
-msgstr ""
+msgstr "Învechire după"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -3116,7 +3455,7 @@ msgstr "Salariul propus de Organizatie, plus bonusuri"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Salary Range"
-msgstr ""
+msgstr "Interval salarial"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__phone_sanitized
@@ -3142,7 +3481,7 @@ msgstr "Programeaza un Interviu"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__schedule_pay
 msgid "Schedule Pay"
-msgstr ""
+msgstr "Plan de salarizare"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__scheduled_date
@@ -3153,7 +3492,7 @@ msgstr "Dată planificată"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__payment_interval
 msgid "Scheduled Pay"
-msgstr ""
+msgstr "Plată programată"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree__score
@@ -3183,7 +3522,7 @@ msgstr "Al doilea interviu"
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_graduate
 msgid "Secondary Education"
-msgstr ""
+msgstr "Învățământ secundar"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -3288,7 +3627,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
 msgid "Show for all positions"
-msgstr ""
+msgstr "Afișează pentru toate posturile"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__source_id
@@ -3380,7 +3719,7 @@ msgstr "Etape"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_tree_view_job
 msgid "State"
-msgstr ""
+msgstr "Stare"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__activity_state
@@ -3416,7 +3755,7 @@ msgstr "Subiect..."
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_job_tag
 msgid "Tag"
-msgstr ""
+msgstr "Etichetă"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__name
@@ -3499,7 +3838,7 @@ msgstr "Talente"
 #. odoo-python
 #: code:addons/hr_recruitment/wizard/talent_pool_add_applicants.py:0
 msgid "Talents Added To Talent Pool(s)"
-msgstr ""
+msgstr "Talente Added To Talent Pool(s)"
 
 #. module: hr_recruitment
 #: model:ir.model.constraint,message:hr_recruitment.constraint_hr_job_platform_email_uniq
@@ -3549,6 +3888,8 @@ msgid ""
 "The company this stage is available to. If not set, it is available to all "
 "companies."
 msgstr ""
+"Compania pentru care este disponibilă această etapă. Dacă nu este setată, "
+"etapa este disponibilă tuturor companiilor."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__availability
@@ -3663,7 +4004,7 @@ msgstr "Total Angajati Estimati"
 #. module: hr_recruitment
 #: model:ir.module.module,summary:base.module_hr_recruitment
 msgid "Track your recruitment pipeline"
-msgstr ""
+msgstr "Urmărește fluxul de recrutare"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_sources
@@ -3685,7 +4026,7 @@ msgstr "Încercați să trimiteți un e-mail"
 #. module: hr_recruitment
 #: model_terms:web_tour.tour,rainbow_man_message:hr_recruitment.hr_recruitment_tour
 msgid "Try the Website app to publish job opportunities online."
-msgstr ""
+msgstr "Încercați aplicația Website pentru a publica posturi online."
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.mail_activity_type_action_config_hr_applicant
@@ -3710,7 +4051,7 @@ msgstr "Campanie UTM"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__utm_reference
 msgid "UTM Reference"
-msgstr ""
+msgstr "Referință UTM"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_utm_source
@@ -3752,6 +4093,8 @@ msgstr "Mesaje necitite"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Use OCR to fill data from a picture of the Résumé or the file itself"
 msgstr ""
+"Folosiți OCR pentru a extrage date dintr-o imagine a CV-ului sau direct din "
+"fișier"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
@@ -3799,12 +4142,12 @@ msgstr "Doriți să analizați de unde provin aplicațiile?"
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__schedule_pay__weekly
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_job__payment_interval__weekly
 msgid "Week"
-msgstr ""
+msgstr "Săptămână"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
 msgid "What are the requirements to move an applicant to this stage?"
-msgstr ""
+msgstr "Care sunt condițiile pentru mutarea candidatului în această etapă?"
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -3832,7 +4175,7 @@ msgstr "Fără regex: Numele candidatului va fi subiectul e-mailului."
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__schedule_pay__yearly
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_job__payment_interval__yearly
 msgid "Year"
-msgstr ""
+msgstr "An"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -3868,7 +4211,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "You cannot duplicate the talent(s)."
-msgstr ""
+msgstr "Nu puteți duplica talentele."
 
 #. module: hr_recruitment
 #. odoo-python
@@ -3931,7 +4274,7 @@ msgstr "ex. Master"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
 msgid "e.g. Qualification"
-msgstr ""
+msgstr "ex. Calificare"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -3992,18 +4335,18 @@ msgstr "id"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "in<br/><span class=\"text-nowrap\">progress</span>"
-msgstr ""
+msgstr "în<br/><span class=\"text-nowrap\">curs</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "new<br/><span class=\"text-nowrap\">applications</span>"
-msgstr ""
+msgstr "candidaturi<br/><span class=\"text-nowrap\">noi</span>"
 
 #. module: hr_recruitment
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/views/recruitment_helper_view.xml:0
 msgid "or"
-msgstr ""
+msgstr "sau"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_applicant_get_refuse_reason__scheduled_date
@@ -4024,7 +4367,7 @@ msgstr "rezervor de talente"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "to<br/><span class=\"text-nowrap\">recruit</span>"
-msgstr ""
+msgstr "de<br/><span class=\"text-nowrap\">recrutat</span>"
 
 #~ msgid "Ready for Next Stage"
 #~ msgstr "Pregătit pentru etapa următoare"

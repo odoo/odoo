@@ -10,7 +10,7 @@
 # Martin Trigaux, 2022
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
 # Cozmin Candea <office@terrabit.ro>, 2023
-# Dorin Hongu <dhongu@gmail.com>, 2023, 2025.
+# Dorin Hongu <dhongu@gmail.com>, 2023, 2025, 2026.
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Comaniciu Ioana <ioana@dakai.ro>, 2025.
@@ -21,9 +21,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-13 17:38+0000\n"
-"PO-Revision-Date: 2026-08-31 14:09+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-21 09:31+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/"
 "website_sale/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -31,12 +31,12 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "\" category"
-msgstr ""
+msgstr "„ categorie"
 
 #. module: website_sale
 #. odoo-python
@@ -45,12 +45,14 @@ msgid ""
 "%(product_name)s requires a minimum of %(min_qty)g; please add %"
 "(missing_qty)g more to your cart."
 msgstr ""
+"%(product_name)s necesită o cantitate minimă de %(min_qty)g; adaugă încă %"
+"(missing_qty)g în coș."
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 msgid "%(product_name)s was not added to your cart because it is unavailable."
-msgstr ""
+msgstr "%(product_name)s nu a fost adăugat în coș deoarece nu este disponibil."
 
 #. module: website_sale
 #. odoo-python
@@ -152,6 +154,58 @@ msgid ""
 "                }\n"
 "                }"
 msgstr ""
+".heartBeat {\n"
+"                        animation: heartBeat 1.3s ease-in-out forwards;\n"
+"                        animation-delay: 0.75s;\n"
+"                        transform-origin: 74.5px 25.5px;\n"
+"                    }\n"
+"                @keyframes heartBeat {\n"
+"                        0% {\n"
+"                        transform: scale(1);\n"
+"                        }\n"
+"\n"
+"                        14% {\n"
+"                            transform: scale(1.2);\n"
+"                        }\n"
+"\n"
+"                        28% {\n"
+"                            transform: scale(1);\n"
+"                        }\n"
+"\n"
+"                        42% {\n"
+"                            transform: scale(1.2);\n"
+"                        }\n"
+"\n"
+"                        70% {\n"
+"                            transform: scale(1);\n"
+"                        }\n"
+"                    }\n"
+"                .swing {\n"
+"                    animation: swing 1.3s ease forwards;\n"
+"                    animation-delay: 0.75s;\n"
+"                    transform-origin: top center\n"
+"                }\n"
+"                @keyframes swing {\n"
+"                    20% {\n"
+"                    transform: rotate(15deg)\n"
+"                }\n"
+"\n"
+"                40% {\n"
+"                    transform: rotate(-10deg)\n"
+"                }\n"
+"\n"
+"                60% {\n"
+"                    transform: rotate(5deg)\n"
+"                }\n"
+"\n"
+"                80% {\n"
+"                    transform: rotate(-5deg)\n"
+"                }\n"
+"\n"
+"                to {\n"
+"                    transform: rotate(0deg)\n"
+"                }\n"
+"                }"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.empty_cart_svg
@@ -245,12 +299,12 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippets
 msgid "/shop"
-msgstr ""
+msgstr "/shop"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__prevent_sale_for__zero_price
 msgid "0 price products"
-msgstr ""
+msgstr "Produse cu prețul 0"
 
 #. module: website_sale
 #. odoo-javascript
@@ -272,53 +326,53 @@ msgstr "2 Coloane"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "2 columns"
-msgstr ""
+msgstr "2 coloane"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_products_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/wishlist_page_option.xml:0
 msgid "3 Columns"
-msgstr ""
+msgstr "3 coloane"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "3 columns"
-msgstr ""
+msgstr "3 coloane"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_products_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/wishlist_page_option.xml:0
 msgid "4 Columns"
-msgstr ""
+msgstr "4 coloane"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "4 columns"
-msgstr ""
+msgstr "4 coloane"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_products_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/wishlist_page_option.xml:0
 msgid "5 Columns"
-msgstr ""
+msgstr "5 coloane"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "5 columns"
-msgstr ""
+msgstr "5 coloane"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_products_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/wishlist_page_option.xml:0
 msgid "6 Columns"
-msgstr ""
+msgstr "6 coloane"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
@@ -424,6 +478,83 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <t t-set=\"secondary_color\" t-"
+"value=\"object.company_id.email_secondary_color or '#875A7B'\"></t>\n"
+"                    <t t-set=\"primary_color\" t-"
+"value=\"object.company_id.email_primary_color or '#FFFFFF'\"></t>\n"
+"                    <t t-if=\"'website_id' in object and object.website_id\" "
+"t-set=\"logo_src\" t-value=\"object.website_id.image_url(object.website_id, "
+"'logo')\"></t>\n"
+"                    <t t-else=\"\" t-set=\"logo_src\" t-valuef=\"/"
+"logo.png?company=#{object.company_id.id}\"></t>\n"
+"                    <img t-att-src=\"logo_src\" style=\"display: block; "
+"height: 50px; margin: 0 0 16px;\" alt=\"Logo\">\n"
+"                    <p style=\"margin: 0 0 12px; padding: 0px; line-height: "
+"18px; font-size: 14px;\">\n"
+"                        Bună <t t-out=\"object.partner_id.display_name\"></t>"
+",\n"
+"                        <br><br>\n"
+"                        Acordă un minut pentru a evalua comanda!\n"
+"                        <br>\n"
+"                        <t t-if=\"not is_html_empty(object.user_id.signature)"
+"\">\n"
+"                            <div style=\"font-size: 14px; margin: 0 0 "
+"16px;\"><t t-out=\"object.user_id.signature\"></t></div>\n"
+"                        </t>\n"
+"                        <br>\n"
+"                        <t t-foreach=\"object.order_line.filtered(lambda l: "
+"l._is_sellable())\" t-as=\"line\">\n"
+"                            <t t-set=\"product\" t-value=\"line.product_id\">"
+"</t>\n"
+"                            <table width=\"100%\" t-attf-style=\"font-size: "
+"14px; border-collapse: collapse; margin-bottom: 10px; max-width: 590px; {"
+"{not line_last and 'border-bottom: 1px solid #dee2e6;'}}\">\n"
+"                                <tr>\n"
+"                                    <td style=\"width: 84px; padding: 10px "
+"10px 10px 0; vertical-align: top;\">\n"
+"                                        <img t-attf-src=\"/web/image/"
+"product.product/{{ product.id }}/image_128\" t-attf-style=\"width: 64px; "
+"height: {{object.website_id and "
+"object.website_id._get_product_image_ratio_height() or '64px'}}; object-fit: "
+"cover; object-position: center;\" alt=\"Imaginea produsului\">\n"
+"                                    </td>\n"
+"                                    <td style=\"padding: 10px 10px 10px 0;\">"
+"\n"
+"                                        <div>\n"
+"                                            <h3 t-attf-style=\"font-size: "
+"14px; margin-bottom: {{line.product_id.product_template_attribute_value_ids "
+"and '6px' or '0'}};\">\n"
+"                                                <strong t-attf-"
+"style=\"color: {{secondary_color}};\" t-out=\"product.name\"></strong>\n"
+"                                            </h3>\n"
+"                                        </div>\n"
+"                                        <div>\n"
+"                                            <span t-"
+"if=\"line.product_id.product_template_attribute_value_ids\" style=\"color: "
+"#6c757d;\">\n"
+"                                                <t t-out=\"', '.join"
+"(line.product_id.product_template_attribute_value_ids.mapped('name'))\"></t>"
+"\n"
+"                                            </span>\n"
+"                                        </div>\n"
+"                                    </td>\n"
+"                                    <td style=\"padding: 10px 0; text-align: "
+"right;\">\n"
+"                                        <a t-att-"
+"href=\"product.website_absolute_url + '#o_product_page_reviews'\" t-attf-"
+"style=\"border-radius: 5px; background-color: {{secondary_color}}; padding: "
+"8px 16px 8px 16px; color: {{primary_color}}; text-decoration: none; font-"
+"size:13px; white-space: nowrap;\" target=\"_blank\">\n"
+"                                            Evaluează acum\n"
+"                                        </a>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </t>\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
@@ -433,17 +564,21 @@ msgid ""
 "                                <span class=\"d-none d-md-inline\">Add to "
 "cart</span>"
 msgstr ""
+"<i class=\"oi d-md-none\" data-icon=\"shopping_cart\" role=\"presentation\"/>"
+"\n"
+"                                <span class=\"d-none d-md-inline\">Adaugă în "
+"coș</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.billing_address_list
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_address_list
 msgid "<i class=\"oi me-1\" data-icon=\"add\"/>Add"
-msgstr ""
+msgstr "<i class=\"oi me-1\" data-icon=\"add\"/>Adaugă"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
 msgid "<i class=\"oi me-1\" data-icon=\"chevron_backward\"/> Back to shop"
-msgstr ""
+msgstr "<i class=\"oi me-1\" data-icon=\"chevron_backward\"/> Înapoi la magazin"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_re_order_btn
@@ -469,21 +604,23 @@ msgid ""
 "<i class=\"oi me-2 me-lg-0\" data-icon=\"favorite\" role=\"img\" aria-"
 "label=\"Add to wishlist\"/>"
 msgstr ""
+"<i class=\"oi me-2 me-lg-0\" data-icon=\"favorite\" role=\"img\" aria-"
+"label=\"Adaugă to wishlist\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart
 msgid "<i class=\"oi me-2\" data-icon=\"add_shopping_cart\"/>Add to Cart"
-msgstr ""
+msgstr "<i class=\"oi me-2\" data-icon=\"add_shopping_cart\"/>Adaugă to Cart"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<i class=\"oi me-2\" data-icon=\"article\"/>Invoice"
-msgstr ""
+msgstr "<i class=\"oi me-2\" data-icon=\"article\"/>Factură"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<i class=\"oi me-2\" data-icon=\"download\"/>Download"
-msgstr ""
+msgstr "<i class=\"oi me-2\" data-icon=\"download\"/>Descarcă"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_buy_now
@@ -500,6 +637,8 @@ msgid ""
 "<i class=\"oi me-2\" data-icon=\"mail\"/>\n"
 "                    Notify me"
 msgstr ""
+"<i class=\"oi me-2\" data-icon=\"mail\"/>\n"
+"                    Anunță-mă"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
@@ -507,6 +646,8 @@ msgid ""
 "<i class=\"oi me-2\" data-icon=\"shopping_cart\" aria-hidden=\"true\"/>Add "
 "to Cart"
 msgstr ""
+"<i class=\"oi me-2\" data-icon=\"shopping_cart\" aria-hidden=\"true\"/>"
+"Adaugă to Cart"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cta_wrapper
@@ -520,7 +661,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<i class=\"oi me-2\" data-icon=\"shopping_cart_checkout\"/>Order"
-msgstr ""
+msgstr "<i class=\"oi me-2\" data-icon=\"shopping_cart_checkout\"/>Comandă"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.quick_reorder_button
@@ -565,6 +706,9 @@ msgid ""
 "hidden=\"true\"/>\n"
 "                                            Out of stock"
 msgstr ""
+"<i class=\"oi oi-filled me-2 text-danger\" data-icon=\"circle\" aria-"
+"hidden=\"true\"/>\n"
+"                                            Stoc epuizat"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cta_wrapper
@@ -572,6 +716,8 @@ msgid ""
 "<i class=\"oi oi-filled me-2\" data-icon=\"notifications\"/>\n"
 "                    Subscribed"
 msgstr ""
+"<i class=\"oi oi-filled me-2\" data-icon=\"notifications\"/>\n"
+"                    Abonat"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_wishlist
@@ -580,6 +726,9 @@ msgid ""
 "hidden=\"true\"/>\n"
 "                                            Out of stock"
 msgstr ""
+"<i class=\"oi oi-filled text-danger me-1\" data-icon=\"circle\" aria-"
+"hidden=\"true\"/>\n"
+"                                            Stoc epuizat"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_product_buttons
@@ -599,6 +748,9 @@ msgid ""
 "role=\"presentation\"/>\n"
 "                    <span class=\"o_label small ms-1\">Contact Us</span>"
 msgstr ""
+"<i class=\"oi oi-fw oi-filled o_not-animable\" data-icon=\"mail\" "
+"role=\"presentation\"/>\n"
+"                    <span class=\"o_label small ms-1\">Contactează-ne</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
@@ -607,6 +759,9 @@ msgid ""
 "                                            <span class=\"o_label small "
 "ms-1\">Contact Us</span>"
 msgstr ""
+"<i class=\"oi oi-fw oi-filled\" data-icon=\"mail\" role=\"presentation\"/>\n"
+"                                            <span class=\"o_label small ms-"
+"1\">Contactează-ne</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
@@ -614,6 +769,8 @@ msgid ""
 "<i class=\"oi oi-fw\" data-icon=\"shopping_cart\" role=\"presentation\"/"
 "><span class=\"o_label small ms-1\">Add to Cart</span>"
 msgstr ""
+"<i class=\"oi oi-fw\" data-icon=\"shopping_cart\" role=\"presentation\"/>"
+"<span class=\"o_label small ms-1\">Adaugă to Cart</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
@@ -655,6 +812,18 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<p>\n"
+"A fost trimisă o solicitare de retragere pentru comanda <t t-"
+"out=\"object.order_reference\">S00001</t>.\n"
+"</p>\n"
+"<div style=\"margin: 16px 0; text-align: center;\">\n"
+"    <a t-att-href=\"ctx.get('order_access_link')\" target=\"_blank\" "
+"style=\"background-color: #875A7B; padding: 8px 16px; text-decoration: none; "
+"color: #fff; border-radius: 5px; font-size: 14px; display: inline-block;\">\n"
+"        Vezi comanda\n"
+"    </a>\n"
+"</div>\n"
+"            "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -675,7 +844,7 @@ msgstr "<span class=\"align-middle\">Aveți deja un cont?</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<span class=\"align-middle\">to follow your order.</span>"
-msgstr ""
+msgstr "<span class=\"align-middle\">pentru a vă onora comanda.</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_wishlist
@@ -689,6 +858,14 @@ msgid ""
 "                                                    </span>\n"
 "                                                </span>"
 msgstr ""
+"<span class=\"d-inline-flex align-items-baseline\">\n"
+"                                                    <i class=\"oi oi-fw "
+"o_not-animable\" data-icon=\"shopping_cart\" role=\"presentation\"/>\n"
+"                                                    <span class=\"o_label "
+"small ms-1\">\n"
+"                                                        Adaugă to Cart\n"
+"                                                    </span>\n"
+"                                                </span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_wishlist
@@ -702,11 +879,19 @@ msgid ""
 "                                                    </span>\n"
 "                                                </span>"
 msgstr ""
+"<span class=\"d-inline-flex align-items-baseline\">\n"
+"                                                    <i class=\"oi oi-fw oi-"
+"filled o_not-animable\" data-icon=\"mail\" role=\"presentation\"/>\n"
+"                                                    <span class=\"o_label "
+"small ms-1\">\n"
+"                                                        Contactează-ne\n"
+"                                                    </span>\n"
+"                                                </span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_inline
 msgid "<span class=\"fw-bold fs-5 w-100\">Donate</span>"
-msgstr ""
+msgstr "<span class=\"fw-bold fs-5 w-100\">Donează</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_method
@@ -729,6 +914,8 @@ msgid ""
 "<span class=\"oi oi-fw o_not-animable\" data-icon=\"swap_horiz\"/>\n"
 "            <span class=\"o_label small ms-2\">Compare</span>"
 msgstr ""
+"<span class=\"oi oi-fw o_not-animable\" data-icon=\"swap_horiz\"/>\n"
+"            <span class=\"o_label small ms-2\">Compară</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.navigation_buttons
@@ -776,30 +963,30 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_inline
 msgid "<span class=\"s_donation_currency pe-1\">$</span>"
-msgstr ""
+msgstr "<span class=\"s_donation_currency pe-1\">$</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_inline
 msgid "<span class=\"s_donation_currency pe-1\">$</span>10"
-msgstr ""
+msgstr "<span class=\"s_donation_currency pe-1\">$</span>10"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
 msgid "<span class=\"s_donation_currency pe-1\">$</span>100"
-msgstr ""
+msgstr "<span class=\"s_donation_currency pe-1\">$</span>100"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_inline
 msgid "<span class=\"s_donation_currency pe-1\">$</span>25"
-msgstr ""
+msgstr "<span class=\"s_donation_currency pe-1\">$</span>25"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_inline
 msgid "<span class=\"s_donation_currency pe-1\">$</span>50"
-msgstr ""
+msgstr "<span class=\"s_donation_currency pe-1\">$</span>50"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -824,7 +1011,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_cart_lines
 msgid "<span class=\"text-300\">|</span>"
-msgstr ""
+msgstr "<span class=\"text-300\">|</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -850,7 +1037,7 @@ msgstr "<span class=\"visually-hidden\">filtre active</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "<span invisible=\"not default_show_availability\">units</span>"
-msgstr ""
+msgstr "<span invisible=\"not default_show_availability\">unități</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cta_wrapper_boxed
@@ -885,7 +1072,7 @@ msgstr "<span><b>Felicitări!</b> Ai parcurs toți pașii acestui tur.</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.documents
 msgid "<span>Documents</span>"
-msgstr ""
+msgstr "<span>Documente</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -991,6 +1178,74 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<t t-set=\"website\" t-value=\"object.website_id or object.env.website or "
+"object.env.website.browse(env.context.get('host_id'))\"></t>\n"
+"                <div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <t t-if=\"website\" t-set=\"logo_src\" t-"
+"value=\"website.image_url(website, 'logo')\"></t>\n"
+"                    <t t-else=\"\" t-set=\"logo_src\" t-valuef=\"/"
+"logo.png?company=#{object.company_id.id}\"></t>\n"
+"                    <img t-att-src=\"logo_src\" style=\"display:block; "
+"height:50px; margin:0 0 16px;\" alt=\"Logo\">\n"
+"                    <p>\n"
+"                        Bună <t t-out=\"ctx.get('customer_name')\">Customer</"
+"t>,\n"
+"                    </p>\n"
+"                    <p>Produsul pe care îl așteptai este din nou în stoc!</p>"
+"\n"
+"                    <div t-if=\"not is_html_empty(user.signature)\" "
+"style=\"font-size: 14px; margin: 0 0 16px;\">\n"
+"                        <t t-out=\"user.signature or ''\">Mitchell Admin</t>"
+"\n"
+"                    </div>\n"
+"                    <div t-attf-style=\"margin-bottom: 22px; font-size: "
+"14px;\">\n"
+"                        <a t-att-href=\"website.get_base_url() + "
+"object.website_url\" t-attf-style=\"background-color: {"
+"{website.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px "
+"8px 16px; text-decoration: none; color: {"
+"{website.company_id.email_primary_color or '#fff'}}; border-radius: 5px; "
+"font-size:14px;\">\n"
+"                            Comandă acum\n"
+"                        </a>\n"
+"                    </div>\n"
+"                    <div style=\"margin-bottom: 12px;\">\n"
+"                        <table role=\"presentation\" width=\"100%\" "
+"style=\"max-width: 590px; border-collapse: collapse; font-size: 14px;\">\n"
+"                            <tr>\n"
+"                                <td width=\"24%\" style=\"max-width: 120px; "
+"padding: 0 10px 10px 0; vertical-align: top;\">\n"
+"                                    <img t-att-src=\"website.image_url"
+"(object, 'image_1920')\" style=\"width: 100px; height: 100px; object-fit: "
+"contain;\" alt=\"Imaginea produsului\">\n"
+"                                </td>\n"
+"                                <td style=\"padding-bottom: 8px; vertical-"
+"align: top;\">\n"
+"                                    <h2 t-att-style=\"'margin:0; font-"
+"size:14px; color:%s;' % ((website and "
+"website.company_id.email_secondary_color) or '#875A7B')\">\n"
+"                                        <strong t-out=\"object.name or ''\">"
+"Birou modular</strong>\n"
+"                                    </h2>\n"
+"                                    <p t-"
+"if=\"object.product_template_attribute_value_ids\" style=\"margin: 4px 0;\">"
+"\n"
+"                                        ( <t t-out=\"', '.join"
+"(object.product_template_attribute_value_ids.mapped('name'))\">Wood</t> )\n"
+"                                    </p>\n"
+"                                    <t t-out=\"object.description_ecommerce "
+"or ''\">Descrierea biroului</t>\n"
+"                                </td>\n"
+"                                <td width=\"19%\" align=\"right\" "
+"style=\"max-width: 100%; vertical-align: top;\">\n"
+"                                    <t t-out=\"format_amount(ctx.get"
+"('product_price') or 0, object.currency_id)\">$ 450</t>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                        </table>\n"
+"                    </div>\n"
+"                </div>\n"
+"            "
 
 #. module: website_sale
 #: model:mail.template,body_html:website_sale.mail_template_sale_withdrawal_request_confirmation
@@ -1007,6 +1262,17 @@ msgid ""
 "</t>\n"
 "            "
 msgstr ""
+"<t>\n"
+"Bună,<br><br>\n"
+"Acest email confirmă primirea solicitării tale de anulare a comenzii <t t-"
+"out=\"object.name\">S00001</t>.<br><br>\n"
+"Echipa noastră analizează solicitarea. Te vom anunța după procesare.<br><br>"
+"\n"
+"Cu stimă,<br>\n"
+"<t t-out=\"(object.company_id or object.user_id.company_id or "
+"user.company_id).name\">YourCompany</t> Team\n"
+"</t>\n"
+"            "
 
 #. module: website_sale
 #: model:mail.template,body_html:website_sale.mail_template_sale_cart_recovery
@@ -1342,6 +1608,331 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" "
+"style=\"max-width: 590px; padding: 0px; background-color: white; color: "
+"#454748; border-collapse: collapse;\" role=\"presentation\">\n"
+"<tbody>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"100%\" style=\"max-width: 590px; background-color: white; padding: "
+"0px 0px 0px 0px; border-collapse:collapse;\" role=\"presentation\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <t t-set=\"color\" t-"
+"value=\"object.company_id.email_secondary_color or '#875A7B'\"></t>\n"
+"                    <t t-if=\"'website_id' in object and object.website_id\" "
+"t-set=\"logo_src\" t-value=\"object.website_id.image_url(object.website_id, "
+"'logo')\"></t>\n"
+"                    <t t-else=\"\" t-set=\"logo_src\" t-valuef=\"/"
+"logo.png?company=#{object.company_id.id}\"></t>\n"
+"                    <img t-att-src=\"logo_src\" style=\"display: block; "
+"height: 50px; margin: 0 0 16px;\" alt=\"Logo\">\n"
+"                    <p style=\"margin: 0 0 12px; line-height: 18px;\">\n"
+"                        Bună <t t-out=\"object.partner_id.display_name or "
+"''\">Johnny Tester</t>,\n"
+"                        <br><br>\n"
+"                        Nu ai finalizat comanda online.<br>\n"
+"                        Ai întrebări despre produsele noastre?<br>\n"
+"                        Răspunde la acest email pentru a discuta!<br>\n"
+"                    </p>\n"
+"                    <t t-if=\"not is_html_empty(user.signature)\">\n"
+"                        <div style=\"font-size: 14px; margin: 0 0 16px;\"><t "
+"t-out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
+"                    </t>\n"
+"                    <t t-if=\"'hide_recovery_button' not in ctx\">\n"
+"                        <div t-attf-style=\"margin-bottom: 22px; font-size: "
+"14px;\">\n"
+"                            <a t-attf-href=\"{{ object.get_base_url() }}/"
+"shop/cart?id={{ object.id }}&amp;access_token={{ object.access_token }}\" "
+"target=\"_blank\" t-attf-style=\"background-color: {"
+"{object.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px "
+"8px 16px; text-decoration: none; color: {"
+"{object.company_id.email_primary_color or '#fff'}}; border-radius: 5px; font-"
+"size:14px;\">\n"
+"                                Reia comanda\n"
+"                            </a>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.order_line\">\n"
+"                        <!-- The following loop is also used in the addons > "
+"sale > data > mail_template_data.xml file because we want the same "
+"layout. -->\n"
+"                        <t t-foreach=\"object.order_line\" t-as=\"line\">\n"
+"                            <t t-if=\"(not hasattr(line, 'is_delivery') or "
+"not line.is_delivery) and not line.combo_item_id\">\n"
+"                                <table width=\"100%\" style=\"max-width: "
+"590px; color: #454748; font-size: 14px; border-collapse: collapse;\" "
+"role=\"presentation\">\n"
+"                                    <tr>\n"
+"                                        <td width=\"24%\" style=\"max-width: "
+"120px; padding: 0 10px 10px 0; vertical-align: top;\">\n"
+"                                            <img t-attf-src=\"/web/image/"
+"product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; "
+"height: 100px; object-fit: contain;\" alt=\"Imaginea produsului\">\n"
+"                                        </td>\n"
+"                                        <td align=\"left\" style=\"vertical-"
+"align: top; padding-bottom: 22px;\">\n"
+"                                            <h3 t-attf-style=\"mso-line-"
+"height-rule:exactly; margin:0; font-size: 14px; color: {{color}}; {{'margin-"
+"bottom: 6px;' if line.product_type == 'combo' else ''}}\">\n"
+"                                                <strong t-"
+"out=\"line.product_id.name or ''\">Curs de îngrijire a copacilor</strong>\n"
+"                                                <span t-"
+"if=\"line.product_id.product_template_attribute_value_ids\" style=\"color: "
+"#6c757d;\">\n"
+"                                                    <t t-out=\"', '.join"
+"(line.product_id.product_template_attribute_value_ids.mapped('name'))\"></t>"
+"\n"
+"                                                </span>\n"
+"                                            </h3>\n"
+"                                            <t t-set=\"combo_line_idx\" t-"
+"value=\"0\"></t>\n"
+"                                            <t t-set=\"totalComboLines\" t-"
+"value=\"0\"></t>\n"
+"                                            <t t-set=\"line_idx\" t-"
+"value=\"line_index\"></t>\n"
+"                                            <t t-"
+"foreach=\"object.order_line\" t-as=\"combo_liness\">\n"
+"                                                <t t-if=\"(not hasattr(line, "
+"'is_delivery') or not line.is_delivery) and (combo_liness.linked_line_id.id "
+"== line.id) and line_idx == line_index\">\n"
+"                                                    <t t-"
+"if=\"combo_liness.linked_line_id.id == line.id and combo_liness.id != "
+"line.id\">\n"
+"                                                        <t t-"
+"set=\"totalComboLines\" t-value=\"totalComboLines + 1\"></t>\n"
+"                                                    </t>\n"
+"                                                </t>\n"
+"                                            </t>\n"
+"                                            <t t-"
+"foreach=\"object.order_line\" t-as=\"combo_line\">\n"
+"                                                <t t-if=\"(not hasattr(line, "
+"'is_delivery') or not line.is_delivery) and (combo_line.linked_line_id.id == "
+"line.id) and combo_line.combo_item_id and line_idx == line_index\">\n"
+"                                                        <t t-"
+"set=\"borderRadiusStyle\" t-value=\"''\"></t>\n"
+"                                                        <t t-"
+"set=\"borderTopStyle\" t-value=\"''\"></t>\n"
+"                                                        <t t-"
+"set=\"borderBottomStyle\" t-value=\"''\"></t>\n"
+"\n"
+"                                                        <t t-"
+"if=\"combo_line.linked_line_id.id == line.id and combo_line.id != line.id\">"
+"\n"
+"                                                            <t t-"
+"set=\"combo_line_idx\" t-value=\"combo_line_idx + 1\"></t>\n"
+"                                                        </t>\n"
+"                                                        <t t-"
+"elif=\"combo_line.id == line.id and line_idx != line_index\">\n"
+"                                                            <t t-"
+"set=\"combo_line_idx\" t-value=\"0\"></t>\n"
+"                                                        </t>\n"
+"                                                        <t t-"
+"if=\"combo_line_idx == 1\">\n"
+"                                                            <t t-"
+"if=\"totalComboLines != 1\">\n"
+"                                                                <t t-"
+"set=\"borderRadiusStyle\" t-value=\"'border-radius: 6px 6px 0 0;'\"></t>\n"
+"                                                                <t t-"
+"set=\"borderBottomStyle\" t-value=\"'border-bottom: none;'\"></t>\n"
+"                                                            </t>\n"
+"                                                            <t t-else=\"\">\n"
+"                                                                <t t-"
+"set=\"borderRadiusStyle\" t-value=\"'border-radius: 6px;'\"></t>\n"
+"                                                            </t>\n"
+"                                                        </t>\n"
+"                                                        <t t-"
+"elif=\"totalComboLines == combo_line_idx\">\n"
+"                                                            <t t-"
+"set=\"borderRadiusStyle\" t-value=\"'border-radius: 0 0 6px 6px;'\"></t>\n"
+"                                                            <t t-"
+"if=\"totalComboLines != 2\">\n"
+"                                                                <t t-"
+"set=\"borderTopStyle\" t-value=\"'border-top: none;'\"></t>\n"
+"                                                            </t>\n"
+"                                                        </t>\n"
+"                                                        <div t-attf-"
+"style=\"width: 100%; border: 1px solid #dee2e6; padding: 5px 8px; {{ "
+"borderRadiusStyle }} {{ borderBottomStyle }} {{ borderTopStyle }}\">\n"
+"                                                                    <t t-"
+"out=\"combo_line.product_id.name or ''\">Curs de îngrijire a copacilor</t>\n"
+"                                                                    <span t-"
+"if=\"combo_line.product_id.product_template_attribute_value_ids\" "
+"style=\"color: #6c757d;\">\n"
+"                                                                        <t t-"
+"out=\"', '.join"
+"(combo_line.product_id.product_template_attribute_value_ids.mapped('name'))"
+"\"></t>\n"
+"                                                                    </span>\n"
+"                                                                    -\n"
+"                                                                    <span>\n"
+"                                                                        <t t-"
+"out=\"int(combo_line.product_uom_qty) or ''\">10000</t>\n"
+"                                                                        <t t-"
+"out=\"combo_line.product_uom_id.name or ''\" t-"
+"if=\"combo_line.order_id.create_uid._has_group('uom.group_uom')\"></t>\n"
+"                                                                    </span>\n"
+"                                                                    <p t-"
+"if=\"hasattr(combo_line, 'is_rental') and combo_line.is_rental and "
+"combo_line.id == line.id\" style=\"color: #6c757d;\">\n"
+"                                                                        <t t-"
+"out=\"combo_line._get_rental_pricing_description() or ''\"></t><br>\n"
+"                                                                    </p>\n"
+"                                                                    <t t-"
+"if=\"(hasattr(combo_line, 'is_rental') and combo_line.is_rental) or (hasattr"
+"(combo_line, 'event_id') and combo_line.event_id) or (hasattr(combo_line, "
+"'calendar_event_id') and combo_line.calendar_event_id)\">\n"
+"                                                                        <t t-"
+"set=\"description_lines\" t-"
+"value=\"combo_line.get_description_following_lines()\"></t>\n"
+"                                                                        <div "
+"t-if=\"description_lines\" style=\"color: #6c757d;\">\n"
+"                                                                            "
+"<t t-foreach=\"description_lines\" t-as=\"description_line\">\n"
+"                                                                                "
+"<p t-if=\"description_line\" t-out=\"description_line\" style=\"margin: 4px "
+"0 0;\"></p>\n"
+"                                                                            "
+"</t>\n"
+"                                                                        </"
+"div>\n"
+"                                                                    </t>\n"
+"                                                        </div>\n"
+"                                                    </t>\n"
+"                                                <t t-elif=\"not"
+"(combo_line.linked_line_id) and combo_line.id == line.id\">\n"
+"                                                    <p t-if=\"hasattr(line, "
+"'is_rental') and line.is_rental\" style=\"margin: 4px 0 0; color: #6c757d;\">"
+"\n"
+"                                                        <t t-"
+"out=\"line._get_rental_pricing_description() or ''\"></t><br>\n"
+"                                                    </p>\n"
+"                                                    <t t-if=\"(hasattr"
+"(combo_line, 'is_rental') and combo_line.is_rental) or (hasattr(combo_line, "
+"'event_id') and combo_line.event_id) or (hasattr(combo_line, "
+"'calendar_event_id') and combo_line.calendar_event_id)\">\n"
+"                                                        <t t-"
+"set=\"product_description_lines\" t-"
+"value=\"line.get_description_following_lines()\"></t>\n"
+"                                                        <div t-"
+"if=\"product_description_lines\" style=\"color: #6c757d;\">\n"
+"                                                            <t t-"
+"foreach=\"product_description_lines\" t-as=\"product_description_line\">\n"
+"                                                                <p t-"
+"if=\"product_description_line\" t-out=\"product_description_line\" "
+"style=\"margin: 4px 0 0;\"></p>\n"
+"                                                            </t>\n"
+"                                                        </div>\n"
+"                                                    </t>\n"
+"                                                </t>\n"
+"                                            </t>\n"
+"                                            <span style=\"display: inline-"
+"block;  margin-top: 4px; padding: 4px 8px; border-radius: 20px; background-"
+"color: #e9ecef; color: #454748; font-size: 12px;\">\n"
+"                                                <t t-out=\"int"
+"(line.product_uom_qty) or ''\">10000</t>\n"
+"                                                <t t-"
+"out=\"line.product_uom_id.name or ''\" t-"
+"if=\"line.order_id.create_uid._has_group('uom.group_uom')\"></t>\n"
+"                                            </span>\n"
+"                                        </td>\n"
+"                                        <td width=\"19%\" align=\"right\" "
+"style=\"max-width: 100px; vertical-align: top;\">\n"
+"                                            <t t-if=\"line.product_type == "
+"'combo'\">\n"
+"                                                <span t-out=\"format_amount"
+"(line._get_cart_display_price(), object.currency_id) or ''\">$ 10.00</span>\n"
+"                                            </t>\n"
+"                                            <t t-else=\"\">\n"
+"                                                <span style=\"white-space: "
+"nowrap;\">\n"
+"                                                    <t t-"
+"if=\"object.company_price_include == 'tax_excluded'\">\n"
+"                                                        <t t-"
+"out=\"format_amount(line.price_subtotal, object.currency_id) or ''\">$ "
+"10.00</t>\n"
+"                                                    </t>\n"
+"                                                    <t t-else=\"\">\n"
+"                                                        <t t-"
+"out=\"format_amount(line.price_total, object.currency_id) or ''\">$ 10.00</t>"
+"\n"
+"                                                    </t>\n"
+"                                                </span>\n"
+"                                            </t>\n"
+"                                            <t t-if=\"hasattr(line, "
+"'recurring_invoice') and line.recurring_invoice\">\n"
+"                                                <br>\n"
+"                                                <t t-"
+"out=\"line.subscription_plan_id.billing_period_display_sentence or ''\"></t>"
+"\n"
+"                                            </t>\n"
+"                                        </td>\n"
+"                                    </tr>\n"
+"                                </table>\n"
+"                            </t>\n"
+"                        </t>\n"
+"                        <table width=\"100%\" role=\"presentation\" "
+"style=\"font-size: 14px; border-collapse:collapse;\">\n"
+"                            <tr>\n"
+"                                <td style=\"padding-top: 8px;  border-top: "
+"1px solid #dee2e6; color: #495057;\">Livrare</td>\n"
+"                                <td style=\"padding-top: 8px;  border-top: "
+"1px solid #dee2e6; text-align: right; color: #495057;\" width=\"100px\" "
+"align=\"right\">\n"
+"                                    <t t-out=\"format_amount"
+"(object.amount_delivery, object.currency_id) or ''\">-</t>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                            <tr>\n"
+"                                <td style=\"padding-top: 4px; color: "
+"#495057;\">Subtotal</td>\n"
+"                                <td style=\"padding-top: 4px; text-align: "
+"right; color: #495057;\" width=\"100px\" align=\"right\"><t t-"
+"out=\"format_amount(object.amount_untaxed, object.currency_id) or ''\">-</t>"
+"</td>\n"
+"                            </tr>\n"
+"                        </table>\n"
+"                        <t t-if=\"object.tax_totals and "
+"object.tax_totals['subtotals']\">\n"
+"                            <t t-set=\"all_tax_lines\" t-value=\"[tax for "
+"line in object.tax_totals['subtotals'] for tax in line['tax_groups']]\"></t>"
+"\n"
+"                            <table width=\"100%\" t-if=\"all_tax_lines\" "
+"style=\"font-size: 14px; border-collapse:collapse;\" role=\"presentation\">\n"
+"                                <tr t-foreach=\"all_tax_lines\" t-"
+"as=\"tax_line\">\n"
+"                                    <td style=\"padding: 4px 0 8px 0; color: "
+"#495057;\"><span t-out=\"tax_line['group_name']\"></span></td>\n"
+"                                    <td style=\"padding: 4px 0 8px 0; text-"
+"align: right; color: #495057;\" width=\"100px\" align=\"right\" t-"
+"out=\"format_amount(tax_line['tax_amount_currency'], object.currency_id) or "
+"''\">$ 0.00</td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </t>\n"
+"                        <table width=\"100%\" role=\"presentation\" "
+"style=\"font-size: 14px; border-collapse:collapse;\">\n"
+"                            <tr>\n"
+"                                <td style=\"padding-top: 8px; border-top: "
+"1px solid #343a40;\"><strong>Total</strong></td>\n"
+"                                <td style=\"padding-top: 8px; border-top: "
+"1px solid #343a40; text-align: right\" width=\"100px\" align=\"right\">\n"
+"                                    <strong t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">-</strong>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                        </table>\n"
+"                    </t>\n"
+"                    <t t-set=\"company\" t-value=\"object.company_id or "
+"object.user_id.company_id or user.company_id\"></t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"            "
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_description
@@ -1370,6 +1961,8 @@ msgstr ""
 msgid ""
 "A detailed, formatted description to promote your product on your eCommerce."
 msgstr ""
+"O descriere detaliată și formatată pentru promovarea produsului tău în "
+"comerțul electronic."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
@@ -1395,11 +1988,13 @@ msgstr ""
 msgid ""
 "A stock notification can only exist once per product, website and partner."
 msgstr ""
+"Poate exista o singură notificare de stoc pentru fiecare produs, site și "
+"partener."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
 msgid "A year of cultural awakening."
-msgstr ""
+msgstr "Un an de revenire culturală."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
@@ -1440,12 +2035,12 @@ msgstr "Acceptă termenii"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist__code
 msgid "Access Code"
-msgstr ""
+msgstr "Cod de acces"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "Acces Grupuri"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__access_token
@@ -1455,7 +2050,7 @@ msgstr "Token de acces"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_document__attached_on_sale
 msgid "Accessible"
-msgstr ""
+msgstr "Accesibil"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
@@ -1505,20 +2100,20 @@ msgstr "Acțiuni"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_wishlist__active
 msgid "Active"
-msgstr ""
+msgstr "Activ"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/product_variant_option.xml:0
 msgid "Add"
-msgstr ""
+msgstr "Adaugă"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_tag_option.xml:0
 msgid "Add Image"
-msgstr ""
+msgstr "Adăugați imagine"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_normal_form_view
@@ -1531,12 +2126,12 @@ msgstr "Adăugați media"
 #: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/donation/donation_option_plugin.js:0
 msgid "Add a description here"
-msgstr ""
+msgstr "Adaugă o descriere aici"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_public_category_form_view
 msgid "Add a product"
-msgstr ""
+msgstr "Adăugați un produs"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1544,6 +2139,8 @@ msgid ""
 "Add a reference price per UoM on products (e.g $/kg), in addition to "
 "the                           sale price"
 msgstr ""
+"Adaugă un preț de referință pe unitatea de măsură pentru produse (de ex. lei/"
+"kg), pe lângă prețul de vânzare"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__compare_list_price
@@ -1571,7 +2168,7 @@ msgstr "Adaugă o adresă"
 #: model_terms:ir.ui.view,arch_db:website_sale.container_dropzone_above_product_details
 #: model_terms:ir.ui.view,arch_db:website_sale.container_dropzone_below_product_details
 msgid "Add elements to all products"
-msgstr ""
+msgstr "Adaugă elemente la toate produsele"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines_quantity
@@ -1605,13 +2202,13 @@ msgstr "Adaugă în coș"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_add_to_compare
 #: model_terms:ir.ui.view,arch_db:website_sale.product_wishlist
 msgid "Add to compare"
-msgstr ""
+msgstr "Adaugă la comparare"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_add_to_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale.wishlist_button
 msgid "Add to wishlist"
-msgstr ""
+msgstr "Adaugă la lista de dorințe"
 
 #. module: website_sale
 #: model:website.checkout.step,name:website_sale.checkout_step_address
@@ -1624,7 +2221,7 @@ msgstr "Adresa"
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_line__alerts
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_alert_mixin__alerts
 msgid "Alerts"
-msgstr ""
+msgstr "Alerte"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__align_category_content
@@ -1675,7 +2272,7 @@ msgstr "Toate produsele"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option_plugin.js:0
 msgid "All categories"
-msgstr ""
+msgstr "Toate categoriile"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1706,7 +2303,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_delivery_carrier_form_website_delivery
 msgid "Allow selection up to"
-msgstr ""
+msgstr "Permite selectarea a cel mult"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_pricelist__selectable
@@ -1728,6 +2325,19 @@ msgid ""
 "page.\n"
 "e.g. this option can be useful to share Product description files."
 msgstr ""
+"Vă permite să partajați documentul cu clienții în cadrul unei vânzări.\n"
+"Din ofertă: documentul va fi trimis clienților și va fi accesibil acestora "
+"oricând.\n"
+"de ex. această opțiune poate fi utilă pentru a partaja fișe de descriere a "
+"produsului.\n"
+"La confirmarea comenzii: documentul va fi trimis clienților și va fi "
+"accesibil acestora.\n"
+"de ex. această opțiune poate fi utilă pentru a partaja manualul de utilizare "
+"sau conținut digital cumpărat din eCommerce. \n"
+"Pe pagina produsului: documentul va fi accesibil clienților pe pagina "
+"produsului.\n"
+"de ex. această opțiune poate fi utilă pentru a partaja fișe de descriere a "
+"produsului."
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_alternative_products
@@ -1744,7 +2354,7 @@ msgstr "Produse alternative"
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_inline
 msgid "Amount"
-msgstr ""
+msgstr "Valoare"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team__abandoned_carts_amount
@@ -1755,7 +2365,7 @@ msgstr "Valoarea coșurilor abandonate"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/product_image/attribute_value_selector/attribute_value_selector.xml:0
 msgid "And"
-msgstr ""
+msgstr "Și"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_page_empty_screen
@@ -1763,6 +2373,8 @@ msgid ""
 "Animation showing how to create a new product: Click 'New' in the top-right "
 "corner, then select 'Product'."
 msgstr ""
+"Animație care arată cum să creezi un produs nou: fă clic pe „Nou” în colțul "
+"din dreapta sus, apoi selectează „Produs”."
 
 #. module: website_sale
 #. odoo-python
@@ -1783,7 +2395,7 @@ msgstr "Aplică"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
 msgid "Apply Filters"
-msgstr ""
+msgstr "Aplică filtrele"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1794,7 +2406,7 @@ msgstr "Aplicați prețuri sau monede specifice pe țară, client, produse etc."
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/product_image/attribute_value_selector/attribute_value_selector.xml:0
 msgid "Apply to attributes"
-msgstr ""
+msgstr "Aplică atributelor"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1822,12 +2434,12 @@ msgstr "Număr atașamente"
 #: model:ir.actions.act_window,name:website_sale.product_attribute_category_action
 #: model:ir.ui.menu,name:website_sale.menu_attribute_category_action
 msgid "Attribute Categories"
-msgstr ""
+msgstr "Categorii de atribute"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__attribute_value_ids
 msgid "Attribute Value"
-msgstr ""
+msgstr "Valoare atribut"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_product_attribute_action
@@ -1852,7 +2464,7 @@ msgstr "Auto"
 #: model:ir.model.fields,field_description:website_sale.field_product_template__publish_on
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__publish_on
 msgid "Auto publish on"
-msgstr ""
+msgstr "Publică automat la"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1864,17 +2476,17 @@ msgstr "Decupare automată"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__group_automate_suggested_products
 msgid "Automate suggested products"
-msgstr ""
+msgstr "Automatizează produsele sugerate"
 
 #. module: website_sale
 #: model:res.groups,name:website_sale.group_automate_suggested_products
 msgid "Automatically add optional, accessory and alternative products"
-msgstr ""
+msgstr "Adaugă automat produse opționale, accesorii și produse alternative"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Automatically add optional, accessory, and alternative products."
-msgstr ""
+msgstr "Adaugă automat produse opționale, accesorii și produse alternative."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__publish_on
@@ -1882,7 +2494,7 @@ msgstr ""
 #: model:ir.model.fields,help:website_sale.field_product_template__publish_on
 #: model:ir.model.fields,help:website_sale.field_website_checkout_step__publish_on
 msgid "Automatically publish the page on the chosen date and time."
-msgstr ""
+msgstr "Publică automat pagina la data și ora selectate."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_avg
@@ -1925,7 +2537,7 @@ msgstr "Culoare fundal"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Background Zoom"
-msgstr ""
+msgstr "Zoom fundal"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1937,7 +2549,7 @@ msgstr "Etichetă"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_delivery_carrier_form_website_delivery
 msgid "Based on"
-msgstr ""
+msgstr "Bazat pe"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_cabinets_bathroom
@@ -1962,7 +2574,7 @@ msgstr "Paturi"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Below"
-msgstr ""
+msgstr "Mai jos"
 
 #. module: website_sale
 #: model:product.pricelist,name:website_sale.list_benelux
@@ -1973,7 +2585,7 @@ msgstr "BeNeLux"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Bento"
-msgstr ""
+msgstr "Bento"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2029,7 +2641,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Border-Primary"
-msgstr ""
+msgstr "Contur primar"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2041,13 +2653,13 @@ msgstr "Mărginit"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Bottom"
-msgstr ""
+msgstr "Jos"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Bottom of Page"
-msgstr ""
+msgstr "Partea de jos a paginii"
 
 #. module: website_sale
 #. odoo-python
@@ -2059,7 +2671,7 @@ msgstr "Cutie"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Boxed"
-msgstr ""
+msgstr "În cutie"
 
 #. module: website_sale
 #. odoo-python
@@ -2096,7 +2708,7 @@ msgstr "Clasa CSS pentru designul produselor din magazin"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website__wishlist_opt_products_design_classes
 msgid "CSS class for wishlist page design"
-msgstr ""
+msgstr "Clasă CSS pentru designul paginii listei de dorințe"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_cabinets
@@ -2137,7 +2749,7 @@ msgstr "Design carduri"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
 msgid "Caring for a baby for 1 month."
-msgstr ""
+msgstr "Îngrijirea unui copil pentru 1 lună."
 
 #. module: website_sale
 #. odoo-javascript
@@ -2205,7 +2817,7 @@ msgstr "Subsol categorie"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/website_sale_options.xml:0
 msgid "Category Header"
-msgstr ""
+msgstr "Antet categorie"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_public_category_default
@@ -2222,7 +2834,7 @@ msgstr "Lista categoriilor"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute_category__name
 msgid "Category Name"
-msgstr ""
+msgstr "Nume categorie"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.filmstrip_categories
@@ -2238,7 +2850,7 @@ msgstr "Lămpi de tavan"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Center"
-msgstr ""
+msgstr "Centru"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2285,7 +2897,7 @@ msgstr "Chipsuri"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/donation/donation.edit.xml:0
 msgid "Choose Your Amount"
-msgstr ""
+msgstr "Alegeți suma"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2298,7 +2910,7 @@ msgstr "Alegeți o presetare predefinită și personalizați-o după cum doriți
 #: code:addons/website_sale/static/src/js/client_actions/configurator/productPageSelectionScreen.xml:0
 #: code:addons/website_sale/static/src/js/client_actions/configurator/shopPageSelectionScreen.xml:0
 msgid "Choose your"
-msgstr ""
+msgstr "Selectați"
 
 #. module: website_sale
 #. odoo-python
@@ -2332,7 +2944,7 @@ msgstr "Click & Collect"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 msgid "Click here to go back to block tab."
-msgstr ""
+msgstr "Faceți clic aici pentru a reveni la fila bloc."
 
 #. module: website_sale
 #. odoo-javascript
@@ -2350,13 +2962,13 @@ msgstr "Click pe <em>Salvează</em> pentru a crea produsul."
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 msgid "Click on the <b>Content</b> category."
-msgstr ""
+msgstr "Fă clic pe categoria <b>Conținut</b>."
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 msgid "Click on the <b>Text - Image</b> building block."
-msgstr ""
+msgstr "Fă clic pe blocul de conținut <b>Text - Imagine</b>."
 
 #. module: website_sale
 #. odoo-javascript
@@ -2407,7 +3019,7 @@ msgstr "Culoare"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_category_options.xml:0
 msgid "Color Filter"
-msgstr ""
+msgstr "Filtru de culoare"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2440,13 +3052,13 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "Companie"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/checkout_page_option.xml:0
 msgid "Company Details"
-msgstr ""
+msgstr "Detalii companie"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2461,18 +3073,18 @@ msgstr "Numele companiei"
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.comparison_button
 msgid "Compare"
-msgstr ""
+msgstr "Compară"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
 msgid "Compare Products"
-msgstr ""
+msgstr "Compară produse"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/product_comparison_bottom_bar/product_comparison_bottom_bar.xml:0
 msgid "Compare products"
-msgstr ""
+msgstr "Compară produsele"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__compare_list_price
@@ -2542,7 +3154,7 @@ msgstr "Confirmă"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_list_view_ecommerce
 msgid "Confirm Orders"
-msgstr ""
+msgstr "Confirmă comenzile"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
@@ -2597,17 +3209,17 @@ msgstr "Lățime Conținut"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Continue Selling"
-msgstr ""
+msgstr "Continuați vânzarea"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__default_allow_out_of_stock_order
 msgid "Continue selling when out-of-stock"
-msgstr ""
+msgstr "Continuați să vindeți când nu mai este stoc"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
 msgid "Continue shopping"
-msgstr ""
+msgstr "Continuă cumpărăturile"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_feed_form
@@ -2640,7 +3252,7 @@ msgstr "Creează"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_list_view_ecommerce
 msgid "Create Invoices"
-msgstr ""
+msgstr "Creați facturi"
 
 #. module: website_sale
 #: model:ir.model,website_form_label:website_sale.model_res_partner
@@ -2650,7 +3262,7 @@ msgstr "Creează un client"
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_attribute_category_action
 msgid "Create a new attribute category"
-msgstr ""
+msgstr "Creează o categorie nouă de atribute"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
@@ -2660,7 +3272,7 @@ msgstr "Creați un produs nou"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Create your first product"
-msgstr ""
+msgstr "Creează primul produs"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute_category__create_uid
@@ -2707,12 +3319,12 @@ msgstr "Categoria curentă sau Toate"
 #: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
 msgid "Custom Amount"
-msgstr ""
+msgstr "Sumă personalizată"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_inline
 msgid "Custom amount"
-msgstr ""
+msgstr "Sumă personalizată"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -2755,7 +3367,7 @@ msgstr "Personalizați șabloanele de e-mail"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__rating_email_delay
 #: model:ir.model.fields,field_description:website_sale.field_website__rating_email_delay
 msgid "Days After Order to Send Rating Email"
-msgstr ""
+msgstr "Zile după comandă pentru trimiterea emailului de evaluare"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2778,13 +3390,13 @@ msgstr "Implicit (1/1)"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
 msgid "Default Amount"
-msgstr ""
+msgstr "Sumă implicită"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Default Color"
-msgstr ""
+msgstr "Culoare implicită"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_wishlist__currency_id
@@ -2802,12 +3414,12 @@ msgstr "Sortare Implicită"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__journal_id
 #: model:ir.model.fields,field_description:website_sale.field_website__journal_id
 msgid "Default Website Journal"
-msgstr ""
+msgstr "Jurnal implicit al site-ului"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Default accounting journal for online orders"
-msgstr ""
+msgstr "Jurnal contabil implicit pentru comenzile online"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2815,6 +3427,8 @@ msgid ""
 "Default availability mode set on newly created storable products. This can "
 "be changed at the product level."
 msgstr ""
+"Modul implicit de disponibilitate este setat pentru produsele stocate nou "
+"create. Acest lucru poate fi modificat la nivelul produsului."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_public_category_action
@@ -2829,7 +3443,7 @@ msgstr "Definește o panglică nouă"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
 msgid "Defined on website"
-msgstr ""
+msgstr "Definit pe site"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_ribbon__assign
@@ -2867,7 +3481,7 @@ msgstr "Șterge panglica"
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_delivery
 msgid "Deliveries"
-msgstr ""
+msgstr "Livrări"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_checkout
@@ -2889,22 +3503,22 @@ msgstr "Valoare livrare"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__delivery_calendar_id
 msgid "Delivery Calendar"
-msgstr ""
+msgstr "Calendar de livrare"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__delivery_estimate_lead_days
 msgid "Delivery Estimate Lead Days"
-msgstr ""
+msgstr "Zile de livrare estimate (avans)"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__delivery_estimate_range_days
 msgid "Delivery Estimate Range Days"
-msgstr ""
+msgstr "Interval estimat de livrare (zile)"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_delivery_carrier
 msgid "Delivery Method"
-msgstr ""
+msgstr "Metodă de livrare"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_address_list
@@ -2951,14 +3565,14 @@ msgstr "Descriere pentru website"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
 msgid "Descriptions"
-msgstr ""
+msgstr "Descrieri"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 #: model:product.attribute.category,name:website_sale.product_attribute_category_design
 msgid "Design"
-msgstr ""
+msgstr "Proiectare"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_services_design_and_planning
@@ -2983,7 +3597,7 @@ msgstr "Birouri"
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_products_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/wishlist_page_option.xml:0
 msgid "Desktop"
-msgstr ""
+msgstr "Desktop"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3016,7 +3630,7 @@ msgstr "Rezumat"
 #. module: website_sale
 #: model:product.attribute.category,name:website_sale.product_attribute_category_dimensions
 msgid "Dimensions"
-msgstr ""
+msgstr "Dimensiuni"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3098,7 +3712,7 @@ msgstr "Nume afișat"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
 msgid "Display Options"
-msgstr ""
+msgstr "Afișează opțiunile"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__show_line_subtotals_tax_selection
@@ -3117,6 +3731,8 @@ msgstr "Tipul de afișare"
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__enable_delivery_estimate
 msgid "Display estimated date to your customer. Editable if range is defined."
 msgstr ""
+"Afișează clientului data estimată de livrare. Poate fi editată dacă este "
+"definit un interval."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website__show_category_description
@@ -3150,30 +3766,30 @@ msgstr "Afișat numai în fragmentul Listei de categorii."
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_inline
 msgid "Donate"
-msgstr ""
+msgstr "Donați"
 
 #. module: website_sale
 #: model:product.template,name:website_sale.product_donation
 #: model_terms:ir.ui.view,arch_db:website_sale.snippets
 msgid "Donation"
-msgstr ""
+msgstr "Donare"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/snippets/s_donation/donation_snippet.js:0
 msgid "Donation product not found."
-msgstr ""
+msgstr "Produsul pentru donații nu a fost găsit."
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/product_template.py:0
 msgid "Donation products cannot be deleted."
-msgstr ""
+msgstr "Produsele pentru donații nu pot fi șterse."
 
 #. module: website_sale
 #: model:product.category,name:website_sale.product_category_donations
 msgid "Donations"
-msgstr ""
+msgstr "Donații"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3184,27 +3800,27 @@ msgstr "Dublu click pentru a stabili o imagine descriptivă a produsului."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Download"
-msgstr ""
+msgstr "Descarcă"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Download Invoice"
-msgstr ""
+msgstr "Descarcă factura"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Download Sale Order"
-msgstr ""
+msgstr "Descarcă comanda de vânzare"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "Drag blocks here to add them on all products"
-msgstr ""
+msgstr "Trage blocurile aici pentru a le adăuga pe toate paginile de produs"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Drag blocks here to customize the Shop page header"
-msgstr ""
+msgstr "Trage blocurile aici pentru a personaliza antetul paginii Magazin"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -3212,6 +3828,8 @@ msgid ""
 "Drag blocks here to customize the footer of\n"
 "                                    the \""
 msgstr ""
+"Trage blocurile aici pentru a personaliza subsolul paginii\n"
+"                                    „"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -3219,6 +3837,8 @@ msgid ""
 "Drag blocks here to customize the header of\n"
 "                                        the \""
 msgstr ""
+"Trage blocurile aici pentru a personaliza antetul paginii\n"
+"                                        „"
 
 #. module: website_sale
 #. odoo-python
@@ -3238,23 +3858,23 @@ msgstr "Sertare"
 #: model:ir.model.fields,field_description:website_sale.field_product_product__dropzone_above_price
 #: model:ir.model.fields,field_description:website_sale.field_product_template__dropzone_above_price
 msgid "Drop Zone Above Price"
-msgstr ""
+msgstr "Zonă de inserare deasupra prețului"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__dropzone_above_specification
 #: model:ir.model.fields,field_description:website_sale.field_product_template__dropzone_above_specification
 msgid "Drop Zone Above Specification"
-msgstr ""
+msgstr "Zonă de inserare deasupra specificațiilor"
 
 #. module: website_sale
 #: model:ir.model.constraint,message:website_sale.constraint_product_wishlist_product_unique_partner_id
 msgid "Duplicated wishlisted product for this partner."
-msgstr ""
+msgstr "Produs favorit duplicat pentru acest partener."
 
 #. module: website_sale
 #: model:product.attribute.category,name:website_sale.product_attribute_category_duration
 msgid "Duration"
-msgstr ""
+msgstr "Durată"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__shop_extra_field_ids
@@ -3292,17 +3912,17 @@ msgstr "Ecommerce: recuperare coș"
 #. module: website_sale
 #: model:mail.template,name:website_sale.mail_template_sale_order_rating
 msgid "Ecommerce: Order Rating Request"
-msgstr ""
+msgstr "Comerț electronic: solicitare de evaluare a comenzii"
 
 #. module: website_sale
 #: model:mail.template,name:website_sale.mail_template_sale_withdrawal_request_confirmation
 msgid "Ecommerce: Withdrawal Request Confirmation"
-msgstr ""
+msgstr "Comerț electronic: confirmarea solicitării de retragere"
 
 #. module: website_sale
 #: model:mail.template,name:website_sale.mail_template_withdrawal_request_notification
 msgid "Ecommerce: Withdrawal Request Notification"
-msgstr ""
+msgstr "Comerț electronic: notificare privind solicitarea de retragere"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3338,6 +3958,8 @@ msgstr "Email"
 msgid ""
 "Email addresses of the recipients of the withdrawal request notification"
 msgstr ""
+"Adresele de email ale destinatarilor notificării privind solicitarea de "
+"retragere"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3359,7 +3981,7 @@ msgstr "Elemente esențiale"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__enable_delivery_estimate
 msgid "Estimated Delivery"
-msgstr ""
+msgstr "Livrare estimată"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3370,7 +3992,7 @@ msgstr "Explorează acum"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__external_identifier
 msgid "External Identifier"
-msgstr ""
+msgstr "Identificator extern"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_attribute__external_identifier
@@ -3378,6 +4000,8 @@ msgid ""
 "External Identifier will ensure a precise matching between your attributes "
 "and attributes in SEO and other external platforms."
 msgstr ""
+"Identificatorul extern asigură potrivirea exactă între atributele tale și "
+"cele din SEO și de pe alte platforme externe."
 
 #. module: website_sale
 #: model:website.checkout.step,name:website_sale.checkout_step_extra
@@ -3399,7 +4023,7 @@ msgstr "Pas suplimentar"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__extra_step_category_ids
 msgid "Extra Step Categories"
-msgstr ""
+msgstr "Categorii pentru pașii suplimentari"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -3447,17 +4071,17 @@ msgstr "Sertare pentru fișiere"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_attribute_view_form
 msgid "Filter"
-msgstr ""
+msgstr "Filtru"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.ribbon_filter_pills
 msgid "Filter by in stock products"
-msgstr ""
+msgstr "Filtrează produsele aflate în stoc"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.ribbon_filter_pills
 msgid "Filter by on sale products"
-msgstr ""
+msgstr "Filtrează produsele la reducere"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3481,19 +4105,19 @@ msgstr "Fitness"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Fixed"
-msgstr ""
+msgstr "Fix"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Fixed - On Hover"
-msgstr ""
+msgstr "Fix - la trecerea cursorului"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Fixed 33%"
-msgstr ""
+msgstr "Fix 33%"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3505,7 +4129,7 @@ msgstr "Fix 33% lățime"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Fixed 50%"
-msgstr ""
+msgstr "Fix 50%"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3555,12 +4179,12 @@ msgstr "Urmărește-ne"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_abandoned_cart_search
 msgid "Follow-up Sent"
-msgstr ""
+msgstr "Urmărire trimisă"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_abandoned_cart_search
 msgid "Follow-up to Send"
-msgstr ""
+msgstr "Urmărire de trimis"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__message_follower_ids
@@ -3588,7 +4212,7 @@ msgstr "Recipient pentru depozitarea alimentelor"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "For"
-msgstr ""
+msgstr "Pentru"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3599,7 +4223,7 @@ msgstr "Gratis"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_company__free_order_label
 msgid "Free Order Label"
-msgstr ""
+msgstr "Etichetă pentru comandă gratuită"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
@@ -3632,7 +4256,7 @@ msgstr "Funcțional"
 #: model:product.public.category,name:website_sale.public_category_furnitures
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_category_preview_data
 msgid "Furniture"
-msgstr ""
+msgstr "Mobila"
 
 #. module: website_sale
 #. odoo-python
@@ -3665,7 +4289,7 @@ msgstr "Diferență"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website__wishlist_gap
 msgid "Gap between products on the wishlist page"
-msgstr ""
+msgstr "Spațiu între produse în pagina listei de dorințe"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3676,7 +4300,7 @@ msgstr "General"
 #. module: website_sale
 #: model:product.attribute.category,name:website_sale.product_attribute_category_general_features
 msgid "General Features"
-msgstr ""
+msgstr "Caracteristici Generale"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_desks_glass
@@ -3688,12 +4312,12 @@ msgstr "Birouri din sticlă"
 #: code:addons/website_sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
 #: code:addons/website_sale/static/src/js/product_configurator_dialog/product_configurator_dialog.xml:0
 msgid "Go to Checkout"
-msgstr ""
+msgstr "Mergi la finalizare comenzii"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Go to Products Manager"
-msgstr ""
+msgstr "Accesează managerul de produse"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__group_gmc_feed
@@ -3723,6 +4347,9 @@ msgid ""
 "Group attributes by category that will appear in the specification\n"
 "                part of a product page."
 msgstr ""
+"Grupează atributele după categorie, care va apărea în secțiunea de "
+"specificații a\n"
+"paginii produsului."
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_ir_http
@@ -3732,12 +4359,12 @@ msgstr "Rutare HTTP"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.wishlist_button
 msgid "Handle your wishlist from the menu icon."
-msgstr ""
+msgstr "Gestionează lista de dorințe din pictograma de meniu."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__has_attribute_value
 msgid "Has Attribute Value"
-msgstr ""
+msgstr "Are valoare de atribut"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__has_message
@@ -3773,13 +4400,13 @@ msgstr "Ascunde"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__prevent_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__prevent_sale
 msgid "Hide Add To Cart"
-msgstr ""
+msgstr "Ascunde Adaugă în coș"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Hide Images"
-msgstr ""
+msgstr "Ascunde imagini"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3880,6 +4507,8 @@ msgstr "Dacă este bifat, unele mesaje au o eroare de livrare."
 #: model:ir.model.fields,help:website_sale.field_product_public_category__not_in_shop
 msgid "If checked, the category will not be displayed in the main catalog page"
 msgstr ""
+"Dacă este bifat, categoria nu va fi afișată în pagina principală a "
+"catalogului"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website__extra_step_category_ids
@@ -3887,6 +4516,8 @@ msgid ""
 "If set, the extra step is only shown when the cart contains products from "
 "these eCommerce categories."
 msgstr ""
+"Dacă este setat, pasul suplimentar se afișează doar când coșul conține "
+"produse din aceste categorii de comerț electronic."
 
 #. module: website_sale
 #: model:mail.template,description:website_sale.mail_template_sale_cart_recovery
@@ -3945,7 +4576,7 @@ msgstr "Imagine 512"
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Image Grid"
-msgstr ""
+msgstr "Grilă de imagini"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -3962,19 +4593,19 @@ msgstr "Raport imagine"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Image Shadow"
-msgstr ""
+msgstr "Umbra imaginii"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Image on the left"
-msgstr ""
+msgstr "Imaginea în stânga"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Image on the right"
-msgstr ""
+msgstr "Imaginea în dreapta"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3993,34 +4624,34 @@ msgstr "Zona imaginilor"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_delivery_carrier_form_website_delivery
 msgid "In"
-msgstr ""
+msgstr "În"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "In accordion"
-msgstr ""
+msgstr "În acordeon"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.ribbon_filter_pills
 msgid "In stock"
-msgstr ""
+msgstr "În stoc"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.wishlist_button
 msgid "In your wishlist"
-msgstr ""
+msgstr "În lista ta de dorințe"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.order_tax_lines
 msgid "Including"
-msgstr ""
+msgstr "Inclusiv"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Inherit desktop"
-msgstr ""
+msgstr "Moștenește setările desktop"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4032,7 +4663,7 @@ msgstr "In linie"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
 msgid "Input"
-msgstr ""
+msgstr "Intrare"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
@@ -4043,19 +4674,19 @@ msgstr "Instagram"
 #: model:ir.model.fields,help:website_sale.field_product_attribute__preview_variants
 msgid ""
 "Instantly created variants are available for selection from your /shop page."
-msgstr ""
+msgstr "Variantele create instantaneu pot fi selectate din pagina /shop."
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/wishlist.py:0
 msgid "Invalid Email"
-msgstr ""
+msgstr "Email invalid"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/interactions/product_page.js:0
 msgid "Invalid email"
-msgstr ""
+msgstr "Email invalid"
 
 #. module: website_sale
 #. odoo-python
@@ -4067,38 +4698,38 @@ msgstr "Imagine invalidă"
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 msgid "Invalid request parameters."
-msgstr ""
+msgstr "Parametri de solicitare nevalizi."
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 msgid "Invalid video URL provided."
-msgstr ""
+msgstr "Adresa URL a videoclipului furnizată nu este validă."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Inventory"
-msgstr ""
+msgstr "Inventar"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Inventory Defaults"
-msgstr ""
+msgstr "Valori implicite inventar"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_cols_order__inverse
 msgid "Inverse order"
-msgstr ""
+msgstr "Ordine inversă"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Invoice automatically on payment."
-msgstr ""
+msgstr "Emite automat factura la plată."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Invoicing Journal"
-msgstr ""
+msgstr "Jurnal facturare"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -4108,7 +4739,7 @@ msgstr "Politică de facturare"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_line__is_donation
 msgid "Is Donation"
-msgstr ""
+msgstr "Este donație"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__message_is_follower
@@ -4150,12 +4781,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_ribbon_options_plugin.js:0
 msgid "It will be removed from all products. Are you sure?"
-msgstr ""
+msgstr "Va fi eliminat de la toate produsele. Sigur continui?"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Journal"
-msgstr ""
+msgstr "Jurnal"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_account_move
@@ -4219,13 +4850,13 @@ msgstr "Larg"
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Large Image"
-msgstr ""
+msgstr "Imagine mare"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "Large Images"
-msgstr ""
+msgstr "Imagini mari"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_abandoned_cart_search
@@ -4237,7 +4868,7 @@ msgstr "Ultima lună"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__last_notification_date
 msgid "Last Notification Date"
-msgstr ""
+msgstr "Data ultimei notificări"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute_category__write_uid
@@ -4285,7 +4916,7 @@ msgstr "Ultimul an"
 #: model:ir.model.fields,field_description:website_sale.field_product_product__suggested_products_last_update
 #: model:ir.model.fields,field_description:website_sale.field_product_template__suggested_products_last_update
 msgid "Last update of suggested products"
-msgstr ""
+msgstr "Ultima actualizare a produselor sugerate"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_bins_laundry
@@ -4333,19 +4964,19 @@ msgstr "Becul este vândut separat"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Link Color"
-msgstr ""
+msgstr "Culoarea linkului"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__contact_us_link_url
 #: model:ir.model.fields,field_description:website_sale.field_website__contact_us_link_url
 msgid "Link URL"
-msgstr ""
+msgstr "URL-ul linkului"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/cart.py:0
 msgid "Linked lines must be added to the cart with their parent."
-msgstr ""
+msgstr "Liniile asociate trebuie adăugate în coș împreună cu produsul părinte."
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__ecommerce_access__logged_in
@@ -4355,12 +4986,12 @@ msgstr "Utilizatori autentificați"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.quick_reorder_button
 msgid "Login to reorder"
-msgstr ""
+msgstr "Autentifică-te pentru a comanda din nou"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Long Description"
-msgstr ""
+msgstr "Descriere lungă"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_boxes_luxury
@@ -4370,17 +5001,17 @@ msgstr "Cutii de lux"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__main_button_label
 msgid "Main Button Label"
-msgstr ""
+msgstr "Eticheta butonului principal"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation
 msgid "Make a Donation"
-msgstr ""
+msgstr "Faceți o donație"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Manage feeds"
-msgstr ""
+msgstr "Gestionează fluxurile de produse"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__res_config_settings__account_on_checkout__mandatory
@@ -4401,7 +5032,7 @@ msgstr "Manual"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
 msgid "Maximum"
-msgstr ""
+msgstr "Maxim"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4431,7 +5062,7 @@ msgstr "Mediu"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_withdrawal_request__log_message
 msgid "Message"
-msgstr ""
+msgstr "Mesaj"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__message_has_error
@@ -4449,19 +5080,19 @@ msgstr "Mesaje"
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Minimal Cards"
-msgstr ""
+msgstr "Carduri minimale"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
 msgid "Minimum"
-msgstr ""
+msgstr "Minim"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__minimum_quantity
 #: model:ir.model.fields,field_description:website_sale.field_product_template__minimum_quantity
 msgid "Minimum Quantity"
-msgstr ""
+msgstr "Cantitate minimă"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4476,13 +5107,13 @@ msgstr "Mobil"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Mobile Ratio"
-msgstr ""
+msgstr "Proporție mobil"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Modern Grid"
-msgstr ""
+msgstr "Grilă modernă"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_ir_module_module
@@ -4531,7 +5162,7 @@ msgstr "Coșul meu"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_wishlist
 msgid "My Wishlist"
-msgstr ""
+msgstr "Favorite mele"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4560,13 +5191,13 @@ msgstr "Nume scurt"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Needs 'Reviews' to be enabled in the Product Page"
-msgstr ""
+msgstr "Necesită activarea „Evaluărilor” în pagina produsului"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Needs at least two images to be defined in the Product Page"
-msgstr ""
+msgstr "Trebuie definite cel puțin două imagini în pagina produsului"
 
 #. module: website_sale
 #. odoo-python
@@ -4578,12 +5209,12 @@ msgstr "Nou(ă)"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_form_view
 msgid "New Collection"
-msgstr ""
+msgstr "Colecție nouă"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__new_period
 msgid "New Period"
-msgstr ""
+msgstr "Perioadă nouă"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_product_action_add
@@ -4593,7 +5224,7 @@ msgstr "Produs nou"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "New address"
-msgstr ""
+msgstr "Adresă nouă"
 
 #. module: website_sale
 #: model:product.ribbon,name:website_sale.new_ribbon
@@ -4603,7 +5234,7 @@ msgstr "Nou!"
 #. module: website_sale
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_newest_arrivals
 msgid "Newest"
-msgstr ""
+msgstr "Cele mai noi"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4639,14 +5270,14 @@ msgstr "Nu s-au găsit coșuri abandonate"
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 msgid "No delivery method is selected."
-msgstr ""
+msgstr "Nu este selectată nicio metodă de livrare."
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale_utils.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.quick_reorder_button
 msgid "No previous products available for reorder."
-msgstr ""
+msgstr "Nu există produse anterioare pentru a comanda din nou."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.website_sale_visitor_product_action
@@ -4683,7 +5314,7 @@ msgstr "Fără"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/product/product.xml:0
 msgid "Not available for sale"
-msgstr ""
+msgstr "Indisponibil pentru vânzare"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4694,18 +5325,18 @@ msgstr "Nu este disponibil cu %s"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__not_in_shop
 msgid "Not in Shop"
-msgstr ""
+msgstr "Nu este în magazin"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/reorder.py:0
 msgid "Nothing can be reordered in this order"
-msgstr ""
+msgstr "Nu se poate comanda din nou niciun produs din această comandă"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_list_view_ecommerce
 msgid "Number"
-msgstr ""
+msgstr "Număr"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team__abandoned_carts_count
@@ -4722,11 +5353,12 @@ msgstr "Număr acțiuni"
 #: model:ir.model.fields,help:website_sale.field_website__wishlist_mobile_columns
 msgid "Number of columns to display on mobile for the wishlist page (1 or 2)"
 msgstr ""
+"Numărul de coloane afișate pe mobil în pagina listei de dorințe (1 sau 2)"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website__wishlist_grid_columns
 msgid "Number of columns to display on the wishlist page"
-msgstr ""
+msgstr "Numărul de coloane afișate în pagina listei de dorințe"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__message_has_error_counter
@@ -4938,12 +5570,190 @@ msgid ""
 "Schedule, organize, promote or sell events online; conferences, webinars, "
 "trainings, etc.\n"
 msgstr ""
+"Odoo e-Commerce\n"
+"---------------\n"
+"\n"
+"### Optimize sales with an awesome online store.\n"
+"\n"
+"Odoo is an <a href=\"https://www.odoo.com/app/ecommerce\">Open Source "
+"eCommerce</a>\n"
+"unlike anything you have ever seen before. Get an awesome catalog of "
+"products\n"
+"and great product description pages.\n"
+"\n"
+"It's full-featured, integrated with your management software, fully\n"
+"customizable and super easy.\n"
+"\n"
+"Create Awesome Product Pages\n"
+"----------------------------\n"
+"\n"
+"Odoo's unique *'edit inline'* and building blocks approach makes product "
+"pages\n"
+"creation surprisingly easy. \"Want to change the price of a product? or put "
+"it\n"
+"in bold? Want to add a banner for a specific product?\" just click and "
+"change.\n"
+"What you see is what you get. Really.\n"
+"\n"
+"Drag & Drop well designed *'Building Blocks'* to create beautifull product\n"
+"pages that your customer will love.\n"
+"\n"
+"Increase Your Revenue Per Comandă\n"
+"-------------------------------\n"
+"\n"
+"The built-in cross-selling feature helps you offer extra products related "
+"to\n"
+"what the shopper put in his cart. (e.g. accessories)\n"
+"\n"
+"Odoo's upselling algorythm allows you to show visitors similar but more\n"
+"expensive products than the one in view, with incentives.\n"
+"\n"
+"The inline editing feature allows you to easily change a price, launch a\n"
+"promotion or fine tune the description of a product, in a just a click.\n"
+"\n"
+"A Clean Google Analytics Integration\n"
+"------------------------------------\n"
+"\n"
+"Get a clear visibility of your sales funnel. Odoo's Google Analytics "
+"trackers\n"
+"are configured by default to track all kind of events related to shopping\n"
+"carts, call-to-actions, etc.\n"
+"\n"
+"As Odoo marketing tools (mass mailing, campaigns, etc) are also linked with\n"
+"Google Analytics, you get a complete view of your business.\n"
+"\n"
+"Target New Markets\n"
+"------------------\n"
+"\n"
+"Get your website translated in multiple languages with no effort. Odoo "
+"proposes\n"
+"and propagates translations automatically across pages.\n"
+"\n"
+"Our translation \"on demand\" features allows you to benefit from "
+"professional\n"
+"translators to translate all your changes automatically. Just change any "
+"part\n"
+"of your website (a new blog post, a page modification, product "
+"descriptions,\n"
+"...) and the translated versions are updated automatically in around 32 "
+"hours.\n"
+"\n"
+"Fine Tune Your Catalog\n"
+"----------------------\n"
+"\n"
+"Get full control on how you display your products in the catalog page:\n"
+"promotional ribbons, related size of products, discounts, variants, grid/"
+"list\n"
+"view, etc.\n"
+"\n"
+"Edit any product inline to make your website evolve with your customer "
+"need.\n"
+"\n"
+"Acquire New Customers\n"
+"---------------------\n"
+"\n"
+"SEO tools are ready to use, with no configuration required. Odoo suggests\n"
+"keywords according to Google most searched terms, Google Analytics tracks "
+"your\n"
+"shopping cart events, sitemap are created automatically for Google "
+"indexation,\n"
+"etc.\n"
+"\n"
+"We even do structured content automatically to promote your product and "
+"events\n"
+"efficiently in Google.\n"
+"\n"
+"Leverage Social Media\n"
+"---------------------\n"
+"\n"
+"Create new landing pages easily with the Odoo inline editing feature. Send\n"
+"visitors of your different marketing campaigns to specific landing pages to\n"
+"optimize conversions.\n"
+"\n"
+"Manage a Reseller Network\n"
+"-------------------------\n"
+"\n"
+"Manage a reseller network to target new market, have local presences or "
+"broaden\n"
+"your distribution. Give them access to your reseller portal for an "
+"efficient\n"
+"collaboration.\n"
+"\n"
+"Promote your resellers online, forward leads to resellers (with built-in\n"
+"geolocalisation feature), define specific pricelists, launch a loyalty "
+"program\n"
+"(offer specific discounts to your best customers or resellers), etc.\n"
+"\n"
+"Benefit from the power of Odoo, in your online store: a powerfull tax "
+"engine,\n"
+"flexible pricing structures, a real inventory management solution, a "
+"reseller\n"
+"interface, support for products with different behaviours; physical goods,\n"
+"events, services, variants and options, etc.\n"
+"\n"
+"You don't need to interface with your warehouse, sales or accounting "
+"software.\n"
+"Everything is integrated with Odoo. No pain, real time.\n"
+"\n"
+"A Clean Checkout Process\n"
+"------------------------\n"
+"\n"
+"Convert most visitor interests into real orders with a clean checkout "
+"process\n"
+"with a minimal number of steps and a great useability on every page.\n"
+"\n"
+"Customize your checkout process to fit your business needs: payment modes,\n"
+"delivery methods, cross-selling, special conditions, etc.\n"
+"\n"
+"And much more...\n"
+"----------------\n"
+"\n"
+"### Online Sales\n"
+"\n"
+"-   Mobile Interface\n"
+"-   Sell products, events or services\n"
+"-   Flexible pricelists\n"
+"-   Product multi-variants\n"
+"-   Multiple stores\n"
+"-   Great checkout process\n"
+"\n"
+"### Customer Service\n"
+"\n"
+"-   Customer Portal to track orders\n"
+"-   Assisted shopping with website live chats\n"
+"-   Returns management\n"
+"-   Advanced shipping rules\n"
+"-   Coupons or gift certificates\n"
+"\n"
+"### Comandă Management\n"
+"\n"
+"-   Advanced warehouse management features\n"
+"-   Invoicing and accounting integration\n"
+"-   Mass mailing and customer segmentations\n"
+"-   Lead automation and marketing campaigns\n"
+"-   Persistent shopping cart\n"
+"\n"
+"Fully Integrated With Other Apps\n"
+"--------------------------------\n"
+"\n"
+"### CMS\n"
+"\n"
+"Easily create awesome websites with no technical knowledge required.\n"
+"\n"
+"### Blog\n"
+"\n"
+"Write news, attract new visitors, build customer loyalty.\n"
+"\n"
+"### Online Events\n"
+"\n"
+"Schedule, organize, promote or sell events online; conferences, webinars, "
+"trainings, etc.\n"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "Off-screen Menu"
-msgstr ""
+msgstr "Meniu în afara ecranului"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_desks_office
@@ -4954,27 +5764,27 @@ msgstr "Birouri de birou"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "On Hover"
-msgstr ""
+msgstr "La trecere cu mouse-ul"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__preview_variants
 msgid "On Product Cards"
-msgstr ""
+msgstr "Pe cardurile produselor"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__product_document__attached_on_sale__shown_on_product_page
 msgid "On Product Page"
-msgstr ""
+msgstr "În pagina produsului"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__product_ribbon__assign__sale
 msgid "On Sale"
-msgstr ""
+msgstr "La reducere"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.ribbon_filter_pills
 msgid "On sale"
-msgstr ""
+msgstr "La reducere"
 
 #. module: website_sale
 #. odoo-python
@@ -4991,23 +5801,23 @@ msgstr "Când dai click pe <b>Save</b>, produsul este actualizat."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "One product might have different attributes (size, color, etc.)"
-msgstr ""
+msgstr "Un produs poate avea atribute diferite (mărime, culoare etc.)"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
 msgid "One year in elementary school."
-msgstr ""
+msgstr "Un an în școala primară."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
 msgid "One year in high school."
-msgstr ""
+msgstr "Un an în școala gimnazială."
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/client_actions/configurator/shopPageSelectionScreen.xml:0
 msgid "Online Catalog Template"
-msgstr ""
+msgstr "Șablon catalog online"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_report_sales
@@ -5028,7 +5838,7 @@ msgstr "Doar servicii"
 #. odoo-python
 #: code:addons/website_sale/models/product_ribbon.py:0
 msgid "Only one ribbon with the assign %s is allowed."
-msgstr ""
+msgstr "Este permisă o singură banderolă cu atribuirea %s."
 
 #. module: website_sale
 #. odoo-python
@@ -5045,7 +5855,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Opacity of the overlay"
-msgstr ""
+msgstr "Opacitatea suprapunerii"
 
 #. module: website_sale
 #. odoo-python
@@ -5056,7 +5866,7 @@ msgstr "Deschide comenzi de vânzare"
 #. module: website_sale
 #: model:ir.actions.act_url,name:website_sale.action_open_shop_page
 msgid "Open Shop Page"
-msgstr ""
+msgstr "Deschide pagina Magazin"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.brand_promotion
@@ -5105,17 +5915,17 @@ msgstr "Linii de comandă afișate pe site"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/website_sale_form_editor.edit.js:0
 msgid "Order Number"
-msgstr ""
+msgstr "Numărul comenzii"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_withdrawal_request__order_reference
 msgid "Order Reference"
-msgstr ""
+msgstr "Referință comandă"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "Order summary"
-msgstr ""
+msgstr "Rezumat comandă"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5130,7 +5940,7 @@ msgstr "Comenzi"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Orders Assignment"
-msgstr ""
+msgstr "Alocarea comenzilor"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.sale_order_action_to_invoice
@@ -5141,43 +5951,43 @@ msgstr "Comenzi de facturat"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/dashboard/dashboard.js:0
 msgid "Orders to Confirm"
-msgstr ""
+msgstr "Comenzi de confirmat"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/dashboard/dashboard.js:0
 msgid "Orders to Fulfill"
-msgstr ""
+msgstr "Comenzi de onorat"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/dashboard/dashboard.js:0
 msgid "Orders to Invoice"
-msgstr ""
+msgstr "Comenzi de facturat"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.price_dynamic_filter_template_product_product
 #: model_terms:ir.ui.view,arch_db:website_sale.product_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale.products_item
 msgid "Original price"
-msgstr ""
+msgstr "Preț inițial"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.accordion_specs_item
 #: model_terms:ir.ui.view,arch_db:website_sale.specifications_table
 msgid "Others"
-msgstr ""
+msgstr "Altele"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
 msgid "Our payment methods"
-msgstr ""
+msgstr "Metodele noastre de plată"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_product_availability.xml:0
 msgid "Out of Stock"
-msgstr ""
+msgstr "Stoc epuizat"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5189,13 +5999,13 @@ msgstr "Stoc epuizat"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Out-of-Stock"
-msgstr ""
+msgstr "Stoc epuizat"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__out_of_stock_message
 #: model:ir.model.fields,field_description:website_sale.field_product_template__out_of_stock_message
 msgid "Out-of-Stock Message"
-msgstr ""
+msgstr "Mesaj stoc epuizat"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5206,7 +6016,7 @@ msgstr "Acoperire"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_wishlist__partner_id
 msgid "Owner"
-msgstr ""
+msgstr "Proprietar"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.packaging_title
@@ -5217,12 +6027,12 @@ msgstr "Ambalare"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Page Width"
-msgstr ""
+msgstr "Lățimea paginii"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
 msgid "Paid"
-msgstr ""
+msgstr "Plătit"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__parent_id
@@ -5248,7 +6058,7 @@ msgstr "Părinții și Sinele"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_stock_notification__partner_id
 msgid "Partner"
-msgstr ""
+msgstr "Partener"
 
 #. module: website_sale
 #: model:website.checkout.step,name:website_sale.checkout_step_payment
@@ -5258,12 +6068,12 @@ msgstr "Plată"
 #. module: website_sale
 #: model:website.checkout.step,name:website_sale.checkout_step_confirmation
 msgid "Payment Confirmation"
-msgstr ""
+msgstr "Confirmare plată"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Tranzacție plată"
 
 #. module: website_sale
 #. odoo-python
@@ -5275,12 +6085,12 @@ msgstr "Plata este deja în curs de procesare."
 #. odoo-python
 #: code:addons/website_sale/models/payment_transaction.py:0
 msgid "Payment was not successful, please try again."
-msgstr ""
+msgstr "Plata nu a reușit. Încearcă din nou."
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_providers
 msgid "Payments"
-msgstr ""
+msgstr "Plăți"
 
 #. module: website_sale
 #. odoo-python
@@ -5315,13 +6125,13 @@ msgstr "Vă rugăm continuați cu coșul dumneavoastră curent."
 #. odoo-javascript
 #: code:addons/website_sale/static/src/snippets/s_donation/donation_snippet.js:0
 msgid "Please select or enter an amount"
-msgstr ""
+msgstr "Vă rugăm să selectați sau să introduceți o sumă"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/wishlist.py:0
 msgid "Please sign in to proceed."
-msgstr ""
+msgstr "Autentifică-te pentru a continua."
 
 #. module: website_sale
 #. odoo-javascript
@@ -5343,7 +6153,7 @@ msgstr "Poziție"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
 msgid "Pre-filled Options"
-msgstr ""
+msgstr "Opțiuni pre-completate"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5354,18 +6164,18 @@ msgstr "Set predefinit"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.quick_reorder_history
 msgid "Press 'Enter' to add to cart"
-msgstr ""
+msgstr "Apasă „Enter” pentru a adăuga în coș"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__prevent_sale_for
 #: model:ir.model.fields,field_description:website_sale.field_website__prevent_sale_for
 msgid "Prevent Sale For"
-msgstr ""
+msgstr "Împiedică vânzarea pentru"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Prevent from selling the specified packagings"
-msgstr ""
+msgstr "Împiedică vânzarea ambalajelor specificate"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5404,18 +6214,18 @@ msgstr "Preț - de la mic la mare"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
 msgid "Price Display"
-msgstr ""
+msgstr "Afișarea prețului"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_products_price
 msgid "Price Range"
-msgstr ""
+msgstr "Interval de prețuri"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
 #: model_terms:ir.ui.view,arch_db:website_sale.products_item
 msgid "Price information"
-msgstr ""
+msgstr "Informații despre preț"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__pricelist_ids
@@ -5425,7 +6235,7 @@ msgstr "Lista de prețuri disponibilă pentru acest comerț electronic / site we
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_wishlist__price
 msgid "Price of the product when it has been added in the wishlist"
-msgstr ""
+msgstr "Prețul produsului când a fost adăugat în lista de favorite"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
@@ -5451,17 +6261,17 @@ msgstr "Regulă listă de prețuri"
 #: code:addons/website_sale/static/src/website_builder/footer_copyright_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/header_elements_option.xml:0
 msgid "Pricelist Selector"
-msgstr ""
+msgstr "Selector de listă de prețuri"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_wishlist__pricelist_id
 msgid "Pricelist when added"
-msgstr ""
+msgstr "Listă de prețuri atunci când este adăugată"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.pricelist_selector
 msgid "Pricelist: {{0}}"
-msgstr ""
+msgstr "Listă de prețuri: {{0}}"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_catalog_pricelists
@@ -5473,12 +6283,12 @@ msgstr "Liste de prețuri"
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 msgid "Prices have changed. Please review your cart."
-msgstr ""
+msgstr "Prețurile s-au schimbat. Verifică-ți coșul."
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__product_image__type__primary
 msgid "Primary"
-msgstr ""
+msgstr "Primar"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
@@ -5519,7 +6329,7 @@ msgstr "Atribut produs"
 #: model:ir.model,name:website_sale.model_product_attribute_category
 #: model_terms:ir.ui.view,arch_db:website_sale.product_attribute_category_tree_view
 msgid "Product Attribute Category"
-msgstr ""
+msgstr "Categorie Atribut Produs"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
@@ -5534,13 +6344,13 @@ msgstr "Categorie produs"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_combo
 msgid "Product Combo"
-msgstr ""
+msgstr "Combo produs"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Product Details"
-msgstr ""
+msgstr "Detalii produs"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_document
@@ -5552,7 +6362,7 @@ msgstr "Document produs"
 #: model:res.groups,name:website_sale.group_product_feed
 #: model_terms:ir.ui.view,arch_db:website_sale.product_feed_form
 msgid "Product Feed"
-msgstr ""
+msgstr "Feed de produse"
 
 #. module: website_sale
 #. odoo-python
@@ -5561,7 +6371,7 @@ msgstr ""
 #: model:ir.ui.menu,name:website_sale.menu_product_feeds
 #: model_terms:ir.ui.view,arch_db:website_sale.product_feed_list
 msgid "Product Feeds"
-msgstr ""
+msgstr "Fluxuri de produse"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5590,7 +6400,7 @@ msgstr "Pagină produs"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__product_page_container
 msgid "Product Page Container"
-msgstr ""
+msgstr "Containerul paginii produsului"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_website_sale_website_form
@@ -5610,17 +6420,17 @@ msgstr "Aspect imagine pagină produs"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__product_page_image_ratio
 msgid "Product Page Image Ratio"
-msgstr ""
+msgstr "Proporția imaginii din pagina produsului"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__product_page_image_ratio_mobile
 msgid "Product Page Image Ratio Mobile"
-msgstr ""
+msgstr "Proporția imaginii din pagina produsului pe mobil"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__product_page_image_roundness
 msgid "Product Page Image Roundness"
-msgstr ""
+msgstr "Rotunjirea colțurilor imaginii produsului"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__product_page_image_spacing
@@ -5636,12 +6446,12 @@ msgstr "Lățime imagine pagină produs"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/client_actions/configurator/productPageSelectionScreen.xml:0
 msgid "Product Page Template"
-msgstr ""
+msgstr "Șablon pagină produs"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__product_page_cols_order
 msgid "Product Page main columns order"
-msgstr ""
+msgstr "Ordinea coloanelor principale din pagina produsului"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_public_category_tree_view
@@ -5668,7 +6478,7 @@ msgstr "Panglici produs"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_stock_notification
 msgid "Product Stock Notification"
-msgstr ""
+msgstr "Notificare privind stocul produsului"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_tag
@@ -5719,12 +6529,12 @@ msgstr "Istoric vizulaizare produs"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_wishlist
 msgid "Product Wishlist"
-msgstr ""
+msgstr "Produse favorite"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
 msgid "Product image"
-msgstr ""
+msgstr "Imagine produs"
 
 #. module: website_sale
 #. odoo-python
@@ -5740,12 +6550,12 @@ msgstr "Panglică produs"
 #. module: website_sale
 #: model:mail.template,name:website_sale.email_template_back_in_stock
 msgid "Product: Back in Stock Email"
-msgstr ""
+msgstr "Produs: email de notificare la revenirea în stoc"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_cron_send_availability_email_ir_actions_server
 msgid "Product: send email regarding products availability"
-msgstr ""
+msgstr "Produs: trimite email cu privire la disponibilitatea produselor"
 
 #. module: website_sale
 #. odoo-python
@@ -5766,19 +6576,19 @@ msgstr "Produse"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippets
 msgid "Products Carousel"
-msgstr ""
+msgstr "Carusel de produse"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/wishlist_page_option.xml:0
 msgid "Products Design"
-msgstr ""
+msgstr "Designul produselor"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippets
 msgid "Products Grid"
-msgstr ""
+msgstr "Grilă de produse"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5804,7 +6614,7 @@ msgstr "Vizualizări produse"
 #. module: website_sale
 #: model:product.pricelist,name:website_sale.list_b2b
 msgid "Professional Prices"
-msgstr ""
+msgstr "Prețuri profesionale"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5816,12 +6626,14 @@ msgstr "Cod promoțional"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Promote"
-msgstr ""
+msgstr "Promovează"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Promotions, coupons, loyalty cards, gift cards & eWallet"
 msgstr ""
+"Promoții, cupoane, carduri de fidelitate, carduri cadou și portofel "
+"electronic"
 
 #. module: website_sale
 #. odoo-python
@@ -5841,7 +6653,7 @@ msgstr "Dată Publicare"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Publish on"
-msgstr ""
+msgstr "Publică la"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -5856,19 +6668,19 @@ msgstr "Publicat"
 #: model:ir.model.fields,field_description:website_sale.field_product_template__published_date
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__published_date
 msgid "Published date"
-msgstr ""
+msgstr "Dată pubicare"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Purchase Options"
-msgstr ""
+msgstr "Opțiuni de cumpărare"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Purchase Style"
-msgstr ""
+msgstr "Stil de cumpărare"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5905,7 +6717,7 @@ msgstr "Cantitate"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.quick_reorder_sidebar
 msgid "Quick reorder"
-msgstr ""
+msgstr "Comandă rapidă"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5922,7 +6734,7 @@ msgstr "Textul mediu al evaluării"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__rating_email_template_id
 #: model:ir.model.fields,field_description:website_sale.field_website__rating_email_template_id
 msgid "Rating Email Template"
-msgstr ""
+msgstr "Șablon email de evaluare"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_last_feedback
@@ -5957,7 +6769,7 @@ msgstr "Numărul de evaluări"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__is_rating_email_sent
 msgid "Rating email already sent"
-msgstr ""
+msgstr "Emailul de evaluare a fost deja trimis"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5978,20 +6790,20 @@ msgstr "Re-aranjare"
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_sold_products_action
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_latest_sold_products
 msgid "Recently Sold"
-msgstr ""
+msgstr "Vândute recent"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_viewed_products_action
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_latest_viewed_products
 msgid "Recently Viewed (per user)"
-msgstr ""
+msgstr "Vizualizate recent (per utilizator)"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/website_sale_form_editor.js:0
 #: model:ir.model.fields,field_description:website_sale.field_withdrawal_request__recipient_emails
 msgid "Recipient Emails"
-msgstr ""
+msgstr "Emailurile destinatarilor"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_recliners
@@ -6011,7 +6823,7 @@ msgstr "Obișnuit"
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_cols_order__regular
 msgid "Regular order"
-msgstr ""
+msgstr "Comandă obișnuită"
 
 #. module: website_sale
 #. odoo-python
@@ -6022,7 +6834,7 @@ msgstr "Ranforsat pentru încărcături grele"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute_category__attribute_ids
 msgid "Related Attributes"
-msgstr ""
+msgstr "Atribute relatate"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_services_relocation_and_moving
@@ -6041,19 +6853,19 @@ msgstr "Elimină"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/product_comparison_bottom_bar/product_comparison_bottom_bar.xml:0
 msgid "Remove All"
-msgstr ""
+msgstr "Elimină tot"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
 msgid "Remove all"
-msgstr ""
+msgstr "Inlătură tot"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/product_comparison_bottom_bar/product_comparison_bottom_bar.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
 msgid "Remove all products from comparison"
-msgstr ""
+msgstr "Elimină toate produsele din comparație"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -6063,18 +6875,18 @@ msgstr "Șterge din coș"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
 msgid "Remove from recently viewed"
-msgstr ""
+msgstr "Elimină din lista vizualizate recent"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_wishlist
 msgid "Remove from wishlist"
-msgstr ""
+msgstr "Elimină din lista de dorințe"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_tag_image_option.xml:0
 msgid "Remove image"
-msgstr ""
+msgstr "Eliminați imaginea"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6089,13 +6901,13 @@ msgstr "Eliminați unu"
 #: code:addons/website_sale/static/src/js/product_row/product_row.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
 msgid "Remove product from comparison"
-msgstr ""
+msgstr "Elimină produsul din comparație"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "Render a button to show the Off-screen Menu"
-msgstr ""
+msgstr "Afișează un buton pentru deschiderea meniului în afara ecranului"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_services_repair_and_maintenance
@@ -6115,47 +6927,47 @@ msgstr "Înlocuire"
 #: code:addons/website_sale/static/src/website_builder/product_image_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/product_tag_image_option.xml:0
 msgid "Replace image"
-msgstr ""
+msgstr "Înlocuiește imaginea"
 
 #. module: website_sale
 #: model:ir.model,website_form_label:website_sale.model_withdrawal_request
 msgid "Request Withdrawal"
-msgstr ""
+msgstr "Solicită retragerea"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__send_order_rating_emails
 #: model:ir.model.fields,field_description:website_sale.field_website__send_order_rating_emails
 msgid "Request ratings"
-msgstr ""
+msgstr "Solicită evaluări"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/checkout_page_option.xml:0
 msgid "Required"
-msgstr ""
+msgstr "Necesar"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.action_invalidate_cache
 msgid "Reset Cache"
-msgstr ""
+msgstr "Resetează memoria cache"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Responsive"
-msgstr ""
+msgstr "Adaptabil"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__restricted_uom_ids
 #: model:ir.model.fields,field_description:website_sale.field_website__restricted_uom_ids
 msgid "Restrict Packagings"
-msgstr ""
+msgstr "Restricționează ambalajele"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/checkout_page_option.xml:0
 msgid "Restrict to"
-msgstr ""
+msgstr "Restricționează la"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_id
@@ -6185,11 +6997,13 @@ msgid ""
 "Reverses the horizontal order of items on desktop and larger screens (mobile "
 "layout remains unchanged)"
 msgstr ""
+"Inversează ordinea orizontală a elementelor pe desktop și pe ecrane mai mari "
+"(aspectul pe mobil rămâne neschimbat)"
 
 #. module: website_sale
 #: model:mail.template,subject:website_sale.mail_template_sale_order_rating
 msgid "Review your recent order!"
-msgstr ""
+msgstr "Evaluează comanda recentă!"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6218,7 +7032,7 @@ msgstr "Nume panglică"
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_products_option.xml:0
 #: model:ir.ui.menu,name:website_sale.product_catalog_product_ribbons
 msgid "Ribbons"
-msgstr ""
+msgstr "Banderole"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6234,7 +7048,7 @@ msgstr "Dreapta"
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Roundness"
-msgstr ""
+msgstr "Rotunjime"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_boxes_rustic
@@ -6267,7 +7081,7 @@ msgstr "Analiza vânzări"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale.products_item
 msgid "Sale price"
-msgstr ""
+msgstr "Preț de vânzare"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6329,7 +7143,7 @@ msgstr "Mostră"
 #: code:addons/website_sale/static/src/website_builder/checkout_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.product_cart_lines
 msgid "Save for Later"
-msgstr ""
+msgstr "Salvează pentru mai târziu"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6351,33 +7165,33 @@ msgstr "Bară de căutare"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Search globally"
-msgstr ""
+msgstr "Caută global"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Search in {{0}}"
-msgstr ""
+msgstr "Caută în {{0}}"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_radio_and_multi_attributes
 msgid "Search {{0}} ({{1}})"
-msgstr ""
+msgstr "Caută {{0}} ({{1}})"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Search {{0}} globally"
-msgstr ""
+msgstr "Caută {{0}} global"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__product_image__type__secondary
 msgid "Secondary"
-msgstr ""
+msgstr "Secundar"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Secondary Image"
-msgstr ""
+msgstr "Imagine secundară"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6412,6 +7226,8 @@ msgid ""
 "Select the language to translate product names, descriptions, and other text "
 "in the feed."
 msgstr ""
+"Selectează limba pentru traducerea numelor produselor, a descrierilor și a "
+"celorlalte texte din flux."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist__selectable
@@ -6421,24 +7237,24 @@ msgstr "Selectabil"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_page_empty_screen
 msgid "Sell Online"
-msgstr ""
+msgstr "Vinde online"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__allow_out_of_stock_order
 #: model:ir.model.fields,field_description:website_sale.field_product_template__allow_out_of_stock_order
 msgid "Sell when Out-of-Stock"
-msgstr ""
+msgstr "Vindeți când stocul este epuizat"
 
 #. module: website_sale
 #: model:ir.module.module,summary:base.module_website_sale
 msgid "Sell your products online"
-msgstr ""
+msgstr "Vinde-ți produsele online"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__send_abandoned_cart_followup
 #: model:ir.model.fields,field_description:website_sale.field_website__send_abandoned_cart_followup
 msgid "Send Follow-up"
-msgstr ""
+msgstr "Trimite urmărire"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_view_form
@@ -6448,7 +7264,7 @@ msgstr "Trimite e-mail de recuperare"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Send a rating request for each order"
-msgstr ""
+msgstr "Trimite o solicitare de evaluare pentru fiecare comandă"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -6458,7 +7274,7 @@ msgstr "Trimite după"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Send automated reminders for cart recovery"
-msgstr ""
+msgstr "Trimite automat mementouri pentru recuperarea coșurilor"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_view_form
@@ -6468,18 +7284,18 @@ msgstr "Trimiteți prin email"
 #. module: website_sale
 #: model:mail.template,description:website_sale.mail_template_sale_order_rating
 msgid "Sent to customers to request feedback on their order"
-msgstr ""
+msgstr "Trimis clienților pentru a solicita feedback despre comandă"
 
 #. module: website_sale
 #: model:mail.template,description:website_sale.mail_template_sale_withdrawal_request_confirmation
 msgid ""
 "Sent to the customer to confirm their withdrawal request has been received"
-msgstr ""
+msgstr "Trimis clientului pentru a confirma primirea solicitării de retragere"
 
 #. module: website_sale
 #: model:mail.template,description:website_sale.mail_template_withdrawal_request_notification
 msgid "Sent to the internal team when a withdrawal request is submitted"
-msgstr ""
+msgstr "Trimis echipei interne când se trimite o solicitare de retragere"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__seo_name
@@ -6514,18 +7330,20 @@ msgid ""
 "Set a category to regroup similar attributes under the same section in the "
 "Comparison page of eCommerce."
 msgstr ""
+"Setează o categorie pentru a grupa atribute similare în aceeași secțiune a "
+"paginii de comparare din comerțul electronic."
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Shadow-In"
-msgstr ""
+msgstr "Umbră interioară"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Shadow-Out"
-msgstr ""
+msgstr "Umbră exterioară"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
@@ -6563,24 +7381,24 @@ msgstr "Vânzare - Selectați metoda de plată"
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 msgid "Shop Checkout"
-msgstr ""
+msgstr "Finalizarea comenzii din magazin"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 msgid "Shop Checkout - Extra Information"
-msgstr ""
+msgstr "Finalizarea comenzii din magazin - informații suplimentare"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
 msgid "Shop Comparator"
-msgstr ""
+msgstr "Comparator Magazin"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 msgid "Shop Confirmation"
-msgstr ""
+msgstr "Confirmarea magazinului"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__shop_default_sort
@@ -6590,29 +7408,29 @@ msgstr "Sortare implicită magazin"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__shop_opt_products_design_classes
 msgid "Shop Design Class"
-msgstr ""
+msgstr "Clasă de design a magazinului"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/website_sale_options.xml:0
 msgid "Shop Header"
-msgstr ""
+msgstr "Antet magazin"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__shop_page_container
 msgid "Shop Page Container"
-msgstr ""
+msgstr "Container pagină Magazin"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 msgid "Shop Payment"
-msgstr ""
+msgstr "Plata din magazin"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_wishlist
 msgid "Shop Wishlist"
-msgstr ""
+msgstr "Favorite"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -6623,38 +7441,40 @@ msgstr "Vizibilitate magazin, produse, coș și favorite"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/website_sale_show_empty_option.xml:0
 msgid "Shopping Cart"
-msgstr ""
+msgstr "Coș de cumpărături"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Show \"Contact Us\" for zero-priced products or specific categories."
 msgstr ""
+"Afișează „Contactează-ne” pentru produsele fără preț sau pentru anumite "
+"categorii."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Show Available Qty"
-msgstr ""
+msgstr "Afișează disponibil"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Show Available Quantity"
-msgstr ""
+msgstr "Afișează cantitatea disponibilă"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__show_category_description
 msgid "Show Category Description"
-msgstr ""
+msgstr "Afișează descrierea categoriei"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__show_category_title
 msgid "Show Category Title"
-msgstr ""
+msgstr "Afișează titlul categoriei"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_header_category_options.xml:0
 msgid "Show Description"
-msgstr ""
+msgstr "Afișează descrierea"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6665,57 +7485,57 @@ msgstr "Afișați gol"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__show_in_breadcrumb
 msgid "Show In Breadcrumb"
-msgstr ""
+msgstr "Afișează în navigarea ierarhică"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__available_threshold
 #: model:ir.model.fields,field_description:website_sale.field_product_template__available_threshold
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__default_available_threshold
 msgid "Show Threshold"
-msgstr ""
+msgstr "Afișează prag"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__is_thumbnail_visible
 msgid "Show Thumbnails"
-msgstr ""
+msgstr "Afișează miniaturile"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_header_category_options.xml:0
 #: code:addons/website_sale/static/src/website_builder/product_header_shop_options.xml:0
 msgid "Show Title"
-msgstr ""
+msgstr "Afișează titlul"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "Show a filmstrip navigation at the Top"
-msgstr ""
+msgstr "Afișează navigarea tip bandă de film în partea de sus"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__show_availability
 #: model:ir.model.fields,field_description:website_sale.field_product_template__show_availability
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__default_show_availability
 msgid "Show availability Qty"
-msgstr ""
+msgstr "Afișează cantitate disponibilă"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Show description"
-msgstr ""
+msgstr "Afișează descrierea"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "Show filters into Sidebar"
-msgstr ""
+msgstr "Afișează filtrele în bara laterală"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "Show into Sidebar"
-msgstr ""
+msgstr "Afișează în bara laterală"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_document_search
@@ -6726,13 +7546,13 @@ msgstr "Afișați pe Ecommerce"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/product_comparison_bottom_bar/product_comparison_bottom_bar.xml:0
 msgid "Show products added to comparison"
-msgstr ""
+msgstr "Afișează produsele adăugate la comparație"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/website_sale_show_empty_option.xml:0
 msgid "Show the button even if the Cart/Wishlist is empty"
-msgstr ""
+msgstr "Afișează butonul chiar dacă coșul/lista de dorințe este goală"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6746,7 +7566,7 @@ msgstr "Showcase"
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Showcase Grid"
-msgstr ""
+msgstr "Grilă vitrină"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6757,7 +7577,7 @@ msgstr "Bară laterală"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Sign Up"
-msgstr ""
+msgstr "Înregistrare"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -6798,7 +7618,7 @@ msgstr "Dimensiune Y"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
 msgid "Slider"
-msgstr ""
+msgstr "Glisor"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6812,7 +7632,7 @@ msgstr "Mic"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation
 msgid "Small or large, your contribution is essential."
-msgstr ""
+msgstr "Mare sau mică, contribuția ta este esențială."
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_sofas
@@ -6831,12 +7651,14 @@ msgid ""
 "Some products became unavailable and your cart has been updated. We're sorry "
 "for the inconvenience."
 msgstr ""
+"Unele produse au devenit indisponibile și coșul dvs. a fost actualizat. Ne "
+"cerem scuze pentru neplăcerile create."
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 msgid "Some products don't meet the minimum quantity required to be purchased."
-msgstr ""
+msgstr "Unele produse nu îndeplinesc cantitatea minimă de cumpărare."
 
 #. module: website_sale
 #. odoo-python
@@ -6845,6 +7667,8 @@ msgid ""
 "Some products in your cart are not available for purchase in your country. "
 "Please remove them or contact us."
 msgstr ""
+"Unele produse din coș nu pot fi cumpărate în țara ta. Elimină-le sau "
+"contactează-ne."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
@@ -6867,19 +7691,19 @@ msgstr "Spațiere"
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__prevent_sale_for__specific_categories
 msgid "Specific categories"
-msgstr ""
+msgstr "Categorii specifice"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Specification"
-msgstr ""
+msgstr "Specificație"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.accordion_specs_item
 #: model_terms:ir.ui.view,arch_db:website_sale.product_attributes_body
 msgid "Specifications"
-msgstr ""
+msgstr "Specificații"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_feed__pricelist_id
@@ -6888,12 +7712,16 @@ msgid ""
 "set, the default website pricelist will be used.\n"
 "Note that the pricelist must be selectable on the website."
 msgstr ""
+"Specifică o listă de prețuri pentru a localiza fluxul într-o anumită monedă. "
+"Dacă nu\n"
+"este setată, se va folosi lista implicită de prețuri a site-ului. Reține că "
+"lista trebuie să poată fi selectată pe site."
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_products_option.xml:0
 msgid "Split variants"
-msgstr ""
+msgstr "Împarte variantele"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_boxes_stackable
@@ -6914,7 +7742,7 @@ msgstr "Stare"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
 msgid "Step"
-msgstr ""
+msgstr "Pas"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_cabinets_storage
@@ -6933,13 +7761,13 @@ msgstr "Stil"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cta_wrapper
 msgid "Subscribe"
-msgstr ""
+msgstr "Abonare"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Subtle"
-msgstr ""
+msgstr "Subtil"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
@@ -6950,19 +7778,19 @@ msgstr "Subtotal"
 #: model:ir.model.fields,field_description:website_sale.field_product_product__suggest_accessory_products
 #: model:ir.model.fields,field_description:website_sale.field_product_template__suggest_accessory_products
 msgid "Suggest Accessory Products"
-msgstr ""
+msgstr "Sugerează produse accesorii"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__suggest_alternative_products
 #: model:ir.model.fields,field_description:website_sale.field_product_template__suggest_alternative_products
 msgid "Suggest Alternative Products"
-msgstr ""
+msgstr "Sugerează produse alternative"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__suggest_optional_products
 #: model:ir.model.fields,field_description:website_sale.field_product_template__suggest_optional_products
 msgid "Suggest Optional Products"
-msgstr ""
+msgstr "Sugerează produse opționale"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__alternative_product_ids
@@ -6994,7 +7822,7 @@ msgstr "Tab-uri"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/website_sale_options.xml:0
 msgid "Tag"
-msgstr ""
+msgstr "Etichetă"
 
 #. module: website_sale
 #. odoo-javascript
@@ -7014,7 +7842,7 @@ msgstr "Țintă"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__tax_display
 msgid "Tax Display"
-msgstr ""
+msgstr "Afișează taxa"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__show_line_subtotals_tax_selection__tax_excluded
@@ -7037,7 +7865,7 @@ msgstr "Indicație fiscală"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_list_view_ecommerce
 msgid "Tax Total"
-msgstr ""
+msgstr "Total Taxă"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_sale_order__amount_delivery
@@ -7047,18 +7875,18 @@ msgstr "Taxa inclusă sau exclusă în funcție de configurarea site-ului."
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__product_pricelist__tax_display__tax_excluded
 msgid "Taxes Excluded"
-msgstr ""
+msgstr "Fără taxe"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__product_pricelist__tax_display__tax_included
 msgid "Taxes Included"
-msgstr ""
+msgstr "Cu taxe"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/product_template.py:0
 msgid "Taxes calculated at checkout."
-msgstr ""
+msgstr "Taxele se calculează la finalizarea comenzii."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__variants_default_code
@@ -7067,6 +7895,8 @@ msgid ""
 "Technical field to enhance performance when looking up default code of "
 "productvariants (LIKE/ILIKE)"
 msgstr ""
+"Câmp tehnic pentru îmbunătățirea performanței la căutarea codului implicit "
+"al variantelor de produs (LIKE/ILIKE)"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
@@ -7083,7 +7913,7 @@ msgstr "Text"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Text & content"
-msgstr ""
+msgstr "Text și conținut"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__text_color
@@ -7111,6 +7941,8 @@ msgstr "Tokenul de acces este nevalid."
 msgid ""
 "The building block will remain empty until the user visits a product page."
 msgstr ""
+"Blocul de conținut va rămâne gol până când utilizatorul accesează o pagină "
+"de produs."
 
 #. module: website_sale
 #. odoo-python
@@ -7141,6 +7973,8 @@ msgid ""
 "The estimated delivery date was no longer possible. We apologize for any "
 "inconvenience."
 msgstr ""
+"Data estimată de livrare nu mai este disponibilă. Ne cerem scuze pentru "
+"neplăceri."
 
 #. module: website_sale
 #. odoo-python
@@ -7150,6 +7984,9 @@ msgid ""
 "be fully updated. Consider refining the feed by adjusting the product "
 "categories."
 msgstr ""
+"Fluxul %(feed_name)s conține mai mult de %(limit)s produse, care este "
+"posibil să nu fie actualizate complet. Rafinează fluxul ajustând categoriile "
+"de produse."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__website_url
@@ -7164,6 +8001,8 @@ msgstr ""
 #: model:ir.model.fields,help:website_sale.field_website_checkout_step__website_absolute_url
 msgid "The full absolute URL to access the document through the website."
 msgstr ""
+"Calea URL absolută completă pentru a accesa documentul prin intermediul site-"
+"ului web."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_url
@@ -7172,6 +8011,8 @@ msgstr ""
 #: model:ir.model.fields,help:website_sale.field_website_checkout_step__website_url
 msgid "The full relative URL to access the document through the website."
 msgstr ""
+"URL-ul relativ complet pentru accesarea documentului prin intermediul site-"
+"ului web."
 
 #. module: website_sale
 #. odoo-python
@@ -7199,29 +8040,31 @@ msgid ""
 "The label to be displayed on the payment buttons for orders with Total "
 "Amount zero"
 msgstr ""
+"Eticheta afișată pe butoanele de plată pentru comenzile cu valoarea totală "
+"zero"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/snippets/s_donation/donation_snippet.js:0
 msgid "The minimum donation amount is %(amount)s"
-msgstr ""
+msgstr "Suma minimă pentru donație este %(amount)s"
 
 #. module: website_sale
 #: model:ir.model.constraint,message:website_sale.constraint_product_template_minimum_quantity_non_negative
 msgid "The minimum quantity must be greater than or equal to 0."
-msgstr ""
+msgstr "Cantitatea minimă trebuie să fie mai mare sau egală cu 0."
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/sale_order_line.py:0
 msgid "The minimum quantity to purchase for this product is %(min_qty)s."
-msgstr ""
+msgstr "Cantitatea minimă de cumpărare pentru acest produs este %(min_qty)s."
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/product_template.py:0
 msgid "The minimum quantity to purchase this product is %(min_qty)s."
-msgstr ""
+msgstr "Cantitatea minimă de cumpărare a acestui produs este %(min_qty)s."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -7230,6 +8073,8 @@ msgid ""
 "product                            created but not of products already "
 "existing."
 msgstr ""
+"Modul selectat aici se aplică drept politică de facturare produselor noi "
+"create, nu și produselor existente."
 
 #. module: website_sale
 #. odoo-python
@@ -7238,6 +8083,8 @@ msgid ""
 "The number of selected combo items must match the number of available combo "
 "choices."
 msgstr ""
+"Numărul de elemente combo selectate trebuie să corespundă cu numărul de "
+"opțiuni combo disponibile."
 
 #. module: website_sale
 #. odoo-python
@@ -7265,6 +8112,8 @@ msgid ""
 "The selected delivery date was no longer available. Please pick another "
 "delivery date."
 msgstr ""
+"Data de livrare selectată nu mai este disponibilă. Alege o altă dată de "
+"livrare."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
@@ -7275,13 +8124,13 @@ msgstr "Timpul pentru a marca un coș ca abandonat pot fi schimbat în setări."
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Theme Preset n°"
-msgstr ""
+msgstr "Presetare temă nr."
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Theme Preset n°1 (default)"
-msgstr ""
+msgstr "Presetare temă nr. 1 (implicită)"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_theme_utils
@@ -7292,13 +8141,13 @@ msgstr "Utile Temă"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Theme colors"
-msgstr ""
+msgstr "Culorile temei"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Theme default"
-msgstr ""
+msgstr "Tema implicită"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_orders_ecommerce
@@ -7313,13 +8162,13 @@ msgstr "Nu există încă o comandă neplătită de pe site-ul web"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.alternative_products
 msgid "These other products might interest you"
-msgstr ""
+msgstr "S-ar putea să te intereseze și aceste produse"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option_plugin.js:0
 msgid "This category"
-msgstr ""
+msgstr "Această categorie"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.accordion_more_information
@@ -7332,12 +8181,14 @@ msgid ""
 "This note is added to sales orders, invoices, eCommerce listing and SEO "
 "descriptions."
 msgstr ""
+"Această notă se adaugă la comenzile de vânzare, facturi, listările de comerț "
+"electronic și descrierile SEO."
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option_plugin.js:0
 msgid "This page"
-msgstr ""
+msgstr "Această pagină"
 
 #. module: website_sale
 #. odoo-python
@@ -7355,13 +8206,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option_plugin.js:0
 msgid "This product"
-msgstr ""
+msgstr "Acest produs"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/interactions/add_to_comparison.js:0
 msgid "This product has already been added to the comparison."
-msgstr ""
+msgstr "Acest produs a fost deja adăugat la comparație."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_title
@@ -7379,25 +8230,27 @@ msgstr "Produs indisponibil."
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 msgid "This product is not available (anymore) in this unit of measure."
-msgstr ""
+msgstr "Acest produs nu mai este disponibil pentru această unitate de măsură."
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 msgid "This product is not available for purchase in your country."
-msgstr ""
+msgstr "Acest produs nu este disponibil pentru cumpărare în țara ta."
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/wishlist.py:0
 msgid "This product is not eligible for stock notifications."
-msgstr ""
+msgstr "Acest produs nu este eligibil pentru notificările de stoc."
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/cart.py:0
 msgid "This product is part of a combo and can't be updated individually."
 msgstr ""
+"Acest produs face parte dintr-un pachet combinat și nu poate fi actualizat "
+"individual."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
@@ -7422,33 +8275,35 @@ msgid ""
 "Time when the 'Send abandoned cart' feature was activated for emails "
 "followup."
 msgstr ""
+"Momentul activării funcției „Trimite coșurile abandonate” pentru urmărirea "
+"prin email."
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Title Style"
-msgstr ""
+msgstr "Stilul titlului"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/dashboard/dashboard.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "To Confirm"
-msgstr ""
+msgstr "A confirma"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/dashboard/dashboard.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "To Fulfill"
-msgstr ""
+msgstr "De onorat"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/dashboard/dashboard.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "To Invoice"
-msgstr ""
+msgstr "De facturat"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -7457,6 +8312,9 @@ msgid ""
 "ones                            in list view and click on 'Portal Access "
 "Management' option in the                            dropdown menu *Action*."
 msgstr ""
+"Pentru a trimite invitații în modul B2B, deschide un contact sau selectează "
+"mai multe contacte în vizualizarea listă și fă clic pe opțiunea „Gestionarea "
+"accesului la portal” din meniul derulant *Acțiune*."
 
 #. module: website_sale
 #. odoo-python
@@ -7468,13 +8326,13 @@ msgstr "Astăzi"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/interactions/add_to_comparison.js:0
 msgid "Too many products to compare"
-msgstr ""
+msgstr "Prea multe produse pentru comparație"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "Toolbar"
-msgstr ""
+msgstr "Bară de instrumente"
 
 #. module: website_sale
 #. odoo-javascript
@@ -7485,12 +8343,12 @@ msgstr "Sus"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_list_view_ecommerce
 msgid "Total Tax Excluded"
-msgstr ""
+msgstr "Taxă Totală exclusă"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_list_view_ecommerce
 msgid "Total Tax Included"
-msgstr ""
+msgstr "Total taxe incluse"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website_visitor__product_count
@@ -7531,7 +8389,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Try to refine your search criteria."
-msgstr ""
+msgstr "Încearcă să rafinezi criteriile de căutare."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
@@ -7541,7 +8399,7 @@ msgstr "Twitter"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__type
 msgid "Type"
-msgstr ""
+msgstr "Tip"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_image__video_url
@@ -7551,12 +8409,12 @@ msgstr "Adresa URL a unui videoclip pentru prezentarea produsului dvs."
 #. module: website_sale
 #: model:product.pricelist,name:website_sale.list_default
 msgid "USD"
-msgstr ""
+msgstr "USD"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
 msgid "Uncategorized"
-msgstr ""
+msgstr "Neclasificat"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_drawers_underbed
@@ -7571,6 +8429,9 @@ msgid ""
 "does not match the amount of your cart. Please contact the responsible of "
 "the shop for more information."
 msgstr ""
+"Din păcate, comanda nu poate fi confirmată deoarece suma plătită nu "
+"corespunde totalului coșului. Contactează responsabilul magazinului pentru "
+"mai multe informații."
 
 #. module: website_sale
 #. odoo-python
@@ -7579,12 +8440,14 @@ msgid ""
 "Unfortunately, the delivery method that you selected is no longer available. "
 "Please update your choice. We apologize for any inconvenience."
 msgstr ""
+"Din păcate, metoda de livrare selectată nu mai este disponibilă. "
+"Actualizează opțiunea. Ne cerem scuze pentru neplăceri."
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 msgid "Unfortunately, there is no longer enough stock to fulfill your order."
-msgstr ""
+msgstr "Din păcate, stocul nu mai este suficient pentru onorarea comenzii."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
@@ -7600,17 +8463,19 @@ msgstr "Comenzi neplătite"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__group_unpublish_out_of_stock
 #: model:res.groups,name:website_sale.group_unpublish_out_of_stock
 msgid "Unpublish Out-of-Stock Products"
-msgstr ""
+msgstr "Anulează publicarea produselor epuizate"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Unpublish out-of-stock products"
-msgstr ""
+msgstr "Anulează publicarea produselor epuizate"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Unpublish/Republish products based on stock availability."
 msgstr ""
+"Anulează/reactivează publicarea produselor în funcție de disponibilitatea "
+"stocului."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_public_category_default
@@ -7621,17 +8486,17 @@ msgstr "Nepublicat"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Unschedule"
-msgstr ""
+msgstr "Anulare planificare"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_container__unset
 msgid "Unset"
-msgstr ""
+msgstr "Anulează selecția"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.action_update_suggested_products
 msgid "Update suggested products"
-msgstr ""
+msgstr "Actualizează produsele sugerate"
 
 #. module: website_sale
 #. odoo-javascript
@@ -7649,16 +8514,19 @@ msgstr "Url"
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Use auto values or force the link-color defined in the Theme Tab"
 msgstr ""
+"Folosește valorile automate sau forțează culoarea linkului definită în fila "
+"Temă"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_attribute__is_thumbnail_visible
 msgid "Use product variant images instead of the attribute values displays."
 msgstr ""
+"Folosește imaginile variantelor de produs în locul valorilor atributelor."
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_users
 msgid "User"
-msgstr ""
+msgstr "Operator"
 
 #. module: website_sale
 #. odoo-javascript
@@ -7669,7 +8537,7 @@ msgstr "Variantă"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__variant_image_ids
 msgid "Variant Extra Images"
-msgstr ""
+msgstr "Imagini suplimentare pentru variante"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__variant_ribbon_id
@@ -7680,7 +8548,7 @@ msgstr "Ribbon variantă"
 #: model:ir.model.fields,field_description:website_sale.field_product_product__variants_default_code
 #: model:ir.model.fields,field_description:website_sale.field_product_template__variants_default_code
 msgid "Variants Default Code"
-msgstr ""
+msgstr "Cod implicit al variantelor"
 
 #. module: website_sale
 #. odoo-javascript
@@ -7700,20 +8568,20 @@ msgstr "URL Video"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/interactions/shop_page.js:0
 msgid "View Less"
-msgstr ""
+msgstr "Vezi mai puțin"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/interactions/shop_page.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_radio_and_multi_attributes
 msgid "View More"
-msgstr ""
+msgstr "Vezi mai multe"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/cart_notification/item_added_notification/item_added_notification.xml:0
 msgid "View cart"
-msgstr ""
+msgstr "Afișare coș"
 
 #. module: website_sale
 #. odoo-javascript
@@ -7753,7 +8621,7 @@ msgstr "Vizibil pe site-ul curent"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_track
 msgid "Visited Page"
-msgstr ""
+msgstr "Pagină vizitată"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__product_ids
@@ -7774,19 +8642,19 @@ msgstr "Istoricul vizualizărilor produselor pentru vizitatori"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/add_to_cart_option.xml:0
 msgid "Visitor's Choice"
-msgstr ""
+msgstr "Alegerea vizitatorului"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/dashboard/dashboard.js:0
 msgid "Visitors"
-msgstr ""
+msgstr "Vizitatori"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Visual Cards"
-msgstr ""
+msgstr "Carduri vizuale"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_wardrobes
@@ -7815,6 +8683,8 @@ msgstr ""
 msgid ""
 "We could not find any order matching this email address and order number."
 msgstr ""
+"Nu am găsit nicio comandă care să corespundă acestei adrese de email și "
+"acestui număr de comandă."
 
 #. module: website_sale
 #. odoo-python
@@ -7823,6 +8693,8 @@ msgid ""
 "We weren't able to update your cart. Please refresh your page before trying "
 "again."
 msgstr ""
+"Nu am putut actualiza coșul. Reîmprospătează pagina înainte să încerci din "
+"nou."
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website
@@ -7852,7 +8724,7 @@ msgstr "Pagină web"
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_absolute_url
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__website_absolute_url
 msgid "Website Absolute URL"
-msgstr ""
+msgstr "URL absolut al site-ului web"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_normalized
@@ -7862,12 +8734,12 @@ msgstr "Categorie website"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_checkout_alert_mixin
 msgid "Website Checkout Alert Mixin"
-msgstr ""
+msgstr "Mixin pentru alerta de finalizare a comenzii de pe site"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_checkout_step
 msgid "Website Checkout Step"
-msgstr ""
+msgstr "Pas de finalizare a comenzii pe site"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_menu
@@ -7920,7 +8792,7 @@ msgstr "Vizitator al sitului"
 #. odoo-python
 #: code:addons/website_sale/controllers/product_feed.py:0
 msgid "Website does not match."
-msgstr ""
+msgstr "Site-ul nu corespunde."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_description
@@ -7969,12 +8841,12 @@ msgstr "Situri web"
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__product_ribbon__assign__new
 msgid "When New"
-msgstr ""
+msgstr "La apariția unui produs nou"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__product_ribbon__assign__out_of_stock
 msgid "When out of stock"
-msgstr ""
+msgstr "Când produsul nu este în stoc"
 
 #. module: website_sale
 #. odoo-python
@@ -8008,33 +8880,33 @@ msgstr "Mai lat (21/9)"
 #: model_terms:ir.ui.view,arch_db:website_sale.header_wishlist_link
 #: model_terms:ir.ui.view,arch_db:website_sale.product_cart_lines
 msgid "Wishlist"
-msgstr ""
+msgstr "Favorite"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__wishlist_grid_columns
 msgid "Wishlist Grid Columns"
-msgstr ""
+msgstr "Coloane în grila listei de dorințe"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__wishlist_gap
 msgid "Wishlist Grid Gap"
-msgstr ""
+msgstr "Spațierea grilei listei de dorințe"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__wishlist_mobile_columns
 msgid "Wishlist Mobile Columns"
-msgstr ""
+msgstr "Coloane pe mobil în lista de dorințe"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/wishlist_page_option.xml:0
 msgid "Wishlist Page"
-msgstr ""
+msgstr "Pagina listei de dorințe"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__wishlist_opt_products_design_classes
 msgid "Wishlist Page Design Class"
-msgstr ""
+msgstr "Clasă de design a paginii listei de dorințe"
 
 #. module: website_sale
 #. odoo-python
@@ -8045,29 +8917,29 @@ msgstr "Cu trei picioare"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_withdrawal_request
 msgid "Withdrawal Request"
-msgstr ""
+msgstr "Cerere de retragere"
 
 #. module: website_sale
 #: model:mail.template,subject:website_sale.mail_template_withdrawal_request_notification
 msgid "Withdrawal Request - {{ object.order_reference }}"
-msgstr ""
+msgstr "Solicitare de retragere - {{ object.order_reference }}"
 
 #. module: website_sale
 #: model:mail.template,subject:website_sale.mail_template_sale_withdrawal_request_confirmation
 msgid "Withdrawal Request Confirmation"
-msgstr ""
+msgstr "Confirmarea solicitării de retragere"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/withdrawal_request.py:0
 msgid "Withdrawal Requested"
-msgstr ""
+msgstr "Retragere solicitată"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 msgid "Wrong format: got `pricelist=%s`, expected an integer"
-msgstr ""
+msgstr "Format incorect: s-a primit `pricelist=%s`, se aștepta un număr întreg"
 
 #. module: website_sale
 #. odoo-python
@@ -8079,7 +8951,7 @@ msgstr "Ieri"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_product_availability.xml:0
 msgid "You already added all the available product in your cart"
-msgstr ""
+msgstr "Ați adăugat deja toate produsele disponibile în coșul de cumpărături"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -8091,12 +8963,18 @@ msgid ""
 "                            <a class=\"o_translate_inline\" href=\"/shop/"
 "address?address_type=billing\">new address</a>."
 msgstr ""
+"Editezi adresele de <b>livrare și facturare</b>\n"
+"                            în același timp!<br/>\n"
+"                            Dacă vrei să modifici adresa de facturare, "
+"creează o\n"
+"                            <a class=\"o_translate_inline\" href=\"/shop/"
+"address?address_type=billing\">adresă nouă</a>."
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/interactions/add_to_comparison.js:0
 msgid "You can compare up to 4 products at a time."
-msgstr ""
+msgstr "Poți compara cel mult 4 produse simultan."
 
 #. module: website_sale
 #. odoo-python
@@ -8108,13 +8986,13 @@ msgstr "Nu puteți folosi un videoclip ca imagine principală a produsului."
 #. odoo-python
 #: code:addons/website_sale/models/product_template.py:0
 msgid "You can't use a video as the template's main image."
-msgstr ""
+msgstr "Nu poți folosi un videoclip ca imagine principală a șablonului."
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/cart.py:0
 msgid "You cannot add a combo item separately from its combo."
-msgstr ""
+msgstr "Nu poți adăuga separat un element din pachetul combinat."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts
@@ -8134,6 +9012,8 @@ msgid ""
 "You requested %(desired)g %(product_name)s, but only %(available)g are "
 "available in stock."
 msgstr ""
+"Ai solicitat %(desired)g %(product_name)s, dar numai %(available)g sunt "
+"disponibile în stoc."
 
 #. module: website_sale
 #. odoo-python
@@ -8142,6 +9022,8 @@ msgid ""
 "You requested %(qty)g %(product_name)s, but only %(avl_qty)g are available "
 "in stock."
 msgstr ""
+"Ai solicitat %(qty)g %(product_name)s, dar numai %(avl_qty)g sunt "
+"disponibile în stoc."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
@@ -8178,6 +9060,8 @@ msgid ""
 "Your billing address appears to be incomplete or invalid. Please ensure all "
 "required fields are correctly filled and try again."
 msgstr ""
+"Adresa de facturare pare incompletă sau nevalidă. Verifică toate câmpurile "
+"obligatorii și încearcă din nou."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -8193,7 +9077,7 @@ msgstr "Coșul dvs. este gol."
 #. module: website_sale
 #: model:mail.template,subject:website_sale.mail_template_sale_cart_recovery
 msgid "Your cart is waiting"
-msgstr ""
+msgstr "Coșul tău te așteaptă"
 
 #. module: website_sale
 #. odoo-python
@@ -8202,12 +9086,14 @@ msgid ""
 "Your delivery address appears to be incomplete or invalid. Please ensure all "
 "required fields are correctly filled and try again."
 msgstr ""
+"Adresa de livrare pare incompletă sau nevalidă. Verifică toate câmpurile "
+"obligatorii și încearcă din nou."
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/payment_transaction.py:0
 msgid "Your order will be confirmed after payment is received."
-msgstr ""
+msgstr "Comanda va fi confirmată după primirea plății."
 
 #. module: website_sale
 #. odoo-python
@@ -8216,6 +9102,8 @@ msgid ""
 "Your payment of %(formatted_amount)s has been processed. Pay the remaining "
 "amount to confirm your order."
 msgstr ""
+"Plata de %(formatted_amount)s a fost procesată. Achită suma rămasă pentru a "
+"confirma comanda."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -8225,7 +9113,7 @@ msgstr "Coșul dumneavoastră anterior a fost deja finalizat."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_wishlist
 msgid "Your wishlist is empty!"
-msgstr ""
+msgstr "Lista ta de dorințe este goală!"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_delivery_zip_prefix
@@ -8236,41 +9124,41 @@ msgstr "Prefixul codului poștal"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Zoom on click"
-msgstr ""
+msgstr "Mărește la clic"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Zoom-In"
-msgstr ""
+msgstr "Mărire"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Zoom-In Light"
-msgstr ""
+msgstr "Mărire discretă"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Zoom-Out"
-msgstr ""
+msgstr "Micșorare"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Zoom-Out Light"
-msgstr ""
+msgstr "Micșorare discretă"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "days after order confirmation"
-msgstr ""
+msgstr "zile de la confirmarea comenzii"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "e.g. 'Will be back soon'"
-msgstr ""
+msgstr "de exemplu, „Revenim în curând”"
 
 #. module: website_sale
 #. odoo-javascript
@@ -8321,7 +9209,7 @@ msgstr "eCommerce Filtru vizibilitate"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist__tax_display
 msgid "eCommerce Price Display"
-msgstr ""
+msgstr "Afișarea prețului în comerțul electronic"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__kpi_website_sale_total
@@ -8331,7 +9219,7 @@ msgstr "Vânzări eCommerce"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__website_id
 msgid "eCommerce Website"
-msgstr ""
+msgstr "Site de comerț electronic"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.header_cart_link
@@ -8341,7 +9229,7 @@ msgstr "Coș eCommerce"
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.update_suggested_products_cron_ir_actions_server
 msgid "eCommerce: Update suggested products"
-msgstr ""
+msgstr "Comerț electronic: actualizarea produselor sugerate"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_cron_send_abandoned_email_ir_actions_server
@@ -8352,12 +9240,14 @@ msgstr "eCommerce: trimiteți e-mail clienților despre coșul abandonat"
 #: model:ir.actions.server,name:website_sale.ir_cron_send_order_rating_emails_ir_actions_server
 msgid "eCommerce: send order rating request emails"
 msgstr ""
+"Comerț electronic: trimiterea emailurilor cu solicitarea de evaluare a "
+"comenzii"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "in"
-msgstr ""
+msgstr "în"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -8368,19 +9258,19 @@ msgstr "in categoria \""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_product_availability.xml:0
 msgid "in stock"
-msgstr ""
+msgstr "în stoc"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_product_availability.xml:0
 msgid "in your cart)"
-msgstr ""
+msgstr "în coșul dvs.)"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/crm_team.py:0
 msgid "is_abandoned_cart"
-msgstr ""
+msgstr "is_abandoned_cart"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
@@ -8389,6 +9279,9 @@ msgid ""
 "                                    <i class=\"oi ms-1\" data-icon=\"south\" "
 "aria-hidden=\"true\"/>"
 msgstr ""
+"articole - derulează pentru mai multe\n"
+"                                    <i class=\"oi ms-1\" data-icon=\"south\" "
+"aria-hidden=\"true\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary_content
@@ -8397,12 +9290,15 @@ msgid ""
 "                        <i class=\"oi ms-1\" data-icon=\"south\" aria-"
 "hidden=\"true\"/>"
 msgstr ""
+"articole - derulează pentru mai multe\n"
+"                        <i class=\"oi ms-1\" data-icon=\"south\" aria-"
+"hidden=\"true\"/>"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/res_config_settings.py:0
 msgid "model"
-msgstr ""
+msgstr "model"
 
 #. module: website_sale
 #. odoo-javascript
@@ -8412,6 +9308,9 @@ msgid ""
 "            o_wsale_products_opt_actions_promote o_wsale_products_opt_cc "
 "o_wsale_products_opt_cc1"
 msgstr ""
+"o_wsale_products_opt_actions_inline o_wsale_products_opt_wishlist_inline\n"
+"            o_wsale_products_opt_actions_promote o_wsale_products_opt_cc "
+"o_wsale_products_opt_cc1"
 
 #. module: website_sale
 #. odoo-javascript
@@ -8420,6 +9319,8 @@ msgid ""
 "o_wsale_products_opt_actions_onhover o_wsale_products_opt_wishlist_fixed\n"
 "            o_wsale_products_opt_actions_subtle"
 msgstr ""
+"o_wsale_products_opt_actions_onhover o_wsale_products_opt_wishlist_fixed\n"
+"            o_wsale_products_opt_actions_subtle"
 
 #. module: website_sale
 #. odoo-javascript
@@ -8433,6 +9334,13 @@ msgid ""
 "            o_wsale_products_opt_has_wishlist "
 "o_wsale_products_opt_has_comparison"
 msgstr ""
+"o_wsale_products_opt_name_color_regular\n"
+"            o_wsale_products_opt_thumb_cover "
+"o_wsale_products_opt_img_secondary_show\n"
+"            o_wsale_products_opt_img_hover_zoom_out_light "
+"o_wsale_products_opt_has_cta\n"
+"            o_wsale_products_opt_has_wishlist "
+"o_wsale_products_opt_has_comparison"
 
 #. module: website_sale
 #. odoo-javascript
@@ -8446,6 +9354,13 @@ msgid ""
 "            o_wsale_products_opt_has_wishlist "
 "o_wsale_products_opt_has_comparison"
 msgstr ""
+"o_wsale_products_opt_name_color_regular o_wsale_products_opt_thumb_2_3\n"
+"            o_wsale_products_opt_thumb_cover "
+"o_wsale_products_opt_img_secondary_show\n"
+"            o_wsale_products_opt_img_hover_zoom_out_light "
+"o_wsale_products_opt_has_cta\n"
+"            o_wsale_products_opt_has_wishlist "
+"o_wsale_products_opt_has_comparison"
 
 #. module: website_sale
 #. odoo-javascript
@@ -8456,22 +9371,26 @@ msgid ""
 "            o_wsale_products_opt_has_wishlist\n"
 "            o_wsale_products_opt_actions_inline"
 msgstr ""
+"o_wsale_products_opt_name_color_regular o_wsale_products_opt_thumb_cover\n"
+"            o_wsale_products_opt_has_cta\n"
+"            o_wsale_products_opt_has_wishlist\n"
+"            o_wsale_products_opt_actions_inline"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "only if below"
-msgstr ""
+msgstr "dacă sunt sub"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
 msgid "slide"
-msgstr ""
+msgstr "diapozitiv"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/withdrawal_request.py:0
 msgid "string"
-msgstr ""
+msgstr "șir"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.accept_terms_and_conditions
@@ -8481,22 +9400,22 @@ msgstr "termeni și condiții"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_delivery_carrier_form_website_delivery
 msgid "working days"
-msgstr ""
+msgstr "zile lucrătoare"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_combo_item_line
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cta_wrapper
 msgid "youremail@gmail.com"
-msgstr ""
+msgstr "youremail@gmail.com"
 
 #. module: website_sale
 #: model:mail.template,subject:website_sale.email_template_back_in_stock
 msgid "{{ object.name or 'Product' }} is back in stock"
-msgstr ""
+msgstr "{{ object.name or 'Product' }} este din nou în stoc"
 
 #~ msgid "Page"
 #~ msgstr "Pagină"

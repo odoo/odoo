@@ -31,8 +31,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 17:38+0000\n"
-"PO-Revision-Date: 2026-11-12 15:30+0000\n"
+"POT-Creation-Date: 2026-11-20 17:37+0000\n"
+"PO-Revision-Date: 2026-11-19 09:19+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-20/hr/sv/>\n"
 "Language: sv\n"
@@ -40,7 +40,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: hr
 #. odoo-python
@@ -225,6 +225,8 @@ msgid ""
 "<i class=\"oi d-none d-md-inline-flex\" data-icon=\"smartphone\" "
 "title=\"Work Mobile\"/>"
 msgstr ""
+"<i class=\"oi d-none d-md-inline-flex\" data-icon=\"smartphone\" "
+"title=\"Arbetstelefon\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -280,6 +282,9 @@ msgid ""
 "role=\"img\" aria-label=\"Full Chart\"/>\n"
 "                                                Full Chart"
 msgstr ""
+"<i class=\"oi oi-filled oi-rotate-90 ms-1 mt-1\" data-icon=\"share\" "
+"role=\"img\" aria-label=\"Visa schema\"/>\n"
+"                                                Visa schema"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -288,13 +293,8 @@ msgid ""
 "<i class=\"oi oi-fw me-2 text-primary\" data-icon=\"cake\" "
 "title=\"Birthday\"/>"
 msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
-msgid ""
-"<i class=\"oi oi-fw oi-filled me-2 text-primary\" data-icon=\"contract\" "
-"title=\"Contract\"/>"
-msgstr ""
+"<i class=\"oi oi-fw me-2 text-primary\" data-icon=\"cake\" "
+"title=\"Födelsedag\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -322,6 +322,8 @@ msgid ""
 "<i class=\"oi oi-fw oi-filled me-2 text-primary\" data-icon=\"work\" "
 "title=\"Job Position\"/>"
 msgstr ""
+"<i class=\"oi oi-fw oi-filled me-2 text-primary\" data-icon=\"work\" "
+"title=\"Tjänst\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -1226,7 +1228,7 @@ msgstr "Binärfil"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__birthday
 #: model:ir.model.fields,field_description:hr.field_res_users__birthday
 msgid "Birthday"
-msgstr ""
+msgstr "Födelsedag"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__birthday_month
@@ -1439,7 +1441,7 @@ msgstr "Företagslogo"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__company_tz
 msgid "Company Timezone"
-msgstr ""
+msgstr "Företagets tidszon"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__resource_calendar_id
@@ -1538,6 +1540,7 @@ msgstr "Kontakter"
 
 #. module: hr
 #. odoo-javascript
+#: code:addons/hr/static/src/components/contract_period/contract_period.xml:0
 #: code:addons/hr/static/src/components/versions_timeline/versions_timeline.js:0
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -1574,6 +1577,8 @@ msgid "Contract Overview"
 msgstr ""
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/contract_period/contract_period.js:0
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view_enhanced
 msgid "Contract Period"
 msgstr ""
@@ -1604,7 +1609,7 @@ msgstr "Avtalsmall"
 #: model:ir.ui.menu,name:hr.menu_hr_employee_contract_templates
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_list_view
 msgid "Contract Templates"
-msgstr ""
+msgstr "Avtalsmallar"
 
 #. module: hr
 #: model:mail.message.subtype,description:hr.mt_contract_pending
@@ -2028,7 +2033,7 @@ msgstr "Anledning för avgång"
 #: model:ir.actions.act_window,name:hr.hr_departure_reason_action
 #: model:ir.ui.menu,name:hr.menu_hr_departure_reason_tree
 msgid "Departure Reasons"
-msgstr "Skäl till avslutad tjänst"
+msgstr "Uppsägningsskäl"
 
 #. module: hr
 #. odoo-python
@@ -2048,7 +2053,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__children
 #: model:ir.model.fields,field_description:hr.field_hr_version__children
 msgid "Dependent Children"
-msgstr ""
+msgstr "Barn i beroendeställning"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -2304,7 +2309,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Emergency Contact"
-msgstr ""
+msgstr "Nödkontakt"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__emergency_phone
@@ -2398,7 +2403,7 @@ msgstr "Egenskaper för anställda"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__version_id
 msgid "Employee Record"
-msgstr ""
+msgstr "Anställningshandlingar"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_version
@@ -2443,14 +2448,14 @@ msgstr "Typ av anställd"
 #: model:ir.ui.menu,name:hr.menu_view_hr_contract_type
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_type_view_tree
 msgid "Employee Types"
-msgstr "Anställningstyper"
+msgstr "Anställningsformer"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__bank_account_ids
 #: model:ir.model.fields,help:hr.field_res_users__bank_account_ids
 #: model:ir.model.fields,help:hr.field_res_users__employee_bank_account_ids
 msgid "Employee bank accounts to pay salaries"
-msgstr ""
+msgstr "Den anställdas bankkonto för att betala ut lön"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -2588,7 +2593,7 @@ msgstr "Slutdatum för provperioden (om det finns en)."
 #: model:ir.actions.server,name:hr.action_hr_employee_departure
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "End of Collaboration"
-msgstr ""
+msgstr "Uppsägning"
 
 #. module: hr
 #. odoo-python
@@ -2638,6 +2643,8 @@ msgid ""
 "(e.g., Aadhaar, SIN, NIN). This is used for official records and statutory "
 "compliance."
 msgstr ""
+"Ange den anställdas personnummer (t.ex. Aadhaar, SIN, NIN). Detta används "
+"för att skapa officiella handlingar och följa gällande regelverk."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -2780,7 +2787,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Family"
-msgstr ""
+msgstr "Familjesituation"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__2
@@ -2849,7 +2856,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr/static/src/views/hr_employee_action_helper/onboarding_helper_blocks.xml:0
 msgid "Fleet"
-msgstr ""
+msgstr "Fordon"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_follower_ids
@@ -3022,7 +3029,7 @@ msgstr "Mycket kreativ och självständig"
 #. odoo-javascript
 #: code:addons/hr/static/src/views/hr_employee_action_helper/onboarding_helper_blocks.xml:0
 msgid "Hiring"
-msgstr ""
+msgstr "Rekrytering"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -3062,7 +3069,7 @@ msgstr "Hemarbete Distansenhet"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hourly_cost
 msgid "Hourly Cost"
-msgstr ""
+msgstr "Timkostnad"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__hours_per_day
@@ -3174,7 +3181,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__identification_id
 #: model:ir.model.fields,field_description:hr.field_hr_version__identification_id
 msgid "Identification No"
-msgstr "Identifikations Nr"
+msgstr "Personnummer"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_needaction
@@ -3385,7 +3392,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Issued by Government"
-msgstr ""
+msgstr "Utfärdat av en myndighet"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -3566,7 +3573,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr/static/src/views/hr_employee_action_helper/onboarding_helper_blocks.xml:0
 msgid "Leaves"
-msgstr ""
+msgstr "Ledighet"
 
 #. module: hr
 #. odoo-python
@@ -3587,7 +3594,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_contract_templates
 msgid "Let's create one"
-msgstr ""
+msgstr "Börja med att skapa en!"
 
 #. module: hr
 #. odoo-javascript
@@ -3623,7 +3630,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr/static/src/views/hr_employee_action_helper/hr_employee_action_helper.xml:0
 msgid "Load sample data"
-msgstr ""
+msgstr "Hämta exempeldata"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_location__work_location_id
@@ -3657,7 +3664,7 @@ msgstr "Långsiktiga projekt"
 #. odoo-javascript
 #: code:addons/hr/static/src/views/hr_employee_action_helper/onboarding_helper_blocks.xml:0
 msgid "Lunch"
-msgstr ""
+msgstr "Lunch"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_main_attachment_id
@@ -3839,7 +3846,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__monday_location_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__monday_location_id
 msgid "Monday"
-msgstr ""
+msgstr "Måndag"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__monday_location_id
@@ -3910,7 +3917,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr/static/src/components/versions_timeline/versions_timeline.xml:0
 msgid "New Employee Record"
-msgstr ""
+msgstr "Ny anställningshandling"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_open_hr_employee_create_version_wizard
@@ -3982,13 +3989,13 @@ msgstr "Inga taggar hittades! Låt oss skapa en"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_contract_templates
 msgid "No Template found"
-msgstr ""
+msgstr "Inga mallar hittades."
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/versions_timeline/versions_timeline.js:0
 msgid "No contract"
-msgstr ""
+msgstr "Inget avtal"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -4003,7 +4010,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "No user linked"
-msgstr ""
+msgstr "Ingen kopplad användare"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -4312,7 +4319,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Organization Chart"
-msgstr ""
+msgstr "Organisationsschema"
 
 #. module: hr
 #. odoo-python
@@ -4627,7 +4634,7 @@ msgstr ""
 #: model:ir.actions.report,name:hr.hr_employee_print_badge
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Print Badge"
-msgstr "Skriv ut badge"
+msgstr "Skriv ut namnbricka"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
@@ -4735,7 +4742,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Provide additional information about this employee..."
-msgstr ""
+msgstr "Ange ytterligare information om den anställda..."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -4793,7 +4800,7 @@ msgstr "Redo att rekrytera mer effektivt?"
 #. odoo-javascript
 #: code:addons/hr/static/src/views/hr_employee_action_helper/hr_employee_action_helper.xml:0
 msgid "Ready to start your experience?"
-msgstr ""
+msgstr "Är du redo att komma igång?"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -4837,7 +4844,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr/static/src/views/hr_employee_action_helper/onboarding_helper_blocks.xml:0
 msgid "Referral"
-msgstr ""
+msgstr "Rekommendationer"
 
 #. module: hr
 #. odoo-python
@@ -5034,7 +5041,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__saturday_location_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__saturday_location_id
 msgid "Saturday"
-msgstr ""
+msgstr "Lördag"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__saturday_location_id
@@ -5129,7 +5136,7 @@ msgstr "Inställningar"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__sex
 #: model:ir.model.fields,field_description:hr.field_hr_version__sex
 msgid "Sex"
-msgstr ""
+msgstr "Könstillhörighet"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__share
@@ -5222,7 +5229,7 @@ msgstr "Partnerns födelsedatum"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__spouse_complete_name
 #: model:ir.model.fields,field_description:hr.field_hr_version__spouse_complete_name
 msgid "Spouse Legal Name"
-msgstr ""
+msgstr "Makes officiella namn"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view
@@ -5257,7 +5264,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "State"
-msgstr "Läge"
+msgstr "Region"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__activity_state
@@ -5326,7 +5333,7 @@ msgstr "Sammanfattning"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__sunday_location_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__sunday_location_id
 msgid "Sunday"
-msgstr ""
+msgstr "Söndag"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__sunday_location_id
@@ -5361,7 +5368,7 @@ msgstr "Etiketter"
 #. odoo-javascript
 #: code:addons/hr/static/src/views/hr_employee_action_helper/onboarding_helper_blocks.xml:0
 msgid "Talent"
-msgstr ""
+msgstr "Kompetenser"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_recruitment
@@ -5441,8 +5448,8 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
-"ISO-landskoden med två tecken\n"
-"Du kan använda det här fältet för snabb sökning."
+"ISO-landskod angiven med två tecken.\n"
+"Fältet kan användas för snabbsökning."
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_marketing
@@ -5524,7 +5531,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr.field_hr_employee__legal_name
 msgid ""
 "The employee's official name as per government-issued or legal documents."
-msgstr ""
+msgstr "Den anställdas officiella namn såsom det anges på deras ID eller pass."
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_job_no_of_recruitment_positive
@@ -5658,7 +5665,7 @@ msgstr ""
 msgid ""
 "This is the legal sex as recognized by the state, used for official and "
 "statutory purposes."
-msgstr ""
+msgstr "Den könstillhörighet som har registrerats hos gällande myndigheter."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -5707,7 +5714,7 @@ msgstr "Dessa ansvariga typer är begränsade till Employee-planer."
 #: model:ir.model.fields,field_description:hr.field_hr_employee__thursday_location_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__thursday_location_id
 msgid "Thursday"
-msgstr ""
+msgstr "Torsdag"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__thursday_location_id
@@ -5717,7 +5724,7 @@ msgstr "Torsdagar"
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_config_working_times
 msgid "Time Management"
-msgstr ""
+msgstr "Tidshantering"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__tz
@@ -5821,7 +5828,7 @@ msgstr "Tillförlitlig"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__tuesday_location_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__tuesday_location_id
 msgid "Tuesday"
-msgstr ""
+msgstr "Tisdag"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__tuesday_location_id
@@ -5874,7 +5881,7 @@ msgstr "Olästa meddelanden"
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Unspecified"
-msgstr ""
+msgstr "Ej angiven"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -5920,7 +5927,7 @@ msgstr "Användarstatus"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "User Timezone"
-msgstr ""
+msgstr "Användarens tidszon"
 
 #. module: hr
 #. odoo-javascript
@@ -6021,7 +6028,7 @@ msgstr "Användarens partner"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Usual Work Location"
-msgstr ""
+msgstr "Vanlig arbetsplats"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
@@ -6062,7 +6069,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_type_view_tree
 msgid "View Employees"
-msgstr ""
+msgstr "Visa anställda"
 
 #. module: hr
 #. odoo-javascript
@@ -6080,7 +6087,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Visa & Work Permit"
-msgstr ""
+msgstr "Visa och arbetstillstånd"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
@@ -6133,7 +6140,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__wednesday_location_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__wednesday_location_id
 msgid "Wednesday"
-msgstr ""
+msgstr "Onsdag"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__wednesday_location_id
@@ -6579,7 +6586,7 @@ msgstr "läkare"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. 1234"
-msgstr ""
+msgstr "t.ex. 1234"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -6589,7 +6596,7 @@ msgstr "t.ex. byggnad 2, fjärrkontroll, etc."
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. Engineering, Commerce, Business Administration, ..."
-msgstr ""
+msgstr "t.ex. ingenjör, handel, företagsadministration..."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -6628,7 +6635,7 @@ msgstr "t.ex. myprivateemail@example.com"
 #. odoo-javascript
 #: code:addons/hr/static/src/views/hr_employee_action_helper/onboarding_helper_blocks.xml:0
 msgid "eLearning"
-msgstr ""
+msgstr "Utbildning"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_create_version_wizard_view_form
@@ -6737,6 +6744,13 @@ msgstr "arbete"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
 msgstr "work_permit_name"
+
+#~ msgid ""
+#~ "<i class=\"oi oi-fw oi-filled me-2 text-primary\" data-icon=\"contract\" "
+#~ "title=\"Contract\"/>"
+#~ msgstr ""
+#~ "<i class=\"oi oi-fw oi-filled me-2 text-primary\" data-icon=\"contract\" "
+#~ "title=\"Avtal\"/>"
 
 #~ msgid ""
 #~ "The Badge ID must be alphanumeric without any accents and no longer than "

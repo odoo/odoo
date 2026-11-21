@@ -3,14 +3,15 @@
 # * auth_ldap
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Dorin Hongu <dhongu@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-08-31 16:16+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-20 06:18+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/"
 "auth_ldap/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_filter
@@ -150,17 +151,108 @@ msgid ""
 "         user to a username that does not exist in LDAP, and setup its "
 "groups\n"
 msgstr ""
+"Adaugă suport pentru autentificarea prin server LDAP.\n"
+"=====================================================\n"
+"Acest modul permite utilizatorilor să se conecteze cu numele de utilizator "
+"și parola LDAP și\n"
+"creează automat conturi Odoo pentru aceștia.\n"
+"\n"
+"**Notă:** modulul funcționează numai pe serverele pe care este instalat "
+"modulul Python ``python-ldap``.\n"
+"\n"
+"Configurare:\n"
+"------------\n"
+"După instalarea acestui modul, configurați parametrii LDAP din meniul Setări "
+"generale. Companii diferite\n"
+"pot folosi servere LDAP diferite, cu condiția să aibă\n"
+"nume de utilizator unice (numele de utilizator trebuie să fie unice în "
+"Odoo,\n"
+"inclusiv între companii).\n"
+"\n"
+"Este acceptată și autentificarea LDAP anonimă (pentru serverele LDAP care "
+"permit acest lucru):\n"
+"este suficient să lăsați necompletate câmpurile utilizatorului și parolei "
+"LDAP din configurare.\n"
+"Aceasta nu permite autentificarea anonimă a utilizatorilor; se aplică doar "
+"contului principal LDAP,\n"
+"folosit pentru a verifica dacă un utilizator există înainte de a încerca\n"
+"autentificarea acestuia.\n"
+"\n"
+"Pentru serverele LDAP care acceptă această opțiune, conexiunea poate fi "
+"securizată cu STARTTLS\n"
+"prin activarea opțiunii TLS din configurarea LDAP.\n"
+"\n"
+"Pentru alte opțiuni de configurare LDAP, consultați pagina de manual "
+"ldap.conf:\n"
+"manpage:`ldap.conf(5)`.\n"
+"\n"
+"Considerații de securitate:\n"
+"---------------------------\n"
+"Parolele LDAP ale utilizatorilor nu sunt stocate niciodată în baza de date "
+"Odoo. Serverul LDAP\n"
+"este interogat de fiecare dată când un utilizator trebuie autentificat. "
+"Parola nu este duplicată,\n"
+"iar parolele sunt gestionate într-un singur loc.\n"
+"\n"
+"Odoo nu gestionează modificările parolelor în LDAP; pentru utilizatorii "
+"LDAP, orice schimbare\n"
+"a parolei trebuie efectuată direct în directorul LDAP, prin alte mijloace.\n"
+"\n"
+"În baza de date pot exista atât utilizatori Odoo locali, cât și utilizatori "
+"autentificați prin LDAP\n"
+"(de exemplu, contul Administrator).\n"
+"\n"
+"Cum funcționează:\n"
+"-----------------\n"
+"    * Sistemul încearcă mai întâi să autentifice utilizatorii în\n"
+"      baza de date Odoo locală;\n"
+"    * dacă autentificarea eșuează (de exemplu, deoarece utilizatorul nu are "
+"o parolă locală),\n"
+"      sistemul încearcă apoi autentificarea prin LDAP;\n"
+"\n"
+"În mod implicit, utilizatorii LDAP au parole necompletate în baza de date "
+"Odoo locală\n"
+"(ceea ce înseamnă că nu au acces), astfel că primul pas eșuează întotdeauna, "
+"iar serverul LDAP\n"
+"este interogat pentru autentificare.\n"
+"\n"
+"Activarea STARTTLS asigură criptarea solicitării de autentificare trimise\n"
+"serverului LDAP.\n"
+"\n"
+"Șablon utilizator:\n"
+"------------------\n"
+"În configurarea LDAP din Setări generale, puteți selecta un *Șablon de "
+"utilizator*. Dacă este setat,\n"
+"acest utilizator va servi drept șablon la crearea utilizatorilor locali, "
+"atunci când aceștia se\n"
+"autentifică pentru prima dată prin LDAP. Astfel, puteți preconfigura "
+"grupurile și meniurile implicite\n"
+"pentru utilizatorii noi.\n"
+"\n"
+"**Avertisment:** dacă setați o parolă pentru șablonul de utilizator, aceasta "
+"va fi atribuită ca\n"
+"         parolă locală fiecărui utilizator LDAP nou, devenind efectiv o "
+"*parolă principală* pentru\n"
+"         acești utilizatori (până la modificarea manuală). De regulă, nu "
+"este recomandat. O metodă\n"
+"         simplă de configurare a unui utilizator șablon este să vă conectați "
+"o dată cu un utilizator\n"
+"         LDAP valid, să lăsați Odoo să creeze un utilizator local fără "
+"parolă și cu același nume de\n"
+"         autentificare, apoi să redenumiți acest utilizator cu un nume care "
+"nu există în LDAP și\n"
+"         să-i configurați grupurile.\n"
 
 #. module: auth_ldap
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "An error occurred: %(error)s"
-msgstr ""
+msgstr "A apărut o eroare: %(error)s"
 
 #. module: auth_ldap
 #: model:ir.module.module,shortdesc:base.module_auth_ldap
 msgid "Authentication via LDAP"
-msgstr ""
+msgstr "Autentificare prin LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
@@ -175,7 +267,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "Cannot contact LDAP server at %(server)s:%(port)d"
-msgstr ""
+msgstr "Serverul LDAP de la %(server)s:%(port)d nu poate fi contactat"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company
@@ -197,19 +289,19 @@ msgstr "Setări de configurare"
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "Connection Test Failed!"
-msgstr ""
+msgstr "Testul conexiunii a eșuat!"
 
 #. module: auth_ldap
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "Connection Test Successful!"
-msgstr ""
+msgstr "Testul de conexiune a reușit!"
 
 #. module: auth_ldap
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "Connection to LDAP server at %(server)s:%(port)d timed out"
-msgstr ""
+msgstr "Conexiunea la serverul LDAP de la %(server)s:%(port)d a expirat"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_user
@@ -255,7 +347,7 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "Invalid credentials for bind DN %(binddn)s"
-msgstr ""
+msgstr "Date de autentificare nevalide pentru DN-ul de conectare %(binddn)s"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.res_company_ldap_view_tree
@@ -362,7 +454,7 @@ msgstr "Configurați serverul dumneavoastră LDAP"
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "Successfully connected to LDAP server at %(server)s:%(port)d"
-msgstr ""
+msgstr "Conectarea la serverul LDAP de la %(server)s:%(port)d a reușit"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__user
@@ -372,7 +464,7 @@ msgstr "Utilizator șablon"
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Test Connection"
-msgstr ""
+msgstr "Test conexiune"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_password
@@ -400,7 +492,7 @@ msgstr "Folosește TLS"
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_users
 msgid "User"
-msgstr ""
+msgstr "Operator"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form

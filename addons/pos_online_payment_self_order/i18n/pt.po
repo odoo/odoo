@@ -4,12 +4,13 @@
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Cristina Paniagua Ramiro <crpan@odoo.com>, 2026.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-04 17:45+0000\n"
-"PO-Revision-Date: 2026-11-13 10:36+0000\n"
+"PO-Revision-Date: 2026-11-19 09:17+0000\n"
 "Last-Translator: Cristina Paniagua Ramiro <crpan@odoo.com>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-20/"
 "pos_online_payment_self_order/pt/>\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: pos_online_payment_self_order
 #: model:ir.model,name:pos_online_payment_self_order.model_res_config_settings
@@ -38,7 +39,7 @@ msgstr "Nome a apresentar"
 #. module: pos_online_payment_self_order
 #: model:ir.model,name:pos_online_payment_self_order.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "Encaminhamento HTTP"
 
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_ir_http__id
@@ -64,7 +65,7 @@ msgstr "Pedido"
 #. module: pos_online_payment_self_order
 #: model:ir.module.module,shortdesc:base.module_pos_online_payment_self_order
 msgid "POS Self-Order / Online Payment"
-msgstr ""
+msgstr "Autoatendimento/Pagamento online do POS"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
@@ -76,55 +77,55 @@ msgstr "Pagar"
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/portal/pos_self_order_payment_form_patch.js:0
 msgid "Pay anyway"
-msgstr ""
+msgstr "Pagar mesmo assim"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/app/components/order_widget/order_widget.js:0
 msgid "Pay at cashier"
-msgstr "Pagar no caixa"
+msgstr "Pagar na caixa"
 
 #. module: pos_online_payment_self_order
 #: model_terms:ir.ui.view,arch_db:pos_online_payment_self_order.res_config_settings_view_form_menu
 msgid "Pay at cashier if empty"
-msgstr "Pagar no caixa, se vazio"
+msgstr "Pagar na caixa se estiver vazio"
 
 #. module: pos_online_payment_self_order
 #: model_terms:ir.ui.view,arch_db:pos_online_payment_self_order.res_config_settings_view_form_menu
 msgid "Payment Methods"
-msgstr "Formas de pagamento"
+msgstr "Métodos de pagamento"
 
 #. module: pos_online_payment_self_order
 #: model:ir.model,name:pos_online_payment_self_order.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Transação de pagamento"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/portal/pos_self_order_payment_form_patch.js:0
 msgid "Payment already in progress"
-msgstr ""
+msgstr "Pagamento já em curso"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/app/pages/payment_page/payment_page.xml:0
 msgid "Payment in progress"
-msgstr ""
+msgstr "Pagamento em curso"
 
 #. module: pos_online_payment_self_order
 #: model:ir.model,name:pos_online_payment_self_order.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr "Configuração do ponto de venda"
+msgstr "Configuração do POS"
 
 #. module: pos_online_payment_self_order
 #: model:ir.model,name:pos_online_payment_self_order.model_pos_order
 msgid "Point of Sale Order"
-msgstr ""
+msgstr "Pedido do POS"
 
 #. module: pos_online_payment_self_order
 #: model:ir.model,name:pos_online_payment_self_order.model_pos_payment_method
 msgid "Point of Sale Payment Method"
-msgstr ""
+msgstr "Método de pagamento do POS"
 
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_config__self_order_online_payment_method_id
@@ -135,7 +136,7 @@ msgstr "Pagamento online"
 #. module: pos_online_payment_self_order
 #: model:ir.module.module,summary:base.module_pos_online_payment_self_order
 msgid "Support online payment in self-order"
-msgstr ""
+msgstr "Suporte para pagamentos online no autopedido"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
@@ -149,8 +150,8 @@ msgstr "O pedido atual não pode ser pago (talvez já tenha sido pago)."
 msgid ""
 "The online payment method to use when a customer pays a self-order online."
 msgstr ""
-"O método de pagamento a ser usado quando um cliente paga um pedido no "
-"autoatendimento online."
+"O método de pagamento online a utilizar quando um cliente paga um autopedido "
+"online."
 
 #. module: pos_online_payment_self_order
 #. odoo-python
@@ -160,11 +161,11 @@ msgid ""
 "least one published payment provider supporting the currency of that POS "
 "config."
 msgstr ""
-"O método de pagamento online usado para autoatendimento em uma configuração "
-"de PDV deve ter pelo menos um provedor de pagamento publicado que ofereça "
-"suporte à moeda dessa configuração de PDV."
+"O método de pagamento online utilizado para o autopedido numa configuração "
+"do POS tem de ter, pelo menos, um fornecedor de pagamento publicado que "
+"aceite a moeda dessa configuração do POS."
 
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_order__use_self_order_online_payment
 msgid "Use Self Order Online Payment"
-msgstr "Usar pagamento do autoatendimento online"
+msgstr "Suporte para pagamentos online no autopedido"

@@ -1,15 +1,16 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* base_report_wkhtmltox
+# * base_report_wkhtmltox
 #
+# Dorin Hongu <dhongu@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.4a1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-08-31 16:24+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-21 09:32+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/"
 "base_report_wkhtmltox/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: base_report_wkhtmltox
 #: model:ir.module.module,description:base.module_base_report_wkhtmltox
@@ -29,36 +30,42 @@ msgid ""
 "learn more about it here:\n"
 "https://wkhtmltopdf.org/\n"
 msgstr ""
+"\n"
+"Acest modul implementează motoarele de randare wkhtmltopdf și\n"
+"wlhtmltoimage pentru Odoo.\n"
+"\n"
+"Aflați mai multe aici:\n"
+"https://wkhtmltopdf.org/\n"
 
 #. module: base_report_wkhtmltox
 #: model:ir.model.fields,field_description:base_report_wkhtmltox.field_ir_actions_report__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nume afișat"
 
 #. module: base_report_wkhtmltox
 #: model:ir.model.fields,field_description:base_report_wkhtmltox.field_ir_actions_report__report_type
 msgid "Format"
-msgstr ""
+msgstr "Format"
 
 #. module: base_report_wkhtmltox
 #: model:ir.model.fields,field_description:base_report_wkhtmltox.field_ir_actions_report__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: base_report_wkhtmltox
 #: model:ir.model.fields.selection,name:base_report_wkhtmltox.selection__ir_actions_report__report_type__qweb-pdf-wkhtmltopdf
 msgid "PDF (Wkhtmltopdf)"
-msgstr ""
+msgstr "PDF (Wkhtmltopdf)"
 
 #. module: base_report_wkhtmltox
 #: model:ir.model,name:base_report_wkhtmltox.model_ir_actions_report
 msgid "Report Action"
-msgstr ""
+msgstr "Acțiune raport"
 
 #. module: base_report_wkhtmltox
 #: model:ir.module.module,shortdesc:base.module_base_report_wkhtmltox
 msgid "Report Engine: wkhtmltopdf/wkhtmltoimage"
-msgstr ""
+msgstr "Motor de raportare: wkhtmltopdf/wkhtmltoimage"
 
 #. module: base_report_wkhtmltox
 #: model:ir.model.fields,help:base_report_wkhtmltox.field_ir_actions_report__report_type
@@ -67,12 +74,17 @@ msgid ""
 "rendering method. HTML means the report will be opened directly in your "
 "browser, PDF means the report will be generated and downloaded by the user."
 msgstr ""
+"Tipul raportului care va fi randat; fiecare tip folosește propria metodă de "
+"randare. HTML înseamnă că raportul se va deschide direct în browser, iar PDF "
+"înseamnă că raportul va fi generat și descărcat de utilizator."
 
 #. module: base_report_wkhtmltox
 #. odoo-python
 #: code:addons/base_report_wkhtmltox/models/ir_actions_report.py:0
 msgid "Tried to convert multiple documents in wkhtmltopdf using unpatched QT"
 msgstr ""
+"S-a încercat conversia mai multor documente în wkhtmltopdf folosind Qt fără "
+"patch-uri"
 
 #. module: base_report_wkhtmltox
 #. odoo-python
@@ -81,6 +93,8 @@ msgid ""
 "Wkhtmltoimage failed (error code: %(error_code)s). Message: %"
 "(error_message_end)s"
 msgstr ""
+"Wkhtmltoimage a eșuat (cod de eroare: %(error_code)s). Mesaj: %"
+"(error_message_end)s"
 
 #. module: base_report_wkhtmltox
 #. odoo-python
@@ -89,20 +103,25 @@ msgid ""
 "Wkhtmltopdf failed (error code: %(error_code)s). Memory limit too low or "
 "maximum file number of subprocess reached. Message : %(message)s"
 msgstr ""
+"Wkhtmltopdf a eșuat (cod de eroare: %(error_code)s). Limita de memorie este "
+"prea mică sau s-a atins numărul maxim de procese secundare. Mesaj: %(message)"
+"s"
 
 #. module: base_report_wkhtmltox
 #. odoo-python
 #: code:addons/base_report_wkhtmltox/models/ir_actions_report.py:0
 msgid "Wkhtmltopdf failed (error code: %(error_code)s). Message: %(message)s"
-msgstr ""
+msgstr "Wkhtmltopdf a eșuat (cod de eroare: %(error_code)s). Mesaj: %(message)s"
 
 #. module: base_report_wkhtmltox
 #. odoo-python
 #: code:addons/base_report_wkhtmltox/models/ir_actions_report.py:0
 msgid "wkhtmltoimage 0.12.0^ is required in order to render images from html"
 msgstr ""
+"Pentru randarea imaginilor din HTML este necesar wkhtmltoimage 0.12.0 sau o "
+"versiune ulterioară"
 
 #. module: base_report_wkhtmltox
 #: model:ir.module.module,summary:base.module_base_report_wkhtmltox
 msgid "wkhtmltopdf rendering engine"
-msgstr ""
+msgstr "Motor de randare wkhtmltopdf"

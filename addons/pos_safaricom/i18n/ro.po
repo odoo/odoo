@@ -1,15 +1,16 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* pos_safaricom
+# * pos_safaricom
 #
+# Dorin Hongu <dhongu@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:42+0000\n"
-"PO-Revision-Date: 2026-08-31 20:10+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-21 09:33+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/"
 "pos_safaricom/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -17,43 +18,43 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 msgid "'Search by name or phone or transaction id...'"
-msgstr ""
+msgstr "'Căutați după nume, telefon sau ID-ul tranzacției...'"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 msgid "'Select M-Pesa Transaction'"
-msgstr ""
+msgstr "'Selectați tranzacția M-Pesa'"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 msgid "Accept"
-msgstr ""
+msgstr "Acceptă"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__amount
 msgid "Amount"
-msgstr ""
+msgstr "Valoare"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 msgid "Arrived at"
-msgstr ""
+msgstr "Primit la"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__business_short_code
 msgid "Business Short Code"
-msgstr ""
+msgstr "Cod scurt al companiei"
 
 #. module: pos_safaricom
 #: model_terms:ir.ui.view,arch_db:pos_safaricom.pos_payment_method_view_form_inherit_pos_safaricom
@@ -63,40 +64,44 @@ msgid ""
 "                                This happens automatically on creation, but "
 "you can re-register if you deleted them from the business portal."
 msgstr ""
+"URL-urile callback C2B trebuie înregistrate la Safaricom pentru ca Lipa na M-"
+"PESA să funcționeze.\n"
+"                                Înregistrarea are loc automat la creare, dar "
+"le puteți înregistra din nou dacă le-ați șters din portalul companiei."
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 msgid "Cancel"
-msgstr ""
+msgstr "Anulează"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
 msgid "Cannot process transactions with float numbers. Round it please."
-msgstr ""
+msgstr "Tranzacțiile nu pot fi procesate cu numere zecimale. Rotunjiți suma."
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
 msgid "Cannot process transactions with negative amount."
-msgstr ""
+msgstr "Nu se pot procesa tranzacții cu sumă negativă."
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__consumer_key
 msgid "Consumer Key"
-msgstr ""
+msgstr "Cheie Consumator"
 
 #. module: pos_safaricom
 #. odoo-python
 #: code:addons/pos_safaricom/models/pos_payment_method.py:0
 msgid "Consumer Key and Consumer Secret are required for Safaricom M-Pesa"
-msgstr ""
+msgstr "Cheia și secretul de consumator sunt necesare pentru Safaricom M-Pesa"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__consumer_secret
 msgid "Consumer Secret"
-msgstr ""
+msgstr "Secret de consumator"
 
 #. module: pos_safaricom
 #. odoo-python
@@ -104,16 +109,18 @@ msgstr ""
 msgid ""
 "Could not find base url. Please set up web.base.url to a valid https address"
 msgstr ""
+"URL-ul de bază nu a fost găsit. Configurați web.base.url cu o adresă HTTPS "
+"validă"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Creat de"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Creat în"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_order_receipt__display_name
@@ -121,31 +128,33 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__display_name
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nume afișat"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
 msgid "Failed to generate QR code"
-msgstr ""
+msgstr "Generarea codului QR a eșuat"
 
 #. module: pos_safaricom
 #. odoo-python
 #: code:addons/pos_safaricom/models/pos_payment_method.py:0
 msgid "Failed to register URLs. Check your credentials and try again."
 msgstr ""
+"Înregistrarea URL-urilor a eșuat. Verificați datele de autentificare și "
+"încercați din nou."
 
 #. module: pos_safaricom
 #. odoo-python
 #: code:addons/pos_safaricom/models/pos_payment_method.py:0
 msgid "Failed to register URLs: %s"
-msgstr ""
+msgstr "Înregistrarea URL-urilor a eșuat: %s"
 
 #. module: pos_safaricom
 #. odoo-python
 #: code:addons/pos_safaricom/models/pos_payment_method.py:0
 msgid "Failed to retrieve access token from Safaricom"
-msgstr ""
+msgstr "Preluarea tokenului de acces de la Safaricom a eșuat"
 
 #. module: pos_safaricom
 #. odoo-javascript
@@ -155,214 +164,214 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__id
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__safaricom_identifier_type
 msgid "Identifier Type"
-msgstr ""
+msgstr "Tip de identificator"
 
 #. module: pos_safaricom
 #: model:ir.module.module,summary:base.module_pos_safaricom
 msgid "Integrate your POS with the Safaricom Payment Provider"
-msgstr ""
+msgstr "Integrați sistemul POS cu furnizorul de plăți Safaricom"
 
 #. module: pos_safaricom
 #. odoo-python
 #: code:addons/pos_safaricom/models/pos_payment_method.py:0
 msgid "Invalid phone number format. Please use format: 2547XXXXXXXX"
-msgstr ""
+msgstr "Format invalid al numărului de telefon. Folosiți formatul: 2547XXXXXXXX"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Ultima actualizare făcută de"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Ultima actualizare pe"
 
 #. module: pos_safaricom
 #: model:ir.model.fields.selection,name:pos_safaricom.selection__pos_payment_method__safaricom_payment_type__lipa_na_mpesa
 msgid "Lipa na M-PESA"
-msgstr ""
+msgstr "Lipa na M-PESA"
 
 #. module: pos_safaricom
 #: model_terms:ir.ui.view,arch_db:pos_safaricom.pos_payment_method_view_form_inherit_pos_safaricom
 msgid "Lipa na M-PESA Configuration"
-msgstr ""
+msgstr "Configurare Lipa na M-PESA"
 
 #. module: pos_safaricom
 #: model:ir.model.fields.selection,name:pos_safaricom.selection__pos_payment_method__safaricom_payment_type__mpesa_express
 msgid "M-PESA Express"
-msgstr ""
+msgstr "M-PESA Express"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
 msgid "M-Pesa Phone Number"
-msgstr ""
+msgstr "Număr de telefon M-Pesa"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 msgid "M-Pesa QR Code"
-msgstr ""
+msgstr "Cod QR M-Pesa"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__name
 msgid "Name"
-msgstr ""
+msgstr "Nume"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__number
 msgid "Number"
-msgstr ""
+msgstr "Număr"
 
 #. module: pos_safaricom
 #: model:ir.module.module,shortdesc:base.module_pos_safaricom
 msgid "POS Safaricom"
-msgstr ""
+msgstr "POS Safaricom"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__passkey
 msgid "Passkey"
-msgstr ""
+msgstr "Cheie de acces"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__safaricom_paybill_number
 #: model:ir.model.fields.selection,name:pos_safaricom.selection__pos_payment_method__safaricom_identifier_type__paybill
 msgid "Paybill number"
-msgstr ""
+msgstr "Număr Paybill"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/services/pos_store.js:0
 msgid "Payment Failed"
-msgstr ""
+msgstr "Plata a eșuat"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__safaricom_payment_type
 msgid "Payment Type"
-msgstr ""
+msgstr "Tip de plată"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
 msgid "Payment line not found"
-msgstr ""
+msgstr "Linia de plată nu a fost găsită"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/services/pos_store.js:0
 msgid "Payment was not completed"
-msgstr ""
+msgstr "Plata nu a fost finalizată"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 msgid "Phone"
-msgstr ""
+msgstr "Telefon"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
 msgid "Phone number is required for M-Pesa payment."
-msgstr ""
+msgstr "Pentru plata M-Pesa este necesar un număr de telefon."
 
 #. module: pos_safaricom
 #: model:ir.model,name:pos_safaricom.model_pos_order_receipt
 msgid "Point of Sale Order Receipt Generator"
-msgstr ""
+msgstr "Generator de bonuri pentru comenzi POS"
 
 #. module: pos_safaricom
 #: model:ir.model,name:pos_safaricom.model_pos_payment
 msgid "Point of Sale Payment"
-msgstr ""
+msgstr "Plată la punctul de vânzare"
 
 #. module: pos_safaricom
 #: model:ir.model,name:pos_safaricom.model_pos_payment_method
 msgid "Point of Sale Payment Method"
-msgstr ""
+msgstr "Metodă de plată POS"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__received_at
 msgid "Received At"
-msgstr ""
+msgstr "Primit la"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 msgid "Refresh"
-msgstr ""
+msgstr "Reîmprospătează"
 
 #. module: pos_safaricom
 #: model_terms:ir.ui.view,arch_db:pos_safaricom.pos_payment_method_view_form_inherit_pos_safaricom
 msgid "Register URLs"
-msgstr ""
+msgstr "Înregistrează URL-urile"
 
 #. module: pos_safaricom
 #: model_terms:ir.ui.view,arch_db:pos_safaricom.pos_payment_method_view_form_inherit_pos_safaricom
 msgid "Register or re-register C2B callback URLs with Safaricom"
-msgstr ""
+msgstr "Înregistrează sau reînregistrează URL-urile callback C2B la Safaricom"
 
 #. module: pos_safaricom
 #: model_terms:ir.ui.view,arch_db:pos_safaricom.pos_payment_method_view_form_inherit_pos_safaricom
 msgid "Safaricom"
-msgstr ""
+msgstr "Safaricom"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
 msgid "Safaricom M-Pesa Error"
-msgstr ""
+msgstr "Eroare Safaricom M-Pesa"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment__safaricom_transaction_id
 msgid "Safaricom transaction id"
-msgstr ""
+msgstr "ID-ul tranzacției Safaricom"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 msgid "Scan to Pay with M-Pesa"
-msgstr ""
+msgstr "Scanați pentru a plăti cu M-Pesa"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__safaricom_test_mode
 msgid "Test Mode"
-msgstr ""
+msgstr "Mod testare"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,help:pos_safaricom.field_pos_payment_method__passkey
 msgid "The passkey is used to generate the password for the STK Push"
-msgstr ""
+msgstr "Cheia de acces este folosită pentru a genera parola pentru STK Push"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__safaricom_till_number
 #: model:ir.model.fields.selection,name:pos_safaricom.selection__pos_payment_method__safaricom_identifier_type__till
 msgid "Till number"
-msgstr ""
+msgstr "Număr Till"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__trans_id
 msgid "Transaction ID"
-msgstr ""
+msgstr "ID tranzacție"
 
 #. module: pos_safaricom
 #: model_terms:ir.ui.view,arch_db:pos_safaricom.pos_order_receipt
 msgid "Transaction ID:"
-msgstr ""
+msgstr "ID-ul tranzacției:"
 
 #. module: pos_safaricom
 #: model:ir.model,name:pos_safaricom.model_transaction_lipa_na_mpesa
 msgid "Transaction Lipa na M-PESA"
-msgstr ""
+msgstr "Tranzacție Lipa na M-PESA"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,help:pos_safaricom.field_pos_payment_method__safaricom_test_mode
 msgid "Use sandbox environment"
-msgstr ""
+msgstr "Folosește mediul sandbox"

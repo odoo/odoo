@@ -9,7 +9,7 @@
 # Cozmin Candea <office@terrabit.ro>, 2022
 # Martin Trigaux, 2022
 # Claudia Baisan, 2023
-# Dorin Hongu <dhongu@gmail.com>, 2023, 2025.
+# Dorin Hongu <dhongu@gmail.com>, 2023, 2025, 2026.
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Adrian Cocos <adrian.cocos@capps.ai>, 2025.
@@ -20,17 +20,17 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:40+0000\n"
-"PO-Revision-Date: 2026-08-31 14:44+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
-"portal/ro/>\n"
+"PO-Revision-Date: 2026-11-21 09:33+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/portal/"
+"ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: portal
 #: model:ir.module.module,description:base.module_portal
@@ -45,6 +45,18 @@ msgid ""
 "of this module is to allow the display of a customer portal without having\n"
 "a dependency towards website editing and customization capabilities."
 msgstr ""
+"\n"
+"Acest modul adaugă codul de bază necesar pentru un portal de clienți complet "
+"integrat.\n"
+"Conține clasa de bază a controlerului și șabloanele de bază. Modulele de "
+"business\n"
+"vor adăuga propriile șabloane și controlere pentru a extinde portalul "
+"clienților.\n"
+"\n"
+"Acest modul conține cea mai mare parte a codului provenit din website_portal "
+"din Odoo v10. Scopul\n"
+"acestui modul este să permită afișarea unui portal de clienți fără\n"
+"o dependență de capabilitățile de editare și personalizare ale site-ului web."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -55,25 +67,25 @@ msgstr "pentru a vă valida acțiunea."
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "\"Authorization\": f\"bearer {mcp_key}\","
-msgstr ""
+msgstr "\"Authorization\": f\"bearer {mcp_key}\","
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "\"Content-Type\": \"application/json\","
-msgstr ""
+msgstr "\"Content-Type\": \"application/json\","
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "# Store the API key securely, not in the code."
-msgstr ""
+msgstr "# Stocați cheia API în siguranță, nu în cod."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/wizard/portal_share.py:0
 msgid "%(model_name)s shared with %(partner_names)s"
-msgstr ""
+msgstr "%(model_name)s partajat cu %(partner_names)s"
 
 #. module: portal
 #. odoo-javascript
@@ -84,7 +96,7 @@ msgstr "%s zile în urmă"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_docs_entry
 msgid "'Icon for %s' % entry.name"
-msgstr ""
+msgstr "'Pictogramă pentru %s' % entry.name"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -113,11 +125,13 @@ msgid ""
 "<i class=\"oi m-auto ms-auto me-3\" data-icon=\"mail\" role=\"img\" aria-"
 "label=\"Send Message\"/>"
 msgstr ""
+"<i class=\"oi m-auto ms-auto me-3\" data-icon=\"mail\" role=\"img\" aria-"
+"label=\"Trimite mesaj\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
 msgid "<i class=\"oi me-1\" data-icon=\"add\"/>Add"
-msgstr ""
+msgstr "<i class=\"oi me-1\" data-icon=\"add\"/>Adaugă"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
@@ -135,6 +149,8 @@ msgid ""
 "<i class=\"oi oi-fw me-1 small text-primary-emphasis\" data-icon=\"badge\"/> "
 "My Account"
 msgstr ""
+"<i class=\"oi oi-fw me-1 small text-primary-emphasis\" data-icon=\"badge\"/> "
+"Contul meu"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_dropdown
@@ -142,6 +158,8 @@ msgid ""
 "<i class=\"oi oi-fw me-1 small text-primary-emphasis\" data-"
 "icon=\"grid_view\"/> Apps"
 msgstr ""
+"<i class=\"oi oi-fw me-1 small text-primary-emphasis\" data-"
+"icon=\"grid_view\"/> Aplicații"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_dropdown
@@ -149,6 +167,8 @@ msgid ""
 "<i class=\"oi oi-fw small text-primary-emphasis\" data-icon=\"logout\"/> "
 "Logout"
 msgstr ""
+"<i class=\"oi oi-fw small text-primary-emphasis\" data-icon=\"logout\"/> "
+"Deconectare"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
@@ -183,6 +203,8 @@ msgid ""
 "<span class=\"oi\" data-icon=\"chevron_backward\" role=\"img\" aria-"
 "label=\"Previous\" title=\"Previous\"/>"
 msgstr ""
+"<span class=\"oi\" data-icon=\"chevron_backward\" role=\"img\" aria-"
+"label=\"Anterior\" title=\"Anterior\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.pager
@@ -190,6 +212,8 @@ msgid ""
 "<span class=\"oi\" data-icon=\"chevron_forward\" role=\"img\" aria-"
 "label=\"Next\" title=\"Next\"/>"
 msgstr ""
+"<span class=\"oi\" data-icon=\"chevron_forward\" role=\"img\" aria-"
+"label=\"Următor\" title=\"Următor\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_footer
@@ -214,7 +238,7 @@ msgstr "<span class=\"small me-1 navbar-text\">Sortează după:</span>"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_contact
 msgid "<span class=\"small text-muted\">Your Contact</span>"
-msgstr ""
+msgstr "<span class=\"small text-muted\">Persoana dvs. de contact</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
@@ -248,7 +272,7 @@ msgstr "Avertizare acces"
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Account Details"
-msgstr ""
+msgstr "Detalii cont"
 
 #. module: portal
 #. odoo-python
@@ -312,13 +336,13 @@ msgstr "Deja înregistrat"
 #. odoo-python
 #: code:addons/portal/wizard/portal_share.py:0
 msgid "An email invitation has been sent to the selected users."
-msgstr ""
+msgstr "A fost trimisă o invitație prin e-mail utilizatorilor selectați."
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/interactions/portal_profile_editor.js:0
 msgid "An error occurred while saving your profile."
-msgstr ""
+msgstr "A apărut o eroare la salvarea profilului."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
@@ -349,12 +373,12 @@ msgstr "Adresă de facturare"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
 msgid "Billing addresses"
-msgstr ""
+msgstr "Adrese de facturare"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__category
 msgid "Category"
-msgstr ""
+msgstr "Categorie"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -368,6 +392,9 @@ msgid ""
 "Changing %(field_description)s is not allowed once document(s) have been "
 "issued for your account. Please contact us directly for this operation."
 msgstr ""
+"Modificarea câmpului %(field_description)s nu este permisă după emiterea "
+"documentelor pentru contul dvs. Contactați-ne direct pentru această "
+"operațiune."
 
 #. module: portal
 #. odoo-python
@@ -376,6 +403,8 @@ msgid ""
 "Changing country is not allowed once document(s) have been issued for your "
 "account. Please contact us directly for this operation."
 msgstr ""
+"Modificarea țării nu este permisă după emiterea documentelor pentru contul "
+"dvs. Contactați-ne direct pentru această operațiune."
 
 #. module: portal
 #. odoo-python
@@ -401,7 +430,7 @@ msgstr "Localitate"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "City..."
-msgstr ""
+msgstr "Oraș..."
 
 #. module: portal
 #. odoo-javascript
@@ -421,17 +450,17 @@ msgstr "Închide"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.message_thread
 msgid "Communication History"
-msgstr ""
+msgstr "Istoric comunicări"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "Company"
-msgstr ""
+msgstr "Companie"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__is_config_card
 msgid "Config Card"
-msgstr ""
+msgstr "Card de configurare"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_config_settings
@@ -452,7 +481,7 @@ msgstr "Confirmare parolă"
 #. module: portal
 #: model:portal.entry,name:portal.portal_entry_base
 msgid "Connection & Security"
-msgstr ""
+msgstr "Conexiune și securitate"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -477,7 +506,7 @@ msgstr "Contacte"
 #. odoo-javascript
 #: code:addons/portal/static/src/interactions/portal_security.js:0
 msgid "Copied to clipboard"
-msgstr ""
+msgstr "Copiat în clipboard"
 
 #. module: portal
 #. odoo-javascript
@@ -494,13 +523,13 @@ msgstr "Țară"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "Country..."
-msgstr ""
+msgstr "Țară..."
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/interactions/portal_security.js:0
 msgid "Create Key"
-msgstr ""
+msgstr "Creează cheia"
 
 #. module: portal
 #: model:ir.model,website_form_label:portal.model_res_partner
@@ -532,7 +561,7 @@ msgstr "Chei API client"
 #: model:ir.module.module,shortdesc:base.module_portal
 #: model:ir.module.module,summary:base.module_portal
 msgid "Customer Portal"
-msgstr ""
+msgstr "Portalul clientului"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
@@ -573,7 +602,7 @@ msgstr "Adresă de livrare"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
 msgid "Delivery addresses"
-msgstr ""
+msgstr "Adrese de livrare"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -583,7 +612,7 @@ msgstr "Descriere"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__description
 msgid "Description of Card"
-msgstr ""
+msgstr "Descrierea cardului"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
@@ -616,7 +645,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Discard"
-msgstr ""
+msgstr "Renunță"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_ir_http__display_name
@@ -678,7 +707,7 @@ msgstr "Data expirării"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "Expires"
-msgstr ""
+msgstr "Expiră"
 
 #. module: portal
 #. odoo-javascript
@@ -750,12 +779,12 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "If you want to modify it, update"
-msgstr ""
+msgstr "Dacă doriți să îl modificați, actualizați"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__image
 msgid "Image"
-msgstr ""
+msgstr "Imagine"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -809,7 +838,7 @@ msgstr "Este portalul"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "Key Name — your only way to identify that key"
-msgstr ""
+msgstr "Numele cheii — singurul mod de a identifica această cheie"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__write_uid
@@ -887,7 +916,7 @@ msgstr "Adresele mele"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "Name"
-msgstr ""
+msgstr "Nume"
 
 #. module: portal
 #. odoo-javascript
@@ -928,6 +957,7 @@ msgstr "Numai utilizatorii interni și ai portalului pot crea chei API"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 msgid "Oops! Something went wrong. Try to reload the page and log in."
 msgstr ""
+"Hopa! Ceva n-a mers bine. Încercați să reîncărcați pagina și conectați-vă."
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__partner_ids
@@ -957,7 +987,7 @@ msgstr "Telefon"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__placeholder_count
 msgid "Placeholder Count"
-msgstr ""
+msgstr "Număr de substituenți"
 
 #. module: portal
 #. odoo-javascript
@@ -980,7 +1010,7 @@ msgstr "Adresă URL Portal"
 #. module: portal
 #: model:ir.model,name:portal.model_portal_entry
 msgid "Portal Entry"
-msgstr ""
+msgstr "Acces la portal"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_mixin
@@ -1132,7 +1162,7 @@ msgstr "Documente partajate"
 #. odoo-python
 #: code:addons/portal/wizard/portal_share.py:0
 msgid "Shared successfully"
-msgstr ""
+msgstr "Partajat cu succes"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_ir_ui_view__customize_show
@@ -1142,7 +1172,7 @@ msgstr "Afișați ca moștenire opțională"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__show_in_portal
 msgid "Show in Portal"
-msgstr ""
+msgstr "Afișează în portal"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_sign_in
@@ -1178,7 +1208,7 @@ msgstr "Județ"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "State / Province..."
-msgstr ""
+msgstr "Județ / provincie..."
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__email_state
@@ -1193,7 +1223,7 @@ msgstr "Stradă și număr"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__url
 msgid "Target URL"
-msgstr ""
+msgstr "Adresa URL vizată"
 
 #. module: portal
 #. odoo-javascript
@@ -1205,13 +1235,15 @@ msgstr "Mulțumesc!"
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "The %(field_description)s is managed on your company account."
-msgstr ""
+msgstr "Câmpul %(field_description)s este gestionat în contul companiei dvs."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "The %(field_description)s is managed on your main account address."
 msgstr ""
+"Câmpul %(field_description)s este gestionat la adresa principală a contului "
+"dvs."
 
 #. module: portal
 #. odoo-python
@@ -1241,6 +1273,8 @@ msgstr "Fișierul atașat nu există sau nu aveți drepturile de a-l accesa."
 #: code:addons/portal/controllers/portal.py:0
 msgid "The company billing details can only be updated on the company account."
 msgstr ""
+"Datele de facturare ale companiei pot fi actualizate doar din contul "
+"companiei."
 
 #. module: portal
 #. odoo-python
@@ -1318,6 +1352,8 @@ msgid ""
 "This key won't be shown again. Please copy it and store it securely. Treat "
 "it like a password, it grants full access to your account."
 msgstr ""
+"Această cheie nu va mai fi afișată. Copiați-o și păstrați-o într-un loc "
+"sigur. Tratați-o ca pe o parolă: oferă acces complet la contul dvs."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -1344,13 +1380,13 @@ msgstr ""
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__name
 msgid "Title of Card"
-msgstr ""
+msgstr "Titlul cardului"
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "To login, use the following parameters (Python):"
-msgstr ""
+msgstr "Pentru autentificare, folosiți următorii parametri (Python):"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -1364,6 +1400,8 @@ msgid ""
 "Updating VAT number is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
+"Actualizarea codului TVA nu este permisă după emiterea documentelor pentru "
+"contul dvs. Contactați-ne direct pentru această operațiune."
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__user_id
@@ -1445,7 +1483,7 @@ msgstr "Nu puteți arhiva adresa principală."
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "You cannot edit another user's profile."
-msgstr ""
+msgstr "Nu puteți edita profilul altui utilizator."
 
 #. module: portal
 #. odoo-python
@@ -1457,7 +1495,7 @@ msgstr "Nu puteți lăsa necompletat câmpul parolă."
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 msgid "You must be"
-msgstr ""
+msgstr "Trebuie să fii"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -1474,7 +1512,7 @@ msgstr "Ar trebui să acordați mai întâi portalului accesul partenerului „%
 #. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
 msgid "Your Account"
-msgstr ""
+msgstr "Contul dvs."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_contact
@@ -1490,7 +1528,7 @@ msgstr "Cod poștal"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "e.g. \"Odoo MCP\""
-msgstr ""
+msgstr "de ex. „Odoo MCP”"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
@@ -1501,13 +1539,13 @@ msgstr "v-a invitat să accesați următoarele"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "headers = {"
-msgstr ""
+msgstr "headers = {"
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "import requests"
-msgstr ""
+msgstr "import requests"
 
 #. module: portal
 #. odoo-javascript
@@ -1519,7 +1557,7 @@ msgstr "conectat"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "mcp_key = os.environ[\"ODOO_MCP_KEY\"]"
-msgstr ""
+msgstr "mcp_key = os.environ[\"ODOO_MCP_KEY\"]"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
@@ -1529,19 +1567,19 @@ msgstr "odoo"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__sequence
 msgid "sequence"
-msgstr ""
+msgstr "secvență"
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 msgid "to post a comment."
-msgstr ""
+msgstr "pentru a posta un comentariu."
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "url = \""
-msgstr ""
+msgstr "url = \""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields

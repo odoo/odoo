@@ -17,9 +17,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 17:38+0000\n"
-"PO-Revision-Date: 2026-11-12 15:30+0000\n"
-"Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
+"POT-Creation-Date: 2026-11-20 17:37+0000\n"
+"PO-Revision-Date: 2026-11-19 15:33+0000\n"
+"Last-Translator: \"Cécile Collart (cco)\" <cco@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-20/"
 "point_of_sale/fr/>\n"
 "Language: fr\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -327,6 +327,37 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"></t>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"></t>\n"
+"                    <t t-set=\"tz\" t-"
+"value=\"object.company_id.partner_id.tz\"></t>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"></t>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">Bonjour <t t-"
+"out=\"client_name\">Nom du client</t>,</t>\n"
+"                        <t t-else=\"\">Bonjour,</t>\n"
+"                    </div>\n"
+"                    <br>\n"
+"                    <div>Merci pour votre achat chez <t t-"
+"out=\"store_name\">Nom du magasin</t> !</div>\n"
+"                    <div>Vous trouverez en pièce jointe votre ticket de "
+"caisse pour votre achat du <span><t t-"
+"out=\"format_datetime(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d "
+"MMMM&quot;,                          lang_code=lg) or ''\">date</t> à <t t-"
+"out=\"format_time(time=object.date_order, tz=tz, "
+"time_format='short',                          lang_code=lg)\">heure</t>.</"
+"span>\n"
+"                    </div>\n"
+"                    <br>\n"
+"                    <div>Cordialement,</div>\n"
+"                    <br>\n"
+"                    <t t-out=\"store_name\">Nom du magasin</t>\n"
+"                </div>\n"
+"            "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
@@ -592,7 +623,7 @@ msgstr "? Cliquer sur \"Confirmer\" validera le paiement."
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "A customer is required on the order to create an invoice."
-msgstr ""
+msgstr "Un client doit être associé à la commande pour créer une facture."
 
 #. module: point_of_sale
 #. odoo-python
@@ -605,6 +636,7 @@ msgstr "Un client est requis pour utiliser le mode de paiement %s."
 #: code:addons/point_of_sale/models/pos_payment.py:0
 msgid "A customer must be set on the order to pay with a customer account."
 msgstr ""
+"Un client doit être associé à la commande pour payer avec un compte client."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__uuid
@@ -1751,7 +1783,7 @@ msgstr "Avant 19.1 :"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Bill"
-msgstr ""
+msgstr "Facturer"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_printbill
@@ -1822,7 +1854,7 @@ msgstr "Pains"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Break Combo"
-msgstr ""
+msgstr "Dissocier le combo"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4785,7 +4817,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Info"
-msgstr ""
+msgstr "Info"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_form_view
@@ -9307,7 +9339,7 @@ msgstr "Sélectionnez un client avec une adresse valide."
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
 msgid "Select a journal"
-msgstr ""
+msgstr "Sélectionner un journal"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9343,7 +9375,7 @@ msgstr "Sélectionner le ou les produits à rembourser et définir la quantité"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/select_default_payment_method_popup/select_default_payment_method_popup.xml:0
 msgid "Select your default payment method"
-msgstr ""
+msgstr "Sélectionner votre mode de paiement par défaut"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__attribute_value_ids
@@ -9916,7 +9948,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/loader/loader.js:0
 msgid "Still loading, thank you for your patience…"
-msgstr ""
+msgstr "Chargement en cours, merci de votre patience…"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10560,6 +10592,10 @@ msgid ""
 "to %(total)s because they were changed on another device. The order stays "
 "open until the difference is settled."
 msgstr ""
+"La commande a été validée avec un total de %(paid)s, mais le montant de ses "
+"lignes s'élève désormais à %(total)s, car elles ont été modifiées sur un "
+"autre appareil. La commande reste ouverte jusqu'à ce que la différence soit "
+"réglée."
 
 #. module: point_of_sale
 #. odoo-python
@@ -10593,6 +10629,9 @@ msgid ""
 "payments cannot be posted.\n"
 "Set an outstanding account on it."
 msgstr ""
+"Aucun compte d'attente n'est associé au mode de paiement %(payment_method)s, "
+"ses paiements ne peuvent pas être comptabilisés.\n"
+"Configurez un compte d'attente pour ce mode de paiement."
 
 #. module: point_of_sale
 #. odoo-python
@@ -10610,6 +10649,8 @@ msgid ""
 "The payment method you choose will be linked to your device. You can change "
 "it later from the menu on top right."
 msgstr ""
+"Le mode de paiement que vous choisissez sera associé à votre appareil. Vous "
+"pourrez le modifier ultérieurement depuis le menu en haut à droite."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_available_categ_ids
@@ -10772,6 +10813,11 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_preset.py:0
 msgid "The start time must be before the end time."
 msgstr "L'heure de début doit être antérieure à l'heure de fin."
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "The time at which the POS will post its accounting entries."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11138,6 +11184,12 @@ msgid ""
 msgstr ""
 "Cette ligne de commande a déjà été envoyée en cuisine et ne peut pas être "
 "modifiée."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_payment_method.js:0
+msgid "This payment method is currently in use."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python

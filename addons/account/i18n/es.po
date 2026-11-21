@@ -34,8 +34,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:38+0000\n"
-"PO-Revision-Date: 2026-11-10 15:31+0000\n"
+"POT-Creation-Date: 2026-11-20 17:36+0000\n"
+"PO-Revision-Date: 2026-11-20 14:18+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-20/account/"
 "es/>\n"
@@ -45,7 +45,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -180,7 +180,6 @@ msgstr "Asiento de %(accrual_type)s al %(date)s"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
-#, fuzzy
 msgid "%(action)s for journal %(journal)s"
 msgstr "%(action)s para el diario %(journal)s"
 
@@ -193,29 +192,25 @@ msgstr "%(amount).2f %(currency)s ya pagado."
 #. module: account
 #. odoo-python
 #: code:addons/account/models/product.py:0
-#, fuzzy
 msgid "%(amount)s Excl. Taxes"
 msgstr "%(amount)s impuestos no incluidos"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/product.py:0
-#, fuzzy
 msgid "%(amount)s Incl. Taxes"
 msgstr "%(amount)s impuestos incluidos"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#, fuzzy
 msgid "%(amount)s due %(date)s"
-msgstr "%(amount)s adeudado al %(date)s"
+msgstr "%(amount)s con vencimiento el %(date)s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/ir_attachment.py:0
-#, fuzzy
 msgid ""
 "%(attachment_name)s (detached by %(user)s on %(date)s)%"
 "(attachment_extension)s"
@@ -226,19 +221,17 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#, fuzzy
 msgid ""
 "%(auto_post_name)s auto-posting enabled. Next accounting date: %(move_date)s."
 msgstr ""
 "Publicación automática de %(auto_post_name)s activada. Próxima fecha "
-"contable:%(move_date)s."
+"contable: %(move_date)s."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
-#, fuzzy
 msgid "%(exception)s for %(user)s%(end_datetime_string)s%(reason)s."
-msgstr "%(exception)s para %(user)s%(end_datetime_string)s%(reason)s."
+msgstr "%(exception)s a %(user)s%(end_datetime_string)s%(reason)s."
 
 #. module: account
 #. odoo-python
@@ -252,9 +245,8 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#, fuzzy
 msgid "%(label)s at %(currency_amount)s"
-msgstr "%(label)s en %(currency_amount)s"
+msgstr "%(label)s a %(currency_amount)s"
 
 #. module: account
 #. odoo-python
@@ -278,90 +270,78 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
-#, fuzzy
 msgid "%(name)s installment #%(number)s"
-msgstr "%(name)s cuota #%(number)s"
+msgstr "%(name)s cuota n.º %(number)s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#, fuzzy
 msgid "%(name)s%(ref)s at %(currency_amount)s"
-msgstr "%(name)s%(ref)s en %(currency_amount)s"
+msgstr "%(name)s%(ref)s a %(currency_amount)s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#, fuzzy
 msgid "%(partner_name)s has reached its credit limit of: %(credit_limit)s"
-msgstr "%(partner_name)s llegó al crédito concedido de: %(credit_limit)s"
+msgstr ""
+"%(partner_name)s ha alcanzado su límite de crédito de: %(credit_limit)s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account_tag.py:0
-#, fuzzy
 msgid "%(tag)s (%(country_code)s)"
 msgstr "%(tag)s (%(country_code)s)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#, fuzzy
 msgid "%(tax_name)s (rounding)"
 msgstr "%(tax_name)s (redondeo)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
-#, fuzzy
 msgid "%<span class=\"px-3\"/>("
 msgstr "%<span class=\"px-3\"/>("
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
-#, fuzzy
 msgid "%d moves"
 msgstr "%d movimientos"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#, fuzzy
 msgid "%s - private part"
 msgstr "%s - parte privada"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#, fuzzy
 msgid "%s - private part (taxes)"
 msgstr "%s - parte privada (impuestos)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/sequence_mixin.py:0
-#, fuzzy
 msgid "%s is not a stored field"
-msgstr "%s no es un campo guardado"
+msgstr "%s no es un campo almacenado"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/partner.py:0
-#, fuzzy
 msgid "%s taxes"
 msgstr "%s impuestos"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
-#, fuzzy
 msgid "'%(filename)s' (extracted from '%(root_filename)s', type=%(type)s)"
 msgstr "'%(filename)s' (extraído de '%(root_filename)s', tipo = %(type)s)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
-#, fuzzy
 msgid "'%(filename)s' (type=%(type)s)"
 msgstr "'%(filename)s' (tipo = %(type)s)"
 
@@ -383,33 +363,28 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_block_payment
-#, fuzzy
 msgid "(Un)Block Payment"
 msgstr "Desbloquear/Bloquear pago"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
-#, fuzzy
 msgid "(from"
-msgstr "(de"
+msgstr "(desde"
 
 #. module: account
 #: model:ir.actions.report,print_report_name:account.account_invoices
 #: model:ir.actions.report,print_report_name:account.account_invoices_without_payment
-#, fuzzy
 msgid "(object._get_report_base_filename())"
 msgstr "(object._get_report_base_filename())"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
-#, fuzzy
 msgid "- %(name)s in %(company)s"
 msgstr "- %(name)s de %(company)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-#, fuzzy
 msgid ""
 "- A rounding per tax is advised if your prices are tax-excluded. This "
 "minimizes cumulative rounding errors because it totals all unrounded tax "
@@ -418,9 +393,9 @@ msgid ""
 "- A rounding per line is advised if your prices are tax-included. That way, "
 "the sum of line subtotal equals the total with taxes."
 msgstr ""
-"- Se recomienda redondear por impuesto si los precios no incluyen impuestos. "
+"- Se recomienda redondear por impuesto si tus precios no incluyen impuestos. "
 "Esto reduce los errores de redondeo acumulados, ya que primero suma todos "
-"los importes de impuestos sin redondear y solo redondea el total de "
+"los importes de impuestos sin redondear y solo redondea el total final de "
 "impuestos una vez."
 "\\n                                                                                                                                                                                "
 "- Se recomienda redondear por línea si los precios incluyen impuestos. De "
@@ -429,25 +404,21 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_kanban
-#, fuzzy
 msgid "- Ending"
 msgstr "- Final"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#, fuzzy
 msgid "- Installment of"
 msgstr "- Cuota de"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
-#, fuzzy
 msgid "-> View partially reconciled entries"
 msgstr "-> Ver apuntes parcialmente conciliados"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.email_template_mail_gateway_failed
-#, fuzzy
 msgid ""
 ".\n"
 "    <br/>\n"
@@ -461,31 +432,27 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
-#, fuzzy
 msgid ""
 ". The journal entries need to be computed by Odoo before being posted in "
 "your company's currency."
 msgstr ""
-". Odoo debe calcular los asientos contables antes de contabilizarlas en la "
-"moneda de su empresa."
+". Odoo debe calcular los asientos contables antes de contabilizarlos en la "
+"moneda de tu empresa."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
-#, fuzzy
 msgid ". You might want to put a higher number here."
-msgstr ". Es posible que desee poner un número más alto aquí."
+msgstr ". Es posible que quieras poner un número más alto aquí."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_resequence.py:0
-#, fuzzy
 msgid "... (%(nb_of_values)s other)"
-msgstr "... (%(nb_of_values)s otro(s))"
+msgstr "... (%(nb_of_values)s otros)"
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/x2many_buttons/x2many_buttons.xml:0
-#, fuzzy
 msgid "... (View all)"
 msgstr "... (Ver todo)"
 
@@ -501,87 +468,73 @@ msgstr "Importaciones del 0 %"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30_days_end_month_the_10
-#, fuzzy
 msgid "10 Days after End of Next Month"
 msgstr "10 días después del fin del siguiente mes"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
-#, fuzzy
 msgid "100.00 USD"
 msgstr "100,00 USD"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
-#, fuzzy
 msgid "15 Days"
 msgstr "15 días"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30days_early_discount
-#, fuzzy
 msgid "2/7 Net 30"
-msgstr "2/7 Neto 30"
+msgstr "2/7 neto 30"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_21days
-#, fuzzy
 msgid "21 Days"
-msgstr "21 Días"
+msgstr "21 días"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
-#, fuzzy
 msgid "25.0 USD"
 msgstr "25,00 USD"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
-#, fuzzy
 msgid "25.00 USD"
 msgstr "25,00 USD"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30days
-#, fuzzy
 msgid "30 Days"
 msgstr "30 días"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance
-#, fuzzy
 msgid "30% Advance End of Following Month"
 msgstr "30 % de anticipo al final del siguiente mes"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance_60days
-#, fuzzy
 msgid "30% Now, Balance 60 Days"
-msgstr "30% ahora, el resto en 60 días"
+msgstr "30 % ahora, el resto en 60 días"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_45days
-#, fuzzy
 msgid "45 Days"
 msgstr "45 días"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
-#, fuzzy
 msgid "50 USD"
 msgstr "50 USD"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
-#, fuzzy
 msgid "50.00 EUR"
 msgstr "50,00 EUR"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_90days_on_the_10th
-#, fuzzy
 msgid "90 days, on the 10th"
-msgstr "90 días, en el día 10"
+msgstr "90 días, el día 10"
 
 #. module: account
 #. odoo-python
@@ -597,7 +550,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document_preview
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_wizard_preview_inherit_account
-#, fuzzy
 msgid "<br/> on this account:"
 msgstr "<br/> en esta cuenta:"
 
@@ -674,10 +626,10 @@ msgstr ""
 "''\">SUB003</t>)\n"
 "                </t>\n"
 "                por un importe de <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">"
-"143.750,00 €</span>\n"
-"                from <t t-out=\"object.company_id.name or ''\">TuEmpresa</t>"
-".\n"
+"out=\"format_amount(object.amount_total, object.currency_id) or "
+"''\">143.750,00 €</span>\n"
+"                from <t t-out=\"object.company_id.name or ''\">TuEmpresa</"
+"t>.\n"
 "                <br><br>\n"
 "                No dudes en ponerte en contacto con nosotros si tienes "
 "alguna pregunta.\n"
@@ -781,12 +733,12 @@ msgstr ""
 "            factura\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (con referencia: <t t-out=\"object.invoice_origin or ''\">"
-"SUB003</t>)\n"
+"            (con referencia: <t t-out=\"object.invoice_origin or "
+"''\">SUB003</t>)\n"
 "        </t>\n"
 "        por un importe de <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">"
-"143.750,00 €</span>\n"
+"out=\"format_amount(object.amount_total, object.currency_id) or "
+"''\">143.750,00 €</span>\n"
 "        de <t t-out=\"object.company_id.name or ''\">TuEmpresa</t>.\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "            Esta factura ya está pagada.\n"
@@ -892,12 +844,12 @@ msgstr ""
 "            factura de autofacturación\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (con referencia: <t t-out=\"object.invoice_origin or ''\">"
-"SUB003</t>)\n"
+"            (con referencia: <t t-out=\"object.invoice_origin or "
+"''\">SUB003</t>)\n"
 "        </t>\n"
 "        por un importe de <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">"
-"143.750,00 €</span>\n"
+"out=\"format_amount(object.amount_total, object.currency_id) or "
+"''\">143.750,00 €</span>\n"
 "        de <t t-out=\"object.company_id.name or ''\">TuEmpresa</t>.\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "            Esta factura de autofacturación ya está pagada.\n"
@@ -975,12 +927,12 @@ msgstr ""
 "            factura rectificativa\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (con referencia: <t t-out=\"object.invoice_origin or ''\">"
-"SUB003</t>)\n"
+"            (con referencia: <t t-out=\"object.invoice_origin or "
+"''\">SUB003</t>)\n"
 "        </t>\n"
 "        por un importe de <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">"
-"143.750,00 €</span>\n"
+"out=\"format_amount(object.amount_total, object.currency_id) or "
+"''\">143.750,00 €</span>\n"
 "        de <t t-out=\"object.company_id.name or ''\">TuEmpresa</t>.\n"
 "        <br><br>\n"
 "        No dudes en ponerte en contacto con nosotros si tienes alguna "
@@ -1028,8 +980,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Estimado <t t-out=\"object.partner_id.name or ''\">Azure Interior</t>"
-"<br>:<br>\n"
+"        Estimado <t t-out=\"object.partner_id.name or ''\">Azure Interior</"
+"t><br>:<br>\n"
 "        <t t-if=\"object.partner_type == 'customer' and object.payment_type "
 "== 'outbound'\">Hemos procesado el reembolso de</t>\n"
 "        <t t-elif=\"object.partner_type == 'supplier' and "
@@ -1039,8 +991,8 @@ msgstr ""
 "        <t t-else=\"\">Gracias por el pago de</t> <span style=\"font-"
 "weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or "
 "''\">10,00 €</span>.\n"
-"        Consulta la <t t-out=\"object.payment_receipt_title.lower()\">"
-"factura simplificada</t> <span t-if=\"object.name\" style=\"font-"
+"        Consulta la <t t-out=\"object.payment_receipt_title.lower()"
+"\">factura simplificada</t> <span t-if=\"object.name\" style=\"font-"
 "weight:bold;\" t-out=\"object.name.replace('/','-')\">BNK1-2021-05-0002</"
 "span> de <t t-out=\"object.company_id.name or ''\">TuEmpresa</t>.\n"
 "        <br><br>\n"
@@ -1057,9 +1009,8 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
-#, fuzzy
 msgid "<em>Draft Invoice</em>"
-msgstr "<em>Borrador de factura </em>"
+msgstr "<em>Borrador de factura</em>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -1201,7 +1152,6 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_kanban
-#, fuzzy
 msgid ""
 "<span class=\"badge rounded-pill text-bg-info\">\n"
 "                                        To Review\n"
@@ -1245,7 +1195,6 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
-#, fuzzy
 msgid ""
 "<span class=\"o_form_label mx-3 oe_edit_only text-center\" style=\"width: "
 "6ch;\" invisible=\"state != 'draft' or invoice_payment_term_id\">or</span>"
@@ -1255,7 +1204,6 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
-#, fuzzy
 msgid ""
 "<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
 "'fixed'\">%</span>"
@@ -1265,7 +1213,6 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
-#, fuzzy
 msgid ""
 "<span class=\"o_form_label\" invisible=\"match_amount != 'between'\">and</"
 "span>"
@@ -1274,7 +1221,6 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
-#, fuzzy
 msgid "<span class=\"o_form_label\">Changed Lock Date:</span>"
 msgstr "<span class=\"o_form_label\">Fecha de bloqueo modificada:</span>"
 
@@ -1297,7 +1243,6 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
-#, fuzzy
 msgid ""
 "<span class=\"o_stat_text\">\n"
 "                                        Audit\n"
@@ -1309,7 +1254,6 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
-#, fuzzy
 msgid ""
 "<span class=\"o_stat_text\">\n"
 "                                        Balance\n"
@@ -1321,7 +1265,6 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
-#, fuzzy
 msgid ""
 "<span class=\"o_stat_text\">\n"
 "                                        Taxes\n"
@@ -1333,7 +1276,6 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
-#, fuzzy
 msgid ""
 "<span class=\"o_stat_text\">\n"
 "                                    Taxes\n"
@@ -1345,25 +1287,21 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
-#, fuzzy
 msgid "<span class=\"o_stat_text\">1 Payment</span>"
 msgstr "<span class=\"o_stat_text\">1 pago</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
-#, fuzzy
 msgid "<span class=\"o_stat_text\">Cash Basis Entries</span>"
 msgstr "<span class=\"o_stat_text\">Asientos del criterio de caja</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
-#, fuzzy
 msgid "<span class=\"o_stat_text\">Invoiced</span>"
 msgstr "<span class=\"o_stat_text\">Facturado</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
-#, fuzzy
 msgid "<span class=\"o_stat_text\">Journal Entry</span>"
 msgstr "<span class=\"o_stat_text\">Asiento contable</span>"
 
@@ -1375,19 +1313,16 @@ msgstr "<span class=\"o_stat_text\">Apuntes contables</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
-#, fuzzy
 msgid "<span class=\"o_stat_text\">Reconciled Items</span>"
 msgstr "<span class=\"o_stat_text\">Apuntes conciliados</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
-#, fuzzy
 msgid "<span class=\"o_stat_text\">Transaction</span>"
 msgstr "<span class=\"o_stat_text\">Transacción</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_secure_entries_wizard
-#, fuzzy
 msgid ""
 "<span class=\"text-muted ms-2\">\n"
 "                                <i>inclusive, to make them immutable</i>\n"
@@ -1400,19 +1335,17 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_secure_entries_wizard
-#, fuzzy
 msgid ""
 "<span class=\"text-muted\">\n"
 "                                <i>Secure entries up to</i>\n"
 "                            </span>"
 msgstr ""
 "<span class=\"text-muted\">\n"
-"                                <i>Proteja los asientos hasta</i>\n"
+"                                <i>Protege los asientos hasta</i>\n"
 "                            </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
-#, fuzzy
 msgid ""
 "<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">11,750.00</"
 "span></span>"
@@ -1422,7 +1355,6 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
-#, fuzzy
 msgid ""
 "<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">19,250.00</"
 "span></span>"
@@ -1432,7 +1364,6 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
-#, fuzzy
 msgid ""
 "<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">7,500.00</"
 "span></span>"
@@ -1442,13 +1373,11 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
-#, fuzzy
 msgid "<span class=\"text-nowrap\">1,500.00</span>"
 msgstr "<span class=\"text-nowrap\">1.500,00</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
-#, fuzzy
 msgid "<span class=\"text-nowrap\">2,350.00</span>"
 msgstr "<span class=\"text-nowrap\">2.350,00</span>"
 
@@ -1463,31 +1392,26 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
-#, fuzzy
 msgid "<span invisible=\"nb_unmodified_bills &lt; 10\">10+</span>"
 msgstr "<span invisible=\"nb_unmodified_bills &lt; 10\">Más de 10</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_repartition_line_kanban
-#, fuzzy
 msgid "<span invisible=\"not account_id\">on</span>"
 msgstr "<span invisible=\"not account_id\">en</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
-#, fuzzy
 msgid "<span invisible=\"not early_discount\"> % if paid within </span>"
 msgstr "<span invisible=\"not early_discount\"> % si se paga en </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
-#, fuzzy
 msgid "<span invisible=\"not early_discount\"> days</span>"
 msgstr "<span invisible=\"not early_discount\"> días</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
-#, fuzzy
 msgid ""
 "<span invisible=\"reconciled_invoices_type != 'invoice'\"> Invoice</span>\n"
 "                                        <span "
@@ -1500,97 +1424,74 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_repartition_line_kanban
-#, fuzzy
 msgid "<span invisible=\"repartition_type == 'base'\">%</span>"
 msgstr "<span invisible=\"repartition_type == 'base'\">%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
-#, fuzzy
 msgid "<span invisible=\"user_id\">everyone</span>"
 msgstr "<span invisible=\"user_id\">todos</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-#, fuzzy
 msgid "<span role=\"separator\">New</span>"
 msgstr "<span role=\"separator\">Nuevo</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-#, fuzzy
 msgid "<span role=\"separator\">Reconciliation</span>"
 msgstr "<span role=\"separator\">Conciliación</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-#, fuzzy
 msgid "<span role=\"separator\">View</span>"
 msgstr "<span role=\"separator\">Ver</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
-#, fuzzy
 msgid "<span> (CR)</span>"
-msgstr "<span> (Crédito)</span>"
+msgstr "<span> (Haber)</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
-#, fuzzy
 msgid "<span> (DR)</span>"
-msgstr "<span> (Débito)</span>"
+msgstr "<span> (Debe)</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
-#, fuzzy
 msgid "<span> Bill</span>"
 msgstr "<span> Factura</span>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
-msgid ""
-"<span> already exists for this period. Posting this entry will replace it.</"
-"span>"
-msgstr ""
-"<span> ya existe para este período. Al registrar este asiento se reemplazará."
-"</span>"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#, fuzzy
 msgid "<span> due on </span>"
-msgstr "<span> vence el</span>"
+msgstr "<span> vence el </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
-#, fuzzy
 msgid "<span> on </span>"
 msgstr "<span> en </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
-#, fuzzy
 msgid "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
 msgstr "<span><span class=\"oe_currency_value\">19.250,00</span> €</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
-#, fuzzy
 msgid "<span>5.00</span>"
 msgstr "<span>5,00</span>"
 
 #. module: account
 #: model_terms:web_tour.tour,rainbow_man_message:account.account_tour
-#, fuzzy
 msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
 msgstr ""
-"<span><b>¡Buen trabajo!</b> Pasó por todos los pasos de este recorrido.</"
-"span>"
+"<span><b>¡Buen trabajo!</b> Has completado todos los pasos de este recorrido."
+"</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
-#, fuzzy
 msgid "<span>Amount In Currency</span>"
 msgstr "<span>Importe en moneda</span>"
 
@@ -1598,55 +1499,42 @@ msgstr "<span>Importe en moneda</span>"
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
-#, fuzzy
 msgid "<span>Amount</span>"
 msgstr "<span>Importe</span>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
-msgid "<span>An accrual entry of </span>"
-msgstr "<span>Un asiento de periodificación de </span>"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-#, fuzzy
 msgid "<span>Balance</span>"
 msgstr "<span>Saldo</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#, fuzzy
 msgid "<span>Description</span>"
 msgstr "<span>Descripción</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#, fuzzy
 msgid "<span>Disc.%</span>"
-msgstr "<span>Desc.%</span>"
+msgstr "<span>Dto.%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
-#, fuzzy
 msgid "<span>Draft</span>"
 msgstr "<span>Borrador</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
-#, fuzzy
 msgid "<span>Invoice Date</span>"
 msgstr "<span>Fecha de factura</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
-#, fuzzy
 msgid "<span>Invoice Number</span>"
 msgstr "<span>Número de factura</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-#, fuzzy
 msgid "<span>New</span>"
 msgstr "<span>Nuevo</span>"
 
@@ -1657,168 +1545,139 @@ msgstr "<span>No sujeto a IVA</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-#, fuzzy
 msgid "<span>Operations</span>"
 msgstr "<span>Operaciones</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#, fuzzy
 msgid "<span>Quantity</span>"
 msgstr "<span>Cantidad</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
-#, fuzzy
 msgid "<span>Reference</span>"
 msgstr "<span>Referencia</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-#, fuzzy
 msgid "<span>Reporting</span>"
 msgstr "<span>Informes</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
-#, fuzzy
 msgid "<span>Tax 0%</span>"
 msgstr "<span>Impuesto 0 %</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#, fuzzy
 msgid "<span>Taxes</span>"
 msgstr "<span>Impuestos</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
-#, fuzzy
 msgid "<span>This document might be a duplicate of</span>"
 msgstr "<span>Puede que este documento sea un duplicado de</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
-#, fuzzy
 msgid ""
 "<span>This entry has been generated through the Invoicing app, before "
 "installing Accounting. Its balance has been imported separately.</span>"
 msgstr ""
-"<span>Este asiento se ha generado a través de la aplicación *Facturación*, "
-"antes de instalar *Contabilidad*. Su saldo se ha importado por separado.</"
-"span>"
+"<span>Este asiento se ha generado a través de la aplicación Facturación, "
+"antes de instalar Contabilidad. Su saldo se ha importado por separado.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
-#, fuzzy
 msgid "<span>This is a preview of your Terms &amp; Conditions.</span>"
-msgstr "<span>Esta es una vista previa de sus Términos y condiciones.</span>"
+msgstr "<span>Esta es una vista previa de tus Términos y condiciones.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
-#, fuzzy
 msgid "<span>This payment has the same partner, amount and date as </span>"
-msgstr ""
-"<span>Este pago tiene el mismo contacto, la misma cantidad y fecha que </"
-"span>"
+msgstr "<span>Este pago tiene el mismo contacto, importe y fecha que </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#, fuzzy
 msgid "<span>Unit Price</span>"
 msgstr "<span>Precio unitario</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-#, fuzzy
 msgid "<span>View</span>"
 msgstr "<span>Ver</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#, fuzzy
 msgid "<strong class=\"d-block mt-3\">Shipping Address</strong>"
 msgstr "<strong class=\"d-block mt-3\">Dirección de envío</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#, fuzzy
 msgid "<strong>Credit Note Date</strong>"
 msgstr "<strong>Fecha de la factura rectificativa</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#, fuzzy
 msgid "<strong>Customer Code</strong>"
 msgstr "<strong>Código de cliente</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#, fuzzy
 msgid "<strong>Date</strong>"
 msgstr "<strong>Fecha</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#, fuzzy
 msgid "<strong>Delivery Date</strong>"
 msgstr "<strong>Fecha de entrega</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
-#, fuzzy
 msgid "<strong>Due Date:</strong>"
 msgstr "<strong>Fecha de vencimiento:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#, fuzzy
 msgid "<strong>Due Date</strong>"
 msgstr "<strong>Fecha de vencimiento</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
-#, fuzzy
 msgid "<strong>Ending Balance</strong>"
 msgstr "<strong>Saldo de cierre</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#, fuzzy
 msgid "<strong>Incoterm</strong>"
 msgstr "<strong>Incoterm</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
-#, fuzzy
 msgid "<strong>Invoice Date:</strong>"
 msgstr "<strong>Fecha de factura:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#, fuzzy
 msgid "<strong>Invoice Date</strong>"
 msgstr "<strong>Fecha de factura</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#, fuzzy
 msgid "<strong>Receipt Date</strong>"
 msgstr "<strong>Fecha de recepción</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#, fuzzy
 msgid "<strong>Reference</strong>"
 msgstr "<strong>Referencia</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#, fuzzy
 msgid "<strong>Source</strong>"
 msgstr "<strong>Origen</strong>"
 
@@ -1829,13 +1688,11 @@ msgstr "<strong>Saldo inicial</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
-#, fuzzy
 msgid "<strong>Subtotal</strong>"
 msgstr "<strong>Subtotal</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#, fuzzy
 msgid "<strong>Taxable Supply</strong>"
 msgstr "<strong>Entrega sujeta a impuestos</strong>"
 
@@ -1843,19 +1700,16 @@ msgstr "<strong>Entrega sujeta a impuestos</strong>"
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
-#, fuzzy
 msgid "<strong>Total</strong>"
 msgstr "<strong>Total</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_account_kanban
-#, fuzzy
 msgid "<strong>Type: </strong>"
 msgstr "<strong>Tipo: </strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_currency_form_inherit
-#, fuzzy
 msgid "<strong>WARNING - This change is irreversible</strong>"
 msgstr "<strong>AVISO - Este cambio es irreversible</strong>"
 
@@ -2010,8 +1864,8 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-family:Verdana, Arial,sans-"
 "serif; color: #454748;\">\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-"
-"top: 16px; background-color: #F1F1F1; width: 100%; border-"
-"collapse:separate;\">\n"
+"top: 16px; background-color: #F1F1F1; width: 100%; border-collapse:separate;"
+"\">\n"
 "        <tr>\n"
 "            <td align=\"center\">\n"
 "                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
@@ -2026,14 +1880,14 @@ msgstr ""
 "                                    <td align=\"left\" style=\"padding-left: "
 "16px;\">\n"
 "                                        ¡Has recibido <t t-"
-"if=\"invoice_count &gt; 1\">nuevas facturas electrónicas</t><t t-else=\"\">"
-"una nueva factura electrónica!</t>\n"
+"if=\"invoice_count &gt; 1\">nuevas facturas electrónicas</t><t t-"
+"else=\"\">una nueva factura electrónica!</t>\n"
 "                                    </td>\n"
 "                                    <td align=\"right\" style=\"padding-"
 "right: 16px;\">\n"
 "                                        <img alt=\"Odoo\" src=\"/web/static/"
-"img/logo_inverse_white_206px.png\" style=\"height: 2em; object-fit: "
-"contain;\" class=\"align-baseline w-auto\">\n"
+"img/logo_inverse_white_206px.png\" style=\"height: 2em; object-fit: contain;"
+"\" class=\"align-baseline w-auto\">\n"
 "                                    </td>\n"
 "                                </tr>\n"
 "                            </table>\n"
@@ -2060,8 +1914,8 @@ msgstr ""
 "                                        </h3>\n"
 "                                        <p style=\"margin-top: 12px;\">\n"
 "                                            ¡Has recibido <t t-"
-"if=\"invoice_count &gt; 1\">nuevas facturas electrónicas</t><t t-else=\"\">"
-"una nueva factura electrónica</t>!\n"
+"if=\"invoice_count &gt; 1\">nuevas facturas electrónicas</t><t t-"
+"else=\"\">una nueva factura electrónica</t>!\n"
 "                                        </p>\n"
 "                                        <t t-set=\"MAX_INVOICES_TO_DISPLAY\" "
 "t-value=\"5\"></t>\n"
@@ -2085,11 +1939,11 @@ msgstr ""
 "                                                    <span style=\"font-"
 "weight:bold;\">Proveedor:</span> <t t-out=\"inv.partner_id.name\"></t><br>\n"
 "                                                </t>\n"
-"                                                <t t-if=\"inv.amount_total\">"
-"\n"
+"                                                <t t-"
+"if=\"inv.amount_total\">\n"
 "                                                    <span style=\"font-"
-"weight:bold;\">Importe:</span> <t t-out=\"inv.amount_total\" t-options=\""
-"{'widget': 'monetary', 'display_currency': inv.currency_id or "
+"weight:bold;\">Importe:</span> <t t-out=\"inv.amount_total\" t-"
+"options=\"{'widget': 'monetary', 'display_currency': inv.currency_id or "
 "object.company_id.currency_id}\"></t><br>\n"
 "                                                </t>\n"
 "                                                <t t-"
@@ -2105,11 +1959,11 @@ msgstr ""
 "padding-top: 24px;\">\n"
 "                                            <a t-if=\"invoice_count != 1\" t-"
 "attf-href=\"/odoo/accounting/action-"
-"account.action_account_moves_email_preview?active_ids={{ "
-"invoice_preview_ids }}\" target=\"_blank\" t-attf-style=\"padding: 12px "
-"24px; font-size: 14px; font-weight: bold; color: #FFFFFF; text-decoration: "
-"none !important; background-color: #008384; border-radius:3px; display: "
-"inline-block;\">\n"
+"account.action_account_moves_email_preview?"
+"active_ids={{ invoice_preview_ids }}\" target=\"_blank\" t-attf-"
+"style=\"padding: 12px 24px; font-size: 14px; font-weight: bold; color: "
+"#FFFFFF; text-decoration: none !important; background-color: #008384; border-"
+"radius:3px; display: inline-block;\">\n"
 "                                               Ver facturas\n"
 "                                            </a>\n"
 "                                            <a t-else=\"\" t-attf-href=\"/"
@@ -2388,16 +2242,16 @@ msgstr ""
 "border-radius:16px; overflow:hidden; box-shadow:0 20px 45px rgba(56, 37, 60, "
 "0.12);\">\n"
 "                    <tr>\n"
-"                        <td colspan=\"2\" style=\"background:linear-gradient"
-"(140deg,#714B67 0%,#8a6381 55%,#bfa8c2 100%); color:#ffffff; padding:38px;\">"
-"\n"
+"                        <td colspan=\"2\" style=\"background:linear-"
+"gradient(140deg,#714B67 0%,#8a6381 55%,#bfa8c2 100%); color:#ffffff; "
+"padding:38px;\">\n"
 "                            <table cellpadding=\"0\" cellspacing=\"0\" "
 "border=\"0\" style=\"width:100%;\">\n"
 "                                <tr>\n"
 "                                    <td style=\"font-size:13px; letter-"
 "spacing:0.3px; text-transform:uppercase; opacity:0.78;\">\n"
-"                                        <t t-if=\"object.is_sale_document"
-"(include_receipts=True)\">Factura emitida</t>\n"
+"                                        <t t-"
+"if=\"object.is_sale_document(include_receipts=True)\">Factura emitida</t>\n"
 "                                        <t t-else=\"\">Factura recibida</t>\n"
 "                                    </td>\n"
 "                                    <td align=\"right\">\n"
@@ -2408,8 +2262,8 @@ msgstr ""
 "                                </tr>\n"
 "                                <tr>\n"
 "                                    <td colspan=\"2\" style=\"padding-"
-"top:22px; font-size:26px; line-height:1.45; font-weight:600; "
-"color:#ffffff;\">\n"
+"top:22px; font-size:26px; line-height:1.45; font-weight:600; color:#ffffff;"
+"\">\n"
 "                                        Nueva factura en <t t-"
 "out=\"object.journal_id.display_name\"></t>\n"
 "                                    </td>\n"
@@ -2439,8 +2293,8 @@ msgstr ""
 "                                                <td style=\"padding:24px "
 "26px;\">\n"
 "                                                    <div style=\"font-"
-"size:12px; color:#8d7a92; text-transform:uppercase; letter-spacing:0.45px;\">"
-"Documento</div>\n"
+"size:12px; color:#8d7a92; text-transform:uppercase; letter-spacing:0.45px;"
+"\">Documento</div>\n"
 "                                                    <div style=\"margin-"
 "top:8px; font-size:20px; font-weight:600; color:#2c2431; word-break:break-"
 "word;\">\n"
@@ -2457,8 +2311,8 @@ msgstr ""
 "                                                    <td style=\"padding:24px "
 "26px; border-left:1px solid #efe6f3;\" align=\"right\">\n"
 "                                                        <div style=\"font-"
-"size:12px; color:#8d7a92; text-transform:uppercase; letter-spacing:0.45px;\">"
-"Total</div>\n"
+"size:12px; color:#8d7a92; text-transform:uppercase; letter-spacing:0.45px;"
+"\">Total</div>\n"
 "                                                        <div style=\"margin-"
 "top:8px; font-size:22px; font-weight:600; color:#2c2431;\">\n"
 "                                                            <t t-"
@@ -2477,8 +2331,8 @@ msgstr ""
 "                                            <tr>\n"
 "                                                <td style=\"padding:0;\">\n"
 "                                                    <div "
-"style=\"display:flex; flex-wrap:wrap; gap:12px; justify-content:flex-"
-"start;\">\n"
+"style=\"display:flex; flex-wrap:wrap; gap:12px; justify-content:flex-start;"
+"\">\n"
 "                                                        <t t-"
 "if=\"object.partner_id\">\n"
 "                                                            <div "
@@ -2568,13 +2422,14 @@ msgstr ""
 "incluidos:</strong> adjuntamos los documentos originales como referencia.\n"
 "                            </div>\n"
 "\n"
-"                            <div style=\"margin-top:32px; text-"
-"align:center;\" t-if=\"object.move_type != 'in_invoice'\">\n"
-"                                <a t-if=\"portal_url\" t-attf-href=\"{{ "
-"portal_url }}\" style=\"display:inline-block; margin:0 10px 14px; "
-"padding:13px 30px; min-width:210px; background:linear-gradient"
-"(135deg,#714B67 0%,#9b77a3 100%); color:#FFFFFF; text-decoration:none; "
-"border-radius:12px; font-weight:600; font-size:14px;\" target=\"_blank\">\n"
+"                            <div style=\"margin-top:32px; text-align:center;"
+"\" t-if=\"object.move_type != 'in_invoice'\">\n"
+"                                <a t-if=\"portal_url\" t-attf-"
+"href=\"{{ portal_url }}\" style=\"display:inline-block; margin:0 10px 14px; "
+"padding:13px 30px; min-width:210px; background:linear-"
+"gradient(135deg,#714B67 0%,#9b77a3 100%); color:#FFFFFF; text-"
+"decoration:none; border-radius:12px; font-weight:600; font-size:14px;\" "
+"target=\"_blank\">\n"
 "                                    Ver en el portal\n"
 "                                </a>\n"
 "                            </div>\n"
@@ -2605,21 +2460,19 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#, fuzzy
 msgid "@From: %(email)s"
 msgstr "@De: %(email)s"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_view_bank_statement_tree
-#, fuzzy
 msgid ""
 "A Cash Register allows you to manage cash entries in your cash\n"
 "                journals. This feature provides an easy way to follow up "
 "cash\n"
 "                payments on a daily basis."
 msgstr ""
-"Una caja registradora le permite gestionar asientos de caja en sus diarios\n"
-"                de caja. Esta función le proporciona una forma sencilla de "
+"Una caja registradora te permite gestionar asientos de caja en tus diarios\n"
+"                de caja. Esta función te proporciona una forma sencilla de "
 "llevar el seguimiento de pagos\n"
 "                en efectivo diariamente."
 
@@ -2630,7 +2483,6 @@ msgstr "El nombre del grupo del libro mayor debe ser único."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_defaults
-#, fuzzy
 msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
@@ -2641,35 +2493,31 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
-#, fuzzy
 msgid "A bank account can belong to only one journal."
-msgstr "Una cuenta bancaria sólo puede pertenecer a un diario."
+msgstr "Una cuenta bancaria solo puede pertenecer a un diario."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
-#, fuzzy
 msgid ""
 "A bank account with Account Number %(number)s already exists for Partner %"
 "(partner)s, but is archived. Please unarchive it instead."
 msgstr ""
 "Ya existe una cuenta bancaria con el número de cuenta %(number)s para el "
-"contacto %(partner)s, pero está archivada. Desarchívela."
+"contacto %(partner)s, pero está archivada. Desarchívala."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
-#, fuzzy
 msgid ""
 "A bank statement is a summary of all financial transactions\n"
 "                occurring over a given period of time on a bank account. "
 "You\n"
 "                should receive this periodically from your bank."
 msgstr ""
-"Un estado de cuenta bancario es un resumen de todas sus transacciones "
-"financieras\n"
-"                que ocurren en un periodo de tiempo en una cuenta bancaria. "
-"Debe\n"
-"                recibirlo de forma periódica."
+"Un extracto bancario es un resumen de todas las transacciones financieras\n"
+"                que se producen durante un periodo de tiempo determinado en "
+"una cuenta bancaria. Deberías\n"
+"                recibirlo de forma periódica en tu banco."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__clearing_number
@@ -2685,7 +2533,6 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_credit_statement_tree
-#, fuzzy
 msgid ""
 "A credit statement is a summary of all financial transactions\n"
 "                occurring over a given period of time on a credit account. "
@@ -2693,8 +2540,9 @@ msgid ""
 "                should receive this periodically from your bank."
 msgstr ""
 "Un extracto de crédito es un resumen de todas las transacciones financieras\n"
-"                que ocurren en un periodo en una cuenta de crédito. Debería\n"
-"                recibirlo periódicamente por parte de su banco."
+"                que se producen durante un periodo de tiempo determinado en "
+"una cuenta de crédito. Deberías\n"
+"                recibirlo periódicamente por parte de tu banco."
 
 #. module: account
 #. odoo-python
@@ -2704,7 +2552,6 @@ msgstr "Ya existe en este país una posición fiscal con un NIF extranjero."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
-#, fuzzy
 msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
@@ -2714,35 +2561,31 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
-#, fuzzy
 msgid ""
 "A journal is used to record transactions of all accounting data\n"
 "                related to the day-to-day business."
 msgstr ""
-"Un diario se usa para anotar transacciones de los datos\n"
-" contables asociados a los negocios diarios."
+"Un diario se utiliza para registrar las transacciones de todos los datos\n"
+" contables relacionados con la actividad diaria de la empresa."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_report.py:0
-#, fuzzy
 msgid "A line cannot have both children and a groupby value (line '%s')."
 msgstr ""
-"Una línea no puede tener hijos y el valor \"agrupar por\" simultáneamente "
-"(línea '%s')."
+"Una línea no puede tener líneas secundarias y un valor de «agrupar por» al "
+"mismo tiempo (línea '%s')."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#, fuzzy
 msgid "A line of this move is using a archived account, you cannot post it."
 msgstr ""
-"Un apunte de este asiento utiliza una cuenta archivada. No puede publicarlo."
+"Un apunte de este asiento utiliza una cuenta archivada. No puedes publicarlo."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
-#, fuzzy
 msgid "A new Hard Lock Date must be posterior (or equal) to the previous one."
 msgstr ""
 "La nueva fecha de bloqueo permanente debe ser posterior (o igual) a la "
@@ -2760,11 +2603,9 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#, fuzzy
 msgid "A note, whose content usually applies to the section or product above."
 msgstr ""
-"Una nota, cuyo contenido generalmente aplica a la sección o al producto "
-"anterior."
+"Una nota, cuyo contenido suele aplicarse a la sección o al producto anterior."
 
 #. module: account
 #. odoo-python
@@ -2779,33 +2620,29 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
-#, fuzzy
 msgid ""
 "A payment with an outstanding account cannot be confirmed without having a "
 "journal entry."
 msgstr ""
-"No es posible confirmar un pago con una cuenta por pagar si no tiene un "
-"asiento contable."
+"No se puede confirmar un pago con una cuenta pendiente sin tener un asiento "
+"contable."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_report_line_code_uniq
-#, fuzzy
 msgid "A report line with the same code already exists."
 msgstr "Ya existe una línea de informe con el mismo código."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#, fuzzy
 msgid "A section title"
 msgstr "Un título de sección"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
-#, fuzzy
 msgid "A single exception must change exactly one lock date field."
 msgstr ""
-"Solo una excepción debe cambiar exactamente un campo de fecha de bloqueo."
+"Una única excepción debe modificar exactamente un campo de fecha de bloqueo."
 
 #. module: account
 #. odoo-python
@@ -2830,53 +2667,46 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
-#, fuzzy
 msgid "A statement should only contain lines from the same journal."
 msgstr "Un extracto bancario solo debe contener líneas del mismo diario."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_account_tag_name_uniq
-#, fuzzy
 msgid ""
 "A tag with the same name and applicability already exists in this country."
-msgstr "Una etiqueta con el mismo nombre y relevancia ya existe en este país."
+msgstr ""
+"Ya existe una etiqueta con el mismo nombre y aplicabilidad en este país."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
-#, fuzzy
 msgid "A temporary number can not be used in a real matching"
-msgstr "No puede utilizar un número temporal para una conciliación"
+msgstr "No puedes utilizar un número temporal en una conciliación real"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__abnormal_amount_partner_ids
-#, fuzzy
 msgid "Abnormal Amount Partner"
 msgstr "Contacto de importe anormal"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__abnormal_amount_warning
 #: model:ir.model.fields,field_description:account.field_account_move__abnormal_amount_warning
-#, fuzzy
 msgid "Abnormal Amount Warning"
 msgstr "Advertencia de importe anormal"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__abnormal_date_partner_ids
-#, fuzzy
 msgid "Abnormal Date Partner"
 msgstr "Contacto de fecha anormal"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__abnormal_date_warning
 #: model:ir.model.fields,field_description:account.field_account_move__abnormal_date_warning
-#, fuzzy
 msgid "Abnormal Date Warning"
 msgstr "Advertencia de fecha anormal"
 
 #. module: account
 #: model:ir.model,name:account.model_res_groups
-#, fuzzy
 msgid "Access Groups"
 msgstr "Grupos de acceso"
 
@@ -2884,7 +2714,6 @@ msgstr "Grupos de acceso"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__access_warning
 #: model:ir.model.fields,field_description:account.field_account_journal__access_warning
 #: model:ir.model.fields,field_description:account.field_account_move__access_warning
-#, fuzzy
 msgid "Access warning"
 msgstr "Advertencia de acceso"
 
@@ -2907,37 +2736,33 @@ msgstr "Advertencia de acceso"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
-#, fuzzy
 msgid "Account"
 msgstr "Cuenta"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
-#, fuzzy
 msgid ""
 "Account %(account)s will be split in %(num_accounts)s, one for each "
 "company:\n"
 msgstr ""
 "La cuenta %(account)s se dividirá en %(num_accounts)s, una para cada "
-"compañía:\n"
+"empresa:\n"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
-#, fuzzy
 msgid ""
 "Account %s cannot be unmerged as it already belongs to a single company. The "
 "unmerge operation only splits an account based on its companies."
 msgstr ""
-"No es posible separar la cuenta %s, ya pertenece a una sola compañía. Esta "
-"operación de separación solo desagrupa una cuenta en función de sus "
-"compañías."
+"No es posible separar la cuenta %s, pues ya pertenece a una sola empresa. "
+"Esta operación de separación solo desagrupa una cuenta en función de sus "
+"empresas."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
-#, fuzzy
 msgid "Account '%s' is of payable type, but is used in a sale operation."
 msgstr ""
 "La cuenta %s es de tipo por pagar, pero se está utilizando en una operación "
@@ -2984,20 +2809,17 @@ msgstr "Cuenta activa"
 
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
-#, fuzzy
 msgid "Account Cash Rounding"
 msgstr "Redondeo de efectivo de la cuenta"
 
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template
-#, fuzzy
 msgid "Account Chart Template"
 msgstr "Plantilla de plan contable"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_code_mapping.py:0
-#, fuzzy
 msgid ""
 "Account Code Mapping cannot be accessed directly. It is designed to be used "
 "only through the Chart of Accounts."
@@ -3007,26 +2829,22 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__account_codes_formula
-#, fuzzy
 msgid "Account Codes Formula Shortcut"
 msgstr "Acceso rápido de fórmula de códigos de cuenta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__currency_id
-#, fuzzy
 msgid "Account Currency"
 msgstr "Moneda de la cuenta"
 
 #. module: account
 #: model:onboarding.onboarding,name:account.onboarding_onboarding_account_dashboard
-#, fuzzy
 msgid "Account Dashboard Onboarding"
 msgstr "Incorporación del tablero de contabilidad"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_view_activity
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
-#, fuzzy
 msgid "Account Entry"
 msgstr "Asiento contable"
 
@@ -3035,13 +2853,11 @@ msgstr "Asiento contable"
 #: model:ir.model.fields,field_description:account.field_account_journal__account_fiscal_country_group_codes
 #: model:ir.model.fields,field_description:account.field_account_move__account_fiscal_country_group_codes
 #: model:ir.model.fields,field_description:account.field_res_company__account_fiscal_country_group_codes
-#, fuzzy
 msgid "Account Fiscal Country Group Codes"
 msgstr "Códigos de grupos fiscales por país"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard_line__account_has_hashed_entries
-#, fuzzy
 msgid "Account Has Hashed Entries"
 msgstr "La cuenta tiene asientos con hash"
 
@@ -3049,7 +2865,6 @@ msgstr "La cuenta tiene asientos con hash"
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 #: model:ir.model.fields,field_description:account.field_account_journal__company_partner_id
-#, fuzzy
 msgid "Account Holder"
 msgstr "Titular de la cuenta"
 
@@ -3057,40 +2872,34 @@ msgstr "Titular de la cuenta"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__journal_id
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__journal_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
-#, fuzzy
 msgid "Account Journal"
 msgstr "Diario contable"
 
 #. module: account
 #: model:ir.model,name:account.model_account_journal_group
-#, fuzzy
 msgid "Account Journal Group"
 msgstr "Grupo de diario contable"
 
 #. module: account
 #: model:ir.model,name:account.model_account_lock_exception
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
-#, fuzzy
 msgid "Account Lock Exception"
 msgstr "Excepción de bloqueo de la cuenta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__account_map
-#, fuzzy
 msgid "Account Map"
 msgstr "Mapa de la cuenta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__account_ids
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
-#, fuzzy
 msgid "Account Mapping"
-msgstr "Mapeo de cuentas"
+msgstr "Asignación de cuentas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__account_move_count
 #: model:ir.model.fields,field_description:account.field_res_users__account_move_count
-#, fuzzy
 msgid "Account Move Count"
 msgstr "Número de asientos contables"
 
@@ -3103,7 +2912,6 @@ msgstr "Apunte contable"
 #: model:ir.model.fields,field_description:account.field_account_account__name
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_name
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
-#, fuzzy
 msgid "Account Name"
 msgstr "Nombre de la cuenta"
 
@@ -3112,7 +2920,6 @@ msgstr "Nombre de la cuenta"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__account_number
 #: model:ir.model.fields,field_description:account.field_base_document_layout__account_number
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__account_number
-#, fuzzy
 msgid "Account Number"
 msgstr "Número de cuenta"
 
@@ -3124,7 +2931,6 @@ msgstr "Cuentas principales"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_payable_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_payable_id
-#, fuzzy
 msgid "Account Payable"
 msgstr "Cuenta por pagar"
 
@@ -3136,14 +2942,12 @@ msgstr "Cuenta a pagar activa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix_placeholder
-#, fuzzy
 msgid "Account Prefix Placeholder"
 msgstr "Marcador de posición del prefijo de cuenta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_receivable_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_receivable_id
-#, fuzzy
 msgid "Account Receivable"
 msgstr "Cuentas por cobrar"
 
@@ -3165,7 +2969,6 @@ msgstr "Integración del tablero de declaraciones fiscales"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
-#, fuzzy
 msgid "Account Root"
 msgstr "Raíz de cuenta"
 
@@ -3173,20 +2976,17 @@ msgstr "Raíz de cuenta"
 #: model_terms:ir.ui.view,arch_db:account.account_bank_statement_graph
 #: model_terms:ir.ui.view,arch_db:account.account_bank_statement_pivot
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_graph_date
-#, fuzzy
 msgid "Account Statistics"
 msgstr "Estadísticas de cuentas"
 
 #. module: account
 #: model:ir.model,name:account.model_account_account_tag
-#, fuzzy
 msgid "Account Tag"
 msgstr "Etiqueta de cuenta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_product__account_tag_ids
 #: model:ir.model.fields,field_description:account.field_product_template__account_tag_ids
-#, fuzzy
 msgid "Account Tags"
 msgstr "Etiquetas de cuenta"
 
@@ -3194,33 +2994,28 @@ msgstr "Etiquetas de cuenta"
 #: model_terms:ir.ui.view,arch_db:account.account_tax_view_tree
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 #: model_terms:ir.ui.view,arch_db:account.view_tax_tree
-#, fuzzy
 msgid "Account Tax"
 msgstr "Impuestos de cuenta"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_group_form
 #: model_terms:ir.ui.view,arch_db:account.view_tax_group_tree
-#, fuzzy
 msgid "Account Tax Group"
 msgstr "Grupo de impuestos de cuenta"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_repartition_line_form
-#, fuzzy
 msgid "Account Tax Repartition Line"
 msgstr "Línea de reparto de impuestos de la cuenta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_ir_module_module__account_templates
-#, fuzzy
 msgid "Account Templates"
 msgstr "Plantillas de cuentas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__account_type
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
-#, fuzzy
 msgid "Account Type"
 msgstr "Tipo de cuenta"
 
@@ -3228,56 +3023,49 @@ msgstr "Tipo de cuenta"
 #: model:ir.model.fields,help:account.field_account_account__account_type
 #: model:ir.model.fields,help:account.field_account_move_line__account_type
 #: model:ir.model.fields,help:account.field_account_payment__outstanding_account_type
-#, fuzzy
 msgid ""
 "Account Type is used for information purpose, to generate country-specific "
 "legal reports, and set the rules to close a fiscal year and generate opening "
 "entries."
 msgstr ""
-"El tipo de cuenta es usado con propósitos informativos, para generar "
-"informes legales específicos de cada país, y establecer las reglas para "
-"cerrar un ejercicio fiscal y generar los asientos de apertura."
+"El tipo de cuenta se utiliza con fines informativos, para generar informes "
+"legales específicos de cada país y establecer las reglas para cerrar un "
+"ejercicio fiscal y generar los asientos de apertura."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_account_type
-#, fuzzy
 msgid "Account Types"
 msgstr "Tipos de cuentas"
 
 #. module: account
 #: model:ir.model,name:account.model_account_root
-#, fuzzy
 msgid "Account codes first 2 digits"
 msgstr "Primeros 2 dígitos de códigos de cuenta"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
-#, fuzzy
 msgid ""
 "Account codes must be unique. You can't create accounts with these duplicate "
 "codes: %s"
 msgstr ""
-"Los códigos de cuenta deben ser únicos. No puede crear cuentas con los "
+"Los códigos de cuenta deben ser únicos. No puedes crear cuentas con los "
 "siguientes códigos duplicados: %s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
-#, fuzzy
 msgid ""
 "Account for the difference amount after the expense discount has been granted"
 msgstr ""
-"Cuenta para el importe de diferencia después de que el gasto de descuento "
-"haya sido aprobado"
+"Cuenta para el importe de diferencia una vez concedido el descuento en gastos"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_id
-#, fuzzy
 msgid ""
 "Account for the difference amount after the income discount has been granted"
 msgstr ""
-"Cuenta para el importe de diferencia después de que el ingreso de descuento "
-"haya sido aprobado"
+"Cuenta para el importe de diferencia una vez concedido el descuento en "
+"ingresos"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__holder_name
@@ -3290,85 +3078,72 @@ msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_merge_wizard
-#, fuzzy
 msgid "Account merge wizard"
-msgstr "Asistente de fusión de cuenta"
+msgstr "Asistente de fusión de cuentas"
 
 #. module: account
 #: model:ir.model,name:account.model_account_merge_wizard_line
-#, fuzzy
 msgid "Account merge wizard line"
 msgstr "Línea del asistente de fusión de cuentas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_src_id
-#, fuzzy
 msgid "Account on Product"
 msgstr "Cuenta en producto"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__account_id
-#, fuzzy
 msgid "Account on which to post the tax amount"
-msgstr "Cuenta en la que contabilizar el importe del impuesto."
+msgstr "Cuenta en la que contabilizar el importe del impuesto"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_invoice_with_payments
-#, fuzzy
 msgid "Account report with payment lines"
 msgstr "Informe de cuenta con líneas de pagos"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_invoice
-#, fuzzy
 msgid "Account report without payment lines"
 msgstr "Informe de cuenta sin líneas de pago"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_cash_basis_base_account_id
 #: model:ir.model.fields,help:account.field_res_config_settings__account_cash_basis_base_account_id
-#, fuzzy
 msgid ""
 "Account that will be set on lines created in cash basis journal entry and "
 "used to keep track of the tax base amount."
 msgstr ""
-"Cuenta que se asignará a las líneas creadas en el asiento del diario en base "
-"de efectivo y que se utilizará para llevar un seguimiento de la base "
+"Cuenta que se asignará a las líneas creadas en el asiento del diario en "
+"criterio de caja y que se utilizará para realizar un seguimiento de la base "
 "imponible del impuesto."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_dest_id
-#, fuzzy
 msgid "Account to Use Instead"
 msgstr "Cuenta alternativa"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__destination_account_id
-#, fuzzy
 msgid "Account to transfer to."
 msgstr "Cuenta a la cual transferir."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__revenue_accrual_account_id
-#, fuzzy
 msgid "Account used to move the period of a revenue"
 msgstr "Cuenta utilizada para mover el periodo de un ingreso"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__expense_accrual_account_id
-#, fuzzy
 msgid "Account used to move the period of an expense"
 msgstr "Cuenta utilizada para mover el periodo de un gasto"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__non_deductible_account_id
-#, fuzzy
 msgid "Account used to register the private part of mixed expenses."
 msgstr "Cuenta utilizada para registrar la parte privada de los gastos mixtos."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__cash_basis_transition_account_id
-#, fuzzy
 msgid ""
 "Account used to transition the tax amount for cash basis taxes. It will "
 "contain the tax amount as long as the original invoice has not been "
@@ -3382,7 +3157,6 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
-#, fuzzy
 msgid "Account with Entries"
 msgstr "Cuenta con asientos"
 
@@ -3393,13 +3167,12 @@ msgstr "Contabilidad: cierre de valoración de existencias"
 
 #. module: account
 #: model:ir.actions.server,name:account.ir_cron_auto_post_draft_entry_ir_actions_server
-#, fuzzy
 msgid ""
 "Account: Post draft entries with auto_post enabled and accounting date up to "
 "today"
 msgstr ""
-"Cuenta: contabilice borradores de entradas con auto_post habilitado y la "
-"fecha contable hasta día de hoy"
+"Cuenta: contabilizar asientos en borrador con auto_post habilitado y fecha "
+"contable hasta el día de hoy"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_accounting
@@ -3412,7 +3185,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 #: model_terms:ir.ui.view,arch_db:account.view_category_property_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
-#, fuzzy
 msgid "Accounting"
 msgstr "Contabilidad"
 
@@ -3421,129 +3193,109 @@ msgstr "Contabilidad"
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
-#, fuzzy
 msgid "Accounting Date"
 msgstr "Fecha contable"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-#, fuzzy
 msgid "Accounting Firms mode"
 msgstr "Modo de asesoría contable"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/onboarding_onboarding_step.py:0
-#, fuzzy
 msgid "Accounting Periods"
 msgstr "Periodos contables"
 
 #. module: account
 #: model:ir.model,name:account.model_account_report
-#, fuzzy
 msgid "Accounting Report"
 msgstr "Informe contable"
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_column
-#, fuzzy
 msgid "Accounting Report Column"
 msgstr "Columna de informe contable"
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_expression
-#, fuzzy
 msgid "Accounting Report Expression"
 msgstr "Expresión de informe contable"
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_external_value
-#, fuzzy
 msgid "Accounting Report External Value"
 msgstr "Valor externo de informe contable"
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_line
-#, fuzzy
 msgid "Accounting Report Line"
 msgstr "Línea del informe contable"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
-#, fuzzy
 msgid "Accounting documents"
 msgstr "Documentos contables"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
-#, fuzzy
 msgid "Accounting-related settings are managed on"
-msgstr "Los ajustes relacionados a la contabilidad se gestionan en"
+msgstr "Los ajustes relacionados con la contabilidad se gestionan en"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account_tag__applicability__accounts
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
-#, fuzzy
 msgid "Accounts"
 msgstr "Cuentas"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
-#, fuzzy
 msgid "Accounts Mapping of Fiscal Position"
-msgstr "Mapeo de cuentas de posición fiscal"
+msgstr "Asignación de cuentas de posición fiscal"
 
 #. module: account
 #: model:account.account,name:account.21_payable
 #: model:account.account,name:account.22_account_account_us_payable
-#, fuzzy
 msgid "Accounts Payable"
 msgstr "Cuentas por pagar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__account_prefix
-#, fuzzy
 msgid "Accounts Prefix"
 msgstr "Prefijo de cuentas"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_distribution_model_form_inherit
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_distribution_model_tree_inherit
-#, fuzzy
 msgid "Accounts Prefixes"
 msgstr "Prefijos de cuentas"
 
 #. module: account
 #: model:account.account,name:account.21_receivable
 #: model:account.account,name:account.22_account_account_us_receivable
-#, fuzzy
 msgid "Accounts Receivable"
 msgstr "Cuentas por cobrar"
 
 #. module: account
 #: model:account.account,name:account.21_pos_receivable
 #: model:account.account,name:account.22_account_account_us_pos_receivable
-#, fuzzy
 msgid "Accounts Receivable (PoS)"
-msgstr "Cuentas por cobrar (TPV)"
+msgstr "Cuentas por cobrar (PdV)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
-#, fuzzy
 msgid "Accounts successfully merged!"
-msgstr "Cuentas fusionadas con éxito"
+msgstr "Cuentas fusionadas correctamente"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__account_id
-#, fuzzy
 msgid "Accrual Account"
 msgstr "Cuenta de devengo"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
-#, fuzzy
 msgid "Accrual Moves"
 msgstr "Movimientos devengados"
 
@@ -3555,7 +3307,6 @@ msgstr "Tipo de periodificación"
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
-#, fuzzy
 msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
 "reverse entry: %(reverse_entry)s."
@@ -3573,7 +3324,6 @@ msgstr "Periodificaciones"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
-#, fuzzy
 msgid "Accrued Account"
 msgstr "Cuenta de devengo"
 
@@ -3589,14 +3339,12 @@ msgstr "Ingresos pendientes de facturar"
 
 #. module: account
 #: model:ir.model,name:account.model_account_accrued_orders_wizard
-#, fuzzy
 msgid "Accrued Orders Wizard"
 msgstr "Asistente de pedidos devengados"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
-#, fuzzy
 msgid "Accrued total"
 msgstr "Total devengado"
 
@@ -3649,7 +3397,6 @@ msgstr "Remanente y resultados de ejercicios anteriores"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__action
 #: model:ir.model.fields,field_description:account.field_account_report_line__action_id
-#, fuzzy
 msgid "Action"
 msgstr "Acción"
 
@@ -3664,13 +3411,11 @@ msgstr "Acción"
 #: model:ir.model.fields,field_description:account.field_account_tax__message_needaction
 #: model:ir.model.fields,field_description:account.field_res_company__message_needaction
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__message_needaction
-#, fuzzy
 msgid "Action Needed"
 msgstr "Acción requerida"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__actionable_errors
-#, fuzzy
 msgid "Actionable Errors"
 msgstr "Errores recuperables"
 
@@ -3682,13 +3427,11 @@ msgstr "Activar la facturación electrónica"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
-#, fuzzy
 msgid "Activate auto-validation"
 msgstr "Activar autovalidación"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-#, fuzzy
 msgid "Activate to create sale receipt"
 msgstr "Activar para crear un recibo de venta"
 
@@ -3709,7 +3452,6 @@ msgstr "Activar para crear un recibo de venta"
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__state__active
 #: model_terms:ir.ui.view,arch_db:account.rounding_search_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
-#, fuzzy
 msgid "Active"
 msgstr "Activo"
 
@@ -3731,14 +3473,12 @@ msgstr "Selección activa"
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_ids
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_ids
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_ids
-#, fuzzy
 msgid "Activities"
 msgstr "Actividades"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
-#, fuzzy
 msgid "Activities of"
 msgstr "Actividades de"
 
@@ -3750,9 +3490,8 @@ msgstr "Actividades de"
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_exception_decoration
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_exception_decoration
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_exception_decoration
-#, fuzzy
 msgid "Activity Exception Decoration"
-msgstr "Decoración de Actividad de Excepción"
+msgstr "Indicador de excepción de actividad"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__activity_plans_ids
@@ -3762,7 +3501,6 @@ msgstr "Decoración de Actividad de Excepción"
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_plans_ids
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_plans_ids
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_plans_ids
-#, fuzzy
 msgid "Activity Plans"
 msgstr "Planes de actividades"
 
@@ -3774,7 +3512,6 @@ msgstr "Planes de actividades"
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_state
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_state
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_state
-#, fuzzy
 msgid "Activity State"
 msgstr "Estado de la actividad"
 
@@ -3786,34 +3523,29 @@ msgstr "Estado de la actividad"
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_type_icon
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_type_icon
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_type_icon
-#, fuzzy
 msgid "Activity Type Icon"
 msgstr "Icono de tipo de actividad"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
-#, fuzzy
 msgid "Activity type"
 msgstr "Tipo de actividad"
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
-#, fuzzy
 msgid "Add"
 msgstr "Añadir"
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/mail_attachments/account_move_send_attachments_selector.xml:0
-#, fuzzy
 msgid "Add Attachment"
 msgstr "Añadir archivo adjunto"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-#, fuzzy
 msgid "Add QR-code link on PDF"
 msgstr "Añadir enlace del código QR en archivos PDF"
 
@@ -3825,7 +3557,6 @@ msgstr "Añadir sección"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__terms_type__plain
-#, fuzzy
 msgid "Add a Note"
 msgstr "Añadir una nota"
 
@@ -3840,24 +3571,21 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-#, fuzzy
 msgid ""
 "Add a QR-code to your invoices so that your customers can pay instantly with "
 "their mobile banking application."
 msgstr ""
-"Añada un código QR a sus facturas para que sus clientes puedan pagar "
+"Añade un código QR a tus facturas para que los clientes puedan pagar "
 "instantáneamente con su aplicación móvil bancaria."
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
-#, fuzzy
 msgid "Add a description to your item."
-msgstr "Añada una descripción a su artículo."
+msgstr "Añade una descripción a tu artículo."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
-#, fuzzy
 msgid "Add a journal"
 msgstr "Añadir un diario"
 
@@ -3865,26 +3593,22 @@ msgstr "Añadir un diario"
 #. odoo-javascript
 #: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
-#, fuzzy
 msgid "Add a line"
 msgstr "Añadir una línea"
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
-#, fuzzy
 msgid "Add a line to your invoice"
-msgstr "Añada una línea a su factura"
+msgstr "Añadir una línea a la factura"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__terms_type__html
-#, fuzzy
 msgid "Add a link to a Web Page"
-msgstr "Añada un enlace a una página web"
+msgstr "Añadir un enlace a una página web"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_form
-#, fuzzy
 msgid "Add a new account"
 msgstr "Añadir una nueva cuenta"
 
@@ -3892,13 +3616,11 @@ msgstr "Añadir una nueva cuenta"
 #. odoo-javascript
 #: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
-#, fuzzy
 msgid "Add a note"
 msgstr "Añadir una nota"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__strategy__add_invoice_line
-#, fuzzy
 msgid "Add a rounding line"
 msgstr "Añadir una línea de redondeo"
 
@@ -3906,7 +3628,6 @@ msgstr "Añadir una línea de redondeo"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/search/search_panel/search_panel.xml:0
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
-#, fuzzy
 msgid "Add a section"
 msgstr "Añadir una sección"
 
@@ -3914,19 +3635,16 @@ msgstr "Añadir una sección"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/search/section_row/section_row.xml:0
 #: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
-#, fuzzy
 msgid "Add a subsection"
 msgstr "Añadir una subsección"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
-#, fuzzy
 msgid "Add an internal note..."
-msgstr "Añada una nota interna..."
+msgstr "Añadir una nota interna..."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_wizard_form
-#, fuzzy
 msgid "Add contacts to notify..."
 msgstr "Añadir contactos a notificar..."
 
@@ -3938,10 +3656,9 @@ msgstr "Añadir identificador"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-#, fuzzy
 msgid "Add your terms & conditions at the bottom of invoices/orders/quotations"
 msgstr ""
-"Añada sus términos y condiciones al final de sus facturas, pedidos o "
+"Añade los términos y condiciones al final de las facturas, pedidos o "
 "presupuestos"
 
 #. module: account
@@ -3952,28 +3669,24 @@ msgstr "Añadir..."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
-#, fuzzy
 msgid "Address"
 msgstr "Dirección"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
-#, fuzzy
 msgid "Adjusting Amount"
 msgstr "Importe de ajuste"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
-#, fuzzy
 msgid "Adjusting Entries"
 msgstr "Asientos de ajuste"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__adjusting_entries_count
 #: model:ir.model.fields,field_description:account.field_account_move__adjusting_entries_count
-#, fuzzy
 msgid "Adjusting Entries Count"
-msgstr "Numero de asientos de ajuste"
+msgstr "Número de asientos de ajuste"
 
 #. module: account
 #. odoo-python
@@ -20586,9 +20299,8 @@ msgstr "Saldo inicial"
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__state
 #: model:ir.model.fields,field_description:account.field_account_payment__state
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
-#, fuzzy
 msgid "State"
-msgstr "Provincia"
+msgstr "Estado"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_state_income_tax
@@ -20654,7 +20366,6 @@ msgstr "Número de estados"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
-#, fuzzy
 msgid "Status"
 msgstr "Estado"
 
@@ -27008,6 +26719,16 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} {{ object.payment_receipt_title }} (Ref. "
 "{{ object.name or 'n/a' }})"
+
+#~ msgid ""
+#~ "<span> already exists for this period. Posting this entry will replace it."
+#~ "</span>"
+#~ msgstr ""
+#~ "<span> ya existe para este período. Al registrar este asiento se "
+#~ "reemplazará.</span>"
+
+#~ msgid "<span>An accrual entry of </span>"
+#~ msgstr "<span>Un asiento de periodificación de </span>"
 
 #, fuzzy
 #~ msgid ""

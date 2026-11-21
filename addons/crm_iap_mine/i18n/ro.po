@@ -5,7 +5,7 @@
 # Translators:
 # Cozmin Candea <office@terrabit.ro>, 2022
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
-# Dorin Hongu <dhongu@gmail.com>, 2022
+# Dorin Hongu <dhongu@gmail.com>, 2022, 2026.
 # Martin Trigaux, 2022
 # Hongu Cosmin <cosmin513@gmail.com>, 2022
 # Claudia Baisan, 2023
@@ -17,9 +17,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-06 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 16:25+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-21 10:57+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/"
 "crm_iap_mine/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: crm_iap_mine
 #. odoo-python
@@ -43,7 +43,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/crm_iap_mine/models/crm_iap_lead_helpers.py:0
 msgid "%s's opportunity"
-msgstr ""
+msgstr "%s's oportunitate"
 
 #. module: crm_iap_mine
 #: model:mail.template,body_html:crm_iap_mine.lead_generation_no_credits
@@ -57,6 +57,13 @@ msgid ""
 "    <p>Odoo S.A.</p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p>Stimate client,</p>\n"
+"    <p>Nu mai aveți credite în contul IAP pentru generarea de leaduri.<br>\n"
+"    Puteți reîncărca acest cont din setările aplicației CRM.<br></p>\n"
+"    <p>Cu stimă,</p>\n"
+"    <p>Odoo S.A.</p>\n"
+"</div>"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
@@ -64,6 +71,8 @@ msgid ""
 "<i class=\"oi oi-fw me-2 text-primary\" data-icon=\"deployed_code\"/>\n"
 "                    <b>Industries</b>"
 msgstr ""
+"<i class=\"oi oi-fw me-2 text-primary\" data-icon=\"deployed_code\"/>\n"
+"                    <b>Industrii</b>"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
@@ -71,6 +80,8 @@ msgid ""
 "<i class=\"oi oi-fw me-2 text-primary\" data-icon=\"public\"/>\n"
 "                    <b>Website</b>"
 msgstr ""
+"<i class=\"oi oi-fw me-2 text-primary\" data-icon=\"public\"/>\n"
+"                    <b>Site web</b>"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
@@ -78,6 +89,8 @@ msgid ""
 "<i class=\"oi oi-fw oi-filled me-2 text-primary\" data-icon=\"badge\"/>\n"
 "                    <b>Tax ID</b>"
 msgstr ""
+"<i class=\"oi oi-fw oi-filled me-2 text-primary\" data-icon=\"badge\"/>\n"
+"                    <b>Cod fiscal</b>"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
@@ -86,16 +99,19 @@ msgid ""
 ">\n"
 "                    <b>Address</b>"
 msgstr ""
+"<i class=\"oi oi-fw oi-filled me-2 text-primary\" data-"
+"icon=\"contact_page\"/>\n"
+"                    <b>Adresă</b>"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "<span class=\"fw-normal o_stat_text o_translate_inline\">Leads</span>"
-msgstr ""
+msgstr "<span class=\"fw-normal o_stat_text o_translate_inline\">Leaduri</span>"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "<span class=\"o_form_label fw-normal\">employees</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label fw-normal\">angajați</span>"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
@@ -120,42 +136,42 @@ msgstr ""
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_96
 msgid "Administration Of Economic Programs"
-msgstr ""
+msgstr "Administrarea programelor economice"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_07
 msgid "Agricultural Services"
-msgstr ""
+msgstr "Servicii agricole"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry.division,name:crm_iap_mine.crm_iap_mine_division_a
 msgid "Agriculture, Forestry & Fishing"
-msgstr ""
+msgstr "Agricultură, silvicultură și pescuit"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_45
 msgid "Air Transportation"
-msgstr ""
+msgstr "Transport aerian"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_56
 msgid "Apparel and Accessory Stores"
-msgstr ""
+msgstr "Magazine de îmbrăcăminte și accesorii"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_23
 msgid "Apparel and Similar Products"
-msgstr ""
+msgstr "Îmbrăcăminte și produse similare"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_55
 msgid "Auto Dealers and Gas Stations"
-msgstr ""
+msgstr "Dealeri auto și benzinării"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_75
 msgid "Automotive Repair and Parking"
-msgstr ""
+msgstr "Reparații auto și parcări"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__available_state_ids
@@ -165,17 +181,18 @@ msgstr "Status disponibil"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_15
 msgid "Building Construction"
-msgstr ""
+msgstr "Construcții de clădiri"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_52
 msgid "Building Materials and Garden Retail"
 msgstr ""
+"Comerț cu amănuntul de materiale de construcții și produse pentru grădină"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_73
 msgid "Business Services"
-msgstr ""
+msgstr "Servicii pentru afaceri"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
@@ -195,7 +212,7 @@ msgstr "Industria Pistelor CRM IAP"
 #. module: crm_iap_mine
 #: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_industry_division
 msgid "CRM IAP Lead Industry Division"
-msgstr ""
+msgstr "Divizie industrială pentru leaduri CRM IAP"
 
 #. module: crm_iap_mine
 #: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_mining_request
@@ -205,18 +222,18 @@ msgstr "Cerere de extragere a pistelor CRM"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_28
 msgid "Chemicals"
-msgstr ""
+msgstr "Produse chimice"
 
 #. module: crm_iap_mine
 #. odoo-javascript
 #: code:addons/crm_iap_mine/static/src/js/tours/crm_iap_lead.js:0
 msgid "Click here to generate some leads."
-msgstr ""
+msgstr "Faceți clic aici pentru a genera câteva leaduri."
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_12
 msgid "Coal Mining"
-msgstr ""
+msgstr "Exploatarea cărbunelui"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__color
@@ -238,7 +255,7 @@ msgstr "Dimensiunea companiei Max"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry.division,name:crm_iap_mine.crm_iap_mine_division_c
 msgid "Construction"
-msgstr ""
+msgstr "Construcție"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_3
@@ -284,7 +301,7 @@ msgstr "Creat în"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_01
 msgid "Crop Farming"
-msgstr ""
+msgstr "Cultivarea culturilor agricole"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_4
@@ -299,7 +316,7 @@ msgstr "Etichete implicite"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_60
 msgid "Depository Institutions"
-msgstr ""
+msgstr "Instituții de depozitare"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__display_name
@@ -315,18 +332,20 @@ msgstr "Nume afișat"
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry_division__code
 msgid "Division Code"
-msgstr ""
+msgstr "Codul diviziei"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry_division__name
 msgid "Division Name"
-msgstr ""
+msgstr "Numele diviziei"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,help:crm_iap_mine.field_crm_iap_lead_industry_division__code
 msgid ""
 "Division code as per SIC indicating the higher-level industry classification."
 msgstr ""
+"Codul diviziei conform SIC, care indică clasificarea industrială de nivel "
+"superior."
 
 #. module: crm_iap_mine
 #: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__state__done
@@ -343,7 +362,7 @@ msgstr "Ciornă"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_50
 msgid "Durable Goods Wholesale"
-msgstr ""
+msgstr "Comerț cu ridicata de bunuri durabile"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_5
@@ -353,12 +372,12 @@ msgstr "Educație"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_82
 msgid "Educational Services"
-msgstr ""
+msgstr "Servicii educaționale"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_36
 msgid "Electronic and Electrical Equipment"
-msgstr ""
+msgstr "Echipamente electronice și electrice"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_6
@@ -368,7 +387,7 @@ msgstr "Inginerie"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_95
 msgid "Environmental and Housing Administration"
-msgstr ""
+msgstr "Administrația mediului și locuințelor"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__state__error
@@ -384,7 +403,7 @@ msgstr "Tip de eroare"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_34
 msgid "Fabricated Metal Products"
-msgstr ""
+msgstr "Produse metalice prelucrate"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__filter_on_size
@@ -399,27 +418,27 @@ msgstr "Finanțe"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry.division,name:crm_iap_mine.crm_iap_mine_division_h
 msgid "Finance, Insurance & Real Estate"
-msgstr ""
+msgstr "Finanțe, asigurări și imobiliare"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_09
 msgid "Fishing and Hunting"
-msgstr ""
+msgstr "Pescuit și vânătoare"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_20
 msgid "Food Products"
-msgstr ""
+msgstr "Produse alimentare"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_54
 msgid "Food Stores"
-msgstr ""
+msgstr "Magazine alimentare"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_08
 msgid "Forestry"
-msgstr ""
+msgstr "Silvicultură"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_8
@@ -429,7 +448,7 @@ msgstr "Fondator"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_42
 msgid "Freight and Warehousing"
-msgstr ""
+msgstr "Transport de marfă și depozitare"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
@@ -439,17 +458,17 @@ msgstr "De la"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_25
 msgid "Furniture and Fixtures"
-msgstr ""
+msgstr "Mobilier și corpuri de iluminat"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_91
 msgid "General Government"
-msgstr ""
+msgstr "Administrație publică generală"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_53
 msgid "General Merchandise Stores"
-msgstr ""
+msgstr "Magazine cu produse diverse"
 
 #. module: crm_iap_mine
 #. odoo-python
@@ -462,6 +481,7 @@ msgstr "Generare Piste"
 #: model:ir.module.module,summary:base.module_crm_iap_mine
 msgid "Generate Leads/Opportunities based on country, industries, size, etc."
 msgstr ""
+"Generează leaduri/oportunități în funcție de țară, industrie, dimensiune etc."
 
 #. module: crm_iap_mine
 #. odoo-python
@@ -482,12 +502,12 @@ msgstr "Cadru medical"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_80
 msgid "Health Services"
-msgstr ""
+msgstr "Servicii de sănătate"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_16
 msgid "Heavy Construction"
-msgstr ""
+msgstr "Construcții de infrastructură"
 
 #. module: crm_iap_mine
 #: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_helpers
@@ -497,22 +517,22 @@ msgstr "Metode de ajutor pentru modulele crm_iap_mine"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_67
 msgid "Holding and Investment Offices"
-msgstr ""
+msgstr "Societăți holding și birouri de investiții"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_57
 msgid "Home Furnishings Stores"
-msgstr ""
+msgstr "Magazine de mobilier și decorațiuni interioare"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_70
 msgid "Hotels and Lodging"
-msgstr ""
+msgstr "Hoteluri și cazare"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_94
 msgid "Human Resource Administration"
-msgstr ""
+msgstr "Administrarea resurselor umane"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_10
@@ -522,7 +542,7 @@ msgstr "Resurse Umane"
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "I want to order"
-msgstr ""
+msgstr "Vreau să comand"
 
 #. module: crm_iap_mine
 #: model:mail.template,name:crm_iap_mine.lead_generation_no_credits
@@ -554,7 +574,7 @@ msgstr "Industrie"
 #. module: crm_iap_mine
 #: model:ir.model.constraint,message:crm_iap_mine.constraint_crm_iap_lead_industry_division_name_uniq
 msgid "Industry Division already exists!"
-msgstr ""
+msgstr "Divizia industrială există deja!"
 
 #. module: crm_iap_mine
 #: model:ir.model.constraint,message:crm_iap_mine.constraint_crm_iap_lead_industry_name_uniq
@@ -564,7 +584,7 @@ msgstr "Numele industriei există deja!"
 #. module: crm_iap_mine
 #: model:ir.model.fields,help:crm_iap_mine.field_crm_iap_lead_industry__sic_group
 msgid "Industry's Major Group Code as per SIC"
-msgstr ""
+msgstr "Codul grupei principale a industriei conform SIC"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_11
@@ -574,7 +594,7 @@ msgstr "Tehnologia informației"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_38
 msgid "Instruments and Optical Goods"
-msgstr ""
+msgstr "Instrumente și produse optice"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__error_type__credits
@@ -584,17 +604,17 @@ msgstr "Credite insuficiente"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_64
 msgid "Insurance Agents and Brokers"
-msgstr ""
+msgstr "Agenți și brokeri de asigurări"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_63
 msgid "Insurance Carriers"
-msgstr ""
+msgstr "Companii de asigurări"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_92
 msgid "Justice and Public Safety"
-msgstr ""
+msgstr "Justiție și siguranță publică"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__write_uid
@@ -653,7 +673,7 @@ msgstr "Piste"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_31
 msgid "Leather"
-msgstr ""
+msgstr "Piele"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_12
@@ -663,12 +683,12 @@ msgstr "Aspecte juridice"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_81
 msgid "Legal Services"
-msgstr ""
+msgstr "Servicii juridice"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_02
 msgid "Livestock and Animal Production"
-msgstr ""
+msgstr "Creșterea animalelor și producția zootehnică"
 
 #. module: crm_iap_mine
 #. odoo-javascript
@@ -681,12 +701,12 @@ msgstr ""
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_35
 msgid "Machinery and Computer Equipment"
-msgstr ""
+msgstr "Utilaje și echipamente informatice"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry.division,name:crm_iap_mine.crm_iap_mine_division_d
 msgid "Manufacturing"
-msgstr ""
+msgstr "Producție"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_13
@@ -696,47 +716,47 @@ msgstr "Marketing"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_86
 msgid "Membership Organizations"
-msgstr ""
+msgstr "Organizații cu membri"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_10
 msgid "Metal Mining"
-msgstr ""
+msgstr "Exploatarea minereurilor metalifere"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry.division,name:crm_iap_mine.crm_iap_mine_division_b
 msgid "Mining"
-msgstr ""
+msgstr "Industria minieră"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_39
 msgid "Miscellaneous Manufacturing Industries"
-msgstr ""
+msgstr "Diverse industrii prelucrătoare"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_76
 msgid "Miscellaneous Repair Services"
-msgstr ""
+msgstr "Diverse servicii de reparații"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_59
 msgid "Miscellaneous Retail"
-msgstr ""
+msgstr "Diverse activități de comerț cu amănuntul"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_89
 msgid "Miscellaneous Services"
-msgstr ""
+msgstr "Diverse servicii"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_78
 msgid "Motion Pictures"
-msgstr ""
+msgstr "Producție cinematografică"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_84
 msgid "Museums and Botanical Gardens"
-msgstr ""
+msgstr "Muzee și grădini botanice"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__name
@@ -751,7 +771,7 @@ msgstr "Numele există deja!"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_97
 msgid "National Security"
-msgstr ""
+msgstr "Securitate națională"
 
 #. module: crm_iap_mine
 #. odoo-python
@@ -773,22 +793,22 @@ msgstr "Niciun rezultat"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_61
 msgid "Non-Depository Credit"
-msgstr ""
+msgstr "Instituții de credit fără depozite"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_51
 msgid "Non-Durable Goods Wholesale"
-msgstr ""
+msgstr "Comerț cu ridicata de bunuri nedurabile"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_99
 msgid "Nonclassifiable Establishments"
-msgstr ""
+msgstr "Unități neclasificabile"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_14
 msgid "Nonmetallic Mineral Mining"
-msgstr ""
+msgstr "Exploatarea mineralelor nemetalifere"
 
 #. module: crm_iap_mine
 #. odoo-javascript
@@ -810,7 +830,7 @@ msgstr "Număr de piste"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_13
 msgid "Oil and Gas Extraction"
-msgstr ""
+msgstr "Extracția petrolului și gazelor"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_14
@@ -837,7 +857,7 @@ msgstr "Proprietar"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_26
 msgid "Paper Products"
-msgstr ""
+msgstr "Produse din hârtie"
 
 #. module: crm_iap_mine
 #: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_role
@@ -852,12 +872,12 @@ msgstr "Vechimea oamenilor"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_72
 msgid "Personal Services"
-msgstr ""
+msgstr "Servicii personale"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_29
 msgid "Petroleum Refining"
-msgstr ""
+msgstr "Rafinarea petrolului"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
@@ -867,7 +887,7 @@ msgstr "Alegeți județe..."
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_46
 msgid "Pipelines, Except Natural Gas"
-msgstr ""
+msgstr "Conducte, cu excepția gazelor naturale"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_16
@@ -877,17 +897,17 @@ msgstr "Președinte"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_33
 msgid "Primary Metal Industries"
-msgstr ""
+msgstr "Industrii metalurgice primare"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_27
 msgid "Printing and Publishing"
-msgstr ""
+msgstr "Tipărire și editare"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_88
 msgid "Private Households"
-msgstr ""
+msgstr "Gospodării private"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_17
@@ -897,17 +917,17 @@ msgstr "Produs"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_87
 msgid "Professional Services"
-msgstr ""
+msgstr "Servicii profesionale"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry.division,name:crm_iap_mine.crm_iap_mine_division_j
 msgid "Public Administration"
-msgstr ""
+msgstr "Administrație publică"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_93
 msgid "Public Finance and Taxation"
-msgstr ""
+msgstr "Finanțe publice și impozitare"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_18
@@ -917,7 +937,7 @@ msgstr "Relații publice"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_40
 msgid "Railroad Transportation"
-msgstr ""
+msgstr "Transport feroviar"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_65
@@ -928,7 +948,7 @@ msgstr "Proprietate imobiliara"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_79
 msgid "Recreation Services"
-msgstr ""
+msgstr "Servicii recreative"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_20
@@ -948,12 +968,12 @@ msgstr "Cercetare"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_58
 msgid "Restaurants and Bars"
-msgstr ""
+msgstr "Restaurante și baruri"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry.division,name:crm_iap_mine.crm_iap_mine_division_g
 msgid "Retail Trade"
-msgstr ""
+msgstr "Comerț cu amănuntul"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
@@ -979,17 +999,17 @@ msgstr "Numele rolului există deja!"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_30
 msgid "Rubber and Plastics"
-msgstr ""
+msgstr "Cauciuc și mase plastice"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,help:crm_iap_mine.field_crm_iap_lead_industry__division_id
 msgid "SIC Division code to which Major Group belongs."
-msgstr ""
+msgstr "Codul diviziei SIC din care face parte grupa principală."
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__sic_group
 msgid "SIC Group"
-msgstr ""
+msgstr "Grupă SIC"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_22
@@ -1012,12 +1032,12 @@ msgstr "Agent de vânzări"
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__division_id
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_industry_view_search
 msgid "Sector"
-msgstr ""
+msgstr "Sector"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_62
 msgid "Securities and Commodity Services"
-msgstr ""
+msgstr "Servicii pentru valori mobiliare și mărfuri"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__sequence
@@ -1028,7 +1048,7 @@ msgstr "Secvență"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry.division,name:crm_iap_mine.crm_iap_mine_division_i
 msgid "Services"
-msgstr ""
+msgstr "Servicii"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__company_size_min
@@ -1038,12 +1058,12 @@ msgstr "Dimensiune"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_83
 msgid "Social Services"
-msgstr ""
+msgstr "Servicii sociale"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_17
 msgid "Specialty Contractors"
-msgstr ""
+msgstr "Antreprenori specializați"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__state_ids
@@ -1058,7 +1078,7 @@ msgstr "Stare"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_32
 msgid "Stone, Clay, Glass and Concrete"
-msgstr ""
+msgstr "Piatră, argilă, sticlă și beton"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
@@ -1073,32 +1093,32 @@ msgstr "Etichete"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_22
 msgid "Textile Mill Products"
-msgstr ""
+msgstr "Produse textile"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_21
 msgid "Tobacco Products"
-msgstr ""
+msgstr "Produse din tutun"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_41
 msgid "Transit and Passenger Transport"
-msgstr ""
+msgstr "Transport public și de pasageri"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_37
 msgid "Transportation Equipment"
-msgstr ""
+msgstr "Echipamente de transport"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_47
 msgid "Transportation Services"
-msgstr ""
+msgstr "Servicii de transport"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry.division,name:crm_iap_mine.crm_iap_mine_division_e
 msgid "Transportation, Communication, Energy & Sanitation"
-msgstr ""
+msgstr "Transport, comunicații, energie și salubritate"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_type
@@ -1109,17 +1129,17 @@ msgstr "Tip"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_43
 msgid "United States Postal Service"
-msgstr ""
+msgstr "Serviciul Poștal al Statelor Unite"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_49
 msgid "Utilities and Sanitary Services"
-msgstr ""
+msgstr "Servicii de utilități și salubritate"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_44
 msgid "Water Transportation"
-msgstr ""
+msgstr "Transport naval"
 
 #. module: crm_iap_mine
 #. odoo-javascript
@@ -1130,12 +1150,12 @@ msgstr "Ce industrie doriți să vizați?"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry.division,name:crm_iap_mine.crm_iap_mine_division_f
 msgid "Wholesale Trade"
-msgstr ""
+msgstr "Comerț cu ridicata"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_24
 msgid "Wood Products"
-msgstr ""
+msgstr "Produse din lemn"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form

@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 17:38+0000\n"
-"PO-Revision-Date: 2026-11-09 18:33+0000\n"
+"POT-Creation-Date: 2026-11-20 17:37+0000\n"
+"PO-Revision-Date: 2026-11-16 18:33+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
 "odoo-20/hr_holidays/pt_BR/>\n"
@@ -29,7 +29,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -81,34 +81,8 @@ msgid ""
 "\n"
 "A synchronization with an internal agenda (Meetings of the CRM module) is "
 "also possible in order to automatically create a meeting when a time off "
-"request is accepted by setting up a type of meeting in time off Type.\n"
+"request is accepted by setting up a type of meeting in the time type.\n"
 msgstr ""
-"\n"
-"Gerenciar solicitações e alocações de folgas\n"
-"========================================\n"
-"\n"
-"Este aplicativo controla o calendário de folgas da sua empresa. Ele permite "
-"que os funcionários solicitem folgas. Em seguida, os gerentes podem analisar "
-"as solicitações de folgas e aprová-las ou rejeitá-las. Dessa forma, você "
-"pode controlar o planejamento geral de folgas para a empresa ou "
-"departamento.\n"
-"\n"
-"Você pode configurar vários tipos de folga (doença, dias remunerados, ...) e "
-"alocar folgas a um funcionário ou departamento rapidamente usando a alocação "
-"de folga. Um funcionário também pode solicitar mais dias de folga criando "
-"uma nova alocação de folga. Isso aumentará o total de dias disponíveis para "
-"esse tipo de folga (se o pedido for aceito).\n"
-"\n"
-"Você pode acompanhar as folgas de diferentes maneiras por meio dos seguintes "
-"relatórios:\n"
-"\n"
-"* Resumo de folgas\n"
-"* Folgas por Departamento\n"
-"* Análise de folgas\n"
-"\n"
-"Também é possível sincronizar com uma agenda interna (Reuniões do módulo "
-"CRM) para criar automaticamente uma reunião quando um pedido de folga for "
-"aceito, configurando um tipo de reunião no campo Tipo de folga.\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -463,6 +437,8 @@ msgid ""
 "<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"to\" title=\"To\" "
 "invisible=\"accrual_plan_id or state != 'confirm'\"/>"
 msgstr ""
+"<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"to\" title=\"To\" "
+"invisible=\"accrual_plan_id or state != 'confirm'\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
@@ -470,6 +446,7 @@ msgid ""
 "<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"to\" title=\"To\" "
 "invisible=\"accrual_plan_id\"/>"
 msgstr ""
+"<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"to\" title=\"To\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
@@ -477,6 +454,8 @@ msgid ""
 "<i class=\"oi oi-fw mx-2\" data-icon=\"east\" aria-label=\"to\" title=\"To\" "
 "invisible=\"accrual_plan_id\"/>"
 msgstr ""
+"<i class=\"oi oi-fw mx-2\" data-icon=\"east\" aria-label=\"to\" title=\"To\" "
+"invisible=\"accrual_plan_id\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -484,6 +463,8 @@ msgid ""
 "<i class=\"oi oi-lg align-self-center\" data-icon=\"label\" title=\"Time "
 "Type\" name=\"work_entry_type_id\"/>"
 msgstr ""
+"<i class=\"oi oi-lg align-self-center\" data-icon=\"label\" title=\"Time "
+"Type\" name=\"work_entry_type_id\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -999,6 +980,8 @@ msgstr "Frequência de acúmulo:"
 msgid ""
 "Accrual will stop until next carry-over date if the accrued time reaches"
 msgstr ""
+"A acumulação será suspensa até a próxima data de transferência de saldo se o "
+"tempo acumulado atingir"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_needaction
@@ -1733,8 +1716,8 @@ msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_time_rule_view_form_inherit_hr_holidays
-msgid "Choose a Time Off Type"
-msgstr "Escolha um tipo de folga"
+msgid "Choose a Time Type"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__maximum_leave
@@ -2206,6 +2189,7 @@ msgstr "Cancelar"
 #: model:ir.model.fields,field_description:hr_holidays.field_load_public_holiday_wizard_line__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_activity_type__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_message_subtype__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_publisher_warranty_contract__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_res_company__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_res_groups__display_name
@@ -2730,6 +2714,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_holidays.field_load_public_holiday_wizard_line__id
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_activity_type__id
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_message_subtype__id
+#: model:ir.model.fields,field_description:hr_holidays.field_publisher_warranty_contract__id
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary__id
 #: model:ir.model.fields,field_description:hr_holidays.field_res_company__id
 #: model:ir.model.fields,field_description:hr_holidays.field_res_groups__id
@@ -3825,6 +3810,11 @@ msgstr ""
 "Os feriados devem ser contados na duração da licença ao solicitar licenças"
 
 #. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_publisher_warranty_contract
+msgid "Publisher Warranty Contract"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__rating_ids
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__rating_ids
 msgid "Ratings"
@@ -4381,6 +4371,8 @@ msgid ""
 "The allocation balance can go negative when the deficit exceeds the "
 "available balance."
 msgstr ""
+"O saldo da alocação pode ficar negativo quando o déficit excede o saldo "
+"disponível."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4463,7 +4455,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "The plan will be on hold if the balance reaches"
-msgstr ""
+msgstr "O plano ficará em espera se o saldo atingir"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_date_check3
@@ -5544,6 +5536,11 @@ msgid ""
 "may be finer than the condition unit (e.g. hour output on a day leave trims "
 "the source to sub-day)."
 msgstr ""
+"Você pode definir um tipo de tempo que será criado para contar a quantidade "
+"de tempo em excesso. Não pode ser um tipo de tempo que exija uma alocação. A "
+"unidade de saída pode ser mais refinada do que a unidade da condição (por "
+"exemplo, saída em horas em uma licença por dia reduz a fonte para frações de "
+"dia)."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_time_rule_view_form_inherit_hr_holidays
@@ -5553,6 +5550,11 @@ msgid ""
 "allocation. The output unit may be finer than the condition unit (e.g. hour "
 "output on a day leave trims the source to sub-day)."
 msgstr ""
+"Você pode definir um tipo de tempo que será criado para contar a quantidade "
+"de tempo faltante para cumprir a condição. Não pode ser um tipo de tempo que "
+"exija uma alocação. A unidade de saída pode ser mais refinada do que a "
+"unidade da condição (por exemplo, saída em horas em uma licença por dia "
+"reduz a fonte para frações de dia)."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__carryover_options
@@ -5759,12 +5761,9 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_work_entry_type.py:0
 msgid ""
 "You cannot modify the 'Duration Count' setting because one or more leaves "
-"have already been taken for this time off type. Changing it now would affect "
+"have already been taken for this time type. Changing it now would affect "
 "existing employee balances."
 msgstr ""
-"Não é possível modificar a configuração “Contagem de duração”, pois uma ou "
-"mais folgas já foram tiradas para esse tipo de licença. Alterá-la agora "
-"afetaria os saldos existentes dos funcionários."
 
 #. module: hr_holidays
 #. odoo-python
@@ -6184,6 +6183,72 @@ msgstr "validar"
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
 msgid "year(s)"
 msgstr "ano(s)"
+
+#~ msgid ""
+#~ "\n"
+#~ "Manage time off requests and allocations\n"
+#~ "========================================\n"
+#~ "\n"
+#~ "This application controls the time off schedule of your company. It "
+#~ "allows employees to request time off. Then, managers can review requests "
+#~ "for time off and approve or reject them. This way you can control the "
+#~ "overall time off planning for the company or department.\n"
+#~ "\n"
+#~ "You can configure several kinds of time off (sickness, paid days, ...) "
+#~ "and allocate time off to an employee or department quickly using time off "
+#~ "allocation. An employee can also make a request for more days off by "
+#~ "making a new time off allocation. It will increase the total of available "
+#~ "days for that time type (if the request is accepted).\n"
+#~ "\n"
+#~ "You can keep track of time off in different ways by following reports:\n"
+#~ "\n"
+#~ "* Time Off Summary\n"
+#~ "* Time Off by Department\n"
+#~ "* Time Off Analysis\n"
+#~ "\n"
+#~ "A synchronization with an internal agenda (Meetings of the CRM module) is "
+#~ "also possible in order to automatically create a meeting when a time off "
+#~ "request is accepted by setting up a type of meeting in time off Type.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Gerenciar solicitações e alocações de folgas\n"
+#~ "========================================\n"
+#~ "\n"
+#~ "Este aplicativo controla o calendário de folgas da sua empresa. Ele "
+#~ "permite que os funcionários solicitem folgas. Em seguida, os gerentes "
+#~ "podem analisar as solicitações de folgas e aprová-las ou rejeitá-las. "
+#~ "Dessa forma, você pode controlar o planejamento geral de folgas para a "
+#~ "empresa ou departamento.\n"
+#~ "\n"
+#~ "Você pode configurar vários tipos de folga (doença, dias "
+#~ "remunerados, ...) e alocar folgas a um funcionário ou departamento "
+#~ "rapidamente usando a alocação de folga. Um funcionário também pode "
+#~ "solicitar mais dias de folga criando uma nova alocação de folga. Isso "
+#~ "aumentará o total de dias disponíveis para esse tipo de folga (se o "
+#~ "pedido for aceito).\n"
+#~ "\n"
+#~ "Você pode acompanhar as folgas de diferentes maneiras por meio dos "
+#~ "seguintes relatórios:\n"
+#~ "\n"
+#~ "* Resumo de folgas\n"
+#~ "* Folgas por Departamento\n"
+#~ "* Análise de folgas\n"
+#~ "\n"
+#~ "Também é possível sincronizar com uma agenda interna (Reuniões do módulo "
+#~ "CRM) para criar automaticamente uma reunião quando um pedido de folga for "
+#~ "aceito, configurando um tipo de reunião no campo Tipo de folga.\n"
+
+#~ msgid "Choose a Time Off Type"
+#~ msgstr "Escolha um tipo de folga"
+
+#~ msgid ""
+#~ "You cannot modify the 'Duration Count' setting because one or more leaves "
+#~ "have already been taken for this time off type. Changing it now would "
+#~ "affect existing employee balances."
+#~ msgstr ""
+#~ "Não é possível modificar a configuração “Contagem de duração”, pois uma "
+#~ "ou mais folgas já foram tiradas para esse tipo de licença. Alterá-la "
+#~ "agora afetaria os saldos existentes dos funcionários."
 
 #~ msgid ""
 #~ "<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"Arrow icon\" "

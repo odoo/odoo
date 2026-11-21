@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:39+0000\n"
+"POT-Creation-Date: 2026-11-20 17:37+0000\n"
 "PO-Revision-Date: 2026-11-10 08:13+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-20/"
@@ -676,6 +676,12 @@ msgid "Origin Company"
 msgstr "شركة المنشأ"
 
 #. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move.py:0
+msgid "Others"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking_type
 msgid "Picking Type"
 msgstr "نوع الانتقاء"
@@ -984,6 +990,12 @@ msgid "Valuation by Lot/Serial"
 msgstr "التقييم حسب الدفعة/الرقم التسلسلي"
 
 #. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move.py:0
+msgid "Valuation correction following a cost change on: %s"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__value
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__value
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__value
@@ -1057,14 +1069,6 @@ msgstr ""
 "%s"
 
 #. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/stock_picking.py:0
-msgid ""
-"You cannot modify the scheduled date of operation %s because it falls within "
-"a locked fiscal period."
-msgstr "لا يمكنك تعديل تاريخ العملية المجدول %s لأنه يقع ضمن فترة مالية مقفلة."
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__account_move_id
 msgid "stock_move_id"
 msgstr "stock_move_id"
@@ -1073,6 +1077,12 @@ msgstr "stock_move_id"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "units"
 msgstr "وحدات"
+
+#~ msgid ""
+#~ "You cannot modify the scheduled date of operation %s because it falls "
+#~ "within a locked fiscal period."
+#~ msgstr ""
+#~ "لا يمكنك تعديل تاريخ العملية المجدول %s لأنه يقع ضمن فترة مالية مقفلة."
 
 #~ msgid "Account"
 #~ msgstr "الحساب"

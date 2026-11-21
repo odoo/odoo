@@ -14,21 +14,22 @@
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Yoshi Tashiro <tashiro@quartile.co>, 2025.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
+# MAHAMADASIF ANSARI <maan@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:40+0000\n"
-"PO-Revision-Date: 2026-11-13 06:33+0000\n"
-"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-20/sale/"
-"ja/>\n"
+"POT-Creation-Date: 2026-11-20 17:38+0000\n"
+"PO-Revision-Date: 2026-11-19 09:18+0000\n"
+"Last-Translator: MAHAMADASIF ANSARI <maan@odoo.com>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-20/sale/ja/"
+">\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: sale
 #. odoo-javascript
@@ -85,22 +86,6 @@ msgstr "%(attribute)s: %(values)s"
 #. odoo-python
 #: code:addons/sale/wizard/accrued_orders.py:0
 msgid ""
-"%(order)s - %(order_line)s: Goods Delivered not Invoiced (perpetual "
-"valuation)"
-msgstr "%(order)s - %(order_line)s: 納品済未請求商品 (継続記録評価)"
-
-#. module: sale
-#. odoo-python
-#: code:addons/sale/wizard/accrued_orders.py:0
-msgid ""
-"%(order)s - %(order_line)s: Goods Invoiced not Delivered (perpetual "
-"valuation)"
-msgstr "%(order)s - %(order_line)s: 請求済未納品商品 (継続記録評価)"
-
-#. module: sale
-#. odoo-python
-#: code:addons/sale/wizard/accrued_orders.py:0
-msgid ""
 "%(order)s - %(order_line)s; %(quantity_invoiced)s Invoiced, %"
 "(quantity_delivered)s Delivered at %(unit_price)s each"
 msgstr ""
@@ -121,7 +106,7 @@ msgstr "&amp;nbsp;"
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_pro_forma_invoice
 msgid "'PRO FORMA - %s' % (object.name)"
-msgstr "プロフォーマ -%s % (object.name)"
+msgstr "'プロフォーマ - %s' % (object.name)"
 
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_saleorder
@@ -958,7 +943,8 @@ msgstr "<strong class=\"smaller text-uppercase text-muted\">請求書</strong>"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid ""
 "<strong class=\"smaller text-uppercase text-muted\">Your advantage</strong>"
-msgstr "<strong class=\"smaller text-uppercase text-muted\">お客様の割引額</strong>"
+msgstr ""
+"<strong class=\"smaller text-uppercase text-muted\">お客様の割引額</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1320,12 +1306,12 @@ msgid ""
 "e.g. this option can be useful to share Product description files."
 msgstr ""
 "販売プロセス内で顧客とドキュメントを共有できるようにします。\n"
-"見積もりから: ドキュメントは顧客に送信され、いつでもアクセス可能になります"
-"。\n"
+"見積もりから: ドキュメントは顧客に送信され、いつでもアクセス可能になりま"
+"す。\n"
 "例: プロダクト説明ファイルなどを共有する際に便利です。\n"
 "注文確定時: ドキュメントは顧客に送信され、アクセス可能になります。\n"
-"例： 取扱説明書や、ECで購入されたデジタルコンテンツを共有する際に便利です。 "
-"\n"
+"例： 取扱説明書や、ECで購入されたデジタルコンテンツを共有する際に便利で"
+"す。 \n"
 "プロダクトページ上: ドキュメントはプロダクトページ上で顧客がアクセスできるよ"
 "うになります。\n"
 "例：プロダクト説明ファイルなどを共有する際に便利です。"
@@ -2881,7 +2867,8 @@ msgstr ""
 msgid ""
 "If you change the pricelist, the prices of all order lines will be updated "
 "accordingly."
-msgstr "価格表を変更すると、すべてのオーダ明細の価格がそれに応じて更新されます。"
+msgstr ""
+"価格表を変更すると、すべてのオーダ明細の価格がそれに応じて更新されます。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -5941,7 +5928,8 @@ msgstr ""
 msgid ""
 "Validity of the quotation. After this date, you will no longer be able to "
 "sign and pay it."
-msgstr "見積もりの有効期限です。この日付を過ぎると、署名や支払いができなくなります。"
+msgstr ""
+"見積もりの有効期限です。この日付を過ぎると、署名や支払いができなくなります。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -6254,8 +6242,8 @@ msgid ""
 "{{ object.company_id.name }} Order {{ object.name or 'n/a' }} "
 "{{ object.client_order_ref and ('(' + object.client_order_ref + ')') or '' }}"
 msgstr ""
-"{{ object.company_id.name }} オーダ {{ object.name or 'n/a' }} {{ "
-"object.client_order_ref and ('(' + object.client_order_ref + ')') or '' }}"
+"{{ object.company_id.name }} オーダ {{ object.name or 'n/a' }} "
+"{{ object.client_order_ref and ('(' + object.client_order_ref + ')') or '' }}"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_payment_executed
@@ -6285,8 +6273,18 @@ msgid ""
 "{{ object.client_order_ref and ('(' + object.client_order_ref + ')') or '' }}"
 msgstr ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and '見積も"
-"り' or 'オーダ' }} {{ object.name or '該当なし' }} {{ "
-"object.client_order_ref and ('(' + object.client_order_ref + ')') or '' }}"
+"り' or 'オーダ' }} {{ object.name or '該当なし' }} "
+"{{ object.client_order_ref and ('(' + object.client_order_ref + ')') or '' }}"
+
+#~ msgid ""
+#~ "%(order)s - %(order_line)s: Goods Delivered not Invoiced (perpetual "
+#~ "valuation)"
+#~ msgstr "%(order)s - %(order_line)s: 納品済未請求商品 (継続記録評価)"
+
+#~ msgid ""
+#~ "%(order)s - %(order_line)s: Goods Invoiced not Delivered (perpetual "
+#~ "valuation)"
+#~ msgstr "%(order)s - %(order_line)s: 請求済未納品商品 (継続記録評価)"
 
 #~ msgid ""
 #~ "<div style=\"margin: 0px; padding: 0px;\">\n"

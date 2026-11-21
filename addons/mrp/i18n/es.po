@@ -20,18 +20,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 17:41+0000\n"
-"PO-Revision-Date: 2026-11-10 12:13+0000\n"
+"POT-Creation-Date: 2026-11-20 17:37+0000\n"
+"PO-Revision-Date: 2026-11-16 11:08+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
-"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-20/mrp/es/>"
-"\n"
+"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-20/mrp/es/"
+">\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__state
@@ -823,7 +823,7 @@ msgstr "Real"
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__cost_mode__actual
 msgid "Actual time"
-msgstr "Hora actual"
+msgstr "Tiempo real"
 
 #. module: mrp
 #. odoo-javascript
@@ -2337,6 +2337,11 @@ msgid ""
 "- Based on Theoretical time: the cost will be calculated based on estimated "
 "time and costs."
 msgstr ""
+"Define cómo Odoo calcula el coste de la operación:\n"
+"- Según el tiempo real: el coste se calcula según el tiempo registrado y el "
+"coste real de los empleados.\n"
+"- Según el tiempo teórico: el coste se calcula según el tiempo estimado y "
+"los costes."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__unbuild_id
@@ -6399,7 +6404,7 @@ msgstr "El total debe ser igual a la cantidad a producir."
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__cost_mode__estimated
 msgid "Theoretical time"
-msgstr ""
+msgstr "Tiempo teórico"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -7662,16 +7667,6 @@ msgstr ""
 "Pérdidas de productividad."
 
 #. module: mrp
-#. odoo-python
-#: code:addons/mrp/models/mrp_production.py:0
-msgid ""
-"You need to supply Lot/Serial Number for products and 'consume' them: %"
-"(missing_products)s"
-msgstr ""
-"Debe proporcionar el número de lote o serie para los productos y "
-"“consumirlos”: %(missing_products)s"
-
-#. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder
 msgid "You produced less than the initial demand"
 msgstr "Ha producido menos que la demanda inicial"
@@ -7846,6 +7841,13 @@ msgstr "duración real"
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "split"
 msgstr "divididas"
+
+#~ msgid ""
+#~ "You need to supply Lot/Serial Number for products and 'consume' them: %"
+#~ "(missing_products)s"
+#~ msgstr ""
+#~ "Debe proporcionar el número de lote o serie para los productos y "
+#~ "“consumirlos”: %(missing_products)s"
 
 #~ msgid "<strong>Barcode</strong>"
 #~ msgstr "<strong>Código de barras</strong>"

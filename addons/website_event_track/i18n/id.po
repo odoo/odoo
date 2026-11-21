@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-06 17:40+0000\n"
-"PO-Revision-Date: 2026-09-23 06:03+0000\n"
+"PO-Revision-Date: 2026-11-20 10:10+0000\n"
 "Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-20/"
 "website_event_track/id/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: website_event_track
 #. odoo-python
@@ -53,7 +53,7 @@ msgstr "%(name)s, %(function)s pada %(company)s"
 #. odoo-python
 #: code:addons/website_event_track/controllers/location_display.py:0
 msgid "%(start_time)s – %(end_time)s"
-msgstr ""
+msgstr "%(start_time)s – %(end_time)s"
 
 #. module: website_event_track
 #. odoo-python
@@ -71,13 +71,13 @@ msgstr "%s Lamaran Acara Online"
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
 msgid "(timezone:"
-msgstr ""
+msgstr "(zona waktu:"
 
 #. module: website_event_track
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
 msgid ", your favorites are only available from this device."
-msgstr ""
+msgstr ", favorit Anda hanya tersedia dari perangkat ini."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_17
@@ -145,6 +145,33 @@ msgid ""
 "    </t>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    Kepada <t t-out=\"object.partner_id.name or object.partner_name or ''\">"
+"Brandon Freeman</t><br>\n"
+"    Dengan senang hati kami informasikan bahwa proposal Anda <t t-"
+"out=\"object.name or ''\">What This Event Is All About</t> telah diterima "
+"dan dikonfirmasi untuk acara <t t-out=\"object.event_id.name or ''\">"
+"OpenWood Collection Online Reveal</t>.\n"
+"    <br>\n"
+"    Anda dapat melihat detail selengkapnya di sini:\n"
+"    <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ "
+"object.id }}\" t-attf-style=\"padding: 8px 16px 8px 16px; font-size: 14px; "
+"color: {{object.company_id.email_primary_color or '#FFFFFF'}}; text-"
+"decoration: none !important; background-color: {"
+"{object.company_id.email_secondary_color or '#875A7B'}}; border-radius:3px\">"
+"\n"
+"            Lihat Talk\n"
+"        </a>\n"
+"    </div>\n"
+"    <br><br>\n"
+"    Terima kasih,\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"><t t-"
+"out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
+"    </t>\n"
+"</div>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_location_display
@@ -154,6 +181,10 @@ msgid ""
 "                <span>Last updated at</span>\n"
 "                <time/>"
 msgstr ""
+"<i class=\"oi me-1 align-middle\" data-icon=\"link_off\" aria-"
+"hidden=\"true\"/>\n"
+"                <span>Terakhir diperbarui pada</span>\n"
+"                <time/>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_search
@@ -161,6 +192,8 @@ msgid ""
 "<i class=\"oi oi-filled mx-2 text-muted\" data-icon=\"notifications\"/> "
 "Favorite Talks"
 msgstr ""
+"<i class=\"oi oi-filled mx-2 text-muted\" data-icon=\"notifications\"/> Talk "
+"Favorit"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
@@ -168,6 +201,8 @@ msgid ""
 "<i class=\"oi oi-filled\" data-icon=\"star\" title=\"Favorite On\"/> <span "
 "class=\"d-none d-sm-inline\">Favorited</span>"
 msgstr ""
+"<i class=\"oi oi-filled\" data-icon=\"star\" title=\"Favorite On\"/> <span "
+"class=\"d-none d-sm-inline\">Difavoritkan</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
@@ -175,16 +210,18 @@ msgid ""
 "<i class=\"oi\" data-icon=\"star\" title=\"Set Favorite\"/> <span "
 "class=\"\">Add to favorite</span>"
 msgstr ""
+"<i class=\"oi\" data-icon=\"star\" title=\"Set Favorite\"/> <span class=\"\">"
+"Tambahkan ke favorit</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_list_item
 msgid "<span class=\"d-none d-md-block\">&amp;bull;</span>"
-msgstr ""
+msgstr "<span class=\"d-none d-md-block\">&amp;bull;</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
 msgid "<span class=\"o_stat_text\">Track Locations</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Lokasi Track</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -196,6 +233,12 @@ msgid ""
 "class=\"o_wetrack_proposal_error_message\"/>\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\">\n"
+"                                    <i class=\"oi mr4\" data-icon=\"close\" "
+"role=\"img\" aria-label=\"Kesalahan\" title=\"Kesalahan\"/>\n"
+"                                    <span "
+"class=\"o_wetrack_proposal_error_message\"/>\n"
+"                                </span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -203,6 +246,8 @@ msgid ""
 "<span class=\"o_wetrack_proposal_label_content\">Talk Introduction</span>\n"
 "                                        <span>*</span>"
 msgstr ""
+"<span class=\"o_wetrack_proposal_label_content\">Pengantar Talk</span>\n"
+"                                        <span>*</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -210,6 +255,8 @@ msgid ""
 "<span class=\"o_wetrack_proposal_label_content\">Talk Title</span>\n"
 "                                        <span>*</span>"
 msgstr ""
+"<span class=\"o_wetrack_proposal_label_content\">Judul Talk</span>\n"
+"                                        <span>*</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_location_display_content
@@ -217,17 +264,19 @@ msgid ""
 "<span class=\"o_wevent_location_display_live_badge d-inline-block align-"
 "middle me-2 bg-danger rounded-pill\"/>Live Now"
 msgstr ""
+"<span class=\"o_wevent_location_display_live_badge d-inline-block align-"
+"middle me-2 bg-danger rounded-pill\"/>Live Sekarang"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
 msgid "<span class=\"oi me-1\" data-icon=\"add\"/> Schedule Tracks"
-msgstr ""
+msgstr "<span class=\"oi me-1\" data-icon=\"add\"/> Jadwalkan Pelacakan"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
 msgid "<span class=\"text-muted\"> tracks</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\"> trek</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
@@ -654,6 +703,392 @@ msgid ""
 "            </table>\n"
 "        "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
+"align=\"center\">\n"
+"            <t t-set=\"event_organizer\" t-"
+"value=\"object.event_id.organizer_id\"></t>\n"
+"            <t t-set=\"event_address\" t-"
+"value=\"object.event_id.address_id\"></t>\n"
+"            <t t-set=\"is_online\" t-value=\"'is_published' in "
+"object.event_id and object.event_id.is_published\"></t>\n"
+"            <t t-set=\"agenda_urls\" t-"
+"value=\"object._get_track_calendar_urls()\"></t>\n"
+"            <t t-set=\"google_url\" t-value=\"agenda_urls.get('google_url')"
+"\"></t>\n"
+"            <t t-set=\"iCal_url\" t-value=\"agenda_urls.get('iCal_url')\"></"
+"t>\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"padding: 16px; background-color: white; color: "
+"#454748; border-collapse:separate;\">\n"
+"            <tbody>\n"
+"                <!-- HEADER -->\n"
+"                <tr>\n"
+"                    <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                        <table width=\"590\" border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"min-width: 590px; background-color: white; "
+"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                            <tr><td valign=\"middle\">\n"
+"                                <span style=\"font-size: 10px;\">Pantau "
+"Acara Anda</span><br>\n"
+"                                <span style=\"font-size: 20px; font-weight: "
+"bold;\" t-out=\"object.name\"></span>\n"
+"                            </td><td valign=\"middle\" align=\"right\">\n"
+"                                <t t-if=\"not "
+"object.company_id.uses_default_logo\">\n"
+"                                    <img t-att-src=\"'/logo.png?company=%s' "
+"% object.company_id.id\" style=\"padding: 0px; margin: 0px; margin-right: "
+"10px; height: auto; width: 80px;\" t-att-alt=\"'%s' % "
+"object.company_id.name\">\n"
+"                                </t>\n"
+"                            </td></tr>\n"
+"                            <tr><td colspan=\"2\" style=\"text-"
+"align:center;\">\n"
+"                              <hr width=\"100%\" style=\"background-color:rgb"
+"(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin:16px 0px 16px 0px;\">\n"
+"                            </td></tr>\n"
+"                        </table>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <!-- TALK DESCRIPTION -->\n"
+"                <tr>\n"
+"                    <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                        <table width=\"590\" border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"min-width: 590px; background-color: white; "
+"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                            <tr><td valign=\"top\" style=\"font-size: "
+"14px;\">\n"
+"                                <div>\n"
+"                                    Halo<t t-if=\"not user_id.is_public\" t-"
+"out=\"' ' + user_id.name\"></t>,\n"
+"                                    <br><br>\n"
+"                                    Anda baru-baru ini menunjukkan minat "
+"untuk talk\n"
+"                                    <a t-if=\"object.description or "
+"object.partner_biography\" t-attf-href=\"{{ object.get_base_url() }}{{ "
+"object.website_url }}\" style=\"font-weight:bold;color:#875A7B;text-"
+"decoration:none;\" t-out=\"object.name or ''\">OpenWood Collection Online "
+"Reveal</a>\n"
+"                                    <span t-else=\"\" style=\"font-"
+"weight:bold;\" t-out=\"object.name or ''\">OpenWood Collection Online "
+"Reveal</span>.\n"
+"                                </div>\n"
+"                                <div t-if=\"agenda_urls\">\n"
+"                                    <br>\n"
+"                                    <table style=\"width: auto;\">\n"
+"                                        <tr>\n"
+"                                            <td>\n"
+"                                                <strong>Tambahkan talk ini "
+"ke kalender</strong>\n"
+"                                            </td>\n"
+"                                            <td>\n"
+"                                                <a t-if=\"iCal_url\" t-att-"
+"href=\"iCal_url\" style=\"padding-top: 10px; padding-right:8px; padding-"
+"bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; "
+"background-color: #E7E9ED;\">\n"
+"                                                    <img src=\"/event/static/"
+"src/img/apple-calendar-128.png\" alt=\"iCal\" title=\"iCal\" style=\"height: "
+"20px; vertical-align: baseline;\">\n"
+"                                                </a>\n"
+"                                            </td>\n"
+"                                            <td>\n"
+"                                                <a t-if=\"iCal_url\" t-att-"
+"href=\"iCal_url\" style=\"padding-top: 10px; padding-right:8px; padding-"
+"bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; "
+"background-color: #E7E9ED;\">\n"
+"                                                    <img src=\"/event/static/"
+"src/img/outlook-calendar-128.png\" alt=\"Outlook\" title=\"Outlook\" "
+"style=\"height: 20px; vertical-align: baseline;\">\n"
+"                                                </a>\n"
+"                                            </td>\n"
+"                                            <td>\n"
+"                                                <a t-if=\"google_url\" t-att-"
+"href=\"google_url\" target=\"new\" style=\"padding-top: 10px; padding-"
+"right:8px; padding-bottom:2px; padding-left:8px; margin-left: 8px; border-"
+"radius: 3px; background-color: #E7E9ED;\">\n"
+"                                                    <img src=\"/event/static/"
+"src/img/google-calendar-128.png\" alt=\"Google\" title=\"Google\" "
+"style=\"height: 20px; vertical-align: baseline;\">\n"
+"                                                </a>\n"
+"                                            </td>\n"
+"                                        </tr>\n"
+"                                    </table>\n"
+"                                    <br><br>\n"
+"                                </div>\n"
+"                                <div>\n"
+"                                    Sampai jumpa,<br>\n"
+"                                    <span style=\"color: #454748;\">\n"
+"                                    -- <br>\n"
+"                                    <t t-"
+"out=\"object.event_id.organizer_id.name or object.event_id.company_id.name "
+"or ''\">YourCompany</t>\n"
+"                                    </span>\n"
+"                                </div>\n"
+"                            </td></tr>\n"
+"                            <tr><td style=\"text-align:center;\">\n"
+"                              <hr width=\"100%\" style=\"background-color:rgb"
+"(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                            </td></tr>\n"
+"                        </table>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <!-- DETAILS -->\n"
+"                <tr>\n"
+"                    <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                        <table width=\"590\" border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"min-width: 590px; background-color: white; "
+"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                            <tr><td valign=\"top\" style=\"font-size: "
+"14px;\">\n"
+"                                <table style=\"width:100%;\">\n"
+"                                    <tr>\n"
+"                                        <td style=\"vertical-align:top;\">\n"
+"                                            <img src=\"/mail/font_to_img/"
+"61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" "
+"height=\"34\" alt=\"\">\n"
+"                                        </td>\n"
+"                                        <td style=\"padding: 0px 10px 0px "
+"10px;width:50%;line-height:20px;vertical-align:top;\">\n"
+"                                            <div t-if=\"object.is_one_day\">"
+"\n"
+"                                                <t t-out=\"object.date\" t-"
+"options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;date_only&quot;: "
+"True, &quot;tz_name&quot;: object.event_id.date_tz, &quot;format&quot;: "
+"&quot;long&quot;}\">4 Mei 2021</t>\n"
+"                                                <t t-out=\"object.date\" t-"
+"options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;time_only&quot;: "
+"True, &quot;tz_name&quot;: object.event_id.date_tz, "
+"&quot;hide_seconds&quot;: True, &quot;format&quot;: &quot;short&quot;}\">"
+"7:00 AM</t>\n"
+"                                                 - <t t-"
+"out=\"object.date_end\" t-options=\"{&quot;widget&quot;: "
+"&quot;datetime&quot;, &quot;time_only&quot;: True, &quot;tz_name&quot;: "
+"object.event_id.date_tz, &quot;hide_seconds&quot;: True, &quot;format&quot;: "
+"&quot;short&quot;}\">5:00 PM</t>\n"
+"                                            </div>\n"
+"                                            <div t-else=\"\">\n"
+"                                                <strong>Dari</strong>\n"
+"                                                <t t-out=\"object.date or "
+"object.event_id.date_begin\" t-options=\"{&quot;widget&quot;: "
+"&quot;datetime&quot;, &quot;date_only&quot;: True, &quot;tz_name&quot;: "
+"object.event_id.date_tz, &quot;format&quot;: &quot;long&quot;}\">4 Mei 2021</"
+"t>\n"
+"                                                 - <t t-out=\"object.date or "
+"object.event_id.date_begin\" t-options=\"{&quot;widget&quot;: "
+"&quot;datetime&quot;, &quot;time_only&quot;: True, &quot;tz_name&quot;: "
+"object.event_id.date_tz, &quot;hide_seconds&quot;: True, &quot;format&quot;: "
+"&quot;short&quot;}\">7:00 AM</t>\n"
+"                                                <strong>Sampai</strong>\n"
+"                                                <t t-out=\"object.date_end "
+"or object.event_id.date_end\" t-options=\"{&quot;widget&quot;: "
+"&quot;datetime&quot;, &quot;date_only&quot;: True, &quot;tz_name&quot;: "
+"object.event_id.date_tz, &quot;format&quot;: &quot;long&quot;}\">6 Mei 2021</"
+"t>\n"
+"                                                 - <t t-"
+"out=\"object.date_end or object.event_id.date_end\" t-options=\""
+"{&quot;widget&quot;: &quot;datetime&quot;, &quot;time_only&quot;: True, "
+"&quot;tz_name&quot;: object.event_id.date_tz, &quot;hide_seconds&quot;: "
+"True, &quot;format&quot;: &quot;short&quot;}\">5:00 PM</t>\n"
+"                                            </div>\n"
+"                                            <div style=\"font-"
+"size:12px;color:#9e9e9e\"><i><t t-out=\"object.event_id.date_tz or ''\">"
+"Eropa/Brussels</t></i></div>\n"
+"                                        </td>\n"
+"                                        <td style=\"vertical-align:top;\">\n"
+"                                            <t t-if=\"event_address or "
+"object.location_id\">\n"
+"                                                <img src=\"/mail/font_to_img/"
+"61505/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" "
+"height=\"34\" alt=\"\">\n"
+"                                            </t>\n"
+"                                        </td>\n"
+"                                        <td style=\"padding: 0px 10px 0px "
+"10px;width:50%;vertical-align:top;\">\n"
+"                                            <t t-if=\"event_address\">\n"
+"                                                <t t-set=\"location\" t-"
+"value=\"''\"></t>\n"
+"                                                <t t-"
+"if=\"event_address.name\">\n"
+"                                                    <div t-"
+"out=\"event_address.name or ''\">Teksa SpA</div>\n"
+"                                                </t>\n"
+"                                                <t t-"
+"if=\"event_address.street\">\n"
+"                                                    <div t-"
+"out=\"event_address.street or ''\">Puerto Madero 9710</div>\n"
+"                                                    <t t-set=\"location\" t-"
+"value=\"event_address.street\"></t>\n"
+"                                                </t>\n"
+"                                                <t t-"
+"if=\"event_address.street2\">\n"
+"                                                    <div t-"
+"out=\"event_address.street2 or ''\">Of A15, Santiago (RM)</div>\n"
+"                                                    <t t-set=\"location\" t-"
+"value=\"'%s, %s' % (location, event_address.street2)\"></t>\n"
+"                                                </t>\n"
+"                                                <div>\n"
+"                                                    <t t-"
+"if=\"event_address.city\">\n"
+"                                                        <t t-"
+"out=\"event_address.city or ''\">Pudahuel</t>,\n"
+"                                                        <t t-"
+"set=\"location\" t-value=\"'%s, %s' % (location, event_address.city)\"></t>\n"
+"                                                    </t>\n"
+"                                                    <t t-"
+"if=\"event_address.state_id.name\">\n"
+"                                                        <t t-"
+"out=\"event_address.state_id.name or ''\">C1</t>,\n"
+"                                                        <t t-"
+"set=\"location\" t-value=\"'%s, %s' % (location, event_address.state_id.name)"
+"\"></t>\n"
+"                                                    </t>\n"
+"                                                    <t t-"
+"if=\"event_address.zip\">\n"
+"                                                        <t t-"
+"out=\"event_address.zip or ''\">98450</t>\n"
+"                                                        <t t-"
+"set=\"location\" t-value=\"'%s, %s' % (location, event_address.zip)\"></t>\n"
+"                                                    </t>\n"
+"                                                </div>\n"
+"                                                <t t-"
+"if=\"event_address.country_id.name\">\n"
+"                                                    <div t-"
+"out=\"event_address.country_id.name or ''\">Argentina</div>\n"
+"                                                    <t t-set=\"location\" t-"
+"value=\"'%s, %s' % (location, event_address.country_id.name)\"></t>\n"
+"                                                </t>\n"
+"                                            </t>\n"
+"                                            <div t-if=\"object.location_id\" "
+"t-out=\"'Lokasi talk:' + object.location_id.name\"></div>\n"
+"                                        </td>\n"
+"                                    </tr>\n"
+"                                </table>\n"
+"                            </td></tr>\n"
+"                            <tr t-if=\"not object.date\">\n"
+"                                <td>\n"
+"                                    <strong><u>Catatan</u></strong>: Waktu "
+"mulai dan berakhirnya talk belum ditentukan saat email dikirim. Waktu yang "
+"tertera pada pesan ini sesuai dengan waktu acara.\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                            <tr><td style=\"text-align:center;\">\n"
+"                                <t t-if=\"event_organizer\">\n"
+"                                    <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                                </t>\n"
+"                            </td></tr>\n"
+"\n"
+"                            <tr><td valign=\"top\" style=\"font-size: "
+"14px;\">\n"
+"                                <!-- CONTACT ORGANIZER -->\n"
+"                                <t t-if=\"object.event_id.organizer_id.name "
+"or object.event_id.company_id.name\">\n"
+"                                    <div>\n"
+"                                        <span style=\"font-"
+"weight:300;margin:10px 0px\">Ada pertanyaan tentang talk ini?</span>\n"
+"                                        <div>Silakan hubungi penyelenggara:</"
+"div>\n"
+"                                        <ul>\n"
+"                                            <li t-"
+"out=\"object.event_id.organizer_id.name or object.event_id.company_id.name "
+"or ''\">YourCompany</li>\n"
+"                                            <t t-"
+"if=\"event_organizer.email\">\n"
+"                                                <li>Email: <a t-attf-"
+"href=\"mailto:{{ event_organizer.email }}\" style=\"text-"
+"decoration:none;color:#875A7B;\" t-out=\"event_organizer.email or ''\"></a></"
+"li>\n"
+"                                            </t>\n"
+"                                            <t t-"
+"if=\"object.event_id.organizer_id.phone or "
+"object.event_id.company_id.phone\">\n"
+"                                                <li>Telepon: <t t-"
+"out=\"object.event_id.organizer_id.phone or "
+"object.event_id.company_id.phone\"></t></li>\n"
+"                                            </t>\n"
+"                                        </ul>\n"
+"                                    </div>\n"
+"                                </t>\n"
+"                            </td></tr>\n"
+"\n"
+"                            <tr><td style=\"text-align:center;\">\n"
+"                                <!-- CONTACT ORGANIZER SEPARATION -->\n"
+"                                <hr t-if=\"is_online or event_address\" "
+"width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium "
+"none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; "
+"margin: 16px 0px 16px 0px;\">\n"
+"                            </td></tr>\n"
+"\n"
+"                            <tr><td valign=\"top\" style=\"font-size: "
+"14px;\">\n"
+"                                <!-- PWA MARKGETING -->\n"
+"                                <div t-if=\"is_online\">\n"
+"                                    <strong>Dapatkan pengalaman mobile "
+"terbaik.</strong>\n"
+"                                    <a href=\"/event\">Instal aplikasi "
+"mobile kami</a>\n"
+"                                </div>\n"
+"                            </td></tr>\n"
+"                            <tr><td style=\"text-align:center;\">\n"
+"                                <!-- PWA MARKGETING SEPARATION-->\n"
+"                                <hr t-if=\"is_online and event_address\" "
+"width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium "
+"none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; "
+"margin: 16px 0px 16px 0px;\">\n"
+"                            </td></tr>\n"
+"\n"
+"                            <tr><td valign=\"top\" style=\"font-size: "
+"14px;\">\n"
+"                                <!-- GOOGLE MAPS LINK -->\n"
+"                                <table t-if=\"event_address and location\" "
+"style=\"width:100%;\"><tr><td>\n"
+"                                    <div>\n"
+"                                        <img src=\"/web_editor/font_to_img/"
+"61505/rgb(81,81,102)/20\" height=\"20\" style=\"vertical-align: bottom;\">\n"
+"                                        <a t-attf-href=\"https://"
+"maps.google.com/maps?q={{ location }}\" target=\"new\">\n"
+"                                            <img t-"
+"if=\"event_address.static_map_url and "
+"event_address.static_map_url_is_valid\" t-attf-src=\"{{ "
+"event_address.static_map_url }}\" style=\"vertical-align:bottom; width: "
+"100%;\" alt=\"Google Maps\">\n"
+"                                            <span t-else=\"\">Lihat lokasi "
+"acara di Google Maps</span>\n"
+"                                        </a>\n"
+"                                    </div>\n"
+"                                </td></tr></table>\n"
+"                            </td></tr>\n"
+"                        </table>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </tbody>\n"
+"            </table>\n"
+"            </td></tr>\n"
+"            <!-- FOOTER BY -->\n"
+"            <tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"                <table t-if=\"object.company_id\" width=\"590\" border=\"0\" "
+"cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-"
+"color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"                  <tr><td style=\"text-align: center; font-size: 14px;\">\n"
+"                    Dikirim oleh <a target=\"_blank\" t-attf-href=\"{{ "
+"object.get_base_url() }}\" style=\"color: #875A7B;\" t-"
+"out=\"object.event_id.organizer_id.name or object.event_id.company_id.name "
+"or ''\">YourCompany</a>\n"
+"                    <t t-if=\"'website_url' in object.event_id and "
+"object.event_id.website_url\">\n"
+"                        <br>\n"
+"                        Lihat <a href=\"/event\" style=\"color:#875A7B;\">"
+"acara lainnya</a>.\n"
+"                    </t>\n"
+"                  </td></tr>\n"
+"                </table>\n"
+"            </td></tr>\n"
+"            </table>\n"
+"        "
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track7
@@ -732,7 +1167,7 @@ msgstr "Tambahkan tahap baru di pipeline tugas"
 #. module: website_event_track
 #: model:mail.template,name:website_event_track.mail_template_data_track_reminder
 msgid "Add reminder via email"
-msgstr ""
+msgstr "Tambah pengingat via email"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_tag
@@ -745,17 +1180,17 @@ msgstr ""
 #. module: website_event_track
 #: model:mail.template,description:website_event_track.mail_template_data_track_reminder
 msgid "Add talk reminder"
-msgstr ""
+msgstr "Tambah pengingat talk"
 
 #. module: website_event_track
 #: model:mail.template,subject:website_event_track.mail_template_data_track_reminder
 msgid "Add talk reminder: {{ object.name }}"
-msgstr ""
+msgstr "Tambahkan pengingat talk: {{ object.name }}"
 
 #. module: website_event_track
 #: model:ir.module.module,shortdesc:base.module_website_event_track
 msgid "Advanced Events"
-msgstr ""
+msgstr "Acara Lanjutan"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track19
@@ -783,7 +1218,7 @@ msgstr "Warna Agenda"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_view_form_quick_create
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "All Events"
-msgstr ""
+msgstr "Semua Acara"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_main
@@ -808,6 +1243,8 @@ msgid ""
 "Allow video and audio recording of their\n"
 "                            presentation, for publishing on our website."
 msgstr ""
+"Izinkan perekaman video dan audio\n"
+"                            presentasi, untuk dipublikasikan di website kami."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlisted_by_default
@@ -845,7 +1282,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
 msgid "As you are not"
-msgstr ""
+msgstr "Karena Anda tidak"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_17
@@ -894,7 +1331,7 @@ msgstr "Track Tag yang Tersedia"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_main
 msgid "Back to All Talks"
-msgstr ""
+msgstr "Kembali ke Semua Talk"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
@@ -1001,7 +1438,7 @@ msgstr "Indeks Warna"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__location_display_upcoming_track_count
 msgid "Coming Up Sessions"
-msgstr ""
+msgstr "Sesi Mendatang"
 
 #. module: website_event_track
 #. odoo-python
@@ -1017,7 +1454,7 @@ msgstr "Coming soon ..."
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_location_display_content
 msgid "Coming up"
-msgstr ""
+msgstr "Mendatang"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__company_id
@@ -1074,7 +1511,7 @@ msgstr "Email Kontak"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
 msgid "Contact Information"
-msgstr ""
+msgstr "Informasi Kontak"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__contact_phone
@@ -1238,7 +1675,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
 msgid "Do you want an invitation by email to add to your agenda?"
-msgstr ""
+msgstr "Apakah Anda ingin undangan melalui email untuk ditambahkan ke agenda?"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
@@ -1248,12 +1685,12 @@ msgstr "Dowel Hack"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
 msgid "Drag blocks here to add them on all event agenda pages"
-msgstr ""
+msgstr "Tarik blok ke sini untuk menambahkannya di semua halaman agenda acara"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Drag blocks here to add them on all event proposal pages"
-msgstr ""
+msgstr "Tarik blok ke sini untuk menambahkannya ke semua halaman proposal acara"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__duration
@@ -1297,7 +1734,7 @@ msgstr "Email*"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_location_display_empty_state
 msgid "End of the day"
-msgstr ""
+msgstr "Akhir hari"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_event
@@ -1407,7 +1844,7 @@ msgstr "Favorit"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
 msgid "Filter Tracks"
-msgstr ""
+msgstr "Filter Trek"
 
 #. module: website_event_track
 #. odoo-javascript
@@ -1418,7 +1855,7 @@ msgstr "Filter berdasarkan Tag"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
 msgid "Filters"
-msgstr ""
+msgstr "Filter"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_list_item
@@ -1469,7 +1906,7 @@ msgstr "Aktivitas Mendatang"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_confirmation_end_page_hook
 #: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
 msgid "Get prepared and"
-msgstr ""
+msgstr "Bersiaplah dan"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
@@ -1524,7 +1961,7 @@ msgstr "Tertinggi"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
 msgid "Home page"
-msgstr ""
+msgstr "Beranda"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track21
@@ -1876,7 +2313,7 @@ msgstr "Hidup di Rumah Mengelili Dunia: Cerita William"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Lightning Talks"
-msgstr ""
+msgstr "Presentasi Kilat"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_19
@@ -1918,12 +2355,12 @@ msgstr "Lokasi"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__location_display_background
 msgid "Location Display Background"
-msgstr ""
+msgstr "Latar Belakang Tampilan Lokasi"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location__location_display_url
 msgid "Location Display Link"
-msgstr ""
+msgstr "Link Tampilan Lokasi"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_13
@@ -1967,7 +2404,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Ikon Material Symbols, misalnya checklist"
 
 #. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__1
@@ -2022,7 +2459,7 @@ msgstr "Istirahat pagi hari"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "My Activities"
-msgstr ""
+msgstr "Aktivitas Saya"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__my_activity_date_deadline
@@ -2086,7 +2523,7 @@ msgstr "Tipe Aktivitas Berikutnya"
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
 msgid "No Invitation"
-msgstr ""
+msgstr "Tidak Ada Undangan"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
@@ -2097,12 +2534,12 @@ msgstr "Belum ada Pengunjung Track!"
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
 msgid "No don't ask again"
-msgstr ""
+msgstr "Tidak, jangan tanya lagi"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_location_display_empty_state
 msgid "No talks today"
-msgstr ""
+msgstr "Tidak ada presentasi hari ini"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_action_from_visitor
@@ -2129,12 +2566,12 @@ msgstr "Catat bahwa tag tanpa warna tidak akan tersedia pada website."
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_location_display_empty_state
 msgid "Nothing is scheduled in this room today."
-msgstr ""
+msgstr "Tidak ada yang dijadwalkan di ruangan ini hari ini."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_location_display_content
 msgid "Nothing planned right now"
-msgstr ""
+msgstr "Saat ini belum ada rencana"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_needaction_counter
@@ -2214,6 +2651,57 @@ msgid ""
 "You can activate a blog for each event allowing you to communicate on "
 "specific events. Visitors can subscribe to news to get informed."
 msgstr ""
+"Kelola Acara, Pelatihan, & Webinar\n"
+"-------------------------------------\n"
+"\n"
+"### Jadwalkan, Promosikan, Jual, Kelola\n"
+"\n"
+"Dapatkan fitur tambahan untuk setiap acara; berbagai halaman, sponsor, "
+"beragam presentasi, formulir proposal presentasi, agenda, berita terkait "
+"acara, dokumen (slide presentasi), serta menu khusus acara.\n"
+"\n"
+"Kelola Trek Anda\n"
+"--------------------\n"
+"\n"
+"### Dari proposal presentasi hingga publikasi\n"
+"\n"
+"Tambahkan formulir proposal presentasi pada acara Anda agar pengunjung dapat "
+"mengajukan materi presentasi dan pembicara. Atur proses validasi untuk "
+"setiap presentasi, dan buat jadwal dengan mudah.\n"
+"\n"
+"Integrasi frontend dan backend Odoo yang unik membuat pengelolaan dan "
+"publikasi menjadi sangat mudah. Rancang biografi pembicara dan deskripsi "
+"presentasi yang menarik dengan mudah.\n"
+"\n"
+"Agenda dan Daftar Presentasi\n"
+"------------------------\n"
+"\n"
+"### Antarmuka pengguna yang andal\n"
+"\n"
+"Dapatkan agenda yang menarik untuk setiap acara yang dipublikasikan secara "
+"otomatis di website Anda. Permudah pencarian dan penelusuran presentasi, "
+"serta fiter berdasarkan tag, lokasi, atau pembicara.\n"
+"\n"
+"Kelola Sponsor\n"
+"---------------\n"
+"\n"
+"### Jual sponsorship, promosikan sponsor Anda\n"
+"\n"
+"Tambahkan sponsor ke acara Anda dan tampilkan sponsor berdasarkan "
+"tingkatannya (misalnya bronze, silver, gold) di bagian bawah setiap halaman "
+"acara.\n"
+"\n"
+"Jual paket sponsorship secara online melalui Odoo eCommerce untuk integrasi "
+"siklus penjualan yang lengkap.\n"
+"\n"
+"Komunikasi Efisien\n"
+"-----------------------\n"
+"\n"
+"### Aktifkan blog untuk acara tertentu\n"
+"\n"
+"Anda dapat mengaktifkan blog untuk setiap acara agar dapat berkomunikasi "
+"mengenai acara tertentu. Pengunjung dapat berlangganan berita untuk "
+"mendapatkan informasi terbaru."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_20
@@ -2300,7 +2788,7 @@ msgstr "Proposal"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Proposals are closed."
-msgstr ""
+msgstr "Proposal ditutup."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__website_track_proposal
@@ -2364,7 +2852,7 @@ msgstr "Ditolak"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Regular Talks"
-msgstr ""
+msgstr "Presentasi Reguler"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__track_start_relative
@@ -2420,7 +2908,7 @@ msgstr "Kesalahan Pengiriman SMS`"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
 msgid "Search a talk..."
-msgstr ""
+msgstr "Cari presentasi..."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_6
@@ -2437,7 +2925,7 @@ msgstr "Pilih Kategori"
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
 msgid "Send Invitation"
-msgstr ""
+msgstr "Kirim Undangan"
 
 #. module: website_event_track
 #: model:mail.template,description:website_event_track.mail_template_data_track_confirmation
@@ -2470,6 +2958,7 @@ msgstr "Tunjukkan Tombol"
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Show all records whose next activity date is past"
 msgstr ""
+"Tampilkan semua record dengan tanggal aktivitas berikutnya yang sudah lewat"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
@@ -2490,7 +2979,7 @@ msgstr "Profil Pembicara"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tree
 msgid "Speaker Name"
-msgstr ""
+msgstr "Nama Pembicara"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__image
@@ -2500,7 +2989,7 @@ msgstr "Foto Pembicara"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Speaker Profile"
-msgstr ""
+msgstr "Profil Pembicara"
 
 #. module: website_event_track
 #. odoo-python
@@ -2511,7 +3000,7 @@ msgstr "saya"
 #. module: website_event_track
 #: model:ir.module.module,summary:base.module_website_event_track
 msgid "Sponsors, Tracks, Agenda, Event News"
-msgstr ""
+msgstr "Sponsor, Sesi, Agenda, Berita Acara"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__stage_id
@@ -2566,7 +3055,7 @@ msgstr "Mengajukan Proposal"
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
 msgid "Successfully added to your favorites"
-msgstr ""
+msgstr "Berhasil ditambahkan ke favorit"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_tag_line
@@ -2593,7 +3082,7 @@ msgstr "Label"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Talk Intro"
-msgstr ""
+msgstr "Pengantar Presentasi"
 
 #. module: website_event_track
 #. odoo-javascript
@@ -2640,12 +3129,12 @@ msgstr "Terima kasih atas usulan Anda."
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_location_display_empty_state
 msgid "Thanks for joining us."
-msgstr ""
+msgstr "Terima kasih sudah bergabung."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_location_display_empty_state
 msgid "That’s all for today"
-msgstr ""
+msgstr "Sekian untuk hari ini"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_absolute_url
@@ -2671,7 +3160,7 @@ msgstr "Cara baru untuk mempromosikan karya Anda"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_location_display_content
 msgid "The next session will begin shortly."
-msgstr ""
+msgstr "Sesi berikutnya akan segera dimulai."
 
 #. module: website_event_track
 #. odoo-python
@@ -2725,11 +3214,15 @@ msgid ""
 "These are 30 minutes talks on many different topics. Most topics are "
 "accepted in lightning talks."
 msgstr ""
+"Presentasi ini merupakan sesi 30 menit yang membahas berbagai topik. "
+"Sebagian besar topik diterima dalam presentasi singkat."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "These are standard talks with slides, alocated in slots of 60 minutes."
 msgstr ""
+"Ini adalah presentasi standar dengan slide, yang dialokasikan dalam slot 60 "
+"menit."
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
@@ -2786,6 +3279,8 @@ msgid ""
 "Timely release of presentation material (slides),\n"
 "                            for publishing on our website."
 msgstr ""
+"Perilisan materi presentasi (slide) tepat waktu,\n"
+"                            untuk dipublikasikan di website kami."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__name
@@ -2801,7 +3296,7 @@ msgstr "Aktivitas Hari ini"
 #. odoo-python
 #: code:addons/website_event_track/controllers/location_display.py:0
 msgid "Tomorrow · %(date_label)s"
-msgstr ""
+msgstr "Besok · %(date_label)s"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_22
@@ -2945,7 +3440,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/interactions/event_track_reminder.js:0
 msgid "Track added to favorites"
-msgstr ""
+msgstr "Sesi ditambahkan ke favorit"
 
 #. module: website_event_track
 #: model:mail.message.subtype,description:website_event_track.mt_track_blocked
@@ -2996,7 +3491,7 @@ msgstr "Jenis dari aktivitas pengecualian pada rekaman data."
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
 msgid "Unknown"
-msgstr ""
+msgstr "Tidak Diketahui"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -3085,13 +3580,15 @@ msgstr "Tunggu pengunjung menambahkan track ini ke daftar favorit mereka"
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
 msgid "We could not find any track at this moment."
-msgstr ""
+msgstr "Kami tidak dapat menemukan sesi apa pun saat ini."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
 msgid "We could not find any track matching your search for:"
 msgstr ""
+"Kami tidak dapat menemukan sesi apa pun yang sesuai dengan pencarian Anda "
+"untuk:"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -3111,6 +3608,13 @@ msgid ""
 "                                audience, it will be considered for\n"
 "                                inclusion in the programme."
 msgstr ""
+"Kami menerima beragam presentasi,\n"
+"                                mulai dari laporan proyek akademis dan\n"
+"                                komersial hingga tutorial dan studi\n"
+"                                kasus. Selama menarik dan berpotensi\n"
+"                                bermanfaat bagi audiens, presentasi\n"
+"                                tersebut akan dipertimbangkan untuk\n"
+"                                dimasukkan ke dalam program."
 
 #. module: website_event_track
 #. odoo-javascript
@@ -3121,7 +3625,7 @@ msgstr "Kami akan mengevaluasi proposisi dan kembali kepada Anda segera."
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "We're sorry, this event does not accept proposals anymore"
-msgstr ""
+msgstr "Mohon maaf, acara ini tidak lagi menerima proposal"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_website
@@ -3319,7 +3823,7 @@ msgstr "dalam %s"
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
 msgid "logged in"
-msgstr ""
+msgstr "sudah login"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
@@ -3330,7 +3834,7 @@ msgstr "menit setelah Track dimulai"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_confirmation_end_page_hook
 #: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
 msgid "register to your favorites talks now."
-msgstr ""
+msgstr "daftar ke presentasi favorit Anda sekarang."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
@@ -3345,13 +3849,13 @@ msgstr "dimulai pada"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
 msgid "track"
-msgstr ""
+msgstr "trek"
 
 #. module: website_event_track
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/website_event_pwa.xml:0
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #~ msgid ""
 #~ "<div>\n"

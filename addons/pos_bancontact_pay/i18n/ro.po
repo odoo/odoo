@@ -1,15 +1,16 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* pos_bancontact_pay
+# * pos_bancontact_pay
 #
+# Dorin Hongu <dhongu@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:42+0000\n"
-"PO-Revision-Date: 2026-08-31 15:23+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-21 09:32+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/"
 "pos_bancontact_pay/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -28,67 +29,73 @@ msgid ""
 "This currency is not supported.\n"
 "Supported currencies: %(currencies)s."
 msgstr ""
+"Metoda de plată Bancontact Pay este asociată unui jurnal care folosește "
+"moneda implicită a companiei.\n"
+"Această monedă nu este acceptată.\n"
+"Monede acceptate: %(currencies)s."
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_store.js:0
 msgid "A payment for order %s has expired."
-msgstr ""
+msgstr "Plata pentru comanda %s a expirat."
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_store.js:0
 msgid "A payment for order %s has failed."
-msgstr ""
+msgstr "Plata pentru comanda %s a eșuat."
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_store.js:0
 msgid "A payment for order %s was cancelled."
-msgstr ""
+msgstr "Plata pentru comanda %s a fost anulată."
 
 #. module: pos_bancontact_pay
 #: model:ir.module.module,summary:base.module_pos_bancontact_pay
 msgid "Accept Bancontact Pay and Wero QR code payments in POS (Payconiq)."
-msgstr ""
+msgstr "Acceptă plăți Bancontact Pay și Wero prin cod QR în POS (Payconiq)."
 
 #. module: pos_bancontact_pay
 #. odoo-python
 #: code:addons/pos_bancontact_pay/errors/http.py:0
 msgid "Access denied. Please check your Bancontact permissions."
-msgstr ""
+msgstr "Acces refuzat. Verificați permisiunile Bancontact."
 
 #. module: pos_bancontact_pay
 #. odoo-python
 #: code:addons/pos_bancontact_pay/errors/http.py:0
 msgid "Authentication with Bancontact failed. Please verify your API key."
-msgstr ""
+msgstr "Autentificarea Bancontact a eșuat. Verificați cheia API."
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_pos_payment_method__bancontact_api_key
 msgid "Bancontact API Key"
-msgstr ""
+msgstr "Cheie API Bancontact"
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_pos_payment__bancontact_id
 msgid "Bancontact ID"
-msgstr ""
+msgstr "ID Bancontact"
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_pos_payment_method__bancontact_ppid
 msgid "Bancontact PPID"
-msgstr ""
+msgstr "PPID Bancontact"
 
 #. module: pos_bancontact_pay
 #. odoo-python
 #: code:addons/pos_bancontact_pay/models/pos_payment_method.py:0
 msgid "Bancontact PPID must be set to generate the sticker URL."
 msgstr ""
+"PPID Bancontact trebuie configurat pentru a genera adresa URL a "
+"autocolantului."
 
 #. module: pos_bancontact_pay
 #: model_terms:ir.ui.view,arch_db:pos_bancontact_pay.pos_payment_method_view_form_inherit_bancontact_pay
 msgid "Bancontact Pay"
-msgstr ""
+msgstr "Bancontact Pay"
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -97,6 +104,8 @@ msgid ""
 "Bancontact Pay only supports these currencies: %(currencies)s.\n"
 "The linked journal uses a different currency."
 msgstr ""
+"Bancontact Pay acceptă doar aceste monede: %(currencies)s.\n"
+"Jurnalul asociat folosește o altă monedă."
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,help:pos_bancontact_pay.field_pos_payment_method__bancontact_api_key
@@ -104,6 +113,8 @@ msgid ""
 "Bancontact Pro Portal > Admin Centre > Shops and products > Select a product "
 "> Manage API keys > View API key"
 msgstr ""
+"Portalul Bancontact Pro > Admin Centre > Shops and products > Select a "
+"product > Manage API keys > View API key"
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,help:pos_bancontact_pay.field_pos_payment_method__bancontact_ppid
@@ -111,12 +122,14 @@ msgid ""
 "Bancontact Pro Portal > Admin Centre > Shops and products > Select a shop > "
 "Read the product ID from the card"
 msgstr ""
+"Portalul Bancontact Pro > Admin Centre > Shops and products > Select a "
+"shop > Read the product ID from the card"
 
 #. module: pos_bancontact_pay
 #. odoo-python
 #: code:addons/pos_bancontact_pay/errors/http.py:0
 msgid "Bancontact is currently unavailable. Please try again later."
-msgstr ""
+msgstr "Bancontact nu este disponibil momentan. Încercați din nou mai târziu."
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -125,6 +138,8 @@ msgid ""
 "Bancontact payments can only be cancelled for payment methods using "
 "Bancontact Pay as provider."
 msgstr ""
+"Plățile Bancontact pot fi anulate doar pentru metodele de plată care "
+"folosesc Bancontact Pay ca furnizor."
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -133,6 +148,8 @@ msgid ""
 "Bancontact payments can only be created for payment methods using Bancontact "
 "Pay as provider."
 msgstr ""
+"Plățile Bancontact pot fi create doar pentru metodele de plată care folosesc "
+"Bancontact Pay ca furnizor."
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -141,6 +158,8 @@ msgid ""
 "Bancontact sticker URL can only be generated for payment methods configured "
 "with 'Static Sticker' usage."
 msgstr ""
+"Adresa URL a autocolantului Bancontact poate fi generată doar pentru "
+"metodele de plată configurate cu utilizarea „Autocolant static”."
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -149,17 +168,19 @@ msgid ""
 "Bancontact sticker URL can only be generated for payment methods using "
 "Bancontact Pay as provider."
 msgstr ""
+"Adresa URL a autocolantului Bancontact poate fi generată doar pentru "
+"metodele de plată care folosesc Bancontact Pay ca furnizor."
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/payment_bancontact.js:0
 msgid "Close"
-msgstr ""
+msgstr "Închide"
 
 #. module: pos_bancontact_pay
 #: model:ir.model,name:pos_bancontact_pay.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "Companie"
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,help:pos_bancontact_pay.field_pos_payment_method__bancontact_usage
@@ -170,6 +191,11 @@ msgid ""
 "- Static Sticker: A fixed QR sticker placed near the counter is used for "
 "scanning with every order."
 msgstr ""
+"Definește modul în care codul QR este afișat clientului:\n"
+"- Afișare pe ecran: se afișează dinamic un cod QR nou pe ecran pentru "
+"fiecare comandă.\n"
+"- Autocolant static: se folosește pentru scanare la fiecare comandă un "
+"autocolant QR fix, amplasat lângă tejghea."
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_account_journal__display_name
@@ -178,18 +204,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_pos_payment_method__display_name
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_res_company__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nume afișat"
 
 #. module: pos_bancontact_pay
 #: model_terms:ir.ui.view,arch_db:pos_bancontact_pay.pos_payment_method_view_form_inherit_bancontact_pay
 msgid "Download Sticker"
-msgstr ""
+msgstr "Descarcă autocolantul"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/payment_bancontact.js:0
 msgid "Force Cancel"
-msgstr ""
+msgstr "Forțează anularea"
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_account_journal__id
@@ -198,12 +224,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_pos_payment_method__id
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_res_company__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: pos_bancontact_pay
 #: model:ir.model,name:pos_bancontact_pay.model_account_journal
 msgid "Journal"
-msgstr ""
+msgstr "Jurnal"
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -212,17 +238,19 @@ msgid ""
 "Merchant profile not found on Bancontact. Please check your Payment Profile "
 "ID (ppid)."
 msgstr ""
+"Profilul comerciantului nu a fost găsit în Bancontact. Verificați ID-ul "
+"profilului de plată (ppid)."
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/payment_bancontact.js:0
 msgid "Oh snap !"
-msgstr ""
+msgstr "Ups!"
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields.selection,name:pos_bancontact_pay.selection__pos_payment_method__bancontact_usage__display
 msgid "On-Screen Display"
-msgstr ""
+msgstr "Afișare pe ecran"
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -231,11 +259,13 @@ msgid ""
 "One Bancontact Pay sticker payment method can only be linked to one POS "
 "configuration."
 msgstr ""
+"O metodă de plată Bancontact Pay cu autocolant poate fi asociată unei "
+"singure configurații POS."
 
 #. module: pos_bancontact_pay
 #: model:ir.module.module,shortdesc:base.module_pos_bancontact_pay
 msgid "POS Bancontact Pay & Wero"
-msgstr ""
+msgstr "POS Bancontact Pay și Wero"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
@@ -244,78 +274,81 @@ msgid ""
 "Payment at %s\n"
 "POS %s"
 msgstr ""
+"Plată la %s\n"
+"POS %s"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_store.js:0
 msgid "Payment cancelled"
-msgstr ""
+msgstr "Plată anulată"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_store.js:0
 msgid "Payment expired"
-msgstr ""
+msgstr "Plată expirată"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_store.js:0
 msgid "Payment failed"
-msgstr ""
+msgstr "Plată eșuată"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_store.js:0
 msgid "Payment received"
-msgstr ""
+msgstr "Plată primită"
 
 #. module: pos_bancontact_pay
 #: model:ir.model,name:pos_bancontact_pay.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr ""
+msgstr "Configurarea Punctului de Vânzare"
 
 #. module: pos_bancontact_pay
 #: model:ir.model,name:pos_bancontact_pay.model_pos_payment
 msgid "Point of Sale Payment"
-msgstr ""
+msgstr "Plată la punctul de vânzare"
 
 #. module: pos_bancontact_pay
 #: model:ir.model,name:pos_bancontact_pay.model_pos_payment_method
 msgid "Point of Sale Payment Method"
-msgstr ""
+msgstr "Metodă de plată POS"
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_pos_payment_method__bancontact_test_mode
 msgid "Preprod"
-msgstr ""
+msgstr "Preproducție"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/qr_code_popup/qr_code_popup.xml:0
 #: code:addons/pos_bancontact_pay/static/src/customer_display/customer_display.xml:0
 msgid "QR Code"
-msgstr ""
+msgstr "Cod QR"
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_pos_payment_method__bancontact_usage
 msgid "QR Usage"
-msgstr ""
+msgstr "Utilizare QR"
 
 #. module: pos_bancontact_pay
 #. odoo-python
 #: code:addons/pos_bancontact_pay/errors/http.py:0
 msgid "Rate limit reached with Bancontact. Please wait and try again."
 msgstr ""
+"S-a atins limita de solicitări Bancontact. Așteptați și încercați din nou."
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,help:pos_bancontact_pay.field_pos_payment_method__bancontact_test_mode
 msgid "Run transactions in Bancontact's preprod environment."
-msgstr ""
+msgstr "Rulați tranzacțiile în mediul de preproducție Bancontact."
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields.selection,name:pos_bancontact_pay.selection__pos_payment_method__bancontact_usage__sticker
 msgid "Static Sticker"
-msgstr ""
+msgstr "Autocolant static"
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -325,18 +358,24 @@ msgid ""
 "to another POS configuration (%(config_names)s).\n"
 "A sticker can only be linked to one POS configuration at a time."
 msgstr ""
+"Metoda de plată Bancontact cu autocolant „%(method_name)s” este deja "
+"atribuită altei configurații POS (%(config_names)s).\n"
+"Un autocolant poate fi asociat unei singure configurații POS la un moment "
+"dat."
 
 #. module: pos_bancontact_pay
 #. odoo-python
 #: code:addons/pos_bancontact_pay/errors/http.py:0
 msgid "The action could not be completed. Please try again or contact support."
 msgstr ""
+"Acțiunea nu a putut fi finalizată. Încercați din nou sau contactați "
+"serviciul de asistență."
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_payment_method.js:0
 msgid "The amount must be positive to use this payment method."
-msgstr ""
+msgstr "Suma trebuie să fie pozitivă pentru a folosi această metodă de plată."
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
@@ -344,7 +383,7 @@ msgstr ""
 msgid ""
 "The cancellation could not be completed. Do you want to force the "
 "cancellation?"
-msgstr ""
+msgstr "Anularea nu a putut fi finalizată. Doriți să forțați anularea?"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
@@ -355,6 +394,10 @@ msgid ""
 "If you need to cancel it, please ask the customer to do so on their device "
 "or force the cancellation."
 msgstr ""
+"Clientul finalizează plata în acest moment, deci aceasta nu poate fi anulată "
+"acum.\n"
+"Dacă trebuie să o anulați, solicitați clientului să o facă de pe "
+"dispozitivul său sau forțați anularea."
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -364,12 +407,15 @@ msgid ""
 "This payment method does not support the journal's currency.\n"
 "Supported currencies: %(currencies)s."
 msgstr ""
+"Jurnalul „%(journal)s” este folosit de o metodă de plată Bancontact Pay.\n"
+"Această metodă de plată nu acceptă moneda jurnalului.\n"
+"Monede acceptate: %(currencies)s."
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_payment_method.js:0
 msgid "This sticker is already processing another payment."
-msgstr ""
+msgstr "Acest autocolant procesează deja o altă plată."
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -377,6 +423,8 @@ msgstr ""
 msgid ""
 "Unable to cancel payment. The payment may not be in a cancellable state."
 msgstr ""
+"Plata nu a putut fi anulată. Este posibil ca plata să nu poată fi anulată în "
+"această stare."
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -385,3 +433,5 @@ msgid ""
 "Unable to process the request. Please verify your configuration or try again "
 "later."
 msgstr ""
+"Solicitarea nu a putut fi procesată. Verificați configurația sau încercați "
+"din nou mai târziu."

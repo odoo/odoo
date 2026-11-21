@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 17:38+0000\n"
-"PO-Revision-Date: 2026-11-12 15:30+0000\n"
+"POT-Creation-Date: 2026-11-20 17:37+0000\n"
+"PO-Revision-Date: 2026-11-16 07:33+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-20/hr/de/>\n"
 "Language: de\n"
@@ -313,15 +313,6 @@ msgid ""
 msgstr ""
 "<i class=\"oi oi-fw me-2 text-primary\" data-icon=\"cake\" "
 "title=\"Geburtstag\"/>"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
-msgid ""
-"<i class=\"oi oi-fw oi-filled me-2 text-primary\" data-icon=\"contract\" "
-"title=\"Contract\"/>"
-msgstr ""
-"<i class=\"oi oi-fw oi-filled me-2 text-primary\" data-icon=\"contract\" "
-"title=\"Vertrag\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -1624,6 +1615,7 @@ msgstr "Kontakte"
 
 #. module: hr
 #. odoo-javascript
+#: code:addons/hr/static/src/components/contract_period/contract_period.xml:0
 #: code:addons/hr/static/src/components/versions_timeline/versions_timeline.js:0
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -1660,6 +1652,8 @@ msgid "Contract Overview"
 msgstr "Vertragsübersicht"
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/contract_period/contract_period.js:0
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view_enhanced
 msgid "Contract Period"
 msgstr "Vertragsdauer"
@@ -1963,6 +1957,11 @@ msgid ""
 "today or earlier, the departure is applied on confirmation; otherwise it is "
 "scheduled for that date."
 msgstr ""
+"Datum, an dem der Mitarbeiter (und sein Benutzer, sofern er keinen anderen "
+"aktiven Mitarbeiter-Datensatz hat) archiviert wird, standardmäßig der Tag "
+"nach dem Austritt. Wenn dieses Datum heute oder früher liegt, wird der "
+"Austritt bei Bestätigung wirksam. Andernfalls wird er für dieses Datum "
+"geplant."
 
 #. module: hr
 #. odoo-javascript
@@ -7068,6 +7067,13 @@ msgstr "Arbeit"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
 msgstr "work_permit_name"
+
+#~ msgid ""
+#~ "<i class=\"oi oi-fw oi-filled me-2 text-primary\" data-icon=\"contract\" "
+#~ "title=\"Contract\"/>"
+#~ msgstr ""
+#~ "<i class=\"oi oi-fw oi-filled me-2 text-primary\" data-icon=\"contract\" "
+#~ "title=\"Vertrag\"/>"
 
 #~ msgid ""
 #~ "This working schedule is used by  employee(s), are you sure you want "

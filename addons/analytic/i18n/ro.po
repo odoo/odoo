@@ -5,7 +5,7 @@
 # Translators:
 # Hongu Cosmin <cosmin513@gmail.com>, 2022
 # Cozmin Candea <office@terrabit.ro>, 2023
-# Dorin Hongu <dhongu@gmail.com>, 2023, 2025.
+# Dorin Hongu <dhongu@gmail.com>, 2023, 2025, 2026.
 # Martin Trigaux, 2023
 # Foldi Robert <foldirobert@nexterp.ro>, 2023
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
@@ -14,9 +14,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-30 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 16:14+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-21 10:57+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/"
 "analytic/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: analytic
 #: model:ir.module.module,description:base.module_analytic
@@ -38,12 +38,20 @@ msgid ""
 "operations\n"
 "that have no counterpart in the general financial accounts.\n"
 msgstr ""
+"\n"
+"Modul pentru definirea obiectelor de contabilitate analitică.\n"
+"=============================================================\n"
+"\n"
+"În Odoo, conturile analitice sunt asociate conturilor generale, dar sunt "
+"tratate\n"
+"complet independent. Astfel, puteți înregistra diverse operațiuni analitice\n"
+"care nu au corespondent în conturile financiare generale.\n"
 
 #. module: analytic
 #. odoo-python
 #: code:addons/analytic/models/analytic_line.py:0
 msgid "%s analytic lines created"
-msgstr ""
+msgstr "Au fost create %s linii analitice"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
@@ -68,7 +76,7 @@ msgstr ""
 #. module: analytic
 #: model:ir.model,name:analytic.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "Acces Grupuri"
 
 #. module: analytic
 #. odoo-javascript
@@ -84,7 +92,7 @@ msgstr "Conturi"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_agrolait
 msgid "Acme Corporation"
-msgstr ""
+msgstr "Acme Corporation"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction
@@ -139,7 +147,7 @@ msgstr "Câmpul sumă"
 #. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
 msgid "Analytic"
-msgstr ""
+msgstr "Analitic"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_account
@@ -673,7 +681,7 @@ msgstr "Diverse"
 #. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 msgid "Multi edit"
-msgstr ""
+msgstr "Editare multiplă"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__name
@@ -814,7 +822,7 @@ msgstr "Contul de proiect"
 #. module: analytic
 #: model:account.analytic.plan,name:analytic.analytic_plan_projects
 msgid "Project Plan"
-msgstr ""
+msgstr "Plan proiect"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__unit_amount
@@ -937,7 +945,7 @@ msgstr "Subplanuri"
 #. module: analytic
 #: model:ir.model,name:analytic.model_ir_config_parameter
 msgid "System Parameter"
-msgstr ""
+msgstr "Parametru de sistem"
 
 #. module: analytic
 #. odoo-python
@@ -946,6 +954,8 @@ msgid ""
 "The value for %s must be the ID to a valid analytic plan that is not a "
 "subplan"
 msgstr ""
+"Valoarea pentru %s trebuie să fie ID-ul unui plan analitic valid, care nu "
+"este un subplan"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_absences
@@ -1001,7 +1011,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/analytic/models/analytic_mixin.py:0
 msgid "Wrong analytic distribution format"
-msgstr ""
+msgstr "Format incorect al distribuției analitice"
 
 #. module: analytic
 #. odoo-python
@@ -1010,6 +1020,8 @@ msgid ""
 "You can't change the company of an analytic account that already has "
 "analytic items! It's a recipe for an analytical disaster!"
 msgstr ""
+"Nu puteți schimba compania unui cont analitic care are deja elemente "
+"analitice! Ar duce la un dezastru analitic!"
 
 #. module: analytic
 #. odoo-python

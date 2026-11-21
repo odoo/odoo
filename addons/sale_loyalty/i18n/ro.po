@@ -3,14 +3,15 @@
 # * sale_loyalty
 #
 # Alin Ilie <alin.ilie@logit-solutions.com>, 2025.
+# Dorin Hongu <dhongu@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 18:04+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-21 10:58+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/"
 "sale_loyalty/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -30,28 +31,28 @@ msgstr " - Pentru produsele cu următoarele taxe: %(taxes)s"
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "%(points_name)s Issued"
-msgstr ""
+msgstr "%(points_name)s acordate"
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "%(points_name)s Used"
-msgstr ""
+msgstr "%(points_name)s folosite"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
 msgid "<small class=\"fw-bold\">Total</small>"
-msgstr ""
+msgstr "<small class=\"fw-bold\">Total</small>"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
 msgid "<small class=\"text-muted\">Issued</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">Acordate</small>"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
 msgid "<small class=\"text-muted\">Used</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">Folosite</small>"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -60,12 +61,16 @@ msgid ""
 "<span>You must <a href='/web/login?redirect=/shop/checkout'>login</a> to use "
 "this code</span>"
 msgstr ""
+"<span>Trebuie să vă <a href='/web/login?redirect=/shop/checkout'>conectați</"
+"a> pentru a folosi acest cod</span>"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
 msgid ""
 "<strong class=\"smaller text-uppercase text-muted\">Loyalty Card</strong>"
 msgstr ""
+"<strong class=\"smaller text-uppercase text-muted\">Card de fidelitate</"
+"strong>"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -102,13 +107,13 @@ msgstr "Cod:"
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
 msgid "Copy code"
-msgstr ""
+msgstr "Copiați codul"
 
 #. module: sale_loyalty
 #. odoo-javascript
 #: code:addons/sale_loyalty/static/src/interactions/gift_card.js:0
 msgid "Could not send the gift card. Please try again later."
-msgstr ""
+msgstr "Cardul cadou nu a putut fi trimis. Încercați din nou mai târziu."
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__coupon_id
@@ -154,7 +159,7 @@ msgstr "Creat la"
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
 msgid "Discard"
-msgstr ""
+msgstr "Renunță"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -184,7 +189,7 @@ msgstr "Nume afișat"
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
 msgid "Email Address"
-msgstr ""
+msgstr "Adresă de email"
 
 #. module: sale_loyalty
 #: model:ir.actions.act_window,name:sale_loyalty.sale_loyalty_coupon_wizard_action
@@ -211,13 +216,13 @@ msgstr "Carduri cadou"
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
 msgid "Gift card"
-msgstr ""
+msgstr "Card cadou"
 
 #. module: sale_loyalty
 #. odoo-javascript
 #: code:addons/sale_loyalty/static/src/interactions/gift_card.js:0
 msgid "Gift card sent to %s"
-msgstr ""
+msgstr "Card cadou trimis către %s"
 
 #. module: sale_loyalty
 #: model:ir.ui.menu,name:sale_loyalty.menu_gift_ewallet_type_config
@@ -252,6 +257,7 @@ msgstr "ID"
 #: model:ir.module.module,description:base.module_sale_loyalty
 msgid "Integrate discount and loyalty programs mechanisms in sales orders."
 msgstr ""
+"Integrați mecanismele de reducere și fidelizare în comenzile de vânzare."
 
 #. module: sale_loyalty
 #. odoo-python
@@ -273,7 +279,7 @@ msgstr "Este o linie de recompensă a programului"
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_account_move_line
 msgid "Journal Item"
-msgstr ""
+msgstr "Element jurnal"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__write_uid
@@ -292,7 +298,7 @@ msgstr "Ultima actualizare"
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_template
 msgid "Loyalty Card"
-msgstr ""
+msgstr "Card de loialitate"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_card
@@ -344,7 +350,7 @@ msgstr "Nu a fost selectată nicio recompensă."
 #. odoo-python
 #: code:addons/sale_loyalty/tests/common.py:0
 msgid "No reward to claim with this coupon"
-msgstr ""
+msgstr "Nu există recompense de revendicat cu acest cupon"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
@@ -398,7 +404,7 @@ msgstr "Cost în puncte"
 #: model:ir.ui.menu,name:sale_loyalty.menu_sale_promotions
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
 msgid "Promotions"
-msgstr ""
+msgstr "Promoții"
 
 #. module: sale_loyalty
 #. odoo-javascript
@@ -433,7 +439,7 @@ msgstr "Recompense disponibile"
 #. module: sale_loyalty
 #: model:ir.module.module,shortdesc:base.module_sale_loyalty
 msgid "Sale Loyalty"
-msgstr ""
+msgstr "Fidelizare în vânzări"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_sale_loyalty_coupon_wizard
@@ -486,7 +492,7 @@ msgstr "Recompensă selectată"
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
 msgid "Send as gift"
-msgstr ""
+msgstr "Trimiteți ca dar"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -611,7 +617,7 @@ msgstr "Acest program necesită aplicarea unui cod."
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "This promo code can only be used once."
-msgstr ""
+msgstr "Acest cod promoțional poate fi folosit o singură dată."
 
 #. module: sale_loyalty
 #. odoo-python
@@ -626,6 +632,8 @@ msgid ""
 "To take advantage of this offer, your order must include at least %(amount)s "
 "%(currency)s of the eligible products."
 msgstr ""
+"Pentru a beneficia de această ofertă, comanda trebuie să includă produse "
+"eligibile în valoare de cel puțin %(amount)s %(currency)s."
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
@@ -637,7 +645,7 @@ msgstr ""
 #. module: sale_loyalty
 #: model:ir.module.module,summary:base.module_sale_loyalty
 msgid "Use discounts and loyalty programs in sales orders"
-msgstr ""
+msgstr "Folosiți reduceri și programe de fidelizare în comenzile de vânzare."
 
 #. module: sale_loyalty
 #. odoo-python
@@ -646,6 +654,8 @@ msgid ""
 "You don't have enough coupon points to proceed. Please check your applied "
 "rewards and coupon balance. "
 msgstr ""
+"Nu aveți suficiente puncte de cupon pentru a continua. Verificați "
+"recompensele aplicate și soldul cuponului. "
 
 #. module: sale_loyalty
 #. odoo-python
@@ -657,17 +667,17 @@ msgstr "Nu aveți cantitățile necesare de produse în comanda dvs. de vânzare
 #. odoo-python
 #: code:addons/sale_loyalty/controllers/gift_card.py:0
 msgid "You've received a gift card from %s"
-msgstr ""
+msgstr "Ați primit un card cadou de la %s"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
 msgid "Your gift card is ready to use"
-msgstr ""
+msgstr "Cardul dvs. cadou este gata de utilizare"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
 msgid "Your gift cards are ready to use"
-msgstr ""
+msgstr "Cardurile dvs. cadou sunt gata de utilizare"
 
 #. module: sale_loyalty
 #. odoo-python

@@ -4,7 +4,7 @@
 #
 # Translators:
 # Cozmin Candea <office@terrabit.ro>, 2022
-# Dorin Hongu <dhongu@gmail.com>, 2022, 2025.
+# Dorin Hongu <dhongu@gmail.com>, 2022, 2025, 2026.
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
 # Martin Trigaux, 2022
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
@@ -14,9 +14,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-11 17:43+0000\n"
-"PO-Revision-Date: 2026-08-31 20:27+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-21 10:58+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/"
 "snailmail/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: snailmail
 #: model:ir.module.module,description:base.module_snailmail
@@ -33,6 +33,9 @@ msgid ""
 "Allows users to send documents by post\n"
 "=====================================================\n"
 msgstr ""
+"\n"
+"Permite utilizatorilor să trimită documente prin poștă\n"
+"=====================================================\n"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__attachment_error
@@ -102,7 +105,7 @@ msgstr "Ambele părți"
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 msgid "Bounced"
-msgstr ""
+msgstr "Respins"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__credit_error
@@ -182,7 +185,7 @@ msgstr "Creat în"
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 msgid "Dispatched"
-msgstr ""
+msgstr "Expediat"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_ir_actions_report__display_name
@@ -273,7 +276,7 @@ msgstr "Nume destinatar invalid."
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__letter_undeliverable
 msgid "LETTER_UNDELIVERABLE"
-msgstr ""
+msgstr "LETTER_UNDELIVERABLE"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__write_uid
@@ -295,13 +298,13 @@ msgstr "Scrisoare"
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 msgid "Letter Undeliverable"
-msgstr ""
+msgstr "Scrisoarea nu a putut fi livrată"
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/controller/snailmail_webhook.py:0
 msgid "Letter is delivered successfully"
-msgstr ""
+msgstr "Scrisoarea a fost livrată cu succes."
 
 #. module: snailmail
 #. odoo-python
@@ -313,7 +316,7 @@ msgstr "Scrisoare trimisă prin poștă cu Snailmail"
 #. odoo-python
 #: code:addons/snailmail/controller/snailmail_webhook.py:0
 msgid "Letter was unable to be delivered"
-msgstr ""
+msgstr "Scrisoarea nu a putut fi livrată."
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_list
@@ -333,13 +336,13 @@ msgstr "Mesaj"
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_mail_notification
 msgid "Message Notification"
-msgstr ""
+msgstr "Notificare mesaj"
 
 #. module: snailmail
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 msgid "Missing Required Fields"
-msgstr ""
+msgstr "Lipsesc câmpuri obligatorii"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__model
@@ -355,7 +358,7 @@ msgstr "NO_PRICE_AVAILABLE"
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 msgid "No IAP Credits"
-msgstr ""
+msgstr "Nu există credite IAP"
 
 #. module: snailmail
 #. odoo-python
@@ -403,7 +406,7 @@ msgstr "Printare în Culoare"
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__process
 msgid "Processing"
-msgstr ""
+msgstr "Se procesează"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__partner_id
@@ -448,7 +451,7 @@ msgstr "Trimis de către"
 #: model:iap.service,name:snailmail.iap_service_snailmail
 #: model:ir.module.module,shortdesc:base.module_snailmail
 msgid "Snail Mail"
-msgstr ""
+msgstr "Poștă"
 
 #. module: snailmail
 #. odoo-python
@@ -524,7 +527,7 @@ msgstr "Eroare trial Snailmail"
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_undeliverable
 msgid "Snailmail Undeliverable"
-msgstr ""
+msgstr "Scrisoarea nu poate fi livrată"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_error
@@ -534,7 +537,7 @@ msgstr "Eroare necunoscută Snailmail"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__letter_uid
 msgid "Snailmail letter ID"
-msgstr ""
+msgstr "ID-ul scrisorii Snailmail"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__snailmail_error
@@ -606,12 +609,16 @@ msgid ""
 "The document has been accepted by postal service provider and is being "
 "processed.<br>The tracking id is %s"
 msgstr ""
+"Documentul a fost acceptat de furnizorul de servicii poștale și este în curs "
+"de procesare.<br>Numărul de urmărire este %s"
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 msgid "The document to be sent exceeds the maximum allowed limit of 8 pages."
 msgstr ""
+"Documentul care urmează să fie trimis depășește limita maximă permisă de 8 "
+"pagini."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__message_type
@@ -665,6 +672,12 @@ msgid ""
 "If not sent or delivered, it will got in state 'Error' and the error message "
 "will be displayed in the field 'Error Message'."
 msgstr ""
+"La crearea unei scrisori, starea este „În așteptare”.\n"
+"Dacă scrisoarea este trimisă corect furnizorului, starea devine „În procesare"
+"”.\n"
+"Dacă furnizorul confirmă livrarea, starea devine „Trimisă”.\n"
+"Dacă nu este trimisă sau livrată, starea devine „Eroare”, iar mesajul de "
+"eroare va apărea în câmpul „Mesaj de eroare”."
 
 #. module: snailmail
 #. odoo-python

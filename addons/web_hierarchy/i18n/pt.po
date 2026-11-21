@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:43+0000\n"
-"PO-Revision-Date: 2026-11-10 09:34+0000\n"
+"PO-Revision-Date: 2026-11-19 09:22+0000\n"
 "Last-Translator: Cristina Paniagua Ramiro <crpan@odoo.com>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-20/"
 "web_hierarchy/pt/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: web_hierarchy
 #: model:ir.module.module,description:base.module_web_hierarchy
@@ -31,11 +31,18 @@ msgid ""
 "This module adds a new view called to be able to define a view to display\n"
 "an organization such as an Organization Chart for employees for instance.\n"
 msgstr ""
+"\n"
+"Vista de hierarquia do Odoo Web\n"
+"===============================\n"
+"\n"
+"Este módulo adiciona uma nova vista que permite definir uma visualização "
+"hierárquica de uma organização, como, por exemplo, um organograma dos "
+"colaboradores.\n"
 
 #. module: web_hierarchy
 #: model:ir.model,name:web_hierarchy.model_ir_actions_act_window_view
 msgid "Action Window View"
-msgstr "Exibição da janela de ação"
+msgstr "Vista da janela de ação"
 
 #. module: web_hierarchy
 #: model:ir.model,name:web_hierarchy.model_base
@@ -46,7 +53,8 @@ msgstr "Base"
 #. odoo-javascript
 #: code:addons/web_hierarchy/static/src/hierarchy_model.js:0
 msgid "Cannot change the parent because it will cause a cyclic."
-msgstr "Não é possível alterar o superior porque isso causará um ciclo."
+msgstr ""
+"Não é possível alterar o elemento principal, pois isso criaria um ciclo."
 
 #. module: web_hierarchy
 #: model:ir.model.fields,field_description:web_hierarchy.field_ir_actions_act_window_view__display_name
@@ -65,13 +73,14 @@ msgstr "Hierarquia"
 #: code:addons/web_hierarchy/models/ir_ui_view.py:0
 msgid "Hierarchy child can only be field or template, got %s"
 msgstr ""
-"O secundário da hierarquia só pode ser um campo ou um modelo, mas obteve %s"
+"O elemento subordinado da hierarquia só pode ser um campo ou um modelo, mas "
+"foi recebido %s"
 
 #. module: web_hierarchy
 #. odoo-python
 #: code:addons/web_hierarchy/models/ir_ui_view.py:0
 msgid "Hierarchy view can contain only one templates tag"
-msgstr "A visualização hierárquica pode conter apenas um marcador de modelo"
+msgstr "A vista de hierarquia só pode conter uma etiqueta de modelos"
 
 #. module: web_hierarchy
 #: model:ir.model.fields,field_description:web_hierarchy.field_ir_actions_act_window_view__id
@@ -86,8 +95,8 @@ msgid ""
 "Impossible to update the parent node of the dragged node because no parent "
 "has been found."
 msgstr ""
-"Não é possível atualizar o nó primário do nó arrastado porque nenhum "
-"primário foi encontrado."
+"Não é possível atualizar o nó principal do nó arrastado porque não foi "
+"encontrado nenhum nó principal."
 
 #. module: web_hierarchy
 #. odoo-python
@@ -96,13 +105,12 @@ msgid ""
 "Invalid attributes (%(invalid_attributes)s) in hierarchy view. Attributes "
 "must be in (%(valid_attributes)s)"
 msgstr ""
-"Atributos inválidos (%(invalid_attributes)s) na visualização de hierarquia. "
-"Os atributos devem estar em (%(valid_attributes)s)"
+"Atributos inválidos (%(invalid_attributes)s) na vista de hierarquia. Os "
+"atributos têm de estar incluídos em (%(valid_attributes)s)"
 
 #. module: web_hierarchy
 #. odoo-javascript
 #: code:addons/web_hierarchy/static/src/hierarchy_controller.xml:0
-#, fuzzy
 msgid "New"
 msgstr "Novo"
 
@@ -113,27 +121,27 @@ msgid ""
 "The parent of \"%s\" was successfully updated. Reloading records to account "
 "for other changes."
 msgstr ""
-"O superior de \"%s\" foi atualizado com sucesso. Recarregando registros para "
-"contabilizar outras alterações."
+"O elemento principal de \"%s\" foi atualizado com sucesso. A recarregar os "
+"registos para refletir outras alterações."
 
 #. module: web_hierarchy
 #. odoo-javascript
 #: code:addons/web_hierarchy/static/src/hierarchy_model.js:0
 msgid "The parent record cannot be the record dragged."
-msgstr "O registro primário não pode ser o registro arrastado."
+msgstr "O registo principal não pode ser o próprio registo arrastado."
 
 #. module: web_hierarchy
 #: model:ir.model,name:web_hierarchy.model_ir_ui_view
 msgid "View"
-msgstr "Visualização"
+msgstr "Vista"
 
 #. module: web_hierarchy
 #: model:ir.model.fields,field_description:web_hierarchy.field_ir_actions_act_window_view__view_mode
 #: model:ir.model.fields,field_description:web_hierarchy.field_ir_ui_view__type
 msgid "View Type"
-msgstr "Tipo de visualização"
+msgstr "Tipo de vista"
 
 #. module: web_hierarchy
 #: model:ir.module.module,shortdesc:base.module_web_hierarchy
 msgid "Web Hierarchy"
-msgstr ""
+msgstr "Hierarquia da web"

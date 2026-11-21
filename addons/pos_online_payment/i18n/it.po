@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-04 17:45+0000\n"
-"PO-Revision-Date: 2026-10-15 15:38+0000\n"
+"PO-Revision-Date: 2026-11-16 12:33+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-20/"
 "pos_online_payment/it/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status
@@ -32,12 +32,12 @@ msgstr ""
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status
 msgid "<span class=\"text-500\">Order</span>"
-msgstr ""
+msgstr "<span class=\"text-500\">Ordine</span>"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status
 msgid "<span class=\"text-500\">Total</span>"
-msgstr ""
+msgstr "<span class=\"text-500\">Totale</span>"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
@@ -187,6 +187,10 @@ msgid ""
 "from this device, maybe from another. If you continue, you risk to pay the "
 "order twice. Only continue if you're sure the earlier attempt was abandoned."
 msgstr ""
+"Sembra che un pagamento per questo ordine sia già in corso da questo "
+"dispositivo o forse da un altro. Se continui, rischi di pagare l'ordine due "
+"volte. Procedi solo se sei sicuro che il tentativo precedente sia stato "
+"abbandonato."
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__next_online_payment_amount
@@ -213,7 +217,7 @@ msgstr "Metodo di pagamento online"
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment_method.py:0
 msgid "Online Payment Transfer"
-msgstr ""
+msgstr "Trasferimento pagamento online"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__online_account_payment_id
@@ -268,7 +272,7 @@ msgstr "Ordine PoS"
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment_method.py:0
 msgid "POS Receivable Transfer"
-msgstr ""
+msgstr "Trasferimento crediti Punto vendita"
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_account_payment
@@ -321,7 +325,7 @@ msgstr "Metodo di pagamento Punto vendita"
 #. module: pos_online_payment
 #: model:ir.module.module,shortdesc:base.module_pos_online_payment
 msgid "Point of Sale online payment"
-msgstr ""
+msgstr "Pagamento online Punto vendita"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
@@ -337,7 +341,7 @@ msgstr "Errore del server"
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status
 msgid "Skip <i class=\"oi ms-1\" data-icon=\"east\"/>"
-msgstr ""
+msgstr "Salta <i class=\"oi ms-1\" data-icon=\"east\"/>"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -548,6 +552,7 @@ msgstr "Riferimento transazione"
 #: code:addons/pos_online_payment/models/pos_payment_method.py:0
 msgid "Transfer Online payment %(account_name)s => %(pos_receivable_name)s"
 msgstr ""
+"Trasferisci pagamento online %(account_name)s => %(pos_receivable_name)s"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
@@ -588,6 +593,9 @@ msgid ""
 ">\n"
 "                        Don't hesitate to contact us if you don't receive it."
 msgstr ""
+"Dovresti ricevere un'e-mail di conferma del pagamento entro pochi "
+"minuti.<br/>\n"
+"                        Non esitare a contattarci se non la ricevi."
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status

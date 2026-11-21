@@ -16,11 +16,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:38+0000\n"
+"POT-Creation-Date: 2026-11-20 17:36+0000\n"
 "PO-Revision-Date: 2026-11-09 08:33+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-20/stock/de/>"
-"\n"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-20/stock/de/"
+">\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -557,11 +557,11 @@ msgstr ""
 "strong> bekanntgeben:<br><br>\n"
 "\n"
 "                    <strong>Produkt(e):</strong><br>\n"
-"                    <t t-out=\"ctx.get('recalled_products_dict', {}).get(str"
-"(object.id))\">[EXAMPLE] Schubkasten</t><br><br>\n"
+"                    <t t-out=\"ctx.get('recalled_products_dict', "
+"{}).get(str(object.id))\">[EXAMPLE] Schubkasten</t><br><br>\n"
 "                    <strong>Los-/Seriennummer(n):</strong><br>\n"
-"                    <t t-out=\"ctx.get('recalled_lots_dict', {}).get(str"
-"(object.id))\">0000000000029</t><br><br>\n"
+"                    <t t-out=\"ctx.get('recalled_lots_dict', "
+"{}).get(str(object.id))\">0000000000029</t><br><br>\n"
 "\n"
 "                    Wir entschuldigen uns für die entstandenen "
 "Unannehmlichkeiten.<br><br>\n"
@@ -640,8 +640,8 @@ msgstr ""
 "                <t t-set=\"multiple_carrier_tracking\" t-"
 "value=\"object.get_multiple_carrier_tracking()\"></t>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
-"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">"
-"\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-"
+"as=\"line\">\n"
 "                        <br><a t-att-href=\"line[1]\" target=\"_blank\" t-"
 "out=\"line[0] or ''\"></a>\n"
 "                    </t>\n"
@@ -657,8 +657,8 @@ msgstr ""
 "            </strong>\n"
 "        </t>\n"
 "        <br><br>\n"
-"        Für weitere Informationen finden Sie Ihren Lieferauftrag im "
-"Anhang.<br><br>\n"
+"        Für weitere Informationen finden Sie Ihren Lieferauftrag im Anhang."
+"<br><br>\n"
 "        Vielen Dank!\n"
 "        <t t-if=\"user.signature\">\n"
 "            <br>\n"
@@ -2256,6 +2256,16 @@ msgstr ""
 "Feld deaktiviert wird."
 
 #. module: stock
+#: model:ir.model,name:stock.model_report_stock_fleet_report_cmr_batch
+msgid "CMR Batch Report"
+msgstr ""
+
+#. module: stock
+#: model:ir.model,name:stock.model_report_stock_fleet_report_cmr
+msgid "CMR Report"
+msgstr ""
+
+#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "COPY"
@@ -3783,6 +3793,8 @@ msgstr "Los- & Seriennummern auf Lieferscheinen anzeigen"
 #: model:ir.model.fields,field_description:stock.field_product_removal__display_name
 #: model:ir.model.fields,field_description:stock.field_product_replenish__display_name
 #: model:ir.model.fields,field_description:stock.field_product_template__display_name
+#: model:ir.model.fields,field_description:stock.field_report_stock_fleet_report_cmr__display_name
+#: model:ir.model.fields,field_description:stock.field_report_stock_fleet_report_cmr_batch__display_name
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__display_name
 #: model:ir.model.fields,field_description:stock.field_report_stock_report_stock_rule__display_name
 #: model:ir.model.fields,field_description:stock.field_res_company__display_name
@@ -4604,6 +4616,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_product_removal__id
 #: model:ir.model.fields,field_description:stock.field_product_replenish__id
 #: model:ir.model.fields,field_description:stock.field_product_template__id
+#: model:ir.model.fields,field_description:stock.field_report_stock_fleet_report_cmr__id
+#: model:ir.model.fields,field_description:stock.field_report_stock_fleet_report_cmr_batch__id
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__id
 #: model:ir.model.fields,field_description:stock.field_report_stock_report_stock_rule__id
 #: model:ir.model.fields,field_description:stock.field_res_company__id

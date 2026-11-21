@@ -9,7 +9,7 @@
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
 # Cozmin Candea <office@terrabit.ro>, 2023
 # Claudia Baisan, 2023
-# Dorin Hongu <dhongu@gmail.com>, 2023
+# Dorin Hongu <dhongu@gmail.com>, 2023, 2026.
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Adrian Cocos <adrian.cocos@capps.ai>, 2025.
@@ -18,17 +18,17 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-11 17:43+0000\n"
-"PO-Revision-Date: 2026-08-31 17:07+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/sms/"
-"ro/>\n"
+"PO-Revision-Date: 2026-11-21 09:54+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/sms/ro/>"
+"\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: sms
 #: model:ir.module.module,description:base.module_sms
@@ -39,6 +39,11 @@ msgid ""
 "\n"
 "The service is provided by the In App Purchase Odoo platform.\n"
 msgstr ""
+"\n"
+"Acest modul oferă un cadru pentru trimiterea mesajelor SMS\n"
+"----------------------------------------------------\n"
+"\n"
+"Serviciul este furnizat de platforma Odoo pentru achiziții în aplicație.\n"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_invalid_count
@@ -131,7 +136,7 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "<span class=\"text-muted\">To</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Către</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
@@ -159,7 +164,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sms/wizard/sms_composer.py:0
 msgid "A message can only be scheduled in comment mode"
-msgstr ""
+msgstr "Un mesaj poate fi programat doar în modul comentariu"
 
 #. module: sms
 #: model:ir.model.constraint,message:sms.constraint_sms_tracker_sms_uuid_unique
@@ -170,7 +175,7 @@ msgstr "Există deja o înregistrare pentru acest UUID"
 #. odoo-python
 #: code:addons/sms/wizard/sms_composer.py:0
 msgid "A scheduled date is needed to schedule a message"
-msgstr ""
+msgstr "Este necesară o dată programată pentru a programa un mesaj"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__account_id
@@ -192,7 +197,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__sms_type__alert
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__sms_type__alert
 msgid "Alert"
-msgstr ""
+msgstr "Alertă"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_sms__uuid
@@ -242,7 +247,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sms/controllers/main.py:0
 msgid "Bad parameters"
-msgstr ""
+msgstr "Parametri incorecți"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_blacklist
@@ -299,7 +304,7 @@ msgstr "Alegeți numele expeditorului"
 #. module: sms
 #: model:ir.model,name:sms.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "Companie"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__composition_mode
@@ -336,7 +341,7 @@ msgstr "Este necesară înregistrarea specifică țării"
 #. odoo-python
 #: code:addons/sms/wizard/sms_composer.py:0
 msgid "Create an SMS Template"
-msgstr ""
+msgstr "Creați un șablon SMS"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__create_uid
@@ -385,7 +390,7 @@ msgstr "Client: SMS automat"
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_database_non_active
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_database_non_active
 msgid "Database non active"
-msgstr ""
+msgstr "Baza de date nu este activă"
 
 #. module: sms
 #: model:sms.template,body:sms.sms_template_demo_0
@@ -422,7 +427,7 @@ msgstr "Nume afișat"
 #. module: sms
 #: model:ir.model,name:sms.model_mail_followers
 msgid "Document Follower"
-msgstr ""
+msgstr "Urmăritor document"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_id
@@ -453,12 +458,12 @@ msgstr "Duplicare"
 #. odoo-python
 #: code:addons/sms/models/mail_scheduled_message.py:0
 msgid "Edit Scheduled SMS"
-msgstr ""
+msgstr "Editați SMS-ul programat"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_scheduled_message__send_method__email
 msgid "Email"
-msgstr ""
+msgstr "E-mail"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_thread
@@ -588,7 +593,7 @@ msgstr "Dacă este bifată, unele mesaje au o eroare de livrare."
 #. odoo-python
 #: code:addons/sms/wizard/sms_composer.py:0
 msgid "Impossible to determine the model for the template."
-msgstr ""
+msgstr "Nu se poate determina modelul pentru șablon."
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__outgoing
@@ -709,7 +714,7 @@ msgstr "Marcat pentru ștergere"
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__sms_type__marketing
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__sms_type__marketing
 msgid "Marketing"
-msgstr ""
+msgstr "Promovare"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_message
@@ -721,7 +726,7 @@ msgstr "Mesaj"
 #. module: sms
 #: model:ir.model,name:sms.model_mail_notification
 msgid "Message Notification"
-msgstr ""
+msgstr "Notificare mesaj"
 
 #. module: sms
 #. odoo-javascript
@@ -734,7 +739,7 @@ msgstr "Număr lipsă"
 #. module: sms
 #: model:ir.model,name:sms.model_ir_model
 msgid "Model"
-msgstr ""
+msgstr "Model"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__name
@@ -764,7 +769,7 @@ msgstr "Nu a fost livrat"
 #. odoo-python
 #: code:addons/sms/models/sms_sms.py:0
 msgid "Not enough credits to send SMS"
-msgstr ""
+msgstr "Nu există suficiente credite pentru trimiterea SMS-ului"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
@@ -840,7 +845,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sms/wizard/sms_composer.py:0
 msgid "Please provide a name for the template."
-msgstr ""
+msgstr "Introduceți un nume pentru șablon."
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__comment
@@ -853,6 +858,8 @@ msgid ""
 "Prevent sending messages to blacklisted contacts. Disable only when "
 "absolutely necessary."
 msgstr ""
+"Preveniți trimiterea mesajelor către contactele din lista neagră. "
+"Dezactivați numai când este absolut necesar."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
@@ -974,13 +981,13 @@ msgstr "SMS"
 #. odoo-javascript
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
 msgid "SMS ("
-msgstr ""
+msgstr "SMS ("
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/thread/message_patch.js:0
 msgid "SMS Account"
-msgstr ""
+msgstr "Cont SMS"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_account_phone
@@ -1109,7 +1116,7 @@ msgstr "Șabloanele SMS au fost resetate"
 #. module: sms
 #: model:ir.module.module,summary:base.module_sms
 msgid "SMS Text Messaging"
-msgstr ""
+msgstr "Mesagerie SMS"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_tracker_ids
@@ -1124,7 +1131,7 @@ msgstr "Conținut SMS"
 #. module: sms
 #: model:ir.module.module,shortdesc:base.module_sms
 msgid "SMS gateway"
-msgstr ""
+msgstr "Gateway SMS"
 
 #. module: sms
 #. odoo-python
@@ -1157,34 +1164,34 @@ msgstr "Număr sancționat"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form_template_save
 msgid "Save Template"
-msgstr ""
+msgstr "Salvare șablon"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form_template_save
 msgid "Save as SMS Template"
-msgstr ""
+msgstr "Salvați ca șablon SMS"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Schedule"
-msgstr ""
+msgstr "Programare"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__scheduled_date
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Dată planificată"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_scheduled_message
 #: model:ir.model.fields,field_description:sms.field_sms_composer__mail_scheduled_message_id
 msgid "Scheduled Message"
-msgstr ""
+msgstr "Mesaj planificat"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/wizard/sms_composer.py:0
 msgid "Scheduling messages is only supported on mail.thread models."
-msgstr ""
+msgstr "Programarea mesajelor este acceptată doar pentru modelele mail.thread."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_search
@@ -1196,7 +1203,7 @@ msgstr "Căutare șabloane SMS"
 #. odoo-javascript
 #: code:addons/sms/static/src/components/sms_widget/sms_composer_template_selector.js:0
 msgid "Select a Template"
-msgstr ""
+msgstr "Selectează un șablon"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -1207,12 +1214,12 @@ msgstr "Trimite"
 #. odoo-python
 #: code:addons/sms/models/ir_actions_server.py:0
 msgid "Send %(template_name)s"
-msgstr ""
+msgstr "Trimite %(template_name)s"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_scheduled_message__send_method
 msgid "Send Method"
-msgstr ""
+msgstr "Metodă de trimitere"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_tree
@@ -1346,7 +1353,7 @@ msgstr "Șablon SMS"
 #: model:ir.model.fields,field_description:sms.field_sms_composer__sms_type
 #: model:ir.model.fields,field_description:sms.field_sms_sms__sms_type
 msgid "Sms Type"
-msgstr ""
+msgstr "Tip SMS"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_number
@@ -1373,7 +1380,7 @@ msgstr "Nume fișier șablon"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__template_name
 msgid "Template Name"
-msgstr ""
+msgstr "Denumire Șablon"
 
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_template_preview_action
@@ -1539,7 +1546,7 @@ msgstr "Cont neînregistrat"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__use_exclusion_list
 msgid "Use Exclusion List"
-msgstr ""
+msgstr "Folosește lista de excludere"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__template_id
@@ -1666,12 +1673,14 @@ msgstr "Contul dvs. SMS a fost înregistrat cu succes."
 #: code:addons/sms/tools/sms_api.py:0
 msgid "Your country is not supported due to sender registration legislation"
 msgstr ""
+"Țara dvs. nu este acceptată din cauza legislației privind înregistrarea "
+"expeditorilor"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "Your database is not activated"
-msgstr ""
+msgstr "Baza dvs. de date nu este activată"
 
 #. module: sms
 #. odoo-python
@@ -1726,7 +1735,7 @@ msgstr "de exemplu. en_US sau {{ object.partner_id.lang }}"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form_template_save
 msgid "e.g: Send order confirmation"
-msgstr ""
+msgstr "de exemplu: Trimite confirmarea comenzii"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form

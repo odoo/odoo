@@ -3,17 +3,17 @@
 # * pos_discount
 #
 # Translators:
-# Dorin Hongu <dhongu@gmail.com>, 2022, 2025.
+# Dorin Hongu <dhongu@gmail.com>, 2022, 2025, 2026.
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
 # Martin Trigaux, 2022
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:38+0000\n"
-"PO-Revision-Date: 2026-08-31 15:20+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
+"POT-Creation-Date: 2026-11-20 17:37+0000\n"
+"PO-Revision-Date: 2026-11-21 09:32+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/"
 "pos_discount/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: pos_discount
 #: model:ir.module.module,description:base.module_pos_discount
@@ -32,16 +32,21 @@ msgid ""
 "discount to a customer.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Acest modul permite casierului să acorde rapid o reducere procentuală\n"
+"unui client.\n"
+"\n"
 
 #. module: pos_discount
 #: model_terms:ir.ui.view,arch_db:pos_discount.pos_session_sales_details
 msgid "<strong>Amount of global discounts</strong>:"
-msgstr ""
+msgstr "<strong>Valoarea reducerilor globale</strong>:"
 
 #. module: pos_discount
 #: model_terms:ir.ui.view,arch_db:pos_discount.pos_session_sales_details
 msgid "<strong>Number of global discounts</strong>:"
-msgstr ""
+msgstr "<strong>Numărul reducerilor globale</strong>:"
 
 #. module: pos_discount
 #. odoo-python
@@ -82,7 +87,7 @@ msgstr "Reducere produs"
 #: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_pc
 #: model_terms:ir.ui.view,arch_db:pos_discount.res_config_settings_view_form
 msgid "Discount Value"
-msgstr ""
+msgstr "Valoarea reducerii"
 
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_account_move_line__display_name
@@ -91,7 +96,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_discount.field_report_point_of_sale_report_saledetails__display_name
 #: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nume afișat"
 
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_account_move_line__id
@@ -100,24 +105,24 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_discount.field_report_point_of_sale_report_saledetails__id
 #: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: pos_discount
 #: model:ir.model,name:pos_discount.model_account_move_line
 msgid "Journal Item"
-msgstr ""
+msgstr "Element jurnal"
 
 #. module: pos_discount
 #. odoo-javascript
 #: code:addons/pos_discount/static/src/app/services/pos_store.js:0
 msgid "No discount product found"
-msgstr ""
+msgstr "Nu s-a găsit niciun produs pentru reduceri."
 
 #. module: pos_discount
 #. odoo-javascript
-#: code:addons/pos_discount/static/src/app/screens/ticket_screen/ticket_screen.js:0
+#: code:addons/pos_discount/static/src/app/services/pos_store.js:0
 msgid "Oh snap !"
-msgstr ""
+msgstr "Ups!"
 
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__iface_discount
@@ -132,33 +137,33 @@ msgstr "Configurarea Punctului de Vânzare"
 #. module: pos_discount
 #: model:ir.model,name:pos_discount.model_report_point_of_sale_report_saledetails
 msgid "Point of Sale Details"
-msgstr ""
+msgstr "Detalii Punct de Vânzare"
 
 #. module: pos_discount
 #: model:ir.module.module,shortdesc:base.module_pos_discount
 msgid "Point of Sale Discounts"
-msgstr ""
+msgstr "Reduceri în punctul de vânzare"
 
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_product_id
 msgid "Pos Discount Product"
-msgstr ""
+msgstr "Produs pentru reduceri în POS"
 
 #. module: pos_discount
 #: model:ir.model,name:pos_discount.model_product_template
 msgid "Product"
-msgstr ""
+msgstr "Produs"
 
 #. module: pos_discount
 #: model:ir.module.module,summary:base.module_pos_discount
 msgid "Simple Discounts in the Point of Sale "
-msgstr ""
+msgstr "Reduceri simple în punctul de vânzare "
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__discount_pc
 #: model:ir.model.fields,help:pos_discount.field_res_config_settings__pos_discount_pc
 msgid "The default discount value when clicking on the Discount button"
-msgstr ""
+msgstr "Valoarea implicită a reducerii la apăsarea butonului Reducere."
 
 #. module: pos_discount
 #. odoo-javascript
@@ -167,17 +172,19 @@ msgid ""
 "The discount product seems misconfigured. Make sure it is flagged as 'Can be "
 "Sold' and 'Available in Point of Sale'."
 msgstr ""
+"Produsul pentru reduceri pare configurat incorect. Asigurați-vă că opțiunile "
+"„Poate fi vândut” și „Disponibil în punctul de vânzare” sunt activate."
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__discount_product_id
 msgid "The product used to apply the discount on the ticket."
-msgstr ""
+msgstr "Produsul folosit pentru aplicarea reducerii pe bon."
 
 #. module: pos_discount
 #. odoo-javascript
-#: code:addons/pos_discount/static/src/app/screens/ticket_screen/ticket_screen.js:0
+#: code:addons/pos_discount/static/src/app/services/pos_store.js:0
 msgid "You cannot edit a discount line."
-msgstr ""
+msgstr "Nu puteți modifica o linie de reducere."
 
 #~ msgid "Discount %"
 #~ msgstr "Reducere %"

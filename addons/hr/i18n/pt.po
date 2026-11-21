@@ -22,13 +22,14 @@
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
 # Cristina Paniagua Ramiro <crpan@odoo.com>, 2026.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 17:38+0000\n"
-"PO-Revision-Date: 2026-11-13 12:28+0000\n"
-"Last-Translator: Cristina Paniagua Ramiro <crpan@odoo.com>\n"
+"POT-Creation-Date: 2026-11-20 17:37+0000\n"
+"PO-Revision-Date: 2026-11-19 09:19+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-20/hr/pt/"
 ">\n"
 "Language: pt\n"
@@ -37,7 +38,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: hr
 #. odoo-python
@@ -284,13 +285,6 @@ msgid ""
 msgstr ""
 "<i class=\"oi oi-fw me-2 text-primary\" data-icon=\"cake\" "
 "title=\"Birthday\"/>"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
-msgid ""
-"<i class=\"oi oi-fw oi-filled me-2 text-primary\" data-icon=\"contract\" "
-"title=\"Contract\"/>"
-msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -780,7 +774,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model,name:hr.model_mail_activity_schedule
 msgid "Activity schedule plan Wizard"
-msgstr "Assistente de planejamento de atividade"
+msgstr "Assistente de planeamento de atividades"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__departure_description
@@ -1553,6 +1547,7 @@ msgstr "Contactos"
 
 #. module: hr
 #. odoo-javascript
+#: code:addons/hr/static/src/components/contract_period/contract_period.xml:0
 #: code:addons/hr/static/src/components/versions_timeline/versions_timeline.js:0
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -1589,6 +1584,8 @@ msgid "Contract Overview"
 msgstr "Visão geral do contrato"
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/contract_period/contract_period.js:0
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view_enhanced
 msgid "Contract Period"
 msgstr ""
@@ -2212,7 +2209,7 @@ msgstr "Documento"
 #: code:addons/hr/static/src/views/hr_employee_action_helper/onboarding_helper_blocks.xml:0
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Documents"
-msgstr ""
+msgstr "Documentos"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__driving_license
@@ -3436,7 +3433,7 @@ msgstr "Descrição do Cargo"
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Job Position"
-msgstr "Posição do Cargo"
+msgstr "Cargo"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job

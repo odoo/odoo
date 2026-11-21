@@ -7,16 +7,16 @@
 # Hongu Cosmin <cosmin513@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
-# Dorin Hongu <dhongu@gmail.com>, 2023, 2025.
+# Dorin Hongu <dhongu@gmail.com>, 2023, 2025, 2026.
 # Alin Ilie <alin.ilie@logit-solutions.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-25 17:37+0000\n"
-"PO-Revision-Date: 2026-08-31 18:07+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-21 09:54+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/"
 "sale_management/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: sale_management
 #: model:ir.module.module,description:base.module_sale_management
@@ -61,30 +61,61 @@ msgid ""
 "* My Quotations\n"
 "* Monthly Turnover (Graph)\n"
 msgstr ""
+"\n"
+"Gestionează ofertele și comenzile de vânzare\n"
+"============================================\n"
+"\n"
+"Această aplicație vă permite să gestionați obiectivele de vânzare într-un "
+"mod eficient și eficace,\n"
+"urmărind toate comenzile de vânzare și istoricul acestora.\n"
+"\n"
+"Acoperă întregul flux de vânzare:\n"
+"\n"
+"* **Ofertă** -> **Comandă de vânzare** -> **Factură**\n"
+"\n"
+"Preferințe (doar cu Gestiunea depozitului instalată)\n"
+"----------------------------------------------------\n"
+"\n"
+"Dacă ați instalat și Gestiunea depozitului, puteți configura următoarele "
+"preferințe:\n"
+"\n"
+"* Livrare: livrare integrală sau livrare parțială\n"
+"* Facturare: alegeți cum vor fi plătite facturile\n"
+"* Incoterms: termeni comerciali internaționali\n"
+"\n"
+"\n"
+"Cu acest modul puteți personaliza raportul comenzii de vânzare și al "
+"facturii cu\n"
+"categorii, subtotaluri sau salturi de pagină.\n"
+"\n"
+"Panoul de bord pentru managerul de vânzări va include\n"
+"-----------------------------------------------------\n"
+"* Ofertele mele\n"
+"* Cifra de afaceri lunară (grafic)\n"
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template_line.py:0
 msgid "%(attribute)s: %(values)s"
-msgstr ""
+msgstr "%(attribute)s: %(values)s"
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid "Acoustic ceiling"
-msgstr ""
+msgstr "Tavan acustic"
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid "Acoustic underlay"
-msgstr ""
+msgstr "Folie acustică de subpardoseală"
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid "Acoustic wall insulation"
-msgstr ""
+msgstr "Izolație acustică pentru pereți"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__active
@@ -95,7 +126,7 @@ msgstr "Activ"
 #. odoo-javascript
 #: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.xml:0
 msgid "Add Section"
-msgstr ""
+msgstr "Adaugă secțiune"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -136,19 +167,19 @@ msgstr "Arhivat"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_template_attribute_value_ids
 msgid "Attribute Values"
-msgstr ""
+msgstr "Valori atribute"
 
 #. module: sale_management
 #. odoo-javascript
 #: code:addons/sale_management/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Template"
-msgstr ""
+msgstr "Înapoi la șablon"
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid "Brainstorm Whiteboard"
-msgstr ""
+msgstr "Tablă albă pentru brainstorming"
 
 #. module: sale_management
 #. odoo-python
@@ -157,26 +188,28 @@ msgid ""
 "Camera\n"
 "PTZ conference camera, auto-framing"
 msgstr ""
+"Cameră\n"
+"Cameră de conferință PTZ, cu încadrare automată"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__user_has_access
 msgid "Can User access"
-msgstr ""
+msgstr "Utilizatorul are acces"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Catalog"
-msgstr ""
+msgstr "Catalog"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__collapse_composition
 msgid "Collapse Composition"
-msgstr ""
+msgstr "Restrânge compoziția"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__collapse_prices
 msgid "Collapse Prices"
-msgstr ""
+msgstr "Restrânge prețurile"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__company_id
@@ -189,7 +222,7 @@ msgstr "Companie"
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid "Conference Room"
-msgstr ""
+msgstr "Sală de conferințe"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_res_config_settings
@@ -199,7 +232,7 @@ msgstr "Setări de configurare"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Confirmation"
-msgstr ""
+msgstr "Confirmare"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__mail_template_id
@@ -210,7 +243,7 @@ msgstr "Mail de confirmare"
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid "Connectivity"
-msgstr ""
+msgstr "Conectivitate"
 
 #. module: sale_management
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
@@ -232,18 +265,18 @@ msgstr "Creat în"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__currency_id
 msgid "Currency"
-msgstr ""
+msgstr "Moneda"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_custom_attribute_value_ids
 msgid "Custom Values"
-msgstr ""
+msgstr "Valori personalizate"
 
 #. module: sale_management
 #. odoo-javascript
 #: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.xml:0
 msgid "Delete"
-msgstr ""
+msgstr "Șterge"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__name
@@ -259,12 +292,12 @@ msgstr "Rezumat"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Disc %"
-msgstr ""
+msgstr "Red. %"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__discount
 msgid "Discount (%)"
-msgstr ""
+msgstr "Reducere (%)"
 
 #. module: sale_management
 #. odoo-python
@@ -273,6 +306,8 @@ msgid ""
 "Display / TV\n"
 "65\" 4K screen + wall mount + HDMI/USB-C inputs"
 msgstr ""
+"Display / TV\n"
+"Ecran 4K de 65\" + suport de perete + intrări HDMI/USB-C"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__display_name
@@ -293,18 +328,18 @@ msgstr "Tipul de afișare"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Enter a Description"
-msgstr ""
+msgstr "Introduceți o descriere"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_no_variant_attribute_value_ids
 msgid "Extra Values"
-msgstr ""
+msgstr "Valori Extra"
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid "Flooring parquet"
-msgstr ""
+msgstr "Parchet pentru pardoseală"
 
 #. module: sale_management
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_non_accountable_fields_null
@@ -317,11 +352,13 @@ msgstr ""
 msgid ""
 "Forbidden section quantity or section UoM on non section sale quote line"
 msgstr ""
+"Cantitatea de secțiune sau UM de secțiune nu sunt permise pe o linie de "
+"ofertă care nu este secțiune"
 
 #. module: sale_management
 #: model:ir.module.module,summary:base.module_sale_management
 msgid "From quotations to invoices"
-msgstr ""
+msgstr "De la oferte la facturi"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__sequence
@@ -333,7 +370,7 @@ msgstr ""
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__has_productless_lines
 msgid "Has Productless Lines"
-msgstr ""
+msgstr "Are linii fără produs"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__id
@@ -361,32 +398,34 @@ msgid ""
 "If unchecked, it will allow you to hide the Order template without removing "
 "it."
 msgstr ""
+"Dacă este debifat, vă permite să ascundeți șablonul de comandă fără să-l "
+"ștergeți."
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid "Individual Work Station"
-msgstr ""
+msgstr "Post de lucru individual"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Invoicing"
-msgstr ""
+msgstr "Facturare"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__mandatory_product
 msgid "Is Product Mandatory"
-msgstr ""
+msgstr "Produsul este obligatoriu"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__is_configurable_product
 msgid "Is the product configurable?"
-msgstr ""
+msgstr "Produsul poate fi configurat?"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__journal_id
 msgid "Journal"
-msgstr ""
+msgstr "Jurnal"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total_value
@@ -396,7 +435,7 @@ msgstr "Kpi Valoarea totală a tuturor vânzărilor"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__label
 msgid "Label"
-msgstr ""
+msgstr "Eticheta"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__write_uid
@@ -423,29 +462,31 @@ msgid ""
 "Microphone system\n"
 "Ceiling/table array mic with echo cancellation"
 msgstr ""
+"Sistem de microfoane\n"
+"Microfon matrice de tavan/masă cu anulare a ecoului"
 
 #. module: sale_management
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_accountable_product_id_required
 msgid "Missing required UoM on accountable sale quote line."
-msgstr ""
+msgstr "Lipsește UM obligatorie pe linia de ofertă contabilizabilă."
 
 #. module: sale_management
 #. odoo-javascript
 #: code:addons/sale_management/static/src/views/components/template_dropdown.xml:0
 msgid "New"
-msgstr ""
+msgstr "Nou(ă)"
 
 #. module: sale_management
 #. odoo-javascript
 #: code:addons/sale_management/static/src/views/components/template_dropdown.xml:0
 msgid "New Quotation"
-msgstr ""
+msgstr "Ofertă nouă"
 
 #. module: sale_management
 #. odoo-javascript
 #: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.xml:0
 msgid "New Section"
-msgstr ""
+msgstr "Secțiune nouă"
 
 #. module: sale_management
 #: model:ir.model.fields.selection,name:sale_management.selection__sale_order_template_line__display_type__line_note
@@ -461,7 +502,7 @@ msgstr "Numărul de zile pentru calcularea datei de valabilitate a cotației"
 #. module: sale_management
 #: model:sale.order.template,name:sale_management.sale_order_template_1
 msgid "Office Furniture"
-msgstr ""
+msgstr "Mobilier de birou"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__require_signature
@@ -474,17 +515,19 @@ msgid ""
 "Only one Custom Value is allowed per Attribute Value per Quotation Template "
 "Line."
 msgstr ""
+"Este permisă o singură valoare personalizată pentru fiecare valoare de "
+"atribut pe fiecare linie a șablonului de ofertă."
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid "Open Space Renovation"
-msgstr ""
+msgstr "Renovare open space"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
 msgid "Optional"
-msgstr ""
+msgstr "Facultativ"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_line__is_optional
@@ -496,12 +539,12 @@ msgstr "Linie opțională"
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid "Options"
-msgstr ""
+msgstr "Opțiuni"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_template
 msgid "Order Templates"
-msgstr ""
+msgstr "Șabloane de comandă"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__parent_id
@@ -512,12 +555,12 @@ msgstr "Linie secțiune părinte"
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid "Parquet installation"
-msgstr ""
+msgstr "Montaj parchet"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__prepayment_percent
 msgid "Prepayment"
-msgstr ""
+msgstr "Plată în avans"
 
 #. module: sale_management
 #. odoo-python
@@ -534,17 +577,17 @@ msgstr "Produs"
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_product_attribute_custom_value
 msgid "Product Attribute Custom Value"
-msgstr ""
+msgstr "Valoare Personalizată Atributul Produs"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_template_id
 msgid "Product Template"
-msgstr ""
+msgstr "Șablon produs"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Product Variant"
-msgstr ""
+msgstr "Variantă produs"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_uom_qty
@@ -554,7 +597,7 @@ msgstr "Cantitate"
 #. module: sale_management
 #: model:ir.model.fields.selection,name:sale_management.selection__sale_order_template__template_type__quotation
 msgid "Quotation"
-msgstr ""
+msgstr "Ofertă"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__number_of_days
@@ -624,18 +667,18 @@ msgstr "Linie comandă vânzare"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__team_ids
 msgid "Sales Team"
-msgstr ""
+msgstr "Echipa de vânzări"
 
 #. module: sale_management
 #. odoo-javascript
 #: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.xml:0
 msgid "Save as Template"
-msgstr ""
+msgstr "Salvare ca Șablon"
 
 #. module: sale_management
 #: model:ir.actions.server,name:sale_management.model_sale_order_action_create_quotation_template
 msgid "Save as template"
-msgstr ""
+msgstr "Salvează ca șablon"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
@@ -652,29 +695,29 @@ msgstr "Secțiune"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__section_qty
 msgid "Section Quantity"
-msgstr ""
+msgstr "Cantitate secțiune"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
 msgid "Section Templates"
-msgstr ""
+msgstr "Șabloane de secțiune"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__section_uom_id
 msgid "Section Unit of Measure"
-msgstr ""
+msgstr "Unitate de măsură secțiune"
 
 #. module: sale_management
 #. odoo-javascript
 #: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.js:0
 msgid "Section template %s created successfully"
-msgstr ""
+msgstr "Șablonul de secțiune %s a fost creat cu succes"
 
 #. module: sale_management
 #. odoo-javascript
 #: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.js:0
 msgid "Section template %s updated successfully"
-msgstr ""
+msgstr "Șablonul de secțiune %s a fost actualizat cu succes"
 
 #. module: sale_management
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale_management_1
@@ -703,12 +746,12 @@ msgstr "Setează opțional"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Settings"
-msgstr ""
+msgstr "Setări"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__share_template
 msgid "Share"
-msgstr ""
+msgstr "Partajează"
 
 #. module: sale_management
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale1_management_0
@@ -726,7 +769,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid "Subfloor preparation"
-msgstr ""
+msgstr "Pregătirea suportului pardoselii"
 
 #. module: sale_management
 #: model:ir.model.fields.selection,name:sale_management.selection__sale_order_template_line__display_type__line_subsection
@@ -736,26 +779,26 @@ msgstr "Subsecțiune"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__tax_ids
 msgid "Taxes"
-msgstr ""
+msgstr "Taxe"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order__sale_order_template_id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__name
 msgid "Template"
-msgstr ""
+msgstr "Șablon"
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order.py:0
 msgid "Template from %s"
-msgstr ""
+msgstr "Șablon din %s"
 
 #. module: sale_management
 #: model:ir.actions.act_window,name:sale_management.sale_order_template_action
 #: model:ir.ui.menu,name:sale_management.sale_order_template_menu
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Templates"
-msgstr ""
+msgstr "Șabloane"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -807,12 +850,12 @@ msgstr "Sfat: Vindeți sau cumpărați produse în vrac cu matrice"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__template_type
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
 msgid "Type"
-msgstr ""
+msgstr "Tip"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Type to find a product..."
-msgstr ""
+msgstr "Tastați pentru a căuta un produs..."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_uom_id
@@ -822,7 +865,7 @@ msgstr "Unitate"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__price_unit
 msgid "Unit Price"
-msgstr ""
+msgstr "Preț unitar"
 
 #. module: sale_management
 #. odoo-javascript
@@ -854,13 +897,13 @@ msgstr "Vizibil pentru toți"
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid "Whiteboard"
-msgstr ""
+msgstr "Tablă albă"
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid "Whiteboard Pen"
-msgstr ""
+msgstr "Stilou pentru tablă albă"
 
 #. module: sale_management
 #. odoo-python
@@ -877,7 +920,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.js:0
 msgid "You cannot save a section with combo lines as a template"
-msgstr ""
+msgstr "Nu puteți salva ca șablon o secțiune care conține linii combo"
 
 #. module: sale_management
 #. odoo-python
@@ -889,6 +932,10 @@ msgid ""
 "Please change the company of your template or remove the products from other "
 "companies."
 msgstr ""
+"Șablonul dvs. aparține companiei %(template_company)s, dar conține produse "
+"din compania (%(product_company)s) care nu sunt accesibile pentru %"
+"(template_company)s.\n"
+"Schimbați compania șablonului sau eliminați produsele din alte companii."
 
 #. module: sale_management
 #. odoo-python
@@ -900,6 +947,10 @@ msgid ""
 "Please change the company of your template or remove the products from other "
 "companies."
 msgstr ""
+"Șablonul dvs. aparține companiei %(template_company)s, dar conține produse "
+"din alte companii (%(product_company)s) care nu sunt accesibile pentru %"
+"(template_company)s.\n"
+"Schimbați compania șablonului sau eliminați produsele din alte companii."
 
 #. module: sale_management
 #. odoo-python
@@ -909,6 +960,8 @@ msgid ""
 "between companies. Please restrict the template access, or remove those "
 "products."
 msgstr ""
+"Șablonul nu poate conține produse ale unor companii anume dacă este partajat "
+"între companii. Restricționați accesul la șablon sau eliminați acele produse."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form

@@ -8,7 +8,7 @@
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
 # Martin Trigaux, 2022
 # Cozmin Candea <office@terrabit.ro>, 2023
-# Dorin Hongu <dhongu@gmail.com>, 2023, 2025.
+# Dorin Hongu <dhongu@gmail.com>, 2023, 2025, 2026.
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Adrian Cocos <adrian.cocos@capps.ai>, 2025.
@@ -18,9 +18,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-30 17:40+0000\n"
-"PO-Revision-Date: 2026-08-31 15:34+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-21 05:02+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/"
 "website_forum/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: website_forum
 #: model:ir.module.module,description:base.module_website_forum
@@ -36,6 +36,8 @@ msgid ""
 "\n"
 "Ask questions, get answers, no distractions\n"
 msgstr ""
+"\n"
+"Pune întrebări, primește răspunsuri, fără distrageri\n"
 
 #. module: website_forum
 #. odoo-javascript
@@ -84,7 +86,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_forum/static/src/interactions/website_forum.js:0
 msgid "%(score)s karma is required to perform this action."
-msgstr "% (scor) karma este necesară pentru a efectua această acțiune."
+msgstr "Pentru această acțiune sunt necesare %(score)s puncte de karma."
 
 #. module: website_forum
 #. odoo-python
@@ -199,7 +201,7 @@ msgstr "%dkarma necesară pentru a deconecta o postare."
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "%d karma required to update a flagged post."
-msgstr ""
+msgstr "Este necesar un karma de %d pentru a actualiza o postare semnalată."
 
 #. module: website_forum
 #. odoo-python
@@ -217,19 +219,19 @@ msgstr "%dkarma necesară pentru validare postare."
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_comment.py:0
 msgid "%i karma required to comment."
-msgstr ""
+msgstr "Este necesar un karma de %i pentru a comenta."
 
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_comment.py:0
 msgid "%i karma required to delete a comment."
-msgstr ""
+msgstr "Este necesar un karma de %i pentru a șterge un comentariu."
 
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_comment.py:0
 msgid "%i karma required to edit a comment."
-msgstr ""
+msgstr "Este necesar un karma de %i pentru a edita un comentariu."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index_tags
@@ -274,6 +276,8 @@ msgid ""
 "<a class=\"btn btn-primary forum_register_url o_translate_inline\" href=\"/"
 "web/login\">Sign up</a>"
 msgstr ""
+"<a class=\"btn btn-primary forum_register_url o_translate_inline\" href=\"/"
+"web/login\">Înregistrează-te</a>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_display
@@ -465,6 +469,8 @@ msgid ""
 "<i class=\"oi display-inline-block\" data-icon=\"east\"/> Return to "
 "questions list"
 msgstr ""
+"<i class=\"oi display-inline-block\" data-icon=\"east\"/> Revino la lista de "
+"întrebări"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post
@@ -699,6 +705,8 @@ msgid ""
 "<i class=\"oi\" data-icon=\"more_horiz\" data-bs-toggle=\"tooltip\" data-bs-"
 "placement=\"top\" title=\"More\"/>"
 msgstr ""
+"<i class=\"oi\" data-icon=\"more_horiz\" data-bs-toggle=\"tooltip\" data-bs-"
+"placement=\"top\" title=\"Mai multe\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -954,7 +962,7 @@ msgstr "Tot"
 #. odoo-javascript
 #: code:addons/website_forum/static/src/website_builder/forum_floating_snippets_plugin.js:0
 msgid "All Forums"
-msgstr ""
+msgstr "Toate Forumurile"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_body
@@ -1005,7 +1013,7 @@ msgstr "Răspuns acceptat cu 15 sau mai multe voturi"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Answer converted to comment in \"%s\""
-msgstr ""
+msgstr "Răspuns transformat în comentariu în „%s”"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_answer_downvote
@@ -1255,13 +1263,13 @@ msgstr "Cel mai bun răspuns"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_comment__body
 msgid "Body"
-msgstr ""
+msgstr "Conținut"
 
 #. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/xml/public_templates.xml:0
 msgid "By sharing you answer, you will get additional"
-msgstr ""
+msgstr "Prin distribuirea răspunsului, veți obține suplimentar"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_accept
@@ -1342,13 +1350,13 @@ msgstr "Poate Vizualiza"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_comment.py:0
 msgid "Cannot change the post of a comment."
-msgstr ""
+msgstr "Nu se poate schimba postarea unui comentariu."
 
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Cannot convert a question to a comment"
-msgstr ""
+msgstr "Nu se poate transforma o întrebare într-un comentariu"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_edit_retag
@@ -1359,7 +1367,7 @@ msgstr "Schimbați etichetele de întrebare"
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 msgid "Check edit button is there"
-msgstr ""
+msgstr "Verifică dacă butonul de editare este disponibil"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_p_4
@@ -1371,25 +1379,25 @@ msgstr "Comentator principal"
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 msgid "Click here to accept this answer."
-msgstr ""
+msgstr "Faceți clic aici pentru a accepta acest răspuns."
 
 #. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 msgid "Click to post your answer."
-msgstr ""
+msgstr "Faceți clic pentru a posta răspunsul."
 
 #. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 msgid "Click to post your question."
-msgstr ""
+msgstr "Faceți clic pentru a posta întrebarea."
 
 #. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 msgid "Click to reply."
-msgstr ""
+msgstr "Faceți clic pentru a răspunde."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_dropdown
@@ -1421,13 +1429,13 @@ msgstr "Închideți postarea"
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 msgid "Close search bar"
-msgstr ""
+msgstr "Închide bara de căutare"
 
 #. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 msgid "Close this dialog."
-msgstr ""
+msgstr "Închide această fereastră de dialog."
 
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_post__state__close
@@ -1496,7 +1504,7 @@ msgstr "Comentator"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__comment_ids
 msgid "Comments"
-msgstr ""
+msgstr "Comentarii"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_all_oe_structure_forum_all_top
@@ -1528,7 +1536,7 @@ msgstr "Conținut"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__write_date_content
 msgid "Content Updated on"
-msgstr ""
+msgstr "Conținut actualizat la"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_convert_all
@@ -1580,7 +1588,7 @@ msgstr "Creați o nouă postare pe forum"
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 msgid "Create a new post in this forum by clicking on the button."
-msgstr ""
+msgstr "Creați o nouă postare în acest forum făcând clic pe buton."
 
 #. module: website_forum
 #: model_terms:ir.actions.act_window,help:website_forum.forum_tag_action
@@ -1605,7 +1613,7 @@ msgstr "Creați etichete noi"
 #. odoo-javascript
 #: code:addons/website_forum/static/src/xml/website_forum_tags_wrapper.xml:0
 msgid "Create option \""
-msgstr ""
+msgstr "Creează opțiunea \""
 
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_32
@@ -1803,7 +1811,7 @@ msgstr "Vot negativ pentru postarea de conținut ofensator"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "Drag blocks here to add them on all forum"
-msgstr ""
+msgstr "Trage blocurile aici pentru a le adăuga pe toate forumurile"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_1
@@ -1865,7 +1873,7 @@ msgstr "Caracteristici editor: imagine și legături"
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_mail_thread
 msgid "Email Thread"
-msgstr ""
+msgstr "Fir E-mail"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
@@ -2107,7 +2115,7 @@ msgstr "Postare forum"
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post_comment
 msgid "Forum Post Comment"
-msgstr ""
+msgstr "Comentariu la postarea din forum"
 
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.forum_post_action
@@ -2161,7 +2169,7 @@ msgstr "Primiți o notificare atunci când această etichetă este utilizată"
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 msgid "Give your post title."
-msgstr ""
+msgstr "Dă-ți titlu postării."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
@@ -2238,12 +2246,12 @@ msgstr "Guru (15)"
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "Rutare HTTP"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__can_access
 msgid "Has Access"
-msgstr ""
+msgstr "Are acces"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__uid_has_answered
@@ -2398,7 +2406,7 @@ msgstr "Declarații inadecvate și inacceptabile"
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 msgid "Insert tags related to your question."
-msgstr ""
+msgstr "Inserați etichete legate de întrebarea dvs."
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_11
@@ -2552,7 +2560,7 @@ msgstr "Listă"
 #. module: website_forum
 #: model:ir.module.module,summary:base.module_website_forum
 msgid "Manage a forum with FAQ and Q&A"
-msgstr ""
+msgstr "Gestionează un forum cu întrebări frecvente și întrebări și răspunsuri"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_display
@@ -2578,7 +2586,7 @@ msgstr "Marcați ca spam"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_all_oe_structure_forum_all_top
 msgid "Meet our community members"
-msgstr ""
+msgstr "Fă cunoștință cu membrii comunității noastre"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_has_error
@@ -2680,7 +2688,7 @@ msgstr "Răspuns nou"
 #: model:mail.message.subtype,description:website_forum.mt_comment_new
 #: model:mail.message.subtype,name:website_forum.mt_comment_new
 msgid "New Comment"
-msgstr ""
+msgstr "Comentariu nou"
 
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.forum_forum_action_add
@@ -2705,7 +2713,7 @@ msgstr "Întrebare nouă"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_comment.py:0
 msgid "New comment in %s"
-msgstr ""
+msgstr "Comentariu nou în %s"
 
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__default_order__create_date_desc
@@ -2829,13 +2837,13 @@ msgstr "Postări ofensive"
 #. odoo-javascript
 #: code:addons/website_forum/static/src/interactions/website_forum.js:0
 msgid "Oh no! Please sign in to perform this action"
-msgstr ""
+msgstr "Vai! Autentifică-te pentru a efectua această acțiune"
 
 #. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/xml/public_templates.xml:0
 msgid "On average,"
-msgstr ""
+msgstr "În medie,"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
@@ -2986,7 +2994,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Posting answer on a [Flagged] question is not possible."
-msgstr ""
+msgstr "Nu se poate publica un răspuns la o întrebare [semnalată]."
 
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.forum_post_action_forum_main
@@ -3030,13 +3038,13 @@ msgstr "Expert"
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 msgid "Put your answer here."
-msgstr ""
+msgstr "Puneți răspunsul aici."
 
 #. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 msgid "Put your question here."
-msgstr ""
+msgstr "Puneți întrebarea aici."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__parent_id
@@ -3054,7 +3062,7 @@ msgstr "Întrebare %s"
 #: model:mail.message.subtype,description:website_forum.mt_ask_validation
 #: model:mail.message.subtype,name:website_forum.mt_ask_validation
 msgid "Question Ask Validation"
-msgstr ""
+msgstr "Validarea întrebării"
 
 #. module: website_forum
 #. odoo-python
@@ -3329,7 +3337,7 @@ msgstr "Al doilea parametru de relevanță"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
 msgid "See answer"
-msgstr ""
+msgstr "Vezi răspunsul"
 
 #. module: website_forum
 #. odoo-python
@@ -3351,13 +3359,13 @@ msgstr "Selectează tot"
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 msgid "Select a forum to post your question in."
-msgstr ""
+msgstr "Selectează forumul în care dorești să publici întrebarea."
 
 #. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 msgid "Select found select menu item"
-msgstr ""
+msgstr "Selectează elementul din meniul derulant al rezultatelor"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_8
@@ -3586,6 +3594,8 @@ msgstr "Răspunsul acceptat este șters"
 #: model:ir.model.fields,help:website_forum.field_forum_tag__website_absolute_url
 msgid "The full absolute URL to access the document through the website."
 msgstr ""
+"Calea URL absolută completă pentru a accesa documentul prin intermediul site-"
+"ului web."
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__website_url
@@ -3593,6 +3603,8 @@ msgstr ""
 #: model:ir.model.fields,help:website_forum.field_forum_tag__website_url
 msgid "The full relative URL to access the document through the website."
 msgstr ""
+"URL-ul relativ complet pentru accesarea documentului prin intermediul site-"
+"ului web."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -3993,7 +4005,7 @@ msgstr "Website / Forum"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__website_absolute_url
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_absolute_url
 msgid "Website Absolute URL"
-msgstr ""
+msgstr "URL absolut al site-ului web"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_url
@@ -4076,7 +4088,7 @@ msgstr "Aveți deja o postare în așteptare"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "You can post only one answer."
-msgstr ""
+msgstr "Poți publica un singur răspuns."
 
 #. module: website_forum
 #. odoo-javascript
@@ -4272,6 +4284,8 @@ msgid ""
 "has been posted and requires your validation. Click here to access the "
 "question :"
 msgstr ""
+"a fost publicată și necesită validarea ta. Fă clic aici pentru a accesa "
+"întrebarea:"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
@@ -4281,7 +4295,7 @@ msgstr "a fost postat. Faceți clic aici pentru a accesa întrebarea:"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
 msgid "has been posted. Click here to access the question:"
-msgstr ""
+msgstr "a fost publicată. Fă clic aici pentru a accesa întrebarea:"
 
 #. module: website_forum
 #. odoo-javascript
@@ -4316,6 +4330,8 @@ msgid ""
 "if your\n"
 "        answer is selected as the right one. See what you can do with karma"
 msgstr ""
+"dacă \n"
+"răspunsul tău este selectat ca cel corect. Vezi ce poți face cu karma"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
@@ -4387,6 +4403,8 @@ msgid ""
 "on social networks get an answer within\n"
 "        5 hours. Questions shared on two social networks have"
 msgstr ""
+"pe rețelele sociale primiți un răspuns în \n"
+"    5 ore. Întrebările partajate pe două rețele sociale au"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_all_all_entries

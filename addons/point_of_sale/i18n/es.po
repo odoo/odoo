@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 17:38+0000\n"
-"PO-Revision-Date: 2026-11-10 12:13+0000\n"
+"POT-Creation-Date: 2026-11-20 17:37+0000\n"
+"PO-Revision-Date: 2026-11-19 15:33+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-20/"
 "point_of_sale/es/>\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -326,6 +326,37 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"></t>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"></t>\n"
+"                    <t t-set=\"tz\" t-"
+"value=\"object.company_id.partner_id.tz\"></t>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"></t>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">Hola, <t t-"
+"out=\"client_name\">nombre del cliente</t>:</t>\n"
+"                        <t t-else=\"\">Hola:</t>\n"
+"                    </div>\n"
+"                    <br>\n"
+"                    <div>¡Gracias por realizar tu compra en <t t-"
+"out=\"store_name\">nombre de la tienda</t>!</div>\n"
+"                    <div>Adjunta encontrarás la factura simplificada de la "
+"compra realizada el <span><t t-out=\"format_datetime(dt=object.date_order, "
+"tz=tz, dt_format=&quot;EEEE d MMMM&quot;,                          "
+"lang_code=lg) or ''\">fecha</t> <t t-"
+"out=\"format_time(time=object.date_order, tz=tz, "
+"time_format='short',                          lang_code=lg)\">a las (hora)</"
+"t>.</span>\n"
+"                    </div>\n"
+"                    <br>\n"
+"                    <div>Saludos,</div>\n"
+"                    <br>\n"
+"                    <t t-out=\"store_name\">Nombre de la tienda</t>\n"
+"                </div>\n"
+"            "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
@@ -10718,6 +10749,11 @@ msgid "The start time must be before the end time."
 msgstr "El tiempo de inicio debe ser antes del tiempo de finalización."
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "The time at which the POS will post its accounting entries."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid ""
@@ -11075,6 +11111,12 @@ msgstr ""
 msgid ""
 "This orderline has already been sent to the kitchen and cannot be edited."
 msgstr "Este pedido ya se ha enviado a la cocina y no se puede modificar."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_payment_method.js:0
+msgid "This payment method is currently in use."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python

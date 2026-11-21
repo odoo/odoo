@@ -20,9 +20,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 17:39+0000\n"
-"PO-Revision-Date: 2026-11-09 14:44+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-11-20 17:37+0000\n"
+"PO-Revision-Date: 2026-11-16 07:33+0000\n"
+"Last-Translator: Burkay Yıldızhan <seyil@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-20/"
 "hr_work_entry/tr/>\n"
 "Language: tr\n"
@@ -113,6 +113,15 @@ msgid ""
 "time type that will be created to count the amount of time missing to "
 "fulfill the condition.\">?</sup></span>"
 msgstr ""
+"<span class=\"o_form_label\" invisible=\"threshold_operator == "
+"'less_than'\">Fazlayı şu şekilde ayarla: <sup class=\"d-print-none text-info "
+"p-1 ms-1\" data-tooltip=\"You can define a time type that will be created to "
+"count the amount of time in excess.\">?</sup></span>\n"
+"                                <span class=\"o_form_label\" "
+"invisible=\"threshold_operator != 'less_than'\">Eksiği şu şekilde ayarla: "
+"<sup class=\"d-print-none text-info p-1 ms-1\" data-tooltip=\"You can define "
+"a time type that will be created to count the amount of time missing to "
+"fulfill the condition.\">?</sup></span>"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
@@ -197,6 +206,7 @@ msgstr "<span class=\"text-muted ms-2\">saat</span>"
 #: model:hr.work.entry.type,display_code:hr_work_entry.it_work_entry_type_attendance
 #: model:hr.work.entry.type,display_code:hr_work_entry.jo_work_entry_type_attendance
 #: model:hr.work.entry.type,display_code:hr_work_entry.ke_work_entry_type_attendance
+#: model:hr.work.entry.type,display_code:hr_work_entry.lb_work_entry_type_attendance
 #: model:hr.work.entry.type,display_code:hr_work_entry.lt_work_entry_type_attendance
 #: model:hr.work.entry.type,display_code:hr_work_entry.lu_work_entry_type_attendance
 #: model:hr.work.entry.type,display_code:hr_work_entry.ma_work_entry_type_attendance
@@ -267,6 +277,7 @@ msgstr "AH2"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.ge_work_entry_type_legal_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.lb_work_entry_type_legal_leave
 msgid "AL"
 msgstr "AL"
 
@@ -419,6 +430,7 @@ msgstr "Yıllık Çalışma İzni (Pazar)"
 #: model:hr.work.entry.type,name:hr_work_entry.ge_work_entry_type_legal_leave
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_annual_leave
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_kw_work_entry_type_annual_leave
+#: model:hr.work.entry.type,name:hr_work_entry.lb_work_entry_type_legal_leave
 #: model:hr.work.entry.type,name:hr_work_entry.vn_work_entry_type_legal_leave
 msgid "Annual Leave"
 msgstr "Yıllık İzin"
@@ -558,12 +570,18 @@ msgid "BFB"
 msgstr "BFB"
 
 #. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_lb_work_entry_type_bereavement_leave
+msgid "BL"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_us_work_entry_type_bereavement
 msgid "Bereavement"
 msgstr "Vefat izni"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_bereavement_leave
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_lb_work_entry_type_bereavement_leave
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_tr_work_entry_type_bereavement_leave
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_vn_work_entry_type_bereavement_leave
 msgid "Bereavement Leave"
@@ -633,6 +651,11 @@ msgstr "CLA"
 #: model:hr.work.entry.type,display_code:hr_work_entry.iq_work_entry_type_compassionate_leave
 msgid "COM"
 msgstr "COM"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.lb_work_entry_type_compensatory
+msgid "CR"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_paid_compensatory_rest
@@ -789,6 +812,11 @@ msgstr "İnsani izin"
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_paid_compensatory_rest
 msgid "Compensation days RWT"
 msgstr "Telafi günleri RWT"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.lb_work_entry_type_compensatory
+msgid "Compensatory Rest"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.au_work_entry_type_compensatory
@@ -1351,6 +1379,7 @@ msgstr "Başlama"
 #: model:hr.work.entry.type,display_code:hr_work_entry.it_work_entry_type_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.jo_work_entry_type_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.ke_work_entry_type_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.lb_work_entry_type_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.lt_work_entry_type_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.lu_work_entry_type_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.ma_work_entry_type_leave
@@ -1393,6 +1422,7 @@ msgstr "GWI"
 #: model:hr.work.entry.type,name:hr_work_entry.jo_work_entry_type_leave
 #: model:hr.work.entry.type,name:hr_work_entry.ke_work_entry_type_leave
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_kw_work_entry_type_leave
+#: model:hr.work.entry.type,name:hr_work_entry.lb_work_entry_type_leave
 #: model:hr.work.entry.type,name:hr_work_entry.lt_work_entry_type_leave
 #: model:hr.work.entry.type,name:hr_work_entry.lu_work_entry_type_leave
 #: model:hr.work.entry.type,name:hr_work_entry.ma_work_entry_type_leave
@@ -1489,6 +1519,7 @@ msgstr ""
 #: model:hr.work.entry.type,display_code:hr_work_entry.it_work_entry_type_home_working
 #: model:hr.work.entry.type,display_code:hr_work_entry.jo_work_entry_type_home_working
 #: model:hr.work.entry.type,display_code:hr_work_entry.ke_work_entry_type_home_working
+#: model:hr.work.entry.type,display_code:hr_work_entry.lb_work_entry_type_home_working
 #: model:hr.work.entry.type,display_code:hr_work_entry.lt_work_entry_type_home_working
 #: model:hr.work.entry.type,display_code:hr_work_entry.lu_work_entry_type_home_working
 #: model:hr.work.entry.type,display_code:hr_work_entry.ma_work_entry_type_home_working
@@ -1881,6 +1912,7 @@ msgstr "Palyatif bakım izni"
 #: model:hr.work.entry.type,name:hr_work_entry.ke_work_entry_type_unpaid_leave
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_kw_work_entry_type_unpaid_leave
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_unpaid_leave
+#: model:hr.work.entry.type,name:hr_work_entry.lb_work_entry_type_unpaid_leave
 #: model:hr.work.entry.type,name:hr_work_entry.lt_work_entry_type_unpaid_leave
 #: model:hr.work.entry.type,name:hr_work_entry.lu_work_entry_type_unpaid_leave
 #: model:hr.work.entry.type,name:hr_work_entry.ma_work_entry_type_unpaid_leave
@@ -1992,6 +2024,7 @@ msgstr "MIL"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_ge_work_entry_type_maternity_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_lb_work_entry_type_maternity_leave
 msgid "ML"
 msgstr "ML"
 
@@ -2046,6 +2079,7 @@ msgstr "Maternity (IMSS)"
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_maternity_leave
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_jo_work_entry_type_maternity
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_kw_work_entry_type_maternity_leave
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_lb_work_entry_type_maternity_leave
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_lu_work_entry_type_maternity_leave
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_maternity
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_mat_leave
@@ -2343,6 +2377,7 @@ msgstr "OSC"
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_id_work_entry_type_overtime_1
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_id_work_entry_type_overtime_2
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_ph_hr_payroll_overtime
+#: model:hr.work.entry.type,display_code:hr_work_entry.lb_work_entry_type_overtime
 #: model:hr.work.entry.type,display_code:hr_work_entry.lt_work_entry_type_overtime
 #: model:hr.work.entry.type,display_code:hr_work_entry.lu_work_entry_type_overtime
 #: model:hr.work.entry.type,display_code:hr_work_entry.ma_work_entry_type_overtime
@@ -2368,6 +2403,11 @@ msgid "OT5"
 msgstr "OT5"
 
 #. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_lb_work_entry_type_overtime_public_holiday
+msgid "OTH"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__10
 msgid "October"
 msgstr "Ekim"
@@ -2389,6 +2429,7 @@ msgstr "Ekim"
 #: model:hr.work.entry.type,display_code:hr_work_entry.jo_hr_work_entry_type_out_of_contract
 #: model:hr.work.entry.type,display_code:hr_work_entry.ke_hr_work_entry_type_out_of_contract
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_ph_hr_payroll_out_of_contract
+#: model:hr.work.entry.type,display_code:hr_work_entry.lb_hr_work_entry_type_out_of_contract
 #: model:hr.work.entry.type,display_code:hr_work_entry.lt_hr_work_entry_type_out_of_contract
 #: model:hr.work.entry.type,display_code:hr_work_entry.lu_hr_work_entry_type_out_of_contract
 #: model:hr.work.entry.type,display_code:hr_work_entry.ma_hr_work_entry_type_out_of_contract
@@ -2432,6 +2473,7 @@ msgstr "Başka bir kod altında beyan edilmemiş diğer hizmetler"
 #: model:hr.work.entry.type,name:hr_work_entry.ke_hr_work_entry_type_out_of_contract
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_kw_work_entry_type_out_of_contract
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_out_of_contract
+#: model:hr.work.entry.type,name:hr_work_entry.lb_hr_work_entry_type_out_of_contract
 #: model:hr.work.entry.type,name:hr_work_entry.lt_hr_work_entry_type_out_of_contract
 #: model:hr.work.entry.type,name:hr_work_entry.lu_hr_work_entry_type_out_of_contract
 #: model:hr.work.entry.type,name:hr_work_entry.ma_hr_work_entry_type_out_of_contract
@@ -2459,6 +2501,7 @@ msgstr "Sözleşme Dışında"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.ge_work_entry_type_overtime
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_overtime
+#: model:hr.work.entry.type,name:hr_work_entry.lb_work_entry_type_overtime
 #: model:hr.work.entry.type,name:hr_work_entry.vn_work_entry_type_overtime
 msgid "Overtime"
 msgstr "Mesai"
@@ -2694,6 +2737,7 @@ msgstr "PDU"
 #: model:hr.work.entry.type,display_code:hr_work_entry.ke_work_entry_type_public_holiday
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_bank_holiday
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_kw_work_entry_type_public_holiday
+#: model:hr.work.entry.type,display_code:hr_work_entry.lb_work_entry_type_public_holiday
 #: model:hr.work.entry.type,display_code:hr_work_entry.lt_work_entry_type_public_holiday
 #: model:hr.work.entry.type,display_code:hr_work_entry.lu_work_entry_type_public_holiday
 #: model:hr.work.entry.type,display_code:hr_work_entry.ma_work_entry_type_public_holiday
@@ -2718,6 +2762,11 @@ msgstr "PH"
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_phc
 msgid "PHC"
 msgstr "PHC"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_public_holiday_variable_schedule
+msgid "PHV"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_public_holiday_working_with_recovery
@@ -2956,6 +3005,7 @@ msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.ge_work_entry_type_public_holiday
+#: model:hr.work.entry.type,name:hr_work_entry.lb_work_entry_type_public_holiday
 #: model:hr.work.entry.type,name:hr_work_entry.uz_work_entry_type_public_holiday
 #: model:hr.work.entry.type,name:hr_work_entry.vn_work_entry_type_public_holiday
 #: model:hr.work.entry.type,name:hr_work_entry.za_work_entry_type_public_holiday
@@ -3046,6 +3096,11 @@ msgstr "Fesih sonrası resmi tatil"
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_public_holiday_temporary_unemployment_no_onss
 msgid "Public holiday during temporary unemployment"
 msgstr "Geçici işsizlik sürerince resmi tatil"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_public_holiday_variable_schedule
+msgid "Public holiday pay (variable schedule)"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_time_rule__quantity_period
@@ -3174,7 +3229,13 @@ msgid "SEA"
 msgstr "SEA"
 
 #. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_lb_work_entry_type_sick_leave_half
+msgid "SH"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.ge_work_entry_type_sick_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.lb_work_entry_type_sick_leave
 msgid "SL"
 msgstr "SL"
 
@@ -3252,6 +3313,11 @@ msgstr "STR"
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_jo_work_entry_type_study
 msgid "STU"
 msgstr "STU"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_lb_work_entry_type_sick_leave_unpaid
+msgid "SU"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_small_unemployment
@@ -3401,12 +3467,23 @@ msgid "Sick Leave (75% Paid)"
 msgstr "Hastalık İzni (75% Pyardım)"
 
 #. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.lb_work_entry_type_sick_leave
+msgid "Sick Leave (Full Pay)"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_lb_work_entry_type_sick_leave_half
+msgid "Sick Leave (Half Pay)"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.vn_work_entry_type_sick_leave
 msgid "Sick Leave (Social Insurance)"
 msgstr "Hastalık İzni (Sosyal Sigorta)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_jo_work_entry_type_sick_leave_unpaid
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_lb_work_entry_type_sick_leave_unpaid
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_sick_leave_0
 msgid "Sick Leave (Unpaid)"
 msgstr "Hastalık İzni (Ücretsiz)"
@@ -3882,6 +3959,7 @@ msgstr "UMU"
 #: model:hr.work.entry.type,display_code:hr_work_entry.ke_work_entry_type_unpaid_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_kw_work_entry_type_unpaid_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_ph_hr_payroll_unpaid_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.lb_work_entry_type_unpaid_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.lt_work_entry_type_unpaid_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.lu_work_entry_type_unpaid_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.ma_work_entry_type_unpaid_leave
@@ -4152,6 +4230,7 @@ msgstr ""
 #: model:hr.work.entry.type,name:hr_work_entry.jo_work_entry_type_attendance
 #: model:hr.work.entry.type,name:hr_work_entry.ke_work_entry_type_attendance
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_kw_work_entry_type_attendance
+#: model:hr.work.entry.type,name:hr_work_entry.lb_work_entry_type_attendance
 #: model:hr.work.entry.type,name:hr_work_entry.lt_work_entry_type_attendance
 #: model:hr.work.entry.type,name:hr_work_entry.lu_work_entry_type_attendance
 #: model:hr.work.entry.type,name:hr_work_entry.ma_work_entry_type_attendance
@@ -4224,6 +4303,7 @@ msgstr ""
 #: model:hr.work.entry.type,name:hr_work_entry.jo_work_entry_type_home_working
 #: model:hr.work.entry.type,name:hr_work_entry.ke_work_entry_type_home_working
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_kw_work_entry_type_home_working
+#: model:hr.work.entry.type,name:hr_work_entry.lb_work_entry_type_home_working
 #: model:hr.work.entry.type,name:hr_work_entry.lt_work_entry_type_home_working
 #: model:hr.work.entry.type,name:hr_work_entry.lu_work_entry_type_home_working
 #: model:hr.work.entry.type,name:hr_work_entry.ma_work_entry_type_home_working
@@ -4244,6 +4324,11 @@ msgstr ""
 #: model:hr.work.entry.type,name:hr_work_entry.vn_work_entry_type_home_working
 msgid "Work from home"
 msgstr "Evden çalışma"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_lb_work_entry_type_overtime_public_holiday
+msgid "Work on a Public Holiday"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_mx_work_entry_type_work_risk_imss

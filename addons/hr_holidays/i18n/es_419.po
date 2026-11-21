@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 17:38+0000\n"
-"PO-Revision-Date: 2026-11-11 16:33+0000\n"
+"POT-Creation-Date: 2026-11-20 17:37+0000\n"
+"PO-Revision-Date: 2026-11-19 19:36+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-20/hr_holidays/es_419/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -72,31 +72,8 @@ msgid ""
 "\n"
 "A synchronization with an internal agenda (Meetings of the CRM module) is "
 "also possible in order to automatically create a meeting when a time off "
-"request is accepted by setting up a type of meeting in time off Type.\n"
+"request is accepted by setting up a type of meeting in the time type.\n"
 msgstr ""
-"\n"
-"Gestiona solicitudes y asignaciones de permisos\n"
-"========================================\n"
-"\n"
-"Esta aplicación controla el calendario de permisos de tu empresa y permite "
-"que tus empleados los soliciten. Luego, los gerentes revisan las solicitudes "
-"y las aprueban o rechazan. Esto te ayudará a controlar la planificación "
-"general de permisos por empresa o departamento.\n"
-"\n"
-"Puedes configurar varios tipos de permisos (enfermedad, días pagados...) y "
-"asignárselos a un empleado o departamento con rapidez mediante las "
-"asignaciones. Un empleado también puede solicitar más días con una nueva "
-"asignación, esto aumentará el total de días disponibles para ese tipo de "
-"permiso (si aceptas la solicitud).\n"
-"\n"
-"Lleva seguimiento de los permisos con estos reportes:\n"
-"* Resumen de permisos\n"
-"* Permisos por departamento\n"
-"* Análisis de permisos\n"
-"\n"
-"También puedes sincronizar una agenda interna (reuniones del módulo de CRM) "
-"para crear una reunión de forma automática al aceptar una solicitud luego de "
-"definir un tipo de reunión en el tipo de permiso.\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -450,6 +427,8 @@ msgid ""
 "<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"to\" title=\"To\" "
 "invisible=\"accrual_plan_id or state != 'confirm'\"/>"
 msgstr ""
+"<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"to\" title=\"A\" "
+"invisible=\"accrual_plan_id or state != 'confirm'\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
@@ -457,6 +436,8 @@ msgid ""
 "<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"to\" title=\"To\" "
 "invisible=\"accrual_plan_id\"/>"
 msgstr ""
+"<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"to\" title=\"A\" "
+"invisible=\"accrual_plan_id\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
@@ -464,6 +445,8 @@ msgid ""
 "<i class=\"oi oi-fw mx-2\" data-icon=\"east\" aria-label=\"to\" title=\"To\" "
 "invisible=\"accrual_plan_id\"/>"
 msgstr ""
+"<i class=\"oi oi-fw mx-2\" data-icon=\"east\" aria-label=\"to\" title=\"A\" "
+"invisible=\"accrual_plan_id\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -471,6 +454,8 @@ msgid ""
 "<i class=\"oi oi-lg align-self-center\" data-icon=\"label\" title=\"Time "
 "Type\" name=\"work_entry_type_id\"/>"
 msgstr ""
+"<i class=\"oi oi-lg align-self-center\" data-icon=\"label\" title=\"Tipo de "
+"tiempo\" name=\"work_entry_type_id\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -989,6 +974,8 @@ msgstr "Frecuencia de la acumulación:"
 msgid ""
 "Accrual will stop until next carry-over date if the accrued time reaches"
 msgstr ""
+"La acumulación se detendrá hasta la próxima fecha de traslado si el tiempo "
+"acumulado alcanza"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_needaction
@@ -1724,8 +1711,8 @@ msgstr "Regrese después para revisar todas las solicitudes de permisos."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_time_rule_view_form_inherit_hr_holidays
-msgid "Choose a Time Off Type"
-msgstr "Elige un tipo de permiso"
+msgid "Choose a Time Type"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__maximum_leave
@@ -2197,6 +2184,7 @@ msgstr "Descartar"
 #: model:ir.model.fields,field_description:hr_holidays.field_load_public_holiday_wizard_line__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_activity_type__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_message_subtype__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_publisher_warranty_contract__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_res_company__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_res_groups__display_name
@@ -2723,6 +2711,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_holidays.field_load_public_holiday_wizard_line__id
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_activity_type__id
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_message_subtype__id
+#: model:ir.model.fields,field_description:hr_holidays.field_publisher_warranty_contract__id
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary__id
 #: model:ir.model.fields,field_description:hr_holidays.field_res_company__id
 #: model:ir.model.fields,field_description:hr_holidays.field_res_groups__id
@@ -3823,6 +3812,11 @@ msgstr ""
 "solicitar permisos."
 
 #. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_publisher_warranty_contract
+msgid "Publisher Warranty Contract"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__rating_ids
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__rating_ids
 msgid "Ratings"
@@ -4382,6 +4376,8 @@ msgid ""
 "The allocation balance can go negative when the deficit exceeds the "
 "available balance."
 msgstr ""
+"El balance de la asignación puede ser negativo cuando el déficit supera el "
+"balance disponible."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4464,7 +4460,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "The plan will be on hold if the balance reaches"
-msgstr ""
+msgstr "El plan quedará en espera si el balance llega a"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_date_check3
@@ -5555,6 +5551,11 @@ msgid ""
 "may be finer than the condition unit (e.g. hour output on a day leave trims "
 "the source to sub-day)."
 msgstr ""
+"Puedes definir el tipo de tiempo que se creará para contabilizar el tiempo "
+"excedente. No puede ser un tipo de tiempo que requiera una asignación. La "
+"unidad de salida puede ser más precisa que la unidad de la condición (por "
+"ejemplo, una salida en horas para un permiso de un día divide el tiempo de "
+"origen en unidades inferiores a un día)."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_time_rule_view_form_inherit_hr_holidays
@@ -5564,6 +5565,11 @@ msgid ""
 "allocation. The output unit may be finer than the condition unit (e.g. hour "
 "output on a day leave trims the source to sub-day)."
 msgstr ""
+"Puedes definir el tipo de tiempo que se creará para contabilizar el tiempo "
+"que falta para cumplir la condición. No puede ser un tipo de tiempo que "
+"requiera una asignación. La unidad de salida puede ser más precisa que la "
+"unidad de la condición (por ejemplo, una salida en horas para un permiso de "
+"un día divide el tiempo de origen en unidades inferiores a un día)."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__carryover_options
@@ -5770,12 +5776,9 @@ msgstr "No puedes configurar una validez de acumulación con 0."
 #: code:addons/hr_holidays/models/hr_work_entry_type.py:0
 msgid ""
 "You cannot modify the 'Duration Count' setting because one or more leaves "
-"have already been taken for this time off type. Changing it now would affect "
+"have already been taken for this time type. Changing it now would affect "
 "existing employee balances."
 msgstr ""
-"No puedes modificar el ajuste Recuento de la duración porque ya se han "
-"tomado uno o más permisos de este tipo. Si lo cambias ahora, afectarás los "
-"saldos actuales de los empleados."
 
 #. module: hr_holidays
 #. odoo-python
@@ -6193,6 +6196,68 @@ msgstr "validar"
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
 msgid "year(s)"
 msgstr "año(s)"
+
+#~ msgid ""
+#~ "\n"
+#~ "Manage time off requests and allocations\n"
+#~ "========================================\n"
+#~ "\n"
+#~ "This application controls the time off schedule of your company. It "
+#~ "allows employees to request time off. Then, managers can review requests "
+#~ "for time off and approve or reject them. This way you can control the "
+#~ "overall time off planning for the company or department.\n"
+#~ "\n"
+#~ "You can configure several kinds of time off (sickness, paid days, ...) "
+#~ "and allocate time off to an employee or department quickly using time off "
+#~ "allocation. An employee can also make a request for more days off by "
+#~ "making a new time off allocation. It will increase the total of available "
+#~ "days for that time type (if the request is accepted).\n"
+#~ "\n"
+#~ "You can keep track of time off in different ways by following reports:\n"
+#~ "\n"
+#~ "* Time Off Summary\n"
+#~ "* Time Off by Department\n"
+#~ "* Time Off Analysis\n"
+#~ "\n"
+#~ "A synchronization with an internal agenda (Meetings of the CRM module) is "
+#~ "also possible in order to automatically create a meeting when a time off "
+#~ "request is accepted by setting up a type of meeting in time off Type.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Gestiona solicitudes y asignaciones de permisos\n"
+#~ "========================================\n"
+#~ "\n"
+#~ "Esta aplicación controla el calendario de permisos de tu empresa y "
+#~ "permite que tus empleados los soliciten. Luego, los gerentes revisan las "
+#~ "solicitudes y las aprueban o rechazan. Esto te ayudará a controlar la "
+#~ "planificación general de permisos por empresa o departamento.\n"
+#~ "\n"
+#~ "Puedes configurar varios tipos de permisos (enfermedad, días pagados...) "
+#~ "y asignárselos a un empleado o departamento con rapidez mediante las "
+#~ "asignaciones. Un empleado también puede solicitar más días con una nueva "
+#~ "asignación, esto aumentará el total de días disponibles para ese tipo de "
+#~ "permiso (si aceptas la solicitud).\n"
+#~ "\n"
+#~ "Lleva seguimiento de los permisos con estos reportes:\n"
+#~ "* Resumen de permisos\n"
+#~ "* Permisos por departamento\n"
+#~ "* Análisis de permisos\n"
+#~ "\n"
+#~ "También puedes sincronizar una agenda interna (reuniones del módulo de "
+#~ "CRM) para crear una reunión de forma automática al aceptar una solicitud "
+#~ "luego de definir un tipo de reunión en el tipo de permiso.\n"
+
+#~ msgid "Choose a Time Off Type"
+#~ msgstr "Elige un tipo de permiso"
+
+#~ msgid ""
+#~ "You cannot modify the 'Duration Count' setting because one or more leaves "
+#~ "have already been taken for this time off type. Changing it now would "
+#~ "affect existing employee balances."
+#~ msgstr ""
+#~ "No puedes modificar el ajuste Recuento de la duración porque ya se han "
+#~ "tomado uno o más permisos de este tipo. Si lo cambias ahora, afectarás "
+#~ "los saldos actuales de los empleados."
 
 #~ msgid ""
 #~ "<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"Arrow icon\" "

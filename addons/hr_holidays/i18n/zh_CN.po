@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 17:38+0000\n"
+"POT-Creation-Date: 2026-11-20 17:37+0000\n"
 "PO-Revision-Date: 2026-10-11 06:34+0000\n"
 "Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -78,27 +78,8 @@ msgid ""
 "\n"
 "A synchronization with an internal agenda (Meetings of the CRM module) is "
 "also possible in order to automatically create a meeting when a time off "
-"request is accepted by setting up a type of meeting in time off Type.\n"
+"request is accepted by setting up a type of meeting in the time type.\n"
 msgstr ""
-"\n"
-"管理休假申请与休假分配\n"
-"========================================\n"
-"\n"
-"此应用用于管控公司的休假安排。员工可以提交休假申请，经理可以审核休假申请并批"
-"准或拒绝。这样您可以掌控整个公司或部门的休假计划。\n"
-"\n"
-"您可以配置多种休假类型（病假、带薪假等），并通过休假分配快速为员工或部门分配"
-"休假。员工也可以通过新建休假分配来申请更多休假天数；若申请被批准，该休假类型"
-"的可用天数总额会相应增加。\n"
-"\n"
-"您可以通过以下报表以不同方式跟踪休假情况：\n"
-"\n"
-"* 休假汇总\n"
-"* 按部门统计的休假\n"
-"* 休假分析\n"
-"\n"
-"还可以与内部日程（CRM 模块的会议）同步：在休假类型中设置会议类型后，休假申请"
-"获批时将自动创建会议。\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -1646,8 +1627,8 @@ msgstr "您可稍后再回来，概览所有休假申请"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_time_rule_view_form_inherit_hr_holidays
-msgid "Choose a Time Off Type"
-msgstr "选择休假类型"
+msgid "Choose a Time Type"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__maximum_leave
@@ -2107,6 +2088,7 @@ msgstr "丢弃"
 #: model:ir.model.fields,field_description:hr_holidays.field_load_public_holiday_wizard_line__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_activity_type__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_message_subtype__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_publisher_warranty_contract__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_res_company__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_res_groups__display_name
@@ -2616,6 +2598,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_holidays.field_load_public_holiday_wizard_line__id
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_activity_type__id
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_message_subtype__id
+#: model:ir.model.fields,field_description:hr_holidays.field_publisher_warranty_contract__id
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary__id
 #: model:ir.model.fields,field_description:hr_holidays.field_res_company__id
 #: model:ir.model.fields,field_description:hr_holidays.field_res_groups__id
@@ -3673,6 +3656,11 @@ msgid ""
 "Public holidays should be counted in the leave duration when applying for "
 "leaves"
 msgstr "申请休假时，公共假期应计入休假时间"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_publisher_warranty_contract
+msgid "Publisher Warranty Contract"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__rating_ids
@@ -5520,11 +5508,9 @@ msgstr "累积休假的有效期，不可设为 0。"
 #: code:addons/hr_holidays/models/hr_work_entry_type.py:0
 msgid ""
 "You cannot modify the 'Duration Count' setting because one or more leaves "
-"have already been taken for this time off type. Changing it now would affect "
+"have already been taken for this time type. Changing it now would affect "
 "existing employee balances."
 msgstr ""
-"无法修改“天数计算方式”设置，因为该休假类型已有休假记录。现在更改会影响现有员"
-"工的余额。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -5928,6 +5914,63 @@ msgstr "完成送出"
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
 msgid "year(s)"
 msgstr "年"
+
+#~ msgid ""
+#~ "\n"
+#~ "Manage time off requests and allocations\n"
+#~ "========================================\n"
+#~ "\n"
+#~ "This application controls the time off schedule of your company. It "
+#~ "allows employees to request time off. Then, managers can review requests "
+#~ "for time off and approve or reject them. This way you can control the "
+#~ "overall time off planning for the company or department.\n"
+#~ "\n"
+#~ "You can configure several kinds of time off (sickness, paid days, ...) "
+#~ "and allocate time off to an employee or department quickly using time off "
+#~ "allocation. An employee can also make a request for more days off by "
+#~ "making a new time off allocation. It will increase the total of available "
+#~ "days for that time type (if the request is accepted).\n"
+#~ "\n"
+#~ "You can keep track of time off in different ways by following reports:\n"
+#~ "\n"
+#~ "* Time Off Summary\n"
+#~ "* Time Off by Department\n"
+#~ "* Time Off Analysis\n"
+#~ "\n"
+#~ "A synchronization with an internal agenda (Meetings of the CRM module) is "
+#~ "also possible in order to automatically create a meeting when a time off "
+#~ "request is accepted by setting up a type of meeting in time off Type.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "管理休假申请与休假分配\n"
+#~ "========================================\n"
+#~ "\n"
+#~ "此应用用于管控公司的休假安排。员工可以提交休假申请，经理可以审核休假申请并"
+#~ "批准或拒绝。这样您可以掌控整个公司或部门的休假计划。\n"
+#~ "\n"
+#~ "您可以配置多种休假类型（病假、带薪假等），并通过休假分配快速为员工或部门分"
+#~ "配休假。员工也可以通过新建休假分配来申请更多休假天数；若申请被批准，该休假"
+#~ "类型的可用天数总额会相应增加。\n"
+#~ "\n"
+#~ "您可以通过以下报表以不同方式跟踪休假情况：\n"
+#~ "\n"
+#~ "* 休假汇总\n"
+#~ "* 按部门统计的休假\n"
+#~ "* 休假分析\n"
+#~ "\n"
+#~ "还可以与内部日程（CRM 模块的会议）同步：在休假类型中设置会议类型后，休假申"
+#~ "请获批时将自动创建会议。\n"
+
+#~ msgid "Choose a Time Off Type"
+#~ msgstr "选择休假类型"
+
+#~ msgid ""
+#~ "You cannot modify the 'Duration Count' setting because one or more leaves "
+#~ "have already been taken for this time off type. Changing it now would "
+#~ "affect existing employee balances."
+#~ msgstr ""
+#~ "无法修改“天数计算方式”设置，因为该休假类型已有休假记录。现在更改会影响现有"
+#~ "员工的余额。"
 
 #~ msgid ""
 #~ "<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"Arrow icon\" "

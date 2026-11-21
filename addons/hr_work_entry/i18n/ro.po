@@ -7,17 +7,17 @@
 # Hongu Cosmin <cosmin513@gmail.com>, 2022
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
 # Martin Trigaux, 2023
-# Dorin Hongu <dhongu@gmail.com>, 2023
+# Dorin Hongu <dhongu@gmail.com>, 2023, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Alin Ilie <alin.ilie@logit-solutions.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 14:55+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
+"POT-Creation-Date: 2026-11-20 17:37+0000\n"
+"PO-Revision-Date: 2026-11-21 18:59+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/"
 "hr_work_entry/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: hr_work_entry
 #. odoo-python
@@ -37,6 +37,11 @@ msgid ""
 "(country)s\".\n"
 "                    "
 msgstr ""
+"\n"
+"Nu se poate insera \"%(insert_name)s\":\n"
+"Tipul de timp \"%(name)s\" cu codul \"%(code)s\" există deja pentru țara \"%"
+"(country)s\".\n"
+"                    "
 
 #. module: hr_work_entry
 #. odoo-python
@@ -48,42 +53,47 @@ msgid ""
 "already exists.\n"
 "                    "
 msgstr ""
+"\n"
+"Nu se poate insera \"%(insert_name)s\":\n"
+"Tipul de timp \"%(name)s\" cu codul \"%(code)s\", fără o țară atribuită, "
+"există deja.\n"
+"                    "
 
 #. module: hr_work_entry
 #. odoo-python
 #: code:addons/hr_work_entry/models/resource_calendar_attendance.py:0
 msgid "%(duration)s hours %(work_entry_type)s"
-msgstr ""
+msgstr "%(duration)s ore %(work_entry_type)s"
 
 #. module: hr_work_entry
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_time_rule.py:0
 msgid "%(from)s-%(to)s"
-msgstr ""
+msgstr "%(from)s-%(to)s"
 
 #. module: hr_work_entry
 #. odoo-python
 #: code:addons/hr_work_entry/models/resource_calendar_attendance.py:0
 msgid "%(hour_from)s - %(hour_to)s (%(duration)s) %(work_entry_type)s"
-msgstr ""
+msgstr "%(hour_from)s - %(hour_to)s (%(duration)s) %(work_entry_type)s"
 
 #. module: hr_work_entry
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_time_rule.py:0
 msgid "%(op)s %(hours)gh/%(period)s"
-msgstr ""
+msgstr "%(op)s %(hours)gh/%(period)s"
 
 #. module: hr_work_entry
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_time_rule.py:0
 msgid "%(op)s schedule/%(period)s"
-msgstr ""
+msgstr "program %(op)s/%(period)s"
 
 #. module: hr_work_entry
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_time_rule.py:0
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (copie)"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
@@ -98,6 +108,15 @@ msgid ""
 "time type that will be created to count the amount of time missing to "
 "fulfill the condition.\">?</sup></span>"
 msgstr ""
+"<span class=\"o_form_label\" invisible=\"threshold_operator == "
+"'less_than'\">Setați surplusul la <sup class=\"d-print-none text-info p-1 "
+"ms-1\" data-tooltip=\"Puteți defini un tip de timp care va fi creat pentru a "
+"contabiliza durata în exces.\">?</sup></span>\n"
+"                                <span class=\"o_form_label\" "
+"invisible=\"threshold_operator != 'less_than'\">Setați deficitul la <sup "
+"class=\"d-print-none text-info p-1 ms-1\" data-tooltip=\"Puteți defini un "
+"tip de timp care va fi creat pentru a contabiliza durata lipsă necesară "
+"îndeplinirii condiției.\">?</sup></span>"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
@@ -106,6 +125,9 @@ msgid ""
 "p-1 ms-1\" data-tooltip=\"Define a condition based on the timing of the time "
 "entry.\">?</sup></span>"
 msgstr ""
+"<span class=\"o_form_label\">Zile lucrătoare <sup class=\"d-print-none text-"
+"info p-1 ms-1\" data-tooltip=\"Definiți o condiție bazată pe momentul "
+"înregistrării timpului.\">?</sup></span>"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
@@ -117,6 +139,12 @@ msgid ""
 "o_form_label_readonly oe_read_only\">Availability</span>\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_wrap_label\">\n"
+"                                <span class=\"o_form_label "
+"oe_edit_only\">Disponibilitate</span>\n"
+"                                <span class=\"o_form_label "
+"o_form_label_readonly oe_read_only\">Disponibilitate</span>\n"
+"                            </span>"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
@@ -124,6 +152,8 @@ msgid ""
 "<span class=\"text-muted fst-italic\">Define how this time type affects "
 "payslips and salary computation.</span>"
 msgstr ""
+"<span class=\"text-muted fst-italic\">Definiți modul în care acest tip de "
+"timp afectează fluturașii de salariu și calculul salariului.</span>"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
@@ -131,32 +161,35 @@ msgid ""
 "<span class=\"text-muted me-2\" invisible=\"not calendar_source\">based on</"
 "span>"
 msgstr ""
+"<span class=\"text-muted me-2\" invisible=\"not calendar_source\">pe baza</"
+"span>"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
 msgid "<span class=\"text-muted me-2\">from</span>"
-msgstr ""
+msgstr "<span class=\"text-muted me-2\">de la</span>"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
 msgid "<span class=\"text-muted me-2\">week starts on</span>"
-msgstr ""
+msgstr "<span class=\"text-muted me-2\">săptămâna începe în</span>"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
 msgid ""
 "<span class=\"text-muted ms-1\" invisible=\"not calendar_source\">·  ±</span>"
 msgstr ""
+"<span class=\"text-muted ms-1\" invisible=\"not calendar_source\">·  ±</span>"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
 msgid "<span class=\"text-muted ms-2 me-2\">to</span>"
-msgstr ""
+msgstr "<span class=\"text-muted ms-2 me-2\">până la</span>"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
 msgid "<span class=\"text-muted ms-2\">hours</span>"
-msgstr ""
+msgstr "<span class=\"text-muted ms-2\">ore</span>"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.au_work_entry_type_attendance
@@ -174,6 +207,7 @@ msgstr ""
 #: model:hr.work.entry.type,display_code:hr_work_entry.it_work_entry_type_attendance
 #: model:hr.work.entry.type,display_code:hr_work_entry.jo_work_entry_type_attendance
 #: model:hr.work.entry.type,display_code:hr_work_entry.ke_work_entry_type_attendance
+#: model:hr.work.entry.type,display_code:hr_work_entry.lb_work_entry_type_attendance
 #: model:hr.work.entry.type,display_code:hr_work_entry.lt_work_entry_type_attendance
 #: model:hr.work.entry.type,display_code:hr_work_entry.lu_work_entry_type_attendance
 #: model:hr.work.entry.type,display_code:hr_work_entry.ma_work_entry_type_attendance
@@ -194,12 +228,14 @@ msgstr ""
 #: model:hr.work.entry.type,display_code:hr_work_entry.vn_work_entry_type_attendance
 #: model:hr.work.entry.type,display_code:hr_work_entry.za_work_entry_type_attendance
 msgid "A"
-msgstr ""
+msgstr "A"
 
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_time_rule_at_least_one_day
 msgid "A time rule must apply on at least one day or on public holidays."
 msgstr ""
+"O regulă de timp trebuie să se aplice cel puțin într-o zi sau în zilele de "
+"sărbătoare legală."
 
 #. module: hr_work_entry
 #. odoo-python
@@ -208,91 +244,95 @@ msgid ""
 "A working schedule not linked to a company cannot have a country defined on "
 "one of its work entry types."
 msgstr ""
+"Un program de lucru care nu este asociat unei companii nu poate avea o țară "
+"definită pentru unul dintre tipurile sale de înregistrare a timpului de "
+"lucru."
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_ge_work_entry_type_adoption_leave
 msgid "ADL"
-msgstr ""
+msgstr "ADL"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_adoption_company
 msgid "AFP"
-msgstr ""
+msgstr "AFP"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_adoption_legal
 msgid "AFU"
-msgstr ""
+msgstr "AFU"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.be_work_entry_type_additional_hours
 msgid "AH"
-msgstr ""
+msgstr "AH"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.be_work_entry_type_additional_hours_50
 msgid "AH1"
-msgstr ""
+msgstr "AH1"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.be_work_entry_type_additional_hours_100
 msgid "AH2"
-msgstr ""
+msgstr "AH2"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.ge_work_entry_type_legal_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.lb_work_entry_type_legal_leave
 msgid "AL"
-msgstr ""
+msgstr "AL"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_common_law_illness_ami
 msgid "AMI"
-msgstr ""
+msgstr "AMI"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_ge_work_entry_type_additional_parental_leave
 msgid "APA"
-msgstr ""
+msgstr "APA"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_ge_work_entry_type_additional_leave
 msgid "APL"
-msgstr ""
+msgstr "APL"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_available_not_working
 msgid "AVL"
-msgstr ""
+msgstr "AVL"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry_type__count_as__absence
 msgid "Absence"
-msgstr ""
+msgstr "Absență"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_search
 msgid "Absence Time"
-msgstr ""
+msgstr "Timp de absență"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_solicitation_time_off
 msgid "Absence during notice"
-msgstr ""
+msgstr "Absență în perioada de preaviz"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_foster_care
 msgid "Absence equated foster care (Days 1 - 6 / NES)"
-msgstr ""
+msgstr "Absență asimilată plasamentului familial (zilele 1 - 6 / NES)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_work_accident_unpaid
 msgid "Accident de travail-après jour 30"
-msgstr ""
+msgstr "Accident de muncă după ziua 30"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Intervenție necesară"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_time_rule__active
@@ -304,75 +344,75 @@ msgstr "Activ"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__activity_ids
 msgid "Activities"
-msgstr ""
+msgstr "Activități"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Activitate Excepție Decorare"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__activity_plans_ids
 msgid "Activity Plans"
-msgstr ""
+msgstr "Planuri de activitate"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__activity_state
 msgid "Activity State"
-msgstr ""
+msgstr "Stare activitate"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "Pictograma tipului de activitate"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ge_work_entry_type_additional_leave
 msgid "Additional Paid Leave"
-msgstr ""
+msgstr "Concediu plătit suplimentar"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ge_work_entry_type_additional_parental_leave
 msgid "Additional Parental Leave"
-msgstr ""
+msgstr "Concediu parental suplimentar"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ge_work_entry_type_adoption_leave
 msgid "Adoption Leave"
-msgstr ""
+msgstr "Concediu de adopție"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_adoption_legal
 msgid "Adoption leave ( After 3 days to 6 weeks)"
-msgstr ""
+msgstr "Concediu de adopție (după 3 zile, până la 6 săptămâni)"
 
 #. module: hr_work_entry
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_work_entry_type.py:0
 msgid "All"
-msgstr ""
+msgstr "Tot"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "All Countries"
-msgstr ""
+msgstr "Toate țările"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
 msgid "All companies"
-msgstr ""
+msgstr "Toate companiile"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
 msgid "All countries"
-msgstr ""
+msgstr "Toate țările"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_res_company__allowed_work_entry_type_ids
 #: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__allowed_work_entry_type_ids
 #: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves__allowed_work_entry_type_ids
 msgid "Allowed Work Entry Type"
-msgstr ""
+msgstr "Tip permis de înregistrare a timpului de lucru"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_defence
@@ -382,75 +422,76 @@ msgstr "Concediu auxiliar și pentru apărare"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_uz_work_entry_type_annual_labor_leave
 msgid "Annual Labor Leave"
-msgstr ""
+msgstr "Concediu anual de muncă"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_uz_work_entry_type_annual_labor_leave_sunday
 msgid "Annual Labor Leave (Sunday)"
-msgstr ""
+msgstr "Concediu anual de muncă (duminică)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.ge_work_entry_type_legal_leave
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_annual_leave
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_kw_work_entry_type_annual_leave
+#: model:hr.work.entry.type,name:hr_work_entry.lb_work_entry_type_legal_leave
 #: model:hr.work.entry.type,name:hr_work_entry.vn_work_entry_type_legal_leave
 msgid "Annual Leave"
-msgstr ""
+msgstr "Concediu anual"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_worker_time_off
 msgid "Annual holiday (workers)"
-msgstr ""
+msgstr "Concediu anual (lucrători)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_militia_obligation
 msgid "Appel sous les armes"
-msgstr ""
+msgstr "Chemare sub arme"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_time_rule__apply_friday
 msgid "Apply Friday"
-msgstr ""
+msgstr "Se aplică vinerea"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_time_rule__apply_monday
 msgid "Apply Monday"
-msgstr ""
+msgstr "Se aplică lunea"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_time_rule__apply_on_public_holidays
 msgid "Apply On Public Holidays"
-msgstr ""
+msgstr "Se aplică în zilele de sărbătoare legală"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_time_rule__apply_saturday
 msgid "Apply Saturday"
-msgstr ""
+msgstr "Se aplică sâmbăta"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_time_rule__apply_sunday
 msgid "Apply Sunday"
-msgstr ""
+msgstr "Se aplică duminica"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_time_rule__apply_thursday
 msgid "Apply Thursday"
-msgstr ""
+msgstr "Se aplică joia"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_time_rule__apply_tuesday
 msgid "Apply Tuesday"
-msgstr ""
+msgstr "Se aplică marțea"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_time_rule__apply_wednesday
 msgid "Apply Wednesday"
-msgstr ""
+msgstr "Se aplică miercurea"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__4
 msgid "April"
-msgstr ""
+msgstr "Aprilie"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
@@ -461,7 +502,7 @@ msgstr "Arhivat"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Număr atașamente"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.za_work_entry_type_attendance
@@ -472,72 +513,78 @@ msgstr "Prezență"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_attendance_dbl_hol
 msgid "Attendance - Double Holiday"
-msgstr ""
+msgstr "Prezență - sărbătoare dublă"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_attendance_dbl_hol_rest
 msgid "Attendance - Double Holiday (Rest Day)"
-msgstr ""
+msgstr "Prezență - sărbătoare dublă (zi de repaus)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_attendance_rh
 msgid "Attendance - Regular Holiday"
-msgstr ""
+msgstr "Prezență - sărbătoare legală obișnuită"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_attendance_rh_rest
 msgid "Attendance - Regular Holiday (Rest Day)"
-msgstr ""
+msgstr "Prezență - sărbătoare legală obișnuită (zi de repaus)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_attendance_rest
 msgid "Attendance - Rest Day"
-msgstr ""
+msgstr "Prezență - zi de repaus"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_attendance_snw
 msgid "Attendance - Special Non-Working Holiday"
-msgstr ""
+msgstr "Prezență - sărbătoare specială nelucrătoare"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_attendance_snw_rest
 msgid "Attendance - Special Non-Working Holiday (Rest Day)"
-msgstr ""
+msgstr "Prezență - sărbătoare specială nelucrătoare (zi de repaus)"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__8
 msgid "August"
-msgstr ""
+msgstr "august"
 
 #. module: hr_work_entry
 #: model:ir.actions.act_window,name:hr_work_entry.hr_time_rule_action
 msgid "Automatic Rules"
-msgstr ""
+msgstr "Reguli automate"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_available_not_working
 msgid "Availability time not considered as working time"
-msgstr ""
+msgstr "Timpul de disponibilitate nu este considerat timp de lucru"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_death_close_family
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_tr_work_entry_type_bereavement_leave
 msgid "BER"
-msgstr ""
+msgstr "BER"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_breast_feeding
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_breast_feeding_unassimilated
 msgid "BFB"
-msgstr ""
+msgstr "BFB"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_lb_work_entry_type_bereavement_leave
+msgid "BL"
+msgstr "BL"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_us_work_entry_type_bereavement
 msgid "Bereavement"
-msgstr ""
+msgstr "Doliu"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_bereavement_leave
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_lb_work_entry_type_bereavement_leave
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_tr_work_entry_type_bereavement_leave
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_vn_work_entry_type_bereavement_leave
 msgid "Bereavement Leave"
@@ -546,87 +593,92 @@ msgstr "Concediu pentru deces"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_death_close_family
 msgid "Bereavement leave-Spouse/Child"
-msgstr ""
+msgstr "Concediu de doliu - soț/soție sau copil"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_breast_feeding
 msgid "Breast-feeding leave"
-msgstr ""
+msgstr "Concediu pentru alăptare"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_breast_feeding_unassimilated
 msgid "Breast-feeding leave (volunteer)"
-msgstr ""
+msgstr "Concediu pentru alăptare (voluntar)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_collective_closure
 msgid "Business closed - annual holidays"
-msgstr ""
+msgstr "Activitate suspendată - concedii anuale"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_collective_closure_reduction
 msgid "Business closed - reduction of working time"
-msgstr ""
+msgstr "Activitate suspendată - reducerea timpului de lucru"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_thematic_leave_informal_carer
 msgid "CAR"
-msgstr ""
+msgstr "CAR"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_non_provided_service_childminders
 msgid "CHI"
-msgstr ""
+msgstr "CHI"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_unpaid_recovered_compensatory_rest
 msgid "CHU"
-msgstr ""
+msgstr "CHU"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_civic_duty_unpaid
 msgid "CIV"
-msgstr ""
+msgstr "CIV"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_common_law_illness_non_attributable_to_worker
 msgid "CL1"
-msgstr ""
+msgstr "CL1"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_common_law_illness_attributable_to_worker
 msgid "CL2"
-msgstr ""
+msgstr "CL2"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_common_law_illness_after_legal_period
 msgid "CLA"
-msgstr ""
+msgstr "CLA"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.iq_work_entry_type_compassionate_leave
 msgid "COM"
-msgstr ""
+msgstr "COM"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.lb_work_entry_type_compensatory
+msgid "CR"
+msgstr "CR"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_paid_compensatory_rest
 msgid "CRP"
-msgstr ""
+msgstr "CRP"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_credit_time
 msgid "CRT"
-msgstr ""
+msgstr "CRT"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_unpaid_compensatory_rest
 msgid "CRU"
-msgstr ""
+msgstr "CRU"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_uz_work_entry_type_child_support_leave
 msgid "CSL"
-msgstr ""
+msgstr "CSL"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.au_work_entry_type_compensatory
@@ -666,37 +718,37 @@ msgstr "CTO"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_time_rule__calendar_source
 msgid "Calendar Source"
-msgstr ""
+msgstr "Sursa calendarului"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_extra_legal_sectoral_holiday
 msgid "Career leave"
-msgstr ""
+msgstr "Concediu pentru dezvoltarea carierei"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_lu_work_entry_type_caring_leave
 msgid "Caring Leave"
-msgstr ""
+msgstr "Concediu pentru îngrijire"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_postponed_paid_time_off_n1
 msgid "Carried over leave (incapacity)"
-msgstr ""
+msgstr "Concediu reportat (incapacitate de muncă)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_postponed_paid_time_off_n2
 msgid "Carried over leave (incapacity) - Counter Year-2"
-msgstr ""
+msgstr "Concediu reportat (incapacitate de muncă) - contor anul 2"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_uz_work_entry_type_child_support_leave
 msgid "Child Support Leave"
-msgstr ""
+msgstr "Concediu pentru îngrijirea copilului"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_small_unemployment
 msgid "Circumstancial leave"
-msgstr ""
+msgstr "Concediu pentru situații speciale"
 
 #. module: hr_work_entry
 #. odoo-python
@@ -704,18 +756,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_tree
 msgid "Code"
-msgstr ""
+msgstr "Cod"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "Code used in manual exports"
-msgstr ""
+msgstr "Cod utilizat la exporturile manuale"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_employee_view_form
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.res_company_view_form_inherit_hr_work_entry
 msgid "Code used in work entry exports"
-msgstr ""
+msgstr "Cod utilizat la exporturile înregistrărilor timpului de lucru"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__color
@@ -726,7 +778,7 @@ msgstr "Color"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_community_service_leave
 msgid "Community Service Leave"
-msgstr ""
+msgstr "Concediu pentru serviciu în folosul comunității"
 
 #. module: hr_work_entry
 #. odoo-python
@@ -741,12 +793,12 @@ msgstr "Companie"
 #. odoo-python
 #: code:addons/hr_work_entry/wizard/hr_export_work_entries.py:0
 msgid "Company External Code"
-msgstr ""
+msgstr "Cod extern al companiei"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
 msgid "Company default schedule"
-msgstr ""
+msgstr "Program implicit al companiei"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_compassionate_leave
@@ -757,12 +809,17 @@ msgstr "Concediu pentru motive familiale"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.iq_work_entry_type_compassionate_leave
 msgid "Compassionate leave"
-msgstr ""
+msgstr "Concediu pentru motive umanitare"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_paid_compensatory_rest
 msgid "Compensation days RWT"
-msgstr ""
+msgstr "Zile compensatorii RWT"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.lb_work_entry_type_compensatory
+msgid "Compensatory Rest"
+msgstr "Odihnă compensatorie"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.au_work_entry_type_compensatory
@@ -803,40 +860,40 @@ msgstr "Concediu compensatoriu"
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "Computation"
-msgstr ""
+msgstr "Calcul"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_time_rule__condition_label
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_list
 msgid "Condition"
-msgstr ""
+msgstr "Condiție"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
 msgid "Conditions"
-msgstr ""
+msgstr "Condiții"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Setări de configurare"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_search
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_tree
 msgid "Considered as"
-msgstr ""
+msgstr "Considerat drept"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_maternity_time_off_converted
 msgid "Converted Maternity leave"
-msgstr ""
+msgstr "Concediu de maternitate convertit"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__count_as
 msgid "Count As"
-msgstr ""
+msgstr "Se contabilizează ca"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_time_rule__country_id
@@ -855,12 +912,12 @@ msgstr "Codul tarii"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_time_rule__country_work_entry_type_ids
 msgid "Country Work Entry Type"
-msgstr ""
+msgstr "Tip de înregistrare a timpului de lucru pentru țară"
 
 #. module: hr_work_entry
 #: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_type_action
 msgid "Create a new Time type"
-msgstr ""
+msgstr "Creați un tip de timp nou"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__create_uid
@@ -884,42 +941,42 @@ msgstr "Creat în"
 #. odoo-python
 #: code:addons/hr_work_entry/wizard/hr_export_work_entries.py:0
 msgid "Date"
-msgstr ""
+msgstr "Dată"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_time_rule__quantity_period__day
 msgid "Day"
-msgstr ""
+msgstr "Zi"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.iq_work_entry_type_day_overtime
 msgid "Day time Overtime Hours"
-msgstr ""
+msgstr "Ore suplimentare în timpul zilei"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_common_law_illness_non_attributable_to_worker
 msgid "Days of illness (Not paid)"
-msgstr ""
+msgstr "Zile de boală (neplătite)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_long_sick
 msgid "Days of illness after 12 months"
-msgstr ""
+msgstr "Zile de boală după 12 luni"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_death
 msgid "Death Leave"
-msgstr ""
+msgstr "Concediu de deces"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__12
 msgid "December"
-msgstr ""
+msgstr "Decembrie"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.resource_calendar_attendance_view_tree
 msgid "Default: Attendance"
-msgstr ""
+msgstr "Implicit: Prezență"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_time_rule__working_hours_mode
@@ -928,11 +985,14 @@ msgid ""
 "Define a condition based on the quantity of work made by the employee on a "
 "specific period of time."
 msgstr ""
+"Definiți o condiție bazată pe cantitatea de muncă prestată de angajat într-o "
+"anumită perioadă."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_time_rule__apply_monday
 msgid "Define a condition based on the timing of the time entry."
 msgstr ""
+"Definiți o condiție bazată pe momentul înregistrării timpului de lucru."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_time_rule__work_entry_type_id
@@ -940,6 +1000,8 @@ msgid ""
 "Define a time type that will be created to count the amount of time in "
 "excess or missing."
 msgstr ""
+"Definiți un tip de timp care va fi creat pentru a contabiliza durata în "
+"exces sau durata lipsă."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_time_rule__description
@@ -951,17 +1013,18 @@ msgstr "Descriere"
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
 msgid "Details"
-msgstr ""
+msgstr "Detalii"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__count_as
 msgid "Determines if the entry counts as working time or absence."
 msgstr ""
+"Stabilește dacă înregistrarea se contabilizează ca timp de lucru sau absență."
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_civic_duty_unpaid
 msgid "Devoir civique"
-msgstr ""
+msgstr "Obligație civică"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_mx_work_entry_type_disability_due_to_illness_imss
@@ -971,12 +1034,12 @@ msgstr "Invaliditate din cauza bolii (IMSS)"
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_export_work_entries_wizard
 msgid "Discard"
-msgstr ""
+msgstr "Renunță"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "Display"
-msgstr ""
+msgstr "Afișare"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__display_code
@@ -1004,83 +1067,83 @@ msgstr "Nume afișat"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_dvl_leave
 msgid "Domestic Violence Leave"
-msgstr ""
+msgstr "Concediu pentru victimele violenței domestice"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_dh_leave
 msgid "Double Holiday"
-msgstr ""
+msgstr "Sărbătoare dublă"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_us_work_entry_type_double
 msgid "Double Time (2x)"
-msgstr ""
+msgstr "Plată dublă (2x)"
 
 #. module: hr_work_entry
 #. odoo-python
 #: code:addons/hr_work_entry/wizard/hr_export_work_entries.py:0
 msgid "Download Export"
-msgstr ""
+msgstr "Descărcați exportul"
 
 #. module: hr_work_entry
 #. odoo-python
 #: code:addons/hr_work_entry/wizard/hr_export_work_entries.py:0
 msgid "Duration"
-msgstr ""
+msgstr "Durată"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_economic_unemployment
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_economic_unemployment_refused_by_administration
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_temporary_economic_unemployement_employee
 msgid "ECO"
-msgstr ""
+msgstr "ECO"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_training_time_off
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_training_time_off_with_meal_voucher
 msgid "EDU"
-msgstr ""
+msgstr "EDU"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_european
 msgid "EUR"
-msgstr ""
+msgstr "EUR"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_end_of_carreer_exemption
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_tr_work_entry_type_excuse_leave
 msgid "EXC"
-msgstr ""
+msgstr "EXC"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_temporary_economic_unemployement_employee
 msgid "Economic temporarly unemployment"
-msgstr ""
+msgstr "Șomaj economic temporar"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_economic_unemployment
 msgid "Economic unemployment"
-msgstr ""
+msgstr "Șomaj economic"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_training_time_off
 msgid "Educational leave (unlimited)"
-msgstr ""
+msgstr "Concediu pentru formare (nelimitat)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_training_time_off_with_meal_voucher
 msgid "Educational leave (unlimited) +  luncheon voucher"
-msgstr ""
+msgstr "Concediu pentru formare (nelimitat) + tichet de masă"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
 msgid "Effect"
-msgstr ""
+msgstr "Efect"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__eligible_employee_line_ids
 msgid "Eligible Employees"
-msgstr ""
+msgstr "Angajați eligibili"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_emergency
@@ -1103,40 +1166,40 @@ msgstr "Contract angajat"
 #. odoo-python
 #: code:addons/hr_work_entry/wizard/hr_export_work_entries.py:0
 msgid "Employee Ext. Code"
-msgstr ""
+msgstr "Cod extern angajat"
 
 #. module: hr_work_entry
 #. odoo-python
 #: code:addons/hr_work_entry/wizard/hr_export_work_entries.py:0
 msgid "Employee Name"
-msgstr ""
+msgstr "Nume angajat"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_time_rule__calendar_source__employee
 msgid "Employee Schedule"
-msgstr ""
+msgstr "Programul angajaților"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_time_rule__employee_tolerance
 msgid "Employee Tolerance"
-msgstr ""
+msgstr "Toleranța angajaților"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_time_rule__employee_domain
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_list
 msgid "Employees"
-msgstr ""
+msgstr "Angajați"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_time_rule__employer_tolerance
 msgid "Employer Tolerance"
-msgstr ""
+msgstr "Toleranța angajatorului"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_european
 msgid "European Time Off"
-msgstr ""
+msgstr "Concediu european"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_examination_leave
@@ -1146,29 +1209,29 @@ msgstr "Concediu pentru examene"
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_time_rule__threshold_operator__exceed
 msgid "Exceed"
-msgstr ""
+msgstr "Depășește"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_tr_work_entry_type_excuse_leave
 msgid "Excuse Leave"
-msgstr ""
+msgstr "Concediu motivat"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_end_of_carreer_exemption
 msgid "Exemption from end-of-career benefits"
-msgstr ""
+msgstr "Scutire de la beneficiile de sfârșit de carieră"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_public_mandate_unpaid
 msgid "Exercise of a political mandate"
-msgstr ""
+msgstr "Exercitarea unui mandat politic"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries_employee__export_id
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_employee_view_form
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_export_work_entries_wizard
 msgid "Export"
-msgstr ""
+msgstr "Export de înregistrări de lucru"
 
 #. module: hr_work_entry
 #. odoo-javascript
@@ -1177,22 +1240,22 @@ msgstr ""
 #: model:ir.actions.server,name:hr_work_entry.action_hr_employee_export_work_entries
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_export_work_entries_wizard
 msgid "Export Time Entries"
-msgstr ""
+msgstr "Exportă înregistrările de timp"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_export_work_entries
 msgid "Export Work Entries"
-msgstr ""
+msgstr "Exportă înregistrările de lucru"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "Exports Code"
-msgstr ""
+msgstr "Cod de export"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "External"
-msgstr ""
+msgstr "Extern"
 
 #. module: hr_work_entry
 #. odoo-python
@@ -1207,7 +1270,7 @@ msgstr "Cod extern"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_other_training
 msgid "External training"
-msgstr ""
+msgstr "Formare externă"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_extra_hours
@@ -1217,93 +1280,93 @@ msgstr "Ore suplimentare"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_extra_legal
 msgid "Extra-legal holiday"
-msgstr ""
+msgstr "Zi liberă suplimentară"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_construction_bad_weather_first_day
 msgid "FDB"
-msgstr ""
+msgstr "FDB"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_flemish_training_time_off
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_flemish_training_time_off_with_meal_voucher
 msgid "FED"
-msgstr ""
+msgstr "FED"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_us_work_entry_type_fmla_leave
 msgid "FMLA Leave"
-msgstr ""
+msgstr "Concediu FMLA"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_foster_care
 msgid "FOS"
-msgstr ""
+msgstr "FOS"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_social_judge
 msgid "FSJ"
-msgstr ""
+msgstr "FSJ"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_lu_work_entry_type_family_reason_leave
 msgid "Family Reason Time Off"
-msgstr ""
+msgstr "Concediu pentru motive familiale"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_family_domestic_violence_leave
 msgid "Family and Domestic Violence Leave"
-msgstr ""
+msgstr "Concediu pentru violență domestică și familială"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__2
 msgid "February"
-msgstr ""
+msgstr "Februarie"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_fdrcl
 msgid "First Degree Relatives Compassionate Leave"
-msgstr ""
+msgstr "Concediu de compasiune pentru rude de gradul întâi"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_construction_bad_weather_first_day
 msgid "First day of absence due to bad weather in the construction site"
-msgstr ""
+msgstr "Prima zi de absență din cauza vremii nefavorabile pe șantier"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_flemish_training_time_off
 msgid "Flemish Training Leave (unlimited)"
-msgstr ""
+msgstr "Concediu flamand pentru formare (nelimitat)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_flemish_training_time_off_with_meal_voucher
 msgid "Flemish Training Leave (unlimited) + luncheon voucher"
-msgstr ""
+msgstr "Concediu flamand pentru formare (nelimitat) + tichet de masă"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "Persoane interesate"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Urmăritori (Parteneri)"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
 msgid "Fri"
-msgstr ""
+msgstr "Vineri"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_time_rule__week_start__4
 msgid "Friday"
-msgstr ""
+msgstr "Vineri"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_time_rule__timing_start
 msgid "From"
-msgstr ""
+msgstr "De la"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.au_work_entry_type_leave
@@ -1320,6 +1383,7 @@ msgstr ""
 #: model:hr.work.entry.type,display_code:hr_work_entry.it_work_entry_type_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.jo_work_entry_type_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.ke_work_entry_type_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.lb_work_entry_type_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.lt_work_entry_type_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.lu_work_entry_type_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.ma_work_entry_type_leave
@@ -1344,7 +1408,7 @@ msgstr "GTO"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_guaranteed_wage_interrupted_day_illness
 msgid "GWI"
-msgstr ""
+msgstr "GWI"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.au_work_entry_type_leave
@@ -1362,6 +1426,7 @@ msgstr ""
 #: model:hr.work.entry.type,name:hr_work_entry.jo_work_entry_type_leave
 #: model:hr.work.entry.type,name:hr_work_entry.ke_work_entry_type_leave
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_kw_work_entry_type_leave
+#: model:hr.work.entry.type,name:hr_work_entry.lb_work_entry_type_leave
 #: model:hr.work.entry.type,name:hr_work_entry.lt_work_entry_type_leave
 #: model:hr.work.entry.type,name:hr_work_entry.lu_work_entry_type_leave
 #: model:hr.work.entry.type,name:hr_work_entry.ma_work_entry_type_leave
@@ -1386,12 +1451,12 @@ msgstr "Concediu generic"
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_search
 msgid "Give Salary"
-msgstr ""
+msgstr "Acordă salariul"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_work_accident_guaranteed_monthly
 msgid "Guaranteed monthly wage accident"
-msgstr ""
+msgstr "Salariu lunar garantat pentru accident"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.au_work_entry_type_sick_leave
@@ -1425,22 +1490,22 @@ msgstr ""
 #: model:hr.work.entry.type,name:hr_work_entry.us_work_entry_type_sick_leave
 #: model:hr.work.entry.type,name:hr_work_entry.uz_work_entry_type_sick_leave
 msgid "Guaranteed monthly wage illness"
-msgstr ""
+msgstr "Salariu lunar garantat pentru boală"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_guaranteed_wage_interrupted_day_illness
 msgid "Guaranteed wage interrupted day illness"
-msgstr ""
+msgstr "Salariu garantat pentru ziua întreruptă din cauza bolii"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_work_incapacity_first_week
 msgid "Guaranteed weekly wage illness"
-msgstr ""
+msgstr "Salariu săptămânal garantat pentru boală"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_work_accident_first_week
 msgid "Guaranteed weekly wage industrial accident"
-msgstr ""
+msgstr "Salariu săptămânal garantat pentru accident de muncă"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.au_work_entry_type_home_working
@@ -1458,6 +1523,7 @@ msgstr ""
 #: model:hr.work.entry.type,display_code:hr_work_entry.it_work_entry_type_home_working
 #: model:hr.work.entry.type,display_code:hr_work_entry.jo_work_entry_type_home_working
 #: model:hr.work.entry.type,display_code:hr_work_entry.ke_work_entry_type_home_working
+#: model:hr.work.entry.type,display_code:hr_work_entry.lb_work_entry_type_home_working
 #: model:hr.work.entry.type,display_code:hr_work_entry.lt_work_entry_type_home_working
 #: model:hr.work.entry.type,display_code:hr_work_entry.lu_work_entry_type_home_working
 #: model:hr.work.entry.type,display_code:hr_work_entry.ma_work_entry_type_home_working
@@ -1486,32 +1552,32 @@ msgstr "HW"
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_hajj
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_hajj
 msgid "Hajj Leave"
-msgstr ""
+msgstr "Concediu pentru Hajj"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Are mesaj"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_voluntary_overtime_net
 msgid "Heures supplémentaire volontaires nettes (Heures de relances)"
-msgstr ""
+msgstr "Ore suplimentare voluntare nete (ore de recuperare)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_youth_time_off
 msgid "Holiday junior worker"
-msgstr ""
+msgstr "Concediu pentru angajatul tânăr"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_holiday_previous_vacation_credit_year
 msgid "Holiday previous vacation credit year"
-msgstr ""
+msgstr "Concediu din anul precedent"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_senior_time_off
 msgid "Holiday senior worker"
-msgstr ""
+msgstr "Concediu pentru angajatul senior"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.za_work_entry_type_home_working
@@ -1546,12 +1612,12 @@ msgstr "Salariul pe oră în caz de concediu militar"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_justified_reason_paid
 msgid "Hours no worked (paid)"
-msgstr ""
+msgstr "Ore nelucrate (plătite)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_work_incapacity_worker_second_week_short_term_employee
 msgid "I2W"
-msgstr ""
+msgstr "I2W"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__id
@@ -1573,74 +1639,78 @@ msgstr "ID"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.iq_work_entry_type_iddah_leave
 msgid "IDD"
-msgstr ""
+msgstr "IDD"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_construction_imperative_maintained_salary
 msgid "IMS"
-msgstr ""
+msgstr "IMS"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_work_incapacity_sickness_credit
 msgid "ISC"
-msgstr ""
+msgstr "ISC"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_work_incapacity_worker_after_second_week
 msgid "ISS"
-msgstr ""
+msgstr "ISS"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_work_incapacity_first_week
 msgid "IW1"
-msgstr ""
+msgstr "IW1"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_work_incapacity_worker_second_week
 msgid "IW2"
-msgstr ""
+msgstr "IW2"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__activity_exception_icon
 msgid "Icon"
-msgstr ""
+msgstr "Pictogramă"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Pictograma pentru a indica o activitate de excepție."
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_iddah
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_iddah
 msgid "Iddah Leave"
-msgstr ""
+msgstr "Concediu Iddah"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.iq_work_entry_type_iddah_leave
 msgid "Iddah leave"
-msgstr ""
+msgstr "Concediu Iddah"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Dacă este selectat, mesajele noi necesită atenția dumneavoastră."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__message_has_error
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Dacă este bifată, unele mesaje au o eroare de livrare."
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
 msgid "If set, only selected types will be considered by this rule."
 msgstr ""
+"Dacă este activată, această regulă va lua în considerare doar tipurile "
+"selectate."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_time_rule__condition_work_entry_type_ids
 msgid "If set, only the selected types will be considered by this rule."
 msgstr ""
+"Dacă este activată, această regulă va lua în considerare doar tipurile "
+"selectate."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__active
@@ -1648,21 +1718,23 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the time type "
 "without removing it."
 msgstr ""
+"Dacă dezactivezi câmpul „Activ”, poți ascunde tipul de timp fără să îl "
+"ștergi."
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_unjustified_reason
 msgid "Illegitimate absence"
-msgstr ""
+msgstr "Absență nejustificată"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_work_incapacity_worker_after_second_week
 msgid "Illness from 15th-30th day"
-msgstr ""
+msgstr "Boală între zilele 15 și 30"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_work_incapacity_worker_second_week
 msgid "Illness from 8th-14th day"
-msgstr ""
+msgstr "Boală între zilele 8 și 14"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_common_law_illness_ami
@@ -1670,16 +1742,18 @@ msgid ""
 "Illness or accident under common law within the framework of an adapted AMI "
 "work regime"
 msgstr ""
+"Boală sau accident conform dreptului comun, în cadrul unui regim de lucru "
+"AMI adaptat"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_unpredictable
 msgid "Imperative family reason (days 1-10/year)"
-msgstr ""
+msgstr "Motiv familial imperativ (zilele 1–10/an)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_construction_imperative_maintained_salary
 msgid "Imperative leave with maintained salary"
-msgstr ""
+msgstr "Concediu imperativ cu menținerea salariului"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_work_incapacity_sickness_credit
@@ -1687,6 +1761,8 @@ msgid ""
 "Incapacity for work paid by the employer until the sickness credit is "
 "exhausted (education and public sector)"
 msgstr ""
+"Incapacitate de muncă plătită de angajator până la epuizarea concediului "
+"medical (educație și sectorul public)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_work_incapacity_worker_second_week_short_term_employee
@@ -1694,16 +1770,18 @@ msgid ""
 "Incapacity for work with guaranteed salary system for workers - 2nd week "
 "(Short Term Employee)"
 msgstr ""
+"Incapacitate de muncă cu sistem de salariu garantat pentru muncitori – "
+"săptămâna a 2-a (angajat pe termen scurt)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_work_accident_unassimilated
 msgid "Industrial accident 31st day - 6 month"
-msgstr ""
+msgstr "Accident de muncă: ziua 31 – luna a 6-a"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_work_accident_second_week
 msgid "Industrial accident TT 8 - 30th day"
-msgstr ""
+msgstr "Accident de muncă TT: zilele 8–30"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_interruption_wt
@@ -1714,7 +1792,7 @@ msgstr "Întreruperea activității"
 #. odoo-javascript
 #: code:addons/hr_work_entry/static/src/components/domain_count_field/domain_count_field.xml:0
 msgid "Invalid domain"
-msgstr ""
+msgstr "Domeniu invalid"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__is_checked
@@ -1724,67 +1802,67 @@ msgstr "Este verificat"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Este urmăritor"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_justified_reason_paid
 msgid "JRP"
-msgstr ""
+msgstr "JRP"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_justified_reason_unpaid
 msgid "JRU"
-msgstr ""
+msgstr "JRU"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__1
 msgid "January"
-msgstr ""
+msgstr "Ianuarie"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_extra_legal_public_holiday
 msgid "Jour férié - sectoriel"
-msgstr ""
+msgstr "Sărbătoare legală sectorială"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__7
 msgid "July"
-msgstr ""
+msgstr "Iulie"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__6
 msgid "June"
-msgstr ""
+msgstr "Iunie"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_social_judge
 msgid "Juridiction du travail"
-msgstr ""
+msgstr "Instanța de muncă"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_us_work_entry_type_jury_duty
 msgid "Jury Duty"
-msgstr ""
+msgstr "Concediu pentru participarea la juriu"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_kw_work_entry_type_paid_leave
 msgid "Kuwait: Paid Leave"
-msgstr ""
+msgstr "Kuweit: concediu plătit"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_uz_work_entry_type_annual_labor_leave
 msgid "LL"
-msgstr ""
+msgstr "LL"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_uz_work_entry_type_annual_labor_leave_sunday
 msgid "LLS"
-msgstr ""
+msgstr "LLS"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_long_sick
 msgid "LTS"
-msgstr ""
+msgstr "LTS"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__write_uid
@@ -1807,22 +1885,22 @@ msgstr "Ultima actualizare pe"
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
 msgid "Leave as it is"
-msgstr ""
+msgstr "Lasă neschimbat"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_paternity_company
 msgid "Leave for Birth (days 1-3)"
-msgstr ""
+msgstr "Concediu pentru naștere (zilele 1–3)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_paternity_legal
 msgid "Leave for birth (days 4-20)"
-msgstr ""
+msgstr "Concediu pentru naștere (zilele 4–20)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_leave_palliative_care
 msgid "Leave palliative care"
-msgstr ""
+msgstr "Concediu pentru îngrijiri paliative"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.au_work_entry_type_unpaid_leave
@@ -1842,6 +1920,7 @@ msgstr ""
 #: model:hr.work.entry.type,name:hr_work_entry.ke_work_entry_type_unpaid_leave
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_kw_work_entry_type_unpaid_leave
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_unpaid_leave
+#: model:hr.work.entry.type,name:hr_work_entry.lb_work_entry_type_unpaid_leave
 #: model:hr.work.entry.type,name:hr_work_entry.lt_work_entry_type_unpaid_leave
 #: model:hr.work.entry.type,name:hr_work_entry.lu_work_entry_type_unpaid_leave
 #: model:hr.work.entry.type,name:hr_work_entry.ma_work_entry_type_unpaid_leave
@@ -1860,7 +1939,7 @@ msgstr ""
 #: model:hr.work.entry.type,name:hr_work_entry.uz_work_entry_type_unpaid_leave
 #: model:hr.work.entry.type,name:hr_work_entry.vn_work_entry_type_unpaid_leave
 msgid "Leave without pay"
-msgstr ""
+msgstr "Concediu fără plată"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.au_work_entry_type_legal_leave
@@ -1895,17 +1974,17 @@ msgstr ""
 #: model:hr.work.entry.type,name:hr_work_entry.uae_work_entry_type_legal_leave
 #: model:hr.work.entry.type,name:hr_work_entry.us_work_entry_type_legal_leave
 msgid "Legal leave employee"
-msgstr ""
+msgstr "Concediu legal al angajatului"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_justified_reason_unpaid
 msgid "Legitimate absence"
-msgstr ""
+msgstr "Absență justificată"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_time_rule__threshold_operator__less_than
 msgid "Less than"
-msgstr ""
+msgstr "Mai puțin de"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_lesson_wt
@@ -1916,7 +1995,7 @@ msgstr "Salariul pe lecție"
 #. odoo-javascript
 #: code:addons/hr_work_entry/static/src/components/domain_count_field/domain_count_field.xml:0
 msgid "Loading"
-msgstr ""
+msgstr "Se încarcă"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_long_service_leave
@@ -1931,7 +2010,7 @@ msgstr "Concediu pe termen lung"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_lu_work_entry_type_sick_leave
 msgid "Luxembourg Sick Time Off"
-msgstr ""
+msgstr "Concediu medical în Luxemburg"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_maternity
@@ -1939,47 +2018,48 @@ msgstr ""
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_tr_work_entry_type_maternity_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.za_work_entry_type_maternity_leave
 msgid "MAT"
-msgstr ""
+msgstr "MAT"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_medical_assistance
 msgid "MED"
-msgstr ""
+msgstr "MED"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_militia_obligation
 msgid "MIL"
-msgstr ""
+msgstr "MIL"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_ge_work_entry_type_maternity_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_lb_work_entry_type_maternity_leave
 msgid "ML"
-msgstr ""
+msgstr "ML"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_maternity_time_off_converted
 msgid "MLC"
-msgstr ""
+msgstr "MLC"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.iq_work_entry_type_maternity_leave
 msgid "MTY"
-msgstr ""
+msgstr "MTY"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_occupational_disease_unpaid
 msgid "Maladie professionnel après 12°mois"
-msgstr ""
+msgstr "Boală profesională după luna a 12-a"
 
 #. module: hr_work_entry
 #: model:ir.module.module,summary:base.module_hr_work_entry
 msgid "Manage work entries"
-msgstr ""
+msgstr "Gestionează înregistrările de lucru"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__3
 msgid "March"
-msgstr ""
+msgstr "Martie"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_marriage
@@ -1993,7 +2073,7 @@ msgstr "Concediu pentru căsătorie"
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Pictogramă Material Symbols, de ex. checklist"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_mx_work_entry_type_maternity_imss
@@ -2007,6 +2087,7 @@ msgstr "Maternitate (IMSS)"
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_maternity_leave
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_jo_work_entry_type_maternity
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_kw_work_entry_type_maternity_leave
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_lb_work_entry_type_maternity_leave
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_lu_work_entry_type_maternity_leave
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_maternity
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_mat_leave
@@ -2019,7 +2100,7 @@ msgstr "Concediu de maternitate"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_vn_work_entry_type_maternity_leave
 msgid "Maternity Leave (Social Insurance)"
-msgstr ""
+msgstr "Concediu de maternitate (asigurări sociale)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_maternity_leave_80
@@ -2035,12 +2116,12 @@ msgstr "Concediu de maternitate (plătit în proporție de 75%)"
 #: model:hr.work.entry.type,name:hr_work_entry.iq_work_entry_type_maternity_leave
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_maternity
 msgid "Maternity leave"
-msgstr ""
+msgstr "Concediu de maternitate"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__5
 msgid "May"
-msgstr ""
+msgstr "Mai"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__user_id
@@ -2056,12 +2137,12 @@ msgstr ""
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Eroare livrare mesaj"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "Mesaje"
 
 #. module: hr_work_entry
 #. odoo-python
@@ -2078,17 +2159,17 @@ msgstr "Lipsește fusul orar pentru generarea înregistrărilor de muncă."
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
 msgid "Mon"
-msgstr ""
+msgstr "Luni"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_time_rule__week_start__0
 msgid "Monday"
-msgstr ""
+msgstr "Luni"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__reference_month
 msgid "Month"
-msgstr ""
+msgstr "Luna"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_monthly_wt
@@ -2098,22 +2179,22 @@ msgstr "Salariu lunar"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Data limită a activității mele"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_normal_inactivity
 msgid "NDI"
-msgstr ""
+msgstr "NDI"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_overtime_no_onss_horeca
 msgid "NOH"
-msgstr ""
+msgstr "NOH"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_non_taxable_political_service
 msgid "NTS"
-msgstr ""
+msgstr "NTS"
 
 #. module: hr_work_entry
 #. odoo-python
@@ -2127,162 +2208,164 @@ msgstr "Nume"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_overtime_no_onss_horeca
 msgid "Net-Overtime hours (Horeca)"
-msgstr ""
+msgstr "Ore suplimentare nete (HoReCa)"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "Următoarea activitate din calendar"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Data limită pentru următoarea activitate"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__activity_summary
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "Sumarul următoarei activități"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Tip de activitate urmatoare"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_ns
 msgid "Night Shift"
-msgstr ""
+msgstr "Tură de noapte"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_ns_dbl_hol
 msgid "Night Shift - Double Holiday"
-msgstr ""
+msgstr "Tură de noapte – sărbătoare dublă"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_ns_dbl_hol_rest
 msgid "Night Shift - Double Holiday (Rest Day)"
-msgstr ""
+msgstr "Tură de noapte – sărbătoare dublă (zi de repaus)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_ns_overtime
 msgid "Night Shift - Overtime"
-msgstr ""
+msgstr "Tură de noapte – ore suplimentare"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_ns_overtime_dbl_hol
 msgid "Night Shift - Overtime - Double Holiday"
-msgstr ""
+msgstr "Tură de noapte – ore suplimentare – sărbătoare dublă"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_ns_overtime_dbl_hol_rest
 msgid "Night Shift - Overtime - Double Holiday (Rest Day)"
-msgstr ""
+msgstr "Tură de noapte – ore suplimentare – sărbătoare dublă (zi de repaus)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_ns_overtime_rh
 msgid "Night Shift - Overtime - Regular Holiday"
-msgstr ""
+msgstr "Tură de noapte – ore suplimentare – sărbătoare legală"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_ns_overtime_rh_rest
 msgid "Night Shift - Overtime - Regular Holiday (Rest Day)"
-msgstr ""
+msgstr "Tură de noapte – ore suplimentare – sărbătoare legală (zi de repaus)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_ns_overtime_rest
 msgid "Night Shift - Overtime - Rest Day"
-msgstr ""
+msgstr "Tură de noapte – ore suplimentare – zi de repaus"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_ns_overtime_snw
 msgid "Night Shift - Overtime - Special Non-Working Holiday"
-msgstr ""
+msgstr "Tură de noapte – ore suplimentare – sărbătoare specială nelucrătoare"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_ns_overtime_snw_rest
 msgid "Night Shift - Overtime - Special Non-Working Holiday (Rest Day)"
 msgstr ""
+"Tură de noapte – ore suplimentare – sărbătoare specială nelucrătoare (zi de "
+"repaus)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_ns_rh
 msgid "Night Shift - Regular Holiday"
-msgstr ""
+msgstr "Tură de noapte – sărbătoare legală"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_ns_rh_rest
 msgid "Night Shift - Regular Holiday (Rest Day)"
-msgstr ""
+msgstr "Tură de noapte – sărbătoare legală (zi de repaus)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_ns_rest
 msgid "Night Shift - Rest Day"
-msgstr ""
+msgstr "Tură de noapte – zi de repaus"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_ns_snw
 msgid "Night Shift - Special Non-Working Holiday"
-msgstr ""
+msgstr "Tură de noapte – sărbătoare specială nelucrătoare"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_ns_snw_rest
 msgid "Night Shift - Special Non-Working Holiday (Rest Day)"
-msgstr ""
+msgstr "Tură de noapte – sărbătoare specială nelucrătoare (zi de repaus)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.iq_work_entry_type_night_overtime
 msgid "Night time Overtime Hours"
-msgstr ""
+msgstr "Ore suplimentare de noapte"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_training
 msgid "Non-productive absence"
-msgstr ""
+msgstr "Absență neproductivă"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_non_taxable_political_service
 msgid "Non-taxable service for political representatives"
-msgstr ""
+msgstr "Serviciu neimpozabil pentru reprezentanții politici"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_normal_inactivity
 msgid "Normal days of inactivity in the employment schedule"
-msgstr ""
+msgstr "Zile normale de inactivitate din programul de lucru"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__11
 msgid "November"
-msgstr ""
+msgstr "Noiembrie"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Număr de acțiuni"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Numărul de erori"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Număr de mesaje care necesită acțiune"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Numărul de mesaje cu eroare de livrare"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_occupational_disease_unpaid
 msgid "ODU"
-msgstr ""
+msgstr "ODU"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_other_presence
 msgid "OSC"
-msgstr ""
+msgstr "OSC"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.au_work_entry_type_overtime
@@ -2305,6 +2388,7 @@ msgstr ""
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_id_work_entry_type_overtime_1
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_id_work_entry_type_overtime_2
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_ph_hr_payroll_overtime
+#: model:hr.work.entry.type,display_code:hr_work_entry.lb_work_entry_type_overtime
 #: model:hr.work.entry.type,display_code:hr_work_entry.lt_work_entry_type_overtime
 #: model:hr.work.entry.type,display_code:hr_work_entry.lu_work_entry_type_overtime
 #: model:hr.work.entry.type,display_code:hr_work_entry.ma_work_entry_type_overtime
@@ -2327,12 +2411,17 @@ msgstr "OT"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_overtime_recoverable
 msgid "OT5"
-msgstr ""
+msgstr "OT5"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_lb_work_entry_type_overtime_public_holiday
+msgid "OTH"
+msgstr "OTH"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__10
 msgid "October"
-msgstr ""
+msgstr "Octombrie"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.au_hr_work_entry_type_out_of_contract
@@ -2351,6 +2440,7 @@ msgstr ""
 #: model:hr.work.entry.type,display_code:hr_work_entry.jo_hr_work_entry_type_out_of_contract
 #: model:hr.work.entry.type,display_code:hr_work_entry.ke_hr_work_entry_type_out_of_contract
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_ph_hr_payroll_out_of_contract
+#: model:hr.work.entry.type,display_code:hr_work_entry.lb_hr_work_entry_type_out_of_contract
 #: model:hr.work.entry.type,display_code:hr_work_entry.lt_hr_work_entry_type_out_of_contract
 #: model:hr.work.entry.type,display_code:hr_work_entry.lu_hr_work_entry_type_out_of_contract
 #: model:hr.work.entry.type,display_code:hr_work_entry.ma_hr_work_entry_type_out_of_contract
@@ -2374,7 +2464,7 @@ msgstr "OoC"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_other_presence
 msgid "Other services not declared under another code"
-msgstr ""
+msgstr "Alte servicii nedeclarate la un alt cod"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.au_hr_work_entry_type_out_of_contract
@@ -2394,6 +2484,7 @@ msgstr ""
 #: model:hr.work.entry.type,name:hr_work_entry.ke_hr_work_entry_type_out_of_contract
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_kw_work_entry_type_out_of_contract
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_out_of_contract
+#: model:hr.work.entry.type,name:hr_work_entry.lb_hr_work_entry_type_out_of_contract
 #: model:hr.work.entry.type,name:hr_work_entry.lt_hr_work_entry_type_out_of_contract
 #: model:hr.work.entry.type,name:hr_work_entry.lu_hr_work_entry_type_out_of_contract
 #: model:hr.work.entry.type,name:hr_work_entry.ma_hr_work_entry_type_out_of_contract
@@ -2411,7 +2502,7 @@ msgstr ""
 #: model:hr.work.entry.type,name:hr_work_entry.uz_hr_work_entry_type_out_of_contract
 #: model:hr.work.entry.type,name:hr_work_entry.vn_hr_work_entry_type_out_of_contract
 msgid "Out Of Contract"
-msgstr ""
+msgstr "În afara contractului"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.za_hr_work_entry_type_out_of_contract
@@ -2421,44 +2512,45 @@ msgstr "În afara contractului"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.ge_work_entry_type_overtime
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_overtime
+#: model:hr.work.entry.type,name:hr_work_entry.lb_work_entry_type_overtime
 #: model:hr.work.entry.type,name:hr_work_entry.vn_work_entry_type_overtime
 msgid "Overtime"
-msgstr ""
+msgstr "Suplimentare"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_us_work_entry_type_overtime
 msgid "Overtime (1.5x)"
-msgstr ""
+msgstr "Ore suplimentare (1,5x)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.be_work_entry_type_additional_hours
 msgid "Overtime (Part-time workers)"
-msgstr ""
+msgstr "Ore suplimentare (angajați cu normă parțială)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.be_work_entry_type_additional_hours_50
 msgid "Overtime (part-time workers) 150%"
-msgstr ""
+msgstr "Ore suplimentare (angajați cu normă parțială) 150%"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.be_work_entry_type_additional_hours_100
 msgid "Overtime (part-time workers) 200%"
-msgstr ""
+msgstr "Ore suplimentare (angajați cu normă parțială) 200%"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.za_work_entry_type_overtime_public_holidays
 msgid "Overtime - Public Holidays"
-msgstr ""
+msgstr "Ore suplimentare - sărbători legale"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.za_work_entry_type_overtime_work_days
 msgid "Overtime - Work Days"
-msgstr ""
+msgstr "Ore suplimentare - zile lucrătoare"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_overtime_1
 msgid "Overtime 1"
-msgstr ""
+msgstr "Ore suplimentare 1"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_overtime_wt
@@ -2473,82 +2565,82 @@ msgstr "Ore suplimentare 125%"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_overtime_2
 msgid "Overtime 2"
-msgstr ""
+msgstr "Ore suplimentare 2"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_overtime_dbl_hol
 msgid "Overtime Hours - Double Holiday"
-msgstr ""
+msgstr "Ore suplimentare - sărbătoare legală dublă"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_overtime_dbl_hol_rest
 msgid "Overtime Hours - Double Holiday (Rest Day)"
-msgstr ""
+msgstr "Ore suplimentare - sărbătoare legală dublă (zi de repaus)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_overtime_rh
 msgid "Overtime Hours - Regular Holiday"
-msgstr ""
+msgstr "Ore suplimentare - sărbătoare legală obișnuită"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_overtime_rh_rest
 msgid "Overtime Hours - Regular Holiday (Rest Day)"
-msgstr ""
+msgstr "Ore suplimentare - sărbătoare legală obișnuită (zi de repaus)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_overtime_rest
 msgid "Overtime Hours - Rest Day"
-msgstr ""
+msgstr "Ore suplimentare - zi de repaus"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_overtime_snw
 msgid "Overtime Hours - Special Non-Working Holiday"
-msgstr ""
+msgstr "Ore suplimentare - sărbătoare specială nelucrătoare"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_overtime_snw_rest
 msgid "Overtime Hours - Special Non-Working Holiday (Rest Day)"
-msgstr ""
+msgstr "Ore suplimentare - sărbătoare specială nelucrătoare (zi de repaus)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.uae_work_entry_type_overtime_off_days
 msgid "Overtime Off-days"
-msgstr ""
+msgstr "Ore suplimentare în zile libere"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_overtime_public_holiday
 msgid "Overtime Public Holiday"
-msgstr ""
+msgstr "Ore suplimentare în sărbătoare legală"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_overtime_rest_days
 msgid "Overtime Restday"
-msgstr ""
+msgstr "Ore suplimentare în ziua de repaus"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.uae_work_entry_type_overtime_work_days_daytime
 msgid "Overtime Weekdays Daytime"
-msgstr ""
+msgstr "Ore suplimentare în timpul zilei, în zilele lucrătoare"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.uae_work_entry_type_overtime_work_days_nighttime
 msgid "Overtime Weekdays Nighttime"
-msgstr ""
+msgstr "Ore suplimentare noaptea, în zilele lucrătoare"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_overtime_work_days_daytime
 msgid "Overtime Workday Daytime"
-msgstr ""
+msgstr "Ore suplimentare în timpul zilei lucrătoare"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_overtime_work_days_nighttime
 msgid "Overtime Workday Nighttime"
-msgstr ""
+msgstr "Ore suplimentare noaptea în zi lucrătoare"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_overtime_recoverable
 msgid "Overtime hours (recoverable) - 50%"
-msgstr ""
+msgstr "Ore suplimentare recuperabile - 50%"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.au_work_entry_type_overtime
@@ -2583,12 +2675,12 @@ msgstr ""
 #: model:hr.work.entry.type,name:hr_work_entry.uae_work_entry_type_overtime
 #: model:hr.work.entry.type,name:hr_work_entry.uz_work_entry_type_overtime
 msgid "Overtime hours non recoverable - 150%"
-msgstr ""
+msgstr "Ore suplimentare nerecuperabile - 150%"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_overtime_pto
 msgid "Overtime: Public Holiday"
-msgstr ""
+msgstr "Ore suplimentare: sărbătoare legală"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_overtime_saturday
@@ -2598,7 +2690,7 @@ msgstr "Ore suplimentare: sâmbătă"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_overtime_saturday_pto
 msgid "Overtime: Saturday & Public Holiday"
-msgstr ""
+msgstr "Ore suplimentare: sâmbătă și sărbătoare legală"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_overtime_sunday
@@ -2608,39 +2700,39 @@ msgstr "Ore suplimentare: duminică"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_overtime_sunday_pto
 msgid "Overtime: Sunday & Public Holiday"
-msgstr ""
+msgstr "Ore suplimentare: duminică și sărbătoare legală"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_overtime_regular
 msgid "Overtime: Week Day"
-msgstr ""
+msgstr "Ore suplimentare: zi lucrătoare"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_leave_palliative_care
 msgid "PAL"
-msgstr ""
+msgstr "PAL"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_parental_time_off
 msgid "PAR"
-msgstr ""
+msgstr "PAR"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_jo_work_entry_type_paternity
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_tr_work_entry_type_paternity_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.za_work_entry_type_paternity_leave
 msgid "PAT"
-msgstr ""
+msgstr "PAT"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_paid_absence
 msgid "PDA"
-msgstr ""
+msgstr "PDA"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.iq_work_entry_type_public_duty
 msgid "PDU"
-msgstr ""
+msgstr "PDU"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.au_work_entry_type_public_holiday
@@ -2656,6 +2748,7 @@ msgstr ""
 #: model:hr.work.entry.type,display_code:hr_work_entry.ke_work_entry_type_public_holiday
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_bank_holiday
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_kw_work_entry_type_public_holiday
+#: model:hr.work.entry.type,display_code:hr_work_entry.lb_work_entry_type_public_holiday
 #: model:hr.work.entry.type,display_code:hr_work_entry.lt_work_entry_type_public_holiday
 #: model:hr.work.entry.type,display_code:hr_work_entry.lu_work_entry_type_public_holiday
 #: model:hr.work.entry.type,display_code:hr_work_entry.ma_work_entry_type_public_holiday
@@ -2674,75 +2767,80 @@ msgstr ""
 #: model:hr.work.entry.type,display_code:hr_work_entry.uz_work_entry_type_public_holiday
 #: model:hr.work.entry.type,display_code:hr_work_entry.vn_work_entry_type_public_holiday
 msgid "PH"
-msgstr ""
+msgstr "PH"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_phc
 msgid "PHC"
-msgstr ""
+msgstr "PHC"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_public_holiday_variable_schedule
+msgid "PHV"
+msgstr "PHV"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_public_holiday_working_with_recovery
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_public_holiday_working_without_recovery
 msgid "PHW"
-msgstr ""
+msgstr "PHW"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_jo_work_entry_type_pilgrimage
 msgid "PIL"
-msgstr ""
+msgstr "PIL"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_partial_incapacity
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_partial_incapacity_unassimilated
 msgid "PIN"
-msgstr ""
+msgstr "Cod PIN"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_ge_work_entry_type_parental_leave
 msgid "PL"
-msgstr ""
+msgstr "PL"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_public_mandate_unpaid
 msgid "PMU"
-msgstr ""
+msgstr "PMU"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_postponed_paid_time_off_n1
 msgid "PN1"
-msgstr ""
+msgstr "PN1"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_postponed_paid_time_off_n2
 msgid "PN2"
-msgstr ""
+msgstr "PN2"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_political_leave
 msgid "POL"
-msgstr ""
+msgstr "POL"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_uz_work_entry_type_partially_paid_leave
 msgid "PPL"
-msgstr ""
+msgstr "PPL"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_prophylactic_time_off
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_prophylactic_time_off_maternity_protection
 msgid "PRO"
-msgstr ""
+msgstr "PRO"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_paternity_company
 msgid "PTC"
-msgstr ""
+msgstr "PTC"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_paternity_legal
 msgid "PTL"
-msgstr ""
+msgstr "PTL"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.au_work_entry_type_legal_leave
@@ -2785,7 +2883,7 @@ msgstr "PTO"
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_public_holiday_temporary_unemployment
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_public_holiday_temporary_unemployment_no_onss
 msgid "PUT"
-msgstr ""
+msgstr "PUT"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_parental
@@ -2805,17 +2903,17 @@ msgstr "Concediu Plătit"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_paid_absence
 msgid "Paid days and hours"
-msgstr ""
+msgstr "Zile și ore plătite"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ge_work_entry_type_parental_leave
 msgid "Parental Leave"
-msgstr ""
+msgstr "Concediu pentru creșterea copilului"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.hr_work_entry_type_dv
 msgid "Parental Leaves"
-msgstr ""
+msgstr "Concedii pentru creșterea copilului"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sk_work_entry_type_parental_time_off
@@ -2825,17 +2923,17 @@ msgstr "Concediu parental"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_adoption_company
 msgid "Parental foster care or Adoption Leave (days 1-3)"
-msgstr ""
+msgstr "Concediu pentru plasament familial sau adopție (zilele 1–3)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_parental_time_off
 msgid "Parental leave"
-msgstr ""
+msgstr "Concediu pentru creșterea copilului"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_uz_work_entry_type_partially_paid_leave
 msgid "Partially Paid Leave"
-msgstr ""
+msgstr "Concediu plătit parțial"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_paternity_leave
@@ -2852,7 +2950,7 @@ msgstr "Concediu de paternitate"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_vn_work_entry_type_paternity_leave
 msgid "Paternity Leave (Social Insurance)"
-msgstr ""
+msgstr "Concediu paternal (asigurări sociale)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_paternity_leave_80
@@ -2862,12 +2960,12 @@ msgstr "Concediu de paternitate 80%"
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "Pay Rate"
-msgstr ""
+msgstr "Rata de plată"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "Payroll"
-msgstr ""
+msgstr "Stat de plată"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__code
@@ -2877,12 +2975,12 @@ msgstr "Cod salarizare"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__period_start
 msgid "Period Start"
-msgstr ""
+msgstr "Început perioadă"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__period_stop
 msgid "Period Stop"
-msgstr ""
+msgstr "Sfârșit perioadă"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_personal_leave
@@ -2892,30 +2990,33 @@ msgstr "Concediu personal"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_jo_work_entry_type_pilgrimage
 msgid "Pilgrimage Leave"
-msgstr ""
+msgstr "Concediu pentru pelerinaj"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_political_leave
 msgid "Political leave"
-msgstr ""
+msgstr "Concediu pentru activități politice"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_training_social_promotion
 msgid "Promotion sociale"
-msgstr ""
+msgstr "Promovare socială"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_prophylactic_time_off
 msgid "Prophylactic leave"
-msgstr ""
+msgstr "Concediu profilactic"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "Provide a description of the Time Type, in which case should it be used"
 msgstr ""
+"Furnizați o descriere a tipului de timp și precizați în ce situații trebuie "
+"utilizat"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.ge_work_entry_type_public_holiday
+#: model:hr.work.entry.type,name:hr_work_entry.lb_work_entry_type_public_holiday
 #: model:hr.work.entry.type,name:hr_work_entry.uz_work_entry_type_public_holiday
 #: model:hr.work.entry.type,name:hr_work_entry.vn_work_entry_type_public_holiday
 #: model:hr.work.entry.type,name:hr_work_entry.za_work_entry_type_public_holiday
@@ -2930,32 +3031,32 @@ msgstr "Compensare pentru sărbători legale"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_public_holiday_saturday
 msgid "Public Holiday Shift - Saturday"
-msgstr ""
+msgstr "Tură în sărbătoare legală - sâmbătă"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_public_holiday_sunday
 msgid "Public Holiday Shift - Sunday"
-msgstr ""
+msgstr "Tură în sărbătoare legală - duminică"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_public_holiday_week_day
 msgid "Public Holiday Shift - Week Day"
-msgstr ""
+msgstr "Tură în sărbătoare legală - zi lucrătoare"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
 msgid "Public Holidays"
-msgstr ""
+msgstr "Sărbători legale"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_jo_work_entry_type_public_holidays_overtime
 msgid "Public Holidays Overtime"
-msgstr ""
+msgstr "Ore suplimentare în zilele de sărbătoare legală"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.iq_work_entry_type_public_duty
 msgid "Public duty"
-msgstr ""
+msgstr "Serviciu public"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.au_work_entry_type_public_holiday
@@ -2990,32 +3091,37 @@ msgstr ""
 #: model:hr.work.entry.type,name:hr_work_entry.uae_public_holiday_entry_type
 #: model:hr.work.entry.type,name:hr_work_entry.us_work_entry_type_public_holiday
 msgid "Public holiday"
-msgstr ""
+msgstr "Sărbătoare legală"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_public_holiday_temporary_unemployment
 msgid "Public holiday & temp.unemployment (act of God)"
-msgstr ""
+msgstr "Sărbătoare legală și șomaj tehnic temporar (forță majoră)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_upcomming_public_holiday
 msgid "Public holiday after termination"
-msgstr ""
+msgstr "Sărbătoare legală după încetarea contractului"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_public_holiday_temporary_unemployment_no_onss
 msgid "Public holiday during temporary unemployment"
-msgstr ""
+msgstr "Sărbătoare legală în perioada șomajului tehnic temporar"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_public_holiday_variable_schedule
+msgid "Public holiday pay (variable schedule)"
+msgstr "Plata pentru sărbătoarea legală (program variabil)"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_time_rule__quantity_period
 msgid "Quantity Period"
-msgstr ""
+msgstr "Cantitate Perioadă"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_recovery_additional
 msgid "RAT"
-msgstr ""
+msgstr "RAT"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__amount_rate
@@ -3025,52 +3131,52 @@ msgstr "Rată"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Evaluări"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_recovery_additional
 msgid "Recovered overtime"
-msgstr ""
+msgstr "Ore suplimentare recuperate"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_unpaid_compensatory_rest
 msgid "Reduction of working hours (unpaid)"
-msgstr ""
+msgstr "Reducerea timpului de lucru (neplătită)"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_time_rule__calendar_source__reference
 msgid "Reference Schedule"
-msgstr ""
+msgstr "Program de referință"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_rh_leave
 msgid "Regular Holiday"
-msgstr ""
+msgstr "Sărbătoare legală obișnuită"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_partial_incapacity
 msgid "Reintegration journey < 12 months"
-msgstr ""
+msgstr "Program de reintegrare < 12 luni"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_partial_incapacity_unassimilated
 msgid "Reintegration journey > 12 months"
-msgstr ""
+msgstr "Program de reintegrare > 12 luni"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_prophylactic_time_off_maternity_protection
 msgid "Removal maternity protection"
-msgstr ""
+msgstr "Încetarea protecției maternității"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_sectoral_compensatory_rest
 msgid "Repos comp. (RTT) payé par tiers"
-msgstr ""
+msgstr "Timp compensatoriu de odihnă (RTT) plătit de o terță parte"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__resource_calendar_attendance_ids
 msgid "Resource Calendar Attendance"
-msgstr ""
+msgstr "Prezență conform calendarului resurselor"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_resource_calendar_leaves
@@ -3085,83 +3191,89 @@ msgstr "Timpul Lucru Resurse"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__activity_user_id
 msgid "Responsible User"
-msgstr ""
+msgstr "Utilizator responsabil"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_jo_work_entry_type_rest_days_overtime
 msgid "Rest Days Overtime"
-msgstr ""
+msgstr "Ore suplimentare în zilele de repaus"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_overtime_rest_days
 msgid "Restday(s) & public holidays Overtime"
-msgstr ""
+msgstr "Ore suplimentare în zilele de repaus și sărbătorile legale"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_overtime_special_rest_days
 msgid "Restday(s) & public holidays Special Overtime"
-msgstr ""
+msgstr "Ore suplimentare speciale în zilele de repaus și sărbătorile legale"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_rostered_days_off
 msgid "Rostered Days Off"
-msgstr ""
+msgstr "Zile libere conform programului"
 
 #. module: hr_work_entry
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_time_rule.py:0
 msgid "Rule '%(name)s': invalid employee domain %(domain)s — %(error)s"
-msgstr ""
+msgstr "Regula „%(name)s”: domeniu de angajați nevalid %(domain)s — %(error)s"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_sectoral_compensatory_rest
 msgid "SCT"
-msgstr ""
+msgstr "SCT"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.mx_work_entry_type_seventh_day
 msgid "SD"
-msgstr ""
+msgstr "SD"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_schooldays
 msgid "SDY"
-msgstr ""
+msgstr "SDY"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_sailor_time_off
 msgid "SEA"
-msgstr ""
+msgstr "SEA"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_lb_work_entry_type_sick_leave_half
+msgid "SH"
+msgstr "SH"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.ge_work_entry_type_sick_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.lb_work_entry_type_sick_leave
 msgid "SL"
-msgstr ""
+msgstr "SL"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "Eroare livrare SMS"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_uz_work_entry_type_social_leave
 msgid "SOC"
-msgstr ""
+msgstr "SOC"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_solicitation_time_off
 msgid "SOL"
-msgstr ""
+msgstr "SOL"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_training_social_promotion
 msgid "SPT"
-msgstr ""
+msgstr "SPT"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_uz_work_entry_type_study_leave
 msgid "STL"
-msgstr ""
+msgstr "STL"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.au_work_entry_type_sick_leave
@@ -3206,33 +3318,38 @@ msgstr "STO"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_strike
 msgid "STR"
-msgstr ""
+msgstr "STR"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_jo_work_entry_type_study
 msgid "STU"
-msgstr ""
+msgstr "STU"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_lb_work_entry_type_sick_leave_unpaid
+msgid "SU"
+msgstr "SU"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_small_unemployment
 msgid "SUH"
-msgstr ""
+msgstr "SUH"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_sailor_time_off
 msgid "Sailors Time Off"
-msgstr ""
+msgstr "Concediu pentru navigatori"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_time_rule__amount_rate
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_search
 msgid "Salary Rate"
-msgstr ""
+msgstr "Rata salarială"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_list
 msgid "Salary Rate (%)"
-msgstr ""
+msgstr "Rata salarială (%)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_accident_wt
@@ -3257,52 +3374,52 @@ msgstr "Salariul în caz de concediu militar"
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
 msgid "Sat"
-msgstr ""
+msgstr "Sâmbătă"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_time_rule__week_start__5
 msgid "Saturday"
-msgstr ""
+msgstr "Sâmbătă"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_saturday_shift
 msgid "Saturday Shift"
-msgstr ""
+msgstr "Tură de sâmbătă"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_time_rule__resource_calendar_id
 msgid "Schedule"
-msgstr ""
+msgstr "Programare"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_schooldays
 msgid "Schooldays"
-msgstr ""
+msgstr "Zile de școală"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_search
 msgid "Search Time Type"
-msgstr ""
+msgstr "Căutare tip de timp"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_sdrcl
 msgid "Second Degree Relatives Compassionate Leave"
-msgstr ""
+msgstr "Concediu pentru evenimente familiale - rude de gradul al doilea"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
 msgid "Select the time types considered in the rule's computation"
-msgstr ""
+msgstr "Selectați tipurile de timp luate în calculul regulii"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__resource_calendar_selectable
 msgid "Selectable in Working Schedule"
-msgstr ""
+msgstr "Disponibil pentru selectare în programul de lucru"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__9
 msgid "September"
-msgstr ""
+msgstr "Septembrie"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_time_rule__sequence
@@ -3313,7 +3430,7 @@ msgstr "Secvență"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_sil_leave
 msgid "Service Incentive Leave"
-msgstr ""
+msgstr "Concediu stimulativ de serviciu"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_non_provided_service_childminders
@@ -3321,50 +3438,63 @@ msgid ""
 "Service planned but not provided by childminders due to the absence of "
 "children for reasons beyond the control of the childminder"
 msgstr ""
+"Serviciu planificat, dar neprestat de îngrijitorii de copii din cauza "
+"absenței copiilor, din motive independente de voința îngrijitorului"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_time_rule__work_entry_type_id
 msgid "Set Excess to"
-msgstr ""
+msgstr "Setați surplusul la"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.mx_work_entry_type_seventh_day
 msgid "Seventh Day"
-msgstr ""
+msgstr "A șaptea zi"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.ge_work_entry_type_sick_leave
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_kw_work_entry_type_sick_leave
 msgid "Sick Leave"
-msgstr ""
+msgstr "Concediu medical"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_sick_leave_100
 msgid "Sick Leave (100% Paid)"
-msgstr ""
+msgstr "Concediu medical (plătit 100%)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_sick_leave_35
 msgid "Sick Leave (35% Paid)"
-msgstr ""
+msgstr "Concediu medical (plătit 35%)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_sick_leave_50
 msgid "Sick Leave (50% Paid)"
-msgstr ""
+msgstr "Concediu medical (plătit 50%)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_sick_leave_75
 msgid "Sick Leave (75% Paid)"
-msgstr ""
+msgstr "Concediu medical (plătit 75%)"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.lb_work_entry_type_sick_leave
+msgid "Sick Leave (Full Pay)"
+msgstr "Concediu medical plătit integral"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_lb_work_entry_type_sick_leave_half
+msgid "Sick Leave (Half Pay)"
+msgstr "Concediu medical plătit pe jumătate"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.vn_work_entry_type_sick_leave
 msgid "Sick Leave (Social Insurance)"
-msgstr ""
+msgstr "Concediu medical (asigurări sociale)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_jo_work_entry_type_sick_leave_unpaid
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_lb_work_entry_type_sick_leave_unpaid
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_sick_leave_0
 msgid "Sick Leave (Unpaid)"
 msgstr "Concediu medical (neplătit)"
@@ -3387,12 +3517,12 @@ msgstr "Concediu medical (plătit în proporție de 80%)"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_sick_leave_0
 msgid "Sick Time Off (Unpaid)"
-msgstr ""
+msgstr "Concediu medical neplătit"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_sick_leave_75
 msgid "Sick Time Off 75%"
-msgstr ""
+msgstr "Concediu medical 75%"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sk_work_entry_type_sick_25
@@ -3414,7 +3544,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_lu_work_entry_type_sick_leave_paid_by_CNS
 msgid "Sick Time Off paid by CNS"
-msgstr ""
+msgstr "Concediu medical plătit de CNS"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_sick_leave_75
@@ -3434,22 +3564,22 @@ msgstr "Șomaj situațional"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_uz_work_entry_type_social_leave
 msgid "Social Leave"
-msgstr ""
+msgstr "Concediu social"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_spl_leave
 msgid "Solo-Parent Leave"
-msgstr ""
+msgstr "Concediu pentru părinți singuri"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_slfw_leave
 msgid "Special Leave For Women"
-msgstr ""
+msgstr "Concediu special pentru femei"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_snwh_leave
 msgid "Special Non-Working Holiday"
-msgstr ""
+msgstr "Sărbătoare specială nelucrătoare"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__activity_state
@@ -3459,6 +3589,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Stare bazată pe activități\n"
+"Întârziată: data scadentă este deja trecută\n"
+"Astăzi: activității pentru astăzi\n"
+"Planificate: activități viitoare."
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_statutory_holiday
@@ -3469,7 +3603,7 @@ msgstr "Sărbătoare legală"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_strike
 msgid "Strike recognized by trade union Or Lock-out"
-msgstr ""
+msgstr "Greva recunoscută de sindicat sau blocarea activității"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_jo_work_entry_type_study
@@ -3477,102 +3611,102 @@ msgstr ""
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_study
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_uz_work_entry_type_study_leave
 msgid "Study Leave"
-msgstr ""
+msgstr "Concediu de studiu"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
 msgid "Sun"
-msgstr ""
+msgstr "Duminică"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_time_rule__week_start__6
 msgid "Sunday"
-msgstr ""
+msgstr "Duminică"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_sunday_shift
 msgid "Sunday Shift"
-msgstr ""
+msgstr "Tură de duminică"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_time_credit_not_equated
 msgid "TCN"
-msgstr ""
+msgstr "TCN"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_environmental_protection
 msgid "TME"
-msgstr ""
+msgstr "TME"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.ge_work_entry_type_compensatory
 msgid "TOIL"
-msgstr ""
+msgstr "TOIL"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_training
 msgid "TRN"
-msgstr ""
+msgstr "TRN"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_other_training
 msgid "TRX"
-msgstr ""
+msgstr "TRX"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_force_majeure
 msgid "TUA"
-msgstr ""
+msgstr "TUA"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_bad_weather
 msgid "TUB"
-msgstr ""
+msgstr "TUB"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_collective_closure_agreeement
 msgid "TUC"
-msgstr ""
+msgstr "TUC"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.iq_work_entry_type_trade_union_duty
 msgid "TUD"
-msgstr ""
+msgstr "TUD"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_collective_closure
 msgid "TUH"
-msgstr ""
+msgstr "TUH"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_force_majeure_medical
 msgid "TUM"
-msgstr ""
+msgstr "TUM"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_dismissal
 msgid "TUP"
-msgstr ""
+msgstr "TUP"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_collective_closure_reduction
 msgid "TUR"
-msgstr ""
+msgstr "TUR"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_strike
 msgid "TUS"
-msgstr ""
+msgstr "TUS"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_incident
 msgid "TUT"
-msgstr ""
+msgstr "TUT"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_tardiness
 msgid "Tardiness"
-msgstr ""
+msgstr "Întârziere"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_environmental_protection
@@ -3580,17 +3714,20 @@ msgid ""
 "Technical malfunction in the company or closure of the company for "
 "environmental protection purposes"
 msgstr ""
+"Defecțiune tehnică în companie sau închiderea companiei în scopul protecției "
+"mediului"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_economic_unemployment_refused_by_administration
 msgid "Technical unemployment (Paid by the employer)"
-msgstr ""
+msgstr "Șomaj tehnic (plătit de angajator)"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid ""
 "Tells whether this time type can be selected in working schedules or not"
 msgstr ""
+"Indică dacă acest tip de timp poate fi selectat în programele de lucru."
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_collective_closure_agreeement
@@ -3598,11 +3735,13 @@ msgid ""
 "Temporary unemployment due to collective closure of the company due to "
 "compulsory leave under a collective labor agreement"
 msgstr ""
+"Șomaj temporar din cauza închiderii colective a companiei pentru concediul "
+"obligatoriu prevăzut de contractul colectiv de muncă"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_dismissal
 msgid "Temporary unemployment in the event of dismissal of a protected worker"
-msgstr ""
+msgstr "Șomaj temporar în cazul concedierii unui angajat protejat"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_time_rule__country_code
@@ -3620,6 +3759,8 @@ msgid ""
 "The code is used as a reference in salary rules. Careful, changing an "
 "existing code can lead to unwanted behaviors."
 msgstr ""
+"Codul este folosit ca referință în regulile salariale. Atenție: modificarea "
+"unui cod existent poate cauza comportamente nedorite."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__color
@@ -3627,6 +3768,8 @@ msgstr ""
 msgid ""
 "The color selected here will be used in every screen with the time type."
 msgstr ""
+"Culoarea selectată aici va fi folosită în toate ecranele care afișează acest "
+"tip de timp."
 
 #. module: hr_work_entry
 #. odoo-python
@@ -3635,6 +3778,8 @@ msgid ""
 "The country of the work entry type does not match the country of the "
 "associated resource calendar."
 msgstr ""
+"Țara tipului de înregistrare a muncii nu corespunde cu țara calendarului de "
+"resurse asociat."
 
 #. module: hr_work_entry
 #. odoo-python
@@ -3643,6 +3788,8 @@ msgid ""
 "The country of the work entry types linked to the attendances must be the "
 "same as the company's country."
 msgstr ""
+"Țara tipurilor de înregistrări ale muncii asociate prezențelor trebuie să "
+"fie aceeași cu țara companiei."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__amount_rate
@@ -3650,12 +3797,16 @@ msgid ""
 "The percentage of wages paid. For standard paid leave set to 100%, for "
 "unpaid leave to 0%, or for double-pay to 200%."
 msgstr ""
+"Procentul din salariu plătit. Pentru concediul plătit obișnuit setează 100%, "
+"pentru concediul neplătit 0%, iar pentru plata dublă 200%."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_time_rule__employee_domain
 msgid ""
 "The rule will automatically apply to all time entries for matching employees."
 msgstr ""
+"Regula se va aplica automat tuturor înregistrărilor de timp pentru angajații "
+"corespunzători."
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
@@ -3663,16 +3814,18 @@ msgid ""
 "The rule will automatically apply to all times entries for matching "
 "employees."
 msgstr ""
+"Regula se va aplica automat tuturor înregistrărilor de timp pentru angajații "
+"corespunzători."
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_thematic_leave_informal_carer
 msgid "Thematic leave - Leave for informal carer"
-msgstr ""
+msgstr "Concediu tematic - concediu pentru îngrijitor informal"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_medical_assistance
 msgid "Thematic leave - Medical assistance"
-msgstr ""
+msgstr "Concediu tematic - asistență medicală"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__display_code
@@ -3686,32 +3839,32 @@ msgstr ""
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_time_rule__threshold_operator
 msgid "Threshold Operator"
-msgstr ""
+msgstr "Operator de prag"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
 msgid "Thu"
-msgstr ""
+msgstr "Joi"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_time_rule__week_start__3
 msgid "Thursday"
-msgstr ""
+msgstr "Joi"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.ge_work_entry_type_compensatory
 msgid "Time Off in Lieu of Overtime"
-msgstr ""
+msgstr "Concediu compensatoriu pentru ore suplimentare"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_time_rule
 msgid "Time Rule"
-msgstr ""
+msgstr "Regulă de timp"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_time_rule_source_mixin
 msgid "Time Rule Source Mixin"
-msgstr ""
+msgstr "Mixin sursă pentru regula de timp"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_work_entry_type
@@ -3723,88 +3876,88 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_search
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.resource_calendar_leaves_view_search_inherit
 msgid "Time Type"
-msgstr ""
+msgstr "Tip timp"
 
 #. module: hr_work_entry
 #: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_type_action
 #: model:ir.ui.menu,name:hr_work_entry.menu_hr_work_entry_type_view_employee
 msgid "Time Types"
-msgstr ""
+msgstr "Tipuri de timp"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_credit_time
 msgid "Time credit (with/no motif)"
-msgstr ""
+msgstr "Credit de timp (cu/fără motiv)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_time_credit_not_equated
 msgid "Time crédit not equated"
-msgstr ""
+msgstr "Credit de timp neechivalat"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_time_off_in_lieu
 msgid "Time off in Lieu"
-msgstr ""
+msgstr "Concediu compensatoriu"
 
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_time_rule_timing_start_less_than_timing_stop
 msgid "Timing Start < Timing Stop"
-msgstr ""
+msgstr "Ora de început < ora de sfârșit"
 
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_time_rule_timing_start_is_hour
 msgid "Timing Start is an hour of the day"
-msgstr ""
+msgstr "Începerea cronometrării este la o oră din zi"
 
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_time_rule_timing_stop_is_hour
 msgid "Timing Stop is an hour of the day"
-msgstr ""
+msgstr "Începerea cronometrării este la o oră din zi"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_time_rule__timing_stop
 msgid "To"
-msgstr ""
+msgstr "Către"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.iq_work_entry_type_trade_union_duty
 msgid "Trade union duty"
-msgstr ""
+msgstr "Activitate sindicală"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_training
 msgid "Training Time Off"
-msgstr ""
+msgstr "Timpul liber pentru formare"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
 msgid "Tue"
-msgstr ""
+msgstr "Marți"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_time_rule__week_start__1
 msgid "Tuesday"
-msgstr ""
+msgstr "Marți"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Tipul activității de excepție din înregistrare."
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_unjustified_reason
 msgid "UJR"
-msgstr ""
+msgstr "UJR"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_union_mission
 msgid "UMP"
-msgstr ""
+msgstr "UMP"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_union_mission_unpaid
 msgid "UMU"
-msgstr ""
+msgstr "UMU"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.au_work_entry_type_unpaid_leave
@@ -3824,6 +3977,7 @@ msgstr ""
 #: model:hr.work.entry.type,display_code:hr_work_entry.ke_work_entry_type_unpaid_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_kw_work_entry_type_unpaid_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_ph_hr_payroll_unpaid_leave
+#: model:hr.work.entry.type,display_code:hr_work_entry.lb_work_entry_type_unpaid_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.lt_work_entry_type_unpaid_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.lu_work_entry_type_unpaid_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.ma_work_entry_type_unpaid_leave
@@ -3848,47 +4002,50 @@ msgstr "UN"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_upcomming_public_holiday
 msgid "UPH"
-msgstr ""
+msgstr "UPH"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_unpredictable
 msgid "URU"
-msgstr ""
+msgstr "URU"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_force_majeure_medical
 msgid "Unemployment act of god medical (court appeal-tribunal)"
 msgstr ""
+"Șomaj din motive medicale de forță majoră (contestație în instanță - "
+"tribunal)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_bad_weather
 msgid "Unemployment bad weather"
-msgstr ""
+msgstr "Șomaj din cauza condițiilor meteorologice nefavorabile"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_force_majeure
 msgid "Unemployment due to act of god (External cause to the company)"
 msgstr ""
+"Șomaj din cauza unui eveniment de forță majoră (cauză externă companiei)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_strike
 msgid "Unemployment owing to a strike or lock-out"
-msgstr ""
+msgstr "Șomaj din cauza unei greve sau a blocării activității"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_incident
 msgid "Unemployment technical reason"
-msgstr ""
+msgstr "Șomaj din motive tehnice"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_union_mission
 msgid "Union obligations (paid)"
-msgstr ""
+msgstr "Obligații sindicale (plătite)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_union_mission_unpaid
 msgid "Union obligations (unpaid)"
-msgstr ""
+msgstr "Obligații sindicale (neplătite)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.za_work_entry_type_unpaid_leave
@@ -3906,11 +4063,13 @@ msgid ""
 "Unpaid compensatory rest at the time of recovery following hours worked at "
 "another time"
 msgstr ""
+"Timp de odihnă compensatoriu neplătit, acordat ca recuperare pentru ore "
+"lucrate în altă perioadă"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_common_law_illness_attributable_to_worker
 msgid "Unpaid illness late submission of the certificate"
-msgstr ""
+msgstr "Concediu medical neplătit din cauza depunerii tardive a certificatului"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_employee__external_code
@@ -3923,138 +4082,138 @@ msgstr "Utilizați acest cod pentru a vă exporta datele către o terță parte"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_time_rule__expected_hours
 msgid "Usual work hours"
-msgstr ""
+msgstr "Ore obișnuite de lucru"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_voluntary_overtime_150
 msgid "V15"
-msgstr ""
+msgstr "V15"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_voluntary_overtime_200
 msgid "V20"
-msgstr ""
+msgstr "V20"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_overtime_no_onss
 msgid "VNH"
-msgstr ""
+msgstr "VNH"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_voluntary_overtime_net
 msgid "VNO"
-msgstr ""
+msgstr "VNO"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_holiday_previous_vacation_credit_year
 msgid "VPC"
-msgstr ""
+msgstr "VPC"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries_employee__version_ids
 msgid "Version"
-msgstr ""
+msgstr "Versiune"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_overtime_no_onss
 msgid "Voluntarily Net-Overtime hours (Horeca)"
-msgstr ""
+msgstr "Ore suplimentare nete voluntare (HoReCa)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_voluntary_overtime_150
 msgid "Voluntary extra hours - 150%"
-msgstr ""
+msgstr "Ore suplimentare voluntare - 150%"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_voluntary_overtime_200
 msgid "Voluntary extra hours - 200%"
-msgstr ""
+msgstr "Ore suplimentare voluntare - 200%"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_work_accident_second_week_short_term_employee
 msgid "W2A"
-msgstr ""
+msgstr "W2A"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_work_accident_first_week
 msgid "WA1"
-msgstr ""
+msgstr "WA1"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_work_accident_guaranteed_monthly
 msgid "WAM"
-msgstr ""
+msgstr "WAM"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_work_accident_second_week
 msgid "WAS"
-msgstr ""
+msgstr "WAS"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_work_accident_unassimilated
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_work_accident_unpaid
 msgid "WAU"
-msgstr ""
+msgstr "WAU"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.iq_work_entry_type_wedding_leave
 msgid "WED"
-msgstr ""
+msgstr "WED"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_worker_time_off
 msgid "WTO"
-msgstr ""
+msgstr "WTO"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
 msgid "Wed"
-msgstr ""
+msgstr "Miercuri"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.iq_work_entry_type_wedding_leave
 msgid "Wedding leave"
-msgstr ""
+msgstr "Concediu pentru căsătorie"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_time_rule__week_start__2
 msgid "Wednesday"
-msgstr ""
+msgstr "Miercuri"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_time_rule__quantity_period__week
 msgid "Week"
-msgstr ""
+msgstr "Săptămână"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_time_rule__week_start
 msgid "Week Starts On"
-msgstr ""
+msgstr "Săptămâna începe în"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_overtime_work_days_daytime
 msgid "Weekday(s) Daytime Overtime"
-msgstr ""
+msgstr "Ore suplimentare în timpul zilei în zilele lucrătoare"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_overtime_special_work_days_daytime
 msgid "Weekday(s) Daytime Special Overtime"
-msgstr ""
+msgstr "Ore suplimentare speciale în timpul zilei în zilele lucrătoare"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_overtime_work_days_nighttime
 msgid "Weekday(s) Nighttime Overtime"
-msgstr ""
+msgstr "Ore suplimentare pe timp de noapte în zilele lucrătoare"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_overtime_special_work_days_nighttime
 msgid "Weekday(s) Nighttime Special Overtime"
-msgstr ""
+msgstr "Ore suplimentare speciale pe timp de noapte în zilele lucrătoare"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_jo_work_entry_type_week_days_overtime
 msgid "Weekday(s) Overtime"
-msgstr ""
+msgstr "Ore suplimentare în zilele lucrătoare"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ae_work_entry_type_weekend
@@ -4067,12 +4226,12 @@ msgstr "Weekend"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_lu_work_entry_type_welcome_leave
 msgid "Welcome Leave"
-msgstr ""
+msgstr "Concediu de acomodare"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_time_rule__calendar_source
 msgid "Which schedule to use as the expected-hours baseline."
-msgstr ""
+msgstr "Programul folosit ca bază pentru calculul orelor preconizate."
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.au_work_entry_type_attendance
@@ -4091,6 +4250,7 @@ msgstr ""
 #: model:hr.work.entry.type,name:hr_work_entry.jo_work_entry_type_attendance
 #: model:hr.work.entry.type,name:hr_work_entry.ke_work_entry_type_attendance
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_kw_work_entry_type_attendance
+#: model:hr.work.entry.type,name:hr_work_entry.lb_work_entry_type_attendance
 #: model:hr.work.entry.type,name:hr_work_entry.lt_work_entry_type_attendance
 #: model:hr.work.entry.type,name:hr_work_entry.lu_work_entry_type_attendance
 #: model:hr.work.entry.type,name:hr_work_entry.ma_work_entry_type_attendance
@@ -4110,7 +4270,7 @@ msgstr ""
 #: model:hr.work.entry.type,name:hr_work_entry.uz_work_entry_type_attendance
 #: model:hr.work.entry.type,name:hr_work_entry.vn_work_entry_type_attendance
 msgid "Work"
-msgstr ""
+msgstr "Loc de muncă"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_resource_calendar_attendance
@@ -4120,22 +4280,22 @@ msgstr "Detaliu lucru"
 #. module: hr_work_entry
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry
 msgid "Work Entries"
-msgstr ""
+msgstr "Intrări de lucru"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_user_work_entry_employee
 msgid "Work Entries Employee"
-msgstr ""
+msgstr "Angajat - înregistrări ale muncii"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_export_work_entries_employee
 msgid "Work Entry Export Employee"
-msgstr ""
+msgstr "Export intrare muncă angajat"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_work_injury_sick_leave_80
 msgid "Work Injury Sick Leave 80%"
-msgstr ""
+msgstr "Concediu medical pentru accident de muncă 80%"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_work_accident_second_week_short_term_employee
@@ -4143,6 +4303,9 @@ msgid ""
 "Work accident or occupational illness with employer supplement from the 2nd "
 "week of CCT 12bis/13bis (Short Term Employee)"
 msgstr ""
+"Accident de muncă sau boală profesională cu supliment din partea "
+"angajatorului începând cu a doua săptămână, conform CCT 12bis/13bis (angajat "
+"pe termen scurt)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.au_work_entry_type_home_working
@@ -4161,6 +4324,7 @@ msgstr ""
 #: model:hr.work.entry.type,name:hr_work_entry.jo_work_entry_type_home_working
 #: model:hr.work.entry.type,name:hr_work_entry.ke_work_entry_type_home_working
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_kw_work_entry_type_home_working
+#: model:hr.work.entry.type,name:hr_work_entry.lb_work_entry_type_home_working
 #: model:hr.work.entry.type,name:hr_work_entry.lt_work_entry_type_home_working
 #: model:hr.work.entry.type,name:hr_work_entry.lu_work_entry_type_home_working
 #: model:hr.work.entry.type,name:hr_work_entry.ma_work_entry_type_home_working
@@ -4180,7 +4344,12 @@ msgstr ""
 #: model:hr.work.entry.type,name:hr_work_entry.uz_work_entry_type_home_working
 #: model:hr.work.entry.type,name:hr_work_entry.vn_work_entry_type_home_working
 msgid "Work from home"
-msgstr ""
+msgstr "Lucru de acasă"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_lb_work_entry_type_overtime_public_holiday
+msgid "Work on a Public Holiday"
+msgstr "Muncă într-o zi de sărbătoare legală"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_mx_work_entry_type_work_risk_imss
@@ -4190,12 +4359,12 @@ msgstr "Risc profesional (IMSS)"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_public_holiday_working_with_recovery
 msgid "Worked public holiday"
-msgstr ""
+msgstr "Sărbătoare legală lucrată"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_public_holiday_working_without_recovery
 msgid "Worked public holiday ( no recovery)"
-msgstr ""
+msgstr "Sărbătoare legală lucrată (fără recuperare)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_compensation
@@ -4205,17 +4374,17 @@ msgstr "Indemnizație pentru accident de muncă"
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
 msgid "Working Hours"
-msgstr ""
+msgstr "Program de lucru"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_time_rule__working_hours_mode
 msgid "Working Hours Mode"
-msgstr ""
+msgstr "Mod de calcul al orelor de lucru"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "Working Schedule"
-msgstr ""
+msgstr "Program de lucru"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry_type__count_as__working_time
@@ -4226,27 +4395,27 @@ msgstr "Program de lucru"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_extra_legal
 msgid "XLT"
-msgstr ""
+msgstr "XLT"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_extra_legal_public_holiday
 msgid "XPH"
-msgstr ""
+msgstr "XPH"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_extra_legal_sectoral_holiday
 msgid "XSH"
-msgstr ""
+msgstr "XSH"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_youth_time_off
 msgid "YTO"
-msgstr ""
+msgstr "YTO"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__reference_year
 msgid "Year"
-msgstr ""
+msgstr "An"
 
 #. module: hr_work_entry
 #. odoo-python
@@ -4255,6 +4424,8 @@ msgid ""
 "You cannot create more than one time type of code \"%(code)s\" for the same "
 "country (%(country)s)"
 msgstr ""
+"Nu poți crea mai mult de un tip de timp cu codul „%(code)s” pentru aceeași "
+"țară (%(country)s)"
 
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_user_work_entry_employee_user_id_employee_id_unique
@@ -4264,82 +4435,82 @@ msgstr "Nu puteți avea același angajat de două ori."
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.za_work_entry_type_public_holiday
 msgid "ZA"
-msgstr ""
+msgstr "ZA"
 
 #. module: hr_work_entry
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_time_rule.py:0
 msgid "day"
-msgstr ""
+msgstr "zi"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_common_law_illness_after_legal_period
 msgid "days of illness after 30th day"
-msgstr ""
+msgstr "zile de boală după a 30-a zi"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "e.g. 002.00, 128.00, 000.00, ..."
-msgstr ""
+msgstr "de exemplu, 002.00, 128.00, 000.00, ..."
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "e.g. ATT, PTO, STO, OT, RW, ..."
-msgstr ""
+msgstr "de exemplu, ATT, PTO, STO, OT, RW, ..."
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
 msgid "e.g. Exceed 8h per day"
-msgstr ""
+msgstr "de exemplu, depășește 8 ore pe zi"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "e.g. Paid Time Off, Sick Leave, Work From Home"
-msgstr ""
+msgstr "de exemplu, concediu plătit, concediu medical, lucru de acasă"
 
 #. module: hr_work_entry
 #. odoo-javascript
 #: code:addons/hr_work_entry/static/src/components/domain_count_field/domain_count_field.xml:0
 msgid "employee(s)"
-msgstr ""
+msgstr "angajat(angajați)"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_time_rule__working_hours_mode__day
 msgid "per day"
-msgstr ""
+msgstr "pe zi"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_time_rule__working_hours_mode__week
 msgid "per week"
-msgstr ""
+msgstr "pe săptămână"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_time_rule__working_hours_mode__schedule_day
 msgid "the daily schedule"
-msgstr ""
+msgstr "programul zilnic"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_time_rule__working_hours_mode__schedule_week
 msgid "the weekly schedule"
-msgstr ""
+msgstr "programul săptămânal"
 
 #. module: hr_work_entry
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_time_rule.py:0
 msgid "week"
-msgstr ""
+msgstr "săptămână"
 
 #. module: hr_work_entry
 #. odoo-python
 #: code:addons/hr_work_entry/wizard/hr_export_work_entries.py:0
 msgid "workentries_"
-msgstr ""
+msgstr "workentries_"
 
 #. module: hr_work_entry
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_time_rule_source_mixin.py:0
 msgid "… and %d more"
-msgstr ""
+msgstr "… și încă %d"
 
 #~ msgid "Additional Time (Paid)"
 #~ msgstr "Timp suplimentar (plătit)"

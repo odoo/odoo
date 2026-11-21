@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 17:39+0000\n"
+"POT-Creation-Date: 2026-11-20 17:38+0000\n"
 "PO-Revision-Date: 2026-10-21 06:33+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -1529,6 +1529,11 @@ msgid "Published"
 msgstr "已发布"
 
 #. module: payment
+#: model:payment.provider,name:payment.payment_provider_qfpay
+msgid "QFPay"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__onboarding_payment_module__razorpay
 #: model:payment.provider,name:payment.payment_provider_razorpay
 msgid "Razorpay"
@@ -2365,6 +2370,7 @@ msgstr "您的订单已确认，您很快就会收到发票。"
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_paymob
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_paypal
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_payu
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_qfpay
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_sepa_direct_debit
@@ -2396,6 +2402,7 @@ msgstr "支付已获授权。"
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_paymob
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_paypal
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_payu
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_qfpay
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_sepa_direct_debit
@@ -2427,6 +2434,7 @@ msgstr "您的支付已被取消。"
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_paymob
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_paypal
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_payu
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_qfpay
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sepa_direct_debit
@@ -2456,6 +2464,7 @@ msgstr "您的付款已经处理，但正在等待批准。"
 #: model_terms:payment.provider,done_msg:payment.payment_provider_paymob
 #: model_terms:payment.provider,done_msg:payment.payment_provider_paypal
 #: model_terms:payment.provider,done_msg:payment.payment_provider_payu
+#: model_terms:payment.provider,done_msg:payment.payment_provider_qfpay
 #: model_terms:payment.provider,done_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,done_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,done_msg:payment.payment_provider_sepa_direct_debit

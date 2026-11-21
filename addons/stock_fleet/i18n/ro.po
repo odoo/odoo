@@ -2,16 +2,16 @@
 # This file contains the translation of the following modules:
 # * stock_fleet
 #
-# Dorin Hongu <dhongu@gmail.com>, 2025.
+# Dorin Hongu <dhongu@gmail.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:43+0000\n"
-"PO-Revision-Date: 2026-08-31 16:57+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
+"POT-Creation-Date: 2026-11-20 17:39+0000\n"
+"PO-Revision-Date: 2026-11-21 20:07+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/"
 "stock_fleet/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -19,26 +19,23 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: stock_fleet
 #. odoo-python
 #: code:addons/stock_fleet/models/fleet_vehicle_model.py:0
-#, fuzzy
 msgid "%(display_name)s (%(load_capacity)s)"
 msgstr "%(display_name)s (%(load_capacity)s)"
 
 #. module: stock_fleet
 #. odoo-python
 #: code:addons/stock_fleet/models/fleet_vehicle_model.py:0
-#, fuzzy
 msgid "%(volume_capacity)s %(volume_uom)s"
 msgstr "%(volume_capacity)s %(volume_uom)s"
 
 #. module: stock_fleet
 #. odoo-python
 #: code:addons/stock_fleet/models/fleet_vehicle_model.py:0
-#, fuzzy
 msgid "%(weight_capacity)s %(weight_uom)s"
 msgstr "%(weight_capacity)s %(weight_uom)s"
 
@@ -46,12 +43,12 @@ msgstr "%(weight_capacity)s %(weight_uom)s"
 #: model:ir.actions.report,print_report_name:stock_fleet.action_report_cmr
 #: model:ir.actions.report,print_report_name:stock_fleet.action_report_cmr_batch
 msgid "'CMR - %s' % (object.name)"
-msgstr ""
+msgstr "'CMR - %s' % (object.name)"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_card
 msgid "<i class=\"oi mx-2\" data-icon=\"east\" title=\"Arrow\"/>"
-msgstr ""
+msgstr "<i class=\"oi mx-2\" data-icon=\"east\" title=\"Săgeată\"/>"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_card
@@ -59,6 +56,8 @@ msgid ""
 "<i class=\"oi text-primary me-2\" data-icon=\"inventory_2\" "
 "title=\"Location\"/>"
 msgstr ""
+"<i class=\"oi text-primary me-2\" data-icon=\"inventory_2\" "
+"title=\"Locație\"/>"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_card
@@ -66,10 +65,11 @@ msgid ""
 "<i class=\"oi text-primary me-2\" data-icon=\"local_shipping\" "
 "title=\"Vehicle\"/>"
 msgstr ""
+"<i class=\"oi text-primary me-2\" data-icon=\"local_shipping\" "
+"title=\"Vehicul\"/>"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.view_picking_type_form
-#, fuzzy
 msgid ""
 "<span class=\"fw-bold\" invisible=\"code !='outgoing'\">From</span>\n"
 "                        <span class=\"fw-bold\" invisible=\"code "
@@ -81,32 +81,28 @@ msgstr ""
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_picking_batch_inherit
-#, fuzzy
 msgid "<strong>Dock:</strong>"
-msgstr "<strong>Doc:</strong>"
+msgstr "<strong>Rampă de încărcare:</strong>"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_picking_batch_inherit
-#, fuzzy
 msgid "<strong>Vehicle Category:</strong>"
-msgstr "<strong>Categorie vehicul:</strong>"
+msgstr "<strong>Categoria vehiculului:</strong>"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_picking_batch_inherit
-#, fuzzy
 msgid "<strong>Vehicle:</strong>"
 msgstr "<strong>Vehicul:</strong>"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Address"
-msgstr ""
+msgstr "Adresa"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__allowed_dock_ids
-#, fuzzy
 msgid "Allowed Docks"
-msgstr "Docuri permise"
+msgstr "Rampe de încărcare permise"
 
 #. module: stock_fleet
 #: model:ir.module.module,description:base.module_stock_fleet
@@ -114,232 +110,204 @@ msgid ""
 "Allows organizing deliveries by dock, assigning drivers and vehicles, and "
 "printing the associated consignment notes."
 msgstr ""
+"Permite organizarea livrărilor după rampă, atribuirea șoferilor și "
+"vehiculelor și imprimarea scrisorilor de trăsură aferente."
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Annexed documents"
-msgstr ""
+msgstr "Documente anexate"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__auto_print_cmr_report
 msgid "Auto Print Consignment Note (CMR)"
-msgstr ""
+msgstr "Imprimă automat scrisoarea de trăsură (CMR)"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Balance"
-msgstr ""
+msgstr "Sold"
 
 #. module: stock_fleet
 #: model:ir.model,name:stock_fleet.model_stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_pivot
-#, fuzzy
 msgid "Batch Transfer"
 msgstr "Transfer în lot"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
-#, fuzzy
 msgid "Batches by Route"
-msgstr "Loturi pe rută"
-
-#. module: stock_fleet
-#: model:ir.model,name:stock_fleet.model_report_stock_fleet_report_cmr_batch
-msgid "CMR Batch Report"
-msgstr ""
+msgstr "Loturi după rută"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "CMR INTERNATIONAL CONSIGNMENT NOTE"
-msgstr ""
-
-#. module: stock_fleet
-#: model:ir.model,name:stock_fleet.model_report_stock_fleet_report_cmr
-msgid "CMR Report"
-msgstr ""
+msgstr "SCRISOARE DE TRĂSURĂ INTERNAȚIONALĂ CMR"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
-#, fuzzy
 msgid "Calendar"
 msgstr "Calendar"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Carriage charges"
-msgstr ""
+msgstr "Taxe de transport"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Carrier (name, address, country)"
-msgstr ""
+msgstr "Transportator (nume, adresă, țară)"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Carrier's reservations and observations"
-msgstr ""
+msgstr "Rezervele și observațiile transportatorului"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Cash on delivery"
-msgstr ""
+msgstr "Ramburs"
 
 #. module: stock_fleet
 #: model:ir.model,name:stock_fleet.model_fleet_vehicle_model_category
-#, fuzzy
 msgid "Category of the model"
-msgstr "Categorie model"
+msgstr "Categoria modelului"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Class"
-msgstr ""
+msgstr "Clasă"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Consignee"
-msgstr ""
+msgstr "Destinatar"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Consignee (name, address, country)"
-msgstr ""
+msgstr "Destinatar (nume, adresă, țară)"
 
 #. module: stock_fleet
 #: model:ir.actions.report,name:stock_fleet.action_report_cmr
 #: model:ir.actions.report,name:stock_fleet.action_report_cmr_batch
 #: model_terms:ir.ui.view,arch_db:stock_fleet.view_picking_type_form
 msgid "Consignment Note (CMR)"
-msgstr ""
+msgstr "Scrisoare de trăsură (CMR)"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Copy for the carrier"
-msgstr ""
+msgstr "Exemplarul transportatorului"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Copy for the consignee"
-msgstr ""
+msgstr "Exemplarul destinatarului"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Copy for the sender"
-msgstr ""
+msgstr "Exemplarul expeditorului"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Date"
-msgstr ""
+msgstr "Dată"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Directions as to freight payment"
-msgstr ""
+msgstr "Instrucțiuni privind plata transportului"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__has_dispatch_management
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__dispatch_management
-#, fuzzy
 msgid "Dispatch Management"
 msgstr "Gestionarea expedierilor"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_model_category__display_name
-#: model:ir.model.fields,field_description:stock_fleet.field_report_stock_fleet_report_cmr__display_name
-#: model:ir.model.fields,field_description:stock_fleet.field_report_stock_fleet_report_cmr_batch__display_name
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking__display_name
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__display_name
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__display_name
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_warehouse__display_name
-#, fuzzy
 msgid "Display Name"
 msgstr "Nume afișat"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__dock_id
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__dock_ids
-#, fuzzy
 msgid "Dock"
-msgstr "Doc"
+msgstr "Rampă de încărcare"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
-#, fuzzy
 msgid "Dock Dispatching"
-msgstr "Expediere doc"
+msgstr "Planificarea rampelor de încărcare"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
-#, fuzzy
 msgid "Dock Location"
-msgstr "Locație doc"
+msgstr "Locația rampei de încărcare"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.view_picking_type_form
-#, fuzzy
 msgid "Dock Locations"
-msgstr "Locații docuri"
+msgstr "Locațiile rampelor de încărcare"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__driver_id
-#, fuzzy
 msgid "Driver"
 msgstr "Șofer"
 
 #. module: stock_fleet
 #: model:ir.model.fields,help:stock_fleet.field_stock_picking_batch__has_dispatch_management
 #: model:ir.model.fields,help:stock_fleet.field_stock_picking_type__dispatch_management
-#, fuzzy
 msgid ""
 "Enable this option to display dispatch management related details in the "
 "batch/wave form view and operations kanban overview."
 msgstr ""
-"Activați această opțiune pentru a afișa detalii legate de gestionarea "
-"expedierilor în vizualizarea formularului lot/val și în prezentarea generală "
-"a operațiunilor kanban."
+"Activează această opțiune pentru a afișa detaliile de expediere în "
+"formularul lotului/undei și în vizualizarea Kanban a operațiunilor."
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__end_date
-#, fuzzy
 msgid "End Date"
-msgstr "Dată sfârșit"
+msgstr "Data de sfârșit"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Established in / on"
-msgstr ""
+msgstr "Întocmită în/la"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Freight paid"
-msgstr ""
+msgstr "Transport plătit"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Freight to be paid"
-msgstr ""
+msgstr "Transport de plătit"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_graph
-#, fuzzy
 msgid "Graph View"
-msgstr "Vedere grafică"
+msgstr "Vizualizare grafică"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Gross weight kg"
-msgstr ""
+msgstr "Greutate brută kg"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_model_category__id
-#: model:ir.model.fields,field_description:stock_fleet.field_report_stock_fleet_report_cmr__id
-#: model:ir.model.fields,field_description:stock_fleet.field_report_stock_fleet_report_cmr_batch__id
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking__id
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__id
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__id
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_warehouse__id
-#, fuzzy
 msgid "ID"
 msgstr "ID"
 
@@ -349,134 +317,128 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the Consignment "
 "Note (CMR) of a delivery when it is validated."
 msgstr ""
+"Dacă această casetă este bifată, Odoo va imprima automat scrisoarea de "
+"trăsură (CMR) a unei livrări la validare."
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Letter"
-msgstr ""
+msgstr "Scrisoare"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Loading list of products"
-msgstr ""
+msgstr "Lista produselor încărcate"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
-#, fuzzy
 msgid "Manage Batches"
-msgstr "Gestionează loturi"
+msgstr "Gestionează loturile"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Marks and Nos."
-msgstr ""
+msgstr "Mărci și numere"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_model_category__volume_capacity
-#, fuzzy
 msgid "Max Volume"
 msgstr "Volum maxim"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__vehicle_volume_capacity
-#, fuzzy
 msgid "Max Volume (m³)"
 msgstr "Volum maxim (m³)"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_model_category__weight_capacity
-#, fuzzy
 msgid "Max Weight"
-msgstr "Masă maximă"
+msgstr "Greutate maximă"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Method of packing"
-msgstr ""
+msgstr "Metoda de ambalare"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Miscellaneous"
-msgstr ""
+msgstr "Diverse"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Name"
-msgstr ""
+msgstr "Nume"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Nature of the goods"
-msgstr ""
+msgstr "Natura mărfurilor"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
-#, fuzzy
 msgid "Next 7 Days"
 msgstr "Următoarele 7 zile"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Number"
-msgstr ""
+msgstr "Număr"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Number of packages"
-msgstr ""
+msgstr "Număr de colete"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
-#, fuzzy
 msgid "Own Fleet"
 msgstr "Flotă proprie"
 
 #. module: stock_fleet
 #: model:ir.model,name:stock_fleet.model_stock_picking_type
-#, fuzzy
 msgid "Picking Type"
-msgstr "Tip ridicare"
+msgstr "Tipul operațiunii"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Place and date of taking over the goods (place, country, date)"
-msgstr ""
+msgstr "Locul și data preluării mărfurilor (loc, țară, dată)"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Place of delivery of the goods (place, country)"
-msgstr ""
+msgstr "Locul livrării mărfurilor (loc, țară)"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Reductions"
-msgstr ""
+msgstr "Reduceri"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
-#, fuzzy
 msgid "Scheduled Date"
-msgstr "Dată planificată"
+msgstr "Data planificată"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "See the attached loading list of products"
-msgstr ""
+msgstr "Vezi lista produselor încărcate anexată"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Sender"
-msgstr ""
+msgstr "Expeditor"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Sender (name, address, country)"
-msgstr ""
+msgstr "Expeditor (nume, adresă, țară)"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Sender's instructions (customs and other formalities)"
-msgstr ""
+msgstr "Instrucțiunile expeditorului (vamă și alte formalități)"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_picking_batch_inherit
@@ -485,78 +447,73 @@ msgstr "Secvență"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.vpicktree
-#, fuzzy
 msgid "Shipping Volume"
-msgstr "Volum livrare"
+msgstr "Volum expediat"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.vpicktree
-#, fuzzy
 msgid "Shipping Weight"
-msgstr "Greutate livrare"
+msgstr "Greutate expediată"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Signature and stamp of the carrier"
-msgstr ""
+msgstr "Semnătura și ștampila transportatorului"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Signature and stamp of the consignee"
-msgstr ""
+msgstr "Semnătura și ștampila destinatarului"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Signature and stamp of the sender"
-msgstr ""
+msgstr "Semnătura și ștampila expeditorului"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Special agreements"
-msgstr ""
+msgstr "Acorduri speciale"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Statistical No."
-msgstr ""
+msgstr "Nr. statistic"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
-#, fuzzy
 msgid "Statistics"
-msgstr "Statistica"
+msgstr "Statistici"
 
 #. module: stock_fleet
 #: model:ir.module.module,shortdesc:base.module_stock_fleet
 msgid "Stock Transport"
-msgstr ""
+msgstr "Transport stoc"
 
 #. module: stock_fleet
 #: model:ir.module.module,summary:base.module_stock_fleet
 msgid "Stock Transport Management"
-msgstr ""
+msgstr "Gestionarea transportului stocului"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Successive carriers (name, address, country)"
-msgstr ""
+msgstr "Transportatori succesivi (nume, adresă, țară)"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Supplement charges"
-msgstr ""
+msgstr "Taxe suplimentare"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
-#, fuzzy
 msgid "Third Party Carrier"
 msgstr "Transportator terț"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_form
-#, fuzzy
 msgid "Third Party Provider"
-msgstr "Eroare furnizor terț API"
+msgstr "Furnizor terț"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
@@ -565,153 +522,143 @@ msgid ""
 "convention on the contact for the international carriage of goods by road "
 "(CMR)"
 msgstr ""
+"Acest transport este supus, indiferent de orice clauză contrară, convenției "
+"privind contractul de transport internațional de mărfuri pe șosea (CMR)."
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Time of arrival"
-msgstr ""
+msgstr "Ora sosirii"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Time of departure"
-msgstr ""
+msgstr "Ora plecării"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "To be paid by"
-msgstr ""
+msgstr "Plătit de"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
-#, fuzzy
 msgid "Tomorrow"
 msgstr "Mâine"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.vpicktree
-#, fuzzy
 msgid "Total Shipping Volume"
-msgstr "Volum total livrare"
+msgstr "Volum total expediat"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.vpicktree
-#, fuzzy
 msgid "Total Shipping Weight"
-msgstr "Greutate totală livrare"
+msgstr "Greutate totală expediată"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Total to be paid"
-msgstr ""
+msgstr "Total de plată"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Tractor licence plate"
-msgstr ""
+msgstr "Numărul de înmatriculare al capului tractor"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Trailer licence plate"
-msgstr ""
+msgstr "Numărul de înmatriculare al remorcii"
 
 #. module: stock_fleet
 #: model:ir.model,name:stock_fleet.model_stock_picking
-#, fuzzy
 msgid "Transfer"
 msgstr "Transfer"
 
 #. module: stock_fleet
 #: model:fleet.vehicle.tag,name:stock_fleet.vehicle_tag_transport
-#, fuzzy
 msgid "Transport"
 msgstr "Transport"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
-#, fuzzy
 msgid "Transport Management"
-msgstr "Management transport"
+msgstr "Gestionarea transportului"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__vehicle_weight_capacity
-#, fuzzy
 msgid "Vehcilce Payload Capacity"
-msgstr "Capacitate de încărcare vehicul"
+msgstr "Capacitatea de încărcare a vehiculului"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__vehicle_id
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
-#, fuzzy
 msgid "Vehicle"
 msgstr "Vehicul"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__vehicle_category_id
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
-#, fuzzy
 msgid "Vehicle Category"
 msgstr "Categorie vehicul"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_form
-#, fuzzy
 msgid "Volume"
 msgstr "Volum"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__used_volume_percentage
-#, fuzzy
 msgid "Volume %"
 msgstr "Volum %"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_cmr_translated_label
 msgid "Volume m³"
-msgstr ""
+msgstr "Volum m³"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_model_category__volume_capacity_uom_name
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__volume_uom_name
-#, fuzzy
 msgid "Volume unit of measure label"
-msgstr "Etichetă unitate de măsură volum"
+msgstr "Eticheta unității de măsură pentru volum"
 
 #. module: stock_fleet
 #: model:ir.model,name:stock_fleet.model_stock_warehouse
-#, fuzzy
 msgid "Warehouse"
 msgstr "Depozit"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_form
-#, fuzzy
 msgid "Weight"
 msgstr "Masă"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__used_weight_percentage
-#, fuzzy
 msgid "Weight %"
 msgstr "Greutate %"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_model_category__weight_capacity_uom_name
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__weight_uom_name
-#, fuzzy
 msgid "Weight unit of measure label"
-msgstr "Etichetă unitate de măsură a greutății"
+msgstr "Eticheta unității de măsură pentru greutate"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking__zip
-#, fuzzy
 msgid "Zip"
-msgstr "Cod postal"
+msgstr "Cod poștal"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_form
-#, fuzzy
 msgid "semi-truck"
-msgstr "autocamion"
+msgstr "autotractor"
+
+#~ msgid "CMR Batch Report"
+#~ msgstr "Raport CMR în lot"
+
+#~ msgid "CMR Report"
+#~ msgstr "Raport CMR"
 
 #, fuzzy
 #~ msgid "Operation Type"

@@ -3,14 +3,15 @@
 # * pos_stripe
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Dorin Hongu <dhongu@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-06 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 17:52+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-21 09:32+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/"
 "pos_stripe/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -18,13 +19,13 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: pos_stripe
 #. odoo-javascript
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 msgid "Capture Payment"
-msgstr ""
+msgstr "Încasează plata"
 
 #. module: pos_stripe
 #: model:ir.model.fields,field_description:pos_stripe.field_pos_payment_method__display_name
@@ -35,7 +36,7 @@ msgstr "Nume afișat"
 #. odoo-python
 #: code:addons/pos_stripe/models/pos_payment_method.py:0
 msgid "Do not have access to fetch the Stripe account"
-msgstr ""
+msgstr "Nu aveți acces pentru a prelua contul Stripe"
 
 #. module: pos_stripe
 #. odoo-python
@@ -67,13 +68,13 @@ msgstr "A eșuat încărcarea sursei: net::ERR_INTERNET_DISCONNECTED."
 #. odoo-javascript
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 msgid "Fetch Secret"
-msgstr ""
+msgstr "Preia secretul"
 
 #. module: pos_stripe
 #. odoo-javascript
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 msgid "Fetch Token"
-msgstr ""
+msgstr "Preia tokenul"
 
 #. module: pos_stripe
 #: model:ir.model.fields,field_description:pos_stripe.field_pos_payment_method__id
@@ -83,7 +84,7 @@ msgstr "ID"
 #. module: pos_stripe
 #: model:ir.module.module,summary:base.module_pos_stripe
 msgid "Integrate your POS with a Stripe payment terminal"
-msgstr ""
+msgstr "Integrați sistemul POS cu un terminal de plată Stripe"
 
 #. module: pos_stripe
 #. odoo-javascript
@@ -94,7 +95,7 @@ msgstr "Nu există cititoare Stripe disponibile."
 #. module: pos_stripe
 #: model:ir.module.module,shortdesc:base.module_pos_stripe
 msgid "POS Stripe"
-msgstr ""
+msgstr "POS Stripe"
 
 #. module: pos_stripe
 #. odoo-javascript
@@ -105,7 +106,7 @@ msgstr "Plata a fost anulată deoarece nu este conectat niciun cititor"
 #. module: pos_stripe
 #: model:ir.model,name:pos_stripe.model_pos_payment_method
 msgid "Point of Sale Payment Method"
-msgstr ""
+msgstr "Metodă de plată POS"
 
 #. module: pos_stripe
 #. odoo-javascript
@@ -141,13 +142,13 @@ msgstr "Furnizorul de plăți Stripe pentru compania %s lipsește"
 #. odoo-javascript
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 msgid "Stripe readers %s not listed in your account"
-msgstr "Cititoarele Stripe %s nu sunt listate în contul dvs"
+msgstr "Cititoarele Stripe %s nu apar în contul tău."
 
 #. module: pos_stripe
 #. odoo-javascript
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 msgid "Stripe's documentation"
-msgstr ""
+msgstr "Documentația Stripe"
 
 #. module: pos_stripe
 #. odoo-python
@@ -167,26 +168,36 @@ msgid ""
 "(mccMessage)s To check whether your business is eligible, see %(link)s or "
 "contact Stripe support."
 msgstr ""
+"La această plată Stripe nu se pot adăuga bacșișuri. Stripe permite bacșișuri "
+"după plată (captură suplimentară) doar pentru anumite categorii de "
+"comercianți și mărci de carduri. %(mccMessage)s Pentru a verifica dacă "
+"afacerea dvs. este eligibilă, consultați %(link)s sau contactați serviciul "
+"de asistență Stripe."
 
 #. module: pos_stripe
 #. odoo-javascript
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 msgid "You cannot refund a non-Stripe payment via Stripe"
 msgstr ""
+"Nu puteți rambursa prin Stripe o plată care nu a fost efectuată prin Stripe."
 
 #. module: pos_stripe
 #. odoo-javascript
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 msgid "Your current Stripe account's merchant category code (MCC) is %(mcc)s."
 msgstr ""
+"Codul de categorie de comerciant (MCC) al contului Stripe curent este %(mcc)"
+"s."
 
 #. module: pos_stripe
 #. odoo-javascript
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 msgid "Your current Stripe account's merchant category code (MCC) is not set."
 msgstr ""
+"Codul de categorie de comerciant (MCC) al contului Stripe curent nu este "
+"setat."
 
 #. module: pos_stripe
 #: model:ir.model.fields,help:pos_stripe.field_pos_payment_method__stripe_serial_number
 msgid "[Serial number of the stripe terminal], for example: WSC513105011295"
-msgstr "[Număr serial al terminalului stripe], de exemplu: WSC513105011295"
+msgstr "[Numărul de serie al terminalului Stripe], de exemplu: WSC513105011295"

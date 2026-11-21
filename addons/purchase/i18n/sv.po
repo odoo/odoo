@@ -31,8 +31,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 17:38+0000\n"
-"PO-Revision-Date: 2026-11-12 15:30+0000\n"
+"POT-Creation-Date: 2026-11-20 17:36+0000\n"
+"PO-Revision-Date: 2026-11-17 14:02+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-20/purchase/"
 "sv/>\n"
@@ -41,7 +41,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: purchase
 #: model:ir.actions.report,print_report_name:purchase.action_report_purchase_order
@@ -2359,6 +2359,12 @@ msgstr ""
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
+msgid "Only a purchase manager can approve this purchase order."
+msgstr ""
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__order_id
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -3562,8 +3568,8 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
-"ISO-landskoden med två tecken\n"
-"Du kan använda det här fältet för snabb sökning."
+"ISO-landskod angiven med två tecken.\n"
+"Fältet kan användas för snabbsökning."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__price_unit_product_uom
@@ -4190,8 +4196,8 @@ msgstr "res_id"
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
-msgid "res_model_id"
-msgstr "res_model_id"
+msgid "res_model"
+msgstr ""
 
 #. module: purchase
 #. odoo-python
@@ -4234,3 +4240,6 @@ msgid ""
 "{{ object.company_id.name }} Request for Quotation (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
+
+#~ msgid "res_model_id"
+#~ msgstr "res_model_id"

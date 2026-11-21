@@ -44,8 +44,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 17:38+0000\n"
-"PO-Revision-Date: 2026-11-13 13:49+0000\n"
+"POT-Creation-Date: 2026-11-20 17:37+0000\n"
+"PO-Revision-Date: 2026-11-16 11:08+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-20/"
 "point_of_sale/fi/>\n"
@@ -54,7 +54,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4352,7 +4352,7 @@ msgstr "HTTP-reititys"
 #. module: point_of_sale
 #: model:ir.module.module,summary:base.module_point_of_sale
 msgid "Handle checkouts and payments for shops and restaurants."
-msgstr ""
+msgstr "Käsittele kauppojen ja ravintoloiden kassatoiminnot ja maksut."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__has_active_session
@@ -10571,6 +10571,11 @@ msgid "The start time must be before the end time."
 msgstr "Aloitusajan tulee olla ennen lopetusaikaa."
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "The time at which the POS will post its accounting entries."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid ""
@@ -10913,6 +10918,12 @@ msgstr ""
 msgid ""
 "This orderline has already been sent to the kitchen and cannot be edited."
 msgstr "Tämä tilausrivi on jo lähetetty keittiöön eikä sitä voi enää muokata."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_payment_method.js:0
+msgid "This payment method is currently in use."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python

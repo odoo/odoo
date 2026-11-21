@@ -10,16 +10,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:40+0000\n"
-"PO-Revision-Date: 2026-08-31 17:59+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-20 14:17+0000\n"
+"Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-20/"
 "stock_delivery/it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: stock_delivery
 #: model:ir.module.module,description:base.module_stock_delivery
@@ -31,6 +31,12 @@ msgid ""
 "When creating invoices from picking, the system is able to add and compute "
 "the shipping line.\n"
 msgstr ""
+"\n"
+"Consente di aggiungere metodi di consegna nei prelievi.\n"
+"===============================================\n"
+"\n"
+"Quando si creano fatture da un prelievo, il sistema è in grado di aggiungere "
+"e calcolare la riga di spedizione.\n"
 
 #. module: stock_delivery
 #. odoo-python
@@ -42,7 +48,7 @@ msgstr "%(name)s (Costo stimato: %(cost)s)"
 #. odoo-python
 #: code:addons/stock_delivery/wizard/stock_package_label_layout.py:0
 msgid "%(weight_name)s: %(weight)s %(uom)s"
-msgstr ""
+msgstr "%(weight_name)s: %(weight)s %(uom)s"
 
 #. module: stock_delivery
 #: model:ir.actions.report,print_report_name:stock_delivery.action_report_shipping_docs
@@ -76,12 +82,16 @@ msgstr "2. Scarica e stampa l’etichetta di spedizione e apponila sul collo;"
 msgid ""
 "<i class=\"oi pe-1\" data-icon=\"arrow_forward\"/>Configure Carrier Labels"
 msgstr ""
+"<i class=\"oi pe-1\" data-icon=\"arrow_forward\"/>Configura etichette "
+"corriere"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
 msgid ""
 "<i class=\"oi pe-1\" data-icon=\"arrow_forward\"/>Configure Export Documents"
 msgstr ""
+"<i class=\"oi pe-1\" data-icon=\"arrow_forward\"/>Configura documenti di "
+"esportazione"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_report_delivery_package_section_line_inherit_delivery
@@ -145,7 +155,7 @@ msgstr ""
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.pay_on_delivery_form
 msgid "A payment totaling"
-msgstr ""
+msgstr "Un pagamento per un totale di"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking_type__batch_max_weight
@@ -154,6 +164,9 @@ msgid ""
 "weight if the transfer is added to it.\n"
 "Leave this value as '0' if no weight limit."
 msgstr ""
+"Un trasferimento non verrà aggiunto automaticamente ai raggruppamenti che, "
+"con la sua aggiunta, supererebbero questo peso.\n"
+"Lascia questo valore a '0' se non è previsto alcun limite di peso."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking__integration_level
@@ -163,7 +176,7 @@ msgstr "Azione durante la convalida degli ordini di consegna."
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
 msgid "All"
-msgstr ""
+msgstr "Tutto"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__allowed_carrier_ids
@@ -173,7 +186,7 @@ msgstr "Corriere consentito"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__amount_to_collect
 msgid "Amount To Collect"
-msgstr ""
+msgstr "Importo da incassare"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_route__shipping_selectable
@@ -193,7 +206,7 @@ msgstr "Stampa automatica documenti esportazione"
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking_type__batch_group_by_carrier
 msgid "Automatically group batches by carriers"
-msgstr ""
+msgstr "Raggruppa automaticamente lotti per corriere"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking_type__auto_print_carrier_labels
@@ -217,7 +230,7 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_picking_batch
 msgid "Batch Transfer"
-msgstr ""
+msgstr "Trasferimento raggruppato"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.pay_on_delivery_form
@@ -264,13 +277,13 @@ msgstr "Nome Vettore"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_product_label_layout
 msgid "Choose the sheet layout to print the labels"
-msgstr ""
+msgstr "Scegli il layout del foglio per stampare le etichette"
 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid "Collect Payment"
-msgstr ""
+msgstr "Incassa pagamento"
 
 #. module: stock_delivery
 #. odoo-python
@@ -291,7 +304,7 @@ msgstr ""
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.pay_on_delivery_form
 msgid "Confirm Payment"
-msgstr ""
+msgstr "Conferma pagamento"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_res_partner
@@ -312,22 +325,22 @@ msgstr "Crea cliente"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Creato da"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Creato il"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__currency_id
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. module: stock_delivery
 #: model:ir.module.module,shortdesc:base.module_stock_delivery
 msgid "Delivery - Stock"
-msgstr ""
+msgstr "Consegna - Magazzino"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_delivery_carrier
@@ -483,12 +496,12 @@ msgstr "È un prelievo di reso"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Ultimo aggiornamento di"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Ultimo aggiornamento il"
 
 #. module: stock_delivery
 #: model:ir.ui.menu,name:stock_delivery.manage_printers_action
@@ -504,7 +517,7 @@ msgstr "Potrebbero essere necessarie azioni manuali."
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking_type__batch_max_weight
 msgid "Maximum weight"
-msgstr ""
+msgstr "Peso massimo"
 
 #. module: stock_delivery
 #: model:ir.model.fields.selection,name:stock_delivery.selection__stock_package_type__package_carrier_type__none
@@ -519,7 +532,7 @@ msgstr "OK"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__order_ids
 msgid "Order"
-msgstr ""
+msgstr "Ordine"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_product_product__country_of_origin
@@ -542,7 +555,7 @@ msgstr "Collo troppo pesante!"
 #: model:ir.model,name:stock_delivery.model_pay_on_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.pay_on_delivery_form
 msgid "Pay on Delivery"
-msgstr ""
+msgstr "Pagamento alla consegna"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_picking_type
@@ -558,7 +571,7 @@ msgstr "Dati punto di prelievo"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_package_label_layout
 msgid "Prepare Package Labels"
-msgstr ""
+msgstr "Prepara etichette colli"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
@@ -801,6 +814,9 @@ msgid ""
 "still due are in different currencies. Validate the transfers one currency "
 "at a time to collect them."
 msgstr ""
+"Questi trasferimenti riguardano ordini con pagamento alla consegna e gli "
+"importi ancora dovuti sono in valute diverse. Convalida i trasferimenti una "
+"valuta alla volta per incassarli."
 
 #. module: stock_delivery
 #. odoo-python
@@ -916,17 +932,17 @@ msgstr "Codici postali"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.package_zpl_label_delivery
 msgid "^FO310,200^A0N,44,33^FH^FD"
-msgstr ""
+msgstr "^FO310,200^A0N,44,33^FH^FD"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.barcode_alternative_label
 msgid "^FO35,180^A0N,15^FH^FDHS:"
-msgstr ""
+msgstr "^FO35,180^A0N,15^FH^FDHS:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.barcode_normal_label
 msgid "^FO35,220^A0N,15^FH^FDHS:"
-msgstr ""
+msgstr "^FO35,220^A0N,15^FH^FDHS:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.barcode_alternative_label
@@ -959,6 +975,8 @@ msgid ""
 "must be collected for\n"
 "                the delivery of the following orders:"
 msgstr ""
+"deve essere incassato per\n"
+"                la consegna dei seguenti ordini:"
 
 #~ msgid "<span>Shipping Weight: </span>"
 #~ msgstr "<span>Peso spedizione: </span>"

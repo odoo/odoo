@@ -4,14 +4,15 @@
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Betty Keresztesi <betty@soft4biz.ro>, 2025.
+# Dorin Hongu <dhongu@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-25 18:30+0000\n"
-"PO-Revision-Date: 2026-08-31 15:08+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-21 09:34+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/"
 "l10n_ro_edi_stock/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -19,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: l10n_ro_edi_stock
 #: model:ir.module.module,description:base.module_l10n_ro_edi_stock
@@ -27,6 +28,8 @@ msgid ""
 "\n"
 "E-Transport implementation for Romania\n"
 msgstr ""
+"\n"
+"Implementarea e-Transport pentru România\n"
 
 #. module: l10n_ro_edi_stock
 #. odoo-python
@@ -67,12 +70,12 @@ msgstr "„Locația de pornire”"
 #. module: l10n_ro_edi_stock
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi_stock.report_picking_batch
 msgid "3U3H3P4C2U5Y8N20"
-msgstr ""
+msgstr "3U3H3P4C2U5Y8N20"
 
 #. module: l10n_ro_edi_stock
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi_stock.report_picking_batch
 msgid "<strong>eTransport UIT:</strong>"
-msgstr ""
+msgstr "<strong>UIT eTransport:</strong>"
 
 #. module: l10n_ro_edi_stock
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi_stock.l10n_ro_edi_stock_report_delivery_document
@@ -89,7 +92,7 @@ msgstr "Tokenul de acces este interzis."
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock/models/etransport_api.py:0
 msgid "Access token is unauthorized."
-msgstr ""
+msgstr "Tokenul de acces nu este autorizat."
 
 #. module: l10n_ro_edi_stock
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking__l10n_ro_edi_stock_end_bcp__32
@@ -104,6 +107,7 @@ msgstr "Albița(MD)"
 #: code:addons/l10n_ro_edi_stock/models/stock_picking_batch.py:0
 msgid "All Pickings in a Batch Transfer should have the same Carrier"
 msgstr ""
+"Toate Picking-urile dintr-un Transfer ar trebui să aibă același Livrator"
 
 #. module: l10n_ro_edi_stock
 #. odoo-python
@@ -111,6 +115,8 @@ msgstr ""
 msgid ""
 "All Pickings in a Batch Transfer should have the same Commercial Partner"
 msgstr ""
+"Toate alegerile dintr-un transfer de lot ar trebui să aibă același partener "
+"comercial"
 
 #. module: l10n_ro_edi_stock
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi_stock.l10n_ro_edi_stock_view_picking_form
@@ -841,12 +847,12 @@ msgstr "BVI Zalău (ROCJ9700)"
 #. module: l10n_ro_edi_stock
 #: model:ir.model.fields,field_description:l10n_ro_edi_stock.field_l10n_ro_edi_document__batch_id
 msgid "Batch"
-msgstr ""
+msgstr "Lot"
 
 #. module: l10n_ro_edi_stock
 #: model:ir.model,name:l10n_ro_edi_stock.model_stock_picking_batch
 msgid "Batch Transfer"
-msgstr ""
+msgstr "Transfer în lot"
 
 #. module: l10n_ro_edi_stock
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking__l10n_ro_edi_stock_end_bcp__6
@@ -961,6 +967,8 @@ msgid ""
 "Declaration in the name of other registered Romanian B2B Customers is not "
 "supported. %(partner)s must declare the eTransport itself."
 msgstr ""
+"Nu este acceptată declararea în numele altor clienți B2B înregistrați în "
+"România. %(partner)s trebuie să declare e-Transport în nume propriu."
 
 #. module: l10n_ro_edi_stock
 #. odoo-python
@@ -970,11 +978,14 @@ msgid ""
 "dropshipping. %(vendor)s, as the supplier, must handle the eTransport "
 "declaration."
 msgstr ""
+"Pentru livrările directe interne nu este necesară declararea în numele "
+"furnizorului. Furnizorul %(vendor)s trebuie să se ocupe de declarația e-"
+"Transport."
 
 #. module: l10n_ro_edi_stock
 #: model:ir.model,name:l10n_ro_edi_stock.model_delivery_carrier
 msgid "Delivery Method"
-msgstr ""
+msgstr "Metodă de livrare"
 
 #. module: l10n_ro_edi_stock
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking__l10n_ro_edi_stock_operation_scope__703
@@ -1096,7 +1107,7 @@ msgstr "General"
 #: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
 #: code:addons/l10n_ro_edi_stock/models/stock_picking_batch.py:0
 msgid "Generated eTransport XML (UIT: %(uit)s) was sent to the authority."
-msgstr ""
+msgstr "Fișierul XML eTransport generat (UIT: %(uit)s) a fost transmis."
 
 #. module: l10n_ro_edi_stock
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking__l10n_ro_edi_stock_end_bcp__9
@@ -1207,71 +1218,71 @@ msgstr "Factura"
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_end_bcp__28
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_start_bcp__28
 msgid "Jimbolia(RS)"
-msgstr ""
+msgstr "Jimbolia (RS)"
 
 #. module: l10n_ro_edi_stock
 #: model:ir.model.fields,field_description:l10n_ro_edi_stock.field_stock_picking__l10n_ro_edi_stock_available_end_loc_types
 #: model:ir.model.fields,field_description:l10n_ro_edi_stock.field_stock_picking_batch__l10n_ro_edi_stock_available_end_loc_types
 msgid "L10N Ro Edi Stock Available End Loc Types"
-msgstr ""
+msgstr "Tipuri de locație finală disponibile pentru e-Transport RO"
 
 #. module: l10n_ro_edi_stock
 #: model:ir.model.fields,field_description:l10n_ro_edi_stock.field_stock_picking__l10n_ro_edi_stock_available_operation_scopes
 #: model:ir.model.fields,field_description:l10n_ro_edi_stock.field_stock_picking_batch__l10n_ro_edi_stock_available_operation_scopes
 msgid "L10N Ro Edi Stock Available Operation Scopes"
-msgstr ""
+msgstr "Domenii de operațiuni disponibile pentru e-Transport RO"
 
 #. module: l10n_ro_edi_stock
 #: model:ir.model.fields,field_description:l10n_ro_edi_stock.field_stock_picking__l10n_ro_edi_stock_available_start_loc_types
 #: model:ir.model.fields,field_description:l10n_ro_edi_stock.field_stock_picking_batch__l10n_ro_edi_stock_available_start_loc_types
 msgid "L10N Ro Edi Stock Available Start Loc Types"
-msgstr ""
+msgstr "Tipuri de locație inițială disponibile pentru e-Transport RO"
 
 #. module: l10n_ro_edi_stock
 #: model:ir.model.fields,field_description:l10n_ro_edi_stock.field_stock_picking__l10n_ro_edi_stock_document_ids
 #: model:ir.model.fields,field_description:l10n_ro_edi_stock.field_stock_picking_batch__l10n_ro_edi_stock_document_ids
 msgid "L10N Ro Edi Stock Document"
-msgstr ""
+msgstr "Document e-Transport RO"
 
 #. module: l10n_ro_edi_stock
 #: model:ir.model.fields,field_description:l10n_ro_edi_stock.field_stock_picking__l10n_ro_edi_stock_enable
 #: model:ir.model.fields,field_description:l10n_ro_edi_stock.field_stock_picking_batch__l10n_ro_edi_stock_enable
 msgid "L10N Ro Edi Stock Enable"
-msgstr ""
+msgstr "Activează e-Transport RO"
 
 #. module: l10n_ro_edi_stock
 #: model:ir.model.fields,field_description:l10n_ro_edi_stock.field_stock_picking__l10n_ro_edi_stock_enable_amend
 #: model:ir.model.fields,field_description:l10n_ro_edi_stock.field_stock_picking_batch__l10n_ro_edi_stock_enable_amend
 msgid "L10N Ro Edi Stock Enable Amend"
-msgstr ""
+msgstr "Activează modificarea e-Transport RO"
 
 #. module: l10n_ro_edi_stock
 #: model:ir.model.fields,field_description:l10n_ro_edi_stock.field_stock_picking__l10n_ro_edi_stock_enable_fetch
 #: model:ir.model.fields,field_description:l10n_ro_edi_stock.field_stock_picking_batch__l10n_ro_edi_stock_enable_fetch
 msgid "L10N Ro Edi Stock Enable Fetch"
-msgstr ""
+msgstr "Activează preluarea e-Transport RO"
 
 #. module: l10n_ro_edi_stock
 #: model:ir.model.fields,field_description:l10n_ro_edi_stock.field_stock_picking__l10n_ro_edi_stock_enable_send
 #: model:ir.model.fields,field_description:l10n_ro_edi_stock.field_stock_picking_batch__l10n_ro_edi_stock_enable_send
 msgid "L10N Ro Edi Stock Enable Send"
-msgstr ""
+msgstr "Activează trimiterea e-Transport RO"
 
 #. module: l10n_ro_edi_stock
 #: model:ir.model.fields,field_description:l10n_ro_edi_stock.field_stock_picking__l10n_ro_edi_stock_fields_readonly
 #: model:ir.model.fields,field_description:l10n_ro_edi_stock.field_stock_picking_batch__l10n_ro_edi_stock_fields_readonly
 msgid "L10N Ro Edi Stock Fields Readonly"
-msgstr ""
+msgstr "Câmpuri e-Transport RO doar pentru citire"
 
 #. module: l10n_ro_edi_stock
 #: model:ir.model.fields,field_description:l10n_ro_edi_stock.field_l10n_ro_edi_document__l10n_ro_edi_stock_load_id
 msgid "L10N Ro Edi Stock Load"
-msgstr ""
+msgstr "Încarcă e-Transport RO"
 
 #. module: l10n_ro_edi_stock
 #: model:ir.model.fields,field_description:l10n_ro_edi_stock.field_l10n_ro_edi_document__l10n_ro_edi_stock_uit
 msgid "L10N Ro Edi Stock Uit"
-msgstr ""
+msgstr "UIT e-Transport RO"
 
 #. module: l10n_ro_edi_stock
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi_stock.l10n_ro_edi_stock_view_picking_form
@@ -1304,7 +1315,7 @@ msgstr "Mesaj"
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_end_bcp__26
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_start_bcp__26
 msgid "Naidăș(RS)"
-msgstr ""
+msgstr "Naidăș (RS)"
 
 #. module: l10n_ro_edi_stock
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking__l10n_ro_edi_stock_end_bcp__11
@@ -1312,7 +1323,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_end_bcp__11
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_start_bcp__11
 msgid "Negru Vodă(BG)"
-msgstr ""
+msgstr "Negru Vodă (BG)"
 
 #. module: l10n_ro_edi_stock
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking__l10n_ro_edi_stock_end_bcp__37
@@ -1320,7 +1331,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_end_bcp__37
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_start_bcp__37
 msgid "Nădlac 2 - A1 (HU)"
-msgstr ""
+msgstr "Nădlac 2 - A1 (HU)"
 
 #. module: l10n_ro_edi_stock
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking__l10n_ro_edi_stock_end_bcp__4
@@ -1328,7 +1339,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_end_bcp__4
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_start_bcp__4
 msgid "Nădlac(HU)"
-msgstr ""
+msgstr "Nădlac (HU)"
 
 #. module: l10n_ro_edi_stock
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking__l10n_ro_edi_stock_end_bcp__33
@@ -1336,7 +1347,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_end_bcp__33
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_start_bcp__33
 msgid "Oancea(MD)"
-msgstr ""
+msgstr "Oancea (MD)"
 
 #. module: l10n_ro_edi_stock
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking__l10n_ro_edi_stock_end_bcp__15
@@ -1344,7 +1355,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_end_bcp__15
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_start_bcp__15
 msgid "Oltenița(BG)"
-msgstr ""
+msgstr "Oltenița (BG)"
 
 #. module: l10n_ro_edi_stock
 #: model:ir.model.fields,field_description:l10n_ro_edi_stock.field_stock_picking__l10n_ro_edi_stock_operation_scope
@@ -1382,7 +1393,7 @@ msgstr "Operaţiuni în sistem lohn (UE) - intrare"
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_end_bcp__10
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_start_bcp__10
 msgid "Ostrov(BG)"
-msgstr ""
+msgstr "Ostrov (BG)"
 
 #. module: l10n_ro_edi_stock
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking__l10n_ro_edi_stock_operation_scope__9901
@@ -1413,7 +1424,7 @@ msgstr "Partener"
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_end_bcp__1
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_start_bcp__1
 msgid "Petea (HU)"
-msgstr ""
+msgstr "Petea (HU)"
 
 #. module: l10n_ro_edi_stock
 #: model:ir.model.fields,field_description:l10n_ro_edi_stock.field_l10n_ro_edi_document__picking_id
@@ -1426,7 +1437,7 @@ msgstr "Culegerea"
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_end_bcp__25
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_start_bcp__25
 msgid "Porțile de Fier 1 (RS)"
-msgstr ""
+msgstr "Porțile de Fier 1 (RS)"
 
 #. module: l10n_ro_edi_stock
 #. odoo-python
@@ -1455,7 +1466,7 @@ msgstr "Remarci"
 #. module: l10n_ro_edi_stock
 #: model:ir.module.module,shortdesc:base.module_l10n_ro_edi_stock
 msgid "Romania - E-Transport"
-msgstr ""
+msgstr "România - e-Transport"
 
 #. module: l10n_ro_edi_stock
 #. odoo-python
@@ -1473,7 +1484,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_end_bcp__19
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_start_bcp__19
 msgid "Salonta (HU)"
-msgstr ""
+msgstr "Salonta (HU)"
 
 #. module: l10n_ro_edi_stock
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking__l10n_ro_edi_stock_operation_scope__9999
@@ -1487,7 +1498,7 @@ msgstr "Același cu operațiunea"
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_end_bcp__31
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_start_bcp__31
 msgid "Sculeni(MD)"
-msgstr ""
+msgstr "Sculeni (MD)"
 
 #. module: l10n_ro_edi_stock
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi_stock.l10n_ro_edi_stock_view_picking_form
@@ -1570,7 +1581,7 @@ msgstr "Stare"
 #. module: l10n_ro_edi_stock
 #: model:ir.model,name:l10n_ro_edi_stock.model_stock_picking
 msgid "Stock Picking - Delivery Guide (Uruguay)"
-msgstr ""
+msgstr "Transfer de stoc - Aviz de livrare (Uruguay)"
 
 #. module: l10n_ro_edi_stock
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking__l10n_ro_edi_stock_operation_type__14
@@ -1596,7 +1607,7 @@ msgstr "Stradă"
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_end_bcp__30
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_start_bcp__30
 msgid "Stânca Costești (MD)"
-msgstr ""
+msgstr "Stânca Costești (MD)"
 
 #. module: l10n_ro_edi_stock
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking__l10n_ro_edi_stock_end_bcp__20
@@ -1604,7 +1615,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_end_bcp__20
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_start_bcp__20
 msgid "Săcuieni (HU)"
-msgstr ""
+msgstr "Sacuieni (HU)"
 
 #. module: l10n_ro_edi_stock
 #. odoo-python
@@ -1707,7 +1718,7 @@ msgstr "Transport pe teritoriul naţional"
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_end_bcp__21
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_start_bcp__21
 msgid "Turnu (HU)"
-msgstr ""
+msgstr "Turnu (HU)"
 
 #. module: l10n_ro_edi_stock
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking__l10n_ro_edi_stock_end_bcp__7
@@ -1715,13 +1726,13 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_end_bcp__7
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_start_bcp__7
 msgid "Turnu Măgurele(BG)"
-msgstr ""
+msgstr "Turnu Magurele(BG)"
 
 #. module: l10n_ro_edi_stock
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi_stock.l10n_ro_edi_stock_view_picking_form
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi_stock.stock_picking_batch_form
 msgid "UIT"
-msgstr ""
+msgstr "UIT"
 
 #. module: l10n_ro_edi_stock
 #: model:ir.model.fields,help:l10n_ro_edi_stock.field_l10n_ro_edi_document__l10n_ro_edi_stock_uit
@@ -1741,7 +1752,7 @@ msgstr "Starea documentului eTransport netratată: %(state)s"
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_end_bcp__22
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_start_bcp__22
 msgid "Urziceni (HU)"
-msgstr ""
+msgstr "Urziceni (HU)"
 
 #. module: l10n_ro_edi_stock
 #. odoo-python
@@ -1755,7 +1766,7 @@ msgstr "TVA"
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_end_bcp__23
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_start_bcp__23
 msgid "Valea lui Mihai (HU)"
-msgstr ""
+msgstr "Valea lui Mihai (HU)"
 
 #. module: l10n_ro_edi_stock
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__l10n_ro_edi_document__state__stock_validated
@@ -1770,7 +1781,7 @@ msgstr "Validat"
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_end_bcp__12
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_start_bcp__12
 msgid "Vama Veche(BG)"
-msgstr ""
+msgstr "Vama Veche (BG)"
 
 #. module: l10n_ro_edi_stock
 #: model:ir.model.fields,field_description:l10n_ro_edi_stock.field_stock_picking__l10n_ro_edi_stock_vehicle_number
@@ -1798,7 +1809,7 @@ msgstr "Numărul vehiculului lipsește."
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_end_bcp__24
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_start_bcp__24
 msgid "Vladimirescu (HU)"
-msgstr ""
+msgstr "Vladimirescu (HU)"
 
 #. module: l10n_ro_edi_stock
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking__l10n_ro_edi_stock_end_bcp__3
@@ -1806,13 +1817,13 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_end_bcp__3
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_start_bcp__3
 msgid "Vărșand(HU)"
-msgstr ""
+msgstr "Vărșand (HU)"
 
 #. module: l10n_ro_edi_stock
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
 msgid "Warehouse of %(location_group)s should be in Romania"
-msgstr ""
+msgstr "Depozitul pentru %(location_group)s ar trebui să fie în România."
 
 #. module: l10n_ro_edi_stock
 #. odoo-python
@@ -1833,13 +1844,13 @@ msgstr "Ai atins limita de cereri. Vă rugăm să încercați din nou mai târzi
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_end_bcp__8
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking_batch__l10n_ro_edi_stock_start_bcp__8
 msgid "Zimnicea(BG)"
-msgstr ""
+msgstr "Zimnicea (BG)"
 
 #. module: l10n_ro_edi_stock
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi_stock.l10n_ro_edi_stock_view_picking_form
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi_stock.stock_picking_batch_form
 msgid "eTransport"
-msgstr ""
+msgstr "e-Transport"
 
 #. module: l10n_ro_edi_stock
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi_stock.l10n_ro_edi_stock_view_picking_form

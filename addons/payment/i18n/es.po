@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 17:39+0000\n"
-"PO-Revision-Date: 2026-11-10 12:14+0000\n"
+"POT-Creation-Date: 2026-11-20 17:38+0000\n"
+"PO-Revision-Date: 2026-11-17 14:19+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-20/payment/"
 "es/>\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_method
@@ -98,7 +98,7 @@ msgstr "<small class=\"text-600\">Guardar mis detalles de pago</small>"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.amount_input
 msgid "<small>Amount</small>"
-msgstr ""
+msgstr "<small>Importe</small>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -145,6 +145,10 @@ msgid ""
 "                            Test Mode\n"
 "                        </span>"
 msgstr ""
+"<span invisible=\"is_live\" class=\"badge rounded-pill text-bg-warning "
+"fs-6\">\n"
+"                            Modo de prueba\n"
+"                        </span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
@@ -275,7 +279,7 @@ msgstr "Permitir guardar métodos de pago"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__allow_amount_selection
 msgid "Allow splitting payments across several payment methods."
-msgstr ""
+msgstr "Permite dividir los pagos entre varios métodos de pago."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__captured_amount
@@ -304,7 +308,7 @@ msgstr "Importe"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__allow_amount_selection
 msgid "Amount Selection"
-msgstr ""
+msgstr "Selección de importe"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__amount_to_capture
@@ -343,6 +347,8 @@ msgid ""
 "Are you sure you want to void the authorized transaction? "
 "This                                  action can't be undone."
 msgstr ""
+"¿Estás seguro de que quieres anular la transacción autorizada? "
+"Esta                                   acción no se puede deshacer."
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_asiapay
@@ -446,7 +452,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__child_transaction_count
 msgid "Child Transaction Count"
-msgstr ""
+msgstr "Número de transacciones secundarias"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__child_transaction_ids
@@ -1026,7 +1032,7 @@ msgstr "Mensajes"
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_list
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_list
 msgid "Method"
-msgstr ""
+msgstr "Método"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__minimum_amount
@@ -1242,7 +1248,7 @@ msgstr "Motor de pago"
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 msgid "Payment History"
-msgstr ""
+msgstr "Historial de pagos"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__link
@@ -1397,7 +1403,7 @@ msgstr ""
 #. module: payment
 #: model:ir.actions.server,name:payment.post_processing_cron_ir_actions_server
 msgid "Payment: Run Post-processing"
-msgstr ""
+msgstr "Pago: ejecutar postprocesamiento"
 
 #. module: payment
 #: model:ir.actions.server,name:payment.processing_cron_ir_actions_server
@@ -1453,7 +1459,7 @@ msgstr "Por favor, elige otro método de pago."
 #. module: payment
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
 msgid "Please find the payment details below."
-msgstr ""
+msgstr "A continuación encontrarás los detalles del pago."
 
 #. module: payment
 #. odoo-python
@@ -1484,7 +1490,7 @@ msgstr "Posprocesamiento"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Post-processed"
-msgstr ""
+msgstr "Posprocesado"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__primary_payment_method_id
@@ -1540,6 +1546,11 @@ msgstr "Referencia del proveedor"
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
 msgid "Published"
 msgstr "Publicado"
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_qfpay
+msgid "QFPay"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__onboarding_payment_module__razorpay
@@ -2173,13 +2184,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/controllers/portal.py:0
 msgid "This payment method is not available."
-msgstr ""
+msgstr "Este método de pago no está disponible."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/controllers/portal.py:0
 msgid "This payment provider is not available."
-msgstr ""
+msgstr "Este proveedor de pago no está disponible."
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_provider
@@ -2195,7 +2206,7 @@ msgstr "Elija la compañía principal en el selector de compañías."
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_form
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_list
 msgid "Token"
-msgstr ""
+msgstr "Token"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__token_count
@@ -2445,6 +2456,7 @@ msgstr "Tu pedido está confirmado; pronto recibirás la factura."
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_paymob
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_paypal
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_payu
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_qfpay
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_sepa_direct_debit
@@ -2476,6 +2488,7 @@ msgstr "Tu pago ha sido autorizado."
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_paymob
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_paypal
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_payu
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_qfpay
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_sepa_direct_debit
@@ -2507,6 +2520,7 @@ msgstr "Su pago ha sido cancelado."
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_paymob
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_paypal
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_payu
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_qfpay
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sepa_direct_debit
@@ -2536,6 +2550,7 @@ msgstr "Tu pago se ha procesado, pero está pendiente de aprobación."
 #: model_terms:payment.provider,done_msg:payment.payment_provider_paymob
 #: model_terms:payment.provider,done_msg:payment.payment_provider_paypal
 #: model_terms:payment.provider,done_msg:payment.payment_provider_payu
+#: model_terms:payment.provider,done_msg:payment.payment_provider_qfpay
 #: model_terms:payment.provider,done_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,done_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,done_msg:payment.payment_provider_sepa_direct_debit
@@ -2599,7 +2614,7 @@ msgstr "Tu operación de pago se ha enviado correctamente."
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
 msgid "Zip Code"
-msgstr ""
+msgstr "Código postal"
 
 #. module: payment
 #. odoo-python
@@ -2616,7 +2631,7 @@ msgstr "proveedor"
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "source_transaction_id"
-msgstr ""
+msgstr "source_transaction_id"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning

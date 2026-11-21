@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 17:38+0000\n"
-"PO-Revision-Date: 2026-11-12 12:45+0000\n"
+"POT-Creation-Date: 2026-11-20 17:37+0000\n"
+"PO-Revision-Date: 2026-11-16 12:56+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-20/"
 "point_of_sale/it/>\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -622,7 +622,7 @@ msgstr "? Un clic su \"Conferma\" convalida il pagamento."
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "A customer is required on the order to create an invoice."
-msgstr ""
+msgstr "È necessario un cliente sull'ordine per creare una fattura."
 
 #. module: point_of_sale
 #. odoo-python
@@ -635,6 +635,8 @@ msgstr "Il cliente è tenuto a utilizzare il metodo di pagamento %s."
 #: code:addons/point_of_sale/models/pos_payment.py:0
 msgid "A customer must be set on the order to pay with a customer account."
 msgstr ""
+"È necessario impostare un cliente sull'ordine per pagare con un conto "
+"cliente."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__uuid
@@ -1777,7 +1779,7 @@ msgstr "Prima della versione 19.1:"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Bill"
-msgstr ""
+msgstr "Fattura fornitore"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_printbill
@@ -1848,7 +1850,7 @@ msgstr "Pane"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Break Combo"
-msgstr ""
+msgstr "Dividi combo"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4793,7 +4795,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Info"
-msgstr ""
+msgstr "Informazioni"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_form_view
@@ -9297,7 +9299,7 @@ msgstr "Seleziona un cliente con un indirizzo valido."
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
 msgid "Select a journal"
-msgstr ""
+msgstr "Seleziona un registro"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9333,7 +9335,7 @@ msgstr "Seleziona il prodotto o i prodotti da rimborsare e imposta la quantità"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/select_default_payment_method_popup/select_default_payment_method_popup.xml:0
 msgid "Select your default payment method"
-msgstr ""
+msgstr "Seleziona il metodo di pagamento predefinito"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__attribute_value_ids
@@ -9903,7 +9905,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/loader/loader.js:0
 msgid "Still loading, thank you for your patience…"
-msgstr ""
+msgstr "Caricamento in corso, grazie per la pazienza…"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10545,6 +10547,9 @@ msgid ""
 "to %(total)s because they were changed on another device. The order stays "
 "open until the difference is settled."
 msgstr ""
+"L'ordine è stato convalidato con un totale di %(paid)s ma le sue righe ora "
+"ammontano a %(total)s poiché sono state modificate su un altro dispositivo. "
+"L'ordine rimane aperto finché la differenza non viene saldata."
 
 #. module: point_of_sale
 #. odoo-python
@@ -10578,6 +10583,9 @@ msgid ""
 "payments cannot be posted.\n"
 "Set an outstanding account on it."
 msgstr ""
+"Il metodo di pagamento %(payment_method)s non ha un conto in sospeso, i suoi "
+"pagamenti non possono essere contabilizzati.\n"
+"Imposta un conto in sospeso su di esso."
 
 #. module: point_of_sale
 #. odoo-python
@@ -10595,6 +10603,8 @@ msgid ""
 "The payment method you choose will be linked to your device. You can change "
 "it later from the menu on top right."
 msgstr ""
+"Il metodo di pagamento scelto verrà collegato al dispositivo. Potrai "
+"modificarlo in seguito dal menu in alto a destra."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_available_categ_ids
@@ -10757,6 +10767,11 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_preset.py:0
 msgid "The start time must be before the end time."
 msgstr "La data di inizio deve essere anteriore alla data di fine."
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "The time at which the POS will post its accounting entries."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11121,6 +11136,12 @@ msgid ""
 msgstr ""
 "La riga dell'ordine è già stata inviata in cucina e non può essere "
 "modificata."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_payment_method.js:0
+msgid "This payment method is currently in use."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python

@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 17:38+0000\n"
-"PO-Revision-Date: 2026-11-10 12:11+0000\n"
+"POT-Creation-Date: 2026-11-20 17:37+0000\n"
+"PO-Revision-Date: 2026-11-20 12:02+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-20/"
 "hr_holidays/es/>\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -76,7 +76,7 @@ msgid ""
 "\n"
 "A synchronization with an internal agenda (Meetings of the CRM module) is "
 "also possible in order to automatically create a meeting when a time off "
-"request is accepted by setting up a type of meeting in time off Type.\n"
+"request is accepted by setting up a type of meeting in the time type.\n"
 msgstr ""
 
 #. module: hr_holidays
@@ -355,6 +355,23 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"                    Estimado <b><t t-out=\"object.env.context.get('manager')"
+"\"></t></b>:\n"
+"                    <br><br>\n"
+"                    <p>Solicitud de ausencia enviada. Cuando tengas un "
+"momento, ¿podrías aprobar la solicitud de ausencia?</p>\n"
+"                    <ul>\n"
+"                        <li>Tipo de ausencia: <t t-"
+"out=\"object.work_entry_type_id.name\"></t></li>\n"
+"                        <li><t t-out=\"object.request_date_from\"></t> → <t "
+"t-out=\"object.request_date_to\"></t> (<t t-"
+"out=\"object.duration_display\"></t>)</li>\n"
+"                        <li t-if=\"object.name\">Motivo: <t t-"
+"out=\"object.name\"></t></li>\n"
+"                    </ul>\n"
+"                </div>\n"
+"            "
 
 #. module: hr_holidays
 #: model:mail.template,body_html:hr_holidays.mail_template_allocation_confirmed
@@ -382,6 +399,29 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"                    Estimado <t t-out=\"object.employee_id.name or "
+"'empleado'\"></t>:<br><br>\n"
+"                    Tu asignación de ausencia ha sido confirmada.<br><br>\n"
+"                    Detalles:<br>\n"
+"                    <ul>\n"
+"                        <li>Tipo de ausencia: <t t-"
+"out=\"object.work_entry_type_id.name or ''\"></t></li>\n"
+"                        <li>Asignación: <t t-out=\"object.duration_display "
+"or ''\"></t></li>\n"
+"                        <li>Válido desde: <t t-out=\"object.date_from or "
+"''\"></t> <t t-if=\"not object.date_to\">(sin fecha de vencimiento)</t><t t-"
+"else=\"\"> hasta <t t-out=\"object.date_to or ''\"></t></t></li>\n"
+"                        <li t-if=\"object.accrual_plan_id\">Plan de "
+"acumulación: <t t-out=\"object.accrual_plan_id.name or ''\"></t></li>\n"
+"                    </ul>\n"
+"                    <br>\n"
+"                    Ponte en contacto con la persona responsable de RR. HH. "
+"si tienes alguna pregunta.<br><br>\n"
+"                    Saludos,<br>\n"
+"                    <t t-out=\"object.env.user.name or ''\"></t>\n"
+"                </div>\n"
+"            "
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -1576,7 +1616,7 @@ msgstr "Regrese después para revisar todas las solicitudes de permisos."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_time_rule_view_form_inherit_hr_holidays
-msgid "Choose a Time Off Type"
+msgid "Choose a Time Type"
 msgstr ""
 
 #. module: hr_holidays
@@ -2039,6 +2079,7 @@ msgstr "Descartar"
 #: model:ir.model.fields,field_description:hr_holidays.field_load_public_holiday_wizard_line__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_activity_type__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_message_subtype__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_publisher_warranty_contract__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_res_company__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_res_groups__display_name
@@ -2558,6 +2599,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_holidays.field_load_public_holiday_wizard_line__id
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_activity_type__id
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_message_subtype__id
+#: model:ir.model.fields,field_description:hr_holidays.field_publisher_warranty_contract__id
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary__id
 #: model:ir.model.fields,field_description:hr_holidays.field_res_company__id
 #: model:ir.model.fields,field_description:hr_holidays.field_res_groups__id
@@ -3633,6 +3675,11 @@ msgid ""
 msgstr ""
 "Los días festivos se deben tomar en cuenta en la duración de los permisos al "
 "solicitar permisos."
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_publisher_warranty_contract
+msgid "Publisher Warranty Contract"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__rating_ids
@@ -5537,7 +5584,7 @@ msgstr "No puede configurar una validez de acumulación con 0."
 #: code:addons/hr_holidays/models/hr_work_entry_type.py:0
 msgid ""
 "You cannot modify the 'Duration Count' setting because one or more leaves "
-"have already been taken for this time off type. Changing it now would affect "
+"have already been taken for this time type. Changing it now would affect "
 "existing employee balances."
 msgstr ""
 

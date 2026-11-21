@@ -4,7 +4,7 @@
 #
 # Translators:
 # Hongu Cosmin <cosmin513@gmail.com>, 2022
-# Dorin Hongu <dhongu@gmail.com>, 2022, 2025.
+# Dorin Hongu <dhongu@gmail.com>, 2022, 2025, 2026.
 # Martin Trigaux, 2022
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
 # Cozmin Candea <office@terrabit.ro>, 2023
@@ -14,9 +14,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:42+0000\n"
-"PO-Revision-Date: 2026-08-31 16:27+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-21 10:57+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/"
 "hr_fleet/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_log_contract_view_form_inherit_hr
@@ -37,11 +37,13 @@ msgid ""
 "<span class=\"o_stat_value\">1</span>\n"
 "                        <span class=\"o_stat_text\">Employee</span>"
 msgstr ""
+"<span class=\"o_stat_value\">1</span>\n"
+"                        <span class=\"o_stat_text\">Angajat</span>"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_ir_attachment
 msgid "Attachment"
-msgstr ""
+msgstr "Atașament"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_assignation_log_employee_view_list
@@ -53,7 +55,7 @@ msgstr "Atașamente"
 #. odoo-python
 #: code:addons/hr_fleet/models/hr_employee.py:0
 msgid "Cannot remove address from employees with linked cars."
-msgstr ""
+msgstr "Nu se poate elimina adresa angajaților care au mașini asociate."
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__employee_cars_count
@@ -67,7 +69,7 @@ msgstr "Mașini"
 #: model_terms:ir.ui.view,arch_db:hr_fleet.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_fleet.view_employee_form
 msgid "Cars History"
-msgstr ""
+msgstr "Istoricul mașinilor"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_assignation_log_employee_view_list
@@ -77,7 +79,7 @@ msgstr "Șofer Actual"
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.view_attachment_kanban_inherit_hr
 msgid "Delete"
-msgstr ""
+msgstr "Șterge"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__display_name
@@ -90,7 +92,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee_public__display_name
 #: model:ir.model.fields,field_description:hr_fleet.field_ir_attachment__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nume afișat"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_log_contract_view_form_inherit_hr
@@ -105,7 +107,7 @@ msgstr "Șofer"
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_odometer__driver_employee_id
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_log_services_view_form_inherit_hr
 msgid "Driver (Employee)"
-msgstr ""
+msgstr "Șofer (angajat)"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle_assignation_log
@@ -121,7 +123,7 @@ msgstr "Angajat"
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_hr_employee_departure
 msgid "Employee Departure"
-msgstr ""
+msgstr "Plecarea angajatului"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__driver_employee_name
@@ -133,21 +135,22 @@ msgstr "Nume angajat"
 #: code:addons/hr_fleet/models/hr_employee_departure.py:0
 msgid "Employee has been removed from %(car)s future driver list"
 msgstr ""
+"Angajatul a fost eliminat din lista viitorilor șoferi ai vehiculului %(car)s"
 
 #. module: hr_fleet
 #: model:ir.module.module,shortdesc:base.module_hr_fleet
 msgid "Fleet History"
-msgstr ""
+msgstr "Istoric flotă"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__future_driver_employee_id
 msgid "Future Driver (Employee)"
-msgstr ""
+msgstr "Viitor șofer (angajat)"
 
 #. module: hr_fleet
 #: model:ir.module.module,summary:base.module_hr_fleet
 msgid "Get history of driven cars by employees"
-msgstr ""
+msgstr "Obține istoricul mașinilor conduse de angajați"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__id
@@ -160,7 +163,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee_public__id
 #: model:ir.model.fields,field_description:hr_fleet.field_ir_attachment__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__license_plate
@@ -181,7 +184,7 @@ msgstr "Registrul Controrului de kilometraj pentru un vehicul"
 #. odoo-python
 #: code:addons/hr_fleet/models/fleet_vehicle_assignation_log.py:0
 msgid "Ongoing"
-msgstr ""
+msgstr "În curs de desfășurare"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_hr_employee_public
@@ -193,7 +196,7 @@ msgstr "Angajați Publici"
 #: code:addons/hr_fleet/models/fleet_vehicle.py:0
 #: code:addons/hr_fleet/models/fleet_vehicle_log_contract.py:0
 msgid "Related Employee"
-msgstr ""
+msgstr "Angajat asociat"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle_log_services
@@ -207,12 +210,14 @@ msgid ""
 "The future driver has been removed due to the end of collaboration with %"
 "(employee)s"
 msgstr ""
+"Viitorul șofer a fost eliminat deoarece colaborarea cu %(employee)s s-a "
+"încheiat"
 
 #. module: hr_fleet
 #. odoo-python
 #: code:addons/hr_fleet/models/hr_employee_departure.py:0
 msgid "The vehicle %(car)s has been freed"
-msgstr ""
+msgstr "Vehiculul %(car)s a fost eliberat"
 
 #. module: hr_fleet
 #. odoo-python
@@ -220,6 +225,7 @@ msgstr ""
 msgid ""
 "The vehicle has been freed due to the end of collaboration with %(employee)s"
 msgstr ""
+"Vehiculul a fost eliberat deoarece colaborarea cu %(employee)s s-a încheiat"
 
 #. module: hr_fleet
 #. odoo-python
@@ -228,12 +234,14 @@ msgid ""
 "This assignment overlaps with an existing assignment for %(vehicle)s "
 "(Driver: %(driver)s, Period: %(start)s to %(end)s)"
 msgstr ""
+"Această alocare se suprapune cu o alocare existentă pentru %(vehicle)s "
+"(șofer: %(driver)s, perioadă: %(start)s – %(end)s)"
 
 #. module: hr_fleet
 #. odoo-javascript
 #: code:addons/hr_fleet/static/src/views/hr_fleet_kanban/hr_fleet_kanban_controller.xml:0
 msgid "Upload"
-msgstr ""
+msgstr "Încărcare"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle
@@ -248,4 +256,4 @@ msgstr "Contract Vehicul"
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__car_ids
 msgid "Vehicles (private)"
-msgstr ""
+msgstr "Vehicule (private)"

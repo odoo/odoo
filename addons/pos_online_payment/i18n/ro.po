@@ -3,14 +3,15 @@
 # * pos_online_payment
 #
 # Busoi Cristina <elena.busoi@capps.ai>, 2025.
+# Dorin Hongu <dhongu@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-04 17:45+0000\n"
-"PO-Revision-Date: 2026-08-31 19:10+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-21 09:32+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/"
 "pos_online_payment/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status
@@ -26,16 +27,18 @@ msgid ""
 "<i class=\"oi me-2\" data-icon=\"lock\"/>Payment secured · Don't close this "
 "window"
 msgstr ""
+"<i class=\"oi me-2\" data-icon=\"lock\"/>Plată securizată · Nu închideți "
+"această fereastră"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status
 msgid "<span class=\"text-500\">Order</span>"
-msgstr ""
+msgstr "<span class=\"text-500\">Comandă</span>"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status
 msgid "<span class=\"text-500\">Total</span>"
-msgstr ""
+msgstr "<span class=\"text-500\">Total</span>"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
@@ -87,7 +90,7 @@ msgstr "Furnizori permiși"
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status
 msgid "Almost there!"
-msgstr ""
+msgstr "Aproape gata!"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
@@ -182,6 +185,10 @@ msgid ""
 "from this device, maybe from another. If you continue, you risk to pay the "
 "order twice. Only continue if you're sure the earlier attempt was abandoned."
 msgstr ""
+"Se pare că plata acestei comenzi este deja în curs de procesare — poate de "
+"pe acest dispozitiv sau de pe altul. Dacă continuați, riscați să plătiți "
+"comanda de două ori. Continuați doar dacă sunteți sigur că încercarea "
+"anterioară a fost abandonată."
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__next_online_payment_amount
@@ -208,7 +215,7 @@ msgstr "Metoda de plată online"
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment_method.py:0
 msgid "Online Payment Transfer"
-msgstr ""
+msgstr "Transfer plată online"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__online_account_payment_id
@@ -263,7 +270,7 @@ msgstr "Comandă POS"
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment_method.py:0
 msgid "POS Receivable Transfer"
-msgstr ""
+msgstr "Transfer creanță POS"
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_account_payment
@@ -285,13 +292,14 @@ msgstr "Tranzacție de plată"
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "Payment provider requirement"
-msgstr ""
+msgstr "Cerință a furnizorului de plăți"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "Please ensure you have a customer with an email address on this order."
 msgstr ""
+"Asigurați-vă că această comandă are asociat un client cu adresă de e-mail."
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_pos_config
@@ -301,22 +309,22 @@ msgstr "Configurație Punct de vânzare"
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_pos_order
 msgid "Point of Sale Order"
-msgstr ""
+msgstr "Comandă la punctul de vânzare"
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_pos_payment
 msgid "Point of Sale Payment"
-msgstr ""
+msgstr "Plată la punctul de vânzare"
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_pos_payment_method
 msgid "Point of Sale Payment Method"
-msgstr ""
+msgstr "Metodă de plată POS"
 
 #. module: pos_online_payment
 #: model:ir.module.module,shortdesc:base.module_pos_online_payment
 msgid "Point of Sale online payment"
-msgstr ""
+msgstr "Plată online la punctul de vânzare"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
@@ -332,13 +340,13 @@ msgstr "Eroare server"
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status
 msgid "Skip <i class=\"oi ms-1\" data-icon=\"east\"/>"
-msgstr ""
+msgstr "Omiteți <i class=\"oi ms-1\" data-icon=\"east\"/>"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment_method.py:0
 msgid "The %s already has one online payment."
-msgstr ""
+msgstr "%s are deja o plată online."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -376,7 +384,7 @@ msgstr "Comanda punctului de vânzare asociată acestei plăți"
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "The QR code payment could not be generated."
-msgstr ""
+msgstr "Codul QR pentru plată nu a putut fi generat."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -540,7 +548,7 @@ msgstr "Referința tranzacției"
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment_method.py:0
 msgid "Transfer Online payment %(account_name)s => %(pos_receivable_name)s"
-msgstr ""
+msgstr "Transfer plată online %(account_name)s => %(pos_receivable_name)s"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
@@ -561,7 +569,7 @@ msgstr "Plata online actualizată"
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status
 msgid "We're confirming your payment."
-msgstr ""
+msgstr "Confirmăm plata dvs."
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -581,11 +589,13 @@ msgid ""
 ">\n"
 "                        Don't hesitate to contact us if you don't receive it."
 msgstr ""
+"Veți primi un e-mail de confirmare a plății în câteva minute.<br/>\n"
+"                        Contactați-ne dacă nu îl primiți."
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status
 msgid "Your payment is on its way!"
-msgstr ""
+msgstr "Plata dvs. este în curs de procesare!"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment

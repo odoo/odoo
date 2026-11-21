@@ -2,15 +2,15 @@
 # This file contains the translation of the following modules:
 # * stock_delivery
 #
-# Dorin Hongu <dhongu@gmail.com>, 2025.
+# Dorin Hongu <dhongu@gmail.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:40+0000\n"
-"PO-Revision-Date: 2026-08-31 17:59+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-21 09:31+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/"
 "stock_delivery/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: stock_delivery
 #: model:ir.module.module,description:base.module_stock_delivery
@@ -30,6 +30,12 @@ msgid ""
 "When creating invoices from picking, the system is able to add and compute "
 "the shipping line.\n"
 msgstr ""
+"\n"
+"Permite adăugarea metodelor de livrare în transferuri.\n"
+"====================================================\n"
+"\n"
+"La crearea facturilor dintr-un transfer, sistemul poate adăuga și calcula "
+"linia de expediere.\n"
 
 #. module: stock_delivery
 #. odoo-python
@@ -41,17 +47,17 @@ msgstr "%(name)s (Cost estimat: %(cost)s)"
 #. odoo-python
 #: code:addons/stock_delivery/wizard/stock_package_label_layout.py:0
 msgid "%(weight_name)s: %(weight)s %(uom)s"
-msgstr ""
+msgstr "%(weight_name)s: %(weight)s %(uom)s"
 
 #. module: stock_delivery
 #: model:ir.actions.report,print_report_name:stock_delivery.action_report_shipping_docs
 msgid "'Shipping-Document-%s' % object.name"
-msgstr ""
+msgstr "'Document-de-expediere-%s' % object.name"
 
 #. module: stock_delivery
 #: model:ir.actions.report,print_report_name:stock_delivery.action_report_shipping_labels
 msgid "'Shipping-Label-%s' % object.name"
-msgstr ""
+msgstr "'Etichetă-de-expediere-%s' % object.name"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_package_view_form
@@ -62,25 +68,29 @@ msgstr "(calculat:"
 #. odoo-javascript
 #: code:addons/stock_delivery/static/src/return_order_dialog/return_label_info.xml:0
 msgid "1. Download and print the Return label and place it in your package."
-msgstr ""
+msgstr "1. Descarcă și imprimă eticheta de retur, apoi pune-o în coletul tău."
 
 #. module: stock_delivery
 #. odoo-javascript
 #: code:addons/stock_delivery/static/src/return_order_dialog/return_label_info.xml:0
 msgid "2. Download and print the Shipping label and place it on your package."
-msgstr ""
+msgstr "2. Descarcă și imprimă eticheta de expediere, apoi lipește-o pe colet."
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
 msgid ""
 "<i class=\"oi pe-1\" data-icon=\"arrow_forward\"/>Configure Carrier Labels"
 msgstr ""
+"<i class=\"oi pe-1\" data-icon=\"arrow_forward\"/>Configurează etichetele "
+"transportatorului"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
 msgid ""
 "<i class=\"oi pe-1\" data-icon=\"arrow_forward\"/>Configure Export Documents"
 msgstr ""
+"<i class=\"oi pe-1\" data-icon=\"arrow_forward\"/>Configurează documentele "
+"de export"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_report_delivery_package_section_line_inherit_delivery
@@ -144,7 +154,7 @@ msgstr ""
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.pay_on_delivery_form
 msgid "A payment totaling"
-msgstr ""
+msgstr "O plată în valoare de"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking_type__batch_max_weight
@@ -153,16 +163,19 @@ msgid ""
 "weight if the transfer is added to it.\n"
 "Leave this value as '0' if no weight limit."
 msgstr ""
+"Un transfer nu va fi adăugat automat loturilor care vor depăși această "
+"greutate dacă transferul este adăugat la ele.\n"
+"Lăsați această valoare ca '0' dacă nu există nici o limită de greutate."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking__integration_level
 msgid "Action while validating Delivery Orders."
-msgstr ""
+msgstr "Acțiune la validarea comenzilor de livrare."
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
 msgid "All"
-msgstr ""
+msgstr "Tot"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__allowed_carrier_ids
@@ -172,33 +185,35 @@ msgstr "Transportator permis"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__amount_to_collect
 msgid "Amount To Collect"
-msgstr ""
+msgstr "Sumă de încasat"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_route__shipping_selectable
 msgid "Applicable on Delivery Methods"
-msgstr ""
+msgstr "Aplicabil pentru metodele de livrare"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking_type__auto_print_carrier_labels
 msgid "Auto Print Carrier Labels"
-msgstr ""
+msgstr "Tipărește automat etichete de transport"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking_type__auto_print_export_documents
 msgid "Auto Print Export Documents"
-msgstr ""
+msgstr "Tipărește automat documente de export"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking_type__batch_group_by_carrier
 msgid "Automatically group batches by carriers"
-msgstr ""
+msgstr "Gruparea automată a loturilor după transportatori"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking_type__auto_print_carrier_labels
 msgid ""
 "Automatically print the carrier labels of the picking when they are created."
 msgstr ""
+"Imprimă automat etichetele transportatorului pentru transfer atunci când "
+"sunt create."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking_type__auto_print_export_documents
@@ -207,11 +222,14 @@ msgid ""
 "created. Availability of export documents depends on the carrier and the "
 "destination."
 msgstr ""
+"Imprimă automat documentele de export pentru transfer atunci când sunt "
+"create. Disponibilitatea documentelor de export depinde de transportator și "
+"de destinație."
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_picking_batch
 msgid "Batch Transfer"
-msgstr ""
+msgstr "Transfer în lot"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.pay_on_delivery_form
@@ -245,7 +263,7 @@ msgstr "Cod transportator"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
 msgid "Carrier Labels"
-msgstr ""
+msgstr "Etichete de transport"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_put_in_pack__package_carrier_type
@@ -260,19 +278,19 @@ msgstr "Nume transportator"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_product_label_layout
 msgid "Choose the sheet layout to print the labels"
-msgstr ""
+msgstr "Alegeti aspectul foii pentru a imprima etichetele"
 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid "Collect Payment"
-msgstr ""
+msgstr "Încasează plata"
 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/ir_actions_report.py:0
 msgid "Configure a printer to print this report: '%s'"
-msgstr ""
+msgstr "Configurează o imprimantă pentru a imprima acest raport: „%s”"
 
 #. module: stock_delivery
 #. odoo-python
@@ -281,16 +299,18 @@ msgid ""
 "Configure the carrier to generate labels in PDF format, or use a ZPL/ePOS "
 "printer to print %s from the chatter."
 msgstr ""
+"Configurează transportatorul să genereze etichete în format PDF sau "
+"folosește o imprimantă ZPL/ePOS pentru a imprima %s din conversație."
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.pay_on_delivery_form
 msgid "Confirm Payment"
-msgstr ""
+msgstr "Confirmă plata"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Persoană de contact"
 
 #. module: stock_delivery
 #. odoo-python
@@ -301,37 +321,37 @@ msgstr "Cost: %(price).2f %(currency)s"
 #. module: stock_delivery
 #: model:ir.model,website_form_label:stock_delivery.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Creează un client"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Creat de"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Creat în"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__currency_id
 msgid "Currency"
-msgstr ""
+msgstr "Moneda"
 
 #. module: stock_delivery
 #: model:ir.module.module,shortdesc:base.module_stock_delivery
 msgid "Delivery - Stock"
-msgstr ""
+msgstr "Livrare - Stoc"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_delivery_carrier
 msgid "Delivery Method"
-msgstr ""
+msgstr "Metodă de livrare"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_choose_delivery_carrier
 msgid "Delivery Method Selection Wizard"
-msgstr ""
+msgstr "Asistent pentru selectarea metodei de livrare"
 
 #. module: stock_delivery
 #: model:ir.ui.menu,name:stock_delivery.menu_action_delivery_carrier_form
@@ -383,7 +403,7 @@ msgstr "Afișează linkurile de urmărire"
 #. odoo-javascript
 #: code:addons/stock_delivery/static/src/return_order_dialog/return_order_dialog.js:0
 msgid "Download Shipping Label"
-msgstr ""
+msgstr "Descarcă eticheta de expediere"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_delivery_carrier__invoice_policy
@@ -412,12 +432,12 @@ msgstr "Excepție:"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
 msgid "Export Documents"
-msgstr ""
+msgstr "Documente de export"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
 msgid "Export documents"
-msgstr ""
+msgstr "Documente de export"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_product_product__hs_code
@@ -458,7 +478,7 @@ msgstr "Nivel de integrare"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_route
 msgid "Inventory Route"
-msgstr ""
+msgstr "Rută de inventar"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__invoice_policy
@@ -473,17 +493,17 @@ msgstr "Este retur de ridicare"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Ultima actualizare făcută de"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Ultima actualizare pe"
 
 #. module: stock_delivery
 #: model:ir.ui.menu,name:stock_delivery.manage_printers_action
 msgid "Manage Printers"
-msgstr ""
+msgstr "Gestionează imprimantele"
 
 #. module: stock_delivery
 #. odoo-python
@@ -494,7 +514,7 @@ msgstr "Pot fi necesare acțiuni manuale."
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking_type__batch_max_weight
 msgid "Maximum weight"
-msgstr ""
+msgstr "Greutate maximă"
 
 #. module: stock_delivery
 #: model:ir.model.fields.selection,name:stock_delivery.selection__stock_package_type__package_carrier_type__none
@@ -509,7 +529,7 @@ msgstr "OK"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__order_ids
 msgid "Order"
-msgstr ""
+msgstr "Comandă"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_product_product__country_of_origin
@@ -532,23 +552,23 @@ msgstr "Pachet prea greu!"
 #: model:ir.model,name:stock_delivery.model_pay_on_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.pay_on_delivery_form
 msgid "Pay on Delivery"
-msgstr ""
+msgstr "Plată la livrare"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_picking_type
 msgid "Picking Type"
-msgstr ""
+msgstr "Tip ridicare"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_res_partner__pickup_location_data
 #: model:ir.model.fields,field_description:stock_delivery.field_res_users__pickup_location_data
 msgid "Pickup Location Data"
-msgstr ""
+msgstr "Date locație ridicare"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_package_label_layout
 msgid "Prepare Package Labels"
-msgstr ""
+msgstr "Pregătește etichetele coletelor"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
@@ -568,7 +588,7 @@ msgstr "Mutări produse (Linie mișcare stoc)"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_product_product
 msgid "Product Variant"
-msgstr ""
+msgstr "Variantă produs"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__delivery_type
@@ -588,17 +608,17 @@ msgstr "Cost real"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_ir_actions_report
 msgid "Report Action"
-msgstr ""
+msgstr "Acțiune raport"
 
 #. module: stock_delivery
 #: model:ir.ui.menu,name:stock_delivery.cached_printers_section
 msgid "Reporting"
-msgstr ""
+msgstr "Raportare"
 
 #. module: stock_delivery
 #: model:ir.ui.menu,name:stock_delivery.cached_printers_action
 msgid "Reset Linked Printers"
-msgstr ""
+msgstr "Resetează imprimantele asociate"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__return_label_ids
@@ -663,12 +683,12 @@ msgstr "Cost de expediere"
 #. module: stock_delivery
 #: model:ir.actions.report,name:stock_delivery.action_report_shipping_docs
 msgid "Shipping Documents"
-msgstr ""
+msgstr "Documente de Livrare"
 
 #. module: stock_delivery
 #: model:ir.actions.act_window,name:stock_delivery.open_export_docs_report
 msgid "Shipping Documents Report"
-msgstr ""
+msgstr "Raport cu documentele de expediere"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
@@ -678,12 +698,12 @@ msgstr "Informații de expediere"
 #. module: stock_delivery
 #: model:ir.actions.report,name:stock_delivery.action_report_shipping_labels
 msgid "Shipping Labels"
-msgstr ""
+msgstr "Etichete de livrare"
 
 #. module: stock_delivery
 #: model:ir.actions.act_window,name:stock_delivery.open_shipping_labels_report
 msgid "Shipping Labels Report"
-msgstr ""
+msgstr "Raport cu etichetele de expediere"
 
 #. module: stock_delivery
 #. odoo-python
@@ -728,6 +748,8 @@ msgid ""
 "Technical field: information needed by delivery providers in case of pickup "
 "point addresses."
 msgstr ""
+"Câmp tehnic: informații necesare furnizorilor de livrare pentru adresele cu "
+"punct de ridicare."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_move_line__destination_country_code
@@ -789,6 +811,9 @@ msgid ""
 "still due are in different currencies. Validate the transfers one currency "
 "at a time to collect them."
 msgstr ""
+"Aceste transferuri sunt pentru comenzi plătite la livrare, iar sumele "
+"restante sunt în monede diferite. Validează transferurile pe rând pentru "
+"fiecare monedă, ca să încasezi sumele."
 
 #. module: stock_delivery
 #. odoo-python
@@ -797,6 +822,8 @@ msgid ""
 "This action is meant to print %s attachments from the chatter: none was "
 "found."
 msgstr ""
+"Această acțiune trebuie să imprime atașamentele %s din conversație: nu a "
+"fost găsit niciunul."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_package__weight
@@ -902,17 +929,17 @@ msgstr "Prefix cod poștal"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.package_zpl_label_delivery
 msgid "^FO310,200^A0N,44,33^FH^FD"
-msgstr ""
+msgstr "^FO310,200^A0N,44,33^FH^FD"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.barcode_alternative_label
 msgid "^FO35,180^A0N,15^FH^FDHS:"
-msgstr ""
+msgstr "^FO35,180^A0N,15^FH^FDHS:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.barcode_normal_label
 msgid "^FO35,220^A0N,15^FH^FDHS:"
-msgstr ""
+msgstr "^FO35,220^A0N,15^FH^FDHS:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.barcode_alternative_label
@@ -924,7 +951,7 @@ msgstr "^FS"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
 msgid "and"
-msgstr ""
+msgstr "și"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
@@ -934,6 +961,10 @@ msgid ""
 "configure a printer on the\n"
 "                    report form.<br/>"
 msgstr ""
+"sunt încărcate în conversație la validarea transferului. Dacă vrei să le\n"
+"                    imprimi automat la validare, trebuie să configurezi o "
+"imprimantă în\n"
+"                    formularul raportului.<br/>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.pay_on_delivery_form
@@ -941,6 +972,8 @@ msgid ""
 "must be collected for\n"
 "                the delivery of the following orders:"
 msgstr ""
+"trebuie încasată pentru\n"
+"                livrarea următoarelor comenzi:"
 
 #~ msgid "<span>Shipping Weight: </span>"
 #~ msgstr "<span>Greutate de expediere: </span>"

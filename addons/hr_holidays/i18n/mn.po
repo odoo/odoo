@@ -29,7 +29,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 17:38+0000\n"
+"POT-Creation-Date: 2026-11-20 17:37+0000\n"
 "PO-Revision-Date: 2026-10-14 15:33+0000\n"
 "Last-Translator: Lodoikhuu <baskhuujacara@gmail.com>\n"
 "Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-20/"
@@ -91,32 +91,8 @@ msgid ""
 "\n"
 "A synchronization with an internal agenda (Meetings of the CRM module) is "
 "also possible in order to automatically create a meeting when a time off "
-"request is accepted by setting up a type of meeting in time off Type.\n"
+"request is accepted by setting up a type of meeting in the time type.\n"
 msgstr ""
-"\n"
-"Чөлөөний хүсэлт болон хуваарилалтыг удирдах\n"
-"========================================\n"
-"\n"
-"Энэ аппликейшн танай компанийн чөлөөний хуваарийг хянана. Ажилтнууд чөлөө "
-"хүсэх боломжтой. Дараа нь менежерүүд чөлөөний хүсэлтийг хянаж, зөвшөөрөх "
-"эсвэл татгалзана. Ингэснээр компани эсвэл хэлтсийн чөлөөний ерөнхий "
-"төлөвлөлтийг хянах боломжтой.\n"
-"\n"
-"Та хэд хэдэн төрлийн чөлөө (өвчний, цалинтай өдөр, ...) тохируулж, чөлөөний "
-"хуваарилалтаар ажилтан эсвэл хэлтэст хурдан чөлөө хуваарилах боломжтой. "
-"Ажилтан мөн шинэ чөлөөний хуваарилалт үүсгэж нэмэлт чөлөөний өдөр хүсэх "
-"боломжтой. Энэ нь тухайн чөлөөний төрлийн боломжит нийт өдрийг нэмэгдүүлнэ "
-"(хүсэлт зөвшөөрөгдвөл).\n"
-"\n"
-"Дараах тайлангуудаар чөлөөг янз бүрээр хянах боломжтой:\n"
-"\n"
-"* Чөлөөний хураангуй\n"
-"* Хэлтсээрх чөлөө\n"
-"* Чөлөөний шинжилгээ\n"
-"\n"
-"Мөн дотоод хуанлитай (CRM модулийн уулзалтууд) ижилсүүлэх боломжтой бөгөөд "
-"чөлөөний төрөлд уулзалтын төрөл тохируулснаар чөлөөний хүсэлт зөвшөөрөгдөх "
-"үед автоматаар уулзалт үүсгэнэ.\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -1683,8 +1659,8 @@ msgstr "Бүх чөлөөний хүсэлтийг дараа нь эргэж х
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_time_rule_view_form_inherit_hr_holidays
-msgid "Choose a Time Off Type"
-msgstr "Чөлөөний төрөл сонгох"
+msgid "Choose a Time Type"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__maximum_leave
@@ -2154,6 +2130,7 @@ msgstr "Болих"
 #: model:ir.model.fields,field_description:hr_holidays.field_load_public_holiday_wizard_line__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_activity_type__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_message_subtype__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_publisher_warranty_contract__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_res_company__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_res_groups__display_name
@@ -2673,6 +2650,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_holidays.field_load_public_holiday_wizard_line__id
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_activity_type__id
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_message_subtype__id
+#: model:ir.model.fields,field_description:hr_holidays.field_publisher_warranty_contract__id
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary__id
 #: model:ir.model.fields,field_description:hr_holidays.field_res_company__id
 #: model:ir.model.fields,field_description:hr_holidays.field_res_groups__id
@@ -3755,6 +3733,11 @@ msgid ""
 "Public holidays should be counted in the leave duration when applying for "
 "leaves"
 msgstr "Чөлөө хүсэх үед бүх нийтийн амралтыг чөлөөний хугацаанд тооцох ёстой"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_publisher_warranty_contract
+msgid "Publisher Warranty Contract"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__rating_ids
@@ -5671,12 +5654,9 @@ msgstr "Хуримтлалын хүчинтэй хугацааг 0 болгох 
 #: code:addons/hr_holidays/models/hr_work_entry_type.py:0
 msgid ""
 "You cannot modify the 'Duration Count' setting because one or more leaves "
-"have already been taken for this time off type. Changing it now would affect "
+"have already been taken for this time type. Changing it now would affect "
 "existing employee balances."
 msgstr ""
-"Энэ чөлөөний төрлөөр нэг буюу хэд хэдэн чөлөө аль хэдийн авсан тул "
-"'Үргэлжлэх хугацааны тооцоо' тохиргоог өөрчлөх боломжгүй. Одоо өөрчлөх нь "
-"ажилтнуудын одоогийн үлдэгдэлд нөлөөлнө."
 
 #. module: hr_holidays
 #. odoo-python
@@ -6089,6 +6069,69 @@ msgstr "батлах"
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
 msgid "year(s)"
 msgstr "жил"
+
+#~ msgid ""
+#~ "\n"
+#~ "Manage time off requests and allocations\n"
+#~ "========================================\n"
+#~ "\n"
+#~ "This application controls the time off schedule of your company. It "
+#~ "allows employees to request time off. Then, managers can review requests "
+#~ "for time off and approve or reject them. This way you can control the "
+#~ "overall time off planning for the company or department.\n"
+#~ "\n"
+#~ "You can configure several kinds of time off (sickness, paid days, ...) "
+#~ "and allocate time off to an employee or department quickly using time off "
+#~ "allocation. An employee can also make a request for more days off by "
+#~ "making a new time off allocation. It will increase the total of available "
+#~ "days for that time type (if the request is accepted).\n"
+#~ "\n"
+#~ "You can keep track of time off in different ways by following reports:\n"
+#~ "\n"
+#~ "* Time Off Summary\n"
+#~ "* Time Off by Department\n"
+#~ "* Time Off Analysis\n"
+#~ "\n"
+#~ "A synchronization with an internal agenda (Meetings of the CRM module) is "
+#~ "also possible in order to automatically create a meeting when a time off "
+#~ "request is accepted by setting up a type of meeting in time off Type.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Чөлөөний хүсэлт болон хуваарилалтыг удирдах\n"
+#~ "========================================\n"
+#~ "\n"
+#~ "Энэ аппликейшн танай компанийн чөлөөний хуваарийг хянана. Ажилтнууд чөлөө "
+#~ "хүсэх боломжтой. Дараа нь менежерүүд чөлөөний хүсэлтийг хянаж, зөвшөөрөх "
+#~ "эсвэл татгалзана. Ингэснээр компани эсвэл хэлтсийн чөлөөний ерөнхий "
+#~ "төлөвлөлтийг хянах боломжтой.\n"
+#~ "\n"
+#~ "Та хэд хэдэн төрлийн чөлөө (өвчний, цалинтай өдөр, ...) тохируулж, "
+#~ "чөлөөний хуваарилалтаар ажилтан эсвэл хэлтэст хурдан чөлөө хуваарилах "
+#~ "боломжтой. Ажилтан мөн шинэ чөлөөний хуваарилалт үүсгэж нэмэлт чөлөөний "
+#~ "өдөр хүсэх боломжтой. Энэ нь тухайн чөлөөний төрлийн боломжит нийт өдрийг "
+#~ "нэмэгдүүлнэ (хүсэлт зөвшөөрөгдвөл).\n"
+#~ "\n"
+#~ "Дараах тайлангуудаар чөлөөг янз бүрээр хянах боломжтой:\n"
+#~ "\n"
+#~ "* Чөлөөний хураангуй\n"
+#~ "* Хэлтсээрх чөлөө\n"
+#~ "* Чөлөөний шинжилгээ\n"
+#~ "\n"
+#~ "Мөн дотоод хуанлитай (CRM модулийн уулзалтууд) ижилсүүлэх боломжтой "
+#~ "бөгөөд чөлөөний төрөлд уулзалтын төрөл тохируулснаар чөлөөний хүсэлт "
+#~ "зөвшөөрөгдөх үед автоматаар уулзалт үүсгэнэ.\n"
+
+#~ msgid "Choose a Time Off Type"
+#~ msgstr "Чөлөөний төрөл сонгох"
+
+#~ msgid ""
+#~ "You cannot modify the 'Duration Count' setting because one or more leaves "
+#~ "have already been taken for this time off type. Changing it now would "
+#~ "affect existing employee balances."
+#~ msgstr ""
+#~ "Энэ чөлөөний төрлөөр нэг буюу хэд хэдэн чөлөө аль хэдийн авсан тул "
+#~ "'Үргэлжлэх хугацааны тооцоо' тохиргоог өөрчлөх боломжгүй. Одоо өөрчлөх нь "
+#~ "ажилтнуудын одоогийн үлдэгдэлд нөлөөлнө."
 
 #~ msgid ""
 #~ "<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"Arrow icon\" "

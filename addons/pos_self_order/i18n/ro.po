@@ -4,14 +4,15 @@
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
+# Dorin Hongu <dhongu@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-06 17:40+0000\n"
-"PO-Revision-Date: 2026-08-31 19:13+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-21 09:33+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/"
 "pos_self_order/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -19,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: pos_self_order
 #: model:ir.actions.report,print_report_name:pos_self_order.report_self_order_qr_codes_page
@@ -30,7 +31,7 @@ msgstr "\"Coduri QR\""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
 msgid "(Tips included)"
-msgstr ""
+msgstr "(Bacșiș inclus)"
 
 #. module: pos_self_order
 #. odoo-python
@@ -42,7 +43,7 @@ msgstr "(necesită Odoo Enterprise)"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/choose_combo_popup/choose_combo_popup.xml:0
 msgid "(up to"
-msgstr ""
+msgstr "(până la"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -101,6 +102,49 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"client\" t-value=\"object.partner_id\"></t>\n"
+"                    <t t-set=\"client_name\" t-value=\"client.name\"></t>\n"
+"                    <t t-set=\"street\" t-value=\"client.street or ''\"></t>"
+"\n"
+"                    <t t-set=\"state\" t-value=\"client.state_id.name or "
+"''\"></t>\n"
+"                    <t t-set=\"city\" t-value=\"client.city or ''\"></t>\n"
+"                    <t t-set=\"country\" t-value=\"client.country_id.name or "
+"''\"></t>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"></t>\n"
+"                    <t t-set=\"tz\" t-"
+"value=\"object.company_id.partner_id.tz\"></t>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"></t>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">Salut <t t-"
+"out=\"client_name\">Numele clientului</t>,</t>\n"
+"                        <t t-else=\"\">Salut,</t>\n"
+"                    </div>\n"
+"                    <br>\n"
+"                    <div>Comanda ta <t t-out=\"object.tracking_number\">...</"
+"t> în valoare de <t t-out=\"format_amount"
+"(object.amount_total,object.currency_id)\">$xx.xx</t> a fost confirmată. "
+"<span t-if=\"object.preset_time or client.street\">Va fi gata</span> <span t-"
+"if=\"object.preset_time\">la <t t-out=\"format_time(time=object.preset_time, "
+"tz=tz, time_format='short', lang_code=lg)\">12:00 pm</t></span> <span t-"
+"if=\"client.street\">la <t t-out=\"street\">stradă</t>, <t t-out=\"state\">"
+"județ</t>, <t t-out=\"client.zip or ''\">cod poștal</t>, <t t-out=\"city\">"
+"oraș</t>, <t t-out=\"country\">țară</t></span></div>\n"
+"                    <br>\n"
+"                    <div>Îți mulțumim,</div>\n"
+"                    <br>\n"
+"                    <div t-if=\"object.state == 'paid'\">\n"
+"                        <div>Poți descărca bonul <a t-attf-href=\"{{ "
+"object.get_base_url() }}/pos-self-order/receipt/{{ object.id }}?access_token="
+"{{ object.access_token }}\">aici</a></div>\n"
+"                        <br>\n"
+"                    </div>\n"
+"                    <t t-out=\"store_name\">Numele magazinului</t>\n"
+"                </div>\n"
+"            "
 
 #. module: pos_self_order
 #: model:mail.template,body_html:pos_self_order.takeout_email_template
@@ -137,6 +181,37 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"></t>\n"
+"                    <t t-set=\"tz\" t-"
+"value=\"object.company_id.partner_id.tz\"></t>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"></t>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">Salut <t t-"
+"out=\"client_name\">Numele clientului</t>,</t>\n"
+"                        <t t-else=\"\">Salut,</t>\n"
+"                    </div>\n"
+"                    <br>\n"
+"                    <div>Comanda ta <t t-out=\"object.tracking_number\">...</"
+"t> în valoare de <t t-out=\"format_amount"
+"(object.amount_total,object.currency_id)\">$xx.xx</t> a fost confirmată. "
+"<span t-if=\"object.preset_time\">Va fi gata la <t t-out=\"format_time"
+"(time=object.preset_time, tz=tz, time_format='short', lang_code=lg)\">12:00 "
+"pm</t></span></div>\n"
+"                    <br>\n"
+"                    <div>Îți mulțumim,</div>\n"
+"                    <br>\n"
+"                    <div t-if=\"object.state == 'paid'\">\n"
+"                        <div>Poți descărca bonul <a t-attf-href=\"{{ "
+"object.get_base_url() }}/pos-self-order/receipt/{{ object.id }}?access_token="
+"{{ object.access_token }}\">aici</a></div>\n"
+"                        <br>\n"
+"                    </div>\n"
+"                    <t t-out=\"store_name\">Numele magazinului</t>\n"
+"                </div>\n"
+"            "
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_default_user_id
@@ -157,7 +232,7 @@ msgstr "Activ"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "Add"
-msgstr ""
+msgstr "Adaugă"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -168,26 +243,26 @@ msgstr "Adaugă limbă"
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_home_ids
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_image_home_ids
 msgid "Add Media"
-msgstr ""
+msgstr "Adăugați media"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 msgid "Add a Tip"
-msgstr ""
+msgstr "Adaugă un bacșiș"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
 msgid "Add a tip"
-msgstr ""
+msgstr "Adăugați un bacșiș"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
 msgid "Add an order note"
-msgstr ""
+msgstr "Adaugă o notă la comandă"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -202,25 +277,27 @@ msgid ""
 "Addon for the POS App that allows customers to view the menu on their "
 "smartphone."
 msgstr ""
+"Extensie pentru aplicația POS care le permite clienților să consulte meniul "
+"pe smartphone."
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.js:0
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Address"
-msgstr ""
+msgstr "Adresa"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Afternoon"
-msgstr ""
+msgstr "După amiază"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
 msgid "All"
-msgstr ""
+msgstr "Tot"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -232,19 +309,19 @@ msgstr "A apărut o eroare"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/choose_combo_popup/choose_combo_popup.xml:0
 msgid "Apply"
-msgstr ""
+msgstr "Aplică"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/payment_page/payment_page.js:0
 msgid "Are you sure you want to cancel the cash machine payment?"
-msgstr ""
+msgstr "Sigur dorești să anulezi plata la terminalul de plată?"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/cancel_popup/cancel_popup.xml:0
 msgid "Are you sure you want to cancel this order?"
-msgstr ""
+msgstr "Sunteți sigur că doriți să anulați această comandă?"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -273,7 +350,7 @@ msgstr "Disponibil în autocomandă"
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__available_in_self
 msgid "Available in self"
-msgstr ""
+msgstr "Disponibil pentru comenzi la pachet"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -284,7 +361,7 @@ msgstr "Limbi disponibile ale interfeței"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
 msgid "Average time:"
-msgstr ""
+msgstr "Timp mediu:"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -329,7 +406,7 @@ msgstr "Anulează comanda"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/payment_page/payment_page.xml:0
 msgid "Cancellation in progress"
-msgstr ""
+msgstr "Anulare în curs"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -353,7 +430,7 @@ msgstr "Finalizare comanda"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/choose_combo_popup/choose_combo_popup.xml:0
 msgid "Choose"
-msgstr ""
+msgstr "Alege"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_service_mode
@@ -399,7 +476,7 @@ msgstr "Închideți sesiunea"
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_primary_color
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Color"
-msgstr ""
+msgstr "Culoare"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -411,7 +488,7 @@ msgstr "Combo"
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_order_line__combo_id
 msgid "Combo Reference"
-msgstr ""
+msgstr "Referință combo"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_res_config_settings
@@ -423,19 +500,19 @@ msgstr "Setări de configurare"
 #: code:addons/pos_self_order/static/src/app/components/number_popup/number_popup.xml:0
 #: code:addons/pos_self_order/static/src/app/components/pills_selection_popup/pills_selection_popup.xml:0
 msgid "Confirm"
-msgstr ""
+msgstr "Confirmă"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/payment_page/payment_page.js:0
 msgid "Confirm cancellation"
-msgstr ""
+msgstr "Confirmă anularea"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
 msgid "Connection restored"
-msgstr ""
+msgstr "Conexiune restabilită"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_res_partner
@@ -536,17 +613,17 @@ msgstr "Livrare"
 #. module: pos_self_order
 #: model:product.template,name:pos_self_order.product_delivery_template
 msgid "Delivery Fee (Self-order)"
-msgstr ""
+msgstr "Taxă de livrare (comandă proprie)"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__delivery_product_id
 msgid "Delivery Product"
-msgstr ""
+msgstr "Livrare produs"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_preset__free_delivery_min_amount
 msgid "Delivery is free when the order total reaches this amount."
-msgstr ""
+msgstr "Livrarea este gratuită când totalul comenzii atinge această sumă."
 
 #. module: pos_self_order
 #. odoo-python
@@ -555,11 +632,13 @@ msgid ""
 "Delivery isn't available for this address. You can still place your order "
 "using another method."
 msgstr ""
+"Livrarea nu este disponibilă la această adresă. Poți plasa comanda folosind "
+"o altă metodă."
 
 #. module: pos_self_order
 #: model:mail.template,name:pos_self_order.delivery_email_template
 msgid "Delivery: Confirmation order for self"
-msgstr ""
+msgstr "Livrare: confirmarea comenzii pentru autoservire"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__nothing
@@ -606,19 +685,19 @@ msgstr "Nume afișat"
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__delivery_distance_unit
 msgid "Distance unit"
-msgstr ""
+msgstr "Unitate de distanță"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
 msgid "Do not refresh the page."
-msgstr ""
+msgstr "Nu reîncărca pagina."
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/choose_combo_popup/choose_combo_popup.xml:0
 msgid "Do you want to make a combo instead ?"
-msgstr ""
+msgstr "Dorești să alegi un combo în schimb?"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -629,14 +708,14 @@ msgstr "Descărcați codurile QR"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 msgid "Download receipt"
-msgstr ""
+msgstr "Descarcă bonul"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/screens/product_screen/control_buttons/control_buttons.xml:0
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_service_mode__dynamic_qr
 msgid "Dynamic QR"
-msgstr ""
+msgstr "Cod QR dinamic"
 
 #. module: pos_self_order
 #. odoo-python
@@ -660,7 +739,7 @@ msgstr ""
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_preset
 msgid "Easily load a set of configuration options"
-msgstr ""
+msgstr "Încărcați cu ușurință un set de opțiuni de configurare"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -676,7 +755,7 @@ msgstr "Email Confirmare"
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_mail_template
 msgid "Email Template"
-msgstr ""
+msgstr "Șablon email"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -684,18 +763,20 @@ msgstr ""
 msgid ""
 "Enable QR menu in the Restaurant settings to get QR codes for free on tables."
 msgstr ""
+"Activează meniul QR în setările restaurantului pentru a genera gratuit "
+"coduri QR pentru mese."
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/number_popup/number_popup.js:0
 msgid "Enter Amount"
-msgstr ""
+msgstr "Introdu suma"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Enter a valid phone number"
-msgstr ""
+msgstr "Introdu un număr de telefon valid"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -707,25 +788,25 @@ msgstr "Introduceți valoarea personalizată"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.xml:0
 msgid "Enter your tracker number"
-msgstr ""
+msgstr "Introdu numărul de urmărire"
 
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_order.py:0
 msgid "Error while creating the order. Please try again."
-msgstr ""
+msgstr "Eroare la crearea comenzii. Încearcă din nou."
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Evening"
-msgstr ""
+msgstr "Seara"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "Extra:"
-msgstr ""
+msgstr "Supliment:"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -739,13 +820,13 @@ msgstr ""
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__delivery_product_price
 msgid "Fixed Price"
-msgstr ""
+msgstr "Preț fixat"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/payment_page/payment_page.xml:0
 msgid "Follow instructions on the cash machine"
-msgstr ""
+msgstr "Urmează instrucțiunile de pe terminalul de plată"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -756,18 +837,18 @@ msgstr "Urmați instrucțiunile de pe terminal"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Free Metal / Wood Stands"
-msgstr ""
+msgstr "Suporturi gratuite din metal/lemn"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__free_delivery_min_amount
 msgid "Free if order amount is above"
-msgstr ""
+msgstr "Gratuit dacă valoarea comenzii este mai mare"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Full Day"
-msgstr ""
+msgstr "Zi întreagă"
 
 #. module: pos_self_order
 #. odoo-python
@@ -780,13 +861,13 @@ msgstr "Generic"
 #: code:addons/pos_self_order/static/src/overrides/components/navbar/navbar.xml:0
 #: code:addons/pos_self_order/static/src/overrides/screens/floor_screen/floor_screen.xml:0
 msgid "Get QR Codes"
-msgstr ""
+msgstr "Obține coduri QR"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/backend/qr_order_button/qr_order_button.js:0
 msgid "Get QR codes"
-msgstr ""
+msgstr "Obține coduri QR"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_ir_http
@@ -805,6 +886,8 @@ msgid ""
 "Hey, looks like you forgot to create products or add them to pos_config. "
 "Please add them before using the Self Order"
 msgstr ""
+"Hei, se pare că ați uitat să creați produse sau să le adăugați la "
+"pos_config. Vă rugăm să le adăugați înainte de a utiliza Self Order"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -815,7 +898,7 @@ msgstr "Butoane de pornire"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 msgid "Hope you enjoyed your meal!"
-msgstr ""
+msgstr "Sperăm că v-a plăcut masa!"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -878,7 +961,7 @@ msgstr ""
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_background_ids
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_background_ids
 msgid "Image to be displayed in the background"
-msgstr ""
+msgstr "Imagine afișată în fundal"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand
@@ -890,7 +973,7 @@ msgstr "Imagine de afișat pe ecranul de autocomandă"
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_order.py:0
 msgid "Impossible to create a new order."
-msgstr ""
+msgstr "Nu s-a putut crea o comandă nouă."
 
 #. module: pos_self_order
 #. odoo-python
@@ -915,38 +998,38 @@ msgstr "Informații"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
 msgid "Internet Connection Lost"
-msgstr ""
+msgstr "Conexiune la internet pierdută"
 
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_order.py:0
 msgid "Invalid combo line"
-msgstr ""
+msgstr "Linie combo nevalidă"
 
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_order.py:0
 msgid "Invalid preset"
-msgstr ""
+msgstr "Presetare indisponibilă"
 
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_order.py:0
 msgid "Invalid product attribute"
-msgstr ""
+msgstr "Atribut de produs nevalid"
 
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/controllers/orders.py:0
 #: code:addons/pos_self_order/models/pos_order.py:0
 msgid "Invalid product configuration"
-msgstr ""
+msgstr "Configurație de produs nevalidă"
 
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_order.py:0
 msgid "Invalid quantity"
-msgstr ""
+msgstr "Cantitate nevalidă"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -958,13 +1041,13 @@ msgstr "Facturat"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
 msgid "It seems that"
-msgstr ""
+msgstr "Se pare că"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
 msgid "It seems that the network connection was lost."
-msgstr ""
+msgstr "Se pare că s-a pierdut conexiunea la rețea."
 
 #. module: pos_self_order
 #. odoo-python
@@ -981,7 +1064,7 @@ msgstr "Kiosk"
 #: code:addons/pos_self_order/receipt/pos_order_receipt.py:0
 #: code:addons/pos_self_order/static/src/overrides/utils/printer/generate_printer_data.js:0
 msgid "Kiosk Order"
-msgstr ""
+msgstr "Comandă de la kiosk"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__name
@@ -1012,7 +1095,7 @@ msgstr "Ultima actualizare la"
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__delivery_from_latitude
 msgid "Latitude"
-msgstr ""
+msgstr "Latitudine"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -1034,7 +1117,7 @@ msgstr "Se încarcă..."
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__delivery_from_longitude
 msgid "Longitude"
-msgstr ""
+msgstr "Longitudine"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -1061,16 +1144,18 @@ msgstr ""
 msgid ""
 "Make sure you choose all your options for this item. You're alomost there."
 msgstr ""
+"Asigură-te că ai ales toate opțiunile pentru acest articol. Ești aproape "
+"gata."
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__delivery_max_distance_km
 msgid "Max radius"
-msgstr ""
+msgstr "Rază maximă"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_preset__delivery_max_distance_km
 msgid "Maximum delivery distance, in the unit shown next to the field."
-msgstr ""
+msgstr "Distanța maximă de livrare, în unitatea afișată lângă câmp."
 
 #. module: pos_self_order
 #. odoo-python
@@ -1082,7 +1167,7 @@ msgstr "Mâncare"
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_home_ids
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_home_ids
 msgid "Media items to display on the self order screen"
-msgstr ""
+msgstr "Elemente media afișate pe ecranul de comandă proprie"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
@@ -1098,13 +1183,13 @@ msgstr "Comandă automată pe mobil & Chioșc"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Morning"
-msgstr ""
+msgstr "Dimineața"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/landing_page/landing_page.xml:0
 msgid "My Order"
-msgstr ""
+msgstr "Comanda mea"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1141,7 +1226,7 @@ msgstr "Nu"
 #: code:addons/pos_self_order/static/src/app/components/choose_combo_popup/choose_combo_popup.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/optional_product_page/optional_product_page.xml:0
 msgid "No Thanks"
-msgstr ""
+msgstr "Nu, mulțumesc"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1153,7 +1238,7 @@ msgstr "Nu s-a găsit nicio comandă"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "No, thanks"
-msgstr ""
+msgstr "Nu, mulțumesc"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1188,7 +1273,7 @@ msgstr "În curs de desfășurare"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
 msgid "Online"
-msgstr ""
+msgstr "Activ"
 
 #. module: pos_self_order
 #. odoo-python
@@ -1200,7 +1285,7 @@ msgstr "Doar plata după fiecare comandă este disponibilă cu modul chioșc."
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
 msgid "Oops..."
-msgstr ""
+msgstr "Ups..."
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
@@ -1211,13 +1296,13 @@ msgstr "Deschide Chioșc"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/components/dynamic_qr_popup/dynamic_qr_popup.xml:0
 msgid "Open self-order on this device"
-msgstr ""
+msgstr "Deschide autoservirea pe acest dispozitiv"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/optional_product_page/optional_product_page.xml:0
 msgid "Options"
-msgstr ""
+msgstr "Opțiuni"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1236,13 +1321,13 @@ msgstr "Comandă acum"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 msgid "Order for"
-msgstr ""
+msgstr "Comandă pentru"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
 msgid "Order note"
-msgstr ""
+msgstr "Notă la comandă"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1259,7 +1344,7 @@ msgstr "Origine"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
 msgid "Other"
-msgstr ""
+msgstr "Altul"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1270,7 +1355,7 @@ msgstr "Stoc epuizat"
 #. module: pos_self_order
 #: model:ir.module.module,shortdesc:base.module_pos_self_order
 msgid "POS Self Order"
-msgstr ""
+msgstr "Comandă proprie POS"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1299,7 +1384,7 @@ msgstr "Plată după"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Personalize the Interface"
-msgstr ""
+msgstr "Personalizează interfața"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -1307,6 +1392,8 @@ msgid ""
 "Personalize your splash screen by adding one or multiple media items to "
 "create a slideshow"
 msgstr ""
+"Personalizează ecranul de întâmpinare adăugând unul sau mai multe elemente "
+"media pentru a crea o prezentare"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1329,14 +1416,14 @@ msgstr "Zonă de ridicare"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 msgid "Please choose a table for your order."
-msgstr ""
+msgstr "Alege o masă pentru comandă."
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.js:0
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 msgid "Please choose a time slot for your order."
-msgstr ""
+msgstr "Alege un interval orar pentru comandă."
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_load_mixin
@@ -1356,22 +1443,22 @@ msgstr "Configurarea Punctului de Vânzare"
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_order
 msgid "Point of Sale Order"
-msgstr ""
+msgstr "Comandă la punctul de vânzare"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_order_line
 msgid "Point of Sale Order Line"
-msgstr ""
+msgstr "Linie de comandă POS"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_order_receipt
 msgid "Point of Sale Order Receipt Generator"
-msgstr ""
+msgstr "Generator de bonuri pentru comenzi POS"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_payment_method
 msgid "Point of Sale Payment Method"
-msgstr ""
+msgstr "Metodă de plată POS"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_session
@@ -1391,30 +1478,30 @@ msgstr "Puncte de vânzare"
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_prep_line
 msgid "Pos Preparation Line"
-msgstr ""
+msgstr "Linie de pregătire POS"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_prep_order
 msgid "Pos Preparation Order"
-msgstr ""
+msgstr "Comandă de pregătire POS"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Powered by Google"
-msgstr ""
+msgstr "Oferit de Google"
 
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_order.py:0
 msgid "Preset is not available in self-ordering"
-msgstr ""
+msgstr "Presetarea nu este disponibilă în autoservire"
 
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_order.py:0
 msgid "Preset is not available in this configuration"
-msgstr ""
+msgstr "Presetarea nu este disponibilă în această configurație"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__link_html
@@ -1435,7 +1522,7 @@ msgstr "Primar"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/components/dynamic_qr_popup/dynamic_qr_popup.xml:0
 msgid "Print"
-msgstr ""
+msgstr "Tipăriți"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -1452,7 +1539,7 @@ msgstr "Imprimare eșuată"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/payment_page/payment_page.xml:0
 msgid "Processing your payment..."
-msgstr ""
+msgstr "Se procesează plata..."
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_product_template
@@ -1484,14 +1571,14 @@ msgstr "Produsul nu a fost găsit"
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_preset__delivery_product_id
 msgid "Product used for delivery fees in self order."
-msgstr ""
+msgstr "Produs folosit pentru taxele de livrare în comenzile proprii."
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/components/dynamic_qr_popup/dynamic_qr_popup.xml:0
 #: model_terms:ir.ui.view,arch_db:pos_self_order.DynamicQrReceipt
 msgid "QR Code"
-msgstr ""
+msgstr "Cod QR"
 
 #. module: pos_self_order
 #: model:ir.actions.report,name:pos_self_order.report_self_order_qr_codes_page
@@ -1529,13 +1616,13 @@ msgstr "Selectați cantitatea"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/payment_page/payment_page.xml:0
 msgid "Remaining:"
-msgstr ""
+msgstr "Rămas:"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/attribute_selection/attribute_selection.xml:0
 msgid "Required"
-msgstr ""
+msgstr "Necesar"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_restaurant_floor
@@ -1557,55 +1644,55 @@ msgstr "Reîncercați"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.js:0
 msgid "Retrying in %s second..."
-msgstr ""
+msgstr "Se reîncearcă în %s secundă..."
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.js:0
 msgid "Retrying in %s seconds..."
-msgstr ""
+msgstr "Se reîncearcă în %s secunde..."
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
 msgid "Retrying..."
-msgstr ""
+msgstr "Se reîncearcă..."
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/choose_combo_popup/choose_combo_popup.xml:0
 msgid "Save"
-msgstr ""
+msgstr "Salvează"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/payment_page/payment_page.xml:0
 msgid "Scan the QR code to pay"
-msgstr ""
+msgstr "Scanați codul QR pentru a plăti"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/components/dynamic_qr_popup/dynamic_qr_popup.xml:0
 #: code:addons/pos_self_order/static/src/overrides/screens/product_screen/control_buttons/control_buttons.js:0
 msgid "Scan to join the order"
-msgstr ""
+msgstr "Scanează pentru a te alătura comenzii"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.DynamicQrReceipt
 msgid "Scan to join your order"
-msgstr ""
+msgstr "Scanează pentru a te alătura comenzii"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Search country..."
-msgstr ""
+msgstr "Caută țara..."
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.js:0
 msgid "Searching for addresses..."
-msgstr ""
+msgstr "Se caută adresele..."
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__secondary
@@ -1621,14 +1708,14 @@ msgstr "Security Token"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/missing_required_details/missing_required_details.xml:0
 msgid "See what you missed"
-msgstr ""
+msgstr "Vezi ce ai ratat"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.js:0
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 msgid "Select a hour"
-msgstr ""
+msgstr "Selectează o oră"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1640,7 +1727,7 @@ msgstr "Selectați o masă"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
 msgid "Select an hour"
-msgstr ""
+msgstr "Selectează o oră"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_self_order_custom_link__pos_config_ids
@@ -1657,7 +1744,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
 msgid "Select your preferred option"
-msgstr ""
+msgstr "Selectează opțiunea preferată"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1672,7 +1759,7 @@ msgstr "Selecție"
 #: code:addons/pos_self_order/receipt/pos_order_receipt.py:0
 #: code:addons/pos_self_order/static/src/overrides/utils/printer/generate_printer_data.js:0
 msgid "Self Order"
-msgstr ""
+msgstr "Comandă proprie"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_brand
@@ -1689,13 +1776,13 @@ msgstr "Nume imagine brand chioșc autocomandă"
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_snooze__type__self-ordering
 msgid "Self Order Service"
-msgstr ""
+msgstr "Serviciu de comandă proprie"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_product_product__self_order_visible
 #: model:ir.model.fields,field_description:pos_self_order.field_product_template__self_order_visible
 msgid "Self Order Visible"
-msgstr ""
+msgstr "Vizibil pentru comenzi proprii"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -1728,18 +1815,18 @@ msgstr "URL autocomandă"
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_order__source__kiosk
 msgid "Self-Order Kiosk"
-msgstr ""
+msgstr "Kiosk pentru comenzi proprii"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_order__source__mobile
 msgid "Self-Order Mobile"
-msgstr ""
+msgstr "Comandă proprie de pe mobil"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 msgid "Self-Order T %s"
-msgstr ""
+msgstr "Comandă proprie T %s"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1748,12 +1835,14 @@ msgid ""
 "Self-ordering is only available through the QR code provided by our staff. "
 "You can still view the menu."
 msgstr ""
+"Comanda proprie este disponibilă doar prin codul QR oferit de personalul "
+"nostru. Poți consulta în continuare meniul."
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/self_order_index.xml:0
 msgid "Self-ordering is temporarily paused."
-msgstr ""
+msgstr "Comanda proprie este suspendată temporar."
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1764,13 +1853,13 @@ msgstr "Autocomandă:"
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__delivery_from_address
 msgid "Sender address"
-msgstr ""
+msgstr "Adresă expeditor"
 
 #. module: pos_self_order
 #: model:mail.template,description:pos_self_order.delivery_email_template
 #: model:mail.template,description:pos_self_order.takeout_email_template
 msgid "Sent to customers with a link to download their receipt"
-msgstr ""
+msgstr "Trimis clienților împreună cu un link pentru descărcarea bonului"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__sequence
@@ -1780,7 +1869,7 @@ msgstr "Secvență"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.DynamicQrReceipt
 msgid "Served by"
-msgstr ""
+msgstr "Servit de"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__service_at
@@ -1797,35 +1886,35 @@ msgstr "Servire la masă"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/timeout_popup/timeout_popup.xml:0
 msgid "Session Inactive"
-msgstr ""
+msgstr "Sesiune inactivă"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_background_ids
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_image_background_ids
 msgid "Set background image"
-msgstr ""
+msgstr "Setează imaginea de fundal"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_snooze__type
 msgid "Snoozed for?"
-msgstr ""
+msgstr "Amânat pentru cât timp?"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_snooze
 msgid "Snoozed records for Point of Sale"
-msgstr ""
+msgstr "Înregistrări amânate pentru Punctul de vânzare"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/screens/product_screen/control_buttons/control_buttons.js:0
 msgid "Something went wrong while generating the QR code"
-msgstr ""
+msgstr "A apărut o eroare la generarea codului QR"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/screens/ticket_screen/ticket_screen.js:0
 msgid "Source"
-msgstr ""
+msgstr "Sursa"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1835,6 +1924,8 @@ msgid ""
 "included or any special instructions that you want the restaurant to be "
 "aware of"
 msgstr ""
+"Precizează ce tacâmuri, șervețele, paie și condimente dorești sau "
+"menționează instrucțiuni speciale pentru restaurant."
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -1849,7 +1940,7 @@ msgstr "Pornește chioșcul"
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__delivery_from_state_id
 msgid "State"
-msgstr ""
+msgstr "Stare"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__status
@@ -1859,7 +1950,7 @@ msgstr "Stare"
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__delivery_from_street
 msgid "Street"
-msgstr ""
+msgstr "Stradă"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__style
@@ -1889,12 +1980,12 @@ msgstr "Număr stand masă"
 #: code:addons/pos_self_order/receipt/pos_order_receipt.py:0
 #: code:addons/pos_self_order/static/src/overrides/utils/printer/generate_printer_data.js:0
 msgid "Table Tracker %s"
-msgstr ""
+msgstr "Urmărire masă %s"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_order__self_ordering_table_id
 msgid "Table reference"
-msgstr ""
+msgstr "Referință masă"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -1904,7 +1995,7 @@ msgstr "Masă:"
 #. module: pos_self_order
 #: model:mail.template,name:pos_self_order.takeout_email_template
 msgid "Takeout: Confirmation order for self"
-msgstr ""
+msgstr "Ridicare: confirmarea comenzii pentru autoservire"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1916,7 +2007,7 @@ msgstr "Taxă:"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
 msgid "Taxes:"
-msgstr ""
+msgstr "Taxe:"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1938,12 +2029,15 @@ msgid ""
 "the address is valid, your geolocation service may be unavailable or unable "
 "to resolve it"
 msgstr ""
+"Adresa de livrare nu a putut fi geolocalizată. Verifică adresa. Dacă este "
+"validă, este posibil ca serviciul de geolocalizare să fie indisponibil sau "
+"să nu o poată identifica."
 
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_order.py:0
 msgid "The mail template with xmlid %s has been deleted."
-msgstr ""
+msgstr "Șablonul de e-mail cu xmlid %s a fost șters."
 
 #. module: pos_self_order
 #. odoo-python
@@ -1952,6 +2046,8 @@ msgid ""
 "The order ID isn't linked to the order UUID. This is a sign of a tampered "
 "payload."
 msgstr ""
+"ID-ul comenzii nu este asociat cu UUID-ul comenzii. Acesta este un indiciu "
+"că datele transmise au fost modificate."
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1959,6 +2055,7 @@ msgstr ""
 msgid ""
 "The shop is currently closed but you can still place an order for later."
 msgstr ""
+"Magazinul este închis momentan, dar poți plasa o comandă pentru mai târziu."
 
 #. module: pos_self_order
 #. odoo-python
@@ -1971,36 +2068,36 @@ msgstr "Utilizatorul trebuie să fie un utilizator POS"
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
 msgid "This combination does not exist."
-msgstr ""
+msgstr "Această combinație nu există."
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.DynamicQrReceipt
 msgid "Ticket"
-msgstr ""
+msgstr "Tichet"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 msgid "To pay at the counter"
-msgstr ""
+msgstr "Pentru plata la casă"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 msgid "To pay in cash at the counter"
-msgstr ""
+msgstr "Pentru plata în numerar la casă"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/models/pos_preset.js:0
 msgid "Today"
-msgstr ""
+msgstr "Astăzi"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/models/pos_preset.js:0
 msgid "Tommorrow"
-msgstr ""
+msgstr "Mâine"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -2035,24 +2132,24 @@ msgstr "Fără categorie"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
 msgid "Utensils, special instructions, etc."
-msgstr ""
+msgstr "Tacâmuri, instrucțiuni speciale etc."
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "Validate your selection"
-msgstr ""
+msgstr "Validează selecția"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Validating..."
-msgstr ""
+msgstr "Se validează..."
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_ir_ui_view
 msgid "View"
-msgstr ""
+msgstr "Afișare"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__warning
@@ -2066,6 +2163,8 @@ msgid ""
 "We couldn't locate this address. Please enter a complete address with a "
 "street number."
 msgstr ""
+"Nu am putut identifica această adresă. Introdu o adresă completă, inclusiv "
+"numărul străzii."
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -2073,19 +2172,19 @@ msgstr ""
 msgid ""
 "We invite you to get the receipt at the counter. Please remember your order "
 "number:"
-msgstr ""
+msgstr "Te rugăm să ridici bonul de la casă. Nu uita numărul comenzii:"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "We need more info"
-msgstr ""
+msgstr "Avem nevoie de mai multe informații"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
 msgid "We'll do everything to be on time!"
-msgstr ""
+msgstr "Vom face tot posibilul să fim punctuali!"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -2097,7 +2196,7 @@ msgstr "În prezent suntem închiși"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/self_order_index.xml:0
 msgid "We're currently closed."
-msgstr ""
+msgstr "În prezent suntem închiși."
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -2109,19 +2208,19 @@ msgstr "Vă pregătim comanda!"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
 msgid "When would you like to receive your orders ?"
-msgstr ""
+msgstr "Când dorești să primești comenzile?"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
 msgid "Where do you want to eat?"
-msgstr ""
+msgstr "Unde dorești să mănânci?"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/timeout_popup/timeout_popup.xml:0
 msgid "Would you like to continue?"
-msgstr ""
+msgstr "Dorești să continui?"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -2132,7 +2231,7 @@ msgstr "Da"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
 msgid "You are back online. You can complete your order now."
-msgstr ""
+msgstr "Conexiunea a revenit. Poți finaliza comanda acum."
 
 #. module: pos_self_order
 #. odoo-python
@@ -2174,13 +2273,13 @@ msgstr "Numărul comenzii dvs"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Your order was just updated. Please review your cart before paying."
-msgstr ""
+msgstr "Comanda ta tocmai a fost actualizată. Verifică coșul înainte de plată."
 
 #. module: pos_self_order
 #: model:mail.template,subject:pos_self_order.delivery_email_template
 #: model:mail.template,subject:pos_self_order.takeout_email_template
 msgid "Your {{ object.config_id.name }} receipt"
-msgstr ""
+msgstr "Chitanța dvs. {{ object.config_id.name }}"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__delivery_from_zip
@@ -2190,13 +2289,13 @@ msgstr "Cod postal"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "a"
-msgstr ""
+msgstr "un/o"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
 msgid "are"
-msgstr ""
+msgstr "sunt"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -2208,7 +2307,7 @@ msgstr "inchideți"
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_config.py:0
 msgid "each"
-msgstr ""
+msgstr "fiecare"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
@@ -2224,47 +2323,47 @@ msgstr "https://odoo.com"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "included &"
-msgstr ""
+msgstr "incluse și"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
 msgid "is"
-msgstr ""
+msgstr "este"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_preset__delivery_distance_unit__km
 msgid "km"
-msgstr ""
+msgstr "km"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_preset__delivery_distance_unit__mi
 msgid "mi"
-msgstr ""
+msgstr "mi"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
 msgid "min"
-msgstr ""
+msgstr "min"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
 msgid "minutes"
-msgstr ""
+msgstr "minute"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/choose_combo_popup/choose_combo_popup.xml:0
 msgid "more)"
-msgstr ""
+msgstr "mai mult)"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
 msgid "no longer available. Please go back and edit your order."
-msgstr ""
+msgstr "nu mai este disponibil. Revino și modifică-ți comanda."
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
@@ -2275,7 +2374,7 @@ msgstr "Odoo"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "per extra unit"
-msgstr ""
+msgstr "pentru fiecare unitate suplimentară"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -2283,4 +2382,4 @@ msgstr ""
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "x"
-msgstr ""
+msgstr "x"

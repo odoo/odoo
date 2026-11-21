@@ -20,11 +20,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:38+0000\n"
+"POT-Creation-Date: 2026-11-20 17:36+0000\n"
 "PO-Revision-Date: 2026-11-09 18:33+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
-"Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
-"20/stock/pt_BR/>\n"
+"Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
+"odoo-20/stock/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -572,11 +572,11 @@ msgstr ""
 "strong>:<br><br>\n"
 "\n"
 "                    <strong>Produto(s):</strong><br>\n"
-"                    <t t-out=\"ctx.get('recalled_products_dict', {}).get(str"
-"(object.id))\">[EXAMPLE] Drawer</t><br><br>\n"
+"                    <t t-out=\"ctx.get('recalled_products_dict', "
+"{}).get(str(object.id))\">[EXAMPLE] Drawer</t><br><br>\n"
 "                    <strong>Lote / Número de série:</strong><br>\n"
-"                    <t t-out=\"ctx.get('recalled_lots_dict', {}).get(str"
-"(object.id))\">0000000000029</t><br><br>\n"
+"                    <t t-out=\"ctx.get('recalled_lots_dict', "
+"{}).get(str(object.id))\">0000000000029</t><br><br>\n"
 "\n"
 "                    Pedimos desculpas pelo transtorno causado.<br><br>\n"
 "                    Atenciosamente,\n"
@@ -636,8 +636,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Olá <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>"
-",<br><br>\n"
+"        Olá <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,"
+"<br><br>\n"
 "        <t t-if=\"hasattr(object, 'delivery_type') and object.delivery_type "
 "== 'in_store'\">\n"
 "            Seu pedido foi coletado.\n"
@@ -653,8 +653,8 @@ msgstr ""
 "                <t t-set=\"multiple_carrier_tracking\" t-"
 "value=\"object.get_multiple_carrier_tracking()\"></t>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
-"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">"
-"\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-"
+"as=\"line\">\n"
 "                        <br><a t-att-href=\"line[1]\" target=\"_blank\" t-"
 "out=\"line[0] or ''\"></a>\n"
 "                    </t>\n"
@@ -2252,6 +2252,16 @@ msgstr ""
 "Ao desmarcar o campo 'ativo', você pode esconder o local sem excluí-lo."
 
 #. module: stock
+#: model:ir.model,name:stock.model_report_stock_fleet_report_cmr_batch
+msgid "CMR Batch Report"
+msgstr ""
+
+#. module: stock
+#: model:ir.model,name:stock.model_report_stock_fleet_report_cmr
+msgid "CMR Report"
+msgstr ""
+
+#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "COPY"
@@ -3765,6 +3775,8 @@ msgstr "Exibir números de lote e de série em recibos de entrega"
 #: model:ir.model.fields,field_description:stock.field_product_removal__display_name
 #: model:ir.model.fields,field_description:stock.field_product_replenish__display_name
 #: model:ir.model.fields,field_description:stock.field_product_template__display_name
+#: model:ir.model.fields,field_description:stock.field_report_stock_fleet_report_cmr__display_name
+#: model:ir.model.fields,field_description:stock.field_report_stock_fleet_report_cmr_batch__display_name
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__display_name
 #: model:ir.model.fields,field_description:stock.field_report_stock_report_stock_rule__display_name
 #: model:ir.model.fields,field_description:stock.field_res_company__display_name
@@ -4581,6 +4593,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_product_removal__id
 #: model:ir.model.fields,field_description:stock.field_product_replenish__id
 #: model:ir.model.fields,field_description:stock.field_product_template__id
+#: model:ir.model.fields,field_description:stock.field_report_stock_fleet_report_cmr__id
+#: model:ir.model.fields,field_description:stock.field_report_stock_fleet_report_cmr_batch__id
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__id
 #: model:ir.model.fields,field_description:stock.field_report_stock_report_stock_rule__id
 #: model:ir.model.fields,field_description:stock.field_res_company__id

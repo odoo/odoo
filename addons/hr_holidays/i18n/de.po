@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 17:38+0000\n"
-"PO-Revision-Date: 2026-11-13 14:18+0000\n"
+"POT-Creation-Date: 2026-11-20 17:37+0000\n"
+"PO-Revision-Date: 2026-11-20 14:17+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-20/"
 "hr_holidays/de/>\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -79,36 +79,8 @@ msgid ""
 "\n"
 "A synchronization with an internal agenda (Meetings of the CRM module) is "
 "also possible in order to automatically create a meeting when a time off "
-"request is accepted by setting up a type of meeting in time off Type.\n"
+"request is accepted by setting up a type of meeting in the time type.\n"
 msgstr ""
-"\n"
-"Verwaltung von Urlaubsanträgen und -ansprüchen\n"
-"=====================================\n"
-"\n"
-"Diese App steuert den Abwesenheitsplan Ihres Unternehmens. Es ermöglicht den "
-"Mitarbeitern, Abwesenheiten zu beantragen. Anschließend können Manager "
-"Abwesenheitsanträge prüfen und genehmigen oder ablehnen. Auf diese Weise "
-"können Sie die Gesamtzeitplanung für das Unternehmen oder die Abteilung "
-"steuern.\n"
-"\n"
-"Sie können mehrere Arten von Abwesenheiten (Krankheit, bezahlte Tage …) "
-"einstellen und Abwesenheiten einem Mitarbeiter oder einer Abteilung über die "
-"Urlaubsansprüche schnell zuordnen. Ein Mitarbeiter kann auch durch einen "
-"neuen Antrag auf Urlaubsanspruch weitere freie Tage beantragen. Es erhöht "
-"die Gesamtzahl der verfügbaren Tage für diese Abwesenheitsart, sofern der "
-"Antrag angenommen wird.\n"
-"\n"
-"Sie können die Abwesenheit auf verschiedene Weise verfolgen, indem Sie die "
-"Berichte verfolgen:\n"
-"\n"
-"* Zusammenfassung der Abwesenheiten\n"
-"* Abwesenheit nach Abteilungen\n"
-"* Abwesenheitsanalyse\n"
-"\n"
-"Eine Synchronisation mit einer internen Agenda (Meetings des CRM-Moduls) ist "
-"ebenfalls möglich, um automatisch eine Besprechung zu erstellen, wenn ein "
-"Abwesenheitsantrag akzeptiert wird, indem eine Art von Besprechung in der "
-"Abwesenheitsart eingerichtet wird.\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -462,6 +434,8 @@ msgid ""
 "<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"to\" title=\"To\" "
 "invisible=\"accrual_plan_id or state != 'confirm'\"/>"
 msgstr ""
+"<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"to\" title=\"Bis\" "
+"invisible=\"accrual_plan_id or state != 'confirm'\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
@@ -469,6 +443,8 @@ msgid ""
 "<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"to\" title=\"To\" "
 "invisible=\"accrual_plan_id\"/>"
 msgstr ""
+"<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"to\" title=\"Bis\" "
+"invisible=\"accrual_plan_id\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
@@ -476,6 +452,8 @@ msgid ""
 "<i class=\"oi oi-fw mx-2\" data-icon=\"east\" aria-label=\"to\" title=\"To\" "
 "invisible=\"accrual_plan_id\"/>"
 msgstr ""
+"<i class=\"oi oi-fw mx-2\" data-icon=\"east\" aria-label=\"to\" "
+"title=\"Bis\" invisible=\"accrual_plan_id\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -483,6 +461,8 @@ msgid ""
 "<i class=\"oi oi-lg align-self-center\" data-icon=\"label\" title=\"Time "
 "Type\" name=\"work_entry_type_id\"/>"
 msgstr ""
+"<i class=\"oi oi-lg align-self-center\" data-icon=\"label\" "
+"title=\"Zeitart\" name=\"work_entry_type_id\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -1002,6 +982,8 @@ msgstr "Rückstellungshäufigkeit:"
 msgid ""
 "Accrual will stop until next carry-over date if the accrued time reaches"
 msgstr ""
+"Die Rückstellung stoppt bis zum nächsten Übertragsdatum bei Erreichen einer "
+"rückgestellten Zeit von"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_needaction
@@ -1737,7 +1719,7 @@ msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_time_rule_view_form_inherit_hr_holidays
-msgid "Choose a Time Off Type"
+msgid "Choose a Time Type"
 msgstr ""
 
 #. module: hr_holidays
@@ -1804,13 +1786,15 @@ msgstr "Unternehmen"
 #: model:ir.actions.act_window,name:hr_holidays.open_view_public_holiday
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_public_time_off_menu_configuration
 msgid "Company Holidays"
-msgstr ""
+msgstr "Betriebsferien"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.open_view_public_holiday
 msgid ""
 "Company Holidays are non-working days that don't impact employees' balances"
 msgstr ""
+"Betriebsferien sind arbeitsfreie Tage, die sich nicht auf die Salden der "
+"Mitarbeiter auswirken"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_configuration
@@ -1858,7 +1842,7 @@ msgstr "Kontakt"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__count_as
 msgid "Count As"
-msgstr ""
+msgstr "Zählen als"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_work_entry_type__count_days_as
@@ -1956,7 +1940,7 @@ msgstr "Erstellt am"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Current Company"
-msgstr ""
+msgstr "Aktuelles Unternehmen"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__current_leave_state
@@ -2085,6 +2069,8 @@ msgid ""
 "Define a time type that will be created to count the amount of time in "
 "excess or missing."
 msgstr ""
+"Definieren Sie eine Zeitart, die erstellt wird, um die überschüssige oder "
+"fehlende Zeit zu zählen."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
@@ -2172,7 +2158,7 @@ msgstr "Beschreibung mit Gültigkeit"
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__count_as
 msgid "Determines if the entry counts as working time or absence."
-msgstr ""
+msgstr "Legt fest, ob der Eintrag als Arbeitszeit oder Abwesenheit zählt."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2210,6 +2196,7 @@ msgstr "Verwerfen"
 #: model:ir.model.fields,field_description:hr_holidays.field_load_public_holiday_wizard_line__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_activity_type__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_message_subtype__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_publisher_warranty_contract__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_res_company__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_res_groups__display_name
@@ -2421,7 +2408,7 @@ msgstr "Abgelehnte ausschließen"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/views/hr_leave_export.js:0
 msgid "External ID (update only)"
-msgstr ""
+msgstr "Externe ID (nur Aktualisierung)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_work_entry_type__employee_requests
@@ -2560,13 +2547,13 @@ msgstr "Generisch"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_time_rule_view_search_inherit_hr_holidays
 msgid "Give Time"
-msgstr ""
+msgstr "Zeit zuweisen"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/views/view_dialog/allocation_form_view_dialog.xml:0
 msgid "Grant"
-msgstr ""
+msgstr "Gewähren"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_work_entry_type__group_days_leave
@@ -2577,6 +2564,8 @@ msgstr "Gruppenabwesenheit"
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__time_rule_time_range
 msgid "HH:MM → HH:MM label shown on rule-split and trimmed leaves."
 msgstr ""
+"Bezeichnung HH:MM → HH:MM, die bei durch Regeln aufgeteilten und gekürzten "
+"Abwesenheiten angezeigt wird."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__hr_responsible_id
@@ -2625,7 +2614,7 @@ msgstr "Schraffiert"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__hide_accrual_plan_id
 msgid "Hide Accrual Plan"
-msgstr ""
+msgstr "Rückstellungsplan ausblenden"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_work_entry_type__hide_on_dashboard
@@ -2635,12 +2624,12 @@ msgstr "Auf Dashboard ausblenden"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_time_rule_view_search_inherit_hr_holidays
 msgid "Holiday Rate"
-msgstr ""
+msgstr "Feiertagssatz"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_time_rule_view_list_inherit_hr_holidays
 msgid "Holiday Rate (%)"
-msgstr ""
+msgstr "Feiertagssatz (%)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_employee_type_report__holiday_status
@@ -2735,6 +2724,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_holidays.field_load_public_holiday_wizard_line__id
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_activity_type__id
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_message_subtype__id
+#: model:ir.model.fields,field_description:hr_holidays.field_publisher_warranty_contract__id
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary__id
 #: model:ir.model.fields,field_description:hr_holidays.field_res_company__id
 #: model:ir.model.fields,field_description:hr_holidays.field_res_groups__id
@@ -2816,6 +2806,9 @@ msgid ""
 "corresponding entry in the calendar application. There will be no entry if "
 "this stays unchecked."
 msgstr ""
+"Wenn dieses Feld aktiviert ist, wird für jeden Abwesenheitsantrag dieser Art "
+"ein entsprechender Eintrag in der Kalenderapp erstellt. Bleibt es "
+"deaktiviert, wird kein Eintrag erstellt."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2824,6 +2817,8 @@ msgid ""
 "If you modify this request, it will need to be approved again. Do you wish "
 "to continue?"
 msgstr ""
+"Wenn Sie diese Anfrage ändern, muss sie erneut genehmigt werden. Möchten Sie "
+"fortfahren?"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_work_entry_type__count_days_as
@@ -2989,13 +2984,15 @@ msgstr "Urlaubsdatum bis"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_display_name_mixin
 msgid "Leave Display Name Mixin"
-msgstr ""
+msgstr "Mixin für den Anzeigenamen von Abwesenheiten"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_time_rule__leave_compensation_rate
 msgid ""
 "Leave allocated or taken at this rate of the excess or deficit. 100% = 1:1."
 msgstr ""
+"Abwesenheit, die zu diesem Satz des Überschusses oder Defizits zugewiesen "
+"oder genommen wird. 100 % = 1:1."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_employee_type_report__holiday_status__left
@@ -3025,6 +3022,8 @@ msgstr "Schauen wir uns das mal an"
 #: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
 msgid "Let's try to create a sick time off, select it in the list"
 msgstr ""
+"Versuchen wir, eine Krankheitsabwesenheit zu erstellen. Wählen Sie sie in "
+"der Liste aus."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__level_count
@@ -3834,6 +3833,11 @@ msgid ""
 msgstr ""
 "Gesetzliche Feiertage sollten bei der Urlaubsanträgen auf die Urlaubsdauer "
 "angerechnet werden"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_publisher_warranty_contract
+msgid "Publisher Warranty Contract"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__rating_ids
@@ -5783,7 +5787,7 @@ msgstr "Sie können keine Gültigkeitsdauer auf 0 setzen."
 #: code:addons/hr_holidays/models/hr_work_entry_type.py:0
 msgid ""
 "You cannot modify the 'Duration Count' setting because one or more leaves "
-"have already been taken for this time off type. Changing it now would affect "
+"have already been taken for this time type. Changing it now would affect "
 "existing employee balances."
 msgstr ""
 
@@ -6207,6 +6211,64 @@ msgstr "validieren"
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
 msgid "year(s)"
 msgstr "Jahr(e)"
+
+#~ msgid ""
+#~ "\n"
+#~ "Manage time off requests and allocations\n"
+#~ "========================================\n"
+#~ "\n"
+#~ "This application controls the time off schedule of your company. It "
+#~ "allows employees to request time off. Then, managers can review requests "
+#~ "for time off and approve or reject them. This way you can control the "
+#~ "overall time off planning for the company or department.\n"
+#~ "\n"
+#~ "You can configure several kinds of time off (sickness, paid days, ...) "
+#~ "and allocate time off to an employee or department quickly using time off "
+#~ "allocation. An employee can also make a request for more days off by "
+#~ "making a new time off allocation. It will increase the total of available "
+#~ "days for that time type (if the request is accepted).\n"
+#~ "\n"
+#~ "You can keep track of time off in different ways by following reports:\n"
+#~ "\n"
+#~ "* Time Off Summary\n"
+#~ "* Time Off by Department\n"
+#~ "* Time Off Analysis\n"
+#~ "\n"
+#~ "A synchronization with an internal agenda (Meetings of the CRM module) is "
+#~ "also possible in order to automatically create a meeting when a time off "
+#~ "request is accepted by setting up a type of meeting in time off Type.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Verwaltung von Urlaubsanträgen und -ansprüchen\n"
+#~ "=====================================\n"
+#~ "\n"
+#~ "Diese App steuert den Abwesenheitsplan Ihres Unternehmens. Es ermöglicht "
+#~ "den Mitarbeitern, Abwesenheiten zu beantragen. Anschließend können "
+#~ "Manager Abwesenheitsanträge prüfen und genehmigen oder ablehnen. Auf "
+#~ "diese Weise können Sie die Gesamtzeitplanung für das Unternehmen oder die "
+#~ "Abteilung steuern.\n"
+#~ "\n"
+#~ "Sie können mehrere Arten von Abwesenheiten (Krankheit, bezahlte Tage …) "
+#~ "einstellen und Abwesenheiten einem Mitarbeiter oder einer Abteilung über "
+#~ "die Urlaubsansprüche schnell zuordnen. Ein Mitarbeiter kann auch durch "
+#~ "einen neuen Antrag auf Urlaubsanspruch weitere freie Tage beantragen. Es "
+#~ "erhöht die Gesamtzahl der verfügbaren Tage für diese Abwesenheitsart, "
+#~ "sofern der Antrag angenommen wird.\n"
+#~ "\n"
+#~ "Sie können die Abwesenheit auf verschiedene Weise verfolgen, indem Sie "
+#~ "die Berichte verfolgen:\n"
+#~ "\n"
+#~ "* Zusammenfassung der Abwesenheiten\n"
+#~ "* Abwesenheit nach Abteilungen\n"
+#~ "* Abwesenheitsanalyse\n"
+#~ "\n"
+#~ "Eine Synchronisation mit einer internen Agenda (Meetings des CRM-Moduls) "
+#~ "ist ebenfalls möglich, um automatisch eine Besprechung zu erstellen, wenn "
+#~ "ein Abwesenheitsantrag akzeptiert wird, indem eine Art von Besprechung in "
+#~ "der Abwesenheitsart eingerichtet wird.\n"
+
+#~ msgid "Choose a Time Off Type"
+#~ msgstr "Abwesenheitsart auswählen"
 
 #~ msgid ""
 #~ "<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"Arrow icon\" "

@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 17:38+0000\n"
-"PO-Revision-Date: 2026-11-13 19:37+0000\n"
+"POT-Creation-Date: 2026-11-20 17:37+0000\n"
+"PO-Revision-Date: 2026-11-19 19:36+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-20/hr/es_419/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: hr
 #. odoo-python
@@ -309,15 +309,6 @@ msgid ""
 msgstr ""
 "<i class=\"oi oi-fw me-2 text-primary\" data-icon=\"cake\" "
 "title=\"Cumpleaños\"/>"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
-msgid ""
-"<i class=\"oi oi-fw oi-filled me-2 text-primary\" data-icon=\"contract\" "
-"title=\"Contract\"/>"
-msgstr ""
-"<i class=\"oi oi-fw oi-filled me-2 text-primary\" data-icon=\"contract\" "
-"title=\"Contrato\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -1616,6 +1607,7 @@ msgstr "Contactos"
 
 #. module: hr
 #. odoo-javascript
+#: code:addons/hr/static/src/components/contract_period/contract_period.xml:0
 #: code:addons/hr/static/src/components/versions_timeline/versions_timeline.js:0
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -1652,6 +1644,8 @@ msgid "Contract Overview"
 msgstr "Resumen del contrato"
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/contract_period/contract_period.js:0
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view_enhanced
 msgid "Contract Period"
 msgstr "Periodo del contrato"
@@ -1955,6 +1949,10 @@ msgid ""
 "today or earlier, the departure is applied on confirmation; otherwise it is "
 "scheduled for that date."
 msgstr ""
+"Fecha en la que se archiva al empleado (y a su usuario, si no tiene otro "
+"empleado activo). De forma predeterminada, es el día siguiente a su salida. "
+"Si la fecha es hoy o anterior, la salida se aplica al confirmar; de lo "
+"contrario, se programa para esa fecha."
 
 #. module: hr
 #. odoo-javascript
@@ -2681,7 +2679,7 @@ msgstr "Fin de la relación laboral"
 #. odoo-python
 #: code:addons/hr/models/hr_employee_departure.py:0
 msgid "End of Collaboration cancelled"
-msgstr ""
+msgstr "Fin de la colaboración cancelado"
 
 #. module: hr
 #. odoo-python
@@ -7039,6 +7037,13 @@ msgstr "trabajo"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
 msgstr "work_permit_name"
+
+#~ msgid ""
+#~ "<i class=\"oi oi-fw oi-filled me-2 text-primary\" data-icon=\"contract\" "
+#~ "title=\"Contract\"/>"
+#~ msgstr ""
+#~ "<i class=\"oi oi-fw oi-filled me-2 text-primary\" data-icon=\"contract\" "
+#~ "title=\"Contrato\"/>"
 
 #~ msgid ""
 #~ "This working schedule is used by  employee(s), are you sure you want "

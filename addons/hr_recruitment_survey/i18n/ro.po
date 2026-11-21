@@ -6,7 +6,7 @@
 # Hongu Cosmin <cosmin513@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
-# Dorin Hongu <dhongu@gmail.com>, 2023
+# Dorin Hongu <dhongu@gmail.com>, 2023, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Ciocoiu Beatrice-Flavia <ciocoiuflavia008@gmail.com>, 2025.
 msgid ""
@@ -14,9 +14,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-06 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 16:51+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-21 18:59+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/"
 "hr_recruitment_survey/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: hr_recruitment_survey
 #: model:ir.module.module,description:base.module_hr_recruitment_survey
@@ -34,6 +34,10 @@ msgid ""
 "This module is integrated with the survey module\n"
 "to allow you to define interviews for different jobs.\n"
 msgstr ""
+"\n"
+"Folosește formulare de interviu în procesul de recrutare.\n"
+"Acest modul este integrat cu modulul de sondaje\n"
+"pentru a defini interviuri pentru diferite posturi.\n"
 
 #. module: hr_recruitment_survey
 #: model:mail.template,body_html:hr_recruitment_survey.mail_template_applicant_interview_invite
@@ -69,11 +73,40 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Stimate/Stimată <t t-out=\"object.partner_id.name or 'applicant'\">"
+"[applicant name]</t><br><br>\n"
+"        <t>\n"
+"            Ați avansat în procesul de recrutare și vă invităm să răspundeți "
+"la câteva întrebări.\n"
+"        </t>\n"
+"        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href=\"(object.get_start_url())\" t-attf-"
+"style=\"background-color: {{user.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {"
+"{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\">\n"
+"                <t>\n"
+"                    Începeți interviul scris\n"
+"                </t>\n"
+"            </a>\n"
+"        </div>\n"
+"        <t t-if=\"object.deadline\">\n"
+"            Vă rugăm să completați interviul până la <t t-out=\"format_date"
+"(object.deadline)\">[deadline date]</t>.<br><br>\n"
+"        </t>\n"
+"        <t>\n"
+"            Vă dorim mult succes! Vă mulțumim anticipat pentru participare.\n"
+"        </t>\n"
+"    \n"
+"</div>\n"
+"            "
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_recruitment_survey_button_form_view
 msgid "<i class=\"oi me-2\" data-icon=\"east\"/>Go to Recruitment"
-msgstr ""
+msgstr "<i class=\"oi me-2\" data-icon=\"east\"/>Accesează Recrutarea"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
@@ -87,7 +120,7 @@ msgstr ""
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.survey_survey_view_form
 msgid "<span class=\"o_stat_text\">Jobs</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Posturi</span>"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1
@@ -97,12 +130,12 @@ msgstr "Despre tine"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__accessible_by_current_user
 msgid "Accessible By Current User"
-msgstr ""
+msgstr "Accesibil utilizatorului curent"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__accessible_by_interviewer_user
 msgid "Accessible By Interviewer User"
-msgstr ""
+msgstr "Accesibil intervievatorului"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q7
@@ -116,20 +149,18 @@ msgstr "Adăugare sondaj new"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__emails
-#, fuzzy
 msgid "Additional emails"
 msgstr "E-mailuri suplimentare"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__all_surveys_are_recruitment
 msgid "All Surveys Are Recruitment"
-msgstr ""
+msgstr "Toate sondajele sunt pentru recrutare"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__deadline
-#, fuzzy
 msgid "Answer deadline"
-msgstr "Termenul răspuns"
+msgstr "Termen-limită pentru răspuns"
 
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_hr_applicant
@@ -145,31 +176,26 @@ msgstr "Candidat: Interviu"
 
 #. module: hr_recruitment_survey
 #: model:ir.model,website_form_label:hr_recruitment_survey.model_hr_applicant
-#, fuzzy
 msgid "Apply for a Job"
-msgstr "Aplică pentru un loc de muncă"
+msgstr "Candidează pentru un loc de muncă"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__attachment_ids
-#, fuzzy
 msgid "Attachments"
 msgstr "Atașamente"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__author_id
-#, fuzzy
 msgid "Author"
 msgstr "Autor"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__body_has_template_value
-#, fuzzy
 msgid "Body content is the same as the template"
-msgstr "Conținutul mesajului este același cu template-ul"
+msgstr "Conținutul mesajului este identic cu cel al șablonului"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__can_edit_body
-#, fuzzy
 msgid "Can Edit Body"
 msgstr "Poate edita conținutul"
 
@@ -186,19 +212,16 @@ msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__body
-#, fuzzy
 msgid "Contents"
 msgstr "Conținuturi"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__create_uid
-#, fuzzy
 msgid "Created by"
 msgstr "Creat de"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__create_date
-#, fuzzy
 msgid "Created on"
 msgstr "Creat pe"
 
@@ -223,15 +246,13 @@ msgstr "Educație"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__existing_partner_ids
-#, fuzzy
 msgid "Existing Partner"
-msgstr "Partener Existent"
+msgstr "Partener existent"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__existing_emails
-#, fuzzy
 msgid "Existing emails"
-msgstr "E-mailuri Existente"
+msgstr "E-mailuri existente"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q2
@@ -250,14 +271,13 @@ msgstr "Obțineți avantaje, cum ar fi parcare gratuită, permise de sport"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__existing_mode
-#, fuzzy
 msgid "Handle existing"
-msgstr "Manevrare existentă"
+msgstr "Gestionarea elementelor existente"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__has_many_applicants
 msgid "Has Many Applicants"
-msgstr ""
+msgstr "Are mai mulți candidați"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row1
@@ -277,12 +297,12 @@ msgstr "Aveți cadouri precum ceai, cafea și papetărie"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__hide_url
 msgid "Hide Url"
-msgstr ""
+msgstr "Ascunde URL-ul"
 
 #. module: hr_recruitment_survey
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment_survey
 msgid "Hr Recruitment Interview Forms"
-msgstr ""
+msgstr "Formulare de interviu pentru recrutare HR"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__id
@@ -295,12 +315,11 @@ msgstr "ID"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_recruitment_survey_invite__survey_users_login_required
-#, fuzzy
 msgid ""
 "If checked, users have to login before answering even with a valid token."
 msgstr ""
-"Dacă este bifat, utilizatorii trebuie să se autentifice înainte de a "
-"răspunde chiar și cu un toekn valabil."
+"Dacă este bifată, utilizatorii trebuie să se autentifice înainte de a "
+"răspunde, chiar dacă au un token valid."
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_col2
@@ -323,13 +342,13 @@ msgstr "Formular Interviu: %s"
 #. odoo-python
 #: code:addons/hr_recruitment_survey/wizard/hr_recruitment_survey_invite.py:0
 msgid "Interview Invitation"
-msgstr ""
+msgstr "Invitație la interviu"
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/wizard/hr_recruitment_survey_invite.py:0
 msgid "Interview Invitation: %(survey_name)s"
-msgstr ""
+msgstr "Invitație la interviu: %(survey_name)s"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.res_config_settings_view_form
@@ -345,21 +364,19 @@ msgstr "Interviuri"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__is_mail_template_editor
-#, fuzzy
 msgid "Is Editor"
-msgstr "Este Editor"
+msgstr "Este editor"
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/survey_survey.py:0
-#, fuzzy
 msgid "Job"
 msgstr "Loc de muncă"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__job_count
 msgid "Job Count"
-msgstr ""
+msgstr "Număr de posturi"
 
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_hr_job
@@ -374,25 +391,21 @@ msgstr "Cunoștințe"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__lang
-#, fuzzy
 msgid "Language"
 msgstr "Limba"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__write_uid
-#, fuzzy
 msgid "Last Updated by"
 msgstr "Ultima actualizare făcută de"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__write_date
-#, fuzzy
 msgid "Last Updated on"
 msgstr "Ultima actualizare pe"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__template_id
-#, fuzzy
 msgid "Mail Template"
 msgstr "Șablon de e-mail"
 
@@ -413,23 +426,21 @@ msgstr "Locație birou"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_recruitment_survey_invite__lang
-#, fuzzy
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the main partner's language will be used. This should "
 "usually be a placeholder expression that provides the appropriate language, "
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
-"Limba de traducere opțională (cod ISO) de selectat la trimiterea unui email. "
-"Dacă nu este setată, se va folosi limba principală a partenerului. De "
-"obicei, aceasta ar trebui să fie o expresie substituent care furnizează "
-"limba potrivită, de exemplu {{ object.partner_id.lang }}."
+"Limba opțională a traducerii (cod ISO) folosită la trimiterea unui e-mail. "
+"Dacă nu este setată, se va folosi limba partenerului principal. De obicei, "
+"aceasta este o expresie substituent care furnizează limba potrivită, de "
+"exemplu {{ object.partner_id.lang }}."
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__mail_server_id
-#, fuzzy
 msgid "Outgoing mail server"
-msgstr "Server trimitere e-mail-uri"
+msgstr "Server de e-mail pentru mesaje trimise"
 
 #. module: hr_recruitment_survey
 #: model:mail.template,subject:hr_recruitment_survey.mail_template_applicant_interview_invite
@@ -484,7 +495,6 @@ msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__partner_ids
-#, fuzzy
 msgid "Recipients"
 msgstr "Destinatari"
 
@@ -502,25 +512,22 @@ msgstr "Formulare Recrutare"
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/survey_survey.py:0
 msgid "Related Jobs"
-msgstr ""
+msgstr "Posturi asociate"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__render_model
-#, fuzzy
 msgid "Rendering Model"
-msgstr "Model de redare"
+msgstr "Model de randare"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__survey_users_login_required
-#, fuzzy
 msgid "Require Login"
-msgstr "Necesită Autentificare"
+msgstr "Necesită autentificare"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__existing_text
-#, fuzzy
 msgid "Resend Comment"
-msgstr "Retrimtere Comentariu"
+msgstr "Retrimite comentariul"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__response_ids
@@ -529,9 +536,8 @@ msgstr "Răspunsuri"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__scheduled_date
-#, fuzzy
 msgid "Scheduled Date"
-msgstr "Dată planificată"
+msgstr "Dată programată"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
@@ -540,9 +546,8 @@ msgstr "Vezi raportul interviului"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__send_email
-#, fuzzy
 msgid "Send Email"
-msgstr "Trimiteți e-mail"
+msgstr "Trimite e-mail"
 
 #. module: hr_recruitment_survey
 #: model:ir.actions.server,name:hr_recruitment_survey.action_applicant_send_interview
@@ -553,22 +558,21 @@ msgstr "Trimite Interviu"
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.crm_case_tree_view_job_inherit
 msgid "Send Interviews"
-msgstr ""
+msgstr "Trimite interviurile"
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_applicant.py:0
 msgid "Send interviews"
-msgstr ""
+msgstr "Trimite interviuri"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__single_survey_id
 msgid "Single Survey"
-msgstr ""
+msgstr "Sondaj unic"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__subject
-#, fuzzy
 msgid "Subject"
 msgstr "Subiect"
 
@@ -584,7 +588,7 @@ msgstr "Sondaj"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__survey_access_mode
 msgid "Survey Access Mode"
-msgstr ""
+msgstr "Mod de acces la sondaj"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__survey_type
@@ -593,9 +597,8 @@ msgstr "Tip sondaj"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__survey_start_url
-#, fuzzy
 msgid "Survey URL"
-msgstr "URL Sondaj"
+msgstr "URL-ul sondajului"
 
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_survey_user_input
@@ -605,7 +608,6 @@ msgstr "Răspuns Utilizator Sondaj"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__survey_ids
 #: model:ir.module.module,summary:base.module_hr_recruitment_survey
-#, fuzzy
 msgid "Surveys"
 msgstr "Sondaje"
 
@@ -627,18 +629,18 @@ msgid ""
 "The following emails you just entered are invalid:\n"
 "%s"
 msgstr ""
+"Următoarele adrese de e-mail introduse nu sunt valide:\n"
+"%s"
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/wizard/hr_recruitment_survey_invite.py:0
-#, fuzzy
 msgid ""
 "The following recipients have no user account: %s. You should create user "
 "accounts for them or allow external signup in configuration."
 msgstr ""
-"Următorii destinatari nu au cont de utilizator: %s. Ar trebui să creați "
-"conturi de utilizator pentru ei sau să permiteți înscrierea externă în "
-"configurare."
+"Următorii destinatari nu au cont de utilizator: %s. Creează conturi pentru "
+"ei sau permite înscrierea externă în configurare."
 
 #. module: hr_recruitment_survey
 #. odoo-python
@@ -649,19 +651,17 @@ msgstr "Sondajul %(survey_link)s a fost trimis către %(partner_link)s"
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/wizard/hr_recruitment_survey_invite.py:0
-#, fuzzy
 msgid ""
 "This survey does not allow external people to participate. You should create "
 "user accounts or update survey access mode accordingly."
 msgstr ""
-"Acest sondaj nu permite participanților externi. Ar trebui să creați conturi "
-"de utilizator sau să actualizați modul de acces la sondaj în consecință."
+"Acest sondaj nu permite participarea persoanelor din exterior. Creează "
+"conturi pentru acestea sau modifică modul de acces la sondaj."
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__survey_users_can_signup
-#, fuzzy
 msgid "Users can signup"
-msgstr "Utilizatorii se pot înscrie"
+msgstr "Utilizatorii se pot înregistra"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_col3
@@ -696,6 +696,8 @@ msgid ""
 "Wizard for sending interview invitations to job applicants during "
 "recruitment process"
 msgstr ""
+"Asistent pentru trimiterea invitațiilor la interviu candidaților în procesul "
+"de recrutare"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row4
@@ -714,19 +716,17 @@ msgstr ""
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/survey_survey.py:0
-#, fuzzy
 msgid "id"
 msgstr "id"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_recruitment_survey_invite__scheduled_date
-#, fuzzy
 msgid ""
 "send emails after that date. This date is considered as being in UTC "
 "timezone."
 msgstr ""
-"trimiteți e-mailuri după data respectivă. Această dată este considerată a fi "
-"în fusul orar UTC."
+"trimite e-mailuri după această dată. Data este interpretată în fusul orar "
+"UTC."
 
 #~ msgid ""
 #~ "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"

@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:38+0000\n"
-"PO-Revision-Date: 2026-10-29 04:33+0000\n"
+"PO-Revision-Date: 2026-11-17 05:43+0000\n"
 "Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-20/"
 "maintenance/id/>\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: maintenance
 #: model:ir.module.module,description:base.module_maintenance
@@ -33,11 +33,13 @@ msgid ""
 "\n"
 "Track equipment and maintenance requests"
 msgstr ""
+"\n"
+"Lacak permintaan peralatan dan maintenance"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "<span>Reporting</span>"
-msgstr "Laporan"
+msgstr "<span>Pelaporan</span>"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
@@ -61,7 +63,7 @@ msgid ""
 "creating new records for this alias."
 msgstr ""
 "Kamus Python yang akan dievaluasi untuk memberikan nilai baku ketika membuat "
-"catatan baru untuk alias ini."
+"record baru untuk alias ini."
 
 #. module: maintenance
 #: model:maintenance.equipment,name:maintenance.equipment_computer3
@@ -204,7 +206,7 @@ msgstr "Semua"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_stage_view_form
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_stage_view_tree
 msgid "All Maintenance Teams"
-msgstr ""
+msgstr "Semua Tim Maintenance"
 
 #. module: maintenance
 #: model:ir.model.constraint,message:maintenance.constraint_maintenance_equipment_serial_no
@@ -215,7 +217,7 @@ msgstr "Aset lain sudah memakai nomor serial ini!"
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__state__approved
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 msgid "Approved"
-msgstr ""
+msgstr "Disetujui"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
@@ -229,7 +231,7 @@ msgstr "Diarsipkan"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_tree
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_tree
 msgid "Assign To User"
-msgstr "Ditugaskan Untuk User"
+msgstr "Tugaskan ke User"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
@@ -249,14 +251,14 @@ msgstr "Ditugaskan untuk"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Assignees"
-msgstr ""
+msgstr "Petugas"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_attachment_count
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_attachment_count
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__message_attachment_count
 msgid "Attachment Count"
-msgstr "Hitungan Lampiran"
+msgstr "Jumlah Lampiran"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -289,7 +291,7 @@ msgstr "Nama Kategori"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Changes Requested"
-msgstr ""
+msgstr "Perubahan Diminta"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__close_date
@@ -505,7 +507,7 @@ msgstr "Domain email misal 'contoh.com' di 'odoo@contoh.com'"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__repeat_until
 msgid "End Date"
-msgstr "Tanggal Berakhir"
+msgstr "Tanggal Akhir"
 
 #. module: maintenance
 #. odoo-python
@@ -682,8 +684,8 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task "
 "creation alias)"
 msgstr ""
-"ID dari catatan induk alias (contoh: project yang menahan pembuatan alias "
-"tugas)"
+"ID dari record induk yang menyimpan alias (contoh: project yang menyimpan "
+"alias pembuatan tugas)"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_exception_icon
@@ -745,7 +747,7 @@ msgstr "Catatan Internal"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__is_assigned
 msgid "Is Assigned"
-msgstr ""
+msgstr "Ditugaskan"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_is_follower
@@ -873,7 +875,7 @@ msgstr "Permintaan Maintenance Dibuat"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__equipment_req_properties_definition
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__equipment_req_properties
 msgid "Maintenance Request Properties"
-msgstr ""
+msgstr "Properti Permintaan Maintenance"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
@@ -948,7 +950,7 @@ msgstr "Tipe Maintenance"
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__activity_type_icon
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Ikon Material Symbols, misalnya checklist"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
@@ -1066,7 +1068,7 @@ msgstr "Tipe Aktivitas Berikutnya"
 #. module: maintenance
 #: model:res.groups.privilege,placeholder:maintenance.res_groups_privilege_maintenance
 msgid "No"
-msgstr ""
+msgstr "Tidak"
 
 #. module: maintenance
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__priority__2
@@ -1113,7 +1115,7 @@ msgstr "Jumlah Permintaan di Prioritas Tinggi"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__todo_request_count_changes_requested
 msgid "Number of Requests with Changes Requested"
-msgstr ""
+msgstr "Jumlah Permintaan dengan Perubahan Diminta"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_has_error_counter
@@ -1140,7 +1142,7 @@ msgstr "Jumlah pesan dengan kesalahan pengiriman"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Open"
-msgstr ""
+msgstr "Terbuka"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_force_thread_id
@@ -1149,14 +1151,14 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"ID Opsional dari file (catatan) di mana semua pesan masuk akan dilampirkan, "
+"ID Opsional dari file (record) di mana semua pesan masuk akan dilampirkan, "
 "bahkan jika mereka tidak menjawabnya. Jika diatur, hal ini akan "
-"menonaktifkan pembuatan catatan baru sepenuhnya."
+"menonaktifkan pembuatan record baru sepenuhnya."
 
 #. module: maintenance
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_equipment__equipment_assign_to__other
 msgid "Other"
-msgstr ""
+msgstr "Lainnya"
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_reports_oee
@@ -1179,7 +1181,7 @@ msgstr "Model Induk"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr "Catatan Induk ID File"
+msgstr "ID Thread Record Induk"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_parent_model_id
@@ -1200,7 +1202,7 @@ msgstr "Telepon"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Planned Date"
-msgstr ""
+msgstr "Tanggal Terencana"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_contact
@@ -1245,12 +1247,12 @@ msgstr "Properti"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
 msgid "Record Colour"
-msgstr "Warna Data"
+msgstr "Warna Record"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_force_thread_id
 msgid "Record Thread ID"
-msgstr "Rekam ID Thread"
+msgstr "ID Thread Record"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__recurring_maintenance
@@ -1345,11 +1347,13 @@ msgstr "Tanggal Terjadwal"
 msgid ""
 "Scheduled Date and Scheduled End must either both be set or both be empty."
 msgstr ""
+"Tanggal Terjadwal dan Akhir Terjadwal harus diisi keduanya atau dikosongkan "
+"keduanya."
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__schedule_end
 msgid "Scheduled End"
-msgstr "Akhir yang Dijadwalkan"
+msgstr "Akhir Terjadwal"
 
 #. module: maintenance
 #: model:maintenance.stage,name:maintenance.stage_4
@@ -1389,7 +1393,7 @@ msgstr "Pengaturan"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Show all records whose next activity date is past"
 msgstr ""
-"Tunjukkan semua rekaman yang tanggal kegiatan berikutnya berada di masa lalu"
+"Tunjukkan semua record dengan tanggal aktivitas berikutnya ada di masa lalu"
 
 #. module: maintenance
 #: model:maintenance.equipment.category,name:maintenance.equipment_software
@@ -1410,7 +1414,7 @@ msgstr "Tahap"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__state
 msgid "State"
-msgstr ""
+msgstr "Status"
 
 #. module: maintenance
 #: model:mail.message.subtype,name:maintenance.mt_req_status
@@ -1478,7 +1482,7 @@ msgstr "Teknisi"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__user_ids
 msgid "Technicians"
-msgstr ""
+msgstr "Teknisi"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__instruction_text
@@ -1493,8 +1497,8 @@ msgid ""
 "new record of this model (e.g. a Project Task)"
 msgstr ""
 "Model (Jenis Dokumen Odoo) di mana alias ini dikaitkan. Email masuk yang "
-"tidak menjawab catatan yang sudah ada akan menyebabkan pembuatan rekor baru "
-"model ini (misalnya tugas project)"
+"tidak menjawab record yang sudah ada akan menyebabkan pembuatan record baru "
+"dengan model ini (misalnya Tugas Project)"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_name
@@ -1553,13 +1557,13 @@ msgstr ""
 #. module: maintenance
 #: model:ir.module.module,summary:base.module_maintenance
 msgid "Track equipment and manage maintenance requests"
-msgstr ""
+msgstr "Lacak peralatan dan kelola permintaan maintenance"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__activity_exception_decoration
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Jenis dari aktivitas pengecualian pada rekaman data."
+msgstr "Jenis dari aktivitas pengecualian pada record."
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
@@ -1593,7 +1597,7 @@ msgstr "Hingga"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__equipment_assign_to
 msgid "Used By"
-msgstr ""
+msgstr "Digunakan oleh"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__partner_id
@@ -1662,29 +1666,29 @@ msgstr "hari"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_stage_view_form
 msgid "e.g. In Progress"
-msgstr ""
+msgstr "cth: Sedang Diproses"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 msgid "e.g. Internal Maintenance"
-msgstr "contoh Maintenance Internal"
+msgstr "cth: Maintenance Internal"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "e.g. LED Monitor"
-msgstr "contoh LED Monitor"
+msgstr "cth: LED Monitor"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
 msgid "e.g. Monitors"
-msgstr "Monitor"
+msgstr "cth: Monitor"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "e.g. Screen not working"
-msgstr "Layar tidak bekerja"
+msgstr "cth: Layar tidak bekerja"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 msgid "e.g. mycompany.com"
-msgstr "contoh. mycompany.com"
+msgstr "cth: mycompany.com"

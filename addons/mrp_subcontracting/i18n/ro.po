@@ -6,7 +6,7 @@
 # Hongu Cosmin <cosmin513@gmail.com>, 2022
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
 # Martin Trigaux, 2022
-# Dorin Hongu <dhongu@gmail.com>, 2023
+# Dorin Hongu <dhongu@gmail.com>, 2023, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Alin Ilie <alin.ilie@logit-solutions.com>, 2025.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-25 17:38+0000\n"
-"PO-Revision-Date: 2026-10-08 15:33+0000\n"
-"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"PO-Revision-Date: 2026-11-21 13:37+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/"
 "mrp_subcontracting/ro/>\n"
 "Language: ro\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -43,7 +43,7 @@ msgstr "Secvență subcontractare %(name)s"
 #. odoo-python
 #: code:addons/mrp_subcontracting/report/mrp_report_bom_structure.py:0
 msgid "%(qty)s To %(route)s"
-msgstr ""
+msgstr "%(qty)s La %(route)s"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal
@@ -53,7 +53,7 @@ msgstr "/my/productions"
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_form_view
 msgid "<span class=\"o_stat_text\">Overview</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Prezentare generală</span>"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -70,7 +70,7 @@ msgstr "Atribuie numere de serie comenzii de producție"
 #. odoo-javascript
 #: code:addons/mrp_subcontracting/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 msgid "Availabilities on subcontract location."
-msgstr ""
+msgstr "Disponibilități la locația de subcontractare."
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_report_mrp_report_bom_structure
@@ -113,7 +113,6 @@ msgstr ""
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_res_company
-#, fuzzy
 msgid "Company"
 msgstr "Companie"
 
@@ -234,9 +233,8 @@ msgstr "Transfer de intrare"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_location
-#, fuzzy
 msgid "Inventory Location"
-msgstr "Locație diferențe inventar"
+msgstr "Locație pentru inventar"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_quant__is_subcontract
@@ -255,7 +253,7 @@ msgstr ""
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_report_mrp_report_mo_overview
 msgid "MO Overview Report"
-msgstr ""
+msgstr "Raport general CP"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__production_ids
@@ -266,7 +264,7 @@ msgstr "Producții MRP pentru care partenerul este subcontractant"
 #. module: mrp_subcontracting
 #: model:ir.module.module,shortdesc:base.module_mrp_subcontracting
 msgid "MRP Subcontracting"
-msgstr ""
+msgstr "Subcontractare MRP"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -354,7 +352,6 @@ msgstr "Productii"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_quant
-#, fuzzy
 msgid "Quant"
 msgstr "Poziții de stoc"
 
@@ -379,7 +376,7 @@ msgstr "Reaprovizionare la comandă (MTO)"
 #. odoo-javascript
 #: code:addons/mrp_subcontracting/static/src/components/subcontracting_production_form_controller.js:0
 msgid "Reserve"
-msgstr ""
+msgstr "Rezervă"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -440,7 +437,7 @@ msgstr "Regulă stoc"
 #. module: mrp_subcontracting
 #: model:ir.module.module,summary:base.module_mrp_subcontracting
 msgid "Subcontract Productions"
-msgstr ""
+msgstr "Subcontractează ordine de fabricație"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
@@ -450,7 +447,7 @@ msgstr "Subcontractat"
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
 msgid "Subcontracted Productions"
-msgstr ""
+msgstr "Ordine de fabricație subcontractate"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -511,7 +508,6 @@ msgstr "Tip operație reaprovizionare subcontractare"
 #. module: mrp_subcontracting
 #. odoo-javascript
 #: code:addons/mrp_subcontracting/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
-#, fuzzy
 msgid "Subcontracting:"
 msgstr "Subcontractare:"
 
@@ -542,7 +538,7 @@ msgstr "Locație subcontractant"
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mo_overview_content
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.report_mrp_bom
 msgid "Subcontractor Stock"
-msgstr ""
+msgstr "Stocul subcontractantului"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom__subcontractor_ids
@@ -585,7 +581,7 @@ msgstr "În prezent nu există producții pentru contul dvs."
 #. odoo-python
 #: code:addons/mrp_subcontracting/report/mrp_report_mo_overview.py:0
 msgid "To Order"
-msgstr ""
+msgstr "A comanda"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_move_form_view
@@ -601,7 +597,7 @@ msgstr "Transfer"
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_form_view
 msgid "Transfers"
-msgstr ""
+msgstr "Transferuri"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_mrp_production__subcontractor_id

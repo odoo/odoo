@@ -1,21 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* sale_expense
+# * sale_expense
 #
 # Translators:
 # Hongu Cosmin <cosmin513@gmail.com>, 2022
-# Dorin Hongu <dhongu@gmail.com>, 2022
+# Dorin Hongu <dhongu@gmail.com>, 2022, 2026.
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
 # Martin Trigaux, 2022
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 20:11+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-21 10:58+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/"
 "sale_expense/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +22,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: sale_expense
 #: model:ir.module.module,description:base.module_sale_expense
@@ -36,6 +35,13 @@ msgid ""
 "This module allow to reinvoice employee expense, by setting the SO directly "
 "on the expense.\n"
 msgstr ""
+"\n"
+"Refacturarea cheltuielilor angajaților\n"
+"==========================\n"
+"\n"
+"Creați produse pentru care puteți refactura costurile.\n"
+"Acest modul permite refacturarea cheltuielilor angajaților prin asocierea "
+"directă a comenzii de vânzare la cheltuială.\n"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_sale_order__expense_count
@@ -45,7 +51,7 @@ msgstr "# de Cheltuieli"
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__attach_receipts_to_invoice
 msgid "Attach receipts to future customer invoices"
-msgstr ""
+msgstr "Atașați bonurile la facturile viitoare ale clienților"
 
 #. module: sale_expense
 #: model:ir.model.fields,help:sale_expense.field_hr_expense__attach_receipts_to_invoice
@@ -53,19 +59,21 @@ msgid ""
 "Attach the expense receipts to customer invoices generated later from the "
 "related sales order"
 msgstr ""
+"Atașați bonurile de cheltuieli la facturile clientului generate ulterior din "
+"comanda de vânzare asociată"
 
 #. module: sale_expense
 #. odoo-javascript
 #: code:addons/sale_expense/static/src/views/attachment_selector.js:0
 #: model:ir.model,name:sale_expense.model_expense_attachment_selection_wizard
 msgid "Attachment Selection"
-msgstr ""
+msgstr "Selectarea atașamentelor"
 
 #. module: sale_expense
 #. odoo-python
 #: code:addons/sale_expense/models/sale_order.py:0
 msgid "Attachments Selection"
-msgstr ""
+msgstr "Selectarea atașamentelor"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__can_be_reinvoiced
@@ -76,12 +84,12 @@ msgstr "Pot fi refacturate"
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_expense_attachment_selection_wizard__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Creat de"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_expense_attachment_selection_wizard__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Creat în"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_account_move__display_name
@@ -93,7 +101,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_expense.field_sale_order__display_name
 #: model:ir.model.fields,field_description:sale_expense.field_sale_order_line__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nume afișat"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_hr_expense
@@ -104,12 +112,12 @@ msgstr "Cheltuieli"
 #: model:ir.model.fields,field_description:sale_expense.field_product_product__expense_policy_tooltip
 #: model:ir.model.fields,field_description:sale_expense.field_product_template__expense_policy_tooltip
 msgid "Expense Policy Tooltip"
-msgstr ""
+msgstr "Indicații privind politica de cheltuieli"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_hr_expense_split
 msgid "Expense Split"
-msgstr ""
+msgstr "Repartizarea cheltuielilor"
 
 #. module: sale_expense
 #: model:ir.actions.act_window,name:sale_expense.hr_expense_action_from_sale_order
@@ -123,7 +131,7 @@ msgstr "Cheltuieli"
 #. odoo-python
 #: code:addons/sale_expense/models/product_template.py:0
 msgid "Expenses of this product may not be added to a Sales Order."
-msgstr ""
+msgstr "Cheltuielile acestui produs nu pot fi adăugate la o comandă de vânzare."
 
 #. module: sale_expense
 #. odoo-python
@@ -131,6 +139,8 @@ msgstr ""
 msgid ""
 "Expenses will be added to the Sales Order at their actual cost when posted."
 msgstr ""
+"La înregistrare, cheltuielile vor fi adăugate la comanda de vânzare la "
+"costul lor real."
 
 #. module: sale_expense
 #. odoo-python
@@ -139,6 +149,8 @@ msgid ""
 "Expenses will be added to the Sales Order at their sales price (product "
 "price, pricelist, etc.) when posted."
 msgstr ""
+"La înregistrare, cheltuielile vor fi adăugate la comanda de vânzare la "
+"prețul de vânzare (prețul produsului, lista de prețuri etc.)."
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_account_move__id
@@ -150,7 +162,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_expense.field_sale_order__id
 #: model:ir.model.fields,field_description:sale_expense.field_sale_order_line__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: sale_expense
 #: model:ir.model.fields,help:sale_expense.field_hr_expense__sale_order_id
@@ -158,16 +170,18 @@ msgid ""
 "If the category has an expense policy, it will be reinvoiced on this sales "
 "order"
 msgstr ""
+"Dacă categoria are o politică de cheltuieli, costul va fi refacturat pe "
+"această comandă de vânzare"
 
 #. module: sale_expense
 #: model_terms:ir.ui.view,arch_db:sale_expense.expense_attachment_selection_wizard_view
 msgid "Import Attachments"
-msgstr ""
+msgstr "Importați atașamente"
 
 #. module: sale_expense
 #: model_terms:ir.ui.view,arch_db:sale_expense.sale_order_form_view_inherit
 msgid "Import Expense Attachments"
-msgstr ""
+msgstr "Importați atașamentele cheltuielilor"
 
 #. module: sale_expense
 #: model_terms:ir.ui.view,arch_db:sale_expense.product_product_view_form_inherit_sale_expense
@@ -177,12 +191,12 @@ msgstr "Facturare"
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_sale_order__is_linked_to_expense_with_attachment
 msgid "Is Linked To Expense With Attachment"
-msgstr ""
+msgstr "Este asociat unei cheltuieli cu atașament"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_account_move
 msgid "Journal Entry"
-msgstr ""
+msgstr "Notă contabilă"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_account_move_line
@@ -192,24 +206,24 @@ msgstr "Element jurnal"
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_expense_attachment_selection_wizard__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Ultima actualizare făcută de"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_expense_attachment_selection_wizard__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Ultima actualizare pe"
 
 #. module: sale_expense
 #. odoo-python
 #: code:addons/sale_expense/models/sale_order.py:0
 msgid "No attachment found to import from linked expense(s)"
-msgstr ""
+msgstr "Nu s-au găsit atașamente de importat din cheltuielile asociate"
 
 #. module: sale_expense
 #. odoo-python
 #: code:addons/sale_expense/wizard/expense_attachment_selection_wizard.py:0
 msgid "Please select at least one attachment to import."
-msgstr ""
+msgstr "Selectați cel puțin un atașament de importat."
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_product_template
@@ -219,28 +233,28 @@ msgstr "Produs"
 #. module: sale_expense
 #: model:ir.module.module,summary:base.module_sale_expense
 msgid "Quotation, Sales Orders, Delivery & Invoicing Control"
-msgstr ""
+msgstr "Controlul ofertelor, comenzilor de vânzare, livrărilor și facturării"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_id
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense_split__sale_order_id
 msgid "Reinvoice to"
-msgstr ""
+msgstr "Refacturați către"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_expense_attachment_selection_wizard__sale_order_id
 msgid "Sale Order"
-msgstr ""
+msgstr "Comadă vânzare"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_line_id
 msgid "Sale Order Line"
-msgstr ""
+msgstr "Linie comandă de vânzare"
 
 #. module: sale_expense
 #: model:ir.module.module,shortdesc:base.module_sale_expense
 msgid "Sales Expense"
-msgstr ""
+msgstr "Cheltuieli de vânzare"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_sale_order
@@ -251,15 +265,15 @@ msgstr "Comandă de vânzare"
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Linie comandă vânzare"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_expense_attachment_selection_wizard__selected_attachments
 msgid "Selected Attachments"
-msgstr ""
+msgstr "Atașamente selectate"
 
 #. module: sale_expense
 #. odoo-python
 #: code:addons/sale_expense/wizard/expense_attachment_selection_wizard.py:0
 msgid "The following expense receipts were attached from reinvoiced expenses."
-msgstr ""
+msgstr "Următoarele bonuri au fost atașate din cheltuielile refacturate."

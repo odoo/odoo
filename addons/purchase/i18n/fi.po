@@ -37,8 +37,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 17:38+0000\n"
-"PO-Revision-Date: 2026-11-05 09:33+0000\n"
+"POT-Creation-Date: 2026-11-20 17:36+0000\n"
+"PO-Revision-Date: 2026-11-19 09:18+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-20/purchase/"
 "fi/>\n"
@@ -47,7 +47,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: purchase
 #: model:ir.actions.report,print_report_name:purchase.action_report_purchase_order
@@ -2101,7 +2101,7 @@ msgstr "Uusi"
 #. odoo-python
 #: code:addons/purchase/controllers/portal.py:0
 msgid "Newest"
-msgstr "Uusimmat"
+msgstr "Uusin"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_tree
@@ -2447,6 +2447,12 @@ msgid ""
 msgstr ""
 "Kun olet tilannut tuotteet toimittajallesi, vahvista tarjouspyyntösi, niin "
 "se muuttuu ostotilaukseksi."
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+msgid "Only a purchase manager can approve this purchase order."
+msgstr ""
 
 #. module: purchase
 #. odoo-python
@@ -4285,8 +4291,8 @@ msgstr "res_id"
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
-msgid "res_model_id"
-msgstr "res_model_id"
+msgid "res_model"
+msgstr ""
 
 #. module: purchase
 #. odoo-python
@@ -4328,6 +4334,9 @@ msgid ""
 "{{ object.company_id.name }} Request for Quotation (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
+
+#~ msgid "res_model_id"
+#~ msgstr "res_model_id"
 
 #~ msgid ""
 #~ "<div style=\"margin: 0px; padding: 0px;\">\n"

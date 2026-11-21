@@ -23,22 +23,23 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # "Marta (wacm)" <wacm@odoo.com>, 2026.
+# Lukáš Matějovský <lukas.matejovsky.71@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:38+0000\n"
-"PO-Revision-Date: 2026-08-31 21:11+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Czech <https://translate.odoo.com/projects/odoo-s19-4/stock/"
-"cs/>\n"
+"POT-Creation-Date: 2026-11-20 17:36+0000\n"
+"PO-Revision-Date: 2026-11-17 08:26+0000\n"
+"Last-Translator: Lukáš Matějovský <lukas.matejovsky.71@gmail.com>\n"
+"Language-Team: Czech <https://translate.odoo.com/projects/odoo-20/stock/cs/"
+">\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
 "<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: stock
 #. odoo-python
@@ -2163,6 +2164,16 @@ msgid ""
 msgstr "Odškrtnutím aktivního pole, můžete skrýt umístění bez jeho smazání."
 
 #. module: stock
+#: model:ir.model,name:stock.model_report_stock_fleet_report_cmr_batch
+msgid "CMR Batch Report"
+msgstr ""
+
+#. module: stock
+#: model:ir.model,name:stock.model_report_stock_fleet_report_cmr
+msgid "CMR Report"
+msgstr ""
+
+#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "COPY"
@@ -3706,6 +3717,8 @@ msgstr "Zobrazení šarží a sériových čísel na dodacích listech"
 #: model:ir.model.fields,field_description:stock.field_product_removal__display_name
 #: model:ir.model.fields,field_description:stock.field_product_replenish__display_name
 #: model:ir.model.fields,field_description:stock.field_product_template__display_name
+#: model:ir.model.fields,field_description:stock.field_report_stock_fleet_report_cmr__display_name
+#: model:ir.model.fields,field_description:stock.field_report_stock_fleet_report_cmr_batch__display_name
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__display_name
 #: model:ir.model.fields,field_description:stock.field_report_stock_report_stock_rule__display_name
 #: model:ir.model.fields,field_description:stock.field_res_company__display_name
@@ -4530,6 +4543,8 @@ msgstr "Jak by měly být produkty v převodech tohoto typu operace rezervovány
 #: model:ir.model.fields,field_description:stock.field_product_removal__id
 #: model:ir.model.fields,field_description:stock.field_product_replenish__id
 #: model:ir.model.fields,field_description:stock.field_product_template__id
+#: model:ir.model.fields,field_description:stock.field_report_stock_fleet_report_cmr__id
+#: model:ir.model.fields,field_description:stock.field_report_stock_fleet_report_cmr_batch__id
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__id
 #: model:ir.model.fields,field_description:stock.field_report_stock_report_stock_rule__id
 #: model:ir.model.fields,field_description:stock.field_res_company__id
@@ -10245,7 +10260,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.stock_quant_action
 #: model:ir.ui.menu,name:stock.menu_valuation
 msgid "Stock by Location"
-msgstr ""
+msgstr "Zásoby podle lokace"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_replenishment_info
@@ -12030,7 +12045,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__wave_category_ids
 msgid "Wave Product Categories"
-msgstr ""
+msgstr "Kategorie produktů pro vlnové převody"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__wave_date_granularity__week

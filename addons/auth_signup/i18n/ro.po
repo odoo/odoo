@@ -3,7 +3,7 @@
 # * auth_signup
 #
 # Translators:
-# Dorin Hongu <dhongu@gmail.com>, 2022, 2025.
+# Dorin Hongu <dhongu@gmail.com>, 2022, 2025, 2026.
 # sharkutz <sharkutz4life@yahoo.com>, 2022
 # Martin Trigaux, 2022
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
@@ -15,9 +15,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-06 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 16:05+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-20 06:17+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/"
 "auth_signup/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: auth_signup
 #: model:ir.module.module,description:base.module_auth_signup
@@ -34,6 +34,9 @@ msgid ""
 "Allow users to sign up and reset their password\n"
 "===============================================\n"
 msgstr ""
+"\n"
+"Permite utilizatorilor să se înregistreze și să își reseteze parola\n"
+"===================================================================\n"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -44,6 +47,11 @@ msgid ""
 "        You may change your password by following this link which will "
 "remain valid during"
 msgstr ""
+",<br/><br/>\n"
+"        A fost solicitată resetarea parolei pentru contul asociat acestei "
+"adrese de e-mail.\n"
+"        Vă puteți schimba parola accesând acest link, care va rămâne valabil "
+"timp de"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.mail_template_user_signup_account_created
@@ -74,6 +82,30 @@ msgid ""
 "                        </t>\n"
 "                    </t>"
 msgstr ""
+"<t>\n"
+"                        Bună ziua, <t t-out=\"object.name or ''\">Marc Demo</"
+"t>,<br><br>\n"
+"                        Contul dumneavoastră a fost creat cu succes!<br>\n"
+"                        Numele de utilizator este <strong><t t-"
+"out=\"object.email or ''\">mark.brown23@example.com</t></strong><br>\n"
+"                        Pentru a vă accesa contul, folosiți următorul link:\n"
+"                        <div style=\"margin: 32px 0px 32px 0px;\">\n"
+"                            <a t-attf-href=\"/web/login?auth_login={"
+"{object.email}}\" t-attf-style=\"background-color: {"
+"{object.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px "
+"8px 16px; text-decoration: none; color: {"
+"{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\">\n"
+"                                Accesați contul meu\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        Cu mulțumiri,<br>\n"
+"                        <t t-if=\"user.signature\">\n"
+"                            <br>\n"
+"                            <div data-o-mail-quote=\"1\">--<br data-o-mail-"
+"quote=\"1\"><t t-out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
+"                        </t>\n"
+"                    </t>"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.portal_set_password_email
@@ -100,6 +132,28 @@ msgid ""
 "company's portal.</t>\n"
 "            </t>"
 msgstr ""
+"<t>\n"
+"                Bună ziua, <t t-out=\"object.name or ''\">Marc Demo</t>,<br> "
+"<br>\n"
+"                Bine ați venit în portalul companiei <t t-"
+"out=\"object.company_id.name\">YourCompany</t>!<br><br>\n"
+"                A fost creat un cont pentru dumneavoastră cu numele de "
+"utilizator: <t t-out=\"object.login\">demo</t><br><br>\n"
+"                Faceți clic pe butonul de mai jos pentru a alege o parolă și "
+"a vă activa contul.\n"
+"                <div style=\"margin: 16px 0px 16px 0px; text-align: "
+"center;\">\n"
+"                    <a t-att-href=\"object.partner_id._get_signup_url()\" t-"
+"attf-style=\"display: inline-block; padding: 10px; text-decoration: none; "
+"font-size: 12px; background-color: {{object.company_id.email_secondary_color "
+"or '#875A7B'}}; color: {{object.company_id.email_primary_color or '#FFFFFF'}}"
+"; border-radius: 5px;\">\n"
+"                        <strong>Activează contul</strong>\n"
+"                    </a>\n"
+"                </div>\n"
+"                <t t-out=\"ctx.get('welcome_message') or ''\">Bine ați venit "
+"în portalul companiei noastre.</t>\n"
+"            </t>"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.set_password_email
@@ -140,6 +194,42 @@ msgid ""
 "--<br>The <t t-out=\"company_name\"></t> Team</t>\n"
 "            "
 msgstr ""
+"<t>\n"
+"<t t-set=\"company_name\" t-value=\"object.company_id.name or ''\"></t>\n"
+"<t t-set=\"website_url\" t-value=\"object.get_base_url()\"></t>\n"
+"Bună ziua, <t t-out=\"object.name or ''\">Marc Demo</t>,<br><br>\n"
+"<em>Acest link este valabil <t t-out=\""
+"(object.env['ir.config_parameter'].sudo().get_int"
+"('auth_signup.signup.validity.hours') or 144)//24\">link_validity_days</t> "
+"zile </em><br>\n"
+"<b><t t-out=\"company_name\"></t></b> folosește <a href=\"https://odoo.com\" "
+"t-attf-style=\"color: {{object.company_id.email_secondary_color or "
+"'#875A7B'}};\">Odoo</a>\n"
+"pentru activitatea sa. Ați fost invitat(ă) de <b><t t-"
+"out=\"object.create_uid.name or ''\">OdooBot</t></b> să vă conectați.\n"
+"<br><br>\n"
+"După acceptare, vă puteți conecta folosind: <br>\n"
+"<ul>\n"
+"    <li>Nume de utilizator: <a t-attf-href=\"/web/login?login={{ "
+"object.email }}\" target=\"_blank\" t-out=\"object.email or ''\">"
+"mark.brown23@example.com</a></li>\n"
+"    <li>Link: <a t-att-href=\"website_url\" t-out=\"website_url or ''\">"
+"http://yourcompany.odoo.com</a></li>\n"
+"</ul>\n"
+"<br>\n"
+"<div style=\"margin: 16px 0px 16px 0px;\">\n"
+"    <a t-att-href=\"object.partner_id._get_signup_url()\" t-attf-"
+"style=\"background-color: {{object.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {"
+"{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\">\n"
+"        Acceptă invitația\n"
+"    </a>\n"
+"</div>\n"
+"<br>\n"
+"Bucură-te de Odoo!<br><br>\n"
+"--<br>Echipa <t t-out=\"company_name\"></t></t>\n"
+"            "
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.mail_template_data_unregistered_users
@@ -160,6 +250,21 @@ msgid ""
 "--<br>The <t t-out=\"object.company_id.name or ''\">YourCompany</t> Team\n"
 "            </t>"
 msgstr ""
+"<t>\n"
+"Bună ziua, <t t-out=\"object.name or ''\">Mitchell Admin</t>,<br> <br>\n"
+"Ați adăugat următorii utilizatori în baza de date, dar încă nu s-au "
+"înregistrat:\n"
+"<ul>\n"
+"    <t t-foreach=\"invited_users\" t-as=\"invited_user\">\n"
+"        <li t-out=\"invited_user or ''\">demo@example.com</li>\n"
+"    </t>\n"
+"</ul>\n"
+"Contactați-i pentru a se putea conecta la baza de date și a începe să "
+"lucreze împreună cu dumneavoastră.\n"
+"<br><br>\n"
+"O zi frumoasă!<br>\n"
+"--<br>Echipa <t t-out=\"object.company_id.name or ''\">YourCompany</t>\n"
+"            </t>"
 
 #. module: auth_signup
 #. odoo-python
@@ -219,7 +324,7 @@ msgstr "Contact"
 #. odoo-javascript
 #: code:addons/auth_signup/static/src/components/signup.xml:0
 msgid "Copy Reset Password Link"
-msgstr ""
+msgstr "Copiază linkul de resetare a parolei"
 
 #. module: auth_signup
 #. odoo-python
@@ -312,17 +417,19 @@ msgid ""
 "If you do not expect this, you can safely ignore this email.<br/><br/>\n"
 "        Thanks,"
 msgstr ""
+"Dacă nu ați solicitat acest lucru, puteți ignora acest e-mail.<br/><br/>\n"
+"        Mulțumim,"
 
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__inactive
 msgid "Inactive"
-msgstr ""
+msgstr "Inactiv"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/controllers/main.py:0
 msgid "Invalid email; please enter a valid email address."
-msgstr ""
+msgstr "Adresă de e-mail invalidă; introduceți o adresă validă."
 
 #. module: auth_signup
 #. odoo-python
@@ -349,7 +456,7 @@ msgstr "Permite clienților logați să-și vadă documentele"
 #. odoo-javascript
 #: code:addons/auth_signup/static/src/components/signup.js:0
 msgid "Link copied to clipboard!"
-msgstr ""
+msgstr "Linkul a fost copiat în clipboard!"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -388,7 +495,7 @@ msgstr "Cu invitație"
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "Only administrators can generate reset password link."
-msgstr ""
+msgstr "Doar administratorii pot genera linkuri de resetare a parolei."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -511,12 +618,12 @@ msgstr "Înregistrare"
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "Sign-up link sent by email!"
-msgstr ""
+msgstr "Linkul de înregistrare a fost trimis prin e-mail!"
 
 #. module: auth_signup
 #: model:ir.module.module,shortdesc:base.module_auth_signup
 msgid "Signup"
-msgstr ""
+msgstr "Înregistrare"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_type
@@ -605,7 +712,7 @@ msgstr "Utilizatori: Notificați despre utilizatorii neînregistrați"
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "Welcome to Odoo"
-msgstr ""
+msgstr "Bine ați venit în Odoo"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
@@ -622,14 +729,14 @@ msgstr "Nu puteți efectua această acțiune unui utilizator arhivat."
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "You cannot perform this action on your own user."
-msgstr ""
+msgstr "Nu puteți efectua această acțiune asupra propriului utilizator."
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/controllers/main.py:0
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "Your Account"
-msgstr ""
+msgstr "Contul dvs."
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.portal_set_password_email

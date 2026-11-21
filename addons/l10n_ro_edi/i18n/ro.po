@@ -4,15 +4,15 @@
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Betty Keresztesi <betty@soft4biz.ro>, 2025.
-# Dorin Hongu <dhongu@gmail.com>, 2025.
+# Dorin Hongu <dhongu@gmail.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.4a1+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-06 18:29+0000\n"
-"PO-Revision-Date: 2026-08-31 14:11+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-21 09:34+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/"
 "l10n_ro_edi/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: l10n_ro_edi
 #: model:ir.module.module,description:base.module_l10n_ro_edi
@@ -28,6 +28,8 @@ msgid ""
 "\n"
 "E-invoice implementation for Romania\n"
 msgstr ""
+"\n"
+"Implementarea facturării electronice pentru România\n"
 
 #. module: l10n_ro_edi
 #: model:ir.model.fields,help:l10n_ro_edi.field_account_bank_statement_line__l10n_ro_edi_state
@@ -69,6 +71,12 @@ msgid ""
 "                                <span class=\"oi oi-lg\" data-"
 "icon=\"business\" title=\"Values set here are company-specific.\"/>"
 msgstr ""
+"<span class=\"o_form_label\">\n"
+"                                    Detalii e-Factura\n"
+"                                </span>\n"
+"                                <span class=\"oi oi-lg\" data-"
+"icon=\"business\" title=\"Valorile definite aici sunt specifice "
+"companiei.\"/>"
 
 #. module: l10n_ro_edi
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_res_company__l10n_ro_edi_access_token
@@ -128,14 +136,14 @@ msgstr "Atașament XML CIUS-RO nu a fost găsit."
 #. module: l10n_ro_edi
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.product_template_form_inherit
 msgid "CPV"
-msgstr ""
+msgstr "CPV"
 
 #. module: l10n_ro_edi
 #: model:ir.model,name:l10n_ro_edi.model_l10n_ro_cpv_code
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_product_product__cpv_code_id
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_product_template__cpv_code_id
 msgid "CPV Code"
-msgstr ""
+msgstr "Cod CPV"
 
 #. module: l10n_ro_edi
 #. odoo-python
@@ -164,23 +172,23 @@ msgstr "Secret Client"
 #. module: l10n_ro_edi
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_cpv_code__code
 msgid "Code"
-msgstr ""
+msgstr "Cod"
 
 #. module: l10n_ro_edi
 #: model:ir.model.constraint,message:l10n_ro_edi.constraint_l10n_ro_cpv_code_code_uniq
 msgid "Code must be unique!"
-msgstr ""
+msgstr "Codul trebuie sa fie unic!"
 
 #. module: l10n_ro_edi
 #: model:ir.model.fields,help:l10n_ro_edi.field_product_product__cpv_code_id
 #: model:ir.model.fields,help:l10n_ro_edi.field_product_template__cpv_code_id
 msgid "Common Procurement Vocabulary, used by e-Factura"
-msgstr ""
+msgstr "Vocabularul comun privind achizițiile, utilizat de e-Factura"
 
 #. module: l10n_ro_edi
 #: model:ir.model,name:l10n_ro_edi.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "Companie"
 
 #. module: l10n_ro_edi
 #: model:ir.model,name:l10n_ro_edi.model_res_config_settings
@@ -200,7 +208,7 @@ msgstr "Copiați Client ID și Client Secret generate în câmpurile de mai jos"
 #. module: l10n_ro_edi
 #: model:ir.model,website_form_label:l10n_ro_edi.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Creează un client"
 
 #. module: l10n_ro_edi
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_cpv_code__create_uid
@@ -227,7 +235,7 @@ msgstr ""
 #. module: l10n_ro_edi
 #: model:ir.model.fields,help:l10n_ro_edi.field_l10n_ro_edi_account_move_fetch_invoices_wizard__start_date
 msgid "Date from which you want to synchronize (back up to 60 days)"
-msgstr ""
+msgstr "Data de la care dorești sincronizarea (cu cel mult 60 de zile în urmă)"
 
 #. module: l10n_ro_edi
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__datetime
@@ -237,7 +245,7 @@ msgstr "Dată și oră"
 #. module: l10n_ro_edi
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.account_move_fetch_invoices_wizard_form
 msgid "Discard"
-msgstr ""
+msgstr "Renunță"
 
 #. module: l10n_ro_edi
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_account_edi_xml_ubl_ro__display_name
@@ -307,7 +315,7 @@ msgstr "E-Factura: Sincronizare cu ANAF"
 #. module: l10n_ro_edi
 #: model:ir.module.module,summary:base.module_l10n_ro_edi
 msgid "E-Invoice implementation for Romania"
-msgstr ""
+msgstr "Implementarea facturării electronice pentru România"
 
 #. module: l10n_ro_edi
 #: model:ir.model.fields.selection,name:l10n_ro_edi.selection__l10n_ro_edi_document__state__invoice_refused
@@ -447,7 +455,7 @@ msgstr "Factură"
 msgid ""
 "It was not possible to retrieve the PDF from the SPV for the following "
 "reason: %s"
-msgstr ""
+msgstr "Nu a fost posibilă preluarea PDF-ului din SPV din următorul motiv: %s"
 
 #. module: l10n_ro_edi
 #: model:ir.model,name:l10n_ro_edi.model_account_move
@@ -498,18 +506,18 @@ msgstr "Mesaj"
 #. module: l10n_ro_edi
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_cpv_code__name
 msgid "Name"
-msgstr ""
+msgstr "Nume"
 
 #. module: l10n_ro_edi
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_account_move_fetch_invoices_wizard__nb_days
 msgid "Nb Days"
-msgstr ""
+msgstr "Număr de zile"
 
 #. module: l10n_ro_edi
 #. odoo-python
 #: code:addons/l10n_ro_edi/models/account_move.py:0
 msgid "No PDF found: PDF imported from SPV."
-msgstr ""
+msgstr "Nu a fost găsit niciun PDF nou: PDF-urile au fost importate din SPV."
 
 #. module: l10n_ro_edi
 #: model:ir.model.fields.selection,name:l10n_ro_edi.selection__account_move__l10n_ro_edi_state__invoice_not_indexed
@@ -526,12 +534,12 @@ msgstr "Numai înregistrările validate pot fi trimise către SPV."
 #. odoo-python
 #: code:addons/l10n_ro_edi/models/account_move.py:0
 msgid "Period selection"
-msgstr ""
+msgstr "Selectarea perioadei"
 
 #. module: l10n_ro_edi
 #: model:ir.model,name:l10n_ro_edi.model_product_template
 msgid "Product"
-msgstr ""
+msgstr "Produs"
 
 #. module: l10n_ro_edi
 #. odoo-python
@@ -591,7 +599,7 @@ msgstr "România (CIUS RO)"
 #. module: l10n_ro_edi
 #: model:ir.module.module,shortdesc:base.module_l10n_ro_edi
 msgid "Romania - E-invoicing"
-msgstr ""
+msgstr "România - Facturare electronică"
 
 #. module: l10n_ro_edi
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
@@ -634,6 +642,8 @@ msgstr "Selectați jurnalul pentru facturile importate din SPV"
 msgid ""
 "Select the date from which you want to synchronize with ANAF (up to 60 days)"
 msgstr ""
+"Selectează data de la care dorești sincronizarea cu ANAF (cu cel mult 60 de "
+"zile în urmă)"
 
 #. module: l10n_ro_edi
 #. odoo-python
@@ -644,7 +654,7 @@ msgstr "Trimite E-Factura către SPV"
 #. module: l10n_ro_edi
 #: model:ir.model,name:l10n_ro_edi.model_account_move_send_wizard
 msgid "Send Invoice Wizard"
-msgstr ""
+msgstr "Asistent pentru trimiterea facturii"
 
 #. module: l10n_ro_edi
 #: model:ir.model.fields.selection,name:l10n_ro_edi.selection__account_move__l10n_ro_edi_state__invoice_sent
@@ -673,7 +683,7 @@ msgstr "E-Factura trimisă"
 #. module: l10n_ro_edi
 #: model:ir.model,name:l10n_ro_edi.model_account_move_send
 msgid "Shared Send Invoice Wizard Functions"
-msgstr ""
+msgstr "Funcții comune ale asistentului de trimitere a facturii"
 
 #. module: l10n_ro_edi
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__show_fetch_status_button
@@ -688,18 +698,18 @@ msgstr "Trimiteți formularul făcând clic pe „Generare Client ID”"
 #. module: l10n_ro_edi
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.account_move_fetch_invoices_wizard_form
 msgid "Synchronize"
-msgstr ""
+msgstr "Sincronizează"
 
 #. module: l10n_ro_edi
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_account_move_fetch_invoices_wizard__start_date
 msgid "Synchronize from"
-msgstr ""
+msgstr "Sincronizează de la"
 
 #. module: l10n_ro_edi
 #. odoo-javascript
 #: code:addons/l10n_ro_edi/static/src/components/fetch_invoices.xml:0
 msgid "Synchronize with ANAF"
-msgstr ""
+msgstr "Sincronizează cu ANAF"
 
 #. module: l10n_ro_edi
 #. odoo-python
@@ -746,6 +756,8 @@ msgid ""
 "The following partner doesn't have a VAT nor any other Peppol-routable "
 "identifier: %s. At least one of them is required. "
 msgstr ""
+"Următorul partener nu are un cod de TVA sau un alt identificator compatibil "
+"cu rutarea Peppol: %s. Este necesar cel puțin unul dintre acestea. "
 
 #. module: l10n_ro_edi
 #. odoo-python
@@ -872,7 +884,7 @@ msgstr ""
 #. module: l10n_ro_edi
 #: model:ir.model,name:l10n_ro_edi.model_l10n_ro_edi_account_move_fetch_invoices_wizard
 msgid "Wizard to select date to fetch the invoices from"
-msgstr ""
+msgstr "Asistent pentru selectarea datei de la care se preiau facturile"
 
 #. module: l10n_ro_edi
 #. odoo-python
@@ -884,7 +896,7 @@ msgstr "Nu puteți trimite acum. Factura așteaptă un răspuns."
 #. odoo-python
 #: code:addons/l10n_ro_edi/wizard/account_move_fetch_invoices_wizard.py:0
 msgid "You cannot synchronize invoices that are older than 60 days"
-msgstr ""
+msgstr "Nu poți sincroniza facturi mai vechi de 60 de zile"
 
 #. module: l10n_ro_edi
 #. odoo-python

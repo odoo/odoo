@@ -8,14 +8,15 @@
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
+# "Cécile Collart (cco)" <cco@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:38+0000\n"
-"PO-Revision-Date: 2026-08-31 15:20+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-4/"
+"POT-Creation-Date: 2026-11-20 17:37+0000\n"
+"PO-Revision-Date: 2026-11-19 15:33+0000\n"
+"Last-Translator: \"Cécile Collart (cco)\" <cco@odoo.com>\n"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-20/"
 "pos_discount/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: pos_discount
 #: model:ir.module.module,description:base.module_pos_discount
@@ -34,6 +35,11 @@ msgid ""
 "discount to a customer.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Ce module permet au caissier d'accorder rapidement une\n"
+"remise en pourcentage à un client.\n"
+"\n"
 
 #. module: pos_discount
 #: model_terms:ir.ui.view,arch_db:pos_discount.pos_session_sales_details
@@ -85,7 +91,7 @@ msgstr "Produit de remise"
 #: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_pc
 #: model_terms:ir.ui.view,arch_db:pos_discount.res_config_settings_view_form
 msgid "Discount Value"
-msgstr ""
+msgstr "Valeur de la remise"
 
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_account_move_line__display_name
@@ -118,7 +124,7 @@ msgstr "Aucun produit de remise trouvé"
 
 #. module: pos_discount
 #. odoo-javascript
-#: code:addons/pos_discount/static/src/app/screens/ticket_screen/ticket_screen.js:0
+#: code:addons/pos_discount/static/src/app/services/pos_store.js:0
 msgid "Oh snap !"
 msgstr "Zut !"
 
@@ -140,7 +146,7 @@ msgstr "Détails point de vente"
 #. module: pos_discount
 #: model:ir.module.module,shortdesc:base.module_pos_discount
 msgid "Point of Sale Discounts"
-msgstr ""
+msgstr "Point de Vente - Remises"
 
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_product_id
@@ -155,13 +161,14 @@ msgstr "Produit"
 #. module: pos_discount
 #: model:ir.module.module,summary:base.module_pos_discount
 msgid "Simple Discounts in the Point of Sale "
-msgstr ""
+msgstr "Remises simples dans le Point de Vente "
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__discount_pc
 #: model:ir.model.fields,help:pos_discount.field_res_config_settings__pos_discount_pc
 msgid "The default discount value when clicking on the Discount button"
 msgstr ""
+"La valeur de remise par défaut lorsque vous cliquez sur le bouton Remise"
 
 #. module: pos_discount
 #. odoo-javascript
@@ -180,7 +187,7 @@ msgstr "Le produit utilisé pour appliquer la remise sur le ticket."
 
 #. module: pos_discount
 #. odoo-javascript
-#: code:addons/pos_discount/static/src/app/screens/ticket_screen/ticket_screen.js:0
+#: code:addons/pos_discount/static/src/app/services/pos_store.js:0
 msgid "You cannot edit a discount line."
 msgstr "Vous ne pouvez pas modifier une ligne de remise."
 

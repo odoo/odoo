@@ -6,14 +6,15 @@
 # Martin Trigaux, 2022
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Dorin Hongu <dhongu@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-08-31 14:13+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-20 06:16+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/"
 "base_sparse_field/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +22,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: base_sparse_field
 #: model:ir.module.module,description:base.module_base_sparse_field
@@ -32,6 +33,14 @@ msgid ""
 "limitation on the number of columns in a table. The values of all sparse\n"
 "fields are stored in a \"serialized\" field in the form of a JSON mapping.\n"
 msgstr ""
+"\n"
+"Scopul acestui modul este implementarea câmpurilor cu valori rare, adică a "
+"câmpurilor\n"
+"care sunt în mare parte nule. Această implementare ocolește limita "
+"PostgreSQL\n"
+"privind numărul de coloane dintr-un tabel. Valorile tuturor câmpurilor cu "
+"valori rare\n"
+"sunt stocate într-un câmp „serializat”, sub forma unei mapări JSON.\n"
 
 #. module: base_sparse_field
 #: model:ir.model,name:base_sparse_field.model_base
@@ -78,7 +87,7 @@ msgstr "Nume afișat"
 #. module: base_sparse_field
 #: model:ir.model,name:base_sparse_field.model_ir_model_fields
 msgid "Field"
-msgstr ""
+msgstr "Câmp"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_ir_model_fields__ttype
@@ -110,7 +119,7 @@ msgstr ""
 #. module: base_sparse_field
 #: model:ir.module.module,summary:base.module_base_sparse_field
 msgid "Implementation of sparse fields."
-msgstr ""
+msgstr "Implementarea câmpurilor rare."
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__integer
@@ -166,7 +175,7 @@ msgstr ""
 #. module: base_sparse_field
 #: model:ir.module.module,shortdesc:base.module_base_sparse_field
 msgid "Sparse Fields"
-msgstr ""
+msgstr "Câmpuri rare"
 
 #. module: base_sparse_field
 #: model:ir.model,name:base_sparse_field.model_sparse_fields_test

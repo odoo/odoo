@@ -9,7 +9,7 @@
 # Martin Trigaux, 2022
 # Claudia Baisan, 2023
 # Cozmin Candea <office@terrabit.ro>, 2023
-# Dorin Hongu <dhongu@gmail.com>, 2023, 2025.
+# Dorin Hongu <dhongu@gmail.com>, 2023, 2025, 2026.
 # Hongu Cosmin <cosmin513@gmail.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Marianna Ciofani (cima)" <cima@odoo.com>, 2025.
@@ -21,17 +21,17 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-06 17:49+0000\n"
-"PO-Revision-Date: 2026-06-21 11:51+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-master/"
-"base/ro/>\n"
+"PO-Revision-Date: 2026-11-21 09:31+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/base/"
+"ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users_apikeys_description__scope
@@ -42,6 +42,12 @@ msgid ""
 "        can't be used for endpoints requiring any other scope than 'A'.\n"
 "        "
 msgstr ""
+"\n"
+"        Un token cu domeniul 'A' poate fi folosit doar pentru endpoint-uri "
+"care necesită un bearer token cu domeniul 'A' și\n"
+"        nu poate fi folosit pentru endpoint-uri care necesită alt domeniu "
+"decât 'A'.\n"
+"        "
 
 #. module: base
 #. odoo-python
@@ -50,6 +56,8 @@ msgid ""
 "\n"
 "Example: %(example)s"
 msgstr ""
+"\n"
+"Exemplu: %(example)s"
 
 #. module: base
 #. odoo-python
@@ -80,6 +88,9 @@ msgid ""
 "User: %(user)s\n"
 "Groups: %(allowed_groups_msg)s"
 msgstr ""
+"\n"
+"Utilizator: %(user)s\n"
+"Grupuri: %(allowed_groups_msg)s"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__time_format__%i:%m:%s_%p
@@ -107,7 +118,7 @@ msgstr "# Grupuri"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
 msgid "# Records"
-msgstr ""
+msgstr "# Înregistrări"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__all_users_count
@@ -124,7 +135,7 @@ msgstr "%(action_name)s nu este o acțiune validă pe %(model_name)s"
 #. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 msgid "%(date_label)s - %(author)s"
-msgstr ""
+msgstr "%(date_label)s - %(author)s"
 
 #. module: base
 #. odoo-python
@@ -157,6 +168,9 @@ msgid ""
 "\n"
 "Implicitly accessed through '%(document_kind)s' (%(document_model)s)."
 msgstr ""
+"%(previous_message)s\n"
+"\n"
+"Accesat implicit prin „%(document_kind)s” (%(document_model)s)."
 
 #. module: base
 #. odoo-python
@@ -294,7 +308,7 @@ msgstr "'new' este rezervat și nu poate fi folosit ca și cale."
 #. odoo-python
 #: code:addons/fields.py:0
 msgid "(Record: %(record)s, User: %(user)s)"
-msgstr ""
+msgstr "(Înregistrare: %(record)s, Utilizator: %(user)s)"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -329,6 +343,8 @@ msgid ""
 "- Only a root company can be set on “%(record)s”. Currently set to “%"
 "(company)s”"
 msgstr ""
+"- Pe „%(record)s” se poate seta doar o companie rădăcină. În prezent este "
+"setată „%(company)s”"
 
 #. module: base
 #. odoo-python
@@ -337,6 +353,8 @@ msgid ""
 "- Record is company “%(company)s” while “%(field)s” (%(fname)s: %(values)s) "
 "belongs to another company."
 msgstr ""
+"- Înregistrarea aparține companiei „%(company)s”, în timp ce „%(field)s” (%"
+"(fname)s: %(values)s) aparține altei companii."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -400,17 +418,19 @@ msgid ""
 "- “%(record)s” belongs to company “%(company)s” while “%(field)s” (%"
 "(fname)s: %(values)s) belongs to another company."
 msgstr ""
+"- „%(record)s” aparține companiei „%(company)s”, în timp ce „%(field)s” (%"
+"(fname)s: %(values)s) aparține altei companii."
 
 #. module: base
 #: model:website,contact_us_link_url:base.default_website
 msgid "/contactus"
-msgstr ""
+msgstr "/contactus"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 msgid "0123456789016 or 1234545678781 [13 digits]"
-msgstr ""
+msgstr "0123456789016 sau 1234545678781 [13 cifre]"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_enable_profiling_wizard__duration__days_1
@@ -432,7 +452,7 @@ msgstr "1 Lună"
 #: code:addons/base/models/res_partner.py:0
 #: code:addons/partner_identifiers.py:0
 msgid "1-01-85004-3 or 101850043"
-msgstr ""
+msgstr "1-01-85004-3 sau 101850043"
 
 #. module: base
 #. odoo-python
@@ -440,25 +460,26 @@ msgstr ""
 #: code:addons/partner_identifiers.py:0
 msgid "10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
 msgstr ""
+"10XXXXXXXXY sau 20XXXXXXXXY sau 15XXXXXXXXY sau 16XXXXXXXXY sau 17XXXXXXXXY"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 #: code:addons/partner_identifiers.py:0
 msgid "11111111111 (NIN) or 2222222222 (VKN)"
-msgstr ""
+msgstr "11111111111 (NIN) sau 2222222222 (VKN)"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "123-45-67890 or 1234567890"
-msgstr ""
+msgstr "123-45-67890 sau 1234567890"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 msgid "1234567 or 1234567-8 or 12345-1234567-8"
-msgstr ""
+msgstr "1234567 sau 1234567-8 sau 12345-1234567-8"
 
 #. module: base
 #. odoo-python
@@ -467,31 +488,32 @@ msgstr ""
 msgid ""
 "12345678 or UA12345678 (EDRPOU), 1234567890 (RNOPP) or 123456789012 (IPN)"
 msgstr ""
+"12345678 sau UA12345678 (EDRPOU), 1234567890 (RNOPP) sau 123456789012 (IPN)"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 msgid "123456782 or 123456782RT0001"
-msgstr ""
+msgstr "123456782 sau 123456782RT0001"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 msgid "123456789 (TIN) or 12345678901234 (PINFL)"
-msgstr ""
+msgstr "123456789 (TIN) sau 12345678901234 (PINFL)"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 #: code:addons/partner_identifiers.py:0
 msgid "1792060346001 or 1792060346"
-msgstr ""
+msgstr "1792060346001 or 1792060346"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "3002707692 [Tax identification number]"
-msgstr ""
+msgstr "3002707692 [Cod de identificare fiscală]"
 
 #. module: base
 #. odoo-python
@@ -499,13 +521,15 @@ msgstr ""
 #: code:addons/partner_identifiers.py:0
 msgid "310175397400003 [Fifteen digits, first and last digits should be \"3\"]"
 msgstr ""
+"310175397400003 [Cincisprezece cifre, prima și ultima cifră ar trebui să fie "
+"\"3\"]"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 #: code:addons/partner_identifiers.py:0
 msgid "49-098-576 or 49098576"
-msgstr ""
+msgstr "49-098-576 or 49098576"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_enable_profiling_wizard__duration__minutes_5
@@ -516,7 +540,7 @@ msgstr "5 Minutes"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "700 Number"
-msgstr ""
+msgstr "Număr 700"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_1
@@ -526,6 +550,7 @@ msgstr ""
 msgid ""
 "<a href=\"#\" class=\"btn btn-primary o_translate_inline\">Discover more</a>"
 msgstr ""
+"<a href=\"#\" class=\"btn btn-primary o_translate_inline\">Află mai multe</a>"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_ir_mail_server_list
@@ -660,6 +685,7 @@ msgstr ""
 msgid ""
 "<i class=\"oi d-none d-md-block\" data-icon=\"luggage\" title=\"Position\"/>"
 msgstr ""
+"<i class=\"oi d-none d-md-block\" data-icon=\"luggage\" title=\"Funcție\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -668,6 +694,8 @@ msgid ""
 "<i class=\"oi d-none d-md-inline-flex\" data-icon=\"business\" "
 "title=\"Company\"/>"
 msgstr ""
+"<i class=\"oi d-none d-md-inline-flex\" data-icon=\"business\" "
+"title=\"Companie\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -676,6 +704,8 @@ msgid ""
 "<i class=\"oi oi-filled d-none d-md-block\" data-icon=\"mail\" "
 "title=\"Email\"/>"
 msgstr ""
+"<i class=\"oi oi-filled d-none d-md-block\" data-icon=\"mail\" title=\"E-"
+"mail\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -685,6 +715,10 @@ msgid ""
 "                                    <i class=\"oi d-none d-md-block\" data-"
 "icon=\"key\" title=\"Login\" invisible=\"login == email\"/>"
 msgstr ""
+"<i class=\"oi oi-filled d-none d-md-block\" data-icon=\"mail\" "
+"title=\"Autentificare / Email\" invisible=\"login != email\"/>\n"
+"                                    <i class=\"oi d-none d-md-block\" data-"
+"icon=\"key\" title=\"Autentificare\" invisible=\"login == email\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -693,6 +727,8 @@ msgid ""
 "<i class=\"oi oi-filled d-none d-md-block\" data-icon=\"phone\" "
 "title=\"Phone\"/>"
 msgstr ""
+"<i class=\"oi oi-filled d-none d-md-block\" data-icon=\"phone\" "
+"title=\"Telefon\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -701,6 +737,8 @@ msgid ""
 "<i class=\"oi oi-filled d-none d-md-inline-flex\" data-icon=\"mail\" "
 "title=\"Email\"/>"
 msgstr ""
+"<i class=\"oi oi-filled d-none d-md-inline-flex\" data-icon=\"mail\" "
+"title=\"E-mail\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -709,6 +747,8 @@ msgid ""
 "<i class=\"oi oi-filled d-none d-md-inline-flex\" data-icon=\"phone\" "
 "title=\"Phone\"/>"
 msgstr ""
+"<i class=\"oi oi-filled d-none d-md-inline-flex\" data-icon=\"phone\" "
+"title=\"Telefon\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
@@ -716,6 +756,8 @@ msgid ""
 "<i class=\"oi oi-filled me-1\" data-icon=\"mail\" role=\"img\" aria-"
 "label=\"Login\"/>"
 msgstr ""
+"<i class=\"oi oi-filled me-1\" data-icon=\"mail\" role=\"img\" aria-"
+"label=\"Autentificare\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
@@ -723,6 +765,8 @@ msgid ""
 "<i class=\"oi oi-filled\" data-icon=\"circle\" role=\"img\" aria-"
 "label=\"Invalid\" title=\"Invalid\"/>"
 msgstr ""
+"<i class=\"oi oi-filled\" data-icon=\"circle\" role=\"img\" aria-"
+"label=\"Nevalid\" title=\"Nevalid\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
@@ -730,6 +774,8 @@ msgid ""
 "<i class=\"oi oi-filled\" data-icon=\"circle\" role=\"img\" aria-"
 "label=\"Ok\" title=\"Ok\"/>"
 msgstr ""
+"<i class=\"oi oi-filled\" data-icon=\"circle\" role=\"img\" aria-"
+"label=\"Ok\" title=\"Ok\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_kanban_view
@@ -737,11 +783,12 @@ msgstr ""
 msgid ""
 "<i class=\"oi oi-fw me-1\" data-icon=\"location_on\" title=\"Location\"/>"
 msgstr ""
+"<i class=\"oi oi-fw me-1\" data-icon=\"location_on\" title=\"Locație\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "<i class=\"oi oi-fw me-1\" data-icon=\"luggage\" title=\"Position\"/>"
-msgstr ""
+msgstr "<i class=\"oi oi-fw me-1\" data-icon=\"luggage\" title=\"Funcție\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_form_view
@@ -749,6 +796,8 @@ msgid ""
 "<i class=\"oi oi-fw o_button_icon\" data-icon=\"east\"/>\n"
 "                                Access rights documentation"
 msgstr ""
+"<i class=\"oi oi-fw o_button_icon\" data-icon=\"east\"/>\n"
+"                                Documentație drepturi de acces"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
@@ -756,6 +805,8 @@ msgid ""
 "<i class=\"oi oi-fw oi-filled d-none d-md-inline-flex\" data-icon=\"mail\" "
 "title=\"Email\"/>"
 msgstr ""
+"<i class=\"oi oi-fw oi-filled d-none d-md-inline-flex\" data-icon=\"mail\" "
+"title=\"E-mail\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
@@ -763,6 +814,8 @@ msgid ""
 "<i class=\"oi oi-fw oi-filled d-none d-md-inline-flex\" data-icon=\"phone\" "
 "title=\"Phone\"/>"
 msgstr ""
+"<i class=\"oi oi-fw oi-filled d-none d-md-inline-flex\" data-icon=\"phone\" "
+"title=\"Telefon\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_kanban_view
@@ -770,6 +823,8 @@ msgid ""
 "<i class=\"oi oi-fw oi-filled me-1 text-muted\" data-icon=\"mail\" "
 "title=\"Email\"/>"
 msgstr ""
+"<i class=\"oi oi-fw oi-filled me-1 text-muted\" data-icon=\"mail\" title=\"E-"
+"mail\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_kanban_view
@@ -777,6 +832,8 @@ msgid ""
 "<i class=\"oi oi-fw oi-filled me-1 text-muted\" data-icon=\"phone\" "
 "title=\"Phone\"/>"
 msgstr ""
+"<i class=\"oi oi-fw oi-filled me-1 text-muted\" data-icon=\"phone\" "
+"title=\"Telefon\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -784,6 +841,7 @@ msgstr ""
 msgid ""
 "<i class=\"oi oi-fw oi-filled me-1\" data-icon=\"mail\" title=\"Email\"/>"
 msgstr ""
+"<i class=\"oi oi-fw oi-filled me-1\" data-icon=\"mail\" title=\"E-mail\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -791,11 +849,12 @@ msgstr ""
 msgid ""
 "<i class=\"oi oi-fw oi-filled me-1\" data-icon=\"phone\" title=\"Phone\"/>"
 msgstr ""
+"<i class=\"oi oi-fw oi-filled me-1\" data-icon=\"phone\" title=\"Telefon\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<i class=\"oi pe-2\" data-icon=\"warning\" title=\"Warning\"/>"
-msgstr ""
+msgstr "<i class=\"oi pe-2\" data-icon=\"warning\" title=\"Avertisment\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_kanban
@@ -805,12 +864,12 @@ msgstr "<span class=\"badge rounded-pill bg-light border\">inactive</span>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_kanban_view
 msgid "<span class=\"me-1\">For</span>"
-msgstr ""
+msgstr "<span class=\"me-1\">Pentru</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_kanban_view
 msgid "<span class=\"me-1\">On</span>"
-msgstr ""
+msgstr "<span class=\"me-1\">Pe</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
@@ -973,6 +1032,8 @@ msgid ""
 "<span invisible=\"evaluation_type != 'value' or value_field_to_show != "
 "'x2many'\">by</span>"
 msgstr ""
+"<span invisible=\"evaluation_type != 'value' or value_field_to_show != "
+"'x2many'\">cu</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -982,6 +1043,10 @@ msgid ""
 "                                <span invisible=\"evaluation_type != "
 "'sequence'\">with</span>"
 msgstr ""
+"<span invisible=\"evaluation_type != 'value' or value_field_to_show == "
+"'x2many'\">la</span>\n"
+"                                <span invisible=\"evaluation_type != "
+"'sequence'\">cu</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
@@ -989,6 +1054,8 @@ msgid ""
 "<span invisible=\"impacted_application_count == 1\"> apps</span><span "
 "invisible=\"impacted_application_count &gt; 1\"> app</span>"
 msgstr ""
+"<span invisible=\"impacted_application_count == 1\"> aplicații</span><span "
+"invisible=\"impacted_application_count &gt; 1\"> aplicație</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
@@ -996,6 +1063,8 @@ msgid ""
 "<span invisible=\"impacted_module_count == 1\"> modules</span><span "
 "invisible=\"impacted_module_count &gt; 1\"> module</span>"
 msgstr ""
+"<span invisible=\"impacted_module_count == 1\"> module</span><span "
+"invisible=\"impacted_module_count &gt; 1\"> modul</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
@@ -1003,6 +1072,8 @@ msgid ""
 "<span invisible=\"model_count == 1\"> models</span><span "
 "invisible=\"model_count &gt; 1\"> model</span>"
 msgstr ""
+"<span invisible=\"model_count == 1\"> modele</span><span "
+"invisible=\"model_count &gt; 1\"> model</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.reset_view_arch_wizard_view
@@ -1042,7 +1113,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_form
 msgid "<span> days</span>"
-msgstr ""
+msgstr "<span>zile</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -1259,6 +1330,9 @@ msgid ""
 "and is used by domestic money transfer protocols (from/to bank accounts in "
 "the same country)."
 msgstr ""
+"Un cod de clearing (sau routing number) identifică o bancă, o sucursală sau "
+"o locație și este folosit de protocoalele de transfer bancar naționale "
+"(între conturi bancare din aceeași țară)."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_3
@@ -1270,6 +1344,11 @@ msgid ""
 "and\n"
 "                    turbomachinery and propulsion)."
 msgstr ""
+"O organizație internațională educațională și științifică\n"
+"                    non-profit, care găzduiește trei departamente "
+"(aeronautică și\n"
+"                    spațiu aerian, dinamica fluidelor aplicată și de mediu,\n"
+"                    turbomașini și propulsie)."
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_3
@@ -1278,6 +1357,9 @@ msgid ""
 "three departments (aeronautics and aerospace, environmental and applied "
 "fluid dynamics, and turbomachinery and propulsion)."
 msgstr ""
+"O organizație internațională educațională și științifică non-profit, care "
+"găzduiește trei departamente (aeronautică și spațiu aerian, dinamica "
+"fluidelor aplicată și de mediu, turbomașini și propulsie)."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_form
@@ -1288,12 +1370,17 @@ msgid ""
 "group                                             that is constrained by "
 "their domain and the restrictions"
 msgstr ""
+"O restricție este un drept de acces fără grup, aplicat global"
+"                                             și care nu poate fi ocolit. O "
+"permisiune este un drept de acces asociat unui "
+"grup,                                             limitat de domeniul său și "
+"de restricții"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 msgid "A sequence must only be used with character fields."
-msgstr ""
+msgstr "O secvență poate fi folosită doar cu câmpuri de tip caracter."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__exclude_contact
@@ -1324,7 +1411,7 @@ msgstr "A0  5   841 x 1189 mm"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "A00012345"
-msgstr ""
+msgstr "A00012345"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__a1
@@ -1380,7 +1467,7 @@ msgstr "ABN"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "ACN"
-msgstr ""
+msgstr "ACN"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_ai
@@ -1459,7 +1546,7 @@ msgstr "Control Acces"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__access_count
 msgid "Access Count"
-msgstr ""
+msgstr "Număr de accesări"
 
 #. module: base
 #: model:ir.model,name:base.model_res_groups
@@ -1474,7 +1561,7 @@ msgstr "Meniu Acces"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_search_view
 msgid "Access Right"
-msgstr ""
+msgstr "Drept de acces"
 
 #. module: base
 #. odoo-python
@@ -1505,7 +1592,7 @@ msgstr "Inconsistență drepturi de acces"
 #: code:addons/base/models/res_groups.py:0
 #: model:ir.model.fields,field_description:base.field_res_groups__access_ids
 msgid "Access Rules"
-msgstr ""
+msgstr "Reguli de acces"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__access_token
@@ -1515,7 +1602,7 @@ msgstr "Access Token"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_form_view
 msgid "Access name..."
-msgstr ""
+msgstr "Nume acces..."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_form_view
@@ -1525,16 +1612,20 @@ msgid ""
 "                            Access rights associated with a group grant "
 "permissions. These are constrained by their domain and the restrictions."
 msgstr ""
+"Drepturile de acces fără grup aplică restricții globale care nu pot fi "
+"ocolite.<br/>\n"
+"                            Drepturile de acces asociate unui grup acordă "
+"permisiuni. Acestea sunt limitate de domeniul lor și de restricții."
 
 #. module: base
 #: model:res.groups,comment:base.group_user
 msgid "Access to the home menu with limited access"
-msgstr ""
+msgstr "Acces la meniul principal cu acces limitat"
 
 #. module: base
 #: model:res.groups,comment:base.group_user_regular
 msgid "Access to the home menu with regular access"
-msgstr ""
+msgstr "Acces la meniul principal cu acces obișnuit"
 
 #. module: base
 #: model:res.groups,comment:base.group_system
@@ -1545,13 +1636,13 @@ msgstr "Acces la setările pentru configurarea aplicațiilor"
 #. odoo-python
 #: code:addons/environments.py:0
 msgid "Access to unauthorized or invalid companies."
-msgstr ""
+msgstr "Acces la companii neautorizate sau nevalide."
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_access.py:0
 msgid "Accesses with domain can not be applied on model Access itself."
-msgstr ""
+msgstr "Accesele cu domeniu nu pot fi aplicate pe modelul Access însuși."
 
 #. module: base
 #. odoo-python
@@ -1573,7 +1664,7 @@ msgstr "Numar de Cont"
 #: model:ir.model.fields,help:base.field_res_partner_bank__holder_name
 msgid ""
 "Account holder name in case it is different than the name of the partner."
-msgstr ""
+msgstr "Numele titularului contului, dacă este diferit de numele partenerului."
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting
@@ -1589,6 +1680,11 @@ msgid ""
 "productive,\n"
 "                responsive and profitable."
 msgstr ""
+"Acme Corporation proiectează, dezvoltă, integrează și susține procese de "
+"resurse umane și\n"
+"                lanț de aprovizionare, pentru ca clienții noștri să fie mai "
+"productivi,\n"
+"                mai receptivi și mai profitabili."
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_2
@@ -1598,6 +1694,9 @@ msgid ""
 "Chain processes in order to make our customers more productive, responsive "
 "and profitable."
 msgstr ""
+"Acme Corporation proiectează, dezvoltă, integrează și susține procese de "
+"resurse umane și lanț de aprovizionare, pentru ca clienții noștri să fie mai "
+"productivi, mai receptivi și mai profitabili."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_2
@@ -1607,6 +1706,11 @@ msgid ""
 "                with Open Sources software to manage their businesses. Our\n"
 "                consultants are experts in the following areas:"
 msgstr ""
+"Acme Corporation integrează ERP pentru companii globale și susține IMM-"
+"urile\n"
+"                cu software open source pentru gestionarea afacerilor. "
+"Consultanții\n"
+"                noștri sunt experți în următoarele domenii:"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_actions
@@ -1818,7 +1922,7 @@ msgstr "Adăugați informații direcționale (nu sunt utilizate pentru digital)"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "Add to the 'Print' menu"
-msgstr ""
+msgstr "Adăugare în meniul „Tipărire”"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__update_m2m_operation__add
@@ -1829,6 +1933,7 @@ msgstr "Adding"
 #: model:res.partner,website_short_description:base.res_partner_address_31
 msgid "Addison Olson is a mighty sales representative at Acme Corporation."
 msgstr ""
+"Addison Olson este un reprezentant de vânzări redutabil la Acme Corporation."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_address_31
@@ -1837,13 +1942,17 @@ msgid ""
 "    notably for selling mouse traps. With that trick he cut\n"
 "    IT budget by almost half within the last 2 years."
 msgstr ""
+"Addison Olson lucrează în sectorul IT <b>de 10 ani</b>. Este cunoscut\n"
+"    mai ales pentru vânzarea de capcane pentru șoareci. Cu acest truc a "
+"redus\n"
+"    bugetul IT cu aproape jumătate în ultimii 2 ani."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__additional_identifiers
 #: model:ir.model.fields,field_description:base.field_res_partner__additional_identifiers
 #: model:ir.model.fields,field_description:base.field_res_users__additional_identifiers
 msgid "Additional Identifiers"
-msgstr ""
+msgstr "Identificatori suplimentari"
 
 #. module: base
 #. odoo-python
@@ -1860,7 +1969,7 @@ msgstr "Adresa"
 #: model:ir.model.fields,field_description:base.field_res_partner__address
 #: model:ir.model.fields,field_description:base.field_res_users__address
 msgid "Address (without name)"
-msgstr ""
+msgstr "Adresă (fără nume)"
 
 #. module: base
 #: model:ir.model,name:base.model_format_address_mixin
@@ -1888,7 +1997,7 @@ msgstr "Format adresă..."
 #: model:ir.model.fields,field_description:base.field_res_partner__address_inline
 #: model:ir.model.fields,field_description:base.field_res_users__address_inline
 msgid "Address inline (without name)"
-msgstr ""
+msgstr "Adresă pe un rând (fără nume)"
 
 #. module: base
 #. odoo-python
@@ -1907,6 +2016,8 @@ msgstr "Administrare"
 msgid ""
 "Administrative divisions of a country. E.g. Fed. State, Department, Canton"
 msgstr ""
+"Diviziuni administrative ale unei țări. De ex. stat federal, departament, "
+"canton"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_N
@@ -2269,13 +2380,15 @@ msgstr ""
 msgid ""
 "All our contractual relations will be governed exclusively by Indonesia law."
 msgstr ""
+"Toate relațiile contractuale vor fi reglementate exclusiv de legea "
+"Indoneziei."
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
 msgid ""
 "All our contractual relations will be governed exclusively by United States "
 "law."
-msgstr ""
+msgstr "Toate relațiile contractuale vor fi reglementate exclusiv de legea SUA."
 
 #. module: base
 #. odoo-python
@@ -2315,7 +2428,7 @@ msgstr "Allowed Groups"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__allowed_index_types
 msgid "Allowed Index Types"
-msgstr ""
+msgstr "Tipuri de index permise"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__allowed_states
@@ -3196,6 +3309,8 @@ msgid ""
 "An error occurred while evaluating the domain:\n"
 "%(error)s"
 msgstr ""
+"A apărut o eroare la evaluarea domeniului:\n"
+"%(error)s"
 
 #. module: base
 #. odoo-python
@@ -3232,6 +3347,11 @@ msgid ""
 "Thanks to the following constraint: %(field_display)s\n"
 "How about archiving the record instead?"
 msgstr ""
+"Un alt model folosește înregistrarea pe care încercați să o ștergeți.\n"
+"\n"
+"Modelul în cauză: %(model_display)s\n"
+"Din cauza următoarei constrângeri: %(field_display)s\n"
+"Ce-ar fi să arhivați înregistrarea?"
 
 #. module: base
 #. odoo-python
@@ -3336,7 +3456,7 @@ msgstr "Aplică actualizările planificate"
 #: model:ir.actions.act_window,name:base.action_view_base_module_upgrade
 #: model:ir.ui.menu,name:base.menu_view_base_module_upgrade
 msgid "Apply Schedule Upgrades"
-msgstr ""
+msgstr "Aplică actualizările planificate"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_appointment
@@ -3470,7 +3590,7 @@ msgstr "Aruba"
 #: model_terms:res.partner,website_description:base.res_partner_12
 #: model_terms:res.partner,website_description:base.res_partner_5
 msgid "As a team, we are happy to contribute to this event."
-msgstr ""
+msgstr "Ca echipă, suntem bucuroși să contribuim la acest eveniment."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__asia/aden
@@ -4017,7 +4137,7 @@ msgstr "Atașament"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__attachment
 msgid "Attachment Name"
-msgstr ""
+msgstr "Nume atașament"
 
 #. module: base
 #. odoo-python
@@ -4123,7 +4243,7 @@ msgstr "Australia/Yancowinna"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Australian Company Number."
-msgstr ""
+msgstr "Număr de companie australian (ACN)."
 
 #. module: base
 #: model:res.country,name:base.at
@@ -4134,7 +4254,7 @@ msgstr "Austria"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Austrian company ID number (UID)."
-msgstr ""
+msgstr "Număr de identificare a companiei austriece (UID)."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_identitycheck__auth_method
@@ -4210,7 +4330,7 @@ msgstr "Automatizare"
 #: model:ir.model.fields,field_description:base.field_res_partner__available_additional_identifiers_metadata
 #: model:ir.model.fields,field_description:base.field_res_users__available_additional_identifiers_metadata
 msgid "Available Additional Identifiers Metadata"
-msgstr ""
+msgstr "Metadate identificatori suplimentari disponibili"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__available_model_ids
@@ -4221,7 +4341,7 @@ msgstr "Available Models"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_apikeys_description__available_scopes_count
 msgid "Available Scopes Count"
-msgstr ""
+msgstr "Număr de domenii disponibile"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_avatar_mixin__avatar_1920
@@ -4275,6 +4395,8 @@ msgid ""
 "Azure Interior brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
 msgstr ""
+"Azure Interior aduce onestitate și seriozitate în industria lemnului, "
+"ajutându-și clienții să se descurce cu copaci, flori și ciuperci."
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_B
@@ -4284,12 +4406,12 @@ msgstr "B - MINING AND QUARRYING"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__index__btree
 msgid "B-tree"
-msgstr ""
+msgstr "B-tree"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__index__btree_not_null
 msgid "B-tree, excluding nulls"
-msgstr ""
+msgstr "B-tree, fără valori nule"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__b0
@@ -4350,24 +4472,25 @@ msgstr "B9  23  33 x 62 mm"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "BCE/KBO"
-msgstr ""
+msgstr "BCE/KBO"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__bank_bic
 msgid "BIC/SWIFT"
-msgstr ""
+msgstr "BIC/SWIFT"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0 model:res.country,vat_label:base.hk
 msgid "BRN"
-msgstr ""
+msgstr "BRN"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_partner_bank.py:0
 msgid "BSB is not valid (expected format is \"NNN-NNN\"). Please rectify."
 msgstr ""
+"BSB nu este valid (formatul așteptat este „NNN-NNN”). Vă rugăm să corectați."
 
 #. module: base
 #. odoo-python
@@ -4378,7 +4501,7 @@ msgstr "Format greșit fișier %s"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__barcode
 msgid "Badge ID"
-msgstr ""
+msgstr "ID Ecuson"
 
 #. module: base
 #: model:res.country,name:base.bs
@@ -4428,12 +4551,12 @@ msgstr "Bancă"
 #. module: base
 #: model:ir.model,name:base.model_res_partner_bank
 msgid "Bank Account"
-msgstr ""
+msgstr "Cont bancar"
 
 #. module: base
 #: model:ir.model,name:base.model_clearing_label
 msgid "Bank Account Clearing Number Label"
-msgstr ""
+msgstr "Etichetă număr de compensare cont bancar"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_partner_bank_account_form
@@ -4451,7 +4574,7 @@ msgstr "Adresa băncii"
 #. odoo-python
 #: code:addons/base/models/res_partner_bank.py:0
 msgid "Bank Code length must be 3."
-msgstr ""
+msgstr "Codul băncii trebuie să aibă lungimea 3."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_bank__bank_bic
@@ -4460,11 +4583,14 @@ msgid ""
 "letters) + Country Code (2 letters) + Location Code (2 letters/numbers) + "
 "Optional Branch Code (3 letters/numbers)."
 msgstr ""
+"Codul de identificare a băncii pentru transferuri internaționale, în "
+"formatul: cod bancă (4 litere) + cod țară (2 litere) + cod locație (2 litere/"
+"cifre) + cod sucursală opțional (3 litere/cifre)."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_bank_form
 msgid "Bank Information"
-msgstr ""
+msgstr "Informații bancare"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__bank_name
@@ -4478,6 +4604,7 @@ msgstr "Numele Bancii"
 #: code:addons/base/models/res_partner_bank.py:0
 msgid "Bank SARIE ID must consist of 4 upper case English letter."
 msgstr ""
+"ID-ul SARIE al băncii trebuie să conțină 4 litere mari din alfabetul englez."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_bank_form
@@ -4490,6 +4617,8 @@ msgid ""
 "Bank account type: Normal, IBAN, CLABE, or other from localization. Inferred "
 "from the bank account number."
 msgstr ""
+"Tip de cont bancar: normal, IBAN, CLABE sau altul, în funcție de localizare. "
+"Se determină automat pe baza numărului contului bancar."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__bank_ids
@@ -4539,7 +4668,7 @@ msgstr "Baza"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_form
 msgid "Base Currency"
-msgstr ""
+msgstr "Moneda de bază"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__state__base
@@ -4565,7 +4694,7 @@ msgstr "Vizualizare bază"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_form
 msgid "Base/Unit"
-msgstr ""
+msgstr "Bază/Unitate"
 
 #. module: base
 #: model:ir.actions.server,name:base.autovacuum_job_ir_actions_server
@@ -4615,13 +4744,13 @@ msgstr "Belarus"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Belgian Crossroads Bank for Enterprises number."
-msgstr ""
+msgstr "Număr din Banca Centrală a Întreprinderilor din Belgia (BCE/KBO)."
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Belgian national identification number."
-msgstr ""
+msgstr "Număr național de identificare belgian."
 
 #. module: base
 #: model:res.country,name:base.be
@@ -4709,11 +4838,13 @@ msgid ""
 "Blame the following accesses:\n"
 "%s"
 msgstr ""
+"Sunt responsabile următoarele accese:\n"
+"%s"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__report_tables_id__bold
 msgid "Bold"
-msgstr ""
+msgstr "Îngroșat"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.VEF
@@ -4764,25 +4895,26 @@ msgstr "Insula Bouvet"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__report_tables_id__boxed
 msgid "Boxed"
-msgstr ""
+msgstr "În cutie"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Branch Code"
-msgstr ""
+msgstr "Cod sucursală"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Branch Number"
-msgstr ""
+msgstr "Număr sucursală"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Branch Number of your company, leave empty for headquarters."
 msgstr ""
+"Numărul sucursalei companiei dvs.; lăsați necompletat pentru sediul central."
 
 #. module: base
 #. odoo-python
@@ -4799,6 +4931,10 @@ msgid ""
 "                notably for selling mouse traps. With that trick he cut\n"
 "                IT budget by almost half within the last 2 years."
 msgstr ""
+"Brandon lucrează în sectorul IT <b>de 10 ani</b>. Este cunoscut\n"
+"                mai ales pentru vânzarea de capcane pentru șoareci. Cu acest "
+"truc a redus\n"
+"                bugetul IT cu aproape jumătate în ultimii 2 ani."
 
 #. module: base
 #: model:res.country,name:base.br
@@ -4809,7 +4945,7 @@ msgstr "Brazilia"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Brazilian company identification number. 14 digits."
-msgstr ""
+msgstr "Număr de identificare a companiei din Brazilia. 14 cifre."
 
 #. module: base
 #: model:res.country,name:base.io
@@ -4826,13 +4962,13 @@ msgstr "Browser"
 #: model:ir.model.fields,field_description:base.field_res_device__browser_language
 #: model:ir.model.fields,field_description:base.field_res_session__browser_language
 msgid "Browser Language"
-msgstr ""
+msgstr "Limba browserului"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_device__browser_version
 #: model:ir.model.fields,field_description:base.field_res_session__browser_version
 msgid "Browser Version"
-msgstr ""
+msgstr "Versiunea browserului"
 
 #. module: base
 #: model:res.country,name:base.bn
@@ -4843,12 +4979,12 @@ msgstr "Brunei Darussalam"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Brønnøysund nr"
-msgstr ""
+msgstr "Brønnøysund nr"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__report_tables_id__bubble
 msgid "Bubble"
-msgstr ""
+msgstr "Bulă"
 
 #. module: base
 #: model:res.country,name:base.bg
@@ -4874,19 +5010,19 @@ msgstr "Burundi"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Business ID"
-msgstr ""
+msgstr "ID firmă"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Business ID (Y-tunnus)."
-msgstr ""
+msgstr "ID firmă (Y-tunnus)."
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Business Registration Number."
-msgstr ""
+msgstr "Număr de înregistrare a firmei."
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.GMD
@@ -4924,7 +5060,7 @@ msgstr "C5E 24  163 x 229 mm"
 #: code:addons/base/models/res_partner.py:0
 #: code:addons/partner_identifiers.py:0
 msgid "CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA"
-msgstr ""
+msgstr "CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_uk_cis
@@ -4935,13 +5071,13 @@ msgstr "CIS"
 #. odoo-python
 #: code:addons/bank_account_number.py:0
 msgid "CLABE should be a string of 18 digits."
-msgstr ""
+msgstr "CLABE trebuie să fie un șir de 18 cifre."
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0 model:res.country,vat_label:base.br
 msgid "CNPJ"
-msgstr ""
+msgstr "CNPJ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__cpu_duration
@@ -4990,7 +5126,7 @@ msgstr "CUIT"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "CVR"
-msgstr ""
+msgstr "CVR"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__calendar
@@ -5078,7 +5214,7 @@ msgstr "Configurația nu poate fi copiată!"
 #. odoo-python
 #: code:addons/models.py:0
 msgid "Cannot grab a lock on records"
-msgstr ""
+msgstr "Nu se pot bloca înregistrările"
 
 #. module: base
 #. odoo-python
@@ -5096,13 +5232,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/base/models/ir_attachment.py:0
 msgid "Cannot search, too many attachments"
-msgstr ""
+msgstr "Nu se poate căuta, prea multe atașamente"
 
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
 msgid "Cannot update a record without specifying its id or xml_id"
 msgstr ""
+"Nu se poate actualiza o înregistrare fără a specifica id-ul sau xml_id-ul ei"
 
 #. module: base
 #. odoo-python
@@ -5118,7 +5255,7 @@ msgstr "Capul Verde"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__card
 msgid "Card"
-msgstr ""
+msgstr "Card bancar"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__on_delete__cascade
@@ -5286,6 +5423,12 @@ msgid ""
 "and does not include any costs relating to the legislation of the country in "
 "which the client is located."
 msgstr ""
+"Unele țări aplică reținerea la sursă asupra valorii facturilor, în "
+"conformitate cu legislația internă. Orice reținere la sursă va fi plătită de "
+"client autorităților fiscale. În niciun caz ID Company nu poate suporta "
+"costuri legate de legislația unei țări. Prin urmare, valoarea facturii va fi "
+"datorată integral către ID Company și nu include niciun cost legat de "
+"legislația țării în care se află clientul."
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
@@ -5298,6 +5441,12 @@ msgid ""
 "(San Francisco) in its entirety and does not include any costs relating to "
 "the legislation of the country in which the client is located."
 msgstr ""
+"Unele țări aplică reținerea la sursă asupra valorii facturilor, în "
+"conformitate cu legislația internă. Orice reținere la sursă va fi plătită de "
+"client autorităților fiscale. În niciun caz My Company (San Francisco) nu "
+"poate suporta costuri legate de legislația unei țări. Prin urmare, valoarea "
+"facturii va fi datorată integral către My Company (San Francisco) și nu "
+"include niciun cost legat de legislația țării în care se află clientul."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_mail_server_certificate_requires_tls
@@ -5483,7 +5632,7 @@ msgstr "Insula Craciunului"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Citizen Identification"
-msgstr ""
+msgstr "Identificare cetățean"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__city
@@ -5503,7 +5652,7 @@ msgstr "Localitate"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__clearing_label_id
 msgid "Clearing Label"
-msgstr ""
+msgstr "Etichetă de compensare"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__clearing_number
@@ -5598,6 +5747,10 @@ msgid ""
 "                notably for selling mouse traps. With that trick he cut\n"
 "                IT budget by almost half within the last 2 years."
 msgstr ""
+"Colleen Diaz lucrează în sectorul IT <b>de 10 ani</b>. Este cunoscută\n"
+"                mai ales pentru vânzarea de capcane pentru șoareci. Cu acest "
+"truc a redus\n"
+"                bugetul IT cu aproape jumătate în ultimii 2 ani."
 
 #. module: base
 #: model:res.country,name:base.co
@@ -5631,7 +5784,7 @@ msgstr "Index Culori"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__report_tables_id__column
 msgid "Column"
-msgstr ""
+msgstr "Coloana"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__column1
@@ -5659,7 +5812,7 @@ msgstr "Coloană referitoare la înregistrarea din tabelul de modele"
 #: model_terms:res.partner,website_description:base.res_partner_12
 #: model_terms:res.partner,website_description:base.res_partner_5
 msgid "Come see us live, we hope to meet you!"
-msgstr ""
+msgstr "Veniți să ne vedeți live, sperăm să vă cunoaștem!"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__comm10e
@@ -5707,7 +5860,7 @@ msgstr "Entitate comercială"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Commercial Registration Number"
-msgstr ""
+msgstr "Număr de înregistrare comercială"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales_commission
@@ -5727,7 +5880,7 @@ msgstr "Comore"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__report_tables_id__compact
 msgid "Compact"
-msgstr ""
+msgstr "Compact"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_company_form
@@ -5772,7 +5925,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_rate__company_currency_id
 msgid "Company Currency"
-msgstr ""
+msgstr "Moneda Companiei"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__company_dependent
@@ -5787,7 +5940,7 @@ msgstr "Detalii companie"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Company Employer"
-msgstr ""
+msgstr "Angajator (companie)"
 
 #. module: base
 #. odoo-python
@@ -5830,7 +5983,7 @@ msgstr "Sloganul Companiei"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Company identification number"
-msgstr ""
+msgstr "Număr de identificare a companiei"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__report_header
@@ -5848,6 +6001,8 @@ msgid ""
 "Company used for the original currency (only used for t-out). By default use "
 "the user company"
 msgstr ""
+"Compania folosită pentru moneda originală (folosită doar pentru t-out). "
+"Implicit se folosește compania utilizatorului"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__compare_view_id
@@ -5869,7 +6024,7 @@ msgstr "Completeaza Adresa"
 #: model:ir.model.fields,field_description:base.field_res_partner__contact_address_inline
 #: model:ir.model.fields,field_description:base.field_res_users__contact_address_inline
 msgid "Complete Address inline"
-msgstr ""
+msgstr "Adresă completă pe un rând"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_data__complete_name
@@ -5964,7 +6119,7 @@ msgstr "Configurare"
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_todo
 msgid "Configuration Wizard"
-msgstr ""
+msgstr "Asistent de configurare"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_ir_actions_todo_form
@@ -5983,7 +6138,7 @@ msgstr "Confirmă"
 #: model:res.company,free_order_label:base.demo_company_id
 #: model:res.company,free_order_label:base.main_company
 msgid "Confirm Order"
-msgstr ""
+msgstr "Confirmă comanda"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_users_identitycheck_view_form
@@ -6099,13 +6254,13 @@ msgstr "Construcție"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_8
 msgid "Consulting Services"
-msgstr ""
+msgstr "Servicii de consultanță"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Consumer Identification"
-msgstr ""
+msgstr "Identificare consumator"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner
@@ -6225,6 +6380,9 @@ msgid ""
 "have a 'company_id' or 'company_ids' field, and isn't company-dependent "
 "either."
 msgstr ""
+"Nu s-a putut genera un domeniu dependent de companie pentru câmpul %s. "
+"Modelul nu are un câmp 'company_id' sau 'company_ids' și nici nu este "
+"dependent de companie."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__count
@@ -6320,7 +6478,7 @@ msgstr "Creează"
 #. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 msgid "Create %(model_name)s"
-msgstr ""
+msgstr "Creează %(model_name)s"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -6434,37 +6592,37 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_access__operation__cd
 msgid "Create, Delete"
-msgstr ""
+msgstr "Creare, Ștergere"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_access__operation__cr
 msgid "Create, Read"
-msgstr ""
+msgstr "Creare, Citire"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_access__operation__crd
 msgid "Create, Read, Delete"
-msgstr ""
+msgstr "Creare, Citire, Ștergere"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_access__operation__cru
 msgid "Create, Read, Update"
-msgstr ""
+msgstr "Creare, Citire, Actualizare"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_access__operation__crud
 msgid "Create, Read, Update, Delete"
-msgstr ""
+msgstr "Creare, Citire, Actualizare, Ștergere"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_access__operation__cu
 msgid "Create, Update"
-msgstr ""
+msgstr "Creare, Actualizare"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_access__operation__cud
 msgid "Create, Update, Delete"
-msgstr ""
+msgstr "Creare, Actualizare, Ștergere"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
@@ -6679,7 +6837,7 @@ msgstr "Croatia"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Croatian company ID number."
-msgstr ""
+msgstr "Număr de identificare a companiei din Croația."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_progress__cron_id
@@ -6717,6 +6875,9 @@ msgid ""
 "take action. More information can be found in the server logs around %"
 "(time)s."
 msgstr ""
+"Jobul cron %(name)s (%(id)s) eșuează și va fi dezactivat dacă nu luați "
+"măsuri. Mai multe informații pot fi găsite în jurnalele serverului în jurul "
+"orei %(time)s."
 
 #. module: base
 #: model:res.country,name:base.cu
@@ -6826,7 +6987,7 @@ msgstr "Semnul monedei, care va fi folosit la imprimarea sumelor."
 #: model:ir.model.fields,field_description:base.field_res_device__is_current
 #: model:ir.model.fields,field_description:base.field_res_session__is_current
 msgid "Current"
-msgstr ""
+msgstr "Curent"
 
 #. module: base
 #. odoo-python
@@ -6895,7 +7056,7 @@ msgstr "Poziție Nume Client"
 #: model_terms:res.partner,website_description:base.res_partner_2
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Customer Relationship Management"
-msgstr ""
+msgstr "Gestionarea relațiilor cu clienții"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_customer_form
@@ -6912,7 +7073,7 @@ msgstr "Personalizări"
 #: model_terms:ir.ui.view,arch_db:base.ir_access_form_view
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
 msgid "Customize"
-msgstr ""
+msgstr "Personalizează"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_ui_view_custom
@@ -6946,7 +7107,7 @@ msgstr "Republica Ceha"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Czech business identification number (IČO)."
-msgstr ""
+msgstr "Număr de identificare a companiei din Cehia (IČO)."
 
 #. module: base
 #: model:res.country,name:base.ci
@@ -6963,7 +7124,7 @@ msgstr "D - ELECTRICITY, GAS, STEAM AND AIR CONDITIONING SUPPLY"
 #: code:addons/base/models/res_partner.py:0
 #: code:addons/partner_identifiers.py:0
 msgid "DE123456788 or 12/345/67890"
-msgstr ""
+msgstr "DE123456788 or 12/345/67890"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__dle
@@ -6979,7 +7140,7 @@ msgstr "DOM-TOM"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "DUNS"
-msgstr ""
+msgstr "DUNS"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.GMD
@@ -6990,13 +7151,13 @@ msgstr "Dalasi"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Danish Central Business Register number."
-msgstr ""
+msgstr "Număr din Registrul central al companiilor din Danemarca."
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Danish tax entity number (SE-nummer)."
-msgstr ""
+msgstr "Număr de entitate fiscală din Danemarca (SE-nummer)."
 
 #. module: base
 #. odoo-python
@@ -7051,7 +7212,7 @@ msgstr "Structura bazei de date"
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_databases
 msgid "Databases"
-msgstr ""
+msgstr "Baze de Date"
 
 #. module: base
 #. odoo-python
@@ -7109,6 +7270,8 @@ msgid ""
 "Date used for the original currency (only used for t-out). by default use "
 "the current date."
 msgstr ""
+"Data folosită pentru moneda originală (folosită doar pentru t-out). Implicit "
+"se folosește data curentă."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_cron__interval_type__days
@@ -7192,7 +7355,7 @@ msgstr "Filtrul implicit"
 #. module: base
 #: model:ir.model,name:base.model_ir_default
 msgid "Default Value"
-msgstr ""
+msgstr "Valoare implicită"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_default__json_value
@@ -7207,12 +7370,12 @@ msgstr "Vizualizare implicită"
 #. module: base
 #: model:res.groups,name:base.default_user_group
 msgid "Default access for new light users"
-msgstr ""
+msgstr "Acces implicit pentru utilizatorii limitați noi"
 
 #. module: base
 #: model:res.groups,name:base.default_user_regular_group
 msgid "Default access for new regular users"
-msgstr ""
+msgstr "Acces implicit pentru utilizatorii obișnuiți noi"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_embedded_actions__filter_ids
@@ -7244,13 +7407,15 @@ msgstr "Rapoarte Definite"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "Defined in the general settings"
-msgstr ""
+msgstr "Definit în setările generale"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_form
 msgid ""
 "Defines the number of days the API keys will be alive for users in this group"
 msgstr ""
+"Definește numărul de zile în care cheile API rămân valabile pentru "
+"utilizatorii din acest grup"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint__definition
@@ -7283,6 +7448,8 @@ msgid ""
 "Deleting the public user is not allowed. Deleting this profile will "
 "compromise critical functionalities."
 msgstr ""
+"Ștergerea utilizatorului public nu este permisă. Ștergerea acestui profil ar "
+"compromite funcționalități critice."
 
 #. module: base
 #. odoo-python
@@ -7400,7 +7567,7 @@ msgstr "Descriere HTML"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_14
 msgid "Desk Manufacturers"
-msgstr ""
+msgstr "Producători de birouri"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__dst_partner_id
@@ -7443,7 +7610,7 @@ msgstr ""
 #: model:ir.model,name:base.model_res_device
 #: model:ir.model.fields,field_description:base.field_res_session__device_ids
 msgid "Device"
-msgstr ""
+msgstr "Dispozitiv"
 
 #. module: base
 #: model:ir.model,name:base.model_res_device_log
@@ -7853,6 +8020,8 @@ msgstr "Dong"
 #: model:res.partner,website_short_description:base.res_partner_address_3
 msgid "Douglas Fletcher is a mighty functional consultant at Acme Corporation"
 msgstr ""
+"Douglas Fletcher este un consultant funcțional excepțional la Acme "
+"Corporation"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_address_3
@@ -7861,6 +8030,10 @@ msgid ""
 "    notably for selling mouse traps. With that trick he cut\n"
 "    IT budget by almost half within the last 2 years."
 msgstr ""
+"Douglas Fletcher lucrează în sectorul IT <b>de 10 ani</b>. Este cunoscut\n"
+"    mai ales pentru vânzarea de capcane pentru șoareci. Cu acest truc a "
+"redus\n"
+"    bugetul IT la aproape jumătate în ultimii 2 ani."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_url__target__download
@@ -7876,19 +8049,19 @@ msgstr "Dram"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Dun & Bradstreet unique 9-digit business identifier."
-msgstr ""
+msgstr "Identificator unic de companie Dun & Bradstreet, din 9 cifre."
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 msgid "Duplicate %(record)s"
-msgstr ""
+msgstr "Duplicare %(record)s"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 msgid "Duplicate ..."
-msgstr ""
+msgstr "Duplicare ..."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__state__object_copy
@@ -7904,7 +8077,7 @@ msgstr "Duplicat din"
 #: model_terms:ir.ui.view,arch_db:base.ir_access_form_view
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
 msgid "Duplicate this access to customize it"
-msgstr ""
+msgstr "Duplicați acest drept de acces pentru a-l personaliza"
 
 #. module: base
 #. odoo-python
@@ -7924,13 +8097,13 @@ msgstr "Durată"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Dutch Chamber of Commerce registration number."
-msgstr ""
+msgstr "Număr de înregistrare la Camera de Comerț din Țările de Jos."
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Dutch government Organisation Identification Number."
-msgstr ""
+msgstr "Număr de identificare a organizației guvernamentale din Țările de Jos."
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_E
@@ -7941,13 +8114,13 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_website__domain
 msgid "E.g. https://www.mydomain.com"
-msgstr ""
+msgstr "Ex. https://www.mindomeniu.com"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "EAN/GLN"
-msgstr ""
+msgstr "EAN/GLN"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_edi
@@ -8003,6 +8176,8 @@ msgstr "El Salvador"
 #: code:addons/partner_identifiers.py:0
 msgid "Electronic address for French e-invoicing platforms (PDP/PPF)."
 msgstr ""
+"Adresă electronică pentru platformele franceze de facturare electronică (PDP/"
+"PPF)."
 
 #. module: base
 #. odoo-python
@@ -8134,6 +8309,8 @@ msgid ""
 "Enter a description of and purpose for the key. <strong>it will be the only "
 "way to identify the key once created</strong>"
 msgstr ""
+"Introduceți o descriere și scopul cheii. <strong>va fi singura modalitate de "
+"a identifica cheia după creare</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_users_identitycheck_view_form
@@ -8240,7 +8417,7 @@ msgstr "Estonia"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Estonian business registry code."
-msgstr ""
+msgstr "Cod din registrul comerțului din Estonia."
 
 #. module: base
 #: model:res.country,name:base.sz
@@ -8768,6 +8945,8 @@ msgstr "Example of Python code:"
 msgid ""
 "Example: '219999830019' (format: 12 digits, all numbers, valid check digit)"
 msgstr ""
+"Exemplu: '219999830019' (format: 12 cifre, doar numere, cifră de control "
+"validă)"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_rate__rate
@@ -8775,11 +8954,13 @@ msgid ""
 "Exchange rate expressed as reference-currency units per 1 unit of this "
 "currency"
 msgstr ""
+"Curs de schimb exprimat în unități ale monedei de referință pentru 1 unitate "
+"din această monedă"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
 msgid "Exchange rate from the company currency to this currency"
-msgstr ""
+msgstr "Curs de schimb din moneda companiei în această monedă"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
@@ -8831,7 +9012,7 @@ msgstr "Extindeți grupuri"
 #. odoo-python
 #: code:addons/base/models/ir_binary.py:0
 msgid "Expected singleton: %(record)s"
-msgstr ""
+msgstr "Se aștepta o singură înregistrare: %(record)s"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_expenses
@@ -8863,7 +9044,7 @@ msgstr "Expiră la:"
 #: model_terms:ir.ui.view,arch_db:base.view_client_action_form
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Explanation"
-msgstr ""
+msgstr "Explicație"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_report_paperformat__report_ids
@@ -9036,7 +9217,7 @@ msgstr "Eroare la instalarea datelor demo pentru unele module, demo dezactivat"
 #. odoo-python
 #: code:addons/fields_relational.py:0
 msgid "Failed to write field %s"
-msgstr ""
+msgstr "Scrierea câmpului %s a eșuat"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__failure_count
@@ -9109,6 +9290,9 @@ msgid ""
 "Field \"%(field_name)s\" in related path \"%(related_field)s\" is not "
 "searchable. Non-searchable fields cannot be used in related fields."
 msgstr ""
+"Câmpul „%(field_name)s” din calea asociată „%(related_field)s” nu poate fi "
+"căutat. Câmpurile care nu pot fi căutate nu pot fi folosite în câmpuri "
+"asociate."
 
 #. module: base
 #. odoo-python
@@ -9216,6 +9400,8 @@ msgid ""
 "Field “%(field)s” is type “%(field_type)s” but it is only possible to stream "
 "Binary or Image fields."
 msgstr ""
+"Câmpul „%(field)s” este de tipul „%(field_type)s”, dar doar câmpurile Binary "
+"sau Image pot fi transmise în flux."
 
 #. module: base
 #. odoo-python
@@ -9468,7 +9654,7 @@ msgstr "Flotă"
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_address_4
 msgid "Floyd Steward is a mighty analyst at Acme Corporation."
-msgstr ""
+msgstr "Floyd Steward este un analist excepțional la Acme Corporation."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_address_4
@@ -9477,6 +9663,10 @@ msgid ""
 "    notably for selling mouse traps. With that trick he cut\n"
 "    IT budget by almost half within the last 2 years."
 msgstr ""
+"Floyd Steward lucrează în sectorul IT <b>de 10 ani</b>. Este cunoscut\n"
+"    mai ales pentru vânzarea de capcane pentru șoareci. Cu acest truc a "
+"redus\n"
+"    bugetul IT la aproape jumătate în ultimii 2 ani."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__fold_name
@@ -9492,7 +9682,7 @@ msgstr "Folio 27 210 x 330 mm"
 #. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 msgid "Following child actions have warnings: %(children)s"
-msgstr ""
+msgstr "Următoarele acțiuni secundare au avertismente: %(children)s"
 
 #. module: base
 #. odoo-python
@@ -9501,6 +9691,8 @@ msgid ""
 "Following child actions should have the same groups (%(groups)s): %"
 "(children)s"
 msgstr ""
+"Următoarele acțiuni copil trebuie să aibă aceleași grupuri (%(groups)s): %"
+"(children)s"
 
 #. module: base
 #. odoo-python
@@ -9508,6 +9700,8 @@ msgstr ""
 msgid ""
 "Following child actions should have the same model (%(model)s): %(children)s"
 msgstr ""
+"Următoarele acțiuni copil trebuie să aibă același model (%(model)s): %"
+"(children)s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__font
@@ -9550,6 +9744,8 @@ msgid ""
 "For many2one_reference fields, the field that stores the technical name of "
 "the target model"
 msgstr ""
+"Pentru câmpurile many2one_reference, câmpul care stochează numele tehnic al "
+"modelului țintă"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
@@ -9565,6 +9761,8 @@ msgid ""
 "For one2many fields, the field on the target model that implements the "
 "opposite many2one relationship"
 msgstr ""
+"Pentru câmpurile one2many, câmpul din modelul țintă care implementează "
+"relația many2one inversă"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__relation
@@ -9650,6 +9848,8 @@ msgid ""
 "Found more than 10 errors and more than one error per 10 records, "
 "interrupted to avoid showing too many errors."
 msgstr ""
+"S-au găsit peste 10 erori și mai mult de o eroare la 10 înregistrări; "
+"procesul a fost întrerupt pentru a nu afișa prea multe erori."
 
 #. module: base
 #. odoo-python
@@ -9684,13 +9884,13 @@ msgstr "Franța"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "France FRCTC Electronic Address"
-msgstr ""
+msgstr "Adresă electronică FRCTC Franța"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "France Register of legal persons"
-msgstr ""
+msgstr "Registrul persoanelor juridice din Franța"
 
 #. module: base
 #. odoo-python
@@ -9703,12 +9903,13 @@ msgstr "Acces gratuit"
 #: code:addons/partner_identifiers.py:0
 msgid "French 14-digit establishment identification number (SIREN + NIC)."
 msgstr ""
+"Număr de identificare a unității din Franța, din 14 cifre (SIREN + NIC)."
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "French 9-digit business identification number."
-msgstr ""
+msgstr "Număr de identificare a companiei din Franța, din 9 cifre."
 
 #. module: base
 #: model:res.country,name:base.gf
@@ -9729,7 +9930,7 @@ msgstr "Teritoriile Franceze de Sud"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "French national identification number (NIR)."
-msgstr ""
+msgstr "Număr național de identificare din Franța (NIR)."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__5
@@ -9757,7 +9958,7 @@ msgstr "Recepție"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_search_view
 msgid "Full"
-msgstr ""
+msgstr "Complet"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_industry__full_name
@@ -9792,25 +9993,25 @@ msgstr ""
 #: code:addons/base/models/res_partner.py:0
 #: code:addons/partner_identifiers.py:0
 msgid "GB123456782 or XI123456782"
-msgstr ""
+msgstr "GB123456782 or XI123456782"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "GCC ID"
-msgstr ""
+msgstr "GCC ID"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "GCC ID Number"
-msgstr ""
+msgstr "Număr GCC ID"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "GEBA"
-msgstr ""
+msgstr "GEBA"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__gmt
@@ -9821,7 +10022,7 @@ msgstr "GMT"
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 msgid "GODE561231GR8"
-msgstr ""
+msgstr "GODE561231GR8"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__gpl-2
@@ -9892,7 +10093,7 @@ msgstr "Generați cheia"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__attachment_use
 msgid "Generate new file each time the report is printed"
-msgstr ""
+msgstr "Generează un fișier nou la fiecare tipărire a raportului"
 
 #. module: base
 #: model:res.country,name:base.ge
@@ -9903,13 +10104,13 @@ msgstr "Georgia"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "German Commercial Register (Handelsregister) number."
-msgstr ""
+msgstr "Număr din Registrul comerțului din Germania (Handelsregister)."
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "German Electronic Business Address."
-msgstr ""
+msgstr "Adresă electronică de afaceri din Germania."
 
 #. module: base
 #: model:res.country,name:base.de
@@ -9941,6 +10142,8 @@ msgstr "Global"
 #: code:addons/partner_identifiers.py:0
 msgid "Global Location Number, used to identify parties and locations."
 msgstr ""
+"Global Location Number, folosit pentru identificarea partenerilor și a "
+"locațiilor."
 
 #. module: base
 #. odoo-python
@@ -9962,6 +10165,11 @@ msgid ""
 "                IT budget by almost half within the last 2 years.\n"
 "                Famous Senior Consultant."
 msgstr ""
+"Gordon Owens lucrează în sectorul IT <b>de 10 ani</b>. Este cunoscut\n"
+"                mai ales pentru vânzarea de capcane pentru șoareci. Cu acest "
+"truc a redus\n"
+"                bugetul IT la aproape jumătate în ultimii 2 ani.\n"
+"                Consultant senior renumit."
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.HTG
@@ -10022,12 +10230,17 @@ msgid ""
 "remove the following fields from the webhook payload:\n"
 "%(restricted_fields)s"
 msgstr ""
+"Câmpurile restricționate la grupuri nu pot fi incluse în conținutul webhook, "
+"deoarece ar putea permite oricărui utilizator să divulge accidental "
+"informații sensibile. Va trebui să eliminați următoarele câmpuri din "
+"conținutul webhook:\n"
+"%(restricted_fields)s"
 
 #. module: base
 #. odoo-python
 #: code:addons/fields_properties.py:0
 msgid "Grouping by HTML properties is not supported."
-msgstr ""
+msgstr "Gruparea după proprietăți HTML nu este acceptată."
 
 #. module: base
 #. odoo-python
@@ -10058,6 +10271,12 @@ msgid ""
 "interact with,\n"
 "                    or enforce strict record-level security rules."
 msgstr ""
+"Grupurile permit centralizarea și gestionarea drepturilor de acces ale "
+"utilizatorilor.<br>\n"
+"                    Definiți cu ce modele, meniuri și vizualizări pot "
+"interacționa utilizatorii\n"
+"                    sau impuneți reguli stricte de securitate la nivel de "
+"înregistrare."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__all_group_ids
@@ -10156,7 +10375,7 @@ msgstr "HMRC"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "HRB Nr"
-msgstr ""
+msgstr "Nr. HRB"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_report__report_type__qweb-html
@@ -10178,7 +10397,7 @@ msgstr "Rutare HTTP"
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 msgid "HU12345676 or 12345678-1-11 or 8071592153"
-msgstr ""
+msgstr "HU12345676 or 12345678-1-11 or 8071592153"
 
 #. module: base
 #: model:res.country,name:base.ht
@@ -10201,7 +10420,7 @@ msgstr "Halers"
 #: model_terms:res.partner,website_description:base.res_partner_12
 #: model_terms:res.partner,website_description:base.res_partner_5
 msgid "Happy to be Sponsor"
-msgstr ""
+msgstr "Mă bucur să fiu sponsor"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__has_diff
@@ -10213,7 +10432,7 @@ msgstr "Has Diff"
 #: model:ir.model.fields,field_description:base.field_res_partner__has_vat
 #: model:ir.model.fields,field_description:base.field_res_users__has_vat
 msgid "Has Tax ID"
-msgstr ""
+msgstr "Are CIF"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__header_spacing
@@ -10309,7 +10528,7 @@ msgstr "Istoric"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__holder_name
 msgid "Holder Name"
-msgstr ""
+msgstr "Nume titular"
 
 #. module: base
 #: model:res.country,name:base.va
@@ -10383,13 +10602,13 @@ msgstr "Resurse Umane"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Hungarian Tax ID"
-msgstr ""
+msgstr "Cod fiscal maghiar"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Hungarian company ID number."
-msgstr ""
+msgstr "Număr de identificare a companiei din Ungaria."
 
 #. module: base
 #: model:res.country,name:base.hu
@@ -10408,6 +10627,8 @@ msgid ""
 "I'll be happy to send a webhook for you, but you really need to give me a "
 "URL to reach out to..."
 msgstr ""
+"Vă trimit cu plăcere un webhook, dar trebuie neapărat să-mi dați un URL "
+"către care să-l trimit..."
 
 #. module: base
 #. odoo-python
@@ -10415,12 +10636,14 @@ msgstr ""
 msgid ""
 "I'm sorry to say that JSON fields (such as '%s') are currently not supported."
 msgstr ""
+"Ne pare rău, dar câmpurile JSON (cum ar fi '%s') nu sunt acceptate în "
+"prezent."
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "ICE"
-msgstr ""
+msgstr "ICE"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field__unknown__id
@@ -10561,6 +10784,12 @@ msgid ""
 "as a third party in the context of any claim for damages filed against the "
 "client by an end consumer."
 msgstr ""
+"ID Company se angajează să facă tot posibilul pentru a furniza servicii "
+"performante la timp, în conformitate cu termenele convenite. Cu toate "
+"acestea, niciuna dintre obligațiile sale nu poate fi considerată o obligație "
+"de rezultat. ID Company nu poate fi obligată în niciun caz de către client "
+"să intervină ca terț în cadrul unei cereri de despăgubire formulate "
+"împotriva clientului de către un consumator final."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__xml_id
@@ -10581,13 +10810,13 @@ msgstr "ID-ul vizualizării definit în fișierul xml"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__barcode
 msgid "ID used for employee identification."
-msgstr ""
+msgstr "ID utilizat pentru identificare angajat."
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "IIN"
-msgstr ""
+msgstr "IIN"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_device__ip_address
@@ -10625,7 +10854,7 @@ msgstr "IT / Comunicare"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "IVA"
-msgstr ""
+msgstr "IVA"
 
 #. module: base
 #: model:res.country,name:base.is
@@ -10665,6 +10894,10 @@ msgid ""
 "payment date, ID Company reserves the right to call on the services of a "
 "debt recovery company. All legal expenses will be payable by the client."
 msgstr ""
+"Dacă o plată rămâne neachitată la mai mult de șaizeci (60) de zile de la "
+"data scadenței, ID Company își rezervă dreptul de a apela la serviciile unei "
+"firme de recuperare a creanțelor. Toate cheltuielile legale vor fi suportate "
+"de client."
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
@@ -10674,6 +10907,10 @@ msgid ""
 "services of a debt recovery company. All legal expenses will be payable by "
 "the client."
 msgstr ""
+"Dacă o plată rămâne neachitată la mai mult de șaizeci (60) de zile de la "
+"data scadenței, My Company (San Francisco) își rezervă dreptul de a apela la "
+"serviciile unei firme de recuperare a creanțelor. Toate cheltuielile legale "
+"vor fi suportate de client."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__group_expand
@@ -10793,6 +11030,8 @@ msgstr ""
 msgid ""
 "If you are trying to input a European number, this is the expected format: "
 msgstr ""
+"Dacă încercați să introduceți un număr european, acesta este formatul "
+"așteptat: "
 
 #. module: base
 #: model:ir.model.fields,help:base.field_base_language_install__overwrite
@@ -10887,7 +11126,7 @@ msgstr "Image Mixin"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_uninstall__impacted_application_count
 msgid "Impacted Application Count"
-msgstr ""
+msgstr "Număr de aplicații afectate"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -10897,12 +11136,12 @@ msgstr "Module afectate"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_uninstall__impacted_module_count
 msgid "Impacted Module Count"
-msgstr ""
+msgstr "Număr de module afectate"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_uninstall__impacted_application_ids
 msgid "Impacted applications"
-msgstr ""
+msgstr "Aplicații afectate"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_uninstall__impacted_module_ids
@@ -10917,17 +11156,17 @@ msgstr "Implementare"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__implied_by_count
 msgid "Implied By Count"
-msgstr ""
+msgstr "Număr de grupuri care îl implică"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__implied_count
 msgid "Implied Count"
-msgstr ""
+msgstr "Număr de grupuri implicate"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_search
 msgid "Implied Group"
-msgstr ""
+msgstr "Grup implicat"
 
 #. module: base
 #. odoo-python
@@ -10945,7 +11184,7 @@ msgstr "Grupuri implicite"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_search
 msgid "Implying Group"
-msgstr ""
+msgstr "Grup care implică"
 
 #. module: base
 #. odoo-python
@@ -10995,6 +11234,9 @@ msgid ""
 "by means of a letter sent by recorded delivery to its registered office "
 "within 8 days of the delivery of the goods or the provision of the services."
 msgstr ""
+"Pentru a fi admisibilă, orice reclamație trebuie notificată către ID Company "
+"printr-o scrisoare recomandată trimisă la sediul social, în termen de 8 zile "
+"de la livrarea bunurilor sau prestarea serviciilor."
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
@@ -11004,6 +11246,9 @@ msgid ""
 "registered office within 8 days of the delivery of the goods or the "
 "provision of the services."
 msgstr ""
+"Pentru a fi admisibilă, orice reclamație trebuie notificată către My Company "
+"(San Francisco) printr-o scrisoare recomandată trimisă la sediul social, în "
+"termen de 8 zile de la livrarea bunurilor sau prestarea serviciilor."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_search
@@ -11025,6 +11270,8 @@ msgstr "Includere"
 #: model:res.groups,comment:base.group_everyone
 msgid "Includes all users. This makes group restrictions more convenient."
 msgstr ""
+"Include toți utilizatorii. Astfel, restricțiile pe grupuri sunt mai ușor de "
+"folosit."
 
 #. module: base
 #. odoo-python
@@ -11032,6 +11279,7 @@ msgstr ""
 msgid ""
 "Inconsistent values: model=%(model)s does not match model_id=%(model_id)s."
 msgstr ""
+"Valori inconsecvente: model=%(model)s nu corespunde cu model_id=%(model_id)s."
 
 #. module: base
 #. odoo-python
@@ -11046,7 +11294,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__index
 msgid "Index"
-msgstr ""
+msgstr "Index"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__index_content
@@ -11125,6 +11373,8 @@ msgid ""
 "Indicates that the group is used external data sharing prupose (e.g., portal "
 "access to specific records)"
 msgstr ""
+"Indică faptul că grupul este folosit pentru partajarea datelor cu externi "
+"(de ex., acces portal la anumite înregistrări)"
 
 #. module: base
 #: model:res.country,name:base.id
@@ -11179,6 +11429,8 @@ msgid ""
 "Inherited view cannot have '%(attr)s' defined on the record. Use '%(attr)s' "
 "attributes inside the view definition"
 msgstr ""
+"O vizualizare moștenită nu poate avea '%(attr)s' definit pe înregistrare. "
+"Folosiți atributele '%(attr)s' în definiția vizualizării"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__init_stack_trace
@@ -11282,6 +11534,9 @@ msgid ""
 "separated list of valid field names (optionally followed by asc/desc for the "
 "direction)"
 msgstr ""
+"„order” nevalid (%s). O specificație „order” validă este o listă de nume de "
+"câmpuri valide separate prin virgulă (urmate opțional de asc/desc pentru "
+"direcție)"
 
 #. module: base
 #. odoo-python
@@ -11360,7 +11615,7 @@ msgstr "Perioadă implicită invalidă %(default_period)s pentru filtrul de dat�
 #. odoo-python
 #: code:addons/base/models/ir_access.py:0
 msgid "Invalid domain %(domain)s: %(error)s"
-msgstr ""
+msgstr "Domeniu nevalid %(domain)s: %(error)s"
 
 #. module: base
 #. odoo-python
@@ -11374,6 +11629,7 @@ msgstr "Câmp invalid %(model)s.%(field)s"
 msgid ""
 "Invalid identifier: %(identifier_value)s%(identifier_label)s.%(example)s"
 msgstr ""
+"Identificator nevalid: %(identifier_value)s%(identifier_label)s.%(example)s"
 
 #. module: base
 #. odoo-python
@@ -11470,7 +11726,7 @@ msgstr "Invalid template user. It seems it has been deleted."
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
 msgid "Invalid user group."
-msgstr ""
+msgstr "Grup de utilizatori nevalid."
 
 #. module: base
 #. odoo-python
@@ -11495,6 +11751,8 @@ msgid ""
 "Invalid value in Default Value field. Expected type '%(field_type)s' for '%"
 "(model_name)s.%(field_name)s'."
 msgstr ""
+"Valoare nevalidă în câmpul Valoare implicită. Tipul așteptat este '%"
+"(field_type)s' pentru '%(model_name)s.%(field_name)s'."
 
 #. module: base
 #. odoo-python
@@ -11529,7 +11787,7 @@ msgstr "Inventar"
 #: model_terms:res.partner,website_description:base.res_partner_2
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Inventory and Warehouse management"
-msgstr ""
+msgstr "Gestionarea stocurilor și a depozitului"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_rate__inverse_company_rate
@@ -11566,13 +11824,13 @@ msgstr "IoT"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Iqama ID Number"
-msgstr ""
+msgstr "Număr de identitate Iqama"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Iqama Number"
-msgstr ""
+msgstr "Număr Iqama"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_menu_ir_profile
@@ -11603,7 +11861,7 @@ msgstr "Irlanda"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Ireland Personal Public Service Number."
-msgstr ""
+msgstr "Număr personal de serviciu public din Irlanda (PPSN)."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__group_by_is_company
@@ -11634,7 +11892,7 @@ msgstr "Este Public"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_access__is_standard
 msgid "Is Standard"
-msgstr ""
+msgstr "Este standard"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__is_company
@@ -11676,6 +11934,14 @@ msgid ""
 "                    series) and encourages \"training in research through\n"
 "                    research\"."
 msgstr ""
+"Oferă învățământ postuniversitar în dinamica fluidelor\n"
+"                    (master de cercetare în dinamica fluidelor, fostul „"
+"Diploma\n"
+"                    Course”, program de doctorat, program de stagiu și "
+"serii\n"
+"                    de prelegeri) și încurajează „formarea în cercetare "
+"prin\n"
+"                    cercetare”."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_3
@@ -11696,6 +11962,21 @@ msgid ""
 "well\n"
 "                    as industries."
 msgstr ""
+"Desfășoară și promovează cercetarea în domeniul dinamicii\n"
+"                    fluidelor. Deține aproximativ cincizeci de tuneluri "
+"aerodinamice,\n"
+"                    turbomașini și alte instalații de testare specializate, "
+"unele\n"
+"                    dintre ele unice sau cele mai mari din lume. Cercetări "
+"ample\n"
+"                    asupra aspectelor experimentale, computaționale și "
+"teoretice\n"
+"                    ale curgerii gazelor și lichidelor sunt efectuate sub\n"
+"                    coordonarea cadrelor didactice și a inginerilor de "
+"cercetare, finanțate\n"
+"                    în principal de agenții guvernamentale și "
+"internaționale, precum\n"
+"                    și de industrie."
 
 #. module: base
 #: model:res.country,name:base.it
@@ -11706,7 +11987,7 @@ msgstr "Italia"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "IČO"
-msgstr ""
+msgstr "IČO"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_J
@@ -11727,7 +12008,7 @@ msgstr "Japonia"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Japanese corporate number (Specified Subject to Tax)."
-msgstr ""
+msgstr "Număr de corporație din Japonia (Specified Subject to Tax)."
 
 #. module: base
 #: model:res.country,name:base.je
@@ -11776,7 +12057,7 @@ msgstr "K - FINANCIAL AND INSURANCE ACTIVITIES"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "KVK"
-msgstr ""
+msgstr "KVK"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__kanban
@@ -11804,22 +12085,22 @@ msgstr "Nu completa, dacă dorești ca utilizatorul să nu se poată conecta"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_form_view
 msgid "Keep track of what this access right does and why it exists..."
-msgstr ""
+msgstr "Notați ce face acest drept de acces și de ce există..."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_form
 msgid "Keep track of what this groups does and why it exists..."
-msgstr ""
+msgstr "Notați ce face acest grup și de ce există..."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "Keep track of what this report action does and why it exists..."
-msgstr ""
+msgstr "Notați ce face această acțiune de raport și de ce există..."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_groups_privilege_form
 msgid "Keep track of what this scope does and why it exists..."
-msgstr ""
+msgstr "Notați ce face acest domeniu și de ce există..."
 
 #. module: base
 #: model:res.country,name:base.ke
@@ -11853,7 +12134,7 @@ msgstr "Kina"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_access__kind
 msgid "Kind"
-msgstr ""
+msgstr "Tip"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.LAK
@@ -11957,7 +12238,7 @@ msgstr "L - REAL ESTATE ACTIVITIES"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "LEI"
-msgstr ""
+msgstr "LEI"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__lgpl-3
@@ -11974,6 +12255,8 @@ msgstr "Laari"
 msgid ""
 "Label displayed when the user does not belong of any group of that scope."
 msgstr ""
+"Eticheta afișată când utilizatorul nu aparține niciunui grup din acel "
+"domeniu."
 
 #. module: base
 #. odoo-python
@@ -12055,7 +12338,7 @@ msgstr "Data ultimei execuții"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__rate_date
 msgid "Last Rate Update"
-msgstr ""
+msgstr "Ultima actualizare a cursului"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_enable_profiling_wizard__write_uid
@@ -12251,7 +12534,7 @@ msgstr "Ultima versiune"
 #: model:ir.model.fields,field_description:base.field_res_partner__partner_latitude
 #: model:ir.model.fields,field_description:base.field_res_users__partner_latitude
 msgid "Latitude"
-msgstr ""
+msgstr "Latitudine"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__font__lato
@@ -12272,7 +12555,7 @@ msgstr "Letonia"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Latvian unified registration number."
-msgstr ""
+msgstr "Număr unic de înregistrare din Letonia."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_form
@@ -12325,7 +12608,7 @@ msgstr "Legal    3   8.5 x 14 inches, 215.9 x 355.6 mm"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Legal Entity Identifier"
-msgstr ""
+msgstr "Identificatorul entității juridice"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
@@ -12336,7 +12619,7 @@ msgstr "Legendă (pentru prefix, sufix)"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Leitweg-ID"
-msgstr ""
+msgstr "Leitweg-ID"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.ALL
@@ -12404,12 +12687,12 @@ msgstr "Liechtenstein"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__report_tables_id__light
 msgid "Light"
-msgstr ""
+msgstr "Luminos"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_users__role__group_user
 msgid "Light User"
-msgstr ""
+msgstr "Utilizator limitat"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.SZL
@@ -12425,7 +12708,7 @@ msgstr "Limită"
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
 msgid "Limit of %s API keys is reached for programmatic creation"
-msgstr ""
+msgstr "S-a atins limita de %s chei API pentru crearea programatică"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging__line
@@ -12452,12 +12735,12 @@ msgstr "Câmp de legătură"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__linked_view_ids
 msgid "Linked View"
-msgstr ""
+msgstr "Vizualizare asociată"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__linked_view_count
 msgid "Linked View Count"
-msgstr ""
+msgstr "Număr de vizualizări asociate"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.HRK
@@ -12514,7 +12797,7 @@ msgstr "Lituania"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Lithuanian legal entity code (JAK)."
-msgstr ""
+msgstr "Cod de persoană juridică din Lituania (JAK)."
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_website_live_chat
@@ -12545,7 +12828,7 @@ msgstr "Localizare"
 #: model:ir.module.category,name:base.module_category_point_of_sale_localizations
 #: model:ir.module.category,name:base.module_category_website_sale_localizations
 msgid "Localizations"
-msgstr ""
+msgstr "Localizări"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_form_view
@@ -12603,7 +12886,7 @@ msgstr "Lung"
 #: model:ir.model.fields,field_description:base.field_res_partner__partner_longitude
 #: model:ir.model.fields,field_description:base.field_res_users__partner_longitude
 msgid "Longitude"
-msgstr ""
+msgstr "Longitudine"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.LSL
@@ -12629,7 +12912,7 @@ msgstr "Luxemburg"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Luxembourg business registry number."
-msgstr ""
+msgstr "Număr din registrul comerțului din Luxemburg."
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_M
@@ -12640,37 +12923,37 @@ msgstr "M - PROFESSIONAL, SCIENTIFIC AND TECHNICAL ACTIVITIES"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "MHRSD License"
-msgstr ""
+msgstr "Licență MHRSD"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "MHRSD License Number"
-msgstr ""
+msgstr "Număr licență MHRSD"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "MISA License"
-msgstr ""
+msgstr "Licență MISA"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "MISA License Number"
-msgstr ""
+msgstr "Număr licență MISA"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "MOMRAH License"
-msgstr ""
+msgstr "Licență MOMRAH"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "MOMRAH License Number"
-msgstr ""
+msgstr "Număr licență MOMRAH"
 
 #. module: base
 #: model:res.country,name:base.mo
@@ -12749,7 +13032,7 @@ msgstr "Malaezia"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Malaysian company registration number."
-msgstr ""
+msgstr "Număr de înregistrare al companiei din Malaezia."
 
 #. module: base
 #: model:res.country,name:base.mv
@@ -12769,7 +13052,7 @@ msgstr "Malta"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_form
 msgid "Manage Scopes"
-msgstr ""
+msgstr "Gestionare domenii"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.grant_menu_access
@@ -12780,11 +13063,10 @@ msgid ""
 "assigned to specific groups in order to make them accessible to some users "
 "within the system."
 msgstr ""
-"Gestionează și personalizează item-uri disponibile și afișate în sistemul de "
-"meniuri Odoo. Poți șterge un item făcând click pe căsuța de la începutul "
-"fiecărei linii și apoi click pe butonul care apare. Item-urile pot fi "
-"alocate anumitor grupuri pentru a le face accesibile doar anumitor "
-"utilizatori"
+"Gestionați și personalizați elementele disponibile în meniul sistemului "
+"Odoo. Pentru a șterge un element, bifați caseta de la începutul rândului și "
+"apoi apăsați butonul care apare. Elementele pot fi atribuite unor grupuri "
+"pentru a le face accesibile anumitor utilizatori ai sistemului."
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_country
@@ -12862,7 +13144,7 @@ msgstr "Date de bază"
 #: model_terms:res.partner,website_description:base.res_partner_2
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Materials Management"
-msgstr ""
+msgstr "Gestiunea materialelor"
 
 #. module: base
 #: model:res.country,name:base.mr
@@ -12873,7 +13155,7 @@ msgstr "Mauritania"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Mauritian Business Registration Number."
-msgstr ""
+msgstr "Număr de înregistrare a afacerii din Mauritius."
 
 #. module: base
 #: model:res.country,name:base.mu
@@ -12966,7 +13248,7 @@ msgstr "Unire cu verificare manuală"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Mersis Number"
-msgstr ""
+msgstr "Număr Mersis"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging__message
@@ -13023,7 +13305,7 @@ msgstr "Diverse"
 #. odoo-python
 #: code:addons/template_inheritance.py:0
 msgid "Missing 'expr' attribute in xpath specification"
-msgstr ""
+msgstr "Atributul 'expr' lipsește din specificația xpath"
 
 #. module: base
 #. odoo-python
@@ -13042,6 +13324,8 @@ msgstr ""
 #: code:addons/models.py:0
 msgid "Missing required field %(field_display)s for model %(model_display)s"
 msgstr ""
+"Câmpul obligatoriu %(field_display)s lipsește pentru modelul %(model_display)"
+"s"
 
 #. module: base
 #. odoo-python
@@ -13118,7 +13402,7 @@ msgstr "Restricții Model"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_uninstall__model_count
 msgid "Model Count"
-msgstr ""
+msgstr "Nr. Modele"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_model_data
@@ -13207,7 +13491,7 @@ msgstr "Models inherits from another only once"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_uninstall__model_ids
 msgid "Models to be deleted"
-msgstr ""
+msgstr "Modele de șters"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_updated
@@ -13360,6 +13644,8 @@ msgstr "Montserrat"
 msgid ""
 "Moroccan joint business identifier (Identifiant Commun de l'Entreprise)."
 msgstr ""
+"Identificator comun al întreprinderii din Maroc (Identifiant Commun de "
+"l'Entreprise)."
 
 #. module: base
 #: model:res.country,name:base.ma
@@ -13396,6 +13682,13 @@ msgid ""
 "required by the client to appear as a third party in the context of any "
 "claim for damages filed against the client by an end consumer."
 msgstr ""
+"My Company (San Francisco) se angajează să depună toate eforturile pentru a "
+"furniza servicii performante în timp util, în conformitate cu termenele "
+"convenite. Cu toate acestea, niciuna dintre obligațiile sale nu poate fi "
+"considerată o obligație de rezultat. My Company (San Francisco) nu poate fi "
+"obligată, în nicio situație, de către client să intervină ca terț în cadrul "
+"unei cereri de despăgubire formulate împotriva clientului de către un "
+"consumator final."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
@@ -13420,7 +13713,7 @@ msgstr "N - ADMINISTRATIVE AND SUPPORT SERVICE ACTIVITIES"
 #. module: base
 #: model:res.country,vat_label:base.ci
 msgid "NCC"
-msgstr ""
+msgstr "NCC"
 
 #. module: base
 #: model:res.country,vat_label:base.co model:res.country,vat_label:base.gt
@@ -13430,7 +13723,7 @@ msgstr "NIT"
 #. module: base
 #: model:res.country,vat_label:base.id
 msgid "NPWP/NIK"
-msgstr ""
+msgstr "NPWP/NIK"
 
 #. module: base
 #: model:res.country,vat_label:base.pk
@@ -13440,13 +13733,13 @@ msgstr "NTN"
 #. module: base
 #: model:res.country,vat_label:base.mz
 msgid "NUIT"
-msgstr ""
+msgstr "NUIT"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "NZBN"
-msgstr ""
+msgstr "NZBN"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.NGN
@@ -13503,12 +13796,12 @@ msgstr "Nume"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Name (company or person)"
-msgstr ""
+msgstr "Nume (companie sau persoană)"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "Name in the 'Print' menu..."
-msgstr ""
+msgstr "Nume în meniul 'Tipărire'..."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__currency_field
@@ -13556,7 +13849,7 @@ msgstr "Îngust"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "National ID"
-msgstr ""
+msgstr "ID național"
 
 #. module: base
 #: model:res.country,name:base.nr
@@ -13567,7 +13860,7 @@ msgstr "Nauru"
 #. odoo-python
 #: code:addons/models.py:0
 msgid "Need groupby or aggregates."
-msgstr ""
+msgstr "Este necesară o grupare (groupby) sau agregări."
 
 #. module: base
 #: model:res.country,name:base.np
@@ -13617,7 +13910,7 @@ msgstr "Noua Zeelandă"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "New Zealand Business Number."
-msgstr ""
+msgstr "Număr de afaceri din Noua Zeelandă."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__nextcall
@@ -13674,6 +13967,9 @@ msgid ""
 "Nicole is <b>author of several books</b>, including Amazon best seller\n"
 "                \"How Azure and Odoo will change the business world!\"."
 msgstr ""
+"Nicole este <b>autoarea mai multor cărți</b>, printre care bestsellerul "
+"Amazon\n"
+"                „How Azure and Odoo will change the business world!”."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_address_16
@@ -13685,6 +13981,14 @@ msgid ""
 "                from 1 to 55 employees mostly by reselling services on\n"
 "                Odoo."
 msgstr ""
+"Nicole lucrează în sectorul IT <b>de 20 de ani</b>. Ea\n"
+"                dezvoltă software care ajută la crearea de site-uri web.  Și-"
+"a vândut\n"
+"                prima companie la 30 de ani și a reușit să crească Azure "
+"Interior\n"
+"                de la 1 la 55 de angajați, în principal prin revânzarea de "
+"servicii\n"
+"                Odoo."
 
 #. module: base
 #: model:res.country,name:base.ne
@@ -13707,7 +14011,7 @@ msgstr "Niue"
 #: model:res.groups.privilege,placeholder:base.res_groups_privilege_contact
 #: model:res.groups.privilege,placeholder:base.res_groups_privilege_export
 msgid "No"
-msgstr ""
+msgstr "Nu"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__update_boolean_value__false
@@ -13744,18 +14048,18 @@ msgstr "Niciun grup nu permite în prezent această operațiune."
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups_privilege__placeholder
 msgid "No group label"
-msgstr ""
+msgstr "Fără etichetă de grup"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_res_groups
 msgid "No groups found. Let's create one!"
-msgstr ""
+msgstr "Nu s-a găsit niciun grup. Să creăm unul!"
 
 #. module: base
 #. odoo-python
 #: code:addons/fields_relational.py:0
 msgid "No inverse field \"%(inverse_field)s\" found for \"%(comodel)s\""
-msgstr ""
+msgstr "Nu s-a găsit câmpul invers \"%(inverse_field)s\" pentru \"%(comodel)s\""
 
 #. module: base
 #. odoo-python
@@ -13794,6 +14098,8 @@ msgstr "Număr de vizualizări"
 msgid ""
 "No record found for xmlid=%(xmlid)s, res_model=%(res_model)s, id=%(res_id)s"
 msgstr ""
+"Nu s-a găsit nicio înregistrare pentru xmlid=%(xmlid)s, res_model=%"
+"(res_model)s, id=%(res_id)s"
 
 #. module: base
 #. odoo-python
@@ -13809,7 +14115,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_form
 msgid "No scope"
-msgstr ""
+msgstr "Fără domeniu"
 
 #. module: base
 #. odoo-python
@@ -13826,7 +14132,7 @@ msgstr "Nu poate fi actualizat"
 #. odoo-python
 #: code:addons/base/models/ir_sequence.py:0
 msgid "Non-ASCII characters in %s"
-msgstr ""
+msgstr "Caractere non-ASCII în %s"
 
 #. module: base
 #. odoo-python
@@ -13894,6 +14200,7 @@ msgstr "Norvegia"
 #: code:addons/partner_identifiers.py:0
 msgid "Norwegian Register of Legal Entities (Brønnøysund Register Center)"
 msgstr ""
+"Registrul norvegian al persoanelor juridice (Brønnøysund Register Center)"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__state__uninstalled
@@ -13917,6 +14224,8 @@ msgid ""
 "Not enough workers to generate the PDF. Please try another engine or upgrade "
 "your setup."
 msgstr ""
+"Nu sunt suficienți workeri pentru a genera PDF-ul. Încercați alt motor sau "
+"actualizați configurația."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_access__note
@@ -13928,7 +14237,7 @@ msgstr "Notă"
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 msgid "Note: the expected format is %(expected_format)s"
-msgstr ""
+msgstr "Notă: formatul așteptat este %(expected_format)s"
 
 #. module: base
 #. odoo-python
@@ -13937,6 +14246,8 @@ msgid ""
 "Note: this might be a multi-company issue. Switching company may help - in "
 "Odoo, not in real life!"
 msgstr ""
+"Notă: aceasta ar putea fi o problemă multi-companie. Schimbarea companiei "
+"poate ajuta - în Odoo, nu în viața reală!"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__comment
@@ -13954,7 +14265,7 @@ msgstr "Note"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__font__noto_sans_mono
 msgid "Noto Sans Mono"
-msgstr ""
+msgstr "Noto Sans Mono"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__companies_count
@@ -13995,19 +14306,21 @@ msgstr "O - PUBLIC ADMINISTRATION AND DEFENCE; COMPULSORY SOCIAL SECURITY"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "OB"
-msgstr ""
+msgstr "OB"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "OB-number cannot be computed from the VAT for sole proprietorships."
 msgstr ""
+"Numărul OB nu poate fi calculat din codul de TVA pentru întreprinderile "
+"individuale."
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "OIN"
-msgstr ""
+msgstr "OIN"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -14027,7 +14340,7 @@ msgstr "Obiect:"
 #. module: base
 #: model:ir.module.category,name:base.module_category_supply_chain_obox
 msgid "Obox"
-msgstr ""
+msgstr "Obox"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__oeel-1
@@ -14113,7 +14426,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_12
 msgid "Office Supplies"
-msgstr ""
+msgstr "Consumabile de birou"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
@@ -14177,6 +14490,8 @@ msgstr "Întâlnire online"
 msgid ""
 "Only active accesses are taken into account when checking access rights."
 msgstr ""
+"La verificarea drepturilor de acces sunt luate în considerare doar accesele "
+"active."
 
 #. module: base
 #. odoo-python
@@ -14194,7 +14509,7 @@ msgstr "Doar administratorii pot executa această acțiune."
 #. odoo-python
 #: code:addons/fields_binary.py:0
 msgid "Only admins can upload SVG files."
-msgstr ""
+msgstr "Doar administratorii pot încărca fișiere SVG."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__mode
@@ -14251,7 +14566,7 @@ msgstr "Doar o singură valoare poate fi definită pentru fiecare utilizare!"
 #. odoo-python
 #: code:addons/base/models/ir_model.py:0
 msgid "Only stored fields with a database column can be indexed."
-msgstr ""
+msgstr "Doar câmpurile stocate, cu o coloană în baza de date, pot fi indexate."
 
 #. module: base
 #. odoo-python
@@ -14316,17 +14631,19 @@ msgid ""
 "OpenWood brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
 msgstr ""
+"OpenWood aduce onestitate și seriozitate industriei lemnului, ajutând în "
+"același timp clienții să se ocupe de copaci, flori și ciuperci."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_access__operation
 msgid "Operation"
-msgstr ""
+msgstr "Operație"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_form_view
 #: model_terms:ir.ui.view,arch_db:base.ir_access_search_view
 msgid "Operations"
-msgstr ""
+msgstr "Operații"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_partner_merge_automatic_wizard__state__option
@@ -14430,13 +14747,13 @@ msgstr "Alte drepturi suplimentare"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Other ID"
-msgstr ""
+msgstr "Alt ID"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Other ID Number"
-msgstr ""
+msgstr "Alt număr de identificare"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__other_osi_approved_licence
@@ -14488,6 +14805,14 @@ msgid ""
 "                installed IT software into account. That is why Idealis\n"
 "                Consulting delivers excellence in HR and SC Management."
 msgstr ""
+"Experții noștri inventează, imaginează și dezvoltă soluții care răspund\n"
+"                cerințelor afacerii dumneavoastră. Ei construiesc un nou "
+"mediu\n"
+"                tehnic pentru compania dumneavoastră, dar țin întotdeauna "
+"cont de\n"
+"                software-ul IT deja instalat. De aceea Idealis\n"
+"                Consulting oferă excelență în managementul HR și al lanțului "
+"de aprovizionare."
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.demo_company_id
@@ -14499,6 +14824,12 @@ msgid ""
 "will be authorized to suspend any provision of services without prior "
 "warning in the event of late payment."
 msgstr ""
+"Facturile noastre sunt plătibile în termen de 21 de zile lucrătoare, cu "
+"excepția cazului în care pe factură sau pe comandă este indicat un alt "
+"termen de plată. În cazul neplății până la data scadentă, ID Company își "
+"rezervă dreptul de a solicita o dobândă fixă în valoare de 10% din suma "
+"rămasă de plată. ID Company va fi autorizată să suspende orice prestare de "
+"servicii fără notificare prealabilă în caz de întârziere a plății."
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
@@ -14510,6 +14841,13 @@ msgid ""
 "due. My Company (San Francisco) will be authorized to suspend any provision "
 "of services without prior warning in the event of late payment."
 msgstr ""
+"Facturile noastre sunt plătibile în termen de 21 de zile lucrătoare, cu "
+"excepția cazului în care pe factură sau pe comandă este indicat un alt "
+"termen de plată. În cazul neplății până la data scadentă, My Company (San "
+"Francisco) își rezervă dreptul de a solicita o dobândă fixă în valoare de "
+"10% din suma rămasă de plată. My Company (San Francisco) va fi autorizată să "
+"suspende orice prestare de servicii fără notificare prealabilă în caz de "
+"întârziere a plății."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_ir_mail_server_search
@@ -14571,7 +14909,7 @@ msgstr "POEdit"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "PPSN"
-msgstr ""
+msgstr "PPSN"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.TOP
@@ -14821,6 +15159,8 @@ msgstr "Pakistan"
 #: code:addons/partner_identifiers.py:0
 msgid "Pakistani Computerized National Identity Card number (CNIC), 13 digits."
 msgstr ""
+"Numărul cărții naționale de identitate computerizate din Pakistan (CNIC), 13 "
+"cifre."
 
 #. module: base
 #: model:res.country,name:base.pw
@@ -14851,7 +15191,7 @@ msgstr "Configurare format hârtie"
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__paperformat_id
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_search_view
 msgid "Paper Size"
-msgstr ""
+msgstr "Dimensiune pagină"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__paperformat_id
@@ -14933,7 +15273,7 @@ msgstr "Meniu principal"
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 msgid "Parent Name is required at this point"
-msgstr ""
+msgstr "Numele părintelui este obligatoriu în acest moment"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__parent_path
@@ -14958,7 +15298,7 @@ msgstr "Partener"
 #. module: base
 #: model:ir.model,name:base.model_res_partner_category
 msgid "Partner Tag"
-msgstr ""
+msgstr "Etichete Partener"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__active_partner
@@ -14993,19 +15333,19 @@ msgstr "Parteneri: %(category)s"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Passport"
-msgstr ""
+msgstr "Pașaport"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Passport ID"
-msgstr ""
+msgstr "ID pașaport"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Passport number."
-msgstr ""
+msgstr "Număr pașaport."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_pass
@@ -15081,7 +15421,7 @@ msgstr "Model pentru formatare"
 #: model:res.company,pay_now_label:base.demo_company_id
 #: model:res.company,pay_now_label:base.main_company
 msgid "Pay now"
-msgstr ""
+msgstr "Achită acum"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_payment
@@ -15091,7 +15431,7 @@ msgstr "Plată"
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_payment_custom
 msgid "Payment Custom"
-msgstr ""
+msgstr "Plată personalizată"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_payment_providers
@@ -15120,13 +15460,13 @@ msgstr "Penny"
 #: model:ir.model.fields.selection,name:base.selection__ir_access__kind__permission
 #: model_terms:ir.ui.view,arch_db:base.ir_access_form_view
 msgid "Permission"
-msgstr ""
+msgstr "Permisiune"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_2
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Personnel Administration"
-msgstr ""
+msgstr "Administrarea personalului"
 
 #. module: base
 #: model:res.country,name:base.pe
@@ -15137,7 +15477,7 @@ msgstr "Peru"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Peruvian unique taxpayer registry number (RUC)."
-msgstr ""
+msgstr "Numărul unic de înregistrare a contribuabilului din Peru (RUC)."
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.GHS
@@ -15226,7 +15566,7 @@ msgstr "Platformă"
 #: code:addons/base/models/res_partner_bank.py:0
 msgid ""
 "Please add your own bank account manually: %(account_number)s (%(partner)s)"
-msgstr ""
+msgstr "Adăugați manual propriul cont bancar: %(account_number)s (%(partner)s)"
 
 #. module: base
 #. odoo-python
@@ -15266,7 +15606,7 @@ msgstr "Punct de vânzare"
 #. module: base
 #: model:ir.module.category,name:base.module_category_point_of_sale
 msgid "Point of sale"
-msgstr ""
+msgstr "Punct de vânzare"
 
 #. module: base
 #: model:res.country,name:base.pl
@@ -15307,7 +15647,7 @@ msgstr "PostgreSQL constraint definition"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__name
 msgid "PostgreSQL constraint or foreign key name."
-msgstr "Restricție PostgreSQL sau key name străin"
+msgstr "Numele constrângerii PostgreSQL sau al cheii străine."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_relation__name
@@ -15466,7 +15806,7 @@ msgstr "Profilare"
 #. module: base
 #: model:ir.model,name:base.model_ir_profile
 msgid "Profiling Result"
-msgstr ""
+msgstr "Rezultat profilare"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.enable_profiling_wizard
@@ -15506,12 +15846,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
 msgid "Programmatic API keys are not enabled"
-msgstr ""
+msgstr "Cheile API programatice nu sunt activate"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_cron_progress
 msgid "Progress of Scheduled Action"
-msgstr ""
+msgstr "Progresul acțiunii planificate"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_project
@@ -15566,23 +15906,23 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__property_selection
 #: model:ir.model.fields,field_description:base.field_ir_cron__property_selection
 msgid "Property Selection"
-msgstr ""
+msgstr "Selecție proprietate"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__update_property
 #: model:ir.model.fields,field_description:base.field_ir_cron__update_property
 msgid "Property to Update"
-msgstr ""
+msgstr "Proprietate de actualizat"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_2
 msgid "Prospects"
-msgstr ""
+msgstr "Prospecți"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
 msgid "Provide a verbose explanation of the model's purpose..."
-msgstr ""
+msgstr "Descrieți detaliat scopul modelului..."
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_O
@@ -15592,7 +15932,7 @@ msgstr "Administrație publică"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_website__user_id
 msgid "Public User"
-msgstr ""
+msgstr "Utilizator public"
 
 #. module: base
 #: model:res.groups,comment:base.group_public
@@ -15602,6 +15942,10 @@ msgid ""
 "                They usually do not belong to the usual Odoo groups.\n"
 "                This makes group restrictions more convenient."
 msgstr ""
+"Utilizatorii publici au drepturi de acces specifice (cum ar fi reguli de "
+"înregistrare și meniuri restricționate).\n"
+"                De obicei, nu aparțin grupurilor Odoo obișnuite.\n"
+"                Acest lucru face restricțiile de grup mai convenabile."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__published_version
@@ -15626,7 +15970,7 @@ msgstr "Puls"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_website__domain_punycode
 msgid "Punycode Domain"
-msgstr ""
+msgstr "Domeniu Punycode"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_purchase
@@ -15803,7 +16147,7 @@ msgstr "Qweb câmp many2many"
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_one2many
 msgid "Qweb field one2many"
-msgstr ""
+msgstr "Qweb câmp one2many"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_R
@@ -15814,7 +16158,7 @@ msgstr "R - ARTĂ, AMUZAMENT ȘI RECREERE"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "RC123456"
-msgstr ""
+msgstr "RC123456"
 
 #. module: base
 #: model:res.country,vat_label:base.mx
@@ -15830,12 +16174,12 @@ msgstr "RNC"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "RO1234567897 or 8001011234567 or 9000123456789"
-msgstr ""
+msgstr "RO1234567897 sau 8001011234567 sau 9000123456789"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_users_apikeys_description__scope__rpc
 msgid "RPC"
-msgstr ""
+msgstr "RPC"
 
 #. module: base
 #: model:res.country,vat_label:base.hn
@@ -15886,17 +16230,17 @@ msgstr "Citiți"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_access__operation__rd
 msgid "Read, Delete"
-msgstr ""
+msgstr "Citire, ștergere"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_access__operation__ru
 msgid "Read, Update"
-msgstr ""
+msgstr "Citire, actualizare"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_access__operation__rud
 msgid "Read, Update, Delete"
-msgstr ""
+msgstr "Citire, actualizare, ștergere"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__readonly
@@ -15947,13 +16291,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/fields.py:0
 msgid "Record does not exist or has been deleted."
-msgstr ""
+msgstr "Înregistrarea nu există sau a fost ștearsă."
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_binary.py:0
 msgid "Record has no field “%s”"
-msgstr ""
+msgstr "Înregistrarea nu are câmpul „%s”"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__crud_model_id
@@ -15976,7 +16320,7 @@ msgstr "Recursion error in modules dependencies!"
 #. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 msgid "Recursion found in child server actions"
-msgstr ""
+msgstr "S-a găsit o recursivitate în acțiunile server subordonate"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_data__reference
@@ -16001,7 +16345,7 @@ msgstr "Recomandări"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Registrikood"
-msgstr ""
+msgstr "Registrikood"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__parent_id
@@ -16013,7 +16357,7 @@ msgstr "Compania asociată"
 #: model:ir.model.fields,field_description:base.field_res_partner__child_ids
 #: model:ir.model.fields,field_description:base.field_res_users__child_ids
 msgid "Related Contacts"
-msgstr ""
+msgstr "Contacte Asociate"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__related_field_id
@@ -16061,7 +16405,7 @@ msgstr "Model de relație"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__relation_model_field
 msgid "Relation Model Field"
-msgstr ""
+msgstr "Câmp model de relație"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_relation__name
@@ -16086,7 +16430,7 @@ msgstr "Rămas"
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_remote_work
 msgid "Remote Work"
-msgstr ""
+msgstr "Muncă la distanță"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_asset__directive__remove
@@ -16108,7 +16452,7 @@ msgstr "Eliminați acțiunea contextuală"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "Remove from the 'Print' menu"
-msgstr ""
+msgstr "Eliminare din meniul 'Tipărire'"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
@@ -16159,7 +16503,7 @@ msgstr "Acțiune raport"
 #: model:ir.actions.act_window,name:base.ir_action_report
 #: model:ir.ui.menu,name:base.menu_ir_action_report
 msgid "Report Actions"
-msgstr ""
+msgstr "Acțiuni raport"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__report_footer
@@ -16185,7 +16529,13 @@ msgid ""
 "Cannot separate file to save as attachment because the report's template "
 "does not contain the attributes 'data-oe-model' and 'data-oe-id' as part of "
 "the div with 'article' classname."
-msgstr "Raport - Stoc Contabilitate"
+msgstr ""
+"Șablonul de raport „%s” are o problemă, vă rugăm să contactați "
+"administratorul. \n"
+"\n"
+"Fișierul nu poate fi separat pentru a fi salvat ca atașament, deoarece "
+"șablonul raportului nu conține atributele 'data-oe-model' și 'data-oe-id' în "
+"div-ul cu clasa 'article'."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view_tree
@@ -16221,12 +16571,12 @@ msgstr "Necesar"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__res_access_read
 msgid "Res Access Read"
-msgstr ""
+msgstr "Acces citire înregistrare"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__res_access_write
 msgid "Res Access Write"
-msgstr ""
+msgstr "Acces scriere înregistrare"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__res_users_settings_ids
@@ -16267,7 +16617,7 @@ msgstr "Resetați la versiunea fișierului (resetare hard)."
 #. odoo-python
 #: code:addons/models.py:0
 msgid "Resolve other errors first"
-msgstr ""
+msgstr "Rezolvați mai întâi celelalte erori"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_exports__resource
@@ -16313,12 +16663,12 @@ msgstr "Restricționează"
 #: model:ir.model.fields.selection,name:base.selection__ir_access__kind__restriction
 #: model_terms:ir.ui.view,arch_db:base.ir_access_form_view
 msgid "Restriction"
-msgstr ""
+msgstr "Restricție"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_form_view
 msgid "Restriction globally applied"
-msgstr ""
+msgstr "Restricție aplicată global"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_form_view
@@ -16329,6 +16679,11 @@ msgid ""
 "                            If a user belongs to several groups, the "
 "permissions are combined with a logical OR operator."
 msgstr ""
+"Restricțiile sunt combinate între ele cu operatorul logic AND.<br/>\n"
+"                            Permisiunile sunt combinate între ele cu "
+"operatorul logic OR.<br/>\n"
+"                            Dacă un utilizator aparține mai multor grupuri, "
+"permisiunile sunt combinate cu operatorul logic OR."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_server_action_history_wizard__revision
@@ -16403,12 +16758,12 @@ msgstr "Rol / Administrator"
 #. module: base
 #: model:res.groups,name:base.group_everyone
 msgid "Role / Everyone"
-msgstr ""
+msgstr "Rol / Toată lumea"
 
 #. module: base
 #: model:res.groups,name:base.group_user
 msgid "Role / Light User"
-msgstr ""
+msgstr "Rol / Utilizator limitat"
 
 #. module: base
 #: model:res.groups,name:base.group_portal
@@ -16466,13 +16821,13 @@ msgstr "Unitate rotunjire"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Routing ID for invoicing German public authorities."
-msgstr ""
+msgstr "ID de rutare pentru facturarea către autoritățile publice germane."
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_partner_bank.py:0
 msgid "Routing Number should only contain numbers (maximum 9 digits)."
-msgstr ""
+msgstr "Numărul de rutare trebuie să conțină doar cifre (maximum 9 cifre)."
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.RUB
@@ -16557,7 +16912,7 @@ msgstr "S - ALTE ACTIVITĂȚI DE SERVICII"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "SE"
-msgstr ""
+msgstr "SE"
 
 #. module: base
 #: model:res.country.group,name:base.sepa_zone
@@ -16568,13 +16923,13 @@ msgstr "Țările SEPA"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "SIREN"
-msgstr ""
+msgstr "SIREN"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "SIRET"
-msgstr ""
+msgstr "SIRET"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_port
@@ -16648,7 +17003,7 @@ msgstr "SSL/TLS, numai criptare"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "SST"
-msgstr ""
+msgstr "SST"
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.demo_company_id
@@ -16712,7 +17067,7 @@ msgstr "Vânzări & Achiziții"
 #: model_terms:res.partner,website_description:base.res_partner_2
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Sales and Distribution"
-msgstr ""
+msgstr "Vânzări și distribuție"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__user_id
@@ -16802,77 +17157,77 @@ msgstr "Arabia Saudita"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Saudi Arabia 700 Number"
-msgstr ""
+msgstr "Număr 700 Arabia Saudită"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Saudi Arabia Commercial Registration Number"
-msgstr ""
+msgstr "Număr de înregistrare comercială Arabia Saudită"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Saudi Arabia GCC ID Number"
-msgstr ""
+msgstr "Număr ID GCC Arabia Saudită"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Saudi Arabia Iqama ID Number"
-msgstr ""
+msgstr "Număr ID Iqama Arabia Saudită"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Saudi Arabia MHRSD License Number"
-msgstr ""
+msgstr "Număr licență MHRSD Arabia Saudită"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Saudi Arabia MISA License Number"
-msgstr ""
+msgstr "Număr licență MISA Arabia Saudită"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Saudi Arabia MOMRAH License Number"
-msgstr ""
+msgstr "Număr licență MOMRAH Arabia Saudită"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Saudi Arabia National ID Number"
-msgstr ""
+msgstr "Număr ID național Arabia Saudită"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Saudi Arabia Other ID Number"
-msgstr ""
+msgstr "Alt număr de identificare Arabia Saudită"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Saudi Arabia Passport ID Number"
-msgstr ""
+msgstr "Număr pașaport Arabia Saudită"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Saudi Arabia Tax Identification Number"
-msgstr ""
+msgstr "Număr de identificare fiscală Arabia Saudită"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__save_as_attachment
 msgid "Save As Attachment"
-msgstr ""
+msgstr "Salvare ca atașament"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "Save as attachment"
-msgstr ""
+msgstr "Salvare ca atașament"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_cron
@@ -16926,7 +17281,7 @@ msgstr "Scop:"
 #: model:ir.actions.act_window,name:base.action_res_groups_privilege
 #: model:ir.ui.menu,name:base.menu_action_res_groups_privilege
 msgid "Scopes"
-msgstr ""
+msgstr "Domenii"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__search
@@ -17003,7 +17358,7 @@ msgstr "Vezi toate valorile posibile"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Select Field:"
-msgstr ""
+msgstr "Selectați câmpul:"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_report_paperformat__format
@@ -17018,7 +17373,7 @@ msgstr "Select a field to link the record to"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
 msgid "Select a scope"
-msgstr ""
+msgstr "Selectați un domeniu"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -17283,6 +17638,8 @@ msgstr "Acțiune server"
 msgid ""
 "Server action %(action_name)s has one or more warnings, address them first."
 msgstr ""
+"Acțiunea server %(action_name)s are unul sau mai multe avertismente; "
+"rezolvați-le mai întâi."
 
 #. module: base
 #. odoo-python
@@ -17316,7 +17673,7 @@ msgstr "Identificator sesiune"
 #: model:ir.model.fields,field_description:base.field_res_device__session_identifier
 #: model:ir.model.fields,field_description:base.field_res_session__session_identifier
 msgid "Session identifier"
-msgstr ""
+msgstr "Identificator sesiune"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__on_delete__set_null
@@ -17331,7 +17688,7 @@ msgstr "Configurează parola"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "Set a technical name to call the report in the code"
-msgstr ""
+msgstr "Setați un nume tehnic pentru a apela raportul din cod"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -17352,12 +17709,14 @@ msgstr "Setat ca De efectuat"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "Set the name of the file that will be saved on the computer"
-msgstr ""
+msgstr "Setați numele fișierului care va fi salvat pe calculator"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_form
 msgid "Sets in which scope this group appears on the users access rights page"
 msgstr ""
+"Stabilește în ce domeniu apare acest grup pe pagina drepturilor de acces ale "
+"utilizatorului"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_url__binding_model_id
@@ -17458,7 +17817,7 @@ msgstr "Afișează cheia API"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__show_clearing_number
 msgid "Show Clearing Number"
-msgstr ""
+msgstr "Afișează numărul de compensare"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__show_code_history
@@ -17520,7 +17879,7 @@ msgstr "Singapore"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Singapore Unique Entity Number."
-msgstr ""
+msgstr "Număr unic de identificare a entității din Singapore."
 
 #. module: base
 #: model:res.country,name:base.sx
@@ -17550,6 +17909,9 @@ msgid ""
 "(field_names)s are set as company-dependent, but the model doesn't have a "
 "`company_id` or `company_ids` field!"
 msgstr ""
+"Se omite verificarea companiei pentru modelul %(model_name)s. Câmpurile sale "
+"%(field_names)s sunt definite ca dependente de companie, dar modelul nu are "
+"un câmp `company_id` sau `company_ids`!"
 
 #. module: base
 #. odoo-python
@@ -17561,7 +17923,7 @@ msgstr "Slash"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Slovak company identification number (IČO)."
-msgstr ""
+msgstr "Număr de identificare a companiei din Slovacia (IČO)."
 
 #. module: base
 #: model:res.country,name:base.sk
@@ -17609,13 +17971,13 @@ msgstr "Somalia"
 #. odoo-python
 #: code:addons/fields_textual.py:0
 msgid "Some of the languages are not active: %s"
-msgstr ""
+msgstr "Unele limbi nu sunt active: %s"
 
 #. module: base
 #. odoo-python
 #: code:addons/fields_textual.py:0
 msgid "Some of the translations are False: %s"
-msgstr ""
+msgstr "Unele traduceri sunt False: %s"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.TJS
@@ -17882,6 +18244,8 @@ msgid ""
 "Stringified Python variable value. Supported types: str, bool, int, float. "
 "Blank means undefined."
 msgstr ""
+"Valoarea variabilei Python ca șir de caractere. Tipuri acceptate: str, bool, "
+"int, float. Gol înseamnă nedefinit."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__strip_classes
@@ -17896,7 +18260,7 @@ msgstr "Strip Style Attribute"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__report_tables_id__striped
 msgid "Striped"
-msgstr ""
+msgstr "Dungat"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_customizations_studio
@@ -17906,7 +18270,7 @@ msgstr "Studio"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Subject to VAT"
-msgstr ""
+msgstr "Plătitor de TVA"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.edit_menu_access
@@ -17982,13 +18346,13 @@ msgstr "Suedia"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Swedish organization number (Organisationsnummer)."
-msgstr ""
+msgstr "Număr de organizație din Suedia (Organisationsnummer)."
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Swiss company identification number (UIDB)."
-msgstr ""
+msgstr "Număr de identificare a companiei din Elveția (UIDB)."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.language_install_view_form_lang_switch
@@ -18082,7 +18446,7 @@ msgstr "TIN"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "TKU"
-msgstr ""
+msgstr "TKU"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_mail_server__smtp_encryption__starttls_strict
@@ -18107,7 +18471,7 @@ msgstr "TRN"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__report_tables_id
 msgid "Table Design"
-msgstr ""
+msgstr "Design tabel"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__tabloid
@@ -18154,7 +18518,7 @@ msgstr "Tala"
 #: model_terms:res.partner,website_description:base.res_partner_2
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Talent Management"
-msgstr ""
+msgstr "Managementul talentelor"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.MWK
@@ -18203,7 +18567,7 @@ msgstr "Etichetă cod fiscal"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Tax Identification Number"
-msgstr ""
+msgstr "Număr de identificare fiscală"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
@@ -18258,6 +18622,8 @@ msgid ""
 "Technical field indicating whether the Tax ID is not a placeholder.Returns "
 "False for placeholder values such as '/', 'NA', 'na', or an empty string."
 msgstr ""
+"Câmp tehnic care indică dacă CIF-ul nu este o valoare substitut. Returnează "
+"False pentru valori substitut precum '/', 'NA', 'na' sau un șir gol."
 
 #. module: base
 #: model:ir.actions.report,name:base.ir_module_reference_print
@@ -18268,7 +18634,7 @@ msgstr "Ghid tehnic"
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 msgid "Template for Contacts"
-msgstr ""
+msgstr "Șablon pentru contacte"
 
 #. module: base
 #. odoo-python
@@ -18353,6 +18719,9 @@ msgid ""
 "this sequence may be printed as Code128 barcodes in reports, which only "
 "support ASCII characters."
 msgstr ""
+"%(field)s %(value)s conține caractere non-ASCII. Denumirile generate de "
+"această secvență pot fi tipărite în rapoarte ca coduri de bare Code128, care "
+"acceptă doar caractere ASCII."
 
 #. module: base
 #. odoo-python
@@ -18361,6 +18730,7 @@ msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. %"
 "(expected_note)s"
 msgstr ""
+"Numărul %(vat_label)s [%(wrong_vat)s] nu pare să fie valid. %(expected_note)s"
 
 #. module: base
 #. odoo-python
@@ -18369,6 +18739,8 @@ msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem "
 "to be valid. %(expected_note)s"
 msgstr ""
+"Numărul %(vat_label)s [%(wrong_vat)s] pentru %(record_label)s nu pare să fie "
+"valid. %(expected_note)s"
 
 #. module: base
 #. odoo-python
@@ -18383,6 +18755,8 @@ msgid ""
 "The 5-digit branch code as registered with the Revenue Department. Leave "
 "empty for Head Office."
 msgstr ""
+"Codul de sucursală din 5 cifre, așa cum este înregistrat la Revenue "
+"Department. Lăsați gol pentru sediul central."
 
 #. module: base
 #. odoo-python
@@ -18402,6 +18776,8 @@ msgid ""
 "The API key will only be valid for the selected scope and can't be used for "
 "other scopes."
 msgstr ""
+"Cheia API va fi validă doar pentru domeniul de aplicare selectat și nu poate "
+"fi folosită pentru alte domenii de aplicare."
 
 #. module: base
 #. odoo-python
@@ -18412,12 +18788,14 @@ msgid ""
 "Where B = National bank code, S = Branch code, C = Account No, k = Check "
 "digit"
 msgstr ""
+"IBAN-ul nu pare să fi corect. Trebuie să introduceți ceva de genul %s Unde B "
+"= Codul de banca, S = Cod domeniu, C= Număr cont, k = sumă control"
 
 #. module: base
 #. odoo-python
 #: code:addons/bank_account_number.py:0
 msgid "The IBAN is invalid, it should begin with the country code"
-msgstr ""
+msgstr "Codul IBAN este nevalid, ar trebui să înceapă cu codul țării"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_clearing_label__country_code
@@ -18439,8 +18817,8 @@ msgid ""
 "The International Grouping will represent 123456789 to be 123,456,789.00; "
 "The Indian Grouping will represent 123456789 to be 12,34,56,789.00"
 msgstr ""
-"Gruparea internațională va reprezenta 123456789 ca fiind 123.456.789,00; "
-"Gruparea indiană va reprezenta 123456789 ca fiind 12.34.56.789,00."
+"Gruparea internațională va afișa 123456789 ca 123,456,789.00; gruparea "
+"indiană va afișa 123456789 ca 12,34,56,789.00."
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_10
@@ -18448,6 +18826,8 @@ msgid ""
 "The Jackson Group brings honesty and seriousness to wood industry while "
 "helping customers deal with trees, flowers and fungi."
 msgstr ""
+"Jackson Group aduce onestitate și seriozitate în industria lemnului, "
+"ajutându-și clienții să se ocupe de copaci, flori și ciuperci."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang__url_code
@@ -18607,7 +18987,7 @@ msgstr "Datele demonstrative din"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_filters__embedded_action_id
 msgid "The embedded action this filter is applied to"
-msgstr "Contul bancar nu este valid."
+msgstr "Acțiunea încorporată căreia i se aplică acest filtru"
 
 #. module: base
 #. odoo-python
@@ -18700,6 +19080,10 @@ msgid ""
 "with higher privileges previously modified it, and you are therefore not "
 "able to modify it yourself while preserving the content."
 msgstr ""
+"Valoarea câmpului pe care o salvați (%(model)s %(field)s)(%(record)s) "
+"include conținut restricționat din motive de securitate. Este posibil ca "
+"cineva cu drepturi mai mari să o fi modificat anterior și, prin urmare, nu o "
+"puteți modifica dumneavoastră păstrând conținutul."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_cron__first_failure_date
@@ -18710,7 +19094,7 @@ msgstr "Prima dată când cron a eșuat. Se resetează automat la succes."
 #. odoo-python
 #: code:addons/models.py:0
 msgid "The following languages are not activated: %(missing_names)s"
-msgstr ""
+msgstr "Următoarele limbi nu sunt activate: %(missing_names)s"
 
 #. module: base
 #. odoo-python
@@ -18764,6 +19148,11 @@ msgid ""
 "most values are empty; trigram indexes speed up text pattern searches. "
 "Leaving this empty does not remove an index that already exists."
 msgstr ""
+"Tipul de index de bază de date solicitat pentru acest câmp. Indexurile B-"
+"tree permit căutări după egalitate și pe intervale; excluderea valorilor "
+"nule micșorează indexul atunci când majoritatea valorilor sunt goale; "
+"indexurile trigram accelerează căutările după tipare de text. Lăsarea "
+"acestui câmp gol nu elimină un index care există deja."
 
 #. module: base
 #. odoo-python
@@ -18918,7 +19307,7 @@ msgstr "Urmatorul pas depinde de formatul fisierului:"
 #: code:addons/fields_textual.py:0
 msgid ""
 "The non translatable content of the written value are not consistent: %s"
-msgstr ""
+msgstr "Conținutul netraductibil al valorii scrise nu este consecvent: %s"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_cron__failure_count
@@ -18946,6 +19335,7 @@ msgstr "Singurele variabile predefinite sunt"
 #: model:ir.model.fields,help:base.field_ir_access__domain
 msgid "The operations will only be allowed for records in this domain"
 msgstr ""
+"Operațiunile vor fi permise doar pentru înregistrările din acest domeniu"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__domain
@@ -18967,6 +19357,10 @@ msgid ""
 "You can't traverse non-relational fields (even in the quantum realm). Make "
 "sure only the last field in the path is non-relational."
 msgstr ""
+"Calea conținută de câmpul '%(searched_field)s' conține un câmp nerelațional "
+"(%(current_field)s) care nu este ultimul câmp din cale. Nu puteți parcurge "
+"câmpuri nerelaționale (nici măcar în lumea cuantică). Asigurați-vă că doar "
+"ultimul câmp din cale este nerelațional."
 
 #. module: base
 #. odoo-python
@@ -18982,7 +19376,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base/models/ir_actions_report.py:0
 msgid "The pdf engine on this system is not working."
-msgstr ""
+msgstr "Motorul PDF de pe acest sistem nu funcționează."
 
 #. module: base
 #. odoo-python
@@ -19032,12 +19426,13 @@ msgstr ""
 #: code:addons/base/models/res_users.py:0
 msgid "The provided API key is invalid or does not belong to the current user."
 msgstr ""
+"Cheia API furnizată este invalidă sau nu aparține utilizatorului curent."
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
 msgid "The provided API key is invalid."
-msgstr ""
+msgstr "Cheia API furnizată este invalidă."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__rate
@@ -19055,6 +19450,12 @@ msgid ""
 "For example, __import__, resulting in the external id __import__.%"
 "(record_id)s."
 msgstr ""
+"Înregistrarea %(xml_id)s are prefixul de modul %(module_name)s. Aceasta este "
+"partea dinaintea caracterului '.' din ID-ul extern. Deoarece prefixul se "
+"referă la un modul existent, înregistrarea ar fi ștearsă la actualizarea "
+"modulului. Folosiți fie niciun prefix și niciun punct, fie un prefix care nu "
+"este un modul existent. De exemplu, __import__, rezultând ID-ul extern "
+"__import__.%(record_id)s."
 
 #. module: base
 #. odoo-python
@@ -19130,7 +19531,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country_state__code
 msgid "The state code."
-msgstr "Cod stat/județ"
+msgstr "Cod stat/județ."
 
 #. module: base
 #. odoo-python
@@ -19151,6 +19552,9 @@ msgid ""
 "rendering method. HTML means the report will be opened directly in your "
 "browser, PDF means the report will be generated and downloaded by the user."
 msgstr ""
+"Tipul raportului care va fi generat, fiecare având propria metodă de "
+"generare. HTML înseamnă că raportul va fi deschis direct în browser, PDF "
+"înseamnă că raportul va fi generat și descărcat de utilizator."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_filters__user_ids
@@ -19175,6 +19579,9 @@ msgid ""
 "\n"
 "Detail: %(detail)s\n"
 msgstr ""
+"Valoarea pentru %(field_display)s există deja.\n"
+"\n"
+"Detalii: %(detail)s\n"
 
 #. module: base
 #. odoo-python
@@ -19225,7 +19632,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/bank_account_number.py:0
 msgid "There is no IBAN code."
-msgstr ""
+msgstr "Nu există cod IBAN."
 
 #. module: base
 #: model:ir.actions.act_url,name:base.action_third_party
@@ -19238,12 +19645,14 @@ msgstr "Aplicații de la terți"
 #: code:addons/bank_account_number.py:0
 msgid "This CLABE does not pass the checksum check, please verify it."
 msgstr ""
+"Acest CLABE nu trece verificarea cifrei de control, vă rugăm să îl "
+"verificați."
 
 #. module: base
 #. odoo-python
 #: code:addons/bank_account_number.py:0
 msgid "This IBAN does not pass the validation check, please verify it."
-msgstr ""
+msgstr "Acest cod IBAN nu a trecut de validare, vă rugăm să îl verificați"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang__iso_code
@@ -19376,7 +19785,7 @@ msgstr "Aceasta este moneda companiei dvs."
 #. odoo-python
 #: code:addons/base/models/res_groups.py:0
 msgid "This makes a group imply two disjoint groups."
-msgstr ""
+msgstr "Astfel, un grup ar implica două grupuri disjuncte."
 
 #. module: base
 #. odoo-python
@@ -19406,6 +19815,8 @@ msgid ""
 "This seems to be a multi-company issue, but you do not have access to the "
 "proper company to access the record anyhow."
 msgstr ""
+"Aceasta pare să fie o problemă multi-companie, dar oricum nu aveți acces la "
+"compania potrivită pentru a accesa înregistrarea."
 
 #. module: base
 #. odoo-python
@@ -19414,6 +19825,8 @@ msgid ""
 "This seems to be a multi-company issue, you might be able to access the "
 "record by switching to the company: %s."
 msgstr ""
+"Aceasta pare să fie o problemă multi-companie; ați putea accesa "
+"înregistrarea comutând pe compania: %s."
 
 #. module: base
 #. odoo-python
@@ -19439,7 +19852,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
 msgid "This will remove:"
-msgstr ""
+msgstr "Se vor elimina:"
 
 #. module: base
 #. odoo-python
@@ -19520,7 +19933,7 @@ msgstr "De făcut"
 #. odoo-python
 #: code:addons/models.py:0
 msgid "To avoid a mess, no company crossover is allowed!"
-msgstr ""
+msgstr "Pentru a evita confuziile, nu este permisă încrucișarea companiilor!"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__state__to_install
@@ -19548,6 +19961,8 @@ msgstr "De actualizat"
 #: code:addons/base/models/res_partner.py:0
 msgid "To explicitly indicate no (valid) VAT, use '/', 'na' or 'NA' instead. "
 msgstr ""
+"Pentru a indica explicit lipsa unui CIF (valid), folosiți '/', 'na' sau "
+"'NA'. "
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -19604,6 +20019,11 @@ msgid ""
 "                IT budget by almost half within the last 2 years.\n"
 "                Famous Managing Partner."
 msgstr ""
+"Toni Rhodes lucrează în sectorul IT <b>de 10 ani</b>. Este cunoscut\n"
+"                în special pentru vânzarea de capcane pentru șoareci. Cu "
+"acest truc a redus\n"
+"                bugetul IT aproape la jumătate în ultimii 2 ani.\n"
+"                Celebru Managing Partner."
 
 #. module: base
 #. odoo-python
@@ -19649,7 +20069,7 @@ msgstr "Traces Async"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Trade Registry Number"
-msgstr ""
+msgstr "Număr de înregistrare la Registrul Comerțului"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_search
@@ -19710,7 +20130,7 @@ msgstr "Traduceți în întregime"
 #. odoo-python
 #: code:addons/base/models/ir_model.py:0
 msgid "Translated fields only support trigram indexes."
-msgstr ""
+msgstr "Câmpurile traduse acceptă doar indexuri trigram."
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_translation
@@ -19724,6 +20144,8 @@ msgid ""
 "Translations %(translations)s for field %(field)s has None value for "
 "language '%(language)s'"
 msgstr ""
+"Traducerile %(translations)s pentru câmpul %(field)s au valoarea None pentru "
+"limba '%(language)s'"
 
 #. module: base
 #. odoo-python
@@ -19732,6 +20154,8 @@ msgid ""
 "Translations %(translations)s for field %(field)s has invalid language '%"
 "(language)s'"
 msgstr ""
+"Traducerile %(translations)s pentru câmpul %(field)s au limba invalidă '%"
+"(language)s'"
 
 #. module: base
 #. odoo-python
@@ -19740,6 +20164,8 @@ msgid ""
 "Translations %(translations)s for field %(field)s has technical language %"
 "(technical_language)s but not corresponding language '%(language)s'"
 msgstr ""
+"Traducerile %(translations)s pentru câmpul %(field)s au limba tehnică %"
+"(technical_language)s, dar nu și limba corespunzătoare '%(language)s'"
 
 #. module: base
 #. odoo-python
@@ -19747,12 +20173,15 @@ msgstr ""
 msgid ""
 "Translations %(translations)s for field %(field)s have different structures"
 msgstr ""
+"Traducerile %(translations)s pentru câmpul %(field)s au structuri diferite"
 
 #. module: base
 #. odoo-python
 #: code:addons/translate.py:0
 msgid "Translations %(translations)s for field %(field)s must have 'en_US'"
 msgstr ""
+"Traducerile %(translations)s pentru câmpul %(field)s trebuie să conțină "
+"'en_US'"
 
 #. module: base
 #. odoo-python
@@ -19760,6 +20189,8 @@ msgstr ""
 msgid ""
 "Translations for model translated fields only accept falsy values and str"
 msgstr ""
+"Traducerile pentru câmpurile traduse ale modelului acceptă doar valori false "
+"și str"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_H
@@ -19769,12 +20200,12 @@ msgstr "Transportation/Logistics"
 #. module: base
 #: model:ir.model,name:base.model_ir_cron_trigger
 msgid "Triggered Action"
-msgstr ""
+msgstr "Acțiune declanșată"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__index__trigram
 msgid "Trigram"
-msgstr ""
+msgstr "Trigramă"
 
 #. module: base
 #. odoo-python
@@ -19782,12 +20213,14 @@ msgstr ""
 msgid ""
 "Trigram indexes are only supported on stored Char, Text, and HTML fields."
 msgstr ""
+"Indexurile trigram sunt acceptate doar pe câmpurile Char, Text și HTML "
+"stocate."
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_model.py:0
 msgid "Trigram indexes require the PostgreSQL pg_trgm extension."
-msgstr ""
+msgstr "Indexurile trigram necesită extensia PostgreSQL pg_trgm."
 
 #. module: base
 #: model:res.country,name:base.tt
@@ -19797,7 +20230,7 @@ msgstr "Trinidad și Tobago"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_bank_form
 msgid "Trust bank account"
-msgstr ""
+msgstr "Cont bancar de încredere"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__2
@@ -19890,7 +20323,8 @@ msgstr ""
 msgid ""
 "Type of the constraint: `f` for a foreign key, `u` for other constraints."
 msgstr ""
-"Tipul constrangerii: `f` pentru o cheie externa, `u` pentru alte constrangeri"
+"Tipul constrângerii: `f` pentru o cheie străină, `u` pentru alte "
+"constrângeri."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -19911,13 +20345,13 @@ msgstr "U - ACTIVITIES OF EXTRATERRITORIAL ORGANISATIONS AND BODIES"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "UEN"
-msgstr ""
+msgstr "UEN"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "UIDB"
-msgstr ""
+msgstr "UIDB"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_uk
@@ -19941,7 +20375,7 @@ msgstr "Cod URL"
 #. odoo-python
 #: code:addons/base/models/ir_attachment.py:0
 msgid "URL attachment (%s) shouldn't be migrated to local."
-msgstr ""
+msgstr "Atașamentul URL (%s) nu ar trebui migrat local."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__webhook_url
@@ -19986,7 +20420,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/models.py:0
 msgid "Uh-oh! You’ve got some company inconsistencies here:"
-msgstr ""
+msgstr "Hopa! Aveți câteva neconcordanțe între companii:"
 
 #. module: base
 #: model:res.country,name:base.ua
@@ -20000,13 +20434,15 @@ msgid ""
 "Unable to delete %(record)s because it is used as the default value of %"
 "(field)s"
 msgstr ""
+"Nu se poate șterge %(record)s deoarece este folosit ca valoare implicită "
+"pentru %(field)s"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_actions_report.py:0
 msgid ""
 "Unable to find the pdf engine on this system. The PDF can not be created."
-msgstr ""
+msgstr "Motorul PDF nu a fost găsit pe acest sistem. PDF-ul nu poate fi creat."
 
 #. module: base
 #. odoo-python
@@ -20103,7 +20539,7 @@ msgstr "Neinstalabil"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
 msgid "Uninstallation"
-msgstr ""
+msgstr "Dezinstalare"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__uninstalled_l10n_module_ids
@@ -20116,6 +20552,8 @@ msgid ""
 "Uninstalling modules can be risky. We recommend to try it on a testing "
 "environment first."
 msgstr ""
+"Dezinstalarea modulelor poate fi riscantă. Vă recomandăm să încercați mai "
+"întâi într-un mediu de test."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
@@ -20125,7 +20563,7 @@ msgstr "Dezinstalare…"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_form
 msgid "Unit/Base"
-msgstr ""
+msgstr "Unitate/Bază"
 
 #. module: base
 #: model:res.country,name:base.ae
@@ -20155,19 +20593,19 @@ msgstr "Necunoscut"
 #. odoo-python
 #: code:addons/models.py:0
 msgid "Unknown database error: '%s'"
-msgstr ""
+msgstr "Eroare necunoscută a bazei de date: '%s'"
 
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
 msgid "Unknown database identifier '%s'"
-msgstr ""
+msgstr "Identificator de bază de date necunoscut '%s'"
 
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
 msgid "Unknown error during import: %(error_type)s: %(error_message)s"
-msgstr ""
+msgstr "Eroare necunoscută la import: %(error_type)s: %(error_message)s"
 
 #. module: base
 #. odoo-python
@@ -20254,7 +20692,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/domains.py:0
 msgid "Unsupported operator on %(field_label)s %(model_label)s in %(domain)s"
-msgstr ""
+msgstr "Operator neacceptat pe %(field_label)s %(model_label)s în %(domain)s"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_data_search
@@ -20276,7 +20714,7 @@ msgstr "Actualizare"
 #. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 msgid "Update %(model_name)s"
-msgstr ""
+msgstr "Actualizează %(model_name)s"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_view_base_module_update
@@ -20312,7 +20750,7 @@ msgstr "Update Related Model"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_access__operation__ud
 msgid "Update, Delete"
-msgstr ""
+msgstr "Actualizare, ștergere"
 
 #. module: base
 #. odoo-python
@@ -20321,6 +20759,8 @@ msgid ""
 "Updating records with different property fields definitions is not "
 "supported. Update by separate definition instead."
 msgstr ""
+"Actualizarea înregistrărilor cu definiții diferite ale câmpurilor de "
+"proprietăți nu este acceptată. Actualizați separat, pe fiecare definiție."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
@@ -20506,14 +20946,14 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_res_users_apikeys
 msgid "User API Key"
-msgstr ""
+msgstr "Cheie API utilizator"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_device__user_agent
 #: model:ir.model.fields,field_description:base.field_res_device_log__user_agent
 #: model:ir.model.fields,field_description:base.field_res_session__user_agent
 msgid "User Agent"
-msgstr ""
+msgstr "Agent utilizator"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_user_device
@@ -20540,7 +20980,7 @@ msgstr "Autentificare utilizator"
 #: model:ir.actions.act_window,name:base.action_user_session
 #: model:ir.ui.menu,name:base.menu_action_user_session
 msgid "User Sessions"
-msgstr ""
+msgstr "Sesiuni utilizator"
 
 #. module: base
 #: model:ir.model,name:base.model_res_users_settings
@@ -20560,7 +21000,7 @@ msgstr "Intrări jurnal utilizator"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__session_ids
 msgid "User sessions"
-msgstr ""
+msgstr "Sesiuni utilizator"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_embedded_actions__user_id
@@ -20655,11 +21095,14 @@ msgstr "Utilizatori care aparțin în mod explicit acestui grup"
 #: model:ir.model.fields,help:base.field_res_groups__implied_by_ids
 msgid "Users in implying groups are implicitly part of the current group"
 msgstr ""
+"Utilizatorii din grupurile care implică acest grup fac parte implicit din "
+"grupul curent"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_groups__implied_ids
 msgid "Users in the current group are implicitly part of the implied groups"
 msgstr ""
+"Utilizatorii din grupul curent fac parte implicit din grupurile implicite"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_groups__disjoint_ids
@@ -20667,6 +21110,9 @@ msgid ""
 "Users in the current group cannot be added in disjoint groups. For example, "
 "a user cannot be in the \"Internal\" and \"Portal\" groups at the same time."
 msgstr ""
+"Utilizatorii din grupul curent nu pot fi adăugați în grupuri disjuncte. De "
+"exemplu, un utilizator nu poate fi în același timp în grupurile \"Intern\" "
+"și \"Portal\"."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__uses_default_logo
@@ -20710,7 +21156,7 @@ msgstr "TVA"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "VAT Registry (VAT ID)"
-msgstr ""
+msgstr "Registru TVA (cod TVA)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__value
@@ -20741,7 +21187,7 @@ msgstr "Tip Valoare"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_rate__company_rate
 msgid "Value of 1 unit of this currency in the company currency"
-msgstr ""
+msgstr "Valoarea unei unități din această monedă în moneda companiei"
 
 #. module: base
 #: model:res.country,name:base.vu
@@ -20761,7 +21207,7 @@ msgstr "Vatu"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_0
 msgid "Vendor"
-msgstr ""
+msgstr "Furnizor"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_supplier_form
@@ -20776,7 +21222,7 @@ msgstr "Venezuela"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model__explanation
 msgid "Verbose description of what is this model for"
-msgstr ""
+msgstr "Descriere detaliată a scopului acestui model"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_url__explanation
@@ -20788,7 +21234,7 @@ msgstr ""
 #: model:ir.model.fields,help:base.field_ir_actions_server__explanation
 #: model:ir.model.fields,help:base.field_ir_cron__explanation
 msgid "Verbose description of what this action actually does"
-msgstr ""
+msgstr "Descriere detaliată a ceea ce face efectiv această acțiune"
 
 #. module: base
 #. odoo-python
@@ -20877,7 +21323,7 @@ msgstr "Mod moștenire vizualizare"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__technical_usage
 msgid "View's Technical Usage"
-msgstr ""
+msgstr "Utilizarea tehnică a vizualizării"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_ui_view
@@ -20943,12 +21389,12 @@ msgstr "Vizibil pentru toți"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "Visible to all groups"
-msgstr ""
+msgstr "Vizibil pentru toate grupurile"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "Visible to all records"
-msgstr ""
+msgstr "Vizibil pentru toate înregistrările"
 
 #. module: base
 #: model:res.country,name:base.wf
@@ -20988,6 +21434,10 @@ msgid ""
 "enhancing solutions through the use of advanced software for our clients "
 "worldwide. At Lumber Inc we bring operational experience combined..."
 msgstr ""
+"Suntem o firmă de consultanță tehnologică și consiliere strategică ce "
+"creează soluții care aduc valoare, prin utilizarea de software avansat, "
+"pentru clienții noștri din întreaga lume. La Lumber Inc aducem experiență "
+"operațională combinată..."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_18
@@ -21004,6 +21454,17 @@ msgid ""
 "it contributes to the goals of the company, we then optimize it, and design "
 "the software solutions to best support it."
 msgstr ""
+"Suntem o firmă de consultanță tehnologică &amp; consiliere strategică ce "
+"creează soluții care aduc valoare, prin utilizarea de software avansat, "
+"pentru clienții noștri din întreaga lume.\n"
+" <br> <br>\n"
+"La Lumber Inc aducem experiență operațională combinată cu pricepere "
+"tehnologică. Înțelegem că orice software care susține operațiunile unei "
+"afaceri trebuie proiectat astfel încât să faciliteze executarea proceselor "
+"operaționale critice și să servească drept instrument pentru utilizatori, nu "
+"drept obstacol. Abordarea noastră pune procesul pe primul loc, asigurându-ne "
+"că acesta contribuie la obiectivele companiei, apoi îl optimizăm și "
+"proiectăm soluțiile software care să-l susțină cel mai bine."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__web_icon
@@ -21044,12 +21505,12 @@ msgstr "Pagină web"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_website__domain
 msgid "Website Domain"
-msgstr ""
+msgstr "Domeniul Site-ului web"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_website_domain_unique
 msgid "Website Domain should be unique."
-msgstr ""
+msgstr "Domeniul Site-ului web ar trebui să fie unic."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__website
@@ -21061,12 +21522,12 @@ msgstr "Website Link"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_website__name
 msgid "Website Name"
-msgstr ""
+msgstr "Nume website"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_website_sale
 msgid "Website Sale"
-msgstr ""
+msgstr "Vânzări website"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__3
@@ -21147,13 +21608,13 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_access__is_standard
 msgid "Whether the access is defined by a module"
-msgstr ""
+msgstr "Dacă accesul este definit de un modul"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_report__save_as_attachment
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "Whether the report is saved as attachment when it is printed"
-msgstr ""
+msgstr "Dacă raportul este salvat ca atașament la tipărire"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__copied
@@ -21168,22 +21629,22 @@ msgstr "Dacă valoarea este stocată în baza de date."
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_access__for_create
 msgid "Whether this access record applies for operation 'create'"
-msgstr ""
+msgstr "Dacă această înregistrare de acces se aplică operațiunii 'create'"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_access__for_read
 msgid "Whether this access record applies for operation 'read'"
-msgstr ""
+msgstr "Dacă această înregistrare de acces se aplică operațiunii 'read'"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_access__for_unlink
 msgid "Whether this access record applies for operation 'unlink'"
-msgstr ""
+msgstr "Dacă această înregistrare de acces se aplică operațiunii 'unlink'"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_access__for_write
 msgid "Whether this access record applies for operation 'write'"
-msgstr ""
+msgstr "Dacă această înregistrare de acces se aplică operațiunii 'write'"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__employee
@@ -21202,6 +21663,8 @@ msgid ""
 "Whether this record adds (permission) or restricts (restriction) access to "
 "the given model"
 msgstr ""
+"Dacă această înregistrare adaugă (permisiune) sau restricționează "
+"(restricție) accesul la modelul dat"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__translate
@@ -21221,6 +21684,8 @@ msgstr "Dacă valorile pentru acest câmp sunt dependente de companie"
 #: model:ir.model.fields,help:base.field_ir_access__operation
 msgid "Which operation(s) this access applies to, a subset of 'crud'."
 msgstr ""
+"Operațiunea (operațiunile) la care se aplică acest acces, un subset din "
+"'crud'."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence__implementation
@@ -21279,6 +21744,8 @@ msgid ""
 "Wood Corner brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
 msgstr ""
+"Wood Corner aduce onestitate și seriozitate în industria lemnului, ajutându-"
+"și clienții să se ocupe de copaci, flori și ciuperci."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_relation__write_date
@@ -21305,7 +21772,7 @@ msgstr "Notează cheia"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "X"
-msgstr ""
+msgstr "X"
 
 #. module: base
 #. odoo-python
@@ -21313,6 +21780,8 @@ msgstr ""
 #: code:addons/partner_identifiers.py:0
 msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
 msgstr ""
+"XXXXXXXXX [9 cifre] și trebuie să respecte suma de control a algoritmului "
+"Luhn"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.VND
@@ -21346,6 +21815,9 @@ msgid ""
 "You are creating a loop in your '%s' records. A record cannot be a child of "
 "itself or one of its own sub-items. Please select a different parent."
 msgstr ""
+"Creați o buclă în înregistrările '%s'. O înregistrare nu poate fi propriul "
+"părinte sau părintele unuia dintre propriile subelemente. Vă rugăm să "
+"selectați un alt părinte."
 
 #. module: base
 #. odoo-python
@@ -21467,7 +21939,7 @@ msgstr ""
 #: model:ir.model.fields,help:base.field_res_partner__vat
 #: model:ir.model.fields,help:base.field_res_users__vat
 msgid "You can use '/' to indicate that the customer has no Tax ID."
-msgstr ""
+msgstr "Puteți folosi '/' pentru a indica faptul că clientul nu are CIF."
 
 #. module: base
 #. odoo-python
@@ -21546,6 +22018,8 @@ msgid ""
 "You cannot attach an attachment to itself.\n"
 "Attachment %(record)s cannot have res_id: %(res_id)s"
 msgstr ""
+"Nu puteți atașa un atașament la el însuși.\n"
+"Atașamentul %(record)s nu poate avea res_id: %(res_id)s"
 
 #. module: base
 #. odoo-python
@@ -21581,6 +22055,8 @@ msgid ""
 "You cannot delete %(to_delete_record)s, as it is used by %"
 "(on_restrict_record)s"
 msgstr ""
+"Nu puteți șterge %(to_delete_record)s, deoarece este folosit de %"
+"(on_restrict_record)s"
 
 #. module: base
 #. odoo-python
@@ -21646,7 +22122,9 @@ msgstr ""
 msgid ""
 "You cannot delete the language which is Active!\n"
 "Please de-activate the language first."
-msgstr "Nu poți șterge limba care este activă. mai întâi trebuie dezactivată"
+msgstr ""
+"Nu puteți șterge limba activă!\n"
+"Dezactivați mai întâi limba."
 
 #. module: base
 #. odoo-python
@@ -21689,6 +22167,8 @@ msgid ""
 "You cannot use “%(property_name)s” because the linked “%(model_name)s” model "
 "doesn't exist or is invalid"
 msgstr ""
+"Nu puteți folosi „%(property_name)s” deoarece modelul asociat „%(model_name)s"
+"” nu există sau este invalid"
 
 #. module: base
 #. odoo-python
@@ -21700,12 +22180,17 @@ msgid ""
 "\n"
 "Operation: %(operation)s"
 msgstr ""
+"Nu aveți suficiente drepturi pentru a accesa câmpul \"%(field)s\" din %"
+"(document_kind)s (%(document_model)s). Vă rugăm să contactați "
+"administratorul de sistem.\n"
+"\n"
+"Operațiune: %(operation)s"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 msgid "You don't have enough access rights to run this action."
-msgstr ""
+msgstr "Nu aveți suficiente drepturi de acces pentru a rula această acțiune."
 
 #. module: base
 #. odoo-python
@@ -21713,6 +22198,8 @@ msgstr ""
 msgid ""
 "You don't have the rights to export data. Please contact an Administrator."
 msgstr ""
+"Nu aveți drepturi pentru a exporta date. Vă rugăm să contactați un "
+"administrator."
 
 #. module: base
 #. odoo-python
@@ -21767,8 +22254,8 @@ msgid ""
 "You will be able to define additional access rights by editing the newly "
 "created user under the Settings / Users menu."
 msgstr ""
-"Puteți defini drepturi suplimentare de acces prin editarea noului user in "
-"meniul Setări/Utilizatori"
+"Puteți defini drepturi de acces suplimentare editând utilizatorul nou creat "
+"din meniul Setări / Utilizatori."
 
 #. module: base
 #: model_terms:res.company,sign_terms:base.demo_company_id
@@ -21821,7 +22308,7 @@ msgstr "Zambia"
 #. odoo-python
 #: code:addons/base/models/res_partner_bank.py:0
 msgid "Zengin Branch Code must consist of 3 digits."
-msgstr ""
+msgstr "Codul de sucursală Zengin trebuie să fie format din 3 cifre."
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.ZIG
@@ -21865,19 +22352,19 @@ msgstr "active"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "address"
-msgstr ""
+msgstr "adresă"
 
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
 msgid "allowed for groups %s"
-msgstr ""
+msgstr "permis pentru grupurile %s"
 
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
 msgid "always forbidden"
-msgstr ""
+msgstr "întotdeauna interzis"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_assets
@@ -21925,7 +22412,7 @@ msgstr "create"
 #. odoo-python
 #: code:addons/models.py:0
 msgid "custom field access rules"
-msgstr ""
+msgstr "reguli de acces pentru câmpurile personalizate"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.STN
@@ -21958,7 +22445,7 @@ msgstr "zi"
 #. odoo-python
 #: code:addons/base/models/ir_access.py:0
 msgid "delete"
-msgstr ""
+msgstr "șterge"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
@@ -22004,7 +22491,7 @@ msgstr "de exemplu %(placeholder)s"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "e.g. 'report ' + (object.name) + '.pdf'"
-msgstr ""
+msgstr "ex. 'raport ' + (object.name) + '.pdf'"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
@@ -22015,7 +22502,7 @@ msgstr "exemplu RO0477472701"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_bank_form
 msgid "e.g. Bank of America"
-msgstr ""
+msgstr "ex. Bank of America"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -22051,7 +22538,7 @@ msgstr "ex. John Doe"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_simple_form
 msgid "e.g. Lumber Inc or Brandon Freeman"
-msgstr ""
+msgstr "ex. Lumber Inc sau Brandon Freeman"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
@@ -22072,7 +22559,7 @@ msgstr "ex. Director vânzări"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
 msgid "e.g. Sales Order"
-msgstr ""
+msgstr "ex. Comandă de vânzare"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_form
@@ -22099,7 +22586,7 @@ msgstr "e.g. https://www.odoo.com"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "e.g. module_name.report_name"
-msgstr ""
+msgstr "ex. module_name.report_name"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_website_elearning
@@ -22110,7 +22597,7 @@ msgstr "eLearning"
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 msgid "either 11 digits for CPF or 14 characters for CNPJ"
-msgstr ""
+msgstr "fie 11 cifre pentru CPF, fie 14 caractere pentru CNPJ"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_expenses
@@ -22311,7 +22798,7 @@ msgstr "ID părinte"
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 msgid "partner%s"
-msgstr ""
+msgstr "partener%s"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -22345,7 +22832,7 @@ msgstr "properties_definition"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__value_field_to_show__property_selection
 msgid "property_selection"
-msgstr ""
+msgstr "property_selection"
 
 #. module: base
 #. odoo-python
@@ -22432,12 +22919,12 @@ msgstr "scrie"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__value_field_to_show__x2many
 msgid "x2many"
-msgstr ""
+msgstr "x2many"
 
 #. module: base
 #. odoo-python

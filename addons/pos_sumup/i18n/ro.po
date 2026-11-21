@@ -1,90 +1,95 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* pos_sumup
+# * pos_sumup
 #
+# Dorin Hongu <dhongu@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 20.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-23 17:40+0000\n"
-"PO-Revision-Date: 2026-10-23 17:40+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"PO-Revision-Date: 2026-11-21 09:34+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/"
+"pos_sumup/ro/>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2;\n"
+"Language: ro\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: pos_sumup
 #: model:ir.model.fields,help:pos_sumup.field_pos_payment_method__sumup_pairing_code
 msgid "Code displayed on the reader screen, used to pair it once."
-msgstr ""
+msgstr "Cod afișat pe ecranul cititorului, folosit pentru asocierea inițială."
 
 #. module: pos_sumup
 #. odoo-python
 #: code:addons/pos_sumup/models/pos_payment_method.py:0
 msgid "Could not pair the reader: %(error)s"
-msgstr ""
+msgstr "Nu s-a putut asocia cititorul: %(error)s"
 
 #. module: pos_sumup
 #. odoo-python
 #: code:addons/pos_sumup/models/pos_payment_method.py:0
 msgid "Could not reach SumUp. Please try again in a moment."
-msgstr ""
+msgstr "Nu s-a putut contacta SumUp. Încearcă din nou peste câteva clipe."
 
 #. module: pos_sumup
 #. odoo-python
 #: code:addons/pos_sumup/models/pos_payment_method.py:0
 msgid "Could not reach SumUp. Please try again."
-msgstr ""
+msgstr "Nu s-a putut contacta SumUp. Încearcă din nou."
 
 #. module: pos_sumup
 #. odoo-python
 #: code:addons/pos_sumup/models/pos_payment_method.py:0
 msgid "Couldn't find a transaction corresponding to this payment."
-msgstr ""
+msgstr "Nu s-a găsit nicio tranzacție corespunzătoare acestei plăți."
 
 #. module: pos_sumup
 #: model:ir.model.fields,field_description:pos_sumup.field_pos_payment_method__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nume afișat"
 
 #. module: pos_sumup
 #: model:ir.model.fields,field_description:pos_sumup.field_pos_payment_method__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: pos_sumup
 #: model:ir.module.module,summary:base.module_pos_sumup
 msgid "Integrate your POS with a SumUp payment terminal"
-msgstr ""
+msgstr "Integrează POS-ul cu un terminal de plată SumUp"
 
 #. module: pos_sumup
 #: model:ir.module.module,shortdesc:base.module_pos_sumup
 msgid "POS SumUp"
-msgstr ""
+msgstr "POS SumUp"
 
 #. module: pos_sumup
 #: model:ir.model.fields,field_description:pos_sumup.field_pos_payment_method__sumup_pairing_code
 msgid "Pairing Code"
-msgstr ""
+msgstr "Cod Împerechere"
 
 #. module: pos_sumup
 #. odoo-javascript
 #: code:addons/pos_sumup/static/src/app/utils/payment/payment_sumup.js:0
 msgid "Payment failed."
-msgstr ""
+msgstr "Plata a eșuat."
 
 #. module: pos_sumup
 #. odoo-python
 #: code:addons/pos_sumup/models/pos_payment_method.py:0
 msgid "Please set the SumUp merchant code first."
-msgstr ""
+msgstr "Setează mai întâi codul de comerciant SumUp."
 
 #. module: pos_sumup
 #: model:ir.model,name:pos_sumup.model_pos_payment_method
 msgid "Point of Sale Payment Method"
-msgstr ""
+msgstr "Metodă de plată la punctul de vânzare"
 
 #. module: pos_sumup
 #. odoo-python
@@ -93,6 +98,8 @@ msgid ""
 "Reader %(terminal)s is already used in company %(company)s on payment method"
 " %(payment_method)s."
 msgstr ""
+"Cititorul %(terminal)s este deja folosit în compania %(company)s la metoda "
+"de plată %(payment_method)s."
 
 #. module: pos_sumup
 #. odoo-python
@@ -100,48 +107,51 @@ msgstr ""
 msgid ""
 "Reader %(terminal)s is already used on payment method %(payment_method)s."
 msgstr ""
+"Cititorul %(terminal)s este deja folosit la metoda de plată %(payment_method)"
+"s."
 
 #. module: pos_sumup
 #: model:ir.model.fields,field_description:pos_sumup.field_pos_payment_method__sumup_terminal_id
 msgid "Reader ID"
-msgstr ""
+msgstr "ID cititor"
 
 #. module: pos_sumup
 #: model:ir.model.fields,help:pos_sumup.field_pos_payment_method__sumup_merchant_code
 msgid "Short unique identifier for the merchant (e.g. MK10CL2A)."
-msgstr ""
+msgstr "Identificator unic scurt al comerciantului (de ex. MK10CL2A)."
 
 #. module: pos_sumup
 #: model_terms:ir.ui.view,arch_db:pos_sumup.pos_payment_method_view_form_inherit_pos_sumup
 msgid "SumUp"
-msgstr ""
+msgstr "SumUp"
 
 #. module: pos_sumup
 #: model:ir.model.fields,field_description:pos_sumup.field_pos_payment_method__sumup_api_key
 msgid "SumUp API key"
-msgstr ""
+msgstr "Cheie API SumUp"
 
 #. module: pos_sumup
 #. odoo-javascript
 #: code:addons/pos_sumup/static/src/app/utils/payment/payment_sumup.js:0
 msgid "SumUp Error"
-msgstr ""
+msgstr "Eroare SumUp"
 
 #. module: pos_sumup
 #. odoo-python
 #: code:addons/pos_sumup/models/pos_payment_method.py:0
 msgid "SumUp can't refund a transaction not paid with SumUp."
-msgstr ""
+msgstr "SumUp nu poate rambursa o tranzacție care nu a fost plătită prin SumUp."
 
 #. module: pos_sumup
 #: model:ir.model.fields,help:pos_sumup.field_pos_payment_method__sumup_terminal_id
 msgid "SumUp reader identifier (e.g. rdr_3MSAFM23CK82VSTT4BN6RWSQ65)."
 msgstr ""
+"Identificatorul cititorului SumUp (de ex. rdr_3MSAFM23CK82VSTT4BN6RWSQ65)."
 
 #. module: pos_sumup
 #: model:ir.model.fields,field_description:pos_sumup.field_pos_payment_method__sumup_merchant_code
 msgid "Sumup Merchant Code"
-msgstr ""
+msgstr "Cod de comerciant SumUp"
 
 #. module: pos_sumup
 #: model:ir.model.fields,help:pos_sumup.field_pos_payment_method__sumup_api_key
@@ -149,9 +159,11 @@ msgid ""
 "Used when connecting to SumUp: "
 "https://developer.sumup.com/tools/authorization/api-keys#create-an-api-key"
 msgstr ""
+"Folosit la conectarea la SumUp: https://developer.sumup.com/tools/"
+"authorization/api-keys#create-an-api-key"
 
 #. module: pos_sumup
 #. odoo-python
 #: code:addons/pos_sumup/models/pos_payment_method.py:0
 msgid "You do not have the necessary permissions to make a SumUp payment."
-msgstr ""
+msgstr "Nu ai permisiunile necesare pentru a efectua o plată SumUp."

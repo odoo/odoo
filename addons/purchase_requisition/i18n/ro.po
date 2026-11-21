@@ -7,16 +7,16 @@
 # Hongu Cosmin <cosmin513@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Cozmin Candea <office@terrabit.ro>, 2023
-# Dorin Hongu <dhongu@gmail.com>, 2023, 2025.
+# Dorin Hongu <dhongu@gmail.com>, 2023, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 18:03+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-20 10:09+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/"
 "purchase_requisition/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: purchase_requisition
 #: model:ir.module.module,description:base.module_purchase_requisition
@@ -40,6 +40,15 @@ msgid ""
 "are agreements you have with vendors to benefit from a predetermined "
 "pricing.\n"
 msgstr ""
+"\n"
+"Gestionarea acordurilor de achiziție\n"
+"====================================\n"
+"\n"
+"Gestionează cererile de ofertă și comenzile-cadru. Cererile de ofertă sunt "
+"folosite pentru a obține\n"
+"oferte concurente de la furnizori diferiți și pentru a o alege pe cea mai "
+"bună. Comenzile-cadru\n"
+"sunt acorduri cu furnizorii care îți asigură prețuri stabilite în avans.\n"
 
 #. module: purchase_requisition
 #: model:ir.actions.report,print_report_name:purchase_requisition.action_report_purchase_requisitions
@@ -69,19 +78,19 @@ msgstr "<strong>Referință:</strong><br/>"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "A note"
-msgstr ""
+msgstr "O notă"
 
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 msgid "A product is required on purchase agreement lines."
-msgstr ""
+msgstr "Este necesar un produs pe liniile acordului de achiziție."
 
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 msgid "A section or note line cannot have a product."
-msgstr ""
+msgstr "O secțiune sau o linie de notă nu poate avea un produs."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_needaction
@@ -106,7 +115,7 @@ msgstr "Activitate Excepție Decorare"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_plans_ids
 msgid "Activity Plans"
-msgstr ""
+msgstr "Planuri de activitate"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_state
@@ -121,17 +130,17 @@ msgstr "Pictograma tipului de activitate"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Add a note"
-msgstr ""
+msgstr "Adaugă o notă"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Add a product"
-msgstr ""
+msgstr "Adăugați un produs"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Add a section"
-msgstr ""
+msgstr "Adaugă o secțiune"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__purchase_requisition_id
@@ -162,7 +171,7 @@ msgstr "Valabilitate acord:"
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Amount"
-msgstr ""
+msgstr "Valoare"
 
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -305,7 +314,7 @@ msgstr "Nume afișat"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__display_type
 msgid "Display Type"
-msgstr ""
+msgstr "Tipul de afișare"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__distribution_analytic_account_ids
@@ -433,12 +442,12 @@ msgstr "Activități întârziate"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__name
 msgid "Line Description"
-msgstr ""
+msgstr "Descriere linie"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Pictogramă Material Symbols, de ex., listă de verificare"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_error
@@ -515,7 +524,7 @@ msgstr "Tip de activitate urmatoare"
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_line__display_type__line_note
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Note"
-msgstr ""
+msgstr "Notă"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_needaction_counter
@@ -561,7 +570,7 @@ msgstr "Comenzi"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__parent_id
 msgid "Parent Section Line"
-msgstr ""
+msgstr "Linie secțiune părinte"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__product_id
@@ -714,22 +723,22 @@ msgstr "Caută acorduri de achiziție"
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_line__display_type__line_section
 msgid "Section"
-msgstr ""
+msgstr "Secțiune"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Section Name"
-msgstr ""
+msgstr "Numele secțiunii"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "Section title"
-msgstr ""
+msgstr "Titlul secțiunii"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Secvență"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -770,17 +779,17 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_line__display_type__line_subsection
 msgid "Subsection"
-msgstr ""
+msgstr "Subsecțiune"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Subsection Name"
-msgstr ""
+msgstr "Denumire subsecțiune"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "Subsection title"
-msgstr ""
+msgstr "Titlul subsecțiunii"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__supplier_info_ids
@@ -795,7 +804,7 @@ msgstr "Lista de preturi Furnizor"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_line__display_type
 msgid "Technical field for UX purpose."
-msgstr ""
+msgstr "Câmp tehnic în scop UX."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -888,6 +897,8 @@ msgid ""
 "You cannot change the type of a purchase agreement line. Instead you should "
 "delete the current line and create a new line of the proper type."
 msgstr ""
+"Nu poți schimba tipul unei linii din acordul de achiziție. Șterge linia "
+"actuală și creează una nouă cu tipul corespunzător."
 
 #. module: purchase_requisition
 #. odoo-python

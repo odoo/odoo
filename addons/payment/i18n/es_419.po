@@ -10,9 +10,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 17:39+0000\n"
-"PO-Revision-Date: 2026-10-27 11:33+0000\n"
-"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"POT-Creation-Date: 2026-11-20 17:38+0000\n"
+"PO-Revision-Date: 2026-11-20 22:46+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-20/payment/es_419/>\n"
 "Language: es_419\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_method
@@ -647,7 +647,7 @@ msgstr "Nombre en pantalla"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
 msgid "Don't hesitate to contact us if you don't receive it."
-msgstr "Contáctenos en caso de que no lo reciba."
+msgstr "Contáctanos en caso de que no lo reciba."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__done_msg
@@ -1532,6 +1532,11 @@ msgstr "Referencia del proveedor"
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
 msgid "Published"
 msgstr "Publicado"
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_qfpay
+msgid "QFPay"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__onboarding_payment_module__razorpay
@@ -2432,6 +2437,7 @@ msgstr "Tu orden está confirmada, recibirás tu factura pronto."
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_paymob
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_paypal
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_payu
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_qfpay
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_sepa_direct_debit
@@ -2463,6 +2469,7 @@ msgstr "Se autorizó su pago."
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_paymob
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_paypal
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_payu
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_qfpay
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_sepa_direct_debit
@@ -2494,6 +2501,7 @@ msgstr "Se canceló su pago."
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_paymob
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_paypal
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_payu
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_qfpay
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sepa_direct_debit
@@ -2523,6 +2531,7 @@ msgstr "Tu pago ha sido procesado, pero está a la espera de su aprobación."
 #: model_terms:payment.provider,done_msg:payment.payment_provider_paymob
 #: model_terms:payment.provider,done_msg:payment.payment_provider_paypal
 #: model_terms:payment.provider,done_msg:payment.payment_provider_payu
+#: model_terms:payment.provider,done_msg:payment.payment_provider_qfpay
 #: model_terms:payment.provider,done_msg:payment.payment_provider_razorpay
 #: model_terms:payment.provider,done_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,done_msg:payment.payment_provider_sepa_direct_debit

@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 17:38+0000\n"
-"PO-Revision-Date: 2026-11-10 09:33+0000\n"
+"POT-Creation-Date: 2026-11-20 17:37+0000\n"
+"PO-Revision-Date: 2026-11-19 15:32+0000\n"
 "Last-Translator: \"Cécile Collart (cco)\" <cco@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-20/"
 "hr_holidays/fr/>\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -79,37 +79,8 @@ msgid ""
 "\n"
 "A synchronization with an internal agenda (Meetings of the CRM module) is "
 "also possible in order to automatically create a meeting when a time off "
-"request is accepted by setting up a type of meeting in time off Type.\n"
+"request is accepted by setting up a type of meeting in the time type.\n"
 msgstr ""
-"\n"
-"Gérer les demandes et les allocations de congés\n"
-"========================================\n"
-"\n"
-"Cette application gère le calendrier des congés de votre entreprise. Elle "
-"permet aux employés de demander des congés. Les responsables peuvent ensuite "
-"examiner les demandes de congés et les approuver ou les refuser. Vous pouvez "
-"ainsi contrôler la planification globale des congés de l'entreprise ou du "
-"département.\n"
-"\n"
-"Vous pouvez configurer plusieurs types de congés (maladie, congés "
-"payés, ...) et allouer rapidement des congés à un employé ou à un "
-"département grâce aux allocations de congés. Un employé peut également "
-"demander des jours de congé supplémentaires en créant une nouvelle demande "
-"d'allocation. Cela augmentera le nombre total de jours disponibles pour ce "
-"type de congé (si la demande est acceptée).\n"
-"\n"
-"Vous pouvez suivre les congés de différentes manières à l'aide des rapports "
-"suivants :\n"
-"\n"
-"* Résumé des congés\n"
-"* Congés par département\n"
-"* Analyse des congés\n"
-"\n"
-"Une synchronisation avec un agenda interne (Réunions du module CRM) est "
-"également possible afin de créer automatiquement une réunion lorsqu'une "
-"demande de congé est acceptée, en configurant un type de réunion dans le "
-"type de congé.\n"
-"\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -464,6 +435,8 @@ msgid ""
 "<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"to\" title=\"To\" "
 "invisible=\"accrual_plan_id or state != 'confirm'\"/>"
 msgstr ""
+"<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"à\" title=\"À\" "
+"invisible=\"accrual_plan_id or state != 'confirm'\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
@@ -471,6 +444,8 @@ msgid ""
 "<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"to\" title=\"To\" "
 "invisible=\"accrual_plan_id\"/>"
 msgstr ""
+"<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"à\" title=\"À\" "
+"invisible=\"accrual_plan_id\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
@@ -478,6 +453,8 @@ msgid ""
 "<i class=\"oi oi-fw mx-2\" data-icon=\"east\" aria-label=\"to\" title=\"To\" "
 "invisible=\"accrual_plan_id\"/>"
 msgstr ""
+"<i class=\"oi oi-fw mx-2\" data-icon=\"east\" aria-label=\"à\" title=\"À\" "
+"invisible=\"accrual_plan_id\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -485,6 +462,8 @@ msgid ""
 "<i class=\"oi oi-lg align-self-center\" data-icon=\"label\" title=\"Time "
 "Type\" name=\"work_entry_type_id\"/>"
 msgstr ""
+"<i class=\"oi oi-lg align-self-center\" data-icon=\"label\" title=\"Type de "
+"temps\" name=\"work_entry_type_id\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -1000,6 +979,8 @@ msgstr "Fréquence d’acquisition :"
 msgid ""
 "Accrual will stop until next carry-over date if the accrued time reaches"
 msgstr ""
+"L'acquisition de droits à congé sera suspendue jusqu'à la prochaine date de "
+"report si le temps accumulé atteint"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_needaction
@@ -1735,8 +1716,8 @@ msgstr "Revenez plus tard pour consulter toutes les demandes de congés"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_time_rule_view_form_inherit_hr_holidays
-msgid "Choose a Time Off Type"
-msgstr "Choisir un type de congé"
+msgid "Choose a Time Type"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__maximum_leave
@@ -2209,6 +2190,7 @@ msgstr "Ignorer"
 #: model:ir.model.fields,field_description:hr_holidays.field_load_public_holiday_wizard_line__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_activity_type__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_message_subtype__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_publisher_warranty_contract__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_res_company__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_res_groups__display_name
@@ -2735,6 +2717,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_holidays.field_load_public_holiday_wizard_line__id
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_activity_type__id
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_message_subtype__id
+#: model:ir.model.fields,field_description:hr_holidays.field_publisher_warranty_contract__id
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary__id
 #: model:ir.model.fields,field_description:hr_holidays.field_res_company__id
 #: model:ir.model.fields,field_description:hr_holidays.field_res_groups__id
@@ -3840,6 +3823,11 @@ msgstr ""
 "la demande de congé."
 
 #. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_publisher_warranty_contract
+msgid "Publisher Warranty Contract"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__rating_ids
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__rating_ids
 msgid "Ratings"
@@ -4403,6 +4391,8 @@ msgid ""
 "The allocation balance can go negative when the deficit exceeds the "
 "available balance."
 msgstr ""
+"Le solde de l'allocation peut devenir négatif lorsque le déficit dépasse le "
+"solde disponible."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4486,7 +4476,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "The plan will be on hold if the balance reaches"
-msgstr ""
+msgstr "Le plan d'acquisition sera suspendu si le solde atteint"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_date_check3
@@ -5579,6 +5569,11 @@ msgid ""
 "may be finer than the condition unit (e.g. hour output on a day leave trims "
 "the source to sub-day)."
 msgstr ""
+"Vous pouvez définir un type de temps qui sera créé pour comptabiliser le "
+"temps excédentaire. Il ne peut pas s'agir d'un type de temps nécessitant une "
+"allocation. L'unité de sortie peut être plus précise que l'unité de la "
+"condition (p. ex. une sortie en heures pour un congé en jours permet de "
+"fractionner le congé d'origine en portions de journée)."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_time_rule_view_form_inherit_hr_holidays
@@ -5588,6 +5583,12 @@ msgid ""
 "allocation. The output unit may be finer than the condition unit (e.g. hour "
 "output on a day leave trims the source to sub-day)."
 msgstr ""
+"Vous pouvez définir un type de temps qui sera créé pour comptabiliser le "
+"temps manquant pour satisfaire à la condition. Il ne peut pas s'agir d'un "
+"type de temps nécessitant une allocation. L'unité de sortie peut être plus "
+"précise que l'unité de la condition (p. ex. une sortie en heures pour un "
+"congé en jours permet de fractionner le congé d'origine en portions de "
+"journée)."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__carryover_options
@@ -5804,12 +5805,9 @@ msgstr "Vous ne pouvez pas définir une durée de validité de l’acquisition �
 #: code:addons/hr_holidays/models/hr_work_entry_type.py:0
 msgid ""
 "You cannot modify the 'Duration Count' setting because one or more leaves "
-"have already been taken for this time off type. Changing it now would affect "
+"have already been taken for this time type. Changing it now would affect "
 "existing employee balances."
 msgstr ""
-"Vous ne pouvez pas modifier le paramètre « Décompte de la durée » car un ou "
-"plusieurs congés ont déjà été pris pour ce type de congé. Le modifier "
-"maintenant affecterait les soldes existants des employés."
 
 #. module: hr_holidays
 #. odoo-python
@@ -6229,6 +6227,74 @@ msgstr "valider"
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
 msgid "year(s)"
 msgstr "an(s)"
+
+#~ msgid ""
+#~ "\n"
+#~ "Manage time off requests and allocations\n"
+#~ "========================================\n"
+#~ "\n"
+#~ "This application controls the time off schedule of your company. It "
+#~ "allows employees to request time off. Then, managers can review requests "
+#~ "for time off and approve or reject them. This way you can control the "
+#~ "overall time off planning for the company or department.\n"
+#~ "\n"
+#~ "You can configure several kinds of time off (sickness, paid days, ...) "
+#~ "and allocate time off to an employee or department quickly using time off "
+#~ "allocation. An employee can also make a request for more days off by "
+#~ "making a new time off allocation. It will increase the total of available "
+#~ "days for that time type (if the request is accepted).\n"
+#~ "\n"
+#~ "You can keep track of time off in different ways by following reports:\n"
+#~ "\n"
+#~ "* Time Off Summary\n"
+#~ "* Time Off by Department\n"
+#~ "* Time Off Analysis\n"
+#~ "\n"
+#~ "A synchronization with an internal agenda (Meetings of the CRM module) is "
+#~ "also possible in order to automatically create a meeting when a time off "
+#~ "request is accepted by setting up a type of meeting in time off Type.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Gérer les demandes et les allocations de congés\n"
+#~ "========================================\n"
+#~ "\n"
+#~ "Cette application gère le calendrier des congés de votre entreprise. Elle "
+#~ "permet aux employés de demander des congés. Les responsables peuvent "
+#~ "ensuite examiner les demandes de congés et les approuver ou les refuser. "
+#~ "Vous pouvez ainsi contrôler la planification globale des congés de "
+#~ "l'entreprise ou du département.\n"
+#~ "\n"
+#~ "Vous pouvez configurer plusieurs types de congés (maladie, congés "
+#~ "payés, ...) et allouer rapidement des congés à un employé ou à un "
+#~ "département grâce aux allocations de congés. Un employé peut également "
+#~ "demander des jours de congé supplémentaires en créant une nouvelle "
+#~ "demande d'allocation. Cela augmentera le nombre total de jours "
+#~ "disponibles pour ce type de congé (si la demande est acceptée).\n"
+#~ "\n"
+#~ "Vous pouvez suivre les congés de différentes manières à l'aide des "
+#~ "rapports suivants :\n"
+#~ "\n"
+#~ "* Résumé des congés\n"
+#~ "* Congés par département\n"
+#~ "* Analyse des congés\n"
+#~ "\n"
+#~ "Une synchronisation avec un agenda interne (Réunions du module CRM) est "
+#~ "également possible afin de créer automatiquement une réunion lorsqu'une "
+#~ "demande de congé est acceptée, en configurant un type de réunion dans le "
+#~ "type de congé.\n"
+#~ "\n"
+
+#~ msgid "Choose a Time Off Type"
+#~ msgstr "Choisir un type de congé"
+
+#~ msgid ""
+#~ "You cannot modify the 'Duration Count' setting because one or more leaves "
+#~ "have already been taken for this time off type. Changing it now would "
+#~ "affect existing employee balances."
+#~ msgstr ""
+#~ "Vous ne pouvez pas modifier le paramètre « Décompte de la durée » car un "
+#~ "ou plusieurs congés ont déjà été pris pour ce type de congé. Le modifier "
+#~ "maintenant affecterait les soldes existants des employés."
 
 #~ msgid ""
 #~ "<i class=\"oi mx-2\" data-icon=\"east\" aria-label=\"Arrow icon\" "

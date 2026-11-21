@@ -5,7 +5,7 @@
 # Translators:
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
 # Martin Trigaux, 2022
-# Dorin Hongu <dhongu@gmail.com>, 2023
+# Dorin Hongu <dhongu@gmail.com>, 2023, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Adrian Cocos <adrian.cocos@capps.ai>, 2025.
 # Iulian Tanasa <iulian.tanasa@qbsretail.ro>, 2026.
@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-10-19 03:33+0000\n"
-"Last-Translator: Iulian Tanasa <iulian.tanasa@qbsretail.ro>\n"
+"PO-Revision-Date: 2026-11-21 18:59+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/"
 "base_import/ro/>\n"
 "Language: ro\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: base_import
 #: model:ir.module.module,description:base.module_base_import
@@ -50,6 +50,33 @@ msgid ""
 "* In a module, so that administrators and users of Odoo who do not\n"
 "  need or want an online import can avoid it being available to users.\n"
 msgstr ""
+"\n"
+"Import flexibil și extensibil de fișiere în Odoo\n"
+"================================================\n"
+"\n"
+"Reimplementarea sistemului de import de fișiere din Odoo:\n"
+"\n"
+"* Pe partea de server, sistemul anterior mută cea mai mare parte a logicii "
+"în\n"
+"  client, ceea ce dublează efortul între clienți, face sistemul de import "
+"mult\n"
+"  mai greu de utilizat fără un client (apeluri RPC directe sau alte forme "
+"de\n"
+"  automatizare) și îngreunează documentarea sistemului de import/export,\n"
+"  deoarece acesta este împărțit în peste trei proiecte diferite.\n"
+"\n"
+"* Într-un mod mai extensibil, astfel încât utilizatorii și partenerii să își "
+"poată\n"
+"  crea propria interfață pentru importul altor formate (de exemplu, fișiere\n"
+"  OpenDocument), care pot fi mai ușor de gestionat în fluxul lor de lucru "
+"sau\n"
+"  proveni din sursele lor de date.\n"
+"\n"
+"* Într-un modul, astfel încât administratorii și utilizatorii Odoo care nu "
+"au\n"
+"  nevoie sau nu doresc import online să poată evita expunerea acestei "
+"funcții\n"
+"  utilizatorilor.\n"
 
 #. module: base_import
 #. odoo-javascript
@@ -109,7 +136,6 @@ msgstr ""
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-#, fuzzy
 msgid "Attachments"
 msgstr "Atașamente"
 
@@ -131,12 +157,11 @@ msgstr "Mapare import de bază"
 #. module: base_import
 #: model:ir.module.module,shortdesc:base.module_base_import
 msgid "Base import"
-msgstr ""
+msgstr "Import de bază"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
-#, fuzzy
 msgid "Batch"
 msgstr "Lot"
 
@@ -144,19 +169,19 @@ msgstr "Lot"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Batch interval"
-msgstr ""
+msgstr "Intervalul lotului"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Batch max size"
-msgstr ""
+msgstr "Dimensiunea maximă a lotului"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Batch size"
-msgstr ""
+msgstr "Dimensiunea lotului"
 
 #. module: base_import
 #. odoo-javascript
@@ -228,7 +253,6 @@ msgstr "ID-ul Bază date"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-#, fuzzy
 msgid "Date Format"
 msgstr "Formatul datei"
 
@@ -236,19 +260,19 @@ msgstr "Formatul datei"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Datetime Format"
-msgstr ""
+msgstr "Format dată și oră"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Decimals Separator"
-msgstr ""
+msgstr "Separator zecimal"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Defines how many megabytes can be imported in each batch"
-msgstr ""
+msgstr "Definește câți megabaiți pot fi importați în fiecare lot"
 
 #. module: base_import
 #. odoo-javascript
@@ -257,18 +281,21 @@ msgid ""
 "Defines the number of records that will be imported in one transaction. "
 "Reduce the batch size in case of heavy imports"
 msgstr ""
+"Definește numărul de înregistrări importate într-o singură tranzacție. "
+"Reduceți dimensiunea lotului pentru importuri mari"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Delay applied after each batch to prevent unthrottled calls"
 msgstr ""
+"Pauza aplicată după fiecare lot pentru a preveni apelurile fără limitare"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Delimiter"
-msgstr ""
+msgstr "Delimitator"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
@@ -281,7 +308,6 @@ msgstr "Nume afișat"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-#, fuzzy
 msgid "Documentation"
 msgstr "Documentație"
 
@@ -391,14 +417,13 @@ msgstr "Dimensiunea fișierului depășește maximul configurat (%s bytes)"
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
 msgid "File to check and/or import"
-msgstr ""
+msgstr "Fișier de verificat și/sau importat"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
-#, fuzzy
 msgid "Finalizing current batch before interrupting..."
-msgstr "Finalizarea curentului lot înainte de a întrerupe..."
+msgstr "Se finalizează lotul curent înainte de întrerupere..."
 
 #. module: base_import
 #. odoo-javascript
@@ -450,17 +475,18 @@ msgid ""
 "If checked, the changes are tracked in the chatter and notifications can be "
 "sent to followers, which could slow down the import"
 msgstr ""
+"Dacă este bifat, modificările sunt urmărite în mesagerie și pot fi trimise "
+"notificări urmăritorilor, ceea ce poate încetini importul"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.js:0
 msgid "If checked, the first row of the sheet will not be imported"
-msgstr ""
+msgstr "Dacă este bifat, primul rând al foii nu va fi importat"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
-#, fuzzy
 msgid ""
 "If the file contains\n"
 "                    the column names, Odoo can try auto-detecting the\n"
@@ -468,9 +494,11 @@ msgid ""
 "                    simpler especially when the file has many columns."
 msgstr ""
 "Dacă fișierul conține\n"
-"numele coloanelor, Odoo poate încerca sa detecteze automat\n"
-"câmpul corespunzător coloanei. Astfel, importurile sunt\n"
-"mai ușor de efectuat, mai ales atunci când fișierul are multe coloane."
+"                    numele coloanelor, Odoo poate încerca să detecteze "
+"automat\n"
+"                    câmpul corespunzător coloanei. Astfel, importul este mai "
+"simplu,\n"
+"                    mai ales dacă fișierul conține multe coloane."
 
 #. module: base_import
 #. odoo-javascript
@@ -484,7 +512,7 @@ msgstr "Importă"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Import failed: see errors below"
-msgstr ""
+msgstr "Importul a eșuat: consultați erorile de mai jos"
 
 #. module: base_import
 #. odoo-python
@@ -495,7 +523,6 @@ msgstr "Fișierul de import nu are conținut sau este corupt"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
-#, fuzzy
 msgid "Import preview failed due to: \""
 msgstr "Previzualizarea importului a eșuat din cauza: \""
 
@@ -503,7 +530,7 @@ msgstr "Previzualizarea importului a eșuat din cauza: \""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.js:0
 msgid "Imported records"
-msgstr ""
+msgstr "Înregistrări importate"
 
 #. module: base_import
 #. odoo-javascript
@@ -533,13 +560,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Lang:"
-msgstr ""
+msgstr "Limba:"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Language"
-msgstr ""
+msgstr "Limba"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__write_uid
@@ -579,7 +606,6 @@ msgstr "Model"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
-#, fuzzy
 msgid "Multiple errors occurred"
 msgstr "Au apărut mai multe erori"
 
@@ -593,13 +619,13 @@ msgstr "Fără separator"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "No date detected"
-msgstr ""
+msgstr "Nu s-a detectat nicio dată"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "No datetime detected"
-msgstr ""
+msgstr "Nu s-a detectat nicio dată și oră"
 
 #. module: base_import
 #. odoo-javascript
@@ -610,7 +636,6 @@ msgstr "Niciun fișier selectat"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
-#, fuzzy
 msgid "No matching records found for the following name"
 msgstr "Nu s-au găsit înregistrări potrivite pentru următorul nume"
 
@@ -623,7 +648,6 @@ msgstr "Câmp Odoo"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-#, fuzzy
 msgid "Other"
 msgstr "Altele"
 
@@ -663,7 +687,7 @@ msgstr "Bară de progres"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "Re-Upload"
-msgstr ""
+msgstr "Încarcă din nou"
 
 #. module: base_import
 #. odoo-javascript
@@ -675,7 +699,7 @@ msgstr "Campuri de Legatura"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
 msgid "Required Fields"
-msgstr ""
+msgstr "Câmpuri obligatorii"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
@@ -698,12 +722,11 @@ msgstr "Căutați un câmp..."
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Search a language..."
-msgstr ""
+msgstr "Caută o limbă..."
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
-#, fuzzy
 msgid "See possible values"
 msgstr "A se vedea valorile posibile"
 
@@ -722,7 +745,6 @@ msgstr "Punct și virgula"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-#, fuzzy
 msgid "Separator"
 msgstr "Separator"
 
@@ -811,6 +833,8 @@ msgid ""
 "There was an issue decoding the file using encoding “%s”.\n"
 "This encoding was automatically detected."
 msgstr ""
+"A apărut o problemă la decodarea fișierului folosind codificarea „%s”.\n"
+"Această codificare a fost detectată automat."
 
 #. module: base_import
 #. odoo-python
@@ -819,6 +843,8 @@ msgid ""
 "There was an issue decoding the file using encoding “%s”.\n"
 "This encoding was manually selected."
 msgstr ""
+"A apărut o problemă la decodarea fișierului folosind codificarea „%s”.\n"
+"Această codificare a fost selectată manual."
 
 #. module: base_import
 #. odoo-javascript
@@ -829,9 +855,8 @@ msgstr "Această coloană va fi concatenată în câmp"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-#, fuzzy
 msgid "Thousands Separator"
-msgstr "Separator mii"
+msgstr "Separator pentru mii"
 
 #. module: base_import
 #. odoo-javascript
@@ -849,7 +874,7 @@ msgstr "Pentru import, selectați un câmp"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Track changes in chatter"
-msgstr ""
+msgstr "Urmărește modificările în mesagerie"
 
 #. module: base_import
 #. odoo-python
@@ -878,9 +903,8 @@ msgstr "Fără titlu"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-#, fuzzy
 msgid "Upload"
-msgstr "Încărcare"
+msgstr "Încarcă"
 
 #. module: base_import
 #. odoo-javascript
@@ -889,6 +913,8 @@ msgid ""
 "Upload attachments such as images or files that can be mapped with imported "
 "data"
 msgstr ""
+"Încarcă atașamente, precum imagini sau fișiere care pot fi asociate datelor "
+"importate"
 
 #. module: base_import
 #. odoo-javascript
@@ -920,9 +946,8 @@ msgstr ""
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-#, fuzzy
 msgid "Use first row as header"
-msgstr "Utilizați primul rând ca antet"
+msgstr "Folosește primul rând drept antet."
 
 #. module: base_import
 #. odoo-javascript
@@ -931,6 +956,8 @@ msgid ""
 "Use unique key across objects for External ID's, for example \"lead_1\" "
 "instead of \"1\""
 msgstr ""
+"Folosiți o cheie unică între obiecte pentru ID-urile externe, de exemplu „"
+"lead_1” în loc de „1”"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_res_users
@@ -950,6 +977,8 @@ msgid ""
 "You can not import file via URL, check with your administrator or support "
 "for the reason."
 msgstr ""
+"Nu puteți importa fișierul prin URL; contactați administratorul sau echipa "
+"de asistență pentru a afla motivul."
 
 #. module: base_import
 #. odoo-javascript
@@ -966,21 +995,18 @@ msgstr "Trebuie să configurați cel puțin un câmp de importat"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
-#, fuzzy
 msgid "at multiple rows"
 msgstr "la mai multe rânduri"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
-#, fuzzy
 msgid "at row"
 msgstr "la rândul"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
-#, fuzzy
 msgid "in field"
 msgstr "în câmp"
 
@@ -993,7 +1019,6 @@ msgstr "minute"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
-#, fuzzy
 msgid "more"
 msgstr "mai mult(e)"
 
@@ -1001,12 +1026,11 @@ msgstr "mai mult(e)"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "or drag a file"
-msgstr ""
+msgstr "sau trageți un fișier"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
-#, fuzzy
 msgid "out of"
 msgstr "din"
 

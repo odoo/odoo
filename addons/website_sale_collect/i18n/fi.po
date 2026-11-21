@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-11 17:44+0000\n"
-"PO-Revision-Date: 2026-09-30 08:33+0000\n"
+"PO-Revision-Date: 2026-11-20 10:10+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-20/"
 "website_sale_collect/fi/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: website_sale_collect
 #: model:ir.module.module,description:base.module_website_sale_collect
@@ -28,17 +28,21 @@ msgid ""
 "Allows customers to check in-store stock, pay on site, and pick up their "
 "orders at the shop.\n"
 msgstr ""
+"\n"
+"Antaa asiakkaiden tarkistaa myymälän varastotilanteen, maksaa paikan päällä "
+"sekä noutaa tilauksensa myymälästä.\n"
 
 #. module: website_sale_collect
 #. odoo-python
 #: code:addons/website_sale_collect/models/sale_order_line.py:0
 msgid "%(available_quantity)g/%(desired_quantity)g available at this location."
 msgstr ""
+"%(available_quantity)g/%(desired_quantity)g saatavilla tässä sijainnissa."
 
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
 msgid "<i class=\"oi oi-fw oi-filled\" data-icon=\"favorite\"/> In wishlist"
-msgstr ""
+msgstr "<i class=\"oi oi-fw oi-filled\" data-icon=\"favorite\"/> Toivelistalla"
 
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
@@ -47,24 +51,25 @@ msgid ""
 "label=\"Add to wishlist\"/>\n"
 "                                    Wishlist"
 msgstr ""
+"<i class=\"oi oi-fw\" data-icon=\"favorite\" role=\"presentation\" aria-"
+"label=\"Lisää toivelistalle\"/>\n"
+"                                    Toivelista"
 
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
-#, fuzzy
 msgid "<span class=\"small\">|</span>"
 msgstr "<span class=\"small\">|</span>"
 
 #. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/location_selector/location/location.xml:0
-#, fuzzy
 msgid "Available"
 msgstr "Saatavilla"
 
 #. module: website_sale_collect
 #: model:ir.module.module,shortdesc:base.module_website_sale_collect
 msgid "Click & Collect"
-msgstr ""
+msgstr "Click & collect"
 
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_res_config_settings
@@ -90,13 +95,11 @@ msgstr "Räätälöintitila"
 #. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
-#, fuzzy
 msgid "Delivery"
 msgstr "Toimitus"
 
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_delivery_carrier
-#, fuzzy
 msgid "Delivery Method"
 msgstr "Toimitustapa"
 
@@ -110,7 +113,7 @@ msgstr "Toimitustavat"
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 msgid "Delivery available"
-msgstr ""
+msgstr "Toimitus saatavilla"
 
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.in_store_delivery_method
@@ -135,13 +138,13 @@ msgstr "Näyttönimi"
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/location_selector/map_container/map_container.xml:0
 msgid "Exceptional closing from"
-msgstr ""
+msgstr "Poikkeuksellinen sulkeminen alkaen"
 
 #. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/location_selector/map_container/map_container.xml:0
 msgid "Exceptional closing on"
-msgstr ""
+msgstr "Poikkeuksellinen sulkeminen"
 
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_delivery_carrier__id
@@ -166,25 +169,26 @@ msgstr "Nouto myymälästä -toimitustapa"
 #. odoo-python
 #: code:addons/website_sale_collect/models/payment_provider.py:0
 msgid "In-store is only allowed if a sales order exists"
-msgstr ""
+msgstr "'Myymälässä' on sallittu vain, jos myyntitilaus on olemassa"
 
 #. module: website_sale_collect
 #. odoo-python
 #: code:addons/website_sale_collect/models/payment_provider.py:0
 msgid "In-store not allowed to pay less than the order remaining balance"
 msgstr ""
+"Myymälässä ei ole sallittua maksaa vähemmän kuin tilauksen jäljellä oleva "
+"saldo"
 
 #. module: website_sale_collect
 #. odoo-python
 #: code:addons/website_sale_collect/models/payment_provider.py:0
 msgid "No in-store delivery methods available"
-msgstr ""
+msgstr "Myymälätoimitustapoja ei ole saatavilla"
 
 #. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.in_store_delivery_method
-#, fuzzy
 msgid "Not available"
 msgstr "Ei saatavilla"
 
@@ -196,7 +200,6 @@ msgstr "Aukioloajat"
 #. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/location_selector/location/location.xml:0
-#, fuzzy
 msgid "Out of stock"
 msgstr "Loppu varastosta"
 
@@ -214,7 +217,7 @@ msgstr "Maksa paikan päällä"
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_payment_method
 msgid "Payment Method"
-msgstr ""
+msgstr "Maksutapa"
 
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_payment_provider
@@ -237,7 +240,7 @@ msgstr "Nouto myymälästä"
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 msgid "Pickup"
-msgstr ""
+msgstr "Nouto"
 
 #. module: website_sale_collect
 #. odoo-javascript
@@ -281,7 +284,7 @@ msgstr "Myyntitilaus"
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Myyntitilausrivi"
 
 #. module: website_sale_collect
 #. odoo-javascript
@@ -293,25 +296,25 @@ msgstr "Sama kuin yhteystiedot"
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 msgid "Select a Store"
-msgstr ""
+msgstr "Valitse myymälä"
 
 #. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
 msgid "Selected country:"
-msgstr ""
+msgstr "Valittu maa:"
 
 #. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 msgid "Shipping"
-msgstr ""
+msgstr "Toimitus"
 
 #. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 msgid "Shipping method"
-msgstr ""
+msgstr "Toimitustapa"
 
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
@@ -347,7 +350,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "This address may require to recompute taxes."
-msgstr ""
+msgstr "Tämä osoite saattaa vaatia verojen uudelleenlaskennan."
 
 #. module: website_sale_collect
 #. odoo-python
@@ -356,6 +359,8 @@ msgid ""
 "Unfortunately, we can not deliver this order with the selected delivery "
 "method. Please update your choice and try again."
 msgstr ""
+"Emme valitettavasti voi toimittaa tätä tilausta valitulla toimitustavalla. "
+"Päivitä valintasi ja yritä uudelleen."
 
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
@@ -390,12 +395,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale_collect/models/payment_transaction.py:0
 msgid "Your order will be ready on %s."
-msgstr ""
+msgstr "Tilauksesi on valmis %s."
 
 #. module: website_sale_collect
 #: model_terms:payment.provider,pending_msg:website_sale_collect.payment_provider_on_site
 msgid "Your order will be ready soon."
-msgstr ""
+msgstr "Tilauksesi on pian valmis."
 
 #. module: website_sale_collect
 #: model_terms:payment.provider,auth_msg:website_sale_collect.payment_provider_on_site
@@ -416,13 +421,12 @@ msgstr "Maksusi on käsitelty."
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.js:0
 msgid "from %(date)s"
-msgstr ""
+msgstr "alkaen %(date)s"
 
 #. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 #: code:addons/website_sale_collect/static/src/js/location_selector/location/location.xml:0
-#, fuzzy
 msgid "in stock"
 msgstr "varastossa"
 
@@ -430,7 +434,7 @@ msgstr "varastossa"
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/location_selector/map_container/map_container.xml:0
 msgid "to"
-msgstr ""
+msgstr "-"
 
 #~ msgid "Change store"
 #~ msgstr "Vaihda myymälää"

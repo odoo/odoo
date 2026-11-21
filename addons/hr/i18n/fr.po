@@ -14,13 +14,14 @@
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Philippe Lang <philippe.lang@colab.ch>, 2025.
 # "Cécile Collart (cco)" <cco@odoo.com>, 2026.
+# Dossogne Bertrand <bedo@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 17:38+0000\n"
-"PO-Revision-Date: 2026-11-13 16:08+0000\n"
-"Last-Translator: \"Cécile Collart (cco)\" <cco@odoo.com>\n"
+"POT-Creation-Date: 2026-11-20 17:37+0000\n"
+"PO-Revision-Date: 2026-11-19 10:50+0000\n"
+"Last-Translator: Dossogne Bertrand <bedo@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-20/hr/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -28,7 +29,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: hr
 #. odoo-python
@@ -318,15 +319,6 @@ msgid ""
 msgstr ""
 "<i class=\"oi oi-fw me-2 text-primary\" data-icon=\"cake\" "
 "title=\"Anniversaire\"/>"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
-msgid ""
-"<i class=\"oi oi-fw oi-filled me-2 text-primary\" data-icon=\"contract\" "
-"title=\"Contract\"/>"
-msgstr ""
-"<i class=\"oi oi-fw oi-filled me-2 text-primary\" data-icon=\"contract\" "
-"title=\"Contrat\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -1627,6 +1619,7 @@ msgstr "Contacts"
 
 #. module: hr
 #. odoo-javascript
+#: code:addons/hr/static/src/components/contract_period/contract_period.xml:0
 #: code:addons/hr/static/src/components/versions_timeline/versions_timeline.js:0
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -1663,6 +1656,8 @@ msgid "Contract Overview"
 msgstr "Aperçu du contrat"
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/contract_period/contract_period.js:0
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view_enhanced
 msgid "Contract Period"
 msgstr "Période du contrat"
@@ -1967,6 +1962,10 @@ msgid ""
 "today or earlier, the departure is applied on confirmation; otherwise it is "
 "scheduled for that date."
 msgstr ""
+"Date à laquelle l'employé (et son utilisateur, s'il n'a pas d'autre employé "
+"actif) est archivé, par défaut le jour après le départ. Si la date est "
+"définie au jour-même ou un jour qui précède, le départ est appliqué à la "
+"confirmation ; dans le cas contraire il est planifié pour cette date."
 
 #. module: hr
 #. odoo-javascript
@@ -5509,7 +5508,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "State"
-msgstr "Etat"
+msgstr "État"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__activity_state
@@ -7064,6 +7063,13 @@ msgstr "travail"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
 msgstr "work_permit_name"
+
+#~ msgid ""
+#~ "<i class=\"oi oi-fw oi-filled me-2 text-primary\" data-icon=\"contract\" "
+#~ "title=\"Contract\"/>"
+#~ msgstr ""
+#~ "<i class=\"oi oi-fw oi-filled me-2 text-primary\" data-icon=\"contract\" "
+#~ "title=\"Contrat\"/>"
 
 #~ msgid "Company Executive"
 #~ msgstr "Dirigeant"

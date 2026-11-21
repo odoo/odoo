@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:38+0000\n"
-"PO-Revision-Date: 2026-10-21 16:08+0000\n"
+"PO-Revision-Date: 2026-11-17 10:06+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-20/repair/"
 "it/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: repair
 #: model:ir.module.module,description:base.module_repair
@@ -83,6 +83,14 @@ msgid ""
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+"*Lo stato 'Nuovo' viene utilizzato quando un utente inserisce un nuovo "
+"ordine di riparazione non confermato.\n"
+"*Lo stato 'Confermato' viene utilizzato quando un utente conferma l'ordine "
+"di riparazione.\n"
+"*Lo stato 'Completato' viene impostato quando la riparazione viene "
+"completata.\n"
+"*Lo stato 'Annullato' viene utilizzato quando l'utente annulla l'ordine di "
+"riparazione."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -510,7 +518,7 @@ msgstr "Nome visualizzato"
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__done
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Done"
-msgstr ""
+msgstr "Completato"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -648,7 +656,7 @@ msgstr "Movimenti di inventario"
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__validate_button_style__invisible
 msgid "Invisible"
-msgstr ""
+msgstr "Invisibile"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoice_ids
@@ -950,7 +958,7 @@ msgstr "Configura il primo numero di serie o una sequenza predefinita"
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__validate_button_style__primary
 msgid "Primary"
-msgstr ""
+msgstr "Primario"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__priority
@@ -1214,13 +1222,14 @@ msgstr "Tag riparazione"
 #. module: repair
 #: model:ir.module.module,summary:base.module_repair
 msgid "Repair damaged products"
-msgstr ""
+msgstr "Ripara prodotti danneggiati"
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 msgid "Repair must be confirmed in order to end reparation."
 msgstr ""
+"La riparazione deve essere confermata per poter terminare la riparazione."
 
 #. module: repair
 #. odoo-python
@@ -1347,7 +1356,7 @@ msgstr "Ricerca ordini di riparazione"
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__validate_button_style__secondary
 msgid "Secondary"
-msgstr ""
+msgstr "Secondario"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_service_line__sequence
@@ -1443,6 +1452,9 @@ msgid ""
 "Technical field holding the tracking method. False on a storable product "
 "means it's tracked by quantity only."
 msgstr ""
+"Campo tecnico che contiene il metodo di tracciabilità. Il valore \"False\" "
+"su un prodotto stoccabile indica che viene tracciato solo in base alla "
+"quantità."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__reserve_visible
@@ -1627,7 +1639,7 @@ msgstr "Urgente"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__validate_button_style
 msgid "Validate Button Style"
-msgstr ""
+msgstr "Stile pulsante Convalida"
 
 #. module: repair
 #: model:ir.model,name:repair.model_stock_warehouse

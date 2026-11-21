@@ -4,13 +4,14 @@
 #
 # Busoi Cristina <elena.busoi@capps.ai>, 2025.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
+# Dorin Hongu <dhongu@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:44+0000\n"
-"PO-Revision-Date: 2026-10-08 15:33+0000\n"
-"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"PO-Revision-Date: 2026-11-21 13:37+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/"
 "payment_demo/ro/>\n"
 "Language: ro\n"
@@ -19,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
@@ -73,11 +74,16 @@ msgid ""
 "                                Test Mode\n"
 "                            </span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-warning ms-1\">\n"
+"                                Mod de testare\n"
+"                            </span>"
 
 #. module: payment_demo
 #: model:ir.module.module,summary:base.module_payment_demo
 msgid "A payment provider for running fake payment flows for demo purposes."
 msgstr ""
+"Un furnizor de plăți pentru simularea fluxurilor de plată în scop "
+"demonstrativ."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
@@ -101,9 +107,8 @@ msgstr "Anulat"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
-#, fuzzy
 msgid "Cancelled"
-msgstr "Anulat"
+msgstr "Anulată"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
@@ -140,7 +145,7 @@ msgstr "Demo Express Checkout"
 #. odoo-python
 #: code:addons/payment_demo/models/payment_provider.py:0
 msgid "Demo providers must never be set in live mode."
-msgstr ""
+msgstr "Furnizorii demonstrativi nu trebuie utilizați niciodată în modul live."
 
 #. module: payment_demo
 #: model:ir.model.fields,field_description:payment_demo.field_payment_provider__display_name
@@ -158,7 +163,7 @@ msgstr "Eroare"
 #. module: payment_demo
 #: model:payment.method,name:payment_demo.payment_method_unknown
 msgid "Express Checkout"
-msgstr ""
+msgstr "Plată rapidă"
 
 #. module: payment_demo
 #: model:ir.model.fields,field_description:payment_demo.field_payment_provider__id
@@ -191,7 +196,7 @@ msgstr "Furnizor de plată"
 #. module: payment_demo
 #: model:ir.module.module,shortdesc:base.module_payment_demo
 msgid "Payment Provider: Demo"
-msgstr ""
+msgstr "Furnizor de plăți: Demo"
 
 #. module: payment_demo
 #: model:ir.model,name:payment_demo.model_payment_token
@@ -206,12 +211,12 @@ msgstr "Tranzacție de plată"
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
 msgid "Payment cancelled by customer"
-msgstr ""
+msgstr "Plata a fost anulată de client"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
 msgid "Payment processing"
-msgstr ""
+msgstr "Plata este în curs de procesare"
 
 #. module: payment_demo
 #. odoo-javascript
@@ -256,13 +261,13 @@ msgstr "În așteptare"
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
 msgid "Processing error"
-msgstr ""
+msgstr "Eroare de procesare"
 
 #. module: payment_demo
 #. odoo-python
 #: code:addons/payment_demo/controllers/portal.py:0
 msgid "Provider %s is not properly configured."
-msgstr ""
+msgstr "Furnizorul %s nu este configurat corect."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
@@ -276,14 +281,13 @@ msgstr "Stare Simulată"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
-#, fuzzy
 msgid "Successful"
-msgstr "De succes"
+msgstr "Reușită"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
 msgid "Successful payment"
-msgstr ""
+msgstr "Plată reușită"
 
 #. module: payment_demo
 #: model:ir.model.fields,help:payment_demo.field_payment_token__demo_simulated_state

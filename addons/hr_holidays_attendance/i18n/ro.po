@@ -4,14 +4,15 @@
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Ioan Muntean <imuntean@information-systems.ro>, 2025.
+# Dorin Hongu <dhongu@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.2a1+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 19:43+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-20 06:17+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/"
 "hr_holidays_attendance/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -19,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: hr_holidays_attendance
 #: model:ir.module.module,description:base.module_hr_holidays_attendance
@@ -27,6 +28,8 @@ msgid ""
 "\n"
 "Convert employee's extra hours to leave allocations.\n"
 msgstr ""
+"\n"
+"Convertește orele suplimentare ale angajaților în alocări de concediu.\n"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_accrual_level_view_form
@@ -36,6 +39,10 @@ msgid ""
 "on attendances)</span>\n"
 "            </span>"
 msgstr ""
+"<span name=\"yearly_gain\" position=\"inside\">\n"
+"                <span invisible=\"frequency != 'worked_hours'\"> (în funcție "
+"de prezențe)</span>\n"
+"            </span>"
 
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_leave_accrual_level
@@ -65,12 +72,12 @@ msgstr "Angajați arhivați"
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_attendance
 msgid "Attendance"
-msgstr ""
+msgstr "Prezență"
 
 #. module: hr_holidays_attendance
 #: model:ir.module.module,summary:base.module_hr_holidays_attendance
 msgid "Attendance Holidays"
-msgstr ""
+msgstr "Concedii în funcție de prezență"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_form
@@ -80,7 +87,7 @@ msgstr "Înregistrări de prezență"
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_res_company__attendance_work_entry_type_id
 msgid "Attendance Time Type"
-msgstr ""
+msgstr "Tip de timp pentru prezență"
 
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_leave_attendance_report
@@ -95,7 +102,7 @@ msgstr "Prezențe"
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "Companie"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__date
@@ -144,7 +151,7 @@ msgstr "Angajat"
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_version
 msgid "Employee Contract"
-msgstr ""
+msgstr "Contract angajat"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
@@ -164,7 +171,7 @@ msgstr "Frecvență"
 #. module: hr_holidays_attendance
 #: model:ir.module.module,shortdesc:base.module_hr_holidays_attendance
 msgid "HR Attendance Holidays"
-msgstr ""
+msgstr "Resurse Umane - Concedii în funcție de prezență"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance__id
@@ -219,7 +226,7 @@ msgstr "Cerere Alocare Nouă"
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.view_attendance_search_inherit_holidays
 msgid "Overtime Entries"
-msgstr ""
+msgstr "Înregistrări de ore suplimentare"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields.selection,name:hr_holidays_attendance.selection__hr_leave_accrual_level__frequency__worked_hours
@@ -229,12 +236,12 @@ msgstr "Pe oră lucrată"
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_resource_calendar_leaves
 msgid "Resource Time Off Detail"
-msgstr ""
+msgstr "Detaliu Timp Resurse"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.view_attendance_overtime_leave_form
 msgid "Rules Outputs"
-msgstr ""
+msgstr "Rezultatele regulilor"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_manager_view_form
@@ -244,7 +251,7 @@ msgstr "Salvează"
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.view_attendance_search_inherit_holidays
 msgid "Source Attendances"
-msgstr ""
+msgstr "Prezențe sursă"
 
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_leave
@@ -270,28 +277,30 @@ msgstr "Concedii"
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_time_rule
 msgid "Time Rule"
-msgstr ""
+msgstr "Regulă de timp"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__work_entry_type_names
 msgid "Time Types"
-msgstr ""
+msgstr "Tipuri de timp"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.view_attendance_overtime_leave_form
 msgid "Time type"
-msgstr ""
+msgstr "Tip de timp"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.view_attendance_tree_inherit_holidays
 msgid "Type"
-msgstr ""
+msgstr "Tip"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,help:hr_holidays_attendance.field_res_company__attendance_work_entry_type_id
 msgid ""
 "Work entry type assigned to attendances and read by the time rule engine."
 msgstr ""
+"Tipul înregistrării de muncă asociat prezențelor și citit de motorul de "
+"reguli de timp."
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__worked_hours
@@ -323,7 +332,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_holidays_attendance/static/src/components/accrual_levels/accrual_levels.xml:0
 msgid "every worked hour."
-msgstr ""
+msgstr "fiecare oră lucrată."
 
 #~ msgid "%s hours available"
 #~ msgstr "%s ore disponibile"

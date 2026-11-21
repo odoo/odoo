@@ -8,7 +8,7 @@
 # Cozmin Candea <office@terrabit.ro>, 2022
 # Martin Trigaux, 2022
 # Hongu Cosmin <cosmin513@gmail.com>, 2022
-# Dorin Hongu <dhongu@gmail.com>, 2023, 2025.
+# Dorin Hongu <dhongu@gmail.com>, 2023, 2025, 2026.
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
@@ -16,10 +16,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 20:29+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
+"POT-Creation-Date: 2026-11-20 17:37+0000\n"
+"PO-Revision-Date: 2026-11-21 18:59+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/"
 "stock_account/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: stock_account
 #: model:ir.module.module,description:base.module_stock_account
@@ -47,6 +47,20 @@ msgid ""
 "------------------------------------------------------\n"
 "* Stock Inventory Value at given date (support dates in the past)\n"
 msgstr ""
+"\n"
+"Modul de contabilitate WMS\n"
+"==========================\n"
+"Acest modul face legătura dintre modulele „stock” și „account” și permite "
+"crearea înregistrărilor contabile pentru evaluarea mișcărilor de stoc.\n"
+"\n"
+"Funcționalități principale\n"
+"--------------------------\n"
+"* Evaluarea stocului (periodică sau automată)\n"
+"* Facturare din transfer\n"
+"\n"
+"Tabloul de bord și rapoartele pentru gestionarea depozitului includ:\n"
+"---------------------------------------------------------------\n"
+"* Valoarea stocului la o anumită dată (inclusiv date din trecut)\n"
 
 #. module: stock_account
 #. odoo-python
@@ -61,6 +75,8 @@ msgid ""
 "%(lot)s cost update from %(old_value)s to %(new_value)s for %(quantity)s by %"
 "(user)s"
 msgstr ""
+"Actualizare cost pentru lotul %(lot)s de la %(old_value)s la %(new_value)s "
+"pentru cantitatea %(quantity)s de către %(user)s"
 
 #. module: stock_account
 #. odoo-python
@@ -69,17 +85,19 @@ msgid ""
 "%(move)s cost update from %(old_value)s to %(new_value)s for %(quantity)s by "
 "%(user)s"
 msgstr ""
+"Actualizare cost pentru mișcarea %(move)s de la %(old_value)s la %"
+"(new_value)s pentru cantitatea %(quantity)s de către %(user)s"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "%(quantity)s %(uom)s at product's cost"
-msgstr ""
+msgstr "%(quantity)s %(uom)s la costul produsului"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_move_form
 msgid "<span class=\"o_stat_text\">Product Value</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Valoarea produsului</span>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -103,6 +121,8 @@ msgid ""
 "A lot/serial number is required for product '%s' as it has lot valuation "
 "enabled."
 msgstr ""
+"Pentru produsul „%s” este necesar un număr de lot/serie, deoarece evaluarea "
+"pe lot este activată."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__avco_value
@@ -112,17 +132,19 @@ msgstr "Valoare CMP"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "Acces Grupuri"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__account_move_id
 msgid "Account Move"
-msgstr ""
+msgstr "Mișcare contabilă"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move__cogs_aml_ids
 msgid "Account move lines using this move in order to compute their COGS"
 msgstr ""
+"Liniile de înregistrare contabilă care folosesc această mișcare pentru "
+"calculul costului bunurilor vândute (COGS)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_adjustment_name__accounting_date
@@ -175,12 +197,12 @@ msgstr "Ajustat la %(date)s de către %(user)s"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__adjustment
 msgid "Adjustment"
-msgstr ""
+msgstr "Ajustare"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_value_search_view
 msgid "Adjustments"
-msgstr ""
+msgstr "Ajustări"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -205,7 +227,7 @@ msgstr "Linie cont analitic"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_plan
 msgid "Analytic Plan"
-msgstr ""
+msgstr "Plan analitic"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__avg_cost
@@ -231,18 +253,18 @@ msgstr "Bacon"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__cogs_aml_ids
 msgid "COGS lines"
-msgstr ""
+msgstr "Linii COGS"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line__cogs_move_ids
 msgid "COGS stock moves"
-msgstr ""
+msgstr "Mișcări de stoc COGS"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_bank_statement_line__closing_datetime
 #: model:ir.model.fields,field_description:stock_account.field_account_move__closing_datetime
 msgid "Closing Date"
-msgstr ""
+msgstr "Data închiderii"
 
 #. module: stock_account
 #. odoo-python
@@ -307,6 +329,8 @@ msgstr "Costul producției"
 msgid ""
 "Cost update from %(old_value)s to %(new_value)s for %(quantity)s by %(user)s"
 msgstr ""
+"Actualizare cost de la %(old_value)s la %(new_value)s pentru cantitatea %"
+"(quantity)s de către %(user)s"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_cost_method
@@ -412,7 +436,7 @@ msgstr "Afișare serie și număr lot pe facturi"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_value_list_view
 msgid "Done By"
-msgstr ""
+msgstr "Efectuat de"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_account_id
@@ -485,6 +509,8 @@ msgid ""
 "If the move originates from a document from another company, contains that "
 "company's partner, otherwise the move's partner."
 msgstr ""
+"Dacă mișcarea provine dintr-un document al altei companii, conține "
+"partenerul acelei companii; în caz contrar, conține partenerul mișcării."
 
 #. module: stock_account
 #. odoo-python
@@ -500,7 +526,7 @@ msgstr "Referință / Motiv ajustare inventar"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
 msgid "Inventory Location"
-msgstr ""
+msgstr "Locație diferențe inventar"
 
 #. module: stock_account
 #. odoo-javascript
@@ -513,17 +539,17 @@ msgstr "Pierdere la inventar"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_account_move_line__cogs_move_ids
 msgid "Inventory moves used to compute COGS values."
-msgstr ""
+msgstr "Mișcări de inventar folosite pentru calculul valorilor COGS."
 
 #. module: stock_account
 #: model:ir.module.module,summary:base.module_stock_account
 msgid "Inventory, Logistic, Valuation, Accounting"
-msgstr ""
+msgstr "Inventar, logistică, evaluare, contabilitate"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__invoice_line_ids
 msgid "Invoice Line"
-msgstr ""
+msgstr "Linie factură"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__is_dropship
@@ -565,7 +591,7 @@ msgstr "Element jurnal"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__justification
 msgid "Justification"
-msgstr ""
+msgstr "Justificare"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -615,29 +641,31 @@ msgstr "Mișcare"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__new_cost
 msgid "New Unit Cost"
-msgstr ""
+msgstr "Cost unitar nou"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__new_value
 #: model_terms:ir.ui.view,arch_db:stock_account.product_value_form_view
 msgid "New Value"
-msgstr ""
+msgstr "Valoare nouă"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__old_cost
 msgid "Old Unit Cost"
-msgstr ""
+msgstr "Cost unitar vechi"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__old_value
 msgid "Old Value"
-msgstr ""
+msgstr "Valoare veche"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "Only is set (= True) is supported in search for remaining_qty."
 msgstr ""
+"În căutarea pentru remaining_qty este acceptată numai valoarea setată (= "
+"True)."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move__origin_company_id
@@ -645,16 +673,24 @@ msgid ""
 "Only set if the move is generated from a document belonging to another "
 "company"
 msgstr ""
+"Se setează numai dacă mișcarea este generată dintr-un document care aparține "
+"altei companii."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__order_partner_id
 msgid "Order Partner"
-msgstr ""
+msgstr "Partenerul comenzii"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__origin_company_id
 msgid "Origin Company"
-msgstr ""
+msgstr "Compania de origine"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move.py:0
+msgid "Others"
+msgstr "Altele"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking_type
@@ -719,6 +755,8 @@ msgid ""
 "Product should be passed as an argument in order to get the unit price for "
 "moves in a kit."
 msgstr ""
+"Produsul trebuie transmis ca argument pentru a obține prețul unitar al "
+"mișcărilor dintr-un kit."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_company__account_production_wip_account_id
@@ -733,12 +771,12 @@ msgstr "Cont cheltuieli indirecte producție în curs"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
 msgid "Quant"
-msgstr ""
+msgstr "Poziții de stoc"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__quantity
 msgid "Quantity"
-msgstr ""
+msgstr "Cantitate"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__reference
@@ -748,7 +786,7 @@ msgstr "Referință"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_move_search
 msgid "Remaining"
-msgstr ""
+msgstr "Rămas"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__remaining_qty
@@ -785,6 +823,11 @@ msgid ""
 "cost.\n"
 "        "
 msgstr ""
+"Preț standard: produsele sunt evaluate la costul standard definit pe "
+"produs.\n"
+"        Cost mediu (AVCO): produsele sunt evaluate la costul mediu "
+"ponderat.\n"
+"        "
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_avco_report
@@ -821,6 +864,8 @@ msgid ""
 "Technical field holding the tracking method. False on a storable product "
 "means it's tracked by quantity only."
 msgstr ""
+"Câmp tehnic care păstrează metoda de urmărire. Pentru un produs stocabil, "
+"valoarea False înseamnă că este urmărit numai după cantitate."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product__company_currency_id
@@ -860,7 +905,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_move_view_list
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__total_quantity
@@ -889,7 +934,7 @@ msgstr "Valoare totală"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__product_tracking
 msgid "Tracking Method"
-msgstr ""
+msgstr "Metodă de urmărire"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking
@@ -943,7 +988,7 @@ msgstr "Evaluare"
 #: model:ir.actions.act_window,name:stock_account.product_value_list_action
 #: model:ir.ui.menu,name:stock_account.valuation_adjustments_menu
 msgid "Valuation Adjustments"
-msgstr ""
+msgstr "Cont evaluare stoc"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__company_currency_id
@@ -957,6 +1002,12 @@ msgstr "Valuarea monedei"
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__lot_valuated
 msgid "Valuation by Lot/Serial"
 msgstr "Evaluare pe lot/serie"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move.py:0
+msgid "Valuation correction following a cost change on: %s"
+msgstr "Corecție de evaluare ca urmare a modificării costului la: %s"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__value
@@ -976,7 +1027,7 @@ msgstr "Descriere valoare"
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.xml:0
 msgid "Value On Hand:"
-msgstr ""
+msgstr "Valoarea în stoc:"
 
 #. module: stock_account
 #. odoo-python
@@ -988,7 +1039,7 @@ msgstr "Valoare bazată pe mișcarea originală %(reference)s"
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "Value from previous move %(references)s"
-msgstr ""
+msgstr "Valoare din mișcarea anterioară %(references)s"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_lot__standard_price
@@ -1006,12 +1057,12 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_value_list_view
 msgid "View Account Move"
-msgstr ""
+msgstr "Vezi înregistrarea contabilă"
 
 #. module: stock_account
 #: model:ir.module.module,shortdesc:base.module_stock_account
 msgid "WMS Accounting"
-msgstr ""
+msgstr "Contabilitate WMS"
 
 #. module: stock_account
 #. odoo-python
@@ -1027,14 +1078,9 @@ msgid ""
 "quantities without a lot/serial number:\n"
 "%s"
 msgstr ""
-
-#. module: stock_account
-#. odoo-python
-#: code:addons/stock_account/models/stock_picking.py:0
-msgid ""
-"You cannot modify the scheduled date of operation %s because it falls within "
-"a locked fiscal period."
-msgstr ""
+"Nu poți activa evaluarea pe lot deoarece următoarele produse au cantități "
+"disponibile fără număr de lot/serie:\n"
+"%s"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__account_move_id
@@ -1045,6 +1091,13 @@ msgstr "stock_move_id"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "units"
 msgstr "unități"
+
+#~ msgid ""
+#~ "You cannot modify the scheduled date of operation %s because it falls "
+#~ "within a locked fiscal period."
+#~ msgstr ""
+#~ "Nu poți modifica data programată a operațiunii %s deoarece aceasta se "
+#~ "încadrează într-o perioadă fiscală blocată."
 
 #~ msgid "%(lot)s price update from %(old_price)s to %(new_price)s by %(user)s"
 #~ msgstr ""

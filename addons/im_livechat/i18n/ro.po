@@ -9,16 +9,16 @@
 # Martin Trigaux, 2022
 # Cozmin Candea <office@terrabit.ro>, 2023
 # Claudia Baisan, 2023
-# Dorin Hongu <dhongu@gmail.com>, 2023
+# Dorin Hongu <dhongu@gmail.com>, 2023, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-16 17:41+0000\n"
-"PO-Revision-Date: 2026-08-31 15:02+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-11-21 09:32+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/"
 "im_livechat/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: im_livechat
 #: model:ir.model.constraint,message:im_livechat.constraint_discuss_channel_livechat_rating_constraint
@@ -37,6 +37,12 @@ msgid ""
 "        or empty and can only be set on live chat channels.\n"
 "        "
 msgstr ""
+"\n"
+"        Evaluarea conversației live trebuie să fie 1 (Nemulțumit), 3 (Neutru)"
+", 5 (Fericit)\n"
+"        sau necompletată și poate fi setată doar pentru canalele de "
+"conversație live.\n"
+"        "
 
 #. module: im_livechat
 #: model:ir.module.module,description:base.module_im_livechat
@@ -52,6 +58,16 @@ msgid ""
 "Help your customers with this chat, and analyse their feedback.\n"
 "\n"
 msgstr ""
+"\n"
+"Asistență prin conversație live\n"
+"===============================\n"
+"\n"
+"Permite adăugarea pe orice pagină web a unor widgeturi de mesagerie "
+"instantanee care comunică\n"
+"cu serverul curent și distribuie solicitările vizitatorilor către mai mulți "
+"operatori de conversații\n"
+"live. Ajutați-vă clienții prin acest chat și analizați feedbackul lor.\n"
+"\n"
 
 #. module: im_livechat
 #. odoo-python
@@ -72,22 +88,22 @@ msgstr "# Evaluări"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__message_count
 msgid "# of Messages per Session"
-msgstr ""
+msgstr "Nr. de mesaje per sesiune"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__call_count
 msgid "# of Sessions with Calls"
-msgstr ""
+msgstr "Nr. de sesiuni cu apeluri"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__number_of_calls
 msgid "# of Sessions with calls"
-msgstr ""
+msgstr "Nr. de sesiuni cu apeluri"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_pivot
 msgid "# of calls"
-msgstr ""
+msgstr "Nr. de apeluri"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_rating
@@ -98,37 +114,37 @@ msgstr "% din Fericire"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.js:0
 msgid "%(days)sd"
-msgstr ""
+msgstr "%(days)sz"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.js:0
 msgid "%(hours)sh"
-msgstr ""
+msgstr "%(hours)sh"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.js:0
 msgid "%(minutes)sm"
-msgstr ""
+msgstr "%(minutes)smin"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/livechat_rating_notification_service.js:0
 msgid "%(name)s left a rating:"
-msgstr ""
+msgstr "%(name)s a lăsat o evaluare:"
 
 #. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/chatbot_script_step.py:0
 msgid "%(title)s - Step %(sequence)d"
-msgstr ""
+msgstr "%(title)s - Pasul %(sequence)d"
 
 #. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/res_users.py:0
 msgid "%(visitor)s authenticated as %(user)s."
-msgstr ""
+msgstr "%(visitor)s s-a autentificat ca %(user)s."
 
 #. module: im_livechat
 #. odoo-python
@@ -143,13 +159,13 @@ msgstr "'%(input_email)s' nu pare a fi un email valid. Puteți încerca din nou?
 msgid ""
 "'%(input_phone)s' does not look like a valid phone number. Can you please "
 "try again?"
-msgstr ""
+msgstr "Numărul „%(input_phone)s” nu pare valid. Încercați din nou?"
 
 #. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/chatbot_script_step.py:0
 msgid "'%s' is not a valid phone number."
-msgstr ""
+msgstr "„%s” nu este un număr de telefon valid."
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__action
@@ -162,22 +178,29 @@ msgid ""
 "'Show'.\n"
 "* 'Hide' hides the chat button on the pages.\n"
 msgstr ""
+"* „Afișează” arată butonul de chat pe pagini.\n"
+"* „Afișează cu notificare” arată butonul și un text flotant chiar lângă "
+"acesta.\n"
+"* „Deschide automat” afișează butonul și deschide automat panoul "
+"conversației pe ecranele mari. Pe ecranele mici se comportă ca opțiunea „"
+"Afișează”.\n"
+"* „Ascunde” ascunde butonul de chat de pe pagini.\n"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.js:0
 msgid "< 1m"
-msgstr ""
+msgstr "< 1 min"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "<i class=\"oi o-me-1_5\" data-icon=\"login\" role=\"img\"/>Join"
-msgstr ""
+msgstr "<i class=\"oi o-me-1_5\" data-icon=\"login\" role=\"img\"/>Alătură-te"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "<i class=\"oi o-me-1_5\" data-icon=\"logout\" role=\"img\"/>Leave"
-msgstr ""
+msgstr "<i class=\"oi o-me-1_5\" data-icon=\"logout\" role=\"img\"/>Părăsește"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_test_script_page
@@ -190,6 +213,8 @@ msgid ""
 "<i class=\"oi text-success\" data-icon=\"sentiment_satisfied\" role=\"img\" "
 "aria-label=\"Happy face\"/>"
 msgstr ""
+"<i class=\"oi text-success\" data-icon=\"sentiment_satisfied\" role=\"img\" "
+"aria-label=\"Față fericită\"/>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -206,17 +231,17 @@ msgstr "<span class=\"fw-bold\">Țară: </span>"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "<span class=\"o_stat_text\">Happy</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Fericit</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "<span class=\"o_stat_text\">Sessions</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Sesiuni</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "<span>Ongoing Sessions:</span>"
-msgstr ""
+msgstr "<span>Sesiuni în desfășurare:</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_step_view_form
@@ -287,7 +312,7 @@ msgstr "Activ"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/expertise_tags_autocomplete.js:0
 msgid "Add expertise"
-msgstr ""
+msgstr "Adaugă o competență"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -298,7 +323,7 @@ msgstr "Adăugați următorul cod în secțiunea &lt;head&gt; a site-ului dvs.:"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
 msgid "Add your notes here..."
-msgstr ""
+msgstr "Adăugați notițele aici..."
 
 #. module: im_livechat
 #: model:res.groups,name:im_livechat.im_livechat_group_manager
@@ -320,7 +345,7 @@ msgstr "Agent"
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel_member__agent_expertise_ids
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__agent_expertise_ids
 msgid "Agent Expertise"
-msgstr ""
+msgstr "Competența agentului"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_agent_partner_ids
@@ -333,18 +358,18 @@ msgstr "Agenți"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_agent_history_ids
 msgid "Agents (History)"
-msgstr ""
+msgstr "Agenți (istoric)"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__available_operator_ids_count
 msgid "Agents Connected"
-msgstr ""
+msgstr "Agenți conectați"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_agent_history_action
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat_agent
 msgid "Agents Performance"
-msgstr ""
+msgstr "Performanța agenților"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -352,6 +377,8 @@ msgid ""
 "Agents who are inactive in Odoo for more than 30 minutes will be considered "
 "disconnected."
 msgstr ""
+"Agenții care sunt inactivi în Odoo mai mult de 30 de minute vor fi "
+"considerați deconectați."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
@@ -374,7 +401,7 @@ msgstr "Întotdeauna"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/common/thread_patch.js:0
 msgid "An error occurred while processing your answer."
-msgstr ""
+msgstr "A apărut o eroare la procesarea răspunsului."
 
 #. module: im_livechat
 #. odoo-javascript
@@ -422,7 +449,7 @@ msgstr "Avatar 128"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__time_to_answer
 msgid "Average time in hours to give the first answer to the visitor"
-msgstr ""
+msgstr "Timpul mediu, în ore, până la primul răspuns oferit vizitatorului"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__operator_partner_id
@@ -432,12 +459,12 @@ msgstr "Operator Bot"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_bot_partner_ids
 msgid "Bots"
-msgstr ""
+msgstr "Boți"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_bot_history_ids
 msgid "Bots (History)"
-msgstr ""
+msgstr "Boți (istoric)"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__button_background_color
@@ -447,7 +474,7 @@ msgstr "Buton Culoare Fundal"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Button Colors"
-msgstr ""
+msgstr "Culorile butonului"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__button_text_color
@@ -458,18 +485,18 @@ msgstr "Buton Culoare Text"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__call_duration_hour
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__call_duration_hour
 msgid "Call Duration"
-msgstr ""
+msgstr "Durata apelului"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__call_history_ids
 msgid "Call History"
-msgstr ""
+msgstr "Istoric apeluri"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/common/livechat_command_dialog.xml:0
 msgid "Cancel"
-msgstr ""
+msgstr "Anulează"
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.canned_responses
@@ -482,6 +509,8 @@ msgstr "Răspunsuri predefinite"
 msgid ""
 "Cannot create history as it is only available for live chats: %(histories)s."
 msgstr ""
+"Nu se poate crea istoricul, deoarece este disponibil doar pentru "
+"conversațiile live: %(histories)s."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_channel_id
@@ -532,12 +561,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/embed/common/livechat_button.xml:0
 msgid "Chat with us"
-msgstr ""
+msgstr "Discutați cu noi"
 
 #. module: im_livechat
 #: model:ir.module.module,summary:base.module_im_livechat
 msgid "Chat with your website visitors"
-msgstr ""
+msgstr "Discutați cu vizitatorii site-ului"
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
@@ -546,6 +575,8 @@ msgid ""
 "Chat with your website visitors in real time by creating a\n"
 "                channel for each website where you want live chat enabled."
 msgstr ""
+"Discutați în timp real cu vizitatorii site-ului, creând un canal pentru "
+"fiecare site pe care doriți să activați conversația live."
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.chatbot_script_action
@@ -565,12 +596,12 @@ msgstr "Chatbot"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__chatbot_answers_path
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Chatbot Answers"
-msgstr ""
+msgstr "Răspunsuri chatbot"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__chatbot_answers_path_str
 msgid "Chatbot Answers (String)"
-msgstr ""
+msgstr "Răspunsuri chatbot (șir)"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__chatbot_current_step_id
@@ -622,7 +653,7 @@ msgstr "Pas Chatbot"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
 msgid "Chatbot answers"
-msgstr ""
+msgstr "Răspunsuri chatbot"
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.chatbot_config
@@ -639,7 +670,7 @@ msgstr ""
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_troubleshooting_answer_chrome_demo
 msgid "Chrome"
-msgstr ""
+msgstr "Chrome"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -653,12 +684,12 @@ msgstr "Închide"
 #: code:addons/im_livechat/static/src/core/common/thread_actions_patch.js:0
 #: code:addons/im_livechat/static/src/core/public_web/livechat_leave_dialog.xml:0
 msgid "Close Conversation"
-msgstr ""
+msgstr "Închide conversația"
 
 #. module: im_livechat
 #: model:ir.model.constraint,message:im_livechat.constraint_discuss_channel_livechat_end_dt_status_constraint
 msgid "Closed Live Chat session should not have a status."
-msgstr ""
+msgstr "O sesiune de conversație live închisă nu trebuie să aibă o stare."
 
 #. module: im_livechat
 #. odoo-javascript
@@ -667,16 +698,18 @@ msgid ""
 "Closing this will end the live chat with %(channel_name)s. Are you sure you "
 "want to proceed?"
 msgstr ""
+"Închiderea va termina conversația live cu %(channel_name)s. Sigur doriți să "
+"continuați?"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_expertise__color
 msgid "Color"
-msgstr ""
+msgstr "Culoare"
 
 #. module: im_livechat
 #: model:ir.model.constraint,message:im_livechat.constraint_im_livechat_channel_max_sessions_mode_greater_than_zero
 msgid "Concurrent session number should be greater than zero."
-msgstr ""
+msgstr "Numărul sesiunilor simultane trebuie să fie mai mare decât zero."
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.livechat_config
@@ -686,13 +719,13 @@ msgstr "Configurare"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Configure Channel"
-msgstr ""
+msgstr "Configurează canalul"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
 msgid "Connect"
-msgstr ""
+msgstr "Conectează"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_res_partner
@@ -713,19 +746,19 @@ msgstr "Conversație"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__channel_type
 msgid "Conversation Type"
-msgstr ""
+msgstr "Tip conversație"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/discuss_channel_model_patch.js:0
 msgid "Conversation has ended"
-msgstr ""
+msgstr "Conversația s-a încheiat"
 
 #. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/discuss_channel.py:0
 msgid "Conversation with %s"
-msgstr ""
+msgstr "Conversație cu %s"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_conversations
@@ -753,7 +786,7 @@ msgstr "Țară"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
 msgid "Country & Language"
-msgstr ""
+msgstr "Țară și limbă"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__country_id
@@ -805,17 +838,17 @@ msgstr "Client"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_customer_guest_ids
 msgid "Customers (Guests)"
-msgstr ""
+msgstr "Clienți (oaspeți)"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_customer_history_ids
 msgid "Customers (History)"
-msgstr ""
+msgstr "Clienți (istoric)"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_customer_partner_ids
 msgid "Customers (Partners)"
-msgstr ""
+msgstr "Clienți (parteneri)"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_tree
@@ -833,18 +866,18 @@ msgstr "Data:"
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Date: Last month"
-msgstr ""
+msgstr "Data: luna trecută"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Date: Last week"
-msgstr ""
+msgstr "Data: săptămâna trecută"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__livechat_looking_for_help_since_dt
 msgid "Datetime when the chat entered the 'Looking for help' status."
-msgstr ""
+msgstr "Data și ora la care conversația a intrat în starea „Caută ajutor”."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
@@ -857,7 +890,7 @@ msgstr "Zi a săptămânii"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__session_week_day
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__day_number
 msgid "Day of the Week"
-msgstr ""
+msgstr "Ziua săptămânii"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__button_background_color
@@ -905,7 +938,7 @@ msgstr "Rezumat"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/livechat_leave_dialog.xml:0
 msgid "Discard"
-msgstr ""
+msgstr "Renunță"
 
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_answer_discuss_demo
@@ -916,7 +949,7 @@ msgstr "Mesagerie"
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_answer_discuss_livechat_demo
 msgid "Discuss and Livechat"
-msgstr ""
+msgstr "Discuții și conversație live"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_discuss_channel
@@ -954,26 +987,26 @@ msgstr "Nume afișat"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Do not redirect visitors"
-msgstr ""
+msgstr "Nu redirecționa vizitatorii"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
 msgid "Download"
-msgstr ""
+msgstr "Descarcă"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/embed/common/feedback_panel/feedback_panel.xml:0
 msgid "Download Conversation"
-msgstr ""
+msgstr "Descarcă conversația"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
 #: code:addons/im_livechat/static/src/embed/common/feedback_panel/feedback_panel.xml:0
 msgid "Download a copy of this conversation"
-msgstr ""
+msgstr "Descărcați o copie a acestei conversații"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__duration
@@ -983,12 +1016,12 @@ msgstr "Durată"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__duration
 msgid "Duration (min)"
-msgstr ""
+msgstr "Durată (min)"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__duration
 msgid "Duration of the conversation (in minutes)"
-msgstr ""
+msgstr "Durata conversației (în minute)"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__duration
@@ -1009,18 +1042,20 @@ msgstr "Email"
 #. odoo-python
 #: code:addons/im_livechat/models/chatbot_script_step.py:0
 msgid "Email: "
-msgstr ""
+msgstr "E-mail: "
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__chatbot_enabled_condition
 msgid "Enable ChatBot"
-msgstr ""
+msgstr "Activează chatbotul"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
 msgid "Engage with visitors to convert leads or offer services."
 msgstr ""
+"Interacționați cu vizitatorii pentru a transforma pistele în clienți sau "
+"pentru a oferi servicii."
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1032,7 +1067,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Escalated"
-msgstr ""
+msgstr "Escaladat"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1048,22 +1083,22 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view_simple_modif
 msgid "Expertise"
-msgstr ""
+msgstr "Expertiză"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_list
 msgid "Expertises"
-msgstr ""
+msgstr "Expertize"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__session_expertise_ids
 msgid "Expertises used in this session"
-msgstr ""
+msgstr "Competențe folosite în această sesiune"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__session_expertises
 msgid "Expertises used in this session (String)"
-msgstr ""
+msgstr "Competențe folosite în această sesiune (șir)"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1085,12 +1120,12 @@ msgstr "PENTRU SITE-URI CONSTRUITE CU ODOO"
 #. odoo-python
 #: code:addons/im_livechat/models/discuss_channel.py:0
 msgid "File"
-msgstr ""
+msgstr "Fișier"
 
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_troubleshooting_answer_firefox_demo
 msgid "Firefox"
-msgstr ""
+msgstr "Firefox"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script__first_step_warning__first_step_invalid
@@ -1132,7 +1167,7 @@ msgstr "Vineri"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/embed/common/chat_window_patch.xml:0
 msgid "Give your feedback"
-msgstr ""
+msgstr "Oferiți feedback"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__sequence
@@ -1150,12 +1185,14 @@ msgid ""
 "Go to <strong>Website</strong> &gt; <strong>Configuration</strong> &gt; "
 "<strong>Settings</strong> &gt; <strong>General.</strong>"
 msgstr ""
+"Accesați <strong>Site web</strong> &gt; <strong>Configurare</strong> &gt; "
+"<strong>Setări</strong> &gt; <strong>General.</strong>"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/views/discuss_template.xml:0
 msgid "Go to Sessions"
-msgstr ""
+msgstr "Accesați sesiunile"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__guest_id
@@ -1165,19 +1202,19 @@ msgstr "Oaspete"
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "Rutare HTTP"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__handled_by_agent
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
 msgid "Handled by Agent"
-msgstr ""
+msgstr "Gestionat de agent"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__handled_by_bot
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
 msgid "Handled by Bot"
-msgstr ""
+msgstr "Gestionat de Bot"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_rating__5
@@ -1192,7 +1229,7 @@ msgstr "Fericit"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__has_call
 msgid "Has Call"
-msgstr ""
+msgstr "Are apel"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_res_users__has_access_livechat
@@ -1212,46 +1249,46 @@ msgstr "Bună, cu ce vă pot ajuta?"
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_member_history__help_status__provided
 msgid "Help Provided"
-msgstr ""
+msgstr "Ajutor oferit"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_agent_providing_help_history
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__agent_providing_help_history
 msgid "Help Provided (Agent)"
-msgstr ""
+msgstr "Ajutor oferit (agent)"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_member_history__help_status__requested
 msgid "Help Requested"
-msgstr ""
+msgstr "Ajutor solicitat"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_agent_requesting_help_history
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__agent_requesting_help_history
 msgid "Help Requested (Agent)"
-msgstr ""
+msgstr "Ajutor solicitat (agent)"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__help_status
 msgid "Help Status"
-msgstr ""
+msgstr "Starea solicitării de ajutor"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
 msgid "Help needed"
-msgstr ""
+msgstr "Este nevoie de ajutor"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "Here's a copy of your conversation with"
-msgstr ""
+msgstr "Iată o copie a conversației cu"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/livechat_leave_dialog.xml:0
 msgid "Here's the most recent message:"
-msgstr ""
+msgstr "Iată cel mai recent mesaj:"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__hide_button
@@ -1267,6 +1304,7 @@ msgstr "Istoric"
 #: model:ir.model.constraint,message:im_livechat.constraint_im_livechat_channel_member_history_partner_id_or_guest_3b134909
 msgid "History should either be linked to a partner or a guest but not both"
 msgstr ""
+"Istoricul trebuie asociat fie unui partener, fie unui oaspete, nu ambilor"
 
 #. module: im_livechat
 #: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing
@@ -1280,7 +1318,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Hour of Day"
-msgstr ""
+msgstr "Ora din zi"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__start_date_hour
@@ -1349,6 +1387,8 @@ msgstr "ID"
 #: model:ir.model.fields,help:im_livechat.field_chatbot_message__user_raw_script_answer_id
 msgid "Id of the script answer. Useful for statistics when answer is deleted."
 msgstr ""
+"ID-ul răspunsului din script. Este util pentru statistici când răspunsul "
+"este șters."
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__max_sessions_mode
@@ -1356,6 +1396,8 @@ msgid ""
 "If limited, operators will only handle the selected number of sessions at a "
 "time."
 msgstr ""
+"Dacă este limitat, operatorii vor gestiona simultan doar numărul selectat de "
+"sesiuni."
 
 #. module: im_livechat
 #: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_documentation_exit
@@ -1391,19 +1433,19 @@ msgstr "Imagine 512"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
 msgid "In Call"
-msgstr ""
+msgstr "În apel"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/views/boolean_phone/boolean_phone.xml:0
 msgid "In a Call"
-msgstr ""
+msgstr "Într-un apel"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/views/boolean_phone/boolean_phone.js:0
 msgid "In call"
-msgstr ""
+msgstr "În timpul apelului"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1426,6 +1468,8 @@ msgstr "Informații"
 msgid ""
 "Invalid URL '%s'. The Review Link must start with 'http://' or 'https://'."
 msgstr ""
+"Adresa URL „%s” nu este validă. Linkul de recenzie trebuie să înceapă cu „"
+"http://” sau „https://”."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__is_forward_operator_child
@@ -1435,7 +1479,7 @@ msgstr "Este copil al operatorului de redirecționare"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_is_escalated
 msgid "Is session escalated"
-msgstr ""
+msgstr "Sesiunea a fost escaladată"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1451,7 +1495,7 @@ msgstr "Aderă la canal"
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_discuss_call_history
 msgid "Keep the call history"
-msgstr ""
+msgstr "Păstrează istoricul apelurilor"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_channel_member_history
@@ -1483,7 +1527,7 @@ msgstr "Limbă"
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__livechat_lang_id
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__lang_id
 msgid "Lang of the visitor of the channel."
-msgstr ""
+msgstr "Limba vizitatorului canalului."
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1503,12 +1547,12 @@ msgstr "Limbi"
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view_simple_modif
 msgid "Languages you can speak for live chat conversations."
-msgstr ""
+msgstr "Limbile în care puteți conversa în sesiunile live."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
 msgid "Last 24 Hours"
-msgstr ""
+msgstr "Ultimele 24 de ore"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
@@ -1576,22 +1620,24 @@ msgid ""
 "Leaving will end the live chat with %(channel_name)s. Are you sure you want "
 "to continue?"
 msgstr ""
+"Plecarea va încheia conversația live cu %(channel_name)s. Sigur doriți să "
+"continuați?"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/common/close_confirmation.js:0
 msgid "Leaving will end the live chat. Do you want to proceed?"
-msgstr ""
+msgstr "Plecarea va încheia conversația live. Doriți să continuați?"
 
 #. module: im_livechat
 #: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_module_info_expert_text_step_demo
 msgid "Let me check if I can connect you with the right expert..."
-msgstr ""
+msgstr "Verific dacă vă pot conecta cu specialistul potrivit..."
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel__max_sessions_mode__limited
 msgid "Limited"
-msgstr ""
+msgstr "Limitat"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__channel_type__livechat
@@ -1612,7 +1658,7 @@ msgstr "Live Chat Button"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_search
 msgid "Live Chat Channel Search"
-msgstr ""
+msgstr "Căutare canale de conversație live"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_channel_action
@@ -1620,37 +1666,37 @@ msgstr ""
 #: model:ir.ui.menu,name:im_livechat.livechat_channels_config
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_list
 msgid "Live Chat Channels"
-msgstr ""
+msgstr "Canale de conversație live"
 
 #. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/discuss_channel.py:0
 #: model:ir.actions.report,name:im_livechat.action_report_livechat_conversation
 msgid "Live Chat Conversation"
-msgstr ""
+msgstr "Conversație live"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_expertise
 #: model:ir.model.fields,field_description:im_livechat.field_res_users__livechat_expertise_ids
 #: model:ir.model.fields,field_description:im_livechat.field_res_users_settings__livechat_expertise_ids
 msgid "Live Chat Expertise"
-msgstr ""
+msgstr "Competență pentru conversații live"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view_simple_modif
 msgid "Live Chat Name"
-msgstr ""
+msgstr "Nume conversație live"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_note
 msgid "Live Chat Note"
-msgstr ""
+msgstr "Notă conversație live"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_failure
 msgid "Live Chat Session Failure"
-msgstr ""
+msgstr "Eșec sesiune de conversație live"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_graph
@@ -1658,24 +1704,24 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_graph
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_pivot
 msgid "Live Chat Support Statistics"
-msgstr ""
+msgstr "Statistici asistență prin conversație live"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Live Chat Window"
-msgstr ""
+msgstr "Fereastră de conversație live"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
 #: model_terms:ir.ui.view,arch_db:im_livechat.view_partner_form
 msgid "Live Chats"
-msgstr ""
+msgstr "Conversații live"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__session_livechat_channel_id
 msgid "Live chat channel"
-msgstr ""
+msgstr "Canal de chat live"
 
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_answer_livechat_demo
@@ -1699,17 +1745,17 @@ msgstr "Număr canale Livechat"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_channel_member_history_ids
 msgid "Livechat Channel Member History"
-msgstr ""
+msgstr "Istoricul membrilor canalului de chat live"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_channel_rule
 msgid "Livechat Channel Rule"
-msgstr ""
+msgstr "Regulă Canal Livechat"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_expertise_ids
 msgid "Livechat Expertise"
-msgstr ""
+msgstr "Competență pentru chat live"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.unit_embed_suite
@@ -1719,7 +1765,7 @@ msgstr "Teste externe Livechat"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_res_users__livechat_is_in_call
 msgid "Livechat Is In Call"
-msgstr ""
+msgstr "Agentul de chat live este într-un apel"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_res_users__livechat_lang_ids
@@ -1729,44 +1775,44 @@ msgstr "Limbi Livechat"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_matches_self_expertise
 msgid "Livechat Matches Self Expertise"
-msgstr ""
+msgstr "Potrivire cu propriile competențe pentru chat live"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_matches_self_lang
 msgid "Livechat Matches Self Lang"
-msgstr ""
+msgstr "Potrivire cu propria limbă pentru chat live"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel_member__livechat_member_history_ids
 msgid "Livechat Member History"
-msgstr ""
+msgstr "Istoricul membrilor chatului live"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel_member__livechat_member_type
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__livechat_member_type
 msgid "Livechat Member Type"
-msgstr ""
+msgstr "Tip de membru al chatului live"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_outcome
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__session_outcome
 msgid "Livechat Outcome"
-msgstr ""
+msgstr "Rezultatul chatului live"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_call_history__livechat_participant_history_ids
 msgid "Livechat Participant History"
-msgstr ""
+msgstr "Istoricul participanților la chatul live"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_rating
 msgid "Livechat Rating Text"
-msgstr ""
+msgstr "Textul evaluării chatului live"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_status
 msgid "Livechat Status"
-msgstr ""
+msgstr "Starea chatului live"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_report_channel
@@ -1790,7 +1836,7 @@ msgstr "Limbi Livechat"
 #: code:addons/im_livechat/static/src/core/web/store_service_patch.js:0
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_status__need_help
 msgid "Looking for help"
-msgstr ""
+msgstr "Caută ajutor"
 
 #. module: im_livechat
 #: model:ir.model.constraint,message:im_livechat.constraint_discuss_channel_livechat_looking_for_help_since_dt_constraint
@@ -1798,12 +1844,14 @@ msgid ""
 "Looking for help date should only be set if the channel is looking for help "
 "and must be empty otherwise."
 msgstr ""
+"Data căutării de ajutor trebuie completată numai dacă acest canal caută "
+"ajutor; în caz contrar, trebuie să fie goală."
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.js:0
 msgid "Looking for help for: %(duration)s"
-msgstr ""
+msgstr "Caută ajutor de: %(duration)s"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_discuss_channel_rtc_session
@@ -1818,12 +1866,12 @@ msgstr "Ordine Reconciliere"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__max_sessions
 msgid "Maximum Sessions"
-msgstr ""
+msgstr "Număr maxim de sesiuni"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__max_sessions
 msgid "Maximum number of concurrent sessions per operator."
-msgstr ""
+msgstr "Numărul maxim de sesiuni simultane pentru fiecare operator."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__member_id
@@ -1835,18 +1883,18 @@ msgstr "Membru"
 #: model:ir.ui.menu,name:im_livechat.menu_member_history
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_member_history_view_tree
 msgid "Member History"
-msgstr ""
+msgstr "Istoricul membrilor"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_member_history_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_member_history_view_tree
 msgid "Member Type"
-msgstr ""
+msgstr "Tip de membru"
 
 #. module: im_livechat
 #: model:ir.model.constraint,message:im_livechat.constraint_im_livechat_channel_member_history_member_id_unique
 msgid "Members can only be linked to one history"
-msgstr ""
+msgstr "Membrii pot fi asociați unui singur istoric"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_mail_message
@@ -1862,12 +1910,12 @@ msgstr "Mesaje"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__nbr_message
 msgid "Messages per Session"
-msgstr ""
+msgstr "Mesaje pe sesiune"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_kanban
 msgid "Messages:"
-msgstr ""
+msgstr "Mesaje:"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_week_day__0
@@ -1896,7 +1944,7 @@ msgstr "Nume"
 #: model:im_livechat.channel,button_text:im_livechat.im_livechat_channel_data
 #: model:im_livechat.channel,button_text:im_livechat.support_bot_channel_demo
 msgid "Need help? Chat with us."
-msgstr ""
+msgstr "Ai nevoie de ajutor? Discută cu noi."
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_rating__3
@@ -1915,7 +1963,7 @@ msgstr "Neutru"
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_outcome__no_answer
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_report_channel__session_outcome__no_answer
 msgid "Never Answered"
-msgstr ""
+msgstr "Fără răspuns"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1930,27 +1978,29 @@ msgid ""
 "Nickname used in live chat conversations to protect your real name from "
 "visitors."
 msgstr ""
+"Porecla folosită în conversațiile live pentru a-ți proteja numele real față "
+"de vizitatori."
 
 #. module: im_livechat
 #: model:res.groups.privilege,placeholder:im_livechat.res_groups_privilege_live_chat
 msgid "No"
-msgstr ""
+msgstr "Nu"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__block_assignment_during_call
 msgid "No Chats During Call"
-msgstr ""
+msgstr "Fără conversații în timpul apelului"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_failure__no_failure
 msgid "No Failure"
-msgstr ""
+msgstr "Fără eroare"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
 msgid "No Livechat Session!"
-msgstr ""
+msgstr "Nicio sesiune de chat live!"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1961,13 +2011,13 @@ msgstr "Nu există colaboratori disponibili, vă rugăm să încercați mai târ
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.chatbot_script_action
 msgid "No chatbots found. Let's create one!"
-msgstr ""
+msgstr "Nu s-a găsit niciun chatbot. Hai să creăm unul!"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/views/discuss_template.xml:0
 msgid "No conversation found"
-msgstr ""
+msgstr "Nicio conversație găsită"
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.discuss_channel_action
@@ -1988,7 +2038,7 @@ msgstr "Nu a fost găsit istoric"
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_channel_config_action
 msgid "No live chat channel found. Let's create one!"
-msgstr ""
+msgstr "Nu s-a găsit niciun canal de chat live. Hai să creăm unul!"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1998,13 +2048,13 @@ msgstr ""
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_report_channel__session_outcome__no_agent
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "No one Available"
-msgstr ""
+msgstr "Nimeni disponibil"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Not Answered"
-msgstr ""
+msgstr "Fără răspuns"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__livechat_note
@@ -2012,6 +2062,8 @@ msgid ""
 "Note about the session, visible to all internal users having access to the "
 "session."
 msgstr ""
+"Notă despre sesiune, vizibilă tuturor utilizatorilor interni care au acces "
+"la aceasta."
 
 #. module: im_livechat
 #. odoo-javascript
@@ -2022,7 +2074,7 @@ msgstr "Note"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Notification Text"
-msgstr ""
+msgstr "Textul notificării"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__chatbot_script_count
@@ -2032,12 +2084,12 @@ msgstr "Număr de Chatboți"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__ongoing_session_count
 msgid "Number of Ongoing Sessions"
-msgstr ""
+msgstr "Numărul sesiunilor în desfășurare"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_res_users__livechat_ongoing_session_count
 msgid "Number of Ongoing sessions"
-msgstr ""
+msgstr "Numărul sesiunilor în desfășurare"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -2045,11 +2097,13 @@ msgid ""
 "Number of conversations and percentage of positive ratings in the last 30 "
 "days"
 msgstr ""
+"Numărul conversațiilor și procentul evaluărilor pozitive din ultimele 30 de "
+"zile"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__nbr_channel
 msgid "Number of conversations in the past 30 days"
-msgstr ""
+msgstr "Numărul conversațiilor din ultimele 30 de zile"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__nbr_message
@@ -2064,12 +2118,12 @@ msgstr "Odoo"
 #. module: im_livechat
 #: model:ir.model.constraint,message:im_livechat.constraint_im_livechat_channel_member_history_channel_id_guest_id_unique
 msgid "One guest can only be linked to one history on a channel"
-msgstr ""
+msgstr "Un vizitator poate fi asociat unui singur istoric pentru un canal"
 
 #. module: im_livechat
 #: model:ir.model.constraint,message:im_livechat.constraint_im_livechat_channel_member_history_channel_id_partner_id_unique
 msgid "One partner can only be linked to one history on a channel"
-msgstr ""
+msgstr "Un partener poate fi asociat unui singur istoric pentru un canal"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
@@ -2079,12 +2133,12 @@ msgstr "În curs de desfășurare"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Ongoing Conversations"
-msgstr ""
+msgstr "Conversații în desfășurare"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Ongoing Sessions"
-msgstr ""
+msgstr "Sesiuni în curs"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__triggering_answer_ids
@@ -2095,23 +2149,23 @@ msgstr "Doar dacă"
 #. odoo-python
 #: code:addons/im_livechat/models/im_livechat_channel.py:0
 msgid "Only Live Chat operators can join Live Chat channels"
-msgstr ""
+msgstr "Numai operatorii de chat live se pot alătura canalelor de chat live"
 
 #. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/discuss_channel.py:0
 msgid "Only customers can rate a live chat conversation."
-msgstr ""
+msgstr "Numai clienții pot evalua o conversație live."
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__chatbot_enabled_condition__only_if_operator
 msgid "Only when an operator is available"
-msgstr ""
+msgstr "Numai când este disponibil un operator"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__chatbot_enabled_condition__only_if_no_operator
 msgid "Only when no operator is available"
-msgstr ""
+msgstr "Numai când nu este disponibil niciun operator"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__auto_popup
@@ -2121,7 +2175,7 @@ msgstr "Deschide automat"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__operator_expertise_ids
 msgid "Operator Expertise"
-msgstr ""
+msgstr "Competențele operatorului"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_expertise__user_ids
@@ -2160,7 +2214,7 @@ msgstr "Partener"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Percentage of positive ratings in the last 30 days"
-msgstr ""
+msgstr "Procentul evaluărilor pozitive din ultimele 30 de zile"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__question_phone
@@ -2171,7 +2225,7 @@ msgstr "Telefon"
 #. odoo-python
 #: code:addons/im_livechat/models/chatbot_script_step.py:0
 msgid "Phone: "
-msgstr ""
+msgstr "Telefon: "
 
 #. module: im_livechat
 #: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_just_looking
@@ -2187,7 +2241,7 @@ msgstr "Întrebare"
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_ir_qweb
 msgid "Qweb"
-msgstr ""
+msgstr "Qweb"
 
 #. module: im_livechat
 #. odoo-python
@@ -2206,7 +2260,7 @@ msgstr "Evaluare"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__rating_percentage
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_list
 msgid "Rating (%)"
-msgstr ""
+msgstr "Evaluare (%)"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rating_percentage_satisfaction
@@ -2222,7 +2276,7 @@ msgstr "Text evaluare"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/embed/common/feedback_panel/feedback_panel.xml:0
 msgid "Receive a copy of this conversation"
-msgstr ""
+msgstr "Primește o copie a acestei conversații"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__redirect_link
@@ -2245,12 +2299,12 @@ msgstr "Mesaj email asociat"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.xml:0
 msgid "Relevant to your expertise"
-msgstr ""
+msgstr "Relevant pentru competențele tale"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__remaining_session_capacity
 msgid "Remaining Session Capacity"
-msgstr ""
+msgstr "Capacitatea rămasă pentru sesiuni"
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat
@@ -2260,7 +2314,7 @@ msgstr "Raportare"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_looking_for_help_since_dt
 msgid "Requested At"
-msgstr ""
+msgstr "Solicitat la"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -2275,7 +2329,7 @@ msgstr "Resetare la culori implicite"
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_pivot
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_pivot
 msgid "Response Time"
-msgstr ""
+msgstr "Timp de răspuns"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -2292,7 +2346,7 @@ msgstr "Se repornește conversația..."
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__review_link
 msgid "Review Link"
-msgstr ""
+msgstr "Link pentru recenzie"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rule_ids
@@ -2304,7 +2358,7 @@ msgstr "Reguli"
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_troubleshooting_answer_safari_demo
 msgid "Safari"
-msgstr ""
+msgstr "Safari"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__rating
@@ -2341,7 +2395,7 @@ msgstr "Script (extern)"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__script_external_text
 msgid "Script (external) Text"
-msgstr ""
+msgstr "Textul scriptului (extern)"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__script_step_id
@@ -2356,12 +2410,12 @@ msgstr "Pași Script"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
 msgid "Search Agent"
-msgstr ""
+msgstr "Caută agent"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_member_history_view_search
 msgid "Search History"
-msgstr ""
+msgstr "Caută în istoric"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
@@ -2389,7 +2443,7 @@ msgstr "Trimite"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
 msgid "Send conversation"
-msgstr ""
+msgstr "Trimite conversația"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__sequence
@@ -2406,7 +2460,7 @@ msgstr "Dată sesiune"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__session_duration_hour
 msgid "Session Duration"
-msgstr ""
+msgstr "Durata sesiunii"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_form
@@ -2416,23 +2470,23 @@ msgstr "Formular Sesiune"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Session Limits"
-msgstr ""
+msgstr "Limitele sesiunii"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__session_outcome
 msgid "Session Outcome"
-msgstr ""
+msgstr "Rezultatul sesiunii"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_start_hour
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__session_start_hour
 msgid "Session Start Hour"
-msgstr ""
+msgstr "Ora de început a sesiunii"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_end_dt
 msgid "Session end date"
-msgstr ""
+msgstr "Data de încheiere a sesiunii"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__livechat_end_dt
@@ -2440,12 +2494,13 @@ msgid ""
 "Session is closed when either the visitor or the last agent leaves the "
 "conversation."
 msgstr ""
+"Sesiunea se închide când vizitatorul sau ultimul agent părăsește conversația."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__call_percentage
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__percentage_of_calls
 msgid "Session with Calls (%)"
-msgstr ""
+msgstr "Sesiuni cu apeluri (%)"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.discuss_channel_action
@@ -2463,12 +2518,12 @@ msgstr "Sesiuni"
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_report_channel_action
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat_channel
 msgid "Sessions Analysis"
-msgstr ""
+msgstr "Analiza sesiunilor"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__max_sessions_mode
 msgid "Sessions per Operator"
-msgstr ""
+msgstr "Sesiuni per operator"
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.chatbot_script_action
@@ -2478,6 +2533,11 @@ msgid ""
 "and generate leads or\n"
 "                support tickets automatically."
 msgstr ""
+"Configurează un bot cu un script definit pentru a discuta cu vizitatorii "
+"site-ului.\n"
+"                Califică și redirecționează conversațiile către agenții de "
+"chat live și generează automat\n"
+"                piste de vânzare sau tichete de asistență."
 
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_answer_setup_demo
@@ -2504,13 +2564,13 @@ msgstr "Afișează cu notificare"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/thread_actions.js:0
 msgid "Someone has already joined this conversation"
-msgstr ""
+msgstr "Cineva s-a alăturat deja acestei conversații"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view_simple_modif
 msgid "Spoken Languages"
-msgstr ""
+msgstr "Limbi vorbite"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__start_date
@@ -2520,7 +2580,7 @@ msgstr "Data începerii sesiunii"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__start_date_minutes
 msgid "Start Date of session, truncated to minutes"
-msgstr ""
+msgstr "Data de început a sesiunii, rotunjită la minut"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__start_hour
@@ -2531,7 +2591,7 @@ msgstr "Ora de începere a sesiunii"
 #: model_terms:ir.actions.act_window,help:im_livechat.discuss_channel_action
 #: model_terms:ir.actions.act_window,help:im_livechat.discuss_channel_action_from_livechat_channel
 msgid "Start a conversation to populate your chat history."
-msgstr ""
+msgstr "Începe o conversație pentru a completa istoricul chatului."
 
 #. module: im_livechat
 #. odoo-javascript
@@ -2575,13 +2635,13 @@ msgstr "Duminică"
 #. module: im_livechat
 #: model:chatbot.script,title:im_livechat.chatbot_script_support_bot_demo
 msgid "Support Bot"
-msgstr ""
+msgstr "Bot de asistență"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/composer_patch.js:0
 msgid "Tab to next live chat"
-msgstr ""
+msgstr "Treci la următorul chat live"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__text
@@ -2603,7 +2663,7 @@ msgstr "Mulțumim pentru feedback-ul dvs."
 #. odoo-python
 #: code:addons/im_livechat/models/im_livechat_channel.py:0
 msgid "The URL Regex '%(regex)s' is not valid."
-msgstr ""
+msgstr "Expresia regulată pentru URL „%(regex)s” nu este validă."
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__channel_id
@@ -2670,12 +2730,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/common/discuss_channel_model_patch.js:0
 msgid "This live chat conversation has ended."
-msgstr ""
+msgstr "Această conversație live s-a încheiat."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "This message has been removed"
-msgstr ""
+msgstr "Acest mesaj a fost eliminat"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_res_users_settings__livechat_username
@@ -2691,12 +2751,12 @@ msgstr "Joi"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_member_history__session_duration_hour
 msgid "Time spent by the persona in the session in hours"
-msgstr ""
+msgstr "Timpul petrecut de persoană în sesiune, în ore"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__auto_popup_timer
 msgid "Time to Open"
-msgstr ""
+msgstr "Timp până la deschidere"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_response
@@ -2729,6 +2789,13 @@ msgid ""
 "installed on your server to geolocate visitors. Without it, rules that "
 "include country restrictions will be ignored."
 msgstr ""
+"Pentru a aplica regula numai anumitor pagini ale site-ului, introdu o "
+"expresie regulată pentru URL, de exemplu /shop. Aceasta va corespunde "
+"oricărei pagini care începe cu /shop, precum /shop/product. Lasă câmpul gol "
+"pentru a aplica regula tuturor paginilor.<br/>\n"
+"                                    Pentru bazele de date locale, GeoIP "
+"trebuie instalat pe server pentru a geolocaliza vizitatorii. Fără acesta, "
+"regulile care includ restricții de țară vor fi ignorate."
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_agent_history_action
@@ -2738,6 +2805,9 @@ msgid ""
 "Track and improve live chat performance with insights on session activity, "
 "response times, customer ratings, and call interactions."
 msgstr ""
+"Urmărește și îmbunătățește performanța chatului live cu informații despre "
+"activitatea sesiunilor, timpii de răspuns, evaluările clienților și "
+"interacțiunile prin apeluri."
 
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_answer_troubleshooting_demo
@@ -2772,7 +2842,7 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_utm_mixin
 msgid "UTM Mixin"
-msgstr ""
+msgstr "Mixin UTM"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__uuid
@@ -2787,7 +2857,7 @@ msgstr "UUID"
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Unhappy"
-msgstr ""
+msgstr "Nefericit"
 
 #. module: im_livechat
 #. odoo-python
@@ -2805,7 +2875,7 @@ msgstr "Unlimited"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
 msgid "Unread"
-msgstr ""
+msgstr "Necitit"
 
 #. module: im_livechat
 #: model_terms:digest.tip,tip_description:im_livechat.digest_tip_im_livechat_0
@@ -2814,6 +2884,9 @@ msgid ""
 "To load a canned response, start your sentence with '::' and select the "
 "template."
 msgstr ""
+"Folosește răspunsuri predefinite pentru a crea șabloane de mesaje în "
+"aplicația Chat live. Pentru a încărca un răspuns predefinit, începe "
+"propoziția cu „::” și selectează șablonul."
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_res_users
@@ -2831,7 +2904,7 @@ msgstr "Utilizator Livechat"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_message__user_raw_script_answer_id
 msgid "User Raw Script Answer"
-msgstr ""
+msgstr "Răspuns brut al utilizatorului la script"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_res_users_settings
@@ -2851,19 +2924,19 @@ msgstr "Răspuns brut utilizator"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "View Channel"
-msgstr ""
+msgstr "Vezi canalul"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/livechat_rating_notification_message.xml:0
 msgid "View Chat"
-msgstr ""
+msgstr "Vezi conversația"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
 msgid "View Contact"
-msgstr ""
+msgstr "Vezi contactul"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -2880,19 +2953,19 @@ msgstr "Vizitator"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/common/thread_patch.js:0
 msgid "Visitor is disconnected"
-msgstr ""
+msgstr "Vizitatorul s-a deconectat"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/common/thread_patch.js:0
 msgid "Visitor is disconnected since %(time)s"
-msgstr ""
+msgstr "Vizitatorul este deconectat de la %(time)s"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/common/thread_patch.js:0
 msgid "Visitor is disconnected since yesterday at %(time)s"
-msgstr ""
+msgstr "Vizitatorul este deconectat de ieri de la %(time)s"
 
 #. module: im_livechat
 #. odoo-python
@@ -2906,6 +2979,8 @@ msgid ""
 "Visitors who leave a positive review will be redirected to this optional "
 "link."
 msgstr ""
+"Vizitatorii care lasă o recenzie pozitivă vor fi redirecționați către acest "
+"link opțional."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__web_page
@@ -2937,7 +3012,7 @@ msgstr "Bun venit la CompanyName! 👋"
 #. module: im_livechat
 #: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_initial_step_demo
 msgid "Welcome to the Support! How can I assist you today?"
-msgstr ""
+msgstr "Bine ai venit la asistență! Cu ce te pot ajuta astăzi?"
 
 #. module: im_livechat
 #: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_dispatch
@@ -2948,12 +3023,12 @@ msgstr "Ce căutați?"
 #. module: im_livechat
 #: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_troubleshooting_step_browser_demo
 msgid "What browser are you using?"
-msgstr ""
+msgstr "Ce browser folosești?"
 
 #. module: im_livechat
 #: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_module_selection_demo
 msgid "What module are you interested in?"
-msgstr ""
+msgstr "De ce modul ești interesat?"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_chatbot_script_step__operator_expertise_ids
@@ -2963,11 +3038,13 @@ msgid ""
 "When forwarding live chat conversations, the chatbot will prioritize users "
 "with matching expertise."
 msgstr ""
+"La redirecționarea conversațiilor live, chatbotul va acorda prioritate "
+"utilizatorilor cu competențe corespunzătoare."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__has_call
 msgid "Whether the session had a call"
-msgstr ""
+msgstr "Indică dacă sesiunea a inclus un apel"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_res_users__livechat_is_in_call
@@ -2975,11 +3052,13 @@ msgid ""
 "Whether the user is in a call, only available if the user is in a live chat "
 "agent"
 msgstr ""
+"Indică dacă utilizatorul este într-un apel; disponibil numai dacă "
+"utilizatorul este agent de chat live"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__block_assignment_during_call
 msgid "While on a call, agents will not receive new conversations."
-msgstr ""
+msgstr "În timpul unui apel, agenții nu vor primi conversații noi."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -2989,7 +3068,7 @@ msgstr "Widget"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Window Colors"
-msgstr ""
+msgstr "Culorile ferestrei"
 
 #. module: im_livechat
 #: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_email
@@ -3002,7 +3081,7 @@ msgstr "Te deranjează să-ți lăsăm adresa de email pentru a te putea contact
 #. odoo-python
 #: code:addons/im_livechat/controllers/channel.py:0
 msgid "Write expertises: Only LINK and UNLINK commands are allowed."
-msgstr ""
+msgstr "Scrierea competențelor: sunt permise numai comenzile LINK și UNLINK."
 
 #. module: im_livechat
 #. odoo-javascript
@@ -3067,7 +3146,7 @@ msgstr "ex: Bună, aveți nevoie de ajutor?"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "e.g. Need help? Chat with us."
-msgstr ""
+msgstr "de ex. Ai nevoie de ajutor? Discută cu noi."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -3078,19 +3157,19 @@ msgstr "e.g. YourWebsite.com"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/channel_invitation_patch.xml:0
 msgid "in a call"
-msgstr ""
+msgstr "într-un apel"
 
 #. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/discuss_channel.py:0
 msgid "invited %s to the conversation"
-msgstr ""
+msgstr "l-a invitat pe %s în conversație"
 
 #. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/discuss_channel.py:0
 msgid "joined the conversation"
-msgstr ""
+msgstr "s-a alăturat conversației"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -3116,7 +3195,7 @@ msgstr "gestionarea mesajelor websocket"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "width:40px; height:40px; border-radius:0.5rem; display:block;"
-msgstr ""
+msgstr "width:40px; height:40px; border-radius:0.5rem; display:block;"
 
 #~ msgid ""
 #~ "Go to <strong>Website</strong> &gt; <strong>Configuration</strong> &gt; "
