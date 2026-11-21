@@ -68,6 +68,33 @@
                 </t>
             </t>
         </BuilderRow>
+        <BuilderRow label.translate="Letter Spacing" tooltip.translate="Space between letters, as a % of the font size. Negative values are allowed (e.g. -2 tighter, 10 wider)." action="'customizeWebsiteVariable'">
+            <BuilderNumberInput id="'headings_letter_spacing_opt'" title.translate="Heading 1" actionParam="'headings-letter-spacing'" default="null" unit="'%'" saveUnit="''"/>
+            <t t-set-slot="collapse">
+                <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
+                    <BuilderRow level="1" label="heading_label + ' ' + depth">
+                        <BuilderNumberInput id="'h' + depth + '_letter_spacing_opt'" actionParam="'h' + depth + '-letter-spacing'" default="null" unit="'%'" saveUnit="''"/>
+                        <BuilderButton
+                            t-if="this.getItemValue('h' + depth + '_letter_spacing_opt') !== this.getItemValue('headings_letter_spacing_opt')"
+                            actionParam="'h' + depth + '-letter-spacing'"
+                            className="'btn-danger-color-hover'"
+                            icon="'close'"
+                            title.translate="Reset to Headings Letter Spacing"/>
+                    </BuilderRow>
+                </t>
+                <t t-foreach="used_display_font_sizes" t-as="depth" t-key="depth">
+                    <BuilderRow level="1" label="display_label + ' ' + depth">
+                        <BuilderNumberInput id="'display_' + depth + '_letter_spacing_opt'" actionParam="'display-' + depth + '-letter-spacing'" default="null" unit="'%'" saveUnit="''"/>
+                        <BuilderButton
+                            t-if="this.getItemValue('display_' + depth + '_letter_spacing_opt') !== this.getItemValue('headings_letter_spacing_opt')"
+                            actionParam="'display-' + depth + '-letter-spacing'"
+                            className="'btn-danger-color-hover'"
+                            icon="'close'"
+                            title.translate="Reset to Headings Letter Spacing"/>
+                    </BuilderRow>
+                </t>
+            </t>
+        </BuilderRow>
         <BuilderRow label.translate="Margins" tooltip.translate="Heading 1" action="'customizeWebsiteVariable'">
             <BuilderNumberInput title.translate="Top" actionParam="'headings-margin-top'" unit="'px'" saveUnit="'px'"/>
             <BuilderNumberInput title.translate="Bottom" actionParam="'headings-margin-bottom'" unit="'px'" saveUnit="'px'"/>

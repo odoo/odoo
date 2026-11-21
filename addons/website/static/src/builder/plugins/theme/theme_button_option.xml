@@ -66,6 +66,15 @@
             boldVariables="['btn-font-weight-bold']"
             fontVariable="'buttons-font'"
         />
+        <BuilderRow label.translate="Letter Spacing" tooltip.translate="Space between letters, as a % of the font size. Negative values are allowed (e.g. -2 tighter, 10 wider). Follows Paragraph until changed." action="'customizeWebsiteVariable'">
+            <BuilderNumberInput actionParam="'btn-letter-spacing'" default="null" unit="'%'" saveUnit="''"/>
+            <BuilderButton
+                t-if="this.state.isLetterSpacingSpecified"
+                actionParam="'btn-letter-spacing'"
+                className="'btn-danger-color-hover'"
+                icon="'close'"
+                title.translate="Reset to Paragraph Letter Spacing"/>
+        </BuilderRow>
         <BuilderRow label.translate="Round Corners" action="'customizeWebsiteVariable'">
             <BuilderNumberInput actionParam="'btn-border-radius'" unit="'px'" saveUnit="'rem'"/>
             <t t-set-slot="collapse">
