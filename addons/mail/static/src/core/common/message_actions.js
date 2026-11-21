@@ -55,12 +55,12 @@ registerMessageAction("reaction", {
             : rootRef?.()?.querySelector(`[name="${this.id}"]`);
         return owner.reactionPicker.open(() => anchorEl);
     },
-    setup: ({ message, owner, thread }) =>
+    setup: ({ message, owner }) =>
         (owner.reactionPicker = useEmojiPicker(undefined, {
             onSelect: (emoji) => {
                 const reaction = message.reactions.find(
                     ({ content, personas }) =>
-                        content === emoji && thread.effectiveSelf.in(personas)
+                        content === emoji && message.effectiveSelf.in(personas)
                 );
                 if (!reaction) {
                     message.react(emoji);
