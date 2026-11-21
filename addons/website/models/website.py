@@ -342,8 +342,53 @@ class Website(models.CachedModel):
         if 'sequence' in values or 'company_id' in values:
             (original_company | self.company_id)._compute_website_id()
 
+<<<<<<< b5ca7aee6b4f6961097ea00d4d549fe90fe0dfaa
         if 'sequence' in values:
             self._ensure_default_website_consistency()
+||||||| d4e6fd3ab9bf36ff5e96e98925933c54f5c7fdb0
+        if 'cookies_bar' in values:
+            existing_policy_page = self.env['website.page'].search([
+                ('website_id', '=', self.id),
+                ('url', '=', '/cookie-policy'),
+            ])
+            if not values['cookies_bar']:
+                existing_policy_page.unlink()
+            elif not existing_policy_page:
+                cookies_view = self.env.ref('website.cookie_policy', raise_if_not_found=False)
+                if cookies_view:
+                    cookies_view.with_context(website_id=self.id).write({'website_id': self.id})
+                    specific_cook_view = self.with_context(website_id=self.id).viewref('website.cookie_policy')
+                    self.env['website.page'].create({
+                        'is_published': True,
+                        'website_indexed': False,
+                        'url': '/cookie-policy',
+                        'website_id': self.id,
+                        'view_id': specific_cook_view.id,
+                    })
+=======
+        if 'cookies_bar' in values:
+            existing_policy_pages = self.env['website.page'].search([
+                ('website_id', 'in', self.ids),
+                ('url', '=', '/cookie-policy'),
+            ])
+            if not values['cookies_bar']:
+                existing_policy_pages.unlink()
+            else:
+                cookies_view = self.env.ref('website.cookie_policy', raise_if_not_found=False)
+                if cookies_view:
+                    page_vals_list = []
+                    for website in self - existing_policy_pages.website_id:
+                        cookies_view.with_context(website_id=website.id).write({'website_id': website.id})
+                        specific_cook_view = website.with_context(website_id=website.id).viewref('website.cookie_policy')
+                        page_vals_list.append({
+                            'is_published': True,
+                            'website_indexed': False,
+                            'url': '/cookie-policy',
+                            'website_id': website.id,
+                            'view_id': specific_cook_view.id,
+                        })
+                    self.env['website.page'].create(page_vals_list)
+>>>>>>> e2a9517073cf27716ef9b28cb834f2adb3dd429e
 
         return result
 
