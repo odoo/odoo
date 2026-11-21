@@ -1,3 +1,5 @@
+import { isRecordRotting } from "./rotting_widget";
+
 export const rottingProgressBarPatch = {
     rotIsFiltered: {},
     async toggleFilterRotten(group) {
@@ -33,7 +35,7 @@ export const rottingProgressBarPatch = {
      */
     getGroupCount(group) {
         if (this.rotIsFiltered[group.id]) {
-            return group.list.records.filter((record) => record.data.is_rotting).length;
+            return group.list.records.filter(isRecordRotting).length;
         }
         return super.getGroupCount(group);
     },
