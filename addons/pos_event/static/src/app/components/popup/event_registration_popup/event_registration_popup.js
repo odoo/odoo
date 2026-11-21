@@ -103,7 +103,7 @@ export class EventRegistrationPopup extends Component {
     }
 
     validateQuestion(question, value) {
-        if (question.is_mandatory_answer && !value?.trim()) {
+        if (question.is_mandatory_answer && !(typeof value === "string" ? value.trim() : value)) {
             return false;
         }
         if (!value) {

@@ -10,6 +10,30 @@ from odoo.addons.pos_event.tests.test_frontend import TestUi
 @tagged("post_install", "-at_install")
 class TestSelfOrderEventPrice(TestUi):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.test_event.question_ids = [
+            (0, 0, {
+                'title': 'Question1',
+                'question_type': 'simple_choice',
+                'once_per_order': False,
+                'answer_ids': [
+                    (0, 0, {'name': 'Q1-Answer1'}),
+                    (0, 0, {'name': 'Q1-Answer2'})
+                ],
+            }),
+            (0, 0, {
+                'title': 'Question2',
+                'question_type': 'simple_choice',
+                'once_per_order': True,
+                'answer_ids': [
+                    (0, 0, {'name': 'Q2-Answer1'}),
+                    (0, 0, {'name': 'Q2-Answer2'})
+                ],
+            })
+        ]
+
     def test_event_ticket_order_price(self):
         """Ensure event ticket prices are preserved during recomputation."""
         self.main_pos_config.with_user(self.pos_user).open_ui()
