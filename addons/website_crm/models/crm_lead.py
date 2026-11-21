@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models, tools
+from odoo.exceptions import UserError
 
 
 class Lead(models.Model):
@@ -48,6 +49,9 @@ class Lead(models.Model):
         if 'partner_id' in values:
             values.pop('email_from', None)
             values.pop('phone', None)
+
+        if values.get('email_from') and not tools.email_normalize(values['email_from'], strict=True):
+            raise UserError(_("Please enter a valid email address."))
 
         values['medium_id'] = values.get('medium_id') or \
                               self.sudo().default_get(['medium_id']).get('medium_id') or \
