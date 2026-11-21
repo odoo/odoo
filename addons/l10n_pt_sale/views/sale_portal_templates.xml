@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="sale_order_portal_template" inherit_id="sale.sale_order_portal_template">
+        <xpath expr="//div[@t-if=&quot;message == 'sign_ok'&quot;]" position="before">
+            <!-- A quotation confirmed into a sales order stays a quotation: point to its order. -->
+            <t t-set="l10n_pt_sales_orders" t-value="sale_order._l10n_pt_live_sales_orders() if sale_order.country_code == 'PT' else sale_order.browse()"/>
+            <div t-if="l10n_pt_sales_orders" id="l10n_pt_sales_order_notice" class="alert alert-info d-print-none" role="status">
+                This quotation was accepted and confirmed into the sales order
+                <t t-foreach="l10n_pt_sales_orders" t-as="l10n_pt_sales_order">
+                    <a t-att-href="l10n_pt_sales_order.get_portal_url()" t-out="l10n_pt_sales_order.l10n_pt_document_number or l10n_pt_sales_order.name"/><t t-if="not l10n_pt_sales_order_last">,</t>
+                </t>.
+            </div>
+        </xpath>
+        <!-- No report of an unissued document for the customer: the route refuses it -->
+        <xpath expr="//div[@id='print_invoice_sidebar_button']" position="attributes">
+            <attribute name="t-if">not (request.env.user.share and sale_order._l10n_pt_is_unissued_document())</attribute>
+        </xpath>
+    </template>
+</odoo>

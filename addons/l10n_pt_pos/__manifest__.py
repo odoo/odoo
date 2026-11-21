@@ -1,0 +1,25 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+{
+    'name': 'Portugal - Point of Sale',
+    'description': """Certification requirements for the Point of Sale of Portuguese companies: every order is invoiced
+(FR, FS or FT), and receipts print the invoice's number, ATCUD and QR code.""",
+    'category': 'Accounting/Localizations/Point of Sale',
+    'depends': [
+        'l10n_pt_certification',
+        'l10n_pt_stock',
+        'point_of_sale',
+    ],
+    'data': [
+        'views/pos_payment_method_views.xml',
+        'views/product_views.xml',
+    ],
+    'assets': {
+        'point_of_sale._assets_pos': [
+            'l10n_pt_pos/static/src/**/*',
+        ],
+    },
+    'author': 'Odoo S.A.',
+    'license': 'LGPL-3',
+    'auto_install': True,
+}
