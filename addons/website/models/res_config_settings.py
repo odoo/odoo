@@ -130,6 +130,9 @@ class ResConfigSettings(models.TransientModel):
         inverse='_inverse_has_plausible_shared_key')
     module_website_livechat = fields.Boolean()
     module_website_address_autocomplete = fields.Boolean("Website Address Autocomplete")
+    website_distance_unit = fields.Selection(
+        related='website_id.distance_unit',
+        readonly=False)
 
     @api.depends('website_id')
     def _compute_shared_user_account(self):
