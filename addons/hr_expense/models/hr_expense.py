@@ -148,6 +148,9 @@ class HrExpense(models.Model):
         default='draft',
         tracking=True,
     )
+    # Processed expenses cannot always be deleted, archiving them prevents cluttering the views
+    active = fields.Boolean(default=True, copy=False, tracking=True)
+    is_action_required = fields.Boolean(compute='_compute_is_action_required', search='_search_is_action_required')
     approval_state = fields.Selection(selection=EXPENSE_APPROVAL_STATE, copy=False, readonly=True)
     approval_date = fields.Datetime(string="Approval Date", readonly=True)
     duplicate_expense_ids = fields.Many2many(comodel_name='hr.expense', compute='_compute_duplicate_expense_ids')  # Used to trigger warnings
@@ -365,6 +368,12 @@ class HrExpense(models.Model):
             if errors:
                 raise ValidationError("\n".join(errors))
 
+    @api.constrains('active')
+    def _check_active(self):
+        """ Only processed expenses can be archived, otherwise expenses requiring an action could be hidden """
+        if any(not expense.active and expense.is_action_required for expense in self):
+            raise ValidationError(self.env._("Only paid or refused expenses can be archived."))
+
     @api.constrains('account_move_id')
     def _check_o2o_payment(self):
         for expense in self:
@@ -570,6 +579,19 @@ class HrExpense(models.Model):
                     expense.state = 'paid'
                 continue
             expense.state = expense.approval_state or 'draft'
+
+    @api.depends('state')
+    def _compute_is_action_required(self):
+        processed_states = self._get_processed_states()
+        for expense in self:
+            expense.is_action_required = expense.state not in processed_states
+
+    def _search_is_action_required(self, operator, value):
+        if operator == 'in':
+            return [('state', 'not in', tuple(self._get_processed_states()))]
+        if operator == 'not in':
+            return [('state', 'in', tuple(self._get_processed_states()))]
+        return NotImplemented
 
     @api.depends('employee_id', 'employee_id.department_id')
     def _compute_from_employee_id(self):
@@ -1618,6 +1640,11 @@ class HrExpense(models.Model):
     # ----------------------------------------
     # Business
     # ----------------------------------------
+
+    @api.model
+    def _get_processed_states(self) -> set[str]:
+        """ States in which no further action is expected on the expense, those expenses can be archived """
+        return {'paid', 'refused'}
 
     @api.model
     def _open_linked_record(self, res_model, record):

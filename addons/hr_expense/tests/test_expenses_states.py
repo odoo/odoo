@@ -2,6 +2,7 @@
 
 from odoo.addons.mail.tests.common import MailCase
 from odoo import fields
+from odoo.exceptions import ValidationError
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.tests import tagged
 
@@ -192,6 +193,34 @@ class TestExpensesStates(TestExpenseCommon, MailCase):
         self.assertRecordValues(self.expenses_company.account_move_id, [
             {'state': 'draft', 'payment_state': 'not_paid'},
         ])
+
+    def test_expense_archive(self):
+        """ Only processed expenses can be archived, and they are unarchived when they require an action again """
+        with self.assertRaises(ValidationError, msg="An expense requiring an action cannot be archived"):
+            self.expenses_all.action_archive()
+
+        self.expenses_all.action_submit()
+        self.expenses_all.action_approve()
+        self.post_expenses(self.expenses_all)
+        self.assertRecordValues(self.expenses_all, [
+            {'state': 'approved', 'is_action_required': True},
+            {'state': 'paid', 'is_action_required': False},
+        ])
+        expense_domain = [('id', 'in', self.expenses_all.ids)]
+        self.assertEqual(self.env['hr.expense'].search(expense_domain + [('is_action_required', '=', True)]), self.expenses_employee)
+        self.assertEqual(self.env['hr.expense'].search(expense_domain + [('is_action_required', '=', False)]), self.expenses_company)
+
+        with self.assertRaises(ValidationError, msg="An expense waiting for its reimbursement cannot be archived"):
+            self.expenses_employee.action_archive()
+        self.expenses_company.action_archive()
+        self.assertFalse(self.expenses_company.active)
+        self.assertEqual(self.env['hr.expense'].search(expense_domain), self.expenses_employee)
+
+        move = self.expenses_company.account_move_id
+        self.assertEqual(move.expense_ids, self.expenses_company, "Archived expenses should still be linked to their move")
+
+        move._reverse_moves(default_values_list=[{'invoice_date': fields.Date.context_today(move)}], cancel=True)
+        self.assertRecordValues(self.expenses_company, [{'state': 'approved', 'account_move_id': False, 'active': True}])
 
     def test_expense_state_autovalidation(self):
         """ Test the auto-validation flow skips 'submitted' state when there is no manager"""

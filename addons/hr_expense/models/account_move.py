@@ -7,7 +7,8 @@ from odoo.tools.misc import frozendict
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    expense_ids = fields.One2many(comodel_name='hr.expense', inverse_name='account_move_id')
+    # Archived expenses are still linked to their journal entry
+    expense_ids = fields.One2many(comodel_name='hr.expense', inverse_name='account_move_id', context={'active_test': False})
     nb_expenses = fields.Integer(compute='_compute_nb_expenses', string='Number of Expenses', compute_sudo=True)
 
     # Removed in master (20.1), no longer used
@@ -45,6 +46,7 @@ class AccountMove(models.Model):
     @api.ondelete(at_uninstall=False)
     def _reset_linked_expense_to_submitted(self):
         if self.expense_ids:
+            self.expense_ids.action_unarchive()  # They require an action again
             self.expense_ids.approval_state = 'submitted'
 
     def action_open_expense(self):
@@ -114,6 +116,7 @@ class AccountMove(models.Model):
 
     def _reverse_moves(self, default_values_list=None, cancel=False):
         # EXTENDS account
+        self.expense_ids.action_unarchive()  # They require an action again
         self.filtered('expense_ids').write({'expense_ids': [Command.clear()]})
         return super()._reverse_moves(default_values_list=default_values_list, cancel=cancel)
 
@@ -122,5 +125,6 @@ class AccountMove(models.Model):
         # We need to override this method to remove the link with the move, else we cannot reimburse them anymore.
         # And cancelling the move != cancelling the expense
         res = super().button_cancel()
+        self.expense_ids.action_unarchive()  # They require an action again
         self.filtered('expense_ids').write({'expense_ids': [Command.clear()]})
         return res
