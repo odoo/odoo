@@ -4,14 +4,15 @@
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Betty Keresztesi <betty@soft4biz.ro>, 2025.
+# Dorin Hongu <dhongu@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-24 18:21+0000\n"
-"PO-Revision-Date: 2025-12-03 14:25+0000\n"
-"Last-Translator: Betty Keresztesi <betty@soft4biz.ro>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19-l10n/"
+"PO-Revision-Date: 2026-11-20 10:20+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-3/"
 "l10n_ro_edi_stock/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -19,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: l10n_ro_edi_stock
 #. odoo-python
@@ -72,7 +73,7 @@ msgstr "Tokenul de acces este interzis."
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock/models/etransport_api.py:0
 msgid "Access token is unauthorized."
-msgstr ""
+msgstr "Tokenul de acces nu este autorizat."
 
 #. module: l10n_ro_edi_stock
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking__l10n_ro_edi_stock_end_bcp__32
@@ -715,6 +716,8 @@ msgid ""
 "Declaration in the name of other registered Romanian B2B Customers is not "
 "supported. %(partner)s must declare the eTransport itself."
 msgstr ""
+"Nu este acceptată declararea în numele altor clienți B2B înregistrați în "
+"România. %(partner)s trebuie să declare e-Transport în nume propriu."
 
 #. module: l10n_ro_edi_stock
 #. odoo-python
@@ -724,11 +727,14 @@ msgid ""
 "dropshipping. %(vendor)s, as the supplier, must handle the eTransport "
 "declaration."
 msgstr ""
+"Pentru livrările directe interne nu este necesară declararea în numele "
+"furnizorului. Furnizorul %(vendor)s trebuie să se ocupe de declarația e-"
+"Transport."
 
 #. module: l10n_ro_edi_stock
 #: model:ir.model,name:l10n_ro_edi_stock.model_delivery_carrier
 msgid "Delivery Method"
-msgstr ""
+msgstr "Metodă de livrare"
 
 #. module: l10n_ro_edi_stock
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking__l10n_ro_edi_stock_operation_scope__703
@@ -830,7 +836,7 @@ msgstr "General"
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
 msgid "Generated eTransport XML (UIT: %(uit)s) was sent to the authority."
-msgstr ""
+msgstr "Fișierul XML eTransport generat (UIT: %(uit)s) a fost transmis."
 
 #. module: l10n_ro_edi_stock
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking__l10n_ro_edi_stock_end_bcp__9
@@ -1256,7 +1262,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking__l10n_ro_edi_stock_end_bcp__20
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking__l10n_ro_edi_stock_start_bcp__20
 msgid "Săcuieni (HU)"
-msgstr ""
+msgstr "Sacuieni (HU)"
 
 #. module: l10n_ro_edi_stock
 #. odoo-python
@@ -1355,7 +1361,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking__l10n_ro_edi_stock_end_bcp__7
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking__l10n_ro_edi_stock_start_bcp__7
 msgid "Turnu Măgurele(BG)"
-msgstr ""
+msgstr "Turnu Magurele(BG)"
 
 #. module: l10n_ro_edi_stock
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi_stock.l10n_ro_edi_stock_view_picking_form
@@ -1401,7 +1407,7 @@ msgstr "Validat"
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking__l10n_ro_edi_stock_end_bcp__12
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking__l10n_ro_edi_stock_start_bcp__12
 msgid "Vama Veche(BG)"
-msgstr ""
+msgstr "Vama Veche (BG)"
 
 #. module: l10n_ro_edi_stock
 #: model:ir.model.fields,field_description:l10n_ro_edi_stock.field_stock_picking__l10n_ro_edi_stock_vehicle_number
@@ -1438,7 +1444,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
 msgid "Warehouse of %(location_group)s should be in Romania"
-msgstr ""
+msgstr "Depozitul pentru %(location_group)s ar trebui să fie în România."
 
 #. module: l10n_ro_edi_stock
 #. odoo-python

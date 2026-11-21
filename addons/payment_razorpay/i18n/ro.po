@@ -3,13 +3,14 @@
 # * payment_razorpay
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Dorin Hongu <dhongu@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-03 17:38+0000\n"
-"PO-Revision-Date: 2026-06-30 09:41+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-11-20 10:21+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-3/"
 "payment_razorpay/ro/>\n"
 "Language: ro\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: payment_razorpay
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
@@ -41,17 +42,17 @@ msgstr ""
 #. module: payment_razorpay
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.authorization_error
 msgid "An error occurred while linking your Razorpay account with Odoo."
-msgstr ""
+msgstr "A apărut o eroare la conectarea contului Razorpay la Odoo."
 
 #. module: payment_razorpay
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
 msgid "Are you sure you want to disconnect?"
-msgstr ""
+msgstr "Sigur vrei să te deconectezi?"
 
 #. module: payment_razorpay
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.authorization_error
 msgid "Back to the Razorpay provider"
-msgstr ""
+msgstr "Înapoi la furnizorul Razorpay"
 
 #. module: payment_razorpay
 #: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__code
@@ -67,12 +68,12 @@ msgstr "Conectează"
 #. odoo-python
 #: code:addons/payment_razorpay/controllers/onboarding.py:0
 msgid "Could not find Razorpay provider with id %s"
-msgstr ""
+msgstr "Nu s-a găsit furnizorul Razorpay cu ID-ul %s"
 
 #. module: payment_razorpay
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
 msgid "Disconnect"
-msgstr ""
+msgstr "Deconecta"
 
 #. module: payment_razorpay
 #: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__display_name
@@ -143,22 +144,22 @@ msgstr "Razorpay"
 #. module: payment_razorpay
 #: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__razorpay_access_token
 msgid "Razorpay Access Token"
-msgstr ""
+msgstr "Token de acces Razorpay"
 
 #. module: payment_razorpay
 #: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__razorpay_access_token_expiry
 msgid "Razorpay Access Token Expiry"
-msgstr ""
+msgstr "Data expirării tokenului de acces Razorpay"
 
 #. module: payment_razorpay
 #: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__razorpay_account_id
 msgid "Razorpay Account ID"
-msgstr ""
+msgstr "ID cont Razorpay"
 
 #. module: payment_razorpay
 #: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__razorpay_is_oauth_supported
 msgid "Razorpay Is Oauth Supported"
-msgstr ""
+msgstr "Razorpay acceptă OAuth"
 
 #. module: payment_razorpay
 #: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__razorpay_key_id
@@ -173,12 +174,12 @@ msgstr "Cheie secretă Razorpay"
 #. module: payment_razorpay
 #: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__razorpay_public_token
 msgid "Razorpay Public Token"
-msgstr ""
+msgstr "Token public Razorpay"
 
 #. module: payment_razorpay
 #: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__razorpay_refresh_token
 msgid "Razorpay Refresh Token"
-msgstr ""
+msgstr "Token de reîmprospătare Razorpay"
 
 #. module: payment_razorpay
 #: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__razorpay_webhook_secret
@@ -191,6 +192,8 @@ msgstr "Secret webhook Razorpay"
 msgid ""
 "Razorpay credentials are missing. Please fill them to set up your account."
 msgstr ""
+"Lipsesc datele de autentificare Razorpay. Completează-le pentru a-ți "
+"configura contul."
 
 #. module: payment_razorpay
 #. odoo-python
@@ -199,6 +202,8 @@ msgid ""
 "Razorpay credentials are missing. Please set the state back to 'Disabled' "
 "and click the \"Connect\" button to set up your account."
 msgstr ""
+"Lipsesc datele de autentificare Razorpay. Setează din nou starea la „"
+"Dezactivat” și apasă butonul „Conectează” pentru a-ți configura contul."
 
 #. module: payment_razorpay
 #. odoo-python
@@ -207,6 +212,7 @@ msgid ""
 "Razorpay is not available in your country; please use another payment "
 "provider."
 msgstr ""
+"Razorpay nu este disponibil în țara ta; folosește un alt furnizor de plăți."
 
 #. module: payment_razorpay
 #. odoo-python
@@ -257,7 +263,7 @@ msgstr "Cod tehnic al acestui procesator de plată"
 #. module: payment_razorpay
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
 msgid "This provider is linked with your Razorpay account."
-msgstr ""
+msgstr "Acest furnizor este conectat la contul tău Razorpay."
 
 #. module: payment_razorpay
 #. odoo-python
@@ -279,6 +285,11 @@ msgid ""
 "the recommended OAuth\n"
 "                    method."
 msgstr ""
+"În prezent, ești conectat la Razorpay prin metoda cu date de autentificare, "
+"care este\n"
+"                    învechită. Apasă butonul „Conectează” de mai sus pentru "
+"a folosi metoda OAuth\n"
+"                    recomandată."
 
 #. module: payment_razorpay
 #. odoo-python
@@ -294,7 +305,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment_razorpay/models/payment_provider.py:0
 msgid "Your Razorpay webhook was successfully set up!"
-msgstr ""
+msgstr "Webhook-ul Razorpay a fost configurat cu succes!"
 
 #. module: payment_razorpay
 #. odoo-python
@@ -303,3 +314,5 @@ msgid ""
 "Your last payment %s will soon be processed. Please wait up to 24 hours "
 "before trying again, or use another payment method."
 msgstr ""
+"Ultima ta plată %s va fi procesată în curând. Așteaptă până la 24 de ore "
+"înainte să încerci din nou sau folosește o altă metodă de plată."
