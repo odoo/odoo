@@ -71,7 +71,7 @@ class SaleProductConfiguratorController(Controller):
             if not combination:
                 combination = product_template._get_first_available_combination()
             currency = self.env["res.currency"].browse(currency_id)
-            pricelist = self.env["product.pricelist"].browse(pricelist_id)
+            pricelist = self._get_pricelist(pricelist_id)
             so_date = datetime.fromisoformat(so_date)
 
             res["products"] = [
@@ -185,7 +185,7 @@ class SaleProductConfiguratorController(Controller):
         if company_id:
             request.update_context(allowed_company_ids=[company_id])
         product_template = self._get_product_template(product_template_id)
-        pricelist = self.env["product.pricelist"].browse(pricelist_id)
+        pricelist = self._get_pricelist(pricelist_id)
         product_uom = self.env["uom.uom"].browse(product_uom_id)
         currency = self.env["res.currency"].browse(currency_id)
         combination = self.env["product.template.attribute.value"].browse(ptav_ids)
@@ -249,7 +249,7 @@ class SaleProductConfiguratorController(Controller):
             request.update_context(allowed_company_ids=[company_id])
         product_template = self._get_product_template(product_template_id)
         currency = self.env["res.currency"].browse(currency_id)
-        pricelist = self.env["product.pricelist"].browse(pricelist_id)
+        pricelist = self._get_pricelist(pricelist_id)
         return [
             dict(
                 **self._get_product_information(
@@ -268,6 +268,9 @@ class SaleProductConfiguratorController(Controller):
 
     def _get_product_template(self, product_template_id):
         return self.env["product.template"].browse(product_template_id)
+
+    def _get_pricelist(self, pricelist_id):
+        return self.env["product.pricelist"].browse(pricelist_id)
 
     def _get_product_information(
         self,
