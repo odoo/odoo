@@ -1,10 +1,13 @@
-import { Component, onWillStart, proxy, usePlugin } from "@odoo/owl";
+import { Component, onWillStart, proxy, useEnv, usePlugin } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { rpc, ConnectionLostError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
+import { DialogPlugin } from "@web/core/dialog/dialog_plugin";
+import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
+import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { formatFloatTime, formatDateTime } from "@web/views/fields/formatters";
 import { getPropertyFieldInfo } from "@web/views/fields/field";
 import { useService } from "@web/core/utils/hooks";
@@ -33,12 +36,12 @@ export class ActivityMenu extends Component {
     static template = "hr_attendance.attendance_menu";
 
     setup() {
-        this.ui = useService("ui");
+        this.ui = usePlugin(UIPlugin);
         this.lazySession = usePlugin(LazySessionPlugin);
-        this.notification = useService("notification");
-        this.dialogService = useService("dialog");
-        const { services } = this.env;
-        const datetimePicker = services.datetime_picker;
+        this.notification = usePlugin(NotificationPlugin);
+        this.dialogService = usePlugin(DialogPlugin);
+        const datetimePicker = useService("datetime_picker");
+        const { services } = useEnv();
         const attendanceDateTimePicker = Object.create(datetimePicker);
         // Keep datetime picker popovers within the dropdown scope.
         attendanceDateTimePicker.create = (params, options) =>

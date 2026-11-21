@@ -1,9 +1,11 @@
 import { _t } from "@web/core/l10n/translation";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { DialogPlugin } from "@web/core/dialog/dialog_plugin";
 import { user } from "@web/core/user";
-import { useService } from "@web/core/utils/hooks";
+import { UIPlugin } from "@web/core/ui/ui_plugin";
 
 import { Component, onWillStart, proxy, t, usePlugin, useProps } from "@odoo/owl";
+import { ActionPlugin } from "@web/webclient/actions/action_plugin";
 import { LazySessionPlugin } from "@web/webclient/lazy_session_plugin";
 
 export class AttendanceActionHelper extends Component {
@@ -13,9 +15,9 @@ export class AttendanceActionHelper extends Component {
         noContentHelp: t.any(),
     });
     setup() {
-        this.actionService = useService("action");
-        this.uiService = useService("ui");
-        this.dialogService = useService("dialog");
+        this.actionService = usePlugin(ActionPlugin);
+        this.uiService = usePlugin(UIPlugin);
+        this.dialogService = usePlugin(DialogPlugin);
         this.state = proxy({
             hasDemoData: true,
         });
