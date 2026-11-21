@@ -492,7 +492,7 @@ class SurveyQuestion(models.Model):
 
         # Answer validation (if properly defined)
         # Length of the answer must be in a range
-        if self.validation_required:
+        if self.validation_required and self.validation_length_max:
             if not (self.validation_length_min <= len(answer) <= self.validation_length_max):
                 return {self.id: self.validation_error_msg or _('The answer you entered is not valid.')}
         return {}

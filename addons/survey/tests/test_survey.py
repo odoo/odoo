@@ -206,6 +206,12 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
             {}
         )
 
+        question.validation_required = True
+        self.assertEqual(
+            question.validate_question('email@example.com'),
+            {}
+        )
+
     @users('survey_manager')
     def test_answer_validation_char_box_length(self):
         question = self._add_question(
