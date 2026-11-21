@@ -1195,6 +1195,75 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_total': -2627.014,
         })
 
+    def test_out_invoice_line_price_total_tax_round_globally(self):
+        """Ensure that when the tax rounding method is set to 'global', price_total is equal to
+        round(price_subtotal) + round(taxes), not simply round(subtotal + taxes)"""
+
+        self.env.company.tax_calculation_rounding_method = 'round_globally'
+
+        tax_100 = self.env['account.tax'].create({
+            'name': '100%',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 100,
+        })
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'test line',
+                    'quantity': 1.00,
+                    'price_unit': 1.003,
+                    'tax_ids': tax_100.ids,
+                }),
+            ],
+        })
+
+        # Subtotal 1.003 + Tax 1.003 = Total 2.006
+        # Should round to (1 + 1 = 2.00), not (1 + 1 = 2.01)
+        self.assertRecordValues(invoice.invoice_line_ids, [
+            {'price_total': 2.00},
+        ])
+
+    def test_out_invoice_line_price_total_multiple_tax_round_globally(self):
+        """Ensure that when the tax rounding method is set to 'global', price_total is equal to
+        round(price_subtotal) + round(taxes), not simply round(subtotal + taxes)"""
+
+        self.env.company.tax_calculation_rounding_method = 'round_globally'
+
+        tax_100_multiple = self.env['account.tax'].create([{
+            'name': '100% a',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 100,
+        }, {
+            'name': '100% b',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 100,
+        }])
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'test line',
+                    'quantity': 1.00,
+                    'price_unit': 1.003,
+                    'tax_ids': tax_100_multiple.ids,
+                }),
+            ],
+        })
+
+        # Subtotal 1.003 + Tax (1.003 + 1.003 = 2.006) = Total 3.006
+        # Should round to (1 + (1+1=2) = 3.00), not (1 + 2.01 = 3.01)
+        self.assertRecordValues(invoice.invoice_line_ids, [
+            {'price_total': 3.00},
+        ])
+
     def test_payment_term_line_fiscal_position(self):
         """Test the mapping of payment term line accounts with fiscal position."""
         account_revenue_copy = self.company_data['default_account_revenue'].copy()
