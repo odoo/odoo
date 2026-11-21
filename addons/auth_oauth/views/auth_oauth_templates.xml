@@ -29,4 +29,13 @@
                 <t t-call="auth_oauth.providers"/>
             </xpath>
         </template>
+
+        <template id="native_confirm" name="OAuth Mobile App Confirmation">
+            <t t-call="web.login_layout">
+                <t t-set="disable_footer" t-value="True"/>
+                <p class="text-center">Continue to the Odoo mobile app as <strong t-out="login"/>?</p>
+                <a class="o_auth_oauth_native_confirm btn btn-primary w-100" t-att-href="native_url">Continue</a>
+                <p class="text-center text-muted small mt-3 mb-0">Close this page if you did not start this login from the Odoo mobile app.</p>
+            </t>
+        </template>
 </odoo>
