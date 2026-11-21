@@ -91,9 +91,12 @@ class PurchaseOrderLine(models.Model):
 
     def _prepare_stock_moves(self, picking):
         res = super()._prepare_stock_moves(picking)
-        if len(self.order_id.reference_ids.move_ids.production_group_id) == 1:
+        production_group = self.order_id.reference_ids.move_ids.filtered(
+            lambda m: m.raw_material_production_id and m.product_id == self.product_id
+        ).production_group_id
+        if len(production_group) == 1:
             for re in res:
-                re['production_group_id'] = self.order_id.reference_ids.move_ids.production_group_id.id
+                re['production_group_id'] = production_group.id
         sale_line_product = self._get_sale_order_line_product()
         if sale_line_product:
             bom = self.env['mrp.bom']._bom_find(self.env['product.product'].browse(sale_line_product.id), company_id=picking.company_id.id, bom_type='phantom')

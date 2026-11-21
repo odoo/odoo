@@ -409,3 +409,9 @@ class TestSaleDropshippingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(manufacturing_order.purchase_order_count, 0)
         self.assertEqual(len(purchase), 1)
         self.assertEqual(purchase.mrp_production_count, 0)
+
+        purchase.button_confirm()
+        self.assertFalse(purchase.picking_ids.production_ids)
+
+        manufacturing_order.action_cancel()
+        self.assertEqual(purchase.picking_ids.state, 'assigned')
