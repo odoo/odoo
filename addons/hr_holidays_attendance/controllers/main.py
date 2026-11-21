@@ -15,4 +15,5 @@ class HrHolidaysAttendance(HrAttendance):
             return response
 
         response['total_overtime'] = float_round(employee.total_overtime, precision_digits=2)
+        response['overtime_today'] = employee.sudo()._get_overtime_today()
         return response

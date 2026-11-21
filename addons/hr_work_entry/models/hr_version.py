@@ -234,6 +234,10 @@ class HrVersion(models.Model):
         :rtype: list
         """
         self.ensure_one()
+        payload = interval[2]
+        # undefined schedule: no expected working days, so global leaves (public/company holidays) do not apply
+        if payload and self._is_flexible() and not payload.resource_id:
+            return []
         return [interval]
 
     def _get_no_wet_or_wet_match(self, leave, leave_entry_type):
@@ -378,13 +382,8 @@ class HrVersion(models.Model):
                 static_attendances = calendar._attendance_intervals_batch(
                     start_dt, end_dt, resources_per_tz=resources_per_tz)[resource.id]
                 real_leaves = (static_attendances & multi_day_leaves) | one_day_leaves
-            elif version.has_static_work_entries() or not leaves:
-                real_leaves = version._get_real_leaves_static(leaves, expected_attendances)
             else:
-                resources_per_tz = version._get_resources_per_tz()
-                static_attendances = calendar._attendance_intervals_batch(
-                    start_dt, end_dt, resources_per_tz=resources_per_tz)[resource.id]
-                real_leaves = version._get_real_leaves_static_attendance(leaves, static_attendances)
+                real_leaves = version._get_real_leaves_static(leaves, expected_attendances)
 
             real_worked_leaves = version._get_real_worked_leaves(worked_leaves, real_leaves)
             real_attendances = version._get_real_attendances(expected_attendances, leaves, worked_leaves)
@@ -471,16 +470,6 @@ class HrVersion(models.Model):
         """
         return expected_attendances & leaves
 
-    def _get_real_leaves_static_attendance(self, leaves, static_attendances):
-        """Return the absence intervals to generate for a non-static (attendance based) version.
-
-        The expected attendances are empty for such a version, so leaves are intersected with the
-        intervals of its working schedule instead.
-
-        :rtype: Intervals
-        """
-        return static_attendances & leaves
-
     def _get_real_worked_leaves(self, worked_leaves, real_leaves):
         """Return the working time leave intervals to generate.
 
@@ -525,8 +514,9 @@ class HrVersion(models.Model):
 
         ``True`` (default): worked time is generated from the calendar attendances.
         ``False``: worked time comes from another source; ``hr_holidays_attendance`` returns
-        ``not attendance_based``, worked time then coming from validated ``hr.attendance``
-        records. See :meth:`_get_attendance_intervals` for what an override must also do.
+        ``not attendance_based``, worked time then coming from the working time leaves of the
+        validated ``hr.attendance`` records. See :meth:`_get_attendance_intervals` for what an
+        override must also do.
 
         :rtype: bool
         """

@@ -694,8 +694,7 @@ class HrTimeRule(models.Model):
     def _apply_output(self, excess, deficit, active_iv=None):
         """Write the result of :meth:`_evaluate_rules` on the source records.
 
-        Shared by attendances and leaves (called by ``_apply_attendance_output`` /
-        ``_apply_leave_output``). Writes use the source's ``_time_rule_write_ctx``, so they do not
+        Used by leaves (called by ``_apply_leave_output``). Writes use the source's ``_time_rule_write_ctx``, so they do not
         trigger the rules again.
 
         - Excess: if the first output interval starts with the source, the source itself is

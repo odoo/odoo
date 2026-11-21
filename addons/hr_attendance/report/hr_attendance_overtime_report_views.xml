@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_attendance_overtime_report_view_list" model="ir.ui.view">
+        <field name="name">hr.attendance.overtime.report.list</field>
+        <field name="model">hr.attendance.overtime.report</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0" delete="0">
+                <field name="employee_id"/>
+                <field name="department_id" optional="hide"/>
+                <field name="date"/>
+                <field name="expected_hours" widget="float_time" sum="Total"/>
+                <field name="worked_hours" widget="float_time" sum="Total"/>
+                <field name="overtime_hours" widget="float_time" sum="Total"
+                    decoration-success="overtime_hours &gt; 0" decoration-danger="overtime_hours &lt; 0"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_attendance_overtime_report_view_pivot" model="ir.ui.view">
+        <field name="name">hr.attendance.overtime.report.pivot</field>
+        <field name="model">hr.attendance.overtime.report</field>
+        <field name="arch" type="xml">
+            <pivot disable_linking="1">
+                <field name="employee_id" type="row"/>
+                <field name="date" interval="month" type="col"/>
+                <field name="expected_hours" type="measure" widget="float_time"/>
+                <field name="worked_hours" type="measure" widget="float_time"/>
+                <field name="overtime_hours" type="measure" widget="float_time"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="hr_attendance_overtime_report_view_search" model="ir.ui.view">
+        <field name="name">hr.attendance.overtime.report.search</field>
+        <field name="model">hr.attendance.overtime.report</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <filter name="date" string="Date" date="date"/>
+                <separator/>
+                <filter name="overtime" string="Overtime" domain="[('overtime_hours', '&gt;', 0)]"/>
+                <filter name="undertime" string="Undertime" domain="[('overtime_hours', '&lt;', 0)]"/>
+                <filter name="group_by_employee" string="Employee" context="{'group_by': 'employee_id'}"/>
+                <filter name="group_by_department" string="Department" context="{'group_by': 'department_id'}"/>
+                <filter name="group_by_date" string="Date" context="{'group_by': 'date'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_attendance_overtime_report_action" model="ir.actions.server">
+        <field name="name">Overtime</field>
+        <field name="model_id" ref="hr_attendance.model_hr_attendance_overtime_report"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_open_report()</field>
+    </record>
+
+    <menuitem
+        id="menu_hr_attendance_overtime_report"
+        name="Overtime"
+        action="hr_attendance_overtime_report_action"
+        parent="menu_hr_attendance_reporting"
+        sequence="20"/>
+</odoo>

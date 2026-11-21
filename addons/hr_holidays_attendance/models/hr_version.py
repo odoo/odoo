@@ -13,31 +13,27 @@ class HrVersion(models.Model):
     _inherit = 'hr.version'
 
     def has_static_work_entries(self):
-        """Attendance-based versions have no static work entries.
+        """Attendance based versions with a flexible schedule have no static work entries:
+        their worked time comes from the working time leaves of their attendances. With another
+        schedule, the schedule gives the worked time and the leaves only the difference.
 
         :rtype: bool
         """
-        return not self.attendance_based
-
-    def _get_attendance_intervals(self, start_dt, end_dt):
-        """Return empty intervals for the resources of attendance-based versions, the
-        schedule intervals for the others.
-
-        :return: ``{resource_id: Intervals}``
-        :rtype: dict
-        """
-        result = {}
-        calendar_versions = self.filtered(lambda v: v.has_static_work_entries())
-        for v in self - calendar_versions:
-            result[v.employee_id.resource_id.id] = Intervals()
-        if calendar_versions:
-            result.update(super(HrVersion, calendar_versions)._get_attendance_intervals(start_dt, end_dt))
-        return result
+        return not self.attendance_based or not self._is_flexible()
 
     @api.model
     def _get_work_entry_source_fields(self):
-        """Also merge ``attendance_ids`` (and track ``attendance_based``)."""
-        return super()._get_work_entry_source_fields() + ['attendance_based', 'attendance_ids']
+        """Also merge ``attendance_ids``."""
+        return super()._get_work_entry_source_fields() + ['attendance_ids']
+
+    def _get_attendance_intervals(self, start_dt, end_dt):
+        """Attendance based versions with a flexible schedule have no expected schedule: only
+        their leaves give entries."""
+        based = self.filtered(lambda v: not v.has_static_work_entries())
+        result = super(HrVersion, self - based)._get_attendance_intervals(start_dt, end_dt)
+        for version in based:
+            result[version.employee_id.resource_id.id] = Intervals()
+        return result
 
     def _resolve_attendance_intervals(self, intervals):
         """Split overlapping intervals and pick the winner by work_entry_type.sequence."""
@@ -98,6 +94,8 @@ class HrVersion(models.Model):
                 wt_iv_by_rid[rid].append((ci, co, leave.work_entry_type_id))
 
         for version in self:
+            if not version.has_static_work_entries() or version._is_flexible():
+                continue
             tz = ZoneInfo(version._get_tz())
             rid = version.employee_id.resource_id.id
             default_wet_id = version._get_default_work_entry_type_id()
@@ -108,17 +106,14 @@ class HrVersion(models.Model):
             for att in emp_atts:
                 check_in = att.check_in.replace(tzinfo=UTC)
                 check_out = att.check_out.replace(tzinfo=UTC)
-                # deficit outputs start after source check_out (unworked time); exclude from time_on
-                if not att.source_attendance_id or att.check_in < att.source_attendance_id.check_out:
-                    time_on_raw[rid].append((check_in, check_out, dummy))
-                if version.has_static_work_entries():
-                    start_day = check_in.astimezone(tz).date()
-                    end_day = check_out.astimezone(tz).date()
-                    knocked_raw[rid].append((
-                        datetime.combine(start_day, time.min, tzinfo=tz).astimezone(UTC),
-                        datetime.combine(end_day, time.max, tzinfo=tz).astimezone(UTC),
-                        dummy,
-                    ))
+                time_on_raw[rid].append((check_in, check_out, dummy))
+                start_day = check_in.astimezone(tz).date()
+                end_day = check_out.astimezone(tz).date()
+                knocked_raw[rid].append((
+                    datetime.combine(start_day, time.min, tzinfo=tz).astimezone(UTC),
+                    datetime.combine(end_day, time.max, tzinfo=tz).astimezone(UTC),
+                    dummy,
+                ))
                 # exclude break from worked time
                 work_check_out = check_out - timedelta(hours=att.break_duration) if att.break_duration else check_out
                 if work_check_out > check_in:
@@ -177,8 +172,11 @@ class HrVersion(models.Model):
         return (attendances - knocked) - leaves - worked_leaves
 
     def _generate_work_entries_postprocess_adapt_to_calendar(self, vals):
-        """Values from attendances and from fully flexible versions keep their real duration."""
+        """Values from attendances, from their working time leaves and from fully flexible
+        versions keep their real duration."""
         if vals.pop('_from_attendance', False):
+            return False
+        if vals.get('leave_ids') and vals['leave_ids'].attendance_id:
             return False
         # fully-flexible employees have no calendar; compute duration from actual time span
         version = vals.get('version_id')
@@ -203,6 +201,9 @@ class HrVersion(models.Model):
         payload = interval[2]
         if not payload:
             return [interval]
+
+        if not super()._get_valid_leave_intervals(attendances, interval):
+            return []
 
         count_as = self._get_interval_work_entry_type(interval).count_as
 

@@ -73,7 +73,7 @@ class HrEmployee(models.Model):
         """Return the hours of the attendances overlapping a period, per employee.
 
         Hours are the full ``worked_hours`` of the overlapping attendances (not clipped to the
-        period); ``overtime_hours`` sums the attendances produced by a time rule.
+        period); ``overtime_hours`` is 0, set by ``hr_holidays_attendance``.
 
         :param datetime date_start: naive UTC
         :param datetime date_stop: naive UTC
@@ -96,14 +96,11 @@ class HrEmployee(models.Model):
                 ('check_in', '<', date_stop),
                 ('check_out', '>', date_start),
             ],
-            groupby=['employee_id', 'time_rule_id'],
+            groupby=['employee_id'],
             aggregates=['worked_hours:sum'],
         )
-        for employee, time_rule, worked_hours in all_attendances:
-            data = attendance_data[employee.id]
-            data['worked_hours'] += worked_hours
-            if time_rule:
-                data['overtime_hours'] += worked_hours
+        for employee, worked_hours in all_attendances:
+            attendance_data[employee.id]['worked_hours'] += worked_hours
 
         # per work entry type aggregation for the overview cards
         by_wet = self.env['hr.attendance']._read_group(
@@ -194,27 +191,17 @@ class HrEmployee(models.Model):
             is_users_employee = has_attendance_own_reader_group and employee in current_user.employee_ids
             employee.display_attendances = has_attendance_user_group or is_approver or is_users_employee
 
-    @api.depends('attendance_ids.worked_hours', 'attendance_ids.time_rule_id', 'attendance_ids.state')
     def _compute_total_overtime(self):
-        overtime_by_employee = dict(self.env['hr.attendance']._read_group(
-            domain=[
-                ('employee_id', 'in', self.ids),
-                ('time_rule_id', '!=', False),
-                ('state', '=', 'validated'),
-            ],
-            groupby=['employee_id'],
-            aggregates=['worked_hours:sum'],
-        ))
-        for employee in self:
-            employee.total_overtime = overtime_by_employee.get(employee, 0.0)
+        """Overtime comes from the time rules, see ``hr_holidays_attendance``."""
+        self.total_overtime = 0.0
 
-    @api.depends('attendance_ids', 'attendance_ids.check_in', 'attendance_ids.check_out', 'attendance_ids.worked_hours', 'attendance_ids.time_rule_id')
+    @api.depends('attendance_ids', 'attendance_ids.check_in', 'attendance_ids.check_out', 'attendance_ids.worked_hours')
     def _compute_hours_last_month(self):
         """Compute the hours of the **current** month (despite the field names), in the
         employee's timezone.
 
-        Only the closed attendances within the month count: ``hours_last_month`` sums those not
-        produced by a time rule, ``hours_last_month_overtime`` those produced by one.
+        Only the closed attendances within the month count in ``hours_last_month``.
+        ``hours_last_month_overtime`` is 0, set by ``hr_holidays_attendance``.
         """
         now = fields.Datetime.now()
         now_utc = now.replace(tzinfo=datetime.UTC)
@@ -230,11 +217,10 @@ class HrEmployee(models.Model):
                 current_month_attendances = employee.attendance_ids.filtered(
                     lambda att: att.check_in >= start_naive and att.check_out and att.check_out <= end_naive
                 )
-                hours = sum(att.worked_hours or 0 for att in current_month_attendances if not att.time_rule_id)
-                overtime_hours = sum(att.worked_hours or 0 for att in current_month_attendances if att.time_rule_id)
+                hours = sum(att.worked_hours or 0 for att in current_month_attendances)
                 employee.hours_last_month = round(hours, 2)
                 employee.hours_last_month_display = self.env._("%(hours)g h in %(month)s") % {'hours': employee.hours_last_month, 'month': now_tz.strftime('%b')}
-                employee.hours_last_month_overtime = round(overtime_hours, 2)
+                employee.hours_last_month_overtime = 0.0
 
     @api.depends('attendance_ids', 'attendance_ids.check_in', 'attendance_ids.check_out', 'attendance_ids.break_duration')
     def _compute_hours_today(self):
