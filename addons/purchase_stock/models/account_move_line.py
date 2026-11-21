@@ -43,7 +43,9 @@ class AccountMoveLine(models.Model):
             if float_is_zero(quantity, precision_rounding=uom.rounding):
                 continue
 
-            layers = line._get_valued_in_moves()._get_layers_price_diff().filtered(lambda svl: svl.product_id == line.product_id and not svl.stock_valuation_layer_id)
+            svl_candidates = line._get_valued_in_moves()._get_layers_price_diff()
+            svl_candidates.fetch(['product_id', 'stock_valuation_layer_id'])
+            layers = svl_candidates.filtered(lambda svl: svl.product_id == line.product_id and not svl.stock_valuation_layer_id)
             if not layers:
                 continue
 
@@ -174,6 +176,12 @@ class AccountMoveLine(models.Model):
         # [total qty to invoice, remaining qty to invoice]
         # we need the total qty to invoice, so we will be able to deduce the invoiced qty before `self`
         qty_to_invoice_per_layer = defaultdict(lambda: [0, 0])
+        rounding = self.product_id.uom_id.rounding
+        all_moves = layers.mapped('stock_move_id')
+        move_directions = all_moves._get_move_directions()
+        dropshipped_move_ids = set(all_moves.filtered(lambda m: m._is_dropshipped()).ids)
+        in_layers = []
+        out_layers = []
         for _time, aml, layer in history:
             if layer:
                 total_layer_qty_to_invoice = abs(layer.quantity)
@@ -188,8 +196,14 @@ class AccountMoveLine(models.Model):
                     qty_to_invoice_per_layer[initial_layer][0] -= common_qty
                     qty_to_invoice_per_layer[initial_layer][1] -= common_qty
                     total_layer_qty_to_invoice = max(0, total_layer_qty_to_invoice - common_qty)
-                if float_compare(total_layer_qty_to_invoice, 0, precision_rounding=self.product_id.uom_id.rounding) > 0:
+                if float_compare(total_layer_qty_to_invoice, 0, precision_rounding=rounding) > 0:
                     qty_to_invoice_per_layer[layer] = [total_layer_qty_to_invoice, total_layer_qty_to_invoice]
+                    move = layer.stock_move_id
+                    directions = move_directions.get(move.id, set())
+                    if 'out' in directions:
+                        out_layers.append(layer)
+                    if 'in' in directions or move.id in dropshipped_move_ids:
+                        in_layers.append(layer)
             else:
                 invoice = aml.move_id
                 impacted_invoice = False
@@ -208,21 +222,15 @@ class AccountMoveLine(models.Model):
                     else:
                         # the refund has been generated because of a stock return, let's find and use it
                         sign = 1
-                        layers_to_consume = []
-                        for layer in qty_to_invoice_per_layer:
-                            if layer.stock_move_id._is_out():
-                                layers_to_consume.append((layer, qty_to_invoice_per_layer[layer][1]))
+                        layers_to_consume = [(layer, qty_to_invoice_per_layer[layer][1]) for layer in out_layers]
                 else:
                     # classic case, we are billing a received quantity so let's use the incoming SVLs
                     sign = 1
-                    layers_to_consume = []
-                    for layer in qty_to_invoice_per_layer:
-                        if layer.stock_move_id._is_in() or layer.stock_move_id._is_dropshipped():
-                            layers_to_consume.append((layer, qty_to_invoice_per_layer[layer][1]))
-                while float_compare(aml_qty, 0, precision_rounding=self.product_id.uom_id.rounding) > 0 and layers_to_consume:
+                    layers_to_consume = [(layer, qty_to_invoice_per_layer[layer][1]) for layer in in_layers]
+                while float_compare(aml_qty, 0, precision_rounding=rounding) > 0 and layers_to_consume:
                     layer, total_layer_qty_to_invoice = layers_to_consume[0]
                     layers_to_consume = layers_to_consume[1:]
-                    if float_is_zero(total_layer_qty_to_invoice, precision_rounding=self.product_id.uom_id.rounding):
+                    if float_is_zero(total_layer_qty_to_invoice, precision_rounding=rounding):
                         continue
                     common_qty = min(aml_qty, total_layer_qty_to_invoice)
                     aml_qty -= common_qty
