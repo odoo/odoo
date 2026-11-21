@@ -27,6 +27,8 @@ class IrAttachment(models.Model):
         readonly=True,
         copy=False,
     )
+    quote_attachment = fields.Boolean('Quoted Attachment', copy='False',
+        help='"Quoted" attachments sent as image email signatures or in replied-to emails are not listed in chatter attachment lists')
 
     @api.depends("thumbnail")
     def _compute_has_thumbnail(self):
