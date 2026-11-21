@@ -2,7 +2,7 @@
 <odoo>
     <data>
         <template id="l10n_tw_edi_ecpay_pos.ecpay_certificate_receipt">
-            <html id="pos-receipt">
+            <html id="pos-receipt" t-att-class="extra_data.get('receipt_class', '')">
                 <head>
                     <meta charset="UTF-8"></meta>
                     <t t-call="point_of_sale.pos_order_receipt_style" />
