@@ -12,7 +12,7 @@ const { chartDataSourceRegistry } = registries;
 const { CHART_TYPES } = constants;
 
 // Types not supported by odoo charts (at least for now)
-const EXCLUDED_CHART_TYPES = ["scorecard", "gauge", "calendar", "bubble", "heatmap"];
+const EXCLUDED_CHART_TYPES = ["scorecard", "gauge", "bubble", "heatmap"];
 
 function generateDataSetId(dataSource, dataSet) {
     const identifiers = JSON.parse([...dataSet.identifiers][0] ?? "[]");
@@ -38,7 +38,9 @@ chartDataSourceRegistry.add("odoo", {
     validate: (dataSource) => CommandResult.Success,
     transform: (dataSource) => dataSource,
     extractData: (dataSource, chartId, getters) => {
-        const { datasets, labels } = getters.getChartDataSource(chartId).getData();
+        const chartDataSource = getters.getChartDataSource(chartId);
+        const { datasets } = chartDataSource.getData();
+        const labels = chartDataSource.getLabelValues();
         for (const ds of datasets) {
             if (ds.cumulatedStart) {
                 ds.data[0].value += ds.cumulatedStart;

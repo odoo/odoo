@@ -5,6 +5,19 @@ import { Domain } from "@web/core/domain";
 import { range } from "@web/core/utils/numbers";
 import { getCurrency } from "@web/core/currency";
 import { computeFormatFromCurrency } from "@spreadsheet/currency/helpers";
+import { deserializeDateTime } from "@web/core/l10n/dates";
+import { helpers, constants } from "@odoo/o-spreadsheet";
+
+const { toNumber } = helpers;
+const { DEFAULT_LOCALE } = constants;
+
+export const ODOO_CALENDAR_GRANULARITIES = {
+    year: "year",
+    quarter_number: "quarter",
+    month_number: "month",
+    day_of_week: "day",
+    hour_number: "hour",
+};
 
 export class ChartDataSource extends OdooViewsDataSource {
     /**
@@ -19,6 +32,7 @@ export class ChartDataSource extends OdooViewsDataSource {
                 ...dataSource.metaData,
                 cumulatedStart: dataSource.cumulatedStart,
                 mode: chartTypeToDataSourceMode(chartDefinition.type),
+                calendarGroupBys: getCalendarGroupBys(chartDefinition),
             },
         });
     }
@@ -32,6 +46,9 @@ export class ChartDataSource extends OdooViewsDataSource {
             fieldAttrs: {},
             ...this._metaData,
         };
+        if (metaData.calendarGroupBys && this.getDateField()) {
+            metaData.groupBy = [this._getCalendarDataSourceGroupBy()];
+        }
         this._model = new ChartModel(
             {
                 _t,
@@ -67,6 +84,34 @@ export class ChartDataSource extends OdooViewsDataSource {
             return { datasets: [], labels: [] };
         }
         return this._getHierarchicalData();
+    }
+
+    getLabelValues() {
+        const { labels } = this.getData();
+        if (!this._metaData.calendarGroupBys) {
+            return labels;
+        }
+        const dateField = this.getDateField();
+        if (!dateField || !this._model) {
+            return labels.map(() => null);
+        }
+        const rawValues = {};
+        for (const dataPoint of this._model.dataPoints) {
+            const [groupValue] = Object.values(JSON.parse(dataPoint.identifier)[0]);
+            rawValues[dataPoint.labels[0]] = groupValue && groupValue[0];
+        }
+        return labels.map((label) => {
+            let value = rawValues[label];
+            if (!value) {
+                return null;
+            }
+            if (dateField.type === "datetime") {
+                value = deserializeDateTime(value).toFormat("yyyy-MM-dd HH:mm:ss", {
+                    numberingSystem: "latn",
+                });
+            }
+            return toNumber(value, DEFAULT_LOCALE);
+        });
     }
 
     get source() {
@@ -147,6 +192,25 @@ export class ChartDataSource extends OdooViewsDataSource {
         return this._hierarchicalData;
     }
 
+    getDateField() {
+        const fieldName = this._metaData.groupBy[0]?.split(":")[0];
+        const field = fieldName && this._metaData.fields?.[fieldName];
+        return ["date", "datetime"].includes(field?.type) ? field : undefined;
+    }
+
+    _getCalendarDataSourceGroupBy() {
+        const { calendarGroupBys } = this._metaData;
+        const dateField = this.getDateField();
+        const grouping = Object.keys(ODOO_CALENDAR_GRANULARITIES).findLast((granularity) =>
+            calendarGroupBys.includes(granularity)
+        );
+        let granularity = ODOO_CALENDAR_GRANULARITIES[grouping];
+        if (granularity === "hour" && dateField.type === "date") {
+            granularity = "day";
+        }
+        return `${dateField.name}:${granularity}`;
+    }
+
     /**
      * Build a domain from the labels of the values of the groupBys.
      * Only works if getHierarchicalData was called before to build a mapping between groupBy labels and domains.
@@ -162,6 +226,16 @@ export class ChartDataSource extends OdooViewsDataSource {
         }
         return Domain.and(domains).toList();
     }
+}
+
+export function getCalendarGroupBys(chartDefinition) {
+    if (chartDefinition.type !== "calendar") {
+        return undefined;
+    }
+    return [
+        chartDefinition.horizontalGroupBy ?? "day_of_week",
+        chartDefinition.verticalGroupBy ?? "hour_number",
+    ];
 }
 
 export function chartTypeToDataSourceMode(chartType) {
