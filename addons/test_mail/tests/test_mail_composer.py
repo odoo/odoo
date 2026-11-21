@@ -567,6 +567,27 @@ class TestComposerForm(TestMailComposer):
                 form.template_id = template_no_subject
                 self.assertEqual(form.subject, template_complete.subject, "subject should be kept unchanged")
 
+    @users('employee')
+    def test_mail_composer_comment_batch_single_res_id(self):
+        """ Test that mass_mail composition mode forces batch mode even for a single record,
+        preventing premature template rendering and placeholder breakage. """
+        mass_mail_form = Form(self.env['mail.compose.message'].with_context(
+            self._get_web_context(self.test_record, add_web=True, default_composition_mode='mass_mail')
+        ))
+        self.assertTrue(
+            mass_mail_form.composition_batch,
+            "Mass mailing with a single record should evaluate as a batch."
+        )
+        comment_form = Form(self.env['mail.compose.message'].with_context(
+            self._get_web_context(self.test_record, add_web=True, default_composition_mode='comment')
+        ))
+        self.assertFalse(comment_form.composition_batch, "Comment mode with a single record should not evaluate as a batch.")
+        empty_mass_mail_form = Form(self.env['mail.compose.message'].with_context(
+            default_composition_mode='mass_mail',
+            default_model=self.test_record._name,
+        ))
+        self.assertFalse(empty_mass_mail_form.composition_batch, "Mass mailing with zero records should not evaluate as a batch.")
+
 @tagged('mail_composer')
 class TestComposerInternals(TestMailComposer):
 
