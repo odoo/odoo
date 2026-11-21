@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"POT-Creation-Date: 2026-11-20 17:37+0000\n"
 "PO-Revision-Date: 2026-11-09 07:43+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -67,8 +67,8 @@ msgid ""
 "'cancel'\"/>"
 msgstr ""
 "<span class=\"fa fa-exclamation-triangle text-warning\" title=\"與此專案關聯"
-"的銷售單已被取消。我們建議更新銷售單項目，或依照銷售單的取消動作取消此專案"
-"。\" invisible=\"sale_order_state != 'cancel'\"/>"
+"的銷售單已被取消。我們建議更新銷售單項目，或依照銷售單的取消動作取消此專案。"
+"\" invisible=\"sale_order_state != 'cancel'\"/>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
@@ -80,8 +80,8 @@ msgid ""
 "'cancel'\"/>"
 msgstr ""
 "<span class=\"fa fa-exclamation-triangle text-warning\" title=\"與此任務關聯"
-"的銷售單已被取消。我們建議更新銷售單項目，或依照銷售單的取消動作取消此任務"
-"。\" invisible=\"sale_order_state != 'cancel'\"/>"
+"的銷售單已被取消。我們建議更新銷售單項目，或依照銷售單的取消動作取消此任務。"
+"\" invisible=\"sale_order_state != 'cancel'\"/>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -224,6 +224,12 @@ msgid "Confirm & Close"
 msgstr ""
 
 #. module: sale_project
+#. odoo-javascript
+#: code:addons/sale_project/static/src/views/project_form/sale_project_project_form_controller.js:0
+msgid "Confirmation Required"
+msgstr ""
+
+#. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid ""
@@ -277,7 +283,8 @@ msgstr "建立客戶發票"
 msgid ""
 "Create a project for the order with a task for each sales order line to "
 "track the time spent."
-msgstr "為訂單建立一個專案，並為每個銷售訂單資料行分配一個任務，以追蹤所花費的時間。"
+msgstr ""
+"為訂單建立一個專案，並為每個銷售訂單資料行分配一個任務，以追蹤所花費的時間。"
 
 #. module: sale_project
 #. odoo-python
@@ -488,6 +495,15 @@ msgstr "日記賬項目"
 #: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
 msgid "Load more"
 msgstr "載入更多"
+
+#. module: sale_project
+#. odoo-javascript
+#: code:addons/sale_project/static/src/views/project_form/sale_project_project_form_controller.js:0
+msgid ""
+"Making this project non-billable will unlink it from any products that "
+"create tasks in it or use it as a template. Are you sure you want to "
+"continue?"
+msgstr ""
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__service_type

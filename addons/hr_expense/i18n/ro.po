@@ -18,8 +18,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-30 17:37+0000\n"
-"PO-Revision-Date: 2026-08-02 12:55+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2026-11-20 06:05+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
 "hr_expense/ro/>\n"
 "Language: ro\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: hr_expense
 #. odoo-python
@@ -332,7 +332,7 @@ msgstr "Atașați o chitanță - de obicei o imagine sau un fișier PDF."
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_ir_attachment
 msgid "Attachment"
-msgstr ""
+msgstr "Atașament"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_attachment_count
@@ -962,7 +962,7 @@ msgstr "Hotel, bilet de avion, taxi, etc."
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_tax__hr_expense_ids
 msgid "Hr Expense"
-msgstr ""
+msgstr "Cheltuieli HR"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_alias_domain_id
@@ -1391,6 +1391,10 @@ msgid ""
 "Give Odoo a hand to find an account by setting up an expense account.\n"
 "%(expense)s %(expense_name)s.\n"
 msgstr ""
+"Odoo a verificat cheltuiala, produsul, compania și jurnalul, dar nu a găsit "
+"un cont.\n"
+"Ajutați Odoo să găsească un cont configurând un cont de cheltuieli.\n"
+"%(expense)s %(expense_name)s.\n"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_account
@@ -1408,6 +1412,8 @@ msgid ""
 "Once your <b>Expense</b> is ready, you can submit it to your manager and "
 "wait for approval."
 msgstr ""
+"După ce <b>cheltuiala</b> este pregătită, o puteți trimite managerului și "
+"aștepta aprobarea."
 
 #. module: hr_expense
 #. odoo-python
@@ -1488,7 +1494,7 @@ msgstr "Partener"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_payment_register
 msgid "Pay"
-msgstr ""
+msgstr "Plătește"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__payment_method_line_id
@@ -1763,6 +1769,11 @@ msgid ""
 "expense approver), otherwise by the employee's manager. If there is none, "
 "the expense is auto-validated."
 msgstr ""
+"Selectați utilizatorul responsabil de aprobarea cheltuielilor acestui "
+"angajat.\n"
+"Dacă nu este specificat, aprobarea este făcută de managerul departamentului "
+"(dacă este aprobator de cheltuieli), în caz contrar de managerul "
+"angajatului. Dacă nu există un manager, cheltuiala este validată automat."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__selectable_payment_method_line_ids
@@ -1958,6 +1969,8 @@ msgid ""
 "The attachment (%(attachment_name)s) has not been added to the report due to "
 "the following error: '%(error)s'"
 msgstr ""
+"Atașamentul (%(attachment_name)s) nu a fost adăugat la raport din cauza "
+"următoarei erori: '%(error)s'"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
@@ -1974,6 +1987,8 @@ msgid ""
 "The current user has no related employee. Please, create one in %(company)s, "
 "or switch to a company where they have one."
 msgstr ""
+"Utilizatorul curent nu are un angajat asociat. Creați unul în %(company)s "
+"sau comutați la o companie în care există un angajat asociat."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -2003,6 +2018,9 @@ msgid ""
 "this isn't supported:\n"
 "%(expenses)s"
 msgstr ""
+"Metoda de plată a următoarelor cheltuieli generează mai multe conturi de "
+"datorii, lucru care nu este acceptat:\n"
+"%(expenses)s"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_post_wizard__employee_journal_id
@@ -2145,6 +2163,10 @@ msgid ""
 "Reach out to the administrators, flash your best smile, and see if they'll "
 "grant you the magical access you seek."
 msgstr ""
+"Ups! Nu puteți edita această cheltuială.\n"
+"\n"
+"Contactați administratorii, afișați-vă cel mai frumos zâmbet și vedeți dacă "
+"vă pot acorda accesul dorit."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_uom_id
@@ -2283,6 +2305,8 @@ msgstr "Puteți genera o notă contabilă doar pentru cheltuieli aprobate."
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You can't add an attachment to an expense once it has been approved."
 msgstr ""
+"Nu puteți adăuga un atașament la o cheltuială după ce aceasta a fost "
+"aprobată."
 
 #. module: hr_expense
 #. odoo-python
@@ -2296,6 +2320,7 @@ msgstr ""
 msgid ""
 "You can't delete attachments from an expense once it has been submitted."
 msgstr ""
+"Nu puteți șterge atașamentele unei cheltuieli după ce aceasta a fost trimisă."
 
 #. module: hr_expense
 #. odoo-python
@@ -2314,6 +2339,8 @@ msgid ""
 "You cannot approve:\n"
 " %(reasons)s"
 msgstr ""
+"Nu puteți aproba:\n"
+" %(reasons)s"
 
 #. module: hr_expense
 #. odoo-python
@@ -2390,6 +2417,7 @@ msgstr "Nu aveți drepturile necesare pentru a edita această cheltuială."
 #: code:addons/hr_expense/wizard/hr_expense_post_wizard.py:0
 msgid "You don't have the access rights to modify this expense."
 msgstr ""
+"Nu aveți drepturile de acces necesare pentru a modifica această cheltuială."
 
 #. module: hr_expense
 #. odoo-python

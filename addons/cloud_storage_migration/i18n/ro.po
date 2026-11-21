@@ -1,14 +1,15 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* cloud_storage_migration
+# * cloud_storage_migration
 #
+# Dorin Hongu <dhongu@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-08-02 11:48+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-11-20 09:36+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
 "cloud_storage_migration/ro/>\n"
 "Language: ro\n"
@@ -17,22 +18,22 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_all_model_ids
 msgid "All Attachments"
-msgstr ""
+msgstr "Toate atașamentele"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__all_to_migrate
 msgid "All Attachments Migration"
-msgstr ""
+msgstr "Migrarea tuturor atașamentelor"
 
 #. module: cloud_storage_migration
 #: model:ir.model,name:cloud_storage_migration.model_ir_attachment
 msgid "Attachment"
-msgstr ""
+msgstr "Atașament"
 
 #. module: cloud_storage_migration
 #. odoo-python
@@ -41,6 +42,8 @@ msgid ""
 "Attachment (%s) does not have a stored filename and cannot be migrated to "
 "cloud storage."
 msgstr ""
+"Atașamentul (%s) nu are un nume de fișier stocat și nu poate fi migrat în "
+"stocarea în cloud."
 
 #. module: cloud_storage_migration
 #. odoo-python
@@ -49,72 +52,74 @@ msgid ""
 "Attachment (%s) is not a binary attachment and cannot be migrated to cloud "
 "storage."
 msgstr ""
+"Atașamentul (%s) nu este un atașament binar și nu poate fi migrat în "
+"stocarea în cloud."
 
 #. module: cloud_storage_migration
 #: model_terms:ir.ui.view,arch_db:cloud_storage_migration.cloud_storage_migration_config_settings_view_form
 msgid "Attachments Report"
-msgstr ""
+msgstr "Raportul atașamentelor"
 
 #. module: cloud_storage_migration
 #: model_terms:ir.ui.view,arch_db:cloud_storage_migration.cloud_storage_migration_config_settings_view_form
 msgid "Cloud Storage Migration"
-msgstr ""
+msgstr "Migrarea stocării în cloud"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_all_models
 msgid "Cloud Storage Migration All Models"
-msgstr ""
+msgstr "Migrarea stocării în cloud pentru toate modelele"
 
 #. module: cloud_storage_migration
 #: model:ir.actions.act_window,name:cloud_storage_migration.action_cloud_storage_migration_cron
 msgid "Cloud Storage Migration Cron"
-msgstr ""
+msgstr "Planificatorul migrării stocării în cloud"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_message_models
 msgid "Cloud Storage Migration Message Models"
-msgstr ""
+msgstr "Migrarea stocării în cloud pentru modelele de mesaje"
 
 #. module: cloud_storage_migration
 #: model:ir.actions.act_window,name:cloud_storage_migration.action_cloud_storage_migration_report
 #: model:ir.model,name:cloud_storage_migration.model_cloud_storage_migration_report
 #: model_terms:ir.ui.view,arch_db:cloud_storage_migration.view_cloud_storage_migration_report_list
 msgid "Cloud Storage Migration Report"
-msgstr ""
+msgstr "Raportul migrării stocării în cloud"
 
 #. module: cloud_storage_migration
 #. odoo-python
 #: code:addons/cloud_storage_migration/models/ir_attachment.py:0
 msgid "Cloud storage provider is not configured"
-msgstr ""
+msgstr "Furnizorul de stocare în cloud nu este configurat"
 
 #. module: cloud_storage_migration
 #: model:ir.model,name:cloud_storage_migration.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Setări de configurare"
 
 #. module: cloud_storage_migration
 #: model_terms:ir.ui.view,arch_db:cloud_storage_migration.cloud_storage_migration_config_settings_view_form
 msgid "Cron Job"
-msgstr ""
+msgstr "Acțiune planificată"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__display_name
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_ir_attachment__display_name
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_res_config_settings__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nume afișat"
 
 #. module: cloud_storage_migration
 #. odoo-python
 #: code:addons/cloud_storage_migration/models/ir_attachment.py:0
 msgid "Failed to upload attachment %(id)s to cloud storage: %(code)s"
-msgstr ""
+msgstr "Încărcarea atașamentului %(id)s în stocarea în cloud a eșuat: %(code)s"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__has_attachment_rel
 msgid "Has Attachment Field"
-msgstr ""
+msgstr "Are câmp pentru atașament"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__id
@@ -129,6 +134,8 @@ msgid ""
 "Indicates whether all attachments associated with this model are scheduled "
 "for cloud storage migration"
 msgstr ""
+"Indică dacă toate atașamentele asociate acestui model sunt programate pentru "
+"migrare în stocarea în cloud"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__message_to_migrate
@@ -136,6 +143,8 @@ msgid ""
 "Indicates whether attachments linked to mail messages for this model are "
 "scheduled for cloud storage migration"
 msgstr ""
+"Indică dacă atașamentele asociate mesajelor de e-mail pentru acest model "
+"sunt programate pentru migrare în stocarea în cloud"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__has_attachment_rel
@@ -143,61 +152,62 @@ msgid ""
 "Indicates whether this model has a relational field linking to ir.attachment"
 " model"
 msgstr ""
+"Indică dacă acest model are un câmp relațional către modelul ir.attachment"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__all_max_size
 msgid "Largest Attachment (MB)"
-msgstr ""
+msgstr "Cel mai mare atașament (MB)"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_message_model_ids
 msgid "Message Attachments"
-msgstr ""
+msgstr "Atașamentele mesajelor"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__message_count
 msgid "Message Attachments Count"
-msgstr ""
+msgstr "Numărul atașamentelor mesajelor"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__message_to_migrate
 msgid "Message Attachments Migration"
-msgstr ""
+msgstr "Migrarea atașamentelor mesajelor"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__message_sum_size
 msgid "Message Attachments Size (MB)"
-msgstr ""
+msgstr "Dimensiunea atașamentelor mesajelor (MB)"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__message_max_size
 msgid "Message Largest Attachment (MB)"
-msgstr ""
+msgstr "Cel mai mare atașament al mesajului (MB)"
 
 #. module: cloud_storage_migration
 #: model:ir.actions.server,name:cloud_storage_migration.ir_cron_manual_migrate_local_to_cloud_storage_ir_actions_server
 msgid "Migrate Local Attachment Binaries to Cloud Storage"
-msgstr ""
+msgstr "Migrează fișierele binare ale atașamentelor locale în stocarea în cloud"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_all_model_ids
 msgid "Migrate Models' All Attachments"
-msgstr ""
+msgstr "Migrează toate atașamentele modelelor"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_message_model_ids
 msgid "Migrate Models' Message Attachments"
-msgstr ""
+msgstr "Migrează atașamentele mesajelor modelelor"
 
 #. module: cloud_storage_migration
 #: model_terms:ir.ui.view,arch_db:cloud_storage_migration.cloud_storage_migration_config_settings_view_form
 msgid "Migrate local attachments to cloud storage"
-msgstr ""
+msgstr "Migrează atașamentele locale în stocarea în cloud"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_progress
 msgid "Migration Progress"
-msgstr ""
+msgstr "Progresul migrării"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__res_model
@@ -207,28 +217,28 @@ msgstr ""
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__res_model_name
 msgid "Model Name"
-msgstr ""
+msgstr "Nume model"
 
 #. module: cloud_storage_migration
 #: model_terms:ir.actions.act_window,help:cloud_storage_migration.action_cloud_storage_migration_report
 msgid "No attachment data found"
-msgstr ""
+msgstr "Nu s-au găsit date despre atașamente"
 
 #. module: cloud_storage_migration
 #. odoo-python
 #: code:addons/cloud_storage_migration/models/ir_attachment.py:0
 msgid "No model for cloud storage migration"
-msgstr ""
+msgstr "Nu există niciun model pentru migrarea stocării în cloud"
 
 #. module: cloud_storage_migration
 #: model_terms:ir.ui.view,arch_db:cloud_storage_migration.cloud_storage_migration_config_settings_view_form
 msgid "Parameters"
-msgstr ""
+msgstr "Parametri"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_progress
 msgid "Shows the progress of cloud storage migration (current/total)"
-msgstr ""
+msgstr "Afișează progresul migrării stocării în cloud (curent/total)"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__all_max_size
@@ -236,6 +246,8 @@ msgid ""
 "Size in megabytes of the largest attachment associated with any record of "
 "this model"
 msgstr ""
+"Dimensiunea în megabytes a celui mai mare atașament asociat oricărei "
+"înregistrări a acestui model"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__message_max_size
@@ -243,6 +255,8 @@ msgid ""
 "Size in megabytes of the largest attachment linked to mail messages for this"
 " model"
 msgstr ""
+"Dimensiunea în megabytes a celui mai mare atașament asociat mesajelor de e-"
+"mail pentru acest model"
 
 #. module: cloud_storage_migration
 #: model_terms:ir.actions.act_window,help:cloud_storage_migration.action_cloud_storage_migration_report
@@ -250,26 +264,30 @@ msgid ""
 "This report shows statistics about attachments that could be migrated to "
 "cloud storage."
 msgstr ""
+"Acest raport prezintă statistici despre atașamentele care pot fi migrate în "
+"stocarea în cloud."
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__all_count
 msgid "Total Attachments Count"
-msgstr ""
+msgstr "Numărul total de atașamente"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__all_sum_size
 msgid "Total Attachments Size (MB)"
-msgstr ""
+msgstr "Dimensiunea totală a atașamentelor (MB)"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__all_count
 msgid "Total number of attachments associated with all records of this model"
 msgstr ""
+"Numărul total de atașamente asociate tuturor înregistrărilor acestui model"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__message_count
 msgid "Total number of attachments linked to mail messages for this model"
 msgstr ""
+"Numărul total de atașamente asociate mesajelor de e-mail pentru acest model"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__all_sum_size
@@ -277,6 +295,8 @@ msgid ""
 "Total size in megabytes of all attachments associated with records of this "
 "model"
 msgstr ""
+"Dimensiunea totală în megabytes a tuturor atașamentelor asociate "
+"înregistrărilor acestui model"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__message_sum_size
@@ -284,3 +304,5 @@ msgid ""
 "Total size in megabytes of all attachments linked to mail messages for this "
 "model"
 msgstr ""
+"Dimensiunea totală în megabytes a tuturor atașamentelor asociate mesajelor "
+"de e-mail pentru acest model"

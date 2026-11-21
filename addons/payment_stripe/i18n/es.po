@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:37+0000\n"
-"PO-Revision-Date: 2026-08-07 23:09+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-11-19 14:18+0000\n"
+"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/"
 "payment_stripe/es/>\n"
 "Language: es\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: payment_stripe
 #. odoo-javascript
@@ -50,7 +50,7 @@ msgstr "Entrega"
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_token__display_name
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__display_name
 msgid "Display Name"
-msgstr "Nombre para mostrar"
+msgstr "Nombre a mostrar"
 
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
@@ -66,12 +66,12 @@ msgstr "Envío gratuito"
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
 msgid "Generate your webhook"
-msgstr "Genere su webhook"
+msgstr "Genera tu webhook"
 
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
 msgid "Get your Secret and Publishable keys"
-msgstr "Obtenga su clave secreta y pública"
+msgstr "Obtén tu clave secreta y pública"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__id
@@ -86,8 +86,8 @@ msgid ""
 "If a webhook is enabled on your Stripe account, this signing secret must be "
 "set to authenticate the messages sent from Stripe to Odoo."
 msgstr ""
-"Si cuenta con un webhook habilitado en su cuenta de Stripe, debe "
-"configurarlo para que autentifique los mensajes enviados desde Stripe a Odoo."
+"Si hay un webhook activado en tu cuenta de Stripe, debes establecer este "
+"secreto de firma para autenticar los mensajes enviados desde Stripe a Odoo."
 
 #. module: payment_stripe
 #. odoo-javascript
@@ -131,7 +131,7 @@ msgstr "Error al procesar el pago"
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
 msgid "Please use live credentials to enable Apple Pay."
-msgstr "Use datos reales para habilitar Apple Pay."
+msgstr "Usa credenciales reales para activar Apple Pay."
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__stripe_publishable_key
@@ -142,18 +142,18 @@ msgstr "Clave publicable"
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 msgid "Received data with invalid intent status: %s."
-msgstr "Datos recibidos con estado de intento no válido: %s."
+msgstr "Se han recibido datos con un estado de intención no válido: %s."
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 msgid "Received data with missing intent status."
-msgstr "Datos recibidos sin estado de intento."
+msgstr "Se han recibido datos sin el estado de intención."
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__stripe_secret_key
 msgid "Secret Key"
-msgstr "Contraseña secreta"
+msgstr "Clave secreta"
 
 #. module: payment_stripe
 #: model:ir.model.fields.selection,name:payment_stripe.selection__payment_provider__code__stripe
@@ -167,7 +167,7 @@ msgid ""
 "Stripe Connect is not available in your country, please use another payment "
 "provider."
 msgstr ""
-"Stripe Connect no está disponible en su país, use otro proveedor de pago."
+"Stripe Connect no está disponible en tu país; utiliza otro proveedor de pago."
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_mandate
@@ -183,7 +183,7 @@ msgstr "ID del método de pago de Stripe"
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 msgid "The customer left the payment page."
-msgstr "El cliente abandonó la página de pago."
+msgstr "El cliente ha abandonado la página de pago."
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_provider__stripe_publishable_key
@@ -198,13 +198,14 @@ msgid ""
 "The refund did not go through. Please log into your Stripe Dashboard to get "
 "more information on that matter, and address any accounting discrepancies."
 msgstr ""
-"No se pudo realizar el reembolso. Para obtener más información y solucionar "
-"cualquier problema, inicie sesión y vaya a su tablero en Stripe."
+"No se ha podido realizar el reembolso. Inicia sesión y dirígete a tu tablero "
+"o panel de control de Stripe para obtener más información al respecto y "
+"resolver cualquier discrepancia contable."
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_provider__code
 msgid "The technical code of this payment provider."
-msgstr "El código técnico de este proveedor de pagos."
+msgstr "El código técnico de este proveedor de pago."
 
 #. module: payment_stripe
 #. odoo-python
@@ -215,13 +216,13 @@ msgstr "No se puede convertir el token de pago a la nueva API."
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__stripe_webhook_secret
 msgid "Webhook Signing Secret"
-msgstr "Secreto de firma del Webhook"
+msgstr "Secreto de firma del webhook"
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
 msgid "You Stripe Webhook was successfully set up!"
-msgstr "¡Se configuró con éxito su webhook de Stripe!"
+msgstr "¡Tu webhook de Stripe se ha configurado correctamente!"
 
 #. module: payment_stripe
 #. odoo-python
@@ -229,7 +230,7 @@ msgstr "¡Se configuró con éxito su webhook de Stripe!"
 msgid ""
 "You cannot create a Stripe Webhook if your Stripe Secret Key is not set."
 msgstr ""
-"No puede crear un webhook de Stripe si su clave secreta de Stripe no está "
+"No puedes crear un webhook de Stripe si tu clave secreta de Stripe no está "
 "configurada."
 
 #. module: payment_stripe
@@ -239,8 +240,8 @@ msgid ""
 "You cannot set the provider state to Enabled until your onboarding to Stripe "
 "is completed."
 msgstr ""
-"No puede establecer el estado del proveedor como Habilitado hasta que "
-"termine su incorporación con Stripe."
+"No puedes establecer el estado del proveedor en «Activado» hasta que hayas "
+"completado tu registro en Stripe."
 
 #. module: payment_stripe
 #. odoo-python
@@ -249,14 +250,14 @@ msgid ""
 "You cannot set the provider to Test Mode while it is linked with your Stripe "
 "account."
 msgstr ""
-"No puede establecer al proveedor en modo de prueba mientras esté vinculado a "
-"su cuenta de Stripe."
+"No puedes establecer el proveedor en modo de prueba mientras esté vinculado "
+"a tu cuenta de Stripe."
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
 msgid "Your Stripe Webhook is already set up."
-msgstr "Su webhook de Stripe ya está configurado."
+msgstr "Tu webhook de Stripe ya está configurado."
 
 #. module: payment_stripe
 #. odoo-javascript
@@ -268,7 +269,7 @@ msgstr "Tu pedido"
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
 msgid "Your web domain was successfully verified."
-msgstr "Se verificó con éxito su dominio de sitio web."
+msgstr "Tu dominio web se ha verificado correctamente."
 
 #~ msgid "Payment Acquirer"
 #~ msgstr "Método de pago"

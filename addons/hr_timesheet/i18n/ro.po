@@ -5,7 +5,7 @@
 # Translators:
 # sharkutz <sharkutz4life@yahoo.com>, 2022
 # Hongu Cosmin <cosmin513@gmail.com>, 2022
-# Dorin Hongu <dhongu@gmail.com>, 2022
+# Dorin Hongu <dhongu@gmail.com>, 2022, 2026.
 # Martin Trigaux, 2022
 # Foldi Robert <foldirobert@nexterp.ro>, 2023
 # Cozmin Candea <office@terrabit.ro>, 2023
@@ -17,8 +17,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-12 17:36+0000\n"
-"PO-Revision-Date: 2026-08-02 23:45+0000\n"
-"Last-Translator: MAHAMADASIF ANSARI <maan@odoo.com>\n"
+"PO-Revision-Date: 2026-11-20 06:05+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
 "hr_timesheet/ro/>\n"
 "Language: ro\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -166,6 +166,9 @@ msgid ""
 "                        Are you sure you want to delete these employees?\n"
 "                    </span>"
 msgstr ""
+"<span invisible=\"has_timesheet\">\n"
+"                        Sigur dorești să ștergi acești angajați?\n"
+"                    </span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
@@ -748,7 +751,7 @@ msgstr "Nu există date încă!"
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "No timesheets created: employees aren’t working on the selected days"
-msgstr ""
+msgstr "Nu s-au creat foi de pontaj: angajații nu lucrează în zilele selectate"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -795,7 +798,7 @@ msgstr "Filtre personale pentru angajați pentru vizualizarea calendarului"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
 msgid "Please first delete all of their timesheets."
-msgstr ""
+msgstr "Șterge mai întâi toate foile lor de pontaj."
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_uom_uom
@@ -974,6 +977,8 @@ msgid ""
 "Some timesheets were not created: employees aren’t working on the selected "
 "days"
 msgstr ""
+"Unele foi de pontaj nu au fost create: angajații nu lucrează în zilele "
+"selectate"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_report_subtask
@@ -1447,6 +1452,12 @@ msgid ""
 "those timesheets or consider archiving the employee instead.\n"
 "                        </span>"
 msgstr ""
+"Ups! Angajatul pe care încerci să îl ștergi mai are foi de pontaj și nu "
+"poate fi șters.\n"
+"                        <span invisible=\"not has_active_employee\">\n"
+"                            Ai două opțiuni: șterge acele foi de pontaj sau "
+"arhivează angajatul.\n"
+"                        </span>"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__display_name
@@ -1463,6 +1474,17 @@ msgid ""
 "        Make sure to use the right format and order e.g. Improve the "
 "configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"Utilizați aceste cuvinte cheie în titlu pentru a seta sarcini noi:\n"
+"\n"
+"        30h Alocați 30 de ore sarcinii\n"
+"        #tags Setează etichete pe sarcină\n"
+"        @user Atribuie sarcina unui utilizator\n"
+"        ! Setează sarcina o prioritate medie\n"
+"        !! Setează sarcina o prioritate mare\n"
+"        !!! Setează sarcina o prioritate urgentă\n"
+"\n"
+"Asigurați-vă că utilizați formatul și ordinea corectă, de exemplu "
+"Îmbunătățiți ecranul de configurare 5h #feature #v16 @Mitchell !"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__user_id

@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 17:37+0000\n"
-"PO-Revision-Date: 2026-11-11 07:33+0000\n"
+"POT-Creation-Date: 2026-11-20 17:35+0000\n"
+"PO-Revision-Date: 2026-11-16 08:33+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "point_of_sale/ja/>\n"
@@ -343,7 +343,7 @@ msgstr "<span>残高</span>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<span>Closing</span>"
-msgstr "<span>クローズ</span>"
+msgstr "<span>締め処理中</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -713,7 +713,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Add a closing note..."
-msgstr "終了ノートを追加..."
+msgstr "締めメモを追加…"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1936,7 +1936,7 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__cash_control
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_cash_control
 msgid "Check the amount of the cashbox at opening and closing."
-msgstr "開閉時にキャッシュボックスの金額を確認してください。"
+msgstr "開始時と締め時に、キャッシュドロワーの金額を確認します。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2092,7 +2092,7 @@ msgstr "セッションクローズ"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Close Session & Post Entries"
-msgstr "セッションクローズ & 記帳"
+msgstr "セッションを締めて仕訳を記帳"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_close_session_wizard
@@ -2108,7 +2108,7 @@ msgstr "デバッグウィジットをクローズ"
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_session__state__closed
 msgid "Closed & Posted"
-msgstr "クローズ済・記帳済"
+msgstr "締め済・記帳済"
 
 #. module: point_of_sale
 #. odoo-python
@@ -3566,6 +3566,7 @@ msgstr "PoSデータをエクスポート"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Export data"
 msgstr "データをエクスポートする"
@@ -4547,8 +4548,8 @@ msgid ""
 "It is forbidden to modify a tax used in a POS order not posted. You must "
 "close the POS sessions before modifying the tax."
 msgstr ""
-"掲載されていないPOS注文で使用される税金を変更することは禁じられています。税金"
-"を変更する前に、POSセッションを閉じる必要があります。"
+"未記帳のPOSオーダで使用されている税は変更できません。税を変更する前に、POS"
+"セッションを締めてください。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5877,7 +5878,7 @@ msgstr "おっと.."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 msgid "Open Cashbox"
-msgstr "キャッシュボックスを開く"
+msgstr "キャッシュドロワーを開く"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6133,7 +6134,7 @@ msgstr "オーダ明細"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Order saved for later"
-msgstr "後に保存されたオーダ"
+msgstr "オーダを一時保存しました"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
@@ -6523,7 +6524,7 @@ msgstr "支払方法"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Payments in"
-msgstr "以下の支払"
+msgstr "入金"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8741,8 +8742,8 @@ msgid ""
 "errors. You can exit the Point of Sale, but do not close the session before "
 "the issue has been resolved."
 msgstr ""
-"一部の注文は、構成エラーのためにサーバーに送信できませんでした。 POSを終了す"
-"ることはできますが、問題が解決するまでセッションを閉じないでください。"
+"一部のオーダは、設定の不備によりサーバへ送信できませんでした。POSは終了できま"
+"すが、問題が解決するまでセッションを締めないでください。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8752,9 +8753,8 @@ msgid ""
 "issues. You can exit the Point of Sale, but do not close the session before "
 "the issue has been resolved."
 msgstr ""
-"インターネット接続の問題により、一部の注文をサーバーに送信できませんでした。 "
-"POSを終了することはできますが、問題が解決するまでセッションを閉じないでくださ"
-"い。"
+"一部のオーダは、インターネット接続の問題によりサーバへ送信できませんでした。"
+"POSは終了できますが、問題が解決するまでセッションを締めないでください。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9655,8 +9655,7 @@ msgstr "セッションは異常に長い間開かれました。閉鎖をご検
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "The session is being closed by another user. The page will be reloaded."
-msgstr ""
-"セッションが他のユーザによって終了されています。ページが再読み込みされます。"
+msgstr "別のユーザがこのセッションを締めています。ページを再読み込みします。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -10108,7 +10107,7 @@ msgstr "チップ"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "To Close"
-msgstr "クローズ対象"
+msgstr "未締め"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_order__invoice_status__to_invoice
@@ -10867,8 +10866,8 @@ msgid ""
 "You can't reset this invoice to draft because the POS session is still open. "
 "Please close the ongoing session first, then try again."
 msgstr ""
-"この請求書を下書きに戻すことはできません。POSセッションがまだ開いているためで"
-"す。まず進行中のセッションを閉じてから、再度お試しください。"
+"POSセッションが未締めのため、この請求書を下書きに戻すことはできません。先に未"
+"締めのセッションを締めてから、もう一度お試しください。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -10913,7 +10912,7 @@ msgid ""
 "You cannot close the POS when invoices are not posted.\n"
 "Invoices: %s"
 msgstr ""
-"請求書が記帳されていない時はPOSをクローズすることができません。\n"
+"請求書が未記帳の場合、POSを締めることはできません。\n"
 "請求書: %s"
 
 #. module: point_of_sale
@@ -10921,7 +10920,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid ""
 "You cannot close the POS while there are still draft orders for the day."
-msgstr "その日の未確定オーダが残っている間は、POSを閉じることができません。"
+msgstr "本日のオーダに下書きが残っているため、POSを締めることはできません。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -11120,8 +11119,8 @@ msgid ""
 "Your PoS Session is open since %(date)s, we advise you to close it and to "
 "create a new one."
 msgstr ""
-"PoSセッションは%(date)s以降開いています。閉じて、新しいセッションを作成するこ"
-"とをお勧めします。"
+"POSセッションは %(date)s からオープン中です。セッションを締めて、新しいセッ"
+"ションを作成することをおすすめします。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -11187,7 +11186,7 @@ msgstr "値引"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/orderline/orderline.xml:0
 msgid "discount off on"
-msgstr "割引オフ"
+msgstr "% 割引 対象:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_view_form_normalized_pos

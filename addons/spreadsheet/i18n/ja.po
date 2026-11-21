@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-24 17:38+0000\n"
-"PO-Revision-Date: 2026-11-12 06:39+0000\n"
+"POT-Creation-Date: 2026-11-20 17:37+0000\n"
+"PO-Revision-Date: 2026-11-20 09:36+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "spreadsheet/ja/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -739,6 +739,24 @@ msgstr "計算した測定値を追加"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Add filters"
 msgstr "フィルタを追加"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Add missing columns"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Add missing columns and rows"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Add missing rows"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1815,6 +1833,8 @@ msgstr "リンクされたシートが隠されているためリンクを開け
 msgid ""
 "Cannot perform this action on merged cells. Unmerge the cells and try again."
 msgstr ""
+"結合されたセルではこの操作を実行できません。セルの結合を解除してから、もう一"
+"度お試しください。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1835,8 +1855,8 @@ msgid ""
 "Cannot sort. To sort, select only cells or only merges that have the same "
 "size."
 msgstr ""
-"ソートできません。ソートするには、同じサイズのセルまたはマージのみを選択して"
-"下さい。"
+"ソートできません。ソートするには、同じサイズのセルまたは統合のみを選択して下"
+"さい。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5510,7 +5530,7 @@ msgstr "リスト数%(list_id)s"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Load more..."
-msgstr "さらに読み込む..."
+msgstr "さらに読み込む…"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5754,8 +5774,8 @@ msgid ""
 "Merged cells are preventing this operation. Unmerge those cells and try "
 "again."
 msgstr ""
-"マージされたセルがこの操作を妨げています。セルをアンマージして、もう一度試し"
-"て下さい。"
+"統合されたセルがこの操作を妨げています。セルをアン統合して、もう一度試して下"
+"さい。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5772,8 +5792,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Merging these cells will only preserve the top-leftmost value. Merge anyway?"
-msgstr ""
-"これらのセルをマージすると一番左上の値のみが保持されます。マージしますか？"
+msgstr "これらのセルを統合すると一番左上の値のみが保持されます。統合しますか？"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6032,7 +6051,7 @@ msgstr "右に移動"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Name"
-msgstr "名称"
+msgstr "名前"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6086,7 +6105,7 @@ msgstr "決済日後の次回クーポン日"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/hooks.js:0
 msgid "No"
-msgstr ""
+msgstr "いいえ"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6140,19 +6159,19 @@ msgstr "一致する項目が見つかりません。"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "No results"
-msgstr "該当結果なし"
+msgstr "結果なし"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "No results for the given arguments of TOCOL."
-msgstr "TOCOLの指定された引数に対する結果はありません。"
+msgstr "TOCOLの指定された引数に対する結果がありません。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "No results for the given arguments of TOROW."
-msgstr "TOROWの指定された引数に対する結果はありません。"
+msgstr "TOROWの指定された引数に対する結果がありません。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6164,25 +6183,25 @@ msgstr "行なし"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "No selected cells had whitespace trimmed."
-msgstr "選択されたセルには空白がありません。"
+msgstr "選択したセルに削除対象の空白はありませんでした。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "No sorting"
-msgstr "ソート梨"
+msgstr "並べ替えなし"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "No text to split."
-msgstr "分割する文字列がありません。"
+msgstr "分割するテキストがありません。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "No unique values found"
-msgstr "一意の値なし"
+msgstr "一意の値が見つかりませんでした"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6203,7 +6222,7 @@ msgstr "北アメリカ"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Not equal."
-msgstr "不一致。"
+msgstr "等しくありません。"
 
 #. module: spreadsheet
 #. odoo-javascript

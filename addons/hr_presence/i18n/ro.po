@@ -1,19 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* hr_presence
+# * hr_presence
 #
 # Translators:
 # Martin Trigaux, 2022
 # Hongu Cosmin <cosmin513@gmail.com>, 2022
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
-#
+# Dorin Hongu <dhongu@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-08-06 22:36+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-11-20 06:05+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
 "hr_presence/ro/>\n"
 "Language: ro\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: hr_presence
 #. odoo-python
@@ -69,12 +69,12 @@ msgstr "Companii"
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Setări de configurare"
 
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_time_off
 msgid "Create a Time Off"
-msgstr ""
+msgstr "Creează o cerere de concediu"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__display_name
@@ -84,7 +84,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_presence.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nume afișat"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__email_sent
@@ -95,7 +95,7 @@ msgstr "E-mai Trimis"
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_hr_employee
 msgid "Employee"
-msgstr ""
+msgstr "Angajat"
 
 #. module: hr_presence
 #: model:sms.template,name:hr_presence.sms_template_data_hr_presence
@@ -105,12 +105,12 @@ msgstr "Angajat: Memento de prezență"
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.ir_cron_presence_control_ir_actions_server
 msgid "HR Presence: cron"
-msgstr ""
+msgstr "HR Prezență: cron"
 
 #. module: hr_presence
 #: model:mail.template,name:hr_presence.mail_template_presence
 msgid "HR: Employee Absence email"
-msgstr ""
+msgstr "HR: e-mail privind absența angajatului"
 
 #. module: hr_presence
 #: model:sms.template,body:hr_presence.sms_template_data_hr_presence
@@ -119,6 +119,10 @@ msgid ""
 "an oversight from us, we apologize. Please contact your manager or HR ASAP. "
 "Thanks"
 msgstr ""
+"Bună ziua, am observat că nu sunteți la serviciu și nu a fost depusă o "
+"cerere de concediu. Dacă este o omisiune din partea noastră, ne cerem scuze. "
+"Vă rugăm să contactați cât mai curând managerul sau departamentul HR. "
+"Mulțumim."
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_company__hr_presence_last_compute_date
@@ -156,7 +160,7 @@ msgstr "Ip conectat"
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__manually_set_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__manually_set_presence
 msgid "Manually Set Presence"
-msgstr ""
+msgstr "Setează manual prezența"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__manually_set_present
@@ -175,7 +179,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_presence/static/src/search/hr_presence_cog_menu/hr_presence_cog_menu.xml:0
 msgid "Presence Control"
-msgstr ""
+msgstr "Controlul prezenței"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
@@ -191,13 +195,13 @@ msgstr "Prezent"
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_hr_employee_public
 msgid "Public Employee"
-msgstr ""
+msgstr "Angajați Publici"
 
 #. module: hr_presence
 #. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
 msgid "Send SMS"
-msgstr ""
+msgstr "Trimite SMS"
 
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_sms
@@ -210,16 +214,18 @@ msgid ""
 "Sent manually in presence module when an employee wasn't working despite not "
 "being off"
 msgstr ""
+"Trimis manual din modulul de prezență când un angajat nu lucra, deși nu era "
+"în concediu"
 
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_absent
 msgid "Set Absent"
-msgstr ""
+msgstr "Setează ca absent"
 
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_present
 msgid "Set Present"
-msgstr ""
+msgstr "Setează ca prezent"
 
 #. module: hr_presence
 #: model:mail.template,subject:hr_presence.mail_template_presence
@@ -230,7 +236,7 @@ msgstr "Absență neașteptată"
 #. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
 msgid "Unplanned Absence"
-msgstr ""
+msgstr "Absență neplanificată"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_users_log
@@ -250,6 +256,14 @@ msgid ""
 "your manager or the HR department at your earliest convenience.\n"
 "Thank you for your prompt attention to this matter."
 msgstr ""
+"Sperăm că sunteți bine. Am observat că momentan nu sunteți la serviciu și nu "
+"avem înregistrată o cerere de concediu din partea dumneavoastră. Dacă "
+"absența se datorează unei omisiuni din partea noastră, ne cerem scuze pentru "
+"confuzie.\n"
+"Vă rugăm să luați măsurile necesare pentru clarificarea acestei absențe "
+"neplanificate. Dacă aveți întrebări sau aveți nevoie de ajutor, contactați "
+"managerul sau departamentul HR cât mai curând.\n"
+"Vă mulțumim că acordați atenție acestei situații."
 
 #. module: hr_presence
 #. odoo-python
@@ -262,7 +276,7 @@ msgstr ""
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_ir_websocket
 msgid "websocket message handling"
-msgstr ""
+msgstr "gestionarea mesajelor websocket"
 
 #~ msgid "Absence/Presence"
 #~ msgstr "Absență / Prezență"

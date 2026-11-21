@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"POT-Creation-Date: 2026-11-20 17:37+0000\n"
 "PO-Revision-Date: 2026-09-18 11:28+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
@@ -67,8 +67,8 @@ msgid ""
 msgstr ""
 "<span class=\"fa fa-exclamation-triangle text-warning\" title=\"لقد تم إلغاء "
 "أمر البيع المرتبط بهذا المشروع. نوصي إما بتحديث عنصر أمر البيع أو إلغاء هذا "
-"المشروع بأكمله ليتوافق مع إلغاء أمر البيع. \" invisible=\"sale_order_state "
-"!= 'cancel'\"/>"
+"المشروع بأكمله ليتوافق مع إلغاء أمر البيع. \" invisible=\"sale_order_state !"
+"= 'cancel'\"/>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
@@ -81,8 +81,8 @@ msgid ""
 msgstr ""
 "<span class=\"fa fa-exclamation-triangle text-warning\" title=\"لقد تم إلغاء "
 "أمر البيع المرتبط بهذه المهمة. نوصي إما بتحديث عنصر أمر البيع أو إلغاء هذه "
-"المهمة بأكملها لتتوافق مع إلغاء أمر البيع. \" invisible=\"sale_order_state "
-"!= 'cancel'\"/>"
+"المهمة بأكملها لتتوافق مع إلغاء أمر البيع. \" invisible=\"sale_order_state !"
+"= 'cancel'\"/>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -171,8 +171,8 @@ msgid ""
 "The following product need a project in which to put its task: %"
 "(product_name)s"
 msgstr ""
-"لابد من تحديد مشروع في عرض الأسعار %(order)s أو في استمارة المنتجات التي تنشئ "
-"مهمة عند الطلب.\n"
+"لابد من تحديد مشروع في عرض الأسعار %(order)s أو في استمارة المنتجات التي "
+"تنشئ مهمة عند الطلب.\n"
 "تحتاج المنتجات التالية إلى مشروع لوضع مهامها فيه: %(product_name)s"
 
 #. module: sale_project
@@ -236,12 +236,19 @@ msgid "Confirm & Close"
 msgstr "تأكيد وإغلاق"
 
 #. module: sale_project
+#. odoo-javascript
+#: code:addons/sale_project/static/src/views/project_form/sale_project_project_form_controller.js:0
+msgid "Confirmation Required"
+msgstr ""
+
+#. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid ""
 "Converting this template to a regular project will unlink it from its "
 "associated products."
-msgstr "سيؤدي تحويل هذا القالب إلى مشروع عادي إلى فصله عن المنتجات المرتبطة به."
+msgstr ""
+"سيؤدي تحويل هذا القالب إلى مشروع عادي إلى فصله عن المنتجات المرتبطة به."
 
 #. module: sale_project
 #. odoo-python
@@ -503,6 +510,15 @@ msgid "Load more"
 msgstr "تحميل المزيد"
 
 #. module: sale_project
+#. odoo-javascript
+#: code:addons/sale_project/static/src/views/project_form/sale_project_project_form_controller.js:0
+msgid ""
+"Making this project non-billable will unlink it from any products that "
+"create tasks in it or use it as a template. Are you sure you want to "
+"continue?"
+msgstr ""
+
+#. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__service_type
 #: model:ir.model.fields,help:sale_project.field_product_template__service_type
 msgid ""
@@ -626,8 +642,8 @@ msgid ""
 "set up for it."
 msgstr ""
 "ستتم إعادة فوترة المنتجات المضافة إلى عمليات انتقاء المخزون، والتي تمت تهيئة "
-"نوع العملية الخاصة بها لإنشاء تكاليف تحليلية، في أمر البيع هذا إذا تم إعدادها "
-"لذلك."
+"نوع العملية الخاصة بها لإنشاء تكاليف تحليلية، في أمر البيع هذا إذا تم "
+"إعدادها لذلك."
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_project
@@ -792,8 +808,8 @@ msgid ""
 "necessary."
 msgstr ""
 "عنصر أمر البيع الذي سيتم تحديده افتراضياً في المهام والجداول الزمنية لهذا "
-"المشروع، إلا إذا كان الموظف المعين في الجداول الزمنية مرتبطاً بعنصر أمر بيع في "
-"المشروع. \n"
+"المشروع، إلا إذا كان الموظف المعين في الجداول الزمنية مرتبطاً بعنصر أمر بيع "
+"في المشروع. \n"
 "يمكن تعديله في كل مهمة وكل قيد للجداول الزمنية على حدة، إذا لزم الأرم."
 
 #. module: sale_project

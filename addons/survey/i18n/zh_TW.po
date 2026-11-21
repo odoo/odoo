@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-11-09 07:43+0000\n"
+"PO-Revision-Date: 2026-11-20 09:36+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
 "projects/odoo-19/survey/zh_Hant/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.8.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__question_count
@@ -2196,7 +2196,7 @@ msgstr "如果勾選了，使用者能夠返回上頁。"
 #: model:ir.model.fields,help:survey.field_survey_survey__users_login_required
 msgid ""
 "If checked, users have to login before answering even with a valid token."
-msgstr "如果勾選此項，使用者必須在回答之前登入並使用有效的代碼(token)。"
+msgstr "若勾選，就算使用者有有效的權杖/代碼(token)，仍須先登入才可作答。"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_container
@@ -2301,7 +2301,7 @@ msgstr "僅邀請人員"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__is_mail_template_editor
 msgid "Is Editor"
-msgstr "是編輯器"
+msgstr "有編輯權限"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_is_follower
@@ -3163,8 +3163,8 @@ msgid ""
 "usually be a placeholder expression that provides the appropriate language, "
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
-"發送電子郵件時使用的翻譯語言（ISO 代碼），可選填。若未有設定，會使用合作夥伴"
-"的主要語言。通常，這會是佔位表達式，指示適當的語言，例如：{{ "
+"發送電子郵件所使用的翻譯語言之 ISO 代碼，可選填。若未有設定，會使用合作夥伴的"
+"主要語言。通常會是佔位表達式，指示適當的語言，例如：{{ "
 "object.partner_id.lang }}。"
 
 #. module: survey
@@ -3568,7 +3568,7 @@ msgstr "已註冊"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__render_model
 msgid "Rendering Model"
-msgstr "呈現模型"
+msgstr "繪製模型"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -4611,7 +4611,9 @@ msgstr ""
 msgid ""
 "This survey does not allow external people to participate. You should create "
 "user accounts or update survey access mode accordingly."
-msgstr "此調查不允許外部人員參與。 您應該建立使用者帳戶或更新調查存取模式。"
+msgstr ""
+"此調查不允許外部人員參與。你可為調查參加者建立使用者帳戶，或更改調查的存取模"
+"式。"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_closed_expired

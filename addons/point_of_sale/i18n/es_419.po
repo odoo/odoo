@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 17:37+0000\n"
+"POT-Creation-Date: 2026-11-20 17:35+0000\n"
 "PO-Revision-Date: 2026-11-09 19:34+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -273,8 +273,8 @@ msgstr ""
 "                        <t t-else=\"\">Hola:</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>Gracias por comprar en <t t-out=\"store_name\">"
-"Nombre de la tienda</t>.</div>\n"
+"                    <div>Gracias por comprar en <t t-"
+"out=\"store_name\">Nombre de la tienda</t>.</div>\n"
 "                    <div>Te enviamos el recibo de la compra que realizaste "
 "el <span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, "
 "dt_format=&quot;EEEE d MMMM&quot;,                          lang_code=lg) or "
@@ -3656,6 +3656,7 @@ msgstr "Exportar datos del PdV"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Export data"
 msgstr "Exportar datos"
