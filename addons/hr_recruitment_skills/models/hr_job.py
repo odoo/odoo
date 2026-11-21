@@ -3,6 +3,7 @@ from ast import literal_eval
 from markupsafe import Markup
 
 from odoo import api, fields, models
+from odoo.fields import Domain
 
 
 class HrJob(models.Model):
@@ -87,10 +88,12 @@ class HrJob(models.Model):
     @api.model
     def name_search(self, name='', domain=None, operator='ilike', limit=100):
         if self.env.context.get('show_matching_score_in_name'):
-            records = self.search_fetch(
-                domain=[('id', 'not in', self.env.context.get('active_applicant_job_ids', []))],
-                field_names=['display_name'],
-            )
+            search_domain = Domain.AND([
+                [('id', 'not in', self.env.context.get('active_applicant_job_ids', []))],
+                [('display_name', operator, name)] if name else [],
+                domain or [],
+            ])
+            records = self.search_fetch(domain=search_domain, field_names=['display_name'])
             records = records.sorted(lambda a: (a.no_of_recruitment > 0, a.applicant_matching_score), reverse=True)[:limit]
             return [(r.id, r.display_name) for r in records]
         return super().name_search(name, domain, operator, limit)
