@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
+from unittest.mock import patch
 
 from lxml import html
 
@@ -527,3 +528,63 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
         }}).json().get('result', [])
 
         self.assertTrue(len(result))
+
+    def _enable_in_stock_filter(self):
+        """Only list the products created by the test, and enable the "In stock" filter by
+        assigning the out of stock ribbon automatically."""
+        self.product_tmpls.website_published = False
+        self.env.ref("website_sale.out_of_stock_ribbon").assign = "out_of_stock"
+
+    def _get_shop_filters_and_products(self, url="/shop"):
+        """Return the ribbon filters and the names of the products displayed on a shop page."""
+        tree = html.fromstring(self.url_open(url).content)
+        return tuple(
+            {" ".join(node.text_content().split()) for node in tree.xpath(xpath)}
+            for xpath in (
+                "//a[hasclass('o_wsale_ribbon_filter')]",
+                "//h6[hasclass('o_wsale_products_item_title')]",
+            )
+        )
+
+    def test_shop_in_stock_filter(self):
+        self._enable_in_stock_filter()
+        self._create_product(name="Service Product", type="service")
+        self._create_product(
+            name="Backorder Product", is_storable=True, allow_out_of_stock_order=True
+        )
+        filters, _products = self._get_shop_filters_and_products()
+        self.assertNotIn("In stock", filters, "No listed product can be sold out.")
+
+        available_product = self._create_product(
+            name="Available Product", is_storable=True, allow_out_of_stock_order=False
+        )
+        available_product.qty_available = 10
+        self._create_product(
+            name="Sold Out Product", is_storable=True, allow_out_of_stock_order=False
+        )
+        filters, products = self._get_shop_filters_and_products()
+        self.assertIn("In stock", filters)
+        self.assertEqual(
+            products,
+            {"Service Product", "Backorder Product", "Available Product", "Sold Out Product"},
+        )
+        _filters, products = self._get_shop_filters_and_products("/shop?in_stock=1")
+        self.assertEqual(products, {"Service Product", "Backorder Product", "Available Product"})
+
+    def test_shop_in_stock_filter_only_checks_displayed_products(self):
+        """Showing the "In stock" filter must not check the stock of every listed product."""
+        self._enable_in_stock_filter()
+        self.website.shop_ppg = 1
+        for name in ("Product A", "Product B", "Product C"):
+            self._create_product(name=name, is_storable=True, allow_out_of_stock_order=False)
+
+        ProductTemplate = self.env.registry["product.template"]
+        with patch.object(
+            ProductTemplate, "_is_sold_out", autospec=True, side_effect=ProductTemplate._is_sold_out
+        ) as is_sold_out_mock:
+            filters, products = self._get_shop_filters_and_products()
+
+        self.assertEqual(filters, {"In stock"})
+        self.assertEqual(len(products), 1)
+        checked_ids = {call.args[0].id for call in is_sold_out_mock.call_args_list}
+        self.assertEqual(len(checked_ids), 1, "Only the displayed product's stock is needed.")
