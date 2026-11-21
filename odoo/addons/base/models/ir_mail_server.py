@@ -580,7 +580,7 @@ class IrMail_Server(models.Model):
             msg['Cc'] = email_cc
         if email_bcc:
             msg['Bcc'] = email_bcc
-        msg['Date'] = datetime.datetime.utcnow()
+        msg['Date'] = datetime.datetime.now(datetime.UTC)
         for key, value in headers.items():
             msg[key] = value
 

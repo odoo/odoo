@@ -4,8 +4,6 @@
 import json
 import logging
 
-from datetime import datetime
-
 from odoo import api, fields, models
 
 _logger = logging.getLogger(__name__)
@@ -44,7 +42,7 @@ class MailMessageSchedule(models.Model):
     @api.model
     def _send_notifications_cron(self):
         messages_scheduled = self.env['mail.message.schedule'].search(
-            [('scheduled_datetime', '<=', datetime.utcnow())]
+            [('scheduled_datetime', '<=', fields.Datetime.now())]
         )
         if messages_scheduled:
             _logger.info('Send %s scheduled messages', len(messages_scheduled))
