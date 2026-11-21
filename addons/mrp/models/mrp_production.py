@@ -237,6 +237,11 @@ class MrpProduction(models.Model):
     user_id = fields.Many2one(
         'res.users', 'Responsible', default=lambda self: self.env.user,
         domain=lambda self: [('all_group_ids', 'in', self.env.ref('mrp.group_mrp_user').id)])
+    owner_id = fields.Many2one(
+        'res.partner', 'Owner', compute='_compute_owner_id', store=True, readonly=False, copy=True,
+        check_company=True, index='btree_not_null',
+        help="When the manufacturing order is done, the finished products and by-products are assigned to this "
+             "owner. By default, it is the owner of the reserved components when they all belong to the same one.")
     company_id = fields.Many2one(
         'res.company', 'Company', default=lambda self: self.env.company,
         index=True, required=True)
@@ -337,6 +342,16 @@ class MrpProduction(models.Model):
     def _compute_mrp_production_source_count(self):
         for production in self:
             production.mrp_production_source_count = len(production._get_sources())
+
+    @api.depends('move_raw_ids.move_line_ids.owner_id')
+    def _compute_owner_id(self):
+        # Goods processed on behalf of a customer stay theirs: propose the owner of the components.
+        for production in self:
+            if production.owner_id or production.state in ('done', 'cancel'):
+                continue
+            component_lines = production.move_raw_ids.move_line_ids
+            if len(component_lines.owner_id) == 1 and all(line.owner_id for line in component_lines):
+                production.owner_id = component_lines.owner_id
 
     @api.depends('production_group_id.production_ids')
     def _compute_mrp_production_backorder(self):
@@ -2126,6 +2141,9 @@ class MrpProduction(models.Model):
                     workorder.duration_unit = round(workorder.duration / max(workorder.qty_produced, 1), 2)
             order.with_company(order.company_id)._cal_price(moves_to_do_by_order[order.id])
         moves_to_finish = self.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
+        for order in self.filtered('owner_id'):
+            order_lines = moves_to_finish.filtered(lambda m: m.production_id == order).move_line_ids
+            order_lines.filtered(lambda ml: not ml.owner_id).owner_id = order.owner_id
         moves_to_finish.picked = True
         moves_to_finish = moves_to_finish._action_done(cancel_backorder=cancel_backorder)
         for order in self:

@@ -151,6 +151,9 @@ class MrpUnbuild(models.Model):
             'location_id': finished_move.location_id.id,
             'location_dest_id': finished_move.location_dest_id.id,
         }
+        if self.mo_id.owner_id:
+            # Unbuild the products of the owner, whose components they get back.
+            vals['owner_id'] = self.mo_id.owner_id.id
         if len(self.lot_ids) > 1:
             return [dict(vals, lot_id=lot.id, quantity=1) for lot in self.lot_ids]
         else:
