@@ -1,6 +1,7 @@
 /* global Stripe */
 
-import { StripeOptions } from '@payment_stripe/interactions/stripe_options';
+import { STRIPE_SDK_URL, StripeOptions } from '@payment_stripe/interactions/stripe_options';
+import { loadJS } from '@web/core/assets';
 import { _t } from '@web/core/l10n/translation';
 import { patch } from '@web/core/utils/patch';
 
@@ -15,6 +16,22 @@ patch(PaymentForm.prototype, {
     },
 
     // #=== DOM MANIPULATION ===#
+
+    /**
+     * Request the Stripe SDK for each Stripe payment method listed in the form.
+     *
+     * @override method from payment.payment_form
+     */
+    _getAssetsPromises() {
+        const promises = super._getAssetsPromises();
+        for (const radio of this.el.querySelectorAll(
+            'input[name="o_payment_radio"][data-provider-code="stripe"]'
+            + '[data-payment-option-type="payment_method"]'
+        )) {
+            promises.set(radio, [loadJS(STRIPE_SDK_URL)]);
+        }
+        return promises;
+    },
 
     /**
      * Prepare the inline form of Stripe for direct payment.
