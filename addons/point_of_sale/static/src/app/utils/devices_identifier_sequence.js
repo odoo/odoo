@@ -73,12 +73,12 @@ export default class DeviceIdentifierSequence {
         return number;
     }
 
-    save({ next_number, device_identifier, unsynced_number_stack }) {
+    save({ unsynced_number_stack, ...rest }) {
         const localStorageKey = DeviceIdentifierSequence.uniqueDeviceIdentifierKey;
         const current = this.data;
         const data = {
-            device_identifier: device_identifier || current.device_identifier,
-            next_number: next_number || current.next_number,
+            ...current,
+            ...rest,
             unsynced_number_stack: [
                 ...new Set(unsynced_number_stack || current.unsynced_number_stack || []),
             ],
