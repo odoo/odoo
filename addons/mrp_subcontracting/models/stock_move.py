@@ -250,7 +250,7 @@ class StockMove(models.Model):
 
     def _action_record_components(self):
         self.ensure_one()
-        production = self._get_subcontract_production()[-1:]
+        production = self._get_subcontract_production().filtered(lambda p: not p._has_been_recorded())[-1:]
         view = self.env.ref('mrp_subcontracting.mrp_production_subcontracting_form_view')
         if self.env.user._is_portal():
             view = self.env.ref('mrp_subcontracting.mrp_production_subcontracting_portal_form_view')
