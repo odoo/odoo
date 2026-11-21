@@ -59,7 +59,19 @@ class ResCompany(models.Model):
         )._with_valuation_context()
         if date:
             valued_product_context = valued_product_context.with_context(at_date=date, to_date=date)
-        return valued_product_context.search(self._get_inventory_valuation_products_domain())
+        domain = Domain(self._get_inventory_valuation_products_domain()) & Domain([
+            '|',
+            ('stock_move_ids', 'any', [
+                ('company_id', '=', self.id),
+                ('state', '=', 'done'),
+            ]),
+            ('stock_quant_ids', 'any', [
+                ('company_id', '=', self.id),
+                ('location_id.is_valued', '=', True),
+                ('quantity', '!=', 0),
+            ]),
+        ])
+        return valued_product_context.search(domain)
 
     def _get_closing_move_extra_aml_vals(self, at_date):
         # OVERRIDE: also account for location-to-location reclassification entries.
