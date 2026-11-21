@@ -154,6 +154,13 @@ export class ImagePlugin extends Plugin {
         on_selectionchange_handlers: withSequence(READ, this.updateImageParams.bind(this)),
         on_undone_handlers: this.updateImageParams.bind(this),
         on_redone_handlers: this.updateImageParams.bind(this),
+        on_will_save_media_dialog_handlers: async (elements) => {
+            for (const element of elements) {
+                if (element && element.tagName === "IMG") {
+                    element.style.removeProperty("width");
+                }
+            }
+        },
         should_show_hint_predicates: (node) => {
             if (isElementOverlappingAnyFloatingImage(closestBlock(node))) {
                 return false;
