@@ -175,3 +175,27 @@ class TestTags(TestForumCommon):
                 'forum_id': self.forum.id,
             })
         self.assertEqual(post.content, '<p>This is a test link: <a rel="nofollow" href="https://www.example.com/route?param1=a&amp;param2=b">test</a> Let make sure it works.</p>')
+
+
+@tagged('forum_internals')
+class TestForumGamification(TestForumCommon):
+
+    def test_commentator_badge(self):
+        """ Posting 10 comments on forum posts should reach the goal of the
+        'Commentator' challenge and grant its badge. """
+        challenge = self.env.ref('website_forum.challenge_commentator')
+        badge = self.env.ref('website_forum.badge_p_2')
+        self.user_portal.karma = KARMA['com_all']
+
+        for idx in range(10):
+            self.post.with_user(self.user_portal)._post_comment(f'Comment {idx}')
+
+        challenge._update_all()
+        goal = self.env['gamification.goal'].search([
+            ('challenge_id', '=', challenge.id),
+            ('user_id', '=', self.user_portal.id),
+        ])
+        goal.update_goal()
+        self.assertEqual(goal.current, 10, "Each comment should count in the Commentator goal")
+        challenge._check_challenge_reward()
+        self.assertIn(badge, self.user_portal.badge_ids.badge_id)
