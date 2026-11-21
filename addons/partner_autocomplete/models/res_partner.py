@@ -39,7 +39,7 @@ class ResPartner(models.Model):
             iap_data['state_id'] = {'id': state.id, 'display_name': state.display_name}
 
         # Handle base_address_extended
-        if self.env['ir.module.module']._get('base_address_extended').state == 'installed':
+        if 'base_address_extended' in self.env['ir.module.module']._installed():
             city_zip, city_name = iap_data.get('zip'), iap_data.get('city')
             if (city_zip or city_name) and country and country.enforce_cities:
                 domain = Domain('country_id', '=', country.id)
@@ -83,6 +83,18 @@ class ResPartner(models.Model):
         return iap_data
 
     @api.model
+    def autocomplete_by_field(self, fieldName, query, query_country_id, timeout=15):
+        match fieldName:
+            case "name":
+                results = []
+                # A name that looks like a VAT number may be either: search both, the exact VAT match first
+                if len(re.findall(r'\d', query)) >= 4:
+                    results = self.autocomplete_by_vat(query, query_country_id, timeout=timeout)
+                return results + self.autocomplete_by_name(query, query_country_id, timeout=timeout)
+            case _:
+                return self.autocomplete_by_vat(query, query_country_id, timeout=timeout)
+
+    @api.model
     def autocomplete_by_name(self, query, query_country_id, timeout=15):
         if query_country_id is False:  # If it's 0, we purposely do not want to filter on the country
             query_country_id = self.env.company.country_id.id
@@ -101,8 +113,15 @@ class ResPartner(models.Model):
 
     @api.model
     def autocomplete_by_vat(self, vat, query_country_id, timeout=15):
-        query_country_id = query_country_id or self.env.company.country_id.id
-        query_country_code = self.env['res.country'].browse(query_country_id).code
+        # Without country, or searching worldwide, the VAT number may come from any country
+        query_country = self.env['res.country'].browse(query_country_id).exists() or self.env.company.country_id
+        if (
+            query_country
+            and 'base_vat' in self.env['ir.module.module']._installed()
+            and not self._run_vat_checks(query_country, vat, validation='setnull')[0]
+        ):
+            return []
+        query_country_code = query_country.code
         response, _ = self.env['iap.autocomplete.api']._request_partner_autocomplete('search_by_vat', {
             'query': vat,
             'query_country_code': query_country_code,
@@ -163,13 +182,17 @@ class ResPartner(models.Model):
 
     @api.model
     def _validate_partner_autocomplete_response(self, autocomplete_response):
-        if (
-            self.env['ir.module.module']._get('base_vat').state == 'installed'
-            and (vat_number := autocomplete_response.get('vat'))
-            and (enriched_company := self.env.context.get('enriched_company_data'))
-            ):
-            country = self.env['res.country'].browse(enriched_company['country_id']['id']).exists()
+        company_data = self.env.context.get('enriched_company_data')
+        if not company_data or 'base_vat' in self.env['ir.module.module']._installed():
+            return autocomplete_response
+        country = self.env['res.country'].browse((company_data.get('country_id') or {}).get('id')).exists()
+        if vat_number := autocomplete_response.get('vat'):
             autocomplete_response['vat'] = self._run_vat_checks(country, vat_number, validation='setnull')[0]
+        elif (query := company_data.get('query')) and country and self._get_vat_validation_method(country.code):
+            # The company may have been found from its VAT number, which the enrichment data does not hold.
+            vat_number, vat_country_code = self._run_vat_checks(country, query, validation='setnull')
+            if vat_number and vat_country_code == country.code:
+                autocomplete_response['vat'] = vat_number
         return autocomplete_response
 
     @api.model
@@ -197,7 +220,7 @@ class ResPartner(models.Model):
     def iap_partner_autocomplete_get_tag_ids(self, unspsc_codes):
         """Called by JS to create the activity tags from the UNSPSC codes"""
         # If the UNSPSC module is installed, we might have a translation, so let's use it
-        if self.env['ir.module.module']._get('product_unspsc').state == 'installed':
+        if 'product_unspsc' in self.env['ir.module.module']._installed():
             tag_names = self.env['product.unspsc.code']\
                             .with_context(active_test=False)\
                             .search([('code', 'in', [unspsc_code for unspsc_code, __ in unspsc_codes])])\

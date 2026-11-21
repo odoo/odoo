@@ -9,7 +9,6 @@ import {
     models,
     mountView,
     onRpc,
-    preloadBundle,
 } from "@web/../tests/web_test_helpers";
 
 // Autocomplete has a debounce time of 250 ms on input
@@ -113,8 +112,7 @@ const clearbitSuggestions = [
     },
 ];
 
-onRpc("res.partner", "autocomplete_by_name", () => iapSuggestions);
-onRpc("res.partner", "autocomplete_by_vat", () => iapSuggestions);
+onRpc("res.partner", "autocomplete_by_field", () => iapSuggestions);
 onRpc("res.partner", "enrich_by_duns", ({ args }) => ({
     name: iapSuggestions.filter((sugg) => sugg.duns === args[0])[0].name,
     vat: "BE0477472701",
@@ -138,8 +136,6 @@ onRpc("res.partner", "enrich_by_duns", ({ args }) => ({
 }));
 onRpc("/v1/companies/suggest", () => clearbitSuggestions);
 onRpc("enrich_company_message_post", () => true);
-
-preloadBundle("web.jsvat_lib");
 
 test.tags("desktop");
 test("Partner autocomplete : Company type = Individual", async () => {
