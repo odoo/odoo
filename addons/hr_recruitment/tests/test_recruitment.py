@@ -259,6 +259,22 @@ class TestRecruitment(TransactionCase):
         job._compute_activities()
         self.assertEqual(job.activities_today, 0)
 
+    def test_create_employee_from_applicant_other_company(self):
+        """
+        The employee created from an applicant must be in the company of the
+        application and not in the current company of the user
+        """
+        company_b = self.env['res.company'].create({'name': 'Company B'})
+        self.env.user.company_ids |= company_b
+        job = self.env['hr.job'].create({'name': 'Job B', 'company_id': company_b.id})
+        candidate = self.env['hr.candidate'].create({'partner_name': 'Test Candidate', 'company_id': company_b.id})
+        applicant = self.env['hr.applicant'].create({'candidate_id': candidate.id, 'job_id': job.id})
+
+        employee = self.env['hr.employee'].browse(applicant.create_employee_from_applicant()['res_id'])
+
+        self.assertNotEqual(self.env.company, company_b)
+        self.assertEqual(employee.company_id, company_b)
+
     def test_default_template_applicant_refuse_reason_when_archived(self):
         """
         Ensure that an archived email template linked to a refuse reason
