@@ -535,7 +535,8 @@ class Base(models.AbstractModel):
                 if not record_msg:
                     continue
                 # direct recipients, and author if not archived / root
-                suggested[record.id]['partners'] += (record_msg.partner_ids | record_msg.author_id).filtered(lambda p: p.active)
+                msg_partners = (record_msg.partner_ids | record_msg.author_id)._filtered_access('read')
+                suggested[record.id]['partners'] += msg_partners.filtered(lambda p: p.active)
                 # To and Cc emails (mainly for incoming email), and email_from if not linked to hereabove author
                 suggested[record.id]['email_to_lst'] += [record_msg.incoming_email_to or '', record_msg.incoming_email_cc or '', record_msg.email_from or '']
                 from_normalized = email_normalize(record_msg.email_from)
