@@ -1,3 +1,4 @@
+import { rpc } from "@web/core/network/rpc";
 import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
 import { ORM } from "@web/core/orm_plugin";
 import { patch } from "@web/core/utils/patch";
@@ -100,7 +101,9 @@ patch(WebClient.prototype, {
             kwargs.vapid_public_key = this._arrayBufferToBase64(
                 subscription.options.applicationServerKey
             );
-            await this.orm.call(USER_DEVICES_MODEL, "register_devices", [], kwargs);
+            // Use the dedicated JSON-RPC route (instead of a plain ORM call) so the server
+            // can set the refresh token as an HttpOnly cookie in the same response.
+            await rpc("/web/push/device/register", kwargs);
         } catch (e) {
             // The component was destroyed during the call: rethrow so the AbortError skips the
             // error handling below and reaches the global handler, which silently ignores it.
