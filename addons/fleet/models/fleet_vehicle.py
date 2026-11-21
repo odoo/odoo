@@ -193,44 +193,54 @@ class FleetVehicle(models.Model):
             vehicle.contract_count = mapped_log_data[vehicle.id][vehicle.active]
             vehicle.history_count = mapped_history_data[vehicle.id]
 
-    @api.depends('log_contracts')
+    @api.depends('log_contracts', 'log_contracts.state', 'log_contracts.expiration_date')
     def _compute_contract_reminder(self):
         params = self.env['ir.config_parameter'].sudo()
         delay_alert_contract = int(params.get_param('hr_fleet.delay_alert_contract', default=30))
-        for record in self:
-            overdue = False
-            due_soon = False
-            total = 0
-            name = ''
-            state = ''
-            for element in record.log_contracts:
-                if element.state in ('open', 'expired') and element.expiration_date:
-                    current_date_str = fields.Date.context_today(record)
-                    due_time_str = element.expiration_date
-                    current_date = fields.Date.from_string(current_date_str)
-                    due_time = fields.Date.from_string(due_time_str)
-                    diff_time = (due_time - current_date).days
-                    if diff_time < 0:
-                        overdue = True
-                        total += 1
-                    if diff_time < delay_alert_contract:
-                        due_soon = True
-                        total += 1
-                    if overdue or due_soon:
-                        log_contract = self.env['fleet.vehicle.log.contract'].search([
-                            ('vehicle_id', '=', record.id),
-                            ('state', 'in', ('open', 'expired'))
-                            ], limit=1, order='expiration_date asc')
-                        if log_contract:
-                            # we display only the name of the oldest overdue/due soon contract
-                            name = log_contract.name
-                            state = log_contract.state
+        today = fields.Date.context_today(self)
+        relevant_contracts = self.env['fleet.vehicle.log.contract'].search_fetch(
+            domain=[
+                ('vehicle_id', 'in', self.ids),
+                ('state', 'in', ('open', 'expired')),
+                ('expiration_date', '!=', False)
+            ],
+            field_names=['vehicle_id', 'name', 'state', 'expiration_date'],
+            order='expiration_date asc'
+        )
 
-            record.contract_renewal_overdue = overdue
-            record.contract_renewal_due_soon = due_soon
-            record.contract_renewal_total = total - 1  # we remove 1 from the real total for display purposes
-            record.contract_renewal_name = name
-            record.contract_state = state
+        contract_status_by_vehicle = defaultdict(lambda: {
+            'overdue': False,
+            'due_soon': False,
+            'total': 0,
+            'name': '',
+            'state': ''
+        })
+
+        for contract in relevant_contracts:
+            vehicle_id = contract.vehicle_id.id
+            diff_time = (contract.expiration_date - today).days
+            is_overdue = diff_time < 0
+            is_due_soon = diff_time < delay_alert_contract
+
+            if is_overdue or is_due_soon:
+                status = contract_status_by_vehicle[vehicle_id]
+                status['total'] += 1
+                if is_overdue:
+                    status['overdue'] = True
+                if is_due_soon:
+                    status['due_soon'] = True
+                if not status['name']:
+                    status['name'] = contract.name
+                    status['state'] = contract.state
+
+        for record in self:
+            contract_status = contract_status_by_vehicle[record.id]
+            if contract_status:
+                record.contract_renewal_overdue = contract_status['overdue']
+                record.contract_renewal_due_soon = contract_status['due_soon']
+                record.contract_renewal_total = contract_status['total'] - 1 if contract_status['total'] > 0 else 0
+                record.contract_renewal_name = contract_status['name']
+                record.contract_state = contract_status['state']
 
     def _get_analytic_name(self):
         # This function is used in fleet_account and is overrided in l10n_be_hr_payroll_fleet
