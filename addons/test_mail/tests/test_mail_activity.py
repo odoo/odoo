@@ -196,6 +196,8 @@ class TestActivityRights(TestActivityCommon):
             """ If employee is test employee, consider they have no access on document """
             if records.env.uid == self.user_employee.id and not records.env.su:
                 return Domain.FALSE
+            if records.env.uid == self.user_admin.id and not records.env.su:
+                return Domain.TRUE
             return DEFAULT
 
         with patch.object(MailTestActivity, '_access_domain', autospec=True, side_effect=_employee_crash):
