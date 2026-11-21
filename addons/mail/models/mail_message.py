@@ -641,8 +641,16 @@ class MailMessage(models.Model):
                         FROM "mail_message" m
                         JOIN "mail_message_res_partner_rel" partner_rel
                             ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = %s
+<<<<<<< df81fbdf0c37204c780ecc5bf8d8e973758a4d50
                         WHERE m.id = ANY(%s) """,
                     pid, list(parent_ids_msg_ids),
+||||||| 41068c05d02f2d68839166a624bbd93a70c0da50
+                        WHERE m.id = ANY(%s) """,
+                    self.env.user.partner_id.id, list(parent_ids_msg_ids),
+=======
+                        WHERE m.id = ANY(%s) AND m.message_type != 'user_notification' """,
+                    self.env.user.partner_id.id, list(parent_ids_msg_ids),
+>>>>>>> 839523c07c6a3bd5bb5908508882d44eb100c466
                 )
                 for parent_id, parent_model, parent_res_id in self.env.execute_query(query):
                     for mid in parent_ids_msg_ids[parent_id]:
