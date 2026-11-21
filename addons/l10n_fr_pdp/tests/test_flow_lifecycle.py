@@ -3094,3 +3094,10 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         )
         self.assertTrue(branch.l10n_fr_f10_enable_reporting)
         self.assertTrue(invoice.l10n_fr_pdp_last_flow_id)
+
+    def test_bookkeeper_open_fr_accounting(self):
+        """
+        Tests that a bookkeeper can open the accounting app in a french company
+        """
+        bookkeeper = new_test_user(self.env, login='pdp_bookkeeper', groups='account.group_account_user')
+        self.company.with_user(bookkeeper)._action_open_pdp_form()
