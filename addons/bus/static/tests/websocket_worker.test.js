@@ -213,18 +213,18 @@ test("check connection health during inactivity", async () => {
             expect.step("_restartConnectionCheckInterval");
             super._restartConnectionCheckInterval();
         },
-        _sendToServer(payload) {
-            if (payload.event_name === "foo") {
-                super._sendToServer(payload);
-            }
-        },
     });
     const worker = await startWebSocketWorker((type) => {
         if (type === "BUS:CONNECT") {
             expect.step(`broadcast ${type}`);
         }
     });
-    await expect.waitForSteps(["broadcast BUS:CONNECT", "_restartConnectionCheckInterval"]);
+    // Restarted on open, then by the first subscription.
+    await expect.waitForSteps([
+        "broadcast BUS:CONNECT",
+        "_restartConnectionCheckInterval",
+        "_restartConnectionCheckInterval",
+    ]);
     worker.websocket.dispatchEvent(
         new MessageEvent("message", {
             data: JSON.stringify([{ id: 70, message: { type: "foo" } }]),
@@ -276,4 +276,100 @@ test("debounced updates respect force and batching", async () => {
     worker._onClientMessage(client, { action: "BUS:ADD_CHANNEL", data: "C3" });
     await advanceTime(120_000);
     await expect.waitForSteps(['subscribe - ["C1","C2","C3"]']);
+});
+
+/**
+ * @param {WebsocketWorker} worker
+ * @param {string[]} channels
+ * @param {(message: { type: string, data: any }) => void} [postMessage]
+ */
+const addFakeClient = (worker, channels, postMessage = () => {}) => {
+    const client = { postMessage };
+    worker.channelsByClient.set(client, channels);
+    return client;
+};
+
+test("stale tab does not change the connection data", async () => {
+    const worker = await startWebSocketWorker();
+    const client = addFakeClient(worker, ["C1"], ({ type }) => expect.step(type));
+    const initData = { db: "db1", lastNotificationId: 1, uid: 1, websocketURL: "ws://new" };
+    worker._initializeConnection(client, { ...initData, startTs: 2000 });
+    await expect.waitForSteps(["BUS:WORKER_STATE_UPDATED", "BUS:INITIALIZED"]);
+    worker.active = false;
+    worker._initializeConnection(client, {
+        db: "db2",
+        lastNotificationId: 1,
+        uid: 2,
+        websocketURL: "ws://old",
+        startTs: 1000,
+    });
+    await expect.waitForSteps(["BUS:WORKER_STATE_UPDATED", "BUS:INITIALIZED", "BUS:OUTDATED"]);
+    expect(worker.websocketURL).toBe("ws://new");
+    expect(worker.currentUID).toBe(1);
+    expect(worker.currentDB).toBe("db1");
+    expect(worker.channelsByClient.get(client)).toEqual(["C1"]);
+});
+
+test("uid is adopted after session expiry without a reset", async () => {
+    const worker = await startWebSocketWorker();
+    const client = addFakeClient(worker, ["C1"]);
+    const initData = { db: "db1", lastNotificationId: 1, websocketURL: "ws://bus" };
+    worker._initializeConnection(client, { ...initData, uid: 1, startTs: 1000 });
+    worker.websocket.close(WEBSOCKET_CLOSE_CODES.SESSION_EXPIRED);
+    await runAllTimers();
+    expect(worker.currentUID).toBe(null);
+    worker._initializeConnection(client, { ...initData, uid: 2, startTs: 2000 });
+    expect(worker.currentUID).toBe(2);
+    expect(worker.channelsByClient.get(client)).toEqual(["C1"]);
+    worker._initializeConnection(client, { ...initData, uid: 3, startTs: 3000 });
+    expect(worker.currentUID).toBe(3);
+    expect(worker.channelsByClient.get(client)).toEqual([]);
+});
+
+test("database change from a tab without uid keeps the known uid", async () => {
+    const worker = await startWebSocketWorker();
+    const client = addFakeClient(worker, ["C1"]);
+    const initData = { lastNotificationId: 1, websocketURL: "ws://bus" };
+    worker._initializeConnection(client, { ...initData, db: "db1", uid: 1, startTs: 1000 });
+    expect(worker.channelsByClient.get(client)).toEqual(["C1"]);
+    worker._initializeConnection(client, { ...initData, db: "db2", uid: undefined, startTs: 2000 });
+    expect(worker.currentDB).toBe("db2");
+    expect(worker.currentUID).toBe(1);
+    expect(worker.channelsByClient.get(client)).toEqual([]);
+    worker.channelsByClient.set(client, ["C2"]);
+    worker._initializeConnection(client, { ...initData, db: "db2", uid: 1, startTs: 3000 });
+    expect(worker.channelsByClient.get(client)).toEqual(["C2"]);
+});
+
+test("message sent before the first subscription survives a reconnection", async () => {
+    patchWithCleanup(WebSocket.prototype, {
+        send(data) {
+            if (typeof data === "string") {
+                expect.step(`sent ${JSON.parse(data).event_name}`);
+            }
+            return super.send(...arguments);
+        },
+    });
+    const worker = await startWebSocketWorker((type) => {
+        if (["BUS:RECONNECTING", "BUS:RECONNECT"].includes(type)) {
+            expect.step(type);
+        }
+    });
+    await expect.waitForSteps(["sent subscribe"]);
+    const reconnect = async () => {
+        worker.websocket.close(WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE);
+        await expect.waitForSteps(["BUS:RECONNECTING"]);
+        await runAllTimers();
+        await expect.waitForSteps(["BUS:RECONNECT"]);
+    };
+    const updateChannels = worker._debouncedUpdateChannels;
+    worker._debouncedUpdateChannels = () => {};
+    await reconnect();
+    // The new websocket is open, but did not subscribe yet.
+    worker._sendToServer({ event_name: "foo" });
+    await reconnect();
+    worker._debouncedUpdateChannels = updateChannels;
+    worker._scheduleUpdateChannels();
+    await runAllTimers();
+    await expect.waitForSteps(["sent subscribe", "sent foo"]);
 });
