@@ -5,6 +5,7 @@ from freezegun import freeze_time
 from datetime import timedelta
 
 from odoo import fields
+from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.tests import Form, tagged
 from odoo.tools import float_compare, mute_logger, float_round
@@ -1298,6 +1299,46 @@ class TestSalePrices(SaleCommon):
             "Combo price must be split evenly when all combos have zero base price",
         )
         self.assertEqual(order.amount_untaxed, 100.0)
+
+    def test_outdated_combo_product(self):
+        """Ensure that an order whose combo product was modified after being added to it doesn't
+        crash when recomputing its prices, and can't be confirmed."""
+        order = self.empty_order
+
+        product_a = self._create_product(name="Beefy burger")
+        product_b = self._create_product(name="Belgian fries")
+        combos = self.env['product.combo'].create([{
+            'name': "Burger",
+            'combo_item_ids': [Command.create({'product_id': product_a.id})],
+        }, {
+            'name': "Side",
+            'combo_item_ids': [Command.create({'product_id': product_b.id})],
+        }])
+        product_combo = self._create_product(
+            name="Meal Menu",
+            list_price=10.0,
+            type='combo',
+            combo_ids=[Command.set(combos.ids)],
+        )
+        combo_line = self.env['sale.order.line'].create({
+            'order_id': order.id,
+            'product_id': product_combo.id,
+        })
+        self.env['sale.order.line'].create([{
+            'order_id': order.id,
+            'product_id': product.id,
+            'combo_item_id': combo.combo_item_ids.id,
+            'linked_line_id': combo_line.id,
+        } for product, combo in zip(product_a + product_b, combos)])
+
+        # Remove a combo choice from the combo product.
+        product_combo.combo_ids = [Command.unlink(combos[0].id)]
+
+        order._recompute_prices()  # Shouldn't raise.
+        with self.assertRaises(UserError):
+            order.action_update_prices()
+        with self.assertRaises(UserError):
+            order.action_confirm()
 
     def test_combo_product_extra_price_currency(self):
         """Ensure that the extra price for combo products and their no_variant attribute is
