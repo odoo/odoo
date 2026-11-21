@@ -21,7 +21,7 @@ from odoo.tools.sql import column_exists, create_column
 from odoo.addons.account.tools import format_structured_reference_iso
 from odoo.exceptions import UserError, ValidationError, AccessError, RedirectWarning
 from odoo.fields import Command, Domain
-from odoo.tools.misc import clean_context
+from odoo.tools.misc import clean_context, partition
 from odoo.tools import (
     date_utils,
     float_compare,
@@ -5735,6 +5735,7 @@ class AccountMove(models.Model):
         :param reverse_moves:       An account.move recordset, reverse of the current self.
         :return:                    An account.move recordset, reverse of the current self.
         '''
+        term_plan = []
         reconciliation_plan = []
         for move, reverse_move in zip(self, reverse_moves):
             group = (move.line_ids + reverse_move.line_ids) \
@@ -5743,7 +5744,17 @@ class AccountMove(models.Model):
                     l.move_id.tax_cash_basis_origin_move_id
                 )) \
                 .grouped(lambda l: (l.account_id, l.currency_id))
-            reconciliation_plan.extend(group.values())
+            term_groups, other_groups = partition(
+                lambda lines: lines.account_id.account_type in ('asset_receivable', 'liability_payable'),
+                group.values(),
+            )
+            term_plan.extend(term_groups)
+            reconciliation_plan.extend(other_groups)
+        # Reconcile the payment term lines first: it creates the cash basis entries, which reconcile
+        # the tax transition lines on their own.
+        self.env['account.move.line'].with_context(move_reverse_cancel=move_reverse_cancel)._reconcile_plan(term_plan)
+        # Then reconcile the remaining groups, skipping the ones already reconciled by the cash basis entries.
+        reconciliation_plan = [lines for lines in reconciliation_plan if not any(lines.mapped('reconciled'))]
         self.env['account.move.line'].with_context(move_reverse_cancel=move_reverse_cancel)._reconcile_plan(reconciliation_plan)
         return reverse_moves
 
