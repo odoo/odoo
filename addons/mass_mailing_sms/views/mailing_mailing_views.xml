@@ -196,6 +196,9 @@
             <xpath expr="//button[@name='action_send_winner_mailing']" position="attributes">
                 <attribute name="invisible">not is_ab_test_sent or ab_testing_completed or ab_testing_winner_selection == 'manual' or ab_testing_sms_winner_selection == 'manual'</attribute>
             </xpath>
+            <xpath expr="//button[@name='action_select_as_winner']" position="attributes">
+                <attribute name="invisible">ab_testing_completed or (mailing_type == 'sms' and ab_testing_sms_winner_selection != 'manual') or (mailing_type != 'sms' and ab_testing_winner_selection != 'manual')</attribute>
+            </xpath>
             <xpath expr="//button[@name='action_duplicate'][hasclass('btn-primary')]" position="attributes">
                 <attribute name="invisible">not ab_testing_enabled or ab_testing_mailings_count &gt;= 2 or ab_testing_mailings_sms_count &gt;= 2</attribute>
             </xpath>
