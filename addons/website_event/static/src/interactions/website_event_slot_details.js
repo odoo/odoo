@@ -1,4 +1,5 @@
 import { deserializeDateTime } from "@web/core/l10n/dates";
+import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
@@ -90,9 +91,12 @@ export class SlotDetails extends Interaction {
      */
     _onSlotSelected(ev) {
         const dataset = ev.currentTarget.dataset;
-        this.selectedSlotDatetime =
-            deserializeDateTime(dataset.slotStart, {tz: dataset.eventTz}).toLocaleString(DateTime.DATETIME_MED_WITH_WEEKDAY) +
-            " - " + deserializeDateTime(dataset.slotEnd, {tz: dataset.eventTz}).toLocaleString(DateTime.TIME_SIMPLE);
+        const timeFormat = localization.timeFormat.replace(":ss", "");
+        this.selectedSlotDatetime = _t("%(date)s, %(start_time)s - %(end_time)s", {
+            date: deserializeDateTime(dataset.slotStart, {tz: dataset.eventTz}).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY),
+            start_time: deserializeDateTime(dataset.slotStart, {tz: dataset.eventTz}).toFormat(timeFormat),
+            end_time: deserializeDateTime(dataset.slotEnd, {tz: dataset.eventTz}).toFormat(timeFormat)
+        });
         this.form.setAttribute("data-selected-slot-id", parseInt(ev.currentTarget.dataset.slotId));
     }
 
