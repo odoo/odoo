@@ -3,6 +3,7 @@
 import json
 from urllib.parse import parse_qs
 
+import lxml.html
 from urllib3.util import parse_url
 from werkzeug.test import EnvironBuilder
 from werkzeug.urls import url_encode
@@ -292,3 +293,31 @@ class TestControllers(tests.HttpCase):
         res_login = self.url_open('/web/login')
         self.assertEqual(res_login.status_code, 200)
         self.assertNotIn('meta name="robots" content="noindex', res_login.text)
+
+    @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
+    def test_error_page_flag(self):
+        tests.new_test_user(self.env, 'internal_user', groups='base.group_user')
+        self.env['website.page'].create({
+            'name': 'Direct 404',
+            'type': 'qweb',
+            'key': 'website.test_error_page_flag',
+            'arch': '<t t-call="website.page_404"/>',
+            'url': '/test-error-page-flag',
+            'is_published': True,
+        })
+        for login, url, status, template_xpath, is_error_page in [
+            ("admin", "/", 200, "/html[starts-with(@data-main-object, 'website.page(')]", False),
+            # Preview of a system page, from the controller
+            ("admin", "/website/http_error/403", 200, "//*[@id='oe_structure_403_layout_1']", True),
+            # 404 of a non designer, from the exception handler only
+            ("internal_user", "/does-not-exist", 404, "//section[contains(@class, 's_hero_404_ghost')]", True),
+            # 404 page rendered directly, from the template only
+            ("admin", "/test-error-page-flag", 200, "//section[contains(@class, 's_hero_404_ghost')]", True),
+        ]:
+            with self.subTest(login=login, url=url):
+                self.authenticate(login, login)
+                res = self.url_open(url, allow_redirects=False)
+                self.assertEqual(res.status_code, status)
+                html = lxml.html.fromstring(res.content)
+                self.assertTrue(html.xpath(template_xpath))
+                self.assertEqual(html.get("data-is-error-page"), "True" if is_error_page else None)

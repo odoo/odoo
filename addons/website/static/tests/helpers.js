@@ -1,4 +1,6 @@
+import { getFixture } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
+import { getService, makeTestApp } from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
 import { buildEditableInteractions } from "@website/core/website_edit_service";
 import { setupInteractionWhiteList } from "@web/../tests/public/helpers";
@@ -24,6 +26,38 @@ export async function switchToEditMode(core) {
     const editableInteractions = buildEditableInteractions(Interactions);
     core.activate(editableInteractions);
     await animationFrame();
+}
+
+/**
+ * Sets up the website services with an empty page document and returns a
+ * function giving the xmlids of the menus displayed by `website_custom_menus`
+ * among `menuXmlids`, for a page whose `<html>` dataset is `dataset`.
+ *
+ * @param {string[]} menuXmlids
+ * @returns {Promise<(dataset: Object) => string[]>}
+ */
+export async function setupWebsiteCustomMenus(menuXmlids) {
+    await makeTestApp();
+    const website = getService("website");
+    const websiteCustomMenus = getService("website_custom_menus");
+    await website.fetchUserGroups();
+    await website.fetchWebsites();
+    website.currentWebsiteId = 1;
+    const iframeEl = document.createElement("iframe");
+    iframeEl.hidden = true;
+    getFixture().appendChild(iframeEl);
+    const pageDocument = iframeEl.contentDocument;
+    pageDocument.documentElement.lang = "en-US";
+    const sections = menuXmlids.map((xmlid) => ({ xmlid, children: [], childrenTree: [] }));
+    return (dataset) => {
+        const htmlDataset = pageDocument.documentElement.dataset;
+        for (const key of Object.keys(htmlDataset)) {
+            delete htmlDataset[key];
+        }
+        Object.assign(htmlDataset, dataset);
+        website.pageDocument = pageDocument;
+        return websiteCustomMenus.addCustomMenus(sections).map((menu) => menu.xmlid);
+    };
 }
 
 export const websiteModels = {
