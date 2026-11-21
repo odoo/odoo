@@ -230,8 +230,6 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
             # website queries
             'orm_signaling_registry': 1,
             'ir_attachment': 1,
-            # website_livechat _post_process_response_from_cache queries
-            'website': 1,
             # website_crm_iap_reveal _serve_page queries
             'website_visitor': 1,
         }
@@ -257,8 +255,6 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
             # website queries
             'orm_signaling_registry': 1,
             'ir_attachment': 1,
-            # website_livechat _post_process_response_from_cache queries
-            'website': 1,
             # website_crm_iap_reveal _serve_page queries
             'website_visitor': 1,
         }
@@ -281,8 +277,6 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
             # website queries
             'orm_signaling_registry': 1,
             'ir_attachment': 1,
-            # website_livechat _post_process_response_from_cache queries
-            'website': 1,
             # website_crm_iap_reveal _serve_page queries
             'website_visitor': 1,
         }
