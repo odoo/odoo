@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 from ast import literal_eval
 from uuid import uuid4
 
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError
+from odoo.tools import html2plaintext, plaintext2html
+
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.sms.tools.sms_tools import sms_content_to_rendered_html
-from odoo.tools import html2plaintext, plaintext2html
-from odoo.exceptions import UserError
 
 
 class SmsComposer(models.TransientModel):
@@ -25,6 +27,7 @@ class SmsComposer(models.TransientModel):
             values = {
                 'composition_mode': 'comment',
                 'mail_scheduled_message_id': scheduled_message.id,
+                'number_field_name': json.loads(scheduled_message.notification_parameters or '{}').get('number_field', False),
                 'res_id': scheduled_message.res_id,
                 'res_model': scheduled_message.model,
                 'scheduled_date': scheduled_message.scheduled_date,
@@ -288,7 +291,11 @@ class SmsComposer(models.TransientModel):
             'composition_comment_option': False,
             'is_note': False,
             'model': self.res_model,
-            'notification_parameters': '{}',
+            # keep the number field used by the composer (e.g. SMS button of a given phone field)
+            'notification_parameters': json.dumps(
+                {'number_field': self.number_field_name}
+                if self.number_field_name and self.number_field_name in self.env[self.res_model] else {},
+            ),
             'partner_ids': [],
             'res_id': self.res_id,
             'scheduled_date': self.scheduled_date,
