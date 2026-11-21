@@ -177,7 +177,10 @@ class EventEventTicket(models.Model):
         if self:
             slots_seats_available = self.event_id._get_seats_availability([[event_slot, ticket] for ticket in self])
         else:
-            return {False: event_slot.seats_available if event_slot else (event.seats_available if event.seats_limited else event.EVENT_MAX_TICKETS)}
+            # event without tickets: get the seats left on the event, or on the slot
+            # if one is given. None means no seat limit, so allow the maximum per order.
+            seats_available = event._get_seats_availability([(event_slot or self.env['event.slot'], self)])[0]
+            return {False: event.EVENT_MAX_TICKETS if seats_available is None else seats_available}
         availabilities = {}
         for ticket, seats_available in zip(self, slots_seats_available):
             if seats_available is None:  # "No limit"
