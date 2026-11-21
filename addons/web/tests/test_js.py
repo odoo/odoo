@@ -252,3 +252,35 @@ class MobileWebSuite(QunitCommon, HOOTCommon):
     def test_unit_mobile(self):
         # Unit tests suite (mobile)
         self.browser_js(f'/web/tests?headless&loglevel=2&preset=mobile&tag=-headless&timeout=15000{self.hoot_filters}', "", "", login='admin', timeout=2100, success_signal="[HOOT] Test suite succeeded", error_checker=unit_test_error_checker)
+
+
+@odoo.tests.tagged('post_install_l10n', '-standard')
+class L10nHOOTCommon(HOOTCommon):
+
+    def get_hoot_filters(self):
+        assets = self.env['ir.qweb']._get_asset_content('web.assets_unit_tests')[0]
+        modules = sorted({
+            asset['url'].split('/')[1]
+            for asset in assets
+            if 'l10n' in asset['url'].split('/')[1] and asset['filename'].endswith('.test.js')
+        })
+        if not modules:
+            self.skipTest('No localization HOOT tests in the asset bundle')
+        filters = super().get_hoot_filters()
+        if any(sign == '+' for sign, _ in _get_filters(self._test_params)):
+            return filters
+        return ''.join(f'&id={self._generate_hash(f"@{module}")}' for module in modules) + filters
+
+
+class L10nWebSuite(L10nHOOTCommon, WebSuite):
+
+    @odoo.tests.no_retry
+    def test_unit_desktop(self):
+        super().test_unit_desktop()
+
+
+class L10nMobileWebSuite(L10nHOOTCommon, MobileWebSuite):
+
+    @odoo.tests.no_retry
+    def test_unit_mobile(self):
+        super().test_unit_mobile()
