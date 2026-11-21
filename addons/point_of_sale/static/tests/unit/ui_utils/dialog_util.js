@@ -1,6 +1,6 @@
 import { animationFrame, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
-import { normalizeText } from "./common";
+import { normalizeText, isMobile } from "./common";
 
 export async function confirmDialog(buttonText) {
     await waitFor(".modal");
@@ -12,9 +12,25 @@ export async function confirmDialog(buttonText) {
     await animationFrame();
 }
 
-export async function cancelDialog() {
+export async function cancelDialog(btnLabel = "Discard", title = "") {
     await waitFor(".modal");
-    await contains(".modal .btn-secondary").click();
+    if (title) {
+        await contains(
+            `.modal:has(.modal-title:contains(${title})) .btn-secondary:contains(${btnLabel})`
+        ).click();
+    } else {
+        await contains(`.modal .btn-secondary:contains(${btnLabel})`).click();
+    }
+    await animationFrame();
+}
+
+export async function closeDialog() {
+    await waitFor(".modal");
+    if (isMobile()) {
+        await contains(".modal-header button[data-icon='arrow_back']").click();
+    } else {
+        await contains(`.modal button.btn-close`).click();
+    }
     await animationFrame();
 }
 

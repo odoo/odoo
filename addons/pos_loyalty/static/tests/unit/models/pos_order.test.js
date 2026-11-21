@@ -396,4 +396,45 @@ describe("pos.order - loyalty", () => {
         order.setPricelist(models["product.pricelist"].get(1));
         expect(hasRewardLine()).toBe(true);
     });
+
+    describe("loadCode", () => {
+        // CARD001 belongs to partner 1 and its program 1 is restricted to pricelist 1.
+        const setupOrder = async () => {
+            const store = await setupPosEnv();
+            const models = store.models;
+            const order = store.addNewOrder();
+            order.setPricelist(models["product.pricelist"].get(1));
+            return { store, models, order };
+        };
+
+        test("accepts a valid code", async () => {
+            const { store, models } = await setupOrder();
+            store.setPartnerToCurrentOrder(models["res.partner"].get(1));
+            expect(await store.loadCode("CARD001")).toBe("");
+        });
+
+        test("rejects a code already applied to the order", async () => {
+            const { store, order } = await setupOrder();
+            order.applied_codes = ["CARD001"];
+            expect(await store.loadCode("CARD001")).toBe(
+                'The code "CARD001" has already been applied to this order.'
+            );
+        });
+
+        test("rejects a code whose program doesn't allow the order's pricelist", async () => {
+            const { store, models, order } = await setupOrder();
+            order.setPricelist(models["product.pricelist"].get(2));
+            expect(await store.loadCode("CARD001")).toBe(
+                'The code "CARD001" is not valid for the current pricelist. Change the pricelist and try again.'
+            );
+        });
+
+        test("rejects a card belonging to another customer", async () => {
+            const { store, models } = await setupOrder();
+            store.setPartnerToCurrentOrder(models["res.partner"].get(3));
+            expect(await store.loadCode("CARD001")).toBe(
+                'The card "CARD001" belongs to another customer and cannot be used on this order.'
+            );
+        });
+    });
 });

@@ -124,6 +124,11 @@ patch(ControlButtons.prototype, {
             // into active_payment_programs, which recomputeRewards spends via
             // applyPaymentProgram.
             const card = this.pos.models["loyalty.card"].get(eWalletReward.card_id);
+            const loadError = await this.pos.loadCode(card.code);
+            if (loadError) {
+                this.notification.add(loadError, { type: "danger" });
+                return;
+            }
             await this.pos.applyCode(card.code);
             this.pos.updateRewards();
         }
@@ -135,14 +140,10 @@ patch(ControlButtons.prototype, {
             placeholder: _t("Gift card or Discount code"),
             size: "md",
             removeNewLines: true,
+            inputValidationFunc: (code) => this.pos.loadCode(code.trim()),
             getPayload: async (code) => {
                 code = code.trim();
                 if (code === "") {
-                    return;
-                }
-                const loadError = await this.pos.loadCode(code);
-                if (loadError) {
-                    this.notification.add(loadError, { type: "danger" });
                     return;
                 }
                 await this.pos.applyCode(code);
