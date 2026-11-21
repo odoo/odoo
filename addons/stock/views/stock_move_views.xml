@@ -362,7 +362,8 @@
                         <field name="is_scrap" invisible="1"/> <!-- kept for default_is_scrap create context/domain filtering, not displayed since this form is scrap-specific -->
                         <group>
                             <group>
-                                <field name="product_id" readonly="state in ('done', 'cancel')" domain="[('id', 'in', context.get('product_ids')), ('type', '=', 'consu')] if 'product_ids' in context else [('type', '=', 'consu')]" options="{'no_create': 'product_ids' in context}"/>
+                                <field name="product_id" readonly="state in ('done', 'cancel')" domain="[('type', '=', 'consu')]" invisible="'product_ids' in context"/>
+                                <field name="product_id" readonly="state in ('done', 'cancel')" domain="[('id', 'in', context.get('product_ids')), ('type', '=', 'consu')]" options="{'no_create': True}" invisible="'product_ids' not in context"/>
                                 <label for="quantity" readonly="state in ('done', 'cancel')"/>
                                 <div class="o_row">
                                     <field name="quantity" string="Quantity" readonly="state in ('done', 'cancel')"/>
