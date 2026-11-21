@@ -464,16 +464,11 @@ class TestDocumentTaxModeCommon(AccountTestInvoicingCommon):
             'fiscal_position_ids': self.fpos_id,
             'original_tax_ids': self.tax_10_default,
         })
+
+        form = Form(document)
         # Changing the fiscal position by setting a customer with the equivalent fiscal position of the above tax
-        if document_type == 'invoice':
-            document.partner_id = self.fpos_partner_id
-            # Clicking on 'Update Taxes and Accounts'
-            document.action_update_fpos_values()
-        else:  # for both purchase and sale orders there is an onchange for fpos that recomputes taxes
-            form = Form(document)
-            # Changing the fiscal position by setting a customer with the equivalent fiscal position of the above tax
-            form.partner_id = self.fpos_partner_id
-            form.save()
+        form.partner_id = self.fpos_partner_id
+        form.save()
 
         # Check initial document values
         self.assertEqual(document.document_tax_mode, 'tax_excluded')
@@ -523,6 +518,11 @@ class TestAccountMoveTaxMode(TestDocumentTaxModeCommon):
             price_unit=1000,
             tax_ids=cls.tax_10_default,
         )
+        # The fiscal position maps the 10% tax to the 20% tax
+        cls.tax_20_default.update({
+            'fiscal_position_ids': cls.fpos_id,
+            'original_tax_ids': cls.tax_10_default,
+        })
 
     def test_account_move_tax_mode_change_with_product(self):
         invoice = self.invoice_one_line_with_product
@@ -589,3 +589,109 @@ class TestAccountMoveTaxMode(TestDocumentTaxModeCommon):
             self.assertEqual(line_form.price_unit, 1000)
             self.assertEqual(line_form.price_subtotal, 909.09)
             self.assertEqual(line_form.price_total, 1000)
+
+    def test_fpos_change_recomputes_price_of_lines_without_price(self):
+        # A line with no price gets its price rebuilt from the product when the fiscal position changes.
+
+        # Given: product priced 1100 tax included (10%); the fiscal position maps it to 20% tax included
+        self.tax_10_default.price_include_override = 'tax_included'
+        self.tax_20_default.price_include_override = 'tax_included'
+        self.test_product_a.write({
+            'lst_price': 1100.0,
+            'taxes_id': [Command.set(self.tax_10_default.ids)],
+        })
+        # And: a saved draft whose line has no price
+        invoice = self.invoice_one_line_with_product
+        invoice.invoice_line_ids.price_unit = 0.0
+
+        with Form(invoice) as form:
+            form.fiscal_position_id = self.fpos_id
+
+        # The price is rebuilt from the product
+        self.assertEqual(invoice.invoice_line_ids.price_unit, 1200.0)
+
+    def test_fpos_change_ignores_imported_lines(self):
+        # Imported lines (is_imported=True) are left untouched when the fiscal position changes.
+
+        # Given: a saved draft with an imported line (no price, 10% tax)
+        invoice = self._create_invoice(invoice_line_ids=[
+            self._prepare_invoice_line(
+                product_id=self.test_product_a,
+                price_unit=0.0,
+                tax_ids=self.tax_10_default,
+                is_imported=True,
+            ),
+        ])
+        with Form(invoice) as form:
+            form.fiscal_position_id = self.fpos_id
+        # Neither the tax nor the price changed
+        self.assertRecordValues(invoice.invoice_line_ids, [{
+            'tax_ids': self.tax_10_default.ids,
+            'price_unit': 0.0,
+        }])
+
+    def test_account_move_fpos_change_updates_lines_before_and_after_saving(self):
+        # Changing the fiscal position updates the line taxes, the amounts and the
+        # totals block, both on an unsaved invoice (before the first save) and on the
+        # saved draft (when the fiscal position is removed afterwards).
+
+        form = Form(self.env['account.move'].with_context(default_move_type='out_invoice'))
+        form.partner_id = self.partner_a
+        with form.invoice_line_ids.new() as line_form:
+            line_form.product_id = self.test_product_a
+
+        # When: the fiscal position is set before the first save
+        form.fiscal_position_id = self.fpos_id
+
+        # Then: the totals block already shows the mapped tax (1000 + 20%)
+        self.assertEqual(form.tax_totals['total_amount_currency'], 1200.0)
+
+        # And: the saved invoice keeps those values
+        invoice = form.save()
+        self.assertRecordValues(invoice, [{
+            'fiscal_position_id': self.fpos_id.id,
+            'amount_tax': 200.0,
+            'amount_total': 1200.0,
+            'amount_residual': 1200.0,
+        }])
+        self.assertEqual(invoice.invoice_line_ids.tax_ids.ids, self.tax_20_default.ids)
+        # The tax journal item is rebuilt with the mapped tax (credit on a sale)
+        self.assertRecordValues(invoice.line_ids.filtered(lambda l: l.display_type == 'tax'), [{
+            'tax_line_id': self.tax_20_default.id,
+            'balance': -200.0,
+        }])
+
+        with Form(invoice) as form:
+            form.fiscal_position_id = self.env['account.fiscal.position']
+
+        # Line goes back to the 10% tax
+        self.assertRecordValues(invoice, [{
+            'amount_tax': 100.0,
+            'amount_total': 1100.0,
+            'amount_residual': 1100.0,
+        }])
+        self.assertEqual(invoice.invoice_line_ids.tax_ids.ids, self.tax_10_default.ids)
+
+    def test_account_move_fpos_change_updates_lines_without_product(self):
+        # Setting then removing the fiscal position on a saved draft updates
+        # the taxes of a line without a product.
+
+        # Given: the company default sales tax is the 10% tax (used by lines without a product)
+        self.env.company.account_sale_tax_id = self.tax_10_default
+
+        # And: a saved draft with a line without a product and the 10% tax
+        invoice = self.invoice_one_line_without_product
+
+        with Form(invoice) as form:
+            form.fiscal_position_id = self.fpos_id
+
+        # The line gets the mapped 20% tax
+        self.assertRecordValues(invoice, [{'amount_total': 1200.0, 'amount_residual': 1200.0}])
+        self.assertEqual(invoice.invoice_line_ids.tax_ids.ids, self.tax_20_default.ids)
+
+        with Form(invoice) as form:
+            form.fiscal_position_id = self.env['account.fiscal.position']
+
+        # Line goes back to the 10% tax
+        self.assertRecordValues(invoice, [{'amount_total': 1100.0, 'amount_residual': 1100.0}])
+        self.assertEqual(invoice.invoice_line_ids.tax_ids.ids, self.tax_10_default.ids)

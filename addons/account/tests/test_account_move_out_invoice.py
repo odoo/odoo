@@ -592,60 +592,8 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         move_form.partner_id = self.partner_b
         move_form.save()
 
-        self.assertInvoiceValues(self.invoice, [
-            {
-                **self.product_line_vals_1,
-                'partner_id': self.partner_b.id,
-            },
-            {
-                **self.product_line_vals_2,
-                'partner_id': self.partner_b.id,
-            },
-            {
-                **self.tax_line_vals_1,
-                'partner_id': self.partner_b.id,
-            },
-            {
-                **self.tax_line_vals_2,
-                'partner_id': self.partner_b.id,
-            },
-            {
-                **self.term_line_vals_1,
-                'name': 'installment #1',
-                'account_id': self.partner_b.property_account_receivable_id.id,
-                'partner_id': self.partner_b.id,
-                'amount_currency': 423.0,
-                'debit': 423.0,
-            },
-            {
-                **self.term_line_vals_1,
-                'name': 'installment #2',
-                'account_id': self.partner_b.property_account_receivable_id.id,
-                'partner_id': self.partner_b.id,
-                'amount_currency': 987.0,
-                'debit': 987.0,
-                'date_maturity': fields.Date.from_string('2019-02-28'),
-            },
-        ], {
-            **self.move_vals,
-            'partner_id': self.partner_b.id,
-            'fiscal_position_id': self.fiscal_pos_a.id,
-            'invoice_payment_term_id': self.pay_terms_b.id,
-            'amount_untaxed': 1200.0,
-            'amount_tax': 210.0,
-            'amount_total': 1410.0,
-        })
-
-        # Remove lines and recreate them to apply the fiscal position.
-        move_form = Form(self.invoice)
-        move_form.invoice_line_ids.remove(0)
-        move_form.invoice_line_ids.remove(0)
-        with move_form.invoice_line_ids.new() as line_form:
-            line_form.product_id = self.product_a
-        with move_form.invoice_line_ids.new() as line_form:
-            line_form.product_id = self.product_b
-        move_form.save()
-
+        # Changing the partner changes the fiscal position, which is now applied
+        # to the existing lines right away.
         self.assertInvoiceValues(self.invoice, [
             {
                 **self.product_line_vals_1,
@@ -5228,7 +5176,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         """Manually adjusted prices should be preserved when changing fiscal position"""
         self.invoice.invoice_line_ids[0].price_unit = 1500.0
         self.invoice.fiscal_position_id = self.fiscal_pos_a
-        self.invoice.action_update_fpos_values()
+        self.invoice._update_fpos_values()
         self.assertEqual(self.invoice.invoice_line_ids[0].price_unit, 1500.0)
 
     def test_out_invoice_fiscal_position_recomputes_price_include_taxes(self):
@@ -5275,7 +5223,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
         # Apply fiscal position - price should convert: 1100 / 1.10 * 1.05 = 1050
         invoice.fiscal_position_id = fiscal_position
-        invoice.action_update_fpos_values()
+        invoice._update_fpos_values()
 
         self.assertEqual(
             invoice.invoice_line_ids[0].price_unit,
