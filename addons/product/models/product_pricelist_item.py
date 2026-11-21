@@ -520,6 +520,61 @@ class PricelistItem(models.Model):
 
         return res
 
+    def _get_applicability_key(self):
+        """Return the key of the products the rule may apply to, if it is restricted to some.
+
+        A rule restricted to a variant, a product or a category may only apply to the products
+        whose `_get_applicability_keys` contain its key: the other products aren't checked with
+        `_is_applicable_for`. Override both methods when overriding `_is_applicable_for` to apply
+        a rule to other products.
+
+        Note: self.ensure_one()
+
+        :returns: a `(model name, record id)` pair, or `False` if the rule may apply to any
+            product
+        :rtype: tuple[str, int] | bool
+        """
+        self.ensure_one()
+        if self.applied_on == "0_product_variant":
+            return ("product.product", self.product_id.id)
+        if self.applied_on == "1_product":
+            return ("product.template", self.product_tmpl_id.id)
+        if self.applied_on == "2_product_category":
+            return ("product.category", self.categ_id.id)
+        return False
+
+    @api.model
+    def _get_applicability_keys(self, product, key_models):
+        """Return the keys of the restricted rules that may apply to the given product.
+
+        See `_get_applicability_key`.
+
+        :param product: product record (product.product/product.template)
+        :param set[str] key_models: the models of the keys of the candidate rules, to only read
+            the fields needed for them
+        :returns: the `(model name, record id)` keys
+        :rtype: list[tuple[str, int]]
+        """
+        keys = []
+        is_product_template = product._name == "product.template"
+        if "product.template" in key_models:
+            keys.append(
+                ("product.template", product.id if is_product_template else product.product_tmpl_id.id)
+            )
+        if "product.product" in key_models:
+            if not is_product_template:
+                keys.append(("product.product", product.id))
+            elif product.product_variant_count == 1:
+                # A variant rule applies to the template of a single variant
+                keys.append(("product.product", product.product_variant_id.id))
+        if "product.category" in key_models and product.categ_id:
+            # A category rule applies to the products of the category and of its children
+            keys.extend(
+                ("product.category", int(categ_id))
+                for categ_id in product.categ_id.parent_path.split("/")[:-1]
+            )
+        return keys
+
     def _compute_price(self, product, quantity, uom, date, currency=None):
         """Compute the unit price of a product in the context of a pricelist application.
 
