@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
-const HEADER_SEARCHBAR_SELECTOR = ".o_header_searchbar";
+const HEADER_SEARCH_INPUT_SELECTOR = ".o_header_searchbar .search-query";
 const DIRTY_CLASS = "o_dirty_header_search";
 
 /**
@@ -14,13 +14,12 @@ export class HeaderSearchbarOptionPlugin extends Plugin {
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        dirty_trackers: { selector: HEADER_SEARCHBAR_SELECTOR, dirtyClass: DIRTY_CLASS },
+        dirty_trackers: { selector: HEADER_SEARCH_INPUT_SELECTOR, dirtyClass: DIRTY_CLASS },
         on_ready_to_save_document_handlers: this.onSave.bind(this),
     };
 
     async onSave() {
-        for (const searchbarEl of this.editable.querySelectorAll(`.${DIRTY_CLASS}`)) {
-            const inputEl = searchbarEl.querySelector(".search-query");
+        for (const inputEl of this.editable.querySelectorAll(`.${DIRTY_CLASS}`)) {
             const limit = parseInt(inputEl.dataset.limit);
             await this.services.orm.call(
                 "website",
@@ -32,7 +31,7 @@ export class HeaderSearchbarOptionPlugin extends Plugin {
                     limit: Number.isNaN(limit) ? 30 : limit,
                 }
             );
-            searchbarEl.classList.remove(DIRTY_CLASS);
+            inputEl.classList.remove(DIRTY_CLASS);
         }
     }
 }
