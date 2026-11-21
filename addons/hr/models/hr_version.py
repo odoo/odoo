@@ -254,6 +254,7 @@ class HrVersion(models.Model):
         dates_per_employee = defaultdict(list)
         for employee, date_start, date_end, versions in version_read_group:
             dates_per_employee[employee].append((date_start, date_end, versions))
+        self.sudo()._check_contract_start_after_version_date()
         for version in self.sudo():  # sudo needed to read contract dates
             if not version.contract_date_start or not version.employee_id:
                 continue
@@ -280,6 +281,44 @@ class HrVersion(models.Model):
                         version.employee_id.display_name))
             if not contract_period_exists:
                 dates_per_employee[version.employee_id].append((version.contract_date_start, version.contract_date_end, version))
+
+    def _check_contract_start_after_version_date(self):
+        """
+        Check that the contract start date is not before the version date.
+        Employees with a single version are skipped
+
+        :raise ValidationError: if the first version of a contract has
+            date_version later than its contract_date_start
+        """
+        versions = self.filtered(lambda v: v.active and v.employee_id and v.contract_date_start)
+        if not versions:
+            return
+        first_version_date_per_contract = {
+            (employee, contract_start): first_date_version
+            for employee, contract_start, first_date_version in self.env['hr.version']._read_group(
+                [
+                    ('id', 'not in', self.ids),
+                    ('employee_id', 'in', versions.employee_id.ids),
+                    ('contract_date_start', '!=', False),
+                ],
+                ['employee_id', 'contract_date_start:day'],
+                ['date_version:min'],
+            )
+        }
+        for (employee, contract_start), contract_versions in versions.grouped(
+            lambda v: (v.employee_id, v.contract_date_start)
+        ).items():
+            if len(employee.version_ids) <= 1:
+                continue
+            first_date = min(contract_versions.mapped('date_version'))
+            existing_first_date = first_version_date_per_contract.get((employee, contract_start))
+            if existing_first_date and existing_first_date < first_date:
+                continue
+            if first_date > contract_start:
+                raise ValidationError(self.env._(
+                    "You're trying to start a new contract before the start of the version. "
+                    "Modify the start of the version first then add a new contract date."
+                ))
 
     def check_contract_finished(self):
         """Raise if the version has an open-ended contract (start date but no end date).
@@ -527,6 +566,10 @@ class HrVersion(models.Model):
             for f_name, f_value in vals.items()
             if (f_name != 'contract_date_start' or not f_value) and f_name != 'contract_date_end'
         }
+        # write the version date before syncing the contract dates, so that the
+        # contract start date is checked against the new version date
+        if 'date_version' in new_vals:
+            super(HrVersion, multiple_versions).write({'date_version': new_vals.pop('date_version')})
         for employee, versions in multiple_versions.grouped('employee_id').items():
 
             dates_vals = {}

@@ -49,7 +49,7 @@ class TestAttendances(TestHrCommon):
         cls.employee.create_version({
             'contract_date_start': date(2024, 8, 1),
             'wage': 1,
-            'date_version': date(2024, 9, 1),
+            'date_version': date(2024, 8, 1),
         })
 
         cls.employee.resource_calendar_id = contract_now.resource_calendar_id
