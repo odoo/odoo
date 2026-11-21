@@ -389,6 +389,12 @@ class TestMailRender(TestMailRenderCommon):
         local_links_template_bits = [
             '<a href="/web/path?a=a&b=b"/>',
             '<img src="/web/path?a=a&b=b"/>',
+            '<img src="/web/path" srcset="/web/image/photo-small.jpg"/>',
+            '<img src="/web/path" srcset="/web/image/photo-small.jpg, /web/image/photo-large.jpg 800w"/>',
+            '<img src="/web/path" srcset="/web/image/photo-small.jpg, http://www.example.com/web/image/photo-large.jpg 800w"/>',
+            '<img src="/web/path" srcset="/web/image/photo-small.jpg 400w, /web/image/photo-large.jpg 800w"/>',
+            '<img src="/web/path" srcset="/web/image/photo.jpg 1x, /web/image/photo@2x.jpg 2x"/>',
+            '<img src="/web/path" srcset="http://www.example.com/web/image/photo.jpg 1x, http://www.example.com/web/image/photo@2x.jpg 2x"/>',
             '<v:fill src="/web/path?a=a&b=b"/>',
             '<v:image src="/web/path?a=a&b=b"/>',
             '<div style="background-image:url(/web/path?a=a&b=b);"/>',
@@ -401,6 +407,13 @@ class TestMailRender(TestMailRenderCommon):
         rendered_local_links = [
             '<a href="%s/web/path?a=a&b=b"/>' % base_url,
             '<img src="%s/web/path?a=a&b=b"/>' % base_url,
+            # Test for the `srcset`:
+            f'<img src="{base_url}/web/path" srcset="{base_url}/web/image/photo-small.jpg"/>',
+            f'<img src="{base_url}/web/path" srcset="{base_url}/web/image/photo-small.jpg, {base_url}/web/image/photo-large.jpg 800w"/>',
+            f'<img src="{base_url}/web/path" srcset="{base_url}/web/image/photo-small.jpg, http://www.example.com/web/image/photo-large.jpg 800w"/>',
+            f'<img src="{base_url}/web/path" srcset="{base_url}/web/image/photo-small.jpg 400w, {base_url}/web/image/photo-large.jpg 800w"/>',
+            f'<img src="{base_url}/web/path" srcset="{base_url}/web/image/photo.jpg 1x, {base_url}/web/image/photo@2x.jpg 2x"/>',
+            f'<img src="{base_url}/web/path" srcset="http://www.example.com/web/image/photo.jpg 1x, http://www.example.com/web/image/photo@2x.jpg 2x"/>',
             '<v:fill src="%s/web/path?a=a&b=b"/>' % base_url,
             '<v:image src="%s/web/path?a=a&b=b"/>' % base_url,
             '<div style="background-image:url(%s/web/path?a=a&b=b);"/>' % base_url,
