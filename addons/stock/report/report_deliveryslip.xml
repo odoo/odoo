@@ -39,15 +39,16 @@
                     </div>
                 </div>
             </t>
+            <t t-set="layout_document_title">
+                <span t-out="o._get_deliveryslip_report_title()"/>
+                <span t-field="o.name">WH/OUT/0001</span>
+            </t>
             <t t-call="web.external_layout"
                 partner="partner"
                 address="address"
-                information_block="information_block">
+                information_block="information_block"
+                layout_document_title="layout_document_title">
                 <div class="page">
-                    <h2 style="margin-top: 15px;">
-                        <span t-out="o._get_deliveryslip_report_title()"/>
-                        <span t-field="o.name">WH/OUT/0001</span>
-                    </h2>
                     <div class="oe_structure"></div>
                     <div id="informations" class="report-wrapping-flexbox clearfix row mb-4">
                         <div t-if="o.origin" class="col col-3 mw-100 mb-2" name="div_origin">
