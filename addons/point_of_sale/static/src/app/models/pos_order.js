@@ -392,10 +392,6 @@ export class PosOrder extends PosOrderAccounting {
         return true;
     }
 
-    isSaleDisallowed(values, options) {
-        return this.isRefund && (!values.qty || values.qty > 0);
-    }
-
     getSelectedOrderline() {
         return this.lines.find((line) => line.uuid === this.uiState.selected_orderline_uuid);
     }
@@ -439,7 +435,10 @@ export class PosOrder extends PosOrderAccounting {
         this.selectPaymentline(newPaymentLine);
         newPaymentLine.setAmount(totalAmountDue);
 
-        if ((payment_method.payment_interface && !this.isRefund) || payment_method.useBankQrCode) {
+        if (
+            (payment_method.payment_interface && !this.isRefundDocument) ||
+            payment_method.useBankQrCode
+        ) {
             newPaymentLine.setPaymentStatus("pending");
         }
         if (payment_method.type === "pay_later") {

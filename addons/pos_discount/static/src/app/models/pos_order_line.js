@@ -25,6 +25,10 @@ patch(PosOrderline.prototype, {
         );
     },
 
+    get isRefundLocked() {
+        return super.isRefundLocked || (this.order_id.isRefund && this.isDiscountLine);
+    },
+
     get isValidForRefund() {
         return super.isValidForRefund && !this.isDiscountLine;
     },

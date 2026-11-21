@@ -47,16 +47,18 @@ export class LoyaltyRule extends Base {
      * @param {object} order
      * @returns {object[]} the order lines eligible for this rule
      */
-    _qualifyingLines(order) {
-        return order
-            .getOrderlines()
-            .filter(
-                (line) =>
-                    !line.is_reward_line &&
-                    !line.payment_program_id &&
-                    this._countsForPoints(line) &&
-                    this._inDomain(line)
-            );
+    _qualifyingLines(order, lines = order.getOrderlines()) {
+        return lines.filter(
+            (line) =>
+                !line.is_reward_line &&
+                !line.payment_program_id &&
+                this._countsForPoints(line) &&
+                this._inDomain(line)
+        );
+    }
+
+    _getAmountSign(order) {
+        return order.isRefundDocument ? -1 : 1;
     }
 
     /**
@@ -66,14 +68,14 @@ export class LoyaltyRule extends Base {
      * @param {object} order
      * @returns {boolean}
      */
-    isFulfilled(order) {
+    isFulfilled(order, lines) {
         if (this.mode === "with_code" && !order.applied_codes.includes(this.code)) {
             return false;
         }
         if (this.program_id?.is_nominative && !order.getPartner()) {
             return false;
         }
-        const qualifyingLines = this._qualifyingLines(order);
+        const qualifyingLines = this._qualifyingLines(order, lines);
         if (!qualifyingLines.length) {
             return false;
         }
@@ -89,7 +91,7 @@ export class LoyaltyRule extends Base {
                     : line.linePriceTaxExcluded),
             0
         );
-        return amount >= this.minimum_amount;
+        return amount * this._getAmountSign(order) >= this.minimum_amount;
     }
 
     /**
@@ -98,15 +100,15 @@ export class LoyaltyRule extends Base {
      * @param {object} order
      * @returns {number} the number of points
      */
-    getPoints(order) {
+    getPoints(order, lines = order.getOrderlines()) {
         if (
             !this.reward_point_amount ||
-            !this.isFulfilled(order) ||
+            !this.isFulfilled(order, lines) ||
             !order.isProgramPricelistValid(this.program_id)
         ) {
             return 0;
         }
-        const qualifyingLines = this._qualifyingLines(order);
+        const qualifyingLines = this._qualifyingLines(order, lines);
         switch (this.reward_point_mode) {
             case "order":
                 return this.reward_point_amount;
@@ -121,17 +123,16 @@ export class LoyaltyRule extends Base {
                         ["ewallet", "gift_card"].includes(
                             line.reward_id?.program_id?.program_type
                         ));
-                const moneyLines = order
-                    .getOrderlines()
-                    .filter(
-                        (line) =>
-                            !line.payment_program_id &&
-                            this._countsForPoints(line) &&
-                            this._inDomain(line) &&
-                            !isExcludedReward(line)
-                    );
+                const moneyLines = lines.filter(
+                    (line) =>
+                        !line.payment_program_id &&
+                        this._countsForPoints(line) &&
+                        this._inDomain(line) &&
+                        !isExcludedReward(line)
+                );
                 return roundPrecision(
                     this.reward_point_amount *
+                        this._getAmountSign(order) *
                         moneyLines.reduce((total, line) => total + line.linePriceTaxIncluded, 0),
                     0.01,
                     "DOWN"

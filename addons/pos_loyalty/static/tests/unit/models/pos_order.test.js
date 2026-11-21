@@ -189,18 +189,6 @@ describe("pos.order - loyalty", () => {
         expect(remainingLines[0].is_reward_line).not.toBe(true);
     });
 
-    test("isSaleDisallowed", async () => {
-        const store = await setupPosEnv();
-        const models = store.models;
-        const order = store.addNewOrder();
-
-        // Get loyalty program #3 - type = "gift_card"
-        const giftProgram = models["loyalty.program"].get(3);
-
-        const result = order.isSaleDisallowed({}, { eWalletGiftCardProgram: giftProgram });
-        expect(result).toBe(false);
-    });
-
     test("totalItemQuantity", async () => {
         const store = await setupPosEnv();
         const order = store.addNewOrder();
