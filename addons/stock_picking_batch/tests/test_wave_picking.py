@@ -187,6 +187,18 @@ class TestBatchPicking(TransactionCase):
         res = wizard.attach_pickings()
         self.assertEqual(set(res['context']['picking_to_wave']), set(self.all_pickings.ids))
 
+        all_lines = self.all_pickings.move_line_ids
+        all_lines.with_context(**res['context']).action_open_add_to_wave()
+        wave = self.env['stock.picking.batch'].search([
+            ('is_wave', '=', True)
+        ])
+        self.assertEqual(len(wave), 1)
+        self.assertEqual(wave.move_line_ids, all_lines)
+
+    def test_prepare_wave_opens_wizard(self):
+        res = self.all_pickings.move_line_ids.with_context(active_wave_id=False).action_open_add_to_wave()
+        self.assertEqual(res['res_model'], 'stock.add.to.wave')
+
     def test_add_to_existing_wave_from_lines(self):
         res_dict = self.picking_client_1.move_line_ids.action_open_add_to_wave()
         res_dict['context'] = {'active_model': 'stock.move.line', 'active_ids': self.picking_client_1.move_line_ids.ids}
