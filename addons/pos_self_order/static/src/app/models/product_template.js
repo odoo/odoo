@@ -2,6 +2,15 @@ import { ProductTemplate } from "@point_of_sale/app/models/product_template";
 import { patch } from "@web/core/utils/patch";
 
 patch(ProductTemplate.prototype, {
+    productImageUrl() {
+        if (!this.image_128) {
+            return this.config.module_pos_restaurant
+                ? "/pos_self_order/static/img/restaurant_placeholder.png"
+                : "/pos_self_order/static/img/retail_placeholder.png";
+        }
+        return this.getImageUrl().replace("image_256", "image_512");
+    },
+
     get isConfigurableForSelfOrder() {
         if (this.config.self_ordering_mode !== "kiosk") {
             return this.isConfigurable();
