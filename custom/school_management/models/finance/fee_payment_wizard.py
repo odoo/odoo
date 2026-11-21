@@ -1,4 +1,3 @@
-
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
@@ -124,7 +123,7 @@ class UniversityFeePaymentWizard(models.TransientModel):
             discount = 0.0
             if rec.fee_id:
                 for line in rec.fee_id.line_ids:
-                    if line.amount < 0 or (line.name and "scholarship" in line.name.lower()):
+                    if line.name and any(k in line.name.lower() for k in ("scholarship", "grant", "waiver", "discount")):
                         discount += abs(line.amount)
             rec.scholarship_discount = discount
 

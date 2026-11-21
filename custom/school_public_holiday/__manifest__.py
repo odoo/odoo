@@ -1,6 +1,6 @@
 {
     "name": "School Public Holidays",
-    "version": "1.0.0",
+    "version": "19.0.1.0.0",
     "category": "Education",
     "summary": "Cambodia public holiday calendar, file import, and schedule conflict validation",
     "author": "School Management",

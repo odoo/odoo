@@ -11,8 +11,7 @@
                 <button name="action_view_slide_channels"
                         type="object"
                         class="oe_stat_button"
-                        icon="fa-graduation-cap"
-                        groups="school_management.group_school_admin,school_management.group_school_teacher,school_management.group_school_hod,school_management.group_school_dean,website_slides.group_website_slides_officer">
+                        icon="fa-graduation-cap">
                     <field name="slide_channel_count" widget="statinfo" string="eLearning"/>
                 </button>
             </xpath>
@@ -20,8 +19,7 @@
             <!-- eLearning Courses Notebook Tab -->
             <xpath expr="//notebook" position="inside">
                 <page string="eLearning Courses"
-                      name="elearning_tab"
-                      groups="school_management.group_school_admin,school_management.group_school_teacher,school_management.group_school_hod,school_management.group_school_dean,website_slides.group_website_slides_officer">
+                      name="elearning_tab">
                     <field name="slide_channel_ids" context="{'default_subject_id': id}">
                         <list string="eLearning Courses">
                             <field name="name" string="Course Title"/>

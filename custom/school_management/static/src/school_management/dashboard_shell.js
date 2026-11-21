@@ -355,6 +355,10 @@ class SchoolDashboardShell extends Component {
         return this.state.dashboard?.kpi_five || [];
     }
 
+    get urgentAlerts() {
+        return this.state.dashboard?.urgent_actions?.alerts || [];
+    }
+
     get recentEnrollments() {
         return this.state.dashboard?.recent_enrollments || [];
     }

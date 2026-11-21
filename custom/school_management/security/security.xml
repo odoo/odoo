@@ -112,10 +112,6 @@
         <field name="implied_ids" eval="[(4, ref('group_school_admin'))]"/>
     </record>
 
-    <record id="group_school_teacher" model="res.groups">
-        <field name="implied_ids" eval="[(4, ref('group_university_teacher'))]"/>
-    </record>
-
 
     <record id="rule_teacher_ui_sections" model="ir.rule">
         <field name="name">Teacher: assigned sections</field>

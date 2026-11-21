@@ -21,6 +21,25 @@ class UniversityClassSection(models.Model):
         for section in self:
             section.slide_channel_count = len(section.slide_channel_ids)
 
+    def write(self, vals):
+        res = super().write(vals)
+        if "teacher_id" in vals:
+            for section in self:
+                if section.slide_channel_ids:
+                    update_vals = {
+                        "teacher_id": section.teacher_id.id if section.teacher_id else False,
+                    }
+                    if section.teacher_id and section.teacher_id.user_id:
+                        update_vals["user_id"] = section.teacher_id.user_id.id
+                    section.slide_channel_ids.write(update_vals)
+        if "subject_id" in vals:
+            for section in self:
+                if section.slide_channel_ids:
+                    section.slide_channel_ids.write({
+                        "subject_id": section.subject_id.id if section.subject_id else False,
+                    })
+        return res
+
     def action_view_slide_channels(self):
         self.ensure_one()
         action = self.env["ir.actions.act_window"]._for_xml_id("website_slides.slide_channel_action_overview")

@@ -896,33 +896,43 @@ class UniversityDashboard(models.Model):
                 "action": "openTeachers",
             },
             {
+                "id": "attendance_rate",
+                "category": "Attendance Rate",
+                "value": f"{attendance_rate:.1f}%",
+                "growth": "Recorded attendance",
+                "growth_type": "up" if attendance_rate >= 80 else "down" if attendance_rate < 70 else "neutral",
+                "icon": "fa-calendar-check-o",
+                "color": "blue",
+                "action": "openAttendance",
+            },
+            {
                 "id": "total_courses",
                 "category": "Total Courses",
                 "value": f"{courses_count:,}",
-                "growth": "Active courses",
+                "growth": f"{department_count} Departments",
                 "growth_type": "neutral",
                 "icon": "fa-book",
                 "color": "purple",
                 "action": "openSubjects",
             },
             {
-                "id": "departments",
-                "category": "Departments",
-                "value": f"{department_count:,}",
-                "growth": "Active departments",
-                "growth_type": "neutral",
-                "icon": "fa-building-o",
-                "color": "amber",
-                "action": "openDepartments",
-            },
-            {
                 "id": "tuition_fee",
-                "category": "Tuition Fee Collected",
+                "category": "Tuition Collected",
                 "value": f"{currency_sym} {total_paid:,.2f}",
-                "growth": "Posted payments",
-                "growth_type": "neutral",
+                "growth": f"{coll_rate}% collection rate",
+                "growth_type": "up" if coll_rate >= 75 else "neutral",
                 "icon": "fa-credit-card",
                 "color": "emerald",
+                "action": "openFees",
+            },
+            {
+                "id": "outstanding_fee",
+                "category": "Outstanding Fees",
+                "value": f"{currency_sym} {total_unpaid:,.2f}",
+                "growth": f"{currency_sym} {tot_rev:,.2f} total billed",
+                "growth_type": "down" if total_unpaid > 0 else "neutral",
+                "icon": "fa-clock-o",
+                "color": "amber",
                 "action": "openFees",
             },
         ]
@@ -1019,6 +1029,28 @@ class UniversityDashboard(models.Model):
             "action": "openReports",
         }
 
+        alerts = []
+        if pending_admission_count > 0:
+            alerts.append({
+                "id": "admissions",
+                "icon": "fa-exclamation-triangle",
+                "iconColor": "text-warning",
+                "btnClass": "o_alert_btn_amber",
+                "text": f"{pending_admission_count} Pending Student Admission{'s' if pending_admission_count != 1 else ''} need review",
+                "btnLabel": "Review Admissions",
+                "action": "openAdmissions",
+            })
+        if schedule_conflicts_count > 0:
+            alerts.append({
+                "id": "conflicts",
+                "icon": "fa-exclamation-circle",
+                "iconColor": "text-danger",
+                "btnClass": "o_alert_btn_danger",
+                "text": f"{schedule_conflicts_count} Schedule Conflict{'s' if schedule_conflicts_count != 1 else ''} need resolution",
+                "btnLabel": "Resolve Conflicts",
+                "action": "openConflicts",
+            })
+
         dashboard = {
             "user_name": display_user_name,
             "user_initials": user_initials,
@@ -1032,6 +1064,9 @@ class UniversityDashboard(models.Model):
             "teacher_count": teacher_count,
             "attendance_rate": attendance_rate,
             "total_paid_fees": total_paid,
+            "total_unpaid_fees": total_unpaid,
+            "total_revenue": tot_rev,
+            "collection_rate": coll_rate,
             "pending_admission_count": pending_admission_count,
             "schedule_conflicts_count": schedule_conflicts_count,
             "active_semester_name": semester_name,
@@ -1046,26 +1081,7 @@ class UniversityDashboard(models.Model):
                 "pending_admissions_text": f"{pending_admission_count} Pending Student Admissions need review",
                 "schedule_conflicts_count": schedule_conflicts_count,
                 "schedule_conflicts_text": f"{schedule_conflicts_count} Room Schedule Conflict needs resolution" if schedule_conflicts_count == 1 else f"{schedule_conflicts_count} Schedule Conflicts need resolution",
-                "alerts": [
-                    {
-                        "id": "admissions",
-                        "icon": "fa-exclamation-triangle",
-                        "iconColor": "text-warning",
-                        "btnClass": "o_alert_btn_amber",
-                        "text": f"{pending_admission_count} Pending Student Admissions need review",
-                        "btnLabel": "Review Admissions",
-                        "action": "openAdmissions",
-                    },
-                    {
-                        "id": "conflicts",
-                        "icon": "fa-exclamation-circle",
-                        "iconColor": "text-danger",
-                        "btnClass": "o_alert_btn_danger",
-                        "text": f"{schedule_conflicts_count} Room Schedule Conflict needs resolution" if schedule_conflicts_count == 1 else f"{schedule_conflicts_count} Schedule Conflicts need resolution",
-                        "btnLabel": "Resolve Conflicts",
-                        "action": "openConflicts",
-                    },
-                ],
+                "alerts": alerts,
             },
             "kpis": {
                 "demographics": {

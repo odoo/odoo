@@ -69,6 +69,29 @@
             <!-- A. EXECUTIVE LAYOUT -->
             <t t-if="this.isExecutiveLayout">
 
+              <!-- ACTION CENTER BANNER (URGENT ALERTS) -->
+              <section t-if="this.urgentAlerts and this.urgentAlerts.length" class="o_action_center_section mb-1" aria-label="Action Required">
+                <div class="o_action_center_banner p-3 p-md-3 d-flex flex-wrap align-items-center justify-content-between gap-3">
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="o_action_center_tag small fw-bold text-dark d-inline-flex align-items-center gap-1">
+                      <i class="fa fa-bell text-warning" aria-hidden="true"></i> Action Required
+                    </span>
+                    <span class="small text-muted d-none d-md-inline">Items requiring immediate administrative attention</span>
+                  </div>
+                  <div class="d-flex align-items-center gap-2 flex-wrap">
+                    <t t-foreach="this.urgentAlerts" t-as="alert" t-key="alert.id">
+                      <div class="o_alert_pill d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill">
+                        <i t-attf-class="fa #{alert.icon} #{alert.iconColor}" aria-hidden="true"></i>
+                        <span class="small fw-semibold text-dark" t-esc="alert.text"/>
+                        <button type="button" t-attf-class="btn btn-sm o_alert_btn #{alert.btnClass}" t-on-click="() => this.handleActionClick(alert.action)">
+                          <t t-esc="alert.btnLabel"/>
+                        </button>
+                      </div>
+                    </t>
+                  </div>
+                </div>
+              </section>
+
               <!-- KPI ROW -->
               <section class="o_kpi_five_section" aria-label="Key Performance Indicators">
                 <div class="o_kpi_five_row">
@@ -82,7 +105,8 @@
                       </div>
                       <div class="o_kpi_metric_value fw-semibold text-dark mb-1" t-esc="card.value"/>
                       <div class="small text-muted">
-                        <i t-if="card.growth_type == 'up'" class="fa fa-arrow-up me-1" aria-hidden="true"></i>
+                        <i t-if="card.growth_type == 'up'" class="fa fa-arrow-up me-1 text-success" aria-hidden="true"></i>
+                        <i t-if="card.growth_type == 'down'" class="fa fa-arrow-down me-1 text-danger" aria-hidden="true"></i>
                         <t t-esc="card.growth"/>
                       </div>
                     </div>
