@@ -17,16 +17,15 @@ class EventRegistration(models.Model):
 
     @api.depends('pos_order_id.state', 'pos_order_id.currency_id', 'pos_order_id.amount_total')
     def _compute_registration_status(self):
-        if self.pos_order_id:
-            for registration in self:
-                if registration.pos_order_id.state == 'cancel':
-                    registration.state = 'cancel'
-                elif float_is_zero(registration.pos_order_id.amount_total, precision_rounding=registration.pos_order_id.currency_id.rounding):
-                    registration.sale_status = 'free'
-                    registration.state = 'open'
-                else:
-                    registration.sale_status = 'sold'
-                    registration.state = 'open'
+        for registration in self.filtered("pos_order_id.id"):
+            if registration.pos_order_id.state == 'cancel':
+                registration.state = 'cancel'
+            elif float_is_zero(registration.pos_order_id.amount_total, precision_rounding=registration.pos_order_id.currency_id.rounding):
+                registration.sale_status = 'free'
+                registration.state = 'open'
+            else:
+                registration.sale_status = 'sold'
+                registration.state = 'open'
 
         super()._compute_registration_status()
 
