@@ -70,58 +70,6 @@ CONFIGURATOR_PREVIEW_CSP = (
     " font-src 'self' data: https://fonts.gstatic.com;"
     " frame-ancestors 'self'"
 )
-CONFIGURATOR_PREVIEW_FALLBACK_IMAGES = {
-    f'website.{image_name}': f'website.{fallback_image_name}'
-    for image_name, fallback_image_name in [
-        ('s_intro_pill_default_image', 'library_image_10'),
-        ('s_intro_pill_default_image_2', 'library_image_14'),
-        ('s_banner_default_image_2', 's_image_text_default_image'),
-        ('s_banner_default_image_3', 's_product_list_default_image_1'),
-        ('s_striped_top_default_image', 's_picture_default_image'),
-        ('s_text_cover_default_image', 's_cover_default_image'),
-        ('s_showcase_default_image', 's_image_text_default_image'),
-        ('s_image_hexagonal_default_image', 's_cover_default_image'),
-        ('s_image_hexagonal_default_image_1', 's_company_team_image_1'),
-        ('s_accordion_image_default_image', 's_image_text_default_image'),
-        ('s_pricelist_boxed_default_background', 's_product_catalog_default_image'),
-        ('s_image_title_default_image', 's_cover_default_image'),
-        ('s_key_images_default_image_1', 's_media_list_default_image_1'),
-        ('s_key_images_default_image_2', 's_image_text_default_image'),
-        ('s_key_images_default_image_3', 's_media_list_default_image_2'),
-        ('s_key_images_default_image_4', 's_text_image_default_image'),
-        ('s_kickoff_default_image', 's_cover_default_image'),
-        ('s_quadrant_default_image_1', 'library_image_03'),
-        ('s_quadrant_default_image_2', 'library_image_10'),
-        ('s_quadrant_default_image_3', 'library_image_13'),
-        ('s_quadrant_default_image_4', 'library_image_05'),
-        ('s_sidegrid_default_image_1', 'library_image_03'),
-        ('s_sidegrid_default_image_2', 'library_image_10'),
-        ('s_sidegrid_default_image_3', 'library_image_13'),
-        ('s_sidegrid_default_image_4', 'library_image_05'),
-        ('s_cta_box_default_image', 'library_image_02'),
-        ('s_image_punchy_default_image', 's_cover_default_image'),
-        ('s_image_frame_default_image', 's_carousel_default_image_2'),
-        ('s_carousel_intro_default_image_1', 's_cover_default_image'),
-        ('s_carousel_intro_default_image_2', 's_image_text_default_image'),
-        ('s_carousel_intro_default_image_3', 's_text_image_default_image'),
-        ('s_website_form_overlay_default_image', 's_cover_default_image'),
-        ('s_website_form_cover_default_image', 's_cover_default_image'),
-        ('s_split_intro_default_image', 's_cover_default_image'),
-        ('s_framed_intro_default_image', 's_cover_default_image'),
-        ('s_splash_intro_default_image', 's_cover_default_image'),
-        ('s_wavy_grid_default_image_1', 's_cover_default_image'),
-        ('s_wavy_grid_default_image_2', 's_image_text_default_image'),
-        ('s_wavy_grid_default_image_3', 's_text_image_default_image'),
-        ('s_wavy_grid_default_image_4', 's_carousel_default_image_1'),
-        ('s_timeline_images_default_image_1', 's_media_list_default_image_1'),
-        ('s_timeline_images_default_image_2', 's_media_list_default_image_2'),
-        ('s_carousel_cards_default_image_1', 's_carousel_default_image_1'),
-        ('s_carousel_cards_default_image_2', 's_carousel_default_image_2'),
-        ('s_carousel_cards_default_image_3', 's_carousel_default_image_3'),
-        ('s_banner_connected_default_image', 's_cover_default_image'),
-    ]
-}
-
 # Matches the translation marker inside attribute values
 # (e.g. alt="<span data-oe-translation-source-sha="...">term</span>")
 # when a record is read with edit_translations=True.
@@ -605,8 +553,6 @@ class Website(Home):
         :rtype: str | None
         """
         image_name = urllib.parse.unquote(image_name).split('?', 1)[0]
-        if image_name not in images_map:
-            image_name = CONFIGURATOR_PREVIEW_FALLBACK_IMAGES.get(image_name, image_name)
         image_url = images_map.get(image_name)
         if image_url:
             return image_url.replace('/small/', '/')
@@ -624,8 +570,6 @@ class Website(Home):
         image_url = self._get_configurator_industry_image_url(images_map, image_name)
         if image_url:
             return image_url
-        image_name = urllib.parse.unquote(image_name).split('?', 1)[0]
-        image_name = CONFIGURATOR_PREVIEW_FALLBACK_IMAGES.get(image_name, image_name)
         return self._get_theme_static_preview_image_url(theme_name, image_name)
 
     def _is_safe_configurator_preview_image_url(self, image_url):
