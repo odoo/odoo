@@ -5,6 +5,8 @@ from unittest.mock import patch
 
 import odoo.tests
 
+from odoo import Command
+from odoo.addons.mail.tests.common import MailCase
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
 
 CHANGE_RECEIPT_ROUTE = '/pos-self-order/kiosk/change-receipt'
@@ -149,3 +151,69 @@ class TestSelfOrderReceiptLang(SelfOrderCommonTest):
         self.pos_config.self_ordering_mode = 'mobile'
 
         self.assertIsNone(self._request_change_receipt(order, order.access_token))
+
+
+@odoo.tests.tagged("post_install", "-at_install")
+class TestSelfOrderMailLang(MailCase, SelfOrderCommonTest):
+    def setUp(self):
+        super().setUp()
+        self.lang_en = self.env.ref('base.lang_en')
+        self.lang_fr = self.env['res.lang']._activate_lang('fr_FR')
+        self.lang_nl = self.env['res.lang']._activate_lang('nl_NL')
+        self.template = self.env.ref('pos_self_order.takeout_email_template')
+        self.template.update_field_translations('subject', {'fr_FR': 'Votre reçu {{ object.config_id.name }}'})
+        self.template.update_field_translations('body_html', {
+            'fr_FR': self.template.with_context(lang='en_US').body_html.replace('Thank you,', 'Merci,'),
+        })
+        self.out_preset.mail_template_id = self.template
+        self.env.company.partner_id.tz = 'Europe/Brussels'
+        self.pos_config.write({
+            'self_ordering_mode': 'kiosk',
+            'self_ordering_default_language_id': self.lang_en.id,
+            'self_ordering_available_language_ids': [Command.set((self.lang_en | self.lang_fr).ids)],
+            'default_preset_id': self.out_preset.id,
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+
+    def _process_free_kiosk_order(self, lang=None, **order_values):
+        order_data = self._create_order_data(
+            product=self.free,
+            price_unit=0,
+            email='customer@example.com',
+            **order_values,
+        )
+        receipt_langs = []
+        origin = self.env.registry['pos.order'].order_receipt_generate_data
+
+        def spy_generate_data(order, *args, **kwargs):
+            receipt_langs.append(order.env.lang)
+            return origin(order, *args, **kwargs)
+
+        with self.mock_mail_gateway(), \
+            patch.object(self.env.registry['pos.order'], 'order_receipt_generate_data', spy_generate_data), \
+            patch.object(self.env.registry['ir.actions.report'], '_run_image_engine', lambda *args, **kwargs: [b'Receipt']):
+            data = self.make_request_to_controller(
+                '/pos-self-order/process-order/kiosk',
+                order_data,
+                cookies={'frontend_lang': lang} if lang else None,
+            )
+        order = self.env['pos.order'].browse(data['pos.order'][0]['id'])
+        return order, receipt_langs
+
+    def test_receipt_mail_sent_in_kiosk_lang(self):
+        order, receipt_langs = self._process_free_kiosk_order('fr_FR', preset_time='2026-11-17 13:30:00')
+
+        self.assertEqual(order.self_ordering_lang_id, self.lang_fr)
+        self.assertEqual(self._new_mails.subject, 'Votre reçu BarTest')
+        self.assertIn('Merci,', self._new_mails.body_html)
+        self.assertIn('ready at 14:30', self._new_mails.body_html)
+        self.assertEqual(set(receipt_langs), {'fr_FR'})
+
+    def test_receipt_mail_falls_back_to_default_kiosk_lang(self):
+        """ A language not available on the kiosk falls back to its default language. """
+        order, receipt_langs = self._process_free_kiosk_order('nl_NL', preset_time='2026-11-17 13:30:00')
+
+        self.assertEqual(order.self_ordering_lang_id, self.lang_en)
+        self.assertEqual(self._new_mails.subject, 'Your BarTest receipt')
+        self.assertIn('ready at 02:30 PM', self._new_mails.body_html)
+        self.assertEqual(set(receipt_langs), {'en_US'})

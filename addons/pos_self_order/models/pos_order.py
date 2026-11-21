@@ -20,6 +20,12 @@ class PosOrder(models.Model):
         ('mobile', 'Self-Order Mobile'),
         ('kiosk', 'Self-Order Kiosk')
     ])
+    self_ordering_lang_id = fields.Many2one(
+        comodel_name='res.lang',
+        string='Self-Ordering Language',
+        readonly=True,
+        ui_domain="[('id', 'in', config_id.self_ordering_available_language_ids)]",
+    )
 
     @api.model
     def _load_pos_self_data_domain(self, data):
@@ -274,6 +280,8 @@ class PosOrder(models.Model):
         payment_lines = self._check_pos_order_payment(device_type, order, order.get("payment_ids"))
         payment_lines = [line for line in payment_lines if len(line)]
         partner = self._get_self_partner_from_token(pos_config, order.get('partner_id')) if order.get('partner_id') else False
+        lang = pos_config.self_ordering_available_language_ids.filtered(lambda lg: lg.code == pos_config.env.lang)[:1]
+        lang = lang or pos_config.self_ordering_default_language_id
 
         if order.get('id') and order.get('uuid') and isinstance(order['id'], int):
             exists = pos_config.env['pos.order'].search_count([
@@ -301,6 +309,7 @@ class PosOrder(models.Model):
             'preset_id': preset_id.id if preset_id else False,
             'preset_time': order.get('preset_time'),
             'source': 'kiosk' if device_type == 'kiosk' else 'mobile',
+            'self_ordering_lang_id': lang.id,
             'email': partner.email if partner else order.get('email'),
             'mobile': partner.phone if partner else order.get('mobile'),
             'state': 'draft',
