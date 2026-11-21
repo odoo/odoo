@@ -18,4 +18,10 @@
             <attribute name="class" add="form-select" separator=" "/>
         </select>
     </t>
+
+    <t t-inherit="sale.ptav_image" t-inherit-mode="extension">
+        <label name="ptav_image" position="attributes">
+            <attribute name="class" remove="rounded-3" add="o_wsale_product_thumb" separator=" "/>
+        </label>
+    </t>
 </templates>
