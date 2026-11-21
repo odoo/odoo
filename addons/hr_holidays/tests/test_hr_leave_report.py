@@ -1,4 +1,6 @@
 
+from datetime import date
+
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 
@@ -236,3 +238,48 @@ class TestHrLeaveReport(TestHrHolidaysCommon):
         left_records = leave_balance.filtered(lambda l: l.holiday_status == 'left')
         self.assertEqual(sum(left_records.filtered(lambda l: l.date_from.year == 2025).mapped('number_of_days')), 19)
         self.assertEqual(sum(left_records.filtered(lambda l: l.date_from.year == 2026).mapped('number_of_days')), 20)
+
+    def test_leave_on_allocation_last_day_is_deducted(self):
+        """
+        Scenario:
+            - Hourly allocation: 2025-05-01 to 2025-05-15 (7 hours)
+            - Leave: 2025-05-15, 7 hours during working hours
+
+        The leave starts on the allocation's last day, after midnight, so it
+        must still be deducted from that allocation, as on the dashboard.
+        """
+        self.employee_emp.tz = 'Europe/Brussels'
+        allocation = self.env['hr.leave.allocation'].create({
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.overtime_leave_type.id,
+            'date_from': '2025-05-01',
+            'date_to': '2025-05-15',
+            'number_of_days': 0.875,  # 7 hours on an 8-hour working day
+        })
+        allocation.action_validate()
+        self.assertEqual(allocation.number_of_hours_display, 7)
+
+        leave = self.env['hr.leave'].create({
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.overtime_leave_type.id,
+            'request_date_from': '2025-05-15',
+            'request_date_to': '2025-05-15',
+            'request_unit_hours': True,
+            'request_hour_from': 8,
+            'request_hour_to': 16,
+        })
+        leave.action_validate()
+        self.assertEqual(leave.number_of_hours, 7)
+
+        dashboard = self.employee_emp._get_consumed_leaves(self.overtime_leave_type, date(2025, 5, 15))[0]
+        self.assertEqual(dashboard[self.employee_emp][self.overtime_leave_type][allocation]['remaining_leaves'], 0)
+
+        self.env.flush_all()
+        leave_balance = self.env['hr.leave.employee.type.report'].search([
+            ('employee_id', '=', self.employee_emp.id),
+            ('leave_type', '=', self.overtime_leave_type.id),
+        ])
+        taken = leave_balance.filtered(lambda l: l.holiday_status == 'taken')
+        left = leave_balance.filtered(lambda l: l.holiday_status == 'left')
+        self.assertEqual(sum(taken.mapped('number_of_hours')), 7)
+        self.assertEqual(sum(left.mapped('number_of_hours')), 0)
