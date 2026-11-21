@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from collections import defaultdict
 
 from odoo import models
 
@@ -18,14 +19,25 @@ class StockForecasted_Product_Product(models.AbstractModel):
         else:
             company = self.env.company
         domain += [('company_id', '=', company.id)]
-        po_lines = self.env['purchase.order.line'].sudo().search(domain).grouped('product_id')
-        in_qty = {k.id: sum(v.mapped('product_uom_qty')) for k, v in po_lines.items()}
+        groups = self.env['purchase.order.line'].sudo()._read_group(domain,
+            ['order_id', 'product_id'],
+            ['id:array_agg', 'product_uom_qty:sum'],
+        )
+        in_qty = defaultdict(float)
+        for _order, product, _ids, qty in self.env['purchase.order.line']._get_countable_rfq_groups(groups):
+            in_qty[product.id] += qty
         self._add_product_quantities(res, product_template_ids, product_ids, 'draft_purchase_qty', in_qty)
+        # All RFQs displayed, even the alternatives that are not counted.
+        orders_by_product = defaultdict(self.env['purchase.order'].sudo)
+        line_ids_by_product = defaultdict(set)
+        for order, product, line_ids, _qty in groups:
+            orders_by_product[product.id] |= order
+            line_ids_by_product[product.id].update(line_ids)
         for product in self._get_products(product_template_ids, product_ids):
-            if product not in po_lines:
-                continue
-            res['product'][product.id]['draft_purchase_orders'] = po_lines[product].mapped("order_id").sorted(key=lambda po: po.name).read(fields=['id', 'name'])
-            res['product'][product.id]['draft_purchase_orders_matched'] = self.env.context.get('purchase_line_to_match_id') in po_lines[product].ids
+            if product.id in orders_by_product:
+                values = res['product'][product.id]
+                values['draft_purchase_orders'] = orders_by_product[product.id].sorted('name').read(['id', 'name'])
+                values['draft_purchase_orders_matched'] = self.env.context.get('purchase_line_to_match_id') in line_ids_by_product[product.id]
         return res
 
     def _product_purchase_domain(self, product_template_ids, product_ids):
