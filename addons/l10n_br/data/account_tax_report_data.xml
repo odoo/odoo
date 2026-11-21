@@ -56,6 +56,11 @@
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-ICMS_2</field>
                                     </record>
+                                    <record id="tax_report_icms_2_closing_amount" model="account.report.expression">
+                                        <field name="label">_closing_amount</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">ICMS_2.balance</field>
+                                    </record>
                                 </field>
                             </record>
                         </field>
@@ -106,6 +111,11 @@
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">ICMSST_2</field>
                             </record>
+                            <record id="tax_report_icmsst_2_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ICMSST_2.balance</field>
+                            </record>
                         </field>
                     </record>
                 </field>
@@ -154,6 +164,11 @@
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-IRPJ_2</field>
                             </record>
+                            <record id="tax_report_irpj_2_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">IRPJ_2.balance</field>
+                            </record>
                         </field>
                     </record>
                 </field>
@@ -185,6 +200,11 @@
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-IR_2</field>
+                            </record>
+                            <record id="tax_report_ir_2_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">IR_2.balance</field>
                             </record>
                         </field>
                     </record>
@@ -234,6 +254,11 @@
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-ISSQN_2</field>
                             </record>
+                            <record id="tax_report_issqn_2_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ISSQN_2.balance</field>
+                            </record>
                         </field>
                     </record>
                 </field>
@@ -281,6 +306,11 @@
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-CSLL_2</field>
+                            </record>
+                            <record id="tax_report_csll_2_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CSLL_2.balance</field>
                             </record>
                         </field>
                     </record>
@@ -335,6 +365,11 @@
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-COFINS_2</field>
+                                    </record>
+                                    <record id="tax_report_cofins_2_closing_amount" model="account.report.expression">
+                                        <field name="label">_closing_amount</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">COFINS_2.balance</field>
                                     </record>
                                 </field>
                             </record>
@@ -391,6 +426,11 @@
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-PIS_2</field>
+                                    </record>
+                                    <record id="tax_report_pis_2_closing_amount" model="account.report.expression">
+                                        <field name="label">_closing_amount</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">PIS_2.balance</field>
                                     </record>
                                 </field>
                             </record>
@@ -457,6 +497,11 @@
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-IPI_2</field>
                                     </record>
+                                    <record id="tax_report_ipi_2_closing_amount" model="account.report.expression">
+                                        <field name="label">_closing_amount</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">IPI_2.balance</field>
+                                    </record>
                                 </field>
                             </record>
                         </field>
@@ -507,6 +552,11 @@
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-II_2</field>
                             </record>
+                            <record id="tax_report_ii_2_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">II_2.balance</field>
+                            </record>
                         </field>
                     </record>
                 </field>
@@ -555,6 +605,11 @@
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-INSS_2</field>
                             </record>
+                            <record id="tax_report_inss_2_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">INSS_2.balance</field>
+                            </record>
                         </field>
                     </record>
                 </field>
@@ -599,6 +654,11 @@
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">IS_2</field>
+                            </record>
+                            <record id="tax_report_is_2_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">IS_2.balance</field>
                             </record>
                         </field>
                     </record>
@@ -673,6 +733,11 @@
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">CBS_2</field>
+                            </record>
+                            <record id="tax_report_cbs_2_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CBS_2.balance</field>
                             </record>
                         </field>
                     </record>
@@ -950,6 +1015,11 @@
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">IBS_2</field>
+                            </record>
+                            <record id="tax_report_ibs_2_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">IBS_2.balance</field>
                             </record>
                         </field>
                     </record>
@@ -1492,6 +1562,11 @@
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">ICMSFCP_2</field>
                             </record>
+                            <record id="tax_report_icmsfcp_2_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ICMSFCP_2.balance</field>
+                            </record>
                         </field>
                     </record>
                 </field>
@@ -1540,6 +1615,11 @@
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">ICMSDIFAL_2</field>
                             </record>
+                            <record id="tax_report_icmsdifal_2_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ICMSDIFAL_2.balance</field>
+                            </record>
                         </field>
                     </record>
                 </field>
@@ -1587,6 +1667,11 @@
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">CPRB_2</field>
+                            </record>
+                            <record id="tax_report_cprb_2_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CPRB_2.balance</field>
                             </record>
                         </field>
                     </record>

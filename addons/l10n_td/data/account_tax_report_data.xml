@@ -202,6 +202,11 @@
                                 <field name="formula">TD_SALES.tax - TD_VAT_DEDUCT.tax</field>
                                 <field name="subformula">if_above(EUR(0))</field>
                             </record>
+                            <record id="account_tax_report_line_td_to_pay_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">TD_SALES.tax - TD_VAT_DEDUCT.tax</field>
+                            </record>
                         </field>
                     </record>
                 </field>
