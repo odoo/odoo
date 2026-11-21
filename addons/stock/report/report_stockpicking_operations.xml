@@ -112,14 +112,14 @@
                                 <t t-set="to_col_exists" t-value="o.picking_type_id.code != 'outgoing'"/>
                                 <thead>
                                     <tr>
+                                        <th name="th_from" class="text-start" t-if="from_col_exists" groups="stock.group_stock_multi_locations">
+                                            <strong>From</strong>
+                                        </th>
                                         <th name="th_product" class="text-start">
                                             <strong>Product</strong>
                                         </th>
                                         <th name="th_quantity" class="text-end">
                                             <strong>Quantity</strong>
-                                        </th>
-                                        <th name="th_from" class="text-start" t-if="from_col_exists" groups="stock.group_stock_multi_locations">
-                                            <strong>From</strong>
                                         </th>
                                         <th name="th_to" class="text-start" t-if="to_col_exists" groups="stock.group_stock_multi_locations">
                                             <strong>To</strong>
@@ -137,6 +137,15 @@
                                         <!-- This flag is true if there are multiple move lines in a move, or if there is at least one tracked move line -->
                                         <t t-set="move_has_multiple_lines" t-value="len(move.move_line_ids) > 1 or any(move_line.lot_id or move_line.lot_name for move_line in move_lines_without_entire_pack)"/>
                                         <tr>
+                                            <!-- If a move contains only one move line, the move is summarized in the heading only -->
+                                            <td class="text-start" t-if="from_col_exists" groups="stock.group_stock_multi_locations">
+                                                <div t-if="move.move_line_ids and not move_has_multiple_lines">
+                                                    <span t-field="move.move_line_ids[0].location_id.display_name">WH/Stock</span>
+                                                    <t t-if="move.move_line_ids[0].package_id">
+                                                        <span t-field="move.move_line_ids[0].package_id">Package A</span>
+                                                    </t>
+                                                </div>
+                                            </td>
                                             <td class="text-start">
                                                 <span t-field="move.product_id.display_name">Customizable Desk</span><br/>
                                                 <span t-if="move.description_picking and move.description_picking != move.product_id.name and move.description_picking != move.product_id.display_name">
@@ -149,15 +158,6 @@
                                                 <span t-if="move.packaging_uom_id and move.packaging_uom_id != move.uom_id">
                                                     (<span t-field="move.packaging_uom_qty" t-options='{"widget": "integer"}'/> <span t-field="move.packaging_uom_id.name"/>)
                                                 </span>
-                                            </td>
-                                            <!-- If a move contains only one move line, the move is summarized in the heading only -->
-                                            <td class="text-start" t-if="from_col_exists" groups="stock.group_stock_multi_locations">
-                                                <div t-if="move.move_line_ids and not move_has_multiple_lines">
-                                                    <span t-field="move.move_line_ids[0].location_id.display_name">WH/Stock</span>
-                                                    <t t-if="move.move_line_ids[0].package_id">
-                                                        <span t-field="move.move_line_ids[0].package_id">Package A</span>
-                                                    </t>
-                                                </div>
                                             </td>
                                             <!-- If a move contains only one move line, the move is summarized in the heading only -->
                                             <td class="text-start" t-if="to_col_exists" groups="stock.group_stock_multi_locations">
