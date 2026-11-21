@@ -200,7 +200,6 @@ patch(PaymentForm.prototype, {
                 this.paymentContext['transactionRoute'],
                 this._prepareTransactionRouteParams(),
             ));
-            component.reference = processingValues.reference; // Store final reference.
             // Initiate the payment.
             const paymentResponse = await this.waitFor(rpc('/payment/adyen/payments', {
                 'provider_id': processingValues.provider_id,
@@ -242,7 +241,6 @@ patch(PaymentForm.prototype, {
         try {
             const paymentDetails = await this.waitFor(rpc('/payment/adyen/payments/details', {
                 'provider_id': this.paymentContext['providerId'],
-                'reference': component.reference,
                 'payment_details': state.data,
             }));
             if (!paymentDetails.resultCode) {

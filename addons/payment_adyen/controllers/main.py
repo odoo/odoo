@@ -163,14 +163,13 @@ class AdyenController(http.Controller):
         return response_content
 
     @http.route("/payment/adyen/payments/details", type="jsonrpc", auth="public")
-    def adyen_payment_details(self, provider_id, reference, payment_details):
+    def adyen_payment_details(self, provider_id, payment_details):
         """Submit the details of the additional actions and process the payment data.
 
          The additional actions can have been performed both from the inline form or during a
          redirection.
 
         :param int provider_id: The provider handling the transaction, as a `payment.provider` id
-        :param str reference: The reference of the transaction
         :param dict payment_details: The details of the additional actions performed for the payment
         :return: The JSON-formatted content of the response
         :rtype: dict
@@ -231,9 +230,7 @@ class AdyenController(http.Controller):
             pprint.pformat(data),
         )
         self.adyen_payment_details(
-            tx_sudo.provider_id.id,
-            data["merchantReference"],
-            {"details": {"redirectResult": data["redirectResult"]}},
+            tx_sudo.provider_id.id, {"details": {"redirectResult": data["redirectResult"]}}
         )
 
         # Redirect the user to the status page
