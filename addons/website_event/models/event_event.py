@@ -650,3 +650,11 @@ class EventEvent(models.Model):
                     if begin != end else begin
                 )
         return results_data
+
+    def _get_website_display_date(self):
+        self.ensure_one()
+        if self.is_multi_slots:
+            slots = self.event_slot_ids._filter_open_slots()
+            if slots:
+                return min(slots.mapped('start_datetime'))
+        return self.date_begin
