@@ -534,6 +534,7 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
     def test_oin_code(self):
         partner = self.partner_a
         partner.peppol_endpoint = '00000000001020304050'
+        partner.peppol_eas = '0190'
         partner.country_id = self.env.ref('base.nl').id
         partner.bank_ids = [Command.create({'acc_number': "0123456789", 'allow_out_payment': True})]
         invoice = self.env['account.move'].create({

@@ -20,7 +20,7 @@ class TestJpUBLPint(AccountTestInvoicingCommon):
 
         # TIN number is required
         cls.company_data['company'].write({
-            'vat': '7482543580381',
+            'vat': 'T7482543580381',
             'street': '池上通り',
             'zip': '140-0004',
             'city': '品川区',

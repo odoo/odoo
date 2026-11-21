@@ -232,10 +232,12 @@ class PeppolRegistration(models.TransientModel):
     @api.depends("company_id.peppol_eas")
     def _compute_peppol_eas(self):
         for wizard in self:
-            if wizard.company_id._peppol_is_french_company():
-                wizard.peppol_eas = "0225"
+            company = wizard.company_id or wizard.env.company
+            valid_eas = company._get_peppol_registration_eas()
+            if company.peppol_eas in valid_eas:
+                wizard.peppol_eas = company.peppol_eas
             else:
-                wizard.peppol_eas = wizard.company_id.peppol_eas
+                wizard.peppol_eas = False
 
     def _inverse_peppol_eas(self):
         for wizard in self:
@@ -245,10 +247,12 @@ class PeppolRegistration(models.TransientModel):
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
     def _get_peppol_eas_selection(self):
+        company = self.company_id or self.env.company
+        allowed_eas = company._get_peppol_registration_eas()
         return [
             (eas, label)
             for eas, label in self.env['res.company']._fields['peppol_eas']._description_selection(self.env)
-            if eas not in DEPRECATED_PEPPOL_EAS or eas == self.env.company.peppol_eas
+            if eas in allowed_eas and (eas not in DEPRECATED_PEPPOL_EAS or eas == company.peppol_eas)
         ]
 
     def _ensure_mandatory_fields(self):

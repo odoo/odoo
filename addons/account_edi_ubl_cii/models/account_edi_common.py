@@ -56,11 +56,21 @@ UOM_TO_UNECE_CODE = {
 # ELECTRONIC ADDRESS SCHEME (EAS), see https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/
 # -------------------------------------------------------------------------
 DEPRECATED_PEPPOL_EAS = {'0037', '0213', '9955', '0193'}
+GENERIC_PEPPOL_EAS = {'0060', '0088', '0199', '0209'}
+EXCLUSIVE_PEPPOL_EAS_BY_COUNTRY = {
+    'BE': {'0208'},
+    'FI': {'0216'},
+    'NO': {'0192'},
+    'SE': {'0007', '0088'},
+    'SK': {'0245'},
+    'SG': {'0195'},
+    'AE': {'0235'},
+}
 EAS_MAPPING = {
     'AD': {'9922': 'vat'},
     'AE': {'0235': 'vat'},
     'AL': {'9923': 'vat'},
-    'AT': {'9915': 'vat'},
+    'AT': {'9914': 'vat', '9915': None, '9919': None},
     'AU': {'0151': 'vat'},
     'BA': {'9924': 'vat'},
     'BE': {'0208': 'company_registry', '9925': 'vat'},
@@ -68,9 +78,9 @@ EAS_MAPPING = {
     'CH': {'9927': 'vat', '0183': None},
     'CY': {'9928': 'vat'},
     'CZ': {'9929': 'vat'},
-    'DE': {'9930': 'vat', '0246': 'l10n_de_widnr'},
-    'DK': {'0184': 'vat', '0198': 'vat'},
-    'EE': {'9931': 'vat'},
+    'DE': {'9930': 'vat', '0246': 'l10n_de_widnr', '0204': None},
+    'DK': {'0184': 'vat', '0198': 'vat', '0096': None},
+    'EE': {'9931': 'vat', '0191': None},
     'ES': {'9920': 'vat'},
     'FI': {'0216': None, '0213': 'vat'},
     'FR': {'0225': 'peppol_endpoint', '0009': 'siret', '9957': 'vat', '0002': None},  # `peppol_endpoint` used as place holder for custom logic via `_get_peppol_endpoint_value`
@@ -81,10 +91,10 @@ EAS_MAPPING = {
     'HU': {'9910': 'l10n_hu_eu_vat'},
     'IE': {'9935': 'vat'},
     'IS': {'0196': 'vat'},
-    'IT': {'0211': 'vat', '0210': 'l10n_it_codice_fiscale'},
-    'JP': {'0221': 'vat'},
+    'IT': {'0211': 'vat', '0210': 'l10n_it_codice_fiscale', '0201': None},
+    'JP': {'0221': 'vat', '0188': None},
     'LI': {'9936': 'vat'},
-    'LT': {'9937': 'vat'},
+    'LT': {'9937': 'vat', '0200': None},
     'LU': {'9938': 'vat'},
     'LV': {'0218': 'company_registry', '9939': 'vat'},
     'MC': {'9940': 'vat'},
@@ -95,7 +105,7 @@ EAS_MAPPING = {
     # Do not add the vat for NL, since: "[NL-R-003] For suppliers in the Netherlands, the legal entity identifier
     # MUST be either a KVK or OIN number (schemeID 0106 or 0190)" in the Bis 3 rules (in PartyLegalEntity/CompanyID).
     'NG': {'0244': 'vat'},
-    'NL': {'0106': None, '0190': None},
+    'NL': {'0106': None, '0190': None, '9944': 'vat'},
     'NO': {'0192': 'l10n_no_bronnoysund_number'},
     'NZ': {'0088': 'company_registry'},
     'PL': {'9945': 'vat'},
