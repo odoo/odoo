@@ -2,15 +2,16 @@
 
 import { KanbanHeader } from "@web/views/kanban/kanban_header";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
-import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
+import { usePlugin } from "@odoo/owl";
+import { DialogPlugin } from "@web/core/dialog/dialog_plugin";
 
 export class MrpWorkorderKanbanHeader extends KanbanHeader {
     static template = "mrp.MrpWorkorderKanbanHeader";
 
     setup() {
         super.setup();
-        this.dialog = useService("dialog");
+        this.dialog = usePlugin(DialogPlugin);
     }
 
     canQuickCreate() {
