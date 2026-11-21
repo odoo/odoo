@@ -125,7 +125,7 @@
         <xpath expr="//div[@id='provide_feedback']" position="before">
             <div t-if="loyalty_data and (loyalty_data['issued'] or loyalty_data['cost'])"
                  class="d-lg-none mt-4 p-3 rounded-3 border d-print-none">
-                <h4>Loyalty Card</h4>
+                <h4>Reward Card</h4>
                 <t t-call="sale_loyalty.sale_order_portal_loyalty_content" hide_heading="True"/>
             </div>
         </xpath>

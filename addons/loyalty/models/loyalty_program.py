@@ -100,7 +100,7 @@ class LoyaltyProgram(models.Model):
         selection=[
             ("coupons", "Coupons"),
             ("gift_card", "Gift Card"),
-            ("loyalty", "Loyalty Cards"),
+            ("loyalty", "Reward Cards"),
             ("promotion", "Promotions"),
             ("ewallet", "eWallet"),
             ("promo_code", "Discount Code"),
@@ -297,7 +297,7 @@ class LoyaltyProgram(models.Model):
             "coupons": _lt("Coupons"),
             "promotion": _lt("Promos"),
             "gift_card": _lt("Gift Cards"),
-            "loyalty": _lt("Loyalty Cards"),
+            "loyalty": _lt("Reward Cards"),
             "ewallet": _lt("eWallets"),
             "promo_code": _lt("Discounts"),
             "buy_x_get_y": _lt("Promos"),
@@ -400,7 +400,7 @@ class LoyaltyProgram(models.Model):
                 "applies_on": "future",
                 "trigger": "auto",
                 "portal_visible": True,
-                "portal_point_name": self.env._("Loyalty point(s)"),
+                "portal_point_name": self.env._("Reward point(s)"),
                 "rule_ids": [Command.clear(), Command.create({"reward_point_mode": "money"})],
                 "reward_ids": [
                     Command.clear(),
@@ -641,7 +641,7 @@ class LoyaltyProgram(models.Model):
                 "icon": "coupons",
             },
             "loyalty": {
-                "title": self.env._("Loyalty Card"),
+                "title": self.env._("Reward Card"),
                 "description": self.env._("Win points with each purchase, and claim gifts"),
                 "icon": "loyalty_cards",
             },
@@ -701,7 +701,7 @@ class LoyaltyProgram(models.Model):
                 **program_type_defaults["ewallet"],
             },
             "loyalty": {
-                "name": self.env._("Loyalty Cards"),
+                "name": self.env._("Reward Cards"),
                 "program_type": "loyalty",
                 **program_type_defaults["loyalty"],
             },
