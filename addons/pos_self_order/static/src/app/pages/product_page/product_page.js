@@ -5,7 +5,7 @@ import { useService } from "@web/core/utils/hooks";
 import { AttributeSelection } from "@pos_self_order/app/components/attribute_selection/attribute_selection";
 import { ProductInterface } from "@pos_self_order/app/components/product_interface/product_interface";
 import {
-    getProductVariantByAttributes,
+    getBestMatchingVariant,
     getAttributeValues,
     getAttributeValuesExtraPrice,
 } from "@pos_self_order/app/services/card_utils";
@@ -95,7 +95,7 @@ export class ProductPage extends Component {
     getProductPrice() {
         const attributeIds = this.getSelectedAttributesValues();
 
-        const productVariant = getProductVariantByAttributes(
+        const productVariant = getBestMatchingVariant(
             this.selfOrder.models,
             this.props.productTemplate,
             attributeIds

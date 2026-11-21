@@ -18,4 +18,12 @@ ProductPricelistItem._records = [
         product_tmpl_id: 101,
         product_id: 102,
     },
+    {
+        id: 103,
+        fixed_price: 150.0,
+        compute_price: "fixed",
+        pricelist_id: 101,
+        product_tmpl_id: 102,
+        product_id: 103,
+    },
 ];

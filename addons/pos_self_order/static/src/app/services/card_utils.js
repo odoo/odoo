@@ -44,6 +44,23 @@ export function getProductVariantByAttributes(models, productTemplate, selectedA
     );
 }
 
+export function getBestMatchingVariant(models, productTemplate, selectedAttributes) {
+    const productVariant = getProductVariantByAttributes(
+        models,
+        productTemplate,
+        selectedAttributes
+    );
+    if (productVariant) {
+        return productVariant;
+    }
+    const hasSingleCombination = productTemplate.attribute_line_ids.every(
+        (line) =>
+            line.attribute_id.create_variant === "no_variant" ||
+            line.product_template_value_ids.length === 1
+    );
+    return hasSingleCombination && productTemplate.product_variant_ids[0];
+}
+
 export function getAttributeValues(selectedValues, models) {
     return Object.entries(selectedValues).reduce((acc, [, options]) => {
         const optionEntries = Object.entries(
@@ -76,14 +93,16 @@ export function getOrderLineValues(
     customValues = {},
     comboValues = {}
 ) {
-    const product = productTemplate.product_variant_ids[0];
-    const productPrice = selfOrder.getProductPriceInfo(productTemplate, product);
     const { models, currentOrder } = selfOrder;
+    const product =
+        getBestMatchingVariant(models, productTemplate, selectedValues) ||
+        productTemplate.product_variant_ids[0];
+    const productPrice = selfOrder.getProductPriceInfo(productTemplate, product);
 
     const values = {
         order_id: currentOrder,
         product_id: product,
-        tax_ids: [...productTemplate.taxes_id],
+        tax_ids: [...product.taxes_id],
         qty: qty,
         note: customer_note || "",
         price_unit: productPrice.pricelist_price,
@@ -92,25 +111,6 @@ export function getOrderLineValues(
     };
 
     if (Object.entries(selectedValues).length > 0) {
-        const productVariant = getProductVariantByAttributes(
-            models,
-            productTemplate,
-            selectedValues
-        );
-
-        if (productVariant) {
-            const productVariantPrice = selfOrder.getProductPriceInfo(
-                productTemplate,
-                productVariant
-            );
-
-            Object.assign(values, {
-                product_id: productVariant,
-                price_unit: productVariantPrice.pricelist_price,
-                tax_ids: [...productVariant.taxes_id],
-            });
-        }
-
         values.attribute_value_ids = getAttributeValues(selectedValues, models);
         values.price_extra += getAttributeValuesExtraPrice(values.attribute_value_ids);
 
