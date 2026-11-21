@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import io
 import json
 from functools import partial
 from unittest.mock import patch
@@ -10,6 +11,7 @@ from odoo.fields import Command
 from odoo.http import Response
 from odoo.tests import Form, HttpCase, tagged
 from odoo.tools.misc import file_open
+from odoo.tools.pdf import PdfFileReader
 
 from .files import forms_pdf, plain_pdf
 from odoo.addons.sale_management.tests.common import SaleManagementCommon
@@ -39,6 +41,7 @@ class TestPDFQuoteBuilder(SaleManagementCommon, HttpCase):
 
         with file_open(plain_pdf, "rb") as file:
             plain_pdf_data = file.read()
+        cls.plain_pdf_data = plain_pdf_data
 
         att_header, att_footer, att_prod_doc = cls.env["ir.attachment"].create([
             {"name": "Header", "raw": plain_pdf_data},
@@ -60,6 +63,27 @@ class TestPDFQuoteBuilder(SaleManagementCommon, HttpCase):
             login="internal.user@test.odoo.com", groups="sales_team.group_sale_salesman"
         )
         cls.alt_company = cls.env["res.company"].create({"name": "Backup Company"})
+
+    def _get_order_pdf_page_count(self, order):
+        """Render the order PDF with a stub instead of the quote itself, as wkhtmltopdf is not
+        available in tests, and return its number of pages.
+        """
+        def _fake_prepare_streams(report, report_ref, data, res_ids=None):
+            return {
+                res_id: {"stream": io.BytesIO(self.plain_pdf_data), "attachment": None}
+                for res_id in res_ids
+            }
+
+        with patch(
+            "odoo.addons.base.models.ir_actions_report.IrActionsReport._render_qweb_pdf_prepare_streams",
+            _fake_prepare_streams,
+        ):
+            pdf_data, _report_type = (
+                self.env["ir.actions.report"]
+                .with_context(force_report_rendering=True)
+                ._render_qweb_pdf("sale.action_report_saleorder", order.ids)
+            )
+        return len(PdfFileReader(io.BytesIO(pdf_data), strict=False).pages)
 
     def _create_so_form(self, **values):
         SaleOrder = self.env["sale.order"].with_context(default_partner_id=self.partner.id)
@@ -396,3 +420,22 @@ class TestPDFQuoteBuilder(SaleManagementCommon, HttpCase):
         sof.save()
 
         self.assertFalse(sof.record.quotation_document_ids)
+
+    def test_selected_documents_included_in_confirmed_order_pdf(self):
+        self.sale_order.quotation_document_ids = self.header + self.footer
+        product_line = self.sale_order.order_line.filtered(lambda line: line.product_id == self.product)
+        product_line.product_document_ids = self.product_document
+        quotation_page_count = self._get_order_pdf_page_count(self.sale_order)
+        self.assertGreater(
+            quotation_page_count,
+            len(PdfFileReader(io.BytesIO(self.plain_pdf_data), strict=False).pages),
+            "The quotation PDF should include the selected documents.",
+        )
+
+        self.sale_order.action_confirm()
+        self.assertEqual(self.sale_order.state, "sale")
+        self.assertEqual(
+            self._get_order_pdf_page_count(self.sale_order),
+            quotation_page_count,
+            "Confirming the order must not drop the selected documents from the PDF.",
+        )
