@@ -1,6 +1,6 @@
 import { Tab, Tabs } from "@mail/core/common/tabs";
 import { attClassObjectToString } from "@mail/utils/common/format";
-import { onExternalClick } from "@mail/utils/common/hooks";
+import { useDialogCloseOnClickAway } from "@mail/utils/common/hooks";
 
 import { Component, signal, t, usePlugin, useProps } from "@odoo/owl";
 
@@ -20,12 +20,8 @@ export class PollVotesPanel extends Component {
             poll: t.instanceOf(this.store["mail.poll"]),
         });
         this.ui = usePlugin(UIPlugin);
-        this.tabsRef = signal.ref();
-        onExternalClick(this.tabsRef, (ev) => {
-            if (ev.target && !ev.target.closest(".modal-header")) {
-                this.props.close?.();
-            }
-        });
+        this.modalRef = signal.ref();
+        useDialogCloseOnClickAway(this.modalRef, () => this.props.close?.());
     }
 
     /** @param {import("models").MailPollOptionModel} option */
