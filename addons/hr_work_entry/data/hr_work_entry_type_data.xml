@@ -1112,6 +1112,16 @@
         <field name="count_as">absence</field>
     </record>
 
+    <!-- A day a trainee (Stage First, transition internship) doesn't work but is paid, e.g. for a job interview -->
+    <record id="l10n_be_work_entry_type_internship_assimilated_day" model="hr.work.entry.type">
+        <field name="name">Assimilated day (trainee)</field>
+        <field name="code">017.00</field>
+        <field name="color">7</field>
+        <field name="display_code">ASD</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="count_as">absence</field>
+    </record>
+
     <record id="l10n_be_work_entry_type_schooldays" model="hr.work.entry.type">
         <field name="name">Schooldays</field>
         <field name="code">018.49</field>
