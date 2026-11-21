@@ -172,6 +172,20 @@ class ResUsers(models.Model):
     friday_location_id = fields.Many2one('hr.work.location', **related_employee_field('friday_location_id', string='Fridays'), user_writeable=True)
     saturday_location_id = fields.Many2one('hr.work.location', **related_employee_field('saturday_location_id', string='Saturdays'), user_writeable=True)
     sunday_location_id = fields.Many2one('hr.work.location', **related_employee_field('sunday_location_id', string='Sundays'), user_writeable=True)
+    approval_backups = fields.Many2many('res.users', **{
+        **related_employee_field('approval_backups'),
+        # searched in sudo: the access rules of the approvers' records rely on it
+        'search': '_search_approval_backups',
+    }, user_writeable=True, ui_domain="[('id', '!=', id), ('share', '=', False)]")
+    is_approver = fields.Boolean(**related_employee_field('is_approver'), readonly=True)
+
+    def _search_approval_backups(self, operator, value):
+        if operator in Domain.NEGATIVE_OPERATORS:
+            return NotImplemented
+        # sudo: used in the access rules of the records of the employees that the users approve,
+        # which must not depend on the access to the employees of the approvers
+        employees = self.env['hr.employee'].sudo().search([('approval_backups', operator, value)])
+        return Domain('id', 'in', employees.user_id.ids)
 
     @api.depends_context('uid')
     def _compute_is_system(self):

@@ -23,9 +23,11 @@ class ResUsers(models.Model):
         res = self.env['hr.employee']._read_group(
             [('leave_manager_id', 'in', self.ids)],
             ['leave_manager_id'])
-        responsibles_to_remove_ids = set(self.ids) - {leave_manager.id for [leave_manager] in res}
-        if responsibles_to_remove_ids:
-            self.browse(responsibles_to_remove_ids).write({
+        responsibles_to_remove = self.browse(set(self.ids) - {leave_manager.id for [leave_manager] in res})
+        # keep the group of the approval backups of time off approvers
+        responsibles_to_remove -= self.env['hr.employee']._get_backups_of_approvers('leave_manager_id', responsibles_to_remove)
+        if responsibles_to_remove:
+            responsibles_to_remove.write({
                 'group_ids': [Command.unlink(self.env.ref(approver_group).id)],
             })
 

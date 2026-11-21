@@ -8,16 +8,9 @@ class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
     def _group_hr_expense_user_domain(self):
-        # We return the domain only if the group exists for the following reason:
-        # When a group is created (at module installation), the `res.users` form view is
-        # automatically modified to add application accesses. When modifying the view, it
-        # reads the related field `expense_manager_id` of `res.users` and retrieve its domain.
-        # This is a problem because the `group_hr_expense_team_approver` record has already been created but
-        # not its associated `ir.model.data` which makes `self.env.ref(...)` fail.
-        group = self.env.ref('hr_expense.group_hr_expense_team_approver', raise_if_not_found=False)
-        return [
-            '|', ('id', 'parent_of', self.ids), ('all_group_ids', 'in', group.ids)
-        ] if group else [('id', 'parent_of', self.ids)]
+        # any internal user can approve: the approver group is granted on assignment
+        # (see hr.employee._grant_approver_groups), making a light user a regular one
+        return "[('share', '=', False), ('company_ids', 'in', company_id)]"
 
     expense_manager_id = fields.Many2one(
         comodel_name='res.users',
@@ -72,6 +65,9 @@ class HrEmployee(models.Model):
 
     def _get_user_m2o_to_empty_on_archived_employees(self):
         return super()._get_user_m2o_to_empty_on_archived_employees() + ['expense_manager_id']
+
+    def _get_approver_fields(self):
+        return super()._get_approver_fields() | {'expense_manager_id': 'hr_expense.group_hr_expense_team_approver'}
 
 
 class HrEmployeePublic(models.Model):

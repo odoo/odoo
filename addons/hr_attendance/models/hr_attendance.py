@@ -177,7 +177,7 @@ class HrAttendance(models.Model):
         have_own_right = self.env.user.has_group('hr_attendance.group_hr_attendance_own')
         for attendance in self:
             attendance.is_manager = have_manager_right or \
-                (have_officer_right and attendance.attendance_manager_id.id == self.env.user.id)
+                (have_officer_right and attendance.employee_id._is_acting_approver('attendance_manager_id'))
             attendance.is_own = have_own_right and attendance.employee_id.user_id == self.env.user
 
     @api.depends('is_manager', 'is_own')
@@ -362,7 +362,7 @@ class HrAttendance(models.Model):
         if vals.get('employee_id') and \
             vals['employee_id'] not in self.env.user.employee_ids.ids and \
             not self.env.user.has_group('hr_attendance.group_hr_attendance_manager') and \
-            self.env['hr.employee'].sudo().browse(vals['employee_id']).attendance_manager_id.id != self.env.user.id:
+            not self.env['hr.employee'].browse(vals['employee_id'])._is_acting_approver('attendance_manager_id'):
             raise AccessError(_("Do not have access, user cannot edit the attendances that are not their own or if they are not the attendance manager of the employee."))
         # snapshot existing output ids before the pipeline runs so that newly
         # created outputs (fresh, accurate) are not incorrectly marked stale
