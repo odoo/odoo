@@ -104,6 +104,43 @@ patch(PosOrder.prototype, {
         };
     },
 
+    read_pos_data(orderIds, data, config_id) {
+        const result = super.read_pos_data(...arguments);
+        const rewardIds = [
+            ...new Set(
+                (result["pos.order.line"] || [])
+                    .filter((line) => line.is_reward_line && line.reward_id)
+                    .map((line) => line.reward_id)
+            ),
+        ];
+        if (!rewardIds.length) {
+            return result;
+        }
+
+        const programIds = [
+            ...new Set(this.env["loyalty.reward"].browse(rewardIds).map((r) => r.program_id)),
+        ];
+        for (const programId of programIds) {
+            const programRewardIds = this.env["loyalty.reward"].search([
+                ["program_id", "=", programId],
+            ]);
+            const orderIdsUsingProgram = new Set(
+                this.env["pos.order.line"]
+                    .search_read([["reward_id", "in", programRewardIds]], ["order_id"])
+                    .map((line) => line.order_id)
+            );
+            this.env["loyalty.program"].write([programId], {
+                total_order_count: orderIdsUsingProgram.size,
+            });
+        }
+        result["loyalty.program"] = this.env["loyalty.program"].read(
+            programIds,
+            this.env["loyalty.program"]._load_pos_data_fields(config_id),
+            false
+        );
+        return result;
+    },
+
     add_loyalty_history_lines() {
         return true;
     },
