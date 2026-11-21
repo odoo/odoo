@@ -42,6 +42,12 @@ class TestPaymentProvider(MercadoPagoCommon):
             self.provider._mercado_pago_fetch_access_token()
         self.assertIs(request_mock.call_args.kwargs["json"]["is_live"], True)
 
+    def test_incompatible_with_validation_transactions(self):
+        available_providers = self.env["payment.provider"]._find_available_providers(
+            self.company_id, self.partner.id, 0.0, is_validation=True
+        )
+        self.assertNotIn(self.provider, available_providers)
+
     def test_not_available_for_unsupported_currencies(self):
         available_providers = self.env["payment.provider"]._find_available_providers(
             self.company_id, self.partner.id, self.amount, currency_id=self.env.ref("base.AFN").id
