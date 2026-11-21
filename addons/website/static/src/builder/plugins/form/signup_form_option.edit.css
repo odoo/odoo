@@ -1,0 +1,6 @@
+/* The labels of the standard fields of the signup form show their default text
+   while they are empty (see `SignupFormOptionPlugin`). */
+form.oe_signup_form label.form-label[contenteditable="true"][data-signup-default-label]::after {
+    content: attr(data-signup-default-label);
+    opacity: 0.3;
+}
