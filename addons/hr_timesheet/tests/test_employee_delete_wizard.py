@@ -10,6 +10,19 @@ class TestEmployeeDeleteWizard(TestCommonTimesheet):
         the employee has timesheets, and offers to archive the employee instead.
     """
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # With project_timesheet_holidays, creating an employee generates timesheets for the
+        # upcoming company-wide public holidays, e.g. the ones the "Generate Public Holidays" cron
+        # loads on a database with demo data. Those timesheets cannot be deleted on their own, but
+        # they are deleted with their public holiday.
+        cls.env['resource.calendar.leaves'].search([
+            ('company_id', '=', cls.env.company.id),
+            ('calendar_id', '=', False),
+            ('resource_id', '=', False),
+        ]).unlink()
+
     def _open_wizard(self, employees, user):
         action = employees.with_user(user).action_unlink_wizard()
         self.assertEqual(action['res_model'], 'hr.employee.delete.wizard')
