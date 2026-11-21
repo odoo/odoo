@@ -4,7 +4,8 @@
     <!-- This is the "validation" screen. Recap the ticket info, warn the user to check/set his address and eventually set localization fields if needed. -->
     <template id="ticket_validation_screen" name="Need an invoice?">
         <t t-call="portal.portal_layout" no_breadcrumbs="True">
-            <div class="row justify-content-md-center o_customer_address_fill">
+            <div t-attf-class="row justify-content-md-center #{'o_customer_address_fill' if not user_is_connected or has_order_partner else ''}">
+
                 <form
                     class="address_autoformat"
                     method="post"
@@ -24,6 +25,7 @@
                                     <small class="text-muted mt-auto mb-1" t-out="pos_order.pos_reference"/>
                                 </div>
                                 <a
+                                    t-if="not user_is_connected"
                                     role="button"
                                     class="ms-auto text-nowrap fw-bold"
                                     t-att-href="'/web/login?redirect=/pos/ticket/validate?access_token=%s' % access_token">
