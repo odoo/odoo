@@ -121,6 +121,12 @@ class ProductPricelistItem(models.Model):
     )
 
     fixed_price = fields.Float(string="Fixed Price", min_display_digits='Product Price')
+    packaging_price = fields.Float(
+        string="Packaging Price",
+        compute="_compute_packaging_price",
+        inverse="_inverse_packaging_price",
+        readonly=False
+    )
 
     price_discount = fields.Float(
         string="Price Discount",
@@ -170,7 +176,42 @@ class ProductPricelistItem(models.Model):
         search='_search_is_plain_discount',
         help="Whether the rule lowers the price by exactly its discount percentage.")
 
+    has_different_uom = fields.Boolean(compute="_compute_has_different_uom")
+
     #=== COMPUTE METHODS ===#
+
+    @api.depends("fixed_price", "uom_id", "product_tmpl_id")
+    def _compute_packaging_price(self):
+        for item in self:
+            product_uom = item.product_tmpl_id.uom_id
+            uom = item.uom_id or product_uom
+
+            if not product_uom or not uom:
+                item.packaging_price = item.fixed_price
+                continue
+
+            min_qty = item.min_quantity or 1
+            item.packaging_price = product_uom._compute_price(item.fixed_price, uom) * min_qty
+
+    def _inverse_packaging_price(self):
+        for item in self:
+            product_uom = item.product_tmpl_id.uom_id
+            uom = item.uom_id or product_uom
+
+            if not product_uom or not uom:
+                continue
+
+            min_qty = item.min_quantity or 1
+            item.fixed_price = uom._compute_price(item.packaging_price / min_qty, product_uom)
+
+    @api.depends("uom_id", "product_tmpl_id.uom_id")
+    def _compute_has_different_uom(self):
+        for item in self:
+            item.has_different_uom = bool(
+                item.uom_id
+                and item.product_tmpl_id.uom_id
+                and item.uom_id != item.product_tmpl_id.uom_id
+            )
 
     def _compute_is_pricelist_required(self):
         self.is_pricelist_required = True
@@ -443,6 +484,7 @@ class ProductPricelistItem(models.Model):
             self.product_id = False
         if self.product_tmpl_id:
             self.categ_id = False
+            self.uom_id = self.product_tmpl_id.uom_id
 
     @api.onchange('categ_id')
     def _onchange_categ_id(self):
@@ -463,6 +505,14 @@ class ProductPricelistItem(models.Model):
     @api.onchange('date_start', 'date_end')
     def _onchange_validity_period(self):
         self._check_date_range()
+
+    @api.onchange("packaging_price")
+    def _onchange_packaging_price(self):
+        self._inverse_packaging_price()
+
+    @api.onchange("min_quantity")
+    def _onchange_min_quantity(self):
+        self._inverse_packaging_price()
 
     #=== CRUD METHODS ===#
 
