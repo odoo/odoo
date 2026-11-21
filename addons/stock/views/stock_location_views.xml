@@ -12,10 +12,14 @@
         <field name="name">stock.location.form</field>
         <field name="model">stock.location</field>
         <field name="arch" type="xml">
-            <form string="Stock Location">
+            <form string="Stock Location" js_class="stock_location_form">
                 <field name="company_id" invisible="1"/> <!-- used in button context and to condition Cyclic Counting/Logistics groups invisible -->
                 <sheet>
                     <div class="oe_button_box" name="button_box">
+                      <button string="Sublocations"
+                              class="oe_stat_button" icon="grid_view"
+                              name="action_open_sublocations" type="object"
+                              groups="stock.group_stock_multi_locations"/>
                         <button string="Putaway Rules"
                                 class="oe_stat_button"
                                 icon="shuffle" name="%(location_open_putaway)d" type="action"
@@ -86,6 +90,7 @@
                 <separator/>
                 <filter name="empty_location" string="Empty Locations" domain="[('is_empty', '=', True)]"/>
                 <field name="location_id" string="Parent Location"/>
+                <filter name="sublocations" string="Sublocations" domain="[('location_id', 'any', [('id', 'child_of', context.get('active_id'))])]" invisible="1"/>
                 <field name="usage" string="Location Type"/>
                 <field name="warehouse_id" string="Warehouse"/>
                 <separator/>
