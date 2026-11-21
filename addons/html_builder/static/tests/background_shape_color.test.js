@@ -482,8 +482,8 @@ test("background shapes with animation speed should have the range [0.33, 3]", a
     `
     );
     await contains(":iframe  #section1").click();
-    expect("[data-label='Speed'] input[type='number']").toHaveValue(0.33);
+    expect("[data-label='Speed'] input[type='text']").toHaveValue(0.33);
     await setInputRange("[data-label='Speed'] input[type='range']", 2);
     expect(":iframe #section1").toHaveAttribute("data-oe-shape-data", /"shapeAnimationSpeed":"2"/);
-    expect("[data-label='Speed'] input[type='number']").toHaveValue(3);
+    expect("[data-label='Speed'] input[type='text']").toHaveValue(3);
 });
