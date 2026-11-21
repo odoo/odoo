@@ -1655,9 +1655,7 @@ class Float(Field[float]):
             return self._digits
 
     def get_min_display_digits(self, env):
-        if isinstance(self._min_display_digits, str):
-            return env['decimal.precision'].precision_get(self._min_display_digits)
-        return self._min_display_digits
+        return self.get_digits(self, env)
 
     _related__digits = property(attrgetter('_digits'))
     _related__min_display_digits = property(attrgetter('_min_display_digits'))
