@@ -114,9 +114,6 @@ class AccountAnalyticLine(models.Model):
         self.ensure_one()
         return not self.reinvoice_move_id or (self.reinvoice_move_id.state == 'cancel' and self.reinvoice_move_id.payment_state != 'invoicing_legacy')
 
-    def _check_timesheet_can_be_billed(self):
-        return self.so_line in self.project_id.mapped('sale_line_employee_ids.sale_line_id') | self.task_id.sale_line_id | self.project_id.sale_line_id
-
     def _restricted_fields_when_invoiced(self):
         return super()._restricted_fields_when_invoiced() + ['employee_id', 'project_id', 'task_id']
 

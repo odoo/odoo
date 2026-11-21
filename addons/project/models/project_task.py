@@ -1571,28 +1571,6 @@ class ProjectTask(models.Model):
             render_context['subtitles'].append(subtitles)
         return render_context
 
-    def _send_email_notify_to_cc(self, partners_to_notify):
-        # TDE TODO: this should be removed with email-like recipients management
-        self.ensure_one()
-        template_id = self.env['ir.model.data']._xmlid_to_res_id('project.task_invitation_follower', raise_if_not_found=False)
-        if not template_id:
-            return
-        task_model_description = self.env['ir.model']._get(self._name).display_name
-        values = {
-            'object': self,
-        }
-        for partner in partners_to_notify:
-            values['partner_name'] = partner.name
-            assignation_msg = self.env['ir.qweb']._render('project.task_invitation_follower', values, minimal_qcontext=True)
-            self.message_notify(
-                subject=_('You have been invited to follow %s', self.display_name),
-                body=assignation_msg,
-                partner_ids=partner.ids,
-                email_layout_xmlid='mail.mail_notification_layout',
-                model_description=task_model_description,
-                mail_auto_delete=True,
-            )
-
     @api.model
     def _task_message_auto_subscribe_notify(self, users_per_task):
         if self.env.context.get('mail_auto_subscribe_no_notify'):
@@ -1948,11 +1926,6 @@ class ProjectTask(models.Model):
             ]
         return action
 
-    def action_project_sharing_open_task(self):
-        action = self.action_open_task()
-        action['views'] = [[self.env.ref('project.project_sharing_project_task_view_form').id, 'form']]
-        return action
-
     def action_project_sharing_open_subtasks(self):
         self.ensure_one()
         subtasks = self.env['project.task'].search([('id', 'child_of', self.id), ('id', '!=', self.id)])
@@ -2220,12 +2193,6 @@ class ProjectTask(models.Model):
         """ Overwrite since we have user_ids and not user_id """
         tasks_with_one_user = self.filtered(lambda task: len(task.user_ids) == 1 and task.user_ids.partner_id)
         return tasks_with_one_user.user_ids.partner_id or self.env['res.partner']
-
-    # ---------------------------------------------------
-    # Privacy
-    # ---------------------------------------------------
-    def _unsubscribe_portal_users(self):
-        self.message_unsubscribe(partner_ids=self.message_partner_ids.filtered('user_ids.share').ids)
 
     @api.model
     def get_unusual_days(self, date_from, date_to=None):
