@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import deque
 from datetime import datetime, time
+from itertools import takewhile
 import pytz
 import re
 
@@ -9,7 +11,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools.misc import clean_context
+from odoo.tools.misc import clean_context, split_every
 
 from odoo.addons.base.models.res_partner import _tz_get
 
@@ -264,6 +266,10 @@ class CalendarRecurrence(models.Model):
                 ranges = set([(x[1], x[2]) for x in specific_values_creation if x[0] == recurrence.id])
             else:
                 ranges = recurrence._range_calculation(event, duration)
+                if recurrence.end_type == 'forever':
+                    # Occurrences out of the current window (created when the horizon was further
+                    # away, or older ones) stay in the recurrence as long as they follow the rule
+                    keep |= recurrence._get_events_following_rule(event, duration, ranges)
 
             events_to_keep, ranges = recurrence._reconcile_events(ranges)
             keep |= events_to_keep
@@ -482,7 +488,8 @@ class CalendarRecurrence(models.Model):
         for recurrence in self:
             if recurrence.calendar_event_ids:
                 start = min(recurrence.calendar_event_ids.mapped('start'))
-                starts = set(recurrence._get_occurrences(start))
+                until = max(recurrence.calendar_event_ids.mapped('start')) if recurrence.end_type == 'forever' else None
+                starts = set(recurrence._get_occurrences(start, until=until))
                 synced_events |= recurrence.calendar_event_ids.filtered(lambda e: e.start in starts)
         return self.calendar_event_ids - synced_events
 
@@ -507,21 +514,118 @@ class CalendarRecurrence(models.Model):
         ranges = set((x, y) for x, y in ranges if x.date() >= event.start.date() and y.date() >= event.start.date())
         return ranges
 
-
-    def _get_ranges(self, start, event_duration):
-        starts = self._get_occurrences(start)
+    def _get_ranges(self, start, event_duration, until=None):
+        starts = self._get_occurrences(start, until=until)
         return ((start, start + event_duration) for start in starts)
+
+    def _get_forever_horizon(self, dtstart):
+        """Return the moving limit up to which the occurrences of a 'forever' recurrence
+        are created: `calendar.max_recurrence_years` years after now (or after the start,
+        if it is in the future). `_cron_extend_forever_recurrences` follows it over time.
+        """
+        limit_years = int(self.env['ir.config_parameter'].sudo().get_param('calendar.max_recurrence_years', 15))
+        return max(dtstart, fields.Datetime.now()) + relativedelta(years=limit_years)
+
+    def _limit_forever_occurrences(self, occurrences, dtstart, until=None):
+        """Bound the endless occurrences of a 'forever' recurrence.
+        :param until: if given, return every occurrence up to it (included), otherwise
+            return at most MAX_RECURRENT_EVENT past occurrences (the most recent ones)
+            and MAX_RECURRENT_EVENT upcoming occurrences before the horizon
+        """
+        if until:
+            return takewhile(lambda occurrence: occurrence <= until, occurrences)
+        now = fields.Datetime.now()
+        horizon = self._get_forever_horizon(dtstart)
+        past = deque(maxlen=MAX_RECURRENT_EVENT)
+        upcoming = []
+        for occurrence in occurrences:
+            if occurrence >= horizon or len(upcoming) >= MAX_RECURRENT_EVENT:
+                break
+            if occurrence < now:
+                past.append(occurrence)
+            else:
+                upcoming.append(occurrence)
+        return [*past, *upcoming]
+
+    def _get_events_following_rule(self, event, duration, ranges):
+        """Return the events of the 'forever' recurrence out of `ranges` that follow the rule."""
+        self.ensure_one()
+        other_events = self.calendar_event_ids.filtered(lambda e: e._range() not in ranges)
+        if not other_events:
+            return other_events
+        until = max(other_events.mapped('start'))
+        rule_ranges = set(self._get_ranges(event.start, duration, until=until))
+        return other_events.filtered(lambda e: e._range() in rule_ranges)
+
+    def _extend_forever_occurrences(self):
+        """Create the occurrences between the last existing one and the horizon,
+        leaving the existing events untouched.
+        """
+        vals_list = []
+        now = fields.Datetime.now()
+        for recurrence in self.filtered(lambda r: r.end_type == 'forever' and r.base_event_id):
+            event = recurrence.base_event_id
+            last_start = max(recurrence.calendar_event_ids.mapped('start'))
+            [base_values] = event.copy_data()
+            # Gaps in the past are not filled: only upcoming occurrences are created
+            vals_list += [
+                dict(base_values, start=start, stop=stop, recurrence_id=recurrence.id, follow_recurrence=True)
+                for start, stop in recurrence._get_ranges(event.start, event.stop - event.start)
+                if start > last_start and start >= now
+            ]
+        # The occurrences already exist in the synced calendars, as part of the recurrence
+        context = {
+            **clean_context(self.env.context),
+            'no_mail_to_attendees': True,
+            'mail_create_nolog': True,
+            'no_calendar_sync': True,
+        }
+        return self.env['calendar.event'].with_context(context).create(vals_list)
+
+    @api.model
+    def _cron_extend_forever_recurrences(self, batch_size=50):
+        limit_years = int(self.env['ir.config_parameter'].sudo().get_param('calendar.max_recurrence_years', 15))
+        now = fields.Datetime.now()
+        # A month of margin, so that each recurrence is extended at most once a month
+        threshold = now + relativedelta(years=limit_years, months=-1)
+        self.env['calendar.event'].flush_model(['recurrence_id', 'start', 'active'])
+        self.env['calendar.recurrence'].flush_model(['end_type', 'base_event_id'])
+        self.env.cr.execute("""
+            SELECT recurrence.id
+              FROM calendar_recurrence recurrence
+              JOIN calendar_event event ON event.recurrence_id = recurrence.id AND event.active
+             WHERE recurrence.end_type = 'forever'
+               AND recurrence.base_event_id IS NOT NULL
+          GROUP BY recurrence.id
+            HAVING MAX(event.start) < %s
+               -- skip the recurrences that already have all their upcoming occurrences
+               AND COUNT(*) FILTER (WHERE event.start >= %s) < %s
+        """, [threshold, now, MAX_RECURRENT_EVENT])
+        recurrence_ids = [row[0] for row in self.env.cr.fetchall()]
+        self.env['ir.cron']._commit_progress(remaining=len(recurrence_ids))
+        for recurrences in split_every(batch_size, recurrence_ids, self.browse):
+            recurrences._extend_forever_occurrences()
+            if not self.env['ir.cron']._commit_progress(len(recurrences)):
+                break
 
     def _get_timezone(self):
         return pytz.timezone(self.event_tz or self.env.context.get('tz') or 'UTC')
 
-    def _get_occurrences(self, dtstart):
+    def _get_occurrences(self, dtstart, until=None):
         """
         Get ocurrences of the rrule
         :param dtstart: start of the recurrence
+        :param until: for a 'forever' recurrence, get the occurrences up to this
+            datetime instead of the horizon (see `_limit_forever_occurrences`)
         :return: iterable of datetimes
         """
         self.ensure_one()
+        occurrences = self._get_unlimited_occurrences(dtstart)
+        if self.end_type == 'forever':
+            return self._limit_forever_occurrences(occurrences, dtstart, until=until)
+        return occurrences
+
+    def _get_unlimited_occurrences(self, dtstart):
         dtstart = self._get_start_of_period(dtstart)
         if self._is_allday():
             return self._get_rrule(dtstart=dtstart)
@@ -597,27 +701,10 @@ class CalendarRecurrence(models.Model):
             rrule_params['byweekday'] = weekdays
             rrule_params['wkst'] = self._get_lang_week_start()
 
-        # Limit the number of years to avoid creating recurrent events for up to hundreds of years
-        limit_years = int(self.env['ir.config_parameter'].sudo().get_param('calendar.max_recurrence_years', 15))
+        # A 'forever' rule stays open-ended: its occurrences are bounded by the
+        # moving horizon in `_get_occurrences`, not by the rule itself.
         if self.end_type == 'count':  # e.g. stop after X occurence
             rrule_params['count'] = min(self.count, MAX_RECURRENT_EVENT)
-        elif self.end_type == 'forever':
-            if freq == 'yearly':
-                rrule_params['count'] = min(limit_years, MAX_RECURRENT_EVENT)
-            elif freq == 'monthly':
-                rrule_params['count'] = min(limit_years * 12, MAX_RECURRENT_EVENT)
-            elif freq == 'weekly':
-                # A weekly recurrence yields one occurrence per selected weekday,
-                # every `interval` weeks. Keep the horizon bounded by `limit_years`
-                # (like yearly/monthly) instead of always generating the hard cap.
-                # ~52 weeks per standard year (365 // 7).
-                weekdays = len(self._get_week_days())  # always >= 1 for weekly (validated above)
-                weeks = limit_years * 365 // 7
-                rrule_params['count'] = min(weeks * weekdays // max(self.interval, 1),
-                                            MAX_RECURRENT_EVENT)
-            else:  # daily
-                rrule_params['count'] = min(limit_years * 365 // max(self.interval, 1),
-                                            MAX_RECURRENT_EVENT)
         elif self.end_type == 'end_date':  # e.g. stop after 12/10/2020
             rrule_params['until'] = datetime.combine(self.until, time.max)
         return rrule.rrule(
