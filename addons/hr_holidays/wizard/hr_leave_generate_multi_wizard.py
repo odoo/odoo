@@ -45,13 +45,19 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
 
     @api.depends('company_id')
     def _compute_allowed_work_entry_type_ids(self):
+        # as on the time off, only the time off administrators can use the time types not selectable in time off
+        selectable_domain = (
+            Domain.TRUE
+            if self.env.user.has_group('hr_holidays.group_hr_holidays_manager')
+            else Domain('time_off_selectable', '=', True)
+        )
         for wizard in self:
             country = wizard.company_id.country_id or self.env.company.country_id
             if not country or not self.env['hr.work.entry.type'].search_count([('country_id', '=', country.id)], limit=1):
                 domain = [('country_id', '=', False)]
             else:
                 domain = [('country_id', '=', country.id)]
-            wizard.allowed_work_entry_type_ids = self.env['hr.work.entry.type'].search(domain)
+            wizard.allowed_work_entry_type_ids = self.env['hr.work.entry.type'].search(selectable_domain & Domain(domain))
 
     def _prepare_employees_holiday_values(self, employees, date_from_tz, date_to_tz):
         self.ensure_one()

@@ -72,7 +72,7 @@
                         domain="[('employee_id.member_of_department', '=', True)]"
                         help="My Department"/>
                 <separator/>
-                <filter  name="in_contract" string="In Contract"
+                <filter  name="in_contract" string="In Contract" groups="hr.group_hr_user"
                     domain="[
                         '&amp;',
                             ('employee_id.contract_date_start', '!=', False),
