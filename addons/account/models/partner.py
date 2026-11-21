@@ -233,12 +233,12 @@ class AccountFiscalPosition(models.Model):
             # country
             lambda fpos: (
                 not fpos.country_id
-                or (partner.country_id == fpos.country_id)
+                or ((partner.country_id or partner.state_id.country_id) == fpos.country_id)
             ),
             # country group
             lambda fpos: (
                 not fpos.country_group_id
-                or (partner.country_id in fpos.country_group_id.country_ids and
+                or ((partner.country_id or partner.state_id.country_id) in fpos.country_group_id.country_ids and
                     (not partner.state_id or partner.state_id not in fpos.country_group_id.exclude_state_ids))
             ),
         ]
@@ -271,7 +271,7 @@ class AccountFiscalPosition(models.Model):
         if manual_fiscal_position:
             return manual_fiscal_position
 
-        if not partner.country_id:
+        if not partner.country_id and not partner.state_id:
             return self.env['account.fiscal.position']
 
         all_auto_apply_fpos = self.search(self._check_company_domain(self.env.company) + [('auto_apply', '=', True)])
