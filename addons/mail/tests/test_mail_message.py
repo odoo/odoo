@@ -107,6 +107,24 @@ class TestMailMessage(common.MailCommon, HttpCase):
                     limit=100,
                 )
 
+    def test_notification_search_with_large_message_history(self):
+        self._add_messages(self.env.company, "Unrelated notes", count=5)
+        message = self._add_messages(
+            self.env.company,
+            "Notified note",
+            notification_ids=[(0, 0, {
+                "res_partner_id": self.user_employee.partner_id.id,
+                "notification_type": "inbox",
+            })],
+        )
+        messages = self.env["mail.message"].with_user(self.user_employee)
+        domain = [
+            ("notification_ids.res_partner_id", "=", self.user_employee.partner_id.id),
+            ("model", "!=", "discuss.channel"),
+        ]
+        with patch.object(mail_message_module, "MAX_SEARCH_LIMIT", 5):
+            self.assertEqual(messages.search(domain), message)
+
     @users("employee")
     def test_unlink_failure_message_notify_author(self):
         recipient = new_test_user(self.env(su=True), login="Bob", email="invalid_email_addr")
