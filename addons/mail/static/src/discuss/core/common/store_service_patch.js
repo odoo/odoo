@@ -49,12 +49,13 @@ const storeServicePatch = {
      * @param {string} param0.default_display_mode
      * @param {number[]} param0.users_to
      * @param {string} param0.name
+     * @param {string[]} [param0.emails] addresses to invite by email to the new group
      * @returns {Promise<import("models").DiscussChannel>}
      */
-    async createGroupChat({ default_display_mode, users_to, name }) {
+    async createGroupChat({ default_display_mode, users_to, name, emails }) {
         const { channel } = await this.fetchStoreData(
             "/discuss/create_group",
-            { default_display_mode, users_to, name },
+            { default_display_mode, users_to, name, emails },
             { requestData: true }
         );
         channel.open({ focus: true });
