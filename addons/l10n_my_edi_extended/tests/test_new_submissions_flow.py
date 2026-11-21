@@ -7,8 +7,8 @@ from freezegun import freeze_time
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
-from odoo.exceptions import UserError
-from odoo.tests import tagged
+from odoo.exceptions import AccessError, UserError
+from odoo.tests import Form, new_test_user, tagged
 from unittest.mock import patch
 
 CONTACT_PROXY_METHOD = 'odoo.addons.l10n_my_edi.models.account_edi_proxy_user.AccountEdiProxyClientUser._l10n_my_edi_contact_proxy'
@@ -435,6 +435,23 @@ class L10nMyEDITestNewSubmission(TestAccountMoveSendCommon):
                         'l10n_my_edi_retry_at': '2024-07-15 12:00:00',
                     }]
                 )
+
+    def test_14_access_without_invoicing_rights(self):
+        """ Users reading invoices without the invoicing rights can open them, but cannot send them to MyInvois. """
+        user = new_test_user(self.env, login='readonly_user', groups='base.group_user,account.group_account_readonly')
+        draft_invoice = self.init_invoice('out_invoice', products=self.product_a)
+        posted_bill = self.init_invoice('in_invoice', products=self.product_a, post=True)
+        for move, need_edi in ((draft_invoice, False), (self.basic_invoice, True), (posted_bill, True)):
+            with self.subTest(move_type=move.move_type, state=move.state):
+                self.env.invalidate_all()
+                Form(move.with_user(user))
+                self.env.invalidate_all()
+                self.assertEqual(move.with_user(user).l10n_my_invoice_need_edi, need_edi)
+
+        self.env.invalidate_all()
+        with patch(CONTACT_PROXY_METHOD) as contact_proxy, self.assertRaises(AccessError):
+            self.basic_invoice.with_user(user).action_l10n_my_edi_send_invoice()
+        contact_proxy.assert_not_called()
 
 
     # -------------------------------------------------------------------------

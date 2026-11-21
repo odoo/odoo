@@ -260,6 +260,7 @@ Customs form No. 1, 9, etc for Vendor Bills""",
     def _l10n_my_edi_submit_documents(self, xml_contents, commit=True):
         """ Contact our IAP service in order to send the invoice xml to the MyInvois API. """
         proxy_user = self._l10n_my_edi_ensure_proxy_user()
+        proxy_user.check_access('read')
 
         # We really only care about moves that appears in the xml contents.
         moves_to_send = self.filtered(lambda move: move in xml_contents)
@@ -593,7 +594,8 @@ Customs form No. 1, 9, etc for Vendor Bills""",
         It does not mean that this specific invoice will use it, though.
         """
         self.ensure_one()
-        proxy_user = self.company_id.l10n_my_edi_proxy_user_id
+        # We need to sudo here, as all users having access to invoices may not have the rights to access the proxy users.
+        proxy_user = self.company_id.sudo().l10n_my_edi_proxy_user_id
         return proxy_user and proxy_user.proxy_type == 'l10n_my_edi'
 
     def _l10n_my_edi_generate_invoice_xml(self):

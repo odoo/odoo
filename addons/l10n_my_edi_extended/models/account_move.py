@@ -41,7 +41,8 @@ class AccountMove(models.Model):
                 and move.state == 'posted'
                 and move.country_code == 'MY'
                 and move.l10n_my_edi_state in (False, 'in_progress', 'valid')
-                and move.company_id.l10n_my_edi_proxy_user_id
+                # We need to sudo here, as all users having access to invoices may not have the rights to access the proxy users.
+                and move.company_id.sudo().l10n_my_edi_proxy_user_id
             )
 
     def _get_name_invoice_report(self):
