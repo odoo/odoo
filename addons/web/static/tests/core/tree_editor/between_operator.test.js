@@ -98,3 +98,15 @@ test("between operator: introduction/elimination", async () => {
         expect(eliminateVirtualOperators(tree)).toEqual(tree_py);
     }
 });
+
+test("between operator: no introduction on '|' connector or negated children", async () => {
+    await makeMockEnv();
+    const toTest = [
+        connector("|", [condition("int_1", ">=", 1), condition("int_1", "<=", 2)]),
+        connector("&", [condition("int_1", ">=", 1), condition("int_1", "<=", 2, true)]),
+        connector("&", [condition("int_1", ">=", 1, true), condition("int_1", "<=", 2)]),
+    ];
+    for (const tree of toTest) {
+        expect(introduceVirtualOperators(tree, options)).toEqual(tree);
+    }
+});
