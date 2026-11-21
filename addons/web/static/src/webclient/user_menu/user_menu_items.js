@@ -10,6 +10,7 @@ import { post } from "@web/core/network/http_service";
 import { redirect } from "@web/core/utils/urls";
 import { useService } from "@web/core/utils/hooks";
 import { ORM } from "@web/core/orm_plugin";
+import { CommandPlugin } from "@web/core/commands/command_plugin";
 
 function supportItem() {
     const url = session.support_url;
@@ -36,7 +37,7 @@ class ShortcutsFooterComponent extends Component {
 }
 
 function shortCutsItem() {
-    const command = useService("command");
+    const command = usePlugin(CommandPlugin);
     const ui = useService("ui");
     const label = _t("Shortcuts");
     return {

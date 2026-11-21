@@ -1,7 +1,8 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { click, press, fill, queryFirst, queryOne, queryText, waitFor } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
-import { contains } from "@web/../tests/web_test_helpers";
+import { contains, getService } from "@web/../tests/web_test_helpers";
+import { CommandPlugin } from "@web/core/commands/command_plugin";
 import { setupEditor } from "../_helpers/editor";
 import { cleanLinkArtifacts } from "../_helpers/format";
 import { getContent, setSelection } from "../_helpers/selection";
@@ -393,8 +394,8 @@ describe("link creation by toolbar", () => {
 
 describe("link creation by shortcut", () => {
     test("create link shortcut should be at the first", async () => {
-        const { editor } = await setupEditor(`<p>[]</p>`);
-        editor.services.command.add("A test command", () => {}, {
+        await setupEditor(`<p>[]</p>`);
+        getService(CommandPlugin).add("A test command", () => {}, {
             hotkey: "alt+k",
             category: "app",
         });
