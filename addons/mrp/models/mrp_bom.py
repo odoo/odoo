@@ -126,6 +126,24 @@ class MrpBom(models.Model):
     @api.constrains('active', 'product_id', 'product_tmpl_id', 'bom_line_ids')
     def _check_bom_cycle(self):
         subcomponents_dict = dict()
+        lines_by_values = dict()
+        components_dict = dict()
+
+        def _get_components(bom, product):
+            # Lines with the same attribute values are all kept or all skipped:
+            # call `_skip_bom_line` once per set of values instead of once per line.
+            if bom not in lines_by_values:
+                lines_by_values[bom] = [
+                    (lines[0], lines.product_id)
+                    for lines in bom.bom_line_ids.with_prefetch().grouped('bom_product_template_attribute_value_ids').values()
+                ]
+            if (bom, product) not in components_dict:
+                components_dict[bom, product] = self.env['product.product'].union(*(
+                    components
+                    for line, components in lines_by_values[bom]
+                    if not line._skip_bom_line(product)
+                ))
+            return components_dict[bom, product]
 
         def _check_cycle(components, finished_products):
             """
@@ -148,18 +166,19 @@ class MrpBom(models.Model):
             for component in components:
                 if component not in subcomponents_dict:
                     bom = bom_find_result[component]
-                    subcomponents = bom.bom_line_ids.filtered(lambda l: not l._skip_bom_line(component)).product_id
-                    subcomponents_dict[component] = subcomponents
+                    subcomponents_dict[component] = _get_components(bom, component)
                 subcomponents = subcomponents_dict[component]
                 if subcomponents:
                     _check_cycle(subcomponents, finished_products | component)
 
-        boms_to_check = self
-        if self.bom_line_ids.product_id:
-            boms_to_check |= self.search(OR([
-                self._bom_find_domain(product)
-                for product in self.bom_line_ids.product_id
-            ]))
+        boms_to_check = self.filtered('active')
+        products = boms_to_check.bom_line_ids.product_id
+        for bom in self - boms_to_check:
+            # An archived BoM cannot create a cycle by itself, but another BoM
+            # of the same product may now be the one found by `_bom_find`.
+            products |= bom.product_id or bom.product_tmpl_id.product_variant_ids
+        if products:
+            boms_to_check |= self.search(self._bom_find_domain(products))
 
         for bom in boms_to_check:
             if not bom.active:
@@ -168,8 +187,7 @@ class MrpBom(models.Model):
             if bom.bom_line_ids.bom_product_template_attribute_value_ids:
                 grouped_by_components = defaultdict(lambda: self.env['product.product'])
                 for finished in finished_products:
-                    components = bom.bom_line_ids.filtered(lambda l: not l._skip_bom_line(finished)).product_id
-                    grouped_by_components[components] |= finished
+                    grouped_by_components[_get_components(bom, finished)] |= finished
                 for components, finished in grouped_by_components.items():
                     _check_cycle(components, finished)
             else:

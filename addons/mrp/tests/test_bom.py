@@ -2250,6 +2250,80 @@ class TestBoM(TestMrpCommon):
             for i, record in enumerate(boms[0] | boms[1] | boms[5] | boms[3] | boms[2] | boms[4]):
                 record.write({'sequence': i})
 
+    def test_cycle_on_bom_archive(self):
+        """
+        Five BoMs, created one by one:
+            A -> D (sequence 1)
+            A -> B (sequence 2)
+            E -> A
+            C -> E
+            B -> C
+        A -> D is the main BoM of A, so there is no cycle. Archiving it makes
+        A -> B the main BoM of A, which creates a cycle: A -> B -> C -> E -> A
+        """
+        product_A, product_B, product_C, product_D, product_E = self.env['product.product'].create([{
+            'name': name,
+        } for name in 'ABCDE'])
+        boms = self.env['mrp.bom']
+        for sequence, (finished, compo) in enumerate([
+            (product_A, product_D),
+            (product_A, product_B),
+            (product_E, product_A),
+            (product_C, product_E),
+            (product_B, product_C),
+        ]):
+            boms |= self.env['mrp.bom'].create({
+                'product_tmpl_id': finished.product_tmpl_id.id,
+                'sequence': sequence,
+                'bom_line_ids': [Command.create({'product_id': compo.id})],
+            })
+
+        with self.assertRaises(exceptions.ValidationError):
+            boms[0].action_archive()
+
+    def test_archive_bom_does_not_check_components_boms(self):
+        """ Archiving a BoM cannot create a cycle through its components, so their
+        BoMs (here with apply-on-variant lines) should not be explored. """
+        attribute = self.env['product.attribute'].create({
+            'name': 'Size',
+            'value_ids': [Command.create({'name': 'S'}), Command.create({'name': 'L'})],
+        })
+        finished, compo = self.env['product.template'].create([{
+            'name': name,
+            'attribute_line_ids': [Command.create({
+                'attribute_id': attribute.id,
+                'value_ids': [Command.set(attribute.value_ids.ids)],
+            })],
+        } for name in ('Finished', 'Component')])
+        sub_compo = self.env['product.product'].create({'name': 'Sub-component'})
+        self.env['mrp.bom'].create([{
+            'product_tmpl_id': compo.id,
+            'bom_line_ids': [Command.create({
+                'product_id': sub_compo.id,
+                'bom_product_template_attribute_value_ids': [Command.link(ptav.id)],
+            }) for ptav in compo.attribute_line_ids.product_template_value_ids],
+        }, {
+            'product_tmpl_id': finished.id,
+            'bom_line_ids': [Command.create({
+                'product_id': compo_variant.id,
+                'bom_product_template_attribute_value_ids': [Command.link(ptav.id)],
+            }) for ptav, compo_variant in zip(finished.attribute_line_ids.product_template_value_ids, compo.product_variant_ids)],
+        }])
+
+        BomLine = self.registry['mrp.bom.line']
+        skip_bom_line = BomLine._skip_bom_line
+        checked_lines = self.env['mrp.bom.line']
+
+        def _skip_bom_line(line, product, never_attribute_values=False):
+            nonlocal checked_lines
+            checked_lines |= line
+            return skip_bom_line(line, product, never_attribute_values)
+
+        self.patch(BomLine, '_skip_bom_line', _skip_bom_line)
+        finished.action_archive()
+        self.assertFalse(finished.bom_ids.active)
+        self.assertFalse(checked_lines)
+
     def test_cycle_on_legit_apply_variants(self):
         """ Should not raise anything """
         self.env['mrp.bom'].create({
@@ -2279,6 +2353,29 @@ class TestBoM(TestMrpCommon):
                 (0, 0, {'product_id': self.product_7_1.id, 'product_qty': 1.0}),
             ],
         })
+
+    def test_cycle_on_apply_variants(self):
+        """ The cycle only exists for the variant on which the component is applied """
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product_7_template.id,
+            'bom_line_ids': [
+                Command.create({'product_id': self.product_1.id}),
+                Command.create({
+                    'product_id': self.product_3.id,
+                    'bom_product_template_attribute_value_ids': [Command.link(self.product_7_attr1_v2.id)],
+                }),
+                Command.create({
+                    'product_id': self.product_2.id,
+                    'bom_product_template_attribute_value_ids': [Command.link(self.product_7_attr1_v2.id)],
+                }),
+            ],
+        })
+
+        with self.assertRaises(exceptions.ValidationError):
+            self.env['mrp.bom'].create({
+                'product_tmpl_id': self.product_2.product_tmpl_id.id,
+                'bom_line_ids': [Command.create({'product_id': self.product_7_2.id})],
+            })
 
     def test_component_when_bom_change(self):
         """
