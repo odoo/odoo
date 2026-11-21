@@ -5,12 +5,19 @@ import {
     inputFiles,
     onRpcBefore,
     openDiscuss,
+    openFormView,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { mockFetch, mockUserAgent } from "@odoo/hoot-mock";
-import { asyncStep, patchWithCleanup, waitForSteps } from "@web/../tests/web_test_helpers";
+import {
+    asyncStep,
+    makeServerError,
+    onRpc,
+    patchWithCleanup,
+    waitForSteps,
+} from "@web/../tests/web_test_helpers";
 
 import { downloadFile } from "@web/core/network/download";
 import { getOrigin } from "@web/core/utils/urls";
@@ -168,6 +175,56 @@ test("clicking on the delete attachment button multiple times in composer should
     // Let the pending deletion settle, so any extra rpc has been registered.
     await contains(".o-mail-Attachment-unlink", { count: 0 });
     await waitForSteps(["attachment_unlink"]); // The unlink method must be called once
+});
+
+test("deleting an attachment already removed from the server notifies the user", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "channel1" });
+    const attachmentId = pyEnv["ir.attachment"].create({
+        name: "test.txt",
+        mimetype: "text/plain",
+    });
+    pyEnv["mail.message"].create({
+        attachment_ids: [attachmentId],
+        body: "<p>Test</p>",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    onRpc("/mail/attachment/delete", () => {
+        throw makeServerError({ errorName: "werkzeug.exceptions.NotFound" });
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-AttachmentList .o-mail-AttachmentCard", { text: "test.txt" });
+    await click(".o-mail-Attachment-unlink");
+    await click(".o_dialog button", { text: "Ok" });
+    await contains(
+        ".o_notification:has(.o_notification_bar.bg-danger):has(.o_notification_content:text('Attachment not found'))"
+    );
+    await contains(".o-mail-AttachmentCard", { count: 0, text: "test.txt" });
+});
+
+test("delete button is hidden on another author's attachment without write access on the record", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ hasWriteAccess: false });
+    const authorId = pyEnv["res.partner"].create({ name: "Other author" });
+    const attachmentId = pyEnv["ir.attachment"].create({
+        name: "test.txt",
+        mimetype: "text/plain",
+        res_id: partnerId,
+        res_model: "res.partner",
+    });
+    pyEnv["mail.message"].create({
+        attachment_ids: [attachmentId],
+        author_id: authorId,
+        body: "<p>Test</p>",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains(".o-mail-AttachmentButtons button[title='Download']");
+    await contains(".o-mail-Attachment-unlink", { count: 0 });
 });
 
 test("view attachment", async () => {
@@ -494,7 +551,9 @@ test("download url of non-viewable binary file", async () => {
 
     patchWithCleanup(downloadFile, {
         _download: (data) => {
-            expect(data).toBe(`${getOrigin()}/web/content/${attachmentId}?filename=test.o&download=true`);
+            expect(data).toBe(
+                `${getOrigin()}/web/content/${attachmentId}?filename=test.o&download=true`
+            );
         },
     });
     await click(".fa-download");
