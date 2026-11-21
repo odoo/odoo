@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { setupPosEnv, dialogActions } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { click } from "@odoo/hoot-dom";
 import {
     InternalNoteButton,
@@ -73,4 +73,51 @@ test("customer note on a partially sent line", async () => {
         [1, "", ""],
         [1, "No ice", ""],
     ]);
+});
+
+// Open the note popup of `button`, then apply `text`, or discard when `text` is undefined
+const editNote = (button, text) =>
+    dialogActions(
+        () => button.onClick(),
+        text === undefined
+            ? [() => contains(".modal-footer button:contains(Discard)").click()]
+            : [
+                  () => contains(".modal textarea").edit(text),
+                  () => contains(".modal-footer button:contains(Apply)").click(),
+              ]
+    );
+
+test("discarding the note popup keeps the current note", async () => {
+    const store = await setupPosEnv();
+    const order = store.addNewOrder();
+    const line = await store.addLineToCurrentOrder({
+        product_tmpl_id: store.models["product.template"].get(5),
+        qty: 1,
+    });
+    const customerNoteButton = await mountWithCleanup(NoteButton, { props: { label: "" } });
+    const internalNoteButton = await mountWithCleanup(InternalNoteButton, { props: { label: "" } });
+    const internalNote = '[{"text":"Spicy","colorIndex":0}]';
+
+    // Orderline notes
+    await editNote(customerNoteButton, "No ice");
+    await editNote(customerNoteButton);
+    expect(line.getCustomerNote()).toBe("No ice");
+
+    await editNote(internalNoteButton, "Spicy");
+    await editNote(internalNoteButton);
+    expect(line.getNote()).toBe(internalNote);
+
+    // Order notes
+    order.deselectOrderline();
+    await editNote(customerNoteButton, "Ring the bell");
+    await editNote(customerNoteButton);
+    expect(order.general_customer_note).toBe("Ring the bell");
+
+    await editNote(internalNoteButton, "Spicy");
+    await editNote(internalNoteButton);
+    expect(order.internal_note).toBe(internalNote);
+
+    // Applying an empty value clears the note
+    await editNote(customerNoteButton, "");
+    expect(order.general_customer_note).toBe("");
 });

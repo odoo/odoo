@@ -24,13 +24,16 @@ export class NoteButton extends Component {
         const selectedOrderline = this.pos.getOrder().getSelectedOrderline();
         const selectedNote = this.currentNote || "";
         const payload = await this.openTextInput(selectedNote);
+        if (payload === undefined) {
+            // Discarded: keep the current note untouched
+            return;
+        }
         if (selectedOrderline) {
             this.setChanges(selectedOrderline, payload);
         } else {
             const order = this.pos.getOrder();
             order.general_customer_note = payload;
         }
-        return { confirmed: typeof payload === "string", inputNote: payload };
     }
 
     // Update line changes and set them
@@ -74,6 +77,7 @@ export class NoteButton extends Component {
             buttons,
             rows: 4,
             startingValue: selectedNote,
+            allowEmpty: true,
         });
     }
 
@@ -127,17 +131,16 @@ export class InternalNoteButton extends NoteButton {
         const selectedOrderline = this.pos.getOrder().getSelectedOrderline();
         const selectedNote = JSON.parse(this.currentNote || null);
         const payload = await this.openTextInput(selectedNote?.map((n) => n.text).join("\n"));
+        if (payload === undefined) {
+            // Discarded: keep the current note untouched
+            return;
+        }
         const coloredNotes = payload ? this.reframeNotes(payload) : "";
         if (selectedOrderline) {
             this.setChanges(selectedOrderline, coloredNotes);
         } else {
             this.pos.getOrder().setInternalNote(coloredNotes);
         }
-        return {
-            confirmed: typeof payload === "string",
-            inputNote: coloredNotes,
-            oldNote: JSON.stringify(selectedNote),
-        };
     }
     setOrderlineNote(value) {
         return this.pos.getOrder().getSelectedOrderline().setNote(value);
