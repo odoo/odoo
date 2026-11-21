@@ -3,11 +3,21 @@
     <template id="auth_totp_form" name="Two-Factor Authentication">
         <t t-call="web.login_layout" disable_footer.translate="1">
             <div class="oe_login_form">
-                <h5 class="card-title">Enter verification code</h5>
+                <h5 t-if="setup" class="card-title">Set up two-factor authentication</h5>
+                <h5 t-else="" class="card-title">Enter verification code</h5>
                 <form method="POST" action="" class="">
-                    <div class="mb-2 mt-2 text-muted">
+                    <div t-if="not setup" class="mb-2 mt-2 text-muted">
                         Check your Authenticator app for your code.
                         <br/>
+                    </div>
+                    <div t-if="setup" class="mb-2 mt-2 text-muted text-center">
+                        Your account requires two-factor authentication.
+                        Scan this QR code with your Authenticator app, then enter the code it shows.
+                        <img class="d-block mx-auto my-2" t-att-src="image_data_uri(setup.qrcode)" alt="QR code"/>
+                        <details>
+                            <summary>Cannot scan it?</summary>
+                            <code t-out="setup.secret"/>
+                        </details>
                     </div>
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                     <input type="hidden" name="redirect" t-att-value="redirect"/>

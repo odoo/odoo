@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 from odoo import models
-from odoo.addons.auth_totp.controllers.home import TRUSTED_DEVICE_AGE_DAYS
 
 import logging
 _logger = logging.getLogger(__name__)
+
+TRUSTED_DEVICE_AGE_DAYS = 90
 
 
 class Auth_TotpDevice(models.Model):
