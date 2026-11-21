@@ -13,6 +13,7 @@ from odoo import fields
 from odoo.exceptions import ValidationError
 from odoo.fields import Command, Domain
 from odoo.http import request, route
+from odoo.orm.models import regex_order
 from odoo.tools import SQL, clean_context, float_round, groupby, lazy, str2bool
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import LazyTranslate, _
@@ -147,10 +148,32 @@ class WebsiteSale(payment_portal.PaymentPortal):
     ]
 
     def _get_search_order(self, post):
-        # OrderBy will be parsed in orm and so no direct sql injection
+        # OrderBy will be parsed in orm and so no direct sql injection, but a
+        # term which is not a field of the searched model makes the ORM raise a
+        # ValueError, which turns a malformed query string into a 500 (e.g.
+        # /shop?order=1234567890). Only the orders the shop products can be
+        # sorted by are kept, the default sorting is used otherwise.
         # id is added to be sure that order is a unique sort key
-        order = post.get('order') or request.env['website'].get_current_website().shop_default_sort
+        order = post.get('order')
+        if not self._search_order_is_valid(order):
+            order = request.env['website'].get_current_website().shop_default_sort
         return 'is_published desc, %s, id desc' % order
+
+    def _search_order_is_valid(self, order):
+        """Return whether the shop products can be sorted by `order`.
+
+        The shop only searches `product.template` (see
+        `_shop_lookup_products`), so the ORM needs each term of the order to
+        be a field of that model to build the ORDER BY clause.
+        """
+        if not isinstance(order, str) or not order:
+            return False
+        product_fields = request.env['product.template']._fields
+        for order_part in order.split(','):
+            order_match = regex_order.match(order_part)
+            if order_match is None or order_match['field'] not in product_fields:
+                return False
+        return True
 
     def _add_search_subdomains_hook(self, search):
         return []
