@@ -55,6 +55,24 @@ class MailMail(models.Model):
             )
         return body
 
+    def _get_linkable_attachments(self, attachments):
+        linkable_attachments = super()._get_linkable_attachments(attachments)
+        if attachments and self.mailing_id:
+            originals = {(a.checksum, a.name): a for a in self.mailing_id.sudo().attachment_ids}
+            linkable_attachments.update({
+                attachment: originals[attachment.checksum, attachment.name]
+                for attachment in attachments
+                if (attachment.checksum, attachment.name) in originals
+            })
+        return linkable_attachments
+
+    def _render_attachments_links(self, attachments):
+        attachments_links = super()._render_attachments_links(attachments)
+        if self.mailing_id and self.mailing_trace_ids:
+            attachments_links = self.env['mail.render.mixin']._shorten_links(
+                attachments_links, self.mailing_id._get_link_tracker_values())
+        return attachments_links
+
     def _prepare_outgoing_list(self, mail_server=False, recipients_follower_status=None):
         """ Update mailing specific links to replace generic unsubscribe and
         view links by email-specific links. Also add headers to allow
