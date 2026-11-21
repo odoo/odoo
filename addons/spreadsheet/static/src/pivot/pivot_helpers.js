@@ -9,6 +9,7 @@ const { isDateOrDatetimeField, parseDimension } = helpers;
 /**
  * @typedef {import("@odoo/o-spreadsheet").Token} Token
  * @typedef {import("@odoo/o-spreadsheet").Granularity} Granularity
+ * @typedef {import("@odoo/o-spreadsheet").CompiledFormula} CompiledFormula
  * */
 
 export const pivotFormulaRegex = /^=.*PIVOT/;
@@ -113,4 +114,17 @@ export async function getRelationalFieldDefinition(resModel, fieldName, fieldSer
         string: getFullFieldStringFromPath(fieldInfo),
         name: fieldName,
     };
+}
+
+const PIVOT_FUNCTIONS = ["PIVOT.VALUE", "PIVOT.HEADER", "PIVOT"];
+
+/**
+ * Parse a spreadsheet formula and detect if it contains any PIVOT functions.
+ *
+ * @param {CompiledFormula} compiledFormula
+ *
+ * @returns {boolean}
+ */
+export function hasPivotFormula(compiledFormula) {
+    return PIVOT_FUNCTIONS.some((funcName) => compiledFormula.usesSymbol(funcName));
 }
