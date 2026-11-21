@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, _, Command
 from odoo.tools import format_date
+from odoo.exceptions import UserError
 
 
 class SaleOrder(models.Model):
@@ -11,6 +12,44 @@ class SaleOrder(models.Model):
 
     pos_order_line_ids = fields.One2many('pos.order.line', 'sale_order_origin_id', string="Order lines Transfered to Point of Sale", readonly=True, groups="point_of_sale.group_pos_user")
     pos_order_count = fields.Integer(string='Pos Order Count', compute='_count_pos_order', readonly=True, groups="point_of_sale.group_pos_user")
+    pos_session_options = fields.Json(compute='_compute_pos_session_options', groups="point_of_sale.group_pos_user")
+
+    def _get_open_pos_sessions(self):
+        self.ensure_one()
+        sessions = self.env['pos.session'].sudo().search([
+            ('user_id', '=', self.env.uid),
+            ('state', '=', 'opened'),
+        ])
+        return sessions.filtered(lambda s: s.currency_id == self.currency_id)
+
+    @api.depends('state', 'order_line.qty_invoiced', 'order_line.product_uom_qty')
+    def _compute_pos_session_options(self):
+        for order in self:
+            if order.state == 'cancel' or all(
+                line.qty_invoiced >= line.product_uom_qty
+                for line in order.order_line.filtered(lambda sol: not sol.display_type)
+            ):
+                order.pos_session_options = []
+                continue
+            order.pos_session_options = [
+                {
+                    'id': s.id,
+                    'name': f"{s.config_id.name} ({s.name})",
+                    'config_id': s.config_id.id,
+                }
+                for s in order._get_open_pos_sessions()
+            ]
+
+    def action_pay_in_pos(self, session_id):
+        self.ensure_one()
+        session = self._get_open_pos_sessions().filtered(lambda s: s.id == session_id)
+        if not session:
+            raise UserError(_("This session is no longer available."))
+        return {
+            'type': 'ir.actions.act_url',
+            'target': 'self',
+            'url': f'/pos/ui?config_id={session.config_id.id}&pay_sale_order={self.id}',
+        }
 
     @api.model
     def _load_pos_data_domain(self, data):
