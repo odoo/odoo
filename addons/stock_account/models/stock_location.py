@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 from odoo.fields import Domain
 
 
@@ -12,17 +12,28 @@ class StockLocation(models.Model):
         'account.account', 'Stock Valuation Account',
         domain=[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'asset_cash', 'liability_credit_card'))],
         help="Expense account used to re-qualify products removed from stock and sent to this location")
-    is_valued = fields.Boolean('Is valued inside the company', compute="_compute_is_valued", search="_search_is_valued")
+    is_valuation_location = fields.Boolean(
+        "Stock Valuation", compute='_compute_is_valuation_location', store=True, readonly=False,
+        help="Should this location be used for stock valuation?")
+    # Computed according to the current company. Cannot be stored.
+    is_valued = fields.Boolean('Is valued inside the company', compute='_compute_is_valued', search='_search_is_valued')
 
     def _search_is_valued(self, operator, value):
         if operator not in ['=', '!=']:
             raise NotImplementedError(self.env._("Invalid search operator or value"))
         positive_operator = (operator == '=' and value) or (operator == '!=' and not value)
-        domain = Domain([('company_id', 'in', self.env.companies.ids), ('usage', 'in', ['internal', 'transit'])])
+        domain = Domain([('company_id', 'in', self.env.companies.ids), ('is_valuation_location', '=', True)])
         if positive_operator:
             return domain
         return ~domain
 
+    @api.depends('usage')
+    def _compute_is_valuation_location(self):
+        for location in self:
+            location.is_valuation_location = location.usage in ('internal', 'transit')
+
+    @api.depends('company_id', 'is_valuation_location')
+    @api.depends_context('company')
     def _compute_is_valued(self):
         for location in self:
             location.is_valued = location._should_be_valued()
@@ -32,4 +43,4 @@ class StockLocation(models.Model):
         be considered when valuating the stock of a company.
         """
         self.ensure_one()
-        return bool(self.company_id) and self.company_id == self.env.company and self.usage in ['internal', 'transit']
+        return bool(self.company_id) and self.company_id == self.env.company and self.is_valuation_location
