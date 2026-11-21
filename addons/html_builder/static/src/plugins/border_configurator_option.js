@@ -4,9 +4,9 @@ import { useProps, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 const BORDER_RADIUS_OPTIONS = [
-    { label: _t("Small"), class: "rounded-1" },
-    { label: _t("Normal"), class: "rounded-2" },
-    { label: _t("Large"), class: "rounded-3" },
+    { label: _t("Small"), class: "rounded-1", variable: "border-radius-sm" },
+    { label: _t("Normal"), class: "rounded-2", variable: "border-radius" },
+    { label: _t("Large"), class: "rounded-3", variable: "border-radius-lg" },
 ];
 
 export class BorderConfigurator extends BaseOptionComponent {
@@ -48,6 +48,9 @@ export class BorderConfigurator extends BaseOptionComponent {
         });
         const values = (styleActionValue || "0").match(/\d+/g);
         return values.some((value) => parseInt(value) > 0);
+    }
+    getOnClick(variable) {
+        return () => this.env.editThemeOption(variable, "theme-roundness");
     }
     shouldShowRadiusPresets() {
         return (
