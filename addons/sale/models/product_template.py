@@ -219,8 +219,12 @@ class ProductTemplate(models.Model):
 
     def _get_product_accounts(self):
         accounts = super()._get_product_accounts()
-        accounts['invoices_to_issue'] = self._get_category_account('property_account_invoices_to_issue_id', 'account_invoices_to_issue_id')
-        accounts['invoiced_not_delivered'] = self._get_category_account('property_account_invoiced_not_delivered_id', 'account_invoiced_not_delivered_id')
+        accounts["invoices_to_issue"] = self._get_category_account(
+            "property_account_invoices_to_issue_id", "account_invoices_to_issue_id"
+        )
+        accounts["invoiced_not_delivered"] = self._get_category_account(
+            "property_account_invoiced_not_delivered_id", "account_invoiced_not_delivered_id"
+        )
         return accounts
 
     @api.model
@@ -380,3 +384,50 @@ class ProductTemplate(models.Model):
         :return: A dict containing additional data about the specified product.
         """
         return {}
+
+    @api.model
+    def _get_combo_choice_prices(
+        self, product_or_template, combo_product_price, currency, company, date
+    ):
+        """Compute the combo choice prices.
+
+        Invariant: the sum of the combo choice prices must be equal to the combo product's price.
+        Heuristic: prorate the combo product's price among its combo choices by using each combo
+        choice's `base_price` (i.e. the lowest list price among the products in the combo choice).
+
+        :param product.product|product.template product_or_template: The combo product for which to
+            get the combo choice prices.
+        :param float combo_product_price: The price of the combo product.
+        :param res.currency currency: The currency to use to compute prices.
+        :param res.company company: The company to use to compute prices.
+        :param datetime date: The date to use to compute prices.
+        :rtype: dict
+        :return: A dict containing the prices of the combo choices, keyed by combo choice.
+        """
+        combos = product_or_template.sudo().combo_ids
+        # Compute the combos' base prices.
+        combo_base_prices = {
+            combo: combo.currency_id._convert(
+                from_amount=combo.base_price, to_currency=currency, company=company, date=date
+            )
+            for combo in combos
+        }
+        total_combo_base_price = sum(combo_base_prices.values())
+        # Compute the prorated combo choice prices.
+        # When all combos have a zero base price, prorating by base price would assign the whole
+        # combo product's price to a single combo choice. Distribute the price evenly instead.
+        if total_combo_base_price:
+            combo_prices = {
+                combo: currency.round(base_price * combo_product_price / total_combo_base_price)
+                for (combo, base_price) in combo_base_prices.items()
+            }
+        else:
+            even_share = currency.round(combo_product_price / len(combo_base_prices))
+            combo_prices = dict.fromkeys(combo_base_prices, even_share)
+        # Compute the delta between the combo product's price and the sum of its combo prices.
+        # Ideally, this should be 0, but division in python isn't perfect, so we may need to adjust
+        # the combo prices to make the delta 0.
+        combo_price_delta = combo_product_price - sum(combo_prices.values())
+        if combo_price_delta:
+            combo_prices[combos[-1]] += combo_price_delta
+        return combo_prices
