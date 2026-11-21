@@ -273,6 +273,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                 el.remove();
             }
         });
+        this.config.extraPreviewDocument?.dispatchEvent(new Event("bundles_reloaded"));
         this.dependencies.edit_interaction.restartInteractions();
     }
 
