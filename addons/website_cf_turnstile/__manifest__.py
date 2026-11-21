@@ -22,6 +22,15 @@ This module implements Cloudflare Turnstile so that you can prevent bot spam on 
             'website_cf_turnstile/static/src/interactions/**/*.js',
             'website_cf_turnstile/static/src/interactions/**/*.xml',
         ],
+        'website.website_builder_assets': [
+            'website_cf_turnstile/static/src/website_builder/**/*',
+        ],
+        'website.assets_inside_builder_iframe': [
+            'website_cf_turnstile/static/src/xml/turnstile.xml',
+        ],
+        'website.assets_inside_builder_iframe_tests': [
+            'website_cf_turnstile/static/src/xml/turnstile.xml',
+        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
