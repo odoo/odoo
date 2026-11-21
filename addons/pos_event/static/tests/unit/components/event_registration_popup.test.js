@@ -40,6 +40,8 @@ test("confirm payload", async () => {
         2: "test@test.com",
         3: "+911234567890",
         4: "1",
+        6: "3",
+        7: {5: true, 6: ""},
     };
     comp.confirm();
 
@@ -47,17 +49,23 @@ test("confirm payload", async () => {
     const receivedValues = Object.values(payload.byRegistration[1][0]);
     expect(payload.byRegistration).toHaveLength(1);
     expect(parseInt(Object.keys(payload.byRegistration)[0])).toBe(tickets[0].id);
-    expect(receivedValues).toEqual(["Test User", "test@test.com", "+911234567890", "1"]);
+    expect(receivedValues).toEqual(["Test User", "test@test.com", "+911234567890", "1", "3", {5: true, 6: ""}]);
 });
 
-test("validateQuestion: mandatory / email / phone", async () => {
+test("validateQuestion: mandatory questions / email / phone", async () => {
     const { comp, event } = await mountPopup();
-    const mandatoryQuestion = event.question_ids.find((q) => q.is_mandatory_answer);
+    const mandatoryQuestion = event.question_ids.find((q) => q.is_mandatory_answer && q.question_type !== 'checkbox');
+    const mandatoryCBQuestion = event.question_ids.find((q) => q.question_type === 'checkbox');
+    mandatoryCBQuestion.is_mandatory_answer = true;
+
     const emailQuestion = event.question_ids.find((q) => q.question_type === "email");
     const phoneQuestion = event.question_ids.find((q) => q.question_type === "phone");
 
     expect(comp.validateQuestion(mandatoryQuestion, "")).toBe(false);
     expect(comp.validateQuestion(mandatoryQuestion, "Jethalal")).toBe(true);
+
+    expect(comp.validateQuestion(mandatoryCBQuestion, {5: "", 6: ""})).toBe(false);
+    expect(comp.validateQuestion(mandatoryCBQuestion, {5: "", 6: true})).toBe(true);
 
     expect(comp.validateQuestion(emailQuestion, "invalid")).toBe(false);
     expect(comp.validateQuestion(emailQuestion, "jetha@gada.com")).toBe(true);
@@ -89,6 +97,8 @@ test("isConfirmEnabled: disabled until all required answers are valid", async ()
         email: "test@test.com",
         phone: "+911234567890",
         simple_choice: "1",
+        radio: "3",
+        checkbox: {5: true, 6: ""},
     };
 
     // when questions are empty
@@ -132,6 +142,8 @@ test("autofill first ticket with customer data", async () => {
         "+1234567890",
         "",
         "Don",
+        "",
+        {5: "", 6: ""}
     ]);
-    expect(Object.values(second)).toEqual(["", "", "", "", ""]);
+    expect(Object.values(second)).toEqual(["", "", "", "", "", "", {5: "", 6: ""}]);
 });
