@@ -407,6 +407,8 @@ class TestOrmRelated(models.Model):
     # related fields with a single field
     related_name = fields.Char(related='name', string='A related on Name', readonly=False)
     related_related_name = fields.Char(related='related_name', string='A related on a related on Name', readonly=False)
+    # related field with a custom inverse: not readonly by default
+    related_name_inverse = fields.Char(related='name', inverse='_inverse_related_name_inverse', string='Name (custom inverse)')
 
     message = fields.Many2one('test_orm.message')
     message_name = fields.Text(related="message.body", related_sudo=False, string='Message Body')
@@ -443,6 +445,10 @@ class TestOrmRelated(models.Model):
     foo_binary_bin_sudo = fields.Binary(related='foo_id.binary_bin', related_sudo=True, string='Binary Bin Sudo')
 
     foo_float_id = fields.Float(related='foo_id.test_float')
+
+    def _inverse_related_name_inverse(self):
+        for record in self:
+            record.name = (record.related_name_inverse or '').upper()
 
 
 class TestOrmRelated_Foo(models.Model):
