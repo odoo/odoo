@@ -21,8 +21,14 @@ class MrpBom(models.Model):
         for bom in self:
             if not bom.active or bom.type != 'phantom':
                 continue
-            product_ids += bom.product_id.ids or bom.product_tmpl_id.product_variant_ids.ids
-            for product_id in product_ids:
+            # Accumulate the products of this bom for the "is it delivered"
+            # search, but only map THIS bom's company to THIS bom's products.
+            # Mapping against the accumulated product_ids would wrongly attribute
+            # every earlier product to this bom's company, blocking the archive
+            # of BOMs belonging to other companies (see issue #297830).
+            bom_product_ids = bom.product_id.ids or bom.product_tmpl_id.product_variant_ids.ids
+            product_ids += bom_product_ids
+            for product_id in bom_product_ids:
                 product_bom_company[product_id].add(bom.company_id.id)
         if not product_ids:
             return
