@@ -140,6 +140,35 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
             )
         self.assertEqual(tx_values["amount"], self.sale_order.amount_total)
 
+    def test_amount_to_pay_override(self):
+        """Test that an order charging only part of its total upfront is paid, and confirmed, with
+        that amount."""
+        amount_to_pay = self.currency.round(self.sale_order.amount_total / 4)
+        with patch.object(
+            self.registry["sale.order"], "_get_amount_to_pay", lambda order: amount_to_pay
+        ):
+            with MockRequest(self.env):
+                tx_values = CustomerPortal()._get_payment_values(
+                    self.sale_order, is_down_payment=False
+                )
+            self.assertEqual(tx_values["amount"], amount_to_pay)
+            self.assertFalse(
+                CustomerPortal()._determine_is_down_payment(self.sale_order, None, amount_to_pay),
+                "Paying the amount to pay is not a down payment.",
+            )
+            self.sale_order.prepayment_percent = 0.5
+            self.assertEqual(
+                self.sale_order._get_prepayment_required_amount(),
+                self.currency.round(amount_to_pay / 2),
+            )
+
+            self.sale_order.prepayment_percent = 1.0
+            self.amount = amount_to_pay
+            self._create_transaction(flow="redirect", sale_order_ids=[self.sale_order.id], state="done")
+            self.assertTrue(self.sale_order._is_paid())
+            self._run_post_processing()
+            self.assertEqual(self.sale_order.state, "sale")
+
     def test_confirmed_transactions_confirms_so_with_multiple_transaction(self):
         """Test that a confirmed transaction confirms a SO even if one or more non-confirmed
         transactions are linked."""
