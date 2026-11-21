@@ -85,7 +85,6 @@ export class PaymentScreenPaymentLines extends Component {
     getPaymentActionState(line) {
         const status = line.payment_status;
         const isRefund = this.props.isRefundOrder;
-        const camelToSnakeCase = (id) => id.replace(/([A-Z])/g, "_$1").toLowerCase();
         const SPINNER_ICON = "autorenew";
         const SPINNER_ICON_CLASS = "oi-spin";
         const ACTIONS = {
@@ -138,7 +137,7 @@ export class PaymentScreenPaymentLines extends Component {
                 show: line.isForceDoneAllowed(),
             },
         };
-        const state = { id: "unknown", title: "", actions: [] };
+        const state = { title: "", actions: [] };
 
         // --- Pending
         if (status === "pending") {
@@ -150,7 +149,7 @@ export class PaymentScreenPaymentLines extends Component {
         // --- Retry
         else if (status === "retry") {
             state.id = "retry";
-            state.title = _t("Transaction cancelled");
+            state.title = _t("Transaction failed");
             state.actions = [ACTIONS.retry];
         }
 
@@ -162,13 +161,13 @@ export class PaymentScreenPaymentLines extends Component {
         }
 
         // --- Waiting customer action
-        else if (["waitingCard", "waitingScan"].includes(status)) {
+        else if (["waiting_card", "waiting_scan"].includes(status)) {
             const titles = {
-                waitingCard: _t("Waiting for card"),
-                waitingScan: _t("Waiting for the customer to scan the QR Code"),
+                waiting_card: _t("Waiting for card"),
+                waiting_scan: _t("Waiting for the customer to scan the QR Code"),
             };
 
-            state.id = isRefund ? "waiting_refund" : camelToSnakeCase(status);
+            state.id = isRefund ? "waiting_refund" : status;
             state.title = isRefund ? _t("Refund in process") : titles[status];
             state.icon = SPINNER_ICON;
             state.iconClass = SPINNER_ICON_CLASS;
@@ -176,8 +175,8 @@ export class PaymentScreenPaymentLines extends Component {
         }
 
         // --- Request sent
-        else if (["waiting", "waitingCancel", "waitingCapture"].includes(status)) {
-            state.id = camelToSnakeCase(status);
+        else if (["waiting", "waiting_cancel", "waiting_capture"].includes(status)) {
+            state.id = status;
             state.title = _t("Request sent");
             state.icon = SPINNER_ICON;
             state.iconClass = SPINNER_ICON_CLASS;
@@ -185,7 +184,7 @@ export class PaymentScreenPaymentLines extends Component {
                 { ...ACTIONS.forceDone, show: ACTIONS.forceDone.show && status === "waiting" },
                 {
                     ...ACTIONS.forceCancel,
-                    show: ACTIONS.forceCancel.show && status === "waitingCancel",
+                    show: ACTIONS.forceCancel.show && status === "waiting_cancel",
                 },
             ];
         }
@@ -201,6 +200,11 @@ export class PaymentScreenPaymentLines extends Component {
             state.id = "refund_available";
             state.title = _t("Refund available");
             state.actions = [ACTIONS.refund];
+        }
+
+        // --- Non-electronic payment: no status to show
+        else {
+            return null;
         }
 
         return state;

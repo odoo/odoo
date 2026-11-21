@@ -46,7 +46,7 @@ export class PaymentInterface {
      * Called when a user clicks the "Send" button in the
      * interface. This should initiate a payment request and return a
      * Promise that resolves when the final status of the payment line
-     * is set with setPaymentStatus.
+     * is set in payment_status.
      *
      * For successful transactions setReceiptInfo() should be used
      * to set info that should to be printed on the receipt. You

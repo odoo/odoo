@@ -16,9 +16,9 @@ patch(PosPayment.prototype, {
         }
 
         if (isPaymentSuccessful) {
-            this.setPaymentStatus("waitingScan");
+            this.payment_status = "waiting_scan";
         } else {
-            this.setPaymentStatus("retry");
+            this.payment_status = "retry";
         }
         // Force the payment to fail to avoid auto-validating the order.
         // The payment success/failure will be handled by the Bancontact webhook - bancontact_pay_webhook

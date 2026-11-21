@@ -75,7 +75,7 @@ class PosVivaComController(http.Controller):
         if pos_order.state != 'draft':
             return "Order already finalized"
 
-        final_statuses = ["done", "reversed", "error"]
+        final_statuses = ["done", "retry"]
         if not session_id:
             payment_line = pos_order.payment_ids.filtered(lambda p: p.payment_method_id.payment_provider == 'viva_com' and p.payment_status not in final_statuses)
         else:
@@ -96,7 +96,7 @@ class PosVivaComController(http.Controller):
                 dynamicLink = self._create_dynamic_link(f"/pos/ui/{config_id}/resume/{order_uuid}?post_validate=1")
                 return request.redirect(dynamicLink, local=False)
         elif mismatch:
-            payment_line.write({'payment_status': 'error', 'transaction_id': transaction_id})
+            payment_line.write({'payment_status': 'retry', 'transaction_id': transaction_id})
             if mismatch['currency']:
                 currency = request.env['res.currency'].search([('iso_numeric', '=', mismatch['currency'])], limit=1)
                 query = urllib.parse.urlencode({
@@ -125,7 +125,7 @@ class PosVivaComController(http.Controller):
                 result,
                 kwargs.get('message'),
                 kwargs.get('transactionEventId'))
-            payment_line.write({'payment_status': 'error', 'transaction_id': transaction_id})
+            payment_line.write({'payment_status': 'retry', 'transaction_id': transaction_id})
 
         dynamicLink = self._create_dynamic_link(f"/pos/ui/{config_id}/payment/{order_uuid}")
         return request.redirect(dynamicLink, local=False)
