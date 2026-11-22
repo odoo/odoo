@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from lxml import html
+
 import odoo
 from odoo.http.session import session_store
 from odoo.tests.common import HttpCase, new_test_user, tagged
@@ -42,6 +44,18 @@ class TestWebLogin(TestWebLoginCommon):
         ).raise_for_status()
         # ensure we end up on the right page for internal users.
         self.assertEqual(res_post.request.path_url, '/odoo')
+
+    def test_web_client_html_lang(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        self.env['res.lang']._activate_lang('nl_NL')
+        user = new_test_user(self.env, 'french_user', lang='fr_FR')
+        res_post = self.login('french_user', 'french_user')
+        self.assertEqual(res_post.request.path_url, '/odoo')
+        self.assertEqual(html.fromstring(res_post.content).get('lang'), 'fr-FR')
+        # Another user changes the language: the next page follows it without a new login
+        user.lang = 'nl_NL'
+        res_get = self.url_open('/odoo')
+        self.assertEqual(html.fromstring(res_get.content).get('lang'), 'nl-NL')
 
     def test_web_login_external(self):
         res_post = self.login('portal_user', 'portal_user')
