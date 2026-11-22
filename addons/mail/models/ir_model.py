@@ -27,17 +27,20 @@ class IrModel(models.Model):
         models = tuple(self.mapped('model'))
         model_ids = tuple(self.ids)
 
-        query = "DELETE FROM mail_activity WHERE res_model_id IN %s"
-        self.env.cr.execute(query, [model_ids])
+        def delete_remaining_mail_data():
+            query = "DELETE FROM mail_activity WHERE res_model_id IN %s"
+            self.env.cr.execute(query, [model_ids])
 
-        query = "DELETE FROM mail_activity_type WHERE res_model IN %s"
-        self.env.cr.execute(query, [models])
+            query = "DELETE FROM mail_activity_type WHERE res_model IN %s"
+            self.env.cr.execute(query, [models])
 
-        query = "DELETE FROM mail_followers WHERE res_model IN %s"
-        self.env.cr.execute(query, [models])
+            query = "DELETE FROM mail_followers WHERE res_model IN %s"
+            self.env.cr.execute(query, [models])
 
-        query = "DELETE FROM mail_message WHERE model in %s"
-        self.env.cr.execute(query, [models])
+            query = "DELETE FROM mail_message WHERE model in %s"
+            self.env.cr.execute(query, [models])
+
+        return delete_remaining_mail_data
 
     def write(self, vals):
         if self and ('is_mail_thread' in vals or 'is_mail_activity' in vals or 'is_mail_blacklist' in vals):
