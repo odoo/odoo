@@ -2,12 +2,7 @@ import { DateSection } from "@mail/core/common/date_section";
 import { Message } from "@mail/core/common/message";
 import { NotificationMessage } from "./notification_message";
 import { MessageHighlightPlugin } from "@mail/core/common/message_highlight_plugin";
-import {
-    useChildRefs,
-    useMaybePlugin,
-    useMessageSelection,
-    useVisible,
-} from "@mail/utils/common/hooks";
+import { useChildRefs, useMessageSelection, useVisible } from "@mail/utils/common/hooks";
 import { useScrollManager } from "@mail/utils/common/scroll";
 import { incrementFn } from "@mail/utils/common/signal";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
@@ -34,7 +29,7 @@ import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { _t } from "@web/core/l10n/translation";
 import { Transition } from "@web/core/transition";
 import { UIPlugin } from "@web/core/ui/ui_plugin";
-import { useBus, useService } from "@web/core/utils/hooks";
+import { useBus, useMaybePlugin, useService } from "@web/core/utils/hooks";
 import { escape } from "@web/core/utils/strings";
 
 export const PRESENT_VIEWPORT_THRESHOLD = 1;

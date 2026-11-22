@@ -1,7 +1,7 @@
 import { DYNAMIC_FIELD_PLUGINS } from "@html_editor/backend/dynamic_field/dynamic_field_plugin";
 import { isEmpty } from "@html_editor/utils/dom_info";
 import { registry } from "@web/core/registry";
-import { useBus, useService } from "@web/core/utils/hooks";
+import { useBus, useMaybePlugin, useService } from "@web/core/utils/hooks";
 import { isHtmlEmpty } from "@web/core/utils/html";
 import { renderToMarkup } from "@web/core/utils/render";
 import { HtmlMailField, htmlMailField } from "../html_mail_field/html_mail_field";
@@ -15,7 +15,6 @@ import { fillEmpty } from "@html_editor/utils/dom";
 import { markup, onWillUnmount, useEffect } from "@odoo/owl";
 import { SIGNATURE_CLASS } from "@html_editor/main/user_signature_plugin";
 import { FullComposerBusPlugin } from "@mail/core/web/full_composer_bus_plugin";
-import { useMaybePlugin } from "@mail/utils/common/hooks";
 
 export class HtmlComposerMessageField extends HtmlMailField {
     setup() {

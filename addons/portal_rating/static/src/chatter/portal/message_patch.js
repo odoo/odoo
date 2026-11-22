@@ -1,10 +1,10 @@
 import { PortalChatterPlugin } from "@portal/chatter/portal/portal_chatter_plugin";
 import { Message } from "@mail/core/common/message";
-import { useMaybePlugin } from "@mail/utils/common/hooks";
 
 import { useOnChange } from "@odoo/owl";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { rpc } from "@web/core/network/rpc";
+import { useMaybePlugin } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 
 Message.components = { ...Message.components, DropdownItem };

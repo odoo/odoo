@@ -1,5 +1,5 @@
 import { Plugin, providePlugins, t, useConfig } from "@odoo/owl";
-import { useMaybePlugin } from "@mail/utils/common/hooks";
+import { useMaybePlugin } from "@web/core/utils/hooks";
 
 const NO_ANCESTORS = Object.freeze({});
 

@@ -1,7 +1,7 @@
-import { location } from "@web/core/browser/browser";
-import { PortalRatingPlugin } from "@portal_rating/chatter/portal/portal_rating_plugin";
 import { Chatter } from "@mail/chatter/web_portal_project/chatter";
-import { useMaybePlugin } from "@mail/utils/common/hooks";
+import { PortalRatingPlugin } from "@portal_rating/chatter/portal/portal_rating_plugin";
+import { location } from "@web/core/browser/browser";
+import { useMaybePlugin } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 
 const chatterPatch = {

@@ -37,7 +37,7 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { UIPlugin } from "@web/core/ui/ui_plugin";
-import { useService } from "@web/core/utils/hooks";
+import { useMaybePlugin, useService } from "@web/core/utils/hooks";
 import { createElementWithContent } from "@web/core/utils/html";
 import { nbsp } from "@web/core/utils/strings";
 import { useMessageActions } from "./message_actions";
@@ -48,7 +48,6 @@ import {
     propComputed,
     useForwardRefsToParent,
     useLongPress,
-    useMaybePlugin,
     useRightClickMenu,
 } from "@mail/utils/common/hooks";
 import { ActionList, CircleInlineAction } from "@mail/core/common/action_list";

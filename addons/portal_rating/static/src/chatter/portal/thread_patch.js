@@ -1,6 +1,6 @@
 import { PortalChatterPlugin } from "@portal/chatter/portal/portal_chatter_plugin";
 import { Thread as ThreadComponent } from "@mail/core/common/thread";
-import { useMaybePlugin } from "@mail/utils/common/hooks";
+import { useMaybePlugin } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 
 patch(ThreadComponent.prototype, {

@@ -14,6 +14,7 @@ import {
 } from "@odoo/owl";
 import { useTransition } from "@web/core/transition";
 import { uniqueId } from "@web/core/utils/functions";
+import { useMaybePlugin } from "@web/core/utils/hooks";
 import {
     basicContainerBuilderComponentProps,
     useApplyVisibility,
@@ -22,7 +23,6 @@ import {
 } from "../utils";
 import { BuilderComponent } from "./builder_component";
 import { BuilderLevelPlugin } from "./builder_context";
-import { useMaybePlugin } from "../hooks";
 
 const EXPAND_ANIMATION_DELAY = 150;
 const HIGHLIGHT_DURATION = 2000;

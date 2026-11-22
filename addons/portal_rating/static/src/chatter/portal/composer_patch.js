@@ -3,11 +3,11 @@ import { PortalChatterPlugin } from "@portal/chatter/portal/portal_chatter_plugi
 import { Composer } from "@mail/core/common/composer";
 import { CannedResponseSuggestionPlugin } from "@mail/core/common/plugin/suggestion/canned_response_suggestion_plugin";
 import { PartnerSuggestionPlugin } from "@mail/core/common/plugin/suggestion/partner_suggestion_plugin";
-import { useMaybePlugin } from "@mail/utils/common/hooks";
 
-import { patch } from "@web/core/utils/patch";
-import { rpc } from "@web/core/network/rpc";
 import { isMobileOS } from "@web/core/browser/feature_detection";
+import { rpc } from "@web/core/network/rpc";
+import { useMaybePlugin } from "@web/core/utils/hooks";
+import { patch } from "@web/core/utils/patch";
 
 const MAX_STAR_RATING = 5;
 const DEFAULT_STAR_RATING = 4;

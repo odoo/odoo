@@ -1,7 +1,7 @@
 import { Component, Plugin, providePlugins, t, useConfig, useProps, xml } from "@odoo/owl";
+import { useMaybePlugin } from "@web/core/utils/hooks";
 import { basicContainerBuilderComponentProps, useBuilderComponent } from "../utils";
 import { BuilderComponent } from "./builder_component";
-import { useMaybePlugin } from "../hooks";
 
 export class BuilderLevelPlugin extends Plugin {
     level = useConfig("level", t.number().optional(0));

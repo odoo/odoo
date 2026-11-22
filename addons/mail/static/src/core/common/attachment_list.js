@@ -2,7 +2,7 @@ import { AttachmentDeleteDialog } from "@mail/core/common/attachment_delete_dial
 import { Gif } from "@mail/core/common/gif";
 import { MessageHighlightPlugin } from "@mail/core/common/message_highlight_plugin";
 import { useSearchHighlight } from "@mail/core/common/message_search_plugin";
-import { propStatic, useMaybePlugin, usePropsPlus } from "@mail/utils/common/hooks";
+import { propStatic, usePropsPlus } from "@mail/utils/common/hooks";
 
 import { Component, signal, t, usePlugin, useProps } from "@odoo/owl";
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -16,7 +16,7 @@ import { useFileViewer } from "@web/core/file_viewer/file_viewer_hook";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { UIPlugin } from "@web/core/ui/ui_plugin";
-import { useService } from "@web/core/utils/hooks";
+import { useMaybePlugin, useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
 
 import { attClassObjectToString } from "@mail/utils/common/format";
