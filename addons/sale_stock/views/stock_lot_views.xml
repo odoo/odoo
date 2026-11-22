@@ -7,6 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('oe_button_box')]/button" position="before">
                 <button class="oe_stat_button" name="action_view_so"
+                        groups="sales_team.group_sale_salesman,stock.group_stock_user"
                         type="object" icon="fa-pencil-square-o" help="Sale Orders"
                         invisible="sale_order_count == 0 or not display_complete">
                     <div class="o_field_widget o_stat_info">
@@ -18,7 +19,7 @@
                 </button>
             </xpath>
             <xpath expr="//group[@name='main_group']" position="after">
-                <group>
+                <group groups="sales_team.group_sale_salesman,stock.group_stock_user">
                     <field name="sale_order_ids" widget="many2many"
                            readonly="True"
                            invisible="not sale_order_ids or display_complete">
