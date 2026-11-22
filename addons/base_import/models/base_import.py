@@ -1569,7 +1569,9 @@ class Base_ImportImport(models.TransientModel):
 
             _logger.info('importing %d rows...', len(input_file_data))
 
-            binary_filenames = self._extract_binary_filenames(import_fields, input_file_data)
+            binary_filenames = self._extract_binary_filenames(
+                import_fields, input_file_data, files_data=options.pop('binary_files_data', None),
+            )
 
             import_fields, merged_data = self.with_context(import_options=options)._handle_multi_mapping(import_fields, input_file_data)
 
@@ -1640,14 +1642,21 @@ class Base_ImportImport(models.TransientModel):
 
         return import_result
 
-    def _extract_binary_filenames(self, import_fields, data, model=False, prefix='', binary_filenames=False):
+    def _extract_binary_filenames(self, import_fields, data, model=False, prefix='', binary_filenames=False, files_data=None):
+        """ Handle the binary cells holding the name of a file uploaded with the import.
+
+        The client uploads the files of the imported records afterwards, so their
+        filenames are returned. The sub-records (e.g. the extra images of a
+        product) are created by the import itself, so their cells are replaced by
+        the content of the file, given in ``files_data`` (``{filename: base64}``).
+        """
         model = model or self.res_model
         binary_filenames = binary_filenames or defaultdict(list)
         for name, field in self.env[model]._fields.items():
             name = prefix + name
             if any(name + '/' in import_field and name == import_field.split('/')[prefix.count('/')] for import_field in import_fields):
                 # Recursive call with the relational as new model and add the field name to the prefix
-                binary_filenames = self._extract_binary_filenames(import_fields, data, field.comodel_name, name + '/', binary_filenames)
+                binary_filenames = self._extract_binary_filenames(import_fields, data, field.comodel_name, name + '/', binary_filenames, files_data)
             elif field.type == 'binary' and field.attachment and name in import_fields:
                 index = import_fields.index(name)
                 for line in data:
@@ -1659,9 +1668,10 @@ class Base_ImportImport(models.TransientModel):
                         elif '.' in value:
                             # Detect if it's a filename
                             filename = value
-                            line[index] = ''
+                            line[index] = (files_data or {}).get(value, '') if prefix else ''
                         # else base64 nothing to do
-                    binary_filenames[name].append(filename)
+                    if not prefix:
+                        binary_filenames[name].append(filename)
         return binary_filenames
 
     def _handle_multi_mapping(self, import_fields, input_file_data):
