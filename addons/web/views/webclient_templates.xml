@@ -328,6 +328,7 @@ For more information, please visit: https://developer.mozilla.org/en-US/docs/Web
         </t>
         <t t-call="web.layout"
             head="head"
+            html_data="{'lang': (session_info['user_context'].get('lang') or lang).replace('_', '-')}"
             body_classname.f="o_web_client"/>
     </template>
 
