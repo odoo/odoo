@@ -6,6 +6,7 @@ import { WebClient } from "@web/webclient/webclient";
 import {
     animationFrame,
     click,
+    Deferred,
     edit,
     expect,
     getFixture,
@@ -2003,6 +2004,35 @@ test("properties: discard changes", async () => {
     expect(".o_property_field:first-child input").toHaveValue("char updated");
     await clickCancel();
     expect(".o_property_field:first-child input").toHaveValue("char value");
+});
+
+test("properties: quick successive changes are all saved", async () => {
+    Partner._onChanges.properties = () => {};
+    const onchangeDef = new Deferred();
+    onRpc("onchange", async () => {
+        await onchangeDef;
+    });
+    onRpc("has_access", () => true);
+    onRpc("web_save", ({ args }) => {
+        expect.step(args[1].properties.map((property) => property.value));
+    });
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <field name="company_id"/>
+                <field name="properties"/>
+            </form>`,
+    });
+    // the second change is made while the onchange of the first is pending
+    await contains(".o_property_field:first-child input").edit("char updated");
+    await contains(".o_property_field:nth-child(2) select").select("a");
+    onchangeDef.resolve();
+    await animationFrame();
+    await clickSave();
+    expect.verifySteps([["char updated", "a", false, false]]);
 });
 
 // ---------------------------------------------------
