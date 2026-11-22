@@ -85,28 +85,26 @@ export class FileInput extends Component {
      */
     async onFileInputChange() {
         this.state.isDisable = true;
-        const httpParams = this.httpParams;
-        if (this.props.onWillUploadFiles) {
-            try {
-                const files = await this.props.onWillUploadFiles(httpParams.ufile);
-                httpParams.ufile = files;
-            } catch (e) {
-                this.state.isDisable = false;
-                throw e;
+        try {
+            const httpParams = this.httpParams;
+            if (this.props.onWillUploadFiles) {
+                httpParams.ufile = await this.props.onWillUploadFiles(httpParams.ufile);
             }
+            const parsedFileData = await this.uploadFiles(this.props.route, httpParams);
+            if (parsedFileData) {
+                // When calling onUpload, also pass the files to allow to get data like their names
+                this.props.onUpload(
+                    parsedFileData,
+                    this.fileInputRef.el ? this.fileInputRef.el.files : []
+                );
+            }
+        } finally {
+            // Clear the selection so choosing the same file again triggers a change.
+            if (this.fileInputRef.el) {
+                this.fileInputRef.el.value = null;
+            }
+            this.state.isDisable = false;
         }
-        const parsedFileData = await this.uploadFiles(this.props.route, httpParams);
-        if (parsedFileData) {
-            // When calling onUpload, also pass the files to allow to get data like their names
-            this.props.onUpload(
-                parsedFileData,
-                this.fileInputRef.el ? this.fileInputRef.el.files : []
-            );
-            // Because the input would not trigger this method if the same file name is uploaded,
-            // we must clear the value after handling the upload
-            this.fileInputRef.el.value = null;
-        }
-        this.state.isDisable = false;
     }
 
     /**
