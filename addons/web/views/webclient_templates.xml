@@ -272,6 +272,7 @@
 
     <template id="web.webclient_bootstrap">
         <t t-call="web.layout">
+            <t t-set="html_data" t-value="{'lang': (session_info['user_context'].get('lang') or lang).replace('_', '-')}"/>
             <t t-set="head_web">
                 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
                 <meta name="theme-color" content="#71639e"/>
