@@ -1572,6 +1572,25 @@ class Base_ImportImport(models.TransientModel):
             binary_filenames = self._extract_binary_filenames(
                 import_fields, input_file_data, files_data=options.pop('binary_files_data', None),
             )
+            if binary_filenames:
+                # The client uploads the files per imported record, not per row:
+                # a row only holding one2many values belongs to the previous
+                # record, see BaseModel._extract_records
+                model_fields = self.env[self.res_model]._fields
+                is_o2m = [
+                    (field := model_fields.get(path.split('/')[0])) is not None and field.type == 'one2many'
+                    for path in import_fields
+                ]
+                record_rows = [
+                    index for index, row in enumerate(input_file_data)
+                    if not index
+                    or any(value for value, o2m in zip(row, is_o2m) if not o2m)
+                    or not any(value for value, o2m in zip(row, is_o2m) if o2m)
+                ]
+                binary_filenames = {
+                    name: [filenames[index] for index in record_rows]
+                    for name, filenames in binary_filenames.items()
+                }
 
             import_fields, merged_data = self.with_context(import_options=options)._handle_multi_mapping(import_fields, input_file_data)
 

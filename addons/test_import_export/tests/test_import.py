@@ -1707,3 +1707,26 @@ class TestLocalFilesImport(TransactionCase):
         self.assertEqual(child_1.image_1920.content, img_buf.getvalue())
         self.assertFalse(child_2.image_1920, "a file not uploaded leaves the image empty")
         self.assertNotIn("binary_filenames", result, "files of sub-records are not uploaded afterwards")
+
+    def test_import_local_files_per_record(self):
+        content = (
+            'name,image_1920,child_ids/name\n'
+            'Parent 1,red.png,Child 1\n'
+            ',,Child 2\n'
+            'Parent 2,blue.png,Child 3\n'
+        )
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'res.partner',
+            'file': BinaryBytes(content.encode()),
+            'file_type': 'text/csv',
+        })
+        result = import_wizard.execute_import(
+            ['name', 'image_1920', 'child_ids/name'],
+            [],
+            {'has_headers': True, 'separator': ',', 'quoting': '"'},
+        )
+
+        self.assertFalse(result['messages'])
+        self.assertEqual(len(result['ids']), 2)
+        # aligned with result['ids'], so the client uploads each file on its record
+        self.assertEqual(result['binary_filenames'], {'image_1920': ['red.png', 'blue.png']})
