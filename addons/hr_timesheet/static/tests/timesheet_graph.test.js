@@ -27,3 +27,15 @@ test("hr.timesheet (graph): data are multiplied by a company related factor (fac
 
     checkDatasets(graph, "data", { data: [1] });
 });
+
+test("hr.timesheet (graph): factor is only applied to the data points of the duration measures", async () => {
+    serverState.companies[0].timesheet_uom_factor = 0.125;
+
+    const graph = await mountView({
+        resModel: "account.analytic.line",
+        type: "graph",
+        context: { graph_mode: "pie", graph_measure: ["__count", "unit_amount"] },
+    });
+
+    checkDatasets(graph, "data", [{ data: [3] }, { data: [1] }]);
+});
