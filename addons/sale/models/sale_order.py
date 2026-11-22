@@ -1285,6 +1285,11 @@ class SaleOrder(models.Model):
         cron = self.env.ref('sale.send_pending_emails_cron', raise_if_not_found=False)
         cron_enabled = cron and cron.sudo().active
         if async_send and cron_enabled and allow_deferred_sending:
+            if self.pending_email_template_id and mail_template == self.env.ref(
+                'sale.mail_template_sale_payment_executed', raise_if_not_found=False
+            ):
+                # Only one email can wait, and the waiting one is what the customer expects.
+                return
             # Schedule the email to be sent asynchronously.
             self.pending_email_template_id = mail_template
             cron._trigger()
