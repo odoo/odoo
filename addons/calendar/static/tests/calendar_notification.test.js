@@ -1,10 +1,28 @@
 import { defineCalendarModels } from "@calendar/../tests/calendar_test_helpers";
 import { click, contains, start, startServer } from "@mail/../tests/mail_test_helpers";
-import { expect, test } from "@odoo/hoot";
+import { advanceTime, expect, test } from "@odoo/hoot";
 import { mockService, onRpc, preloadBundle, serverState } from "@web/../tests/web_test_helpers";
 
 defineCalendarModels();
 preloadBundle("web.fullcalendar_lib");
+
+test("loads a saved reminder on startup without a bus notification", async () => {
+    let sentReminder = false;
+    onRpc("/calendar/notify", () => {
+        if (sentReminder) {
+            return [];
+        }
+        sentReminder = true;
+        expect.step("load reminder");
+        return [{ alarm_id: 1, event_id: 2, title: "Meeting", message: "Saved reminder", timer: 5 }];
+    });
+
+    await start();
+    await expect.waitForSteps(["load reminder"]);
+    await contains(".o_notification", { count: 0 });
+    await advanceTime(5000);
+    await contains(".o_notification", { text: "Meeting. Saved reminder" });
+});
 
 test("can listen on bus and display notifications in DOM and click OK", async () => {
     const pyEnv = await startServer();

@@ -48,8 +48,12 @@ If you need to manage your meetings, you should install the CRM module.
             'calendar/static/src/**/*',
         ],
         # Unit test files
+        'web.assets_unit_tests_setup': [
+            'calendar/static/tests/mock_server/calendar_mock_server.js',
+        ],
         'web.assets_unit_tests': [
             'calendar/static/tests/**/*.js',
+            ('remove', 'calendar/static/tests/mock_server/calendar_mock_server.js'),
             ('remove', 'calendar/static/tests/tours/**/*'),
         ],
         'web.assets_tests': [
