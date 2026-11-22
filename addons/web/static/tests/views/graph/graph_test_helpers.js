@@ -146,10 +146,12 @@ export function checkLegend(view, expectedLabels) {
     });
 }
 
-export function checkMeasure(expectedMeasure) {
-    expect(`.o_report_measures`).toHaveText(expectedMeasure, {
-        message: `Measure should be ${expectedMeasure}`,
-    });
+/**
+ * @param {GraphView} view
+ * @param {string | Iterable<string>} expectedMeasures measure names (not labels)
+ */
+export function checkMeasure(view, expectedMeasures) {
+    expect(getGraphModelMetaData(view).activeMeasures).toEqual(ensureArray(expectedMeasures));
 }
 
 /**
