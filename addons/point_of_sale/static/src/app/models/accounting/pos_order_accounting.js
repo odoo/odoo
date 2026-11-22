@@ -2,6 +2,7 @@ import { Base } from "../related_models";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 import { logPosMessage } from "../../utils/pretty_console_log";
 import { formatCurrency } from "@web/core/currency";
+import { invertMethod } from "@point_of_sale/app/utils/numbers";
 
 const CONSOLE_COLOR = "#4EFF4D";
 
@@ -14,6 +15,11 @@ export class PosOrderAccounting extends Base {
         this._prices = {};
         this._pricesDirty = false;
         this._doRecomputeAllPrices();
+    }
+
+    get isRefund() {
+        // Read from the prices so it is never stale after a line change
+        return this.prices.taxDetails.total_amount_no_rounding < 0;
     }
 
     /**
@@ -33,6 +39,17 @@ export class PosOrderAccounting extends Base {
         this._pricesDirty = false;
         this._prices.original = this._constructPriceData();
         this._prices.unit = this._constructPriceData({ baseLineOpts: { quantity: 1 } });
+
+        const oldSign = this.is_refund;
+        this.is_refund = this._prices.original.taxDetails.total_amount_no_rounding < 0;
+
+        for (const line of this.lines) {
+            line.is_refund = line.qty < 0;
+        }
+
+        if (oldSign !== this.is_refund) {
+            this._pricesDirty = true;
+        }
     }
 
     get paymentAmountInCurrency() {
@@ -105,8 +122,7 @@ export class PosOrderAccounting extends Base {
         }
 
         const amount =
-            this.orderIsRounded &&
-            this.config.rounding_method.asymmetricRound(isNegative ? -remaining : remaining) == 0
+            this.orderIsRounded && this.config.rounding_method.asymmetricRound(remaining) == 0
                 ? 0
                 : Math.abs(remaining);
         return isNegative ? this.currency.round(-amount) : this.currency.round(amount);
@@ -144,13 +160,14 @@ export class PosOrderAccounting extends Base {
         const signedRemaining = total < 0 ? -remaining : remaining;
         const isDone =
             this.orderIsRounded &&
-            (signedRemaining <= 0 ||
-                this.config.rounding_method.asymmetricRound(signedRemaining) === 0);
+            (signedRemaining <= 0 || this.config.rounding_method.asymmetricRound(remaining) === 0);
         if (!isDone) {
             return 0;
         }
 
-        const roundedRemaining = this.config.rounding_method.asymmetricRound(signedRemaining);
+        // Round the signed amount so a refund is rounded the other way than a sale
+        const rounded = this.config.rounding_method.asymmetricRound(remaining);
+        const roundedRemaining = total < 0 ? -rounded : rounded;
         const diff =
             total < 0 ? signedRemaining - roundedRemaining : roundedRemaining - signedRemaining;
         return this.currency.round(diff);
@@ -207,9 +224,6 @@ export class PosOrderAccounting extends Base {
             }, 0)
         );
     }
-    get orderSign() {
-        return this.prices.taxDetails.order_sign;
-    }
 
     /**
      * Determine if the amount to pay should be rounded depending on the payment method
@@ -233,7 +247,7 @@ export class PosOrderAccounting extends Base {
      */
     getDefaultAmountDueToPayIn(paymentMethod) {
         const amount = this.shouldRound(paymentMethod)
-            ? this.config_id.rounding_method.round(this.remainingDue)
+            ? this.config_id.rounding_method.asymmetricRound(this.remainingDue)
             : this.remainingDue;
         return amount || this.change;
     }
@@ -249,9 +263,12 @@ export class PosOrderAccounting extends Base {
         this.amount_tax = this.amountTaxes; // Already rounded by the getter
         this.amount_total = this.currency.round(this.priceIncl);
         this.amount_return = this.change; // Already rounded by the getter
+        // Stored line amounts are signed by the order direction (positive for a returned
+        // item in a refund), what the backend and localizations expect.
+        const sign = this.isRefund ? -1 : 1;
         this.lines.forEach((line) => {
-            line.price_subtotal = line.priceExcl;
-            line.price_subtotal_incl = line.priceIncl;
+            line.price_subtotal = line.priceExcl * sign;
+            line.price_subtotal_incl = line.priceIncl * sign;
         });
     }
     /**
@@ -378,13 +395,15 @@ export class PosOrderAccounting extends Base {
     _computeAllPrices(opts = {}) {
         const currency = this.currency;
         const lines = opts.lines || this.lines;
-        const documentSign = this.isRefund ? -1 : 1;
         const company = this.company;
         const baseLines = lines.map((l) =>
             l.getBaseLine({
                 quantity: l.qty,
                 price_unit: l.price_unit,
                 ...(opts.baseLineOpts || {}),
+                // Refund lines are rounded apart from sale lines (taxes rounded globally
+                // are grouped by `is_refund`), same as the backend.
+                is_refund: l.qty < 0,
             })
         );
 
@@ -393,16 +412,29 @@ export class PosOrderAccounting extends Base {
 
         // Cash rounding is added only if the document needs to be globaly rounded.
         // See cash_rounding and only_round_cash_method config fields.
-        const cashRounding =
-            this.config.hasGlobalRounding && this.config.rounding_method
-                ? this.config.rounding_method
-                : null;
+        // A negative total (refund) is rounded the other way, like `asymmetricRound`.
+        const rounding = this.config.rounding_method;
+        let cashRounding = null;
+        if (this.config.hasGlobalRounding && rounding) {
+            const rawTotal = baseLines.reduce(
+                (sum, line) => sum + line.tax_details.raw_total_included_currency,
+                0
+            );
+            cashRounding = {
+                strategy: rounding.strategy,
+                rounding: rounding.rounding,
+                rounding_method:
+                    rawTotal < 0
+                        ? invertMethod(rounding.rounding_method)
+                        : rounding.rounding_method,
+            };
+        }
         const data = accountTaxHelpers.get_tax_totals_summary(baseLines, currency, company, {
             cash_rounding: cashRounding,
         });
         const total = data.total_amount_currency - (data.cash_rounding_base_amount_currency || 0.0);
 
-        data.order_sign = documentSign;
+        data.order_sign = total < 0 ? -1 : 1;
         data.total_amount_no_rounding = total;
 
         const baseLineByLineUuids = baseLines.reduce((acc, line) => {

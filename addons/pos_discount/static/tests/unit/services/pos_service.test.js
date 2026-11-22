@@ -66,7 +66,6 @@ describe("PoS Discount", () => {
         // is given back). Before the fix the fixed discount kept the sale sign and inflated
         // the refund to -39.50, making amount_paid != amount_total.
         const refund = store.addNewOrder();
-        refund.is_refund = true;
         await store.addLineToOrder({ product_tmpl_id: product, qty: -10 }, refund);
         await store.applyDiscount(5, "fixed", refund);
         expect(refund.priceIncl).toBe(-saleTotal); // -1145, not -1155

@@ -715,7 +715,7 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
                 'refund_orderline_ids': [],
                 'refunded_orderline_id': pos_order_record.lines[0].id,
             },
-        }], partner=self.partner_a, to_invoice=True, is_refund=True, shipping_date='2023-01-01')
+        }], partner=self.partner_a, to_invoice=True, shipping_date='2023-01-01')
         pos_order_refund_record = self.env['pos.order'].browse(pos_order_refund_id)
         # For both the normal refund and ship later + refund cases, we will create a picking with a negative quantity and validate it immediately.
         self.assertEqual(len(pos_order_refund_record.picking_ids), 1)

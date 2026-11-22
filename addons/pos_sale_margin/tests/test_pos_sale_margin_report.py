@@ -50,7 +50,6 @@ class TestPoSSaleMarginReport(TestPoSCommon):
         self.open_new_session()
         self.env['pos.order'].create({
             'session_id': self.pos_session.id,
-            'is_refund': True,
             'lines': [(0, 0, {
                 'name': "OL/0001",
                 'product_id': product.id,

@@ -82,7 +82,7 @@ test("showPaymentMethod", async () => {
     expect(comp.showPaymentMethod(card)).toBe(true);
 
     // The payment method must be available for the order
-    order.is_refund = true;
+    order.lines.map((line) => line.setQuantity(-line.qty));
     card.payment_interface = { supports_refunds: false };
     expect(comp.showPaymentMethod(card)).toBe(false);
 });
@@ -164,17 +164,21 @@ const getPaidOrder = async (store, { invoiced = false } = {}) => {
     return order;
 };
 
-const getRefundOrderFor = (store, originalOrder) => {
+const getRefundOrderFor = async (store, originalOrder) => {
     const refund = store.addNewOrder();
-    refund.is_refund = true;
     refund.refunded_order_id = originalOrder;
+    // A refund is an order with a negative total
+    await store.addLineToOrder(
+        { product_tmpl_id: store.models["product.template"].get(5), qty: -1 },
+        refund
+    );
     return refund;
 };
 
 test("invoice button stays enabled for a refund whose original order was not invoiced", async () => {
     const store = await setupPosEnv();
     const originalOrder = await getPaidOrder(store, { invoiced: false });
-    const refundOrder = getRefundOrderFor(store, originalOrder);
+    const refundOrder = await getRefundOrderFor(store, originalOrder);
 
     await mountWithCleanup(PaymentScreen, {
         props: { orderUuid: refundOrder.uuid },

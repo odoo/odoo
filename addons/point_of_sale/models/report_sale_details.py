@@ -113,7 +113,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             if line.order_id.config_id.module_pos_discount and line.product_id.id == line.order_id.config_id.discount_product_id.id:
                 continue
             currency = line.currency_id
-            if not line.order_id.is_refund_or_negative():
+            if not line.is_refund:
                 products_sold, taxes = self._get_products_and_taxes_dict(line, products_sold, taxes, currency)
             else:
                 refund_done, refund_taxes = self._get_products_and_taxes_dict(line, refund_done, refund_taxes, currency)
@@ -453,6 +453,9 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
         return line.currency_id.round(line.price_unit * line.qty * (100 - line.discount) / 100.0)
 
     def _get_products_and_taxes_dict(self, line, products, taxes, currency):
+        # Stored amounts are signed by the order direction: real sign, then the line's own bucket sign
+        real_sign = -1 if line.order_id.is_refund else 1
+        bucket_sign = real_sign * (-1 if line.is_refund else 1)
         key2 = (line.product_id, line.price_unit, line.discount)
         key1 = line.product_id.product_tmpl_id.pos_categ_ids[0].name if len(line.product_id.product_tmpl_id.pos_categ_ids) else _('Not Categorized')
         precision = self.env['decimal.precision'].precision_get('Product Unit')
@@ -460,7 +463,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
         products[key1].setdefault(key2, [0.0, 0.0, 0.0, ''])
         products[key1][key2][0] = round(products[key1][key2][0] + abs(line.qty), precision)
         products[key1][key2][1] += self._get_product_total_amount(line)
-        products[key1][key2][2] += line.price_subtotal
+        products[key1][key2][2] += line.price_subtotal * bucket_sign
 
         # Name of each combo products along with the combo
         if line.combo_line_ids:
@@ -479,10 +482,9 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
                 taxes['taxes'][tax_id]['base_amount'] += currency.round(base_amount)
         else:
             taxes['taxes'].setdefault(0, {'name': _('No Taxes'), 'tax_amount': 0.0, 'base_amount': 0.0})
-            taxes['taxes'][0]['base_amount'] += line.price_subtotal_incl
+            taxes['taxes'][0]['base_amount'] += line.price_subtotal_incl * bucket_sign
 
-        refund_sign = -1 if line.order_id.is_refund_or_negative() else 1
-        taxes['base_amount'] += line.price_subtotal * refund_sign
+        taxes['base_amount'] += line.price_subtotal * real_sign
         return products, taxes
 
     def _get_total_and_qty_per_category(self, categories):

@@ -987,7 +987,7 @@ class PosSession(models.Model):
         # Build the out_receipt lines. Returns pm_data_list so we can
         # create the matching account.payment / statement line records after posting.
         sale_orders, refund_orders = non_invoiced_orders.partitioned(
-            lambda order: not order.is_refund_or_negative() and order.amount_total >= 0,
+            lambda order: not order.is_refund,
         )
         sales_move = self._create_session_account_move(sale_orders)
         refunds_move = self._create_session_account_move(refund_orders)
@@ -1008,7 +1008,7 @@ class PosSession(models.Model):
         self.ensure_one()
         today = fields.Date.context_today(self)
         # All orders are refunds or not
-        move_type = 'out_refund' if orders[0].is_refund_or_negative() else 'out_invoice'
+        move_type = 'out_refund' if orders[0].is_refund else 'out_invoice'
 
         return {
             'move_type': move_type,
@@ -1047,7 +1047,7 @@ class PosSession(models.Model):
         if not orders:
             return self.env['account.move']
 
-        refund = orders[0].is_refund_or_negative()  # All orders are refunds or not
+        refund = orders[0].is_refund  # All orders are refunds or not
         AccountJournal = self.env['account.journal'].with_company(
             self.company_id,
         )
@@ -1067,7 +1067,10 @@ class PosSession(models.Model):
             ))
 
         # product_commands => invoice_line_ids (display_type=product, net price_unit)
-        lines = orders.with_context(hide_combo_title=True)._prepare_account_move_line_data()
+        lines = orders.with_context(
+            hide_combo_title=True,
+            pos_move_type='out_refund' if refund else 'out_invoice',
+        )._prepare_account_move_line_data()
         lines_commands = [Command.create(line['account.move.line']) for line in lines]
 
         payments = orders._prepare_account_move_line_data_for_payments()
@@ -1181,7 +1184,10 @@ class PosSession(models.Model):
         # Product lines balance is direction_sign * total excluded, reverse it
         sign = -original_move.direction_sign
         reverse_move_lines = []
-        line_data = order.with_context(hide_combo_title=True)._prepare_account_move_line_data()
+        line_data = order.with_context(
+            hide_combo_title=True,
+            pos_move_type=original_move.move_type,
+        )._prepare_account_move_line_data()
         for data in line_data:
             vals = data['account.move.line']
             if vals.get('display_type') != 'product':

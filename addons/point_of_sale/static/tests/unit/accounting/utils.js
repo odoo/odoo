@@ -88,7 +88,6 @@ export const getSingleProductOrder = async (
 
     await store.addLineToOrder({ product_tmpl_id: product }, order);
     if (options.isRefund) {
-        order.is_refund = true;
         order.lines.map((line) => line.setQuantity(-line.qty));
     }
     return order;

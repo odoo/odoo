@@ -193,7 +193,6 @@ test("Rounding refund HALF-UP 0.05 (cash only)", async () => {
     const { cashPm, cardPm } = prepareRoundingVals(store, 0.05, "HALF-UP", true);
     const order = await getFilledOrderForPriceCheck(store);
 
-    order.is_refund = true;
     order.lines.map((line) => line.setQuantity(-line.qty));
 
     expect(order.displayPrice).toBe(-52.54);
@@ -218,7 +217,6 @@ test("Rounding refund HALF-UP 0.05 (all methods)", async () => {
     const { cashPm, cardPm } = prepareRoundingVals(store, 0.05, "HALF-UP", false);
     const order = await getFilledOrderForPriceCheck(store);
 
-    order.is_refund = true;
     order.lines.map((line) => line.setQuantity(-line.qty));
 
     expect(order.displayPrice).toBe(-52.54);
@@ -243,7 +241,6 @@ test("Rounding refund UP 10 (cash only)", async () => {
     const { cashPm, cardPm } = prepareRoundingVals(store, 10, "UP", true);
     const order = await getFilledOrderForPriceCheck(store);
 
-    order.is_refund = true;
     order.lines.map((line) => line.setQuantity(-line.qty));
 
     expect(order.displayPrice).toBe(-52.54);
@@ -268,7 +265,6 @@ test("Rounding refund UP 10 (all methods)", async () => {
     const { cashPm, cardPm } = prepareRoundingVals(store, 10, "UP", false);
     const order = await getFilledOrderForPriceCheck(store);
 
-    order.is_refund = true;
     order.lines.map((line) => line.setQuantity(-line.qty));
 
     expect(order.displayPrice).toBe(-52.54);
@@ -293,7 +289,6 @@ test("Rounding refund DOWN 1 (cash only)", async () => {
     const { cashPm, cardPm } = prepareRoundingVals(store, 1, "DOWN", true);
     const order = await getFilledOrderForPriceCheck(store);
 
-    order.is_refund = true;
     order.lines.map((line) => line.setQuantity(-line.qty));
 
     expect(order.displayPrice).toBe(-52.54);
@@ -318,7 +313,6 @@ test("Rounding refund DOWN 1 (all methods)", async () => {
     const { cashPm, cardPm } = prepareRoundingVals(store, 1, "DOWN", false);
     const order = await getFilledOrderForPriceCheck(store);
 
-    order.is_refund = true;
     order.lines.map((line) => line.setQuantity(-line.qty));
 
     expect(order.displayPrice).toBe(-52.54);

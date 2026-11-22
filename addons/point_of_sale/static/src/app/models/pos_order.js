@@ -193,10 +193,6 @@ export class PosOrder extends PosOrderAccounting {
         return true;
     }
 
-    get isRefund() {
-        return this.is_refund === true;
-    }
-
     get isSelfOrder() {
         return this.source === "mobile" || this.source === "kiosk";
     }
@@ -393,7 +389,7 @@ export class PosOrder extends PosOrderAccounting {
     }
 
     isSaleDisallowed(values, options) {
-        return this.isRefund && (!values.qty || values.qty > 0);
+        return false;
     }
 
     getSelectedOrderline() {

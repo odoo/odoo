@@ -765,11 +765,7 @@ export class TicketScreen extends Component {
                 }
             }
         }
-        return (
-            emptyOrderForPartner ||
-            emptyOrder ||
-            this.pos.addNewOrder({ partner_id: partner, is_refund: true })
-        );
+        return emptyOrderForPartner || emptyOrder || this.pos.addNewOrder({ partner_id: partner });
     }
     _doesOrderHaveSoleItem(order) {
         const orderlines = order.getOrderlines();

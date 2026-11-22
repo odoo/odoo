@@ -15,7 +15,7 @@ export function comp(a, b, { precision = 1, method = "HALF-UP" } = {}) {
     return d < 0 ? LT : GT;
 }
 
-function invertMethod(method) {
+export function invertMethod(method) {
     return method === "UP"
         ? "DOWN"
         : method === "DOWN"

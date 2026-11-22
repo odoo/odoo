@@ -4,6 +4,7 @@ from collections import defaultdict
 from datetime import datetime
 from pprint import pformat
 from random import randrange
+from types import SimpleNamespace
 from uuid import uuid4
 from zoneinfo import ZoneInfo
 
@@ -26,6 +27,7 @@ from odoo.tools import (
 
 _logger = logging.getLogger(__name__)
 TRACKING_NUMBER_SEQUENCE_CODE = 'pos.order.tracking.number'
+INVERTED_ROUNDING_METHODS = {'UP': 'DOWN', 'DOWN': 'UP', 'HALF-UP': 'HALF-DOWN', 'HALF-DOWN': 'HALF-UP'}
 
 
 class PosOrder(models.Model):
@@ -354,7 +356,7 @@ class PosOrder(models.Model):
     currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', compute_sudo=True, store=True, digits=0, readonly=True,
         help='The rate of the currency to the currency of rate applicable at the date of the order')
 
-    is_refund = fields.Boolean(string='Is Refund', readonly=True, default=False)
+    is_refund = fields.Boolean(string='Is Refund', compute='_compute_is_refund', store=True)
     state = fields.Selection(
         [('draft', 'New'), ('cancel', 'Cancelled'), ('paid', 'Paid'), ('done', 'Posted')],
         'Status', readonly=True, copy=False, default='draft', index=True)
@@ -407,9 +409,6 @@ class PosOrder(models.Model):
 
     def ask_for_ticket_printing(self):
         self.config_id._notify("TICKET_PRINTING_REQUESTED", self.ids)
-
-    def is_refund_or_negative(self):
-        return self.is_refund or self.amount_total < 0
 
     @api.depends('account_move')
     def _compute_invoice_status(self):
@@ -477,7 +476,7 @@ class PosOrder(models.Model):
     @api.depends('lines.margin', 'is_total_cost_computed')
     def _compute_margin(self):
         for order in self:
-            sign = -1 if order.is_refund_or_negative() else 1
+            sign = -1 if order.is_refund else 1
             if order.is_total_cost_computed:
                 order.margin = sum(order.lines.mapped('margin'))
                 amount_untaxed = order.currency_id.round(sum(line.price_subtotal for line in order.lines)) * sign
@@ -494,7 +493,8 @@ class PosOrder(models.Model):
 
     def _get_order_tax_totals(self):
         self.ensure_one()
-        base_lines = self.lines._prepare_base_lines_for_taxes_computation()
+        # Real signed quantities: totals are negative for a refund
+        base_lines = self.lines.with_context(pos_move_type='out_invoice')._prepare_base_lines_for_taxes_computation()
         self.env['account.tax']._add_tax_details_in_base_lines(base_lines, self.company_id)
         self.env['account.tax']._round_base_lines_tax_details(base_lines, self.company_id)
 
@@ -505,8 +505,14 @@ class PosOrder(models.Model):
             payment_methods = payment_methods.filtered_domain([
                 ("payment_method_id.type", "in", ["cash"])
             ])
-        if payment_methods:
-            cash_rounding = self.config_id.rounding_method
+        rounding = self.config_id.rounding_method
+        if payment_methods and rounding:
+            total = sum(base_line['tax_details']['raw_total_included_currency'] for base_line in base_lines)
+            cash_rounding = SimpleNamespace(
+                strategy=rounding.strategy,
+                rounding=rounding.rounding,
+                rounding_method=self._get_cash_rounding_method(total),
+            )
 
         return self.env['account.tax']._get_tax_totals_summary(
             base_lines=base_lines,
@@ -515,18 +521,24 @@ class PosOrder(models.Model):
             cash_rounding=cash_rounding,
         )
 
+    @api.depends('amount_total')
+    def _compute_is_refund(self):
+        for order in self:
+            order.is_refund = order.amount_total < 0
+
+    @api.depends('lines', 'payment_ids')
     def _compute_prices(self):
         for order in self:
             if not order.currency_id:
                 raise UserError(_("You can't: create a pos order from the backend interface, or unset the pricelist, or create a pos.order in a python test with Form tool, or edit the form view in studio if no PoS order exist"))
             tax_totals = order._get_order_tax_totals()
             rounding_base_amount_currency = tax_totals.get('cash_rounding_base_amount_currency', 0)
+            # Base lines carry their own sign, totals are already negative for a refund
             amount_total = tax_totals['total_amount_currency'] - rounding_base_amount_currency
-            refund_factor = -1 if order.is_refund_or_negative() else 1
             order.amount_paid = sum(payment.amount for payment in order.payment_ids)
             order.amount_return = -sum((payment.amount < 0 and payment.amount) or 0 for payment in order.payment_ids)
-            order.amount_tax = refund_factor * tax_totals['tax_amount_currency']
-            order.amount_total = refund_factor * amount_total
+            order.amount_tax = tax_totals['tax_amount_currency']
+            order.amount_total = amount_total
             order.amount_difference = order.amount_paid - amount_total
 
     @api.depends('lines.is_edited', 'has_deleted_line')
@@ -695,12 +707,13 @@ class PosOrder(models.Model):
         if not prefix:
             prefix = session.config_id.name
         suffix = f" - {suffix}" if suffix else ''
-        return f"{prefix} - {last_reference_part}{suffix}"
+        name = f"{prefix} - {last_reference_part}{suffix}"
+        if self.is_refund:
+            name = f"{name} - REFUND"
+        return name
 
     def _compute_order_name(self, session=None):
         session = session or self.session_id
-        if self.refunded_order_id.exists():
-            return _('%(refunded_order)s REFUND', refunded_order=self.refunded_order_id.name)
         return self._get_order_name_from_pos_reference(session)
 
     def get_reference_last_part(self):
@@ -790,15 +803,27 @@ class PosOrder(models.Model):
             amount_total = -self.refunded_order_id.amount_paid
         return float_is_zero(self._get_rounded_amount(amount_total) - self.amount_paid, precision_rounding=self.currency_id.rounding)
 
+    def _get_cash_rounding_method(self, amount):
+        """ Rounding method to apply on ``amount``, inverted when the amount is negative so that
+        a refund is rounded the other way than a sale (same as ``asymmetricRound`` in the PoS).
+        """
+        method = self.config_id.rounding_method.rounding_method
+        if amount < 0:
+            return INVERTED_ROUNDING_METHODS.get(method, method)
+        return method
+
+    def _cash_round(self, amount):
+        rounding = self.config_id.rounding_method
+        return float_round(amount, precision_rounding=rounding.rounding, rounding_method=self._get_cash_rounding_method(amount))
+
     def _get_rounded_amount(self, amount, force_round=False):
         if self.config_id.cash_rounding:
-            rounding_method = self.config_id.rounding_method
             if force_round or not self.config_id.only_round_cash_method:
-                amount = float_round(amount, precision_rounding=rounding_method.rounding, rounding_method=rounding_method.rounding_method)
+                amount = self._cash_round(amount)
             elif any(p.payment_method_id.type == 'cash' for p in self.payment_ids):
                 # Only round the residual settled in cash: non-cash payments pay their exact share.
                 non_cash_amount = sum(p.amount for p in self.payment_ids if p.payment_method_id.type != 'cash')
-                amount = non_cash_amount + float_round(amount - non_cash_amount, precision_rounding=rounding_method.rounding, rounding_method=rounding_method.rounding_method)
+                amount = non_cash_amount + self._cash_round(amount - non_cash_amount)
         currency = self.currency_id
         return currency.round(amount) if currency else amount
 
@@ -834,7 +859,7 @@ class PosOrder(models.Model):
            and not any(p.payment_method_id.type == 'cash' for p in self.payment_ids)):
             total = self.amount_total
         else:
-            total = float_round(self.amount_total, precision_rounding=self.config_id.rounding_method.rounding, rounding_method=self.config_id.rounding_method.rounding_method)
+            total = self._cash_round(self.amount_total)
 
         isPaid = float_is_zero(total - self.amount_paid, precision_rounding=self.currency_id.rounding)
 
@@ -1434,6 +1459,7 @@ class PosOrder(models.Model):
                         'extra_tax_data': self.env['account.tax']._export_base_line_extra_tax_data(base_line),
                         'product_id': product.id,
                         'product_uom_id': base_line['uom_id'].id,
+                        'is_refund': base_line['is_refund'],
                     },
                     'metadata': {
                         'line': line,
@@ -1470,9 +1496,6 @@ class PosOrder(models.Model):
         to create move lines for sales and refunds.
         - Session closing: lines are aggregated by taxes
         - Order invoice: no aggregation, each line is a separate entry
-
-        The 'pos_invoice_group_move_type' context key, when set, signs lines by the group's
-        move_type instead of each order's own direction (see _prepare_base_lines_for_taxes_computation).
         """
         AccountTax = self.env['account.tax']
         company = self.company_id
@@ -1664,7 +1687,7 @@ class PosOrder(models.Model):
         is_pay_later = any(p.payment_method_id.type == 'pay_later' for p in self.payment_ids)
         invoice_payment_term_id = partner_term.id if partner_term and is_pay_later else False
         lines = []
-        for order in self.with_context(pos_invoice_group_move_type=move_type):
+        for order in self.with_context(pos_move_type=move_type):
             lines += order._prepare_account_move_line_data(False)
         line_commands = [Command.create(line['account.move.line']) for line in lines]
         users = self.user_id.ids
