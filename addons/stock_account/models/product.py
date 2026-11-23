@@ -39,74 +39,83 @@ will update the cost of every lot/serial number in stock."),
             }
 
     def write(self, vals):
-        impacted_templates = {}
-        move_vals_list = []
-        Product = self.env['product.product']
-        SVL = self.env['stock.valuation.layer']
+        impacted_templates_by_company = defaultdict(dict)
+        move_vals_list_by_company = defaultdict(list)
+        companies = self.env['res.company']
+        if 'categ_id' in vals or 'lot_valuated' in vals:
+            companies = self.env.user.company_ids
+        for company in companies:
+            product_templates = self.filtered(
+                lambda t: not t.company_id or t.company_id == company
+            ).with_context(allowed_company_ids=company.ids)
+            Product = self.env['product.product'].with_context(allowed_company_ids=company.ids)
+            SVL = self.env['stock.valuation.layer'].with_context(allowed_company_ids=company.ids)
 
-        if 'categ_id' in vals:
-            # When a change of category implies a change of cost method, we empty out and replenish
-            # the stock.
-            new_product_category = self.env['product.category'].browse(vals.get('categ_id'))
+            if 'categ_id' in vals:
+                # When a change of category implies a change of cost method, we empty out and replenish
+                # the stock.
+                new_product_category = self.env['product.category'].with_context(allowed_company_ids=company.ids).browse(vals.get('categ_id'))
 
-            for product_template in self:
-                product_template = product_template.with_company(product_template.company_id)
-                valuation_impacted = False
-                if product_template.cost_method != new_product_category.property_cost_method:
-                    if product_template.lot_valuated and not 'lot_valuated' in vals\
-                            and any(p.stock_valuation_layer_ids for p in product_template.product_variant_ids):
-                        raise UserError(_("You cannot change the product category of a product valuated by lot/serial number."))
-                    valuation_impacted = True
-                if product_template.valuation != new_product_category.property_valuation:
-                    valuation_impacted = True
-                if valuation_impacted is False:
-                    continue
+                for product_template in product_templates:
+                    valuation_impacted = False
+                    if product_template.cost_method != new_product_category.property_cost_method:
+                        if product_template.lot_valuated and not 'lot_valuated' in vals\
+                                and any(p.stock_valuation_layer_ids for p in product_template.product_variant_ids):
+                            raise UserError(_("You cannot change the product category of a product valuated by lot/serial number."))
+                        valuation_impacted = True
+                    if product_template.valuation != new_product_category.property_valuation:
+                        valuation_impacted = True
+                    if valuation_impacted is False:
+                        continue
 
-                # Empty out the stock with the current cost method.
-                description = _(
-                    "Due to a change of product category (from %(old_category)s to %(new_category)s), the costing method has changed for product %(product)s: from %(old_method)s to %(new_method)s.",
-                    old_category=product_template.categ_id.display_name,
-                    new_category=new_product_category.display_name,
-                    product=product_template.display_name,
-                    old_method=product_template.cost_method,
-                    new_method=new_product_category.property_cost_method)
-                out_svl_vals_list, products_orig_quantity_svl, products = Product\
-                    ._svl_empty_stock(description, product_template=product_template)
-                out_stock_valuation_layers = SVL.create(out_svl_vals_list)
-                if product_template.valuation == 'real_time':
-                    move_vals_list += Product.with_context(products_orig_quantity_svl=products_orig_quantity_svl)._svl_empty_stock_am(out_stock_valuation_layers)
-                impacted_templates[product_template] = (products, description, products_orig_quantity_svl)
-
-        if 'lot_valuated' in vals:
-            for tmpl in self:
-                if tmpl.lot_valuated != vals['lot_valuated'] and tmpl not in impacted_templates:
-                    description = _("Updating lot valuation for product %s.", tmpl.display_name)
+                    # Empty out the stock with the current cost method.
+                    description = _(
+                        "Due to a change of product category (from %(old_category)s to %(new_category)s), the costing method has changed for product %(product)s: from %(old_method)s to %(new_method)s.",
+                        old_category=product_template.categ_id.display_name,
+                        new_category=new_product_category.display_name,
+                        product=product_template.display_name,
+                        old_method=product_template.cost_method,
+                        new_method=new_product_category.property_cost_method)
                     out_svl_vals_list, products_orig_quantity_svl, products = Product\
-                        ._svl_empty_stock(description, product_template=tmpl)
+                        ._svl_empty_stock(description, product_template=product_template)
                     out_stock_valuation_layers = SVL.create(out_svl_vals_list)
-                    if tmpl.valuation == 'real_time':
-                        move_vals_list += Product._svl_empty_stock_am(out_stock_valuation_layers)
-                    impacted_templates[tmpl] = (products, description, products_orig_quantity_svl)
+                    if product_template.valuation == 'real_time':
+                        move_vals_list_by_company[company] += Product.with_context(products_orig_quantity_svl=products_orig_quantity_svl)._svl_empty_stock_am(out_stock_valuation_layers)
+                    impacted_templates_by_company[company][product_template] = (products, description, products_orig_quantity_svl)
+
+            if 'lot_valuated' in vals:
+                for tmpl in product_templates:
+                    if tmpl.lot_valuated != vals['lot_valuated'] and tmpl not in impacted_templates_by_company[company]:
+                        description = _("Updating lot valuation for product %s.", tmpl.display_name)
+                        out_svl_vals_list, products_orig_quantity_svl, products = Product\
+                            ._svl_empty_stock(description, product_template=tmpl)
+                        out_stock_valuation_layers = SVL.create(out_svl_vals_list)
+                        if tmpl.valuation == 'real_time':
+                            move_vals_list_by_company[company] += Product._svl_empty_stock_am(out_stock_valuation_layers)
+                        impacted_templates_by_company[company][tmpl] = (products, description, products_orig_quantity_svl)
 
         res = super(ProductTemplate, self).write(vals)
 
-        for product_template, (products, description, products_orig_quantity_svl) in impacted_templates.items():
-            products = products.exists()
-            if products:
-                # Replenish the stock with the new cost method.
-                in_svl_vals_list = products._svl_replenish_stock(description, products_orig_quantity_svl)
-                in_stock_valuation_layers = SVL.create(in_svl_vals_list)
-                if product_template.valuation == 'real_time':
-                    move_vals_list += Product._svl_replenish_stock_am(in_stock_valuation_layers)
-                products._update_lots_standard_price()
+        for company in companies:
+            Product = self.env['product.product'].with_context(allowed_company_ids=company.ids)
+            SVL = self.env['stock.valuation.layer'].with_context(allowed_company_ids=company.ids)
+            for product_template, (products, description, products_orig_quantity_svl) in impacted_templates_by_company[company].items():
+                products = products.exists()
+                if products:
+                    # Replenish the stock with the new cost method.
+                    in_svl_vals_list = products._svl_replenish_stock(description, products_orig_quantity_svl)
+                    in_stock_valuation_layers = SVL.create(in_svl_vals_list)
+                    if product_template.valuation == 'real_time':
+                        move_vals_list_by_company[company] += Product._svl_replenish_stock_am(in_stock_valuation_layers)
+                    products._update_lots_standard_price()
 
-        # Check access right
-        if move_vals_list and not self.env['stock.valuation.layer'].has_access('read'):
-            raise UserError(_("The action leads to the creation of a journal entry, for which you don't have the access rights."))
-        # Create the account moves.
-        if move_vals_list:
-            account_moves = self.env['account.move'].sudo().create(move_vals_list)
-            account_moves._post()
+            # Check access right
+            if move_vals_list_by_company[company] and not self.env['stock.valuation.layer'].has_access('read'):
+                raise UserError(_("The action leads to the creation of a journal entry, for which you don't have the access rights."))
+            # Create the account moves.
+            if move_vals_list_by_company[company]:
+                account_moves = self.env['account.move'].with_context(allowed_company_ids=company.ids).sudo().create(move_vals_list_by_company[company])
+                account_moves._post()
         return res
 
     # -------------------------------------------------------------------------
@@ -743,6 +752,7 @@ will update the cost of every lot/serial number in stock."),
         lots = self.env['stock.quant']._read_group([
             ('product_id', 'in', self.product_tmpl_id.product_variant_ids.ids),
             ('lot_id', '!=', False),
+            ('company_id', '=', self.env.company.id),
             ], ['product_id', 'location_id', 'lot_id'], ['quantity:sum'],
             having=[('quantity:sum', '>', 0)])
         for product, location, lot, qty in lots:
