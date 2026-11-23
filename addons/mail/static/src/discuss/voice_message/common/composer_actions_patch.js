@@ -2,18 +2,18 @@ import { registerComposerAction } from "@mail/core/common/composer_actions";
 import { _t } from "@web/core/l10n/translation";
 
 registerComposerAction("voice-start", {
-    condition: ({ composer, owner }) =>
+    condition: ({ composer, voiceRecorder }) =>
         composer.targetThread?.channel &&
-        owner.voiceRecorder &&
-        !owner.voiceRecorder?.recording &&
+        voiceRecorder() &&
+        !voiceRecorder().recording &&
         !composer.voiceAttachment,
     icon: "mic",
     name: _t("Voice Message"),
-    onSelected: ({ owner }) => owner.voiceRecorder.onClick(),
+    onSelected: ({ voiceRecorder }) => voiceRecorder().onClick(),
     sequence: 10,
 });
 registerComposerAction("voice-recording", {
-    condition: ({ composer, owner }) =>
-        composer.targetThread?.channel && owner.voiceRecorder?.recording,
+    condition: ({ composer, voiceRecorder }) =>
+        composer.targetThread?.channel && voiceRecorder()?.recording,
     sequenceQuick: 10,
 });

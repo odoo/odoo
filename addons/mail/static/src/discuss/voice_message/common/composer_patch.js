@@ -14,6 +14,12 @@ patch(Composer.prototype, {
             { rootRef: this.rootRef }
         );
     },
+    get composerActionsParams() {
+        return {
+            ...super.composerActionsParams,
+            voiceRecorder: () => this.voiceRecorder,
+        };
+    },
     /** @type {import("@mail/core/common/action_list").GetActionComponent} */
     getActionComponent(params) {
         if (params.action.id === "voice-recording") {

@@ -1,4 +1,3 @@
-import { signal } from "@odoo/owl";
 import { CreatePollDialog } from "@mail/core/common/create_poll_dialog";
 
 import { EmojiPicker, useEmojiPickerStoreScroll } from "@web/core/emoji_picker/emoji_picker";
@@ -18,12 +17,30 @@ import { useService } from "@web/core/utils/hooks";
 
 export const composerActionsRegistry = registry.category("mail.composer/actions");
 
-/** @typedef {import("@odoo/owl").Component} Component */
 /** @typedef {import("models").Composer} Composer */
 /**
- * @typedef {Object} ComposerActionSpecificParams
- * @property {Composer} composer
+ * Params the composer gives to its actions. Modules add more by patching
+ * `Composer.composerActionsParams`. A param must not reuse a key of `Action.params` (e.g.
+ * `action`, `store`), as it would replace it. A value that can change, or is only set after
+ * `setup`, is given as a function so that actions always read its current value.
+ *
+ * @typedef {Object} ComposerActionComponentParams
+ * @property {(emoji: string) => void} addEmoji
+ * @property {() => boolean} allowUpload
+ * @property {() => boolean} areAllActionsDisabled
+ * @property {() => "message"|"note"|false|undefined} composerType
+ * @property {import("@odoo/owl").Signal<HTMLButtonElement>} fileUploaderRef
+ * @property {(ev: MouseEvent) => void} insertCannedResponse
+ * @property {() => boolean} isFullComposerOpen
+ * @property {() => boolean} isSendButtonDisabled
+ * @property {() => void} openFullComposer
+ * @property {(body: string, postData?: Object) => Promise} postMessage posts `body` instead of
+ *   the content of the composer, e.g. a GIF
+ * @property {() => import("@html_editor/editor").Editor|undefined} readyEditor once attached
+ * @property {() => Promise} sendMessage
+ * @property {() => boolean} showFullComposer
  */
+/** @typedef {{composer: Composer} & ComposerActionComponentParams} ComposerActionSpecificParams */
 /** @typedef {import("@mail/core/common/action").ActionParams<ComposerAction, UseComposerActions_Def> & ComposerActionSpecificParams} ComposerActionParams */
 /** @typedef {import("@mail/core/common/action").ActionDefinition<ComposerActionParams, ComposerAction>} ComposerActionDefinition */
 
@@ -45,42 +62,34 @@ export function describeComposerActionGroup(id, definition) {
     );
 }
 
-export function pickerGetAnchor({ action, owner }) {
-    if (action.sequenceQuick) {
-        return owner.quickActionsRef();
-    } else {
-        return owner.moreActionsRef() ?? owner.extraActionsRef();
-    }
-}
-
 registerComposerAction("send-message", {
     condition: ({ ancestors, composer, store }) =>
         (store.ui.isSmall() && composer.message) || (!ancestors.inChatter && !composer.message),
-    disabledCondition: ({ owner }) => owner.isSendButtonDisabled,
+    disabledCondition: ({ isSendButtonDisabled }) => isSendButtonDisabled(),
     hasBtnBg: true,
     icon: "send",
-    isActive: ({ owner }) => !owner.isSendButtonDisabled,
-    name: ({ composer, owner }) =>
+    isActive: ({ isSendButtonDisabled }) => !isSendButtonDisabled(),
+    name: ({ composer, composerType }) =>
         composer.message
             ? _t("Save editing")
             : composer.targetThread?.channel
             ? _t("Send")
-            : owner.props.type === "note"
+            : composerType() === "note"
             ? _t("Log")
             : _t("Send"),
-    onSelected: ({ owner }) => owner.sendMessage(),
+    onSelected: ({ sendMessage }) => sendMessage(),
     sequenceQuick: 30,
     tags: ({ action }) => (action.isActive ? ACTION_TAGS.PRIMARY : undefined),
 });
 registerComposerAction("add-emoji", {
-    disabledCondition: ({ owner }) => owner.areAllActionsDisabled,
+    disabledCondition: ({ areAllActionsDisabled }) => areAllActionsDisabled(),
     icon: "sentiment_satisfied",
     name: _t("Add Emojis"),
     panel: {
         component: EmojiPicker,
         name: _t("Emoji"),
-        props: ({ action, owner }) => ({
-            onSelect: (emoji) => owner.addEmoji(emoji),
+        props: ({ action, addEmoji }) => ({
+            onSelect: (emoji) => addEmoji(emoji),
             onClose: () => action.closePanel(),
             storeScroll: action.emojiStoreScroll,
         }),
@@ -93,46 +102,45 @@ registerComposerAction("add-emoji", {
     sequenceQuick: 20,
 });
 registerComposerAction("upload-files", {
-    disabledCondition: ({ owner }) => owner.areAllActionsDisabled,
-    condition: ({ owner }) => owner.allowUpload,
+    disabledCondition: ({ areAllActionsDisabled }) => areAllActionsDisabled(),
+    condition: ({ allowUpload }) => allowUpload(),
     icon: "attach_file",
     name: _t("Attach Files"),
-    onSelected: ({ composer, owner }) => {
-        owner.fileUploaderRef()?.click();
+    onSelected: ({ composer, fileUploaderRef }) => {
+        fileUploaderRef()?.click();
         composer.autofocus++;
     },
-    setup: ({ owner }) => (owner.fileUploaderRef = signal.ref()),
     sequence: 20,
 });
 registerComposerAction("open-full-composer", {
-    condition: ({ ancestors, composer, owner }) =>
-        owner.props.showFullComposer &&
+    condition: ({ ancestors, composer, showFullComposer }) =>
+        showFullComposer() &&
         composer.targetThread &&
         !composer.targetThread.channel &&
         !ancestors.inFrontendPortalChatter,
-    hasBtnBg: ({ composer, owner }) =>
-        (composer.restoredFromFullComposer && !owner.state.isFullComposerOpen) || undefined,
+    hasBtnBg: ({ composer, isFullComposerOpen }) =>
+        (composer.restoredFromFullComposer && !isFullComposerOpen()) || undefined,
     hotkey: "shift+c",
     icon: "expand_content",
-    isActive: ({ composer, owner }) =>
-        (composer.restoredFromFullComposer && !owner.state.isFullComposerOpen) || undefined,
+    isActive: ({ composer, isFullComposerOpen }) =>
+        (composer.restoredFromFullComposer && !isFullComposerOpen()) || undefined,
     name: ({ composer }) =>
         composer.message ? _t("Edit in Full Composer") : _t("Open Full Composer"),
-    onSelected: ({ owner }) => owner.onClickFullComposer(),
+    onSelected: ({ openFullComposer }) => openFullComposer(),
     sequence: 30,
-    tags: ({ composer, owner }) =>
-        composer.restoredFromFullComposer && !owner.state.isFullComposerOpen
+    tags: ({ composer, isFullComposerOpen }) =>
+        composer.restoredFromFullComposer && !isFullComposerOpen()
             ? [ACTION_TAGS.PRIMARY]
             : undefined,
 });
 registerComposerAction("add-canned-response", {
-    condition: ({ composer, owner, store }) =>
+    condition: ({ composer, readyEditor, store }) =>
         store.hasCannedResponses &&
         composer.targetThread &&
-        Boolean(owner.readyEditor()?.shared[CannedResponseSuggestionPlugin.id]),
+        Boolean(readyEditor()?.shared[CannedResponseSuggestionPlugin.id]),
     icon: "article",
     name: _t("Insert Canned Response"),
-    onSelected: ({ owner }, ev) => owner.onClickInsertCannedResponse(ev),
+    onSelected: ({ insertCannedResponse }, ev) => insertCannedResponse(ev),
     sequence: 5,
 });
 registerComposerAction("create-poll", {
@@ -144,29 +152,33 @@ registerComposerAction("create-poll", {
         }
         return ["channel", "group"].includes(composer.targetThread?.channel?.channel_type);
     },
-    onSelected: ({ action, composer, owner }) => {
-        owner.dialogService.add(
+    onSelected: ({ action, composer }) => {
+        action.dialogService.add(
             CreatePollDialog,
             { thread: composer.targetThread },
             { rootRef: action.actionRef }
         );
     },
-    setup: ({ owner }) => {
-        owner.dialogService = useService("dialog");
+    setup: ({ action }) => {
+        action.dialogService = useService("dialog");
     },
 });
 
 export class ComposerAction extends Action {
     /** @type {() => Composer} */
     composerFn;
+    /** @type {ComposerActionComponentParams} */
+    componentParams;
 
     /**
      * @param {Object} param0
-     * @param {Composer|() => Composer} composer
+     * @param {Composer|() => Composer} param0.composer
+     * @param {ComposerActionComponentParams} [param0.componentParams]
      */
-    constructor({ composer }) {
+    constructor({ composer, componentParams }) {
         super(...arguments);
         this.composerFn = typeof composer === "function" ? composer : () => composer;
+        this.componentParams = componentParams ?? {};
     }
 
     /**
@@ -181,21 +193,27 @@ export class ComposerAction extends Action {
     }
 
     get params() {
-        return Object.assign(super.params, { composer: this.composerFn() });
+        return Object.assign(super.params, this.componentParams, { composer: this.composerFn() });
     }
 }
 
 /** @typedef {UseActions<ComposerActionParams, ComposerAction>} UseComposerActions_Def */
 class UseComposerActions extends UseActions {
     ActionClass = ComposerAction;
+
+    /** Takes the same flat params as `useComposerActions`, which the composer gives to both. */
+    more({ composer, rootRef, ...componentParams } = {}, data, id) {
+        return super.more({ composer, componentParams, rootRef }, data, id);
+    }
 }
 
 /**
- * @param {import("@mail/core/common/action").ActionRootRefParam & {composer?: Composer|() => Composer}} [params0={}]
+ * @param {import("@mail/core/common/action").ActionRootRefParam & {composer?: Composer|() => Composer} & ComposerActionComponentParams} params0
  * @returns {UseComposerActions_Def}
  */
-export function useComposerActions({ composer, rootRef } = {}) {
+export function useComposerActions({ composer, rootRef, ...componentParams } = {}) {
     return useAction(composerActionsRegistry, UseComposerActions, ComposerAction, {
+        componentParams,
         composer,
         rootRef,
     });

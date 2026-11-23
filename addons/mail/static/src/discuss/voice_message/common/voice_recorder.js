@@ -51,7 +51,7 @@ export class VoiceRecorder extends Component {
 export class VoiceRecorderAction extends BaseAction {
     static components = { VoiceRecorder };
     static template = xml`
-        <VoiceRecorder composer="this.action.params.composer" state="this.action.owner.voiceRecorder"/>
+        <VoiceRecorder composer="this.action.params.composer" state="this.action.params.voiceRecorder()"/>
     `;
 }
 
