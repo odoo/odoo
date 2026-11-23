@@ -3022,6 +3022,32 @@ class TestBoM(TestMrpCommon):
                 bom_line.product_id = self.product_5
             bom_form.save()
 
+    def test_bom_cycle_on_variant_loop(self):
+        """
+        Test that BoM creation succeeds when the component's BoM uses a different
+        variant of the original product template.
+
+        """
+        bom_1, bom_2 = self.env['mrp.bom'].create([
+            {
+                'product_tmpl_id': self.product_7_template.id,
+                'bom_line_ids': [Command.create({
+                    'product_id': self.product_1.id,
+                    'bom_product_template_attribute_value_ids':
+                        [Command.set(self.product_7_attr1_v1.ids)],
+                })],
+            },
+            {
+                'product_tmpl_id': self.product_1.product_tmpl_id.id,
+                'bom_line_ids': [Command.create({
+                    'product_id': self.product_7_2.id,
+                })],
+            },
+        ])
+
+        self.assertEqual(bom_1.subassembly_count, 1)
+        self.assertEqual(bom_2.subassembly_count, 1)
+
 
 class TestTourBoM(HttpCase):
     @classmethod
