@@ -123,6 +123,27 @@ class TestWebsiteSaleProductPage(HttpCase, ProductVariantsCommon, WebsiteSaleCom
             },
         )
 
+    def test_only_reviews_shown_in_product_rating_section(self):
+        product = self.product_template_sofa
+        admin = self.env.ref("base.user_admin")
+        self.env["mail.message"].create({
+            "model": "product.template",
+            "res_id": product.id,
+            "body": "I want to play GTA 6 rn",
+            "author_id": admin.partner_id.id,
+            "message_type": "comment",
+            "subtype_id": self.env.ref("mail.mt_comment").id,
+        })
+
+        admin.write({
+            "password": "password"
+        })
+        self._enable_reviews()
+        self.authenticate(admin.login, "password")
+        self.assertTrue(self._post_review(product, admin))
+
+        self.start_tour(product.website_url, "website_sale_product_reviews_has_only_ratings", login=None)
+
     def test_product_unpublished_without_category(self):
         """Test that products created from frontend are unpublished without category"""
         self.start_tour("/", 'product_unpublished_without_category', login="admin")
