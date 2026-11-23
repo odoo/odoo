@@ -1,5 +1,5 @@
 import { reactive } from "@odoo/owl";
-import { Model } from "@odoo/o-spreadsheet";
+import { Model, ModelCreationError } from "@odoo/o-spreadsheet";
 import { registry } from "@web/core/registry";
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
 import { createDefaultCurrency } from "@spreadsheet/currency/helpers";
@@ -27,6 +27,7 @@ export const Status = {
  * @property {string} status
  * @property {Model} [model]
  * @property {Error} [error]
+ * @property {string} [errorMessage] user-facing message, always set when status is Error
  *
  * @typedef DashboardGroupData
  * @property {number} id
@@ -230,6 +231,12 @@ export class DashboardLoader {
         } catch (error) {
             dashboard.error = error;
             dashboard.status = Status.Error;
+            if (error instanceof ModelCreationError) {
+                // known error: its message is displayed in the dashboard
+                dashboard.errorMessage = error.message;
+                return;
+            }
+            dashboard.errorMessage = _t("An error occured while loading the dashboard");
             throw error;
         }
     }

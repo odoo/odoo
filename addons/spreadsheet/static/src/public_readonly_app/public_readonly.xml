@@ -19,7 +19,10 @@
                 <div><t t-out="filter.value"/></div>
             </div>
         </div>
-        <Spreadsheet model="model"/>
+        <div t-if="state.errorMessage" class="o-public-spreadsheet-error alert alert-danger m-3 align-self-start" role="alert">
+            <t t-esc="state.errorMessage"/>
+        </div>
+        <Spreadsheet t-else="" model="model"/>
     </t>
 
 </templates>
