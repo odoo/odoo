@@ -1006,6 +1006,11 @@ class TestApiKeys(UsersCommonCase):
             self.env['res.users.apikeys'].with_user(SUPERUSER_ID).generate(
                 self.api_key, 'scope', 'Another key', self.tomorrow)
 
+    def test_generate_apikey_updates_api_key_ids(self):
+        self.assertEqual(len(self.user_internal.api_key_ids), 1)  # load the keys in cache
+        self.env['res.users.apikeys'].with_user(self.user_internal)._generate('scope', 'Another key', self.tomorrow)
+        self.assertEqual(len(self.user_internal.api_key_ids), 2)
+
 
 class TestResUsersForm(TransactionCase):
     def test_create_res_users(self):
