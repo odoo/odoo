@@ -55,6 +55,11 @@ $
 """, re.VERBOSE)
 
 
+def test_key(test_id):
+    r = _TEST_ID.match(test_id)
+    return '%(module)s.%(class)s.%(method)s' % r if r else test_id
+
+
 class CallStat:
     def __init__(self):
         self.count = 0
@@ -99,6 +104,7 @@ class OdooTestResult(object):
         self._soft_fail = False
         self.had_failure = False
         self.stats = collections.defaultdict(Stat)
+        self.sub_stats = collections.defaultdict(Stat)
         self.call_stats = collections.defaultdict(CallStat)
         self.global_report = global_report
         self.shouldStop = self.global_report and self.global_report.shouldStop or False
@@ -241,6 +247,8 @@ class OdooTestResult(object):
         self.testsRun += other.testsRun
         self.skipped += other.skipped
         self.stats.update(other.stats)
+        for key, value in other.sub_stats.items():
+            self.sub_stats[key] += value
 
     def log(self, level, msg, *args, test=None, exc_info=None, extra=None, stack_info=False, caller_infos=None):
         """
@@ -286,9 +294,10 @@ class OdooTestResult(object):
                 stats_tree['%(module)s.%(class)s.%(method)s' % r] += stat
 
         if details:
+            detailed_stats = {**stats_tree, **self.sub_stats}
             stats_logger.debug('Detailed Tests Report:\n%s', ''.join(
                 f'\t{test}: {stats.time:.2f}s {stats.queries} queries\n'
-                for test, stats in sorted(stats_tree.items())
+                for test, stats in sorted(detailed_stats.items())
             ))
         else:
             for module, stat in sorted(stats_tree.items()):
