@@ -4,6 +4,7 @@ from base64 import b64encode
 from datetime import datetime
 from freezegun import freeze_time
 from requests import PreparedRequest, Response, Session
+from unittest.mock import patch
 from urllib import parse
 
 from odoo.tests.common import tagged
@@ -213,3 +214,9 @@ class TestPeppolMessageResponse(TestPeppolMessage):
 
         all_peppol_responses = self.env['account.peppol.response'].search([])
         self.assertEqual(len(all_peppol_responses), 1)
+
+    def test_check_partner_endpoint_unchanged_documents(self):
+        self.valid_partner.button_account_peppol_check_partner_endpoint()
+        self.assertTrue(self.valid_partner.peppol_supported_documents)
+        with patch.object(self.registry['res.partner'], 'write', side_effect=AssertionError("The partner should not be written again")):
+            self.valid_partner._peppol_fill_participant_supported_documents()
