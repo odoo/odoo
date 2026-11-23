@@ -18,6 +18,11 @@ from sales order. It adds sales name and sales Reference on production order.
         'views/sale_portal_templates.xml',
         'security/ir.access.csv',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'sale_mrp/static/src/**/*',
+        ],
+    },
     'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

@@ -7,6 +7,31 @@ from odoo import api, models, fields
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
+    manufacturing_bom_id = fields.Many2one(
+        'mrp.bom',
+        compute='_compute_manufacturing_bom_id',
+    )
+
+    @api.depends('is_mto', 'product_id', 'route_ids', 'warehouse_id', 'company_id')
+    def _compute_manufacturing_bom_id(self):
+        self.manufacturing_bom_id = False
+        manufactured_lines = self.env['sale.order.line']
+        for line in self.filtered('is_mto'):
+            routes = line.route_ids or (line.product_id.route_ids + line.product_id.categ_id.total_route_ids)
+            # Manufacture is a warehouse route. sudo needed in case cross-company warehouse
+            routes = routes.sudo() | line.warehouse_id.sudo().route_ids
+            if any(rule.action == 'manufacture' for rule in routes.rule_ids):
+                manufactured_lines |= line
+
+        for company, lines in manufactured_lines.grouped('company_id').items():
+            boms_by_product = self.env['mrp.bom']._bom_find(
+                lines.product_id,
+                company_id=company.id,
+                bom_type='normal',
+            )
+            for line in lines:
+                line.manufacturing_bom_id = boms_by_product[line.product_id]
+
     @api.depends('product_uom_qty', 'qty_delivered', 'product_id', 'state')
     def _compute_qty_to_deliver(self):
         """The inventory widget should now be visible in more cases if the product is consumable."""
