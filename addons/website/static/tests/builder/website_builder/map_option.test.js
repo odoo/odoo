@@ -1,15 +1,23 @@
 import { expect, test } from "@odoo/hoot";
+import { queryOne } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
+import { registry } from "@web/core/registry";
 import { getIframeInput } from "@html_editor/../tests/_helpers/iframe_input";
 import {
     defineWebsiteModels,
     setupWebsiteBuilderWithSnippet,
 } from "@website/../tests/builder/website_helpers";
+import { generateGMapIframe } from "@website/snippets/s_map/map";
 
 defineWebsiteModels();
 
+function withIframeRegistry(iframeRegistry) {
+    const entry = registry.category("website.accessible_names").get("website.map");
+    iframeRegistry.category("website.accessible_names").add("website.map", entry);
+}
+
 test("test description option", async () => {
-    await setupWebsiteBuilderWithSnippet("s_map", { loadIframeBuilderTemplates: true });
+    await setupWebsiteBuilderWithSnippet("s_map", { withIframeRegistry });
     await contains(":iframe .s_map").click();
 
     // toggle description
@@ -38,4 +46,37 @@ test("test description option", async () => {
     );
     await contains(hexInputEl).edit("#E4F641");
     expect(":iframe .s_map .description").toHaveStyle({ "background-color": "rgb(228, 246, 65)" });
+});
+
+test("iframe description option", async () => {
+    const { getEditor } = await setupWebsiteBuilderWithSnippet("s_map", {
+        withIframeRegistry,
+    });
+    // The snippet's address comes from the company, which depends on the data
+    const mapEl = queryOne(":iframe .s_map");
+    delete mapEl.dataset.mapAddress;
+    mapEl.querySelector(".s_map_color_filter").before(generateGMapIframe());
+    getEditor().shared.history.commit();
+    await contains(":iframe .s_map").click();
+    const inputSelector = "[data-label='Description'] input[type='text']";
+    expect(inputSelector).toHaveValue("Map");
+
+    await contains(inputSelector).edit("Our Brussels office");
+    expect(":iframe .s_map").toHaveAttribute("data-accessible-name", "Our Brussels office");
+
+    // Typing the default back is the same as clearing the field
+    await contains(inputSelector).edit("Map");
+    expect(":iframe .s_map").not.toHaveAttribute("data-accessible-name");
+
+    await contains(inputSelector).edit("Our Brussels office");
+    await contains(inputSelector).clear();
+    expect(":iframe .s_map").not.toHaveAttribute("data-accessible-name");
+    expect(inputSelector).toHaveValue("Map");
+
+    // A new address replaces the custom name with the new default
+    await contains(inputSelector).edit("Our Brussels office");
+    await contains("[data-label='Address'] input").edit("Rue de la Loi, Brussels");
+    expect(":iframe .s_map").not.toHaveAttribute("data-accessible-name");
+    expect(inputSelector).toHaveValue("Map of Rue de la Loi, Brussels");
+    expect(":iframe .s_map_embedded").toHaveAttribute("src", /Rue%20de%20la%20Loi/);
 });

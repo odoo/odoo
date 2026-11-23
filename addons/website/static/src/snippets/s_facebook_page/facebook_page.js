@@ -4,6 +4,18 @@ import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { clamp } from "@web/core/utils/numbers";
 import { pick } from "@web/core/utils/objects";
+import { getFacebookPageId } from "@website/js/utils";
+
+/**
+ * Returns the default accessible name of the Facebook page.
+ *
+ * @param {HTMLElement} el
+ * @returns {string}
+ */
+function getDefaultName(el) {
+    const page = el.dataset.id || getFacebookPageId(el.dataset.href || "");
+    return page ? _t("Facebook page: %(page)s", { page }) : _t("Facebook page");
+}
 
 export class FacebookPage extends Interaction {
     static selector = ".o_facebook_page";
@@ -51,7 +63,7 @@ export class FacebookPage extends Interaction {
 
             const iframeEl = document.createElement("iframe");
             iframeEl.setAttribute("style", "border: none; overflow: hidden;");
-            iframeEl.setAttribute("aria-label", _t("Facebook"));
+            iframeEl.title = this.el.dataset.accessibleName || getDefaultName(this.el);
             iframeEl.height = params.height;
             iframeEl.width = params.width;
 
@@ -67,3 +79,7 @@ export class FacebookPage extends Interaction {
 }
 
 registry.category("public.interactions").add("website.facebook_page", FacebookPage);
+registry.category("website.accessible_names").add("website.facebook_page", {
+    selector: FacebookPage.selector,
+    getDefaultName,
+});

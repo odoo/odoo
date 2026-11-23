@@ -18,14 +18,30 @@ export function generateGMapIframe() {
     iframeEl.setAttribute("marginheight", "0");
     iframeEl.setAttribute("marginwidth", "0");
     iframeEl.setAttribute("src", "about:blank");
-    iframeEl.setAttribute("aria-label", _t("Map"));
     return iframeEl;
+}
+
+/**
+ * Returns the default accessible name of the map.
+ *
+ * @param {HTMLElement} el
+ * @returns {string}
+ */
+function getDefaultName(el) {
+    return el.dataset.mapAddress
+        ? _t("Map of %(address)s", { address: el.dataset.mapAddress })
+        : _t("Map");
 }
 
 export class Map extends Interaction {
     static selector = ".s_map";
+    dynamicContent = {
+        ".s_map_embedded": {
+            "t-att-title": () => this.el.dataset.accessibleName || getDefaultName(this.el),
+        },
+    };
 
-    start() {
+    setup() {
         if (!this.el.querySelector(".s_map_embedded")) {
             // The iframe is not found inside the snippet. This is probably due
             // to the sanitization of a field during the save, like in a product
@@ -41,3 +57,7 @@ export class Map extends Interaction {
 }
 
 registry.category("public.interactions").add("website.map", Map);
+registry.category("website.accessible_names").add("website.map", {
+    selector: Map.selector,
+    getDefaultName,
+});

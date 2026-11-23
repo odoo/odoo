@@ -277,6 +277,33 @@ export function generateGMapLink(dataset) {
 }
 
 /**
+ * Returns the name or the id of the Facebook page targeted by the given link.
+ *
+ * @param {string} url
+ * @returns {string|undefined}
+ */
+export function getFacebookPageId(url) {
+    // Patterns matched by the regex (all relate to existing pages,
+    // in spite of the URLs containing "profile.php" or "people"):
+    // - https://www.facebook.com/<pagewithaname>
+    // - http://www.facebook.com/<page.with.a.name>
+    // - www.facebook.com/<fbid>
+    // - facebook.com/profile.php?id=<fbid>
+    // - www.facebook.com/<name>-<fbid>  - NB: the name doesn't matter
+    // - www.fb.com/people/<name>/<fbid>  - same
+    // - m.facebook.com/p/<name>-<fbid>  - same
+    // The regex is kept as a huge one-liner for performance as it is
+    // compiled once on script load. The only way to split it on several
+    // lines is with the RegExp constructor, which is compiled on runtime.
+    const match = url
+        .trim()
+        .match(
+            /^(https?:\/\/)?((www\.)?(fb|facebook)|(m\.)?facebook)\.com\/(((profile\.php\?id=|people\/([^/?#]+\/)?|(p\/)?[^/?#]+-)(?<id>[0-9]{12,16}))|(?<nameid>[\w.]+))($|[/?# ])/
+        );
+    return match?.groups.nameid || match?.groups.id;
+}
+
+/**
  * Returns the parsed data coming from the data-for element for the given form.
  *
  * @param {string} formId
