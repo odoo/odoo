@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
-import { queryAll, queryAllTexts } from "@odoo/hoot-dom";
-import { advanceTime, animationFrame } from "@odoo/hoot-mock";
+import { press, queryAll, queryAllTexts } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-mock";
 
 import {
     contains,
@@ -8,6 +8,7 @@ import {
     fields,
     models,
     mountView,
+    onRpc,
 } from "@web/../tests/web_test_helpers";
 
 
@@ -121,7 +122,6 @@ test("adding an identifier via the dropdown appends a row with an empty input", 
 
     await contains(".dropdown-toggle").click();
     await contains(".o-dropdown--menu .o-dropdown-item:contains('France SIREN')").click();
-    await advanceTime(100); // flush debouncedCommitChanges (50ms)
     await animationFrame();
 
     // Two inputs now (existing SIRET + new empty SIREN)
@@ -266,4 +266,20 @@ test("'hide' identifiers are not offered in the dropdown nor shown in the list",
     // ...and it is excluded from the dropdown (only the plain FR_SIREN is offered)
     await contains(".dropdown-toggle").click();
     expect(queryAllTexts(".o-dropdown--menu .o-dropdown-item")).toEqual(["France SIREN"]);
+});
+
+test.tags("desktop");
+test("edited identifier is saved by the first Alt+S", async () => {
+    onRpc("web_save", ({ args }) => expect.step(args[1].additional_identifiers));
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+    });
+
+    // Alt+S saves right after the input fires 'change'
+    await contains(".o_additional_identifiers_list input").edit("12345678901234", { confirm: false });
+    await press(["alt", "s"]);
+    await animationFrame();
+    expect.verifySteps([{ FR_SIRET: "12345678901234" }]);
 });
