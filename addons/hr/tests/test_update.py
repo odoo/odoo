@@ -4,6 +4,7 @@ from unittest.mock import patch
 
 from odoo.tools import SQL
 
+from odoo.tests import tagged
 from odoo.addons.base.tests.common import BaseCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
 
@@ -16,6 +17,7 @@ class TestUpdateEmployeesCommon(BaseCommon):
         return self.env['publisher_warranty.contract']._get_message()['nbr_employees_wo_user']
 
 
+@tagged('-post_install', 'at_install')
 class TestUpdateEmployeesWithoutUser(TestUpdateEmployeesCommon):
 
     def test_count_employees(self):
