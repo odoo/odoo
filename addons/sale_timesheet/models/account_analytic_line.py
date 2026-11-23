@@ -195,6 +195,8 @@ class AccountAnalyticLine(models.Model):
 
     def _get_employee_mapping_entry(self):
         self.ensure_one()
+        if self.employee_id:
+            return self.project_id.sale_line_employee_ids.filtered(lambda m: m.employee_id == self.employee_id)
         employees = self.env['project.sale.line.employee.map'].search([
             ('project_id', '=', self.project_id.id),
             ('employee_id', 'in', self.env.user.employee_ids.ids),

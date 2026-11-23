@@ -152,13 +152,14 @@ class TestProject(TestCommonSaleTimesheet):
         })
 
         unit_amount = 6
-        expected_analytic_account_balance = - self.employee_user.hourly_cost * unit_amount
+        expected_analytic_account_balance = -50 * unit_amount
         self.project_global.write({
             'sale_line_id': sale_line.id,
             'sale_line_employee_ids': [
                 Command.create({
                     'employee_id': self.employee_user.id,
                     'sale_line_id': sale_line.id,
+                    'cost': 50,
                 }),
             ],
         })
