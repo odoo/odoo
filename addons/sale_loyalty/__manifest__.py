@@ -25,8 +25,7 @@
             "sale_loyalty/static/src/scss/gift_card.css",
         ],
         "web.assets_backend": [
-            "sale_loyalty/static/src/xml/discount_menu_widget.xml",
-            "sale_loyalty/static/src/sale_order_form_view/**/*",
+            "sale_loyalty/static/src/views/**/*",
         ],
     },
     "uninstall_hook": "uninstall_hook",
