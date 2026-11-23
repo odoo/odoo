@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import contextlib
 import logging
 import werkzeug
 from werkzeug.urls import url_encode
+from zoneinfo import ZoneInfo
 
 from odoo import http, tools, _
 from odoo.addons.auth_signup.models.res_users import SignupError
@@ -10,6 +12,7 @@ from odoo.addons.web.controllers.home import ensure_db, Home, SIGN_UP_REQUEST_PA
 from odoo.addons.web.models.res_users import SKIP_CAPTCHA_LOGIN
 from odoo.addons.base_setup.controllers.main import BaseSetup
 from odoo.exceptions import UserError
+from odoo.tools.date_utils import all_timezones
 from odoo.tools.translate import LazyTranslate
 from odoo.http import request
 from odoo.http.session import authenticate
@@ -171,6 +174,12 @@ class AuthSignupHome(Home):
         lang = request.env.context.get('lang', '')
         if lang in supported_lang_codes:
             values['lang'] = lang
+        if browser_tz := request.cookies.get('tz'):
+            tz = None
+            with contextlib.suppress(KeyError, ValueError):
+                tz = ZoneInfo(browser_tz).key
+            if tz in all_timezones:
+                values['tz'] = tz
         return values
 
     def do_signup(self, qcontext, do_login=True):
