@@ -1253,6 +1253,8 @@ class TestUpdateEvents(TestCommon):
         for e in updated_events:
             self.assertEqual(e.name, ms_events_to_update[e.microsoft_id])
             self.assertEqual(e.follow_recurrence, True)
+        # Outlook returns the dates in UTC, which is not the time zone of the recurrence
+        self.assertEqual(self.recurrence.event_tz, 'Europe/London')
 
     def _prepare_outlook_events_for_all_events_start_date_update(self, nb_of_events):
         """
