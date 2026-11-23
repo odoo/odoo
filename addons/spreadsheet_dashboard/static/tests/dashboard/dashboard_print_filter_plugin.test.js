@@ -1,8 +1,10 @@
-import { expect, getFixture, test } from "@odoo/hoot";
+import { describe, expect, getFixture, test } from "@odoo/hoot";
 import { createSpreadsheetDashboard } from "@spreadsheet_dashboard/../tests/helpers/dashboard_action";
 import { defineSpreadsheetDashboardModels } from "@spreadsheet_dashboard/../tests/helpers/data";
 import { press } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
+
+describe.current.tags("desktop");
 
 defineSpreadsheetDashboardModels();
 
