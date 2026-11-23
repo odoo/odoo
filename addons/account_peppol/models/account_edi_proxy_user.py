@@ -209,7 +209,11 @@ class AccountEdiProxyClientUser(models.Model):
         except etree.XMLSyntaxError:
             xml_tree = etree.fromstring(REMOVE_EMBEDDED_DOCUMENT_BINARY_OBJECT_RE.sub(b'', attachment.raw))
             _logger.warning("The Peppol XML file was trimmed after huge node tree error for attachment ID %s", attachment.id)
-        return xml_tree.findtext('.//{*}InvoiceTypeCode') or xml_tree.findtext('.//{*}CreditNoteTypeCode')
+        return (
+            xml_tree.findtext('.//{*}InvoiceTypeCode')
+            or xml_tree.findtext('.//{*}CreditNoteTypeCode')
+            or xml_tree.findtext('./{*}ExchangedDocument/{*}TypeCode')
+        )
 
     def _peppol_get_import_journal_and_move_type(self, attachment):
         # Self-billed invoices are invoices which your customer creates on your behalf and sends you via Peppol.
