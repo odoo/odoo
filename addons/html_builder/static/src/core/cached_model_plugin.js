@@ -9,12 +9,32 @@ import { ModelEdit } from "./cached_model_utils";
  * @property { CachedModelPlugin['useModelEdit'] } useModelEdit
  */
 
+/**
+ * @typedef {(data: {
+ *     model: string,
+ *     recordId: number,
+ *     field: string,
+ *     before: any,
+ *     after: any,
+ * }) => void} cached_model
+ */
+
 export class CachedModelPlugin extends Plugin {
     static id = "cachedModel";
     static shared = ["ormRead", "ormSearchRead", "useModelEdit"];
     static dependencies = ["history"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
+        history_data_properties: {
+            cached_model: {
+                apply: ({ model, recordId, field, after }) => {
+                    this.useModelEdit({ model, recordId }).values[field].current = after;
+                },
+                revert: ({ model, recordId, field, before }) => {
+                    this.useModelEdit({ model, recordId }).values[field].current = before;
+                },
+            },
+        },
         on_ready_to_save_document_handlers: this.savePendingRecords.bind(this),
     };
     setup() {

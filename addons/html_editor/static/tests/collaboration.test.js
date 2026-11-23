@@ -456,7 +456,7 @@ describe("sanitize", () => {
                     peerInfos.c1.historyPlugin.commits[1],
                 ]);
                 // Change the peer in order to be undone from peer 2
-                peerInfos.c1.historyPlugin.commits[2].data.peerId = "c2";
+                peerInfos.c1.historyPlugin.commits[2].metadata.peer_id = "c2";
                 peerInfos.c2.collaborationPlugin.insertRemoteHistoryCommits([
                     peerInfos.c1.historyPlugin.commits[2],
                 ]);
@@ -481,7 +481,7 @@ describe("sanitize", () => {
                     peerInfos.c1.historyPlugin.commits[1],
                 ]);
                 // Change the peer in order to be undone from peer 2
-                peerInfos.c1.historyPlugin.commits[2].data.peerId = "c2";
+                peerInfos.c1.historyPlugin.commits[2].metadata.peer_id = "c2";
                 peerInfos.c2.collaborationPlugin.insertRemoteHistoryCommits([
                     peerInfos.c1.historyPlugin.commits[2],
                 ]);
@@ -508,7 +508,7 @@ describe("sanitize", () => {
                     peerInfos.c1.historyPlugin.commits[1],
                 ]);
                 // Change the peer in order to be undone from peer 2
-                peerInfos.c1.historyPlugin.commits[2].data.peerId = "c2";
+                peerInfos.c1.historyPlugin.commits[2].metadata.peer_id = "c2";
                 peerInfos.c2.collaborationPlugin.insertRemoteHistoryCommits([
                     peerInfos.c1.historyPlugin.commits[2],
                 ]);

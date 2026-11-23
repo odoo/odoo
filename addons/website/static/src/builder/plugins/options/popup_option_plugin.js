@@ -13,12 +13,39 @@ export class PopupOption extends BaseOptionComponent {
 
 registry.category("website-options").add(PopupOption.id, PopupOption);
 
+/**
+ * @typedef {(data: {
+ *     nodeId: import("@html_editor/core/dom_reference_map_plugin").NodeId,
+ *     value: boolean,
+ * }) => boolean} popup_visibility
+ */
+
 export class PopupOptionPlugin extends Plugin {
     static id = "PopupOption";
-    static dependencies = ["anchor", "visibility", "popupVisibilityPlugin", "history"];
+    static dependencies = [
+        "anchor",
+        "visibility",
+        "popupVisibilityPlugin",
+        "history",
+        "domReferenceMap",
+    ];
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
+        history_data_properties: {
+            popup_visibility: {
+                apply: ({ nodeId, value }) =>
+                    this.dependencies.visibility.toggleTargetVisibility(
+                        this.dependencies.domReferenceMap.getNodeById(nodeId),
+                        value
+                    ),
+                revert: ({ nodeId, value }) =>
+                    this.dependencies.visibility.toggleTargetVisibility(
+                        this.dependencies.domReferenceMap.getNodeById(nodeId),
+                        !value
+                    ),
+            },
+        },
         dropzone_selectors: {
             selector: ".s_popup",
             exclude: "#website_cookies_bar",
@@ -60,9 +87,9 @@ export class PopupOptionPlugin extends Plugin {
     onSnippetDropped({ snippetEl }) {
         if (snippetEl.matches(".s_popup")) {
             this.assignUniqueID(snippetEl);
-            this.dependencies.history.stageCustomOperation({
-                apply: () => this.dependencies.visibility.toggleTargetVisibility(snippetEl, true),
-                revert: () => this.dependencies.visibility.toggleTargetVisibility(snippetEl, false),
+            this.dependencies.history.apply("popup_visibility", {
+                nodeId: this.dependencies.domReferenceMap.register(snippetEl),
+                value: true,
             });
         }
     }
@@ -117,9 +144,9 @@ export class PopupOptionPlugin extends Plugin {
     }
 
     onWillRemove(el) {
-        this.dependencies.history.stageCustomOperation({
-            apply: () => this.dependencies.visibility.toggleTargetVisibility(el, false),
-            revert: () => this.dependencies.visibility.toggleTargetVisibility(el, true),
+        this.dependencies.history.apply("popup_visibility", {
+            nodeId: this.dependencies.domReferenceMap.register(el),
+            value: false,
         });
     }
 

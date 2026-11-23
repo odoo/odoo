@@ -6,16 +6,38 @@ import { registry } from "@web/core/registry";
  * @property { ValueHistoryPlugin['setValue'] } setValue
  */
 
+/**
+ * @typedef {(data: {
+ *     nodeId: import("@html_editor/core/dom_reference_map_plugin").NodeId,
+ *     before: string,
+ *     after: string,
+ * }) => void} form_value
+ */
+
 export class ValueHistoryPlugin extends Plugin {
     static id = "valueHistory";
-    static dependencies = ["history"];
+    static dependencies = ["history", "domReferenceMap"];
     static shared = ["setValue"];
+
+    resources = {
+        history_data_properties: {
+            form_value: {
+                apply: ({ nodeId, after }) => {
+                    this.dependencies.domReferenceMap.getNodeById(nodeId).value = after;
+                },
+                revert: ({ nodeId, before }) => {
+                    this.dependencies.domReferenceMap.getNodeById(nodeId).value = before;
+                },
+            },
+        },
+    };
 
     setValue(el, value) {
         const oldValue = el.value;
-        this.dependencies.history.stageCustomOperation({
-            apply: () => (el.value = value),
-            revert: () => (el.value = oldValue),
+        this.dependencies.history.apply("form_value", {
+            nodeId: this.dependencies.domReferenceMap.register(el),
+            before: oldValue,
+            after: value,
         });
     }
 }

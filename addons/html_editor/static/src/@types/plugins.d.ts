@@ -12,15 +12,16 @@ declare module "plugins" {
     import { on_content_inserted_handlers, fragment_to_insert_processors, on_will_set_tag_handlers, DomShared, system_attributes, system_classes, system_style_properties, on_will_insert_handlers, can_insert_block_in_parent_predicates } from "@html_editor/core/dom_plugin";
     import { are_inlines_allowed_at_root_predicates } from "@html_editor/core/no_inline_root_plugin";
     import { DomReferenceMapShared, serializable_descendants_processors } from "@html_editor/core/dom_reference_map_plugin";
+    import { dynamic_field_label } from "@html_editor/backend/dynamic_field/dynamic_field_plugin";
     import { can_format_content_predicates, format_specs, is_format_class_predicates, before_format_handlers, formattable_node_providers, FormatShared, can_remove_format_predicates, is_node_in_same_block_segment_predicates, on_all_formats_removed_handlers, on_format_applied_handlers, on_format_requested_handlers, on_collapsed_formats_removed_handlers } from "@html_editor/core/format_plugin";
-    import { HistoryShared, history_commit_data_properties, on_apply_history_commit_handlers, on_history_commit_restored_handlers, on_irreversible_history_commit_applied_handlers, on_revert_history_commit_handlers, on_committed_to_history_handlers, on_will_reset_history_handlers, on_history_commit_redone_handlers, on_history_commit_undone_handlers, on_savepoint_restored_handlers, on_will_rebase_history_handlers, on_history_rebased_handlers, on_remote_history_commit_applied_handlers, on_will_preview_handlers, on_pending_changes_unstashed_handlers, on_history_reset_handlers, on_will_invalidate_pending_changes_handlers, has_history_commit_changes_predicates, is_history_commit_reversible_predicates, pending_history_commit_data_processors, save_point_history_commit_data_processors, snapshot_history_commit_data_processors } from "@html_editor/core/history_plugin";
+    import { HistoryShared, on_apply_history_commit_handlers, on_history_commit_restored_handlers, on_irreversible_history_commit_applied_handlers, on_revert_history_commit_handlers, on_committed_to_history_handlers, on_will_reset_history_handlers, on_history_commit_redone_handlers, on_history_commit_undone_handlers, on_savepoint_restored_handlers, on_will_rebase_history_handlers, on_history_rebased_handlers, on_remote_history_commit_applied_handlers, on_will_preview_handlers, on_pending_changes_unstashed_handlers, on_history_reset_handlers, on_will_invalidate_pending_changes_handlers, has_history_commit_changes_predicates, is_history_commit_reversible_predicates, pending_history_commit_data_processors, pending_history_commit_metadata_processors, save_point_history_commit_data_processors, save_point_history_commit_metadata_processors, snapshot_history_commit_data_processors, snapshot_history_commit_metadata_processors, history_data_properties, history_metadata_properties } from "@html_editor/core/history_plugin";
     import { on_beforeinput_handlers, on_input_handlers } from "@html_editor/core/input_plugin";
     import { on_will_break_line_handlers, insert_line_break_element_overrides, LineBreakShared } from "@html_editor/core/line_break_plugin";
     import { OverlayShared } from "@html_editor/core/overlay_plugin";
     import { properties, PropertiesShared } from "@html_editor/core/properties_plugin";
     import { ProtectedNodeShared } from "@html_editor/core/protected_node_plugin";
     import { SanitizeShared } from "@html_editor/core/sanitize_plugin";
-    import { double_click_overrides, fix_selection_on_no_inline_root_overrides, is_node_fully_selected_predicates, is_char_tangible_for_keyboard_navigation_predicates, is_no_inline_root_predicates, on_selection_leave_handlers, on_selectionchange_handlers, SelectionShared, targeted_nodes_processors, triple_click_overrides } from "@html_editor/core/selection_plugin";
+    import { double_click_overrides, fix_selection_on_no_inline_root_overrides, is_node_fully_selected_predicates, is_char_tangible_for_keyboard_navigation_predicates, is_no_inline_root_predicates, on_selection_leave_handlers, on_selectionchange_handlers, SelectionShared, active_element_id, selection, selection_after, targeted_nodes_processors, triple_click_overrides } from "@html_editor/core/selection_plugin";
     import { shortcuts, shorthands } from "@html_editor/core/shortcut_plugin";
     import { on_element_split_handlers, on_will_split_block_handlers, split_element_block_overrides, SplitShared } from "@html_editor/core/split_plugin";
     import { StyleShared } from "@html_editor/core/style_plugin";
@@ -54,7 +55,7 @@ declare module "plugins" {
     import { expandable_toolbar_namespaces_providers, toolbar_groups, toolbar_items, ToolbarShared } from "@html_editor/main/toolbar/toolbar_plugin";
 
     import { CollaborationOdooShared } from "@html_editor/others/collaboration/collaboration_odoo_plugin";
-    import { CollaborationShared, on_remote_history_commits_applied_handlers } from "@html_editor/others/collaboration/collaboration_plugin";
+    import { CollaborationShared, on_remote_history_commits_applied_handlers, peer_id } from "@html_editor/others/collaboration/collaboration_plugin";
     import { EmbeddedComponentShared, on_will_mount_component_handlers, on_component_mounted_handlers } from "@html_editor/others/embedded_component_plugin";
 
     /* Misc */
@@ -111,6 +112,23 @@ declare module "plugins" {
         collaborationOdoo: CollaborationOdooShared;
         collaboration: CollaborationShared;
         embeddedComponents: EmbeddedComponentShared;
+    }
+
+    /**
+     * History properties, by id: the signature of the `apply` of each data
+     * property, and the type of the value of each metadata property, as
+     * declared by the plugin that registers it.
+     */
+    export interface HistoryDataProperties {}
+    interface HistoryDataProperties {
+        dynamic_field_label: dynamic_field_label;
+    }
+    export interface HistoryMetadataProperties {}
+    interface HistoryMetadataProperties {
+        active_element_id: active_element_id;
+        peer_id: peer_id;
+        selection: selection;
+        selection_after: selection_after;
     }
 
     export interface GlobalResources {}
@@ -245,9 +263,12 @@ declare module "plugins" {
         move_widget_position_processors: move_widget_position_processors;
         normalize_processors: normalize_processors;
         pending_history_commit_data_processors: pending_history_commit_data_processors;
+        pending_history_commit_metadata_processors: pending_history_commit_metadata_processors;
         save_point_history_commit_data_processors: save_point_history_commit_data_processors;
+        save_point_history_commit_metadata_processors: save_point_history_commit_metadata_processors;
         serializable_descendants_processors: serializable_descendants_processors;
         snapshot_history_commit_data_processors: snapshot_history_commit_data_processors;
+        snapshot_history_commit_metadata_processors: snapshot_history_commit_metadata_processors;
         targeted_nodes_processors: targeted_nodes_processors;
         to_inline_code_processors: to_inline_code_processors;
 
@@ -271,7 +292,8 @@ declare module "plugins" {
         expandable_toolbar_namespaces_providers: expandable_toolbar_namespaces_providers;
         font_type_items: font_type_items,
         format_specs: format_specs;
-        history_commit_data_properties: history_commit_data_properties;
+        history_data_properties: history_data_properties;
+        history_metadata_properties: history_metadata_properties;
         link_popovers: link_popovers;
         media_dialog_extra_tabs: media_dialog_extra_tabs;
         move_node_whitelist_selectors: move_node_whitelist_selectors;
