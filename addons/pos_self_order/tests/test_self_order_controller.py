@@ -463,39 +463,51 @@ class TestSelfOrderController(SelfOrderCommonTest):
         preset_data = self.delivery_preset._load_pos_self_data_fields(self.pos_config)
         self.assertIn('free_delivery_min_amount', preset_data)
 
-    def test_delivery_fee_is_applied(self):
-        """Test that the delivery fee line is added server-side when the preset is delivery
-        and the order total is below the free delivery threshold."""
-        self.pos_config.self_ordering_mode = 'mobile'
-        self.pos_config.with_user(self.pos_user).open_ui()
-        self.pos_config.current_session_id.set_opening_control(0, '')
-
-        delivery_template = self.env['product.template'].create({
+    def _setup_delivery_fee(self, **preset_values):
+        delivery_product = self.env['product.product'].create({
             'name': 'Delivery Fee',
             'available_in_pos': True,
             'taxes_id': False,
         })
-        delivery_product = delivery_template.product_variant_id
         self.delivery_preset.write({
             'delivery_product_id': delivery_product.id,
             'delivery_product_price': 5.0,
             'free_delivery_min_amount': 50.0,
+            **preset_values,
         })
+        return delivery_product
 
-        # Submit a delivery order without a delivery fee line (cola total ~2.2, below 50.0 threshold).
-        order_data = self._create_order_data(
-            [{'product': self.cola, 'qty': 1, 'price_unit': self.cola.lst_price}],
-            preset=self.delivery_preset,
-        )
+    def test_delivery_fee_is_applied_below_threshold(self):
+        self._open_self_order_session(self_ordering_mode='mobile')
+        delivery_product = self._setup_delivery_fee()
 
-        data = self.make_request_to_controller('/pos-self-order/process-order/mobile', order_data)
-        order = self.env['pos.order'].browse(data['pos.order'][0]['id'])
+        order = self.process_self_order([{'product': self.cola, 'qty': 1}], preset=self.delivery_preset)
+        delivery_lines = order.lines.filtered(lambda l: l.product_id == delivery_product)
+        self.assertEqual(len(delivery_lines), 1)
+        self.assertAlmostEqual(delivery_lines.price_unit, 5.0)
 
-        delivery_lines = order.lines.filtered(
-            lambda l: l.product_id == delivery_product
-        )
-        self.assertTrue(delivery_lines, "Delivery fee line should be added to the order")
-        self.assertAlmostEqual(delivery_lines[0].price_unit, 5.0)
+        order = self.process_self_order([{'product': self.cola, 'qty': 30}], preset=self.delivery_preset)
+        self.assertFalse(order.lines.filtered(lambda l: l.product_id == delivery_product))
+
+    def test_delivery_fee_uses_config_pricelist_when_preset_has_none(self):
+        self._open_self_order_session(self_ordering_mode='mobile')
+        self.pos_config.pricelist_id = self.env['product.pricelist'].create({
+            'name': 'Minus 20',
+            'item_ids': [Command.create({'compute_price': 'discount', 'price_discount': 20})],
+        })
+        menu = self.env['product.product'].create({
+            'name': 'Family Menu',
+            'list_price': 50.0,
+            'taxes_id': False,
+            'available_in_pos': True,
+            'self_order_available': True,
+        })
+        delivery_product = self._setup_delivery_fee(pricelist_id=False)
+
+        order = self.process_self_order([{'product': menu, 'qty': 1}], preset=self.delivery_preset)
+        self.assertEqual(order.pricelist_id, self.pos_config.pricelist_id)
+        self.assertTrue(order.lines.filtered(lambda l: l.product_id == delivery_product))
+        self.assertAlmostEqual(order.amount_total, 45.0)
 
     def test_service_fee_is_added_when_missing(self):
         """The fee is mandated by the preset: a payload that drops its line must not escape it."""
