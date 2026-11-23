@@ -40,6 +40,12 @@ const messagingMenuModelPatch = {
                     },
                     filters: [
                         {
+                            id: "livechat_my",
+                            text: _t("My Sessions"),
+                            includesChannel: (c) => Boolean(c.self_member_id),
+                            isDefault: true,
+                        },
+                        {
                             id: "livechat_unread",
                             text: _t("Unread"),
                             includesChannel: (c) => c.isUnread,

@@ -98,6 +98,62 @@ test("live chat tab has a need help filter", async () => {
     await waitFor(".o-mail-NotificationItem:has(:text('Visitor #1')):count(1)");
 });
 
+test("live chat tab shows my sessions by default", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write([serverState.userId], {
+        group_ids: pyEnv["res.groups"]
+            .search_read([["id", "=", serverState.groupLivechatId]])
+            .map(({ id }) => id),
+    });
+    const [guest1, guest2, guest3] = pyEnv["mail.guest"].create([
+        { name: "Visitor #1" },
+        { name: "Visitor #2" },
+        { name: "Visitor #3" },
+    ]);
+    pyEnv["discuss.channel"].create([
+        {
+            channel_member_ids: [
+                Command.create({
+                    partner_id: serverState.partnerId,
+                    livechat_member_type: "agent",
+                }),
+                Command.create({ guest_id: guest1, livechat_member_type: "visitor" }),
+            ],
+            channel_type: "livechat",
+        },
+        {
+            channel_member_ids: [
+                Command.create({ guest_id: guest2, livechat_member_type: "visitor" }),
+            ],
+            channel_type: "livechat",
+            livechat_status: "need_help",
+        },
+        {
+            channel_member_ids: [
+                Command.create({
+                    partner_id: serverState.partnerId,
+                    is_pinned: false,
+                    livechat_member_type: "agent",
+                }),
+                Command.create({ guest_id: guest3, livechat_member_type: "visitor" }),
+            ],
+            channel_type: "livechat",
+            livechat_status: "need_help",
+        },
+    ]);
+    await start();
+    await openMessagingMenu(MENU_ACTIVE_IDS.LIVECHAT);
+    await waitFor("button.o-active:text('My Sessions'):count(1)");
+    await waitFor(".o-mail-NotificationItem:count(2)");
+    await waitFor(".o-mail-NotificationItem:has(:text('Visitor #1')):count(1)");
+    await waitFor(".o-mail-NotificationItem:has(:text('Visitor #3')):count(1)");
+    await click("button:text('All')");
+    await waitFor(".o-mail-NotificationItem:count(3)");
+    await waitFor(".o-mail-NotificationItem:has(:text('Visitor #1')):count(1)");
+    await waitFor(".o-mail-NotificationItem:has(:text('Visitor #2')):count(1)");
+    await waitFor(".o-mail-NotificationItem:has(:text('Visitor #3')):count(1)");
+});
+
 test("live chat tab has an unread filter", async () => {
     const pyEnv = await startServer();
     const [guest1, guest2] = pyEnv["mail.guest"].create([

@@ -34,6 +34,8 @@ class LivechatMessagingMenuController(DiscussMessagingMenuController):
 
     def _get_menu_tab_filter_domain(self, tab_id, filter_id):
         match (tab_id, filter_id):
+            case ("livechat", "livechat_my"):
+                return Domain("is_member", "=", True)
             case ("livechat", "livechat_need_help"):
                 return Domain("livechat_status", "=", "need_help")
             case ("livechat", "livechat_unread"):
