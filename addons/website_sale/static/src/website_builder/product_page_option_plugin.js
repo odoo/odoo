@@ -202,6 +202,11 @@ export class ProductPageImageGridSpacingAction extends BasePreviewableProductPag
 export class ProductPageImageRoundnessAction extends BasePreviewableProductPageAction {
     static id = "productPageRoundness";
     static rpcParameterName = "product_page_image_roundness";
+
+    apply(context) {
+        context.editingElement.style.setProperty("--o-wsale-product-image-radius", context.params.radius);
+        return super.apply(context);
+    }
 }
 
 export class ProductPageImageLayoutAction extends WebsiteConfigAction {

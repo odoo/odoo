@@ -230,15 +230,15 @@
             <t t-set="bigLabel">Big</t>
 
             <t t-set="roundnessMap" t-value="[
-                {label: noneLabel, saveValue: 'none'},
-                {label: smallLabel, saveValue: 'small'},
-                {label: mediumLabel, saveValue: 'medium'},
-                {label: bigLabel, saveValue: 'big'},
+                {label: noneLabel, saveValue: 'none', radius: '0'},
+                {label: smallLabel, saveValue: 'small', radius: 'var(--border-radius-sm)'},
+                {label: mediumLabel, saveValue: 'medium', radius: 'var(--border-radius)'},
+                {label: bigLabel, saveValue: 'big', radius: 'var(--border-radius-lg)'},
             ]"/>
 
             <t t-foreach="roundnessMap" t-as="roundEntry" t-key="roundEntry.saveValue">
                 <BuilderSelectItem
-                    actionParam="{ previewClass: 'o_wsale_product_page_opt_image_radius_' + roundEntry.saveValue}"
+                    actionParam="{ previewClass: 'o_wsale_product_page_opt_image_radius_' + roundEntry.saveValue, radius: roundEntry.radius }"
                     actionValue="roundEntry.saveValue"
                 >
                     <t t-out="roundEntry.label"/>
