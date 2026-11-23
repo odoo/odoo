@@ -7,6 +7,7 @@ from freezegun import freeze_time
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import tagged
 from odoo.tools import mute_logger
+from odoo.tools.misc import format_date
 
 from odoo.addons.payment.tests.common import PaymentCommon
 
@@ -58,7 +59,7 @@ class TestPaymentToken(PaymentCommon):
         token.invalidate_recordset(fnames=['create_date'])
         self.assertEqual(
             token._build_display_name(),
-            f"Payment details saved on {date.today().strftime('%Y/%m/%d')}",
+            f"Payment details saved on {format_date(self.env, date.today())}",
         )
 
     def test_display_name_is_shortened_to_max_length(self):
