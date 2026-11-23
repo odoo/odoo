@@ -108,7 +108,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon):
             {'debit': 0.0, 'credit': 20.0, 'account_id': self.account_income.id},
             {'debit': 20.0, 'credit': 0.0, 'account_id': self.account_receivable.id},
         ])
-        self.assertRecordValues(ro.move_ids.account_move_id.line_ids, [
+        self.assertRecordValues(ro.move_ids.sudo().account_move_id.line_ids, [
             {'debit': 0.0, 'credit': 10.0, 'account_id': self.account_stock_valuation.id},
             {'debit': 10.0, 'credit': 0.0, 'account_id': self.account_inventory.id},
         ])

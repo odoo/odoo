@@ -734,7 +734,7 @@ class TestSalePurchaseStockValuation(TestStockValuationCommon):
 
             # Since we're during a lock period, should have created compensation lines instead of updating the existing cogs
             out_move.invalidate_recordset(['cogs_aml_ids'])
-            cogs_lines = sale_order.picking_ids.move_ids.cogs_aml_ids
+            cogs_lines = sale_order.picking_ids.move_ids.sudo().cogs_aml_ids
             self.assertRecordValues(cogs_lines.sorted(), [
                 {'account_id': self.account_stock_valuation.id, 'debit': 0, 'credit': 15},
                 {'account_id': self.account_expense.id, 'debit': 15, 'credit': 0},
@@ -745,7 +745,7 @@ class TestSalePurchaseStockValuation(TestStockValuationCommon):
             # Setting the bill to draft should create another compensation layer that will negate the first compensation layer
             bill.button_draft()
             out_move.invalidate_recordset(['cogs_aml_ids'])
-            cogs_lines = sale_order.picking_ids.move_ids.cogs_aml_ids
+            cogs_lines = sale_order.picking_ids.move_ids.sudo().cogs_aml_ids
             self.assertRecordValues(cogs_lines.sorted(), [
                 {'account_id': self.account_stock_valuation.id, 'debit': 15, 'credit': 0},
                 {'account_id': self.account_expense.id, 'debit': 0, 'credit': 15},
@@ -823,7 +823,7 @@ class TestSalePurchaseStockValuation(TestStockValuationCommon):
             # The delivery is now valued at 10 and its COGS are compensated after the lock date
             self.assertEqual(out_move.value, -10)
             self.assertFalse(invoice.line_ids.filtered(lambda l: l.display_type == 'cogs'))
-            cogs_lines = self.env['account.move.line'].search([
+            cogs_lines = self.env['account.move.line'].sudo().search([
                 ('cogs_origin_id', 'in', invoice.invoice_line_ids.ids),
             ])
             self.assertRecordValues(cogs_lines.sorted('balance'), [

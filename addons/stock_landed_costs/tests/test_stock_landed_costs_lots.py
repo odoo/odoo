@@ -95,7 +95,7 @@ class TestStockLandedCostsLots(TestLotValuation):
         ])
 
         self.assertEqual(lc.state, "done")
-        self.assertRecordValues(lc.account_move_id.line_ids, [
+        self.assertRecordValues(lc.sudo().account_move_id.line_ids, [
             {'account_id': self.account_stock_valuation.id, 'debit': 3, 'credit': 0},
             {'account_id': self.account_expense.id, 'debit': 0, 'credit': 3},
             {'account_id': self.account_stock_valuation.id, 'debit': 3, 'credit': 0},

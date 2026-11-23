@@ -1325,9 +1325,10 @@ class ResCompany(models.Model):
                 'company_id': self.id,
                 **self._get_closing_move_extra_vals(at_date),
             }
-            closing_move = self.env['account.move'].create(moves_vals)
+            closing_move = self.env['account.move'].sudo().create(moves_vals)
             if auto_post:
                 closing_move.with_context(tz=self._get_company_tz())._post()
+            closing_move = closing_move.sudo(False)
 
         list_view = self.env.ref('account.account_move_view_list_stock_closing', raise_if_not_found=False)
         return (closing_move | accrual_moves)._get_records_action(

@@ -128,9 +128,9 @@ class AccountPartialReconcile(models.Model):
                 moves_to_detach_per_payment[payment] |= linked_moves
 
         # Retrieve the CABA entries to reverse.
-        moves_to_reverse = self.env['account.move'].search([('tax_cash_basis_rec_id', 'in', self.ids)])
+        moves_to_reverse = self.env['account.move'].sudo().search([('tax_cash_basis_rec_id', 'in', self.ids)])
         # Same for the exchange difference entries.
-        moves_to_reverse += self.exchange_move_id
+        moves_to_reverse += self.sudo().exchange_move_id
 
         # Retrieve the matching number to unlink
         full_to_unlink = self.full_reconcile_id
