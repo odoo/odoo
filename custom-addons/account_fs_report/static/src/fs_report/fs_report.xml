@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="account_fs_report.FsReport">
+        <div class="o_action o_fs_report">
+            <ControlPanel>
+                <t t-set-slot="control-panel-buttons">
+                    <button class="btn btn-secondary" t-on-click="this.onExportPdf">Export PDF</button>
+                    <button class="btn btn-secondary" t-on-click="this.onExportXlsx">Export XLSX</button>
+                </t>
+                <t t-set-slot="control-panel-actions">
+                    <div class="d-flex gap-1 flex-wrap">
+                        <button class="btn btn-secondary" t-ref="this.asOfRef" t-on-click="this.openAsOfPicker">
+                            As of <t t-out="this.column(this.state.asOf).label"/>
+                        </button>
+                        <Dropdown>
+                            <button class="btn btn-secondary">
+                                <t t-out="this.compareLabel"/>
+                            </button>
+                            <t t-set-slot="content">
+                                <t t-foreach="this.compareModes" t-as="mode" t-key="mode.id">
+                                    <DropdownItem onSelected="() => this.onCompareSelected(mode.id)">
+                                        <t t-out="mode.label"/>
+                                    </DropdownItem>
+                                </t>
+                            </t>
+                        </Dropdown>
+                        <button t-if="this.state.compare === 'custom'" class="btn btn-secondary" t-ref="this.customDateRef" t-on-click="this.openCustomPicker">
+                            <t t-out="this.column(this.state.customDate).label"/>
+                        </button>
+                        <button class="btn btn-secondary" t-on-click="this.onToggleTargetMove">
+                            <t t-out="this.targetMoveLabel"/>
+                        </button>
+                        <Dropdown>
+                            <button class="btn btn-secondary">
+                                <t t-out="this.journalLabel"/>
+                            </button>
+                            <t t-set-slot="content">
+                                <t t-foreach="this.state.journals" t-as="journal" t-key="journal.id">
+                                    <CheckboxItem closingMode="'none'" checked="this.isJournalSelected(journal.id)" onSelected="() => this.onToggleJournal(journal.id)">
+                                        <t t-out="journal.name"/>
+                                    </CheckboxItem>
+                                </t>
+                            </t>
+                        </Dropdown>
+                    </div>
+                </t>
+            </ControlPanel>
+            <div class="o_content o_fs_report_content">
+                <div t-if="this.state.loading" class="d-flex justify-content-center p-4">
+                    <span class="fa fa-spin fa-circle-o-notch"/>
+                </div>
+                <div t-else="" class="o_fs_report_table_container o_fs_report_scroll_container">
+                    <table class="table table-sm table-hover table-borderless o_fs_report_table mx-auto">
+                        <thead id="table_header" class="sticky">
+                            <!-- Period labels only when comparing (Enterprise column_headers). -->
+                            <tr t-if="this.options.columns.length > 1" data-id="column_headers_row">
+                                <th class="o_fs_report_name"/>
+                                <th
+                                    t-foreach="this.options.columns"
+                                    t-as="column"
+                                    t-key="column.date_to"
+                                    class="o_fs_report_amount column_header"
+                                >
+                                    <t t-out="column.label"/>
+                                </th>
+                            </tr>
+                            <!-- Enterprise: companies (left) + Balance (right) on one sticky row. -->
+                            <tr data-id="column_subheaders_row">
+                                <th class="o_fs_report_name">
+                                    <span t-if="this.companiesHeader" class="companies_header" t-out="this.companiesHeader"/>
+                                </th>
+                                <th
+                                    t-foreach="this.options.columns"
+                                    t-as="column"
+                                    t-key="column.date_to"
+                                    class="o_fs_report_amount column_header"
+                                >
+                                    <t t-out="this.balanceColumnLabel"/>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="this.displayRows" t-as="row" t-key="row.key" t-att-class="this.getRowClasses(row)">
+                                <t t-if="row.kind === 'spacer'">
+                                    <td t-att-colspan="1 + this.options.columns.length"/>
+                                </t>
+                                <t t-else="">
+                                    <td
+                                        class="o_fs_report_name line_name"
+                                        t-att-class="{
+                                            unfoldable: row.kind === 'line' and row.unfoldable,
+                                        }"
+                                        t-on-click="() => this.onToggleLine(row)"
+                                    >
+                                        <i
+                                            t-if="row.kind === 'line' and row.unfoldable"
+                                            class="oi oi-fw btn_foldable"
+                                            t-att-data-icon="this.state.accountLines[row.id] ? 'arrow_drop_down' : 'arrow_right'"
+                                        />
+                                        <a
+                                            t-if="row.kind === 'account'"
+                                            href="#"
+                                            class="clickable cursor-pointer"
+                                            t-on-click.stop.prevent="() => this.onOpenAccount(row)"
+                                            t-out="row.name"
+                                        />
+                                        <a
+                                            t-elif="row.kind === 'line' and row.action_id"
+                                            href="#"
+                                            class="clickable cursor-pointer"
+                                            t-on-click.stop.prevent="(ev) => this.onLineAction(row, ev)"
+                                            t-out="row.name"
+                                        />
+                                        <span t-else="" t-out="row.name"/>
+                                    </td>
+                                    <td t-foreach="row.columns" t-as="amount" t-key="amount_index" t-att-class="this.getAmountClasses(row, amount)">
+                                        <a
+                                            t-if="(row.kind === 'line' and row.auditable) or row.kind === 'account'"
+                                            href="#"
+                                            class="cursor-pointer"
+                                            t-on-click.stop.prevent="(ev) => this.onAuditAmount(row, amount_index, ev)"
+                                            t-out="this.formatAmount(amount)"
+                                        />
+                                        <t t-else="" t-out="this.formatAmount(amount)"/>
+                                    </td>
+                                </t>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

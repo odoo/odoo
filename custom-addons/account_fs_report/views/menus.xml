@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Enterprise CYE.action_id → Profit and Loss; Community opens P&amp;L journal items. -->
+    <record id="action_fs_profit_and_loss" model="ir.actions.act_window">
+        <field name="name">Profit and Loss</field>
+        <field name="res_model">account.move.line</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('account_id.account_type', 'in', ['income', 'income_other', 'expense_direct_cost', 'expense', 'expense_depreciation', 'expense_other', 'equity_unaffected', 'equity_retained'])]</field>
+        <field name="context">{'search_default_posted': 1}</field>
+    </record>
+
+    <record id="action_fs_balance_sheet" model="ir.actions.client">
+        <field name="name">Balance Sheet</field>
+        <field name="tag">account_fs_report.main</field>
+        <field name="path">balance-sheet</field>
+        <field name="context" eval="{'report_id': ref('account_fs_report.fs_report_balance_sheet')}"/>
+    </record>
+    <menuitem id="menu_fs_balance_sheet"
+        name="Balance Sheet"
+        parent="account.menu_finance_reports"
+        action="action_fs_balance_sheet"
+        sequence="2"
+        groups="account.group_account_user"/>
+</odoo>

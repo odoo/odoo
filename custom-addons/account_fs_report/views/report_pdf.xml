@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="report_fs_pdf" model="ir.actions.report">
+        <field name="name">Financial Statement</field>
+        <field name="model">fs.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">account_fs_report.report_fs_pdf_template</field>
+        <field name="print_report_name">'%s' % (object.name)</field>
+    </record>
+
+    <template id="report_fs_pdf_template">
+        <t t-call="web.basic_layout">
+            <div class="page o_fs_report_pdf">
+                <h2 t-out="title"/>
+                <table class="table table-sm table-borderless" style="width: 100%; font-size: 0.8rem;">
+                    <thead>
+                        <tr>
+                            <th/>
+                            <th t-foreach="options['columns']" t-as="column" t-key="column['date_to']" style="text-align: right; color: #adb5bd;">
+                                <t t-out="column['label']"/>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="rows" t-as="row" t-key="row['id']">
+                            <t t-if="not (row.get('hide_if_zero') and not any(row['columns']))">
+                                <tr t-if="row['level'] == 0" style="height: 20px;"/>
+                                <tr t-att-style="'color: #495057; font-weight: bold; background-color: #dee2e6;' if row['level'] == 0 else 'color: #495057;'">
+                                    <td t-att-style="'padding-left: %spx;' % (8 * (row['level'] + 1))">
+                                        <t t-out="row['name']"/>
+                                    </td>
+                                    <td t-foreach="row['columns']" t-as="amount" t-key="amount_index" style="text-align: right;">
+                                        <span t-att-style="'color: #adb5bd;' if abs(amount) &lt; 0.0000001 else ('color: #dc3545;' if amount &lt; 0 else '')">
+                                            <t t-out="'%.2f' % amount"/>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </t>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </template>
+</odoo>
