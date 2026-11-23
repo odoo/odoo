@@ -672,10 +672,19 @@ class Message(models.Model):
         self.check_access_rule('read')
         return super(Message, self).read(fields=fields, load=load)
 
+    def _check_author_access(self, operation):
+        """ Non employees can only modify their own messages. """
+        if any(message.author_id != self.env.user.partner_id for message in self.sudo()):
+            raise AccessError(
+                _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)', self._description, operation)
+                + ' - ({} {}, {} {})'.format(_('Records:'), self.ids[:6], _('User:'), self._uid)
+            )
+
     def write(self, vals):
         if not (self.env.su or self.env.user.has_group('base.group_user')):
             vals.pop('author_id', None)
             vals.pop('email_from', None)
+            self._check_author_access('write')
         record_changed = 'model' in vals or 'res_id' in vals
         if record_changed or 'message_type' in vals:
             self._invalidate_documents()
@@ -694,6 +703,8 @@ class Message(models.Model):
         # because the unlink method invalidates the whole cache anyway
         if not self:
             return True
+        if not (self.env.su or self.env.user.has_group('base.group_user')):
+            self._check_author_access('unlink')
         self.check_access_rule('unlink')
         self.mapped('attachment_ids').filtered(
             lambda attach: attach.res_model == self._name and (attach.res_id in self.ids or attach.res_id == 0)
@@ -786,7 +797,7 @@ class Message(models.Model):
         partner_id = self.env.user.partner_id.id
 
         starred_messages = self.search([('starred_partner_ids', 'in', partner_id)])
-        starred_messages.write({'starred_partner_ids': [Command.unlink(partner_id)]})
+        starred_messages.sudo().write({'starred_partner_ids': [Command.unlink(partner_id)]})
 
         ids = [m.id for m in starred_messages]
         self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.message/toggle_star', {
