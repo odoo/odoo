@@ -18,7 +18,7 @@ export class CashMoveListPopup extends Component {
     async setup() {
         super.setup();
         this.pos = usePos();
-        this.ui = useService("ui");
+        this.ui = this.pos.ui;
         this.dialog = useService("dialog");
         this.cashMoves = signal(this.props.cashMoves);
         this.callbacks = this.props.cashMoves.reduce(

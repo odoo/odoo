@@ -202,7 +202,7 @@ test("pos_basic_order_03_tax_position: fiscal position changes tax on order", as
 test("test_tax_control_button_visiblity: fiscal position button hidden when disabled", async () => {
     await setupAndMountPosApp({ tax_regime_selection: false });
 
-    await Utils.ensurePane("left");
+    await Utils.ensurePane("cart");
 
     if (Utils.isMobile()) {
         await contains(".product-screen .mobile-more-button").click();

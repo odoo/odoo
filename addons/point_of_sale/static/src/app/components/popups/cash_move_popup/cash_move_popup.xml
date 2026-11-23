@@ -4,22 +4,22 @@
     <t t-name="point_of_sale.CashMovePopup">
         <Dialog header="false" bodyClass="'pb-0'">
             <div class="input-amount d-flex mb-3 gap-2">
-                <div class="input-group" t-att-class="{ 'w-50' : this.ui.isSmall }">
-                    <button t-on-click="() => this.onClickButton('in')" t-attf-class="input-type btn lh-lg #{this.ui.isSmall ? 'btn-md' : 'btn-lg'} #{this.state.type === 'in' ? 'highlight btn-success' : 'btn-secondary' }">
+                <div class="input-group" t-att-class="{ 'w-50' : this.ui.isSmall() }">
+                    <button t-on-click="() => this.onClickButton('in')" t-attf-class="input-type btn lh-lg #{this.ui.isSmall() ? 'btn-md' : 'btn-lg'} #{this.state.type === 'in' ? 'highlight btn-success' : 'btn-secondary' }">
                         Cash In
                     </button>
-                    <button t-on-click="() => this.onClickButton('out')" t-attf-class="input-type btn lh-lg #{this.ui.isSmall ? 'btn-md' : 'btn-lg'} #{this.state.type === 'out' ? 'red-highlight btn-danger' : 'btn-secondary' }">
+                    <button t-on-click="() => this.onClickButton('out')" t-attf-class="input-type btn lh-lg #{this.ui.isSmall() ? 'btn-md' : 'btn-lg'} #{this.state.type === 'out' ? 'red-highlight btn-danger' : 'btn-secondary' }">
                         Cash Out
                     </button>
                 </div>
                 <CashInput
-                    class="this.ui.isSmall ? 'mw-50 h-50' : 'w-25'"
+                    class="this.ui.isSmall() ? 'mw-50 h-50' : 'w-25'"
                     tModel="[this.state, 'amount']"
                     currencySymbol="this.pos.currency.symbol"
                     currencyPosition="this.pos.currency.position"
                     isValid="(val) => this.pos.isValidFloat(val)"
                     autofocus="true"
-                    readonly="this.ui.isSmall"
+                    readonly="this.ui.isSmall()"
                     onBlur="() => this.handleAmountBlur()"
                     onClick="() => this.openNumpadDialog()"
                     getRef="(ref) => this.inputRef = ref"

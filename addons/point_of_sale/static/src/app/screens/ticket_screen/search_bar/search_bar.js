@@ -1,6 +1,7 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, proxy, signal, useListener, useProps, t } from "@odoo/owl";
-import { useAutofocus, useService } from "@web/core/utils/hooks";
+import { Component, proxy, signal, useListener, useProps, t, usePlugin } from "@odoo/owl";
+import { useAutofocus } from "@web/core/utils/hooks";
+import { PosUiPlugin } from "@point_of_sale/app/plugins/pos_ui_plugin";
 
 /**
  * This is a simple configurable search bar component. It has search fields
@@ -36,7 +37,7 @@ export class SearchBar extends Component {
     autofocusRef = signal.ref();
 
     setup() {
-        this.ui = useService("ui");
+        this.ui = usePlugin(PosUiPlugin);
         useAutofocus({ ref: this.autofocusRef });
         useListener(window, "click", this._hideOptions.bind(this));
         this.filterOptionsList = [...this.props.config.filter.options.keys()];

@@ -18,9 +18,9 @@
                 </div>
             </div>
             <div class="mt-3 d-flex">
-                <div t-attf-class="col align-items-center d-flex {{!this.ui.isSmall? 'me-2 w-50': ''}}">
+                <div t-attf-class="col align-items-center d-flex {{!this.ui.isSmall()? 'me-2 w-50': ''}}">
                     <div class="col-form-label text-center pe-0 me-4 fs-5">Amount</div>
-                    <div t-attf-class="{{this.ui.isSmall? 'flex-grow-1' : ''}}">
+                    <div t-attf-class="{{this.ui.isSmall()? 'flex-grow-1' : ''}}">
                         <input id="amount"
                             class="form-control form-control-lg"
                             type="number"
@@ -31,7 +31,7 @@
                             t-att-style="this.state.amountError ? 'border-color: red;' : ''"/>
                     </div>
                 </div>
-                <div t-if="!this.ui.isSmall" class="d-flex ms-2 w-50 o_exp_date_container">
+                <div t-if="!this.ui.isSmall()" class="d-flex ms-2 w-50 o_exp_date_container">
                     <div class="col-form-label text-center pe-0 me-4 fs-5">Expiration</div>
                     <DateTimeInput
                         type="'date'"
@@ -40,7 +40,7 @@
                         onChange.bind="this.onExpDateChange" />
                 </div>
             </div>
-            <div t-if="this.ui.isSmall" class="d-flex my-2 o_exp_date_container">
+            <div t-if="this.ui.isSmall()" class="d-flex my-2 o_exp_date_container">
                 <div class="col-form-label text-center pe-0 me-2 fs-5">Expiration</div>
                 <DateTimeInput
                     type="'date'"

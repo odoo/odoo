@@ -33,7 +33,7 @@ export class OpeningControlPopup extends Component {
             ),
             ordersByPreset: [],
         });
-        this.ui = useService("ui");
+        this.ui = this.pos.ui;
         this.getOrderCountByPreset = useTrackedAsync(
             async () =>
                 (this.state.ordersByPreset = await this.pos.data.call(

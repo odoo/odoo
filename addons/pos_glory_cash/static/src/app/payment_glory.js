@@ -12,7 +12,6 @@ const CONNECT_TIMEOUT_MS = 5000;
 export class PaymentGlory extends PaymentInterface {
     setup() {
         super.setup(...arguments);
-        this.dialog = this.env.services.dialog;
         this.cancellationResolver = null;
         this.firstStatusReceived = false;
         this.closeErrorDialog = null;

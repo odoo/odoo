@@ -118,7 +118,7 @@ export class PaymentSumup extends PaymentInterface {
     }
 
     _notifySumupError(body) {
-        this.env.services.dialog.add(AlertDialog, {
+        this.dialog.add(AlertDialog, {
             title: _t("SumUp Error"),
             body,
         });

@@ -3,7 +3,6 @@ import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
-import { useService } from "@web/core/utils/hooks";
 import { useSubEnv } from "@web/owl2/utils";
 
 export class ScaleScreen extends Component {
@@ -15,9 +14,9 @@ export class ScaleScreen extends Component {
     });
 
     setup() {
-        this.dialog = useService("dialog");
-        this.uiService = useService("ui");
         this.pos = usePos();
+        this.uiService = this.pos.ui;
+        this.dialog = this.pos.dialog;
         this.scale = this.pos.scale;
         this.scale.setErrorCallback(this.onError.bind(this));
         useSubEnv({ dialogData: { ...this.env.dialogData, close: this.close.bind(this) } });

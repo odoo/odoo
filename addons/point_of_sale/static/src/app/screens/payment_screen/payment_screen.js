@@ -16,6 +16,7 @@ import { PaymentScreenStatus } from "@point_of_sale/app/screens/payment_screen/p
 import { PosNumberBufferPlugin } from "@point_of_sale/app/plugins/pos_number_buffer_plugin";
 import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_popup/selection_popup";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
+import { localization } from "@web/core/l10n/localization";
 
 export class PaymentScreen extends Component {
     static template = "point_of_sale.PaymentScreen";
@@ -31,10 +32,10 @@ export class PaymentScreen extends Component {
 
     setup() {
         this.pos = usePos();
-        this.ui = useService("ui");
-        this.dialog = useService("dialog");
+        this.ui = this.pos.ui;
+        this.dialog = this.pos.dialog;
         this.invoiceService = useService("account_move");
-        this.notification = useService("notification");
+        this.notification = this.pos.notification;
         this.payment_methods_from_config = this.configPaymentMethods || [];
         this.numberBuffer = usePlugin(PosNumberBufferPlugin);
         this.numberBuffer.use(this._getNumberBufferConfig);
@@ -79,7 +80,7 @@ export class PaymentScreen extends Component {
 
     getNumpadButtons() {
         const colorClassMap = {
-            [this.env.services.localization.decimalPoint]: "o_colorlist_numpad o_colorlist_color_6",
+            [localization.decimalPoint]: "o_colorlist_numpad o_colorlist_color_6",
             Backspace: "o_colorlist_numpad o_colorlist_color_1",
             "+10": "o_colorlist_numpad o_colorlist_color_10",
             "+20": "o_colorlist_numpad o_colorlist_color_10",
