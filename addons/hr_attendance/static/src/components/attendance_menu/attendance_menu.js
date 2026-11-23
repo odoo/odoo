@@ -13,7 +13,6 @@ import { Record } from "@web/model/record";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useSubEnv } from "@web/owl2/utils";
 import { AttendanceInlineForm } from "@hr_attendance/components/attendance_inline_form/attendance_inline_form";
-import { AttendanceVideoStream } from "@hr_attendance/components/attendance_video_stream/attendance_video_stream";
 import { LazySessionPlugin } from "@web/webclient/lazy_session_plugin";
 
 const { DateTime } = luxon;
@@ -29,7 +28,7 @@ const ATTENDANCE_FIELD_NAMES = [
 ];
 
 export class ActivityMenu extends Component {
-    static components = { Dropdown, Record, AttendanceInlineForm, AttendanceVideoStream };
+    static components = { Dropdown, Record, AttendanceInlineForm };
     static template = "hr_attendance.attendance_menu";
 
     setup() {
@@ -55,16 +54,13 @@ export class ActivityMenu extends Component {
             attendances: [],
             checkedIn: false,
             isDisplayed: false,
-            captureCheckInEnabled: false,
             deviceTrackingEnabled: false,
             breakManagementEnabled: false,
-            streamAvailable: null,
             activeAttendance: null,
             attendanceReviewExpanded: false,
             editingAttendanceId: null,
         });
 
-        this.cameraCapture = null;
         this.attendanceRecord = null;
         this.dropdown = useDropdownState();
 
@@ -77,9 +73,6 @@ export class ActivityMenu extends Component {
             });
             this.lazySession.getValue("attendance_device_tracking", (enabled) => {
                 this.state.deviceTrackingEnabled = enabled;
-            });
-            this.lazySession.getValue("attendance_capture_check_in", (enabled) => {
-                this.state.captureCheckInEnabled = enabled;
             });
             this.lazySession.getValue("attendance_break_management", (enabled) => {
                 this.state.breakManagementEnabled = enabled;
@@ -188,24 +181,7 @@ export class ActivityMenu extends Component {
         return this.state.attendances.find((attendance) => attendance.id === attendanceId);
     }
 
-    setCameraCapture(capturePicture) {
-        this.cameraCapture = capturePicture;
-    }
-
-    setStreamAvailable(isAvailable) {
-        this.state.streamAvailable = isAvailable;
-    }
-
-    get showVideoStream() {
-        return (
-            this.state.captureCheckInEnabled &&
-            !this.state.checkedIn &&
-            this.state.streamAvailable !== false
-        );
-    }
-
     async beforeDropdownOpen() {
-        this.setStreamAvailable(null);
         if (this.state.checkedIn && this.state.showTimesheetsSystray) {
             return;
         }
@@ -355,12 +331,11 @@ export class ActivityMenu extends Component {
         );
     }
 
-    async checking({ latitude = false, longitude = false, checkInImage = null } = {}) {
+    async checking({ latitude = false, longitude = false } = {}) {
         try {
             const employee = await rpc("/hr_attendance/systray_check_in_out", {
                 latitude,
                 longitude,
-                check_in_image: checkInImage,
             });
             this._searchReadEmployeeFill(employee);
             this._foldAttendanceReview();
@@ -384,13 +359,13 @@ export class ActivityMenu extends Component {
         }
     }
 
-    confirmChecking(checkInImage = null) {
+    confirmChecking() {
         this.dialogService.add(ConfirmationDialog, {
             body: _t(
                 "Unable to get a valid location. Do you want to proceed with your check-in/out anyway?"
             ),
             confirmLabel: _t("Proceed Anyway"),
-            confirm: async () => await this.checking({ checkInImage }),
+            confirm: async () => await this.checking(),
             cancel: () => { this._attendanceInProgress = false; },
         });
     }
@@ -417,7 +392,6 @@ export class ActivityMenu extends Component {
                 return;
             }
         }
-        const checkInImage = this.cameraCapture?.();
         if (this.closeSystrayOnCheckIn) {
             this.dropdown.close();
         }
@@ -426,10 +400,10 @@ export class ActivityMenu extends Component {
         if (trackingEnabled && navigator.geolocation && navigator.onLine) {
             navigator.geolocation.getCurrentPosition(
                 async ({ coords: { latitude, longitude } }) => {
-                    await this.checking({ latitude, longitude, checkInImage });
+                    await this.checking({ latitude, longitude });
                 },
                 () => {
-                    this.confirmChecking(checkInImage);
+                    this.confirmChecking();
                 },
                 {
                     enableHighAccuracy: true,
@@ -437,9 +411,9 @@ export class ActivityMenu extends Component {
                 }
             );
         } else if (trackingEnabled) {
-            this.confirmChecking(checkInImage);
+            this.confirmChecking();
         } else {
-            await this.checking({ checkInImage });
+            await this.checking();
         }
     }
 }
