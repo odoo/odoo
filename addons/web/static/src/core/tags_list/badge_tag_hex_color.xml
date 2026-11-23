@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.BadgeTagHexColor" t-inherit="web.BadgeTag">
+        <xpath expr="//span[hasclass('o_tag')]" position="attributes">
+            <attribute name="t-attf-style">--o-tag-hex-color: {{ this.hexColor }};</attribute>
+            <attribute name="t-att-data-color">this.hexColor</attribute>
+        </xpath>
+    </t>
+</templates>

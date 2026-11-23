@@ -161,8 +161,8 @@
                                     <field name="categ_id" string="Category"/>
                                     <field
                                         name="product_tag_ids"
-                                        widget="many2many_tags"
-                                        options="{'on_tag_click': 'open_form'}"
+                                        widget="many2many_tags_hex_color"
+                                        options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"
                                         context="{'product_template_id': id}"
                                     />
                                     <field name="company_id"
@@ -573,8 +573,8 @@
                 <field name="product_tag_ids" position="after">
                     <field
                         name="additional_product_tag_ids"
-                        widget="many2many_tags"
-                        options="{'on_tag_click': 'open_form'}"
+                        widget="many2many_tags_hex_color"
+                        options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"
                         invisible="product_variant_count == 1"
                     />
                 </field>

@@ -185,15 +185,19 @@ export class Many2ManyTagsField extends Component {
         if (this.popover.isOpen) {
             this.popover.close();
         } else {
-            this.popover.open(ev.currentTarget, {
-                tag: {
-                    id: record.id,
-                    colorIndex: record.data[this.props.colorField],
-                },
-                switchTagColor: this.switchTagColor.bind(this),
-                onTagVisibilityChange: this.onTagVisibilityChange.bind(this),
-            });
+            this.popover.open(ev.currentTarget, this.getColorPopoverProps(record));
         }
+    }
+
+    getColorPopoverProps(record) {
+        return {
+            tag: {
+                id: record.id,
+                colorIndex: record.data[this.props.colorField],
+            },
+            switchTagColor: this.switchTagColor.bind(this),
+            onTagVisibilityChange: this.onTagVisibilityChange.bind(this),
+        };
     }
 
     async onTagVisibilityChange(isHidden, tag) {

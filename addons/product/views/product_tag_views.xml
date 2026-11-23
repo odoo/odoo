@@ -23,9 +23,7 @@
                     </div>
                     <group>
                         <field name="visible_to_customers" widget="boolean_toggle"/>
-                        <field name="color"
-                               widget='color'
-                               invisible="not visible_to_customers"/>
+                        <field name="color" widget="color"/>
                     </group>
                 </sheet>
             </form>
@@ -35,15 +33,11 @@
         <field name="name">product.tag.list</field>
         <field name="model">product.tag</field>
         <field name="arch" type="xml">
-            <list string="Product Tags" multi_edit="1">
+            <list string="Product Tags" editable="bottom" multi_edit="1" open_form_view="1">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="visible_to_customers" optional="show"/>
-                <field name="color"
-                       widget="color"
-                       optional="hide"
-                       readonly="1"
-                       invisible="not visible_to_customers"/>
+                <field name="color" widget="color"/>
                 <field name="image"
                        widget="image"
                        options="{'size': [0, 30]}"

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.Many2ManyTagsHexColorPopover">
+        <div class="o_tag_popover m-2">
+            <ColorList disableTransparent="true" selectedColor="this.selectedColorIndex" onColorSelected="(colorIndex) => this.onColorSelected(colorIndex)"/>
+            <label class="d-flex align-items-center gap-2 pt-2 cursor-pointer">
+                <input type="color" class="o_tag_custom_color form-control form-control-color p-0" t-att-value="this.customColor" t-on-change="this.onCustomColorChange"/>
+                <span>Custom color</span>
+            </label>
+        </div>
+    </t>
+
+</templates>
