@@ -421,6 +421,11 @@ class HrAttendance(models.Model):
         demo_tag = self.env.ref('hr_attendance.resource_calendar_std_38h', raise_if_not_found=False)
         return bool(demo_tag) or bool(self.env['ir.module.module'].search_count([('demo', '=', True)]))
 
+    @api.model
+    def get_help_data(self, domain):
+        # used by the help view (see `hr_attendance_view_help`)
+        return {'can_load_demo': not self.has_demo_data()}
+
     def _load_demo_data(self):
         if self.has_demo_data():
             return

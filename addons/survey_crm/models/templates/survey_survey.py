@@ -2,19 +2,8 @@ from odoo import api, models, _
 
 
 class SurveySurvey(models.Model):
-    """ Add the new 'Lead Qualification' survey template to the templates that can be selected in the helper screen. """
+    """ Add the new 'Lead Qualification' survey template (see the `survey_survey_view_help` view). """
     _inherit = 'survey.survey'
-
-    @api.model
-    def get_survey_templates_data(self):
-        return super().get_survey_templates_data() | {
-            'lead_qualification': {
-                'description': _('Create leads when key answers are chosen'),
-                'icon': '/survey_crm/static/src/img/survey_sample_lead_qualification.svg',
-                'template_key': 'lead_qualification',
-                'title': _('Lead Qualification'),
-            },
-        }
 
     def _get_survey_template_values(self, template_key):
         if template_key == 'lead_qualification':
