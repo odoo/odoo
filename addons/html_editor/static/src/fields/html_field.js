@@ -118,7 +118,9 @@ export class HtmlField extends Component {
             const key = this.state.key;
             // Reset Wysiwyg when we discard or onchange value
             const newValue = fixInvalidHTML(record.data[this.props.name]);
-            if (!this.isDirty) {
+            // also accept the value set while committing the last change, which
+            // an onchange may modify (e.g. a field with parameter clean)
+            if (!this.isDirty || this.committedChangeId === this.lastChangeId) {
                 let value;
                 this.state.forceCodeView = !canRenderAsHTML(newValue);
                 if (this.state.forceCodeView) {
@@ -213,6 +215,7 @@ export class HtmlField extends Component {
         } else {
             this.lastValue = normalizeHTML(value, this.clearElementToCompare.bind(this));
         }
+        this.committedChangeId = changeId;
         await this.props.record.update({ [this.props.name]: value }).then(
             () => {
                 if (this.lastChangeId === changeId) {
@@ -301,9 +304,11 @@ export class HtmlField extends Component {
     }
 
     async toggleCodeView() {
+        const key = this.state.key;
         await this.commitChanges();
         this.state.showCodeView = this.state.forceCodeView || !this.state.showCodeView;
-        if (!this.state.showCodeView && this.editor) {
+        // no need to update the editor if the commit recreated it with the value
+        if (!this.state.showCodeView && this.editor && key === this.state.key) {
             this.editor.editable.innerHTML = this.value;
             this.editor.processThrough("html_compatibility_processors", this.editor.editable);
             this.editor.shared.history.commit();
