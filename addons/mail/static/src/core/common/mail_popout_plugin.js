@@ -159,7 +159,7 @@ export class PopoutManager {
             this.#hooks.beforePopout?.();
             height = height || (width ? width / aspectRatio : Math.min(240, window.innerHeight));
             width = width || height * aspectRatio;
-            if (window.documentPictureInPicture) {
+            if (window.documentPictureInPicture && window === window.top) {
                 externalWindow = await window.documentPictureInPicture.requestWindow({
                     width,
                     height,
