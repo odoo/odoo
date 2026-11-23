@@ -369,13 +369,16 @@ class ResConfigSettings(models.TransientModel):
 
         self = self.with_context(active_test=False)
         classified = self._get_classified_fields()
+        # set_values() may install modules as a side effect (e.g. loading a chart template),
+        # the unchecked boxes of such modules must not be read as a request to uninstall them
+        installed_modules = classified['module'].filtered(lambda m: m.state in ('installed', 'to upgrade'))
 
         self.set_values()
 
         # module fields: install/uninstall the selected modules
         to_install = classified['module'].filtered(
             lambda m: self[f'module_{m.name}'] and m.state != 'installed')
-        to_uninstall = classified['module'].filtered(
+        to_uninstall = installed_modules.filtered(
             lambda m: not self[f'module_{m.name}'] and m.state in ('installed', 'to upgrade'))
 
         if to_install or to_uninstall:
