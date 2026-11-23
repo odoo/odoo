@@ -182,6 +182,27 @@ class TestCalendar(SavepointCaseWithUserDemo):
         self.assertEqual(event_from_activity.attendee_ids.partner_id, activity.user_id.partner_id)
         self.assertEqual(event_from_activity.user_id, activity.user_id)
 
+    @freezegun.freeze_time('2026-11-22 12:10:00')
+    def test_activity_event_default_date(self):
+        self.env.user.tz = 'Asia/Kolkata'
+        activity = self.env['mail.activity'].create({
+            'activity_type_id': self.env.ref('mail.mail_activity_data_meeting').id,
+            'res_model_id': self.env['ir.model']._get_id('res.partner'),
+            'res_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
+            'date_deadline': '2026-12-06',
+        })
+        action_context = activity.action_create_calendar_event()['context']
+        with Form(self.env['calendar.event'].with_context(action_context)) as event_form:
+            self.assertEqual(event_form.start, datetime(2026, 12, 6, 12, 30))
+            self.assertEqual(event_form.stop, datetime(2026, 12, 6, 13, 30))
+            event_form.name = 'Meeting'
+
+        activity.date_deadline = '2026-11-01'
+        action_context = activity.action_create_calendar_event()['context']
+        with Form(self.env['calendar.event'].with_context(action_context)) as event_form:
+            self.assertEqual(event_form.start, datetime(2026, 11, 22, 12, 30))
+            event_form.name = 'Meeting'
+
     def test_activity_event_multiple_meetings(self):
         # Creating multiple meetings from an activity creates additional activities
         # ensure meeting activity type exists
