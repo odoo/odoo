@@ -46,9 +46,11 @@ const RE_THEME_COLOR_CLASS = /^bg-o-color-\d+$/;
 const VERTICAL_ALIGNS = {
     start: "top",
     "flex-start": "top",
+    "flow-start": "top", // Computed `flex-start` since Chrome 158
     center: "middle",
     end: "bottom",
     "flex-end": "bottom",
+    "flow-end": "bottom", // Computed `flex-end` since Chrome 158
     baseline: "bottom",
 };
 const CONVERT_INLINE_BLACKLIST_CLASSES = ["o_mail_redirect"];
