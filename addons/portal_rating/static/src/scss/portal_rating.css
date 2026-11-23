@@ -19,12 +19,13 @@
 
         .o_website_rating_table_progress {
             .o_rating_progressbar {
-                background-color: var(--o-bs-body-color);
+                background-color: currentColor;
             }
         }
 
         .progress {
             --progress-height: .4rem;
+            --progress-bg: color-mix(in srgb, currentColor 25%, transparent);
 
             @media (max-width: 991.98px) {
                 --progress-height: .8rem;

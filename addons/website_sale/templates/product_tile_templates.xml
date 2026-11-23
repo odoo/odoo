@@ -213,11 +213,11 @@
                 t-call="website_sale.product_tile_element_visibility"
                 visible_element_class.f="o_wsale_products_opt_has_rating"
             >
-                <div class="o_wsale_product_rating_wrapper">
+                <div class="o_wsale_product_rating_wrapper small">
                     <t
                         t-call="portal_rating.rating_widget_stars_static"
                         rating_avg="product.sudo().rating_avg"
-                        rating_count="product.rating_count"
+                        rating_count="'(%s)' % product.rating_count"
                     >
                         <!-- sudo: product.product - visitor can access product average rating -->
                     </t>
