@@ -202,6 +202,7 @@ class AccountFiscalPosition(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        self._clear_auto_apply_cache()
         for vals in vals_list:
             zip_from = vals.get('zip_from')
             zip_to = vals.get('zip_to')
@@ -210,6 +211,7 @@ class AccountFiscalPosition(models.Model):
         return super().create(vals_list)
 
     def write(self, vals):
+        self._clear_auto_apply_cache()
         zip_from = vals.get('zip_from')
         zip_to = vals.get('zip_to')
         if zip_from or zip_to:
@@ -217,10 +219,15 @@ class AccountFiscalPosition(models.Model):
                 vals['zip_from'], vals['zip_to'] = self._convert_zip_values(zip_from or rec.zip_from, zip_to or rec.zip_to)
         return super(AccountFiscalPosition, self).write(vals)
 
+    @api.ondelete(at_uninstall=False)
+    def _clear_auto_apply_cache(self):
+        self.env.cr.cache.pop('auto_apply_fpos', None)
+
     def _get_first_matching_fpos(self, partner):
         sorted_fpos = self.sorted(key=lambda f: (-len(f.company_id.sudo().parent_ids), f.sequence))  # company specific first, then sequence
+        validation_functions = self._get_fpos_validation_functions(partner)
         for fpos in sorted_fpos:
-            if all(fn(fpos) for fn in self._get_fpos_validation_functions(partner)):
+            if all(fn(fpos) for fn in validation_functions):
                 return fpos
         return self.env['account.fiscal.position']
 
@@ -286,8 +293,10 @@ class AccountFiscalPosition(models.Model):
         if not partner.country_id:
             return self.env['account.fiscal.position']
 
-        all_auto_apply_fpos = self.search(self._check_company_domain(self.env.company) + [('auto_apply', '=', True)])
-
+        cache = self.env.cr.cache.setdefault('auto_apply_fpos', {})  # {company: auto_apply_fpos_ids}
+        if cache.get(self.env.company) is None:
+            cache[self.env.company] = self.search(self._check_company_domain(self.env.company) + [('auto_apply', '=', True)]).ids
+        all_auto_apply_fpos = self.browse(cache[self.env.company])
         return all_auto_apply_fpos._get_first_matching_fpos(delivery)
 
     def action_open_related_taxes(self):
