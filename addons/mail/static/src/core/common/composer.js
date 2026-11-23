@@ -74,7 +74,7 @@ import {
 } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { pickerGetAnchor, useComposerActions } from "@mail/core/common/composer_actions";
+import { useComposerActions } from "@mail/core/common/composer_actions";
 import { ActionList, CircleInlineAction } from "@mail/core/common/action_list";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { syntaxHighlightingEmbedding } from "@html_editor/others/embedded_components/backend/syntax_highlighting/syntax_highlighting";
@@ -147,6 +147,7 @@ export class Composer extends Component {
     app = useApp();
 
     extraActionsRef = signal.ref(HTMLDivElement);
+    fileUploaderRef = signal.ref(HTMLButtonElement);
     moreActionsRef = signal.ref(HTMLDivElement);
     quickActionsRef = signal.ref(HTMLDivElement);
     /**
@@ -158,7 +159,6 @@ export class Composer extends Component {
     setup() {
         super.setup();
         this.ancestors = useAncestors({ inComposer: true });
-        this.dialogService = useService("dialog");
         /** @type {import("@html_editor/editor").Editor} */
         this.editor = undefined;
         this.isMobileOS = isMobileOS();
@@ -498,8 +498,24 @@ export class Composer extends Component {
         return this.props.disabled;
     }
 
+    /** Given to `useComposerActions`, @see ComposerActionComponentParams */
     get composerActionsParams() {
-        return { composer: this.props.composer };
+        return {
+            addEmoji: (emoji) => this.addEmoji(emoji),
+            allowUpload: () => this.allowUpload,
+            areAllActionsDisabled: () => this.areAllActionsDisabled,
+            composer: this.props.composer,
+            composerType: () => this.props.type,
+            fileUploaderRef: this.fileUploaderRef,
+            insertCannedResponse: (ev) => this.onClickInsertCannedResponse(ev),
+            isFullComposerOpen: () => this.state.isFullComposerOpen,
+            isSendButtonDisabled: () => this.isSendButtonDisabled,
+            openFullComposer: () => this.onClickFullComposer(),
+            postMessage: (body, postData) => this._sendMessage(body, postData),
+            readyEditor: this.readyEditor,
+            sendMessage: () => this.sendMessage(),
+            showFullComposer: () => this.props.showFullComposer,
+        };
     }
 
     quickActionsList = computed(() => this.composerActions.partition.quick);
@@ -515,7 +531,7 @@ export class Composer extends Component {
                 this.composerActions.partition.other,
                 ...this.composerActions.partition.group,
             ],
-            disabledCondition: ({ owner }) => owner.areAllActionsDisabled,
+            disabledCondition: ({ areAllActionsDisabled }) => areAllActionsDisabled(),
             icon: "add_circle",
             name: _t("More Actions"),
         });
@@ -657,9 +673,20 @@ export class Composer extends Component {
             return {
                 type: PANEL_CONTAINER_TYPE.POPOVER,
                 arrow: false,
-                target: pickerGetAnchor({ action, owner: this }),
+                target: this.getPickerAnchor(action),
             };
         }
+    }
+
+    /**
+     * @param {import("@mail/core/common/composer_actions").ComposerAction} action
+     * @returns {HTMLElement|null} the actions bar of the composer showing the action
+     */
+    getPickerAnchor(action) {
+        if (action.sequenceQuick) {
+            return this.quickActionsRef();
+        }
+        return this.moreActionsRef() ?? this.extraActionsRef();
     }
 
     get CANCEL_OR_SAVE_EDIT_TEXT() {

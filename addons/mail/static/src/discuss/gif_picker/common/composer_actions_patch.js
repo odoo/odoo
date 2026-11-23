@@ -17,13 +17,13 @@ registerComposerAction("add-gif", {
     panel: {
         component: GifPicker,
         name: _t("GIF"),
-        props: ({ action, owner }) => ({
+        props: ({ action, composer, postMessage }) => ({
             onSelect: async (gif) => {
                 const gifUrl = gif.media_formats.tinygif.url;
                 const href = encodeURI(gifUrl);
-                await owner._sendMessage(
+                await postMessage(
                     markup`<a href="${href}" target="_blank" rel="noreferrer noopener">${gifUrl}</a>`,
-                    { parentId: owner.props.composer().replyToMessage?.id }
+                    { parentId: composer.replyToMessage?.id }
                 );
             },
             onClose: () => action.closePanel(),
