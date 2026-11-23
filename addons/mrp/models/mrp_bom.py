@@ -6,7 +6,7 @@ from collections import defaultdict
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command, Domain
-from odoo.tools import float_compare
+from odoo.tools import BinaryBytes, float_compare, file_open
 from odoo.tools.misc import clean_context
 
 
@@ -654,6 +654,95 @@ class MrpBom(models.Model):
     def action_copy_existing_operations(self):
         self.ensure_one()
         return self.env['mrp.routing.workcenter'].with_context(bom_id=self.id).copy_existing_operations()
+
+    def can_load_samples(self):
+        return self.sudo().env['mrp.bom'].search_count([]) == 0
+
+    def action_load_samples(self):
+        if not self.can_load_samples():
+            raise UserError(_('Unable to load samples when you already have existing bills of materials'))
+        self._load_sample_bom()
+
+    def _load_sample_bom(self):
+        def file_read(path: str) -> BinaryBytes:
+            with file_open(path, 'rb') as f:
+                return BinaryBytes(f.read())
+
+        unit = self.env.ref('uom.product_uom_unit')
+        products = [{'xml_id': xmlid, 'noupdate': True, 'values': {
+            'name': name,
+            'is_storable': True,
+            'tracking': tracking,
+            'uom_id': unit.id,
+            'description': desc,
+            'default_code': code,
+            'barcode': barcode,
+            'image_1920': file_read(img),
+        }} for (xmlid, name, tracking, desc, code, barcode, img) in (
+            (
+                'product.product_product_27',
+                'Drawer',
+                False,
+                'Drawer with two routing possiblities',
+                'FURN_8855',
+                False,
+                'product/static/img/product_product_27-image.jpg',
+            ),
+            (
+                'mrp.product_product_drawer_drawer',
+                'Drawer Black',
+                'lot',
+                'Drawer on casters for great usability.',
+                'FURN_2100',
+                '601647855646',
+                'mrp/static/img/product_product_drawer_black.png',
+            ),
+            (
+                'mrp.product_product_drawer_case',
+                'Drawer Case Black',
+                'lot',
+                False,
+                'FURN_5623',
+                '601647855647',
+                'mrp/static/img/product_product_drawer_case_black.png',
+            ),
+        )]
+        drawer, drawer_black, drawer_case = self.env['product.product']._load_records(products, True)
+
+        bom = self.env['mrp.bom']._load_records([{'xml_id': 'mrp.mrp_bom_drawer_rout', 'noupdate': True, 'values': {
+            'product_tmpl_id': drawer.product_tmpl_id.id,
+            'uom_id': unit.id,
+            'sequence': 2,
+            'code': 'SEC-ASSEM',
+        }}], True)
+
+        operation = False
+        if self.env.user.has_group('mrp.group_mrp_routings'):
+            assembly, drill = self.env['mrp.workcenter']._load_sample_workcenter()
+            operation = self.env['mrp.routing.workcenter']._load_records([{'xml_id': xmlid, 'noupdate': True, 'values': {
+                'bom_id': bom.id,
+                'workcenter_id': wc.id,
+                'name': name,
+                'time_cycle_manual': time,
+                'sequence': seq,
+            }} for (xmlid, wc, name, time, seq) in (
+                ('mrp.mrp_routing_workcenter_4', drill, 'Packing', 30, 5),
+                ('mrp.mrp_routing_workcenter_3', assembly, 'Testing', 60, 10),
+                ('mrp.mrp_routing_workcenter_1', assembly, 'Long time assembly', 180, 15),
+            )], True)[0].id
+
+        bom_lines = [{'xml_id': xmlid, 'noupdate': True, 'values': {
+            'product_id': prod,
+            'product_qty': 1,
+            'uom_id': unit.id,
+            'sequence': seq,
+            'bom_id': bom.id,
+            'operation_id': operation,
+        }} for (xmlid, prod, seq) in (
+            ('mrp.mrp_bom_drawer_rout_line_1', drawer_black.id, 1),
+            ('mrp.mrp_bom_drawer_rout_line_2', drawer_case.id, 2),
+        )]
+        return self.env['mrp.bom.line']._load_records(bom_lines, True)
 
 
 class MrpBomLine(models.Model):

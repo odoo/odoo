@@ -41,7 +41,7 @@
             <field name="name">mrp.production.list</field>
             <field name="model">mrp.production</field>
             <field name="arch" type="xml">
-                <list string="Manufacturing Orders" multi_edit="1" sample="1" decoration-info="state == 'draft'">
+                <list string="Manufacturing Orders" multi_edit="1" sample="1" js_class="mrp_load_samples_list" decoration-info="state == 'draft'">
                     <header>
                         <button name="button_plan" type="object" string="Plan" groups="mrp.group_mrp_routings"/>
                         <button name="action_assign" type="object" string="Reserve"/>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mrp.MrpLoadSamplesActionHelper" t-inherit="web.ActionHelper" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_nocontent_help')]" position="inside">
+            <button class="btn btn-primary mt-3" t-on-click.stop="this.loadSamples" t-if="this.state.canLoadSamples" t-att-disabled="this.state.canLoadSamples === 'disabled'">Load Sample Data</button>
+        </xpath>
+    </t>
+</templates>
