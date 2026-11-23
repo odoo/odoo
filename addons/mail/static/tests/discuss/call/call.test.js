@@ -3476,3 +3476,34 @@ test("Cross tab calls: the mute suggestion comes from the host tab", async () =>
     await contains('button:text("Don\'t show this again"):count(1)').click();
     await expect.waitForSteps(["isTalkWhileMutedSuggestionDisabled"]);
 });
+
+test("system muted microphone warning moves between the call view and the call menu", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await contains("[title='Start Call']:count(1)").click();
+    await waitFor(".o-discuss-Call:count(1)");
+    getService("discuss.rtc").isMicAudioTrackMuted = true;
+    // above the call view's mute button
+    await waitFor(
+        ".o_popover[data-popper-placement='top'] div:text('Microphone muted by system'):count(1)"
+    );
+    await openFormView("res.partner", serverState.partnerId);
+    await waitFor(".o_last_breadcrumb_item:text('Mitchell Admin'):count(1)");
+    await waitFor(
+        ".o_popover[data-popper-placement='bottom'] div:text('Microphone muted by system'):count(1)"
+    );
+    await waitForNone(
+        ".o_popover[data-popper-placement='top'] div:text('Microphone muted by system')"
+    );
+    await contains(".o-discuss-CallMenu-actionsButton:count(1)").click();
+    await waitFor(".o-dropdown-item:text('Mute'):count(1)");
+    // beside the dropdown menu
+    await waitFor(
+        ".o_popover[data-popper-placement='left'] div:text('Microphone muted by system'):count(1)"
+    );
+    await waitForNone(
+        ".o_popover[data-popper-placement='bottom'] div:text('Microphone muted by system')"
+    );
+});

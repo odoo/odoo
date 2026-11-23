@@ -30,7 +30,9 @@ export class CallMenu extends Component {
         useEffect(() => {
             const isDropdownOpen = this.dropdownState.isOpen;
             const target = isDropdownOpen ? this.menuRef() : this.root();
-            if (!this.rtc.showTalkWhileMutedSuggestion || this.rtc.isSelfCallViewOpen || !target) {
+            const hasWarning =
+                this.rtc.showMicrophoneSilentWarning || this.rtc.showTalkWhileMutedSuggestion;
+            if (!hasWarning || this.rtc.isSelfCallViewOpen || !target) {
                 return;
             }
             return popover.add(

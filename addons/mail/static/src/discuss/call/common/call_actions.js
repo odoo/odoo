@@ -68,9 +68,10 @@ export const muteAction = {
             useEffect(() => {
                 const hasWarning =
                     store.rtc.showMicrophonePermissionWarning ||
-                    store.rtc.showMicrophoneSilentWarning ||
-                    // the call menu shows the suggestion itself
-                    (store.rtc.showTalkWhileMutedSuggestion && !ancestors.inCallMenu);
+                    // the call menu shows these warnings
+                    ((store.rtc.showMicrophoneSilentWarning ||
+                        store.rtc.showTalkWhileMutedSuggestion) &&
+                        !ancestors.inCallMenu);
                 if (!popover.isOpen && action.actionRef() && hasWarning) {
                     popover.open(action.actionRef(), {});
                 } else {
