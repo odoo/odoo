@@ -17,21 +17,25 @@
             <field name="name">Order Processing</field>
             <field name="usage">internal</field>
             <field name="location_id" ref="stock.stock_location_company"/>
+            <field name="active" eval="False"/>
         </record>
         <record id="location_dispatch_zone" model="stock.location">
             <field name="name">Dispatch Zone</field>
             <field name="usage">internal</field>
             <field name="location_id" ref="stock.location_order"/>
+            <field name="active" eval="False"/>
         </record>
         <record id="location_gate_a" model="stock.location">
             <field name="name">Gate A</field>
             <field name="usage">internal</field>
             <field name="location_id" ref="stock.location_dispatch_zone"/>
+            <field name="active" eval="False"/>
         </record>
         <record id="location_gate_b" model="stock.location">
             <field name="name">Gate B</field>
             <field name="usage">internal</field>
             <field name="location_id" ref="stock.location_dispatch_zone"/>
+            <field name="active" eval="False"/>
         </record>
 
         <record id="product.product_product_3" model="product.product">
