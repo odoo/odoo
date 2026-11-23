@@ -9,6 +9,18 @@ from odoo.exceptions import UserError
 from odoo.tools import BinaryBytes, float_round, float_repr
 from odoo.addons.l10n_vn_edi_viettel.models.sinvoice_service import SInvoiceService
 
+SINVOICE_BUYER_ID_TYPES = {
+    'VN_CCCD': '1',
+    'PASSPORT': '3',
+}
+SINVOICE_PAYMENT_STUDIO_FIELDS = {
+    'x_studio_sinvoice_payment_method_name': 'paymentMethodName',
+}
+SINVOICE_ITEM_STUDIO_FIELDS = {
+    'x_studio_sinvoice_batch_no': 'batchNo',
+    'x_studio_sinvoice_exp_date': 'expDate',
+}
+
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
@@ -458,6 +470,20 @@ class AccountMove(models.Model):
                 'buyerBankAccount': self.partner_bank_id.account_number,
             })
 
+        for identifier, id_type in SINVOICE_BUYER_ID_TYPES.items():
+            if id_no := self.commercial_partner_id._get_additional_identifier(identifier):
+                buyer_information.update({'buyerIdType': id_type, 'buyerIdNo': id_no})
+                break
+        if budget_code := self.commercial_partner_id._get_additional_identifier('VN_BUDGET_CODE'):
+            buyer_information['buyerBudgetCode'] = budget_code
+        # The company ID of a Vietnamese buyer is not a foreign organization ID, and the VAT is already sent as buyerTaxCode.
+        partner = self.commercial_partner_id
+        if partner.country_code != 'VN' and (identifier := partner._pick_preferred_identifier(
+            partner._get_all_identifiers(enrich=True),
+            filter_func=lambda key, value, metadata: metadata.get('category') == 'EN',
+            sort_key=lambda key, value, metadata: metadata.get('sequence', 100),
+        )):
+            buyer_information['buyerForeignOrganizationId'] = identifier['value']
         json_values['buyerInfo'] = buyer_information
 
     def _l10n_vn_edi_add_seller_information(self, json_values):
@@ -499,6 +525,7 @@ class AccountMove(models.Model):
             # According to VN laws, if the payment method has not been determined, we can fill in TM/CK.
             # TM is for bank transfer, CK is for cash payment.
             'paymentMethodName': 'TM/CK',
+            **self._l10n_vn_edi_get_studio_values(self, SINVOICE_PAYMENT_STUDIO_FIELDS),
         }]
 
     def _l10n_vn_edi_add_item_information(self, json_values):
@@ -552,6 +579,7 @@ class AccountMove(models.Model):
                     'adjustmentTaxAmount': item_information['taxAmount'],
                     'isIncreaseItem': False,
                 })
+            item_information.update(self._l10n_vn_edi_get_studio_values(line, SINVOICE_ITEM_STUDIO_FIELDS))
             if line.display_type == 'line_note':
                 item_information = {'selection': item_information['selection'], 'itemName': item_information['itemName']}
             items_information.append(item_information)
@@ -611,6 +639,14 @@ class AccountMove(models.Model):
         self.ensure_one()
         sent_statuses = {'sent', 'payment_state_to_update', 'adjusted', 'replaced'}
         return self.l10n_vn_edi_invoice_state in sent_statuses
+
+    def _l10n_vn_edi_get_studio_values(self, record, studio_fields):
+        """ SInvoice expects strings, so only the char, selection and date Studio fields are sent, dates as dd/mm/yyyy. """
+        return {
+            key: value.strftime('%d/%m/%Y') if field.type == 'date' else value
+            for field_name, key in studio_fields.items()
+            if (field := record._fields.get(field_name)) and field.type in ('char', 'selection', 'date') and (value := record[field_name])
+        }
 
     def _get_invoice_files(self):
         invoice_files = super()._get_invoice_files()
