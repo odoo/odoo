@@ -200,6 +200,10 @@ patch(PaymentForm.prototype, {
                 this.paymentContext['transactionRoute'],
                 this._prepareTransactionRouteParams(),
             ));
+            if (processingValues.state === 'error') {
+                this._handlePaymentProcessingError(processingValues);
+                return;
+            }
             component.reference = processingValues.reference; // Store final reference.
             // Initiate the payment.
             const paymentResponse = await this.waitFor(rpc('/payment/adyen/payments', {
