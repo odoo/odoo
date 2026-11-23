@@ -1,6 +1,5 @@
 import { PosOrder } from "@point_of_sale/app/models/pos_order";
 import { patch } from "@web/core/utils/patch";
-import { _t } from "@web/core/l10n/translation";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 
 patch(PosOrder.prototype, {
@@ -185,63 +184,35 @@ patch(PosOrder.prototype, {
         });
     },
     /**
-     * Apply a code and add it to the order's applied_codes
-     * Check whether it was already applied
-     * Check whether a rule with the specific code exists
-     * If the program belongs to a nominative program, automatically set
+     * Apply a code and add it to the order's applied_codes.
+     * The code is expected to have been validated beforehand by `PosStore.loadCode`.
+     * If the code belongs to a nominative program, automatically set
      * the partner ID to the owner of the code.
      * @param {string} code
-     * @returns {string} rejection reason or "" for success
+     * @returns {loyalty_program|null} the program of the applied code, or null if the code is unknown
      */
     applyCode(code) {
         const card = this.models["loyalty.card"].find((card) => card.code == code);
         const rule = card ? null : this.models["loyalty.rule"].find((r) => r.matchCode(code));
-        if (!card && !rule) {
-            return {
-                success: false,
-                program_id: null,
-                rejection_message: _t("That card code is invalid (%s).", code),
-            };
-        }
-        const appliedCode = rule ? rule.code : code;
-        if (this.applied_codes.includes(appliedCode)) {
-            return {
-                success: false,
-                program_id: null,
-                rejection_message: _t("That card code has already been scanned and activated."),
-            };
-        }
         const program = card?.program_id || rule?.program_id;
-        if (program && !this.isProgramPricelistValid(program)) {
-            return {
-                success: false,
-                program_id: null,
-                rejection_message: _t("That card program requires a specific pricelist."),
-            };
+        if (!program) {
+            return null;
         }
         if (card?.partner_id) {
-            if (this.partner_id && this.partner_id != card.partner_id) {
-                return {
-                    success: false,
-                    program_id: null,
-                    rejection_message: _t("That card code belongs to someone else."),
-                };
-            }
             this.partner_id = card.partner_id;
         }
-
-        if (card?.program_id?.is_payment_program) {
+        if (card && program.is_payment_program) {
             this.active_payment_programs = [
                 ...this.active_payment_programs,
-                { reward_id: card.program_id.reward_ids[0].id, card_id: card.id },
+                { reward_id: program.reward_ids[0].id, card_id: card.id },
             ];
         }
-        this.applied_codes = [...this.applied_codes, appliedCode];
+        this.applied_codes = [...this.applied_codes, rule ? rule.code : code];
 
-        if (card?.program_id && !card.program_id.is_payment_program) {
-            this._autoClaimSingleProductReward(card.program_id);
+        if (card && !program.is_payment_program) {
+            this._autoClaimSingleProductReward(program);
         }
-        return { success: true, program_id: program, rejection_message: "" };
+        return program;
     },
     /**
      * Claim a program's reward automatically when the program has a single reward.

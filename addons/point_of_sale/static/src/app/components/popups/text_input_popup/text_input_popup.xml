@@ -11,9 +11,16 @@
                     <t t-out="button.label"/>
                 </button>
             </t>
-            <textarea t-att-rows="this.props.rows" class="form-control form-control-lg mx-auto" type="text" t-model.proxy="this.state.inputValue" t-ref="this.inputRef" t-att-placeholder="this.props.placeholder" t-on-keydown="this.onKeydown" t-on-paste="this.onPaste" />
+            <div class="position-relative">
+                <textarea t-att-rows="this.props.rows" class="form-control form-control-lg mx-auto" t-att-class="{'border border-danger pe-5': this.state.errorMessage}" type="text" t-model.proxy="this.state.inputValue" t-ref="this.inputRef" t-att-placeholder="this.props.placeholder" t-on-keydown="this.onKeydown" t-on-input="this.onInput" t-on-paste="this.onPaste" />
+                <i t-if="this.state.errorMessage" class="oi oi-filled oi-lg text-danger position-absolute end-0 top-0 pe-3 pt-2" data-icon="error" aria-hidden="true" />
+            </div>
+            <div t-if="this.state.errorMessage" class="o_pos_popup_error text-danger mt-1" role="alert">
+                <i class="oi oi-filled text-danger me-1" data-icon="error" aria-hidden="true" />
+                <t t-out="this.state.errorMessage" />
+            </div>
             <t t-set-slot="footer">
-                <button class="btn btn-primary" t-att-disabled="!this.state.inputValue.trim()" t-on-click="this.confirm">Apply</button>
+                <button class="btn btn-primary" t-att-disabled="!this.state.inputValue.trim() or this.state.isProcessing" t-on-click="this.confirm">Apply</button>
                 <button class="btn btn-secondary" t-on-click="this.close">Discard</button>
             </t>
         </Dialog>

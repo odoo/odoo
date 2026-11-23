@@ -1,11 +1,10 @@
-import { Component, onMounted, useProps, proxy, signal, t } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, useProps, proxy, signal, t } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
 import { deserializeDateTime, serializeDate } from "@web/core/l10n/dates";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { _t } from "@web/core/l10n/translation";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { debounce } from "@bus/workers/bus_worker_utils";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 import { roundCurrency } from "@point_of_sale/app/models/utils/currency";
@@ -37,11 +36,13 @@ export class ManageGiftCardPopup extends Component {
             inputValue: this.props.startingValue,
             amountValue: this.props.line.prices.total_included.toString(),
             error: false,
+            errorMessage: "",
             amountError: false,
             expirationDate: luxon.DateTime.now().plus({ year: 1 }),
         });
         this.batchedGiftcardCodeKeydown = debounce(this.checkGiftCard.bind(this), 500);
         onMounted(this.onMounted);
+        onWillUnmount(() => this.batchedGiftcardCodeKeydown.cancel());
     }
 
     onMounted() {
@@ -59,27 +60,40 @@ export class ManageGiftCardPopup extends Component {
     }
 
     async checkGiftCard() {
+        this.state.errorMessage = "";
+        this.state.error = false;
+        // The duplicate check needs no network, so it runs before the offline early return.
+        const code = this.state.inputValue.trim();
+        const duplicate = this.pos
+            .getOrder()
+            .getOrderlines()
+            .some(
+                (other) => other.id !== this.props.line.id && other.gift_card_vals?.code === code
+            );
+        if (duplicate) {
+            this.state.errorMessage = _t(
+                "This code is already used by another gift card in this order. Enter a different code."
+            );
+            this.state.error = true;
+            this.state.loading = false;
+            return false;
+        }
         if (this.pos.data.network.offline) {
             this.state.lockGiftCardFields = false;
             this.state.loading = false;
             return true;
         }
         try {
-            const code = this.state.inputValue.trim();
             const result = await this.pos.data.call("loyalty.card", "get_card_status", [
                 code,
                 this.pos.config.id,
             ]);
 
             if (!result.status) {
-                this.dialog.add(AlertDialog, {
-                    title: _t("Invalid Gift Card Code"),
-                    body: _t(
-                        "The code is invalid. Ensure that the spelling is right or if the gift card exists."
-                    ),
-                });
+                this.state.errorMessage = _t(
+                    "No gift card matches this code. Check the code and try again."
+                );
                 this.state.error = true;
-                this.state.inputValue = "";
                 return false;
             }
 
@@ -109,7 +123,6 @@ export class ManageGiftCardPopup extends Component {
                 type: "danger",
             });
         } finally {
-            this.state.error = false;
             this.state.loading = false;
         }
 
@@ -117,7 +130,14 @@ export class ManageGiftCardPopup extends Component {
     }
 
     async addBalance(ev) {
-        if (!this.validateCode()) {
+        if (this.state.loading) {
+            return;
+        }
+        // Check the code as typed now: a pending debounced check would run on stale input.
+        this.batchedGiftcardCodeKeydown.cancel();
+        this.state.loading = true;
+        const isCodeValid = await this.checkGiftCard();
+        if (!isCodeValid || !this.validateCode()) {
             return;
         }
         this.props.getPayload(
@@ -133,6 +153,9 @@ export class ManageGiftCardPopup extends Component {
     }
 
     validateCode() {
+        if (this.state.error || this.state.amountError) {
+            return false;
+        }
         const { inputValue, amountValue } = this.state;
         if (inputValue.trim() === "") {
             this.state.error = true;

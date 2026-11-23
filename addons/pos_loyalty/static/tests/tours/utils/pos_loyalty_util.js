@@ -27,6 +27,16 @@ export function enterCode(code) {
         Dialog.confirm(),
     ];
 }
+export function enterCodeWithError(code, errorMessage) {
+    return [
+        ...enterCode(code),
+        {
+            content: `check error "${errorMessage}" in the enter code popup`,
+            trigger: `.modal .o_pos_popup_error:contains('${errorMessage}')`,
+        },
+        Dialog.cancel({ title: "Enter Code" }),
+    ];
+}
 export function claimReward(rewardName) {
     return [
         ...ProductScreen.clickControlButton("Reward"),
@@ -178,7 +188,6 @@ export function useExistingLoyaltyCard(code, valid = true) {
     ];
 
     if (!valid) {
-        steps.push(Dialog.proceed({ title: "invalid gift card code", button: "Ok" }));
         steps.push(Dialog.cancel({ title: "sell/manage physical gift card" }));
         steps.push({
             trigger: `a:contains("Sell physical gift card?")`,
