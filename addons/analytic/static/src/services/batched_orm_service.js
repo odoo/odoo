@@ -16,7 +16,7 @@ class RequestBatcherORM extends ORM {
      * @param {Function} callback
      * @returns {Promise<any>}
      */
-    async batch(ids, keys, callback) {
+    async batch(ids, keys, callback, onRefresh) {
         const key = JSON.stringify(keys);
         let batch = this.batches[key];
         if (!batch) {
@@ -24,10 +24,14 @@ class RequestBatcherORM extends ORM {
                 deferred: Promise.withResolvers(),
                 scheduled: false,
                 ids: [],
+                refreshCallbacks: [],
             };
             this.batches[key] = batch;
         }
         batch.ids = unique([...batch.ids, ...ids]);
+        if (onRefresh) {
+            batch.refreshCallbacks.push(onRefresh);
+        }
 
         if (!batch.scheduled) {
             batch.scheduled = true;
@@ -35,7 +39,7 @@ class RequestBatcherORM extends ORM {
                 delete this.batches[key];
                 let result;
                 try {
-                    result = await callback(batch.ids);
+                    result = await callback(batch.ids, batch.refreshCallbacks);
                 } catch (e) {
                     return batch.deferred.reject(e);
                 }
@@ -53,14 +57,38 @@ class RequestBatcherORM extends ORM {
      * responds, records are then dispatched to the callees based on the
      * given ids arguments (kept in the closure).
      *
+     * Reads with different cache settings are never batched together. When the
+     * cache `callback` option is used, it is called with the fresh records of
+     * the given ids only.
+     *
      * @param {string} resModel
      * @param {number[]} resIds
      * @param {string[]} fields
      * @returns {Promise<Object[]>}
      */
     async read(resModel, resIds, fields, kwargs) {
-        const records = await this.batch(resIds, ["read", resModel, fields, kwargs], (resIds) =>
-            super.read.call(this.unscoped, resModel, resIds, fields, kwargs)
+        const { callback, ...cacheOptions } = this._cache || {};
+        const onRefresh =
+            callback &&
+            ((freshRecords, hasChanged) =>
+                callback(
+                    freshRecords.filter((r) => resIds.includes(r.id)),
+                    hasChanged
+                ));
+        const records = await this.batch(
+            resIds,
+            ["read", resModel, fields, kwargs, this._cache ? cacheOptions : false],
+            (allIds, refreshCallbacks) => {
+                const orm = this._cache
+                    ? this.unscoped.cache({
+                          ...cacheOptions,
+                          callback: (freshRecords, hasChanged) =>
+                              refreshCallbacks.forEach((cb) => cb(freshRecords, hasChanged)),
+                      })
+                    : this.unscoped;
+                return super.read.call(orm, resModel, allIds, fields, kwargs);
+            },
+            onRefresh
         );
         return records.filter((r) => resIds.includes(r.id));
     }
