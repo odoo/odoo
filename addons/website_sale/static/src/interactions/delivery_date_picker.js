@@ -15,13 +15,17 @@ export class DeliveryDatePicker extends Interaction {
         const locale = document.documentElement.getAttribute('lang') || 'en-US';
         const defaultDate = DateTime.fromISO(this.availableDates[0], { locale });
         const lastDate = DateTime.fromISO(this.availableDates[this.availableDates.length - 1]);
+        const { deliveryDate } = this.el.dataset;
+        const value = this.availableDates.includes(deliveryDate)
+            ? DateTime.fromISO(deliveryDate, { locale })
+            : defaultDate;
         this.registerCleanup(
             this.services.datetime_picker.create(
                 {
                     target: this.el,
                     format: 'MMM d, yyyy',
                     pickerProps: {
-                        value: defaultDate,
+                        value,
                         type: 'date',
                         minDate: defaultDate,
                         maxDate: lastDate,

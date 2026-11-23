@@ -99,6 +99,7 @@
                         t-if="len(delivery_estimate_dates) > 1"
                         class="o_website_sale_delivery_date_picker input-group o_daterange_picker"
                         t-att-data-delivery-estimate-dates="json.dumps(delivery_estimate_dates)"
+                        t-att-data-delivery-date="order.carrier_id == dm and order.commitment_date and order.commitment_date.date().isoformat()"
                     >
                         <input
                             t-attf-id="o_estimated_delivery_date_{{dm.id}}"

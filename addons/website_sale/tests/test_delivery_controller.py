@@ -152,6 +152,17 @@ class TestWebsiteSaleDeliveryController(PaymentCommon, WebsiteSaleCommon):
 
         self.assertEqual(order.commitment_date.date().isoformat(), delivery_estimate_dates[-1])
 
+    def test_user_choice_mode_shows_customer_chosen_date(self):
+        delivery_estimate_dates = self._enable_user_choice_delivery_estimate(self.free_delivery)
+        with self.mock_request(sale_order_id=self.cart.id) as request:
+            order = request.cart
+            order._set_delivery_method(self.free_delivery)
+            order.commitment_date = delivery_estimate_dates[-1]
+            html = self.env['ir.qweb']._render('website_sale.delivery_method', {
+                'dm': self.free_delivery, 'order': order, 'is_selected': True,
+            })
+        self.assertIn(f'data-delivery-date="{delivery_estimate_dates[-1]}"', str(html))
+
     def test_user_choice_mode_resets_date_no_longer_offered(self):
         delivery_estimate_dates = self._enable_user_choice_delivery_estimate(self.free_delivery)
         with self.mock_request(sale_order_id=self.cart.id) as request:
