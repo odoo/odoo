@@ -4101,3 +4101,30 @@ class TestStockValuation(TestStockValuationCommon):
             'qty_available': 3,
             'avg_cost': 23.33,
         }])
+
+    def test_multi_company_fifo_stack_size(self):
+        """ Check that when multiple companies are selected, the size of the fifo stack
+        only counts the on-hand quantity of the main company
+        """
+        self.product_fifo.categ_id.with_company(self.other_company).property_cost_method = 'fifo'
+
+        self._make_in_move(product=self.product_fifo, quantity=10.0, unit_cost=5.0)
+        self._make_in_move(product=self.product_fifo, quantity=10.0, unit_cost=8.0)
+        self._make_out_move(product=self.product_fifo, quantity=10.0)
+        self._make_in_move(product=self.product_fifo, quantity=10.0, unit_cost=100.0, company=self.other_company)
+
+        out_move = self.env['stock.move'].create({
+            'product_id': self.product_fifo.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_uom_qty': 1,
+            'company_id': self.company.id,
+        })
+        out_move_with_comp = out_move.with_company(self.company).with_context(allowed_company_ids=[self.company.id, self.other_company.id])
+        out_move_with_comp._action_confirm()
+        out_move_with_comp._action_assign()
+        out_move_with_comp.move_line_ids.quantity = 1.0
+        out_move_with_comp.picked = True
+        out_move_with_comp._action_done()
+
+        self.assertEqual(out_move_with_comp.value, 8)
