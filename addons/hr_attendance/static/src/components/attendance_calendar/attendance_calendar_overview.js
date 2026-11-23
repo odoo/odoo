@@ -1,5 +1,5 @@
-import { Component, proxy, t, useEffect, useProps } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
+import { Component, proxy, t, useEffect, usePlugin, useProps } from "@odoo/owl";
+import { ORM } from "@web/core/orm_plugin";
 import { user } from "@web/core/user";
 import { formatDuration } from "@web/views/fields/formatters";
 
@@ -8,10 +8,11 @@ export class AttendanceCalendarOverview extends Component {
 
     props = useProps({
         dateRange: t.object(),
+        employeeId: t.or([t.number(), t.boolean()]).optional(),
     });
 
     setup() {
-        this.orm = useService("orm");
+        this.orm = usePlugin(ORM);
         this.formatDuration = formatDuration;
         this.state = proxy({
             entries: [],
@@ -23,7 +24,7 @@ export class AttendanceCalendarOverview extends Component {
 
     async loadData() {
         const { start, end } = this.props.dateRange;
-        let employeeId = this.env.searchModel.context.active_id;
+        let employeeId = this.props.employeeId;
         if (!employeeId) {
             const employees = await this.orm.searchRead(
                 "hr.employee",

@@ -1,7 +1,8 @@
 /** @odoo-module */
 
-import { onWillUnmount, onMounted } from "@odoo/owl";
+import { onWillUnmount, onMounted, usePlugin } from "@odoo/owl";
 import { hrPresenceStatus, HrPresenceStatus } from "@hr/components/hr_presence_status/hr_presence_status";
+import { BusPlugin } from "@bus/services/bus_plugin";
 import { patch } from "@web/core/utils/patch";
 import { _t } from "@web/core/l10n/translation";
 
@@ -9,7 +10,7 @@ patch(HrPresenceStatus.prototype, {
     setup() {
         super.setup();
 
-        this.busService = this.env.services.bus_service;
+        this.busService = usePlugin(BusPlugin);
         this._onPresenceStatus = this._onPresenceStatus.bind(this);
 
         this.employeeAttendanceChannel = `hr.employee_${this.props.record.resId}`;

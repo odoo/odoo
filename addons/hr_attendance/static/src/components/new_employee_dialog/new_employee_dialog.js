@@ -1,6 +1,7 @@
-import { Component, useProps, proxy, t } from "@odoo/owl";
+import { Component, usePlugin, useProps, proxy, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { useService } from "@web/core/utils/hooks";
+import { DialogPlugin } from "@web/core/dialog/dialog_plugin";
+import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
 import { rpc } from "@web/core/network/rpc";
 import { Dialog } from "@web/core/dialog/dialog";
 import { Many2One } from "./many2one/many2one";
@@ -14,8 +15,8 @@ export class NewEmployeeDialog extends Component {
         token: t.string(),
     });
     setup() {
-        this.dialogService = useService("dialog");
-        this.notification = useService("notification");
+        this.dialogService = usePlugin(DialogPlugin);
+        this.notification = usePlugin(NotificationPlugin);
         this.state = proxy({
             employeeName: "",
             badgeId: "",
