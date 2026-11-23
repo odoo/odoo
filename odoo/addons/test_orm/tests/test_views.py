@@ -256,3 +256,29 @@ class TestViewGroups(ViewCase):
         self.assertEqual(dict(filename2.attrib), {'name': 'binary_x_filename2', 'invisible': 'True', 'readonly': 'False', 'data-used-by': "filename='binary_x_filename2' (field,binary)"})
 
         self.assertEqual(form.xpath("//field[@name='i_dont_exist']"), [])
+
+    def test_get_views_fields_exportable(self):
+        """The ``exportable`` field attribute must be sent to the web client,
+        so that non-exportable fields loaded by a view (e.g. the definition
+        record of a properties field, added automatically) are excluded from
+        the export of that view."""
+        view = self.env['ir.ui.view'].create({
+            'name': 'stuff',
+            'model': 'test_orm.emailmessage',
+            'arch': """
+                <kanban>
+                    <templates>
+                        <t t-name="card">
+                            <field name="email_to"/>
+                            <field name="properties"/>
+                        </t>
+                    </templates>
+                </kanban>
+            """,
+        })
+        views = self.env['test_orm.emailmessage'].get_views([(view.id, 'kanban')])
+        fields_info = views['models']['test_orm.emailmessage']['fields']
+        self.assertIn('properties_base_definition_id', fields_info,
+            "the definition record of the properties field should be loaded in the view")
+        self.assertIs(fields_info['properties_base_definition_id']['exportable'], False)
+        self.assertIs(fields_info['email_to']['exportable'], True)
