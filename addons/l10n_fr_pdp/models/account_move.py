@@ -156,6 +156,8 @@ class AccountMove(models.Model):
             amount = 0
             if is_relevant:
                 amount = move._pdp_get_paid_amount() - already_sent
+                if move.currency_id.is_zero(amount):
+                    amount = 0
             move.pdp_lifecycle_residual = amount
 
     @api.depends('peppol_response_ids', 'peppol_response_ids.peppol_state')
