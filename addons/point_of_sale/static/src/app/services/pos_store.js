@@ -1757,9 +1757,21 @@ export class PosStore extends WithLazyGetterTrap {
 
             try {
                 const serialized = order.serializeForORM({ keepCommands: true });
+                const isPaidAndPrinted = order.isPaidAndPrinted;
                 const data = await this.data.call("pos.order", "sync_from_ui", [[serialized]], {
                     context,
                 });
+                if (isPaidAndPrinted) {
+                    // The server applied the payment edit on a copy and left this order's payments
+                    // untouched. The local payments are the edited ones: drop them so the original
+                    // payments in `data` are loaded instead. Kept, they would stay on this order
+                    // next to the original ones, and be synced again as payments of this order.
+                    this.models["pos.payment"]
+                        .filter((x) => x.pos_order_id.id === order.id)
+                        .forEach((element) => {
+                            this.data.localDeleteCascade(element);
+                        });
+                }
                 order.serializeForORM();
                 const missingRecords = await this.data.missingRecursive(data);
                 const newData = this.models.loadConnectedData(missingRecords);
@@ -2229,7 +2241,7 @@ export class PosStore extends WithLazyGetterTrap {
         });
     }
     canEditPayment(order) {
-        return !this.config.autoPrint && order.nb_print === 0 && order.state === "paid";
+        return order.canEditPayment && this.accessRight.canEditPayment;
     }
     openFinalizedOrders() {
         const order = this.getOrder();

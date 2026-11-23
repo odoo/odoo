@@ -21,6 +21,9 @@
         'web.assets_frontend': [
             'l10n_my_edi_pos/static/src/interactions/address.js',
         ],
+        'point_of_sale._assets_pos': [
+            'l10n_my_edi_pos/static/src/app/**/*',
+        ],
     },
 
     'auto_install': True,

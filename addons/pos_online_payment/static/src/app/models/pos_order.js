@@ -17,6 +17,21 @@ patch(PosOrder.prototype, {
         }
         return serialized;
     },
+    get canEditPayment() {
+        // Online payments cannot be edited from the PoS. Printed orders are refunded and
+        // duplicated with all their payments in negative signs, including online ones, but -ve online payments are not allowed.
+        // Therefore, only unprinted orders with partial online payments can be edited.
+        const onlinePayments = this.payment_ids.filter(
+            (payment) => payment.payment_method_id?.type === "online"
+        );
+        if (
+            onlinePayments.length &&
+            (this.isPaidAndPrinted || onlinePayments.length === this.payment_ids.length)
+        ) {
+            return false;
+        }
+        return super.canEditPayment;
+    },
     get isCustomerRequired() {
         const online_payments_customer_required = this.paymentsRequireCustomer(this.payment_ids);
         return super.isCustomerRequired || (!this.partner_id && online_payments_customer_required);

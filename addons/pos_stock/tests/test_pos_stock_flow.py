@@ -1761,3 +1761,19 @@ class TestPosStockFlow(CommonPosStockTest):
 
         self.assertEqual(order.picking_ids.state, 'done')
         self.assertFalse(order.picking_ids.message_ids.filtered(lambda m: m.subtype_id == self.env.ref('mail.mt_comment')))
+
+    def test_replace_printed_order_keeps_lots(self):
+        """Editing a printed order copies it: the copied lines must keep their lots/serials."""
+        order, _ = self.create_backend_pos_order({
+            'line_data': [{
+                'product_id': self.ten_dollars_with_10_incl.product_variant_id.id,
+                'pack_lot_ids': [Command.create({'lot_name': 'LOT-001'})],
+            }],
+            'payment_data': [{'payment_method_id': self.cash_payment_method.id}],
+        })
+        order.nb_print = 1
+
+        _refund, replacement = order._replace_printed_order({})
+
+        self.assertEqual(replacement.lines.pack_lot_ids.mapped('lot_name'), ['LOT-001'])
+        self.assertEqual(order.lines.pack_lot_ids.mapped('lot_name'), ['LOT-001'])
