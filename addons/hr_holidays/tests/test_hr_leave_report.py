@@ -1,4 +1,7 @@
 
+from datetime import datetime
+
+from odoo import Command
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 
@@ -256,3 +259,36 @@ class TestHrLeaveReport(TestHrHolidaysCommon):
         self.assertEqual(sum(left_2025.mapped('number_of_days')), 19)
         # Allocation B (2026, no end date): untouched at 20
         self.assertEqual(sum(left_2026.mapped('number_of_days')), 20)
+
+    def test_employee_report_leave_spanning_months(self):
+        self.employee_emp.write({
+            'tz': 'Europe/Brussels',
+            'resource_calendar_id': self.env['resource.calendar'].create({
+                'name': 'Duration based',
+                'attendance_ids': [
+                    Command.clear(),
+                    *[Command.create({'dayofweek': str(day), 'duration_hours': 8}) for day in range(5)],
+                ],
+            }).id,
+        })
+        work_entry_type = self.env['hr.work.entry.type'].create({
+            'name': 'Day Leave Type',
+            'code': 'day_leave_report_test',
+            'requires_allocation': False,
+            'leave_validation_type': 'no_validation',
+            'request_unit': 'day',
+            'count_as': 'absence',
+        })
+        # Friday 28/11 -> Wednesday 03/12: 1 day in November, 3 days in December
+        leave = self.env['hr.leave'].create({
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': work_entry_type.id,
+            'request_date_from': '2025-11-28',
+            'request_date_to': '2025-12-03',
+        })
+        self.env.flush_all()
+
+        report = self.env['hr.leave.employee.report'].with_context(tz='Europe/Brussels')
+        self.assertEqual(dict(report._read_group(
+            [('leave_id', '=', leave.id)], ['working_schedule_aligned_date_from:month'], ['number_of_days:sum'],
+        )), {datetime(2025, 11, 1): 1, datetime(2025, 12, 1): 3})
