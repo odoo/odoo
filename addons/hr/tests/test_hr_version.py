@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import date
+from datetime import date, datetime
 from psycopg2.errors import CheckViolation
 
 from odoo.tests import tagged
@@ -55,6 +55,42 @@ class TestHrVersion(TestHrCommon):
                 'contract_date_start': '2021-01-01',
                 'contract_date_end': '2020-12-31'
             })
+
+    def test_direct_version_write_tracked_on_employee(self):
+        """ A write on versions, not through the employee, is logged on the employee's chatter, once per interval of
+        consecutive written versions, and bumps their last modification (which flags their validated payslips). """
+        employee = self.env['hr.employee'].create({'name': 'John Doe', 'date_version': '2020-01-01', 'wage': 1000})
+        version_1 = employee.version_id
+        version_2 = employee.create_version({'date_version': '2021-01-01'})
+        version_3 = employee.create_version({'date_version': '2022-01-01'})
+        self.env.flush_all()
+        self.env.cr.flush()
+
+        def wage_messages(messages):
+            # the tracked values are rendered in the body: "old -> new (Field)"
+            return messages.filtered(lambda m: '(Wage)' in (m.body or ''))
+
+        messages = employee.message_ids
+        with freeze_time('2025-01-01'):
+            (version_1 | version_3).write({'wage': 2000})
+        self.env.flush_all()
+        self.env.cr.flush()
+        self.assertEqual(len(wage_messages(employee.message_ids - messages)), 2,
+            "versions 1 and 3 are not consecutive: one message each")
+        self.assertEqual((version_1 | version_3).mapped('last_modified_date'), [datetime(2025, 1, 1)] * 2)
+
+        messages = employee.message_ids
+        (version_1 | version_2).write({'wage': 3000})
+        self.env.flush_all()
+        self.env.cr.flush()
+        self.assertEqual(len(wage_messages(employee.message_ids - messages)), 1,
+            "versions 1 and 2 are consecutive: a single message")
+
+        messages = employee.message_ids
+        version_2.with_context(skip_employee_tracking=True).write({'wage': 4000})
+        self.env.flush_all()
+        self.env.cr.flush()
+        self.assertFalse(wage_messages(employee.message_ids - messages))
 
     def test_contracts_no_overlap(self):
         # Simple overlap cases
