@@ -54,7 +54,8 @@ export const BUTTON_SIZES = [
 export function computeButtonClasses(el, { type, size, shape }) {
     const classes = [...el.classList].filter(
         (value) =>
-            !value.match(/^(btn.*|rounded-(circle|pill)|flat|(text|bg)-(o-color-\d$|\d{3}$))$/)
+            !value.match(/^(btn.*|rounded-(circle|pill)|flat)$/) &&
+            (type === "custom" || !value.match(/^(text|bg)-(o-color-\d|\d{3})$/))
     );
 
     if (!type || type === "link") {
