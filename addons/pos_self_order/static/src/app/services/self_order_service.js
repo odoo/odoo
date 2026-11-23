@@ -676,6 +676,12 @@ export class SelfOrder extends Reactive {
         );
     }
 
+    getOptionalProducts(productTemplate) {
+        return productTemplate.pos_optional_product_ids.filter(
+            (product) => product.self_order_available && this.isProductAvailable(product)
+        );
+    }
+
     async initKioskData() {
         if (this.session && this.access_token) {
             this.ordering = true;

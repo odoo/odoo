@@ -91,7 +91,10 @@ export class ProductCard extends Component {
 
         if (isConfigurable) {
             router.navigate("product", { id: product.id }, historyState);
-        } else if (product.pos_optional_product_ids.length && !historyState.redirectPage) {
+        } else if (
+            this.selfOrder.getOptionalProducts(product).length &&
+            !historyState.redirectPage
+        ) {
             router.navigate("optional_product", { id: product.id }, historyState);
         }
     }
