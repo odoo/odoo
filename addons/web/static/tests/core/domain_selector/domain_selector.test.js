@@ -648,40 +648,6 @@ test("default condition depends on available fields", async () => {
     expect.verifySteps(['[("user_id", "in", [])]']);
 });
 
-test("debug input in model field selector popover", async () => {
-    class Parent extends Component {
-        static components = { DomainSelector };
-        static template = xml`
-            <DomainSelector
-                resModel="'partner'"
-                domain="this.domain"
-                readonly="false"
-                isDebugMode="true"
-                update.bind="this.update"
-            />
-        `;
-        setup() {
-            this.domain = `[("id", "=", 1)]`;
-        }
-        update(domain) {
-            expect.step(domain);
-            this.domain = domain;
-            render(this);
-        }
-    }
-    await mountWithCleanup(Parent);
-    await openModelFieldSelectorPopover();
-    await contains(".o_model_field_selector_debug").edit("a", { confirm: "tab" });
-    await contains(".o_model_field_selector_popover_close").click();
-    expect.verifySteps([`[("a", "=", 1)]`]);
-    expect(getCurrentPath()).toBe("a");
-    expect(".o_model_field_selector_warning").toHaveCount(1);
-    expect(getOperatorOptions()).toHaveLength(1);
-    expect(getCurrentOperator()).toBe(label("="));
-    expect(getCurrentValue()).toBe("1");
-    expect(SELECTORS.debugArea).toHaveValue(`[("a", "=", 1)]`);
-});
-
 test("between operator", async () => {
     await makeDomainSelector({
         domain: `["&", ("int", ">=", 1), ("int", "<=", 4)]`,

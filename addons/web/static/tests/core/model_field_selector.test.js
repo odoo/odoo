@@ -457,42 +457,6 @@ test("cannot follow relations", async () => {
     expect(getModelFieldSelectorValues()).toEqual(["Product"]);
 });
 
-test("Edit path in popover debug input", async () => {
-    Partner._fields.partner_id = fields.Many2one({
-        string: "Partner",
-        relation: "partner",
-    });
-
-    class Parent extends Component {
-        static components = { ModelFieldSelector };
-        static template = xml`
-            <ModelFieldSelector
-                readonly="false"
-                resModel="'partner'"
-                path="this.path"
-                isDebugMode="true"
-                update="(pathInfo) => this.onUpdate(pathInfo)"
-            />
-        `;
-        setup() {
-            this.path = "foo";
-        }
-        onUpdate(path) {
-            this.path = path;
-            render(this);
-        }
-    }
-
-    await mountWithCleanup(Parent);
-    expect(getModelFieldSelectorValues()).toEqual(["Foo"]);
-
-    await openModelFieldSelectorPopover();
-    await contains(".o_model_field_selector_popover .o_model_field_selector_debug").edit(
-        "partner_id.bar"
-    );
-    expect(getModelFieldSelectorValues()).toEqual(["Partner", "Bar"]);
-});
-
 test("title on first four pages", async () => {
     class Turtle extends models.Model {
         mother_id = fields.Many2one({
@@ -665,63 +629,6 @@ test("support of invalid paths (allowEmpty=true)", async () => {
     expect(".o_model_field_selector_warning").toHaveCount(1);
 });
 
-test("debug input", async () => {
-    expect.assertions(10);
-    let num = 1;
-    class Parent extends Component {
-        static components = { ModelFieldSelector };
-        static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" isDebugMode="true" path="this.state.path" update.bind="this.update"/>`;
-        setup() {
-            this.state = proxy({ path: `` });
-        }
-        update(path, fieldInfo) {
-            if (num === 1) {
-                expect(path).toBe("a");
-                expect(fieldInfo).toEqual({
-                    fieldDef: null,
-                    resModel: "partner",
-                });
-                num++;
-            } else {
-                expect(path).toBe("foo");
-                expect(fieldInfo).toEqual({
-                    resModel: "partner",
-                    fieldDef: {
-                        string: "Foo",
-                        readonly: false,
-                        required: false,
-                        searchable: true,
-                        sortable: true,
-                        store: true,
-                        groupable: true,
-                        type: "char",
-                        name: "foo",
-                    },
-                });
-            }
-        }
-    }
-
-    await mountWithCleanup(Parent);
-    expect(getModelFieldSelectorValues()).toEqual(["-"]);
-    expect(".o_model_field_selector_warning").toHaveCount(1);
-
-    await openModelFieldSelectorPopover();
-    await contains(".o_model_field_selector_debug").edit("a", { confirm: false });
-    await contains(".o_model_field_selector_popover_search").click();
-    expect(getModelFieldSelectorValues()).toEqual(["a"]);
-    expect(".o_model_field_selector_warning").toHaveCount(1);
-
-    await contains(".o_model_field_selector_popover_close").click();
-
-    await openModelFieldSelectorPopover();
-    await contains(".o_model_field_selector_debug").edit("foo");
-    expect(getModelFieldSelectorValues()).toEqual(["Foo"]);
-    expect(".o_model_field_selector_warning").toHaveCount(0);
-
-    await contains(".o_model_field_selector_popover_close").click();
-});
-
 test("focus on search input", async () => {
     class Parent extends Component {
         static components = { ModelFieldSelector };
@@ -884,58 +791,6 @@ test("clear button (allowEmpty=true)", async () => {
     expect(".o_model_field_selector_warning").toHaveCount(0);
     expect(".o_model_field_selector [data-icon='close']").toHaveCount(0);
     expect.verifySteps([`path is ""`]);
-});
-
-test("Modify path in popover debug input and click away", async () => {
-    class Parent extends Component {
-        static components = { ModelFieldSelector };
-        static template = xml`
-            <ModelFieldSelector
-                readonly="false"
-                resModel="'partner'"
-                path="this.path"
-                isDebugMode="true"
-                update.bind="this.update"
-            />
-        `;
-        setup() {
-            this.path = "foo";
-        }
-        update(path) {
-            this.path = path;
-            expect.step(path);
-            render(this);
-        }
-    }
-
-    await mountWithCleanup(Parent);
-    expect(getModelFieldSelectorValues()).toEqual(["Foo"]);
-
-    await openModelFieldSelectorPopover();
-    await contains(".o_model_field_selector_popover .o_model_field_selector_debug").edit(
-        "foooooo",
-        { confirm: false }
-    );
-    expect(getModelFieldSelectorValues()).toEqual(["Foo"]);
-
-    await contains(".o_model_field_selector_popover_close").click();
-    expect(getModelFieldSelectorValues()).toEqual(["foooooo"]);
-    expect.verifySteps(["foooooo"]);
-});
-
-test("showDebugInput = false", async () => {
-    await mountWithCleanup(ModelFieldSelector, {
-        props: {
-            readonly: false,
-            path: "product_id",
-            resModel: "partner",
-            isDebugMode: true,
-            showDebugInput: false,
-        },
-    });
-
-    await openModelFieldSelectorPopover();
-    expect(".o_model_field_selector_debug").toHaveCount(0);
 });
 
 test("models with a m2o of the same name should show the correct page data", async () => {

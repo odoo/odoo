@@ -22,7 +22,6 @@ export class ModelFieldSelector extends Component {
         filter: t.function().optional(),
         sort: t.function().optional(),
         followRelation: t.or([t.boolean(), t.function()]).optional(true),
-        showDebugInput: t.boolean().optional(),
     });
 
     setup() {
@@ -60,18 +59,15 @@ export class ModelFieldSelector extends Component {
             resModel: this.props.resModel,
             path: this.props.path,
             readProperty: this.props.readProperty,
-            update: (path, _fieldInfo, debug = false) => {
+            update: (path) => {
                 this.newPath = path;
-                if (!debug) {
-                    this.updateState({ ...this.props, path }, true);
-                }
+                this.updateState({ ...this.props, path }, true);
             },
             showSearchInput: this.props.showSearchInput,
             isDebugMode: this.props.isDebugMode,
             filter: this.props.filter,
             sort: this.props.sort,
             followRelation: this.props.followRelation,
-            showDebugInput: this.props.showDebugInput,
         };
     }
 

@@ -96,7 +96,6 @@ export class FieldSelectorPopover extends Component {
             path: this.state.path,
             readProperty: true,
             resModel: this.resModel,
-            showDebugInput: false,
             showSearchInput: true,
             update: this.setPath.bind(this),
         });
