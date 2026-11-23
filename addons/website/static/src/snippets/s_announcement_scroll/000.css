@@ -19,6 +19,10 @@
     }
     &.s_announcement_scroll_direction_none {
         --marquee-animation: none;
+
+        .o_marquee_pause {
+            display: none;
+        }
     }
     &.s_announcement_scroll_hover_pause {
         --marquee-hover-play-state: paused;

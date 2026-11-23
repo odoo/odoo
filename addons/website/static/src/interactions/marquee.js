@@ -1,3 +1,4 @@
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { Interaction } from "@web/public/interaction";
 
@@ -26,7 +27,18 @@ export class Marquee extends Interaction {
             "t-att-class": () => ({
                 o_marquee_ready: this.marqueeReady,
                 o_marquee_page_scrolling: this.marqueePageScrolling,
+                o_marquee_paused: this.isPausedByUser,
             }),
+        },
+        ".o_marquee_pause": {
+            "t-on-click": () => (this.isPausedByUser = !this.isPausedByUser),
+            "t-att-title": () => this.pauseButtonLabel,
+        },
+        ".o_marquee_pause_icon": {
+            "t-att-data-icon": () => (this.isPausedByUser ? "play_arrow" : "pause"),
+        },
+        ".o_marquee_pause .visually-hidden": {
+            "t-out": () => this.pauseButtonLabel,
         },
         // Before `start`, so that the clones inherit it.
         _marqueeItem: {
@@ -50,6 +62,7 @@ export class Marquee extends Interaction {
         const prefix = this.constructor.classPrefix;
         this.marqueeContainerEl = this.el.querySelector(`.${prefix}_marquee_container`);
         this.marqueeItemEl = this.el.querySelector(`.${prefix}_marquee_item`);
+        this.isPausedByUser = false;
         this.setParallaxPosition();
     }
 
@@ -82,7 +95,13 @@ export class Marquee extends Interaction {
             this.marqueePageScrolling = false;
         }, 200);
 
-        this.setParallaxPosition();
+        if (!this.isPausedByUser) {
+            this.setParallaxPosition();
+        }
+    }
+
+    get pauseButtonLabel() {
+        return this.isPausedByUser ? _t("Play animation") : _t("Pause animation");
     }
 
     /**
@@ -92,10 +111,12 @@ export class Marquee extends Interaction {
         const MIN_LEFT_SHIFT = 50;
         const prefix = this.constructor.classPrefix;
 
-        if (
-            !this.el.classList.contains(`${prefix}_parallax`) ||
-            window.matchMedia("(prefers-reduced-motion: reduce)").matches
-        ) {
+        // Nothing moves: start on the first item, not on a slice of the loop.
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            this.parallaxPosition = 0;
+            return;
+        }
+        if (!this.el.classList.contains(`${prefix}_parallax`)) {
             this.parallaxPosition = -MIN_LEFT_SHIFT;
             return;
         }
@@ -162,14 +183,19 @@ export class Marquee extends Interaction {
 
     /**
      * Adapts a clone before it is inserted. Clones are decorative duplicates:
-     * they are neither editable, selectable nor exposed to assistive
-     * technologies. Subclasses extending this must call `super`.
+     * they are neither editable, selectable, focusable nor exposed to
+     * assistive technologies. Subclasses extending this must call `super`.
      *
      * @param {HTMLElement} cloneEl
      */
     prepareClone(cloneEl) {
         cloneEl.classList.add("o_not_editable", "o_snippet_not_selectable");
         cloneEl.setAttribute("aria-hidden", "true");
+        for (const focusableEl of cloneEl.querySelectorAll(
+            "a[href], button, input, select, textarea, [tabindex]"
+        )) {
+            focusableEl.setAttribute("tabindex", "-1");
+        }
     }
 }
 

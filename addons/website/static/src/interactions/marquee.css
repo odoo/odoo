@@ -38,8 +38,43 @@
     animation-play-state: var(--marquee-scroll-play-state, running, paused);
 }
 
+/* Not `:focus-within`: the focused pause button would keep it paused. */
+.o_marquee_ready:is(.o_marquee_paused, :has(.o_marquee_item :focus)) .o_marquee_item {
+    animation-play-state: paused;
+}
+
+/* Two classes, to beat `.o_btn_reset` and `section > *` (background.scss). */
+.o_marquee_pause.o_btn_reset {
+    position: absolute;
+    inset-inline-end: var(--o-bs-spacer-2);
+    top: 50%;
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    /* Opaque: the content scrolls under it. */
+    background-color: var(--o-cc-bg, var(--body-bg));
+    box-shadow: 0 0 0 1px color-mix(in srgb, currentColor 25%, transparent);
+    color: inherit;
+    /* In rem: a text strip has a very large font size. */
+    font-size: 1rem;
+    line-height: 1;
+    transform: translateY(-50%);
+
+    &:focus-visible {
+        box-shadow: inset 0 0 0 2px black, inset 0 0 0 4px white;
+    }
+}
+.o_marquee_pause_btn_hidden .o_marquee_pause {
+    display: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
     .o_marquee_ready .o_marquee_item {
         animation: none;
+    }
+    .o_marquee_pause.o_btn_reset {
+        display: none;
     }
 }

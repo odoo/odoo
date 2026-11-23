@@ -1,5 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { queryAll, queryFirst, queryOne } from "@odoo/hoot-dom";
+import { click, queryAll, queryFirst, queryOne } from "@odoo/hoot-dom";
+import { animationFrame, mockMatchMedia } from "@odoo/hoot-mock";
 import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
 
 // The shared `Marquee` interaction is covered through `s_announcement_scroll`,
@@ -51,6 +52,18 @@ test("the clones are decorative duplicates", async () => {
     }
 });
 
+test("the links of the clones are left out of the tab order", async () => {
+    await startInteractions(template.replace("Free Shipping", `<a href="/shop">Free Shipping</a>`));
+
+    expect(".s_announcement_scroll_marquee_item:not(.o_marquee_item_clone) a").not.toHaveAttribute(
+        "tabindex"
+    );
+    expect(".o_marquee_item_clone a").toHaveCount(EXPECTED_CLONE_COUNT);
+    for (const linkEl of queryAll(".o_marquee_item_clone a")) {
+        expect(linkEl).toHaveAttribute("tabindex", "-1");
+    }
+});
+
 test("consecutive text strips are separated by a non-breaking space", async () => {
     await startInteractions(template);
 
@@ -70,4 +83,57 @@ test("stopping the interaction restores the original markup", async () => {
     expect(containerEl.style.getPropertyValue("--marquee-item-size")).toBe("");
     expect(".s_announcement_scroll").not.toHaveClass("o_marquee_ready");
     expect(".o_marquee_item").toHaveCount(0);
+});
+
+test("a visitor can pause and resume the strip", async () => {
+    const { core } = await startInteractions(
+        template.replace(
+            '<div class="s_announcement_scroll_marquee_container"',
+            `<button class="o_marquee_pause o_btn_reset" title="Pause animation">
+                <span class="o_marquee_pause_icon oi oi-filled" data-icon="pause"/>
+                <span class="visually-hidden">Pause animation</span>
+            </button>
+            <div class="s_announcement_scroll_marquee_container"`
+        )
+    );
+    expect(".o_marquee_pause").toHaveAttribute("title", "Pause animation");
+    expect(".o_marquee_pause .visually-hidden").toHaveText("Pause animation");
+    expect(".o_marquee_pause_icon").toHaveAttribute("data-icon", "pause");
+
+    await click(".o_marquee_pause");
+    await animationFrame();
+    expect(".s_announcement_scroll").toHaveClass("o_marquee_paused");
+    expect(".o_marquee_pause").toHaveAttribute("title", "Play animation");
+    expect(".o_marquee_pause .visually-hidden").toHaveText("Play animation");
+    expect(".o_marquee_pause_icon").toHaveAttribute("data-icon", "play_arrow");
+
+    await click(".o_marquee_pause");
+    await animationFrame();
+    expect(".s_announcement_scroll").not.toHaveClass("o_marquee_paused");
+    expect(".o_marquee_pause").toHaveAttribute("title", "Pause animation");
+
+    // Paused when the page is saved: the button is saved as it was.
+    await click(".o_marquee_pause");
+    await animationFrame();
+    core.stopInteractions();
+    expect(".s_announcement_scroll").not.toHaveClass("o_marquee_paused");
+    expect(".o_marquee_pause").toHaveAttribute("title", "Pause animation");
+    expect(".o_marquee_pause .visually-hidden").toHaveText("Pause animation");
+    expect(".o_marquee_pause_icon").toHaveAttribute("data-icon", "pause");
+});
+
+test("with reduced motion, the strip starts on its first item", async () => {
+    mockMatchMedia({ "prefers-reduced-motion": "reduce" });
+    await startInteractions(template);
+    expect(queryOne(".s_announcement_scroll_marquee_container").style.transform).toBe(
+        "translateX(0%)"
+    );
+});
+
+test("with motion, the strip starts in the middle of the loop", async () => {
+    mockMatchMedia({ "prefers-reduced-motion": "no-preference" });
+    await startInteractions(template);
+    expect(queryOne(".s_announcement_scroll_marquee_container").style.transform).toBe(
+        "translateX(-50%)"
+    );
 });
