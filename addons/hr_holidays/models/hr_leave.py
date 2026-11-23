@@ -198,6 +198,9 @@ class HrLeave(models.Model):
         'Duration (Hours)', compute='_compute_duration', store=True, tracking=True,
         inverse="_inverse_number_of_hours",
         help='Number of hours of the time off request. Used in the calculation.')
+    day_durations = fields.Json(
+        compute='_compute_day_durations', store=True, copy=False, prefetch=False, groups='base.group_system',
+        help="Duration of the request on each of its days, read by the Time Off by Employee report.")
     last_several_days = fields.Boolean("All day", compute="_compute_last_several_days")
     duration_display = fields.Char('Requested', compute='_compute_duration_display')
     # details
@@ -1126,6 +1129,42 @@ class HrLeave(models.Model):
 
             if float_compare(leave.number_of_hours, hours, precision_digits=2) != 0:
                 leave.number_of_hours = hours
+
+    @api.depends('date_from', 'date_to', 'employee_id', 'resource_calendar_id', 'work_entry_type_id', 'time_rule_id')
+    def _compute_day_durations(self):
+        """Compute the duration of the requests on each of their days (UTC), as ``{day start: [days, hours]}``.
+
+        Each day is a virtual request whose duration is given by :meth:`_get_durations`; only the days
+        with a duration are kept. The other requests are never deducted from a day, except the ones
+        created by a time rule. The requests created by a time rule get no days: the report does not
+        show them.
+        """
+        self.day_durations = False
+        leaves_to_compute = self.filtered(lambda leave: leave.date_from and leave.date_to and not leave.time_rule_id)
+        for company, leaves in leaves_to_compute.grouped('employee_company_id').items():
+            leaves = leaves.with_context(allowed_company_ids=company.ids or self.env.company.ids)
+            leave_days = []
+            for leave in leaves:
+                day = datetime.combine(leave.date_from.date(), time.min)
+                while day <= leave.date_to:
+                    leave_days.append((leave, max(leave.date_from, day), min(leave.date_to, day + timedelta(days=1, seconds=-1))))
+                    day += timedelta(days=1)
+            virtual_leaves = leaves.browse().concat(leaves.new({
+                'date_from': date_from,
+                'date_to': date_to,
+                'employee_id': leave.employee_id.id,
+                'work_entry_type_id': leave.work_entry_type_id.id,
+                'resource_calendar_id': leave.resource_calendar_id.id,
+            }) for leave, date_from, date_to in leave_days)
+            durations = virtual_leaves._get_durations(
+                additional_domain=['|', ('holiday_id', '=', False), ('holiday_id.time_rule_id', '!=', False)])
+            day_durations = defaultdict(dict)
+            for (leave, date_from, _date_to), virtual_leave in zip(leave_days, virtual_leaves):
+                days, hours = durations.get(virtual_leave.id, (0, 0))
+                if days > 0:
+                    day_durations[leave][fields.Datetime.to_string(date_from)] = [days, hours]
+            for leave in leaves:
+                leave.day_durations = day_durations.get(leave) or False
 
     @api.depends('employee_company_id')
     def _compute_company_id(self):
