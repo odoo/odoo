@@ -324,10 +324,15 @@ export class CartService {
     /**
      * Opens the product configurator dialog.
      *
+     * The configurator data is preloaded by {@link add} (through
+     * `/website_sale/product_configurator/get_values`) to save the dialog an RPC.
+     *
      * @param {Number} productTemplateId - The product template id, as a `product.template` id.
-     * @param {Number} quantity - The quantity to add to the cart.
-     * @param {Number[]} combination - The combination of the product, as a list of
-     *      `product.template.attribute.value` ids.
+     * @param {Object[]} products - The main product's information, as returned by
+     *      `_get_product_information` (one element).
+     * @param {Object[]} optionalProducts - The optional products' information, as returned by
+     *      `_get_product_information`, with their `parent_product_tmpl_id`.
+     * @param {Number} currencyId - The currency of the prices, as a `res.currency` id.
      * @param {CustomAttributeValues[]} productCustomAttributeValues - An array of objects
      *      representing custom attribute values for the product.
      * @param {Object} [options] - Define how to add products to the cart.
