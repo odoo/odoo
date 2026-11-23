@@ -28,17 +28,32 @@ const AUTOCLOSE_NOTIFICATION_DELAY = 4000;
  */
 
 /**
- * Manages product addition via the {@link addToCart} function.
+ * Single source of truth for the eCommerce cart on the client side.
  *
- * This function handles the process of adding products to the cart, including:
- * - Opening configurators if needed;
- * - Updating the cart with the selected products;
- * - Updating the cart count in the navbar;
- * - Notifying the customer of successful additions;
- * - Track the added products.
+ * The service has two responsibilities:
  *
- * Override this class to implement additional checks or
- * provide relevant information when adding a product to the cart.
+ * 1. Cart actions, via {@link add} and {@link update}:
+ *    - Opening the product/combo configurators if needed;
+ *    - Adding products to the cart, or updating/removing existing lines;
+ *    - Updating the cart count in the navbar;
+ *    - Notifying the customer of successful additions and warnings;
+ *    - Tracking the added/updated products.
+ *
+ * 2. Cart state, via {@link loadCart}:
+ *    - The cart data (`lines`, `totals`, order `history` and `currency_id`) is fetched from
+ *      `/shop/cart/data` and stored in the reactive {@link state} object;
+ *    - The OWL cart components (`CartLines`, `CartTotal`, `CartSummary`, `CartQuickReorder`, ...)
+ *      read from this shared state instead of each fetching their own data, and re-render
+ *      automatically when it changes;
+ *    - Every cart action reloads the state once it is done, so that all components stay in sync
+ *      without re-rendering server-side fragments.
+ *
+ * The service also exposes a {@link bus} on which the following events are triggered:
+ *    - `cart_amount_changed`: triggered after a cart line is updated, with the new
+ *      `[amount, minorAmount]` of the order as payload (e.g. used by the express checkout).
+ *
+ * Override this class to implement additional checks or provide relevant information when
+ * adding a product to the cart, or to extend the cart state.
  */
 export class CartService {
     static dependencies = ["dialog", "public.interactions"];
@@ -78,6 +93,9 @@ export class CartService {
             totals: {},
             history: {},
             currency_id: false,
+            is_quantity_view_active: false,
+            is_wishlist_view_active: false,
+            show_product_reference_price: false,
         });
         this.cartLoaded = false;
 
@@ -103,7 +121,26 @@ export class CartService {
     // Methods exposed by the service.
     //--------------------------------------------------------------------------
 
-    async loadCart(force = false, fromConfirmationPage = false, withHistory = false) {
+    /**
+     * Load the cart data into the shared {@link state}.
+     *
+     * Call it in the `onWillStart` of components reading the state, and with `force=true` after
+     * modifying the cart outside of this service (e.g. applying a promo code).
+     *
+     * The mutex serializes the loads: components mounting together trigger a single request, and
+     * concurrent reloads can't apply outdated data.
+     *
+     * @param {Object} [options]
+     * @param {Boolean} [options.force=false] - Whether to fetch the data even if it was already
+     *      loaded.
+     * @param {Boolean} [options.fromConfirmationPage=false] - Whether to load the last confirmed
+     *      order (`sale_last_order_id`) instead of the current cart.
+     * @param {Boolean} [options.withHistory=false] - Whether to also load the order history of the
+     *      customer, used by the quick reorder.
+     *
+     * @returns {Promise<void>}
+     */
+    async loadCart({ force = false, fromConfirmationPage = false, withHistory = false } = {}) {
         await this.mutex.exec(
             async () => await this._loadCartData(force, fromConfirmationPage, withHistory)
         );
@@ -134,7 +171,15 @@ export class CartService {
      * @param {Object} [options] - Define how to add products to the cart.
      * @param {Boolean} [options.isBuyNow=false] - Whether the product should be added immediately,
      *      bypassing optional configurations. Defaults to false.
-     * @param {Boolean} [options.source=false] - From what source the product was added.
+     * @param {Boolean} [options.redirectToCart=isBuyNow] - Whether to redirect the customer to
+     *      the cart once the product is added. Defaults to `isBuyNow`.
+     * @param {Boolean} [options.showNotification=true] - Whether to show the cart notifications
+     *      once the product is added.
+     * @param {Boolean} [options.skipOrderAlert=false] - Whether to not store the warning on the
+     *      order when it can't be attached to a line. Use it when the customer won't see the cart
+     *      page right after, so that the warning isn't shown again there.
+     * @param {Boolean} [options.renderShorterCartSummary=false] - Whether to render the shorter
+     *      cart summary, e.g. when adding to an empty cart from the cart page.
      * @param {Boolean} [options.isConfigured=false] - Whether the product is already configured.
      *      Defaults to false.
      * @param {Boolean} [options.showQuantity=true] - Whether quantity selector should be shown
@@ -155,14 +200,19 @@ export class CartService {
         {
             isBuyNow=false,
             isConfigured=false,
-            source=false,
+            redirectToCart=isBuyNow,
+            showNotification=true,
+            skipOrderAlert=false,
+            renderShorterCartSummary=false,
             showQuantity=true,
         } = {},
     ) {
-        const shouldRedirectToCart = (
-            isBuyNow
-            && !["cart_accessory", "quick_reorder"].includes(source)
-        );
+        const requestOptions = {
+            shouldRedirectToCart: redirectToCart,
+            showNotification: showNotification,
+            skipOrderAlert: skipOrderAlert,
+            renderShorterCartSummary: renderShorterCartSummary,
+        };
 
         if (!productId && ptavs.length) {
             productId = await this.rpc('/sale/create_product_variant', {
@@ -214,8 +264,7 @@ export class CartService {
                             comboItem, productTemplateId, remainingData.quantity
                         )
                     ),
-                    shouldRedirectToCart: shouldRedirectToCart,
-                    source: source,
+                    ...requestOptions,
                     ...rest
                 });
             }
@@ -241,8 +290,7 @@ export class CartService {
                 uomId,
                 productCustomAttributeValues,
                 noVariantAttributeValues,
-                shouldRedirectToCart: shouldRedirectToCart,
-                source: source,
+                ...requestOptions,
                 ...rest
             });
         }
@@ -283,13 +331,29 @@ export class CartService {
             uomId,
             productCustomAttributeValues,
             noVariantAttributeValues,
-            shouldRedirectToCart: shouldRedirectToCart,
-            source: source,
+            ...requestOptions,
             ...rest
         });
     }
 
-    async update(lineId, productId = undefined, quantity, fromCartPage = false) {
+    /**
+     * Update the quantity of a cart line, or remove it if the quantity is 0.
+     *
+     * Once updated, the cart icon, the {@link state} and the express checkout amount (through the
+     * `cart_amount_changed` event) are refreshed, and the update is tracked.
+     *
+     * @param {Object} line - The line to update.
+     * @param {Number} line.lineId - The line's id, as a `sale.order.line` id.
+     * @param {Number} [line.productId=undefined] - The line's product id, as a `product.product`
+     *      id.
+     * @param {Number} line.quantity - The new quantity of the line.
+     * @param {Object} [options]
+     * @param {Boolean} [options.fromCartPage=false] - Whether the update is done from the cart
+     *      page. If so and the cart becomes empty, the page is reloaded to display the empty cart.
+     *
+     * @returns {Promise<void>}
+     */
+    async update({ lineId, productId = undefined, quantity }, { fromCartPage = false } = {}) {
         const data = await this.rpc("/shop/cart/update", {
             line_id: lineId,
             product_id: productId,
@@ -298,13 +362,13 @@ export class CartService {
 
         // If update was done from cart page, and cart is empty after update, refresh the page to
         // show the empty cart
-        if (fromCartPage & !data.cart_quantity) {
+        if (fromCartPage && !data.cart_quantity) {
             return redirect("/shop/cart");
         }
 
         this._updateCartIcon(data.cart_quantity);
         this.showWarning(data.warning);
-        await this.loadCart(true, false, true);
+        await this.loadCart({ force: true, withHistory: true });
         this.bus.trigger("cart_amount_changed", [data.amount, data.minor_amount]);
 
         if (data.tracking_info?.length) {
@@ -541,6 +605,11 @@ export class CartService {
      *      attribute(s), as a list of `product.template.attribute.value` ids.
      * @param {Boolean} [data.shouldRedirectToCart=false] - Whether to redirect the
      *      customer to the cart. Defaults to false.
+     * @param {Boolean} [data.showNotification=true] - Whether to show the cart notifications.
+     * @param {Boolean} [data.skipOrderAlert=false] - Whether to not store the warning on the
+     *      order when it can't be attached to a line.
+     * @param {Boolean} [data.renderShorterCartSummary=false] - Whether to render the shorter cart
+     *      summary.
      * @param {...*} [data.rest] - Locally unused data sent to the controllers.
      *
      * @returns {Number} - The product's quantity in the cart.
@@ -553,7 +622,9 @@ export class CartService {
         productCustomAttributeValues=[],
         noVariantAttributeValues=[],
         shouldRedirectToCart=false,
-        source=false,
+        showNotification=true,
+        skipOrderAlert=false,
+        renderShorterCartSummary=false,
         ...rest
     }) {
         const data = await this.rpc('/shop/cart/add', {
@@ -563,7 +634,8 @@ export class CartService {
             uom_id: uomId,
             product_custom_attribute_values: productCustomAttributeValues,
             no_variant_attribute_value_ids: noVariantAttributeValues,
-            source: source,
+            skip_order_alert: skipOrderAlert,
+            render_shorter_cart_summary: renderShorterCartSummary,
             ...rest
         }).catch(error => {
             this._showCartNotification({
@@ -581,7 +653,7 @@ export class CartService {
                 items: data.tracking_info,
             });
         }
-        await this.loadCart(true, false, true);
+        await this.loadCart({ force: true, withHistory: true });
         if (shouldRedirectToCart) {
             redirect('/shop/cart');
             return data.quantity;
@@ -591,14 +663,12 @@ export class CartService {
         )) {
             this._updateCartIcon(data.cart_quantity);
         }
-        if (!["cart_accessory", "quick_reorder"].includes(source)) {
+        if (showNotification) {
             for (const notification of data.notifications) {
                 this._showCartNotification(notification);
             }
         }
-        // Re-render the cart summary if the product was added from the quick reorder and the cart
-        // was empty. Because the cart summary won't be there in that case.
-        if (source == "quick_reorder" && !data.old_cart_quantity && data.cart_quantity) {
+        if (data["website_sale.shorter_cart_summary"]) {
             data["website_sale.shorter_cart_summary"] = markup(
                 data["website_sale.shorter_cart_summary"]
             );
@@ -650,7 +720,7 @@ export class CartService {
      * Render the cart summary. This could be useful in cases like quick reorder where we add the
      * product to the empty cart from cart page itself.
      *
-     * @param {Object} data
+     * @param {Object} data - The `/shop/cart/add` response, containing the rendered cart summary.
      *
      * @returns {void}
      */
@@ -660,6 +730,19 @@ export class CartService {
         this.interactions.startInteractions(cartTotals);
     }
 
+    /**
+     * Fetch the cart data from the server and store it in the {@link state}, unless it is already
+     * loaded and the reload is not forced.
+     *
+     * Must only be called through {@link loadCart}, which serializes the calls.
+     *
+     * @param {Boolean} force - Whether to fetch the data even if it was already loaded.
+     * @param {Boolean} fromConfirmationPage - Whether to load the last confirmed order instead of
+     *      the current cart.
+     * @param {Boolean} withHistory - Whether to also load the order history of the customer.
+     *
+     * @returns {Promise<void>}
+     */
     async _loadCartData(force, fromConfirmationPage, withHistory) {
         if (force || !this.cartLoaded) {
             const data = await this.rpc("/shop/cart/data", {
@@ -671,11 +754,32 @@ export class CartService {
         }
     }
 
+    /**
+     * Merge the cart data into the reactive {@link state}, triggering the re-render of the
+     * components reading it.
+     *
+     * Override this method to store additional cart data in the state.
+     *
+     * @param {Object} data - The `/shop/cart/data` response.
+     * @param {Object} [data.lines] - The cart lines and their related data.
+     * @param {Object} [data.totals] - The order amounts.
+     * @param {Object} [data.history] - The order history, grouped by date.
+     * @param {Number|null} data.currency_id - The order's currency id, as a `res.currency` id.
+     * @param {Boolean} data.is_quantity_view_active - Whether the quantity selector is enabled.
+     * @param {Boolean} data.is_wishlist_view_active - Whether the wishlist is enabled.
+     * @param {Boolean} data.show_product_reference_price - Whether the product reference price
+     *      is shown.
+     *
+     * @returns {void}
+     */
     _setCartState(data) {
         Object.assign(this.state.lines, data.lines || {});
         Object.assign(this.state.totals, data.totals || {});
         Object.assign(this.state.history, data.history || {});
         this.state.currency_id = data.currency_id;
+        this.state.is_quantity_view_active = data.is_quantity_view_active;
+        this.state.is_wishlist_view_active = data.is_wishlist_view_active;
+        this.state.show_product_reference_price = data.show_product_reference_price;
     }
 }
 

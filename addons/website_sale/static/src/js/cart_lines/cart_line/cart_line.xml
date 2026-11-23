@@ -99,7 +99,10 @@
                                 aria-label="Remove from cart"
                                 t-on-click="(event) => this.updateQuantity(0)"
                             />
-                            <t t-if="this.props.line.is_sellable and this.props.isWishlistViewActive">
+                            <t
+                                t-if="this.props.line.is_sellable
+                                    and this.cartService.state.is_wishlist_view_active"
+                            >
                                 <span class="text-300">|</span>
                                 <button
                                     class="btn btn-link btn-sm p-0"
@@ -129,7 +132,7 @@
                         <t t-call="website_sale.CartLinesQuantity" isMobile="True"/>
                     </div>
                     <button
-                        t-if="this.props.line.is_sellable and this.props.isWishlistViewActive"
+                        t-if="this.props.line.is_sellable and this.cartService.state.is_wishlist_view_active"
                         class="btn btn-link d-inline-block d-md-none px-2"
                         title="Wishlist"
                         t-on-click="() => this.addToWishlist()"
@@ -163,7 +166,7 @@
             <t t-call="website_sale.CartProductPrice" price="this.env.formatPrice(this.props.line.product_price)"/>
         </h6>
         <div
-            t-if="this.props.showProductReferencePrice and this.props.line.base_unit_price"
+            t-if="this.cartService.state.show_product_reference_price and this.props.line.base_unit_price"
             class="cart_product_base_unit_price d-block text-muted text-end"
         >
             <small class="o_product_price_unit text-muted d-block">
@@ -201,7 +204,7 @@
     </t>
 
     <t t-name="website_sale.CartLinesQuantity">
-        <t t-set="showQuantitySelector" t-value="this.props.isQuantityViewActive"/>
+        <t t-set="showQuantitySelector" t-value="this.cartService.state.is_quantity_view_active"/>
         <t t-set="minusButtonTitle">
             <t
                 t-if="this.props.line.min_qunantity and this.state.quantity &lt;= this.props.line.min_qunantity"

@@ -13,7 +13,7 @@ export class CartQuickReorder extends Component {
 
     setup() {
         this.cartService = useService("cart");
-        onWillStart(async () => await this.cartService.loadCart(false, false, true));
+        onWillStart(async () => await this.cartService.loadCart({ withHistory: true }));
 
         useSubEnv({
             formatPrice: this.formatPrice.bind(this),
@@ -41,7 +41,11 @@ export class CartQuickReorder extends Component {
             },
             {
                 isBuyNow: true,
-                source: "quick_reorder",
+                redirectToCart: false,
+                showNotification: false,
+                skipOrderAlert: true,
+                // The cart summary isn't on the page if the cart was empty.
+                renderShorterCartSummary: !this.cartService.state.lines.cart_lines?.length,
             }
         );
     }

@@ -15,7 +15,7 @@ export class CartLines extends Component {
     setup() {
         this.cartService = useService("cart");
         onWillStart(async () => {
-            await this.cartService.loadCart(false, false, true);
+            await this.cartService.loadCart({ withHistory: true });
         });
 
         useSubEnv({
@@ -26,7 +26,7 @@ export class CartLines extends Component {
     }
 
     async updateLine(lineId, productId, quantity) {
-        await this.cartService.update(lineId, productId, quantity, true);
+        await this.cartService.update({ lineId, productId, quantity }, { fromCartPage: true });
     }
 
     async addToWishlist(lineId, productId) {
@@ -50,16 +50,12 @@ export class CartLines extends Component {
 
     get cartLinesProps() {
         return {
-            isQuantityViewActive: this.data.is_quantity_view_active,
-            isWishlistViewActive: this.data.is_wishlist_view_active,
-            showProductReferencePrice: this.data.show_product_reference_price,
             templateData: this.props.templateData,
         };
     }
 
     get cartAccessoriesProps() {
         return {
-            isQuantityViewActive: this.data.is_quantity_view_active,
             templateData: this.props.templateData,
             accessories: this.data.accessories,
         };

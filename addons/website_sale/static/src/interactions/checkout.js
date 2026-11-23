@@ -281,7 +281,7 @@ export class Checkout extends Interaction {
      * @return {void}
      */
     async _updateCartSummaries() {
-        await this.services.cart.loadCart(true);
+        await this.services.cart.loadCart({ force: true });
     }
 
     /**

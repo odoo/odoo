@@ -1,4 +1,5 @@
 import { Component, proxy, useProps, t } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
 
 export const CLICK_DELAY = 200;
@@ -6,14 +7,12 @@ export const CLICK_DELAY = 200;
 export class CartLine extends Component {
     static template = "website_sale.CartLine";
     props = useProps({
-        isQuantityViewActive: t.boolean(),
-        isWishlistViewActive: t.boolean(),
-        showProductReferencePrice: t.boolean(),
         templateData: t.object(),
         line: t.object(),
     });
 
     setup() {
+        this.cartService = useService("cart");
         this.state = proxy({
             quantity: this.props.line.displayed_quantity,
         });

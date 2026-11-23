@@ -33,11 +33,11 @@ patch(Checkout.prototype, {
      * @param {Event} ev
      */
     async onClickUpdateProductQty(ev) {
-        await this.services.cart.update(
-            parseInt(ev.currentTarget.dataset.lineId, 10),
-            parseInt(ev.currentTarget.dataset.productId, 10),
-            parseInt(ev.currentTarget.dataset.availableQty || 0, 10),
-        );
+        await this.services.cart.update({
+            lineId: parseInt(ev.currentTarget.dataset.lineId, 10),
+            productId: parseInt(ev.currentTarget.dataset.productId, 10),
+            quantity: parseInt(ev.currentTarget.dataset.availableQty || 0, 10),
+        });
     },
 
     // #=== DOM MANIPULATION ===#

@@ -6,7 +6,7 @@
             <CartRewards t-if="!this.props.hidePromotions" rewards="this.data.cart_rewards || []"/>
         </table>
         <t name="tax_included_lines" position="after">
-            <tbody t-if="this.data.promotion_progress_bars?.length">
+            <tbody t-if="!this.props.hidePromotions and this.data.promotion_progress_bars?.length">
                 <tr>
                     <td colspan="3" class="border-0 p-0">
                         <t

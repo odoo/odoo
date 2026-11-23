@@ -774,16 +774,16 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
         self.product.is_published = True
         self._create_so(partner_id=self.public_partner.id).action_confirm()
         with self.mock_request():
-            order_history = self.WebsiteSaleCartController._prepare_order_history()
-        self.assertEqual(order_history, {"order_history": []})
+            order_history = self.WebsiteSaleCartController.cart_history()
+        self.assertEqual(order_history, {"is_public_user": True, "order_history": []})
 
     def test_order_history_lists_own_confirmed_orders(self):
         self.product.is_published = True
         order = self._create_so(partner_id=self.user_portal.partner_id.id)
         order.action_confirm()
         with self.mock_request(user=self.user_portal):
-            order_history = self.WebsiteSaleCartController._prepare_order_history()
+            order_history = self.WebsiteSaleCartController.cart_history()
         history_lines = self.env["sale.order.line"].concat(
-            *(group["lines"] for group in order_history["order_history"]),
+            *(group["lines"] for group in order_history["order_history"])
         )
         self.assertEqual(history_lines, order.order_line)

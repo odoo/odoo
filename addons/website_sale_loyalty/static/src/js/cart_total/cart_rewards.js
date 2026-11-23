@@ -36,7 +36,7 @@ export class CartRewards extends Component {
         });
 
         if (data.success) {
-            await this.cartService.loadCart(true, false, false);
+            await this.cartService.loadCart({ force: true });
         } else {
             this.notifications.add(data.message, { type: "danger" });
         }

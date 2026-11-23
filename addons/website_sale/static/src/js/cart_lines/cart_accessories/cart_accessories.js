@@ -4,7 +4,6 @@ import { useService } from "@web/core/utils/hooks";
 export class CartAccessories extends Component {
     static template = "website_sale.CartAccessories";
     props = useProps({
-        isQuantityViewActive: t.boolean(),
         templateData: t.object(),
         accessories: t.array(),
     });
@@ -23,8 +22,9 @@ export class CartAccessories extends Component {
             },
             {
                 isBuyNow: true,
-                source: "cart_accessory",
-                showQuantity: this.props.isQuantityViewActive,
+                redirectToCart: false,
+                showNotification: false,
+                showQuantity: this.cartService.state.is_quantity_view_active,
             }
         );
     }

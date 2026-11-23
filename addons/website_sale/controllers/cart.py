@@ -96,7 +96,8 @@ class Cart(PaymentPortal):
         product_custom_attribute_values=None,
         no_variant_attribute_value_ids=None,
         linked_products=None,
-        source=False,
+        skip_order_alert=False,
+        render_shorter_cart_summary=False,
         **kwargs,
     ):
         """Add a product to the shopping cart.
@@ -114,14 +115,16 @@ class Cart(PaymentPortal):
             of `product.template.attribute.value` ids.
         :param list linked_products: A list of objects representing additional products linked to
             the product added to the cart. Can be combo item or optional products.
-        :param string source: The source of the add to cart call.
+        :param bool skip_order_alert: Whether to not store the warning on the order when it can't
+            be attached to a line, e.g. when the customer is not redirected to the cart page.
+        :param bool render_shorter_cart_summary: Whether to render the shorter cart summary, e.g.
+            when adding a product to an empty cart from the cart page.
         :param dict kwargs: Optional data. This parameter is not used here.
         :return: The values
         :rtype: dict
         """
         order_sudo = request.cart or self.env.website._create_cart()
         order_sudo._check_not_partially_paid()  # Prevent modifying the cart if it's partially paid
-        old_cart_quantity = order_sudo.cart_quantity
 
         # Do not allow float values in ecommerce by default
         quantity = (quantity and int(quantity)) or 1
@@ -304,17 +307,16 @@ class Cart(PaymentPortal):
                 # Store the warning on the order line so the cart page can show its source to the
                 # user.
                 updated_line._add_warning_alert(warning)
-            elif source != "quick_reorder":
+            elif not skip_order_alert:
                 # No line to attach the warning to: keep it on the order so that it is shown on the
                 # cart page for flows redirecting there.
                 order_sudo._add_warning_alert(warning)
             notifications.append({"type": "warning", "data": {"warning_message": warning}})
 
-        # for quick reorder
-        quick_reorder_data = {"old_cart_quantity": old_cart_quantity}
-        IrUiView = self.env["ir.ui.view"]
-        if source == "quick_reorder" and not old_cart_quantity:
-            quick_reorder_data["website_sale.shorter_cart_summary"] = IrUiView._render_template(
+        cart_summary_data = {}
+        if render_shorter_cart_summary and order_sudo.cart_quantity:
+            IrUiView = self.env["ir.ui.view"]
+            cart_summary_data["website_sale.shorter_cart_summary"] = IrUiView._render_template(
                 "website_sale.shorter_cart_summary",
                 {
                     "website_sale_order": order_sudo,
@@ -330,7 +332,7 @@ class Cart(PaymentPortal):
             "quantity": values.pop("quantity", 0),
             "tracking_info": tracking_info,
             "currency": order_sudo.currency_id.name,
-            **quick_reorder_data,
+            **cart_summary_data,
         }
 
     def _get_product_user_error(self, product):  # noqa: ARG002
@@ -443,6 +445,13 @@ class Cart(PaymentPortal):
             "totals": {},
             "history": self.cart_history() if with_history else {},
             "currency_id": None,
+            "is_quantity_view_active": self.env.website.is_view_active(
+                "website_sale.product_quantity"
+            ),
+            "is_wishlist_view_active": self.env.website.is_view_active(
+                "website_sale.wishlist_cart_lines"
+            ),
+            "show_product_reference_price": self.env.website.show_product_reference_price,
         }
 
         if not order_sudo:
@@ -482,7 +491,7 @@ class Cart(PaymentPortal):
 
         # The public partner is shared by all visitors: it has no order history of its own
         if self.env.website.is_public_user():
-            return {"order_history": []}
+            return {"is_public_user": True, "order_history": []}
 
         # Get the last 10 confirmed orders from the current website user.
         previous_orders_lines_sudo = (
@@ -551,9 +560,6 @@ class Cart(PaymentPortal):
         return {
             "id": line.id,
             "is_combo": line.product_type == "combo",
-            "img_uri": (
-                image_data_uri(line.product_id.image_128) if line.product_id.image_128 else False
-            ),
             "name_short": line.name_short,
             "product_id": line.product_id.id,
             "product_tmpl_id": line.product_id.product_tmpl_id.id,
@@ -648,19 +654,8 @@ class Cart(PaymentPortal):
         return infos
 
     def cart_lines(self, order_sudo):
-        is_quantity_view_active = request.env["website"].is_view_active(
-            "website_sale.product_quantity"
-        )
-        is_wishlist_view_active = request.env["website"].is_view_active(
-            "website_sale.wishlist_cart_lines"
-        )
-        show_product_reference_price = self.env.website.show_product_reference_price
-
         values = {
             "cart_lines": [],
-            "is_quantity_view_active": is_quantity_view_active,
-            "is_wishlist_view_active": is_wishlist_view_active,
-            "show_product_reference_price": show_product_reference_price,
             "accessories": self._cart_accessories(order_sudo),
             "cart_quantity": order_sudo.cart_quantity,
         }
@@ -671,6 +666,7 @@ class Cart(PaymentPortal):
         return values
 
     def _prepare_cart_line_data(self, line):
+        is_sellable = line._is_sellable()
         line_data = {
             "id": line.id,
             "product_id": line.product_id.id,
@@ -689,9 +685,12 @@ class Cart(PaymentPortal):
             ),
             "website_url": line.product_id.website_url,
             "is_combo": line.product_type == "combo",
-            "is_sellable": line._is_sellable(),
+            "is_sellable": is_sellable,
+            # Unsellable products can't be accessed through `/web/image` by the customer.
             "image_uri": (
-                image_data_uri(line.product_id.image_128) if line.product_id.image_128 else False
+                image_data_uri(line.product_id.image_128)
+                if not is_sellable and line.product_id.image_128
+                else False
             ),
             "combination_name": line._get_combination_name(),
             "has_multiple_uoms": line.product_id._has_multiple_uoms(),
@@ -751,8 +750,11 @@ class Cart(PaymentPortal):
                 "display_name": accessory.with_context(display_default_code=False).display_name,
                 "website_url": accessory.website_url,
                 "website_published": accessory.website_published,
+                # Unpublished products can't be accessed through `/web/image` by the customer.
                 "image_uri": (
-                    image_data_uri(accessory.image_128) if accessory.image_128 else False
+                    image_data_uri(accessory.image_128)
+                    if not accessory.website_published and accessory.image_128
+                    else False
                 ),
                 "description_sale": accessory.description_sale,
                 "combination_info": accessory._get_combination_info_variant(),

@@ -22,11 +22,10 @@ export class CartTotal extends Component {
         this.cartService = useService("cart");
         onWillStart(
             async () =>
-                await this.cartService.loadCart(
-                    false,
-                    this.props.fromConfirmationPage,
-                    !this.props.fromConfirmationPage
-                )
+                await this.cartService.loadCart({
+                    fromConfirmationPage: this.props.fromConfirmationPage,
+                    withHistory: !this.props.fromConfirmationPage,
+                })
         );
     }
 
@@ -48,7 +47,7 @@ export class CartTotal extends Component {
             });
         }
         if (data.success) {
-            await this.cartService.loadCart(true, false, true);
+            await this.cartService.loadCart({ force: true, withHistory: true });
         }
         this.state.promoCode = "";
     }

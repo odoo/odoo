@@ -18,7 +18,9 @@ export class CartSummary extends Component {
         this.debouncedOnScroll = useDebounced(this.onScroll.bind(this), 100);
         onWillStart(
             async () =>
-                await this.cartService.loadCart(false, this.props.fromConfirmationPage, false)
+                await this.cartService.loadCart({
+                    fromConfirmationPage: this.props.fromConfirmationPage,
+                })
         );
     }
 

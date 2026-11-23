@@ -6,10 +6,7 @@
             <div t-attf-class="d-flex gap-2 {{this.props.line.is_combo ? 'align-items-start' : 'align-items-center'}}">
                 <div class="o_cart_product_image">
                     <img
-                        t-att-src="(
-                            this.props.line.image_uri
-                            || `/web/image/product.product/${this.props.line.product_id}/image_128`
-                        )"
+                        t-att-src="`/web/image/product.product/${this.props.line.product_id}/image_128`"
                         class="img border rounded"
                         t-att-alt="this.props.line.name_short"
                     />
