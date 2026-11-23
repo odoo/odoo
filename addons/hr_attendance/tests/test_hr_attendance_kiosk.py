@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
-from datetime import timedelta
+from datetime import date, datetime, timedelta
 from unittest.mock import patch
 
 from odoo import fields
@@ -16,8 +16,9 @@ class TestHrAttendanceKiosk(HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.company_A = cls.add_class_company('base.test_company', {'name': 'company_A'})
-        cls.company_B = cls.add_class_company('base.test_company_with_branch', {'name': 'company_B'})
+        cls.env.company.country_id = cls.env.ref('base.us')
+        cls.company_A = cls.add_class_company('base.test_company', {'name': 'company_A', 'country_id': cls.env.ref('base.us').id})
+        cls.company_B = cls.add_class_company('base.test_company_with_branch', {'name': 'company_B', 'country_id': cls.env.ref('base.us').id})
 
         cls.department_A = cls.env['hr.department'].create({'name': 'department_A', 'company_id': cls.company_B.id})
 
@@ -142,9 +143,33 @@ class TestHrAttendanceKiosk(HttpCase):
                 break_duration=1,
             )
 
-    def test_update_break_duration_does_not_change_validated_attendance(self):
+    def test_update_break_duration_reviews_again(self):
+        """The kiosk asks for the break after the check-out, when the attendance may already be reviewed. The break is
+        the employee's own change, so the attendance is reviewed again: it goes to review if the day is now too short.
+        """
+        self.company_B.attendance_validation = 'exception_validation'
+        self.employee_A.tz = 'UTC'
+        self.employee_A.version_id.write({'date_version': date(2023, 1, 1), 'contract_date_start': date(2023, 1, 1)})
+        afternoon = self.env['hr.attendance'].create([{
+            'employee_id': self.employee_A.id,
+            'check_in': datetime(2024, 1, 1, start),  # Monday, 8-12 and 13-17 expected
+            'check_out': datetime(2024, 1, 1, start + 4),
+            'in_mode': 'kiosk',
+            'out_mode': 'kiosk',
+        } for start in (8, 13)])[1]
+        self.assertEqual(afternoon.state, 'validated')
+
+        result = self._update_break(employee_id=self.employee_A.id, attendance_id=afternoon.id, break_duration=0.5)
+        self.assertTrue(result['attendance'])
+        self.assertRecordValues(afternoon, [{'break_duration': 0.5, 'is_undertime': True, 'state': 'draft'}])
+
+        # within the tolerance
+        self._update_break(employee_id=self.employee_A.id, attendance_id=afternoon.id, break_duration=0.1)
+        self.assertRecordValues(afternoon, [{'break_duration': 0.1, 'is_undertime': False, 'state': 'validated'}])
+
+    def test_update_break_duration_does_not_change_refused_attendance(self):
         attendance = self._create_checked_out_attendance()
-        attendance.with_context(skip_time_rules=True).write({'state': 'validated'})
+        attendance.with_context(skip_time_rules=True).write({'state': 'refused'})
 
         result = self._update_break(
             employee_id=self.employee_A.id,

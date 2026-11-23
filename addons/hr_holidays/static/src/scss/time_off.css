@@ -38,6 +38,17 @@
         .o_group {
             margin: 0;
         }
+        .o_hr_leave_dates {
+            .o_field_daterange > div, .o_hr_leave_periods {
+                display: grid !important; /* override the widget's .d-flex */
+                grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+                align-items: center;
+                column-gap: var(--o-bs-spacer-2);
+            }
+            .o_field_daterange .oi[data-icon='calendar_today'] {
+                display: none !important;
+            }
+        }
         .o_hr_leave_title, .o_hr_leave_subtitle {
             line-height: 1.2;
             font-weight: 500;
@@ -78,6 +89,56 @@
             @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
                 flex-direction: row;
             }
+        }
+    }
+}
+
+/* Mobile: make the icon + label wrapper the field legend (instead of the label alone, see form_controller_m3.css) */
+.o_form_view .o_inner_group:not(.oe_subtotal_footer) .o_wrap_label:has(+ .o_cell:not(.o_no_box)) .o_hr_leave_label {
+    @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
+        width: max-content;
+        align-items: center;
+        gap: var(--o-bs-spacer-1) !important;
+        transform: translate(var(--field-spacing-unit), calc(-.5 * var(--field-spacing-unit)));
+        padding: 0 calc(var(--field-spacing-unit) / 2);
+        border-radius: var(--field-spacing-unit);
+        margin-bottom: calc(-1 * var(--body-font-size));
+        background: linear-gradient(0deg, transparent 0%, var(--o-view-background-color) 45%, var(--o-view-background-color) 55%, transparent 100%);
+        line-height: var(--body-line-height);
+        font-size: var(--o-bs-font-size-sm);
+        position: relative;
+        z-index: 1;
+
+        .oi {
+            font-size: inherit;
+            align-self: auto !important;
+        }
+
+        .o_form_label {
+            transform: none;
+            margin-bottom: 0 !important;
+            padding: 0 !important;
+            background: none;
+        }
+    }
+}
+
+/* Tablet: the time off form keeps two columns (see above), so the label stays beside its box, as on desktop */
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .o_form_view .o_hr_leave_content .o_inner_group:not(.oe_subtotal_footer) .o_wrap_label:has(+ .o_cell:not(.o_no_box)) .o_hr_leave_label {
+        align-self: start;
+        gap: var(--o-bs-spacer-2) !important;
+        transform: none;
+        padding: calc(var(--field-spacing-unit) + 2px) 0 0; /* on the first line of the box */
+        background: none;
+        font-size: inherit;
+
+        .oi {
+            font-size: 1.25em;
+        }
+
+        .o_form_label {
+            font-size: inherit !important;
         }
     }
 }
@@ -141,6 +202,10 @@
     .o_hr_holidays_kanban_mobile {
 
         container-type: inline-size;
+
+        .o_record_main {
+            min-width: 0;
+        }
 
         .btn-sm {
             padding: var(--o-bs-btn-padding-y-sm) var(--o-bs-btn-padding-x-sm);

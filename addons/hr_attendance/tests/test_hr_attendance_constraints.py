@@ -15,6 +15,7 @@ class TestHrAttendance(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestHrAttendance, cls).setUpClass()
+        cls.env.company.country_id = cls.env.ref('base.us').id
         cls.attendance = cls.env['hr.attendance']
         cls.test_employee = cls.env['hr.employee'].create({'name': "Jacky"})
         # demo data contains set up for cls.test_employee
@@ -111,7 +112,7 @@ class TestHrAttendance(TransactionCase):
             'check_in': '2024-02-05 08:00',  # a Monday
             'check_out': '2024-02-05 09:00',
         })
-        self.assertEqual(attendance_id.display_name, "A - 1h")
+        self.assertEqual(attendance_id.display_name, "A 1h")
 
     def test_overlap_same_check_in(self):
         """Two attendances of an employee starting at the same time overlap."""

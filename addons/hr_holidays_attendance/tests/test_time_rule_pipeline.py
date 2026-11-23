@@ -14,6 +14,7 @@ class TestTimeRulePipeline(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env.company.country_id = cls.env.ref('base.us')
 
         cls.calendar = cls.env['resource.calendar'].create({
             'name': '40h/week',
@@ -31,7 +32,7 @@ class TestTimeRulePipeline(TransactionCase):
         })
         cls.att_type = cls.env.company._get_default_attendance_work_entry_type()
         cls.env.company.attendance_work_entry_type_id = cls.att_type
-        cls.overtime_type = cls.env.ref('hr_work_entry.generic_work_entry_type_overtime')
+        cls.overtime_type = cls.env.ref('hr_work_entry.l10n_us_work_entry_type_overtime')
 
         # Disable all data-file time rules so tests are self-contained.
         cls.env['hr.time.rule'].search([]).write({'active': False})
@@ -2388,7 +2389,8 @@ class TestTimeRulePipeline(TransactionCase):
         )
 
     def test_auto_check_out_employee_time_off(self):
-        """Auto-check-out with personal leave (15:00-17:00): check_out trimmed, 0.1h OT output created."""
+        """Auto-check-out with personal leave (15:00-17:00): checked out after the 6 hours left in the
+        schedule, the tolerance adds no overtime."""
         Attendance = self.env['hr.attendance']
         company = self.env.company
         company.write({'auto_check_out': True, 'auto_check_out_tolerance': 0.1})
@@ -2417,19 +2419,15 @@ class TestTimeRulePipeline(TransactionCase):
             ('check_in', '>=', datetime(2024, 1, 1)),
             ('check_in', '<', datetime(2024, 1, 2)),
         ])
-        self.assertAlmostEqual(
-            sum(a.worked_hours for a in output_atts), 0.1, places=4,
-            msg="Time rule should generate 0.1h overtime output attendance",
-        )
+        self.assertFalse(output_atts, "The tolerance must not create overtime")
         all_atts = Attendance.search([
             ('employee_id', '=', self.cal_emp.id),
             ('check_in', '>=', datetime(2024, 1, 1)),
             ('check_in', '<', datetime(2024, 1, 2)),
         ])
-        self.assertAlmostEqual(
-            sum(a.worked_hours for a in all_atts), 6.1, places=4,
-            msg="Total attendance (source + output) should equal 6.1h",
-        )
+        self.assertEqual(all_atts, attendance)
+        self.assertEqual(attendance.check_out, datetime(2024, 1, 1, 14, 0))
+        self.assertAlmostEqual(attendance.worked_hours, 6, places=4)
         self.assertEqual(
             attendance.check_in, datetime(2024, 1, 1, 8, 0),
             "Source attendance check_in must be unchanged",
@@ -3189,6 +3187,7 @@ class TestTimeRuleCronBehavior(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
 
+        cls.env.company.country_id = cls.env.ref('base.us')
         cls.calendar = cls.env['resource.calendar'].create({
             'name': '40h/week (cron tests)',
             'attendance_ids': [
@@ -3354,6 +3353,7 @@ class TestTimeRulePipelineLeaves(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
 
+        cls.env.company.country_id = cls.env.ref('base.us')
         cls.env['hr.time.rule'].search([]).write({'active': False})
 
         cls.src_type = cls.env['hr.work.entry.type'].create({

@@ -31,6 +31,11 @@ class TestHrAttendanceWorkEntryTypeDomain(TransactionCase):
             'name': 'Company With Types', 'country_id': cls.country_with_types.id})
         cls.company_without_types = cls.env['res.company'].create({
             'name': 'Company Without Types', 'country_id': cls.country_without_types.id})
+        # undo the copies of the generic types: this test wants its own types only.
+        WorkEntryType.sudo().with_context(active_test=False).search([
+            ('code', 'in', ['002.00', '000.00', '006.00']),
+            ('country_id', 'in', (cls.country_with_types + cls.country_without_types).ids),
+        ]).unlink()
         cls.company_no_country = cls.env['res.company'].create({'name': 'Company Without Country'})
         cls.company_no_country.country_id = False
 

@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.fields import Domain
 from odoo.addons.mail.tests.common import MailCase
 from odoo.tests import tagged, TransactionCase, Form
@@ -20,6 +20,8 @@ class TestRecruitment(MailCase, TransactionCase):
         cls.env.user.company_ids = [Command.set(cls.company.ids)]
 
         cls.Attachment = cls.env['ir.attachment']
+        # the applicants with a job position are applications, the others are talents
+        cls.similar_job = cls.env['hr.job'].create({'name': 'Similar Applicants Job'})
 
     def test_infer_applicant_lang_from_context(self):
         # Prerequisites
@@ -39,14 +41,17 @@ class TestRecruitment(MailCase, TransactionCase):
         dup1, dup2, no_dup = self.env['hr.applicant'].create([
             {
                 'partner_name': 'Application 1',
+                'job_id': self.similar_job.id,
                 'email_from': 'laurie.poiret@aol.ru',
             },
             {
                 'partner_name': 'Application 2',
+                'job_id': self.similar_job.id,
                 'email_from': 'laurie.POIRET@aol.ru',
             },
             {
                 'partner_name': 'Application 3',
+                'job_id': self.similar_job.id,
                 'email_from': 'laure.poiret@aol.ru',
             },
         ])
@@ -60,34 +65,41 @@ class TestRecruitment(MailCase, TransactionCase):
             {
                 'active': False,  # Refused/archived application should still count
                 'partner_name': 'Application A',
+                'job_id': self.similar_job.id,
                 'email_from': 'abc@odoo.com',
-                'partner_phone': '123',
+                'partner_phone': '123456',
             },
             {
                 'partner_name': 'Application B',
-                'partner_phone': '456',
+                'job_id': self.similar_job.id,
+                'partner_phone': '456789',
             },
             {
                 'partner_name': 'Application C',
+                'job_id': self.similar_job.id,
                 'email_from': 'def@odoo.com',
-                'partner_phone': '123',
+                'partner_phone': '123456',
             },
             {
                 'partner_name': 'Application D',
+                'job_id': self.similar_job.id,
                 'email_from': 'abc@odoo.com',
-                'partner_phone': '456',
+                'partner_phone': '456789',
             },
             {
                 'partner_name': 'Application E',
+                'job_id': self.similar_job.id,
                 'partner_phone': '',
             },
             {
                 'partner_name': 'Application F',
+                'job_id': self.similar_job.id,
                 'email_from': 'ghi@odoo.com',
-                'partner_phone': '789',
+                'partner_phone': '789123',
             },
             {
                 'partner_name': 'Application G',
+                'job_id': self.similar_job.id,
             },
         ])
         self.assertEqual(A.application_count, 3)  # A, C, D
@@ -97,6 +109,70 @@ class TestRecruitment(MailCase, TransactionCase):
         self.assertEqual(E.application_count, 0)  # Should not match with E and G as there is no data to use for matching.
         self.assertEqual(F.application_count, 1)  # F
 
+    def test_parallel_applications(self):
+        """Only the ongoing applications to a job position flag each other as parallel applications: not the talents,
+        nor the hired, refused or archived applications."""
+        job_1, job_2 = self.env['hr.job'].create([{'name': 'Parallel Job 1'}, {'name': 'Parallel Job 2'}])
+        parallel_1, parallel_2, ongoing, archived, talent, with_talent, hired, after_hired = self.env['hr.applicant'].create([
+            {'partner_name': 'Parallel 1', 'email_from': 'parallel@odoo.com', 'job_id': job_1.id},
+            {'partner_name': 'Parallel 2', 'email_from': 'PARALLEL@odoo.com', 'job_id': job_2.id},
+            {'partner_name': 'Ongoing', 'partner_phone': '+32 470 00 00 01', 'job_id': job_1.id},
+            {'partner_name': 'Archived', 'partner_phone': '+32 470 00 00 01', 'job_id': job_2.id, 'active': False},
+            {'partner_name': 'Talent', 'email_from': 'talent@odoo.com'},
+            {'partner_name': 'With Talent', 'email_from': 'talent@odoo.com', 'job_id': job_1.id},
+            {'partner_name': 'Hired', 'linkedin_profile': 'linkedin.com/in/hired', 'job_id': job_1.id,
+             'date_closed': fields.Datetime.now()},
+            {'partner_name': 'After Hired', 'linkedin_profile': 'linkedin.com/in/hired', 'job_id': job_2.id},
+        ])
+        self.assertTrue(parallel_1.has_parallel_applications)
+        self.assertTrue(parallel_2.has_parallel_applications)
+        for applicant in ongoing | archived | talent | with_talent | hired | after_hired:
+            self.assertFalse(applicant.has_parallel_applications, applicant.partner_name)
+
+        # Refusing the parallel application removes the flag of the other one
+        parallel_2.action_archive()
+        parallel_1.invalidate_recordset(['has_parallel_applications'])
+        self.assertFalse(parallel_1.has_parallel_applications)
+
+    def test_similar_applicants_matching_rules(self):
+        """Only meaningful data matches applicants: the LinkedIn profile name (whatever the URL around it), a phone number
+        longer than a country code, and the contact."""
+        partner = self.env['res.partner'].create({'name': 'Same Contact'})
+        linkedin_1, linkedin_2, linkedin_3, no_profile, no_slug, short_phone_1, short_phone_2, contact_1, contact_2 = \
+            self.env['hr.applicant'].create([
+                {'partner_name': 'L1', 'job_id': self.similar_job.id, 'linkedin_profile': 'https://www.linkedin.com/in/John-Doe/?trk=feed'},
+                {'partner_name': 'L2', 'job_id': self.similar_job.id, 'linkedin_profile': 'linkedin.com/in/john-doe#experience'},
+                {'partner_name': 'L3', 'job_id': self.similar_job.id, 'linkedin_profile': 'https://au.linkedin.com/in/john-doe?trk=keyword-landing-page'},
+                {'partner_name': 'L4', 'job_id': self.similar_job.id, 'linkedin_profile': 'https://www.linkedin.com/in/'},
+                {'partner_name': 'L5', 'job_id': self.similar_job.id, 'linkedin_profile': 'linkedin.com'},
+                {'partner_name': 'P1', 'job_id': self.similar_job.id, 'partner_phone': '+32'},
+                {'partner_name': 'P2', 'job_id': self.similar_job.id, 'partner_phone': '+32'},
+                {'partner_name': 'C1', 'job_id': self.similar_job.id, 'partner_id': partner.id, 'email_from': 'c1@example.com'},
+                {'partner_name': 'C2', 'job_id': self.similar_job.id, 'partner_id': partner.id, 'email_from': 'c2@example.com'},
+            ])
+        self.assertEqual((linkedin_1 | linkedin_2 | linkedin_3).mapped('linkedin_profile_name'), ['john-doe'] * 3)
+        self.assertEqual(linkedin_1.application_count, 3)
+        self.assertFalse(no_profile.linkedin_profile_name)
+        self.assertFalse(no_slug.linkedin_profile_name)
+        self.assertEqual(no_profile.application_count, 0)
+        self.assertEqual(short_phone_1.application_count, 0)
+        self.assertEqual(short_phone_2.application_count, 0)
+        self.assertEqual(contact_1.application_count, 2)
+        self.assertEqual(contact_2.application_count, 2)
+
+    def test_similar_applicants_talent_by_job(self):
+        """The job position tells the applications from the talents, even without talent pool: a talent is not counted
+        as an application, and an application is linked to the matching talent, never to itself."""
+        talent, application = self.env['hr.applicant'].create([
+            {'partner_name': 'Talent Without Pool', 'email_from': 'job.talent@example.com'},
+            {'partner_name': 'Application', 'email_from': 'job.talent@example.com', 'job_id': self.similar_job.id},
+        ])
+        self.assertEqual(application.application_count, 1)
+        application.link_applicant_to_talent()
+        self.assertEqual(application.pool_applicant_id, talent)
+        talent.link_applicant_to_talent()
+        self.assertFalse(talent.pool_applicant_id)
+
     def test_talent_pool_count(self):
         tp_A, tp_B = self.env["hr.talent.pool"].create([{"name": "Cool Pool"}, {"name": "Other Pool"}])
         t_A, t_B = self.env["hr.applicant"].create(
@@ -104,14 +180,14 @@ class TestRecruitment(MailCase, TransactionCase):
                 {
                     "partner_name": "Talent A",
                     "email_from": "abc@example.com",
-                    "partner_phone": "1234",
-                    "linkedin_profile": "linkedin/talent",
+                    "partner_phone": "123456",
+                    "linkedin_profile": "linkedin/in/talent",
                     "talent_pool_ids": [tp_A.id, tp_B.id],
                 },
                 {
                     "partner_name": "Talent B",
                     "email_from": "talent_b@example.com",
-                    "partner_phone": "9999",
+                    "partner_phone": "999999",
                     "talent_pool_ids": [tp_B.id],
                 },
             ]
@@ -127,8 +203,8 @@ class TestRecruitment(MailCase, TransactionCase):
                 {
                     "partner_name": "B",
                     "email_from": "def@example.com",
-                    "partner_phone": "6789",
-                    "linkedin_profile": "linkedin/b",
+                    "partner_phone": "456789",
+                    "linkedin_profile": "linkedin/in/b-applicant",
                     "pool_applicant_id": t_A.id,
                 },
                 {
@@ -137,17 +213,17 @@ class TestRecruitment(MailCase, TransactionCase):
                 },
                 {
                     "partner_name": "D",
-                    "partner_phone": "6789",
+                    "partner_phone": "456789",
                 },
                 {
                     "partner_name": "E",
-                    "linkedin_profile": "linkedin/b",
+                    "linkedin_profile": "linkedin/in/b-applicant",
                 },
                 {
                     "partner_name": "F",
                     "email_from": "not_linked@example.com",
-                    "partner_phone": "00000",
-                    "linkedin_profile": "linkedin/not_linked",
+                    "partner_phone": "000000",
+                    "linkedin_profile": "linkedin/in/not_linked",
                 },
                 {"partner_name": "G", "pool_applicant_id": t_B.id},
             ]
@@ -186,7 +262,7 @@ class TestRecruitment(MailCase, TransactionCase):
                 {
                     "partner_name": "Applicant 1 B",
                     "email_from": "otherTalentEmail@example.com",
-                    "partner_phone": "1234",
+                    "partner_phone": "123456",
                     "linkedin_profile": "linkedin.com/in/applicant",
                     "job_id": job.id,
                 },
@@ -197,7 +273,7 @@ class TestRecruitment(MailCase, TransactionCase):
                 },
                 {
                     "partner_name": "Applicant 1 D",
-                    "partner_phone": "1234",
+                    "partner_phone": "123456",
                     "job_id": job.id,
                 },
                 {
@@ -208,7 +284,7 @@ class TestRecruitment(MailCase, TransactionCase):
                 {
                     "partner_name": "A different applicant F",
                     "email_from": "differentEmail@example.com",
-                    "partner_phone": "9876",
+                    "partner_phone": "987654",
                     "linkedin_profile": "linkedin.com/in/NotAnApplicant",
                     "job_id": job.id,
                 },
@@ -347,6 +423,7 @@ class TestRecruitment(MailCase, TransactionCase):
         })
         applicant, duplicate = self.env['hr.applicant'].create([{
             'partner_name': 'Faruk Demo',
+            'job_id': self.similar_job.id,
             'email_from': 'refuse.duplicates@example.com',
         } for _i in range(2)])
         wizard = self.env['applicant.get.refuse.reason'].create({
@@ -497,9 +574,9 @@ class TestRecruitment(MailCase, TransactionCase):
 
         A1, A2, A3 = self.env["hr.applicant"].create(
             [
-                {"partner_name": "test", "email_from": "test@example.com"},
-                {"partner_name": "test", "email_from": "test@example.com"},
-                {"partner_name": "test", "email_from": "test@example.com"},
+                {"partner_name": "test", "job_id": self.similar_job.id, "email_from": "test@example.com"},
+                {"partner_name": "test", "job_id": self.similar_job.id, "email_from": "test@example.com"},
+                {"partner_name": "test", "job_id": self.similar_job.id, "email_from": "test@example.com"},
             ]
         )
 
@@ -541,9 +618,9 @@ class TestRecruitment(MailCase, TransactionCase):
 
         A1, _, _ = self.env["hr.applicant"].create(
             [
-                {"partner_name": "test", "email_from": "test@example.com"},
-                {"partner_name": "test", "email_from": "test@example.com"},
-                {"partner_name": "test", "email_from": "test@example.com"},
+                {"partner_name": "test", "job_id": self.similar_job.id, "email_from": "test@example.com"},
+                {"partner_name": "test", "job_id": self.similar_job.id, "email_from": "test@example.com"},
+                {"partner_name": "test", "job_id": self.similar_job.id, "email_from": "test@example.com"},
             ]
         )
 

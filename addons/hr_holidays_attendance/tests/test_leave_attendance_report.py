@@ -1,4 +1,4 @@
-from datetime import datetime, time, timedelta, timezone
+from datetime import UTC, datetime, time, timedelta, timezone
 from zoneinfo import ZoneInfo
 from freezegun import freeze_time
 
@@ -470,7 +470,7 @@ class TestLeaveAttendanceReport(TestHrHolidaysCommon):
         tz = ZoneInfo('Pacific/Auckland')
 
         def local(d, hour):
-            return datetime.combine(d, time(hour), tzinfo=tz).astimezone(timezone.utc).replace(tzinfo=None)
+            return datetime.combine(d, time(hour), tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
 
         # Monday 8:00-12:00 in Auckland is still Sunday in UTC
         validated = self.env['hr.attendance'].create({
@@ -571,3 +571,76 @@ class TestLeaveAttendanceReport(TestHrHolidaysCommon):
             )
             self.env['hr.attendance']._cron_auto_check_out()
         self.assertFalse(attendance.check_out)
+
+    def test_attendance_issues_follow_time_off(self):
+        """A day off approved over a worked afternoon changes its issues: it is not late any more, and all its hours
+        are overtime. Refusing the day off brings the late check-in back."""
+        employee = self.employee_emp
+        today = fields.Date.today()
+        monday = today - timedelta(days=today.weekday() + 7 * 8)
+        employee.contract_date_start = monday - timedelta(days=7)
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': employee.id,
+            'check_in': datetime.combine(monday, time(13, 0)),
+            'check_out': datetime.combine(monday, time(17, 0)),
+            'in_mode': 'kiosk',
+            'out_mode': 'kiosk',
+        })
+        self.assertRecordValues(attendance, [{'is_late_check_in': True, 'is_overtime': False, 'state': 'draft'}])
+        day_off = self.env['hr.leave'].create({
+            'name': 'Day off',
+            'work_entry_type_id': self.env['hr.work.entry.type'].create({
+                'code': 'DAY_OFF_ISSUES',
+                'name': 'Day off',
+                'count_as': 'absence',
+                'requires_allocation': False,
+            }).id,
+            'employee_id': employee.id,
+            'request_date_from': monday,
+            'request_date_to': monday,
+        })
+        self.assertEqual(day_off.state, 'validate', "Created by a time off officer for another employee: approved")
+        self.assertRecordValues(attendance, [{'is_late_check_in': False, 'is_overtime': True, 'state': 'draft'}])
+        day_off.action_refuse()
+        self.assertRecordValues(attendance, [{'is_late_check_in': True, 'is_overtime': False, 'state': 'draft'}])
+
+    def test_attendance_reviewed_after_morning_off(self):
+        """A morning off approved after the afternoon was worked: the afternoon is no longer late nor short, so it is
+        reviewed. The approval skips the time rules of the time off, but the review runs those of the attendance."""
+        employee = self.employee_emp
+        today = fields.Date.today()
+        monday = today - timedelta(days=today.weekday() + 7 * 8)
+        employee.version_id.write({'date_version': monday - timedelta(days=7), 'contract_date_start': monday - timedelta(days=7)})
+        # Only an overtime rule on the employee's schedule, as the localizations add their own rules
+        self.env['hr.time.rule'].search([]).write({'active': False})
+        self.env['hr.time.rule'].create({
+            'name': 'Employee schedule',
+            'work_entry_type_id': self.env.ref('hr_work_entry.l10n_us_work_entry_type_overtime').id,
+        })
+        tz = ZoneInfo(employee._get_tz(monday))
+        afternoon = self.env['hr.attendance'].create({
+            'employee_id': employee.id,
+            'check_in': datetime.combine(monday, time(13, 0), tz).astimezone(UTC).replace(tzinfo=None),
+            'check_out': datetime.combine(monday, time(17, 10), tz).astimezone(UTC).replace(tzinfo=None),
+            'in_mode': 'kiosk',
+            'out_mode': 'kiosk',
+        })
+        self.assertRecordValues(afternoon, [{'is_late_check_in': True, 'is_undertime': True, 'state': 'draft'}])
+        morning_off = self.env['hr.leave'].create({
+            'name': 'Morning off',
+            'work_entry_type_id': self.env['hr.work.entry.type'].create({
+                'code': 'MORNING_OFF_ISSUES',
+                'name': 'Morning off',
+                'count_as': 'absence',
+                'requires_allocation': False,
+                'request_unit': 'half_day',
+            }).id,
+            'employee_id': employee.id,
+            'request_date_from': monday,
+            'request_date_to': monday,
+            'request_date_from_period': 'am',
+            'request_date_to_period': 'am',
+        })
+        self.assertEqual(morning_off.state, 'validate')
+        self.assertRecordValues(afternoon, [{'is_late_check_in': False, 'is_undertime': False, 'state': 'validated'}])
+        self.assertTrue(afternoon.overtime_attendance_ids, "The time rules moved the extra 10 minutes to an output")

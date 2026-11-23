@@ -41,9 +41,13 @@ actions(Check in/Check out) performed by them.
             'hr_attendance/static/src/**/*.js',
             'hr_attendance/static/src/**/*.xml',
             'hr_attendance/static/src/scss/views/*.css',
+            'hr_attendance/static/src/components/attendance_dashboard/*.css',
         ],
         'web.assets_unit_tests': [
             'hr_attendance/static/tests/*.test.js',
+        ],
+        'web.assets_tests': [
+            'hr_attendance/static/tests/tours/**/*',
         ],
         'hr_attendance.assets_public_attendance': [
             # Define attendance variables (takes priority)

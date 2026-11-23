@@ -4,6 +4,12 @@ from odoo.tests.common import TransactionCase, new_test_user
 
 
 class TestHrAttendanceScenario(TransactionCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env.company.country_id = cls.env.ref('base.us')
+
     def test_load_scenario(self):
         self.env['hr.attendance']._load_demo_data()
 

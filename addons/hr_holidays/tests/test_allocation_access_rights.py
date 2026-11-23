@@ -146,6 +146,52 @@ class TestAccessRightsSimpleUser(TestAllocationRights):
         allocation = self.request_allocation(self.user_employee.id, values)
         self.assertEqual(allocation.state, 'confirm', "The allocation should be in 'confirm' state")
 
+    def test_simple_user_submit_refused_allocation(self):
+        """ A simple user can edit his refused allocation and submit it again, then it is approved as a new request """
+        values = {
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': self.lt_validation_hr.id,
+        }
+        allocation = self.request_allocation(self.user_employee.id, values)
+        allocation.with_user(self.user_hruser).action_refuse()
+        self.assertEqual(allocation.approver_id, self.employee_hruser)
+        allocation_employee = allocation.with_user(self.user_employee)
+        self.assertTrue(allocation_employee.can_submit)
+        allocation_employee.write({'number_of_days': 2})
+        allocation_employee.action_submit()
+        self.assertRecordValues(allocation, [{'state': 'confirm', 'approver_id': False, 'number_of_days': 2}])
+        self.assertEqual(
+            allocation.activity_ids.activity_type_id,
+            self.env.ref('hr_holidays.mail_act_leave_allocation_approval'),
+        )
+        # only a refused allocation can be submitted again
+        self.assertFalse(allocation_employee.can_submit)
+        with self.assertRaises(UserError):
+            allocation_employee.action_submit()
+        allocation.with_user(self.user_hruser).action_approve()
+        self.assertRecordValues(allocation, [{'state': 'validate', 'approver_id': self.employee_hruser.id}])
+
+    def test_simple_user_cannot_submit_refused_allocation_of_other(self):
+        """ The refused allocation of another employee can't be submitted again by a simple user """
+        allocation = self.request_allocation(self.user_hruser.id, {
+            'employee_id': self.employee_hruser.id,
+            'work_entry_type_id': self.lt_validation_hr.id,
+        })
+        allocation.sudo().write({'state': 'refuse'})
+        with self.assertRaises((AccessError, UserError)):
+            allocation.with_user(self.user_employee).action_submit()
+
+    def test_submit_refused_allocation_without_validation(self):
+        """ A refused allocation of a type without validation is approved again at once when submitted """
+        allocation = self.request_allocation(self.user_employee.id, {
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': self.lt_allocation_no_validation.id,
+        })
+        self.assertEqual(allocation.state, 'validate')
+        allocation.with_user(self.user_hruser).action_refuse()
+        allocation.with_user(self.user_employee).action_submit()
+        self.assertEqual(allocation.state, 'validate')
+
     def test_simple_user_select_self_on_allocation_request(self):
         """ A simple user can select themselves on an allocation request """
         domain = self.env['hr.leave.allocation'].with_user(self.user_employee)._domain_employee_id()
@@ -295,6 +341,29 @@ class TestAccessRightsHolidayManager(TestAllocationRights):
         allocation = self.request_allocation(self.user_hrmanager.id, values)
         allocation.action_approve()
         self.assertEqual(allocation.state, 'validate', "It should have been validated")
+
+    def test_holiday_manager_approve_refused_allocation_both(self):
+        """ Approving a refused allocation starts its approval over: the refuser is no first approver """
+        work_entry_type = self.env['hr.work.entry.type'].create({
+            'name': 'Validation = both',
+            'code': 'Validation = both',
+            'allocation_validation_type': 'both',
+            'requires_allocation': True,
+            'employee_requests': True,
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
+        })
+        allocation = self.request_allocation(self.user_employee.id, {
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': work_entry_type.id,
+        })
+        allocation.with_user(self.user_hruser).action_refuse()
+        allocation.with_user(self.user_hrmanager).action_approve()
+        self.assertRecordValues(allocation, [{
+            'state': 'validate',
+            'approver_id': self.employee_hrmanager.id,
+            'second_approver_id': self.employee_hrmanager.id,
+        }])
 
     def test_holiday_manager_refuse_validated(self):
         """ A holiday manager can refuse a validated allocation """

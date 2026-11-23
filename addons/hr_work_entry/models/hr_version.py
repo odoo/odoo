@@ -28,11 +28,10 @@ class HrVersion(models.Model):
         :rtype: int
         """
         country_code = self.country_code
-        country_attendance = self.env['hr.work.entry.type'].search([
+        attendance = self.env['hr.work.entry.type'].search([
             ('code', '=', '002.00'),
             ('country_code', '=', country_code),
-        ], limit=1)
-        attendance = country_attendance or self.env.ref('hr_work_entry.generic_work_entry_type_attendance', raise_if_not_found=False)
+        ], limit=1) or self.env.ref('hr_work_entry.generic_work_entry_type_attendance', raise_if_not_found=False)
         return attendance.id if attendance else False
 
     def _get_leave_work_entry_type_dates(self, leave, date_from, date_to, employee):
@@ -115,8 +114,8 @@ class HrVersion(models.Model):
         :param tuple interval: ``(start, stop, payload)``, tz-aware in the employee timezone
         :param list leaves: ``(start, stop, resource.calendar.leaves)`` tuples
         :param list bypassing_codes: result of :meth:`_get_bypassing_work_entry_type_codes`
-        :return: the leave's type, or ``hr_work_entry.generic_work_entry_type_leave`` if no
-            leave contains the interval
+        :return: the leave's type, or the company's country's ``006.00`` (public holiday) type
+            (else the generic one) if no leave contains the interval
         :rtype: hr.work.entry.type
         """
         # returns the work entry time related to the leave that
@@ -127,7 +126,14 @@ class HrVersion(models.Model):
                 interval_start = interval[0].astimezone(UTC).replace(tzinfo=None)
                 interval_stop = interval[1].astimezone(UTC).replace(tzinfo=None)
                 return self._get_leave_work_entry_type_dates(leave[2], interval_start, interval_stop, self.employee_id)
-        return self.env.ref('hr_work_entry.generic_work_entry_type_leave')
+        return self._get_default_leave_work_entry_type()
+
+    def _get_default_leave_work_entry_type(self):
+        self.ensure_one()
+        return self.env['hr.work.entry.type'].search([
+            ('code', '=', '006.00'),
+            ('country_id', '=', self.company_id.country_id.id),
+        ], limit=1) or self.env.ref('hr_work_entry.generic_work_entry_type_public_holiday', raise_if_not_found=False) or self.env['hr.work.entry.type']
 
     def _get_sub_leave_domain(self):
         """Return the calendar part of the domain of :meth:`_get_leave_domain`.

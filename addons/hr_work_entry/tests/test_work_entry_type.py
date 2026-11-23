@@ -7,6 +7,28 @@ from odoo.tests import TransactionCase, tagged
 @tagged('-at_install', 'post_install')
 class TestWorkEntryType(TransactionCase):
 
+    def test_default_country_is_current_company_country(self):
+        country = self.env.ref('base.be')
+        self.env.company.country_id = country
+
+        work_entry_type = self.env['hr.work.entry.type'].create({
+            'code': 'TEST_DEFAULT_COUNTRY',
+            'name': 'Test default country',
+        })
+
+        self.assertEqual(work_entry_type.country_id, country)
+
+    def test_generic_work_entry_types_copied_for_new_country(self):
+        """A company of a country without localized time types gets its own copy of the generic
+        attendance, out of contract and public holiday types, and nothing else."""
+        country = self.env['res.country'].create({'name': 'Generic Time Type Land', 'code': 'XG'})
+        self.env['res.company'].create({'name': 'XG Company', 'country_id': country.id})
+        country_types = self.env['hr.work.entry.type'].search([('country_id', '=', country.id)])
+        self.assertCountEqual(country_types.mapped('code'), ['002.00', '000.00', '006.00'])
+        # a second company of the same country does not copy them again
+        self.env['res.company'].create({'name': 'XG Company 2', 'country_id': country.id})
+        self.assertEqual(self.env['hr.work.entry.type'].search_count([('country_id', '=', country.id)]), 3)
+
     def test_duplicate_work_entry_type_same_country(self):
         country_be = self.env.ref('base.be')
         self.env['hr.work.entry.type'].create({
@@ -47,7 +69,6 @@ class TestWorkEntryType(TransactionCase):
             'code': 'test123',
             'name': "Test we type",
             'country_id': False,
-
         })
         with self.assertRaises(
             UserError,
@@ -95,19 +116,9 @@ class TestWorkEntryType(TransactionCase):
             'name': "Test we type",
             'country_id': country_us.id,
         })
-        self.env['hr.work.entry.type'].create({
-            'code': 'test123',
-            'name': "Test we type",
-            'country_id': False
-        })
 
         # creating them in batch. `self` should have multiple records at once
         self.env['hr.work.entry.type'].create([
-            {
-                'code': 'test456',
-                'name': "Test we type",
-                'country_id': False,
-            },
             {
                 'code': 'test456',
                 'name': "Test we type",
@@ -140,17 +151,18 @@ class TestWorkEntryType(TransactionCase):
         """
         Search should match both the name and the payroll code
         """
+        country_us = self.env.ref('base.us')
         absence_type = self.env['hr.work.entry.type'].create({
             'code': 'ABS',
             'name': 'Absence Type',
             'count_as': 'absence',
-            'country_id': False,
+            'country_id': country_us.id,
         })
         working_type = self.env['hr.work.entry.type'].create({
             'code': 'WORK2',
             'name': 'Working Time',
             'count_as': 'working_time',
-            'country_id': False,
+            'country_id': country_us.id,
         })
 
         names = self.env['hr.work.entry.type'].name_search('Absence')
@@ -162,11 +174,11 @@ class TestWorkEntryType(TransactionCase):
     def test_get_default_attendance_ids_transfers_work_entry_type(self):
         """ Calendar copies built from a company's calendar must carry over the
         attendances' work_entry_type_id, not just their hours. """
-        company = self.add_company('base.test_company')
+        company = self.add_company('base.test_company', {'name': 'Test Co', 'country_id': self.env.ref('base.be').id})
         work_entry_type = self.env['hr.work.entry.type'].create({
             'code': 'TESTATT',
             'name': 'Test Attendance',
-            'country_id': False,
+            'country_id': company.country_id.id,
         })
         company.resource_calendar_id.attendance_ids.write({'work_entry_type_id': work_entry_type.id})
 
@@ -209,3 +221,18 @@ class TestWorkEntryType(TransactionCase):
 
         self.assertEqual(self.env['hr.work.entry.type'].search_count([('code', '=', work_entry_us_copy.code)]), 1)
         self.assertEqual(self.env['hr.work.entry.type'].search_count([('code', '=', work_entry_be_copy.code)]), 1)
+
+    def test_time_rule_without_country_offers_active_company_types(self):
+        country_be = self.env.ref('base.be')
+        self.env.company.country_id = country_be
+        generic_type = self.env['hr.work.entry.type'].create({'code': 'GENTEST', 'name': "Generic"})
+        be_type = self.env['hr.work.entry.type'].create({'code': 'BETEST', 'name': "Belgian", 'country_id': country_be.id})
+        rule = self.env['hr.time.rule'].create({
+            'name': 'Shared rule',
+            'company_id': False,
+            'country_id': False,
+            'condition_work_entry_type_ids': [(4, generic_type.id)],
+        })
+        self.assertFalse(rule.country_id)
+        self.assertIn(be_type, rule.country_work_entry_type_ids,
+            "A rule without company nor country should offer the time types of the active company's country")

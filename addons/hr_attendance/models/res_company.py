@@ -35,13 +35,12 @@ class ResCompany(models.Model):
     auto_check_out_specific_time = fields.Float(default=20.0, export_string_translation=False)
     absence_management = fields.Boolean(string="Absence Management", default=False)
     attendance_validation = fields.Selection([
-        ('no_validation', 'Worked days are automatically approved'),
-        ('manual_validation', 'Worked days require manual approval'),
-        ('tolerance_validation', 'Worked days require approval if outside tolerance'),
-    ], string="Attendance Validation", default='no_validation')
-    attendance_validation_tolerance = fields.Float(
-        string="Validation Tolerance (Hours)",
-        default=0.0,
+        ('manual_validation', 'Review everything'),
+        ('exception_validation', 'Review exceptions only'),
+    ], string="Attendance Validation", default='exception_validation', required=True)
+    attendance_validation_tolerance = fields.Integer(
+        string="Validation Tolerance (Minutes)",
+        default=15,
     )
     attendance_work_entry_type_id = fields.Many2one(
         'hr.work.entry.type',
@@ -63,7 +62,7 @@ class ResCompany(models.Model):
     attendance_tolerance_late_check_in = fields.Integer(string="Late Arrivals (Minutes)", default=0)
     attendance_tolerance_early_check_out = fields.Integer(string="Early Departures (Minutes)", default=15)
     attendance_tolerance_late_check_out = fields.Integer(string="Late Departures (Minutes)", default=0)
-    attendance_device_tracking = fields.Boolean(string="Device & Location Tracking", default=False)
+    attendance_device_tracking = fields.Boolean(string="Precise Location Tracking", default=False)
     attendance_capture_check_in = fields.Boolean(string="Take Pictures on Check-In", default=False)
     attendance_break_management = fields.Boolean(
         string="Break Management on Checkout",
@@ -83,20 +82,17 @@ class ResCompany(models.Model):
 
     @api.depends('country_id')
     def _compute_attendance_work_entry_type_id(self):
-        fallback = self.env.ref('hr_work_entry.generic_work_entry_type_attendance', raise_if_not_found=False)
-        country_codes = self.mapped('country_id.code')
-        country_types = self.env['hr.work.entry.type'].sudo().search([
-            ('count_as', '=', 'working_time'),
-            ('code', '=', '002.00'),
-            ('country_code', 'in', country_codes),
-        ])
-        type_by_country = {t.country_code: t for t in country_types}
+        work_entry_types_by_country = dict(self.env['hr.work.entry.type'].sudo()._read_group(
+            domain=[
+                ('count_as', '=', 'working_time'),
+                ('code', '=', '002.00'),
+                ('country_id', 'in', self.country_id.ids + [False]),
+            ],
+            groupby=['country_id'],
+            aggregates=['id:recordset'],
+        ))
         for company in self:
-            current = company.attendance_work_entry_type_id
-            country_specific = type_by_country.get(company.country_id.code)
-            if current and (not country_specific or current != fallback):
-                continue
-            company.attendance_work_entry_type_id = country_specific or fallback
+            company.attendance_work_entry_type_id = work_entry_types_by_country.get(company.country_id, self.env['hr.work.entry.type'])[:1]
 
     # ---------------------------------------------------------
     # ORM Overrides
