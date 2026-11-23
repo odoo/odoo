@@ -3533,13 +3533,15 @@ class AccountMoveLine(models.Model):
             if line.matching_number and line.matching_number.startswith('I')
         })
         if temp_numbers:
-            for _matching_number, account, lines in self._read_group(
-                domain=[('matching_number', 'in', temp_numbers)],
-                groupby=['matching_number', 'account_id'],
-                aggregates=['id:recordset'],
-            ):
-                if all(move.state == 'posted' for move in lines.move_id):
-                    lines.with_context(no_exchange_difference=True, no_cash_basis=True).reconcile()
+            self.with_context(no_exchange_difference=True, no_cash_basis=True)._reconcile_plan([
+                lines
+                for _matching_number, _account, lines in self._read_group(
+                    domain=[('matching_number', 'in', temp_numbers)],
+                    groupby=['matching_number', 'account_id'],
+                    aggregates=['id:recordset'],
+                )
+                if all(move.state == 'posted' for move in lines.move_id)
+            ])
 
     def _get_matched_move_ids(self):
         """ Return a record set with both self.matched_debit_ids & self.matched_credit_ids """
