@@ -26,11 +26,13 @@ export class LivechatService {
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {{
+     * bus_service: ReturnType<typeof import("@bus/services/bus_plugin").busService.start>,
      * "mail.store": import("@mail/core/common/store_plugin").Store
      * }} services
      */
     setup(env, services) {
         this.env = env;
+        this.busService = services.bus_service;
         this.store = services["mail.store"];
         this.notificationService = this.store.notification;
         this.initializedPromise = new Promise((r) => (this._resolveInitializedPromise = r));
@@ -47,10 +49,9 @@ export class LivechatService {
                     return;
                 }
                 expirableStorage.setItem(GUEST_TOKEN_STORAGE_KEY, guestToken);
-                const busService = this.env.services.bus_service;
                 const channel = `mail.guest_${guestToken}`;
-                busService.addChannel(channel);
-                return () => busService.deleteChannel(channel);
+                this.busService.addChannel(channel);
+                return () => this.busService.deleteChannel(channel);
             },
             { immediate: true }
         );
@@ -185,7 +186,7 @@ export class LivechatService {
 }
 
 export const livechatService = {
-    dependencies: ["mail.store"],
+    dependencies: ["bus_service", "mail.store"],
     start(env, services) {
         const livechat = proxy(new LivechatService(env, services));
         if (canLoadLivechat()) {
