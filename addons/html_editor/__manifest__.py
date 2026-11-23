@@ -18,16 +18,6 @@ This addon provides an extensible, maintainable editor.
         'web._assets_primary_variables': [
             ('after', 'web/static/src/scss/primary_variables.scss', 'html_editor/static/src/scss/html_editor.variables.scss'),
         ],
-        "web.assets_frontend_minimal": [
-            "html_editor/static/src/main/media/video/abstract_third_party_video.js",
-            "html_editor/static/src/main/media/video/providers/**/*",
-            "html_editor/static/src/main/media/video/utils.js",
-        ],
-        'web.assets_frontend_lazy': [
-            ('remove', 'html_editor/static/src/main/media/video/abstract_third_party_video.js'),
-            ('remove', 'html_editor/static/src/main/media/video/providers/**/*'),
-            ('remove', 'html_editor/static/src/main/media/video/utils.js'),
-        ],
         'web.assets_frontend': [
             'html_editor/static/src/scss/css_variables.scss',
             ('include', 'html_editor.assets_media_dialog'),
@@ -75,6 +65,9 @@ This addon provides an extensible, maintainable editor.
             # Bundle to use the media dialog in the backend and the frontend
             'html_editor/static/src/components/switch/**/*',
             'html_editor/static/src/main/media/media_dialog/**/*',
+            'html_editor/static/src/main/media/video/abstract_third_party_video.js',
+            'html_editor/static/src/main/media/video/providers/**/*',
+            'html_editor/static/src/main/media/video/utils.js',
         ],
         'html_editor.assets_readonly': [
             'html_editor/static/src/components/html_viewer/**/*',

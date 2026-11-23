@@ -87,8 +87,10 @@ export class AbstractThirdPartyVideo {
      *
      * @param {array} urlMatch The result of the regex match of the url
      * @param {Object} [forcedOptions={}]
+     * @param {Object} [config={}]
+     * @param {boolean} [config.fetchThumbnail=true]
      */
-    static getVideoUrlData(urlMatch, forcedOptions = {}) {
+    static getVideoUrlData(urlMatch, forcedOptions = {}, { fetchThumbnail = true } = {}) {
         const baseUrl = new URL(urlMatch[0]);
         const videoId = urlMatch.groups.id;
         const options = {
@@ -107,7 +109,7 @@ export class AbstractThirdPartyVideo {
             videoId,
             embedUrl: this.getEmbedUrl(videoId, options),
             // thumbnailUrl can be a promise in some cases (see vimeo)
-            thumbnailUrl: this.getThumbnailUrl?.(videoId) || "",
+            thumbnailUrl: fetchThumbnail ? this.getThumbnailUrl?.(videoId) || "" : "",
             options,
         };
     }

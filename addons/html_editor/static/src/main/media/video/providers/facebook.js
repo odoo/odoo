@@ -19,20 +19,4 @@ export class Facebook extends AbstractThirdPartyVideo {
         );
         return `https://facebook.com/plugins/video.php?href=${encodedUrl}`;
     }
-
-    /**
-     * Example urls are used to test that the urlMatcher regular expression
-     * correctly identifies valid video urls and extracts the video ID.
-     * Every urls in this object should be parsable by the urlMatcher.
-     *
-     * The `base` Url is also used in media dialog unit tests.
-     *
-     * @see /addons/html_editor/static/tests/media/*.test.js
-     * */
-    static exampleUrls = {
-        base: "https://www.facebook.com/username/videos/2206239373151307/",
-        watch: "facebook.com/watch/?v=2206239373151307",
-        reel: "https://www.facebook.com/username/reel/2206239373151307/",
-        embed: "https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Fusername%2Fvideos%2F2206239373151307%2F",
-    };
 }

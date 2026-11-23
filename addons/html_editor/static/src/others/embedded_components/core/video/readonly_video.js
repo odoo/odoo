@@ -23,7 +23,7 @@ export class ReadonlyEmbeddedVideoComponent extends Component {
         for (const platform of Object.values(PLATFORMS)) {
             const urlMatch = platform.isValidVideoUrl(src);
             if (urlMatch) {
-                return platform.getVideoUrlData(urlMatch);
+                return platform.getVideoUrlData(urlMatch, {}, { fetchThumbnail: false });
             }
         }
         return null;
