@@ -2417,7 +2417,6 @@ class MrpProduction(models.Model):
         if self.state in ['cancel', 'done', 'draft']:
             self.bom_id = bom
             moves_to_unlink.unlink()
-            workorders_to_unlink.unlink()
             if self.state == 'draft':
                 # we reset the product_qty/uom when the bom is changed on a draft MO
                 # change them back to the original value
