@@ -123,6 +123,8 @@ class PurchaseOrder(models.Model):
             # The purpose is to link the po that the user will manually generate to the existing moves's chain.
             if order.state in ('draft', 'sent', 'to approve', 'purchase'):
                 for order_line in order.order_line:
+                    # do not remove move_dest
+                    move_dest = order_line.move_ids.move_dest_ids
                     order_line.move_ids._action_cancel()
                     if order_line.move_dest_ids:
                         move_dest_ids = order_line.move_dest_ids.filtered(lambda move: move.state != 'done' and not move.scrapped)
@@ -135,6 +137,7 @@ class PurchaseOrder(models.Model):
                         else:
                             move_dest_ids.write({'procure_method': 'make_to_stock'})
                             move_dest_ids._recompute_state()
+                    order_line.move_ids.move_dest_ids = move_dest
 
             for pick in order.picking_ids.filtered(lambda r: r.state != 'cancel'):
                 pick.action_cancel()
