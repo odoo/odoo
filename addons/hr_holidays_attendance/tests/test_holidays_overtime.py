@@ -641,3 +641,27 @@ class TestHolidaysOvertime(HttpCase):
             10,
             "Kiosk should show remaining deductible overtime after leave deduction",
         )
+
+    def test_refuse_overtime_leave_when_negative_balance(self):
+        self.company.absence_management = True
+        self.new_attendance(check_in=datetime(2021, 1, 4, 8), check_out=datetime(2021, 1, 4, 21))
+        self.assertEqual(self.employee.total_overtime, 4, 'Should have 4 hours of overtime')
+
+        self.leave_type_no_alloc.request_unit = 'half_day'
+
+        leave = self.env['hr.leave'].create({
+            'name': 'overtime leave',
+            'employee_id': self.employee.id,
+            'holiday_status_id': self.leave_type_no_alloc.id,
+            'request_date_from': datetime(2021, 1, 5),
+            'request_date_to': datetime(2021, 1, 5),
+            'request_date_from_period': 'am',
+            'request_date_to_period': 'am',
+        })
+        leave.action_approve()
+
+        self.new_attendance(check_in=datetime(2021, 1, 6, 8), check_out=datetime(2021, 1, 6, 10))
+        self._check_deductible(-6)
+
+        leave.action_refuse()
+        self.assertEqual(leave.state, 'refuse')
