@@ -26,6 +26,9 @@
                 step="1"
                 unit="'s'"/>
         </BuilderRow>
+        <BuilderRow t-if="this.state.hasPauseButton" label.translate="Pause Button" tooltip.translate="Allow your visitors to pause the animation" level="1">
+            <BuilderCheckbox classAction="'o_marquee_pause_btn_hidden'" inverseAction="true"/>
+        </BuilderRow>
         <BuilderRow label.translate="Hover effect">
             <BuilderSelect>
                 <BuilderSelectItem classAction="''">None</BuilderSelectItem>

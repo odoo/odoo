@@ -3,6 +3,12 @@ import { AnnouncementScroll } from "./announcement_scroll";
 
 export const AnnouncementScrollEdit = (I) =>
     class extends I {
+        dynamicContent = {
+            ...this.dynamicContent,
+            ".o_marquee_pause": {
+                "t-on-click": () => {},
+            },
+        };
         shouldStop() {
             // Should always restart, because each option may modify the width of
             // the element, meaning the interaction needs to recompute.
