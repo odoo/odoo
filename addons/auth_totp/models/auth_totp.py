@@ -17,6 +17,12 @@ class Auth_TotpDevice(models.Model):
     _description = "Authentication Device"
     _auto = False
 
+    def _generate(self, scope, name, expiration_date):
+        key = super()._generate(scope, name, expiration_date)
+        # the device is inserted with raw SQL, which bypasses the ORM cache
+        self.env.user.invalidate_recordset(['totp_trusted_device_ids'])
+        return key
+
     def _check_credentials_for_uid(self, *, scope, key, uid):
         """Return True if device key matches given `scope` for user ID `uid`"""
         assert uid, "uid is required"

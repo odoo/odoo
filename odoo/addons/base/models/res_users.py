@@ -1695,6 +1695,7 @@ class ResUsersApikeys(models.Model):
         self._check_expiration_date(expiration_date)
         # no need to clear the LRU when *adding* a key, only when removing
         k = secrets.token_hex(API_KEY_SIZE) + API_KEY_SUFFIX
+        self.env.user.invalidate_recordset(['api_key_ids'])
         self.env.cr.execute(SQL("""
             INSERT INTO %s (name, user_id, scope, expiration_date, key, index)
             VALUES (%s, %s, %s, %s, %s, %s)
