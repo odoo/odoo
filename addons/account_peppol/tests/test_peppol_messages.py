@@ -9,7 +9,7 @@ from requests import PreparedRequest, Response, Session
 
 from odoo import Command
 from odoo.exceptions import UserError
-from odoo.tests.common import tagged, freeze_time
+from odoo.tests.common import freeze_time, new_test_user, tagged
 from odoo.tools.misc import file_open
 
 from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
@@ -362,6 +362,34 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             }],
         )
         self.assertTrue(bool(move.ubl_cii_xml_id))
+
+    def test_peppol_chatter_xml_is_not_indexed(self):
+        user = new_test_user(
+            self.env,
+            login='peppol_invoicing_user',
+            groups='base.group_user,account.group_account_invoice,base.group_partner_manager',
+            company_id=self.env.company.id,
+            company_ids=[Command.set(self.env.company.ids)],
+        )
+        move = self.create_move(self.valid_partner)
+        move.action_post()
+
+        action = move.with_user(user).action_send_and_print()
+        wizard = self.env[action['res_model']].with_user(user).with_context(**action['context']).create({
+            'sending_methods': ['peppol'],
+        })
+        self.assertFalse(wizard.env['ir.ui.view'].has_access('write'))
+        wizard.action_send_and_print()
+
+        self.assertEqual(move.peppol_move_state, 'processing')
+        chatter_xml = move.message_ids.attachment_ids.filtered(lambda attachment: attachment.name == move.ubl_cii_xml_id.name)
+        self.assertEqual(len(chatter_xml), 1)
+        self.assertEqual(chatter_xml.checksum, move.ubl_cii_xml_id.checksum)
+        pdf_content = move.invoice_pdf_report_id.raw
+        self.assertTrue(pdf_content)
+        self.assertIn(b64encode(pdf_content), chatter_xml.raw)
+        self.assertEqual((chatter_xml.mimetype, bool(chatter_xml.index_content)), ('application/xml', False))
+        self.assertFalse(move.ubl_cii_xml_id.index_content)
 
     def test_send_invalid_edi_user(self):
         # an invalid edi user should not be able to send invoices via peppol
