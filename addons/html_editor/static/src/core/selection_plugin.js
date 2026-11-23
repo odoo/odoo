@@ -692,6 +692,10 @@ export class SelectionPlugin extends Plugin {
         if (selection) {
             if (documentSelectionIsInEditable || selection.anchorNode === null) {
                 selection.setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
+            }
+            // Focus handlers may move the selection outside the editor.
+            // Only use it if it still belongs to the editable.
+            if (this.isSelectionInEditable(selection)) { 
                 this.activeSelection = this.makeActiveSelection(selection, true);
             } else {
                 let range = new Range();
