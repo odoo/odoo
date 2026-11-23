@@ -145,6 +145,8 @@ class ProductTemplateAttributeValue(models.Model):
                         product=ptav.product_tmpl_id.display_name,
                     ))
         res = super().write(values)
+        if 'price_extra' in values:
+            self.ptav_product_variant_ids._compute_lst_price_in_other_companies()
         if 'excluded_value_ids' in values:
             self.product_tmpl_id._create_variant_ids()
         return res

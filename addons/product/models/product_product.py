@@ -48,6 +48,8 @@ class ProductProduct(models.Model):
         inverse='_inverse_product_lst_price',
         min_display_digits='Product Price',
         readonly=False,
+        store=True,
+        company_dependent=True,
         help="The sale price can be set manually or computed from the product template. Click on the 'Configure Variants' button to set the extra attribute prices.")
 
     default_code = fields.Char('Internal Reference', index=True)
@@ -472,7 +474,6 @@ class ProductProduct(models.Model):
         for product in self:
             product.price_extra = sum(product.product_template_attribute_value_ids.mapped('price_extra'))
 
-    @api.depends_context('company')
     @api.depends('list_price', 'price_extra')
     def _compute_product_lst_price(self):
         for product in self:
@@ -484,6 +485,15 @@ class ProductProduct(models.Model):
             if len(template.with_context(active_test=False).product_variant_ids) == 1 and not template.has_configurable_attributes:
                 template.list_price = product.lst_price
                 product.invalidate_recordset(['list_price'])
+
+    def _compute_lst_price_in_other_companies(self):
+        """Compute the sales price of the variants in the other companies with a template sales
+        price, as a stored company dependent field is only computed in the current company."""
+        self.flush_recordset(['lst_price'])  # compute it in the current company first
+        companies = self.env['res.company'].sudo().search([('id', '!=', self.env.company.id)])
+        for company in companies:
+            variants = self.sudo().with_company(company).filtered('list_price')
+            variants._fields['lst_price'].compute_value(variants)
 
     @api.depends_context('partner_id')
     def _compute_product_code(self):
@@ -652,6 +662,7 @@ class ProductProduct(models.Model):
         return self.base_unit_count and price / self.base_unit_count
 
     @api.depends('lst_price', 'base_unit_count')
+    @api.depends_context('company')
     def _compute_base_unit_price(self):
         for product in self:
             if not product.id:
@@ -908,6 +919,13 @@ class ProductProduct(models.Model):
         )
         # Make sure the `create_product_product` context is not kept, unless it was already set.
         products = products.with_env(self.env)
+        # a template created with its variant gets its sales price in all the companies
+        products.browse(
+            product.id
+            for product, vals in zip(products, vals_list)
+            if 'product_tmpl_id' not in vals
+        ).product_tmpl_id._set_list_price_in_all_companies()
+        products._compute_lst_price_in_other_companies()
         if any('barcode' in vals or 'company_id' in vals for vals in vals_list):
             products._check_barcode_uniqueness()
         return products
