@@ -1,12 +1,15 @@
 import { listView } from "@web/views/list/list_view";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
+import { browser } from "@web/core/browser/browser";
 import { CaledarListController } from "./calendar_list_controller";
 
 export class CalendarListModel extends listView.Model {
     setup(params) {
         super.setup(...arguments);
-        this.calendarFilters = params.calendarFilters;
+        const storedFilters = browser.sessionStorage.getItem("calendar_filters");
+        this.calendarFilters =
+            params.calendarFilters ?? (storedFilters && JSON.parse(storedFilters));
     }
 
     /**
@@ -17,11 +20,21 @@ export class CalendarListModel extends listView.Model {
         const filters = this.calendarFilters;
         // Apply selected calendar attendees only when the action has no domain.
         if (filters && params.domain && !this.env.searchModel.globalDomain.length) {
-            this.selectedPartnerIds ??= this.orm.call(
-                "res.users",
-                "get_selected_calendars_partner_ids",
-                [[user.userId], filters["user"]]
-            );
+            this.selectedPartnerIds ??= this.orm
+                .cache({
+                    type: "disk",
+                    update: "always",
+                    callback: (freshPartnerIds, hasChanged) => {
+                        if (hasChanged) {
+                            this.selectedPartnerIds = freshPartnerIds;
+                            this.env.searchModel.search();
+                        }
+                    },
+                })
+                .call("res.users", "get_selected_calendars_partner_ids", [
+                    [user.userId],
+                    filters["user"],
+                ]);
             params = {
                 ...params,
                 domain: [...params.domain, ["partner_ids", "in", await this.selectedPartnerIds]],
