@@ -541,7 +541,7 @@ class PdpFlow(models.Model):
         ctx = dict(self.env.context)
         today = fields.Date.context_today(self)
         for flow in self:
-            if flow.error_moves_count and not (ctx.get('ignore_error_invoices') or today == flow.due_period_end):
+            if flow.error_moves_count and not (ctx.get('ignore_error_invoices') or today >= flow.due_period_end):
                 raise UserError(_(
                     "This flow still contains invoices with validation errors. "
                     "Fix them or use the 'Send without invalid invoices' button.",
@@ -601,16 +601,11 @@ class PdpFlow(models.Model):
         sudo_ready_flows = self.sudo().search([
             ('company_id', '=', company.id),
             ('state', '=', 'ready'),
-            '|',
-            ('initial_flow_id', '!=', None),
-            ('due_period_start', '>=', today),
-            ('due_period_end', '<=', today),
+            ('period_end', '<', today),
         ])
         for flow in sudo_ready_flows:
             try:
                 if flow.transmission_type == 'initial':
-                    if today < flow.due_period_start:
-                        continue
                     if flow.error_moves_count and today < flow.due_period_end:
                         continue
                 else:
@@ -625,3 +620,10 @@ class PdpFlow(models.Model):
                 )
             except Exception:
                 _logger.exception('Failed to send Flow 10 %s', flow.name)
+            finally:
+                if self.state != 'ready' or today != flow.due_period_end:
+                    continue
+                self._message_post_once(self.env._(
+                    "Today is the deadline to send this flow and it has not been sent yet. "
+                    "Please check it and send it manually.",
+                ))
