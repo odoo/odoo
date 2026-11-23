@@ -33,7 +33,9 @@
 }
 
 .o_notification_fade {
-    transition: all 0.5s;
+    @media (prefers-reduced-motion: no-preference) {
+        transition: all 0.5s;
+    }
 }
 
 .o_notification_fade-enter {

@@ -5,7 +5,9 @@
     }
 
     &.btn-secondary, &.btn-outline-secondary {
-        transition: background-color .2s ease-in-out, border-color .2s ease-in-out;
+        @media (prefers-reduced-motion: no-preference) {
+            transition: background-color .2s ease-in-out, border-color .2s ease-in-out;
+        }
 
         &.show {
             --btn-active-border-color: var(--o-btn-outline-secondary-active-border);
@@ -51,7 +53,9 @@
             font-size: 1em;
 
             transform: scale(1.4) rotate(0deg);
-            transition: .25s ease-in-out;
+            @media (prefers-reduced-motion: no-preference) {
+                transition: .25s ease-in-out;
+            }
         }
 
         &.show:after {

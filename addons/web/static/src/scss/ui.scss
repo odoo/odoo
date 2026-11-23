@@ -52,7 +52,9 @@
 .o_catch_attention {
     position: relative;
     z-index: 1;
-    animation: catchAttention 200ms ease 0s infinite normal;
+    @media (prefers-reduced-motion: no-preference) {
+        animation: catchAttention 200ms ease 0s infinite normal;
+    }
 }
 
 // ----------------------------------------------------------------------------

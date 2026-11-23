@@ -1,6 +1,8 @@
 .o_pager_indicator {
     z-index: calc(var(--o-bs-zindex-modal) + 1);
-    transition: opacity 0.4s;
+    @media (prefers-reduced-motion: no-preference) {
+        transition: opacity 0.4s;
+    }
 
     > .o_pager_indicator_inner {
         min-width: 13ch;

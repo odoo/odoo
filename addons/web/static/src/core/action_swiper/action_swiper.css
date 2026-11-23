@@ -3,7 +3,9 @@
     touch-action: pan-y;
 }
 .o_actionswiper_target_container.o_actionswiper_transition_enabled {
-    transition: transform 0.4s;
+    @media (prefers-reduced-motion: no-preference) {
+        transition: transform 0.4s;
+    }
 }
 .o_actionswiper_right_swipe_area {
     /*rtl:ignore*/

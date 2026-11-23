@@ -302,11 +302,15 @@ $-o-bg-colors-custom: null;
 /* Checkboxes and Radios - transitions and animations */
 /* ============================================================================ */
 .form-check-input {
-    transition: background-color 250ms ease, border-color 200ms ease;
+    @media (prefers-reduced-motion: no-preference) {
+        transition: background-color 250ms ease, border-color 200ms ease;
+    }
 }
 
 .form-check-input[type="checkbox"]:checked {
-    animation: check-grow 300ms ease-in-out;
+    @media (prefers-reduced-motion: no-preference) {
+        animation: check-grow 300ms ease-in-out;
+    }
 }
 
 @keyframes check-grow {

@@ -1,8 +1,10 @@
 
 .o_time_picker_input {
-    transition: all .1s ease-in-out;
-    transition-property: color, background-color, border-bottom-color;
     color: var(--body-color);
+    @media (prefers-reduced-motion: no-preference) {
+        transition: all .1s ease-in-out;
+        transition-property: color, background-color, border-bottom-color;
+    }
 
     &.o_invalid {
         color: var(--o-text-color-danger);

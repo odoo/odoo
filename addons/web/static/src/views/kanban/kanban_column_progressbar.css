@@ -1,7 +1,9 @@
 .o_kanban_renderer {
 
     .o_kanban_counter {
-        transition: opacity 0.3s ease 0s;
+        @media (prefers-reduced-motion: no-preference) {
+            transition: opacity 0.3s ease 0s;
+        }
     }
 
     /* Provide CSS reordering and highlight */

@@ -50,7 +50,9 @@
         &::after {
             @include has-more-content-visual;
             opacity: 0;
-            transition: opacity var(--BottomSheet-slideIn-duration, 500ms);
+            @media (prefers-reduced-motion: no-preference) {
+                transition: opacity var(--BottomSheet-slideIn-duration, 500ms);
+            }
         }
     }
 

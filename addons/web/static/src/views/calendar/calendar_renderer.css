@@ -67,7 +67,9 @@
     .o_calendar_event_bg {
         position: absolute;
         inset: 0;
-        transition: var(--o-bs-transition-base);
+        @media (prefers-reduced-motion: no-preference) {
+            transition: var(--o-bs-transition-base);
+        }
     }
 
     .o_calendar_event_main > .o_event_title {

@@ -15,11 +15,15 @@
       top: 0px;
       &.o-smooth-sticky-top--invisible {
         transform: translateY(-100%);
-        transition: transform 0.5s;
+        @media (prefers-reduced-motion: no-preference) {
+          transition: transform 0.5s;
+        }
       }
       &.o-smooth-sticky-top--visible {
         transform: translateY(0);
-        transition: transform 0.5s;
+        @media (prefers-reduced-motion: no-preference) {
+          transition: transform 0.5s;
+        }
       }
     }
 }

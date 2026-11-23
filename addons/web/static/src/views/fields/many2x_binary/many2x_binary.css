@@ -68,7 +68,9 @@
         cursor: pointer;
         font-size: 20px;
         transform: translateX(100%);
-        transition: all 0.3s ease 0s;
+        @media (prefers-reduced-motion: no-preference) {
+            transition: all 0.3s ease 0s;
+        }
 
         &:hover {
             background: var(--primary);
@@ -94,7 +96,9 @@
     }
 
     &:hover .o_attachment_delete {
-        transition: all 0.1s ease 0s;
         transform: translateX(0);
+        @media (prefers-reduced-motion: no-preference) {
+            transition: all 0.1s ease 0s;
+        }
     }
 }
