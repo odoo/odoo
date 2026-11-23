@@ -2029,7 +2029,7 @@ class ExprContext(Mapping):
         return 8
 
 
-@operator_optimization(['expr'], OptimizationLevel.DYNAMIC_VALUES)
+@operator_optimization(['in.expr', 'child_of.expr', 'parent_of.expr'], OptimizationLevel.DYNAMIC_VALUES)
 def _operator_expr_eval(condition, model):
     """Evaluate a dynamic value given by the expression.
 
@@ -2053,10 +2053,13 @@ def _operator_expr_eval(condition, model):
             condition._raise(f"Cannot compare {field} and {value}")
         value = value.ids
     elif isinstance(value, Domain):
+        if condition.operator != 'in.expr':
+            condition._raise("invalid operator for a domain value")
         return DomainCondition(condition.field_expr, 'any', value)
     elif not isinstance(value, COLLECTION_TYPES):
         value = [value]
-    return DomainCondition(condition.field_expr, 'in', value)
+    operator, _dot, _expr = condition.operator.rpartition('.')
+    return DomainCondition(condition.field_expr, operator, value)
 
 
 @operator_optimization(['access'], level=OptimizationLevel.DYNAMIC_VALUES)
