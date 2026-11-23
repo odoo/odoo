@@ -3096,7 +3096,7 @@ class BaseModel(metaclass=MetaModel):
             else:
                 # avoid cache pollution
                 forbidden.invalidate_recordset([f.name for f in fields_to_fetch])
-                raise env['ir.rule']._make_access_error('read', forbidden)
+                raise forbidden._make_access_error_message('read', forbidden._access_domain('read'))  # noqa: EM101
 
     def _determine_fields_to_fetch(
             self,
