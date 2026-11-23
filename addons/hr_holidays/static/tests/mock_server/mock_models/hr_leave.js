@@ -28,7 +28,7 @@ export class HrLeave extends models.Model {
             ["cancel", "Cancelled"],
         ],
     });
-    number_of_days = fields.Integer();
+    number_of_days = fields.Float();
     number_of_hours = fields.Integer();
     work_entry_type_request_unit = fields.Selection({
         string: "Leave Type Request Unit",

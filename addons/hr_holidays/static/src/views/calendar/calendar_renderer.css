@@ -34,3 +34,21 @@
         }
     }
 }
+
+/* A week keeps its share of the screen whatever its days hold, a working day is what is left under the day number. */
+.o_working_day_calendar {
+    .o_calendar_day_row {
+        container-type: size;
+        overflow: hidden;
+    }
+
+    /* The margin under it counts in its share: two half days are as high as a whole one. */
+    .o_calendar_day_row .o_calendar_event {
+        height: calc(var(--o-working-day__share) * (100cqh - 1.7rem) - 1px);
+        margin-top: calc(var(--o-working-day__offset) * (100cqh - 1.7rem));
+        /* A short one keeps a line for its title. */
+        min-height: 1.25rem;
+        font-size: var(--o-font-size-base);
+        line-height: 1.2;
+    }
+}
