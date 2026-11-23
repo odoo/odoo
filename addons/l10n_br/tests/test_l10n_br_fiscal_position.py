@@ -46,3 +46,28 @@ class TestL10nBrFiscalPosition(AccountTestInvoicingCommon):
             fiscal_position, br_fp,
             "Should return the  BR fiscal position, not the fiscal position from another company",
         )
+
+    def test_get_fiscal_position_interstate_type(self):
+        """The auto-applied fiscal position depends on the states of the company and of the partner."""
+        self.br_company.state_id = self.env.ref('base.state_br_sp')
+        for fp_type in ('internal', 'ss_nnm', 'interstate'):
+            self.env['account.fiscal.position'].create({
+                'name': fp_type,
+                'company_id': self.br_company.id,
+                'auto_apply': True,
+                'country_id': self.env.ref('base.br').id,
+                'l10n_br_fp_type': fp_type,
+            })
+        for state_xmlid, fp_type in (
+            ('base.state_br_sp', 'internal'),
+            ('base.state_br_ba', 'ss_nnm'),
+            ('base.state_br_rj', 'interstate'),
+        ):
+            with self.subTest(state=state_xmlid):
+                partner = self.env['res.partner'].create({
+                    'name': state_xmlid,
+                    'country_id': self.env.ref('base.br').id,
+                    'state_id': self.env.ref(state_xmlid).id,
+                })
+                fiscal_position = self.env['account.fiscal.position'].with_company(self.br_company)._get_fiscal_position(partner)
+                self.assertEqual(fiscal_position.l10n_br_fp_type, fp_type)
