@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="digest_digest_view_tree" model="ir.ui.view">
+        <field name="name">digest.digest.view.tree</field>
+        <field name="model">digest.digest</field>
+        <field name="arch" type="xml">
+            <tree string="KPI Digest">
+                <field name="name" string="Title"/>
+                <field name="periodicity"/>
+                <field name="next_run_date" groups="base.group_no_one"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="state" groups="base.group_no_one" widget="badge" decoration-success="state == 'activated'"/>
+            </tree>
+        </field>
+    </record>
+    <record id="digest_digest_view_form" model="ir.ui.view">
+        <field name="name">digest.digest.view.form</field>
+        <field name="model">digest.digest</field>
+        <field name="arch" type="xml">
+            <form string="KPI Digest">
+                <field name="is_subscribed" invisible="1"/>
+                <header>
+                    <button type="object" name="action_send_manual" string="Send Now"
+                        class="oe_highlight"
+                        invisible="state == 'deactivated'" groups="base.group_system"/>
+                    <button type="object" name="action_deactivate" string="Deactivate"
+                        invisible="state == 'deactivated'" groups="base.group_system"/>
+                    <button type="object" name="action_activate" string="Activate"
+                        class="oe_highlight"
+                        invisible="state == 'activated'" groups="base.group_system"/>
+                    <field name="state" widget="statusbar" statusbar_visible="0"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Digest Title"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Your Weekly Digest"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="periodicity" widget="radio" options="{'horizontal': true}"/>
+                            <field name="company_id" options="{'no_create': True}" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="next_run_date" groups="base.group_system"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="kpis" string="KPIs">
+                            <group name="kpis">
+                                <group name="kpi_general" string="General" groups="base.group_system">
+                                    <field name="kpi_res_users_connected"/>
+                                    <field name="kpi_mail_message_total"/>
+                                </group>
+                                <group name="kpi_sales"/>
+                                <group name="custom" string="Custom" groups="base.group_system">
+                                    <div colspan="2">
+                                        <p>Want to add your own KPIs?<br />
+                                        <a href="https://www.odoo.com/documentation/17.0/applications/general/digest_emails.html#custom-digest-emails" target="_blank"><i class="oi oi-arrow-right"></i> Check our Documentation</a></p>
+                                    </div>
+                                </group>
+                            </group>
+                        </page>
+                        <page name="recipients" string="Recipients" groups="base.group_system">
+                            <field name="user_ids" options="{'no_create': True}">
+                                <tree string="Recipients">
+                                    <field name="name"/>
+                                    <field name="email" string="Email Address" />
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="digest_digest_view_search" model="ir.ui.view">
+        <field name="name">digest.digest.view.search</field>
+        <field name="model">digest.digest</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="user_ids"/>
+                <filter name="filter_activated" string="Activated" domain="[('state', '=', 'activated')]"/>
+                <filter name="filter_deactivated" string="Deactivated" domain="[('state', '=', 'deactivated')]"/>
+                <group expand="1" string="Group by">
+                    <filter string="Periodicity" name="periodicity" context="{'group_by': 'periodicity'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="digest_digest_action" model="ir.actions.act_window">
+        <field name="name">Digest Emails</field>
+        <field name="res_model">digest.digest</field>
+        <field name="context">{'search_default_filter_activated': 1}</field>
+        <field name="search_view_id" ref="digest_digest_view_search"/>
+    </record>
+
+    <menuitem id="digest_menu"
+        action="digest_digest_action"
+        parent="base.menu_email"
+        groups="base.group_erp_manager"
+        sequence="80"/>
+
+    <!-- DIGEST.TIP -->
+    <record id="digest_tip_view_tree" model="ir.ui.view">
+        <field name="name">digest.tip.view.tree</field>
+        <field name="model">digest.tip</field>
+        <field name="arch" type="xml">
+            <tree string="KPI Digest Tips">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="group_id"/>
+            </tree>
+        </field>
+    </record>
+    <record id="digest_tip_view_form" model="ir.ui.view">
+        <field name="name">digest.tip.view.form</field>
+        <field name="model">digest.tip</field>
+        <field name="arch" type="xml">
+            <form string="KPI Digest Tip">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="tip_description"/>
+                        <field name="group_id"/>
+                        <field name="user_ids" widget="many2many_tags"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="digest_tip_view_search" model="ir.ui.view">
+        <field name="name">digest.tip.view.search</field>
+        <field name="model">digest.tip</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="tip_description"/>
+                <field name="group_id"/>
+            </search>
+        </field>
+    </record>
+    <record id="digest_tip_action" model="ir.actions.act_window">
+        <field name="name">Digest Tips</field>
+        <field name="res_model">digest.tip</field>
+        <field name="search_view_id" ref="digest_tip_view_search"/>
+    </record>
+
+    <menuitem id="digest_tip_menu"
+        action="digest_tip_action"
+        parent="base.menu_email"
+        groups="base.group_erp_manager"
+        sequence="81"/>
+
+</odoo>

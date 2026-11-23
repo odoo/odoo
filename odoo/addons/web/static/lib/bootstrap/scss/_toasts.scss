@@ -1,0 +1,51 @@
+.toast {
+  width: $toast-max-width;
+  max-width: 100%;
+  @include font-size($toast-font-size);
+  color: $toast-color;
+  pointer-events: auto;
+  background-color: $toast-background-color;
+  background-clip: padding-box;
+  border: $toast-border-width solid $toast-border-color;
+  box-shadow: $toast-box-shadow;
+  @include border-radius($toast-border-radius);
+
+  &.showing {
+    opacity: 0;
+  }
+
+  &:not(.show) {
+    display: none;
+  }
+}
+
+.toast-container {
+  width: max-content;
+  max-width: 100%;
+  pointer-events: none;
+
+  > :not(:last-child) {
+    margin-bottom: $toast-spacing;
+  }
+}
+
+.toast-header {
+  display: flex;
+  align-items: center;
+  padding: $toast-padding-y $toast-padding-x;
+  color: $toast-header-color;
+  background-color: $toast-header-background-color;
+  background-clip: padding-box;
+  border-bottom: $toast-border-width solid $toast-header-border-color;
+  @include border-top-radius(subtract($toast-border-radius, $toast-border-width));
+
+  .btn-close {
+    margin-right: $toast-padding-x * -.5;
+    margin-left: $toast-padding-x;
+  }
+}
+
+.toast-body {
+  padding: $toast-padding-x; // apply to both vertical and horizontal
+  word-wrap: break-word;
+}

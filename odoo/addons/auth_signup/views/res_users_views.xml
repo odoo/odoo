@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="res_users_view_form" model="ir.ui.view">
+            <field name="name">res.users.form.inherit</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <!-- add state field in header -->
+                <xpath expr="//header" position="inside">
+                    <button string="Send Password Reset Instructions"
+                                type="object" name="action_reset_password"
+                                invisible="state != 'active'"/>
+                    <button string="Send an Invitation Email"
+                                type="object" name="action_reset_password" context="{'create_user': 1}"
+                                invisible="state != 'new'"/>
+                    <field name="state" widget="statusbar"/>
+                </xpath>
+
+                <xpath expr="//sheet" position="before">
+                    <div class="alert alert-success text-center o_form_header alert-dismissible" invisible="not signup_valid" role="status">
+                        <button class="btn-close" data-bs-dismiss="alert" aria-label="Close"/>
+                        <div invisible="state != 'active'">
+                            <strong>A password reset has been requested for this user. An email containing the following link has been sent:</strong>
+                        </div>
+                        <div invisible="state != 'new'">
+                            <strong>An invitation email containing the following subscription link has been sent:</strong>
+                        </div>
+                        <div><field name="signup_url" widget="url"/></div>
+                         <field name="signup_valid" invisible="1"/>
+                     </div>
+                 </xpath>
+            </field>
+        </record>
+
+        <record id="view_users_state_tree" model="ir.ui.view">
+            <field name="name">res.users.tree.inherit</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="state" widget="badge"
+                        decoration-info="state == 'new'" decoration-success="state == 'active'"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_send_password_reset_instructions" model="ir.actions.server">
+            <field name="name">Send Password Reset Instructions</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="groups_id" eval="[(4, ref('base.group_erp_manager'))]"/>
+            <field name="binding_model_id" ref="base.model_res_users" />
+            <field name="state">code</field>
+            <field name="code">records.action_reset_password()</field>
+        </record>
+
+</odoo>

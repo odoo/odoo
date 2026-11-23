@@ -1,0 +1,133 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_qr_code_emv
+# 
+# Translators:
+# Wil Odoo, 2023
+# Tony Ng, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Tony Ng, 2024\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_qr_code_emv
+#. odoo-python
+#: code:addons/account_qr_code_emv/models/res_bank.py:0
+#, python-format
+msgid "A bank account is required for EMV QR Code generation."
+msgstr "需要有銀行賬戶資料，才可產生 EMV 二維碼。"
+
+#. module: account_qr_code_emv
+#: model:ir.model,name:account_qr_code_emv.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr "銀行帳戶"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__country_code
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__country_code
+msgid "Country Code"
+msgstr "國家/地區代碼"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__display_qr_setting
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__display_qr_setting
+msgid "Display Qr Setting"
+msgstr "顯示 QR 設定"
+
+#. module: account_qr_code_emv
+#. odoo-python
+#: code:addons/account_qr_code_emv/models/res_bank.py:0
+#, python-format
+msgid "EMV Merchant-Presented QR-code"
+msgstr "EMV 商戶出示二維碼"
+
+#. module: account_qr_code_emv
+#: model_terms:ir.ui.view,arch_db:account_qr_code_emv.view_partner_bank_form_inherit_account
+msgid "EMV QR Configuration"
+msgstr "EMV QR 配置"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__include_reference
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__include_reference
+msgid "Include Reference"
+msgstr "包括參考編號"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,help:account_qr_code_emv.field_account_setup_bank_manual_config__include_reference
+#: model:ir.model.fields,help:account_qr_code_emv.field_res_partner_bank__include_reference
+msgid "Include the reference in the QR code."
+msgstr "在二維碼中包括參考資料。"
+
+#. module: account_qr_code_emv
+#. odoo-python
+#: code:addons/account_qr_code_emv/models/res_bank.py:0
+#, python-format
+msgid "Missing Merchant Account Information."
+msgstr "未有商戶賬戶資料。"
+
+#. module: account_qr_code_emv
+#. odoo-python
+#: code:addons/account_qr_code_emv/models/res_bank.py:0
+#, python-format
+msgid "Missing Merchant City."
+msgstr "未有商戶所在城市資料。"
+
+#. module: account_qr_code_emv
+#. odoo-python
+#: code:addons/account_qr_code_emv/models/res_bank.py:0
+#, python-format
+msgid "Missing Proxy Type."
+msgstr "未有代理類型。"
+
+#. module: account_qr_code_emv
+#. odoo-python
+#: code:addons/account_qr_code_emv/models/res_bank.py:0
+#, python-format
+msgid "Missing Proxy Value."
+msgstr "未有代理值。"
+
+#. module: account_qr_code_emv
+#. odoo-python
+#: code:addons/account_qr_code_emv/models/res_bank.py:0
+#, python-format
+msgid ""
+"No EMV QR Code is available for the country of the account "
+"%(account_number)s."
+msgstr "此賬戶所在國家/地區沒有可用 EMV 二維碼：%(account_number)s"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields.selection,name:account_qr_code_emv.selection__res_partner_bank__proxy_type__none
+msgid "None"
+msgstr "無"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__proxy_type
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__proxy_type
+msgid "Proxy Type"
+msgstr "代理類型"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__proxy_value
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__proxy_value
+msgid "Proxy Value"
+msgstr "代理值"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,help:account_qr_code_emv.field_account_setup_bank_manual_config__country_code
+#: model:ir.model.fields,help:account_qr_code_emv.field_res_partner_bank__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"ISO 國家代碼使用兩個字元。\n"
+" 您可以使用此欄位進行快速搜尋。"

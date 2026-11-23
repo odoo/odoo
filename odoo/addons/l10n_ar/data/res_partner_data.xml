@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="True">
+
+    <record model='res.partner' id='par_cfa'>
+        <field name='name'>Consumidor Final Anónimo</field>
+        <field name='l10n_latam_identification_type_id' ref='l10n_ar.it_Sigd'/>
+        <field name='l10n_ar_afip_responsibility_type_id' ref="res_CF"/>
+    </record>
+
+    <record model='res.partner' id='par_iibb_pagar'>
+        <field name='name'>IIBB a pagar</field>
+    </record>
+
+    <record id="partner_afip" model="res.partner">
+        <field name="name">AFIP</field>
+        <field name="is_company" eval="True"/>
+        <field name='l10n_latam_identification_type_id' ref="l10n_ar.it_cuit"/>
+        <field name='vat'>33693450239</field>
+        <field name='l10n_ar_afip_responsibility_type_id' ref="res_IVA_NO_ALC"/>
+        <field name='l10n_ar_special_purchase_document_type_ids' eval='[(4, ref("dc_desp_imp"), False), (4, ref("dc_imp_serv"), False)]'/>
+    </record>
+
+</odoo>

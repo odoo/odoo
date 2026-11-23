@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+<t t-name="website.BlockPreview">
+    <div class="o_blockUI o_block_preview position-fixed d-flex justify-content-center align-items-center flex-column h-100 w-100 bg-black-50">
+        <div class="o_spinner mb-4">
+            <img src="/web/static/img/spin.svg" alt="Loading..."/>
+        </div>
+    </div>
+</t>
+
+<t t-name="website.WebsitePreview">
+    <div class="o_website_preview" t-ref="container"
+         t-att-class="{ 'editor_enable editor_has_snippets': this.websiteContext.snippetsLoaded,
+                        'o_is_blocked': this.blockedState.isBlocked,
+                        'o_is_mobile': this.websiteContext.isMobile,
+                        'border-top': !this.websiteContext.snippetsLoaded }">
+        <BlockPreview t-if="this.blockedState.showLoader"/>
+        <div class="o_iframe_container">
+            <iframe t-if="!testMode"
+                t-att-src="iframeFallbackUrl"
+                class="o_ignore_in_tour"
+                t-att-class="{ 'd-none': this.websiteContext.edition }"
+                t-ref="iframefallback"/>
+            <iframe t-att-src="initialUrl"
+                class="o_iframe"
+                t-ref="iframe"
+                t-on-load="_onPageLoaded"
+                is-ready="false"
+                t-att-data-load-wysiwyg="this.websiteService.isRestrictedEditor ? 'true': 'false'"/>
+            <div t-if="this.websiteContext.isMobile" class="o_mobile_preview_layout">
+                <img alt="phone" src="/website/static/src/img/phone.png"/>
+            </div>
+        </div>
+        <WebsiteEditorComponent t-if="websiteContext.edition"
+            reloadIframe.bind="this.reloadIframe"
+            removeWelcomeMessage.bind="this.removeWelcomeMessage"/>
+        <WebsiteTranslator t-if="websiteContext.translation"
+            reloadIframe.bind="this.reloadIframe"
+            removeWelcomeMessage.bind="this.removeWelcomeMessage"/>
+        <ResizablePanel t-if="websiteContext.showResourceEditor" handleSide="'start'" class="'o_resource_editor_wrapper position-fixed'" onResize.bind="_onResourceEditorResize" initialWidth="aceEditorWidth">
+            <ResourceEditor close="() => this.websiteContext.showResourceEditor = false"/>
+        </ResizablePanel>
+    </div>
+</t>
+
+<t t-name="website.homepage_editor_welcome_message">
+    <div class="container text-center o_homepage_editor_welcome_message">
+        <h2 class="mt0">Welcome to your <b>Homepage</b>!</h2>
+        <p class="lead d-none d-md-block">Click on <b>Edit</b> in the top right corner to start designing.</p>
+    </div>
+</t>
+</templates>

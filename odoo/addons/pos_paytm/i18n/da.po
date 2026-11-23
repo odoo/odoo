@@ -1,0 +1,182 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_paytm
+# 
+# Translators:
+# Martin Trigaux, 2023
+# Sanne Kristensen <sanne@vkdata.dk>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2024\n"
+"Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: da\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: pos_paytm
+#: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__accept_payment
+msgid "Accept Payment"
+msgstr "Accepter betaling"
+
+#. module: pos_paytm
+#: model:ir.model.fields.selection,name:pos_paytm.selection__pos_payment_method__allowed_payment_modes__all
+msgid "All"
+msgstr "Alle"
+
+#. module: pos_paytm
+#: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__allowed_payment_modes
+msgid "Allowed Payment Modes"
+msgstr "Tilladte betalingsmåder"
+
+#. module: pos_paytm
+#: model:ir.model.fields.selection,name:pos_paytm.selection__pos_payment_method__accept_payment__auto
+msgid "Automatically"
+msgstr "Automatisk"
+
+#. module: pos_paytm
+#: model:ir.model.fields.selection,name:pos_paytm.selection__pos_payment_method__allowed_payment_modes__card
+msgid "Card"
+msgstr "Kort"
+
+#. module: pos_paytm
+#: model:ir.model.fields.selection,name:pos_paytm.selection__pos_payment_method__accept_payment__manual
+msgid "Manually"
+msgstr "Manuelt"
+
+#. module: pos_paytm
+#: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__channel_id
+msgid "PayTM Channel ID"
+msgstr "PayTM kanal ID"
+
+#. module: pos_paytm
+#. odoo-javascript
+#: code:addons/pos_paytm/static/src/js/payment_paytm.js:0
+#, python-format
+msgid "PayTM Error"
+msgstr "PayTM fejl"
+
+#. module: pos_paytm
+#: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__paytm_merchant_key
+msgid "PayTM Merchant API Key"
+msgstr "PayTM Forhandler API-nøgle"
+
+#. module: pos_paytm
+#: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__paytm_mid
+msgid "PayTM Merchant ID"
+msgstr "PayTM Forhandler ID"
+
+#. module: pos_paytm
+#: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__paytm_tid
+msgid "PayTM Terminal ID"
+msgstr "PayTM Terminal ID"
+
+#. module: pos_paytm
+#: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__paytm_test_mode
+msgid "PayTM Test Mode"
+msgstr "PayTM test tilstand"
+
+#. module: pos_paytm
+#: model:ir.model.fields,field_description:pos_paytm.field_pos_payment__paytm_authcode
+msgid "Paytm APPR Code"
+msgstr "Paytm APPR kode"
+
+#. module: pos_paytm
+#: model:ir.model.fields,field_description:pos_paytm.field_pos_payment__paytm_card_scheme
+msgid "Paytm Card Scheme"
+msgstr "Paytm Kortordning"
+
+#. module: pos_paytm
+#: model:ir.model.fields,field_description:pos_paytm.field_pos_payment__paytm_issuer_card_no
+msgid "Paytm Issue Mask Card No."
+msgstr "Paytm Udsted maskekort nr."
+
+#. module: pos_paytm
+#: model:ir.model.fields,field_description:pos_paytm.field_pos_payment__paytm_issuer_bank
+msgid "Paytm Issuer Bank"
+msgstr "Paytm Udsteder Bank"
+
+#. module: pos_paytm
+#: model:ir.model.fields,field_description:pos_paytm.field_pos_payment__paytm_reference_no
+msgid "Paytm Merchant Reference No."
+msgstr "Paytm Forhandler referencenr."
+
+#. module: pos_paytm
+#: model:ir.model.fields,field_description:pos_paytm.field_pos_payment__paytm_payment_method
+msgid "Paytm Payment Method"
+msgstr "Paytm Betalingsmetode"
+
+#. module: pos_paytm
+#: model:ir.model,name:pos_paytm.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "POS ordrer"
+
+#. module: pos_paytm
+#: model:ir.model,name:pos_paytm.model_pos_payment_method
+msgid "Point of Sale Payment Methods"
+msgstr "Point of Sale betalingsmetoder"
+
+#. module: pos_paytm
+#: model:ir.model,name:pos_paytm.model_pos_payment
+msgid "Point of Sale Payments"
+msgstr "Point of Sale betalinger"
+
+#. module: pos_paytm
+#: model:ir.model.fields.selection,name:pos_paytm.selection__pos_payment_method__allowed_payment_modes__qr
+msgid "QR"
+msgstr "QR"
+
+#. module: pos_paytm
+#. odoo-javascript
+#: code:addons/pos_paytm/static/src/js/payment_paytm.js:0
+#, python-format
+msgid "Reference number mismatched"
+msgstr "Referencenummeret stemmer ikke overens"
+
+#. module: pos_paytm
+#. odoo-python
+#: code:addons/pos_paytm/models/pos_payment_method.py:0
+#, python-format
+msgid "Something went wrong with paytm request. Please try later."
+msgstr "Noget gik galt med paytm anmodningen. Prøv venligst senere."
+
+#. module: pos_paytm
+#. odoo-python
+#: code:addons/pos_paytm/models/pos_payment_method.py:0
+#, python-format
+msgid "This Payment Terminal is only valid for INR Currency"
+msgstr "Denne betalingsterminal er kun gyldig for INR valuta"
+
+#. module: pos_paytm
+#. odoo-python
+#: code:addons/pos_paytm/models/pos_payment_method.py:0
+#, python-format
+msgid "makePaymentRequest expected resultCode not found in the response"
+msgstr "makePaymentRequest forventet resultCode blev ikke fundet i svaret"
+
+#. module: pos_paytm
+#. odoo-python
+#: code:addons/pos_paytm/models/pos_payment_method.py:0
+#, python-format
+msgid "paymentFetchRequest expected resultCode not found in the response"
+msgstr "paymentFetchRequest forventet resultCode blev ikke fundet i svaret"
+
+#. module: pos_paytm
+#. odoo-python
+#: code:addons/pos_paytm/models/pos_payment_method.py:0
+#, python-format
+msgid "paytm transaction failure"
+msgstr "paytm transaktion fejl"
+
+#. module: pos_paytm
+#. odoo-python
+#: code:addons/pos_paytm/models/pos_payment_method.py:0
+#, python-format
+msgid "paytm transaction request declined"
+msgstr "paytm transaktion anmodning afvist"

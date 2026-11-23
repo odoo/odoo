@@ -1,0 +1,47 @@
+.o_website_loader_container {
+    $-accent-color: #BB86FC; // dark mode primary color
+    --website-loader-color: #{$white};
+
+    font-family: "Montserrat", $font-family-sans-serif;
+    background-color: $o-shadow-color;
+    pointer-events: all;
+    font-size: 3.5rem;
+    justify-content: space-evenly;
+    z-index: $zindex-modal - 1;
+    padding: 2%;
+    color: var(--website-loader-color);
+
+    .o_website_loader {
+        position: relative;
+        display: inline-block;
+        width: 400px;
+        height: 220px;
+        background-image: url('/website/static/src/img/theme_loader.gif');
+        background-size: cover;
+        border-radius: 6px;
+    }
+
+    .o_website_loader_tip {
+        font-size: 0.5em;
+        color: var(--website-loader-color);
+
+        @include media-breakpoint-down(md) {
+            width: 50% !important;
+        }
+
+        .o_tour_pointer {
+            --TourPointer__height: 1em;
+            --TourPointer__width: 1em;
+            --TourPointer__color: #{$-accent-color};
+            --TourPointer__color-accent: #{lighten($-accent-color, 7%)};
+        }
+    }
+
+    .o_website_loader_text_highlight {
+        color: $-accent-color;
+    }
+
+    .o_website_loader_progress {
+        width: 15rem;
+    }
+}

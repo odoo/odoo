@@ -1,0 +1,200 @@
+.o_searchview {
+    --SearchBar-background-color: #{$input-focus-bg};
+    
+    background-color: var(--SearchBar-background-color);
+    border: $input-border-width solid $border-color;
+
+    &:focus-within {
+        border-color: $input-focus-border-color;
+        color: $input-focus-color;
+
+        + .o-dropdown .o_searchview_dropdown_toggler {
+            border-top-color: $input-focus-border-color;
+            border-right-color: $input-focus-border-color;
+            border-bottom-color: $input-focus-border-color;
+        }
+    }
+
+    .o_searchview_input {
+        appearance: none;
+    }
+
+    .o_searchview_autocomplete {
+        @include o-position-absolute(calc(100% + #{$border-width * 3}), 0);
+        width: 100%;
+
+        .o_menu_item {
+            align-items: center;
+            display: flex;
+            padding-left: 25px;
+
+            &.o_indent {
+                padding-left: 50px;
+            }
+
+            a {
+                color: inherit;
+
+                &.o_expand {
+                    display: flex;
+                    justify-content: center;
+                    width: 25px;
+                    @include o-position-absolute($left: 0);
+                }
+            }
+        }
+    }
+}
+
+.o_search_options {
+    flex-wrap: wrap;
+    margin: auto 0;
+    flex-grow: 1;
+}
+
+// Filter menu
+.o_filter_menu {
+    .o_filter_condition {
+        &.o_filter_condition_with_buttons {
+            padding-right: 0;
+            padding-left: $dropdown-item-padding-x*1.5;
+        }
+
+        .o_or_filter {
+            @include o-position-absolute($left: $dropdown-item-padding-x*.2);
+        }
+
+        .o_generator_menu_value {
+            color: $o-main-text-color; // avoid to inherit .dropdown-item style
+
+            .datepickerbutton {
+                cursor: pointer;
+                @include o-position-absolute(3px, -20px);
+            }
+        }
+
+        .o_generator_menu_delete {
+            @include o-hover-opacity(0.8, 1);
+            @include o-position-absolute($dropdown-item-padding-x*.3, $dropdown-item-padding-x*.2, auto, auto);
+            
+            &:hover {
+                background-color: map-get($grays, '100');
+            }
+        }
+    }
+    .o_add_condition {
+        line-height: 1.1;
+
+        .fa {
+            font-size: $font-size-lg;
+        }
+    }
+}
+
+.o_web_client .o_mobile_search {
+    align-items: normal;
+    background-color: var(--mobileSearch-bg, #{$o-white});
+    border: none;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    left: 0;
+    overflow: auto;
+    padding: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: $zindex-modal;
+
+    .o_mobile_search_header {
+        background-color: var(--mobileSearch__header-bg, #{$o-brand-odoo});
+        display: flex;
+        min-height: $o-navbar-height;
+        justify-content: space-between;
+        width: 100%;
+
+        .o_mobile_search_button {
+            color: white;
+
+            &:active {
+                background-color: darken($o-brand-primary, 10%);
+            }
+        }
+    }
+
+    .o_mobile_search_content {
+        flex: auto;
+        height: auto;
+        overflow-y: auto;
+        width: 100%;
+
+        .o_searchview_input_container {
+            display: flex;
+            padding: 15px 20px 0 20px;
+            position: relative;
+    
+            .o_searchview_input {
+                border-bottom: 1px solid $o-brand-secondary;
+                margin-bottom: 15px;
+                width: 100%;
+                background-color: var(--o-input-background-color, #{$input-bg});
+            }
+    
+            .o_searchview_facet {
+                border-radius: 10px;
+                display: inline-flex;
+                order: 1;
+    
+                .o_searchview_facet_label {
+                    border-radius: 2em 0em 0em 2em;
+                }
+            }
+    
+            .o_searchview_autocomplete {
+                top: 100%;
+    
+                > li {
+                    margin: 5px 0px;
+                }
+            }
+        }
+    
+        .o_mobile_search_filter {
+            padding: 8px 20px 15%;
+            flex: auto;
+    
+            .dropdown {
+                margin-top: 15px;
+                flex-direction: column;
+                line-height: 2;
+    
+                &:not(.show) {
+                    box-shadow: 0 0 0 1px $border-color;
+                }
+            }
+    
+            .dropdown, .dropdown-toggle {
+                width: 100%;
+            }
+    
+            // We disable the backdrop in this case because it prevents any
+            // interaction outside of a dropdown while it is open.
+            .dropdown-backdrop {
+                z-index: -1;
+            }
+    
+            .dropdown-menu {
+                // Here we use !important because of popper js adding custom style
+                // to element so to override it use !important
+                position: relative !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100%;
+            }
+        }
+    }
+
+    .o_mobile_search_footer {
+        width: 100%;
+    }
+}

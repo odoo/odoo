@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<templates>
+
+    <t t-name="project.SubtaskKanbanList">
+        <div class="subtask_list">
+            <t t-foreach="subTasksRead" t-as="subTask" t-key="subTask.id">
+                <Record resModel="'project.task'"
+                        resId="subTask.id"
+                        fields="fields"
+                        activeFields="activeFields"
+                        values="subTask"
+                        t-slot-scope="data"
+                        onRecordSaved.bind="onSubTaskSaved"
+                >
+                    <div class="subtask_list_row">
+                        <a t-attf-class="subtask_name_col {{['1_done', '1_canceled'].includes(data.record.data.state) ? 'text-muted opacity-50' : ''}}"
+                           t-att-title="data.record.data.display_name"
+                           style="color: inherit;"
+                           t-esc="data.record.data.display_name"
+                           t-on-click.prevent="() => this.goToSubtask(data.record.resId)"/>
+                        <Field
+                            class="`subtask_user_widget_col d-inline-flex justify-content-end align-items-center me-1 ${['1_done', '1_canceled'].includes(data.record.data.state) ? 'opacity-50' : ''}`"
+                            name="'user_ids'"
+                            record="data.record"
+                            fieldInfo="data.record.activeFields.user_ids"
+                            readonly="false"
+                            type="'many2many_avatar_user'"/>
+                        <Field name="'state'"
+                            class="`subtask_state_widget_col d-flex justify-content-center align-items-center`"
+                            record="data.record"
+                            fieldInfo="data.record.activeFields.state"
+                            type="'project_task_state_selection'"/>
+                    </div>
+                </Record>
+            </t>
+        </div>
+    </t>
+
+</templates>

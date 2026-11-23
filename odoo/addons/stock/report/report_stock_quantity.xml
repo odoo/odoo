@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Used in Forecasted Report -->
+    <record id="stock_report_view_graph" model="ir.ui.view">
+        <field name="name">stock_report_view_graph</field>
+        <field name="model">report.stock.quantity</field>
+        <field name="arch" type="xml">
+            <graph string="report_stock_quantity_graph" type="line" sample="1" disable_linking="1">
+                    <field name="date" interval="day"/>
+                    <field name="product_id"/>
+                    <field name="product_qty" type="measure"/>
+            </graph>
+        </field>
+    </record>
+</odoo>
+

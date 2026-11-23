@@ -1,0 +1,764 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="tax_report" model="account.report">
+        <field name="name">Tax Report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.gr"/>
+        <field name="filter_fiscal_position" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_gr_tr_table_B" model="account.report.line">
+                <field name="name">B. TABLE OF OUTPUTS – INPUTS after the reduction (according to the VAT rates) of refunds - deductions</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_gr_tr_section_a" model="account.report.line">
+                        <field name="name">a. Taxable outputs - output tax</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="l10n_gr_tr_301" model="account.report.line">
+                                <field name="name">301 - Sales 13%</field>
+                                <field name="code">l10n_gr_301</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_301_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">301</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_302" model="account.report.line">
+                                <field name="name">302 - Sales 6%</field>
+                                <field name="code">l10n_gr_302</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_302_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">302</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_303" model="account.report.line">
+                                <field name="name">303 - Sales 24%</field>
+                                <field name="code">l10n_gr_303</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_303_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">303</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_304" model="account.report.line">
+                                <field name="name">304 - Sales 9%</field>
+                                <field name="code">l10n_gr_304</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_304_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">304</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_305" model="account.report.line">
+                                <field name="name">305 - Sales 4%</field>
+                                <field name="code">l10n_gr_305</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_305_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">305</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_306" model="account.report.line">
+                                <field name="name">306 - Sales 17%</field>
+                                <field name="code">l10n_gr_306</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_306_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">306</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_307" model="account.report.line">
+                                <field name="name">307 - Taxable outputs</field>
+                                <field name="code">l10n_gr_307</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="aggregation_formula">
+                                    l10n_gr_301.balance +
+                                    l10n_gr_302.balance +
+                                    l10n_gr_303.balance +
+                                    l10n_gr_304.balance +
+                                    l10n_gr_305.balance +
+                                    l10n_gr_306.balance
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_331" model="account.report.line">
+                                <field name="name">331 - VAT sales 13%</field>
+                                <field name="code">l10n_gr_331</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_331_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">331</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_332" model="account.report.line">
+                                <field name="name">332 - VAT sales 6%</field>
+                                <field name="code">l10n_gr_332</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_332_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">332</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_333" model="account.report.line">
+                                <field name="name">333 - VAT sales 24%</field>
+                                <field name="code">l10n_gr_333</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_333_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">333</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_334" model="account.report.line">
+                                <field name="name">334 - VAT Sales 9%</field>
+                                <field name="code">l10n_gr_334</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_334_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">334</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_335" model="account.report.line">
+                                <field name="name">335 - VAT sales 4%</field>
+                                <field name="code">l10n_gr_335</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_335_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">335</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_336" model="account.report.line">
+                                <field name="name">336 - VAT sales 17%</field>
+                                <field name="code">l10n_gr_336</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_336_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">336</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_337" model="account.report.line">
+                                <field name="name">337 - VAT taxable outputs</field>
+                                <field name="code">l10n_gr_337</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="aggregation_formula">
+                                    l10n_gr_331.balance +
+                                    l10n_gr_332.balance +
+                                    l10n_gr_333.balance +
+                                    l10n_gr_334.balance +
+                                    l10n_gr_335.balance +
+                                    l10n_gr_336.balance
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_342" model="account.report.line">
+                                <field name="name">342 - Intra-community supplies</field>
+                                <field name="code">l10n_gr_342</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_342_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">342</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_345" model="account.report.line">
+                                <field name="name">345 - Intra-community supplies of services</field>
+                                <field name="code">l10n_gr_345</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_345_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">345</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_348" model="account.report.line">
+                                <field name="name">348 - Exports and exemptions of ships and aircrafts</field>
+                                <field name="code">l10n_gr_348</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_348_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">348</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_349" model="account.report.line">
+                                <field name="name">349 - Other outputs without VAT with right to deduct</field>
+                                <field name="code">l10n_gr_349</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_349_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">349</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_310" model="account.report.line">
+                                <field name="name">310 - Outputs exempted or excepted, without right to deduct</field>
+                                <field name="code">l10n_gr_310</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_310_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">310</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_311" model="account.report.line">
+                                <field name="name">311 - Total outputs</field>
+                                <field name="code">l10n_gr_311</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="aggregation_formula">
+                                    l10n_gr_307.balance +
+                                    l10n_gr_342.balance +
+                                    l10n_gr_345.balance +
+                                    l10n_gr_348.balance +
+                                    l10n_gr_349.balance +
+                                    l10n_gr_310.balance
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_312" model="account.report.line">
+                                <field name="name">312 - VAT turnover</field>
+                                <field name="code">l10n_gr_312</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_312_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_gr_tr_section_b" model="account.report.line">
+                        <field name="name">b. Taxable inputs - input tax</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="l10n_gr_tr_361" model="account.report.line">
+                                <field name="name">361 - Purchases and expenditures within the country</field>
+                                <field name="code">l10n_gr_361</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_361_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">361</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_362" model="account.report.line">
+                                <field name="name">362 - Purchases and imports of investment goods</field>
+                                <field name="code">l10n_gr_362</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_362_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">362</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_363" model="account.report.line">
+                                <field name="name">363 - Other imports</field>
+                                <field name="code">l10n_gr_363</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_363_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">363</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_364" model="account.report.line">
+                                <field name="name">364 - Intra-community acquisitions of goods</field>
+                                <field name="code">l10n_gr_364</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_364_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">364</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_365" model="account.report.line">
+                                <field name="name">365 - Intra-community acquisitions of services art. 14.2.a</field>
+                                <field name="code">l10n_gr_365</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_365_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">365</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_366" model="account.report.line">
+                                <field name="name">366 - Other reverse charge transactions</field>
+                                <field name="code">l10n_gr_366</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_366_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">366</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_367" model="account.report.line">
+                                <field name="name">367 - Taxable inputs total</field>
+                                <field name="code">l10n_gr_367</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="aggregation_formula">
+                                    l10n_gr_361.balance +
+                                    l10n_gr_362.balance +
+                                    l10n_gr_363.balance +
+                                    l10n_gr_364.balance +
+                                    l10n_gr_365.balance +
+                                    l10n_gr_366.balance
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_381" model="account.report.line">
+                                <field name="name">381 - VAT purchases and expenditures within the country</field>
+                                <field name="code">l10n_gr_381</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_381_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">381</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_382" model="account.report.line">
+                                <field name="name">382 - VAT purchases and imports of investment goods</field>
+                                <field name="code">l10n_gr_382</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_382_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">382</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_383" model="account.report.line">
+                                <field name="name">383 - VAT other imports</field>
+                                <field name="code">l10n_gr_383</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_383_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">383</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_384" model="account.report.line">
+                                <field name="name">384 - VAT intra-community acquisitions of goods</field>
+                                <field name="code">l10n_gr_384</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_384_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">384</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_385" model="account.report.line">
+                                <field name="name">385 - VAT Intra-Community Acquisitions of services art. 14.2.a</field>
+                                <field name="code">l10n_gr_385</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_385_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">385</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_386" model="account.report.line">
+                                <field name="name">386 - VAT other reverse charge transactions</field>
+                                <field name="code">l10n_gr_386</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_386_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">386</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_387" model="account.report.line">
+                                <field name="name">387 - VAT taxable inputs total</field>
+                                <field name="code">l10n_gr_387</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="aggregation_formula">
+                                    l10n_gr_381.balance +
+                                    l10n_gr_382.balance +
+                                    l10n_gr_383.balance +
+                                    l10n_gr_384.balance +
+                                    l10n_gr_385.balance +
+                                    l10n_gr_386.balance
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_gr_tr_section_d" model="account.report.line">
+                        <field name="name">d. Amounts added to the input tax total</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="l10n_gr_tr_400" model="account.report.line">
+                                <field name="name">400 - Tax refund (sales of agricultural products x 3%)</field>
+                                <field name="code">l10n_gr_400</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_400_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_402" model="account.report.line">
+                                <field name="name">402 - Other added amounts</field>
+                                <field name="code">l10n_gr_402</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_402_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_407" model="account.report.line">
+                                <field name="name">407 - Amounts of adjustments of previous tax year for deduction</field>
+                                <field name="code">l10n_gr_407</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_407_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_410" model="account.report.line">
+                                <field name="name">410 - Added amounts to total inputs tax</field>
+                                <field name="code">l10n_gr_410</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_410_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">l10n_gr_400.balance + l10n_gr_402.balance + l10n_gr_407.balance</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_gr_tr_section_e" model="account.report.line">
+                        <field name="name">e. Deductible amounts from the total input tax</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="l10n_gr_tr_411" model="account.report.line">
+                                <field name="name">411 - Inputs VAT reduced under prorata scheme</field>
+                                <field name="code">l10n_gr_411</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_411_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_422" model="account.report.line">
+                                <field name="name">422 - Other removable amounts</field>
+                                <field name="code">l10n_gr_422</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_422_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_423" model="account.report.line">
+                                <field name="name">423 - Amount of adjustments of previous tax year to be paid</field>
+                                <field name="code">l10n_gr_423</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_gr_tr_423_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_gr_tr_428" model="account.report.line">
+                                <field name="name">428 - Amounts removable from total inputs tax</field>
+                                <field name="code">l10n_gr_428</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="aggregation_formula">
+                                    l10n_gr_411.balance +
+                                    l10n_gr_422.balance +
+                                    l10n_gr_423.balance
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_gr_tr_430" model="account.report.line">
+                <field name="name">430 - Remaining inputs VAT</field>
+                <field name="code">l10n_gr_430</field>
+                <field name="hierarchy_level">1</field>
+                <field name="aggregation_formula">
+                    l10n_gr_387.balance +
+                    l10n_gr_410.balance -
+                    l10n_gr_428.balance
+                </field>
+            </record>
+            <record id="l10n_gr_tr_table_C" model="account.report.line">
+                <field name="name">C. TABLE OF TAX SETTLEMENT to be paid, deducted or refunded</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_gr_tr_470" model="account.report.line">
+                        <field name="name">470 - Credit balance</field>
+                        <field name="code">l10n_gr_470</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="l10n_gr_tr_470_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_gr_430.balance - l10n_gr_337.balance</field>
+                                <field name="subformula">if_above(EUR(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_gr_tr_480" model="account.report.line">
+                        <field name="name">480 - Debit balance</field>
+                        <field name="code">l10n_gr_480</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="l10n_gr_tr_480_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_gr_337.balance - l10n_gr_430.balance</field>
+                                <field name="subformula">if_above(EUR(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_gr_tr_401" model="account.report.line">
+                        <field name="name">401 - Credit balance of previous taxable period</field>
+                        <field name="code">l10n_gr_401</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="l10n_gr_tr_401_applied_carryover" model="account.report.expression">
+                                <field name="label">_applied_carryover_balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="date_scope">previous_tax_period</field>
+                            </record>
+                            <record id="l10n_gr_tr_401_tag" model="account.report.expression">
+                                <field name="label">tag</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">401</field>
+                            </record>
+                            <record id="l10n_gr_tr_401_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_gr_401._applied_carryover_balance + l10n_gr_401.tag</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_gr_tr_403" model="account.report.line">
+                        <field name="name">403 - Assessed amount of previous return of this taxable period (= code 511)</field>
+                        <field name="code">l10n_gr_403</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="l10n_gr_tr_403_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_gr_tr_404" model="account.report.line">
+                        <field name="name">404 - Tax that is committed through banks</field>
+                        <field name="code">l10n_gr_404</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="l10n_gr_tr_404_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_gr_tr_483" model="account.report.line">
+                        <field name="name">483 - Debit amount less than 30€ of previous taxable period</field>
+                        <field name="code">l10n_gr_483</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="l10n_gr_tr_483_applied_carryover" model="account.report.expression">
+                                <field name="label">_applied_carryover_balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="date_scope">previous_tax_period</field>
+                            </record>
+                            <record id="l10n_gr_tr_483_tag" model="account.report.expression">
+                                <field name="label">tag</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">483</field>
+                            </record>
+                            <record id="l10n_gr_tr_483_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_gr_483._applied_carryover_balance + l10n_gr_483.tag</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_gr_tr_505" model="account.report.line">
+                        <field name="name">505 - Amount which has been refunded or requested to be refund</field>
+                        <field name="code">l10n_gr_505</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="l10n_gr_tr_505_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_gr_tr_502" model="account.report.line">
+                        <field name="name">502 - AMOUNT for deduction</field>
+                        <field name="code">l10n_gr_502</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="expression_ids">
+                            <record id="l10n_gr_tr_502_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">
+                                    l10n_gr_470.balance +
+                                    l10n_gr_401.balance +
+                                    l10n_gr_403.balance +
+                                    l10n_gr_404.balance -
+                                    l10n_gr_480.balance -
+                                    l10n_gr_483.balance -
+                                    l10n_gr_505.balance
+                                </field>
+                                <field name="subformula">if_above(EUR(0))</field>
+                            </record>
+                            <record id="l10n_gr_tr_502_carryover" model="account.report.expression">
+                                <field name="label">_carryover_balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_gr_502.balance</field>
+                                <field name="carryover_target">l10n_gr_401._applied_carryover_balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_gr_tr_503" model="account.report.line">
+                        <field name="name">503 - AMOUNT REQUESTED for refund</field>
+                        <field name="code">l10n_gr_503</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="expression_ids">
+                            <record id="l10n_gr_tr_503_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_gr_tr_511" model="account.report.line">
+                        <field name="name">511 - AMOUNT TO BE PAID</field>
+                        <field name="code">l10n_gr_511</field>
+                        <field name="hierarchy_level">2</field>
+                        <field name="expression_ids">
+                            <record id="l10n_gr_tr_511_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">
+                                    l10n_gr_480.balance +
+                                    l10n_gr_483.balance +
+                                    l10n_gr_505.balance -
+                                    l10n_gr_470.balance -
+                                    l10n_gr_401.balance -
+                                    l10n_gr_403.balance -
+                                    l10n_gr_404.balance
+                                </field>
+                                <field name="subformula">if_above(EUR(0))</field>
+                            </record>
+                            <record id="l10n_gr_tr_511_carryover_amount" model="account.report.expression">
+                                <field name="label">_carryover_balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_gr_511.balance</field>
+                                <field name="subformula">if_below(EUR(30))</field>
+                                <field name="carryover_target">l10n_gr_483._applied_carryover_balance</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

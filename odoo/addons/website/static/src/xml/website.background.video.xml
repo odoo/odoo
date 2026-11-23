@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website.background.video">
+        <div class="o_bg_video_container">
+            <div class="o_bg_video_loading d-flex justify-content-center align-items-center text-primary">
+                <div class="spinner-border" style="width: 4em; height: 4em;" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+            <iframe t-att-id="iframeID"
+                    class="o_bg_video_iframe fade"
+                    frameBorder="0"
+                    t-att-src="videoSrc"
+                    aria-label="Background video"/>
+        </div>
+    </t>
+</templates>

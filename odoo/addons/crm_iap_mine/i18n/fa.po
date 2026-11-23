@@ -1,0 +1,841 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* crm_iap_mine
+# 
+# Translators:
+# Ali Reza Feizi Derakhshi, 2023
+# Mohsen Mohammadi <iammohsen.123@gmail.com>, 2023
+# Mohammad Tahmasebi <hit.tah75@gmail.com>, 2023
+# Yousef Shadmanesh <y.shadmanesh@gmail.com>, 2023
+# Zahed Alfak <tamass4116@gmail.com>, 2023
+# Hamid Darabi, 2023
+# odooers ir, 2023
+# Hamed Mohammadi <hamed@dehongi.com>, 2023
+# Hanna Kheradroosta, 2023
+# Martin Trigaux, 2023
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
+# Dynamic Business Group, 2025
+# Naser mars, 2025
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Naser mars, 2025\n"
+"Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fa\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: crm_iap_mine
+#. odoo-python
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#, python-format
+msgid "%d credits will be consumed to find %d companies."
+msgstr "%d اعتبار مصرف خواهد شد تا %d شرکت را پیدا کند."
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
+msgid "<b>Contacts</b>"
+msgstr "<b>مخاطبین</b>"
+
+#. module: crm_iap_mine
+#: model:mail.template,body_html:crm_iap_mine.lead_generation_no_credits
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p>Dear,</p>\n"
+"    <p>There are no more credits on your IAP Lead Generation account.<br>\n"
+"    You can charge your IAP Lead Generation account in the settings of the CRM app.<br></p>\n"
+"    <p>Best regards,</p>\n"
+"    <p>Odoo S.A.</p>\n"
+"</div>"
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p>عزیز،</p>\n"
+"    <p>اعتبارات بیشتری در حساب خود برای تولید سرنخ IAP باقی نمانده است.<br>\n"
+"    می‌توانید حساب تولید سرنخ IAP خود را در تنظیمات برنامه CRM شارژ کنید.<br></p>\n"
+"    <p>با احترام،</p>\n"
+"    <p>شرکت Odoo S.A.</p>\n"
+"</div>"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "<span class=\"col-md-6\">Extra contacts per Company</span>"
+msgstr "<span class=\"col-md-6\">تماس‌های اضافی به ازای هر شرکت</span>"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "<span class=\"o_stat_text\">Leads</span>"
+msgstr "<span class=\"o_stat_text\">سرنخ‌ها</span>"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "<span class=\"o_stat_text\">Opportunities</span>"
+msgstr "<span class=\"o_stat_text\">فرصت‌ها</span>"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid ""
+"<span invisible=\"error_type != 'no_result'\">Your request did not return "
+"any result (no credits were used). Try removing some filters.</span>"
+msgstr ""
+"<span invisible=\"error_type != 'no_result'\">درخواست شما هیچ نتیجه‌ای نداشت"
+" (اعتباری مصرف نشد). سعی کنید برخی از فیلترها را حذف کنید.</span>"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_238
+msgid "Automobiles & Components"
+msgstr "اتومبیل ها و قطعات"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__available_state_ids
+msgid "Available State"
+msgstr "وضعیت موجود"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_69_157
+msgid "Banks & Insurance"
+msgstr "بانک‌ها و بیمه‌"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "Buy credits."
+msgstr "خرید اعتبار"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_1
+msgid "CEO"
+msgstr "مدیر عامل"
+
+#. module: crm_iap_mine
+#: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_industry
+msgid "CRM IAP Lead Industry"
+msgstr "صنعتی سرنخ IAP در مدیریت ارتباط با مشتری"
+
+#. module: crm_iap_mine
+#: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_mining_request
+msgid "CRM Lead Mining Request"
+msgstr "درخواست استخراج سرنخ CRM"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "Cancel"
+msgstr "لغو"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_162
+msgid "Capital Goods"
+msgstr "کالاهای سرمایه‌ای"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__color
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__color
+msgid "Color Index"
+msgstr "رنگ پس زمینه"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_163
+msgid "Commercial & Professional Services"
+msgstr "خدمات تجاری و حرفه‌ای"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_2
+msgid "Communications"
+msgstr "ارتباطات"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__search_type__companies
+msgid "Companies"
+msgstr "شرکت‌ها"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__search_type__people
+msgid "Companies and their Contacts"
+msgstr "شرکت و اشخاصشان"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__company_size_max
+msgid "Company Size Max"
+msgstr "حداکثر اندازه شرکت"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_167
+msgid "Construction Materials"
+msgstr "مصالح ساختمانی"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_3
+msgid "Consulting"
+msgstr "مشاوره ای"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_30_155
+msgid "Consumer Discretionary"
+msgstr "اختیاری مصرف‌کننده"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_239
+msgid "Consumer Durables & Apparel"
+msgstr "کالاهای مصرفی بادوام و پوشاک"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_150_151
+msgid "Consumer Services"
+msgstr "خدمات مصرف‌کننده"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_33
+msgid "Consumer Staples"
+msgstr "کالاهای مصرفی ضروری"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__country_ids
+msgid "Countries"
+msgstr "کشورها"
+
+#. module: crm_iap_mine
+#. odoo-python
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#, python-format
+msgid "Create a Lead Mining Request"
+msgstr "ایجاد درخواست استخراج سرنخ"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__create_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__create_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__create_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__create_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__create_uid
+msgid "Created by"
+msgstr "ایجاد شده توسط"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__create_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__create_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__create_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__create_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__create_date
+msgid "Created on"
+msgstr "ایجادشده در"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_4
+msgid "Customer Service"
+msgstr "خدمات مشتریان"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "Default Tags"
+msgstr "برچسپ‌های پیش‌فرض"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__display_lead_label
+msgid "Display Lead Label"
+msgstr "نمایش برچسب سرنخ"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__display_name
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__display_name
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__display_name
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__display_name
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__display_name
+msgid "Display Name"
+msgstr "نام نمایش داده شده"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_158_159
+msgid "Diversified Financials & Financial Services"
+msgstr "خدمات مالی و مالیه‌ متنوع"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__state__done
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Done"
+msgstr "انجام شده"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__state__draft
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Draft"
+msgstr "پیش‌نویس"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_5
+msgid "Education"
+msgstr "آموزش"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
+msgid "Email"
+msgstr "پست الکترونیک"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_138_156
+msgid "Energy & Utilities "
+msgstr "انرژی و خدمات"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_6
+msgid "Engineering"
+msgstr "مهندسی"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__state__error
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Error"
+msgstr "خطا"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__error_type
+msgid "Error Type"
+msgstr "نوع خطا"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__contact_filter_type
+msgid "Filter on"
+msgstr "فیلتر بر اساس"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__filter_on_size
+msgid "Filter on Size"
+msgstr "فیلتر روی اندازه"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_7
+msgid "Finance"
+msgstr "امور مالی"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_153_154
+msgid "Food, Beverage & Tobacco"
+msgstr "غذا، نوشیدنی و تنباکو"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_8
+msgid "Founder"
+msgstr "مؤسس"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "From"
+msgstr "از"
+
+#. module: crm_iap_mine
+#. odoo-python
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_case_kanban_view_leads
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_lead_view_tree_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_lead_view_tree_opportunity
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.view_crm_lead_kanban
+#, python-format
+msgid "Generate Leads"
+msgstr "تولید سرنخ"
+
+#. module: crm_iap_mine
+#. odoo-python
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#, python-format
+msgid "Generate new leads based on their country, industry, size, etc."
+msgstr "بر اساس کشور، صنایع، اندازه و غیره، سرنخ های جدیدی ایجاد کنید."
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_ids
+msgid "Generated Lead / Opportunity"
+msgstr "تولید شده سرنخ / فرصت"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Group By"
+msgstr "گروه‌بندی برمبنای"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_160
+msgid "Health Care Equipment & Services"
+msgstr "تجهیزات و خدمات مراقبت‌های بهداشتی"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_9
+msgid "Health Professional"
+msgstr "متخصص سلامت"
+
+#. module: crm_iap_mine
+#: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_helpers
+msgid "Helper methods for crm_iap_mine modules"
+msgstr "روش‌های کمکی برای ماژول‌های crm_iap_mine"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "How many leads would you like?"
+msgstr "چند سرنخ می‌خواهید؟"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_10
+msgid "Human Resources"
+msgstr "منابع انسانی"
+
+#. module: crm_iap_mine
+#: model:mail.template,name:crm_iap_mine.lead_generation_no_credits
+#: model:mail.template,subject:crm_iap_mine.lead_generation_no_credits
+msgid "IAP Lead Generation Notification"
+msgstr "اطلاعیه تولید سرنخ IAP"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__id
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__id
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__id
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__id
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__id
+msgid "ID"
+msgstr "شناسه"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_168
+msgid "Independent Power and Renewable Electricity Producers"
+msgstr "تولیدکنندگان مستقل برق و برق تجدیدپذیر"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__industry_ids
+msgid "Industries"
+msgstr "صنایع"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__name
+msgid "Industry"
+msgstr "صنعت"
+
+#. module: crm_iap_mine
+#: model:ir.model.constraint,message:crm_iap_mine.constraint_crm_iap_lead_industry_name_uniq
+msgid "Industry name already exists!"
+msgstr "نام صنعت از قبل وجود دارد!"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_11
+msgid "Information Technology"
+msgstr "فناوری اطلاعات"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__error_type__credits
+msgid "Insufficient Credits"
+msgstr "اعتبار ناکافی"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__write_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__write_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__write_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__write_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__write_uid
+msgid "Last Updated by"
+msgstr "آخرین بروز رسانی توسط"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__write_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__write_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__write_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__write_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__write_date
+msgid "Last Updated on"
+msgstr "آخرین بروز رسانی در"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_contacts_credits
+msgid "Lead Contacts Credits"
+msgstr "اعتبارات مخاطبین سرنخ"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_credits
+msgid "Lead Credits"
+msgstr "اعتبارات سرنخ"
+
+#. module: crm_iap_mine
+#: model:ir.ui.menu,name:crm_iap_mine.crm_menu_lead_generation
+msgid "Lead Generation"
+msgstr "تولید سرنخ"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_lead__lead_mining_request_id
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Lead Mining Request"
+msgstr "درخواست استخراج سرنخ"
+
+#. module: crm_iap_mine
+#: model:ir.actions.act_window,name:crm_iap_mine.crm_iap_lead_mining_request_action
+#: model:ir.ui.menu,name:crm_iap_mine.crm_iap_lead_mining_request_menu_action
+msgid "Lead Mining Requests"
+msgstr "درخواست های استخراج سرنخ"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_total_credits
+msgid "Lead Total Credits"
+msgstr "مجموع اعتبارهای سرنخ"
+
+#. module: crm_iap_mine
+#: model:ir.model,name:crm_iap_mine.model_crm_lead
+msgid "Lead/Opportunity"
+msgstr "سرنخ / فرصت"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__lead_type__lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Leads"
+msgstr "سرنخ ها"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_12
+msgid "Legal"
+msgstr "قانونی"
+
+#. module: crm_iap_mine
+#. odoo-javascript
+#: code:addons/crm_iap_mine/static/src/js/tours/crm_iap_lead.js:0
+#, python-format
+msgid ""
+"Looking for more opportunities?<br>Try the <b>Lead Generation</b> tool."
+msgstr ""
+"به دنبال فرصت‌های بیشتر هستید؟<br>از ابزار <b>تولید سرنخ</b> استفاده کنید."
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_13
+msgid "Marketing"
+msgstr "بازاریابی"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_148
+msgid "Materials"
+msgstr "مواد"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_86
+msgid "Media"
+msgstr "رسانه‌ها"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__name
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
+msgid "Name"
+msgstr "نام"
+
+#. module: crm_iap_mine
+#: model:ir.model.constraint,message:crm_iap_mine.constraint_crm_iap_lead_seniority_name_uniq
+msgid "Name already exists!"
+msgstr "نام از قبل وجود دارد!"
+
+#. module: crm_iap_mine
+#. odoo-python
+#: code:addons/crm_iap_mine/models/crm_lead.py:0
+#, python-format
+msgid "Need help reaching your target?"
+msgstr "نیاز به کمک برای رسیدن به هدف خود دارید؟"
+
+#. module: crm_iap_mine
+#. odoo-python
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#, python-format
+msgid "New"
+msgstr "جدید"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__error_type__no_result
+msgid "No Result"
+msgstr "بدون نتیجه"
+
+#. module: crm_iap_mine
+#. odoo-javascript
+#: code:addons/crm_iap_mine/static/src/js/tours/crm_iap_lead.js:0
+#, python-format
+msgid "Now, just let the magic happen!"
+msgstr "اکنون، فقط بگذارید جادو اتفاق بیافتد!"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__contact_number
+msgid "Number of Contacts"
+msgstr "تعداد مخاطبین"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_count
+msgid "Number of Generated Leads"
+msgstr "تعداد سرنخ‌های ایجاد شده"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_number
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_tree
+msgid "Number of Leads"
+msgstr "تعداد سرنخ‌ها"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_14
+msgid "Operations"
+msgstr "عملیات"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__lead_type__opportunity
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Opportunities"
+msgstr "فرصت‌ها"
+
+#. module: crm_iap_mine
+#. odoo-python
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#, python-format
+msgid "Opportunity created by Odoo Lead Generation"
+msgstr "فرصت ایجاد شده توسط تولید سرنخ اودوو"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__role_ids
+msgid "Other Roles"
+msgstr "سایر نقش‌ها"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_15
+msgid "Owner"
+msgstr "مالک‌"
+
+#. module: crm_iap_mine
+#: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_role
+msgid "People Role"
+msgstr "نقش افراد"
+
+#. module: crm_iap_mine
+#: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_seniority
+msgid "People Seniority"
+msgstr "سابقه افراد"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_161
+msgid "Pharmaceuticals, Biotechnology & Life Sciences"
+msgstr "داروسازی، زیست‌فناوری و علوم زیستی"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
+msgid "Phone"
+msgstr "تلفن"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "Pick States..."
+msgstr "انتخاب ایالت‌ها..."
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__preferred_role_id
+msgid "Preferred Role"
+msgstr "نقش ترجیحی"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_16
+msgid "President"
+msgstr "رئیس‌جمهور"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_17
+msgid "Product"
+msgstr "محصول"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_18
+msgid "Public Relations"
+msgstr "روابط عمومی"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_114
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_19
+msgid "Real Estate"
+msgstr "مشاور املاک"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_20
+msgid "Recruiting"
+msgstr "استخدام"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__name
+msgid "Request Number"
+msgstr "شماره درخواست"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_21
+msgid "Research"
+msgstr "پژوهش"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_152
+msgid "Retailing"
+msgstr "خرده فروشی"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "Retry"
+msgstr "تلاش مجدد"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__reveal_ids
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__reveal_id
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__reveal_id
+msgid "Reveal"
+msgstr "افشا"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__contact_filter_type__role
+msgid "Role"
+msgstr "نقش"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__name
+msgid "Role Name"
+msgstr "نام نقش"
+
+#. module: crm_iap_mine
+#: model:ir.model.constraint,message:crm_iap_mine.constraint_crm_iap_lead_role_name_uniq
+msgid "Role name already exists!"
+msgstr "نام نقش از قبل وجود دارد!"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_22
+msgid "Sale"
+msgstr "فروش"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__team_id
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Sales Team"
+msgstr "تیم فروش"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__user_id
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Salesperson"
+msgstr "فروشنده"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__seniority_id
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__contact_filter_type__seniority
+msgid "Seniority"
+msgstr "سناریته"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__sequence
+msgid "Sequence"
+msgstr "دنباله"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__company_size_min
+msgid "Size"
+msgstr "اندازه"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_165
+msgid "Software & Services"
+msgstr "نرم‌افزار و خدمات"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__state_ids
+msgid "States"
+msgstr "استان ها"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__state
+msgid "Status"
+msgstr "وضعیت"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "Submit"
+msgstr "ارسال"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__tag_ids
+msgid "Tags"
+msgstr "برچسب‌ها"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__search_type
+msgid "Target"
+msgstr "هدف"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_166
+msgid "Technology Hardware & Equipment"
+msgstr "تجهیزات و سخت‌افزار فناوری"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_149
+msgid "Telecommunication Services"
+msgstr "خدمات مخابراتی"
+
+#. module: crm_iap_mine
+#. odoo-python
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#, python-format
+msgid "This makes a total of %d credits for this request."
+msgstr "این مجموعاً معادل %d اعتبار برای این درخواست است."
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_136
+msgid "Transportation"
+msgstr "حمل و نقل"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_type
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Type"
+msgstr "نوع"
+
+#. module: crm_iap_mine
+#. odoo-python
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#, python-format
+msgid ""
+"Up to %d additional credits will be consumed to identify %d contacts per "
+"company."
+msgstr ""
+"حداکثر %d اعتبار اضافی مصرف خواهد شد تا %d مخاطب در هر شرکت شناسایی گردد."
+
+#. module: crm_iap_mine
+#. odoo-javascript
+#: code:addons/crm_iap_mine/static/src/js/tours/crm_iap_lead.js:0
+#, python-format
+msgid "Which Industry do you want to target?"
+msgstr "کدام صنعت را می‌خواهید هدف قرار دهید؟"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "You do not have enough credits to submit this request."
+msgstr "شما به اندازه کافی اعتبار برای ارسال این درخواست ندارید."
+
+#. module: crm_iap_mine
+#. odoo-python
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#, python-format
+msgid "Your request could not be executed: %s"
+msgstr "نتوانستیم درخواست شما را اجرا کنیم: %s"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.seniority,name:crm_iap_mine.crm_iap_mine_seniority_1
+msgid "director"
+msgstr "مدیر"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "employees"
+msgstr "کارکنان"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.seniority,name:crm_iap_mine.crm_iap_mine_seniority_2
+msgid "executive"
+msgstr "اجرایی"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.seniority,name:crm_iap_mine.crm_iap_mine_seniority_3
+msgid "manager"
+msgstr "مدیر"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "to"
+msgstr "به"

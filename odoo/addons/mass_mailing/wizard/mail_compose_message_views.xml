@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <!-- Add mass mail campaign to the mail.compose.message form view -->
+        <record model="ir.ui.view" id="email_compose_form_mass_mailing">
+            <field name="name">mail.compose.message.form.mass_mailing</field>
+            <field name="model">mail.compose.message</field>
+            <field name="inherit_id" ref="mail.email_compose_message_wizard_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='auto_delete_keep_log']" position="after">
+                    <field name="campaign_id" groups="mass_mailing.group_mass_mailing_campaign"
+                        invisible="composition_mode != 'mass_mail' or not model_is_thread"/>
+                    <field name="mass_mailing_name"
+                        invisible="composition_mode != 'mass_mail' or not model_is_thread"/>
+                </xpath>
+                <xpath expr="//button[@name='action_send_mail'][not(hasclass('o_mail_send'))]" position="attributes">
+                    <!-- 'Log' button -->
+                    <attribute name="invisible">not subtype_is_log or mass_mailing_name != '' and mass_mailing_name</attribute>
+                </xpath>
+                <xpath expr="//button[hasclass('o_mail_send')]" position="attributes">
+                    <!-- 'Send' button -->
+                    <attribute name="invisible">subtype_is_log or mass_mailing_name != '' and mass_mailing_name</attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_send_mail']" position="after">
+                    <button string="Send Mass Mailing" name="action_send_mail" type="object" class="btn-primary o_mail_send"
+                        invisible="mass_mailing_name == '' or not mass_mailing_name" data-hotkey="q"/>
+                </xpath>
+            </field>
+        </record>
+
+</odoo>

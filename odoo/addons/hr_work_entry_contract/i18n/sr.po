@@ -1,0 +1,356 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_work_entry_contract
+# 
+# Translators:
+# Milan Bojovic <mbojovic@outlook.com>, 2023
+# Uros Kalajdzic <ukalajdzic@gmail.com>, 2023
+# Martin Trigaux, 2023
+# Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2023
+# Nemanja Skadric, 2024
+# コフスタジオ, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: コフスタジオ, 2024\n"
+"Language-Team: Serbian (https://app.transifex.com/odoo/teams/41243/sr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sr\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,help:hr_work_entry_contract.field_hr_contract__work_entry_source
+#: model:ir.model.fields,help:hr_work_entry_contract.field_hr_work_entry__work_entry_source
+msgid ""
+"\n"
+"        Defines the source for work entries generation\n"
+"\n"
+"        Working Schedule: Work entries will be generated from the working hours below.\n"
+"        Attendances: Work entries will be generated from the employee's attendances. (requires Attendance app)\n"
+"        Planning: Work entries will be generated from the employee's planning. (requires Planning app)\n"
+"    "
+msgstr ""
+"\n"
+"        Definiše izvor za generisanje radnih unosa\n"
+"\n"
+"        Radni raspored: Radni unosi će se generisati iz radnog vremena ispod.\n"
+"        Prisustva: Radni unosi će se generisati iz prisustva zaposlenih. (zahteva aplikaciju za prisustvo)\n"
+"       Planiranje: Radni unosi će se generisati iz planiranja zaposlenog. (zahteva aplikaciju za planiranje)\n"
+"    "
+
+#. module: hr_work_entry_contract
+#. odoo-python
+#: code:addons/hr_work_entry_contract/models/hr_work_entry.py:0
+#, python-format
+msgid "%s does not have a contract from %s to %s."
+msgstr "%s nema ugovor od %s do %s."
+
+#. module: hr_work_entry_contract
+#. odoo-python
+#: code:addons/hr_work_entry_contract/models/hr_work_entry.py:0
+#, python-format
+msgid ""
+"%s has multiple contracts from %s to %s. A work entry cannot overlap "
+"multiple contracts."
+msgstr ""
+"%s ima više ugovora od  %s do %s. Unos posla ne može da se preklapa sa više "
+"ugovora"
+
+#. module: hr_work_entry_contract
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
+msgid ""
+"<i class=\"fa fa-exclamation-triangle me-1\" title=\"Warning\"/>You are not "
+"allowed to regenerate validated work entries"
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle me-1\" title=\"Warning\"/>Nije vam "
+"dozvoljeno da ponovo generišete validirane radne unose"
+
+#. module: hr_work_entry_contract
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
+msgid "<i class=\"fa fa-info-circle me-1\" title=\"Hint\"/>"
+msgstr "<i class=\"fa fa-info-circle me-1\" title=\"Hint\"/>"
+
+#. module: hr_work_entry_contract
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
+msgid ""
+"<span class=\"text-muted\">Warning: The work entry regeneration will delete "
+"all manual changes on the selected period.</span>"
+msgstr ""
+"<span class=\"text-muted\">Upozorenje: Regeneracija unosa posla će "
+"izbrisati sve ručne promene u izabranom periodu.</span>"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,help:hr_work_entry_contract.field_hr_work_entry_type__is_leave
+msgid "Allow the work entry type to be linked with time off types."
+msgstr "Dozvolite da se tip unosa posla poveže sa tipovima slobodnog vremena."
+
+#. module: hr_work_entry_contract
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
+msgid "Cancel"
+msgstr "Otkaži"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_compensatory
+msgid "Compensatory Time Off"
+msgstr "Kompenzacioni odmor"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry__contract_id
+msgid "Contract"
+msgstr "Ugovor"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__create_uid
+msgid "Created by"
+msgstr "Kreirao"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__create_date
+msgid "Created on"
+msgstr "Kreirano"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__display_name
+msgid "Display Name"
+msgstr "Naziv za prikaz"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__earliest_available_date_message
+msgid "Earliest Available Date Message"
+msgstr "Poruka najranijeg dostupnog datuma"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__earliest_available_date
+msgid "Earliest date"
+msgstr "Najraniji datum"
+
+#. module: hr_work_entry_contract
+#: model:ir.model,name:hr_work_entry_contract.model_hr_employee
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry__employee_id
+msgid "Employee"
+msgstr "Zaposleni"
+
+#. module: hr_work_entry_contract
+#: model:ir.model,name:hr_work_entry_contract.model_hr_contract
+msgid "Employee Contract"
+msgstr "Ugovor Zapošljenog"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__employee_ids
+msgid "Employees"
+msgstr "Zaposleni"
+
+#. module: hr_work_entry_contract
+#. odoo-javascript
+#: code:addons/hr_work_entry_contract/static/src/views/work_entry_calendar/work_entry_calendar_model.js:0
+#, python-format
+msgid "Everybody's work entries"
+msgstr "Svi radni zapisi"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_extra_hours
+msgid "Extra Hours"
+msgstr "Dodatni sati"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__date_from
+msgid "From"
+msgstr "Od"
+
+#. module: hr_work_entry_contract
+#: model:ir.actions.server,name:hr_work_entry_contract.ir_cron_generate_missing_work_entries_ir_actions_server
+msgid "Generate Missing Work Entries"
+msgstr "Generišite nedostajuće radne unose"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__date_generated_from
+msgid "Generated From"
+msgstr "Generisano od"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__date_generated_to
+msgid "Generated To"
+msgstr "Generisano do"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_leave
+msgid "Generic Time Off"
+msgstr "Generičko slobodno vreme"
+
+#. module: hr_work_entry_contract
+#: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry
+msgid "HR Work Entry"
+msgstr "HR Radni unos"
+
+#. module: hr_work_entry_contract
+#: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry_type
+msgid "HR Work Entry Type"
+msgstr "Vrsta unosa rada HR"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_home_working
+msgid "Home Working"
+msgstr "Rad od kuće"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_work_entry_contract
+#. odoo-python
+#: code:addons/hr_work_entry_contract/wizard/hr_work_entry_regeneration_wizard.py:0
+#, python-format
+msgid ""
+"In order to regenerate the work entries, you need to provide the wizard with"
+" an employee_id, a date_from and a date_to. In addition to that, the time "
+"interval defined by date_from and date_to must not contain any validated "
+"work entries."
+msgstr ""
+"Da biste ponovo generisali radne unose, morate čarobnjaku da dostavite "
+"Employee_id, date_from i date_to. Pored toga, vremenski interval definisan "
+"sa date_from i date_to ne sme da sadrži nijedan validiran unos posla."
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__last_generation_date
+msgid "Last Generation Date"
+msgstr "Datum poslednje generacije"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__write_uid
+msgid "Last Updated by"
+msgstr "Poslednji put ažurirao"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__write_date
+msgid "Last Updated on"
+msgstr "Poslednji put ažurirano"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__latest_available_date_message
+msgid "Latest Available Date Message"
+msgstr "Latest Available Date Message"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__latest_available_date
+msgid "Latest date"
+msgstr "Najnoviji datum"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_long_leave
+msgid "Long Term Time Off"
+msgstr "Dugotrajno slobodno vreme"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_legal_leave
+msgid "Paid Time Off"
+msgstr "Plaćeno odsustvo"
+
+#. module: hr_work_entry_contract
+#: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry_regeneration_wizard
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
+msgid "Regenerate Employee Work Entries"
+msgstr "Regenerisanje radnih unosa zaposlenih"
+
+#. module: hr_work_entry_contract
+#. odoo-javascript
+#: code:addons/hr_work_entry_contract/static/src/views/work_entry_calendar/work_entry_calendar.xml:0
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
+#, python-format
+msgid "Regenerate Work Entries"
+msgstr "Regenerate Work Entries"
+
+#. module: hr_work_entry_contract
+#: model:ir.model,name:hr_work_entry_contract.model_resource_calendar
+msgid "Resource Working Time"
+msgstr "Resource Working Time"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__search_criteria_completed
+msgid "Search Criteria Completed"
+msgstr "Search Criteria Completed"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_sick_leave
+msgid "Sick Time Off"
+msgstr "Bolovanja"
+
+#. module: hr_work_entry_contract
+#. odoo-python
+#: code:addons/hr_work_entry_contract/models/hr_contract.py:0
+#, python-format
+msgid ""
+"Sorry, generating work entries from cancelled contracts is not allowed."
+msgstr ""
+"Sorry, generating work entries from cancelled contracts is not allowed."
+
+#. module: hr_work_entry_contract
+#. odoo-python
+#: code:addons/hr_work_entry_contract/wizard/hr_work_entry_regeneration_wizard.py:0
+#, python-format
+msgid ""
+"The from date must be >= '%(earliest_available_date)s' and the to date must "
+"be <= '%(latest_available_date)s', which correspond to the generated work "
+"entries time interval."
+msgstr ""
+"The from date must be >= '%(earliest_available_date)s' and the to date must "
+"be <= '%(latest_available_date)s', which correspond to the generated work "
+"entries time interval."
+
+#. module: hr_work_entry_contract
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_contract_view_form_inherit
+msgid "This work entry cannot be validated. The work entry type is undefined."
+msgstr ""
+"This work entry cannot be validated. The work entry type is undefined."
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_type__is_leave
+msgid "Time Off"
+msgstr "Odsustvo"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__date_to
+msgid "To"
+msgstr "Za"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_unpaid_leave
+msgid "Unpaid"
+msgstr "Neplaćeno"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__valid
+msgid "Valid"
+msgstr "Važeće"
+
+#. module: hr_work_entry_contract
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
+msgid "Work Entries"
+msgstr "Work Entries"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__validated_work_entry_ids
+msgid "Work Entries Within Interval"
+msgstr "Work Entries Within Interval"
+
+#. module: hr_work_entry_contract
+#: model:ir.actions.act_window,name:hr_work_entry_contract.hr_work_entry_regeneration_wizard_action
+msgid "Work Entry Regeneration"
+msgstr "Work Entry Regeneration"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__work_entry_source
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry__work_entry_source
+msgid "Work Entry Source"
+msgstr "Work Entry Source"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields.selection,name:hr_work_entry_contract.selection__hr_contract__work_entry_source__calendar
+msgid "Working Schedule"
+msgstr "Raspored rada"

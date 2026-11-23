@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="partner_demo_company_bh" model="res.partner">
+        <field name="name">BH Company</field>
+        <field name="street">Palace Ave</field>
+        <field name="city">Manama</field>
+        <field name="zip">973</field>
+        <field name="country_id" ref="base.bh"/>
+        <field name="phone">+973 1 722 1701</field>
+        <field name="email">info@company.bhexample.com</field>
+        <field name="website">www.bhexample.com</field>
+        <field name="vat">123456789012345</field>
+    </record>
+
+    <record id="demo_company_bh" model="res.company">
+        <field name="name">BH Company</field>
+        <field name="partner_id" ref="partner_demo_company_bh"/>
+    </record>
+
+    <record id="demo_bank_bh" model="res.partner.bank">
+        <field name="acc_number">BMAG00001299123456</field>
+        <field name="partner_id" ref="partner_demo_company_bh"/>
+        <field name="company_id" ref="demo_company_bh"/>
+    </record>
+
+    <function model="res.company" name="_onchange_country_id">
+        <value eval="[ref('demo_company_bh')]"/>
+    </function>
+
+    <function model="res.users" name="write">
+        <value eval="[ref('base.user_root'), ref('base.user_admin'), ref('base.user_demo')]"/>
+        <value eval="{'company_ids': [(4, ref('l10n_bh.demo_company_bh'))]}"/>
+    </function>
+
+    <function model="account.chart.template" name="try_loading">
+        <value eval="[]"/>
+        <value>bh</value>
+        <value model="res.company" eval="obj().env.ref('l10n_bh.demo_company_bh')"/>
+    </function>
+</odoo>

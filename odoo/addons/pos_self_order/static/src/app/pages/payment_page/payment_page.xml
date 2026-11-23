@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.PaymentPage">
+        <div t-if="state.selection" class="h-100 d-flex flex-wrap p-5 gap-5 align-items-center justify-content-center">
+            <div
+                t-foreach="selfOrder.pos_payment_methods"
+                t-as="payment_method"
+                t-key="payment_method.id"
+                class="o_kiosk-card border rounded d-flex flex-column align-items-center p-5 justify-content-center bg-white"
+                t-on-click="() => this.selectMethod(payment_method.id)">
+                <div class="h-75 fs-1 p-3 d-flex flex-column justify-content-center align-items-center">
+                    <i class="fa fa-credit-card" aria-hidden="true"></i>
+                </div>
+                <div class="name w-100 d-flex justify-content-center align-items-center h-25">
+                    <span t-esc="payment_method.name" />
+                </div>
+            </div>
+        </div>
+        <div class="payment-state-container d-flex justify-content-center align-items-center flex-column h-100 px-3 text-center">
+            <h1 class="mb-4">Follow instructions on the terminal</h1>
+            <div class="d-inline-flex flex-column border rounded p-4 bg-view mb-3">
+                <i class="fa fa-credit-card-alt fs-1" aria-hidden="true"></i>
+            </div>
+        </div>
+        <div class="px-3 py-4 d-flex gap-1 justify-content-center">
+            <button class="btn btn-primary btn-lg" t-if="state.selection || selectedPaymentMethod.is_online_payment || this.selfOrder.paymentError" t-on-click="() => this.router.back()">Back</button>
+            <button class="btn btn-info btn-lg" t-if="!state.selection and selfOrder.paymentError" t-on-click="startPayment">Retry</button>
+        </div>
+    </t>
+</templates>

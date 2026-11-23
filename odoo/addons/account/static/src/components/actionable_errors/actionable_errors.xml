@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="account.ActionableErrors">
+        <t t-if="this.props.record.data[this.props.name]">
+            <div class="alert alert-warning mb-2 px-3 py-2" role="alert">
+                <t t-foreach="this.props.record.data[this.props.name]" t-as="error" t-key="error">
+                    <div t-att-name="error">
+                        <t t-out="error_value.message"/>
+                        <a class="fw-bold"
+                           t-if="error_value.action"
+                           href="#"
+                           t-on-click.prevent="() => this.handleOnClick(error_value)"
+                        >
+                            <i class="oi oi-arrow-right ms-1"/>
+                            <span class="ms-1" t-out="error_value.action_text"/>
+                            <i t-if="error_value.critical" class="fa fa-warning ms-1"/>
+                        </a>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </t>
+</templates>

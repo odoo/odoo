@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="group_onboarding_todo" model="res.groups">
+        <field name="name">Onboarding todo already generated for those users</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+<data noupdate="1">
+
+    <record model="ir.rule" id="project.task_visibility_rule">
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+    </record>
+
+    <record model="ir.rule" id="task_edition_rule_internal">
+        <field name="name">Project/Task: employees: Full access to own private task only</field>
+        <field name="model_id" ref="project.model_project_task"/>
+        <field name="domain_force">[('project_id', '=', False), ('user_ids', 'in', user.id), ('parent_id', '=', False)]</field>
+        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+    </record>
+
+    <record model="ir.rule" id="task_visibility_rule_project_user">
+        <field name="name">Project/Task: project users: follow required for follower-only projects</field>
+        <field name="model_id" ref="project.model_project_task"/>
+        <field name="domain_force">[
+            '|',
+                '&amp;',
+                    ('project_id', '!=', False),
+                    '|',
+                        ('project_id.privacy_visibility', '!=', 'followers'),
+                        ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                '|',
+                    ('message_partner_ids', 'in', [user.partner_id.id]),
+                    # to subscribe check access to the record, follower is not enough at creation
+                    ('user_ids', 'in', user.id)
+        ]</field>
+        <field name="perm_read" eval="False"/>
+        <field name="groups" eval="[(4,ref('project.group_project_user'))]"/>
+    </record>
+
+</data>
+</odoo>

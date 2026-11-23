@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="partner_page" name="Partner Page">
+    <t t-call="website.layout">
+        <div id="wrap">
+            <div class="oe_structure" id="oe_structure_website_partner_partner_1"/>
+            <div class="container">
+                <div class="row">
+                    <t t-call="website_partner.partner_detail"></t>
+                </div>
+            </div>
+            <div class="oe_structure" id="oe_structure_website_partner_partner_2"/>
+        </div>
+    </t>
+</template>
+
+<template id="partner_detail" name="Partner Details">
+    <div class="row">
+        <div class="col-lg-3 col-md-4">
+            <div t-field="partner.avatar_1920" t-options='{"widget": "image", "preview_image": "avatar_1920", "style": "object-fit: cover", "class": "w-100 mb-2 rounded-3 border"}'/>
+            <div class="o_wcrm_contact_details">
+                <div t-field="partner.self" t-options='{
+                    "widget": "contact",
+                    "fields": ["address", "website", "phone", "email"]
+                }'/>
+                <t t-out="left_column or ''"/>
+            </div>
+        </div>
+        <div class="col-lg-9 col-md-8">
+            <div class="d-flex align-items-center flex-wrap mb-4">
+                <div class="flex-grow-1">
+                    <h1 id="partner_name" t-field="partner.display_name"/>
+                </div>
+            </div>
+            <t t-if="partner">
+                <div t-field="partner.website_description" class="mb-5"/>
+            </t>
+            <t t-out="right_column or ''"/>
+        </div>
+    </div>
+</template>
+</odoo>

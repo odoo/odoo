@@ -1,0 +1,28 @@
+///
+/// Backend Custom Utility Classes
+/// ==============================================================================
+
+$utilities: map-merge(
+    $utilities,
+    (
+        // Limit 'text-X' classes generation.
+        // See bootstrap_review_backend.scss
+        "color": (
+            property: color,
+            class: text,
+            local-vars: (
+                "text-opacity": 1
+            ),
+            values: (
+                "body": $body-color,
+                "muted": $text-muted,
+                "reset": inherit,
+            ),
+        ),
+
+        // Disable 'bg-X' classes generation.
+        // See bootstrap_review_backend.scss
+        "background-color": null
+    )
+);
+

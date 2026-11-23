@@ -1,0 +1,1847 @@
+{
+    "version": 12,
+    "sheets": [
+        {
+            "id": "sheet1",
+            "name": "Dashboard",
+            "colNumber": 9,
+            "rowNumber": 44,
+            "rows": {
+                "6": {
+                    "size": 40
+                },
+                "18": {
+                    "size": 40
+                },
+                "19": {
+                    "size": 40
+                },
+                "31": {
+                    "size": 40
+                },
+                "32": {
+                    "size": 40
+                }
+            },
+            "cols": {
+                "0": {
+                    "size": 175
+                },
+                "1": {
+                    "size": 100
+                },
+                "2": {
+                    "size": 100
+                },
+                "3": {
+                    "size": 100
+                },
+                "4": {
+                    "size": 50
+                },
+                "5": {
+                    "size": 175
+                },
+                "6": {
+                    "size": 100
+                },
+                "7": {
+                    "size": 100
+                },
+                "8": {
+                    "size": 100
+                }
+            },
+            "merges": [],
+            "cells": {
+                "A7": {
+                    "style": 1,
+                    "content": "[Time Billed by Week](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[[\"project_id\",\"!=\",false]],\"context\":{\"group_by\":[\"date:week\"],\"graph_measure\":\"billable_time\",\"graph_mode\":\"line\",\"graph_groupbys\":[\"date:week\"]},\"modelName\":\"timesheets.analysis.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Timesheets by Billing Type\"})",
+                    "border": 1
+                },
+                "A18": {
+                    "style": 2
+                },
+                "A19": {
+                    "style": 1,
+                    "content": "[Top Projects](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"project_id\",\"!=\",false],[\"project_id\",\"!=\",false]],\"context\":{\"group_by\":[\"project_id\"],\"pivot_measures\":[\"unit_amount\",\"billable_time\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"project_id\"]},\"modelName\":\"timesheets.analysis.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Projects\"})",
+                    "border": 1
+                },
+                "A20": {
+                    "style": 3,
+                    "content": "=_t(\"Project\")",
+                    "border": 2
+                },
+                "A21": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#project_id\",1)"
+                },
+                "A22": {
+                    "style": 5,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#project_id\",2)"
+                },
+                "A23": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#project_id\",3)"
+                },
+                "A24": {
+                    "style": 5,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#project_id\",4)"
+                },
+                "A25": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#project_id\",5)"
+                },
+                "A26": {
+                    "style": 5,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#project_id\",6)"
+                },
+                "A27": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#project_id\",7)"
+                },
+                "A28": {
+                    "style": 5,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#project_id\",8)"
+                },
+                "A29": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#project_id\",9)"
+                },
+                "A30": {
+                    "style": 5,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#project_id\",10)"
+                },
+                "A32": {
+                    "style": 1,
+                    "content": "[Top Departments](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"project_id\",\"!=\",false],[\"department_id\",\"!=\",false]],\"context\":{\"group_by\":[\"department_id\"],\"pivot_measures\":[\"unit_amount\",\"billable_time\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"department_id\"]},\"modelName\":\"timesheets.analysis.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Departments\"})",
+                    "border": 1
+                },
+                "A33": {
+                    "style": 3,
+                    "content": "=_t(\"Department\")",
+                    "border": 2
+                },
+                "A34": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#department_id\",1)"
+                },
+                "A35": {
+                    "style": 5,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#department_id\",2)"
+                },
+                "A36": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#department_id\",3)"
+                },
+                "A37": {
+                    "style": 5,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#department_id\",4)"
+                },
+                "A38": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#department_id\",5)"
+                },
+                "A39": {
+                    "style": 5,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#department_id\",6)"
+                },
+                "A40": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#department_id\",7)"
+                },
+                "A41": {
+                    "style": 5,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#department_id\",8)"
+                },
+                "A42": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#department_id\",9)"
+                },
+                "A43": {
+                    "style": 5,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#department_id\",10)"
+                },
+                "B18": {
+                    "style": 2
+                },
+                "B19": {
+                    "style": 2,
+                    "border": 1
+                },
+                "B20": {
+                    "style": 6,
+                    "content": "=_t(\"Hours spent\")",
+                    "border": 2
+                },
+                "B21": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(1,\"unit_amount\",\"#project_id\",1)"
+                },
+                "B22": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(1,\"unit_amount\",\"#project_id\",2)"
+                },
+                "B23": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(1,\"unit_amount\",\"#project_id\",3)"
+                },
+                "B24": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(1,\"unit_amount\",\"#project_id\",4)"
+                },
+                "B25": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(1,\"unit_amount\",\"#project_id\",5)"
+                },
+                "B26": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(1,\"unit_amount\",\"#project_id\",6)"
+                },
+                "B27": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(1,\"unit_amount\",\"#project_id\",7)"
+                },
+                "B28": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(1,\"unit_amount\",\"#project_id\",8)"
+                },
+                "B29": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(1,\"unit_amount\",\"#project_id\",9)"
+                },
+                "B30": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(1,\"unit_amount\",\"#project_id\",10)"
+                },
+                "B32": {
+                    "style": 2,
+                    "border": 1
+                },
+                "B33": {
+                    "style": 6,
+                    "content": "=_t(\"Hours spent\")",
+                    "border": 2
+                },
+                "B34": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"unit_amount\",\"#department_id\",1)"
+                },
+                "B35": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"unit_amount\",\"#department_id\",2)"
+                },
+                "B36": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"unit_amount\",\"#department_id\",3)"
+                },
+                "B37": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"unit_amount\",\"#department_id\",4)"
+                },
+                "B38": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"unit_amount\",\"#department_id\",5)"
+                },
+                "B39": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"unit_amount\",\"#department_id\",6)"
+                },
+                "B40": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"unit_amount\",\"#department_id\",7)"
+                },
+                "B41": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"unit_amount\",\"#department_id\",8)"
+                },
+                "B42": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"unit_amount\",\"#department_id\",9)"
+                },
+                "B43": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"unit_amount\",\"#department_id\",10)"
+                },
+                "C18": {
+                    "style": 2
+                },
+                "C19": {
+                    "style": 2,
+                    "border": 1
+                },
+                "C20": {
+                    "style": 6,
+                    "content": "=_t(\"Hours billed\")",
+                    "border": 2
+                },
+                "C21": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(1,\"billable_time\",\"#project_id\",1)"
+                },
+                "C22": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(1,\"billable_time\",\"#project_id\",2)"
+                },
+                "C23": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(1,\"billable_time\",\"#project_id\",3)"
+                },
+                "C24": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(1,\"billable_time\",\"#project_id\",4)"
+                },
+                "C25": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(1,\"billable_time\",\"#project_id\",5)"
+                },
+                "C26": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(1,\"billable_time\",\"#project_id\",6)"
+                },
+                "C27": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(1,\"billable_time\",\"#project_id\",7)"
+                },
+                "C28": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(1,\"billable_time\",\"#project_id\",8)"
+                },
+                "C29": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(1,\"billable_time\",\"#project_id\",9)"
+                },
+                "C30": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(1,\"billable_time\",\"#project_id\",10)"
+                },
+                "C32": {
+                    "style": 2,
+                    "border": 1
+                },
+                "C33": {
+                    "style": 6,
+                    "content": "=_t(\"Hours billed\")",
+                    "border": 2
+                },
+                "C34": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"billable_time\",\"#department_id\",1)"
+                },
+                "C35": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"billable_time\",\"#department_id\",2)"
+                },
+                "C36": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"billable_time\",\"#department_id\",3)"
+                },
+                "C37": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"billable_time\",\"#department_id\",4)"
+                },
+                "C38": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"billable_time\",\"#department_id\",5)"
+                },
+                "C39": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"billable_time\",\"#department_id\",6)"
+                },
+                "C40": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"billable_time\",\"#department_id\",7)"
+                },
+                "C41": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"billable_time\",\"#department_id\",8)"
+                },
+                "C42": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"billable_time\",\"#department_id\",9)"
+                },
+                "C43": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"billable_time\",\"#department_id\",10)"
+                },
+                "D18": {
+                    "style": 2
+                },
+                "D19": {
+                    "style": 2,
+                    "border": 1
+                },
+                "D20": {
+                    "style": 6,
+                    "content": "=_t(\"Billable rate\")",
+                    "border": 2
+                },
+                "D21": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=IFERROR(C21/B21)"
+                },
+                "D22": {
+                    "format": 2,
+                    "content": "=IFERROR(C22/B22)"
+                },
+                "D23": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=IFERROR(C23/B23)"
+                },
+                "D24": {
+                    "format": 2,
+                    "content": "=IFERROR(C24/B24)"
+                },
+                "D25": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=IFERROR(C25/B25)"
+                },
+                "D26": {
+                    "format": 2,
+                    "content": "=IFERROR(C26/B26)"
+                },
+                "D27": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=IFERROR(C27/B27)"
+                },
+                "D28": {
+                    "format": 2,
+                    "content": "=IFERROR(C28/B28)"
+                },
+                "D29": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=IFERROR(C29/B29)"
+                },
+                "D30": {
+                    "format": 2,
+                    "content": "=IFERROR(C30/B30)"
+                },
+                "D32": {
+                    "style": 2,
+                    "border": 1
+                },
+                "D33": {
+                    "style": 6,
+                    "content": "=_t(\"Billable rate\")",
+                    "border": 2
+                },
+                "D34": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=IFERROR(C34/B34)"
+                },
+                "D35": {
+                    "format": 2,
+                    "content": "=IFERROR(C35/B35)"
+                },
+                "D36": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=IFERROR(C36/B36)"
+                },
+                "D37": {
+                    "format": 2,
+                    "content": "=IFERROR(C37/B37)"
+                },
+                "D38": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=IFERROR(C38/B38)"
+                },
+                "D39": {
+                    "format": 2,
+                    "content": "=IFERROR(C39/B39)"
+                },
+                "D40": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=IFERROR(C40/B40)"
+                },
+                "D41": {
+                    "format": 2,
+                    "content": "=IFERROR(C41/B41)"
+                },
+                "D42": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=IFERROR(C42/B42)"
+                },
+                "D43": {
+                    "format": 2,
+                    "content": "=IFERROR(C43/B43)"
+                },
+                "F19": {
+                    "style": 1,
+                    "content": "[Top Tasks](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"project_id\",\"!=\",false],[\"task_id\",\"!=\",false]],\"context\":{\"group_by\":[\"task_id\"],\"pivot_measures\":[\"unit_amount\",\"billable_time\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"task_id\"]},\"modelName\":\"timesheets.analysis.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Tasks\"})",
+                    "border": 1
+                },
+                "F20": {
+                    "style": 3,
+                    "content": "=_t(\"Task\")",
+                    "border": 2
+                },
+                "F21": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#task_id\",1)"
+                },
+                "F22": {
+                    "style": 5,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#task_id\",2)"
+                },
+                "F23": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#task_id\",3)"
+                },
+                "F24": {
+                    "style": 5,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#task_id\",4)"
+                },
+                "F25": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#task_id\",5)"
+                },
+                "F26": {
+                    "style": 5,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#task_id\",6)"
+                },
+                "F27": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#task_id\",7)"
+                },
+                "F28": {
+                    "style": 5,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#task_id\",8)"
+                },
+                "F29": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#task_id\",9)"
+                },
+                "F30": {
+                    "style": 5
+                },
+                "F32": {
+                    "style": 1,
+                    "content": "[Top Employees](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"project_id\",\"!=\",false],[\"employee_id\",\"!=\",false]],\"context\":{\"group_by\":[\"employee_id\"],\"pivot_measures\":[\"unit_amount\",\"billable_time\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"employee_id\"]},\"modelName\":\"timesheets.analysis.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Employees\"})",
+                    "border": 1
+                },
+                "F33": {
+                    "style": 3,
+                    "content": "=_t(\"Employee\")",
+                    "border": 2
+                },
+                "F34": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#employee_id\",1)"
+                },
+                "F35": {
+                    "style": 5,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#employee_id\",2)"
+                },
+                "F36": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#employee_id\",3)"
+                },
+                "F37": {
+                    "style": 5,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#employee_id\",4)"
+                },
+                "F38": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#employee_id\",5)"
+                },
+                "F39": {
+                    "style": 5,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#employee_id\",6)"
+                },
+                "F40": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#employee_id\",7)"
+                },
+                "F41": {
+                    "style": 5,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#employee_id\",8)"
+                },
+                "F42": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#employee_id\",9)"
+                },
+                "F43": {
+                    "style": 5,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#employee_id\",10)"
+                },
+                "G19": {
+                    "style": 2,
+                    "border": 1
+                },
+                "G20": {
+                    "style": 6,
+                    "content": "=_t(\"Hours spent\")",
+                    "border": 2
+                },
+                "G21": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"unit_amount\",\"#task_id\",1)"
+                },
+                "G22": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"unit_amount\",\"#task_id\",2)"
+                },
+                "G23": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"unit_amount\",\"#task_id\",3)"
+                },
+                "G24": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"unit_amount\",\"#task_id\",4)"
+                },
+                "G25": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"unit_amount\",\"#task_id\",5)"
+                },
+                "G26": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"unit_amount\",\"#task_id\",6)"
+                },
+                "G27": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"unit_amount\",\"#task_id\",7)"
+                },
+                "G28": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"unit_amount\",\"#task_id\",8)"
+                },
+                "G29": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"unit_amount\",\"#task_id\",9)"
+                },
+                "G30": {
+                    "format": 1
+                },
+                "G32": {
+                    "style": 2,
+                    "border": 1
+                },
+                "G33": {
+                    "style": 6,
+                    "content": "=_t(\"Hours spent\")",
+                    "border": 2
+                },
+                "G34": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"unit_amount\",\"#employee_id\",1)"
+                },
+                "G35": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"unit_amount\",\"#employee_id\",2)"
+                },
+                "G36": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"unit_amount\",\"#employee_id\",3)"
+                },
+                "G37": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"unit_amount\",\"#employee_id\",4)"
+                },
+                "G38": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"unit_amount\",\"#employee_id\",5)"
+                },
+                "G39": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"unit_amount\",\"#employee_id\",6)"
+                },
+                "G40": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"unit_amount\",\"#employee_id\",7)"
+                },
+                "G41": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"unit_amount\",\"#employee_id\",8)"
+                },
+                "G42": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"unit_amount\",\"#employee_id\",9)"
+                },
+                "G43": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"unit_amount\",\"#employee_id\",10)"
+                },
+                "H19": {
+                    "style": 2,
+                    "border": 1
+                },
+                "H20": {
+                    "style": 6,
+                    "content": "=_t(\"Hours billed\")",
+                    "border": 2
+                },
+                "H21": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"billable_time\",\"#task_id\",1)"
+                },
+                "H22": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"billable_time\",\"#task_id\",2)"
+                },
+                "H23": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"billable_time\",\"#task_id\",3)"
+                },
+                "H24": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"billable_time\",\"#task_id\",4)"
+                },
+                "H25": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"billable_time\",\"#task_id\",5)"
+                },
+                "H26": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"billable_time\",\"#task_id\",6)"
+                },
+                "H27": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"billable_time\",\"#task_id\",7)"
+                },
+                "H28": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"billable_time\",\"#task_id\",8)"
+                },
+                "H29": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"billable_time\",\"#task_id\",9)"
+                },
+                "H30": {
+                    "format": 1
+                },
+                "H32": {
+                    "style": 2,
+                    "border": 1
+                },
+                "H33": {
+                    "style": 6,
+                    "content": "=_t(\"Hours billed\")",
+                    "border": 2
+                },
+                "H34": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"billable_time\",\"#employee_id\",1)"
+                },
+                "H35": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"billable_time\",\"#employee_id\",2)"
+                },
+                "H36": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"billable_time\",\"#employee_id\",3)"
+                },
+                "H37": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"billable_time\",\"#employee_id\",4)"
+                },
+                "H38": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"billable_time\",\"#employee_id\",5)"
+                },
+                "H39": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"billable_time\",\"#employee_id\",6)"
+                },
+                "H40": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"billable_time\",\"#employee_id\",7)"
+                },
+                "H41": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"billable_time\",\"#employee_id\",8)"
+                },
+                "H42": {
+                    "style": 7,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"billable_time\",\"#employee_id\",9)"
+                },
+                "H43": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"billable_time\",\"#employee_id\",10)"
+                },
+                "I19": {
+                    "style": 2,
+                    "border": 1
+                },
+                "I20": {
+                    "style": 6,
+                    "content": "=_t(\"Billable rate\")",
+                    "border": 2
+                },
+                "I21": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=IFERROR(H21/G21)"
+                },
+                "I22": {
+                    "format": 2,
+                    "content": "=IFERROR(H22/G22)"
+                },
+                "I23": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=IFERROR(H23/G23)"
+                },
+                "I24": {
+                    "format": 2,
+                    "content": "=IFERROR(H24/G24)"
+                },
+                "I25": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=IFERROR(H25/G25)"
+                },
+                "I26": {
+                    "format": 2,
+                    "content": "=IFERROR(H26/G26)"
+                },
+                "I27": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=IFERROR(H27/G27)"
+                },
+                "I28": {
+                    "format": 2,
+                    "content": "=IFERROR(H28/G28)"
+                },
+                "I29": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=IFERROR(H29/G29)"
+                },
+                "I30": {
+                    "format": 2,
+                    "content": "=IFERROR(H30/G30)"
+                },
+                "I32": {
+                    "style": 2,
+                    "border": 1
+                },
+                "I33": {
+                    "style": 6,
+                    "content": "=_t(\"Billable rate\")",
+                    "border": 2
+                },
+                "I34": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=IFERROR(H34/G34)"
+                },
+                "I35": {
+                    "format": 2,
+                    "content": "=IFERROR(H35/G35)"
+                },
+                "I36": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=IFERROR(H36/G36)"
+                },
+                "I37": {
+                    "format": 2,
+                    "content": "=IFERROR(H37/G37)"
+                },
+                "I38": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=IFERROR(H38/G38)"
+                },
+                "I39": {
+                    "format": 2,
+                    "content": "=IFERROR(H39/G39)"
+                },
+                "I40": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=IFERROR(H40/G40)"
+                },
+                "I41": {
+                    "format": 2,
+                    "content": "=IFERROR(H41/G41)"
+                },
+                "I42": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=IFERROR(H42/G42)"
+                },
+                "I43": {
+                    "format": 2,
+                    "content": "=IFERROR(H43/G43)"
+                },
+                "A8": {
+                    "border": 2
+                },
+                "B7": {
+                    "border": 1
+                },
+                "B8": {
+                    "border": 2
+                },
+                "C7": {
+                    "border": 1
+                },
+                "C8": {
+                    "border": 2
+                },
+                "D7": {
+                    "border": 1
+                },
+                "D8": {
+                    "border": 2
+                },
+                "E7": {
+                    "border": 1
+                },
+                "E8": {
+                    "border": 2
+                },
+                "F7": {
+                    "border": 1
+                },
+                "F8": {
+                    "border": 2
+                },
+                "G7": {
+                    "border": 1
+                },
+                "G8": {
+                    "border": 2
+                },
+                "H7": {
+                    "border": 1
+                },
+                "H8": {
+                    "border": 2
+                },
+                "I7": {
+                    "border": 1
+                },
+                "I8": {
+                    "border": 2
+                }
+            },
+            "conditionalFormats": [],
+            "figures": [
+                {
+                    "id": "14907ee1-177b-4dda-97d7-223b1b00abe5",
+                    "x": 0,
+                    "y": 0,
+                    "width": 200,
+                    "height": 120,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "percentage",
+                        "title": "Billable Hours",
+                        "type": "scorecard",
+                        "background": "",
+                        "baseline": "Data!E5",
+                        "baselineDescr": "since last period",
+                        "keyValue": "Data!D5"
+                    }
+                },
+                {
+                    "id": "c484c691-bb4a-4a9d-8a25-8464162ee96a",
+                    "x": 210,
+                    "y": 0,
+                    "width": 200,
+                    "height": 120,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "percentage",
+                        "title": "Non-billable Hours",
+                        "type": "scorecard",
+                        "background": "",
+                        "baseline": "Data!E6",
+                        "baselineDescr": "since last period",
+                        "keyValue": "Data!D6"
+                    }
+                },
+                {
+                    "id": "0b033641-2a0f-4db7-893d-f14fbb320b94",
+                    "x": 420,
+                    "y": 0,
+                    "width": 200,
+                    "height": 120,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "text",
+                        "title": "Billable Rate",
+                        "type": "scorecard",
+                        "background": "",
+                        "baseline": "Data!E8",
+                        "baselineDescr": "last period",
+                        "keyValue": "Data!D8"
+                    }
+                },
+                {
+                    "id": "39c6667b-b74a-478e-87e9-75c22de5ea1f",
+                    "x": 0,
+                    "y": 178,
+                    "width": 1000,
+                    "height": 230,
+                    "tag": "chart",
+                    "data": {
+                        "title": "",
+                        "id": "39c6667b-b74a-478e-87e9-75c22de5ea1f",
+                        "background": "#FFFFFF",
+                        "legendPosition": "none",
+                        "metaData": {
+                            "groupBy": [
+                                "date:week"
+                            ],
+                            "measure": "billable_time",
+                            "order": null,
+                            "resModel": "timesheets.analysis.report"
+                        },
+                        "searchParams": {
+                            "comparison": null,
+                            "context": {},
+                            "domain": [
+                                [
+                                    "project_id",
+                                    "!=",
+                                    false
+                                ]
+                            ],
+                            "groupBy": [
+                                "date:week"
+                            ],
+                            "orderBy": []
+                        },
+                        "type": "odoo_line",
+                        "verticalAxisPosition": "left"
+                    }
+                }
+            ],
+            "areGridLinesVisible": true,
+            "isVisible": true
+        },
+        {
+            "id": "7802fc6d-c96b-452f-86d8-1c69816bebdc",
+            "name": "Data",
+            "colNumber": 26,
+            "rowNumber": 100,
+            "rows": {},
+            "cols": {
+                "0": {
+                    "size": 159.01953125
+                },
+                "1": {
+                    "size": 93.01953125
+                },
+                "2": {
+                    "size": 93.01953125
+                },
+                "3": {
+                    "size": 93.01953125
+                },
+                "4": {
+                    "size": 93.01953125
+                }
+            },
+            "merges": [],
+            "cells": {
+                "A1": {
+                    "style": 3,
+                    "content": "=_t(\"KPI\")"
+                },
+                "A2": {
+                    "style": 7,
+                    "content": "=_t(\"Billed fixed price\")"
+                },
+                "A3": {
+                    "style": 7,
+                    "content": "=_t(\"Billed manually\")"
+                },
+                "A4": {
+                    "style": 7,
+                    "content": "=_t(\"Billed timesheets\")"
+                },
+                "A5": {
+                    "style": 7,
+                    "content": "=_t(\"Billable hours\")"
+                },
+                "A6": {
+                    "style": 7,
+                    "content": "=_t(\"Non-billable hours\")"
+                },
+                "A7": {
+                    "style": 7,
+                    "content": "=_t(\"Grand total\")"
+                },
+                "A8": {
+                    "style": 7,
+                    "content": "=_t(\"Billable rate\")"
+                },
+                "B1": {
+                    "style": 3,
+                    "content": "=_t(\"Current\")"
+                },
+                "B2": {
+                    "style": 7,
+                    "content": "=ODOO.PIVOT(5,\"unit_amount\",\"timesheet_invoice_type\",\"billable_fixed\")"
+                },
+                "B3": {
+                    "style": 7,
+                    "content": "=ODOO.PIVOT(5,\"unit_amount\",\"timesheet_invoice_type\",\"billable_manual\")"
+                },
+                "B4": {
+                    "style": 7,
+                    "content": "=ODOO.PIVOT(5,\"unit_amount\",\"timesheet_invoice_type\",\"billable_time\")"
+                },
+                "B5": {
+                    "style": 7,
+                    "content": "=SUM(B2:B4)"
+                },
+                "B6": {
+                    "style": 7,
+                    "content": "=ODOO.PIVOT(5,\"unit_amount\",\"timesheet_invoice_type\",\"non_billable\")"
+                },
+                "B7": {
+                    "style": 7,
+                    "content": "=ODOO.PIVOT(5,\"unit_amount\")"
+                },
+                "B8": {
+                    "style": 7,
+                    "content": "=IFERROR(B5/B7)"
+                },
+                "C1": {
+                    "style": 3,
+                    "content": "=_t(\"Previous\")"
+                },
+                "C2": {
+                    "style": 7,
+                    "content": "=ODOO.PIVOT(6,\"unit_amount\",\"timesheet_invoice_type\",\"billable_fixed\")"
+                },
+                "C3": {
+                    "style": 7,
+                    "content": "=ODOO.PIVOT(6,\"unit_amount\",\"timesheet_invoice_type\",\"billable_manual\")"
+                },
+                "C4": {
+                    "style": 7,
+                    "content": "=ODOO.PIVOT(6,\"unit_amount\",\"timesheet_invoice_type\",\"billable_time\")"
+                },
+                "C5": {
+                    "style": 7,
+                    "content": "=SUM(C2:C4)"
+                },
+                "C6": {
+                    "style": 7,
+                    "content": "=ODOO.PIVOT(6,\"unit_amount\",\"timesheet_invoice_type\",\"non_billable\")"
+                },
+                "C7": {
+                    "style": 7,
+                    "content": "=ODOO.PIVOT(6,\"unit_amount\")"
+                },
+                "C8": {
+                    "style": 7,
+                    "content": "=IFERROR(C5/C7)"
+                },
+                "D1": {
+                    "style": 3,
+                    "content": "=_t(\"Current\")"
+                },
+                "D2": {
+                    "style": 7,
+                    "content": "=FORMAT.LARGE.NUMBER(B2)"
+                },
+                "D3": {
+                    "style": 7,
+                    "content": "=FORMAT.LARGE.NUMBER(B3)"
+                },
+                "D4": {
+                    "style": 7,
+                    "content": "=FORMAT.LARGE.NUMBER(B4)"
+                },
+                "D5": {
+                    "style": 7,
+                    "content": "=FORMAT.LARGE.NUMBER(B5)"
+                },
+                "D6": {
+                    "style": 7,
+                    "content": "=FORMAT.LARGE.NUMBER(B6)"
+                },
+                "D7": {
+                    "style": 7,
+                    "content": "=FORMAT.LARGE.NUMBER(B7)"
+                },
+                "D8": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=B8"
+                },
+                "E1": {
+                    "style": 3,
+                    "content": "=_t(\"Previous\")"
+                },
+                "E2": {
+                    "style": 7,
+                    "content": "=FORMAT.LARGE.NUMBER(C2)"
+                },
+                "E3": {
+                    "style": 7,
+                    "content": "=FORMAT.LARGE.NUMBER(C3)"
+                },
+                "E4": {
+                    "style": 7,
+                    "content": "=FORMAT.LARGE.NUMBER(C4)"
+                },
+                "E5": {
+                    "style": 7,
+                    "content": "=FORMAT.LARGE.NUMBER(C5)"
+                },
+                "E6": {
+                    "style": 7,
+                    "content": "=FORMAT.LARGE.NUMBER(C6)"
+                },
+                "E7": {
+                    "style": 7,
+                    "content": "=FORMAT.LARGE.NUMBER(C7)"
+                },
+                "E8": {
+                    "style": 7,
+                    "format": 2,
+                    "content": "=C8"
+                },
+                "F1": {
+                    "style": 3
+                },
+                "G1": {
+                    "style": 3
+                },
+                "H1": {
+                    "style": 3
+                },
+                "I1": {
+                    "style": 3
+                },
+                "J1": {
+                    "style": 3
+                },
+                "K1": {
+                    "style": 3
+                },
+                "L1": {
+                    "style": 3
+                },
+                "M1": {
+                    "style": 3
+                },
+                "N1": {
+                    "style": 3
+                },
+                "O1": {
+                    "style": 3
+                },
+                "P1": {
+                    "style": 3
+                },
+                "Q1": {
+                    "style": 3
+                },
+                "R1": {
+                    "style": 3
+                },
+                "S1": {
+                    "style": 3
+                },
+                "T1": {
+                    "style": 3
+                },
+                "U1": {
+                    "style": 3
+                },
+                "V1": {
+                    "style": 3
+                },
+                "W1": {
+                    "style": 3
+                },
+                "X1": {
+                    "style": 3
+                },
+                "Y1": {
+                    "style": 3
+                },
+                "Z1": {
+                    "style": 3
+                }
+            },
+            "conditionalFormats": [],
+            "figures": [],
+            "areGridLinesVisible": true,
+            "isVisible": true
+        }
+    ],
+    "entities": {},
+    "styles": {
+        "1": {
+            "textColor": "#01666b",
+            "bold": true,
+            "fontSize": 16
+        },
+        "2": {
+            "bold": true,
+            "fontSize": 16
+        },
+        "3": {
+            "bold": true
+        },
+        "4": {
+            "fillColor": "#f2f2f2",
+            "textColor": "#741b47"
+        },
+        "5": {
+            "textColor": "#741b47"
+        },
+        "6": {
+            "align": "right",
+            "bold": true
+        },
+        "7": {
+            "fillColor": "#f2f2f2"
+        }
+    },
+    "formats": {
+        "1": "#,##0",
+        "2": "0%"
+    },
+    "borders": {
+        "1": {
+            "bottom": [
+                "thin",
+                "#000"
+            ]
+        },
+        "2": {
+            "top": [
+                "thin",
+                "#000"
+            ]
+        }
+    },
+    "revisionId": "2f8d6a1b-fc40-48c9-bd93-81a9cc5c54d2",
+    "settings": {
+        "locale": {
+            "name": "English (US)",
+            "code": "en_US",
+            "thousandsSeparator": ",",
+            "decimalSeparator": ".",
+            "dateFormat": "mm/dd/yyyy",
+            "timeFormat": "hh:mm:ss",
+            "formulaArgSeparator": ","
+        }
+    },
+    "chartOdooMenusReferences": {
+        "711b3ea3-d7f4-4fa9-85a4-0fa7d46d3811": "hr_timesheet.timesheet_menu_root",
+        "6eba1314-09d2-4821-af97-ad22f43a87fa": "hr_timesheet.timesheet_menu_root",
+        "39c6667b-b74a-478e-87e9-75c22de5ea1f": "hr_timesheet.timesheet_menu_root",
+        "14907ee1-177b-4dda-97d7-223b1b00abe5": "hr_timesheet.timesheet_menu_activity_all",
+        "c484c691-bb4a-4a9d-8a25-8464162ee96a": "hr_timesheet.timesheet_menu_activity_all",
+        "0b033641-2a0f-4db7-893d-f14fbb320b94": "hr_timesheet.timesheet_menu_activity_all"
+    },
+    "odooVersion": 4,
+    "lists": {},
+    "listNextId": 1,
+    "pivots": {
+        "1": {
+            "colGroupBys": [],
+            "context": {},
+            "domain": [
+                "&",
+                [
+                    "project_id",
+                    "!=",
+                    false
+                ],
+                [
+                    "project_id",
+                    "!=",
+                    false
+                ]
+            ],
+            "id": "1",
+            "measures": [
+                {
+                    "field": "unit_amount"
+                },
+                {
+                    "field": "billable_time"
+                }
+            ],
+            "model": "timesheets.analysis.report",
+            "rowGroupBys": [
+                "project_id"
+            ],
+            "name": "Timesheets Analysis by Project",
+            "sortedColumn": {
+                "groupId": [
+                    [],
+                    []
+                ],
+                "measure": "billable_time",
+                "order": "desc"
+            }
+        },
+        "2": {
+            "colGroupBys": [],
+            "context": {},
+            "domain": [
+                "&",
+                [
+                    "project_id",
+                    "!=",
+                    false
+                ],
+                [
+                    "task_id",
+                    "!=",
+                    false
+                ]
+            ],
+            "id": "2",
+            "measures": [
+                {
+                    "field": "unit_amount"
+                },
+                {
+                    "field": "billable_time"
+                }
+            ],
+            "model": "timesheets.analysis.report",
+            "rowGroupBys": [
+                "task_id"
+            ],
+            "name": "Timesheets Analysis by Task",
+            "sortedColumn": {
+                "groupId": [
+                    [],
+                    []
+                ],
+                "measure": "billable_time",
+                "order": "desc"
+            }
+        },
+        "3": {
+            "colGroupBys": [],
+            "context": {},
+            "domain": [
+                "&",
+                [
+                    "project_id",
+                    "!=",
+                    false
+                ],
+                [
+                    "department_id",
+                    "!=",
+                    false
+                ]
+            ],
+            "id": "3",
+            "measures": [
+                {
+                    "field": "unit_amount"
+                },
+                {
+                    "field": "billable_time"
+                }
+            ],
+            "model": "timesheets.analysis.report",
+            "rowGroupBys": [
+                "department_id"
+            ],
+            "name": "Timesheets Analysis by Department",
+            "sortedColumn": {
+                "groupId": [
+                    [],
+                    []
+                ],
+                "measure": "billable_time",
+                "order": "desc"
+            }
+        },
+        "4": {
+            "colGroupBys": [],
+            "context": {},
+            "domain": [
+                "&",
+                [
+                    "project_id",
+                    "!=",
+                    false
+                ],
+                [
+                    "employee_id",
+                    "!=",
+                    false
+                ]
+            ],
+            "id": "4",
+            "measures": [
+                {
+                    "field": "unit_amount"
+                },
+                {
+                    "field": "billable_time"
+                }
+            ],
+            "model": "timesheets.analysis.report",
+            "rowGroupBys": [
+                "employee_id"
+            ],
+            "name": "Timesheets Analysis by Employee",
+            "sortedColumn": {
+                "groupId": [
+                    [],
+                    []
+                ],
+                "measure": "billable_time",
+                "order": "desc"
+            }
+        },
+        "5": {
+            "colGroupBys": [],
+            "context": {
+                "grid_anchor": "2022-09-12",
+                "my_timesheet_display_timer": true,
+                "group_expand": true
+            },
+            "domain": [
+                "&",
+                [
+                    "project_id",
+                    "!=",
+                    false
+                ],
+                [
+                    "user_id",
+                    "=",
+                    2
+                ]
+            ],
+            "id": "5",
+            "measures": [
+                {
+                    "field": "unit_amount"
+                }
+            ],
+            "model": "account.analytic.line",
+            "rowGroupBys": [
+                "timesheet_invoice_type"
+            ],
+            "name": "stats - current",
+            "sortedColumn": null
+        },
+        "6": {
+            "colGroupBys": [],
+            "context": {
+                "grid_anchor": "2022-09-12",
+                "my_timesheet_display_timer": true,
+                "group_expand": true
+            },
+            "domain": [
+                "&",
+                [
+                    "project_id",
+                    "!=",
+                    false
+                ],
+                [
+                    "user_id",
+                    "=",
+                    2
+                ]
+            ],
+            "id": "6",
+            "measures": [
+                {
+                    "field": "unit_amount"
+                }
+            ],
+            "model": "account.analytic.line",
+            "rowGroupBys": [
+                "timesheet_invoice_type"
+            ],
+            "name": "stats - previous",
+            "sortedColumn": null
+        }
+    },
+    "pivotNextId": 7,
+    "globalFilters": [
+        {
+            "id": "fb3700b0-4ee9-4086-86ac-6c62a7d33d37",
+            "type": "date",
+            "label": "Period",
+            "defaultValue": "last_month",
+            "rangeType": "relative",
+            "defaultsToCurrentPeriod": false,
+            "pivotFields": {
+                "1": {
+                    "field": "date",
+                    "type": "date",
+                    "offset": 0
+                },
+                "2": {
+                    "field": "date",
+                    "type": "date",
+                    "offset": 0
+                },
+                "3": {
+                    "field": "date",
+                    "type": "date",
+                    "offset": 0
+                },
+                "4": {
+                    "field": "date",
+                    "type": "date",
+                    "offset": 0
+                },
+                "5": {
+                    "field": "date",
+                    "type": "date",
+                    "offset": 0
+                },
+                "6": {
+                    "field": "date",
+                    "type": "date",
+                    "offset": -1
+                }
+            },
+            "listFields": {},
+            "graphFields": {
+                "39c6667b-b74a-478e-87e9-75c22de5ea1f": {
+                    "field": "date",
+                    "type": "date",
+                    "offset": 0
+                }
+            }
+        },
+        {
+            "id": "65e4bccf-3035-47a0-a268-9a4e5b48037f",
+            "type": "relation",
+            "label": "Project",
+            "modelName": "project.project",
+            "defaultValue": [],
+            "defaultValueDisplayNames": [],
+            "rangeType": "year",
+            "defaultsToCurrentPeriod": false,
+            "pivotFields": {
+                "1": {
+                    "field": "project_id",
+                    "type": "many2one"
+                },
+                "2": {
+                    "field": "project_id",
+                    "type": "many2one"
+                },
+                "3": {
+                    "field": "project_id",
+                    "type": "many2one"
+                },
+                "4": {
+                    "field": "project_id",
+                    "type": "many2one"
+                },
+                "5": {
+                    "field": "project_id",
+                    "type": "many2one"
+                },
+                "6": {
+                    "field": "project_id",
+                    "type": "many2one"
+                }
+            },
+            "listFields": {},
+            "graphFields": {
+                "39c6667b-b74a-478e-87e9-75c22de5ea1f": {
+                    "field": "project_id",
+                    "type": "many2one"
+                }
+            }
+        },
+        {
+            "id": "22a76320-0363-4391-9121-65e1db51b671",
+            "type": "relation",
+            "label": "Task",
+            "modelName": "project.task",
+            "defaultValue": [],
+            "defaultValueDisplayNames": [],
+            "rangeType": "year",
+            "defaultsToCurrentPeriod": false,
+            "pivotFields": {
+                "1": {
+                    "field": "task_id",
+                    "type": "many2one"
+                },
+                "2": {
+                    "field": "task_id",
+                    "type": "many2one"
+                },
+                "3": {
+                    "field": "task_id",
+                    "type": "many2one"
+                },
+                "4": {
+                    "field": "task_id",
+                    "type": "many2one"
+                },
+                "5": {
+                    "field": "task_id",
+                    "type": "many2one"
+                },
+                "6": {
+                    "field": "task_id",
+                    "type": "many2one"
+                }
+            },
+            "listFields": {},
+            "graphFields": {
+                "39c6667b-b74a-478e-87e9-75c22de5ea1f": {
+                    "field": "task_id",
+                    "type": "many2one"
+                }
+            }
+        },
+        {
+            "id": "541de762-4a6c-435e-a5ff-e94d393cf6df",
+            "type": "relation",
+            "label": "Department",
+            "modelName": "hr.department",
+            "defaultValue": [],
+            "defaultValueDisplayNames": [],
+            "rangeType": "year",
+            "defaultsToCurrentPeriod": false,
+            "pivotFields": {
+                "1": {
+                    "field": "department_id",
+                    "type": "many2one"
+                },
+                "2": {
+                    "field": "department_id",
+                    "type": "many2one"
+                },
+                "3": {
+                    "field": "department_id",
+                    "type": "many2one"
+                },
+                "4": {
+                    "field": "department_id",
+                    "type": "many2one"
+                },
+                "5": {
+                    "field": "department_id",
+                    "type": "many2one"
+                },
+                "6": {
+                    "field": "department_id",
+                    "type": "many2one"
+                }
+            },
+            "listFields": {},
+            "graphFields": {
+                "39c6667b-b74a-478e-87e9-75c22de5ea1f": {
+                    "field": "department_id",
+                    "type": "many2one"
+                }
+            }
+        },
+        {
+            "id": "4788ea63-ee8f-4082-a118-a26b4b6f1a71",
+            "type": "relation",
+            "label": "Employee",
+            "modelName": "hr.employee",
+            "defaultValue": [],
+            "defaultValueDisplayNames": [],
+            "rangeType": "year",
+            "defaultsToCurrentPeriod": false,
+            "pivotFields": {
+                "1": {
+                    "field": "employee_id",
+                    "type": "many2one"
+                },
+                "2": {
+                    "field": "employee_id",
+                    "type": "many2one"
+                },
+                "3": {
+                    "field": "employee_id",
+                    "type": "many2one"
+                },
+                "4": {
+                    "field": "employee_id",
+                    "type": "many2one"
+                },
+                "5": {
+                    "field": "employee_id",
+                    "type": "many2one"
+                },
+                "6": {
+                    "field": "employee_id",
+                    "type": "many2one"
+                }
+            },
+            "listFields": {},
+            "graphFields": {
+                "39c6667b-b74a-478e-87e9-75c22de5ea1f": {
+                    "field": "employee_id",
+                    "type": "many2one"
+                }
+            }
+        }
+    ]
+}

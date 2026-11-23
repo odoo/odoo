@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.discuss.ChannelInvitation" t-inherit-mode="extension">
+        <xpath expr="//*[@name='selectablePartnerDetail']" position="replace">
+            <t t-if="props.thread.type !== 'livechat' or !selectablePartner.lang_name">$0</t>
+            <div t-else="" class="d-flex flex-column flex-grow-1">
+                <t>$0</t>
+                <span class="mx-2 text-truncate text-start fs-6">
+                    <i class="fa fa-comment-o me-1" aria-label="Lang"/>
+                    <t t-esc="selectablePartner.lang_name"/>
+                </span>
+            </div>
+        </xpath>
+    </t>
+</templates>

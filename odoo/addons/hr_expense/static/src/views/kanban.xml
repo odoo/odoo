@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_expense.KanbanRenderer" t-inherit="web.KanbanRenderer" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_kanban_renderer')]" position="attributes">
+            <attribute name="class" add="position-relative h-auto" separator=" "/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_kanban_renderer')]" position="before">
+            <div t-if="dragState.showDragZone" class="o_dropzone">
+                <i class="fa fa-upload fa-10x"></i>
+            </div>
+        </xpath>
+    </t>
+
+    <t t-name="hr_expense.DashboardKanbanRenderer" t-inherit="hr_expense.KanbanRenderer" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_kanban_renderer')]" position="before">
+            <ExpenseDashboard/>
+        </xpath>
+    </t>
+
+    <t t-name="hr_expense.KanbanButtons" t-inherit="web.KanbanView.Buttons" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_cp_buttons')]" position="attributes">
+            <attribute name="class" remove="d-flex" separator=" "/>
+            <attribute name="class" add="d-block d-xl-flex" separator=" "/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_cp_buttons')]" position="inside">
+            <input type="file" name="ufile" class="d-none" t-ref="fileInput" multiple="1" accept="*" t-on-change="onChangeFileInput" />
+            <button type="button" class="d-none d-md-inline o_button_upload_expense btn btn-primary" t-on-click.prevent="uploadDocument">
+                Upload
+            </button>
+            <button type="button" class="d-inline d-md-none o_button_upload_expense btn btn-primary" t-on-click.prevent="uploadDocument">
+                Scan
+            </button>
+            <button t-if="displayCreateReport()" class="btn btn-secondary" t-on-click="() => this.action_show_expenses_to_submit()">
+                Create Report
+            </button>
+        </xpath>
+    </t>
+</templates>

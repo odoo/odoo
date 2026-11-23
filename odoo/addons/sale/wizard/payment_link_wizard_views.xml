@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_sale_order_generate_link" model="ir.actions.act_window">
+        <field name="name">Generate a Payment Link</field>
+        <field name="res_model">payment.link.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="payment.payment_link_wizard_view_form"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_sale_order"/>
+        <field name="binding_view_types">form</field>
+    </record>
+
+    <record id="payment_link_wizard_view_form" model="ir.ui.view">
+        <field name="name">payment.link.wizard.form</field>
+        <field name="model">payment.link.wizard</field>
+        <field name="inherit_id" ref="payment.payment_link_wizard_view_form"/>
+        <field name="arch" type="xml">
+            <field name="amount" position="after">
+                <field name="amount_paid" invisible="amount_paid &lt;= 0"/>
+            </field>
+            <div name="payment_link_warning_information" position="after">
+                <span class="text-info text-center fw-bold"
+                      role="alert"
+                      invisible="not confirmation_message">
+                    <field name="confirmation_message"/>
+                </span>
+            </div>
+        </field>
+    </record>
+
+</odoo>

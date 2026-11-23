@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_sale.SaleOrderManagementControlPanel">
+        <div class="control-panel d-flex justify-content-between align-items-center m-1 p-2 gap-2">
+            <div class="d-flex">
+                <button class="item button back btn btn-lg btn-secondary" t-on-click="() => pos.closeScreen()">
+                    <span class="search-icon d-flex align-items-center">
+                        <i class="fa fa-angle-double-left"/>
+                        <span t-if="!ui.isSmall" class="ms-2"> Back</span>
+                    </span>
+                </button>
+            </div>
+            <div class="item search-box d-flex flex-grow-1 ms-3">
+                <div class="input-group">
+                    <span class="icon input-group-text">
+                        <i class="oi oi-search" />
+                    </span>
+                    <input type="text" class="form-control form-control-lg" t-ref="autofocus" t-model="pos.orderManagement.searchString" t-on-keydown="onInputKeydown" placeholder="E.g. customer: Steward, date: 2020-05-09" />
+                    <button type="button" class="clear  btn btn-secondary" t-on-click="() => this.clearSearch()">
+                        <i class="oi oi-close" />
+                    </button>
+                </div> 
+            </div>
+            <div t-if="showPageControls" class="item item d-flex align-items-center ms-3 gap-2">
+                <div class="page-controls input-group">
+                    <button class="previous btn btn-lg btn-secondary" t-on-click="() => this.props.onPrevPage">
+                        <i class="oi oi-chevron-left" role="img" aria-label="Previous Order List" title="Previous Order List"></i>
+                    </button>
+                    <button class="next btn btn-lg btn-secondary" t-on-click="() => this.props.onNextPage">
+                        <i class="oi oi-chevron-right" role="img" aria-label="Next Order List" title="Next Order List"></i>
+                    </button>
+                </div>
+                <div class="page">
+                    <span><t t-esc="pageNumber" /></span>
+                </div>
+            </div>
+            <div t-else="" class="item"></div>
+        </div>
+    </t>
+
+</templates>
