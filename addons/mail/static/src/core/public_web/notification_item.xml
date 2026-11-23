@@ -16,7 +16,7 @@
                     </span>
                     <span class="flex-grow-1"/>
                     <small t-if="this.props.datetime" class="o-mail-NotificationItem-date ms-2 me-1 flex-shrink-0 align-self-end o-xsmaller" t-att-class="{ 'o-muted': this.props.muted, 'fw-bold': !this.props.muted }" t-att-title="this.props.datetime?.toLocaleString(this.DateTime.DATETIME_SHORT) ?? ''">
-                        <t t-out="this.dateText"/>
+                        <t t-out="this.props.dateText ?? this.dateText"/>
                     </small>
                     <t t-if="this.props.slots and this.props.slots.sideContent">
                         <t t-call-slot="sideContent"/>

@@ -41,5 +41,33 @@ const messagingMenuItemPatch = {
             ({ ms }) => ms
         );
     },
+    get notificationItemProps() {
+        const props = super.notificationItemProps;
+        if (this.channel?.channel_type !== "livechat" || !props?.datetime) {
+            return props;
+        }
+        return { ...props, dateText: this.livechatDateText(props.datetime) };
+    },
+    /** @param {import("luxon").DateTime} datetime */
+    livechatDateText(datetime) {
+        const startOfToday = this.store.startOfToday;
+        if (datetime.hasSame(startOfToday, "day")) {
+            const minutes = Math.floor(this.store.startOfMinute.diff(datetime, "minutes").minutes);
+            if (minutes >= 60) {
+                return _t("%(hours)sh", { hours: Math.floor(minutes / 60) });
+            }
+            return minutes > 0 ? _t("%(minutes)sm", { minutes }) : _t("< 1m");
+        }
+        if (datetime.hasSame(startOfToday.minus({ days: 1 }), "day")) {
+            return _t("Yesterday");
+        }
+        if (startOfToday.diff(datetime.startOf("day"), "days").days < 7) {
+            return datetime.toLocaleString({ weekday: "short" });
+        }
+        if (datetime.hasSame(startOfToday, "year")) {
+            return datetime.toLocaleString({ month: "short", day: "numeric" });
+        }
+        return datetime.toLocaleString(luxon.DateTime.DATE_MED);
+    },
 };
 patch(MessagingMenuItem.prototype, messagingMenuItemPatch);
