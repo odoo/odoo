@@ -84,6 +84,36 @@ class TestWebPushNotification(SMSCommon):
         self.assertEqual(push_to_end_point.call_count, 2)
 
     @patch.object(odoo.addons.mail.models.mail_push_device, 'push_to_end_point')
+    def test_notify_by_push_batch(self, push_to_end_point):
+        """ Notify several messages at once: each message is pushed to the
+        devices of its own recipients, with its own payload. """
+        records = self.record_simple + self.env['mail.test.simple'].create({'name': 'Test 2'})
+        messages = records._message_log_batch(
+            bodies={record.id: Markup('<p>Hello %s</p>') % record.name for record in records},
+            message_type='comment',
+        )
+        email_rdata = {'active': True, 'id': self.user_email.partner_id.id, 'notif': 'email'}
+        inbox_rdata = {'active': True, 'id': self.user_inbox.partner_id.id, 'notif': 'inbox'}
+        records._notify_thread_by_web_push_batch(messages, {
+            messages[0].id: [email_rdata],
+            messages[1].id: [email_rdata, inbox_rdata],
+        })
+
+        pushed = []
+        for call in push_to_end_point.call_args_list:
+            payload = json.loads(call.kwargs['payload'])
+            pushed.append((call.kwargs['device']['endpoint'], payload['options']['data']['message_id'], payload['title']))
+        # one push per (message, device): user_email's device is user1, user_inbox's device is user2
+        self.assertEqual(
+            sorted(pushed),
+            [
+                ('https://test.odoo.com/webpush/user1', messages[0].id, records[0].display_name),
+                ('https://test.odoo.com/webpush/user1', messages[1].id, records[1].display_name),
+                ('https://test.odoo.com/webpush/user2', messages[1].id, records[1].display_name),
+            ],
+        )
+
+    @patch.object(odoo.addons.mail.models.mail_push_device, 'push_to_end_point')
     def test_notify_by_push_channel(self, push_to_end_point):
         """ Test various use case with discuss.channel. Chat and group channels
         sends push notifications, channel not. """

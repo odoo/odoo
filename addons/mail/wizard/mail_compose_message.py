@@ -1380,7 +1380,7 @@ class MailComposeMessage(models.TransientModel):
                 mail_values['reply_to'] = reply_to
 
             # body: render layout in email mode (comment mode is managed by the
-            # notification process, see @_notify_thread_by_email)
+            # notification process, see @_notify_thread_by_email_batch)
             if email_mode and self.email_layout_xmlid and (
                     mail_values['recipient_ids'] or mail_values.get('recipient_cc_ids')):
                 lang = langs[res_id]
