@@ -79,7 +79,12 @@ class PosConfig(models.Model):
         return tip_product_id
 
     def _get_customer_display_types(self):
-        return [('none', 'None'), ('local', 'The same device'), ('remote', 'Another device'), ('proxy', 'An IOT-connected screen')]
+        return [
+            ('none', self.env._("None")),
+            ('local', self.env._("The same device")),
+            ('remote', self.env._("Another device")),
+            ('proxy', self.env._("An IOT-connected screen")),
+        ]
 
     name = fields.Char(string='Point of Sale', required=True, help="An internal identification of the point of sale.")
     printer_ids = fields.Many2many('pos.printer', 'pos_config_printer_rel', 'config_id', 'printer_id', string='Order Printers')
