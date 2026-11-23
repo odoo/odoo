@@ -34,7 +34,8 @@
                     <section t-attf-class="s_dynamic_snippet_content oe_unremovable oe_unmovable o_not_editable col s_col_no_resize #{content_classes}">
                         <div class="css_non_editable_mode_hidden">
                             <div class="missing_option_warning alert alert-info fade show d-none d-print-none rounded-0">
-                                Your Dynamic Snippet will be displayed here... This message is displayed because you did not provide enough options to retrieve its content.<br/>
+                                <t t-if="missing_option_warning" t-out="missing_option_warning"/>
+                                <t t-else="">Your Dynamic Snippet will be displayed here... This message is displayed because you did not provide enough options to retrieve its content.<br/></t>
                             </div>
                         </div>
                         <div class="dynamic_snippet_template">

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_dynamic_snippet_instagram" name="Instagram Carousel">
+    <t t-call="website.s_dynamic_snippet_template"
+        snippet_name.f="s_dynamic_snippet_instagram"
+        snippet_classes.f="o_dynamic_carousel_snippet o_instagram_show_profile o_instagram_show_caption o_instagram_show_metrics"
+        snippet_title.translate="Follow us on Instagram"
+        snippet_description.translate="Discover our latest posts."
+        missing_option_warning.translate="Your Instagram posts will be displayed here. Select an Instagram account in the options of this block to show them.">
+        <div class="s_dialog_preview row g-3">
+            <div t-foreach="[1, 2, 3, 4]" t-as="index" class="col-3 d-flex">
+                <article class="o_instagram_post card w-100 overflow-hidden">
+                    <header class="o_instagram_post_header d-flex align-items-center gap-2 p-2">
+                        <i class="oi oi-2x text-muted" data-icon="account_circle"/>
+                        <span class="fw-bold">your_account</span>
+                        <i class="oi fs-5 ms-auto" data-icon="oi_instagram"/>
+                    </header>
+                    <div class="ratio ratio-1x1">
+                        <img t-attf-src="/website/static/src/img/snippets_demo/s_key_images_default_image_#{index}.jpg" class="object-fit-cover" alt=""/>
+                    </div>
+                    <div class="o_instagram_post_body card-body d-flex flex-column gap-1 p-2">
+                        <div class="d-flex align-items-center gap-3">
+                            <i class="o_instagram_icon o_instagram_icon_like"/>
+                            <i class="o_instagram_icon o_instagram_icon_comment"/>
+                            <i class="o_instagram_icon o_instagram_icon_share"/>
+                            <i class="o_instagram_icon o_instagram_icon_save ms-auto"/>
+                        </div>
+                        <p class="o_instagram_post_caption mb-0"><span class="fw-bold me-1">your_account</span>Discover our latest news.</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </t>
+</template>
+
+<asset id="website.s_dynamic_snippet_instagram_000_css" name="Instagram Carousel 000 CSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_dynamic_snippet_instagram/000.css</path>
+</asset>
+
+<asset id="website.s_dynamic_snippet_instagram_000_xml" name="Instagram Carousel 000 XML">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_dynamic_snippet_instagram/000.xml</path>
+</asset>
+
+</odoo>
