@@ -542,6 +542,46 @@ test("Custom choice template using a slot", async () => {
     expect(".coolClass:eq(0)").toHaveText("Hello");
 });
 
+test("Select a group choice after the parent rerendered", async () => {
+    class MyParent extends Component {
+        static props = ["*"];
+        static components = { SelectMenu };
+        static template = xml`
+            <SelectMenu groups="groups" onSelect.bind="onSelect">
+                <span class="select_menu_test" t-esc="state.label"/>
+            </SelectMenu>
+        `;
+        setup() {
+            this.state = useState({ label: "Select something" });
+            this.groups = [
+                {
+                    label: "Group A",
+                    choices: [
+                        { label: "Hello", value: "hello" },
+                        { label: "World", value: "world" },
+                    ],
+                },
+            ];
+        }
+        onSelect(value) {
+            expect.step(value);
+        }
+    }
+    const parent = await mountSingleApp(MyParent);
+    await open();
+    expect(".o_select_menu_menu input").toHaveCount(1);
+
+    // rerender the parent with the same groups while the menu is open
+    parent.state.label = "Still selecting";
+    await animationFrame();
+    expect(".o_select_menu_menu p:contains(No results)").toHaveCount(0);
+    expect(".o_select_menu_item").toHaveCount(2);
+
+    await click(".o_select_menu_item:contains(World)");
+    await animationFrame();
+    expect.verifySteps(["world"]);
+});
+
 test("Custom slot for the bottom area sends the current search value", async () => {
     class MyParent extends Component {
         static props = ["*"];

@@ -138,13 +138,7 @@ export class SelectMenu extends Component {
 
         this.selectedChoice = this.getSelectedChoice(this.props);
         onWillUpdateProps((nextProps) => {
-            const choicesChanged = this.state.choices !== nextProps.choices;
-            if (choicesChanged) {
-                this.state.choices = nextProps.choices;
-            }
-            if (choicesChanged || this.props.value !== nextProps.value) {
-                this.selectedChoice = this.getSelectedChoice(nextProps);
-            }
+            this.selectedChoice = this.getSelectedChoice(nextProps);
         });
         useEffect(
             () => {
@@ -348,8 +342,9 @@ export class SelectMenu extends Component {
             }
         } else if (!this.selectedChoice || this.selectedChoice.value !== value) {
             this.props.onSelect(value);
-            if (this.inputRef.el) {
-                this.inputRef.el.value = this.state.choices.find((c) => c.value === value).label;
+            const choice = this.getSelectedChoice({ ...this.props, value });
+            if (this.inputRef.el && choice) {
+                this.inputRef.el.value = choice.label;
             }
         }
         this.state.searchValue = null;
