@@ -1,9 +1,6 @@
 import { useSpreadsheetNotificationPlugin } from "@spreadsheet/hooks";
-import { Spreadsheet, Model, stores, owlPlugins } from "@odoo/o-spreadsheet";
-import { Component, t, useProps, providePlugins } from "@odoo/owl";
-
-const { useStoreProvider, useStore, ViewportsStore, ModelStore } = stores;
-const { ModelPlugin, ZoomPlugin, RendererPlugin } = owlPlugins;
+import { Spreadsheet, Model } from "@odoo/o-spreadsheet";
+import { Component, t, useProps } from "@odoo/owl";
 
 /**
  * Component wrapping the <Spreadsheet> component from o-spreadsheet
@@ -15,7 +12,6 @@ export class SpreadsheetComponent extends Component {
     static components = { Spreadsheet };
     props = useProps({
         model: t.instanceOf(Model),
-        registerStoreProvider: t.function().optional(),
     });
 
     get model() {
@@ -23,14 +19,5 @@ export class SpreadsheetComponent extends Component {
     }
     setup() {
         useSpreadsheetNotificationPlugin();
-        providePlugins([ModelPlugin, RendererPlugin], { model: this.model });
-
-        if (this.props.registerStoreProvider) {
-            providePlugins([ZoomPlugin]);
-            const stores = useStoreProvider();
-            stores.inject(ModelStore, this.model);
-            this.viewStore = useStore(ViewportsStore);
-            this.props.registerStoreProvider(stores);
-        }
     }
 }
