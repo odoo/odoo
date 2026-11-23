@@ -1060,17 +1060,27 @@ class DiscussChannel(models.Model):
             # as member, remove bot from channel, rename channel and finally broadcast the channel to the new operator).
             channel_sudo = self.sudo()
             bot_member = channel_sudo.channel_member_ids.filtered(lambda m: m.livechat_member_type == "bot")
+            # read before adding the operator: overrides of _add_members may remove the bot
+            bot_partner = bot_member.partner_id
 
             # next, add the human_operator to the channel and post a "Operator invited to the channel" notification
             create_member_params = {'livechat_member_type': 'agent'}
             if chatbot_script_step.operator_expertise_ids:
                 create_member_params['agent_expertise_ids'] = chatbot_script_step.operator_expertise_ids.ids
                 channel_sudo.livechat_expertise_ids |= chatbot_script_step.operator_expertise_ids
-            channel_sudo._add_members(
+            agent_member = channel_sudo._add_members(
                 create_member_params=create_member_params,
-                inviting_partner=bot_member.partner_id,
+                inviting_partner=bot_partner,
+                post_joined_message=False,
                 users=human_operator,
                 skip_chatbot_current_step_reset=True,
+            )
+            channel_sudo.message_post(
+                author_id=bot_partner.id,
+                body=Markup('<div class="o_mail_notification" data-oe-type="channel-joined">%s</div>')
+                % channel_sudo._get_member_join_notification(agent_member),
+                message_type="notification",
+                subtype_xmlid="mail.mt_important_notification",
             )
             bot_member.exists().unlink()
 

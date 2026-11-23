@@ -275,11 +275,6 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                 ),
                 BusResult(
                     discuss_channel,
-                    "discuss.channel/new_message",
-                    {"store_data": joined_message_data, "id": discuss_channel.id},
-                ),
-                BusResult(
-                    discuss_channel,
                     "mail.record/insert",
                     {
                         "discuss.channel": [{"id": discuss_channel.id, "member_count": 2}],
@@ -341,6 +336,11 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                 ),
                 BusResult(
                     discuss_channel,
+                    "discuss.channel/new_message",
+                    {"store_data": joined_message_data, "id": discuss_channel.id},
+                ),
+                BusResult(
+                    discuss_channel,
                     "mail.record/insert",
                     {
                         "discuss.channel": [{"id": discuss_channel.id, "member_count": 2}],
@@ -380,12 +380,11 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
         self.assertEqual(discuss_channel.name, "OdooBot Ernest Employee")
         self.assertEqual(discuss_channel.livechat_agent_partner_ids, self.partner_employee)
         self.assertEqual(discuss_channel.livechat_outcome, "no_answer")
-        self.assertTrue(
-            discuss_channel.channel_member_ids.filtered(
-                lambda m: m.partner_id == self.partner_employee
-                and m.livechat_member_type == "agent"
-            )
+        agent_member = discuss_channel.channel_member_ids.filtered(
+            lambda m: m.partner_id == self.partner_employee and m.livechat_member_type == "agent",
         )
+        self.assertTrue(agent_member)
+        self.assertEqual(agent_member.message_unread_counter, 1, "the hand-over is unread for the agent")
 
     def test_chatbot_multiple_rules_on_same_url(self):
         bob_user = new_test_user(
