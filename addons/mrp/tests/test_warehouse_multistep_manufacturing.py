@@ -854,3 +854,65 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         mo.action_confirm()
         self.assertEqual(mo.state, 'confirmed')
         self.assertEqual(lovely_product.with_context(location=self.warehouse_1.lot_stock_id.id).virtual_available, 3.0)
+
+    def test_picking_origin_updated_on_operation_type_change(self):
+        """
+        When the Operation Type of a confirmed MO is changed, the MO is
+        renamed via the new operation type's sequence. The origin field on
+        existing component pickings must be updated to match the new MO name,
+        otherwise they become orphaned (origin points to a non-existent MO).
+        """
+        with Form(self.warehouse) as warehouse:
+            warehouse.manufacture_steps = 'pbm'
+
+        # Create a second manufacturing operation type with the same sequence
+        # prefix so the rename succeeds without a uniqueness conflict
+        picking_type_2 = self.env['stock.picking.type'].create({
+            'name': 'Manufacturing Test',
+            'code': 'mrp_operation',
+            'sequence_code': 'TEST',
+            'sequence_id': self.env['ir.sequence'].create({
+                'name': 'Test MO Sequence',
+                'prefix': 'WH/MO/',
+                'padding': 5,
+                'number_next': 100,
+                'company_id': self.env.company.id,
+            }).id,
+            'company_id': self.env.company.id,
+        })
+
+        # Create MO with the default manufacturing operation type
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.finished_product
+        mo_form.bom_id = self.bom
+        mo_form.product_qty = 1
+        mo = mo_form.save()
+        mo.action_confirm()
+
+        # Verify component pickings exist and origin matches MO name
+        pickings = mo.picking_ids
+        self.assertTrue(pickings, "MO confirmation should create component pickings")
+        original_name = mo.name
+        for picking in pickings:
+            self.assertEqual(
+                picking.origin, original_name,
+                "Picking origin should match MO name after confirmation"
+            )
+
+        # Change the operation type on the confirmed MO
+        with Form(mo) as mo_form:
+            mo_form.picking_type_id = picking_type_2
+
+        # MO should have been renamed
+        self.assertNotEqual(
+            mo.name, original_name,
+            "MO name should change when operation type is changed"
+        )
+
+        # Picking origin must follow the new MO name
+        for picking in pickings:
+            self.assertEqual(
+                picking.origin, mo.name,
+                "Picking origin must be updated to match the new MO name "
+                "after operation type change — otherwise the picking is orphaned"
+            )
