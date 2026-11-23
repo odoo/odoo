@@ -158,6 +158,49 @@ class TestProduct(AccountTestInvoicingCommon):
         self.assertEqual(bill.invoice_line_ids.account_id, child_expense,
             "Vendor bill line should use child category's expense account")
 
+    def test_product_account_journal_before_company_fallback(self):
+        """Test that an invoice line whose product and category hierarchy have no account
+        takes the journal default account before the company default product accounts."""
+        sale_journal = self.company_data['default_journal_sale']
+        purchase_journal = self.company_data['default_journal_purchase']
+        sale_journal.default_account_id = self.copy_account(self.company_data['default_account_revenue'])
+        purchase_journal.default_account_id = self.copy_account(self.company_data['default_account_expense'])
+        parent_categ = self.env['product.category'].create({
+            'name': 'Parent Category',
+            'property_account_income_categ_id': False,
+            'property_account_expense_categ_id': False,
+        })
+        categ = self.env['product.category'].create({
+            'name': 'Child Category',
+            'parent_id': parent_categ.id,
+            'property_account_income_categ_id': False,
+            'property_account_expense_categ_id': False,
+        })
+        product = self.env['product.product'].create({'name': 'Test Product', 'categ_id': categ.id})
+
+        invoice = self.init_invoice('out_invoice', products=product)
+        bill = self.init_invoice('in_invoice', products=product)
+        self.assertEqual(invoice.invoice_line_ids.account_id, sale_journal.default_account_id)
+        self.assertEqual(bill.invoice_line_ids.account_id, purchase_journal.default_account_id)
+
+        mapped_account = self.copy_account(sale_journal.default_account_id)
+        fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'Account Mapping',
+            'account_ids': [Command.create({
+                'account_src_id': sale_journal.default_account_id.id,
+                'account_dest_id': mapped_account.id,
+            })],
+        })
+        partner = self.env['res.partner'].create({'name': 'Mapped Partner', 'property_account_position_id': fiscal_position.id})
+        invoice = self.init_invoice('out_invoice', partner=partner, products=product)
+        self.assertEqual(invoice.invoice_line_ids.account_id, mapped_account)
+
+        (sale_journal + purchase_journal).default_account_id = False
+        invoice = self.init_invoice('out_invoice', products=product)
+        bill = self.init_invoice('in_invoice', products=product)
+        self.assertEqual(invoice.invoice_line_ids.account_id, self.env.company.income_account_id)
+        self.assertEqual(bill.invoice_line_ids.account_id, self.env.company.expense_account_id)
+
     def test_product_category_defaults_after_company_account_change(self):
         """Ensure new product categories pick up the updated expense and income accounts from settings."""
         old_expense = self.env.company.expense_account_id

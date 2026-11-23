@@ -319,6 +319,22 @@ class TestAccountMove(TestStockValuationCommon):
         })
         self.assertEqual(bill.invoice_line_ids.account_id, test_account)
 
+    def test_cogs_account_journal_before_company_fallback(self):
+        """ The COGS expense line of a product whose product and category have no expense account
+        uses the invoice journal default account before the company default expense account. """
+        product = self.product_standard_auto
+        self.category_standard_auto.property_account_expense_categ_id = False
+        invoice = self._create_invoice(product, price_unit=20.0, post=False)
+        journal_account = self.account_expense.copy()
+        invoice.journal_id.default_account_id = journal_account
+        invoice.action_post()
+
+        cogs_lines = invoice.line_ids.filtered(lambda l: l.display_type == 'cogs')
+        self.assertRecordValues(cogs_lines.sorted('balance'), [
+            {'account_id': self.account_stock_valuation.id, 'balance': -10.0},
+            {'account_id': journal_account.id, 'balance': 10.0},
+        ])
+
     def test_apply_inventory_adjustment_on_multiple_quants_simultaneously(self):
         product = self.product_standard_auto
         product_b = product.copy()
