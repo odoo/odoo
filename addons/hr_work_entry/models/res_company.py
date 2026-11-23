@@ -37,13 +37,14 @@ class ResCompany(models.Model):
 
         :rtype: hr.work.entry.type
         """
-        generic_types = self.env['hr.work.entry.type']
+        # sudo: called when creating or writing a company, by users who can't read the time types
+        generic_types = self.env['hr.work.entry.type'].sudo()
         for xmlid in (
             'hr_work_entry.generic_work_entry_type_attendance',
             'hr_work_entry.generic_hr_work_entry_type_out_of_contract',
             'hr_work_entry.generic_work_entry_type_public_holiday',
         ):
-            generic_types |= self.env.ref(xmlid, raise_if_not_found=False) or generic_types
+            generic_types |= (self.env.ref(xmlid, raise_if_not_found=False) or generic_types).sudo()
         return generic_types.filtered(lambda t: not t.country_id)
 
     @api.model
