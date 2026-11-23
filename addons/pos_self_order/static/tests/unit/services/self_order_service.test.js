@@ -8,7 +8,7 @@ import {
 import { mockDate } from "@odoo/hoot-mock";
 import { registry } from "@web/core/registry";
 import { definePosSelfModels } from "../data/generate_model_definitions";
-import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { MockServer, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 definePosSelfModels();
 
@@ -379,6 +379,32 @@ test("sendDraftOrderToServer updateLastOrderChange", async () => {
     await store.addToCart(product1, 1, "");
     await store.sendDraftOrderToServer();
     expect(Object.keys(order.prep_order_ids[0].prep_line_ids)).toHaveLength(3);
+});
+
+test("confirmOrder syncs a general note added after the first sync", async () => {
+    const store = await setupSelfPosEnv("mobile");
+    const order = await getFilledSelfOrder(store);
+    await store.confirmOrder();
+
+    order.general_customer_note = "No onions";
+    await store.confirmOrder();
+
+    const [serverOrder] = MockServer.env["pos.order"].read([order.id], ["general_customer_note"]);
+    expect(serverOrder.general_customer_note).toBe("No onions");
+});
+
+test("cancelOrder reverts an unsent general note", async () => {
+    const store = await setupSelfPosEnv("mobile");
+    const order = await getFilledSelfOrder(store);
+    await store.confirmOrder();
+
+    order.general_customer_note = "No onions";
+    store.cancelOrder();
+    expect(order.general_customer_note).toBe("");
+    await store.confirmOrder();
+
+    const [serverOrder] = MockServer.env["pos.order"].read([order.id], ["general_customer_note"]);
+    expect(serverOrder.general_customer_note).toBe("");
 });
 
 describe("setOrderPrices", () => {
