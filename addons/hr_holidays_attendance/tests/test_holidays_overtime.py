@@ -530,6 +530,9 @@ class TestHolidaysOvertime(HttpCase):
             ],
         })
         self.employee.ruleset_id = ruleset
+        # Keep the schedule in UTC so it matches the attendance hours below
+        self.employee.tz = 'UTC'
+        self.employee.resource_calendar_id.tz = 'UTC'
 
         leave = self.env['hr.leave'].create({
             'name': 'Vacation Yippie',
