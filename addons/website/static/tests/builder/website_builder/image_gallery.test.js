@@ -5,9 +5,18 @@ import {
     waitForEndOfOperation,
 } from "@html_builder/../tests/helpers";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { animationFrame, click, queryAll, queryOne, waitFor } from "@odoo/hoot-dom";
+import {
+    advanceTime,
+    animationFrame,
+    click,
+    edit,
+    queryAll,
+    queryOne,
+    waitFor,
+} from "@odoo/hoot-dom";
 import { contains, dataURItoBlob, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { uniqueId } from "@web/core/utils/functions";
+import { Youtube } from "@html_editor/main/media/video/providers/youtube";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
@@ -367,4 +376,111 @@ test("Cannot edit s_image_gallery pause button", async () => {
     await contains(":iframe .s_image_gallery .o_carousel_pause_icon").dblclick();
     // The media dialog doesn't open.
     expect("modal").not.toHaveCount();
+});
+
+describe("Videos", () => {
+    const videoUrl = Youtube.exampleUrls.base;
+    const videoId = Youtube.isValidVideoUrl(videoUrl).groups.id;
+    const thumbnailUrl = Youtube.getThumbnailUrl(videoId);
+
+    beforeEach(() => {
+        onRpc("ir.attachment", "search_read", () => []);
+    });
+
+    test("Replace an image by a video in the slideshow and reorder it", async () => {
+        const builder = await setupWebsiteBuilderWithSnippet("s_image_gallery", {
+            loadIframeBuilderTemplates: true,
+        });
+        const { waitSidebarUpdated } = builder;
+        queryAll(":iframe .carousel-item img").forEach((imgEl) => (imgEl.src = dummyBase64Img));
+        builder.getEditor().shared.history.commit();
+        await contains(":iframe .carousel-item.active img").click();
+        await waitSidebarUpdated();
+        await contains("button[data-action-id='replaceMedia']").click();
+        await contains(".o_select_media_dialog .nav-link:contains('Videos')").click();
+        await click("#o_video_text");
+        await edit(videoUrl);
+        // `refreshVideoData()` is debounced.
+        await advanceTime(100);
+        await contains(".modal-footer button:not([disabled]):contains(Add)").click();
+        await waitFor(":iframe .carousel-item.active .media_iframe_video");
+
+        // The video took the place of the image, with its thumbnail in the
+        // miniature.
+        expect(":iframe .carousel-item.active .media_iframe_video").toHaveAttribute(
+            "data-index",
+            "0"
+        );
+        expect(":iframe .carousel-indicators > button:nth-child(1)").toHaveClass(
+            "o_image_gallery_video_indicator"
+        );
+        expect(":iframe .carousel-indicators > button:nth-child(1) img").toHaveAttribute(
+            "src",
+            thumbnailUrl
+        );
+
+        await waitSidebarUpdated();
+        await contains("[data-label='Re-order'] button[data-action-value='next']").click();
+        expect(":iframe .s_image_gallery .media_iframe_video").toHaveCount(1);
+        expect(":iframe .carousel-item:nth-child(2).active .media_iframe_video").toHaveAttribute(
+            "data-index",
+            "1"
+        );
+        expect(":iframe .carousel-item img[data-index]").toHaveCount(2);
+        expect(":iframe .carousel-indicators > button:nth-child(1)").not.toHaveClass(
+            "o_image_gallery_video_indicator"
+        );
+        expect(":iframe .carousel-indicators > button:nth-child(2)").toHaveClass(
+            "o_image_gallery_video_indicator"
+        );
+        expect(":iframe .carousel-indicators > button:nth-child(2) img").toHaveAttribute(
+            "src",
+            thumbnailUrl
+        );
+
+        await contains(".o-snippets-top-actions [data-icon='undo']").click();
+        expect(":iframe .carousel-item:nth-child(1) .media_iframe_video").toHaveCount(1);
+        expect(":iframe .carousel-indicators > button:nth-child(1) img").toHaveAttribute(
+            "src",
+            thumbnailUrl
+        );
+    });
+
+    test("A video saved without index keeps its position", async () => {
+        // The videos added before they were supported have no index.
+        const { waitSidebarUpdated } = await setupWebsiteBuilder(`
+            <section class="s_image_gallery o_masonry" data-columns="1">
+                <div class="container">
+                    <div class="o_masonry_col col-lg-12">
+                        <img class="img-fluid d-block" data-index="0" src="${dummyBase64Img}">
+                        <img class="img-fluid d-block" data-index="1" src="${dummyBase64Img}">
+                        <div class="media_iframe_video" data-oe-expression="//www.youtube.com/embed/${videoId}"></div>
+                        <img class="img-fluid d-block" data-index="3" src="${dummyBase64Img}">
+                    </div>
+                </div>
+            </section>
+        `);
+        const getMediaIndexes = () =>
+            [
+                ...queryOne(":iframe .s_image_gallery").querySelectorAll(
+                    "img, .media_iframe_video"
+                ),
+            ].map((el) => `${el.tagName}:${el.dataset.index}`);
+        expect(getMediaIndexes()).toEqual(["IMG:0", "IMG:1", "DIV:2", "IMG:3"]);
+
+        await click(":iframe img[data-index='0']");
+        await waitFor("[data-container-title='Image'] .oe_snippet_remove");
+        await click("[data-container-title='Image'] .oe_snippet_remove");
+        await animationFrame();
+        expect(getMediaIndexes()).toEqual(["IMG:1", "DIV:2", "IMG:3"]);
+
+        await contains(":iframe img[data-index='1']").click();
+        await waitSidebarUpdated();
+        await unfoldAllOptionsGroups();
+        await contains("[data-label='Mode'] .dropdown-toggle").click();
+        await contains("[data-action-param='nomode']").click();
+        await waitFor(":iframe .o_nomode");
+        expect(getMediaIndexes()).toEqual(["IMG:1", "DIV:2", "IMG:3"]);
+        expect(":iframe .col-lg-6 > .media_iframe_video").toHaveCount(1);
+    });
 });

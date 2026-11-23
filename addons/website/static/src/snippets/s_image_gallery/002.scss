@@ -303,6 +303,21 @@
                 &:hover {
                     opacity: 1;
                 }
+
+                // Play icon on the miniatures of the videos.
+                &.o_image_gallery_video_indicator {
+                    position: relative;
+
+                    &::after {
+                        @include o-position-absolute(50%, auto, auto, 50%);
+                        content: "";
+                        width: 40%;
+                        height: 40%;
+                        transform: translate(-50%, -50%);
+                        background-color: rgba($white, .85);
+                        clip-path: polygon(20% 10%, 90% 50%, 20% 90%);
+                    }
+                }
             }
 
             &.s_image_gallery_indicators_outline .carousel {

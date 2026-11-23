@@ -7,7 +7,12 @@ import { hasMediaOnly, isMediaElement } from "@html_editor/utils/dom_info";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { forwardToThumbnail } from "@html_builder/utils/utils_css";
 import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
+import { PLATFORMS } from "@html_editor/main/media/media_dialog/video_selector";
 import { uuid } from "@web/core/utils/strings";
+
+// The medias of the gallery (the images of the carousel indicators excluded).
+const GALLERY_MEDIA_SELECTOR = "img:not(.o_carousel_controllers img), .media_iframe_video";
+const VIDEO_THUMBNAIL_PLACEHOLDER = "/web/static/img/placeholder.png";
 
 /**
  * @typedef { Object } ImageGalleryOptionShared
@@ -46,6 +51,8 @@ export class ImageGalleryOptionPlugin extends Plugin {
         on_will_remove_handlers: this.onWillRemove.bind(this),
         on_removed_handlers: this.onRemoved.bind(this),
         clean_for_save_processors: this.cleanForSave.bind(this),
+        html_compatibility_processors: this.addMissingIndexes.bind(this),
+        on_will_save_media_dialog_handlers: this.onWillSaveMediaDialog.bind(this),
         on_media_replaced_handlers: ({ newMediaEl }) => this.updateCarouselThumbnail(newMediaEl),
         on_image_updated_handlers: ({ imageEl }) => this.updateCarouselThumbnail(imageEl),
         on_image_saved_handlers: ({ imageEl }) => this.updateCarouselThumbnail(imageEl),
@@ -73,6 +80,19 @@ export class ImageGalleryOptionPlugin extends Plugin {
     setup() {
         const slideshowCarousels = this.document.querySelectorAll(".s_image_gallery .carousel");
         this.addCarouselListener(slideshowCarousels);
+
+        // Reuse the saved video miniatures, as the reordering cannot wait for
+        // a thumbnail to be fetched.
+        this.videoThumbnailUrls = new Map();
+        for (const videoEl of this.document.querySelectorAll(
+            ".s_image_gallery .carousel-item .media_iframe_video"
+        )) {
+            const indicatorEl = this.getCarouselIndicatorEl(videoEl);
+            if (indicatorEl?.classList.contains("o_image_gallery_video_indicator")) {
+                const thumbnailUrl = indicatorEl.querySelector("img").getAttribute("src");
+                this.videoThumbnailUrls.set(this.getVideoUrl(videoEl), thumbnailUrl);
+            }
+        }
     }
 
     addUniqueIds(carousels) {
@@ -145,8 +165,10 @@ export class ImageGalleryOptionPlugin extends Plugin {
                 });
                 updateCarouselIndicators(carouselEl, newPosition);
 
-                // Activate the active image.
-                const activeImageEl = galleryEl.querySelector(".carousel-item.active img");
+                // Activate the active media.
+                const activeImageEl = galleryEl.querySelector(
+                    ".carousel-item.active :is(img, .media_iframe_video)"
+                );
                 this.dependencies.builderOptions.setNextTarget(activeImageEl);
             }
         }
@@ -205,7 +227,7 @@ export class ImageGalleryOptionPlugin extends Plugin {
             let min = Infinity;
             let smallestColEl;
             for (const colEl of columns) {
-                const imagesInCol = colEl.querySelectorAll("img");
+                const imagesInCol = colEl.querySelectorAll("img, .media_iframe_video");
                 const lastImageRect =
                     imagesInCol.length &&
                     imagesInCol[imagesInCol.length - 1].getBoundingClientRect();
@@ -257,7 +279,11 @@ export class ImageGalleryOptionPlugin extends Plugin {
         for (const itemEl of itemEls) {
             const imgEl = this.getImageElement(itemEl);
             let wrapClass = "col-lg-3";
-            if (imgEl.width >= imgEl.height * 2 || imgEl.width > 600) {
+            if (
+                imgEl.width >= imgEl.height * 2 ||
+                imgEl.width > 600 ||
+                imgEl.matches(".media_iframe_video")
+            ) {
                 wrapClass = "col-lg-6";
             }
 
@@ -307,11 +333,18 @@ export class ImageGalleryOptionPlugin extends Plugin {
         slideshowEl
             .querySelectorAll("img:not(.o_carousel_controllers img)")
             .forEach((img, index) => {
-                img.setAttribute("data-index", index);
+                let mediaEl = img;
+                // The template renders the videos as images: put them back.
+                if (images[index]?.matches(".media_iframe_video")) {
+                    mediaEl = images[index];
+                    img.replaceWith(mediaEl);
+                    this.updateCarouselThumbnail(mediaEl);
+                }
+                mediaEl.setAttribute("data-index", index);
                 if (imagesData[index]?.linkEl) {
                     const linkEl = imagesData[index].linkEl.cloneNode(false);
-                    img.before(linkEl);
-                    linkEl.append(img);
+                    mediaEl.before(linkEl);
+                    linkEl.append(mediaEl);
                 }
             });
         if (images.length) {
@@ -328,8 +361,11 @@ export class ImageGalleryOptionPlugin extends Plugin {
     }
 
     onCarouselSlid(ev) {
-        // When the carousel slides, update the builder options to select the active image
-        const activeImageEl = ev.target.querySelector(".carousel-item.active img");
+        // When the carousel slides, update the builder options to select the
+        // active media
+        const activeImageEl = ev.target.querySelector(
+            ".carousel-item.active :is(img, .media_iframe_video)"
+        );
         this.dependencies.builderOptions.updateContainers(activeImageEl);
     }
 
@@ -337,6 +373,9 @@ export class ImageGalleryOptionPlugin extends Plugin {
         await this.transformImagesToWebp(newImages);
         this.setImageProperties(editingElement, newImages);
         const { clonedImgs, imageToSelect } = await this.cloneContainerImages(editingElement);
+        await this.loadVideoThumbnailUrls(
+            clonedImgs.filter((mediaEl) => mediaEl.matches(".media_iframe_video"))
+        );
         return { images: [...clonedImgs, ...newImages], imageToSelect };
     }
 
@@ -390,12 +429,15 @@ export class ImageGalleryOptionPlugin extends Plugin {
             // image to force the loading.
             const newImg = image.cloneNode(true);
             const imgEl = newImg.tagName === "IMG" ? newImg : newImg.querySelector(":scope > img");
-            imgEl.loading = "eager";
-            imgLoaded.push(
-                imgEl.decode().then(() => {
-                    imgEl.loading = "lazy";
-                })
-            );
+            // Videos have no image to load.
+            if (imgEl) {
+                imgEl.loading = "eager";
+                imgLoaded.push(
+                    imgEl.decode().then(() => {
+                        imgEl.loading = "lazy";
+                    })
+                );
+            }
             if (currentContainers.at(-1)?.element === image) {
                 imageToSelect = newImg;
             }
@@ -424,8 +466,27 @@ export class ImageGalleryOptionPlugin extends Plugin {
     }
 
     getImages(currentContainer) {
-        const imgs = currentContainer.querySelectorAll("img:not(.o_carousel_controllers img)");
+        const imgs = currentContainer.querySelectorAll(GALLERY_MEDIA_SELECTOR);
         return [...imgs].sort((imgA, imgB) => this.getIndex(imgA) - this.getIndex(imgB));
+    }
+
+    /**
+     * Gives the missing indexes to the medias saved without one (videos added
+     * before they were supported), so they keep their position.
+     */
+    addMissingIndexes(rootEl) {
+        for (const galleryEl of selectElements(rootEl, ".s_image_gallery")) {
+            const mediaEls = [...galleryEl.querySelectorAll(GALLERY_MEDIA_SELECTOR)];
+            const usedIndexes = new Set(mediaEls.map((mediaEl) => mediaEl.dataset.index));
+            let index = 0;
+            for (const mediaEl of mediaEls.filter((mediaEl) => !mediaEl.dataset.index)) {
+                while (usedIndexes.has(`${index}`)) {
+                    index++;
+                }
+                mediaEl.dataset.index = index++;
+            }
+        }
+        return rootEl;
     }
 
     getIndex(img) {
@@ -448,9 +509,9 @@ export class ImageGalleryOptionPlugin extends Plugin {
     }
 
     onWillRemove(toRemoveEl) {
-        // If the removed element is an image from a gallery, store the gallery
+        // If the removed element is a media from a gallery, store the gallery
         // element for `onRemoved`.
-        if (toRemoveEl.matches(".s_image_gallery img:not(.o_carousel_controllers img)")) {
+        if (toRemoveEl.matches(`.s_image_gallery :is(${GALLERY_MEDIA_SELECTOR})`)) {
             this.imageRemovedGalleryElement = toRemoveEl.closest(".s_image_gallery");
         }
     }
@@ -482,11 +543,80 @@ export class ImageGalleryOptionPlugin extends Plugin {
     updateCarouselThumbnail(mediaEl) {
         if (mediaEl.matches(".s_image_gallery img")) {
             forwardToThumbnail(mediaEl);
+            // The image may have replaced a video.
+            this.getCarouselIndicatorEl(mediaEl)?.classList.remove(
+                "o_image_gallery_video_indicator"
+            );
+        } else if (mediaEl.matches(".s_image_gallery .media_iframe_video")) {
+            const indicatorEl = this.getCarouselIndicatorEl(mediaEl);
+            const thumbnailUrl = this.videoThumbnailUrls.get(this.getVideoUrl(mediaEl));
+            indicatorEl?.classList.add("o_image_gallery_video_indicator");
+            indicatorEl
+                ?.querySelector("img")
+                .setAttribute("src", thumbnailUrl || VIDEO_THUMBNAIL_PLACEHOLDER);
         }
     }
 
+    getCarouselIndicatorEl(mediaEl) {
+        const carouselItemEl = mediaEl.closest(".carousel-item");
+        if (!carouselItemEl) {
+            return null;
+        }
+        const index = [...carouselItemEl.parentElement.children].indexOf(carouselItemEl);
+        return mediaEl
+            .closest(".carousel")
+            .querySelector(`.carousel-indicators [data-bs-slide-to="${index}"]`);
+    }
+
+    /**
+     * Keeps the index of the replaced media and, as it may need a request
+     * (e.g. Vimeo), gets the new video thumbnail before it is inserted.
+     */
+    async onWillSaveMediaDialog([mediaEl], { node }) {
+        if (!mediaEl || !node?.matches(`.s_image_gallery :is(${GALLERY_MEDIA_SELECTOR})`)) {
+            return;
+        }
+        if (node.dataset.index) {
+            mediaEl.dataset.index = node.dataset.index;
+        }
+        if (mediaEl.matches(".media_iframe_video")) {
+            await this.loadVideoThumbnailUrls([mediaEl]);
+        }
+    }
+
+    getVideoUrl(videoEl) {
+        // The older videos have their url in `data-src` or in
+        // `data-oe-expression` (without protocol).
+        const url =
+            videoEl.dataset.embedUrl || videoEl.dataset.src || videoEl.dataset.oeExpression || "";
+        return url.startsWith("//") ? `https:${url}` : url;
+    }
+
+    async loadVideoThumbnailUrls(videoEls) {
+        const loadThumbnailUrl = async (videoEl) => {
+            const videoUrl = this.getVideoUrl(videoEl);
+            if (this.videoThumbnailUrls.has(videoUrl)) {
+                return;
+            }
+            let thumbnailUrl;
+            for (const platform of Object.values(PLATFORMS)) {
+                const urlMatch = platform.isValidVideoUrl(videoUrl);
+                // Instagram does not allow to display its thumbnails elsewhere.
+                if (urlMatch && platform.id !== "instagram") {
+                    // It is a request for Vimeo, which may fail.
+                    thumbnailUrl = await Promise.resolve(
+                        platform.getVideoUrlData(urlMatch).thumbnailUrl
+                    ).catch(() => {});
+                    break;
+                }
+            }
+            this.videoThumbnailUrls.set(videoUrl, thumbnailUrl || VIDEO_THUMBNAIL_PLACEHOLDER);
+        };
+        await Promise.all(videoEls.map(loadThumbnailUrl));
+    }
+
     getImageElement(el) {
-        return el.tagName === "IMG" ? el : el.querySelector("img");
+        return el.matches("img, .media_iframe_video") ? el : el.querySelector("img");
     }
 
     getContentEditableEls(rootEl) {
