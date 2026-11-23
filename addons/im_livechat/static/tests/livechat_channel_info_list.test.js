@@ -11,7 +11,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, press, test } from "@odoo/hoot";
 import { queryOne, waitFor, waitForNone } from "@odoo/hoot-dom";
-import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { Command, installLanguages, serverState } from "@web/../tests/web_test_helpers";
 import { serializeDate, today } from "@web/core/l10n/dates";
 import { getOrigin } from "@web/core/utils/urls";
 
@@ -127,6 +127,37 @@ test("shows country and language in channel info list", async () => {
     await waitFor(
         `.o_country_flag[data-src*='/country_flags/${country.code.toLowerCase()}.png']:count(1)`
     );
+});
+
+test("live chat users can change the language of the visitor", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write([serverState.userId], {
+        group_ids: [serverState.groupLivechatId],
+    });
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor #20" });
+    const [, frenchId] = pyEnv["res.lang"].create([
+        { active: true, code: "en_US", name: "English (US)" },
+        { active: true, code: "fr_FR", name: "French" },
+    ]);
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
+            Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
+        ],
+        channel_type: "livechat",
+        livechat_lang_id: frenchId,
+    });
+    installLanguages({ en_US: "English (US)", fr_FR: "French" });
+    const tab1 = await start({ asTab: true });
+    const tab2 = await start({ asTab: true, waitUntilSubscribe: false });
+    await openDiscuss(channelId, { target: tab1 });
+    await openDiscuss(channelId, { target: tab2 });
+    const langInput = `${actionPanel("Information")} .o-livechat-ChannelInfoList-lang input`;
+    await waitFor(`${tab1.selector} ${langInput}:value(French)`);
+    await waitFor(`${tab2.selector} ${langInput}:value(French)`);
+    await click(`${tab1.selector} ${langInput}`);
+    await click(".o_select_menu_item:text('English (US)')");
+    await waitFor(`${tab2.selector} ${langInput}:value(English (US))`);
 });
 
 test("editing livechat note is synced between tabs", async () => {

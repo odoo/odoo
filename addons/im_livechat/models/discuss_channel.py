@@ -494,6 +494,7 @@ class DiscussChannel(models.Model):
         res[None].attr("livechat_end_dt", predicate=is_livechat_channel)
         res[None].one("chatbot_current_step_id", [], predicate=is_livechat_channel)
         res["internal_users"].attr("description", predicate=is_livechat_channel)
+        res["internal_users"].one("livechat_lang_id", ["name", "code"], predicate=is_livechat_channel)
         res["internal_users"].attr("livechat_note", predicate=is_livechat_channel)
         res["internal_users"].attr("livechat_status", predicate=is_livechat_channel)
         res["internal_users"].attr("livechat_looking_for_help_since_dt", predicate=is_livechat_channel)

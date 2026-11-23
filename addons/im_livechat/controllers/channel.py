@@ -23,6 +23,20 @@ class LivechatChannelController(ChannelController):
         # Markup: note sanitized when written on the field
         channel.sudo().livechat_note = Markup(note)
 
+    @mail_route("/im_livechat/session/update_lang", auth="user", methods=["POST"], type="jsonrpc")
+    def livechat_session_update_lang(self, channel_id, lang_code):
+        """Live chat users can correct the language of the visitor of a session."""
+        if not self.env.user.has_group("im_livechat.im_livechat_group_user"):
+            raise NotFound()
+        channel = request.env["discuss.channel"].search(
+            [("id", "=", channel_id), ("channel_type", "=", "livechat")],
+        )
+        lang = request.env["res.lang"].search([("code", "=", lang_code)])
+        if not channel or not lang:
+            raise NotFound()
+        # sudo: discuss.channel - live chat users can update the language of any live chat they can read
+        channel.sudo().livechat_lang_id = lang
+
     @mail_route("/im_livechat/session/update_status", auth="user", methods=["POST"], type="jsonrpc")
     def livechat_session_update_status(self, channel_id, livechat_status):
         """Internal users having the rights to read the session can update its status."""

@@ -5,7 +5,7 @@ from markupsafe import Markup
 from unittest.mock import patch
 
 from odoo import Command, fields
-from odoo.tests import new_test_user, users
+from odoo.tests import JsonRpcException, new_test_user, users
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon, TestGetOperatorCommon
 from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.tests.common import MailCase
@@ -405,6 +405,30 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         self.assertEqual(channel.livechat_expertise_ids, operator_expertise_ids | cat_expertise)
         channel._add_members(users=bob)
         self.assertEqual(channel.livechat_expertise_ids, operator_expertise_ids | cat_expertise)
+
+    def test_update_lang(self):
+        bob = self._create_operator()
+        self.livechat_channel.user_ids = bob
+        data = self.make_jsonrpc_request(
+            "/im_livechat/get_session",
+            {"channel_id": self.livechat_channel.id},
+        )
+        channel = self.env["discuss.channel"].browse(data["channel_id"])
+        fr_lang = self.env["res.lang"]._activate_lang("fr_FR")
+        self.authenticate(bob.login, bob.login)
+        self.make_jsonrpc_request(
+            "/im_livechat/session/update_lang",
+            {"channel_id": channel.id, "lang_code": "fr_FR"},
+        )
+        self.assertEqual(channel.livechat_lang_id, fr_lang)
+        bob.group_ids -= self.env.ref("im_livechat.im_livechat_group_user")
+        with self.assertRaises(JsonRpcException) as error_catcher:
+            self.make_jsonrpc_request(
+                "/im_livechat/session/update_lang",
+                {"channel_id": channel.id, "lang_code": "en_US"},
+            )
+        self.assertEqual(error_catcher.exception.args[0], "werkzeug.exceptions.NotFound")
+        self.assertEqual(channel.livechat_lang_id, fr_lang)
 
     def test_update_looking_for_help_dt(self):
         bob = self._create_operator()

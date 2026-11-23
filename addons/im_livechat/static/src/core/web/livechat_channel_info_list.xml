@@ -40,11 +40,12 @@
                 <h6 class="pt-3 mb-1">Expertise</h6>
                 <ExpertiseTagsAutocomplete channel="this.props.thread.channel" disabled="!this.store.has_access_livechat"/>
             </div>
-            <div t-if="this.props.thread.channel.correspondentCountry or this.props.thread.channel.livechat_lang_id">
+            <div t-if="this.props.thread.channel.correspondentCountry or this.props.thread.channel.livechat_lang_id or this.store.has_access_livechat">
                 <h6 class="pt-3">Country &amp; Language</h6>
                 <div class="d-flex bg-inherit align-items-center gap-1 ms-2">
                     <img t-if="this.props.thread.channel.correspondentCountry" class="o_country_flag" t-att-src="this.props.thread.channel.correspondentCountry.flagUrl" t-att-title="this.props.thread.channel.correspondentCountry.code or this.props.thread.channel.correspondentCountry.name" aria-label="Country"/>
-                    <span t-if="this.props.thread.channel.livechat_lang_id" title="Language" t-out="this.props.thread.channel.livechat_lang_id.name"/>
+                    <SelectMenu t-if="this.store.has_access_livechat" class="'o-livechat-ChannelInfoList-lang flex-grow-1'" choices="this.languages()" value="this.props.thread.channel.livechat_lang_id?.code" onSelect="(langCode) => this.onSelectLang(langCode)" placeholder.translate="Select a language" required="true"/>
+                    <span t-elif="this.props.thread.channel.livechat_lang_id" title="Language" t-out="this.props.thread.channel.livechat_lang_id.name"/>
                 </div>
             </div>
             <t t-name="extra_infos"/>
