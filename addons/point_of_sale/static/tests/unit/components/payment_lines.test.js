@@ -54,11 +54,7 @@ test("getPaymentActionState", async () => {
 
     // No status
     const stateNoStatus = comp.getPaymentActionState(paymentline);
-    expect(normalizeActionState(stateNoStatus)).toEqual({
-        id: "unknown",
-        title: "",
-        actions: [],
-    });
+    expect(stateNoStatus).toBe(null);
 
     // pending
     paymentline.payment_status = "pending";
@@ -82,7 +78,7 @@ test("getPaymentActionState", async () => {
     const stateRetry = comp.getPaymentActionState(paymentline);
     expect(normalizeActionState(stateRetry)).toEqual({
         id: "retry",
-        title: "Transaction cancelled",
+        title: "Transaction failed",
         actions: [
             {
                 id: "retry",
@@ -111,8 +107,8 @@ test("getPaymentActionState", async () => {
         ],
     });
 
-    // waitingCard - refund
-    paymentline.payment_status = "waitingCard";
+    // waiting_card - refund
+    paymentline.payment_status = "waiting_card";
     await setIsRefundOrder(true);
     const stateWaitingCardRefund = comp.getPaymentActionState(paymentline);
     expect(normalizeActionState(stateWaitingCardRefund)).toEqual({
@@ -139,7 +135,7 @@ test("getPaymentActionState", async () => {
         ],
     });
 
-    // waitingCard - no refund
+    // waiting_card - no refund
     await setIsRefundOrder(false);
     const stateWaitingCardNoRefund = comp.getPaymentActionState(paymentline);
     expect(normalizeActionState(stateWaitingCardNoRefund)).toEqual({
@@ -166,8 +162,8 @@ test("getPaymentActionState", async () => {
         ],
     });
 
-    // waitingScan
-    paymentline.payment_status = "waitingScan";
+    // waiting_scan
+    paymentline.payment_status = "waiting_scan";
     const stateWaitingScan = comp.getPaymentActionState(paymentline);
     expect(normalizeActionState(stateWaitingScan)).toEqual({
         id: "waiting_scan",
@@ -219,8 +215,8 @@ test("getPaymentActionState", async () => {
         ],
     });
 
-    // waitingCancel
-    paymentline.payment_status = "waitingCancel";
+    // waiting_cancel
+    paymentline.payment_status = "waiting_cancel";
     const stateWaitingCancel = comp.getPaymentActionState(paymentline);
     expect(normalizeActionState(stateWaitingCancel)).toEqual({
         id: "waiting_cancel",
@@ -245,8 +241,8 @@ test("getPaymentActionState", async () => {
         ],
     });
 
-    // waitingCapture
-    paymentline.payment_status = "waitingCapture";
+    // waiting_capture
+    paymentline.payment_status = "waiting_capture";
     const stateWaitingCapture = comp.getPaymentActionState(paymentline);
     expect(normalizeActionState(stateWaitingCapture)).toEqual({
         id: "waiting_capture",
@@ -319,7 +315,7 @@ describe("show qr code button", () => {
 
         paymentline.payment_method_id.payment_method_type = "external_qr";
         paymentline.qr_code = "https://example.com/qr-code-data";
-        paymentline.payment_status = "waitingScan";
+        paymentline.payment_status = "waiting_scan";
 
         await mountWithCleanup(PaymentScreenPaymentLines, {
             props: {
@@ -469,7 +465,7 @@ describe("spinner or delete button", () => {
         const card = store.models["pos.payment.method"].get(2);
         const paymentline = createPaymentLine(store, order, card);
 
-        paymentline.payment_status = "waitingCard";
+        paymentline.payment_status = "waiting_card";
 
         await mountWithCleanup(PaymentScreenPaymentLines, {
             props: {
@@ -519,7 +515,7 @@ describe("spinner or delete button", () => {
         const card = store.models["pos.payment.method"].get(2);
         const paymentline = createPaymentLine(store, order, card);
 
-        paymentline.payment_status = "waitingCard";
+        paymentline.payment_status = "waiting_card";
         order.uiState.selected_paymentline_uuid = paymentline.uuid;
 
         await mountWithCleanup(PaymentScreenPaymentLines, {

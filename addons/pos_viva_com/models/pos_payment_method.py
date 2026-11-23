@@ -178,7 +178,7 @@ class PosPaymentMethod(models.Model):
                 data.update({'pos_session_id': pos_session_id, 'data_webhook': data_webhook})
                 self._send_notification(data)
             elif mismatch:
-                payment.filtered('id').write({'payment_status': 'error'})
+                payment.filtered('id').write({'payment_status': 'retry'})
                 if mismatch['currency']:
                     currency = self.env['res.currency'].search([('iso_numeric', '=', mismatch['currency'])], limit=1)
                     notification = {'currency_ask': payment.currency_id.full_name, 'currency_paid': currency.full_name or mismatch['currency']}
