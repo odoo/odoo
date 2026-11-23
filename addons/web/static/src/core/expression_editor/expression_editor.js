@@ -81,7 +81,6 @@ export class ExpressionEditor extends Component {
                 resModel: this.props.resModel,
                 readonly: false,
                 filter: (fieldDef) => fieldDef.name in this.filteredFields,
-                showDebugInput: false,
                 followRelation: false,
                 isDebugMode: this.debugMode.isActive(),
             }),

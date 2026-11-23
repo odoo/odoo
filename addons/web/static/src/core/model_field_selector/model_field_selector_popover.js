@@ -114,7 +114,6 @@ export const modelFieldSelectorPopoverProps = {
         ),
     sort: t.function().optional(),
     followRelation: t.or([t.boolean(), t.function()]).optional(true),
-    showDebugInput: t.boolean().optional(),
     isDebugMode: t.boolean().optional(false),
     path: t.any().optional(),
     readProperty: t.boolean().optional(),
@@ -181,10 +180,6 @@ export class ModelFieldSelectorPopover extends Component {
         return this.state.page.fieldNames;
     }
 
-    get showDebugInput() {
-        return this.props.showDebugInput ?? this.props.isDebugMode;
-    }
-
     canFollowRelationFor(fieldDef) {
         if (fieldDef.type === "properties") {
             return true;
@@ -221,11 +216,6 @@ export class ModelFieldSelectorPopover extends Component {
     goToPreviousPage() {
         this.keepLast.add(Promise.resolve());
         this.openPage(this.state.page.previousPage);
-    }
-
-    async loadNewPath(path) {
-        const newPage = await this.keepLast.add(this.loadPages(this.props.resModel, path));
-        this.openPage(newPage);
     }
 
     async loadPages(resModel, path) {
@@ -286,17 +276,6 @@ export class ModelFieldSelectorPopover extends Component {
         this.state.page.selectedName = field.name;
         this.props.update(this.state.page.path, field);
         this.props.close(true);
-    }
-
-    onDebugInputKeydown(ev) {
-        switch (ev.key) {
-            case "Enter": {
-                ev.preventDefault();
-                ev.stopPropagation();
-                this.loadNewPath(ev.currentTarget.value);
-                break;
-            }
-        }
     }
 
     // @TODO should rework/improve this and maybe use hotkeys
