@@ -4490,6 +4490,7 @@ class AccountTax(models.Model):
         target_currency,
         raw_current_amount,
         raw_current_amount_precision_digits,
+        target_amount_precision_digits=None,
     ):
         """ Get the minimum missing amount having 'raw_current_amount_precision_digits' as precision
         to be added to 'raw_current_amount' to give 'target_amount' after rounding using 'target_currency'.
@@ -4505,13 +4506,17 @@ class AccountTax(models.Model):
         """
         target_amount_sign = -1 if target_amount < 0.0 else 1
         raw_current_amount_rounding = math.pow(10, -raw_current_amount_precision_digits)
+        if target_currency:
+            target_amount_rounding = target_currency.rounding
+        else:
+            target_amount_rounding = math.pow(10, -target_amount_precision_digits)
         tolerance_bounds = (
             float_round(
-                abs(target_amount) + (target_currency.rounding / 2) - raw_current_amount_rounding,
+                abs(target_amount) + (target_amount_rounding / 2) - raw_current_amount_rounding,
                 precision_digits=raw_current_amount_precision_digits,
             ),
             float_round(
-                abs(target_amount) - (target_currency.rounding / 2),
+                abs(target_amount) - (target_amount_rounding / 2),
                 precision_digits=raw_current_amount_precision_digits,
             ),
         )
@@ -4524,7 +4529,7 @@ class AccountTax(models.Model):
         else:
             return 0.0
 
-        return target_amount_sign * delta_raw_amount
+        return float_round(target_amount_sign * delta_raw_amount, precision_digits=raw_current_amount_precision_digits)
 
     @api.model
     def _round_raw_total_excluded(
@@ -4616,6 +4621,14 @@ class AccountTax(models.Model):
         tax_details = base_line['tax_details']
         raw_total_excluded = tax_details[f'raw_total_excluded{suffix}']
 
+        # The distributed global discount is part of 'raw_total_excluded' but is not affected by the line discount.
+        # It has to be removed before reverting the line discount.
+        if account_discount_base_lines:
+            raw_total_excluded -= sum(
+                discount_base_line['tax_details'][f'raw_total_excluded{suffix}']
+                for discount_base_line in base_line.get('discount_base_lines', [])
+            )
+
         discount_factor = 1 - (base_line['discount'] / 100.0)
         if discount_factor:
             raw_gross_total_excluded = raw_total_excluded / discount_factor
@@ -4625,11 +4638,6 @@ class AccountTax(models.Model):
             raw_gross_total_excluded = base_line['price_unit'] * base_line['quantity'] / base_line['rate']
         else:
             raw_gross_total_excluded = 0.0
-        if account_discount_base_lines:
-            raw_gross_total_excluded -= sum(
-                discount_base_line['tax_details'][f'raw_total_excluded{suffix}']
-                for discount_base_line in base_line.get('discount_base_lines', [])
-            )
 
         if precision_digits is not None:
             raw_gross_total_excluded = float_round(raw_gross_total_excluded, precision_digits=precision_digits)
