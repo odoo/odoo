@@ -16,6 +16,7 @@ Thailand - e-Tax Invoice
 Sign e-Tax documents and submit them to the Revenue Department through INET.
     """,
     'data': [
+        'data/ir_cron.xml',
         'views/account_move_views.xml',
         'views/res_config_settings_views.xml',
         'wizard/account_debit_note_views.xml',

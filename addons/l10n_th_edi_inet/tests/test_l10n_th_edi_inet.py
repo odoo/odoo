@@ -1,23 +1,25 @@
 from contextlib import contextmanager
 from unittest.mock import Mock, patch
+from urllib.parse import urlsplit
 
 import requests
 from lxml import etree
 
 from odoo.exceptions import UserError
 from odoo.tests import Form, freeze_time, tagged
+from odoo.tools import file_open, hash_sign
 
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.account.tests.common import AccountTestInvoicingHttpCommon
 
 SIGNED = {'status': 'OK', 'transactionCode': 'TX1', 'xmlURL': 'https://inet/xml', 'pdfURL': 'https://inet/pdf'}
 
 
 @freeze_time('2026-10-01')
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestL10nThEdiInet(AccountTestInvoicingCommon):
+class TestL10nThEdiInet(AccountTestInvoicingHttpCommon):
 
     @classmethod
-    @AccountTestInvoicingCommon.setup_country('th')
+    @AccountTestInvoicingHttpCommon.setup_country('th')
     def setUpClass(cls):
         super().setUpClass()
         cls.env.company.write({
@@ -93,6 +95,7 @@ class TestL10nThEdiInet(AccountTestInvoicingCommon):
             'l10n_th_edi_state': 'signed',
             'l10n_th_edi_inet_transaction_code': 'TX1',
             'l10n_th_edi_error': False,
+            'l10n_th_edi_rd_state': 'waiting',
         }])
         self.assertEqual(tax_invoice.l10n_th_edi_pdf_file_id.raw.content, b'signed https://inet/pdf')
         self.assertEqual(tax_invoice.l10n_th_edi_pdf_file_id.res_id, invoice.id)
@@ -309,6 +312,42 @@ class TestL10nThEdiInet(AccountTestInvoicingCommon):
         with self._mock_inet(duplicate, files={'https://inet/xml': signed_xml}):
             tax_invoice.action_l10n_th_edi_send()
         self.assertRecordValues(tax_invoice, [{'l10n_th_edi_state': 'signed', 'l10n_th_edi_inet_transaction_code': False}])
+
+    def test_rd_status_from_webhook_and_daily_check(self):
+        _invoice, tax_invoice = self._create_tax_invoice()
+        # The webhook and the daily check flush the signed PDF, which Documents reads if installed.
+        with file_open('base/tests/files/file.pdf', 'rb') as pdf_file:
+            pdf = pdf_file.read()
+        with self._mock_inet(SIGNED, files={'https://inet/pdf': pdf}) as calls:
+            tax_invoice.action_l10n_th_edi_send()
+        callback_url = urlsplit(calls[0][1]['callbackUrl'])
+
+        rd_status_url = callback_url.path.rpartition('/')[0]
+        for wrong_token in (hash_sign(self.env, 'another_scope', [tax_invoice._name, tax_invoice.id]), 'garbage'):
+            response = self.url_open(f'{rd_status_url}/{wrong_token}', json={'rdStatus': 'Submitted'})
+            self.assertEqual(response.status_code, 404)
+
+        response = self.url_open(callback_url.path, json={'rdStatus': 'Under RD review'})
+        self.assertEqual(response.status_code, 204)
+        self.env.invalidate_all()
+        self.assertEqual(tax_invoice.l10n_th_edi_rd_state, 'in_review')
+
+        # The webhook of the final status did not reach Odoo.
+        cron = self.env.ref('l10n_th_edi_inet.ir_cron_l10n_th_edi_inet_update_rd_states_tax_invoice')
+        with self._mock_inet({'status': 'ER', 'errorCode': 'ER500', 'errorMessage': "Service unavailable"}):
+            cron.method_direct_trigger()
+        self.assertRecordValues(tax_invoice, [{'l10n_th_edi_rd_state': 'in_review', 'l10n_th_edi_error': "[ER500] Service unavailable"}])
+
+        with self._mock_inet({'status': 'OK', 'rdStatus': 'Failed', 'rdMessage': "Invalid buyer tax ID"}) as calls:
+            cron.method_direct_trigger()
+        self.assertRecordValues(tax_invoice, [{'l10n_th_edi_rd_state': 'failed', 'l10n_th_edi_error': "Invalid buyer tax ID"}])
+        self.assertEqual(calls, [('/getdocument/getdocumentstatus', {
+            'SellerTaxId': '0105561072420', 'SellerBranchId': '00000', 'SourceSystem': 'Odoo', 'TransactionCode': 'TX1',
+        })])
+
+        with self._mock_inet() as calls:
+            cron.method_direct_trigger()
+        self.assertFalse(calls)
 
     def test_lost_answer_of_unknown_document_is_sent_again(self):
         _invoice, tax_invoice = self._create_tax_invoice()

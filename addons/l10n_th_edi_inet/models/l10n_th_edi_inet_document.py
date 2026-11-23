@@ -3,8 +3,9 @@
 import requests
 from stdnum.th import tin
 
-from odoo import fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools import hash_sign, verify_hash_signed
 
 INET_URLS = {
     'staging': 'https://uatservice-etax.one.th',
@@ -13,6 +14,13 @@ INET_URLS = {
 INET_TIMEOUT = 60
 INET_NOT_FOUND_ERROR_CODES = ('ER019', 'AU045')
 INET_DUPLICATE_ERROR_CODE = 'ER011'
+INET_RD_STATES = {
+    'Sending': 'sending',
+    'Under RD review': 'in_review',
+    'Submitted': 'accepted',
+    'Failed': 'failed',
+}
+INET_RD_STATUS_SCOPE = 'l10n_th_edi_inet_rd_status'
 
 
 class L10nThEdiInetDocument(models.AbstractModel):
@@ -90,7 +98,7 @@ class L10nThEdiInetDocument(models.AbstractModel):
         file_name = self._l10n_th_edi_get_file_name(document_values)
         response, error = self._l10n_th_edi_inet_request(
             '/service/etaxsigndocument',
-            {'ServiceCode': 'S04'},
+            {'ServiceCode': 'S04', 'callbackUrl': self._l10n_th_edi_inet_get_callback_url()},
             files={
                 'XMLContent': (f'{file_name}.xml', self._l10n_th_edi_get_xml(document_values), 'application/xml'),
                 'PDFContent': (f'{file_name}.pdf', self._l10n_th_edi_get_pdf_content(), 'application/pdf'),
@@ -152,7 +160,7 @@ class L10nThEdiInetDocument(models.AbstractModel):
                 }
             else:
                 self._l10n_th_edi_save_signed_files(xml_content, pdf_content, document_values)
-                vals = {'l10n_th_edi_state': 'signed', 'l10n_th_edi_error': False}
+                vals = {'l10n_th_edi_state': 'signed', 'l10n_th_edi_error': False, 'l10n_th_edi_rd_state': 'waiting'}
         elif status == 'PC':
             vals = {'l10n_th_edi_state': 'processing', 'l10n_th_edi_error': self._l10n_th_edi_inet_format_error(response)}
         elif status == 'ER':
@@ -160,3 +168,55 @@ class L10nThEdiInetDocument(models.AbstractModel):
         else:
             vals = {'l10n_th_edi_state': 'unknown', 'l10n_th_edi_error': self.env._("Unexpected answer from INET: %s", response)}
         self.write(vals)
+
+    # -------------------------------------------------------------------------
+    # RD STATUS
+    # -------------------------------------------------------------------------
+
+    def _l10n_th_edi_inet_get_callback_url(self):
+        """ INET calls this URL when the RD status of the document changes. Its token identifies the document. """
+        token = hash_sign(self.sudo().env, INET_RD_STATUS_SCOPE, [self._name, self.id])
+        return f'{self.get_base_url()}/l10n_th_edi_inet/rd_status/{token}'
+
+    @api.model
+    def _l10n_th_edi_inet_get_document_from_token(self, token):
+        try:
+            document_ref = verify_hash_signed(self.sudo().env, INET_RD_STATUS_SCOPE, token)
+        except ValueError:
+            return None
+        if document_ref:
+            model_name, document_id = document_ref
+            return self.env[model_name].sudo().browse(document_id).exists()
+        return None
+
+    def _l10n_th_edi_inet_update_rd_state(self, response):
+        """ Update the RD status from INET's webhook or status answer, which carry the same values. """
+        if rd_state := INET_RD_STATES.get(response.get('rdStatus')):
+            self.write({
+                'l10n_th_edi_rd_state': rd_state,
+                'l10n_th_edi_error': rd_state == 'failed' and response.get('rdMessage'),
+            })
+
+    def _l10n_th_edi_inet_fetch_rd_state(self):
+        self.ensure_one()
+        response, error = self._l10n_th_edi_inet_request('/getdocument/getdocumentstatus', {
+            'TransactionCode': self.l10n_th_edi_inet_transaction_code,
+        })
+        if error or response.get('status') == 'ER':
+            self.l10n_th_edi_error = error or self._l10n_th_edi_inet_format_error(response)
+        else:
+            self._l10n_th_edi_inet_update_rd_state(response)
+
+    @api.model
+    def _cron_l10n_th_edi_inet_update_rd_states(self):
+        """ Fallback for the webhooks that did not reach Odoo. """
+        documents = self.search([
+            ('l10n_th_edi_rd_state', 'in', ('waiting', 'sending', 'in_review')),
+            # A document found at INET by its number has no transaction code to follow.
+            ('l10n_th_edi_inet_transaction_code', '!=', False),
+        ])
+        self.env['ir.cron']._commit_progress(remaining=len(documents))
+        for document in documents:
+            document._l10n_th_edi_inet_fetch_rd_state()
+            if not self.env['ir.cron']._commit_progress(1):
+                break

@@ -37,6 +37,7 @@
                         </group>
                         <group>
                             <field name="l10n_th_edi_state"/>
+                            <field name="l10n_th_edi_rd_state" invisible="not l10n_th_edi_rd_state"/>
                             <field name="l10n_th_edi_error" invisible="not l10n_th_edi_error"/>
                         </group>
                     </group>
@@ -48,6 +49,12 @@
                        decoration-success="l10n_th_edi_state == 'signed'"
                        decoration-warning="l10n_th_edi_state in ('processing', 'unknown')"
                        decoration-danger="l10n_th_edi_state == 'error'"/>
+                <field name="l10n_th_edi_rd_state"
+                       widget="badge"
+                       optional="show"
+                       decoration-success="l10n_th_edi_rd_state == 'accepted'"
+                       decoration-info="l10n_th_edi_rd_state in ('waiting', 'sending', 'in_review')"
+                       decoration-danger="l10n_th_edi_rd_state == 'failed'"/>
                 <field name="l10n_th_edi_error" optional="show"/>
             </xpath>
             <xpath expr="//field[@name='l10n_th_tax_invoice_ids']/list/button[@name='action_print_tax_invoice_pdf']" position="after">

@@ -37,6 +37,19 @@ class L10nThEdiDocument(models.AbstractModel):
         help="Processing: the e-Tax provider received the document but has not signed it yet.\n"
              "Unknown: the provider's answer was lost. Odoo checks with the provider before sending it again.",
     )
+    l10n_th_edi_rd_state = fields.Selection(
+        selection=[
+            ('waiting', "Waiting for RD"),
+            ('sending', "Sending to RD"),
+            ('in_review', "Under RD Review"),
+            ('accepted', "Accepted by RD"),
+            ('failed', "Failed at RD"),
+        ],
+        string="RD Status",
+        copy=False,
+        readonly=True,
+        help="The e-Tax provider submits the signed documents to the Revenue Department (RD) by the RD's deadline.",
+    )
     l10n_th_edi_error = fields.Text(string="e-Tax Error", copy=False, readonly=True)
     l10n_th_edi_xml_file_id = fields.Many2one(
         comodel_name='ir.attachment',
