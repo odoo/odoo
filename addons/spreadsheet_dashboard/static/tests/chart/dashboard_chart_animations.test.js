@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";
-import { Model, components, stores } from "@odoo/o-spreadsheet";
+import { Model, components, owlPlugins } from "@odoo/o-spreadsheet";
 import { createBasicChart } from "@spreadsheet/../tests/helpers/commands";
 import { makeSpreadsheetMockEnv } from "@spreadsheet/../tests/helpers/model";
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
@@ -8,7 +8,7 @@ import { createDashboardActionWithData } from "@spreadsheet_dashboard/../tests/h
 import { defineSpreadsheetDashboardModels } from "@spreadsheet_dashboard/../tests/helpers/data";
 import { getMockEnv, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
-const { ViewportsStore } = stores;
+const { ViewportsPlugin } = owlPlugins;
 
 describe.current.tags("desktop");
 defineSpreadsheetDashboardModels();
@@ -33,18 +33,18 @@ test("Charts are animated only at first render", async () => {
     createBasicChart(setupModel, "chartId");
     const charts = spyCharts();
     const { env } = await createDashboardActionWithData(setupModel.exportData());
-    const viewStore = env.getStore(ViewportsStore);
+    const viewPlugin = env.getPlugin(ViewportsPlugin);
 
     expect(".o-figure").toHaveCount(1);
     expect(charts["chartId"].config.options.animation.animateRotate).toBe(true);
 
     // Scroll the figure out of the viewport and back in
-    viewStore.setViewportOffset({ offsetX: 0, offsetY: 500 });
+    viewPlugin.setViewportOffset({ offsetX: 0, offsetY: 500 });
     await animationFrame();
     await animationFrame();
     expect(".o-figure").toHaveCount(0);
 
-    viewStore.setViewportOffset({ offsetX: 0, offsetY: 0 });
+    viewPlugin.setViewportOffset({ offsetX: 0, offsetY: 0 });
     await animationFrame();
     expect(".o-figure").toHaveCount(1);
     expect(charts["chartId"].config.options.animation).toBe(false);
