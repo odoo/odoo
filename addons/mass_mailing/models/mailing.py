@@ -536,17 +536,26 @@ class MailingMailing(models.Model):
         return mailings
 
     def write(self, vals):
-        values = vals
-        if values.get('body_arch'):
-            values['body_arch'] = self._convert_inline_images_to_urls(values['body_arch'])
-        if values.get('body_html'):
-            values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
+        # The queue cron commits the 'sending' state before delivering: refuse
+        # changes from a form opened before, as they would make the cron fail.
+        allowed_fields = {'kpi_mail_required', 'sent_date', 'state'}
+        if vals.get('state') == 'draft':
+            # Cancelling also clears the scheduling fields.
+            allowed_fields.update({'next_departure', 'schedule_date', 'schedule_type'})
+
+        if set(vals) - allowed_fields and any(mailing.state == 'sending' for mailing in self):
+            raise UserError(self.env._("You cannot edit a mailing while it is being sent."))
+
+        if vals.get('body_arch'):
+            vals['body_arch'] = self._convert_inline_images_to_urls(vals['body_arch'])
+        if vals.get('body_html'):
+            vals['body_html'] = self._convert_inline_images_to_urls(vals['body_html'])
         # If ab_testing is already enabled on a mailing and the campaign is removed, we raise a ValidationError
-        if values.get('campaign_id') is False and any(mailing.ab_testing_enabled for mailing in self) and 'ab_testing_enabled' not in values:
+        if vals.get('campaign_id') is False and any(mailing.ab_testing_enabled for mailing in self) and 'ab_testing_enabled' not in vals:
             raise ValidationError(_("A campaign should be set when A/B test is enabled"))
 
-        result = super().write(values)
-        if values.get('ab_testing_enabled'):
+        result = super().write(vals)
+        if vals.get('ab_testing_enabled'):
             self._create_ab_testing_utm_campaigns()
         self._fix_attachment_ownership()
 
@@ -1186,6 +1195,8 @@ class MailingMailing(models.Model):
             )
             if len(mass_mailing._get_remaining_recipients()) > 0:
                 mass_mailing.state = 'sending'
+                # Make concurrent edits fail before the first email is sent.
+                self.env['ir.cron']._commit_progress(processed=0)
                 mass_mailing._action_send_mail()
             else:
                 mass_mailing.write({
