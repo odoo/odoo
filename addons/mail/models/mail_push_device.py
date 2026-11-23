@@ -42,7 +42,7 @@ class MailPushDevice(models.Model):
     refresh_token = fields.Char(
         string='Refresh Token',
         copy=False,
-        groups='base.no_one',
+        groups=fields.NO_ACCESS,
         help="One-time-use token (30 days) stored in an HttpOnly cookie by the browser. "
              "Lets the service worker renew the push subscription without an active "
              "login session.",
@@ -50,7 +50,7 @@ class MailPushDevice(models.Model):
     refresh_token_expiry = fields.Datetime(
         string='Refresh Token Expiry',
         copy=False,
-        groups='base.no_one',
+        groups=fields.NO_ACCESS,
     )
 
     _endpoint_unique = models.Constraint(
