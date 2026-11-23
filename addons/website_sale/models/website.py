@@ -1038,14 +1038,14 @@ class Website(models.Model):
         spacing_map = {"none": "gap-0", "small": "gap-1", "medium": "gap-2", "big": "gap-3"}
         return spacing_map.get(self.product_page_image_spacing)
 
-    def _get_product_page_grid_image_rounded_classes(self):
-        roundness_map = {
-            "none": "o_wsale_product_page_opt_image_radius_none",
-            "small": "o_wsale_product_page_opt_image_radius_small",
-            "medium": "o_wsale_product_page_opt_image_radius_medium",
-            "big": "o_wsale_product_page_opt_image_radius_big",
+    def _get_product_page_image_radius(self):
+        radius_map = {
+            "none": "0",
+            "small": "var(--border-radius-sm)",
+            "medium": "var(--border-radius)",
+            "big": "var(--border-radius-lg)",
         }
-        return roundness_map.get(self.product_page_image_roundness)
+        return radius_map.get(self.product_page_image_roundness)
 
     def _get_product_page_container(self):
         return (

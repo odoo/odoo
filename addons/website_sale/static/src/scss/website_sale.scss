@@ -889,19 +889,6 @@ a.no-decoration {
     }
 }
 
-$-product-radius-map: (
-    'none': 0,
-    'small': var(--border-radius-sm),
-    'medium': var(--border-radius),
-    'big': var(--border-radius-lg),
-);
-
-@each $-name, $-value in $-product-radius-map {
-    .o_wsale_product_page_opt_image_radius_#{$-name} {
-        --o-wsale-product-image-radius: #{$-value};
-    }
-}
-
 /* ==== Layout ================================================================= */
 .o_wsale_content_contained {
     --gutter-x: 0;
