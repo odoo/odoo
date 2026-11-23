@@ -720,10 +720,23 @@ class TestMailMessageAccess(MessageAccessCommon):
         message.write({'partner_ids': [(4, self.user_portal_2.partner_id.id)]})
         with self.assertRaises(AccessError):
             message.write({'res_id': self.record_public.id})
+        with self.assertRaises(AccessError):
+            message.write({'message_type': 'notification'})
         # To change in 18+
         message.write({'notification_ids': [
             (0, 0, {'res_partner_id': self.user_portal_2.partner_id.id})
         ]})
+
+        user_notification = self.env['mail.message'].with_user(self.user_employee).create({
+            'body': 'Test',
+            'message_type': 'user_notification',
+            'model': self.record_admin._name,
+            'partner_ids': [(4, self.user_employee.partner_id.id)],
+            'reply_to': 'avoid.catchall@my.test.com',  # otherwise crashes
+            'res_id': self.record_admin.id,
+        })
+        with self.assertRaises(AccessError):
+            user_notification.write({'message_type': 'comment'})
 
     @mute_logger('odoo.addons.base.models.ir_rule')
     def test_access_write_portal_notification(self):
