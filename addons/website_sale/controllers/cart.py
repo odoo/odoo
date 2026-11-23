@@ -327,11 +327,10 @@ class Cart(PaymentPortal):
             )
 
         return {
-            "cart_quantity": order_sudo.cart_quantity,
+            **self._get_updated_cart_page_values(order_sudo),
             "notifications": notifications,
             "quantity": values.pop("quantity", 0),
             "tracking_info": tracking_info,
-            "currency": order_sudo.currency_id.name,
             **cart_summary_data,
         }
 
@@ -412,9 +411,12 @@ class Cart(PaymentPortal):
         return values
 
     def _get_updated_cart_page_values(self, order_sudo):
-        """Construct the values needed to update the UI after a cart update.
+        """Return the values needed to update the UI after the cart is modified, e.g. when a
+        product is added or a line is updated.
 
-        :param sale.order order_sudo: The current cart order.
+        :param sale.order order_sudo: The current cart.
+        :return: The cart's blocking alerts state, quantity, currency name, and its `amount` and
+                 `minor_amount` sent with the `cart_amount_changed` event.
         :rtype: dict
         """
         return {
@@ -431,7 +433,7 @@ class Cart(PaymentPortal):
         }
 
     @route(route="/shop/cart/data", type="jsonrpc", auth="public", website=True)
-    def cart_data(self, from_confirmation_page=False, with_history=False):
+    def cart_data(self, from_confirmation_page=False, with_history=False) -> dict:
         """Return the shared cart data used by the OWL cart components."""
         if from_confirmation_page:
             order_sudo = (
@@ -466,7 +468,7 @@ class Cart(PaymentPortal):
 
         return result
 
-    def cart_history(self):
+    def cart_history(self) -> dict:
         """Prepare the order history of the current user.
 
         The valid order lines of the last 10 confirmed orders are considered and grouped by date. An
@@ -481,7 +483,9 @@ class Cart(PaymentPortal):
         The dates are represented by labels like "Today", "Yesterday", or "X days ago".
 
         :return: The order history, in the format
-                 {'order_history': [{'label': str, 'lines': SaleOrderLine}, ...]}.
+                 {'is_public_user': bool,
+                  'order_history': [{'label': str, 'lines': [dict, ...]}, ...]}, where each
+                 line is prepared by `_prepare_order_history_line`.
         :rtype: dict
         """
 
@@ -557,7 +561,7 @@ class Cart(PaymentPortal):
         }
 
     def _prepare_order_history_line(self, line):
-        return {
+        history_line = {
             "id": line.id,
             "is_combo": line.product_type == "combo",
             "name_short": line.name_short,
@@ -567,15 +571,16 @@ class Cart(PaymentPortal):
             "quantity": line.product_uom_qty,
             "price": line.price_unit,
             "combo_item_lines": [
-                self._prepare_combo_item_line_data(line)
-                for line in line.linked_line_ids.filtered("combo_item_id")
+                self._prepare_combo_item_line_data(combo_item_line)
+                for combo_item_line in line.linked_line_ids.filtered("combo_item_id")
             ],
             "selected_combo_items": line._get_selected_combo_items(),
-            "has_multiple_uoms": line.product_id._has_multiple_uoms(),
-            "product_uom_name": line.product_uom_id.name,
             "combination_info_variant": line.product_id._get_combination_info_variant(),
             "product_uom_qty": line.product_uom_qty,
         }
+        if line.product_id._has_multiple_uoms():
+            history_line["uom_name"] = line.product_uom_id.name
+        return history_line
 
     def _get_cart_notification_information(self, order, added_qty_per_line):
         """Get the information about the sales order lines to show in the notification.
@@ -653,60 +658,64 @@ class Cart(PaymentPortal):
 
         return infos
 
-    def cart_lines(self, order_sudo):
+    def cart_lines(self, order_sudo) -> dict:
         values = {
             "cart_lines": [],
             "accessories": self._cart_accessories(order_sudo),
             "cart_quantity": order_sudo.cart_quantity,
         }
 
-        for line in order_sudo.website_order_line:
-            values["cart_lines"].append(self._prepare_cart_line_data(line))
+        for line_sudo in order_sudo.website_order_line:
+            values["cart_lines"].append(self._prepare_cart_line_data(line_sudo))
 
         return values
 
-    def _prepare_cart_line_data(self, line):
-        is_sellable = line._is_sellable()
+    def _prepare_cart_line_data(self, line_sudo):
+        is_sellable = line_sudo._is_sellable()
         line_data = {
-            "id": line.id,
-            "product_id": line.product_id.id,
-            "name_short": line.name_short,
-            "header_name": line._get_line_header(),
-            "uom_name": line.product_uom_id.name,
-            "displayed_quantity": line._get_displayed_quantity(),
-            "displayed_unit_price": line._get_displayed_unit_price(),
-            "product_price": line._get_cart_display_price(),
-            "base_unit_price": line.product_id.base_unit_price,
-            "product_uom_qty": line.product_uom_qty,
+            "id": line_sudo.id,
+            "product_id": line_sudo.product_id.id,
+            "name_short": line_sudo.name_short,
+            "header_name": line_sudo._get_line_header(),
+            "displayed_quantity": line_sudo._get_displayed_quantity(),
+            "displayed_unit_price": line_sudo._get_displayed_unit_price(),
+            "product_price": line_sudo._get_cart_display_price(),
+            "base_unit_price": line_sudo.product_id.base_unit_price,
+            "product_uom_qty": line_sudo.product_uom_qty,
             "product_base_unit_price": (
-                line.product_id._get_base_unit_price(
-                    line._get_cart_display_price() / line.product_uom_qty
+                line_sudo.product_id._get_base_unit_price(
+                    line_sudo._get_cart_display_price() / line_sudo.product_uom_qty
                 )
             ),
-            "website_url": line.product_id.website_url,
-            "is_combo": line.product_type == "combo",
+            "website_url": line_sudo.product_id.website_url,
+            "is_combo": line_sudo.product_type == "combo",
             "is_sellable": is_sellable,
             # Unsellable products can't be accessed through `/web/image` by the customer.
             "image_uri": (
-                image_data_uri(line.product_id.image_128)
-                if not is_sellable and line.product_id.image_128
+                image_data_uri(line_sudo.product_id.image_128)
+                if not is_sellable and line_sudo.product_id.image_128
                 else False
             ),
-            "combination_name": line._get_combination_name(),
-            "has_multiple_uoms": line.product_id._has_multiple_uoms(),
-            "should_show_strikethrough_price": line._should_show_strikethrough_price(),
-            "description_lines": list(line.get_description_following_lines()),
-            "alert_message": line._join_alert_messages(),
-            "alert_level": line._get_max_alert_level(),
-            "max_quantity": line._get_max_line_qty(),
-            "min_quantity": line._get_minimum_line_quantity(),
-            "min_qty_message": line._get_minimum_qty_reached_message(),
+            "combination_name": line_sudo._get_combination_name(),
+            "should_show_strikethrough_price": line_sudo._should_show_strikethrough_price(),
+            "description_lines": list(line_sudo.get_description_following_lines()),
+            "alert_message": line_sudo._join_alert_messages(),
+            "alert_level": line_sudo._get_max_alert_level(),
+            "max_quantity": line_sudo._get_max_line_qty(),
+            "min_quantity": line_sudo._get_minimum_line_quantity(),
+            "min_qty_message": line_sudo._get_minimum_qty_reached_message(),
+            # Additional details shown under the product name in the cart summary, e.g. the
+            # event slot. Other modules can append to this list.
+            "short_summary": [],
         }
 
-        if line.product_type == "combo":
+        if line_sudo.product_id._has_multiple_uoms():
+            line_data["uom_name"] = line_sudo.product_uom_id.name
+
+        if line_sudo.product_type == "combo":
             line_data["combo_item_lines"] = [
                 self._prepare_combo_item_line_data(combo_item)
-                for combo_item in line.linked_line_ids.filtered("combo_item_id")
+                for combo_item in line_sudo.linked_line_ids.filtered("combo_item_id")
             ]
 
         return line_data
@@ -722,7 +731,8 @@ class Cart(PaymentPortal):
             "description_lines": list(combo_item_line.get_description_following_lines()),
         }
 
-    def cart_totals(self, order_sudo):
+    def cart_totals(self, order_sudo) -> dict:
+        tax_included = order_sudo.website_id.tax_display == "tax_included"
         return {
             "has_carrier": bool(order_sudo.carrier_id),
             "has_deliverable_products": order_sudo._has_deliverable_products(),
@@ -734,9 +744,13 @@ class Cart(PaymentPortal):
                 else False
             ),
             "amount_total": order_sudo.amount_total,
-            "tax_included": (order_sudo.website_id.tax_display == "tax_included"),
+            "tax_included": tax_included,
             "is_paid": order_sudo._is_paid(),
             "amount_paid": order_sudo.amount_paid,
+            # Which amounts of the order to show, overridable by other modules.
+            "show_untaxed_amount": not tax_included,
+            "show_tax_lines": True,
+            "show_total": True,
         }
 
     def _cart_accessories(self, order_sudo):

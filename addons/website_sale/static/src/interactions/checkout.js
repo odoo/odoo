@@ -3,7 +3,7 @@ import { registry } from '@web/core/registry';
 import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
 import { setElementContent } from '@web/core/utils/html';
-import { markup } from '@odoo/owl';
+import { markup, useListener } from '@odoo/owl';
 import wSaleUtils from '@website_sale/js/website_sale_utils';
 
 export class Checkout extends Interaction {
@@ -15,7 +15,8 @@ export class Checkout extends Interaction {
         '.js_edit_address': { 't-on-click.stop': () => {} },
         '#use_delivery_as_billing': { 't-on-change': this.toggleBillingAddressRow },
         // Delivery methods
-        '[name="o_delivery_radio"]': { 't-on-click': this.selectDeliveryMethod },
+        // `change` isn't triggered when clicking on the already selected delivery method.
+        '[name="o_delivery_radio"]': { 't-on-change': this.selectDeliveryMethod },
     };
 
     setup() {
@@ -27,6 +28,15 @@ export class Checkout extends Interaction {
         this.billingContainer = this.el.querySelector('#billing_container');
         this.vatDiv = this.el.querySelector(".o_address_card_vat");
         this.addBillingAddressBtn = this.el.querySelector('.o_add_billing_address_btn');
+        // Whether the `cart_amount_changed` event is triggered by this interaction, when the
+        // delivery method is set.
+        this.fromCheckout = false;
+        // The delivery prices depend on the order amount (e.g. free delivery over an amount).
+        useListener(this.services.cart.bus, "cart_amount_changed", () => {
+            if (!this.fromCheckout) {
+                this.waitFor(this._prepareDeliveryMethods());
+            }
+        });
     }
 
     async willStart() {
@@ -225,6 +235,10 @@ export class Checkout extends Interaction {
         const result = await this.waitFor(this._setDeliveryMethod(radio.dataset.dmId));
         this._updateAmountBadge(radio, result);
         await this._updateCartSummaries();
+        // The listeners are called synchronously, so the flag only skips this interaction's own.
+        this.fromCheckout = true;
+        this.services.cart.bus.trigger("cart_amount_changed", [result.amount, result.minor_amount]);
+        this.fromCheckout = false;
         if (result.shipping_tracking_info) {
             wSaleUtils.dispatchTrackingEvent(
                 "add_shipping_info_event", result.shipping_tracking_info,

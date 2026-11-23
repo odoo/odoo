@@ -33,13 +33,40 @@ export class CartTotal extends Component {
         return this.cartService.state.totals;
     }
 
+    /**
+     * Whether the untaxed amount of the order should be shown.
+     *
+     * @returns {Boolean}
+     */
+    get showUntaxedAmount() {
+        return this.data.show_untaxed_amount;
+    }
+
+    /**
+     * Whether the tax amounts of the order should be shown.
+     *
+     * @returns {Boolean}
+     */
+    get showTaxLines() {
+        return this.data.show_tax_lines;
+    }
+
+    /**
+     * Whether the total amount of the order should be shown.
+     *
+     * @returns {Boolean}
+     */
+    get showTotal() {
+        return this.data.show_total;
+    }
+
     updatePromoCode(value) {
         this.state.promoCode = value;
     }
 
     async applyPromoCode() {
-        const data = await rpc("/shop/pricelist/apply", {
-            promo: this.state.promoCode,
+        const data = await rpc("/shop/code/apply", {
+            code: this.state.promoCode,
         });
         if (data.message) {
             this.notifications.add(data.message, {
@@ -48,6 +75,7 @@ export class CartTotal extends Component {
         }
         if (data.success) {
             await this.cartService.loadCart({ force: true, withHistory: true });
+            this.cartService.bus.trigger("cart_amount_changed", [data.amount, data.minor_amount]);
         }
         this.state.promoCode = "";
     }

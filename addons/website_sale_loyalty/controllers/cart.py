@@ -41,29 +41,31 @@ class Cart(WebsiteSaleCart):
                         break
         return result
 
-    def _prepare_cart_line_data(self, line):
-        line_data = super()._prepare_cart_line_data(line)
+    def _prepare_cart_line_data(self, line_sudo):
+        line_data = super()._prepare_cart_line_data(line_sudo)
         show_coupon_code = (
-            line.coupon_id
-            and line.order_id != line.coupon_id.order_id
-            and not line.coupon_id.program_id.is_nominative
+            line_sudo.coupon_id
+            and line_sudo.order_id != line_sudo.coupon_id.order_id
+            and not line_sudo.coupon_id.program_id.is_nominative
         )
         line_data.update({
-            "is_reward_line": line.is_reward_line,
+            "is_reward_line": line_sudo.is_reward_line,
             "show_coupon_code": show_coupon_code,
             **(
                 {
-                    "coupon_code": line.coupon_id.code,
-                    "coupon_expiration_date": line.coupon_id.expiration_date,
+                    "coupon_code": line_sudo.coupon_id.code,
+                    "coupon_expiration_date": line_sudo.coupon_id.expiration_date,
                 }
                 if show_coupon_code
                 else {}
             ),
-            **({"reward_type": line.reward_id.reward_type} if line.is_reward_line else {}),
+            **(
+                {"reward_type": line_sudo.reward_id.reward_type} if line_sudo.is_reward_line else {}
+            ),
         })
         return line_data
 
-    def cart_totals(self, order_sudo):
+    def cart_totals(self, order_sudo) -> dict:
         cart_totals = super().cart_totals(order_sudo)
         if order_sudo:
             cart_totals["promotion_progress_bars"] = order_sudo._get_promotion_progress_bars()

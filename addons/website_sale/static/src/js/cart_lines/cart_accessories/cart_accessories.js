@@ -18,7 +18,6 @@ export class CartAccessories extends Component {
                 productTemplateId: accessoryProduct.product_tmpl_id,
                 productId: accessoryProduct.id,
                 isCombo: accessoryProduct.type == "combo",
-                ...this._getOptionalAddToCartParams(),
             },
             {
                 isBuyNow: true,
@@ -30,9 +29,5 @@ export class CartAccessories extends Component {
         if (quantity) {
             await this.cartService.loadCart({ force: true, withHistory: true });
         }
-    }
-
-    _getOptionalAddToCartParams() {
-        return {};
     }
 }

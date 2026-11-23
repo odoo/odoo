@@ -39,7 +39,7 @@
                                     -
                                 </span>
                                 <div
-                                    t-if="this.props.line.combination_name || this.props.line.has_multiple_uoms"
+                                    t-if="this.props.line.combination_name || this.props.line.uom_name"
                                     class="d-inline-flex flex-wrap column-gap-2 row-gap-1 align-items-center my-1 my-md-0 w-100 w-md-auto"
                                 >
                                     <span
@@ -48,7 +48,7 @@
                                         t-out="this.props.line.combination_name"
                                     />
                                     <span
-                                        t-if="this.props.line.has_multiple_uoms"
+                                        t-if="this.props.line.uom_name"
                                         class="badge bg-light mb-1"
                                         t-out="this.props.line.uom_name"
                                     />
@@ -63,6 +63,14 @@
                         <!-- This div displays all the lines following the first one on the description of the sale
                             order line, with a muted style. For typical products this content will be the product
                             description_sale. -->
+                        <!-- Optional pricing details set by other modules, e.g. the rental
+                             price per period. -->
+                        <div
+                            t-if="this.props.line.price_info"
+                            name="cart_lines_price_info"
+                            t-out="this.props.line.price_info"
+                            class="text-muted d-md-block small"
+                        />
                         <div
                             t-if="this.props.line.description_lines.length > 0"
                             name="cart_lines_description"

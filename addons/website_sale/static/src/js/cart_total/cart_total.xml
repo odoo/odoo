@@ -2,7 +2,6 @@
 <templates>
 
     <t t-name="website_sale.CartTotal">
-        <t t-set="showTaxLines" t-value="true"/>
         <table name="cart_total_table" class="table mb-0">
             <tbody>
                 <tr
@@ -28,10 +27,7 @@
                         />
                     </td>
                 </tr>
-                <tr
-                    t-if="!this.data.tax_included"
-                    name="o_order_total_untaxed"
-                >
+                <tr t-if="this.showUntaxedAmount" name="o_order_total_untaxed">
                     <td
                         t-out="this.props.templateData.untaxedLabel"
                         class="border-0 pb-2 ps-0 pt-0 text-muted"
@@ -46,9 +42,16 @@
                     </td>
                 </tr>
             </tbody>
-            <t t-if="showTaxLines and !this.data.tax_included" t-call="website_sale.OrderTaxLines"/>
+            <t
+                t-if="this.showTaxLines and !this.data.tax_included"
+                t-call="website_sale.OrderTaxLines"
+            />
             <tbody>
-                <tr name="o_order_total" class="border-top">
+                <tr
+                    t-if="this.showTotal"
+                    name="o_order_total"
+                    t-att-class="this.showTaxLines ? 'border-top' : ''"
+                >
                     <td
                         t-out="this.props.templateData.totalLabel"
                         colspan="2"
@@ -82,7 +85,7 @@
             <!-- Tax included view -->
             <t
                 name="tax_included_lines"
-                t-if="this.data.tax_included"
+                t-if="this.showTaxLines and this.data.tax_included"
                 t-call="website_sale.OrderTaxLines"
             />
             <!-- promo button -->

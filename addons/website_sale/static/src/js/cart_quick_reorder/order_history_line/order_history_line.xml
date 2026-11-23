@@ -28,8 +28,8 @@
                         </ul>
                     </div>
                     <small
-                        t-if="this.props.line.has_multiple_uoms"
-                        t-out="this.props.line.product_uom_name"
+                        t-if="this.props.line.uom_name"
+                        t-out="this.props.line.uom_name"
                         class="badge mt-1 bg-light"
                     />
                 </div>

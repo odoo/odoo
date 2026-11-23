@@ -472,13 +472,13 @@ class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
             self.assertEqual(order.amount_total, 100.0, "The base cart value is incorrect.")
 
             # Apply coupon for the first time
-            WebsiteSaleController.pricelist_apply(promo=self.coupon.code)
+            WebsiteSaleController.apply_code(code=self.coupon.code)
 
             # Check that the coupon has been applied
             self.assertEqual(order.amount_total, 90.0, "The coupon is not applied.")
 
             # Apply the coupon again
-            result = WebsiteSaleController.pricelist_apply(promo=self.coupon.code)
+            result = WebsiteSaleController.apply_code(code=self.coupon.code)
             Cart().cart()
 
             # Check that the coupon stay applied
@@ -507,7 +507,7 @@ class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
                 return_value={"error": "Reward error"},
             ),
         ):
-            result = WebsiteSale().pricelist_apply(promo=self.coupon.code)
+            result = WebsiteSale().apply_code(code=self.coupon.code)
 
         self.assertEqual(result, {"success": False, "message": "Reward error"})
         self.assertEqual(order.amount_total, 100.0, "The coupon shouldn't be applied.")

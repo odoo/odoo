@@ -783,7 +783,7 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
         order.action_confirm()
         with self.mock_request(user=self.user_portal):
             order_history = self.WebsiteSaleCartController.cart_history()
-        history_lines = self.env["sale.order.line"].concat(
-            *(group["lines"] for group in order_history["order_history"])
-        )
-        self.assertEqual(history_lines, order.order_line)
+        history_line_ids = [
+            line["id"] for group in order_history["order_history"] for line in group["lines"]
+        ]
+        self.assertEqual(history_line_ids, order.order_line.ids)

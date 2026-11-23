@@ -68,6 +68,7 @@ class Delivery(WebsiteSale):
         :rtype: dict
         """
         result = {
+            **self._get_express_checkout_amounts(order),
             "success": True,
             "is_free_delivery": not bool(order.amount_delivery),
             "compute_price_after_delivery": order.carrier_id.invoice_policy == "real",

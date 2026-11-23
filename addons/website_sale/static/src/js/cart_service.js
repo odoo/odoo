@@ -50,8 +50,10 @@ const AUTOCLOSE_NOTIFICATION_DELAY = 4000;
  *      of the cart page: callers displaying the cart must reload it themselves.
  *
  * The service also exposes a {@link bus} on which the following events are triggered:
- *    - `cart_amount_changed`: triggered after a cart line is updated, with the new
- *      `[amount, minorAmount]` of the order as payload (e.g. used by the express checkout).
+ *    - `cart_amount_changed`: triggered after a product is added, a cart line is updated, a code
+ *      is applied or the delivery method is changed, with the new `[amount, minorAmount]` of the
+ *      order as payload (e.g. used by the express checkout and the delivery methods of the
+ *      checkout page).
  *
  * Override this class to implement additional checks or provide relevant information when
  * adding a product to the cart, or to extend the cart state.
@@ -674,6 +676,7 @@ export class CartService {
             );
             this._renderCartSummary(data);
         }
+        this.bus.trigger("cart_amount_changed", [data.amount, data.minor_amount]);
         return data.quantity;
     }
 
@@ -725,9 +728,11 @@ export class CartService {
      * @returns {void}
      */
     _renderCartSummary(data) {
+        const cartSummarySelector = ".o_wsale_shorter_cart_summary";
+        this.interactions.stopInteractions(document.querySelector(cartSummarySelector));
         wSaleUtils.updateCartSummary(data);
-        const cartTotals = document.getElementById("cart_totals");
-        this.interactions.startInteractions(cartTotals);
+        // Start the interactions of the whole summary, totals, express checkout etc.
+        this.interactions.startInteractions(document.querySelector(cartSummarySelector));
     }
 
     /**

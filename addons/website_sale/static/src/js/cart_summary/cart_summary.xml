@@ -57,10 +57,28 @@
                                 class="td-product_name td-qty w-100 pt-3"
                                 name="website_sale_cart_summary_product_name"
                             >
-                                <span class="text-wrap" t-out="line.header_name"/>
+                                <span
+                                    class="text-wrap"
+                                    name="website_sale_cart_summary_header_name"
+                                    t-out="line.header_name"
+                                />
+                                <div
+                                    t-foreach="line.short_summary"
+                                    t-as="summaryLine"
+                                    t-key="summaryLine_index"
+                                    class="text-muted small"
+                                    t-out="summaryLine"
+                                />
+                                <!-- Optional pricing details set by other modules, e.g. the
+                                     rental price per period. -->
+                                <div
+                                    t-if="line.price_info"
+                                    t-out="line.price_info"
+                                    class="text-muted d-md-block small"
+                                />
                                 <p class="text-muted small mb-0" t-out="line.combination_name"/>
                                 <span
-                                    t-if="line.has_multiple_uoms"
+                                    t-if="line.uom_name"
                                     class="badge mt-1 bg-light"
                                     t-out="line.uom_name"
                                 />
