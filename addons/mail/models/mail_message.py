@@ -289,7 +289,7 @@ class MailMessage(models.Model):
     reply_to_force_new = fields.Boolean(
         'No threading for answers',
         help='If true, answers do not go in the original document discussion thread. Instead, it will check for the reply_to in tracking message-id and redirected accordingly. This has an impact on the generated message-id.')
-    message_id = fields.Char('Message-Id', help='Message unique identifier', index='btree', readonly=True, copy=False)
+    message_id = fields.Char('Message-Id', help='Message unique identifier', index='btree', readonly=True, copy=False, allow_sudo_search=True)
     reply_to = fields.Char('Reply-To', help='Reply email address. Setting the reply_to bypasses the automatic thread creation.', allow_sudo_search=True)
     mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing mail server')
     # send notification information (for resend / reschedule)
