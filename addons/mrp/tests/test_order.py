@@ -5875,3 +5875,34 @@ class TestTourMrpOrder(HttpCase):
             ('location_dest_id', '=', warehouse.pbm_loc_id.id)
         ])
         self.assertEqual(component_transfer.product_uom_qty, 2)
+
+    def test_order_by_product_favorite(self):
+        """Sorting MOs by product_id should place starred (favorite) products first."""
+        product_a, product_b = self.env['product.product'].create([
+            {'name': 'Product Alpha'},
+            {'name': 'Product Beta'},
+        ])
+        mo_a, mo_b = self.env['mrp.production'].create([
+            {'product_id': product_a.id, 'product_qty': 1.0},
+            {'product_id': product_b.id, 'product_qty': 1.0},
+        ])
+        domain = [('id', 'in', (mo_a | mo_b).ids)]
+
+        # Default alphabetical order when neither product is starred
+        self.assertEqual(
+            self.env['mrp.production'].search(domain, order='product_id asc'),
+            mo_a | mo_b,
+        )
+
+        # Starring Product Beta puts its MO first when sorting by product_id asc
+        product_b.is_favorite = True
+        self.assertEqual(
+            self.env['mrp.production'].search(domain, order='product_id asc'),
+            mo_b | mo_a,
+        )
+
+        # Sorting descending inverts the order
+        self.assertEqual(
+            self.env['mrp.production'].search(domain, order='product_id desc'),
+            mo_a | mo_b,
+        )

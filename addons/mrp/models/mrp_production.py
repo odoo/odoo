@@ -3222,3 +3222,15 @@ class MrpProduction(models.Model):
         """ remove the given references from the list of references. """
         self.ensure_one()
         self.reference_ids = [Command.unlink(stock_reference.id) for stock_reference in reference]
+
+    def _order_field_to_sql(self, alias, field_name, direction, nulls, query):
+        if field_name == 'product_id':
+            product_field = self._fields['product_id']
+            comodel, coalias = product_field.join(self, alias, query)
+            fav_direction = SQL('ASC') if direction.code == 'DESC' else SQL('DESC')
+            favorite_sql = comodel._order_field_to_sql(
+                coalias, 'is_favorite', fav_direction, SQL('NULLS LAST'), query
+            )
+            default_sql = super()._order_field_to_sql(alias, field_name, direction, nulls, query)
+            return SQL("%s, %s", favorite_sql, default_sql)
+        return super()._order_field_to_sql(alias, field_name, direction, nulls, query)
