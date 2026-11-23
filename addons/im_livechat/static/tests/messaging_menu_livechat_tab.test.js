@@ -38,6 +38,23 @@ test("live chat tab displays kanban action when empty", async () => {
     await expect.waitForSteps(["im_livechat.im_livechat_channel_action"]);
 });
 
+test("live chat tab opens the live chat channels in a dialog", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write([serverState.userId], {
+        group_ids: pyEnv["res.groups"]
+            .search_read([["id", "=", serverState.groupLivechatId]])
+            .map(({ id }) => id),
+    });
+    mockService("action", {
+        doAction: (action) => expect.step(`${action.xml_id} ${action.target}`),
+        loadAction: async (xmlId) => ({ xml_id: xmlId, target: "current" }),
+    });
+    await start();
+    await openMessagingMenu(MENU_ACTIVE_IDS.LIVECHAT);
+    await click("button[title='Join or leave live chat channels']:text('Channel')");
+    await expect.waitForSteps(["im_livechat.im_livechat_channel_action new"]);
+});
+
 test("live chat tab display live chat channels", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });

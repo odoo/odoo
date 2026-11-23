@@ -60,6 +60,18 @@ const messagingMenuModelPatch = {
                               ]
                             : []),
                     ],
+                    actions:
+                        this.store.has_access_livechat && this.store.env.services.action
+                            ? [
+                                  {
+                                      id: "livechat_channels",
+                                      icon: "add",
+                                      text: _t("Channel"),
+                                      title: _t("Join or leave live chat channels"),
+                                      onClick: () => this.openLivechatChannels(),
+                                  },
+                              ]
+                            : [],
                     includesChannel: (c) =>
                         c.channel_type === "livechat" &&
                         (c.self_member_id?.is_pinned ||
@@ -69,6 +81,11 @@ const messagingMenuModelPatch = {
                 };
             },
         });
+    },
+    async openLivechatChannels() {
+        const actionService = this.store.env.services.action;
+        const action = await actionService.loadAction("im_livechat.im_livechat_channel_action");
+        actionService.doAction({ ...action, target: "new" });
     },
 };
 patch(MessagingMenu.prototype, messagingMenuModelPatch);
