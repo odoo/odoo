@@ -1,13 +1,6 @@
 div.o_field_widget.o_field_background_image {
     display: inline-block;
 
-    @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
-        height: calc(100% + var(--Card-padding-v)* 2);
-        margin-top: calc(var(--Card-padding-v)* -1);
-        margin-bottom: calc(var(--Card-padding-v)* -1);
-        margin-left: calc(var(--Card-padding-h)* -1);
-    }
-
     > img {
         display: block;
         width: 100%;
@@ -18,4 +11,13 @@ div.o_field_widget.o_field_background_image {
         top: 0;
         left: 0;
     }
+}
+
+.o_card_aside_full > div.o_field_widget.o_field_background_image {
+    @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
+        height: calc(100% + var(--Card-padding-v)* 2);
+        margin-top: calc(var(--Card-padding-v)* -1);
+        margin-bottom: calc(var(--Card-padding-v)* -1);
+        margin-left: calc(var(--Card-padding-h)* -1);
+    }  
 }
