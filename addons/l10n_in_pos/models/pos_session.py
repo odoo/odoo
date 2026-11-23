@@ -1,4 +1,5 @@
 from odoo import models
+from odoo.exceptions import LockError, UserError
 
 
 class PosSession(models.Model):
@@ -51,6 +52,32 @@ class PosSession(models.Model):
         return commands
 
     def _validate_session_accounting(self):
+        if self.company_id.country_code == 'IN':
+            # Account for individual orders before cash differences are calculated.
+            # This method is shared by manual, automatic and periodic closing.
+            try:
+                # Other transactions may still reference the session meanwhile, e.g. the
+                # payments of the orders invoiced by the cron or of the synced orders.
+                self.lock_for_update(allow_referencing=True)
+            except LockError:
+                raise UserError(self.env._('This session is being updated by another process. Please try again in a few minutes.')) from None
+            orders = self.order_ids.filtered_domain(
+                self.env['pos.order']._l10n_in_get_b2c_orders_to_invoice_domain(),
+            ).sorted('id')
+            if busy_orders := orders - orders.try_lock_for_update():
+                raise UserError(self.env._(
+                    'The session cannot be closed yet because the following orders are being invoiced by another process, such as the scheduled action. Please try again in a few minutes.\n%s',
+                    '\n'.join(busy_orders.mapped('name')),
+                ))
+            failed_orders = []
+            for order in orders:
+                if error := order._l10n_in_try_generate_b2c_invoice():
+                    failed_orders.append(f'{order.name} ({order.l10n_in_b2c_invoice_number}): {error}')
+            if failed_orders:
+                raise UserError(self.env._(
+                    'The session cannot be closed because the invoice of the following orders could not be created:\n%s',
+                    '\n'.join(failed_orders),
+                ))
         super()._validate_session_accounting()
         gst_sessions = self.filtered(
             lambda session: session.company_id.l10n_in_gst_registration_type

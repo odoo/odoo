@@ -10,6 +10,13 @@
                     <span>Please note that the kiosk for INR currency only works with Razorpay terminal</span>
                 </div>
             </xpath>
+            <xpath expr="//setting[@id='pos_download_invoice']" position="after">
+                <setting id="pos_l10n_in_b2c_invoice_prefix" string="B2C Invoice Sequence" invisible="country_code != 'IN'"
+                         help="Number and invoice each paid B2C order individually. Orders invoiced on request (B2B) keep the regular invoice numbers.">
+                    <label for="pos_l10n_in_b2c_invoice_prefix" string="Prefix"/>
+                    <field name="pos_l10n_in_b2c_invoice_prefix" class="oe_inline ps-2" placeholder="P"/>
+                </setting>
+            </xpath>
         </field>
     </record>
 </odoo>

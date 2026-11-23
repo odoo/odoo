@@ -7,6 +7,35 @@ patch(PosOrder.prototype, {
     get isInCompany() {
         return this.company.country_id?.code === "IN";
     },
+    /**
+     * Whether the order is invoiced with its B2C invoice, which is replaced when the
+     * customer asks for an invoice on their name (not once the order has refunds).
+     * Keep in sync with _is_l10n_in_reinvoice_needed.
+     */
+    get isL10nInB2CInvoiced() {
+        return Boolean(
+            this.isL10nInB2COrder &&
+                !this.isRefund &&
+                this.l10n_in_b2c_invoice_number &&
+                this.is_singly_invoiced &&
+                !this.lines.some((line) => line.refund_orderline_ids?.length)
+        );
+    },
+    /**
+     * Indian orders not invoiced on request (B2C) and their refunds get a B2C invoice
+     * number. Keep in sync with _is_l10n_in_b2c_order.
+     */
+    get isL10nInB2COrder() {
+        if (!this.isInCompany || this.isToInvoice()) {
+            return false;
+        }
+        const refundedOrder = this.refunded_order_id;
+        // A refund follows its order, which is invoiced on request once re-invoiced.
+        return (
+            !refundedOrder ||
+            Boolean(refundedOrder.l10n_in_b2c_invoice_number && refundedOrder.isL10nInB2COrder)
+        );
+    },
     _prepareL10nInHsnSummary() {
         const company = this.company;
         const orderLines = this.lines;
