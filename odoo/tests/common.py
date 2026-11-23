@@ -82,7 +82,8 @@ from odoo.tools.safe_eval import safe_whitelist
 from odoo.tools.xml_utils import _validate_xml
 
 import odoo.addons.base
-from . import case, test_cursor
+from . import case, result, test_cursor
+from .. import sql_db
 
 if typing.TYPE_CHECKING:
     from collections.abc import Iterable
@@ -677,6 +678,22 @@ class BaseCase(case.TestCase):
 
     def cursor(self):
         return self.registry.cursor()
+
+    @contextmanager
+    def collect_stats(self, name):
+        report = self.registry._assertion_report
+        if name is None or not report or not result.stats_logger.isEnabledFor(logging.DEBUG):
+            yield
+            return
+        time_start = real_time()
+        queries_start = sql_db.sql_counter
+        try:
+            yield
+        finally:
+            report.sub_stats[f'{result.test_key(self.id())}.{name}'] += result.Stat(
+                time=real_time() - time_start,
+                queries=sql_db.sql_counter - queries_start,
+            )
 
     @classmethod
     @contextmanager
@@ -2974,7 +2991,7 @@ class HttpCase(TransactionCase):
                 ],
             }
 
-    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, success_signal=DEFAULT_SUCCESS_SIGNAL, debug=False, cpu_throttling=None, **kw):
+    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, success_signal=DEFAULT_SUCCESS_SIGNAL, debug=False, cpu_throttling=None, stat_name='browser_js', **kw):
         """ Test JavaScript code running in the browser.
 
         To signal success test do: `console.log()` with the expected `success_signal`. Default is "test successful"
@@ -2995,6 +3012,7 @@ class HttpCase(TransactionCase):
         :param bool debug: automatically open a fullscreen Chrome window with opened devtools and a debugger breakpoint set at the start of the tour.
             The tour is ran with the `debug=assets` query parameter. When an error is thrown, the debugger stops on the exception.
         :param int cpu_throttling: CPU throttling rate as a slowdown factor (1 is no throttle, 2 is 2x slowdown, etc)
+        :param string stat_name: `collect_stats` leaf name for this call
         """
         if not self.env.registry.loaded:
             self._logger.warning('HttpCase test should be in post_install only')
@@ -3012,7 +3030,7 @@ class HttpCase(TransactionCase):
             self._logger.warning('watch mode is only suitable for local testing')
 
         browser = ChromeBrowser(self, headless=not watch, success_signal=success_signal, debug=debug)
-        with self.allow_requests(browser=browser), contextlib.ExitStack() as atexit:
+        with self.collect_stats(stat_name), self.allow_requests(browser=browser), contextlib.ExitStack() as atexit:
             # Flush and clear the current transaction.  This is useful in case
             # we make requests to the server, as these requests are made with
             # test cursors, which uses different caches than this transaction.
@@ -3101,7 +3119,10 @@ class HttpCase(TransactionCase):
         with patch.object(Users, 'tour_enabled', False),\
                 patch.object(Users, '_post_model_setup__', _post_model_setup__),\
                 patch.object(Users, '_compute_tour_enabled', lambda _: None):
-            self.browser_js(url_path=url_path, code=code, ready=ready, timeout=timeout, success_signal="tour succeeded", **kwargs)
+            self.browser_js(
+                url_path=url_path, code=code, ready=ready, timeout=timeout, success_signal="tour succeeded",
+                stat_name=f'start_tour.{tour_name}', **kwargs,
+            )
 
     def profile(self, **kwargs):
         """
