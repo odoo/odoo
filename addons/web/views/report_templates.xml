@@ -570,17 +570,23 @@
         <t t-set="customized_address_layout">
             <table class="o_ignore_layout_styling table table-borderless mb-0">
                 <tbody>
-                    <tr>
-                        <td class="p-0">
+                    <tr t-if="address or not information_block">
+                        <td t-if="address" class="p-0">
                             <t t-call="web.address_layout" custom_layout_address="True"/>
                         </td>
                         <td t-if="not information_block" t-attf-class="align-bottom p-0 {{'ps-2' if address else ''}}">
-                            <h2 class="mb-3 text-nowrap text-end" t-out="layout_document_title"/>
+                            <h2
+                                t-attf-class="mb-3 text-nowrap {{'text-end' if address else ''}}"
+                                t-out="layout_document_title"
+                            />
                         </td>
                     </tr>
                     <tr t-if="information_block">
                         <td colspan="2" class="align-bottom p-0">
-                            <h2 class="text-nowrap text-end" t-out="layout_document_title"/>
+                            <h2
+                                t-attf-class="text-nowrap {{'text-end' if address else ''}}"
+                                t-out="layout_document_title"
+                            />
                         </td>
                     </tr>
                 </tbody>
