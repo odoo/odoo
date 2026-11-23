@@ -13,7 +13,7 @@ from odoo.tools.misc import SENTINEL, Sentinel, unquote
 
 from .commands import Command
 from .domains import Domain
-from .fields import IR_MODELS, Field, _logger, determine
+from .fields import IR_MODELS, Field, _logger
 from .fields_reference import Many2oneReference
 from .identifiers import NewId
 from .models import BaseModel
@@ -1437,7 +1437,7 @@ class Many2many(_RelationalMulti):
             # Check if we have a custom init function
             if self.init_storage:
                 _logger.debug("Table '%s': call %s for column %s", model._table, self.init_storage, self.name)
-                to_compute = determine(self.init_storage, model)
+                to_compute = self.determine__init_storage(model)
             else:
                 to_compute = True
             # Mark computed fields to recompute

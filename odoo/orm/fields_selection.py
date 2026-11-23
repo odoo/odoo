@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from odoo.tools.misc import SENTINEL, Sentinel, merge_sequences
 
-from .fields import Field, determine, resolve_mro
+from .fields import Field, _resolve_field_method, resolve_mro
 from .utils import RegistrySetupError, setup_warning
 
 if typing.TYPE_CHECKING:
@@ -83,6 +83,9 @@ class Selection(Field[str | typing.Literal[False], str]):
             field = self.related_field
             self.selection = lambda model: field._description_selection(model.env)
             self._selection = None
+
+    # None when selection is a list of pairs
+    determine__selection = _resolve_field_method('selection', values_allowed=True)
 
     def _get_attrs(self, model_class, name):
         attrs = super()._get_attrs(model_class, name)
@@ -208,13 +211,12 @@ class Selection(Field[str | typing.Literal[False], str]):
         """ return the selection list (pairs (value, label)); labels are
             translated according to context language
         """
-        selection = self.selection
-        if isinstance(selection, str) or callable(selection):
-            selection = determine(selection, env[self.model_name])
+        if self.determine__selection:
+            selection = self.determine__selection(env[self.model_name])
             return tuple((str(key), str(label)) for key, label in selection)
 
         translations = dict(env['ir.model.fields'].get_field_selection(self.model_name, self.name))
-        return tuple((key, translations.get(key, label)) for key, label in selection)
+        return tuple((key, translations.get(key, label)) for key, label in self.selection)
 
     def _default_group_expand(self, records, groups, domain):
         # return a group per selection option, in definition order
@@ -222,9 +224,10 @@ class Selection(Field[str | typing.Literal[False], str]):
 
     def get_values(self, env):
         """Return a list of the possible values."""
-        selection = self.selection
-        if isinstance(selection, str) or callable(selection):
-            selection = determine(selection, env[self.model_name].with_context(lang=None))
+        if self.determine__selection:
+            selection = self.determine__selection(env[self.model_name].with_context(lang=None))
+        else:
+            selection = self.selection
         return [str(value) for value, _ in selection]
 
     def convert_to_column(self, value, record, values=None, validate=True) -> str | None:
