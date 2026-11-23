@@ -1,6 +1,7 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { queryOne, waitFor } from "@odoo/hoot-dom";
+import { animationFrame, queryOne } from "@odoo/hoot-dom";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
+import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { isHeaderBgBlurAvailable } from "@website/builder/plugins/options/header/header_template_option";
 import {
     defineWebsiteModels,
@@ -78,27 +79,55 @@ describe("header blur option", () => {
 });
 
 describe("header width option", () => {
-    test("width preview is disabled on incompatible templates", async () => {
-        onRpc("/website/theme_customize_data_get", async () => [
-            "website.header_navbar_pills_style",
-            "website.template_header_boxed",
-        ]);
-        await setupWebsiteBuilder("", { headerContent });
+    test("the width is previewed and applied on every element printing it", async () => {
+        onRpc("/website/theme_customize_data", async (request) => {
+            const { params } = await request.json();
+            expect.step(`enable ${params.enable}`);
+        });
+        // Nested width elements (as in the Rounded Box layout), and the mobile
+        // header's container, which doesn't follow the option.
+        const { getEditor } = await setupWebsiteBuilder("", {
+            headerContent: `
+                <header id="top" data-anchor="true" data-name="Header">
+                    <div class="container o_header_content_width test-outer">
+                        <nav class="navbar">
+                            <div id="o_main_nav" class="container o_header_content_width o_main_nav"> content </div>
+                        </nav>
+                    </div>
+                    <nav class="o_header_mobile"><div class="container test-mobile"> mobile </div></nav>
+                </header>`,
+        });
         await contains(":iframe #wrapwrap > header").click();
-        await waitFor("[data-label='Content Width']");
-        expect("[data-label='Content Width'] [data-action-id='websiteConfig']").toHaveCount(3);
-        expect(
-            "[data-label='Content Width'] [data-action-id='previewableWebsiteConfig']"
-        ).toHaveCount(0);
-    });
+        await contains("[data-label='Content Width'] button[title='Small']").hover();
+        expect(":iframe .test-outer").toHaveClass("o_container_small");
+        expect(":iframe #o_main_nav").toHaveClass("o_container_small");
+        expect(":iframe #o_main_nav").not.toHaveClass("container");
+        expect(":iframe .test-mobile").toHaveClass("container");
+        expect(":iframe .test-mobile").not.toHaveClass("o_container_small");
 
-    test("width preview is enabled by default", async () => {
-        await setupWebsiteBuilder("", { headerContent });
-        await contains(":iframe #wrapwrap > header").click();
-        await waitFor("[data-label='Content Width']");
-        expect(
-            "[data-label='Content Width'] [data-action-id='previewableWebsiteConfig']"
-        ).toHaveCount(3);
-        expect("[data-label='Content Width'] [data-action-id='websiteConfig']").toHaveCount(0);
+        await contains("[data-label='Content Width'] button[title='Small']").click();
+        await contains("[data-label='Content Width'] button[title='Full']").click();
+        expect(":iframe .test-outer").toHaveClass("container-fluid");
+        expect(":iframe #o_main_nav").toHaveClass("container-fluid");
+        expect(":iframe .test-outer").not.toHaveClass("container");
+        expect("[data-label='Content Width'] button[title='Full']").toHaveClass("active");
+
+        // A click stages one operation per marked element: undo reverts them
+        // all, the views to save included.
+        undo(getEditor());
+        await animationFrame();
+        expect(":iframe .test-outer").toHaveClass("o_container_small");
+        expect(":iframe #o_main_nav").toHaveClass("o_container_small");
+        expect(":iframe #o_main_nav").not.toHaveClass("container-fluid");
+        expect("[data-label='Content Width'] button[title='Small']").toHaveClass("active");
+
+        redo(getEditor());
+        await animationFrame();
+        expect(":iframe .test-outer").toHaveClass("container-fluid");
+        expect(":iframe #o_main_nav").toHaveClass("container-fluid");
+
+        undo(getEditor());
+        await contains(".o_hb_snippets_top_actions [data-action='save']").click();
+        expect.verifySteps(["enable website.header_width_small"]);
     });
 });
