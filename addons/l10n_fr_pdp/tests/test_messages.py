@@ -1265,6 +1265,19 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
         self.assertTrue(bool(move.ubl_cii_xml_id))
         self.assertTrue(move.pdp_can_send_response)
 
+    def test_receive_success_pdp_standalone_cii_self_billed(self):
+        filename = 'l10n_fr_pdp/tests/test_files/export/facturx/invoice/fr/test_invoice_profile_id_services.xml'
+        with file_open(filename, 'rb') as invoice:
+            content = invoice.read().replace(b'<ram:TypeCode>380</ram:TypeCode>', b'<ram:TypeCode>389</ram:TypeCode>', 1)
+
+        move = self._import_invoice_from_pdp('self_billed_invoice', FAKE_UUID[1], file_content=content)
+
+        self.assertRecordValues(move, [{
+            'move_type': 'out_invoice',
+            'journal_id': self.company_data['default_journal_sale'].id,
+            'partner_id': self.partner_a.id,
+        }])
+
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestPdpMessageFacturX(TestPdpMessage):

@@ -219,7 +219,11 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         if file_data['xml_tree'] is None:
             file_data['raw'] = REMOVE_EMBEDDED_DOCUMENT_BINARY_OBJECT_RE.sub(b'', file_data['raw'])
             file_data['xml_tree'] = self.env['account.move']._get_xml_tree(file_data)
-        return file_data['xml_tree'].findtext('.//{*}InvoiceTypeCode') or file_data['xml_tree'].findtext('.//{*}CreditNoteTypeCode')
+        return (
+            file_data['xml_tree'].findtext('.//{*}InvoiceTypeCode')
+            or file_data['xml_tree'].findtext('.//{*}CreditNoteTypeCode')
+            or file_data['xml_tree'].findtext('./{*}ExchangedDocument/{*}TypeCode')
+        )
 
     def _peppol_import_invoice(self, attachment, peppol_state, uuid, journal=None):
         """Save new documents in an accounting journal, when one is specified on the company.
