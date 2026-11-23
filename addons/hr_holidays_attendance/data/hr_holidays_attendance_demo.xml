@@ -9,7 +9,7 @@
         <!-- Monica was sick last Friday, but her morning was scanned at the kiosk: an attendance on time off, to review -->
         <record id="hr_leave_light_sick" model="hr.leave">
             <field name="name">Sick day</field>
-            <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_sick_leave"/>
+            <field name="work_entry_type_id" ref="hr_work_entry.us_work_entry_type_sick_leave"/>
             <field name="request_date_from" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=4)).date()"/>
             <field name="request_date_to" eval="(datetime.now(pytz.timezone('Europe/Brussels')) + relativedelta(days=-13, weekday=0) + relativedelta(days=4)).date()"/>
             <field name="employee_id" ref="hr.employee_light"/>
