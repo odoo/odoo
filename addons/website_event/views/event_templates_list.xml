@@ -99,7 +99,7 @@
             <a href="#" role="button" class="btn dropdown-toggle" data-bs-toggle="dropdown">
                 <i class="fa fa-calendar"/>
                 <t t-if="current_date" t-out="current_date"/>
-                <t t-else="">Upcoming Events</t>
+                <t t-else="">Scheduled Events</t>
             </a>
             <div class="dropdown-menu">
                 <t t-foreach="dates" t-as="date">
