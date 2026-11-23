@@ -1,0 +1,56 @@
+<odoo>
+<template id="payment_history_template" name="Historique des Paiements">
+    <t t-call="website.layout">
+        <div class="container mt-5">
+            <h2>🧾 Historique de vos paiements</h2>
+            <table class="table table-bordered mt-3 table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Référence</th>
+                        <th>Date</th>
+                        <th>Montant</th>
+                        <th>Statut Paiement</th>
+                        <th>Facture</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="sale_orders" t-as="order">
+                        <tr>
+                            <td><t t-esc="order.name"/></td>
+                            <td><t t-esc="order.date_order.strftime('%d/%m/%Y')"/></td>
+                            <td><t t-esc="order.amount_total"/> <t t-esc="order.currency_id.name"/></td>
+                            <td>
+                                <t t-if="order.cinetpay_status == 'ACCEPTED'">✅ Accepté</t>
+                                <t t-elif="order.cinetpay_status == 'REFUSED'">❌ Refusé</t>
+                                <t t-elif="order.cinetpay_status == 'CANCELLED'">⚠️ Annulé</t>
+                                <t t-else="">🕒 En attente</t>
+                            </td>
+                            <td>
+                                <t t-if="order.invoice_ids">
+                                    <a t-att-href="'/my/invoices/%s?report_type=pdf' % order.invoice_ids[0].id" target="_blank" class="btn btn-sm btn-primary">
+                                        Télécharger
+                                    </a>
+                                </t>
+                                <t t-else="">
+                                    N/A
+                                </t>
+                            </td>
+                            <td>
+                                <t t-if="order.cinetpay_status in ['REFUSED', 'CANCELLED']">
+                                    <a t-att-href="'/payment/retry/%d' % order.id" class="btn btn-sm btn-warning">
+                                        🔄 Relancer paiement
+                                    </a>
+                                </t>
+                                <t t-else="">
+                                    ✅ OK
+                                </t>
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+        </div>
+    </t>
+</template>
+</odoo>

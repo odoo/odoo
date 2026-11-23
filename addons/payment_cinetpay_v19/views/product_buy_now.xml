@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <!-- Template pour Odoo 19 -->
+  <template id="product_buy_now" inherit_id="website_sale.cta_wrapper" name="Buy Now Button">
+    <xpath expr="//a[@id='add_to_cart']" position="after">
+      <a t-attf-href="/shop/buy_now/{{ request.session.get('sale_order_id') }}" class="btn btn-success ms-2" style="z-index:10; position:relative;">
+        <i class="fa fa-bolt me-2"/>
+        Acheter maintenant
+      </a>
+    </xpath>
+  </template>
+</odoo>
