@@ -345,9 +345,11 @@ $o-navbar-nav-pills-link-padding-x: if(o-website-value('header-links-style') == 
 $o-navbar-nav-pills-link-border-radius: if(o-website-value('header-links-style') == 'pills', 10rem, null) !default;
 
 // Borders
-$border-radius-sm: .3rem !default;
-$border-radius: .4rem !default;
-$border-radius-lg: .6rem !default;
+$border-radius: o-website-value('border-radius') or .4rem !default;
+// [grep: border-radius-multipliers] The .75 and 1.5 multipliers are mirrored
+// in theme_roundness_option.js.
+$border-radius-sm: o-website-value('border-radius-sm') or (.75 * $border-radius) !default;
+$border-radius-lg: o-website-value('border-radius-lg') or (1.5 * $border-radius) !default;
 $border-radius-pill: 50rem !default; // BS Default
 
 // Accordion
@@ -396,6 +398,7 @@ $box-shadow-lg: var(--box-shadow-lg-offset-x) var(--box-shadow-lg-offset-y) var(
 
 // Cards
 $card-border-color: $border-color !default;
+$card-border-radius: o-website-value('card-border-radius') !default;
 
 // HR Separator
 $hr-border-color: $border-color !default;

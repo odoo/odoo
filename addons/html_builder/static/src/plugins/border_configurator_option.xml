@@ -21,7 +21,9 @@
         <BuilderNumberSelect inputAction="this.props.action" inputActionParam="this.radiusActionParam" unit="'px'" min="0" composable="true">
             <t t-foreach="this.borderRadiusOptions" t-as="option" t-key="option.class">
                 <BuilderSelectItem action="'setBorderRadius'" actionParam="option.class">
-                    <t t-out="option.label"/>
+                    <t t-call="html_builder.EditInThemeOptionItem" onClick="this.getOnClick(option.variable)">
+                        <t t-out="option.label"/>
+                    </t>
                 </BuilderSelectItem>
             </t>
         </BuilderNumberSelect>
