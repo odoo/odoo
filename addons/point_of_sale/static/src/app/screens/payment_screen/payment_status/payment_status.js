@@ -31,20 +31,12 @@ export class PaymentScreenStatus extends Component {
         return this.pos.formatCurrency(this.currentTip.amount);
     }
 
-    get isComplete() {
-        return this.order.hasRemainingDue && this.order.orderHasZeroRemaining;
-    }
-
-    get isIncompleteAndPositive() {
-        return !this.isComplete && this.order.remainingDue > 0;
-    }
-
     get order() {
         return this.props.order;
     }
 
     get showStatus() {
-        return Boolean(this.order.remainingDue || this.order.change);
+        return Boolean(this.order.change);
     }
 
     get amountText() {

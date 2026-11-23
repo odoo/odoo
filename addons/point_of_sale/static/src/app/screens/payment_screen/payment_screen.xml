@@ -18,6 +18,7 @@
                     selectLine.bind="this.selectPaymentLine"
                     updateSelectedPaymentline.bind="this.updateSelectedPaymentline"
                     isRefundOrder="this.isRefundOrder" />
+                <t t-call="point_of_sale.PaymentScreenFullyPaid" />
                 <div class="payment-screen-status-mobile mb-auto">
                     <PaymentScreenStatus order="this.currentOrder" />
                 </div>
@@ -58,7 +59,8 @@
                                 selectLine.bind="this.selectPaymentLine"
                                 updateSelectedPaymentline.bind="this.updateSelectedPaymentline"
                                 isRefundOrder="this.isRefundOrder" />
-                            <div class="payment-screen-status">
+                            <t t-call="point_of_sale.PaymentScreenFullyPaid" />
+                            <div class="payment-screen-status mt-auto">
                                 <PaymentScreenStatus order="this.currentOrder" />
                             </div>
                         </div>
@@ -69,16 +71,27 @@
     </t>
 
     <t t-name="point_of_sale.PaymentScreenDue">
-        <section class="paymentlines-container fw-bold"
+        <section class="paymentlines-container payment-due w-100 fw-bold"
             t-att-class="{
                 'paymentlines-empty': this.paymentLines.length === 0,
                 'fade-effect': this.pos.addAnimation and !this.ui.isSmall,
             }">
-            <div class="total text-center text-dark"
-                t-att-style="!this.ui.isSmall? 'font-size: 125px;' : ''" >
-                <PriceFormatter price="this.orderTotalDue" />
+            <span class="payment-due-label text-muted text-uppercase text-center" t-att-class="this.ui.isSmall ? 'fs-4' : 'fs-2'">Remaining</span>
+            <div class="remaining-amount text-center lh-1"
+                t-att-style="!this.ui.isSmall ? 'font-size: 125px;' : ''">
+                <PriceFormatter price="this.orderRemainingDue" />
             </div>
+            <span class="payment-due-total text-muted text-center" t-att-class="this.ui.isSmall ? 'fs-4' : 'fs-1'">
+                <t t-set="totalLabel" t-value="this.orderTotalLabelParts"/>
+                <t t-out="totalLabel.before"/><span class="total text-dark"><PriceFormatter price="this.orderTotalDue" /></span><t t-out="totalLabel.after"/>
+            </span>
         </section>
+    </t>
+
+    <t t-name="point_of_sale.PaymentScreenFullyPaid">
+        <div t-if="this.paymentLines.length and this.currentOrder.orderHasZeroRemaining" class="payment-fully-paid text-success text-center fw-normal fs-1">
+            Fully paid
+        </div>
     </t>
 
     <t t-name="point_of_sale.PaymentScreenValidate">

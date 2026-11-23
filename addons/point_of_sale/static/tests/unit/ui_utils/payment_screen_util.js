@@ -75,8 +75,19 @@ export async function paymentScreenAmountTotal(amount) {
     await waitFor(`.paymentlines-container .total:contains('${amount}')`);
 }
 
+/**
+ * Build a `:contains()` regex matching exactly the given amount (e.g. "0.0"
+ * matches "$ 0.00" but neither "0.05" nor "10.00").
+ * @param {String} amount
+ */
+function exactAmountRegex(amount) {
+    const [integer, decimals = ""] = String(amount).split(".");
+    const decimalPart = decimals ? `\\.${decimals}0*` : `(\\.0*)?`;
+    return `/(^|[^\\d.,-])${integer}${decimalPart}(?![\\d.,])/`;
+}
+
 export async function paymentScreenRemainingTotal(amount) {
-    await waitFor(`.payment-status-amount:contains(Remaining):contains('${amount}')`);
+    await waitFor(`.payment-due .remaining-amount:contains(${exactAmountRegex(amount)})`);
 }
 
 export function countPaymentlines() {

@@ -481,6 +481,16 @@ export class PaymentScreen extends Component {
         return this.currentOrder.paymentAmountInCurrency;
     }
 
+    get orderTotalLabelParts() {
+        const [before, after = ""] = _t("Of %s").toString().split("%s");
+        return { before, after };
+    }
+
+    get orderRemainingDue() {
+        const order = this.currentOrder;
+        return order.formatAmountInCurrency(order.remainingDue, order.orderCurrency);
+    }
+
     hasPaymentForCurrency(paymentMethod, currency) {
         return (
             this.currentOrder.orderCurrency === currency &&

@@ -54,4 +54,9 @@ patch(PaymentScreen.prototype, {
         }
         return order;
     },
+
+    get amountPerGuest() {
+        const order = this.currentOrder;
+        return order.formatAmountInCurrency(order.amountPerGuest(), order.orderCurrency);
+    },
 });

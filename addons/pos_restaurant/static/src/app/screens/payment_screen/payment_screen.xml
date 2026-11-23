@@ -3,9 +3,10 @@
 
     <t t-name="pos_restaurant.PaymentScreenDue" t-inherit="point_of_sale.PaymentScreenDue" t-inherit-mode="extension">
         <xpath expr="//section[hasclass('paymentlines-container')]" position="inside">
-            <div t-if="this.currentOrder.getCustomerCount() > 1" t-attf-class="message text-center {{this.ui.isSmall ? 'fs-2' : 'fs-1'}}" >
-                <PriceFormatter price="this.pos.formatCurrency(this.currentOrder.amountPerGuest())" /> / Guest
-                <button class="btn rounded-lg p" t-on-click="this.clickTableGuests" style="background-color: #ced4da;">
+            <div t-if="this.pos.config.module_pos_restaurant and !this.currentOrder.isRefund"
+                t-attf-class="message amount-per-guest d-flex align-items-center gap-2 text-nowrap {{this.ui.isSmall ? 'fs-4' : 'fs-1'}}">
+                <span><PriceFormatter price="this.amountPerGuest" /> / Guest</span>
+                <button class="btn rounded-lg" t-on-click="this.clickTableGuests" style="background-color: #ced4da;">
                     <span class="text-black fs-4 fw-bolder" t-out="this.currentOrder?.getCustomerCount() || 0"/>
                 </button>
             </div>
