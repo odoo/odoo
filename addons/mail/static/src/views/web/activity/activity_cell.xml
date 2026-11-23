@@ -9,7 +9,7 @@
             <div class="d-flex justify-content-between align-items-center gap-3 small">
                 <div class="o-mail-ActivityCell-deadline" t-out="this.reportingDateFormatted"/>
                 <div class="d-flex justify-content-end align-items-center">
-                    <div t-if="this.props.userAssignedIds and this.props.userAssignedIds.length > 0" class="d-flex justify-content-start align-items-center">
+                    <div t-if="this.props.userAssignedIds and this.props.userAssignedIds.length > 0" class="d-flex justify-content-start align-items-center gap-1">
                         <Avatar t-if="this.props.userAssignedIds.length > 0"
                                 resModel="'res.users'" resId="this.props.userAssignedIds[0]"
                                 displayName="''" noSpacing="true"/>
@@ -18,7 +18,7 @@
                                 displayName="''" noSpacing="true"/>
                         <t t-set="nAdditionalAssignee"
                             t-value="this.props.userAssignedIds.length - 2"/>
-                        <span t-if="nAdditionalAssignee > 0" class="ms-1">+<t t-out="nAdditionalAssignee"/></span>
+                        <span t-if="nAdditionalAssignee > 0">+<t t-out="nAdditionalAssignee"/></span>
                     </div>
                     <div t-if="this.props.roleToAssignIds and this.props.roleToAssignIds.length > 0"
                          class="d-flex align-items-center justify-content-center bg-200 text-600 rounded ms-1 flex-shrink-0"

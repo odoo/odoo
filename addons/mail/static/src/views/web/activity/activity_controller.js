@@ -93,27 +93,9 @@ export class ActivityController extends Component {
         });
     }
 
-    openActivityFormView(resId, activityTypeId) {
-        this.action.doAction(
-            {
-                type: "ir.actions.act_window",
-                res_model: "mail.activity",
-                views: [[false, "form"]],
-                view_mode: "form",
-                view_type: "form",
-                res_id: false,
-                target: "new",
-                context: {
-                    default_res_id: resId,
-                    default_res_model: this.props.resModel,
-                    default_activity_type_id: activityTypeId,
-                    dialog_size: "large",
-                },
-            },
-            {
-                onClose: () => this.model.load(this.getSearchProps()),
-            }
-        );
+    async scheduleActivityOnCell(resId, activityTypeId) {
+        await this.store.scheduleActivity(this.props.resModel, [resId], activityTypeId);
+        this.model.load(this.getSearchProps());
     }
 
     sendMailTemplate(templateID, activityTypeID) {
@@ -145,7 +127,7 @@ export class ActivityController extends Component {
             groupedActivities: this.model.activityData.grouped_activities,
             scheduleActivity: this.scheduleActivity.bind(this),
             onReloadData: () => this.model.load(this.getSearchProps()),
-            onEmptyCell: this.openActivityFormView.bind(this),
+            onEmptyCell: this.scheduleActivityOnCell.bind(this),
             onSendMailTemplate: this.sendMailTemplate.bind(this),
             openRecord: this.openRecord.bind(this),
         };

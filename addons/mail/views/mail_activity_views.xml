@@ -16,18 +16,21 @@
                             <field name="active" invisible="1"/> <!-- drives invisible on the Archived web_ribbon widget -->
                             <field name="category"/>
                             <field name="default_user_id" options="{'no_create': True}" domain="[('share', '=', False)]"
-                                   widget="many2one_avatar_user"/>
-                            <field name="default_role_id" options="{'no_quick_create': True}" domain="[('user_ids', '!=', False)]"/>
+                                   widget="many2one_avatar_user"
+                                   placeholder="Active User"/>
+                            <field name="default_role_id" options="{'no_quick_create': True}"
+                                   domain="[('user_ids', '!=', False)]"
+                                   placeholder="None"/>
                             <field name="res_model" invisible="context.get('default_res_model')"
                                 placeholder="Available everywhere"/>
-                            <field name="summary" placeholder="e.g. &quot;Discuss proposal&quot;" string="Summary"/>
+                            <field name="summary" placeholder="e.g. &quot;Discuss proposal&quot;"/>
                             <field name="icon" groups="base.group_no_one"/>
                             <field name="decoration_type" groups="base.group_no_one"/>
                             <label for="delay_count"/>
-                            <div>
-                                <field class="oe_inline pe-1 o_input_3ch" name="delay_count"/>
-                                <field class="oe_inline ps-1 pe-2" name="delay_unit"/>
-                                <field name="delay_from"/>
+                            <div class="d-flex align-items-baseline">
+                                <field class="oe_inline flex-shrink-0 pe-1 o_input_3ch" name="delay_count"/>
+                                <field class="oe_inline flex-shrink-0 ps-1 pe-2 o_input_10ch" name="delay_unit"/>
+                                <field class="flex-grow-1 min-w-0" name="delay_from"/>
                             </div>
                             <field name="kpi_provider_visibility" groups="base.group_no_one"/>
                         </group>
@@ -41,7 +44,7 @@
                         </group>
                     </group>
                     <label for="default_note" class="fw-bold" string="Note"/>
-                    <field nolabel="1" name="default_note" placeholder="e.g. &quot;Go over the offer and discuss details&quot;" class="oe-bordered-editor"/>
+                    <field nolabel="1" name="default_note" placeholder="e.g. &quot;Go over the offer and discuss details&quot;" class="oe-bordered-editor o_activity_type_note"/>
                 </sheet>
             </form>
         </field>
@@ -66,7 +69,7 @@
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="summary"/>
-                <field name="delay_label" string="Planned in" class="text-end"/>
+                <field name="delay_label" string="Planned in"/>
                 <field name="delay_from" string="Type"/>
                 <field name="res_model" column_invisible="context.get('default_res_model')"/>
                 <field name="icon" groups="base.group_no_one"/>
@@ -93,7 +96,7 @@
                         </div>
                         <field t-if="record.res_model.value" name="res_model"/>
                         <div t-if="record.summary.raw_value">
-                            Default Summary: <field name="summary"/>
+                            Summary: <field name="summary"/>
                         </div>
                         <footer>
                             <field class="ms-auto" name="default_user_id"
