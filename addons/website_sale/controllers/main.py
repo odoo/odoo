@@ -709,9 +709,24 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 nb_filter_sections += 1
         if category:
             values["main_object"] = category
+<<<<<<< aa7c478c2f7757700946e6d8c6123a45eeda903e
         values["structured_data"] = products.with_context(
             shop_category_id=category.id if category else False
         )._render_jsonld()
+||||||| ef762809f722e3ce4343e561f41d12a727370185
+            values["markup_data_json"] = json_scriptsafe.dumps(
+                [
+                    website._prepare_ecommerce_store_markup_data(),
+                    self._prepare_breadcrumb_markup_data(website.get_base_url(), category),
+                ],
+                indent=2,
+            )
+=======
+            values["markup_data_json"] = self._wrap_jsonld_graph([
+                website._prepare_ecommerce_store_markup_data(),
+                self._prepare_breadcrumb_markup_data(website.get_base_url(), category),
+            ])
+>>>>>>> de867d743e4490e3354bb9119c91c22e9dcc9005
         values.update(self._get_additional_shop_values(values, **post))
 
         values["default_expand_filter_sections"] = nb_filter_sections < MAX_EXPANDED_FILTER_SECTIONS
@@ -1068,7 +1083,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "product": product,
             "product_variant": self.env["product.product"].browse(combination_info["product_id"]),
             "view_track": view_track,
+<<<<<<< aa7c478c2f7757700946e6d8c6123a45eeda903e
             "structured_data": structured_data,
+||||||| ef762809f722e3ce4343e561f41d12a727370185
+            "markup_data_json": json_scriptsafe.dumps(markup_data, indent=2),
+=======
+            "markup_data_json": self._wrap_jsonld_graph(markup_data),
+>>>>>>> de867d743e4490e3354bb9119c91c22e9dcc9005
             "shop_path": SHOP_PATH,
             "user_email": self.env.user.email_normalized
             or request.session.get("stock_notification_email", ""),
@@ -2162,6 +2183,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :return: A dict mapping attribute IDs to lists of attribute value IDs.
         :rtype: dict(int, list(int))
         """
+<<<<<<< aa7c478c2f7757700946e6d8c6123a45eeda903e
         unslug = self.env["ir.http"]._unslug
         # For each attribute value query param, unslug its key (attribute) and value (attribute
         # values).
@@ -2193,3 +2215,34 @@ class WebsiteSale(payment_portal.PaymentPortal):
             query[slug(pa)] = ",".join([slug(pav) for pav in pavs])
         url = urlparse(request.httprequest.url)
         return url._replace(query=urlencode(query, doseq=True)).geturl()
+||||||| ef762809f722e3ce4343e561f41d12a727370185
+        attribute_value_dict = {}
+        for value in attribute_values:
+            pair = value.split("-")
+            if len(pair) < 2 or not pair[0].isdigit():
+                continue
+            value_ids = [value_id for value_id in pair[1].split(",") if value_id.isdigit()]
+            if value_ids:
+                attribute_value_dict[int(pair[0])] = [int(value_id) for value_id in value_ids]
+        return attribute_value_dict
+=======
+        attribute_value_dict = {}
+        for value in attribute_values:
+            pair = value.split("-")
+            if len(pair) < 2 or not pair[0].isdigit():
+                continue
+            value_ids = [value_id for value_id in pair[1].split(",") if value_id.isdigit()]
+            if value_ids:
+                attribute_value_dict[int(pair[0])] = [int(value_id) for value_id in value_ids]
+        return attribute_value_dict
+
+    @staticmethod
+    def _wrap_jsonld_graph(markup_data):
+        return json_scriptsafe.dumps(
+            {
+                "@context": "https://schema.org",
+                "@graph": markup_data,
+            },
+            indent=2,
+        )
+>>>>>>> de867d743e4490e3354bb9119c91c22e9dcc9005
