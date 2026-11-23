@@ -3,6 +3,7 @@
 import json
 
 from odoo.addons.hr.tests.common import TestHrCommon
+from odoo.tests.common import new_test_user
 from odoo.tools.misc import file_open
 
 
@@ -138,6 +139,77 @@ class TestRecruitmentProcess(TestHrCommon):
 
         self.assertEqual(applicant2.partner_name, 'John Doe')
         self.assertFalse(applicant2.email_from)
+
+    def test_application_forwarded_by_internal_contact(self):
+        """ Applications forwarded by an internal contact are not linked to it. """
+        user = new_test_user(self.env, login='forwarder', email='forwarder@company.com')
+        employee, former_employee = self.env['hr.employee'].create([
+            {'name': 'Employee', 'work_email': 'employee@company.com'},
+            {'name': 'Former Employee', 'work_email': 'former.employee@company.com', 'active': False},
+        ])
+        self.env.company.email = 'info@company.com'
+        shared_mailbox = self.env['res.partner'].create({
+            'name': 'HR Mailbox',
+            'email': 'hr@company.com',
+            'parent_id': self.env.company.partner_id.id,
+        })
+        candidate = new_test_user(self.env, login='candidate', groups='base.group_portal', email='candidate@example.com')
+        for author, is_forwarded in [
+            (user.partner_id, True),
+            (employee.work_contact_id, True),
+            (former_employee.work_contact_id, True),
+            (self.env.company.partner_id, True),
+            (shared_mailbox, True),
+            (candidate.partner_id, False),
+        ]:
+            with self.subTest(author=author.name):
+                applicant = self.env['hr.applicant'].browse(self.env['mail.thread'].message_process('hr.applicant', f"""\
+MIME-Version: 1.0
+Message-ID: <application-{author.id}@example.com>
+From: {author.email_formatted}
+To: jobs@example.com
+Subject: Fwd: Application of John Doe
+Content-Type: text/plain; charset="UTF-8"
+
+Please find attached the CV of John Doe"""))
+                if is_forwarded:
+                    self.assertFalse(applicant.partner_id)
+                    self.assertFalse(applicant.email_from)
+                else:
+                    self.assertEqual(applicant.partner_id, author)
+
+    def test_applicant_does_not_update_internal_contact(self):
+        """ An applicant never updates an internal contact, even edited by a recruiter. """
+        recruiter = new_test_user(self.env, login='recruiter', groups='hr_recruitment.group_hr_recruitment_user')
+        employee = self.env['hr.employee'].create({'name': 'Employee', 'work_email': 'employee@company.com'})
+        work_contact = employee.work_contact_id
+        applicant = self.env['hr.applicant'].create({
+            'partner_name': 'Employee',
+            'partner_id': work_contact.id,
+        }).with_user(recruiter)
+
+        applicant.write({'partner_name': 'John Doe', 'partner_phone': '+32 470 00 00 00'})
+        self.assertEqual(applicant.partner_id, work_contact)
+        self.assertRecordValues(work_contact, [{'name': 'Employee', 'email': 'employee@company.com', 'phone': False}])
+
+        applicant.email_from = 'john.doe@example.com'
+        self.assertNotEqual(applicant.partner_id, work_contact)
+        self.assertRecordValues(applicant.partner_id, [{'name': 'John Doe', 'email': 'john.doe@example.com'}])
+        self.assertEqual(work_contact.email, 'employee@company.com')
+
+    def test_hired_applicant_updates_its_employee_contact(self):
+        """ A hired applicant keeps updating its employee's contact. """
+        applicant = self.env['hr.applicant'].create({
+            'partner_name': 'John Doe',
+            'email_from': 'john.doe@example.com',
+        })
+        partner = applicant.partner_id
+        applicant.create_employee_from_applicant()
+        self.assertEqual(applicant.employee_id.work_contact_id, partner)
+
+        applicant.write({'partner_name': 'John Smith', 'email_from': 'john.smith@example.com'})
+        self.assertEqual(applicant.partner_id, partner)
+        self.assertRecordValues(partner, [{'name': 'John Smith', 'email': 'john.smith@example.com'}])
 
     def test_email_application_multi_company(self):
         """ Make sure that receiving emails for jobs in companies different from self.env.company work. """
