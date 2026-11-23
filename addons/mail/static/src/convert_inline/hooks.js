@@ -3,7 +3,6 @@ import { isBrowserSafari } from "@web/core/browser/feature_detection";
 import { renderToElement, renderToFragment } from "@web/core/utils/render";
 import { getCSSRules, toInline } from "@mail/views/web/fields/html_mail_field/convert_inline";
 import { loadIframeBundles, loadIframe } from "@mail/convert_inline/iframe_utils";
-import { useService } from "@web/core/utils/hooks";
 
 export const EMAIL_DESKTOP_DIMENSIONS = {
     width: 1320,
@@ -19,16 +18,11 @@ export function useEmailHtmlConverter({ bundles = [] }) {
     let reference, referenceDocument; // Element and Document in which the conversion takes place.
     let currentConfig = {};
     const scope = useScope();
-    const convertInlineIframeService = useService("convert_inline_iframe");
     const referenceIframe = renderToElement("mail.EmailHtmlConverterReferenceIframe", {
         isBrowserSafari,
     });
-    const setupIframe = async () => {
-        await convertInlineIframeService.readyPromise;
-        if (scope.isDestroyed()) {
-            return;
-        }
-        convertInlineIframeService.add(referenceIframe);
+    const setupIframe = () => {
+        document.body.append(referenceIframe);
         const assetsPromise = loadIframeBundles(referenceIframe, bundles);
         const contentPromise = loadIframe(referenceIframe, () => {
             referenceDocument = referenceIframe.contentDocument;
