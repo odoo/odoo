@@ -6,6 +6,7 @@ import {
     hasPreview,
     revertPreview,
     useBuilderComponent,
+    useBuilderControl,
     useDependencyDefinition,
     useDomState,
     useOperationWithReload,
@@ -13,6 +14,8 @@ import {
 } from "../utils";
 import { BuilderComponent } from "./builder_component";
 import { SelectMany2X } from "./select_many2x";
+
+export const toIdName = ({ id, display_name }) => ({ id, name: display_name });
 
 export class BuilderMany2One extends Component {
     static components = { BuilderComponent, SelectMany2X };
@@ -81,6 +84,23 @@ export class BuilderMany2One extends Component {
                 getValue: () => getValue(this.env.getEditingElement()),
             });
         }
+
+        useBuilderControl({
+            kind: "record",
+            getModel: () => this.props.model,
+            getValue: () => this.domState.selected?.id && toIdName(this.domState.selected),
+            commit: async (id) => {
+                const fields = ["display_name", "name"];
+                const records = id
+                    ? await this.cachedModel.ormRead(this.props.model, [id], fields)
+                    : [];
+                if (id && !records.length) {
+                    throw new Error(`No ${this.props.model} record has the id ${id}`);
+                }
+                this.select(records[0]);
+            },
+            reload: !!reload,
+        });
 
         if (this.props.createAction) {
             this.createAction = this.env.editor.shared.builderActions.getAction(

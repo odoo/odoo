@@ -5,10 +5,12 @@ import {
     basicContainerBuilderComponentProps,
     getAllActionsAndOperations,
     useBuilderComponent,
+    useBuilderControl,
     useDomState,
 } from "../utils";
 import { BasicMany2Many } from "./basic_many2many";
 import { BuilderComponent } from "./builder_component";
+import { toIdName } from "./builder_many2one";
 
 export class BuilderMany2Many extends Component {
     static components = { BuilderComponent, BasicMany2Many };
@@ -63,6 +65,24 @@ export class BuilderMany2Many extends Component {
                 }
             }
             return { selection };
+        });
+        useBuilderControl({
+            kind: "records",
+            getModel: () => this.searchModel(),
+            getValue: () => this.domState.selection.map(toIdName),
+            commit: async (ids) => {
+                await this.searchModel.currentPromise();
+                const records = await this.cachedModel.ormRead(this.searchModel(), ids, [
+                    "display_name",
+                    "name",
+                ]);
+                const missingIds = ids.filter((id) => !records.some((record) => record.id === id));
+                if (missingIds.length) {
+                    throw new Error(`No ${this.searchModel()} record has the id ${missingIds}`);
+                }
+                this.setSelection(records);
+            },
+            reload: false,
         });
     }
     async getSearchModel({ model, m2oField }) {

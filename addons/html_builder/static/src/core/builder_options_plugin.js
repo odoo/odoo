@@ -108,6 +108,11 @@ import { omit } from "@web/core/utils/objects";
  *     }
  */
 
+// How long to wait for options that never render, e.g. after an error.
+const OPTIONS_RENDER_TIMEOUT = 2000;
+
+const nextFrame = () => new Promise((resolve) => requestAnimationFrame(resolve));
+
 export class BuilderOptionsPlugin extends Plugin {
     static id = "builderOptions";
     static dependencies = ["operation", "domObserver", "history"];
@@ -125,6 +130,11 @@ export class BuilderOptionsPlugin extends Plugin {
         "setNextTarget",
         "getBuilderOptionContext",
         "getBuilderOptions",
+        "registerOptionsContainer",
+        "getOptionControls",
+        "showAllOptions",
+        "notifyOptionsRendered",
+        "getOptionsDisplay",
         "isClonable",
     ]);
     /** @type {import("plugins").BuilderResources} */
@@ -189,6 +199,9 @@ export class BuilderOptionsPlugin extends Plugin {
     };
 
     setup() {
+        this.optionsContainers = new Set();
+        // `renderId` changes to make the sidebar mount its containers anew.
+        this.optionsDisplay = proxy({ showAll: false, renderId: 0 });
         /** @type { current?: Node, next?: Node } */
         this.targetState = {};
         this.builderOptions = this.computeBuilderOptionsFromTemplate();
@@ -649,6 +662,108 @@ export class BuilderOptionsPlugin extends Plugin {
         const renderContext = Object.assign({}, ...optionsRenderContext);
         const template = renderToElement(this.config.builderOptionsTemplate, renderContext);
         return Array.from(template.children, (node) => this.createOptionClassFromXML(node));
+    }
+
+    /**
+     * @typedef {Object} BuilderControl a control mounted in the sidebar
+     * @property {"choice" | "toggle" | "value" | "color" | "record" | "records"} kind
+     * @property {boolean} mounted
+     * @property {boolean} reload committing saves and reloads the editor
+     * @property {(value?: any) => void | Promise<void>} commit takes a text, a
+     *   CSS color, the id of a record or the ids of records
+     * @property {() => boolean} [isActive] for a choice or a toggle
+     * @property {() => any} [getValue] for the other kinds
+     * @property {() => BuilderControl[]} [getChoices] of a group of choices
+     *   that exclude each other
+     * @property {() => string} [getLabel]
+     * @property {() => string} [getModel] of a record or of records
+     * @property {() => HTMLElement} [getElement]
+     *
+     * @param {Object} container gives its title, element, editing element and
+     *   rows
+     * @returns {() => void} removes the container
+     */
+    /**
+     * Called by the sidebar each time it has rendered its containers.
+     */
+    notifyOptionsRendered() {
+        this.onOptionsRendered?.();
+    }
+
+    getOptionsDisplay() {
+        return this.optionsDisplay;
+    }
+
+    registerOptionsContainer(container) {
+        this.optionsContainers.add(container);
+        return () => this.optionsContainers.delete(container);
+    }
+
+    /**
+     * @returns {{ title: string, rows: { label: string, controls: BuilderControl[] }[] }[]}
+     *   the controls the sidebar displays for the target, in the order it
+     *   displays them
+     */
+    getOptionControls() {
+        const isVisible = (item) => item.getElement?.()?.checkVisibility();
+        const inSidebarOrder = (items) =>
+            [...items]
+                .filter(isVisible)
+                .sort((a, b) =>
+                    a.getElement().compareDocumentPosition(b.getElement()) &
+                    Node.DOCUMENT_POSITION_FOLLOWING
+                        ? -1
+                        : 1
+                );
+        // A container of the previous target stays mounted until the sidebar renders.
+        const elements = this.lastContainers.map((container) => container.element);
+        const containers = [...this.optionsContainers].filter((container) =>
+            elements.includes(container.getEditingElement())
+        );
+        return inSidebarOrder(containers).map((container) => ({
+            title: container.getTitle(),
+            rows: inSidebarOrder(container.rows)
+                .map((row) => ({
+                    label: row.getLabel(),
+                    controls: [...row.controls].filter(
+                        (control) => !control.getElement || isVisible(control)
+                    ),
+                }))
+                .filter((row) => row.controls.length),
+        }));
+    }
+
+    /**
+     * Displays every option of the target and of its parents, including the
+     * ones in folded containers and collapsed rows.
+     *
+     * @param {HTMLElement} [target] the current target if not given
+     * @returns {Promise<boolean>} false if the target has no options
+     */
+    async showAllOptions(target) {
+        // Forced so that the sidebar goes to the tab of the options.
+        this.updateContainers(target, { forceUpdate: true });
+        if ((target && this.target !== target) || !this.lastContainers.length) {
+            return false;
+        }
+        for (const container of this.lastContainers) {
+            container.folded = false;
+        }
+        // A row is expanded if it mounts while `showAll` is set.
+        this.optionsDisplay.showAll = true;
+        this.optionsDisplay.renderId++;
+        await new Promise((resolve) => {
+            const timeout = setTimeout(resolve, OPTIONS_RENDER_TIMEOUT);
+            this.onOptionsRendered = () => {
+                clearTimeout(timeout);
+                resolve();
+            };
+        });
+        this.onOptionsRendered = null;
+        this.optionsDisplay.showAll = false;
+        // Containers and rows are revealed after they render.
+        await nextFrame();
+        return true;
     }
 
     getBuilderOptions() {

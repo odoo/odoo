@@ -5,6 +5,7 @@ import {
     useActionInfo,
     useClickableBuilderComponent,
     useDependencyDefinition,
+    useBuilderControl,
     useDomState,
 } from "../utils";
 import { BuilderComponent } from "./builder_component";
@@ -17,7 +18,13 @@ export class BuilderCheckbox extends Component {
 
     setup() {
         this.info = useActionInfo(this.props);
-        const { operation, isApplied, onReady } = useClickableBuilderComponent(this.props);
+        const { operation, isApplied, onReady, reload } = useClickableBuilderComponent(this.props);
+        useBuilderControl({
+            kind: "toggle",
+            isActive: () => this.state.isActive,
+            commit: operation.commit,
+            reload,
+        });
         if (this.props.id) {
             useDependencyDefinition(this.props, { isActive: isApplied }, { onReady });
         }
