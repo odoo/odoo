@@ -94,3 +94,18 @@ class TestResConfig(TransactionCase):
         with patch('odoo.addons.base.models.ir_module.IrModuleModule.button_immediate_install', new=just_raise):
             with self.assertRaisesRegex(Exception, "We should not be here."):
                 self.config.execute()
+
+    def test_no_uninstall_module_installed_by_set_values(self):
+        """A module installed as a side effect of set_values() (e.g. by loading a chart template)
+           has an unchecked box in the settings, which must not be read as a request to uninstall it.
+        """
+        config_fields = self.config._get_classified_fields()
+        module = next(m for m in config_fields['module'] if m.state == 'uninstalled')
+        self.assertFalse(self.config[f'module_{module.name}'])
+
+        def set_values(settings):
+            module.state = 'installed'
+
+        with patch.object(self.env.registry['res.config.settings'], 'set_values', set_values), \
+             patch('odoo.addons.base.models.ir_module.IrModuleModule.button_immediate_uninstall', new=just_raise):
+            self.config.execute()
