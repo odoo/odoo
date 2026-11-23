@@ -1,15 +1,11 @@
 from lxml import etree
-import requests
-from base64 import b64decode, b64encode
-from cryptography.fernet import Fernet
 from unittest.mock import patch
 
 from odoo import Command, fields
 from odoo.tests import tagged
-from odoo.tools.misc import file_open
 
 from odoo.addons.l10n_fr_pdp.models.account_edi_xml_ubl_21_fr import CPRO_INVOICE_IDENTIFIER
-from .common import FAKE_UUID, FILE_PATH, TestL10nFrPdpCommon
+from .common import FAKE_UUID, TestL10nFrPdpCommon
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -314,44 +310,6 @@ class TestL10nFrPdpXml(TestL10nFrPdpCommon):
             namespaces=self.ubl_namespaces,
         )
         self.assertEqual(node[0].text, self.company.vat, "Company VAT fallback")
-
-    def _import_invoice_from_pdp(self, test_name, uuid, sender=None):
-        """ Simulate the reception of a document through the PDP proxy. """
-        self.env.company.peppol_purchase_journal_id = self.company_data['default_journal_purchase']
-        _filename, file_content = self._import_file_content(test_name, 'xml')
-        enc_key = file_open(f'{FILE_PATH}/enc_key', 'rb').read()
-        fernet_key = self.private_key._decrypt(b64decode(enc_key))
-        document = b64encode(Fernet(fernet_key).encrypt(file_content))
-
-        def _request_handler(s: requests.Session, r: requests.PreparedRequest, /, **kwargs):
-            message = {
-                'uuid': uuid,
-                'origin_message_uuid': uuid,
-                'accounting_supplier_party': None,
-                'filename': test_name,
-                'state': 'done',
-                'direction': 'incoming',
-                'document_type': 'Invoice',
-            }
-            responses = {
-                '/api/pdp/1/get_all_documents': {'messages': [{
-                    **message,
-                    'sender': sender,
-                    'receiver': self.proxy_user.edi_identification,
-                }]},
-                '/api/pdp/1/get_document': {uuid: {**message, 'enc_key': enc_key, 'document': document}},
-                '/api/pdp/1/ack': {},
-            }
-            if r.path_url not in responses:
-                return self._request_handler(s, r, **kwargs)
-            response = requests.Response()
-            response.status_code = 200
-            response.json = lambda: {'result': responses[r.path_url]}
-            return response
-
-        with patch.object(requests.sessions.Session, 'send', _request_handler):
-            self.proxy_user._peppol_get_new_documents()
-        return self.env['account.move'].search([('peppol_message_uuid', '=', uuid)])
 
     def test_import_retrieve_partner(self):
         """ Without the sender identifier of the envelope, the endpoint of the document is not used to check the
