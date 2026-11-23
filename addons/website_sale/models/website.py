@@ -411,7 +411,7 @@ class Website(models.Model):
 
     def _get_configurator_preview_urls(self):
         return super()._get_configurator_preview_urls() | {
-            style['preview_url']
+            style["preview_url"]
             for mapping in (const.SHOP_PAGE_STYLE_MAPPING, const.PRODUCT_PAGE_STYLE_MAPPING)
             for style in mapping.values()
         }
@@ -1324,7 +1324,6 @@ class Website(models.Model):
     @api.model
     def _get_settings_to_copy_onto_new_default_website(self):
         """Provide a list of settings that should always be set on the default website.
-
         When the default website changes, a check is performed. If some of these settings are not
         already set on the new default website, they are copied from the previous default website.
         """
