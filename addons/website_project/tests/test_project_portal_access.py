@@ -2,6 +2,7 @@
 
 import json
 from re import search
+from unittest.mock import patch
 
 from odoo.tests import tagged, HttpCase
 
@@ -11,6 +12,7 @@ from odoo.addons.website_project.controllers.main import WebsiteForm
 from odoo.addons.http_routing.tests.common import MockRequest
 
 
+@patch.object(WebsiteForm, '_verify_website_form', lambda self, model_name, values: None)
 class TestProjectPortalAccess(TestProjectSharingCommon, HttpCase):
     def test_post_chatter_as_portal_user(self):
         self.project_no_collabo.privacy_visibility = 'portal'

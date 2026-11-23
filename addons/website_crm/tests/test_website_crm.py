@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from unittest.mock import patch
+
 import odoo.tests
 from odoo.addons.crm.tests.common import TestCrmCommon
+from odoo.addons.website.controllers.form import WebsiteForm
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -64,6 +67,7 @@ class TestWebsiteCrm(odoo.tests.HttpCase, TestCrmCommon):
         }]
         self.start_tour(self.env['website'].get_client_action_url('/contactus', True), 'website_crm_form_properties', login='admin')
 
+    @patch.object(WebsiteForm, '_verify_website_form', lambda self, model_name, values: None)
     def test_public_form_lead_type_without_default_team(self):
         """ Without default team, the lead type should follow the 'Leads' setting,
         not the groups of the (public) user submitting the form. """
