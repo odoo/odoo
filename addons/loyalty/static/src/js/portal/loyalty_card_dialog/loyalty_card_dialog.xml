@@ -27,6 +27,17 @@
             </div>
             <hr/>
             <div class="mt-0 pt-0" t-on-click.stop="">
+                <div
+                    name="card_barcode"
+                    t-if="this.props.program.program_type == 'loyalty'"
+                    class="d-flex align-items-center flex-column"
+                >
+                    <img
+                        t-att-src="`/report/barcode/Code128/${this.props.card.code}?width=350&amp;height=100`"
+                        style="width:400px;height:100px"
+                    />
+                    <span t-out="this.props.card.code" class="fs-5"/>
+                </div>
                 <div name="history_lines">
                     <t t-if="this.props.history_lines.length">
                         <strong>Last Transactions</strong>

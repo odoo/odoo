@@ -24,9 +24,6 @@
     ],
     'auto_install': True,
     'assets': {
-        'web.assets_frontend': [
-            'pos_loyalty/static/src/portal/*',
-        ],
         'point_of_sale._assets_pos': [
             'pos_loyalty/static/src/app/**/*',
         ],
