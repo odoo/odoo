@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="ksw_deduction_type_view_list" model="ir.ui.view">
+        <field name="name">ksw.deduction.type.list</field>
+        <field name="model">ksw.deduction.type</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="category"/>
+                <field name="is_loan"/>
+                <field name="default_installments"/>
+                <field name="active" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="ksw_deduction_type_view_form" model="ir.ui.view">
+        <field name="name">ksw.deduction.type.form</field>
+        <field name="model">ksw.deduction.type</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger"
+                            invisible="active"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="category"/>
+                        </group>
+                        <group>
+                            <field name="is_loan"/>
+                            <field name="default_installments"/>
+                            <field name="sequence"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <separator string="Description"/>
+                    <field name="description" placeholder="Usage notes, policy..."/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ksw_deduction_type" model="ir.actions.act_window">
+        <field name="name">Deduction Types</field>
+        <field name="res_model">ksw.deduction.type</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>
+

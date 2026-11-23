@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_ksw_commission_category_list" model="ir.ui.view">
+        <field name="name">ksw.commission.category.list</field>
+        <field name="model">ksw.commission.category</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="kind"/>
+                <field name="is_quantity_based" optional="show"/>
+                <field name="is_system"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ksw_commission_category_form" model="ir.ui.view">
+        <field name="name">ksw.commission.category.form</field>
+        <field name="model">ksw.commission.category</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="kind"/>
+                        </group>
+                        <group>
+                            <field name="sequence"/>
+                            <field name="active"/>
+                            <field name="is_system" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <group string="Quantity-Based Amount">
+                        <field name="is_quantity_based" widget="boolean_toggle"/>
+                        <field name="formula"
+                               placeholder="result = quantity * 100"
+                               required="is_quantity_based"
+                               invisible="not is_quantity_based"/>
+                        <field name="quantity_label"
+                               placeholder="Days, Trips, Hours…"
+                               invisible="not is_quantity_based"/>
+                        <field name="min_quantity"
+                               invisible="not is_quantity_based"/>
+                        <field name="max_quantity"
+                               invisible="not is_quantity_based"
+                               help="0 means no upper bound."/>
+                    </group>
+
+                    <field name="description" placeholder="Description / usage notes…"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ksw_commission_category" model="ir.actions.act_window">
+        <field name="name">Commission Categories</field>
+        <field name="res_model">ksw.commission.category</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>
+

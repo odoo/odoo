@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <menuitem id="wb_school_root_menu"
+              name="School"
+    />
+
+    <menuitem id="wb_student_sub_root_menu"
+              name="Student"
+              parent="wb_school_root_menu"
+    />
+
+    <menuitem id="wb_teacher_sub_root_menu"
+              name="Teacher"
+              parent="wb_school_root_menu"
+    />
+
+    <menuitem id="wb_student_menu"
+              action="wb_student_action"
+              name="Student List"
+              parent="wb_student_sub_root_menu"
+    />
+
+    <menuitem id="wb_teacher_menu"
+              action="wb_teacher_action"
+              name="Teacher List"
+              parent="wb_teacher_sub_root_menu"
+    />
+</odoo>

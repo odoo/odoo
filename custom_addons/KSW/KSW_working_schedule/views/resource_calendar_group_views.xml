@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <!-- List View -->
+    <record id="view_resource_calendar_group_list" model="ir.ui.view">
+        <field name="name">resource.calendar.group.list</field>
+        <field name="model">resource.calendar.group</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="line_ids" widget="many2many_tags"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_resource_calendar_group_form" model="ir.ui.view">
+        <field name="name">resource.calendar.group.form</field>
+        <field name="model">resource.calendar.group</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Group Name"/>
+                        </h1>
+                    </div>
+                    <separator string="Working Time"/>
+                    <field name="line_ids">
+                        <list editable="bottom">
+                            <field name="name" string="Description"/>
+                            <field name="dayofweek"/>
+                            <field name="day_period"/>
+                            <field name="hour_from" widget="float_time"/>
+                            <field name="hour_to" widget="float_time"/>
+                        </list>
+                        <form>
+                            <group>
+                                <field name="name"/>
+                                <field name="dayofweek"/>
+                                <field name="day_period"/>
+                                <field name="hour_from" widget="float_time"/>
+                                <field name="hour_to" widget="float_time"/>
+                            </group>
+                        </form>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_resource_calendar_group" model="ir.actions.act_window">
+        <field name="name">Calendar Groups</field>
+        <field name="res_model">resource.calendar.group</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Menu: under Employees > Configuration > Working Schedules -->
+    <menuitem
+            id="menu_resource_calendar_group"
+            name="Calendar Groups"
+            parent="hr.menu_human_resources_configuration"
+            action="action_resource_calendar_group"
+            sequence="6"/>
+
+</odoo>
+

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="edit_holiday_status_form" model="ir.ui.view">
+        <field name="name">hr.leave.type</field>
+        <field name="model">hr.leave.type</field>
+        <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
+        <field name="arch" type="xml">
+             <field name="leave_validation_type" position="before">
+                 <field name="code"/>
+             </field>
+        </field>
+    </record>
+
+    <record id="view_holiday_status_normal_tree" model="ir.ui.view">
+        <field name="name">hr.leave.type</field>
+        <field name="model">hr.leave.type</field>
+        <field name="inherit_id" ref="hr_holidays.view_holiday_status_normal_tree"/>
+        <field name="arch" type="xml">
+             <field name="display_name" position="after">
+                 <field name="code"/>
+             </field>
+        </field>
+    </record>
+
+    <record id="view_holidays_status_filter" model="ir.ui.view">
+        <field name="name">hr.leave.type</field>
+        <field name="model">hr.leave.type</field>
+        <field name="inherit_id" ref="hr_holidays.view_holidays_status_filter"/>
+        <field name="arch" type="xml">
+             <field name="name" position="after">
+                 <field name="code"/>
+             </field>
+        </field>
+   </record>
+
+</odoo>

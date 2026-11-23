@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ================================================================ -->
+    <!-- KSW Commissions — General Configuration                            -->
+    <!-- ================================================================ -->
+    <!-- Adds a "KSW Commissions" block to the standard Settings page so
+         the admin can adjust meal unit prices (and any future global
+         KSW_commissions toggles) from one central location. -->
+    <record id="res_config_settings_view_form_ksw_commissions"
+            model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.ksw.commissions</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="KSW Commissions" string="KSW Commissions"
+                     name="ksw_commissions" groups="KSW_commissions.group_commission_admin">
+                    <block title="Technician Location Allowance"
+                           name="ksw_meal_settings"
+                           help="Unit prices used by the Technician Location Allowance calculator. Changing these values updates every line on every existing sheet on next read.">
+                        <setting id="ksw_meal_breakfast_price"
+                                 string="Breakfast Price"
+                                 help="Price (SAR) per breakfast occurrence.">
+                            <field name="ksw_meal_breakfast_price"/>
+                        </setting>
+                        <setting id="ksw_meal_lunch_price"
+                                 string="Lunch Price"
+                                 help="Price (SAR) per lunch occurrence.">
+                            <field name="ksw_meal_lunch_price"/>
+                        </setting>
+                        <setting id="ksw_meal_dinner_price"
+                                 string="Dinner Price"
+                                 help="Price (SAR) per dinner occurrence.">
+                            <field name="ksw_meal_dinner_price"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Direct action that opens the Settings page focused on the
+         KSW Commissions module — used by the Configuration > Settings
+         menu under the KSW Commissions root. -->
+    <record id="action_ksw_commissions_config_settings"
+            model="ir.actions.act_window">
+        <field name="name">KSW Commissions Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'module': 'ksw_commissions'}</field>
+    </record>
+
+</odoo>
+
+

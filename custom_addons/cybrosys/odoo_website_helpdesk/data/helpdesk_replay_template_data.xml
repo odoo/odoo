@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--         Helpdesk Replay mail template -->
+    <record id="helpdesk_replay_email_template" model="mail.template">
+        <field name="name">Helpdesk Reply Email Template</field>
+        <field name="model_id"
+               ref="odoo_website_helpdesk.model_ticket_helpdesk"/>
+        <field name="auto_delete" eval="True"/>
+        <field name="subject">{{ object.name }} Replay</field>
+        <field name="body_html" type="html">
+            <div class="container">
+                <h4 style="text-align:center">Helpdesk Replay</h4>
+                <div style="min-height:30vh;">message........</div>
+                <t t-set="base_url"
+                   t-value="request.env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
+                <h6>
+                    <a t-attf-href="{{base_url}}/my/tickets/{{object.id}}"
+                       class="btn btn-primary">View Ticket
+                    </a>
+                </h6>
+                <table class="table table-light" width="100%">
+                    <tbody>
+                        <tr>
+                            <th>Name</th>
+                            <td>
+                                <t t-if="object.assigned_user_id">
+                                    <t t-esc="object.assigned_user_id.name"/>
+                                </t>
+                                <t t-else="">username</t>
+                                <t t-esc="base_url"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Team name</th>
+                            <td>
+                                <t t-if="object.team_id">
+                                    <t t-esc="object.team_id.name"/>
+                                </t>
+                                <t t-else="">Team name</t>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Replied On</th>
+                            <td>
+                                <t t-set="date"
+                                   t-value="(datetime.date.today())"/>
+                                <t t-esc="date"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </field>
+    </record>
+</odoo>

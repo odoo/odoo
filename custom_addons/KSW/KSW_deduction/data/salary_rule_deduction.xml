@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!-- ============================================================ -->
+        <!-- KSW Deductions salary rule                                   -->
+        <!-- Sums every payslip input whose code starts with KSW_DED_     -->
+        <!-- and produces a single negative deduction line.                -->
+        <!-- ============================================================ -->
+        <record id="hr_rule_ksw_deductions" model="hr.salary.rule">
+            <field name="name">KSW Deductions</field>
+            <field name="sequence" eval="170"/>
+            <field name="code">KSW_DEDUCTIONS</field>
+            <field name="category_id" ref="om_hr_payroll.DED"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = any(i.code and i.code.startswith('KSW_DED_') for i in (payslip.input_line_ids or []))</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+total = sum(i.amount for i in (payslip.input_line_ids or []) if i.code and i.code.startswith('KSW_DED_'))
+result = -total
+            </field>
+            <field name="appears_on_payslip" eval="True"/>
+            <field name="note">Aggregated deduction total from all active KSW deductions
+(loans, advances, penalties). Individual installment lines are
+listed transparently in "Other Inputs" with codes KSW_DED_*.</field>
+        </record>
+
+        <!-- Attach to base structure so it applies everywhere -->
+        <record id="om_hr_payroll.structure_base" model="hr.payroll.structure">
+            <field name="rule_ids" eval="[(4, ref('hr_rule_ksw_deductions'))]"/>
+        </record>
+
+    </data>
+</odoo>
+
+

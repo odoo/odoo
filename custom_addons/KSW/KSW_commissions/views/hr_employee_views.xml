@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Inject the Work Site field into the HR Employee form -->
+    <record id="view_hr_employee_form_site" model="ir.ui.view">
+        <field name="name">hr.employee.form.ksw.commission.site</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <!-- Add work-site and import-alias fields next to the attendance-sheet toggle -->
+            <field name="x_is_attendance_sheet" position="after">
+                <field name="x_site_id"
+                       groups="hr.group_hr_user"
+                       invisible="not x_is_attendance_sheet"/>
+                <field name="x_commission_import_name"
+                       groups="hr.group_hr_user"
+                       invisible="not x_is_attendance_sheet"/>
+            </field>
+        </field>
+    </record>
+</odoo>
+
+

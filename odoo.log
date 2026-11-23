@@ -1,0 +1,1207 @@
+2026-06-15 07:33:01,610 14259 WARNING ? odoo.tools.config: option db_host reads 'False' in the config file at /home/odoo/Odoo/odoo/odoo.conf but isn't a boolean option, skip 
+2026-06-15 07:33:01,611 14259 WARNING ? odoo.tools.config: option db_port reads 'False' in the config file at /home/odoo/Odoo/odoo/odoo.conf but isn't a boolean option, skip 
+2026-06-15 07:33:01,611 14259 WARNING ? odoo.tools.config: option db_password reads 'False' in the config file at /home/odoo/Odoo/odoo/odoo.conf but isn't a boolean option, skip 
+2026-06-15 07:33:01,611 14259 WARNING ? odoo.tools.config: unknown option 'xmlrpc_port' in the config file at /home/odoo/Odoo/odoo/odoo.conf, option stored as-is, without parsing 
+2026-06-15 07:33:01,611 14259 WARNING ? odoo.tools.config: missing --http-interface/http_interface, using 0.0.0.0 by default, will change to 127.0.0.1 in 20.0 
+2026-06-15 07:33:01,612 14259 INFO ? odoo: Odoo version 19.0 
+2026-06-15 07:33:01,613 14259 INFO ? odoo: Using configuration file at /home/odoo/Odoo/odoo/odoo.conf 
+2026-06-15 07:33:01,613 14259 INFO ? odoo: addons paths: _NamespacePath(['/home/odoo/Odoo/odoo/odoo/addons', '/home/odoo/snap/code/247/.local/share/Odoo/addons/19.0', '/home/odoo/Odoo/odoo/addons', '/home/odoo/Odoo/odoo/custom_addons']) 
+2026-06-15 07:33:01,613 14259 INFO ? odoo: database: odoo@default:default 
+2026-06-15 07:33:03,892 14259 INFO ? odoo.service.server: HTTP service (werkzeug) running on Odoo-Dev:8069 
+2026-06-15 07:33:44,128 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:33:44] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.005 0.041
+2026-06-15 07:33:52,833 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:33:52] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.004 0.011
+2026-06-15 07:33:58,157 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:33:58] "GET /odoo/my-time-off?debug=1 HTTP/1.1" 303 - 2 0.011 0.033
+2026-06-15 07:33:59,196 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:33:59] "GET /web/database/selector HTTP/1.1" 200 - 12 0.194 0.804
+2026-06-15 07:33:59,308 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:33:59] "GET /web/static/src/libs/fontawesome/css/font-awesome.css HTTP/1.1" 200 - 1 0.010 0.014
+2026-06-15 07:33:59,345 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:33:59] "GET /web/static/lib/bootstrap/dist/css/bootstrap.css HTTP/1.1" 200 - 1 0.013 0.047
+2026-06-15 07:33:59,373 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:33:59] "GET /web/static/lib/bootstrap/js/dist/util/index.js HTTP/1.1" 200 - 1 0.005 0.053
+2026-06-15 07:33:59,376 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:33:59] "GET /web/static/lib/bootstrap/js/dist/dom/data.js HTTP/1.1" 200 - 1 0.004 0.054
+2026-06-15 07:33:59,377 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:33:59] "GET /web/static/lib/bootstrap/js/dist/dom/event-handler.js HTTP/1.1" 200 - 1 0.010 0.047
+2026-06-15 07:33:59,381 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:33:59] "GET /web/static/lib/bootstrap/js/dist/dom/manipulator.js HTTP/1.1" 200 - 1 0.016 0.043
+2026-06-15 07:33:59,408 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:33:59] "GET /web/static/lib/bootstrap/js/dist/dom/selector-engine.js HTTP/1.1" 200 - 1 0.015 0.066
+2026-06-15 07:33:59,498 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:33:59] "GET /web/static/lib/bootstrap/js/dist/util/config.js HTTP/1.1" 200 - 1 0.019 0.082
+2026-06-15 07:33:59,527 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:33:59] "GET /web/static/lib/bootstrap/js/dist/util/backdrop.js HTTP/1.1" 200 - 1 0.022 0.099
+2026-06-15 07:33:59,528 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:33:59] "GET /web/static/lib/bootstrap/js/dist/util/component-functions.js HTTP/1.1" 200 - 1 0.018 0.107
+2026-06-15 07:33:59,528 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:33:59] "GET /web/static/lib/bootstrap/js/dist/util/focustrap.js HTTP/1.1" 200 - 1 0.017 0.087
+2026-06-15 07:33:59,540 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:33:59] "GET /web/static/lib/bootstrap/js/dist/util/scrollbar.js HTTP/1.1" 200 - 1 0.016 0.108
+2026-06-15 07:33:59,588 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:33:59] "GET /web/static/lib/bootstrap/js/dist/base-component.js HTTP/1.1" 200 - 1 0.029 0.123
+2026-06-15 07:33:59,590 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:33:59] "GET /web/static/lib/bootstrap/js/dist/modal.js HTTP/1.1" 200 - 1 0.009 0.052
+2026-06-15 07:33:59,629 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:33:59] "GET /web/static/img/logo2.png HTTP/1.1" 200 - 1 0.004 0.060
+2026-06-15 07:33:59,658 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:33:59] "GET /web/static/src/public/database_manager.js HTTP/1.1" 200 - 1 0.004 0.093
+2026-06-15 07:34:01,220 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:34:01] "GET /web/service-worker.js HTTP/1.1" 404 - 1 0.004 0.010
+2026-06-15 07:34:01,275 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:34:01] "GET /web/service-worker.js HTTP/1.1" 404 - 1 0.004 0.010
+2026-06-15 07:34:02,068 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:34:02] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.005 0.014
+2026-06-15 07:34:03,783 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:34:03] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.006 0.020
+2026-06-15 07:34:04,009 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:34:04] "GET /odoo?db=KSWCO HTTP/1.1" 302 - 1 0.006 0.027
+2026-06-15 07:34:04,024 14259 INFO KSWCO odoo.modules.loading: loading 1 modules... 
+2026-06-15 07:34:04,061 14259 INFO KSWCO odoo.modules.loading: 1 modules loaded in 0.04s, 0 queries (+0 extra) 
+2026-06-15 07:34:04,107 14259 WARNING KSWCO odoo.modules.module_graph: module KSW_working_schedule: not installable, skipped 
+2026-06-15 07:34:04,109 14259 WARNING KSWCO odoo.modules.module_graph: module KSW_attendance_leave: not installable, skipped 
+2026-06-15 07:34:04,109 14259 WARNING KSWCO odoo.modules.module_graph: module KSW_attendance_report: not installable, skipped 
+2026-06-15 07:34:04,109 14259 WARNING KSWCO odoo.modules.module_graph: module hr_biometric_attendance: not installable, skipped 
+2026-06-15 07:34:04,111 14259 WARNING KSWCO odoo.modules.module_graph: module om_hr_payroll: not installable, skipped 
+2026-06-15 07:34:04,113 14259 WARNING KSWCO odoo.modules.module_graph: module KSW_attendance_sheet: not installable, skipped 
+2026-06-15 07:34:04,174 14259 WARNING KSWCO odoo.modules.module_graph: module KSW_base_security: not installable, skipped 
+2026-06-15 07:34:04,180 14259 WARNING KSWCO odoo.modules.module_graph: module KSW_annual_leave: not installable, skipped 
+2026-06-15 07:34:04,181 14259 WARNING KSWCO odoo.modules.module_graph: module KSW_deduction: not installable, skipped 
+2026-06-15 07:34:04,182 14259 WARNING KSWCO odoo.modules.module_graph: module KSW_unpaid_leave: not installable, skipped 
+2026-06-15 07:34:04,182 14259 WARNING KSWCO odoo.modules.module_graph: module KSW_commissions: not installable, skipped 
+2026-06-15 07:34:04,182 14259 WARNING KSWCO odoo.modules.module_graph: module KSW_payroll: not installable, skipped 
+2026-06-15 07:34:04,187 14259 WARNING KSWCO odoo.modules.module_graph: module KSW_leave_approval: not installable, skipped 
+2026-06-15 07:34:04,196 14259 INFO KSWCO odoo.modules.loading: loading 84 modules... 
+2026-06-15 07:34:06,298 14259 INFO KSWCO odoo.modules.loading: 84 modules loaded in 2.10s, 0 queries (+7 extra) 
+2026-06-15 07:34:06,579 14259 ERROR KSWCO odoo.modules.loading: Some modules are not loaded, some dependencies or manifest may be missing: ['hr_biometric_attendance', 'KSW_annual_leave', 'KSW_attendance_leave', 'KSW_attendance_report', 'KSW_attendance_sheet', 'KSW_base_security', 'KSW_commissions', 'KSW_deduction', 'KSW_leave_approval', 'KSW_payroll', 'KSW_unpaid_leave', 'KSW_working_schedule', 'om_hr_payroll'] 
+2026-06-15 07:34:06,580 14259 INFO KSWCO odoo.modules.loading: Modules loaded. 
+2026-06-15 07:34:06,591 14259 WARNING KSWCO odoo.schema: Missing not-null constraint on resource.calendar.attendance.calendar_id 
+2026-06-15 07:34:06,658 14259 INFO KSWCO odoo.registry: Registry loaded in 2.697s 
+2026-06-15 07:34:06,669 14259 INFO KSWCO odoo.addons.base.models.ir_http: Generating routing map for key None 
+2026-06-15 07:34:06,686 14259 INFO KSWCO odoo.addons.base.models.ir_cron: Job 'Notification: Notify scheduled messages' (8) starting 
+2026-06-15 07:34:06,688 14259 INFO KSWCO odoo.addons.base.models.ir_cron: Job 'Mail: Email Queue Manager' (3) starting 
+2026-06-15 07:34:06,788 14259 INFO KSWCO odoo.addons.base.models.ir_attachment: _read_file reading /home/odoo/snap/code/247/.local/share/Odoo/filestore/KSWCO/44/44d1661b24fa9f688091c8256535434b60aafba7 
+Traceback (most recent call last):
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_attachment.py", line 151, in _file_read
+    with open(full_path, 'rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/odoo/snap/code/247/.local/share/Odoo/filestore/KSWCO/44/44d1661b24fa9f688091c8256535434b60aafba7'
+2026-06-15 07:34:06,802 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:34:06] "GET /odoo?db=KSWCO HTTP/1.1" 303 - 4 0.033 2.710
+2026-06-15 07:34:06,845 14259 INFO KSWCO odoo.addons.base.models.ir_cron: Job 'Notification: Notify scheduled messages' (8) fully done (#loop 1; done 0; remaining 0; duration 0.16s) 
+2026-06-15 07:34:06,859 14259 INFO KSWCO odoo.addons.base.models.ir_cron: Job 'Mail: Email Queue Manager' (3) fully done (#loop 1; done 0; remaining 0; duration 0.17s) 
+2026-06-15 07:34:07,005 14259 INFO KawtherDemo odoo.modules.loading: loading 1 modules... 
+2026-06-15 07:34:07,013 14259 INFO KawtherDemo odoo.modules.loading: 1 modules loaded in 0.01s, 0 queries (+0 extra) 
+2026-06-15 07:34:07,020 14259 INFO KawtherDemo odoo.modules.loading: loading 14 modules... 
+2026-06-15 07:34:07,026 14259 INFO KawtherDemo odoo.modules.loading: 14 modules loaded in 0.01s, 0 queries (+0 extra) 
+2026-06-15 07:34:07,090 14259 INFO KawtherDemo odoo.modules.loading: Modules loaded. 
+2026-06-15 07:34:07,117 14259 INFO KawtherDemo odoo.registry: Registry loaded in 0.179s 
+2026-06-15 07:34:07,145 14259 INFO KawtherDemo odoo.addons.base.models.ir_cron: Job 'Base: Auto-vacuum internal data' (1) starting 
+2026-06-15 07:34:07,148 14259 INFO KawtherDemo odoo.addons.base.models.ir_cron: Job 'Base: Portal Users Deletion' (2) starting 
+2026-06-15 07:34:07,288 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:34:07] "GET /web/login?redirect=/odoo?db%3DKSWCO HTTP/1.1" 200 - 53 0.091 0.371
+2026-06-15 07:34:07,310 14259 INFO KawtherDemo odoo.addons.base.models.ir_cron: Job 'Base: Portal Users Deletion' (2) fully done (#loop 1; done 0; remaining 0; duration 0.16s) 
+2026-06-15 07:34:07,326 14259 INFO KawtherDemo odoo.addons.base.models.res_users: GC'd 0 user log entries 
+2026-06-15 07:34:07,373 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:34:07] "GET /web/binary/company_logo HTTP/1.1" 200 - 2 0.011 0.019
+2026-06-15 07:34:07,390 14259 ERROR KSWCO odoo.http: Exception during request handling. 
+Traceback (most recent call last):
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2802, in __call__
+    response = request._serve_db()
+               ^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2277, in _serve_db
+    raise self._update_served_exception(exc)
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2275, in _serve_db
+    return service_model.retrying(serve_func, env=self.env)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/service/model.py", line 184, in retrying
+    result = func()
+             ^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2330, in _serve_ir_http
+    response = self.dispatcher.dispatch(rule.endpoint, args)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2452, in dispatch
+    return self.request.registry['ir.http']._dispatch(endpoint)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_http.py", line 355, in _dispatch
+    result = endpoint(**request.params)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 788, in route_wrapper
+    result = endpoint(self, *args, **params_ok)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/addons/web/controllers/binary.py", line 150, in content_assets
+    stream = env['ir.binary']._get_stream_from(attachment, 'raw', filename)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_binary.py", line 124, in _get_stream_from
+    stream = self._record_to_stream(record, field_name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_binary.py", line 70, in _record_to_stream
+    return record._to_http_stream()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_attachment.py", line 913, in _to_http_stream
+    stat = os.stat(stream.path)
+           ^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/odoo/snap/code/247/.local/share/Odoo/filestore/KSWCO/23/23b035552184e0a9502d80756dd8f02e0946aab1'
+2026-06-15 07:34:07,409 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:34:07] "GET /web/assets/f06353d/web.assets_frontend_minimal.min.js HTTP/1.1" 500 - 4 0.002 0.022
+2026-06-15 07:34:07,422 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:34:07,498 14259 INFO KawtherDemo odoo.addons.base.models.ir_attachment: filestore gc 0 checked, 0 removed 
+2026-06-15 07:34:07,545 14259 INFO learning odoo.modules.loading: loading 1 modules... 
+2026-06-15 07:34:07,560 14259 INFO learning odoo.modules.loading: 1 modules loaded in 0.01s, 0 queries (+0 extra) 
+2026-06-15 07:34:07,570 14259 INFO learning odoo.modules.loading: loading 14 modules... 
+2026-06-15 07:34:07,578 14259 INFO learning odoo.modules.loading: 14 modules loaded in 0.01s, 0 queries (+0 extra) 
+2026-06-15 07:34:07,667 14259 INFO learning odoo.modules.loading: Modules loaded. 
+2026-06-15 07:34:07,696 14259 INFO learning odoo.registry: Registry loaded in 0.227s 
+2026-06-15 07:34:07,712 14259 INFO learning odoo.addons.base.models.ir_cron: Job 'Base: Auto-vacuum internal data' (1) starting 
+2026-06-15 07:34:07,815 14259 INFO KawtherDemo odoo.addons.base.models.res_device: GC device logs delete 0 entries 
+2026-06-15 07:34:09,274 14259 INFO learning odoo.addons.base.models.res_users: GC 'auth_totp.device' delete 0 entries 
+2026-06-15 07:34:09,295 14259 INFO learning odoo.addons.base.models.res_device: GC device logs delete 0 entries 
+2026-06-15 07:34:09,303 14259 INFO KSWCO odoo.addons.base.models.assetsbundle: Generating a new asset bundle attachment /web/assets/19a5f22/web.assets_frontend.min.css (id:104872) 
+2026-06-15 07:34:09,310 14259 INFO KSWCO odoo.addons.base.models.assetsbundle: Deleting attachments [104871] (matching /web/assets/_______/web.assets_frontend.min.css) because it was replaced with /web/assets/19a5f22/web.assets_frontend.min.css 
+2026-06-15 07:34:09,393 14259 INFO KawtherDemo odoo.addons.api_doc.models.ir_attachment: GC'd 0 /doc cached index 
+2026-06-15 07:34:09,413 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:34:09] "GET /web/assets/19a5f22/web.assets_frontend.min.css HTTP/1.1" 200 - 14 0.176 1.891
+2026-06-15 07:34:09,439 14259 INFO learning odoo.addons.api_doc.models.ir_attachment: GC'd 0 /doc cached index 
+2026-06-15 07:34:09,462 14259 INFO KawtherDemo odoo.addons.base.models.res_device: GC device logs delete 0 entries 
+2026-06-15 07:34:09,483 14259 INFO learning odoo.addons.base.models.res_users: GC 'res.users.apikeys' delete 0 entries 
+2026-06-15 07:34:09,491 14259 INFO KawtherDemo odoo.addons.base.models.res_users: GC 'auth_totp.device' delete 0 entries 
+2026-06-15 07:34:09,536 14259 INFO learning odoo.addons.base.models.ir_attachment: filestore gc 0 checked, 0 removed 
+2026-06-15 07:34:09,536 14259 INFO KawtherDemo odoo.addons.base.models.res_users: GC 'res.users.apikeys' delete 0 entries 
+2026-06-15 07:34:09,544 14259 INFO KawtherDemo odoo.addons.base.models.ir_cron: Job 'Base: Auto-vacuum internal data' (1) fully done (#loop 1; done 44; remaining 0; duration 2.40s) 
+2026-06-15 07:34:09,552 14259 INFO learning odoo.addons.base.models.res_device: GC device logs delete 0 entries 
+2026-06-15 07:34:09,565 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:34:09,584 14259 INFO learning odoo.addons.base.models.ir_cron: Job 'Base: Portal Users Deletion' (2) starting 
+2026-06-15 07:34:09,592 14259 INFO learning odoo.addons.base.models.res_users: GC'd 0 user log entries 
+2026-06-15 07:34:09,617 14259 INFO learning odoo.addons.base.models.ir_cron: Job 'Base: Portal Users Deletion' (2) fully done (#loop 1; done 0; remaining 0; duration 0.03s) 
+2026-06-15 07:34:09,749 14259 INFO odoo19 odoo.modules.loading: loading 1 modules... 
+2026-06-15 07:34:09,758 14259 INFO odoo19 odoo.modules.loading: 1 modules loaded in 0.01s, 0 queries (+0 extra) 
+2026-06-15 07:34:09,777 14259 INFO learning odoo.addons.base.models.ir_cron: Job 'Base: Auto-vacuum internal data' (1) fully done (#loop 1; done 44; remaining 0; duration 2.07s) 
+2026-06-15 07:34:09,805 14259 WARNING odoo19 odoo.modules.module_graph: module app_one: not installable, skipped 
+2026-06-15 07:34:09,812 14259 INFO odoo19 odoo.modules.loading: loading 62 modules... 
+2026-06-15 07:34:09,871 14259 INFO odoo19 odoo.modules.loading: 62 modules loaded in 0.06s, 0 queries (+0 extra) 
+2026-06-15 07:34:10,051 14259 ERROR odoo19 odoo.modules.loading: Some modules are not loaded, some dependencies or manifest may be missing: ['app_one'] 
+2026-06-15 07:34:10,051 14259 INFO odoo19 odoo.modules.loading: Modules loaded. 
+2026-06-15 07:34:10,073 14259 INFO odoo19 odoo.registry: Registry loaded in 0.387s 
+2026-06-15 07:34:10,081 14259 INFO odoo19 odoo.addons.base.models.ir_cron: Job 'Base: Auto-vacuum internal data' (1) starting 
+2026-06-15 07:34:10,086 14259 INFO odoo19 odoo.addons.base.models.ir_cron: Job 'Notification: Delete Notifications older than 6 Months' (5) starting 
+2026-06-15 07:34:10,285 14259 INFO odoo19 odoo.addons.base.models.ir_cron: Job 'Notification: Delete Notifications older than 6 Months' (5) fully done (#loop 1; done 0; remaining 0; duration 0.20s) 
+2026-06-15 07:34:10,321 14259 INFO odoo19 odoo.addons.base.models.ir_cron: Job 'Mail: Post scheduled messages' (7) starting 
+2026-06-15 07:34:10,399 14259 INFO odoo19 odoo.addons.mail.models.mail_scheduled_message: Posting 0 scheduled messages 
+2026-06-15 07:34:10,424 14259 INFO odoo19 odoo.addons.base.models.ir_cron: Job 'Mail: Post scheduled messages' (7) fully done (#loop 1; done 0; remaining 0; duration 0.10s) 
+2026-06-15 07:34:10,473 14259 INFO odoo19 odoo.addons.base.models.ir_cron: Job 'Notification: Notify scheduled messages' (8) starting 
+2026-06-15 07:34:10,519 14259 INFO odoo19 odoo.addons.base.models.ir_cron: Job 'Notification: Notify scheduled messages' (8) fully done (#loop 1; done 0; remaining 0; duration 0.05s) 
+2026-06-15 07:34:10,562 14259 INFO odoo19 odoo.addons.base.models.ir_cron: Job 'Mail: send web push notification' (9) starting 
+2026-06-15 07:34:10,580 14259 INFO odoo19 odoo.addons.base.models.ir_cron: Job 'Mail: send web push notification' (9) fully done (#loop 1; done 0; remaining 0; duration 0.02s) 
+2026-06-15 07:34:10,588 14259 INFO odoo19 odoo.addons.base.models.ir_cron: Job 'Discuss: channel member unmute' (10) starting 
+2026-06-15 07:34:10,614 14259 INFO odoo19 odoo.addons.base.models.ir_cron: Job 'Discuss: channel member unmute' (10) fully done (#loop 1; done 0; remaining 0; duration 0.03s) 
+2026-06-15 07:34:10,622 14259 INFO odoo19 odoo.addons.base.models.ir_cron: Job 'SMS: SMS Queue Manager' (12) starting 
+2026-06-15 07:34:10,645 14259 INFO odoo19 odoo.addons.base.models.ir_cron: Job 'SMS: SMS Queue Manager' (12) fully done (#loop 1; done 0; remaining 0; duration 0.02s) 
+2026-06-15 07:34:10,655 14259 INFO odoo19 odoo.addons.base.models.ir_cron: Job 'Snailmail: process letters queue' (13) starting 
+2026-06-15 07:34:10,673 14259 INFO odoo19 odoo.addons.base.models.ir_cron: Job 'Snailmail: process letters queue' (13) fully done (#loop 1; done 0; remaining 0; duration 0.02s) 
+2026-06-15 07:34:10,682 14259 INFO odoo19 odoo.addons.base.models.ir_cron: Job 'Digest Emails' (14) starting 
+2026-06-15 07:34:10,789 14259 INFO odoo19 odoo.addons.base.models.res_device: GC device logs delete 0 entries 
+2026-06-15 07:34:10,837 14259 INFO odoo19 odoo.addons.base.models.res_device: GC device logs delete 0 entries 
+2026-06-15 07:34:11,203 14259 INFO odoo19 odoo.addons.base.models.res_users: GC 'res.users.apikeys' delete 0 entries 
+2026-06-15 07:34:11,507 14259 INFO odoo19 odoo.addons.api_doc.models.ir_attachment: GC'd 0 /doc cached index 
+2026-06-15 07:34:11,512 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:34:11] "GET /web/service-worker.js HTTP/1.1" 200 - 2 0.014 0.014
+2026-06-15 07:34:11,516 14259 INFO odoo19 odoo.addons.base.models.ir_attachment: _read_file reading /home/odoo/snap/code/247/.local/share/Odoo/filestore/odoo19/44/44d1661b24fa9f688091c8256535434b60aafba7 
+Traceback (most recent call last):
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_attachment.py", line 151, in _file_read
+    with open(full_path, 'rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/odoo/snap/code/247/.local/share/Odoo/filestore/odoo19/44/44d1661b24fa9f688091c8256535434b60aafba7'
+2026-06-15 07:34:11,533 14259 INFO odoo19 odoo.addons.base.models.ir_cron: Job 'Digest Emails' (14) fully done (#loop 1; done 0; remaining 0; duration 0.85s) 
+2026-06-15 07:34:11,556 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:34:11] "GET /web/service-worker.js HTTP/1.1" 200 - 2 0.005 0.020
+2026-06-15 07:34:11,569 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:34:11] "GET /odoo HTTP/1.1" 303 - 1 0.001 0.024
+2026-06-15 07:34:11,571 14259 INFO odoo19 odoo.addons.base.models.ir_cron: Job 'Account: Post draft entries with auto_post enabled and accounting date up to today' (16) starting 
+2026-06-15 07:34:11,819 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:34:11] "GET /odoo/offline HTTP/1.1" 200 - 7 0.023 0.248
+2026-06-15 07:34:11,832 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:34:11] "GET /web/login?redirect=/odoo? HTTP/1.1" 200 - 4 0.195 0.048
+2026-06-15 07:34:11,894 14259 INFO odoo19 odoo.addons.base.models.ir_cron: Job 'Account: Post draft entries with auto_post enabled and accounting date up to today' (16) fully done (#loop 1; done 0; remaining 0; duration 0.32s) 
+2026-06-15 07:34:11,921 14259 INFO odoo19 odoo.addons.base.models.ir_cron: Job 'Send invoices automatically' (17) starting 
+2026-06-15 07:34:11,926 14259 INFO odoo19 odoo.addons.sms.models.sms_sms: GC'd 0 sms marked for deletion 
+2026-06-15 07:34:11,953 14259 INFO odoo19 odoo.addons.base.models.ir_cron: Job 'Send invoices automatically' (17) fully done (#loop 1; done 0; remaining 0; duration 0.03s) 
+2026-06-15 07:34:11,967 14259 INFO odoo19 odoo.addons.base.models.ir_cron: Job 'Mail: Email Queue Manager' (3) starting 
+2026-06-15 07:34:12,011 14259 INFO odoo19 odoo.addons.base.models.ir_cron: Job 'Mail: Email Queue Manager' (3) fully done (#loop 1; done 0; remaining 0; duration 0.04s) 
+2026-06-15 07:34:12,057 14259 INFO odoo19 odoo.models.unlink: User #1 deleted ir.cron.progress records with IDs: [542, 543, 544, 545, 546, 547, 548, 549, 550, 551, 552, 553, 554, 555, 556, 557, 558, 559, 560, 561, 562, 563, 564, 565, 566, 567, 568, 569, 570, 571, 572, 573, 574, 575, 576, 577, 578, 579, 580, 581, 582, 583, 584, 585, 586, 587, 588, 589, 590, 591, 592, 593, 594, 595, 596, 597, 598, 599, 600, 601, 602, 603, 604, 605, 606, 607, 608, 609, 610, 611, 612, 613, 614, 615, 616, 617, 618, 619, 620, 621, 622, 623, 624, 625, 626, 627, 628, 629, 630, 631, 632, 633, 634, 635, 636, 637, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 648, 649, 650, 651, 652, 653, 654, 655, 656, 657, 658, 659, 660, 661, 662, 663, 664, 665, 666, 667, 668, 669, 670, 671, 672, 673, 674, 675, 676, 677, 678, 679, 680, 681, 682, 683, 684, 685, 686, 687, 688, 689, 690, 691, 692, 693, 694, 695, 696, 697, 698, 699, 700, 701, 702, 703, 704, 705, 706, 707, 708, 709, 710, 711, 712, 713, 714, 715, 716, 717, 718, 719, 720, 721, 722, 723, 724, 725, 726, 727, 728, 729, 730, 731, 732, 733, 734, 735, 736, 737, 738, 739, 740, 741, 742, 743, 744, 745, 746, 747, 748, 749, 750, 751, 752, 753, 754, 755, 756, 757, 758, 759, 760, 761, 762, 763, 764, 765, 766, 767, 768, 769, 770, 771, 772, 773, 774, 775, 776, 777, 778, 779, 780, 781, 782, 783, 784, 785, 786, 787, 788, 789, 790, 791, 792, 793, 794, 795, 796, 797, 798, 799, 800, 801, 802, 803, 804, 805, 806, 807, 808, 809, 810, 811, 812, 813, 814, 815, 816, 817, 818, 819, 820, 821, 822, 823, 824, 825, 826, 827, 828, 829, 830, 831, 832, 833, 834, 835, 836, 837, 838, 839, 840, 841, 842, 843, 844, 845, 846, 847, 848, 849, 850, 851, 852, 853, 854, 855, 856, 857, 858, 859, 860, 861, 862, 863, 864, 865, 866, 867, 868, 869, 870, 871, 872, 873, 874, 875, 876, 877, 878, 879, 880, 881, 882, 883, 884, 885, 886, 887, 888, 889, 890, 891, 892, 893, 894, 895, 896, 897, 898, 899, 900, 901, 902, 903, 904, 905, 906, 907, 908, 909, 910, 911, 912, 913, 914, 915, 916, 917, 918, 919, 920, 921, 922, 923, 924, 925, 926, 927, 928, 929, 930, 931, 932, 933, 934, 935, 936, 937, 938, 939, 940, 941, 942, 943, 944, 945, 946, 947, 948, 949, 950, 951, 952, 953, 954, 955, 956] 
+2026-06-15 07:34:12,064 14259 INFO odoo19 odoo.addons.base.models.ir_cron: Job 'Users: Notify About Unregistered Users' (11) starting 
+2026-06-15 07:34:12,096 14259 INFO odoo19 odoo.addons.base.models.ir_cron: Job 'Users: Notify About Unregistered Users' (11) fully done (#loop 1; done 0; remaining 0; duration 0.03s) 
+2026-06-15 07:34:12,105 14259 INFO odoo19 odoo.addons.base.models.ir_cron: Job 'Base: Portal Users Deletion' (2) starting 
+2026-06-15 07:34:12,111 14259 INFO odoo19 odoo.addons.base.models.ir_attachment: filestore gc 0 checked, 0 removed 
+2026-06-15 07:34:12,129 14259 INFO odoo19 odoo.addons.base.models.ir_cron: Job 'Base: Portal Users Deletion' (2) fully done (#loop 1; done 0; remaining 0; duration 0.02s) 
+2026-06-15 07:34:12,137 14259 INFO odoo19 odoo.addons.base.models.ir_cron: Job 'Publisher: Update Notification' (4) starting 
+2026-06-15 07:34:12,259 14259 INFO odoo19 odoo.addons.base.models.res_users: GC'd 0 user log entries 
+2026-06-15 07:34:12,316 14259 INFO odoo19 odoo.addons.base.models.res_users: GC 'auth_totp.device' delete 0 entries 
+2026-06-15 07:34:12,342 14259 INFO odoo19 odoo.addons.base.models.ir_cron: Job 'Base: Auto-vacuum internal data' (1) fully done (#loop 1; done 97; remaining 0; duration 2.26s) 
+2026-06-15 07:34:12,578 14259 INFO odoo19 odoo.addons.base.models.ir_cron: Job 'Publisher: Update Notification' (4) fully done (#loop 1; done 0; remaining 0; duration 0.44s) 
+2026-06-15 07:34:40,554 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:34:40] "GET /web/service-worker.js HTTP/1.1" 200 - 2 0.007 0.031
+2026-06-15 07:34:44,426 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:34:44] "GET /websocket?version=19.0-2 HTTP/1.1" 101 - 3 0.013 0.032
+2026-06-15 07:34:44,500 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:34:44] "POST /bus/has_missed_notifications HTTP/1.1" 200 - 3 0.016 0.028
+2026-06-15 07:34:44,932 14259 INFO ? odoo.addons.bus.models.bus: Bus.loop listen imbus on db postgres 
+2026-06-15 07:34:53,611 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:34:53] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.005 0.020
+2026-06-15 07:35:03,245 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:35:03] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.005 0.013
+2026-06-15 07:35:04,191 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:35:04] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.005 0.013
+2026-06-15 07:35:12,424 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:35:13,756 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:35:46,538 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:35:46] "GET / HTTP/1.1" 303 - 1 0.001 0.005
+2026-06-15 07:35:46,572 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:35:46] "GET /odoo HTTP/1.1" 303 - 1 0.003 0.011
+2026-06-15 07:35:46,633 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:35:46] "GET /web/login?redirect=/odoo? HTTP/1.1" 200 - 4 0.013 0.026
+2026-06-15 07:35:46,754 14259 ERROR KSWCO odoo.http: Exception during request handling. 
+Traceback (most recent call last):
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2802, in __call__
+    response = request._serve_db()
+               ^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2277, in _serve_db
+    raise self._update_served_exception(exc)
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2275, in _serve_db
+    return service_model.retrying(serve_func, env=self.env)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/service/model.py", line 184, in retrying
+    result = func()
+             ^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2330, in _serve_ir_http
+    response = self.dispatcher.dispatch(rule.endpoint, args)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2452, in dispatch
+    return self.request.registry['ir.http']._dispatch(endpoint)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_http.py", line 355, in _dispatch
+    result = endpoint(**request.params)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 788, in route_wrapper
+    result = endpoint(self, *args, **params_ok)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/addons/web/controllers/binary.py", line 150, in content_assets
+    stream = env['ir.binary']._get_stream_from(attachment, 'raw', filename)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_binary.py", line 124, in _get_stream_from
+    stream = self._record_to_stream(record, field_name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_binary.py", line 70, in _record_to_stream
+    return record._to_http_stream()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_attachment.py", line 913, in _to_http_stream
+    stat = os.stat(stream.path)
+           ^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/odoo/snap/code/247/.local/share/Odoo/filestore/KSWCO/23/23b035552184e0a9502d80756dd8f02e0946aab1'
+2026-06-15 07:35:46,762 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:35:46] "GET /web/assets/f06353d/web.assets_frontend_minimal.min.js HTTP/1.1" 500 - 4 0.004 0.016
+2026-06-15 07:35:46,786 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:35:46] "GET /web/binary/company_logo HTTP/1.1" 304 - 2 0.005 0.010
+2026-06-15 07:35:48,750 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:35:48] "GET /web/service-worker.js HTTP/1.1" 200 - 2 0.001 0.003
+2026-06-15 07:35:48,770 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:35:48] "GET /web/service-worker.js HTTP/1.1" 200 - 2 0.002 0.003
+2026-06-15 07:35:51,597 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:35:51] "GET /web/database/manager HTTP/1.1" 200 - 12 0.006 0.727
+2026-06-15 07:35:53,249 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:35:53] "GET /web/service-worker.js HTTP/1.1" 200 - 2 0.002 0.006
+2026-06-15 07:35:53,295 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:35:53] "GET /odoo?db=KSWCO HTTP/1.1" 303 - 1 0.004 0.013
+2026-06-15 07:35:53,332 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:35:53] "GET /web/login?redirect=/odoo?db%3DKSWCO HTTP/1.1" 200 - 4 0.004 0.015
+2026-06-15 07:35:53,408 14259 ERROR KSWCO odoo.http: Exception during request handling. 
+Traceback (most recent call last):
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2802, in __call__
+    response = request._serve_db()
+               ^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2277, in _serve_db
+    raise self._update_served_exception(exc)
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2275, in _serve_db
+    return service_model.retrying(serve_func, env=self.env)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/service/model.py", line 184, in retrying
+    result = func()
+             ^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2330, in _serve_ir_http
+    response = self.dispatcher.dispatch(rule.endpoint, args)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2452, in dispatch
+    return self.request.registry['ir.http']._dispatch(endpoint)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_http.py", line 355, in _dispatch
+    result = endpoint(**request.params)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 788, in route_wrapper
+    result = endpoint(self, *args, **params_ok)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/addons/web/controllers/binary.py", line 150, in content_assets
+    stream = env['ir.binary']._get_stream_from(attachment, 'raw', filename)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_binary.py", line 124, in _get_stream_from
+    stream = self._record_to_stream(record, field_name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_binary.py", line 70, in _record_to_stream
+    return record._to_http_stream()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_attachment.py", line 913, in _to_http_stream
+    stat = os.stat(stream.path)
+           ^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/odoo/snap/code/247/.local/share/Odoo/filestore/KSWCO/23/23b035552184e0a9502d80756dd8f02e0946aab1'
+2026-06-15 07:35:53,410 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:35:53] "GET /web/binary/company_logo HTTP/1.1" 304 - 2 0.009 0.016
+2026-06-15 07:35:53,412 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:35:53] "GET /web/assets/f06353d/web.assets_frontend_minimal.min.js HTTP/1.1" 500 - 4 0.010 0.015
+2026-06-15 07:35:54,142 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:35:54] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.002 0.006
+2026-06-15 07:35:55,028 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:35:55] "GET /web/service-worker.js HTTP/1.1" 200 - 2 0.002 0.009
+2026-06-15 07:35:55,046 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:35:55] "GET /web/service-worker.js HTTP/1.1" 200 - 2 0.001 0.002
+2026-06-15 07:36:03,104 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:36:03] "GET /odoo/action-543/1?debug=1 HTTP/1.1" 303 - 1 0.001 0.003
+2026-06-15 07:36:03,134 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:36:03] "GET /web/login?redirect=/odoo/action-543/1?debug%3D1 HTTP/1.1" 200 - 4 0.004 0.012
+2026-06-15 07:36:03,204 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:36:03] "GET /web/binary/company_logo HTTP/1.1" 304 - 2 0.005 0.009
+2026-06-15 07:36:03,214 14259 ERROR KSWCO odoo.http: Exception during request handling. 
+Traceback (most recent call last):
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2802, in __call__
+    response = request._serve_db()
+               ^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2277, in _serve_db
+    raise self._update_served_exception(exc)
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2275, in _serve_db
+    return service_model.retrying(serve_func, env=self.env)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/service/model.py", line 184, in retrying
+    result = func()
+             ^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2330, in _serve_ir_http
+    response = self.dispatcher.dispatch(rule.endpoint, args)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2452, in dispatch
+    return self.request.registry['ir.http']._dispatch(endpoint)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_http.py", line 355, in _dispatch
+    result = endpoint(**request.params)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 788, in route_wrapper
+    result = endpoint(self, *args, **params_ok)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/addons/web/controllers/binary.py", line 150, in content_assets
+    stream = env['ir.binary']._get_stream_from(attachment, 'raw', filename)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_binary.py", line 124, in _get_stream_from
+    stream = self._record_to_stream(record, field_name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_binary.py", line 70, in _record_to_stream
+    return record._to_http_stream()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_attachment.py", line 913, in _to_http_stream
+    stat = os.stat(stream.path)
+           ^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/odoo/snap/code/247/.local/share/Odoo/filestore/KSWCO/23/23b035552184e0a9502d80756dd8f02e0946aab1'
+2026-06-15 07:36:03,216 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:36:03] "GET /web/assets/f06353d/web.assets_frontend_minimal.min.js HTTP/1.1" 500 - 4 0.004 0.010
+2026-06-15 07:36:04,210 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:36:04] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.005 0.012
+2026-06-15 07:36:04,591 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:36:04] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.006 0.011
+2026-06-15 07:36:05,197 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:36:05] "GET /web/service-worker.js HTTP/1.1" 200 - 2 0.002 0.006
+2026-06-15 07:36:05,218 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:36:05] "GET /web/service-worker.js HTTP/1.1" 200 - 2 0.002 0.006
+2026-06-15 07:36:12,506 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:36:14,906 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:36:34,343 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:36:34] "GET /web/service-worker.js HTTP/1.1" 200 - 2 0.002 0.006
+2026-06-15 07:36:54,783 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:36:54] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.004 0.019
+2026-06-15 07:37:04,711 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:37:04] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.008 0.031
+2026-06-15 07:37:05,072 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:37:05] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.007 0.020
+2026-06-15 07:37:12,625 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:37:16,010 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:37:42,877 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:37:42] "GET /web/login?redirect=/odoo/action-543/1?debug%3D1 HTTP/1.1" 200 - 4 0.026 0.078
+2026-06-15 07:37:43,111 14259 ERROR KSWCO odoo.http: Exception during request handling. 
+Traceback (most recent call last):
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2802, in __call__
+    response = request._serve_db()
+               ^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2277, in _serve_db
+    raise self._update_served_exception(exc)
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2275, in _serve_db
+    return service_model.retrying(serve_func, env=self.env)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/service/model.py", line 184, in retrying
+    result = func()
+             ^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2330, in _serve_ir_http
+    response = self.dispatcher.dispatch(rule.endpoint, args)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2452, in dispatch
+    return self.request.registry['ir.http']._dispatch(endpoint)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_http.py", line 355, in _dispatch
+    result = endpoint(**request.params)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 788, in route_wrapper
+    result = endpoint(self, *args, **params_ok)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/addons/web/controllers/binary.py", line 150, in content_assets
+    stream = env['ir.binary']._get_stream_from(attachment, 'raw', filename)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_binary.py", line 124, in _get_stream_from
+    stream = self._record_to_stream(record, field_name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_binary.py", line 70, in _record_to_stream
+    return record._to_http_stream()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_attachment.py", line 913, in _to_http_stream
+    stat = os.stat(stream.path)
+           ^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/odoo/snap/code/247/.local/share/Odoo/filestore/KSWCO/23/23b035552184e0a9502d80756dd8f02e0946aab1'
+2026-06-15 07:37:43,112 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:37:43] "GET /web/assets/f06353d/web.assets_frontend_minimal.min.js HTTP/1.1" 500 - 4 0.003 0.009
+2026-06-15 07:37:43,145 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:37:43] "GET /web/binary/company_logo HTTP/1.1" 304 - 2 0.001 0.003
+2026-06-15 07:37:44,783 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:37:44] "GET /web/service-worker.js HTTP/1.1" 200 - 2 0.003 0.006
+2026-06-15 07:37:55,289 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:37:55] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.006 0.014
+2026-06-15 07:38:05,411 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:38:05] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.003 0.023
+2026-06-15 07:38:05,645 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:38:05] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.005 0.021
+2026-06-15 07:38:12,723 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:38:14,200 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:38:14] "GET /web/service-worker.js HTTP/1.1" 200 - 2 0.002 0.009
+2026-06-15 07:38:17,110 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:38:55,823 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:38:55] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.007 0.013
+2026-06-15 07:39:06,116 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:39:06] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.011 0.027
+2026-06-15 07:39:06,485 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:39:06] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.004 0.020
+2026-06-15 07:39:12,838 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:39:18,216 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:39:56,445 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:39:56] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.004 0.014
+2026-06-15 07:40:06,580 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:40:06] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.006 0.015
+2026-06-15 07:40:06,640 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:40:06] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.005 0.011
+2026-06-15 07:40:12,935 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:40:19,305 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:40:57,018 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:40:57] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.002 0.020
+2026-06-15 07:41:07,251 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:41:07] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.008 0.011
+2026-06-15 07:41:07,690 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:41:07] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.005 0.012
+2026-06-15 07:41:13,032 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:41:20,407 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:41:57,285 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:41:57] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.005 0.012
+2026-06-15 07:42:08,011 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:42:08] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.004 0.013
+2026-06-15 07:42:08,526 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:42:08] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.002 0.005
+2026-06-15 07:42:13,123 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:42:21,513 14259 INFO KSWCO odoo.addons.base.models.ir_cron: Job 'Biometric: Incremental Attendance Download\n        (every 30 minutes)' (35) starting 
+2026-06-15 07:42:21,525 14259 ERROR KSWCO odoo.addons.base.models.ir_cron: Job 'Biometric: Incremental Attendance Download\n        (every 30 minutes)' (35) server action #542 failed 
+Traceback (most recent call last):
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_cron.py", line 459, in _run_job
+    cron._callback(job['cron_name'], job['ir_actions_server_id'])
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_cron.py", line 619, in _callback
+    self.env['ir.actions.server'].browse(server_action_id).run()
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_actions.py", line 1173, in run
+    eval_context = self._get_eval_context(action)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/addons/mail/models/ir_actions_server.py", line 394, in _get_eval_context
+    eval_context = super()._get_eval_context(action=action)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_actions.py", line 1125, in _get_eval_context
+    model = self.env[model_name]
+            ~~~~~~~~^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/orm/environments.py", line 107, in __getitem__
+    return self.registry[model_name](self, (), ())
+           ~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/orm/registry.py", line 335, in __getitem__
+    return self.models[model_name]
+           ~~~~~~~~~~~^^^^^^^^^^^^
+KeyError: 'biometric.device.details'
+2026-06-15 07:42:21,667 14259 INFO KSWCO odoo.addons.base.models.ir_cron: Job 'Biometric: Incremental Attendance Download\n        (every 30 minutes)' (35) failed (#loop 1; done 0; remaining 0; duration 0.15s) 
+2026-06-15 07:42:21,681 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:42:57,994 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:42:57] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.003 0.005
+2026-06-15 07:43:08,626 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:43:08] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.014 0.012
+2026-06-15 07:43:09,061 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:43:09] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.006 0.019
+2026-06-15 07:43:13,200 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:43:22,763 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:43:59,094 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:43:59] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.007 0.019
+2026-06-15 07:44:09,326 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:44:09] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.005 0.076
+2026-06-15 07:44:09,473 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:44:09] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.002 0.010
+2026-06-15 07:44:13,307 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:44:23,890 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:44:59,718 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:44:59] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.007 0.018
+2026-06-15 07:45:09,693 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:45:09] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.004 0.014
+2026-06-15 07:45:10,361 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:45:10] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.005 0.012
+2026-06-15 07:45:13,399 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:45:24,993 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:46:00,291 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:46:00] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.002 0.006
+2026-06-15 07:46:10,166 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:46:10] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.004 0.011
+2026-06-15 07:46:10,843 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:46:10] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.004 0.011
+2026-06-15 07:46:13,503 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:46:26,092 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:47:01,287 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:47:01] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.006 0.020
+2026-06-15 07:47:10,715 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:47:10] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.007 0.020
+2026-06-15 07:47:11,934 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:47:11] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.007 0.047
+2026-06-15 07:47:13,632 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:47:27,228 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:48:01,815 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:48:01] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.006 0.022
+2026-06-15 07:48:11,109 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:48:11] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.016 0.076
+2026-06-15 07:48:12,967 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:48:12] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.009 0.048
+2026-06-15 07:48:13,740 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:48:28,354 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:49:02,728 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:49:02] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.002 0.010
+2026-06-15 07:49:12,098 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:49:12] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.009 0.012
+2026-06-15 07:49:13,144 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:49:13] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.007 0.013
+2026-06-15 07:49:13,889 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:49:29,494 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:50:03,056 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:50:03] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.009 0.020
+2026-06-15 07:50:13,143 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:50:13] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.004 0.012
+2026-06-15 07:50:13,778 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:50:13] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.006 0.015
+2026-06-15 07:50:13,988 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:50:30,568 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:51:03,848 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:51:03] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.007 0.015
+2026-06-15 07:51:04,582 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:51:04] "GET /web/login?redirect=/odoo/action-543/1?debug%3D1 HTTP/1.1" 200 - 4 0.007 0.022
+2026-06-15 07:51:04,655 14259 ERROR KSWCO odoo.http: Exception during request handling. 
+Traceback (most recent call last):
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2802, in __call__
+    response = request._serve_db()
+               ^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2277, in _serve_db
+    raise self._update_served_exception(exc)
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2275, in _serve_db
+    return service_model.retrying(serve_func, env=self.env)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/service/model.py", line 184, in retrying
+    result = func()
+             ^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2330, in _serve_ir_http
+    response = self.dispatcher.dispatch(rule.endpoint, args)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2452, in dispatch
+    return self.request.registry['ir.http']._dispatch(endpoint)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_http.py", line 355, in _dispatch
+    result = endpoint(**request.params)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 788, in route_wrapper
+    result = endpoint(self, *args, **params_ok)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/addons/web/controllers/binary.py", line 150, in content_assets
+    stream = env['ir.binary']._get_stream_from(attachment, 'raw', filename)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_binary.py", line 124, in _get_stream_from
+    stream = self._record_to_stream(record, field_name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_binary.py", line 70, in _record_to_stream
+    return record._to_http_stream()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_attachment.py", line 913, in _to_http_stream
+    stat = os.stat(stream.path)
+           ^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/odoo/snap/code/247/.local/share/Odoo/filestore/KSWCO/23/23b035552184e0a9502d80756dd8f02e0946aab1'
+2026-06-15 07:51:04,659 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:51:04] "GET /web/assets/f06353d/web.assets_frontend_minimal.min.js HTTP/1.1" 500 - 4 0.008 0.017
+2026-06-15 07:51:04,657 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:51:04] "GET /web/binary/company_logo HTTP/1.1" 304 - 2 0.006 0.015
+2026-06-15 07:51:06,650 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:51:06] "GET /web/service-worker.js HTTP/1.1" 200 - 2 0.001 0.003
+2026-06-15 07:51:10,765 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:51:10] "GET / HTTP/1.1" 303 - 1 0.002 0.010
+2026-06-15 07:51:10,788 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:51:10] "GET /odoo HTTP/1.1" 303 - 1 0.001 0.003
+2026-06-15 07:51:10,865 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:51:10] "GET /web/login?redirect=/odoo? HTTP/1.1" 200 - 4 0.013 0.043
+2026-06-15 07:51:10,924 14259 ERROR KSWCO odoo.http: Exception during request handling. 
+Traceback (most recent call last):
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2802, in __call__
+    response = request._serve_db()
+               ^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2277, in _serve_db
+    raise self._update_served_exception(exc)
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2275, in _serve_db
+    return service_model.retrying(serve_func, env=self.env)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/service/model.py", line 184, in retrying
+    result = func()
+             ^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2330, in _serve_ir_http
+    response = self.dispatcher.dispatch(rule.endpoint, args)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2452, in dispatch
+    return self.request.registry['ir.http']._dispatch(endpoint)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_http.py", line 355, in _dispatch
+    result = endpoint(**request.params)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 788, in route_wrapper
+    result = endpoint(self, *args, **params_ok)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/addons/web/controllers/binary.py", line 150, in content_assets
+    stream = env['ir.binary']._get_stream_from(attachment, 'raw', filename)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_binary.py", line 124, in _get_stream_from
+    stream = self._record_to_stream(record, field_name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_binary.py", line 70, in _record_to_stream
+    return record._to_http_stream()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_attachment.py", line 913, in _to_http_stream
+    stat = os.stat(stream.path)
+           ^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/odoo/snap/code/247/.local/share/Odoo/filestore/KSWCO/23/23b035552184e0a9502d80756dd8f02e0946aab1'
+2026-06-15 07:51:10,926 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:51:10] "GET /web/binary/company_logo HTTP/1.1" 304 - 2 0.005 0.005
+2026-06-15 07:51:10,926 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:51:10] "GET /web/assets/f06353d/web.assets_frontend_minimal.min.js HTTP/1.1" 500 - 4 0.004 0.007
+2026-06-15 07:51:12,703 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:51:12] "GET /web/service-worker.js HTTP/1.1" 200 - 2 0.002 0.006
+2026-06-15 07:51:12,737 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:51:12] "GET /web/service-worker.js HTTP/1.1" 200 - 2 0.002 0.006
+2026-06-15 07:51:13,808 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:51:13] "GET /web/database/manager HTTP/1.1" 200 - 12 0.010 0.680
+2026-06-15 07:51:13,853 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:51:13] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.007 0.015
+2026-06-15 07:51:14,078 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:51:14,608 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:51:14] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.005 0.011
+2026-06-15 07:51:15,456 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:51:15] "GET /web/service-worker.js HTTP/1.1" 200 - 2 0.002 0.005
+2026-06-15 07:51:16,301 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:51:16] "GET /odoo?db=odoo19 HTTP/1.1" 302 - 1 0.001 0.008
+2026-06-15 07:51:16,319 14259 INFO odoo19 odoo.addons.base.models.ir_http: Generating routing map for key None 
+2026-06-15 07:51:16,347 14259 INFO odoo19 werkzeug: 127.0.0.1 - - [15/Jun/2026 07:51:16] "GET /odoo?db=odoo19 HTTP/1.1" 303 - 2 0.003 0.027
+2026-06-15 07:51:16,555 14259 INFO odoo19 werkzeug: 127.0.0.1 - - [15/Jun/2026 07:51:16] "GET /web/login?redirect=/odoo?db%3Dodoo19 HTTP/1.1" 200 - 44 0.032 0.156
+2026-06-15 07:51:16,640 14259 ERROR odoo19 odoo.http: Exception during request handling. 
+Traceback (most recent call last):
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2802, in __call__
+    response = request._serve_db()
+               ^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2277, in _serve_db
+    raise self._update_served_exception(exc)
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2275, in _serve_db
+    return service_model.retrying(serve_func, env=self.env)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/service/model.py", line 184, in retrying
+    result = func()
+             ^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2330, in _serve_ir_http
+    response = self.dispatcher.dispatch(rule.endpoint, args)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2452, in dispatch
+    return self.request.registry['ir.http']._dispatch(endpoint)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_http.py", line 355, in _dispatch
+    result = endpoint(**request.params)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 788, in route_wrapper
+    result = endpoint(self, *args, **params_ok)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/addons/web/controllers/binary.py", line 150, in content_assets
+    stream = env['ir.binary']._get_stream_from(attachment, 'raw', filename)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_binary.py", line 124, in _get_stream_from
+    stream = self._record_to_stream(record, field_name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_binary.py", line 70, in _record_to_stream
+    return record._to_http_stream()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_attachment.py", line 913, in _to_http_stream
+    stat = os.stat(stream.path)
+           ^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/odoo/snap/code/247/.local/share/Odoo/filestore/odoo19/23/23b035552184e0a9502d80756dd8f02e0946aab1'
+2026-06-15 07:51:16,649 14259 INFO odoo19 werkzeug: 127.0.0.1 - - [15/Jun/2026 07:51:16] "GET /web/assets/f06353d/web.assets_frontend_minimal.min.js HTTP/1.1" 500 - 4 0.018 0.032
+2026-06-15 07:51:16,652 14259 ERROR odoo19 odoo.http: Exception during request handling. 
+Traceback (most recent call last):
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2802, in __call__
+    response = request._serve_db()
+               ^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2277, in _serve_db
+    raise self._update_served_exception(exc)
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2275, in _serve_db
+    return service_model.retrying(serve_func, env=self.env)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/service/model.py", line 184, in retrying
+    result = func()
+             ^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2330, in _serve_ir_http
+    response = self.dispatcher.dispatch(rule.endpoint, args)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2452, in dispatch
+    return self.request.registry['ir.http']._dispatch(endpoint)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_http.py", line 355, in _dispatch
+    result = endpoint(**request.params)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 788, in route_wrapper
+    result = endpoint(self, *args, **params_ok)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/addons/web/controllers/binary.py", line 150, in content_assets
+    stream = env['ir.binary']._get_stream_from(attachment, 'raw', filename)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_binary.py", line 124, in _get_stream_from
+    stream = self._record_to_stream(record, field_name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_binary.py", line 70, in _record_to_stream
+    return record._to_http_stream()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_attachment.py", line 913, in _to_http_stream
+    stat = os.stat(stream.path)
+           ^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/odoo/snap/code/247/.local/share/Odoo/filestore/odoo19/76/768177f3571a31dcd608b304c83f96339f0e5657'
+2026-06-15 07:51:16,657 14259 INFO odoo19 werkzeug: 127.0.0.1 - - [15/Jun/2026 07:51:16] "GET /web/assets/1485d5c/web.assets_frontend.min.css HTTP/1.1" 500 - 4 0.028 0.029
+2026-06-15 07:51:16,660 14259 INFO odoo19 werkzeug: 127.0.0.1 - - [15/Jun/2026 07:51:16] "GET /web/binary/company_logo HTTP/1.1" 304 - 2 0.016 0.018
+2026-06-15 07:51:18,250 14259 INFO odoo19 werkzeug: 127.0.0.1 - - [15/Jun/2026 07:51:18] "GET /web/service-worker.js HTTP/1.1" 200 - 2 0.002 0.016
+2026-06-15 07:51:18,285 14259 INFO odoo19 werkzeug: 127.0.0.1 - - [15/Jun/2026 07:51:18] "GET /web/service-worker.js HTTP/1.1" 200 - 2 0.002 0.013
+2026-06-15 07:51:19,985 14259 INFO odoo19 werkzeug: 127.0.0.1 - - [15/Jun/2026 07:51:19] "GET /odoo?db=KSWCO HTTP/1.1" 302 - 1 0.001 0.007
+2026-06-15 07:51:20,004 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:51:20] "GET /odoo?db=KSWCO HTTP/1.1" 303 - 1 0.001 0.005
+2026-06-15 07:51:20,043 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:51:20] "GET /web/login?redirect=/odoo?db%3DKSWCO HTTP/1.1" 200 - 4 0.007 0.019
+2026-06-15 07:51:20,137 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:51:20] "GET /web/binary/company_logo HTTP/1.1" 304 - 2 0.007 0.023
+2026-06-15 07:51:20,144 14259 ERROR KSWCO odoo.http: Exception during request handling. 
+Traceback (most recent call last):
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2802, in __call__
+    response = request._serve_db()
+               ^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2277, in _serve_db
+    raise self._update_served_exception(exc)
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2275, in _serve_db
+    return service_model.retrying(serve_func, env=self.env)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/service/model.py", line 184, in retrying
+    result = func()
+             ^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2330, in _serve_ir_http
+    response = self.dispatcher.dispatch(rule.endpoint, args)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 2452, in dispatch
+    return self.request.registry['ir.http']._dispatch(endpoint)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_http.py", line 355, in _dispatch
+    result = endpoint(**request.params)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/http.py", line 788, in route_wrapper
+    result = endpoint(self, *args, **params_ok)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/addons/web/controllers/binary.py", line 150, in content_assets
+    stream = env['ir.binary']._get_stream_from(attachment, 'raw', filename)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_binary.py", line 124, in _get_stream_from
+    stream = self._record_to_stream(record, field_name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_binary.py", line 70, in _record_to_stream
+    return record._to_http_stream()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_attachment.py", line 913, in _to_http_stream
+    stat = os.stat(stream.path)
+           ^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/odoo/snap/code/247/.local/share/Odoo/filestore/KSWCO/23/23b035552184e0a9502d80756dd8f02e0946aab1'
+2026-06-15 07:51:20,149 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:51:20] "GET /web/assets/f06353d/web.assets_frontend_minimal.min.js HTTP/1.1" 500 - 4 0.017 0.023
+2026-06-15 07:51:21,707 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:51:21] "GET /web/service-worker.js HTTP/1.1" 200 - 2 0.003 0.006
+2026-06-15 07:51:21,728 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:51:21] "GET /web/service-worker.js HTTP/1.1" 200 - 2 0.002 0.006
+2026-06-15 07:51:31,661 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:51:51,213 14259 INFO KSWCO werkzeug: 127.0.0.1 - - [15/Jun/2026 07:51:51] "GET /web/service-worker.js HTTP/1.1" 200 - 2 0.002 0.007
+2026-06-15 07:52:04,281 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:52:04] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.013 0.028
+2026-06-15 07:52:14,193 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:52:14,220 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:52:14] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.005 0.020
+2026-06-15 07:52:14,740 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:52:14] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.005 0.023
+2026-06-15 07:52:32,738 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:53:05,439 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:53:05] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.004 0.014
+2026-06-15 07:53:14,301 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:53:15,194 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:53:15] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.004 0.012
+2026-06-15 07:53:15,362 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:53:15] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.004 0.015
+2026-06-15 07:53:33,831 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:54:06,241 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:54:06] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.011 0.021
+2026-06-15 07:54:14,388 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:54:15,522 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:54:15] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.006 0.021
+2026-06-15 07:54:16,363 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:54:16] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.003 0.014
+2026-06-15 07:54:34,931 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:55:06,863 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:55:06] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.004 0.028
+2026-06-15 07:55:14,495 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:55:16,199 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:55:16] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.011 0.036
+2026-06-15 07:55:17,284 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:55:17] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.017 0.075
+2026-06-15 07:55:36,034 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:56:07,274 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:56:07] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.004 0.013
+2026-06-15 07:56:14,580 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:56:16,425 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:56:16] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.002 0.005
+2026-06-15 07:56:18,339 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:56:18] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.006 0.010
+2026-06-15 07:56:37,140 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:57:07,557 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:57:07] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.004 0.017
+2026-06-15 07:57:14,669 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:57:17,112 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:57:17] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.004 0.011
+2026-06-15 07:57:19,303 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:57:19] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.005 0.012
+2026-06-15 07:57:34,123 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:57:34] "GET /autodiscover/autodiscover.json?@zdi/Powershell HTTP/1.1" 404 - 1 0.005 0.013
+2026-06-15 07:57:38,200 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:58:07,968 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:58:07] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.004 0.011
+2026-06-15 07:58:14,763 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:58:17,348 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:58:17] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.006 0.016
+2026-06-15 07:58:20,090 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:58:20] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.005 0.020
+2026-06-15 07:58:39,331 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:59:08,192 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:08] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.005 0.014
+2026-06-15 07:59:14,896 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:59:18,234 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:18] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.005 0.024
+2026-06-15 07:59:20,738 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:20] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.004 0.011
+2026-06-15 07:59:22,455 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:22] "GET /.env HTTP/1.1" 404 - 1 0.006 0.021
+2026-06-15 07:59:22,666 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:22] "GET /.env.example HTTP/1.1" 404 - 1 0.005 0.010
+2026-06-15 07:59:23,044 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:23] "GET /.env.development HTTP/1.1" 404 - 1 0.005 0.012
+2026-06-15 07:59:23,087 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:23] "GET /.env.local HTTP/1.1" 404 - 1 0.004 0.013
+2026-06-15 07:59:23,325 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:23] "GET /wp-config.php HTTP/1.1" 404 - 1 0.004 0.011
+2026-06-15 07:59:23,383 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:23] "GET /wp-config.php.bak HTTP/1.1" 404 - 1 0.006 0.018
+2026-06-15 07:59:23,642 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:23] "GET /wp-config.php.save HTTP/1.1" 404 - 1 0.010 0.017
+2026-06-15 07:59:23,701 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:23] "GET /wp-config.php.old HTTP/1.1" 404 - 1 0.006 0.008
+2026-06-15 07:59:23,854 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:23] "GET /.env.production HTTP/1.1" 404 - 1 0.005 0.011
+2026-06-15 07:59:24,357 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:24] "GET /wp-config.php~ HTTP/1.1" 404 - 1 0.002 0.005
+2026-06-15 07:59:24,396 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:24] "GET /.env.prod HTTP/1.1" 404 - 1 0.002 0.007
+2026-06-15 07:59:24,457 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:24] "GET /wp-config.php.dist HTTP/1.1" 404 - 1 0.004 0.013
+2026-06-15 07:59:24,492 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:24] "GET /wp-config.php.orig HTTP/1.1" 404 - 1 0.005 0.010
+2026-06-15 07:59:24,630 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:24] "GET /docker-compose.yml HTTP/1.1" 404 - 1 0.011 0.011
+2026-06-15 07:59:24,644 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:24] "GET /docker-compose.yaml HTTP/1.1" 404 - 1 0.003 0.013
+2026-06-15 07:59:24,759 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:24] "GET /docker-compose.prod.yml HTTP/1.1" 404 - 1 0.004 0.011
+2026-06-15 07:59:24,790 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:24] "GET /docker-compose.override.yml HTTP/1.1" 404 - 1 0.003 0.008
+2026-06-15 07:59:24,945 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:24] "GET /compose.yml HTTP/1.1" 404 - 1 0.008 0.010
+2026-06-15 07:59:24,971 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:24] "GET /config/database.yml HTTP/1.1" 404 - 1 0.004 0.009
+2026-06-15 07:59:25,119 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:25] "GET /config/database.yaml HTTP/1.1" 404 - 1 0.014 0.018
+2026-06-15 07:59:25,147 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:25] "GET /config/secrets.yml HTTP/1.1" 404 - 1 0.003 0.008
+2026-06-15 07:59:25,296 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:25] "GET /app/.env HTTP/1.1" 404 - 1 0.010 0.019
+2026-06-15 07:59:25,302 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:25] "GET /api/.env HTTP/1.1" 404 - 1 0.005 0.009
+2026-06-15 07:59:25,465 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:25] "GET /backend/.env HTTP/1.1" 404 - 1 0.005 0.012
+2026-06-15 07:59:25,508 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:25] "GET /web/.env HTTP/1.1" 404 - 1 0.005 0.010
+2026-06-15 07:59:25,642 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:25] "GET /.env.production.local HTTP/1.1" 404 - 1 0.012 0.025
+2026-06-15 07:59:25,656 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:25] "GET /.env.docker HTTP/1.1" 404 - 1 0.012 0.031
+2026-06-15 07:59:25,795 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:25] "GET /backup/.env HTTP/1.1" 404 - 1 0.011 0.016
+2026-06-15 07:59:25,839 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:25] "GET /app/etc/env.php HTTP/1.1" 404 - 1 0.005 0.010
+2026-06-15 07:59:25,953 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:25] "GET /sites/default/settings.php HTTP/1.1" 404 - 1 0.003 0.021
+2026-06-15 07:59:25,964 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:25] "GET /config.inc.php HTTP/1.1" 404 - 1 0.012 0.011
+2026-06-15 07:59:26,107 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:26] "GET /include/config.php HTTP/1.1" 404 - 1 0.003 0.012
+2026-06-15 07:59:26,149 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:26] "GET /includes/config.php HTTP/1.1" 404 - 1 0.002 0.005
+2026-06-15 07:59:26,710 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:26] "GET /application/config/database.php HTTP/1.1" 404 - 1 0.013 0.017
+2026-06-15 07:59:26,723 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:26] "GET /conf/config.php HTTP/1.1" 404 - 1 0.011 0.025
+2026-06-15 07:59:26,780 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:26] "GET /.env.backup HTTP/1.1" 404 - 1 0.006 0.012
+2026-06-15 07:59:26,807 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:26] "GET /.env.local.php HTTP/1.1" 404 - 1 0.002 0.014
+2026-06-15 07:59:26,977 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:26] "GET /storage/logs/laravel.log HTTP/1.1" 404 - 1 0.005 0.010
+2026-06-15 07:59:27,393 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:27] "GET /.env.bak HTTP/1.1" 404 - 1 0.019 0.038
+2026-06-15 07:59:30,571 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:30] "GET /.env.save HTTP/1.1" 404 - 1 0.004 0.010
+2026-06-15 07:59:30,617 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:30] "GET /.env.old HTTP/1.1" 404 - 1 0.008 0.015
+2026-06-15 07:59:39,060 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:39] "GET /terraform.tfstate HTTP/1.1" 404 - 1 0.002 0.007
+2026-06-15 07:59:39,363 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:39] "GET /.terraform/terraform.tfstate HTTP/1.1" 404 - 1 0.004 0.013
+2026-06-15 07:59:39,691 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:39] "GET /.git/HEAD HTTP/1.1" 404 - 1 0.002 0.009
+2026-06-15 07:59:40,006 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:40] "GET /.git/head HTTP/1.1" 404 - 1 0.006 0.010
+2026-06-15 07:59:40,441 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 07:59:44,219 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:44] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.003 0.020
+2026-06-15 07:59:50,094 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:50] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.007 0.016
+2026-06-15 07:59:58,922 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 07:59:58] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.004 0.012
+2026-06-15 08:00:08,601 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:00:08] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.008 0.012
+2026-06-15 08:00:12,614 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:00:12] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.010 0.032
+2026-06-15 08:00:15,043 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:00:18,763 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:00:18] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.007 0.009
+2026-06-15 08:00:21,688 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:00:21] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.005 0.023
+2026-06-15 08:00:33,803 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:00:33] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.004 0.011
+2026-06-15 08:00:41,538 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:01:06,116 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:01:06] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.004 0.021
+2026-06-15 08:01:09,287 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:01:09] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.007 0.014
+2026-06-15 08:01:15,163 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:01:19,522 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:01:19] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.003 0.026
+2026-06-15 08:01:22,347 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:01:22] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.003 0.015
+2026-06-15 08:01:42,637 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:01:54,760 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:01:54] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.004 0.015
+2026-06-15 08:02:09,950 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:02:09] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.009 0.012
+2026-06-15 08:02:15,239 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:02:20,410 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:02:20] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.013 0.028
+2026-06-15 08:02:23,446 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:02:23] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.021 0.032
+2026-06-15 08:02:43,778 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:02:55,742 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:02:55] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.005 0.013
+2026-06-15 08:03:11,033 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:03:11] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.003 0.016
+2026-06-15 08:03:15,333 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:03:21,200 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:03:21] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.005 0.015
+2026-06-15 08:03:23,792 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:03:23] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.008 0.015
+2026-06-15 08:03:44,900 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:03:56,626 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:03:56] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.005 0.011
+2026-06-15 08:04:11,463 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:04:11] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.005 0.009
+2026-06-15 08:04:15,417 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:04:21,916 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:04:21] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.005 0.011
+2026-06-15 08:04:24,481 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:04:24] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.005 0.012
+2026-06-15 08:04:46,006 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:04:56,867 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:04:56] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.014 0.048
+2026-06-15 08:05:11,677 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:05:11] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.003 0.028
+2026-06-15 08:05:15,549 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:05:22,955 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:05:22] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.004 0.014
+2026-06-15 08:05:24,960 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:05:24] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.012 0.024
+2026-06-15 08:05:47,175 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:05:57,287 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:05:57] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.008 0.015
+2026-06-15 08:06:12,703 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:06:12] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.006 0.011
+2026-06-15 08:06:15,664 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:06:23,330 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:06:23] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.004 0.013
+2026-06-15 08:06:25,267 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:06:25] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.003 0.018
+2026-06-15 08:06:48,278 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:06:57,527 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:06:57] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.009 0.021
+2026-06-15 08:07:13,103 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:07:13] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.005 0.011
+2026-06-15 08:07:15,750 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:07:23,530 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:07:23] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.005 0.012
+2026-06-15 08:07:25,951 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:07:25] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.005 0.010
+2026-06-15 08:07:49,387 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:07:58,195 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:07:58] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.024 0.025
+2026-06-15 08:08:13,406 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:08:13] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.009 0.026
+2026-06-15 08:08:15,835 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:08:24,108 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:08:24] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.003 0.011
+2026-06-15 08:08:26,326 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:08:26] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.008 0.011
+2026-06-15 08:08:50,502 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:08:59,295 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:08:59] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.009 0.040
+2026-06-15 08:09:14,082 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:09:14] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.026 0.066
+2026-06-15 08:09:16,062 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:09:24,692 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:09:24] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.012 0.041
+2026-06-15 08:09:27,528 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:09:27] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.023 0.059
+2026-06-15 08:09:51,668 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:10:00,510 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:10:00] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.024 0.038
+2026-06-15 08:10:15,313 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:10:15] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.037 0.073
+2026-06-15 08:10:16,376 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:10:25,049 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:10:25] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.028 0.091
+2026-06-15 08:10:28,027 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:10:28] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.054 0.091
+2026-06-15 08:10:52,989 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:11:01,178 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:11:01] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.019 0.054
+2026-06-15 08:11:16,447 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:11:16] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.036 0.031
+2026-06-15 08:11:16,696 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:11:25,679 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:11:25] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.021 0.050
+2026-06-15 08:11:29,157 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:11:29] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.042 0.066
+2026-06-15 08:11:54,303 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:12:02,206 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:12:02] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.034 0.046
+2026-06-15 08:12:17,415 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:12:17] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.211 0.062
+2026-06-15 08:12:17,504 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:12:26,095 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:12:26] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.034 0.061
+2026-06-15 08:12:30,039 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:12:30] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.021 0.064
+2026-06-15 08:12:55,631 14259 INFO KSWCO odoo.addons.base.models.ir_cron: Job 'Biometric: Incremental Attendance Download\n        (every 30 minutes)' (35) starting 
+2026-06-15 08:12:55,811 14259 ERROR KSWCO odoo.addons.base.models.ir_cron: Job 'Biometric: Incremental Attendance Download\n        (every 30 minutes)' (35) server action #542 failed 
+Traceback (most recent call last):
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_cron.py", line 459, in _run_job
+    cron._callback(job['cron_name'], job['ir_actions_server_id'])
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_cron.py", line 619, in _callback
+    self.env['ir.actions.server'].browse(server_action_id).run()
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_actions.py", line 1173, in run
+    eval_context = self._get_eval_context(action)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/addons/mail/models/ir_actions_server.py", line 394, in _get_eval_context
+    eval_context = super()._get_eval_context(action=action)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_actions.py", line 1125, in _get_eval_context
+    model = self.env[model_name]
+            ~~~~~~~~^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/orm/environments.py", line 107, in __getitem__
+    return self.registry[model_name](self, (), ())
+           ~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/orm/registry.py", line 335, in __getitem__
+    return self.models[model_name]
+           ~~~~~~~~~~~^^^^^^^^^^^^
+KeyError: 'biometric.device.details'
+2026-06-15 08:12:55,862 14259 INFO KSWCO odoo.addons.base.models.ir_cron: Job 'Biometric: Incremental Attendance Download\n        (every 30 minutes)' (35) failed (#loop 1; done 0; remaining 0; duration 0.23s) 
+2026-06-15 08:12:55,991 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:13:02,974 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:13:02] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.025 0.058
+2026-06-15 08:13:17,825 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:13:17] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.011 0.077
+2026-06-15 08:13:17,888 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:13:26,883 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:13:26] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.016 0.073
+2026-06-15 08:13:30,823 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:13:30] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.007 0.043
+2026-06-15 08:13:57,142 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:14:03,643 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:14:03] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.025 0.056
+2026-06-15 08:14:18,074 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:14:18,512 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:14:18] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.024 0.070
+2026-06-15 08:14:27,305 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:14:27] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.028 0.040
+2026-06-15 08:14:31,674 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:14:31] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.014 0.031
+2026-06-15 08:14:58,329 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:15:04,251 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:15:04] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.023 0.043
+2026-06-15 08:15:18,276 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:15:18,824 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:15:18] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.010 0.061
+2026-06-15 08:15:28,081 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:15:28] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.014 0.047
+2026-06-15 08:15:32,763 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:15:32] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.031 0.090
+2026-06-15 08:15:59,573 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:16:05,382 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:16:05] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.014 0.021
+2026-06-15 08:16:18,415 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:16:19,341 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:16:19] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.006 0.017
+2026-06-15 08:16:23,462 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:16:23] "GET /web/service-worker.js HTTP/1.1" 404 - 1 0.010 0.036
+2026-06-15 08:16:29,236 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:16:29] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.016 0.054
+2026-06-15 08:16:33,310 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:16:33] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.023 0.030
+2026-06-15 08:17:00,853 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:17:06,063 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:17:06] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.013 0.041
+2026-06-15 08:17:18,622 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:17:19,860 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:17:19] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.017 0.029
+2026-06-15 08:17:30,100 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:17:30] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.065 0.104
+2026-06-15 08:17:33,981 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:17:33] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.032 0.037
+2026-06-15 08:18:02,073 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:18:07,163 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:18:07] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.024 0.069
+2026-06-15 08:18:18,752 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:18:20,703 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:18:20] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.051 0.044
+2026-06-15 08:18:30,722 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:18:30] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.016 0.046
+2026-06-15 08:18:34,364 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:18:34] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.013 0.085
+2026-06-15 08:19:03,297 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:19:05,901 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:19:05] "GET /.git/config HTTP/1.1" 404 - 1 0.041 0.148
+2026-06-15 08:19:08,242 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:19:08] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.020 0.059
+2026-06-15 08:19:18,922 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:19:21,808 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:19:21] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.011 0.054
+2026-06-15 08:19:31,126 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:19:31] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.026 0.039
+2026-06-15 08:19:35,215 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:19:35] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.014 0.044
+2026-06-15 08:20:04,565 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:20:09,376 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:20:09] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.016 0.054
+2026-06-15 08:20:19,194 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:20:22,610 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:20:22] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.037 0.196
+2026-06-15 08:20:31,507 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:20:31] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.013 0.047
+2026-06-15 08:20:35,773 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:20:35] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.029 0.038
+2026-06-15 08:21:05,855 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:21:09,770 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:21:09] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.003 0.005
+2026-06-15 08:21:19,336 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:21:23,876 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:21:23] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.005 0.014
+2026-06-15 08:21:32,500 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:21:32] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.004 0.006
+2026-06-15 08:21:36,303 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:21:36] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.003 0.013
+2026-06-15 08:22:06,953 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:22:10,653 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:22:10] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.004 0.008
+2026-06-15 08:22:19,419 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:22:24,620 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:22:24] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.003 0.005
+2026-06-15 08:22:33,253 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:22:33] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.004 0.016
+2026-06-15 08:22:36,560 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:22:36] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.004 0.006
+2026-06-15 08:23:08,277 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:23:08,375 14259 INFO odoo19 odoo.addons.base.models.ir_cron: Job 'Notification: Notify scheduled messages' (8) starting 
+2026-06-15 08:23:08,580 14259 INFO odoo19 odoo.addons.base.models.ir_cron: Job 'Notification: Notify scheduled messages' (8) fully done (#loop 1; done 0; remaining 0; duration 0.21s) 
+2026-06-15 08:23:08,693 14259 INFO odoo19 odoo.addons.base.models.ir_cron: Job 'Mail: Email Queue Manager' (3) starting 
+2026-06-15 08:23:08,962 14259 INFO odoo19 odoo.addons.base.models.ir_cron: Job 'Mail: Email Queue Manager' (3) fully done (#loop 1; done 0; remaining 0; duration 0.27s) 
+2026-06-15 08:23:11,210 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:23:11] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.011 0.052
+2026-06-15 08:23:19,599 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:23:25,295 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:23:25] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.015 0.051
+2026-06-15 08:23:34,291 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:23:34] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.027 0.049
+2026-06-15 08:23:37,593 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:23:37] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.007 0.037
+2026-06-15 08:24:10,295 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:24:12,234 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:24:12] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.020 0.091
+2026-06-15 08:24:19,814 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:24:26,490 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:24:26] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.012 0.064
+2026-06-15 08:24:35,106 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:24:35] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.013 0.054
+2026-06-15 08:24:38,165 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:24:38] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.017 0.036
+2026-06-15 08:25:11,600 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:25:13,432 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:25:13] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.028 0.049
+2026-06-15 08:25:20,076 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:25:26,990 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:25:26] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.017 0.044
+2026-06-15 08:25:35,639 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:25:35] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.014 0.030
+2026-06-15 08:25:38,431 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:25:38] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.019 0.049
+2026-06-15 08:26:12,859 14259 INFO KSWCO odoo.addons.base.models.ir_cron: Job 'Notification: Notify scheduled messages' (8) starting 
+2026-06-15 08:26:13,094 14259 INFO KSWCO odoo.addons.base.models.ir_cron: Job 'Notification: Notify scheduled messages' (8) fully done (#loop 1; done 0; remaining 0; duration 0.24s) 
+2026-06-15 08:26:13,184 14259 INFO KSWCO odoo.addons.base.models.ir_cron: Job 'Mail: Email Queue Manager' (3) starting 
+2026-06-15 08:26:13,381 14259 INFO KSWCO odoo.addons.base.models.ir_cron: Job 'Mail: Email Queue Manager' (3) fully done (#loop 1; done 0; remaining 0; duration 0.20s) 
+2026-06-15 08:26:13,435 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:26:14,096 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:26:14] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.005 0.034
+2026-06-15 08:26:20,267 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:26:28,143 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:26:28] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.010 0.022
+2026-06-15 08:26:36,100 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:26:36] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.007 0.023
+2026-06-15 08:26:39,487 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:26:39] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.033 0.026
+2026-06-15 08:27:14,689 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:27:15,168 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:27:15] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.015 0.043
+2026-06-15 08:27:20,473 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:27:28,467 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:27:28] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.021 0.069
+2026-06-15 08:27:36,544 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:27:36] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.012 0.073
+2026-06-15 08:27:40,465 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:27:40] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.021 0.094
+2026-06-15 08:28:15,900 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:28:16,166 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:28:16] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.011 0.035
+2026-06-15 08:28:20,651 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:28:29,060 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:28:29] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.015 0.043
+2026-06-15 08:28:37,162 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:28:37] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.013 0.080
+2026-06-15 08:28:41,101 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:28:41] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.013 0.028
+2026-06-15 08:29:17,142 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:29:17,293 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:29:17] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.020 0.050
+2026-06-15 08:29:20,918 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:29:30,128 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:29:30] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.013 0.044
+2026-06-15 08:29:38,018 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:29:38] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.013 0.034
+2026-06-15 08:29:42,025 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:29:42] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.030 0.179
+2026-06-15 08:30:18,382 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:30:18,514 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:18] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.015 0.048
+2026-06-15 08:30:21,319 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:30:26,999 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:26] "GET /.env.local HTTP/1.1" 404 - 1 0.032 0.056
+2026-06-15 08:30:27,082 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:27] "GET /.env.prod HTTP/1.1" 404 - 1 0.028 0.105
+2026-06-15 08:30:27,084 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:27] "GET /.env.production HTTP/1.1" 404 - 1 0.039 0.098
+2026-06-15 08:30:27,139 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:27] "GET /.env HTTP/1.1" 404 - 1 0.049 0.143
+2026-06-15 08:30:27,170 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:27] "GET /.env.backup HTTP/1.1" 404 - 1 0.027 0.137
+2026-06-15 08:30:27,560 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:27] "GET /.env.example HTTP/1.1" 404 - 1 0.012 0.021
+2026-06-15 08:30:27,979 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:27] "GET /wp-config.php.save HTTP/1.1" 404 - 1 0.032 0.144
+2026-06-15 08:30:27,987 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:27] "GET /.env.development HTTP/1.1" 404 - 1 0.016 0.215
+2026-06-15 08:30:27,990 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:27] "GET /wp-config.php.bak HTTP/1.1" 404 - 1 0.041 0.154
+2026-06-15 08:30:28,030 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:28] "GET /wp-config.php HTTP/1.1" 404 - 1 0.044 0.214
+2026-06-15 08:30:28,058 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:28] "GET /wp-config.php.old HTTP/1.1" 404 - 1 0.026 0.034
+2026-06-15 08:30:28,601 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:28] "GET /wp-config.php~ HTTP/1.1" 404 - 1 0.023 0.060
+2026-06-15 08:30:28,660 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:28] "GET /wp-config.php.dist HTTP/1.1" 404 - 1 0.045 0.081
+2026-06-15 08:30:29,135 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:29] "GET /docker-compose.yml HTTP/1.1" 404 - 1 0.030 0.092
+2026-06-15 08:30:29,155 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:29] "GET /wp-config.php.orig HTTP/1.1" 404 - 1 0.044 0.109
+2026-06-15 08:30:29,170 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:29] "GET /docker-compose.yaml HTTP/1.1" 404 - 1 0.031 0.105
+2026-06-15 08:30:29,633 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:29] "GET /docker-compose.prod.yml HTTP/1.1" 404 - 1 0.023 0.059
+2026-06-15 08:30:29,664 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:29] "GET /docker-compose.override.yml HTTP/1.1" 404 - 1 0.028 0.070
+2026-06-15 08:30:30,103 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:30] "GET /compose.yml HTTP/1.1" 404 - 1 0.051 0.094
+2026-06-15 08:30:30,105 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:30] "GET /config/database.yaml HTTP/1.1" 404 - 1 0.024 0.085
+2026-06-15 08:30:30,144 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:30] "GET /config/database.yml HTTP/1.1" 404 - 1 0.038 0.091
+2026-06-15 08:30:30,446 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:30] "GET /config/secrets.yml HTTP/1.1" 404 - 1 0.049 0.075
+2026-06-15 08:30:30,470 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:30] "GET /app/.env HTTP/1.1" 404 - 1 0.022 0.123
+2026-06-15 08:30:30,572 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:30] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.016 0.042
+2026-06-15 08:30:30,875 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:30] "GET /api/.env HTTP/1.1" 404 - 1 0.025 0.203
+2026-06-15 08:30:31,113 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:31] "GET /web/.env HTTP/1.1" 404 - 1 0.040 0.397
+2026-06-15 08:30:31,220 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:31] "GET /backend/.env HTTP/1.1" 404 - 1 0.017 0.032
+2026-06-15 08:30:31,339 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:31] "GET /.env.production.local HTTP/1.1" 404 - 1 0.047 0.062
+2026-06-15 08:30:31,368 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:31] "GET /.env.docker HTTP/1.1" 404 - 1 0.023 0.098
+2026-06-15 08:30:31,948 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:31] "GET /backup/.env HTTP/1.1" 404 - 1 0.022 0.028
+2026-06-15 08:30:32,102 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:32] "GET /app/etc/env.php HTTP/1.1" 404 - 1 0.040 0.065
+2026-06-15 08:30:32,186 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:32] "GET /sites/default/settings.php HTTP/1.1" 404 - 1 0.033 0.129
+2026-06-15 08:30:32,188 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:32] "GET /config.inc.php HTTP/1.1" 404 - 1 0.027 0.070
+2026-06-15 08:30:32,244 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:32] "GET /include/config.php HTTP/1.1" 404 - 1 0.043 0.105
+2026-06-15 08:30:32,558 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:32] "GET /includes/config.php HTTP/1.1" 404 - 1 0.015 0.043
+2026-06-15 08:30:32,724 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:32] "GET /application/config/database.php HTTP/1.1" 404 - 1 0.026 0.095
+2026-06-15 08:30:32,731 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:32] "GET /conf/config.php HTTP/1.1" 404 - 1 0.029 0.094
+2026-06-15 08:30:32,786 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:32] "GET /.env.local.php HTTP/1.1" 404 - 1 0.061 0.093
+2026-06-15 08:30:32,848 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:32] "GET /config/app.php HTTP/1.1" 404 - 1 0.022 0.033
+2026-06-15 08:30:33,338 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:33] "GET /storage/logs/laravel.log HTTP/1.1" 404 - 1 0.028 0.070
+2026-06-15 08:30:36,051 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:36] "GET /.env.bak HTTP/1.1" 404 - 1 0.026 0.143
+2026-06-15 08:30:38,412 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:38] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.018 0.051
+2026-06-15 08:30:39,503 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:39] "GET /terraform.tfstate HTTP/1.1" 404 - 1 0.014 0.031
+2026-06-15 08:30:40,006 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:40] "GET /.terraform/terraform.tfstate HTTP/1.1" 404 - 1 0.023 0.035
+2026-06-15 08:30:40,547 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:40] "GET /.git/HEAD HTTP/1.1" 404 - 1 0.015 0.067
+2026-06-15 08:30:41,450 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:41] "GET /.git/head HTTP/1.1" 404 - 1 0.017 0.037
+2026-06-15 08:30:42,793 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:30:42] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.031 0.042
+2026-06-15 08:31:18,941 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:31:18] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.013 0.037
+2026-06-15 08:31:19,609 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:31:21,696 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:31:31,610 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:31:31] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.011 0.037
+2026-06-15 08:31:38,947 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:31:38] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.012 0.036
+2026-06-15 08:31:43,126 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:31:43] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.015 0.054
+2026-06-15 08:32:20,167 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:32:20] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.012 0.037
+2026-06-15 08:32:20,756 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:32:21,969 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:32:32,007 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:32:32] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.008 0.043
+2026-06-15 08:32:40,112 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:32:40] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.019 0.042
+2026-06-15 08:32:43,783 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:32:43] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.023 0.087
+2026-06-15 08:33:20,558 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:33:20] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.013 0.076
+2026-06-15 08:33:21,978 14259 INFO KSWCO odoo.addons.base.models.ir_cron: Job 'Attendance: Automatically check-out employees' (29) starting 
+2026-06-15 08:33:22,388 14259 INFO KSWCO odoo.addons.base.models.ir_cron: Job 'Attendance: Detect Absences for employees' (30) starting 
+2026-06-15 08:33:22,744 14259 INFO KSWCO odoo.addons.base.models.ir_cron: Job 'Attendance: Automatically check-out employees' (29) fully done (#loop 1; done 0; remaining 0; duration 0.77s) 
+2026-06-15 08:33:23,352 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:33:23,376 14259 INFO KSWCO odoo.addons.base.models.ir_cron: Job 'Attendance: Detect Absences for employees' (30) fully done (#loop 1; done 0; remaining 0; duration 0.99s) 
+2026-06-15 08:33:23,521 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:33:32,835 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:33:32] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.016 0.049
+2026-06-15 08:33:40,811 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:33:40] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.010 0.040
+2026-06-15 08:33:44,622 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:33:44] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.024 0.180
+2026-06-15 08:33:56,443 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:33:56] "GET /.env HTTP/1.1" 404 - 1 0.017 0.016
+2026-06-15 08:33:56,475 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:33:56] "GET /.env.old HTTP/1.1" 404 - 1 0.006 0.062
+2026-06-15 08:33:56,497 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:33:56] "GET /.env.dev HTTP/1.1" 404 - 1 0.015 0.071
+2026-06-15 08:33:56,503 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:33:56] "GET /config/.env HTTP/1.1" 404 - 1 0.010 0.079
+2026-06-15 08:33:56,525 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:33:56] "GET /.env.production HTTP/1.1" 404 - 1 0.027 0.084
+2026-06-15 08:33:59,240 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:33:59] "GET /wp-config.php.dist HTTP/1.1" 404 - 1 0.036 0.143
+2026-06-15 08:33:59,241 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:33:59] "GET /docker-compose.yaml HTTP/1.1" 404 - 1 0.019 0.140
+2026-06-15 08:33:59,242 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:33:59] "GET /docker-compose.yml HTTP/1.1" 404 - 1 0.020 0.131
+2026-06-15 08:33:59,242 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:33:59] "GET /wp-config.php.orig HTTP/1.1" 404 - 1 0.006 0.133
+2026-06-15 08:33:59,343 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:33:59] "GET /docker-compose.prod.yml HTTP/1.1" 404 - 1 0.063 0.175
+2026-06-15 08:34:02,236 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:34:02] "GET /docker-compose.override.yml HTTP/1.1" 404 - 1 0.006 0.085
+2026-06-15 08:34:02,237 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:34:02] "GET /compose.yml HTTP/1.1" 404 - 1 0.011 0.075
+2026-06-15 08:34:02,237 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:34:02] "GET /config/secrets.yml HTTP/1.1" 404 - 1 0.016 0.065
+2026-06-15 08:34:02,238 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:34:02] "GET /config/database.yml HTTP/1.1" 404 - 1 0.009 0.071
+2026-06-15 08:34:02,256 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:34:02] "GET /config/database.yaml HTTP/1.1" 404 - 1 0.015 0.082
+2026-06-15 08:34:04,886 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:34:04] "GET /.env.production.local HTTP/1.1" 404 - 1 0.027 0.095
+2026-06-15 08:34:04,888 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:34:04] "GET /backup/.env HTTP/1.1" 404 - 1 0.038 0.109
+2026-06-15 08:34:04,954 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:34:04] "GET /.env.docker HTTP/1.1" 404 - 1 0.021 0.183
+2026-06-15 08:34:04,956 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:34:04] "GET /app/etc/env.php HTTP/1.1" 404 - 1 0.045 0.160
+2026-06-15 08:34:05,016 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:34:05] "GET /sites/default/settings.php HTTP/1.1" 404 - 1 0.060 0.179
+2026-06-15 08:34:06,471 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:34:06] "GET /config.inc.php HTTP/1.1" 404 - 1 0.026 0.080
+2026-06-15 08:34:06,520 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:34:06] "GET /include/config.php HTTP/1.1" 404 - 1 0.042 0.140
+2026-06-15 08:34:07,009 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:34:07] "GET /application/config/database.php HTTP/1.1" 404 - 1 0.060 0.176
+2026-06-15 08:34:07,031 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:34:07] "GET /includes/config.php HTTP/1.1" 404 - 1 0.071 0.160
+2026-06-15 08:34:07,213 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:34:07] "GET /conf/config.php HTTP/1.1" 404 - 1 0.044 0.356
+2026-06-15 08:34:08,819 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:34:08] "GET /.env.local.php HTTP/1.1" 404 - 1 0.032 0.091
+2026-06-15 08:34:09,153 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:34:09] "GET /config/app.php HTTP/1.1" 404 - 1 0.017 0.046
+2026-06-15 08:34:09,577 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:34:09] "GET /storage/logs/laravel.log HTTP/1.1" 404 - 1 0.008 0.061
+2026-06-15 08:34:16,926 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:34:16] "GET /terraform.tfstate HTTP/1.1" 404 - 1 0.032 0.095
+2026-06-15 08:34:19,075 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:34:19] "GET /.terraform/terraform.tfstate HTTP/1.1" 404 - 1 0.012 0.040
+2026-06-15 08:34:20,394 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:34:20] "GET /.git/HEAD HTTP/1.1" 404 - 1 0.016 0.067
+2026-06-15 08:34:21,704 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:34:21] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.013 0.054
+2026-06-15 08:34:22,039 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:34:22] "GET /.git/head HTTP/1.1" 404 - 1 0.012 0.030
+2026-06-15 08:34:23,712 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:34:24,577 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:34:34,095 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:34:34] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.046 0.109
+2026-06-15 08:34:41,521 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:34:41] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.013 0.036
+2026-06-15 08:34:45,148 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:34:45] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.020 0.049
+2026-06-15 08:35:22,661 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:35:22] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.017 0.037
+2026-06-15 08:35:23,880 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:35:25,795 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:35:35,069 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:35:35] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.011 0.038
+2026-06-15 08:35:41,713 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:35:41] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.007 0.020
+2026-06-15 08:35:45,946 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:35:45] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.020 0.100
+2026-06-15 08:36:23,030 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:36:23] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.007 0.050
+2026-06-15 08:36:24,106 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:36:27,081 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:36:35,900 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:36:35] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.014 0.025
+2026-06-15 08:36:41,994 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:36:41] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.014 0.045
+2026-06-15 08:36:47,011 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:36:47] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.017 0.071
+2026-06-15 08:37:23,645 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:37:23] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.009 0.030
+2026-06-15 08:37:24,309 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:37:28,310 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:37:36,382 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:37:36] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.013 0.044
+2026-06-15 08:37:43,129 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:37:43] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.014 0.052
+2026-06-15 08:37:47,967 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:37:47] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.007 0.049
+2026-06-15 08:38:24,149 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:38:24] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.009 0.013
+2026-06-15 08:38:24,432 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:38:29,449 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:38:37,335 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:38:37] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.006 0.022
+2026-06-15 08:38:44,122 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:38:44] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.005 0.012
+2026-06-15 08:38:48,621 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:38:48] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.002 0.007
+2026-06-15 08:39:24,521 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:39:25,012 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:39:25] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.009 0.021
+2026-06-15 08:39:30,545 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:39:38,347 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:39:38] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.006 0.030
+2026-06-15 08:39:44,555 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:39:44] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.008 0.020
+2026-06-15 08:39:49,121 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:39:49] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.002 0.008
+2026-06-15 08:40:24,610 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:40:25,269 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:40:25] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.005 0.012
+2026-06-15 08:40:31,652 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:40:38,642 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:40:38] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.008 0.017
+2026-06-15 08:40:44,980 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:40:44] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.007 0.027
+2026-06-15 08:40:50,104 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:40:50] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.003 0.015
+2026-06-15 08:41:24,742 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:41:25,565 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:41:25] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.010 0.057
+2026-06-15 08:41:32,742 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:41:39,288 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:41:39] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.014 0.034
+2026-06-15 08:41:46,179 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:41:46] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.007 0.023
+2026-06-15 08:41:50,922 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:41:50] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.004 0.023
+2026-06-15 08:42:24,844 14259 INFO KSWCO odoo.addons.base.models.ir_cron: Job 'Biometric: Incremental Attendance Download\n        (every 30 minutes)' (35) starting 
+2026-06-15 08:42:24,862 14259 ERROR KSWCO odoo.addons.base.models.ir_cron: Job 'Biometric: Incremental Attendance Download\n        (every 30 minutes)' (35) server action #542 failed 
+Traceback (most recent call last):
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_cron.py", line 459, in _run_job
+    cron._callback(job['cron_name'], job['ir_actions_server_id'])
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_cron.py", line 619, in _callback
+    self.env['ir.actions.server'].browse(server_action_id).run()
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_actions.py", line 1173, in run
+    eval_context = self._get_eval_context(action)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/addons/mail/models/ir_actions_server.py", line 394, in _get_eval_context
+    eval_context = super()._get_eval_context(action=action)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/addons/base/models/ir_actions.py", line 1125, in _get_eval_context
+    model = self.env[model_name]
+            ~~~~~~~~^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/orm/environments.py", line 107, in __getitem__
+    return self.registry[model_name](self, (), ())
+           ~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "/home/odoo/Odoo/odoo/odoo/orm/registry.py", line 335, in __getitem__
+    return self.models[model_name]
+           ~~~~~~~~~~~^^^^^^^^^^^^
+KeyError: 'biometric.device.details'
+2026-06-15 08:42:24,868 14259 INFO KSWCO odoo.addons.base.models.ir_cron: Job 'Biometric: Incremental Attendance Download\n        (every 30 minutes)' (35) failed (#loop 1; done 0; remaining 0; duration 0.02s) 
+2026-06-15 08:42:24,882 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:42:26,483 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:42:26] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.017 0.097
+2026-06-15 08:42:33,857 14259 WARNING app_one odoo.addons.base.models.ir_cron: Skipping database app_one because of modules to install/upgrade/remove. 
+2026-06-15 08:42:40,154 14259 INFO ? werkzeug: 127.0.0.1 - - [15/Jun/2026 08:42:40] "GET /websocket?version=19.0-2 HTTP/1.1" 404 - 1 0.009 0.018
+2026-06-15 08:42:42,502 14259 INFO ? odoo.service.server: Initiating shutdown 
+2026-06-15 08:42:42,506 14259 INFO ? odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-06-15 08:42:42,730 14259 INFO ? odoo.sql_db: ConnectionPool(read/write;used=0/count=0/max=64): Closed 12 connections  
+2026-06-15 08:42:42,849 14259 INFO ? odoo.service.server: cron1 max age (0s) reached, releasing connection. 
+2026-06-15 08:42:42,854 14259 INFO ? odoo.service.server: cron0 max age (0s) reached, releasing connection. 

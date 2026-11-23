@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Add unpaid_leave_days field to the Service Days Calculator wizard -->
+    <record id="view_absent_days_wizard_form_inherit_unpaid" model="ir.ui.view">
+        <field name="name">absent.days.wizard.form.inherit.unpaid</field>
+        <field name="model">absent.days.wizard</field>
+        <field name="inherit_id" ref="KSW_annual_leave.view_absent_days_wizard_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='annual_leave_taken']" position="before">
+                <field name="unpaid_leave_days"
+                       class="text-danger"
+                       invisible="unpaid_leave_days == 0"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
+

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Archive the stock Odoo "Unpaid" leave type -->
+    <record id="hr_holidays.leave_type_unpaid" model="hr.leave.type">
+        <field name="active" eval="False"/>
+    </record>
+
+    <!-- Create our Unpaid Leave type with multi-step approval -->
+    <record id="leave_type_unpaid_ksw" model="hr.leave.type">
+        <field name="name">Unpaid Leave</field>
+        <field name="is_unpaid_leave" eval="True"/>
+        <field name="leave_validation_type">unpaid_multi</field>
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unpaid" eval="True"/>
+        <field name="color">1</field>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" eval="False"/>
+        <field name="sequence">15</field>
+    </record>
+
+</odoo>
+

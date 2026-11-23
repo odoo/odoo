@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--Portal Template-->
+    <template id="helpdesk_website_inherit"
+              inherit_id="portal.portal_searchbar">
+        <xpath expr="//div[@id='o_portal_navbar_content']" position="after">
+            <div t-if="tickets" id="ticket">
+                <select id="group_select" class="btn btn-secondary">
+                    <option value="0" style="color:gray;">Group by</option>
+                    <option value="1">Stage</option>
+                    <option value="2">Ticket type</option>
+                </select>
+                <input type="text" placeholder="Enter Ticket Number"
+                       id="search_box"/>
+                <button type="button" class="btn btn-secondary"
+                        id="search_ticket" t-on-click="onClick">Search
+                </button>
+            </div>
+        </xpath>
+    </template>
+</odoo>

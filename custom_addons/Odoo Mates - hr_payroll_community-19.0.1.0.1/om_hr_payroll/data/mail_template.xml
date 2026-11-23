@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="mail_template_payslip" model="mail.template">
+            <field name="name">Payslip Template</field>
+            <field name="model_id" ref="om_hr_payroll.model_hr_payslip"/>
+            <field name="email_from">{{ (user.email_formatted)}}</field>
+            <field name="email_to">{{ object.employee_id.work_email }}</field>
+            <field name="subject">Payslip: {{ object.number }}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p> Dear <t t-out="object.employee_id.name or ''"/>,</p>
+                    <p>Please find the attached payslip of the period: <t t-out="object.date_from"/> - <t t-out="object.date_to"/></p>
+                    <p>In case of any queries concerning this matter, do not hesitate to contact our accounting/hr department.</p>
+                    <br/>
+                    Best Regards,
+                    <br/>
+                    <t t-out="user.name"/>
+                    <br/>
+                </div>
+            </field>
+            <field name="report_template_ids" eval="[(4, ref('om_hr_payroll.payslip_details_report'))]"/>
+        </record>
+
+    </data>
+</odoo>

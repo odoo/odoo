@@ -1,0 +1,43 @@
+<odoo>
+    <record id="module_property_category" model="ir.module.category">
+        <field name="name">Real Estate</field>
+    </record>
+
+    <record id="property_privilege" model="res.groups.privilege">
+        <field name="name">Property</field>
+        <field name="category_id" ref="module_property_category"/>
+    </record>
+
+    <record id="property_user_group" model="res.groups">
+        <field name="name">Property User</field>
+        <field name="privilege_id" ref="property_privilege"/>
+    </record>
+
+    <record id="property_manager_group" model="res.groups">
+        <field name="name">Property Manager</field>
+        <field name="privilege_id" ref="property_privilege"/>
+        <field name="implied_ids" eval="[(4, ref('property_user_group'))]"/>
+    </record>
+
+    <record id="property_record_rule_by_user" model="ir.rule">
+        <field name="name">Property: Record Rule by User</field>
+        <field name="model_id" ref="model_property"/>
+        <field name="groups" eval="[(4, ref('property_user_group'))]"/>
+        <field name="domain_force">[('create_uid', '=', user.id)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="property_record_rule_by_manager" model="ir.rule">
+        <field name="name">Property: Record Rule by Manager</field>
+        <field name="model_id" ref="model_property"/>
+        <field name="groups" eval="[(4, ref('property_manager_group'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+</odoo>

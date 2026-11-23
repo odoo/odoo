@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- Leave Approval Report — shared for annual & unpaid leaves     -->
+    <!-- ============================================================ -->
+    <record id="action_report_leave_approval" model="ir.actions.report">
+        <field name="name">Leave Approval Report</field>
+        <field name="model">hr.leave</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">KSW_unpaid_leave.report_leave_approval</field>
+        <field name="report_file">KSW_unpaid_leave.report_leave_approval</field>
+        <field name="binding_model_id" ref="hr_holidays.model_hr_leave"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_leave_approval">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+
+                        <!-- ── Title ── -->
+                        <h2 class="text-center mb-4">
+                            <t t-if="o.holiday_status_id.is_unpaid_leave">
+                                Unpaid Leave — Approval Report
+                            </t>
+                            <t t-elif="o.x_excess_days_accepted and o.x_unpaid_portion_days">
+                                Annual + Unpaid Leave — Approval Report
+                            </t>
+                            <t t-elif="o.holiday_status_id.is_annual_leave">
+                                Annual Leave — Approval Report
+                            </t>
+                            <t t-else="">
+                                Leave — Approval Report
+                            </t>
+                        </h2>
+
+                        <!-- ── Employee Info ── -->
+                        <table class="table table-sm table-bordered mb-3">
+                            <tr>
+                                <td style="width:20%"><strong>Employee</strong></td>
+                                <td style="width:30%" t-out="o.employee_id.name"/>
+                                <td style="width:20%"><strong>Designation</strong></td>
+                                <td style="width:30%" t-out="o.employee_id.job_id.name or ''"/>
+                            </tr>
+                            <tr>
+                                <td><strong>Department</strong></td>
+                                <td t-out="o.employee_id.department_id.name or ''"/>
+                                <td><strong>ID No.</strong></td>
+                                <td t-out="o.employee_id.identification_id or ''"/>
+                            </tr>
+                            <tr>
+                                <td><strong>Leave Type</strong></td>
+                                <td t-out="o.holiday_status_id.name"/>
+                                <td><strong>Status</strong></td>
+                                <td t-out="o.state"/>
+                            </tr>
+                        </table>
+
+                        <!-- ── Leave Details ── -->
+                        <h4>Leave Details</h4>
+                        <table class="table table-sm table-bordered mb-3">
+                            <tr>
+                                <td style="width:25%"><strong>Date From</strong></td>
+                                <td style="width:25%" t-out="o.request_date_from"/>
+                                <td style="width:25%"><strong>Date To</strong></td>
+                                <td style="width:25%" t-out="o.request_date_to"/>
+                            </tr>
+                            <tr>
+                                <td><strong>Calendar Days</strong></td>
+                                <td t-out="'%.0f' % o.number_of_days"/>
+                                <td><strong>Description</strong></td>
+                                <td t-out="o.name or ''"/>
+                            </tr>
+                            <t t-if="o.x_is_full_clearance">
+                                <tr>
+                                    <td><strong>Full Clearance</strong></td>
+                                    <td>Yes</td>
+                                    <td><strong>Balance Consumed</strong></td>
+                                    <td t-out="'%.4f' % o.x_clearance_balance"/>
+                                </tr>
+                            </t>
+                            <t t-if="o.x_excess_days_accepted and o.x_unpaid_portion_days">
+                                <tr>
+                                    <td><strong>Combined Leave</strong></td>
+                                    <td>Yes — Annual + Unpaid</td>
+                                    <td><strong>Total Calendar Days</strong></td>
+                                    <td t-out="'%.0f' % o.x_actual_vacation_days"/>
+                                </tr>
+                                <tr>
+                                    <td><strong>Annual Portion</strong></td>
+                                    <td t-out="'%.4f days' % o.x_annual_portion_days"/>
+                                    <td><strong>Unpaid Portion</strong></td>
+                                    <td t-out="'%.0f days' % o.x_unpaid_portion_days"/>
+                                </tr>
+                            </t>
+                        </table>
+
+                        <!-- ── Approval Steps ── -->
+                        <h4>Approval Steps</h4>
+                        <table class="table table-sm table-bordered mb-3">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Step</th>
+                                    <th>Role</th>
+                                    <th>Approver</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Step 1: DM -->
+                                <tr>
+                                    <td>1</td>
+                                    <td>Direct Manager</td>
+                                    <td t-out="o.x_dm_approved_by.name or ''"/>
+                                    <td t-out="o.x_dm_approved_date or ''"/>
+                                    <td>
+                                        <t t-if="o.x_dm_approved_by">✅ Approved</t>
+                                        <t t-elif="o.x_annual_approval_state == 'pending_dm'">⏳ Pending</t>
+                                        <t t-else="">—</t>
+                                    </td>
+                                </tr>
+                                <!-- Step 2: HR -->
+                                <tr>
+                                    <td>2</td>
+                                    <td>Human Resources</td>
+                                    <td t-out="o.x_hr_approved_by.name or ''"/>
+                                    <td t-out="o.x_hr_approved_date or ''"/>
+                                    <td>
+                                        <t t-if="o.x_hr_approved_by">✅ Approved</t>
+                                        <t t-elif="o.x_annual_approval_state == 'pending_hr'">⏳ Pending</t>
+                                        <t t-else="">—</t>
+                                    </td>
+                                </tr>
+                                <!-- Step 3: GM Initial -->
+                                <tr>
+                                    <td>3</td>
+                                    <td>General Manager (Initial)</td>
+                                    <td t-out="o.x_gm_initial_approved_by.name or ''"/>
+                                    <td t-out="o.x_gm_initial_approved_date or ''"/>
+                                    <td>
+                                        <t t-if="o.x_gm_initial_approved_by">✅ Approved</t>
+                                        <t t-elif="o.x_annual_approval_state == 'pending_gm_initial'">⏳ Pending</t>
+                                        <t t-else="">—</t>
+                                    </td>
+                                </tr>
+                                <!-- Step 4: Accounting -->
+                                <tr>
+                                    <td>4</td>
+                                    <td>Accounting</td>
+                                    <td t-out="o.x_acc_approved_by.name or ''"/>
+                                    <td t-out="o.x_acc_approved_date or ''"/>
+                                    <td>
+                                        <t t-if="o.x_acc_approved_by">✅ Approved</t>
+                                        <t t-elif="o.x_annual_approval_state == 'pending_acc'">⏳ Pending</t>
+                                        <t t-else="">—</t>
+                                    </td>
+                                </tr>
+                                <!-- Step 5: GM Final -->
+                                <tr>
+                                    <td>5</td>
+                                    <td>General Manager (Final)</td>
+                                    <td t-out="o.x_gm_final_approved_by.name or ''"/>
+                                    <td t-out="o.x_gm_final_approved_date or ''"/>
+                                    <td>
+                                        <t t-if="o.x_gm_final_approved_by">✅ Approved</t>
+                                        <t t-elif="o.x_annual_approval_state == 'pending_gm_final'">⏳ Pending</t>
+                                        <t t-else="">—</t>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- ── HR Inputs (if any) ── -->
+                        <t t-if="o.x_penalty_amount or o.x_iqama_renewal_amount or o.x_flight_ticket_amount">
+                            <h4>HR Inputs</h4>
+                            <table class="table table-sm table-bordered mb-3">
+                                <t t-if="o.x_penalty_amount">
+                                    <tr>
+                                        <td style="width:30%"><strong>Penalty Amount</strong></td>
+                                        <td style="width:20%" t-out="'%.2f SAR' % o.x_penalty_amount"/>
+                                        <td style="width:20%"><strong>Description</strong></td>
+                                        <td style="width:30%" t-out="o.x_penalty_description or ''"/>
+                                    </tr>
+                                </t>
+                                <t t-if="o.x_iqama_renewal_amount">
+                                    <tr>
+                                        <td><strong>Iqama Renewal</strong></td>
+                                        <td t-out="'%.2f SAR' % o.x_iqama_renewal_amount"/>
+                                        <td><strong>Description</strong></td>
+                                        <td t-out="o.x_iqama_renewal_description or ''"/>
+                                    </tr>
+                                </t>
+                                <t t-if="o.x_flight_ticket_amount">
+                                    <tr>
+                                        <td><strong>Flight Ticket</strong></td>
+                                        <td t-out="'%.2f SAR' % o.x_flight_ticket_amount"/>
+                                        <td><strong>Description</strong></td>
+                                        <td t-out="o.x_flight_ticket_description or ''"/>
+                                    </tr>
+                                </t>
+                            </table>
+                        </t>
+
+                        <!-- ── Accounting Inputs (annual only) ── -->
+                        <t t-if="not o.holiday_status_id.is_unpaid_leave and (o.x_commission_line_ids or o.x_remaining_loans)">
+                            <h4>Accounting Inputs</h4>
+                            <t t-if="o.x_commission_line_ids">
+                                <table class="table table-sm table-bordered mb-2">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th style="width:70%">Commission — Month / Description</th>
+                                            <th style="width:30%">Amount (SAR)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="o.x_commission_line_ids" t-as="cl">
+                                            <tr>
+                                                <td t-out="cl.name"/>
+                                                <td t-out="'%.2f' % cl.amount"/>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr class="fw-bold">
+                                            <td>Total Additional Commissions</td>
+                                            <td t-out="'%.2f SAR' % o.x_additional_commissions"/>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </t>
+                            <t t-if="o.x_remaining_loans">
+                                <table class="table table-sm table-bordered mb-3">
+                                    <tr>
+                                        <td style="width:30%"><strong>Remaining Loans</strong></td>
+                                        <td style="width:20%" t-out="'%.2f SAR' % o.x_remaining_loans"/>
+                                        <td style="width:20%"><strong>Description</strong></td>
+                                        <td style="width:30%" t-out="o.x_remaining_loans_description or ''"/>
+                                    </tr>
+                                </table>
+                            </t>
+                        </t>
+
+                        <!-- ── Accounting Inputs (unpaid or combined leave) ── -->
+                        <t t-if="(o.holiday_status_id.is_unpaid_leave or (o.x_excess_days_accepted and o.x_unpaid_portion_days)) and (o.x_financial_consideration_excess or o.x_visa_cost_recovery)">
+                            <h4>Accounting Inputs — Unpaid Leave</h4>
+                            <table class="table table-sm table-bordered mb-3">
+                                <t t-if="o.x_financial_consideration_excess">
+                                    <tr>
+                                        <td style="width:30%"><strong>Financial Consideration for Excess Leave</strong></td>
+                                        <td style="width:20%" t-out="'%.2f SAR' % o.x_financial_consideration_excess"/>
+                                        <td style="width:20%"><strong>Description</strong></td>
+                                        <td style="width:30%" t-out="o.x_financial_consideration_excess_description or ''"/>
+                                    </tr>
+                                </t>
+                                <t t-if="o.x_visa_cost_recovery">
+                                    <tr>
+                                        <td><strong>Visa Cost Recovery for Excess Leave</strong></td>
+                                        <td t-out="'%.2f SAR' % o.x_visa_cost_recovery"/>
+                                        <td><strong>Description</strong></td>
+                                        <td t-out="o.x_visa_cost_recovery_description or ''"/>
+                                    </tr>
+                                </t>
+                            </table>
+                        </t>
+
+                        <!-- ── Signature Block ── -->
+                        <div class="row mt-5" style="page-break-inside: avoid;">
+                            <div class="col-6 text-center">
+                                <p>___________________________</p>
+                                <p><strong>HR Manager</strong></p>
+                            </div>
+                            <div class="col-6 text-center">
+                                <p>___________________________</p>
+                                <p><strong>General Manager</strong></p>
+                            </div>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>
+
+
+
+
+

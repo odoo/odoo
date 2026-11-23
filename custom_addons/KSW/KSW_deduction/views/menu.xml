@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- Top-level app menu                                             -->
+    <!-- ============================================================ -->
+    <menuitem id="menu_ksw_deduction_root"
+              name="Deductions"
+              sequence="90"
+              web_icon="KSW_deduction,static/description/icon.png"/>
+
+    <!-- ============================================================ -->
+    <!-- 1. Dashboard (officers + approvers)                            -->
+    <!-- ============================================================ -->
+    <menuitem id="menu_ksw_deduction_dashboard"
+              name="Dashboard"
+              parent="menu_ksw_deduction_root"
+              action="action_ksw_deduction_dashboard"
+              sequence="1"
+              groups="KSW_deduction.group_deduction_officer,KSW_deduction.group_loan_hr,KSW_deduction.group_loan_acc,KSW_deduction.group_loan_gm"/>
+
+    <!-- ============================================================ -->
+    <!-- 2. Self-Service (every internal user)                          -->
+    <!-- ============================================================ -->
+    <!--
+        Sequence=5 so plain users (who only see Self-Service) land on
+        "My Loans" when clicking the root menu. Officers/approvers land
+        on Dashboard (seq=1) first.
+    -->
+    <menuitem id="menu_ksw_deduction_self_service"
+              name="Self-Service"
+              parent="menu_ksw_deduction_root"
+              sequence="5"/>
+
+    <menuitem id="menu_ksw_my_loans"
+              name="My Loans"
+              parent="menu_ksw_deduction_self_service"
+              action="action_ksw_my_loans"
+              sequence="10"/>
+
+    <menuitem id="menu_ksw_loan_request"
+              name="Request a Loan"
+              parent="menu_ksw_deduction_self_service"
+              action="action_ksw_loan_request"
+              sequence="20"/>
+
+    <!-- ============================================================ -->
+    <!-- 3. Operations (officers + approvers)                           -->
+    <!-- ============================================================ -->
+    <menuitem id="menu_ksw_deduction_operations"
+              name="Operations"
+              parent="menu_ksw_deduction_root"
+              sequence="10"
+              groups="KSW_deduction.group_deduction_officer,KSW_deduction.group_loan_hr,KSW_deduction.group_loan_acc,KSW_deduction.group_loan_gm"/>
+
+    <menuitem id="menu_ksw_deduction_all"
+              name="All Deductions"
+              parent="menu_ksw_deduction_operations"
+              action="action_ksw_deduction_all"
+              sequence="10"
+              groups="KSW_deduction.group_deduction_officer"/>
+
+    <menuitem id="menu_ksw_deduction_loans"
+              name="Loans"
+              parent="menu_ksw_deduction_operations"
+              action="action_ksw_deduction_loans"
+              sequence="20"
+              groups="KSW_deduction.group_deduction_officer,KSW_deduction.group_loan_hr,KSW_deduction.group_loan_acc,KSW_deduction.group_loan_gm"/>
+
+    <menuitem id="menu_ksw_deduction_penalties"
+              name="Penalties"
+              parent="menu_ksw_deduction_operations"
+              action="action_ksw_deduction_penalties"
+              sequence="30"
+              groups="KSW_deduction.group_deduction_officer"/>
+
+    <menuitem id="menu_ksw_deduction_advances"
+              name="Advances &amp; Other"
+              parent="menu_ksw_deduction_operations"
+              action="action_ksw_deduction_advances"
+              sequence="40"
+              groups="KSW_deduction.group_deduction_officer"/>
+
+    <!-- ============================================================ -->
+    <!-- 5. Reports (officers + approvers)                              -->
+    <!-- ============================================================ -->
+    <menuitem id="menu_ksw_deduction_reports"
+              name="Reports"
+              parent="menu_ksw_deduction_root"
+              sequence="30"
+              groups="KSW_deduction.group_deduction_officer,KSW_deduction.group_loan_hr,KSW_deduction.group_loan_acc,KSW_deduction.group_loan_gm"/>
+
+    <menuitem id="menu_ksw_deduction_report_by_employee"
+              name="By Employee"
+              parent="menu_ksw_deduction_reports"
+              action="action_ksw_deduction_report_by_employee"
+              sequence="10"/>
+
+    <menuitem id="menu_ksw_deduction_report_by_department"
+              name="By Department"
+              parent="menu_ksw_deduction_reports"
+              action="action_ksw_deduction_report_by_department"
+              sequence="20"/>
+
+    <menuitem id="menu_ksw_deduction_report_by_type"
+              name="By Type"
+              parent="menu_ksw_deduction_reports"
+              action="action_ksw_deduction_report_by_type"
+              sequence="30"/>
+
+    <!-- ============================================================ -->
+    <!-- 6. Configuration (managers only)                               -->
+    <!-- ============================================================ -->
+    <menuitem id="menu_ksw_deduction_config"
+              name="Configuration"
+              parent="menu_ksw_deduction_root"
+              sequence="90"
+              groups="KSW_deduction.group_deduction_manager"/>
+
+    <menuitem id="menu_ksw_deduction_types"
+              name="Deduction Types"
+              parent="menu_ksw_deduction_config"
+              action="action_ksw_deduction_type"
+              sequence="10"/>
+
+</odoo>
+

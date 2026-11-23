@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- =============================================================== -->
+    <!-- Loan Request Wizard — form                                        -->
+    <!-- =============================================================== -->
+    <record id="view_ksw_loan_request_wizard_form" model="ir.ui.view">
+        <field name="name">ksw.loan.request.wizard.form</field>
+        <field name="model">ksw.loan.request.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Request a Loan">
+                <sheet>
+                    <!-- Intro banner: explains the 4-step approval chain -->
+                    <div class="alert alert-info d-flex align-items-start"
+                         role="status">
+                        <i class="fa fa-info-circle fa-lg me-2 mt-1"
+                           title="Info" role="img" aria-label="Info"/>
+                        <div>
+                            <strong>Submit a new loan request</strong>
+                            <div class="mt-1">
+                                Your request will be reviewed in four steps:
+                                <span class="badge text-bg-secondary mx-1">1. DM</span>
+                                <i class="fa fa-angle-right mx-1"
+                                   title="then" role="img" aria-hidden="true"/>
+                                <span class="badge text-bg-secondary mx-1">2. HR</span>
+                                <i class="fa fa-angle-right mx-1"
+                                   title="then" role="img" aria-hidden="true"/>
+                                <span class="badge text-bg-secondary mx-1">3. Accounting</span>
+                                <i class="fa fa-angle-right mx-1"
+                                   title="then" role="img" aria-hidden="true"/>
+                                <span class="badge text-bg-secondary mx-1">4. GM</span>.
+                                Track progress under <b>My Loans</b>.
+                            </div>
+                        </div>
+                    </div>
+
+                    <field name="employee_id" invisible="1"/>
+                    <field name="currency_id" invisible="1"/>
+
+                    <!-- Step 1: Loan details -->
+                    <div class="card mb-3">
+                        <div class="card-header bg-light">
+                            <strong>Step 1 — Loan Details</strong>
+                        </div>
+                        <div class="card-body">
+                            <group>
+                                <group>
+                                    <field name="type_id"
+                                           options="{'no_create': True, 'no_open': True}"/>
+                                    <field name="amount"/>
+                                    <field name="installments"/>
+                                </group>
+                                <group>
+                                    <field name="start_month"/>
+                                    <field name="installment_amount"
+                                           widget="monetary" readonly="1"/>
+                                </group>
+                            </group>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Justification + documents -->
+                    <div class="card mb-3">
+                        <div class="card-header bg-light">
+                            <strong>Step 2 — Justification &amp; Documents</strong>
+                        </div>
+                        <div class="card-body">
+                            <group>
+                                <field name="reason" nolabel="1"
+                                       placeholder="Why do you need this loan? (required)"/>
+                            </group>
+                            <group>
+                                <field name="description" nolabel="1"
+                                       placeholder="Additional notes, repayment preferences..."/>
+                            </group>
+                            <separator string="Supporting Documents"/>
+                            <field name="attachment_ids" widget="many2many_binary"/>
+                        </div>
+                    </div>
+
+                    <!-- Live summary recap -->
+                    <div class="alert alert-secondary" role="status"
+                         invisible="not amount or not installments">
+                        <strong>Summary</strong>
+                        <div class="mt-1">
+                            You are requesting
+                            <b><field name="amount" widget="monetary"
+                                      class="oe_inline"/></b>
+                            over
+                            <b><field name="installments" class="oe_inline"/></b>
+                            month(s) —
+                            approximately
+                            <b><field name="installment_amount"
+                                      widget="monetary" class="oe_inline"/></b>
+                            per month starting
+                            <b><field name="start_month" class="oe_inline"/></b>.
+                        </div>
+                    </div>
+                </sheet>
+                <footer>
+                    <button name="action_submit" type="object"
+                            string="Submit Request" class="btn-primary"/>
+                    <button special="cancel" string="Cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- =============================================================== -->
+    <!-- Action: Request a Loan                                            -->
+    <!-- =============================================================== -->
+    <record id="action_ksw_loan_request" model="ir.actions.act_window">
+        <field name="name">Request a Loan</field>
+        <field name="res_model">ksw.loan.request.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_ksw_loan_request_wizard_form"/>
+        <field name="target">new</field>
+    </record>
+
+    <!-- =============================================================== -->
+    <!-- Action: My Loans (read-only list for the requester)               -->
+    <!-- =============================================================== -->
+    <record id="action_ksw_my_loans" model="ir.actions.act_window">
+        <field name="name">My Loans</field>
+        <field name="res_model">ksw.deduction</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('is_loan', '=', True), '|', ('employee_id.user_id', '=', uid), ('employee_id.parent_id.user_id', '=', uid)]</field>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                You have no loan requests yet
+            </p>
+            <p>
+                Use <b>Request a Loan</b> in the sidebar to submit a new
+                loan. Once submitted, your request goes through the
+                approval chain (DM → HR → Accounting → GM) and you can
+                track its status here.
+            </p>
+        </field>
+    </record>
+
+</odoo>
+

@@ -1,0 +1,14 @@
+[Unit]
+Description=Odoo 19 Dev
+After=network.target postgresql.service
+
+[Service]
+Type=simple
+User=odoo
+Group=odoo
+ExecStart=/home/odoo/odoo19env/bin/python3.12 /home/odoo/Odoo/odoo/odoo-bin -c /home/odoo/Odoo/odoo/KSW_dev.conf
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

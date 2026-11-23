@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- Extend hr.leave FORM: vacation payslip smart button          -->
+    <!-- ============================================================ -->
+    <record id="hr_leave_view_form_inherit_payroll_vacation" model="ir.ui.view">
+        <field name="name">hr.leave.form.inherit.payroll.vacation</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="KSW_annual_leave.hr_leave_view_form_inherit_annual_return"/>
+        <field name="arch" type="xml">
+
+            <!-- Hidden field so x_vacation_payslip_id is always loaded
+                 (used in invisible expressions below). -->
+            <xpath expr="//field[@name='x_is_annual_leave_type']" position="after">
+                <field name="x_vacation_payslip_id" invisible="1"
+                       groups="om_hr_payroll.group_hr_payroll_user"/>
+            </xpath>
+
+            <!-- Smart-button box injected before the leave content div. -->
+            <xpath expr="//div[hasclass('o_hr_leave_content')]" position="before">
+                <div class="oe_button_box" name="button_box"
+                     invisible="not x_vacation_payslip_id"
+                     groups="om_hr_payroll.group_hr_payroll_user">
+                    <button class="oe_stat_button"
+                            name="action_open_vacation_payslips"
+                            type="object"
+                            icon="fa-file-text-o"
+                            invisible="not x_vacation_payslip_id">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="x_vacation_payslip_ids" widget="statinfo"
+                                       string=" " nolabel="1"/>
+                            </span>
+                            <span class="o_stat_text">Vacation Payslip(s)</span>
+                        </div>
+                    </button>
+                </div>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>
+

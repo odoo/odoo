@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Report Action -->
+    <record id="action_report_monthly_attendance" model="ir.actions.report">
+        <field name="name">Monthly Attendance Report</field>
+        <field name="model">attendance.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">KSW_attendance_report.report_monthly_attendance</field>
+        <field name="print_report_name">
+            'Attendance - %s - %s %s' % (object.employee_id.name, dict(object._fields['month'].selection).get(object.month), object.year)
+        </field>
+        <field name="paperformat_id" ref="base.paperformat_us"/>
+    </record>
+
+    <!-- QWeb PDF Template -->
+    <template id="report_monthly_attendance">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="rd" t-value="o.get_report_data()"/>
+                <t t-set="employee" t-value="rd['employee']"/>
+                <t t-set="company" t-value="rd['company']"/>
+                <t t-set="month_name" t-value="rd['month_name']"/>
+                <t t-set="year" t-value="rd['year']"/>
+                <t t-set="days" t-value="rd['days']"/>
+                <t t-set="totals" t-value="rd['totals']"/>
+
+                <t t-call="web.external_layout">
+                    <div class="page">
+
+                        <!-- ════════ HEADER ════════ -->
+                        <div style="text-align:center; margin-bottom:20px;">
+                            <h2 style="margin:0; color:#2c3e50;">
+                                Monthly Attendance Report
+                            </h2>
+                            <h3 style="margin:4px 0 0 0; color:#7f8c8d;">
+                                <t t-out="month_name"/> <t t-out="year"/>
+                            </h3>
+                        </div>
+
+                        <!-- Employee Info -->
+                        <table style="width:100%; margin-bottom:16px; font-size:13px;">
+                            <tr>
+                                <td style="width:50%;">
+                                    <strong>Employee:</strong>
+                                    <t t-out="employee.name"/>
+                                </td>
+                                <td style="width:50%;">
+                                    <strong>Department:</strong>
+                                    <t t-out="employee.department_id.name or '—'"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Job Title:</strong>
+                                    <t t-out="employee.job_title or employee.job_id.name or '—'"/>
+                                </td>
+                                <td>
+                                    <strong>Company:</strong>
+                                    <t t-out="company.name"/>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <hr style="border-top:2px solid #2c3e50; margin:8px 0 12px 0;"/>
+
+                        <!-- ════════ DAILY TABLE ════════ -->
+                        <table class="table table-sm table-bordered"
+                               style="font-size:11px; width:100%; border-collapse:collapse;">
+                            <thead>
+                                <tr style="background:#d5e8f0; color:#1a3c4d; text-align:center;">
+                                    <th style="padding:6px; width:10%;">Date</th>
+                                    <th style="padding:6px; width:6%;">Day</th>
+                                    <th style="padding:6px; width:14%;">Status</th>
+                                    <th style="padding:6px; width:9%;">Check In</th>
+                                    <th style="padding:6px; width:9%;">Check Out</th>
+                                    <th style="padding:6px; width:10%;">Worked Hrs</th>
+                                    <th style="padding:6px; width:10%;">Late (min)</th>
+                                    <th style="padding:6px; width:12%;">Early Leave (min)</th>
+                                    <th style="padding:6px; width:20%;">Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="days" t-as="day">
+                                    <tr t-att-style="
+                                        'background:#fdecea;' if day['status_class'] == 'absent'
+                                        else 'background:#e8f5e9;' if day['status_class'] == 'present'
+                                        else 'background:#e3f2fd;' if day['status_class'] in ('weekend', 'weekend_worked')
+                                        else 'background:#fff3e0;' if day['status_class'] == 'leave'
+                                        else 'background:#f0f0f0;' if day['status_class'] == 'covered'
+                                        else 'background:#fafafa;' if day['status_class'] == 'future'
+                                        else 'background:#fff8e1;'
+                                    " style="text-align:center;">
+                                        <td style="padding:4px;"><t t-out="day['date']"/></td>
+                                        <td style="padding:4px;"><t t-out="day['day']"/></td>
+                                        <td style="padding:4px; font-weight:bold;">
+                                            <t t-if="day['status_class'] == 'present'">
+                                                <span style="color:#2e7d32;">✓ Present</span>
+                                            </t>
+                                            <t t-elif="day['status_class'] == 'absent'">
+                                                <span style="color:#c62828;">✗ Absent</span>
+                                            </t>
+                                            <t t-elif="day['status_class'] == 'leave'">
+                                                <span style="color:#e65100;">🏖 Leave</span>
+                                            </t>
+                                            <t t-elif="day['status_class'] == 'covered'">
+                                                <span style="color:#6a1b9a;">☑ Covered</span>
+                                            </t>
+                                            <t t-elif="day['status_class'] == 'weekend_worked'">
+                                                <span style="color:#1565c0;">⬛ Weekend</span>
+                                            </t>
+                                            <t t-elif="day['status_class'] == 'weekend'">
+                                                <span style="color:#90a4ae;">⬜ Weekend</span>
+                                            </t>
+                                            <t t-elif="day['status_class'] == 'future'">
+                                                <span style="color:#bdbdbd;">—</span>
+                                            </t>
+                                            <t t-else="">
+                                                <span style="color:#f9a825;">⚠ No Record</span>
+                                            </t>
+                                        </td>
+                                        <td style="padding:4px;"><t t-out="day['check_in']"/></td>
+                                        <td style="padding:4px;"><t t-out="day['check_out']"/></td>
+                                        <td style="padding:4px;">
+                                            <t t-if="day['worked_hours']">
+                                                <t t-out="'%.2f' % day['worked_hours']"/>
+                                            </t>
+                                        </td>
+                                        <td style="padding:4px;">
+                                            <t t-if="day['late_min']">
+                                                <span style="color:#c62828; font-weight:bold;">
+                                                    <t t-out="'%.0f' % day['late_min']"/>
+                                                </span>
+                                            </t>
+                                        </td>
+                                        <td style="padding:4px;">
+                                            <t t-if="day['early_leave_min']">
+                                                <span style="color:#e65100; font-weight:bold;">
+                                                    <t t-out="'%.0f' % day['early_leave_min']"/>
+                                                </span>
+                                            </t>
+                                        </td>
+                                        <td style="padding:4px; text-align:left; font-size:10px;">
+                                            <t t-out="day['notes']"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <!-- ════════ SUMMARY ════════ -->
+                        <div style="margin-top:16px; page-break-inside:avoid;">
+                            <h4 style="color:#2c3e50; margin-bottom:8px;">Summary</h4>
+                            <table style="width:100%; font-size:12px; border-collapse:collapse;">
+                                <tr>
+                                    <td style="padding:6px 10px; border:1px solid #ddd; background:#e8f5e9; width:25%;">
+                                        <strong>✓ Present Days</strong>
+                                    </td>
+                                    <td style="padding:6px 10px; border:1px solid #ddd; width:25%; text-align:center;">
+                                        <t t-out="totals['present']"/>
+                                    </td>
+                                    <td style="padding:6px 10px; border:1px solid #ddd; background:#fdecea; width:25%;">
+                                        <strong>✗ Absent Days</strong>
+                                    </td>
+                                    <td style="padding:6px 10px; border:1px solid #ddd; width:25%; text-align:center;">
+                                        <t t-out="totals['absent']"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:6px 10px; border:1px solid #ddd; background:#fff3e0;">
+                                        <strong>🏖 Leave Days</strong>
+                                    </td>
+                                    <td style="padding:6px 10px; border:1px solid #ddd; text-align:center;">
+                                        <t t-out="totals['leave']"/>
+                                    </td>
+                                    <td style="padding:6px 10px; border:1px solid #ddd; background:#e3f2fd;">
+                                        <strong>⬜ Weekend Days</strong>
+                                    </td>
+                                    <td style="padding:6px 10px; border:1px solid #ddd; text-align:center;">
+                                        <t t-out="totals['weekend']"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:6px 10px; border:1px solid #ddd; background:#e3f2fd;">
+                                        <strong>⬛ Weekend (Worked)</strong>
+                                    </td>
+                                    <td style="padding:6px 10px; border:1px solid #ddd; text-align:center;">
+                                        <t t-out="totals['weekend_worked']"/>
+                                    </td>
+                                    <td style="padding:6px 10px; border:1px solid #ddd; background:#fff8e1;">
+                                        <strong>⚠ No Record</strong>
+                                    </td>
+                                    <td style="padding:6px 10px; border:1px solid #ddd; text-align:center;">
+                                        <t t-out="totals['no_record']"/>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <table style="width:100%; font-size:12px; border-collapse:collapse; margin-top:8px;">
+                                <tr style="background:#d5e8f0; color:#1a3c4d;">
+                                    <th style="padding:8px 10px; width:33%;">Total Worked Hours</th>
+                                    <th style="padding:8px 10px; width:33%;">Total Late Minutes</th>
+                                    <th style="padding:8px 10px; width:34%;">Total Early Leave Minutes</th>
+                                </tr>
+                                <tr style="text-align:center; font-size:16px; font-weight:bold;">
+                                    <td style="padding:8px; border:1px solid #ddd;">
+                                        <t t-out="'%.2f' % totals['worked_hours']"/>
+                                    </td>
+                                    <td style="padding:8px; border:1px solid #ddd;">
+                                        <span t-att-style="'color:#c62828;' if totals['late_minutes'] else ''">
+                                            <t t-out="'%.0f' % totals['late_minutes']"/>
+                                        </span>
+                                    </td>
+                                    <td style="padding:8px; border:1px solid #ddd;">
+                                        <span t-att-style="'color:#e65100;' if totals['early_leave_minutes'] else ''">
+                                            <t t-out="'%.0f' % totals['early_leave_minutes']"/>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>
+
+
+

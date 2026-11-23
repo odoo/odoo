@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ================================================================ -->
+    <!-- Commission Template — Form View                                    -->
+    <!-- ================================================================ -->
+    <record id="view_ksw_commission_template_form" model="ir.ui.view">
+        <field name="name">ksw.commission.template.form</field>
+        <field name="model">ksw.commission.template</field>
+        <field name="arch" type="xml">
+            <form string="Commission Template">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object"
+                                name="action_view_employees"
+                                icon="fa-users"
+                                invisible="employee_count == 0">
+                            <field name="employee_count" widget="statinfo"
+                                   string="Employees"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived"
+                            bg_color="text-bg-danger"
+                            invisible="active"/>
+                    <field name="active" invisible="1"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"
+                                   placeholder="Template name…"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="description"
+                               placeholder="Optional notes about this template…"/>
+                    </group>
+
+                    <notebook>
+                        <!-- ── Default Lines ── -->
+                        <page string="Default Lines" name="lines">
+                            <field name="line_ids" widget="one2many">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="category_id"
+                                           options="{'no_create': True}"/>
+                                    <field name="kind" readonly="1"
+                                           optional="show"/>
+                                    <field name="holiday_id"
+                                           invisible="kind != 'holiday_bonus'"/>
+                                    <field name="is_quantity_based"
+                                           column_invisible="True"/>
+                                    <field name="quantity"
+                                           string="Qty"
+                                           readonly="not is_quantity_based"/>
+                                    <field name="amount"
+                                           readonly="is_quantity_based"/>
+                                    <field name="description"
+                                           optional="show"/>
+                                </list>
+                            </field>
+                        </page>
+                        <!-- ── Assigned Employees ── -->
+                        <page string="Assigned Employees" name="employees">
+                            <p class="text-muted">
+                                Employees listed here will have these
+                                lines pre-filled when their monthly
+                                commission sheet is created.
+                                An employee can only be assigned to one
+                                template at a time.
+                            </p>
+                            <field name="employee_ids" widget="many2many"
+                                   options="{'no_create': True}">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="department_id"/>
+                                    <field name="job_id"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ================================================================ -->
+    <!-- Commission Template — List View                                    -->
+    <!-- ================================================================ -->
+    <record id="view_ksw_commission_template_list" model="ir.ui.view">
+        <field name="name">ksw.commission.template.list</field>
+        <field name="model">ksw.commission.template</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="employee_count" string="# Employees"/>
+                <field name="active" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ================================================================ -->
+    <!-- Commission Template — Search View                                  -->
+    <!-- ================================================================ -->
+    <record id="view_ksw_commission_template_search" model="ir.ui.view">
+        <field name="name">ksw.commission.template.search</field>
+        <field name="model">ksw.commission.template</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="employee_ids" string="Employee"/>
+                <filter name="active" string="Active"
+                        domain="[('active', '=', True)]"/>
+                <filter name="archived" string="Archived"
+                        domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- ================================================================ -->
+    <!-- Action                                                             -->
+    <!-- ================================================================ -->
+    <record id="action_ksw_commission_template" model="ir.actions.act_window">
+        <field name="name">Commission Templates</field>
+        <field name="res_model">ksw.commission.template</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id"
+               ref="view_ksw_commission_template_search"/>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first commission template!
+            </p>
+            <p>
+                Templates let you define the standard allowance /
+                commission lines once and assign employees to them.
+                Every new monthly sheet for an assigned employee will
+                be pre-filled with these lines — you only need to
+                adjust the amounts.
+            </p>
+        </field>
+    </record>
+
+</odoo>
+
+

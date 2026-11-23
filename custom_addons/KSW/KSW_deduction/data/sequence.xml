@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <!--
+            Legacy sequence kept as a fallback for any code path that
+            still calls next_by_code('ksw.deduction'). Existing records
+            named KSWDED/YYYY/XXXX are preserved (name has copy=False,
+            readonly=True). New records use the category-scoped
+            sequences below (LO / DE / PE).
+        -->
+        <record id="seq_ksw_deduction" model="ir.sequence">
+            <field name="name">KSW Deduction Reference (legacy)</field>
+            <field name="code">ksw.deduction</field>
+            <field name="prefix">KSWDED/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Loans (is_loan=True)  -> LO00001, LO00002, ... -->
+        <record id="seq_ksw_deduction_loan" model="ir.sequence">
+            <field name="name">KSW Loan Reference</field>
+            <field name="code">ksw.deduction.loan</field>
+            <field name="prefix">LO</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Non-loan Borrowed (salary advance, etc.) -> DE00001, ... -->
+        <record id="seq_ksw_deduction_regular" model="ir.sequence">
+            <field name="name">KSW Deduction Reference</field>
+            <field name="code">ksw.deduction.regular</field>
+            <field name="prefix">DE</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Company-paid (gov / internal penalty) -> PE00001, ... -->
+        <record id="seq_ksw_deduction_penalty" model="ir.sequence">
+            <field name="name">KSW Penalty Reference</field>
+            <field name="code">ksw.deduction.penalty</field>
+            <field name="prefix">PE</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>
+

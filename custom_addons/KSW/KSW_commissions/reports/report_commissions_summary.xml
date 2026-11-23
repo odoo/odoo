@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ================================================================ -->
+    <!-- Landscape paperformat — many dynamic category columns can make   -->
+    <!-- the summary table very wide, so portrait A4 is too tight.        -->
+    <!-- ================================================================ -->
+    <record id="paperformat_commissions_summary" model="report.paperformat">
+        <field name="name">KSW Commissions Summary (A4 Landscape)</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">35</field>
+        <field name="margin_bottom">15</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">25</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <!-- ================================================================ -->
+    <!-- Report action — bound on the model so it appears in the          -->
+    <!-- "Print" menu of the list view; multi-record selection is what    -->
+    <!-- this report is designed for.                                     -->
+    <!-- ================================================================ -->
+    <record id="action_report_commissions_summary" model="ir.actions.report">
+        <field name="name">Commissions &amp; Allowances Summary</field>
+        <field name="model">ksw.commission.sheet</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">KSW_commissions.report_commissions_summary</field>
+        <field name="report_file">KSW_commissions.report_commissions_summary</field>
+        <field name="binding_model_id" ref="model_ksw_commission_sheet"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformat_commissions_summary"/>
+    </record>
+
+    <!-- ================================================================ -->
+    <!-- Main QWeb template — ONE row per sheet, dynamic columns per      -->
+    <!-- commission/allowance category, plus driver, loans, totals.       -->
+    <!-- ================================================================ -->
+    <template id="report_commissions_summary">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+
+                    <!-- Title -->
+                    <h2 class="text-center mb-2">
+                        Commissions &amp; Allowances Summary
+                    </h2>
+
+                    <!-- Period header — list every distinct period in the batch -->
+                    <h5 class="text-center text-muted mb-3">
+                        <t t-set="periods" t-value="docs._report_get_period_labels()"/>
+                        <t t-foreach="periods" t-as="p">
+                            <t t-out="p"/>
+                            <t t-if="not p_last"> · </t>
+                        </t>
+                    </h5>
+
+                    <!-- Header summary line -->
+                    <p class="text-muted mb-2" style="font-size:11px;">
+                        <strong><t t-out="len(docs)"/></strong> sheet(s) ·
+                        Printed on
+                        <t t-out="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/>
+                    </p>
+
+                    <!-- Dynamic columns: one per distinct category in the batch -->
+                    <t t-set="columns" t-value="docs._report_get_summary_columns()"/>
+                    <t t-set="totals_cells" t-value="docs._report_get_summary_totals(columns)"/>
+
+                    <table class="table table-sm table-bordered" style="font-size:10px;">
+                        <thead class="table-dark">
+                            <tr>
+                                <th rowspan="2" class="align-middle text-center" style="width:2.5%">#</th>
+                                <th rowspan="2" class="align-middle">Employee</th>
+                                <th rowspan="2" class="align-middle">Department</th>
+                                <th rowspan="2" class="align-middle">Site</th>
+                                <th rowspan="2" class="align-middle text-center">Period</th>
+                                <th t-att-colspan="len(columns)" class="text-center"
+                                    t-if="columns">
+                                    Allowances &amp; Commissions
+                                </th>
+                                <th rowspan="2" class="align-middle text-end">Lines<br/>Subtotal</th>
+                                <th rowspan="2" class="align-middle text-end">Driver<br/>Commission</th>
+                                <th rowspan="2" class="align-middle text-end">Gross<br/>Total</th>
+                                <th rowspan="2" class="align-middle text-end text-danger">Loans<br/>Deduction</th>
+                                <th rowspan="2" class="align-middle text-end">Bank<br/>Transfer</th>
+                                <th rowspan="2" class="align-middle text-center">Status</th>
+                            </tr>
+                            <tr>
+                                <t t-foreach="columns" t-as="cat">
+                                    <th class="text-end" t-att-title="cat.code">
+                                        <t t-out="cat.name"/>
+                                    </th>
+                                </t>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <t t-foreach="docs" t-as="o">
+                                <t t-set="cells" t-value="o._report_get_summary_cells(columns)"/>
+                                <tr>
+                                    <td class="text-center" t-out="o_index + 1"/>
+                                    <td t-out="o.employee_id.name or ''"/>
+                                    <td t-out="o.department_id.name or ''"/>
+                                    <td t-out="o.site_id.name or ''"/>
+                                    <td class="text-center"
+                                        t-out="o.period and o.period.strftime('%m/%Y') or ''"/>
+                                    <t t-foreach="cells" t-as="amt">
+                                        <td class="text-end">
+                                            <t t-if="amt">
+                                                <t t-out="'%.2f' % amt"/>
+                                            </t>
+                                            <t t-else="">
+                                                <span class="text-muted">—</span>
+                                            </t>
+                                        </td>
+                                    </t>
+                                    <td class="text-end" t-out="'%.2f' % (o.lines_subtotal or 0.0)"/>
+                                    <td class="text-end" t-out="'%.2f' % (o.driver_commission_amount or 0.0)"/>
+                                    <td class="text-end fw-bold" t-out="'%.2f' % (o.total or 0.0)"/>
+                                    <td class="text-end text-danger">
+                                        <t t-if="o.x_loans_amount_locked">
+                                            (<t t-out="'%.2f' % o.x_loans_amount_locked"/>)
+                                        </t>
+                                        <t t-else="">—</t>
+                                    </td>
+                                    <td class="text-end fw-bold" t-out="'%.2f' % (o.total_payable or 0.0)"/>
+                                    <td class="text-center">
+                                        <t t-if="o.state == 'draft'">Draft</t>
+                                        <t t-elif="o.state == 'confirmed'">Pending</t>
+                                        <t t-elif="o.state == 'done'">✓ Done</t>
+                                    </td>
+                                </tr>
+                            </t>
+
+                            <t t-if="not docs">
+                                <tr>
+                                    <td colspan="20" class="text-center text-muted">
+                                        No sheets selected.
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+
+                        <tfoot class="table-light fw-bold">
+                            <tr>
+                                <td colspan="5" class="text-end">TOTALS</td>
+                                <t t-foreach="totals_cells" t-as="tamt">
+                                    <td class="text-end">
+                                        <t t-if="tamt">
+                                            <t t-out="'%.2f' % tamt"/>
+                                        </t>
+                                        <t t-else="">—</t>
+                                    </td>
+                                </t>
+                                <td class="text-end">
+                                    <t t-out="'%.2f' % sum(o.lines_subtotal or 0.0 for o in docs)"/>
+                                </td>
+                                <td class="text-end">
+                                    <t t-out="'%.2f' % sum(o.driver_commission_amount or 0.0 for o in docs)"/>
+                                </td>
+                                <td class="text-end">
+                                    <t t-out="'%.2f' % sum(o.total or 0.0 for o in docs)"/>
+                                </td>
+                                <td class="text-end text-danger">
+                                    (<t t-out="'%.2f' % sum(o.x_loans_amount_locked or 0.0 for o in docs)"/>)
+                                </td>
+                                <td class="text-end">
+                                    <t t-out="'%.2f' % sum(o.total_payable or 0.0 for o in docs)"/>
+                                </td>
+                                <td/>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                    <!-- ── Department sub-totals ── -->
+                    <h5 class="mt-4">Summary by Department</h5>
+                    <t t-set="dept_rows" t-value="docs._report_get_dept_breakdown()"/>
+                    <table class="table table-sm table-bordered" style="font-size:10px;">
+                        <thead class="table-secondary">
+                            <tr>
+                                <th style="width:25%">Department</th>
+                                <th style="width:10%" class="text-end">Employees</th>
+                                <th style="width:15%" class="text-end">Lines Total</th>
+                                <th style="width:15%" class="text-end">Driver Total</th>
+                                <th style="width:15%" class="text-end">Gross Total</th>
+                                <th style="width:20%" class="text-end">Bank Transfer</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="dept_rows" t-as="d">
+                                <tr>
+                                    <td t-out="d['name']"/>
+                                    <td class="text-end" t-out="d['count']"/>
+                                    <td class="text-end" t-out="'%.2f' % d['lines']"/>
+                                    <td class="text-end" t-out="'%.2f' % d['driver']"/>
+                                    <td class="text-end fw-bold" t-out="'%.2f' % d['gross']"/>
+                                    <td class="text-end fw-bold" t-out="'%.2f' % d['bank']"/>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+
+                    <!-- ── Signature block ── -->
+                    <div class="row mt-4" style="page-break-inside: avoid;">
+                        <div class="col-4 text-center">
+                            <p style="border-top: 1px solid #000; padding-top: 4px;">
+                                <strong>Prepared by Supervisor</strong>
+                            </p>
+                        </div>
+                        <div class="col-4 text-center">
+                            <p style="border-top: 1px solid #000; padding-top: 4px;">
+                                <strong>Reviewed by Accountant</strong>
+                            </p>
+                        </div>
+                        <div class="col-4 text-center">
+                            <p style="border-top: 1px solid #000; padding-top: 4px;">
+                                <strong>Approved by Manager</strong>
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </t>
+        </t>
+    </template>
+
+</odoo>
+

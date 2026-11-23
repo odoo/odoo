@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ================================================================ -->
+    <!-- Driver Commission Sheet — Form                                     -->
+    <!-- ================================================================ -->
+    <!--
+        Layout strategy:
+        • Header: status bar + action buttons.
+        • Page-top: clean two-column header (Site | Period) + a
+          right-aligned summary panel with the running totals.
+        • Lines: an inline editable <list> shows ONLY the columns the
+          supervisor really needs (employee, vehicle, days, required,
+          actual, factor, multiplied, commission).  Tier-by-tier
+          breakdown is HIDDEN by default and toggled on via the
+          optional-column menu — OR seen in full in the row pop-up.
+        • Each row has a per-line <form> view used by the o2m popup so
+          editing a single driver opens a clean grouped form instead
+          of forcing the user to scroll a 13-column row.
+    -->
+    <record id="view_ksw_driver_commission_sheet_form" model="ir.ui.view">
+        <field name="name">ksw.driver.commission.sheet.form</field>
+        <field name="model">ksw.driver.commission.sheet</field>
+        <field name="arch" type="xml">
+            <form string="Driver Commission Sheet">
+                <field name="is_locked" invisible="1"/>
+                <field name="state" invisible="1"/>
+
+                <header>
+                    <button name="action_confirm" string="Confirm"
+                            type="object" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_reset_to_draft"
+                            string="Reset to Draft"
+                            type="object" class="btn-secondary"
+                            groups="KSW_commissions.group_commission_officer"
+                            invisible="state == 'draft'"/>
+                    <!-- Print -->
+                    <button name="%(KSW_commissions.action_report_driver_commission_sheet)d"
+                            string="Print"
+                            type="action"
+                            class="btn-secondary"/>
+                    <statusbar statusfield="state"
+                               statusbar_visible="draft,confirmed"/>
+                </header>
+
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+
+                    <group>
+                        <group string="Sheet">
+                            <field name="site_id" readonly="is_locked"
+                                   options="{'no_create': True}"/>
+                            <field name="period" readonly="is_locked"/>
+                        </group>
+                        <group string="Summary">
+                            <field name="total_commission" readonly="1"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Drivers" name="drivers">
+                            <!-- line_ids has NO readonly wrapper — supervisors
+                                 can always add new driver rows even on a
+                                 confirmed sheet (to handle late additions).
+                                 Individual trip/vehicle columns keep their
+                                 own readonly guard where needed. -->
+                            <field name="line_ids">
+                                <list editable="bottom"
+                                      decoration-info="total_commission &gt; 0"
+                                      decoration-muted="total_commission == 0">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="employee_id"
+                                           options="{'no_create': True}"/>
+                                    <field name="vehicle_number"/>
+                                    <field name="worked_days" string="Days"/>
+                                    <field name="required_trips"
+                                           string="Required"
+                                           readonly="1"/>
+                                    <field name="actual_trips"
+                                           string="Actual"/>
+                                    <field name="multiplied_trips"
+                                           string="Multiplied"/>
+                                    <field name="tier1_trips" string="T1"
+                                           readonly="1" optional="hide"/>
+                                    <field name="tier2_trips" string="T2"
+                                           readonly="1" optional="hide"/>
+                                    <field name="tier3_trips" string="T3"
+                                           readonly="1" optional="hide"/>
+                                    <field name="tier4_trips" string="T4"
+                                           readonly="1" optional="hide"/>
+                                    <field name="tier5_trips" string="T5"
+                                           readonly="1" optional="hide"/>
+                                    <field name="total_commission"
+                                           string="Commission"
+                                           readonly="1" sum="Total"/>
+                                </list>
+
+                                <!-- Per-row pop-up form -->
+                                <form string="Driver Commission">
+                                    <sheet>
+                                        <group>
+                                            <group string="Driver">
+                                                <field name="employee_id"
+                                                       options="{'no_create': True}"/>
+                                                <field name="vehicle_number"/>
+                                                <field name="worked_days"/>
+                                            </group>
+                                            <group string="Trips">
+                                                <field name="required_trips"
+                                                       readonly="1"/>
+                                                <field name="actual_trips"/>
+                                                <field name="multiplied_trips"/>
+                                            </group>
+                                        </group>
+                                        <group string="Tier Breakdown" col="5">
+                                            <field name="tier1_trips" readonly="1"/>
+                                            <field name="tier2_trips" readonly="1"/>
+                                            <field name="tier3_trips" readonly="1"/>
+                                            <field name="tier4_trips" readonly="1"/>
+                                            <field name="tier5_trips" readonly="1"/>
+                                        </group>
+                                        <group class="oe_subtotal_footer oe_right">
+                                            <field name="total_commission"
+                                                   readonly="1"
+                                                   class="oe_subtotal_footer_separator"/>
+                                            <field name="currency_id" invisible="1"/>
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+
+                    <group class="oe_subtotal_footer oe_right">
+                        <field name="total_commission"
+                               string="Sheet Total"
+                               readonly="1"
+                               class="oe_subtotal_footer_separator"/>
+                    </group>
+                </sheet>
+
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Driver Commission Sheet — List -->
+    <record id="view_ksw_driver_commission_sheet_list" model="ir.ui.view">
+        <field name="name">ksw.driver.commission.sheet.list</field>
+        <field name="model">ksw.driver.commission.sheet</field>
+        <field name="arch" type="xml">
+            <list decoration-success="state == 'confirmed'"
+                  decoration-muted="state == 'draft'">
+                <field name="name"/>
+                <field name="site_id"/>
+                <field name="period"/>
+                <field name="total_commission" sum="Total"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Driver Commission Sheet — Search -->
+    <record id="view_ksw_driver_commission_sheet_search" model="ir.ui.view">
+        <field name="name">ksw.driver.commission.sheet.search</field>
+        <field name="model">ksw.driver.commission.sheet</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="site_id"/>
+                <field name="period"/>
+                <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
+                <filter name="confirmed" string="Confirmed" domain="[('state','=','confirmed')]"/>
+                <group>
+                    <filter string="Site" name="grp_site" domain="[]"
+                            context="{'group_by': 'site_id'}"/>
+                    <filter string="Period" name="grp_period" domain="[]"
+                            context="{'group_by': 'period'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_ksw_driver_commission_sheet" model="ir.actions.act_window">
+        <field name="name">Driver Commission Sheets</field>
+        <field name="res_model">ksw.driver.commission.sheet</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_ksw_driver_commission_sheet_search"/>
+        <field name="context">{'search_default_grp_period': 1}</field>
+    </record>
+
+</odoo>
+

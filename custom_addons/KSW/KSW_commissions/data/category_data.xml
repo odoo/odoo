@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <!--
+            Seeded from the paper Commissions & Other Allowances form.
+            Categories marked is_system=True cannot be unlinked
+            (admins can still archive them via active=False).
+        -->
+        <record id="cat_project_management" model="ksw.commission.category">
+            <field name="name">Project Management Allowance</field>
+            <field name="code">project_management</field>
+            <field name="kind">allowance</field>
+            <field name="sequence">10</field>
+            <field name="is_system" eval="True"/>
+        </record>
+        <record id="cat_location" model="ksw.commission.category">
+            <field name="name">Location Allowance</field>
+            <field name="code">location</field>
+            <field name="kind">allowance</field>
+            <field name="sequence">20</field>
+            <field name="is_system" eval="True"/>
+        </record>
+        <record id="cat_data_entry" model="ksw.commission.category">
+            <field name="name">Data Entry Allowance</field>
+            <field name="code">data_entry</field>
+            <field name="kind">allowance</field>
+            <field name="sequence">30</field>
+            <field name="is_system" eval="True"/>
+        </record>
+        <record id="cat_mobile_phone" model="ksw.commission.category">
+            <field name="name">Mobile Phone Allowance</field>
+            <field name="code">mobile_phone</field>
+            <field name="kind">allowance</field>
+            <field name="sequence">40</field>
+            <field name="is_system" eval="True"/>
+        </record>
+        <record id="cat_sales_commission" model="ksw.commission.category">
+            <field name="name">Sales Commission and Other</field>
+            <field name="code">sales_commission</field>
+            <field name="kind">commission</field>
+            <field name="sequence">60</field>
+            <field name="is_system" eval="True"/>
+        </record>
+        <record id="cat_collection_commission" model="ksw.commission.category">
+            <field name="name">Collection Commission</field>
+            <field name="code">collection_commission</field>
+            <field name="kind">commission</field>
+            <field name="sequence">70</field>
+            <field name="is_system" eval="True"/>
+        </record>
+        <record id="cat_vehicle_commission" model="ksw.commission.category">
+            <field name="name">Vehicle Commission</field>
+            <field name="code">vehicle_commission</field>
+            <field name="kind">commission</field>
+            <field name="sequence">80</field>
+            <field name="is_system" eval="True"/>
+        </record>
+        <record id="cat_holiday_bonus" model="ksw.commission.category">
+            <field name="name">Holiday Bonus</field>
+            <field name="code">holiday_bonus</field>
+            <field name="kind">holiday_bonus</field>
+            <field name="sequence">90</field>
+            <field name="is_system" eval="True"/>
+            <field name="description">Allowance for working on a paid public holiday (Foundation Day, National Day, Eid Al-Fitr, Eid Al-Adha). Pick the holiday on the line.</field>
+        </record>
+        <record id="cat_employee_bonus" model="ksw.commission.category">
+            <field name="name">Employee Bonus</field>
+            <field name="code">employee_bonus</field>
+            <field name="kind">bonus</field>
+            <field name="sequence">100</field>
+            <field name="is_system" eval="True"/>
+        </record>
+        <record id="cat_friday" model="ksw.commission.category">
+            <field name="name">Friday Work Allowance</field>
+            <field name="code">friday</field>
+            <field name="kind">allowance</field>
+            <field name="sequence">110</field>
+            <field name="is_system" eval="True"/>
+        </record>
+        <record id="cat_other" model="ksw.commission.category">
+            <field name="name">Other</field>
+            <field name="code">other</field>
+            <field name="kind">other</field>
+            <field name="sequence">200</field>
+            <field name="is_system" eval="True"/>
+        </record>
+    </data>
+</odoo>
+

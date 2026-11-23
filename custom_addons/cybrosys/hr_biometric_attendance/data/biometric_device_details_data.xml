@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<odoo>
+    <!-- Main cron job: Incremental attendance download every 30 minutes -->
+    <record forcecreate="True" id="cron_incremental_download_data"
+            model="ir.cron">
+        <field name="name">Biometric: Incremental Attendance Download
+        (every 30 minutes)</field>
+        <field eval="True" name="active"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="interval_number">30</field>
+        <field name="interval_type">minutes</field>
+        <field name="model_id"
+               ref="hr_biometric_attendance.model_biometric_device_details"/>
+        <field name="state">code</field>
+        <field name="code">model.cron_download_incremental()</field>
+    </record>
+
+    <!--Generate Absent days daily for past day -->
+    <record id="ir_cron_biometric_absence_detection" model="ir.cron">
+        <field name="name">Biometric: Daily Absence Detection (Yesterday)</field>
+        <field name="model_id" ref="model_biometric_attendance_sync"/>
+        <field name="state">code</field>
+        <field name="code">model.cron_generate_absences()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active">True</field>
+        <field name="nextcall" eval="(DateTime.now() + timedelta(days=1)).replace(hour=1, minute=0, second=0)"/>
+    </record>
+
+    <!-- Background job for the "Generate All Absences" button.
+         Disabled by default; triggered on demand via cron._trigger() so the
+         heavy historical scan runs in a worker thread instead of blocking
+         the HTTP request (which hits the 120s real-time limit). -->
+    <record id="ir_cron_biometric_generate_all_absences" model="ir.cron">
+        <field name="name">Biometric: Generate All Absences (manual trigger)</field>
+        <field name="model_id" ref="model_biometric_attendance_sync"/>
+        <field name="state">code</field>
+        <field name="code">model._run_generate_all_absences()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active">False</field>
+        <field name="nextcall" eval="(DateTime.now() + timedelta(days=365)).replace(hour=2, minute=0, second=0)"/>
+    </record>
+
+</odoo>

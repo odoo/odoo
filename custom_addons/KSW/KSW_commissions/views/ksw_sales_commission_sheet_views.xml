@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ================================================================ -->
+    <!-- Sales / Collection Commission Sheet — Form / List / Search       -->
+    <!-- ================================================================ -->
+    <record id="view_ksw_sales_commission_sheet_form" model="ir.ui.view">
+        <field name="name">ksw.sales.commission.sheet.form</field>
+        <field name="model">ksw.sales.commission.sheet</field>
+        <field name="arch" type="xml">
+            <form string="Sales / Collection Commission Sheet">
+                <field name="is_locked" invisible="1"/>
+                <field name="state" invisible="1"/>
+                <header>
+                    <button name="action_confirm"
+                            string="Confirm"
+                            type="object" class="btn-primary"
+                            invisible="state != 'draft'"
+                            groups="KSW_commissions.group_commission_accountant"/>
+                    <button name="action_reset_to_draft"
+                            string="Reset to Draft"
+                            type="object" class="btn-secondary"
+                            invisible="state == 'draft'"
+                            groups="KSW_commissions.group_commission_accountant"/>
+                    <button name="action_open_import_wizard"
+                            string="Import from Excel"
+                            type="object" class="btn-secondary"
+                            icon="fa-upload"
+                            invisible="state != 'draft'"
+                            title="Import achieved sales &amp; collection amounts from the accountant's Excel files"/>
+                    <statusbar statusfield="state"
+                               statusbar_visible="draft,confirmed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="period"
+                                   readonly="state != 'draft'"/>
+                        </group>
+                        <group>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Lines">
+                            <field name="line_ids"
+                                   readonly="state != 'draft'"
+                                   widget="one2many">
+                                <list editable="bottom">
+                                     <field name="sequence" widget="handle"/>
+                                     <field name="employee_id"
+                                            options="{'no_create': True}"/>
+                                     <field name="split_label"
+                                            string="Split"
+                                            optional="show"
+                                            readonly="1"/>
+                                     <field name="role"/>
+                                     <field name="partner_id"
+                                            string="Client"
+                                            optional="hide"
+                                            domain="[('customer_rank', '>', 0)]"
+                                            options="{'no_create': True}"/>
+                                    <field name="target_sales"/>
+                                    <field name="achieved_sales"/>
+                                    <field name="sales_pct" string="Sales %"/>
+                                    <field name="target_collection"/>
+                                    <field name="achieved_collection"/>
+                                    <field name="collection_pct" string="Coll. %"/>
+                                    <field name="sales_commission_amount"
+                                           string="Sales Comm." optional="show"/>
+                                    <field name="collection_commission_amount"
+                                           string="Coll. Comm." optional="show"/>
+                                    <field name="combined_commission_amount"
+                                           string="Combined Comm." optional="hide"/>
+                                    <field name="total_commission" sum="Total"/>
+                                    <!-- Hidden flag that drives button visibility -->
+                                    <field name="x_condition_override" column_invisible="True"/>
+                                    <!--
+                                        Override / Revoke buttons placed directly in the list
+                                        so they are visible for the Sales Manager on every row
+                                        whether the sheet is draft or confirmed.
+                                        icon= renders as a small icon button in the row.
+                                    -->
+                                    <button name="action_open_override_wizard"
+                                            string="Override"
+                                            type="object"
+                                            icon="fa-shield"
+                                            title="Grant commission exception (Sales Manager)"
+                                            class="text-warning"
+                                            invisible="x_condition_override"
+                                            groups="KSW_commissions.group_sales_commission_manager"/>
+                                    <button name="action_revoke_override"
+                                            string="Revoke"
+                                            type="object"
+                                            icon="fa-times-circle"
+                                            title="Revoke override"
+                                            class="text-muted"
+                                            invisible="not x_condition_override"
+                                            groups="KSW_commissions.group_sales_commission_manager"/>
+                                    <field name="sales_rule_id"
+                                           string="Sales Rule" optional="hide"/>
+                                    <field name="collection_rule_id"
+                                           string="Coll. Rule" optional="hide"/>
+                                    <field name="combined_rule_id"
+                                           string="Combined Rule" optional="hide"/>
+                                    <field name="notes" optional="hide"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                </list>
+                                <form string="Sales/Collection Commission Line">
+                                    <header>
+                                        <button name="action_open_override_wizard"
+                                                string="Override Condition"
+                                                type="object"
+                                                class="btn-warning"
+                                                invisible="x_condition_override"
+                                                groups="KSW_commissions.group_sales_commission_manager"/>
+                                        <button name="action_revoke_override"
+                                                string="Revoke Override"
+                                                type="object"
+                                                class="btn-secondary"
+                                                invisible="not x_condition_override"
+                                                groups="KSW_commissions.group_sales_commission_manager"/>
+                                    </header>
+                                    <sheet>
+                                        <div class="alert alert-warning"
+                                             role="alert"
+                                             invisible="not x_condition_override">
+                                            <i class="fa fa-shield me-2"
+                                               title="Override" role="img" aria-label="Override"/>
+                                            <strong>Condition overridden by Sales Manager.</strong>
+                                            <field name="x_override_by" readonly="1" nolabel="1" class="d-inline ms-2"/>
+                                            <span class="mx-1">·</span>
+                                            <field name="x_override_date" readonly="1" nolabel="1" class="d-inline"/>
+                                            <br/>
+                                            <b>Reason:</b>
+                                            <field name="x_override_reason" readonly="1" nolabel="1" class="d-inline ms-1"/>
+                                        </div>
+                                        <field name="x_condition_override" invisible="1"/>
+                                        <group>
+                                             <group string="Salesperson">
+                                                <field name="employee_id"
+                                                       options="{'no_create': True}"/>
+                                                <field name="role"/>
+                                                <field name="split_id"
+                                                       options="{'no_create': True}"/>
+                                                <field name="partner_id"
+                                                       string="Client"
+                                                       domain="[('customer_rank', '>', 0)]"
+                                                       options="{'no_create': True}"/>
+                                            </group>
+                                            <group string="Targets &amp; Achieved">
+                                                <field name="target_sales"/>
+                                                <field name="achieved_sales"/>
+                                                <field name="sales_pct" readonly="1"/>
+                                                <field name="target_collection"/>
+                                                <field name="achieved_collection"/>
+                                                <field name="collection_pct" readonly="1"/>
+                                            </group>
+                                        </group>
+                                        <group>
+                                            <group string="Resolved Rules">
+                                                <field name="sales_rule_id" readonly="1"/>
+                                                <field name="collection_rule_id" readonly="1"/>
+                                                <field name="combined_rule_id" readonly="1"/>
+                                            </group>
+                                            <group string="Computed Amounts">
+                                                <field name="sales_commission_amount" readonly="1"/>
+                                                <field name="collection_commission_amount" readonly="1"/>
+                                                <field name="combined_commission_amount" readonly="1"/>
+                                                <field name="total_commission" readonly="1"/>
+                                            </group>
+                                        </group>
+                                        <field name="notes"/>
+                                        <field name="currency_id" invisible="1"/>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+                    <group class="oe_subtotal_footer oe_right">
+                        <field name="total_sales_commission" readonly="1"/>
+                        <field name="total_collection_commission" readonly="1"/>
+                        <field name="total_combined_commission" readonly="1"/>
+                        <field name="total_commission" readonly="1"
+                               class="oe_subtotal_footer_separator"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_ksw_sales_commission_sheet_list" model="ir.ui.view">
+        <field name="name">ksw.sales.commission.sheet.list</field>
+        <field name="model">ksw.sales.commission.sheet</field>
+        <field name="arch" type="xml">
+            <list decoration-info="state == 'confirmed'"
+                  decoration-muted="state == 'draft'"
+                  import="0">
+                <field name="name"/>
+                <field name="period"/>
+                <field name="total_sales_commission" sum="Sales"/>
+                <field name="total_collection_commission" sum="Collection"/>
+                <field name="total_combined_commission" sum="Combined" optional="show"/>
+                <field name="total_commission" sum="Total"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ksw_sales_commission_sheet_search" model="ir.ui.view">
+        <field name="name">ksw.sales.commission.sheet.search</field>
+        <field name="model">ksw.sales.commission.sheet</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="period"/>
+                <filter name="draft" string="Draft"
+                        domain="[('state', '=', 'draft')]"/>
+                <filter name="confirmed" string="Confirmed"
+                        domain="[('state', '=', 'confirmed')]"/>
+                <group>
+                    <filter string="Period" name="group_period"
+                            domain="[]" context="{'group_by': 'period'}"/>
+                    <filter string="State" name="group_state"
+                            domain="[]" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_ksw_sales_commission_sheet" model="ir.actions.act_window">
+        <field name="name">Sales/Collection Commission Sheets</field>
+        <field name="res_model">ksw.sales.commission.sheet</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_ksw_sales_commission_sheet_search"/>
+        <field name="context">{'search_default_group_period': 1}</field>
+    </record>
+
+</odoo>
+
+
+

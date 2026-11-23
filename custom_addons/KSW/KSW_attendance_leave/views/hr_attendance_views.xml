@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Extend hr.attendance list to show net & raw fields + coverage -->
+    <record id="hr_attendance_view_list_inherit_coverage" model="ir.ui.view">
+        <field name="name">hr.attendance.list.inherit.coverage</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
+        <field name="arch" type="xml">
+            <!-- Relabel raw fields to "Raw …" and make them optional-hide -->
+            <xpath expr="//field[@name='x_late_minutes']" position="attributes">
+                <attribute name="string">Raw Late Min</attribute>
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//field[@name='x_early_leave_minutes']" position="attributes">
+                <attribute name="string">Raw Early Min</attribute>
+                <attribute name="optional">hide</attribute>
+            </xpath>
+
+            <!-- Relabel base worked_hours as Raw and hide by default -->
+            <xpath expr="//field[@name='worked_hours']" position="attributes">
+                <attribute name="string">Raw Worked Hours</attribute>
+                <attribute name="optional">hide</attribute>
+            </xpath>
+
+            <!-- Insert net worked hours right after the raw one -->
+            <xpath expr="//field[@name='worked_hours']" position="after">
+                <field name="x_net_worked_hours" string="Worked Hours"
+                       widget="float_time" optional="show"/>
+            </xpath>
+
+            <!-- Insert net fields right after the raw ones -->
+            <xpath expr="//field[@name='x_late_minutes']" position="after">
+                <field name="x_net_late_minutes" string="Late Minutes"
+                       optional="show"
+                       decoration-warning="x_net_late_minutes &gt; 0"/>
+            </xpath>
+            <xpath expr="//field[@name='x_early_leave_minutes']" position="after">
+                <field name="x_net_early_leave_minutes" string="Early Leave Minutes"
+                       optional="show"
+                       decoration-warning="x_net_early_leave_minutes &gt; 0"/>
+            </xpath>
+
+            <!-- Add absent and coverage columns at the end -->
+            <xpath expr="//list" position="inside">
+                <field name="x_net_is_absent" string="Absent" optional="show"/>
+                <field name="x_is_covered" string="Covered"
+                       widget="boolean_toggle" readonly="1"
+                       optional="show"/>
+            </xpath>
+
+            <!-- Update list-level decorations to use net values -->
+            <xpath expr="//list" position="attributes">
+                <attribute name="decoration-warning">x_net_late_minutes &gt; 0 or x_net_early_leave_minutes &gt; 0</attribute>
+                <attribute name="decoration-danger">x_net_is_absent</attribute>
+                <attribute name="decoration-success">(x_net_late_minutes == 0 and x_late_minutes &gt; 0) or (x_net_early_leave_minutes == 0 and x_early_leave_minutes &gt; 0) or (not x_net_is_absent and x_is_absent)</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Extend hr.attendance form to show related leaves and net/raw breakdown -->
+    <record id="hr_attendance_view_form_inherit_leaves" model="ir.ui.view">
+        <field name="name">hr.attendance.form.inherit.leaves</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="Attendance Issues">
+                    <group>
+                        <field name="worked_hours" string="Raw Worked Hours" readonly="1" widget="float_time"/>
+                        <field name="x_net_worked_hours" string="Worked Hours (Net)" readonly="1" widget="float_time"/>
+                    </group>
+                    <group>
+                        <field name="x_late_minutes" string="Raw Late Minutes" readonly="1"/>
+                        <field name="x_net_late_minutes" string="Late Minutes (Net)" readonly="1"/>
+                    </group>
+                    <group>
+                        <field name="x_early_leave_minutes" string="Raw Early Leave Minutes" readonly="1"/>
+                        <field name="x_net_early_leave_minutes" string="Early Leave Minutes (Net)" readonly="1"/>
+                    </group>
+                    <group>
+                        <field name="x_is_absent" string="Raw Absent" readonly="1"/>
+                        <field name="x_net_is_absent" string="Absent (Net)" readonly="1"/>
+                    </group>
+                </group>
+                <group string="Related Time Off"
+                       invisible="not x_leave_ids">
+                    <field name="x_leave_ids" widget="one2many_list"
+                           readonly="1"/>
+                    <field name="x_is_covered" readonly="1"
+                           widget="boolean_toggle"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
+

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_biometric_mapping_wizard_form" model="ir.ui.view">
+        <field name="name">biometric.mapping.wizard.form</field>
+        <field name="model">biometric.mapping.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Map Biometric IDs to Employees">
+                <sheet>
+                    <div class="alert alert-info" role="alert">
+                        <p><strong>Note:</strong> The following biometric IDs
+                        were found on the device but are not mapped to any
+                        employee.</p>
+                        <p>Select an employee for each ID you want to map,
+                        then click <strong>Apply</strong>.</p>
+                    </div>
+                    <group>
+                        <field name="device_id" readonly="1"/>
+                    </group>
+                    <field name="unmapped_line_ids">
+                        <list editable="bottom">
+                            <field name="biometric_id" readonly="1"/>
+                            <field name="employee_id"
+                                   domain="[('biometric_user_id', '=', False)]"/>
+                            <field name="department_id"/>
+                            <field name="job_id"/>
+                        </list>
+                    </field>
+                </sheet>
+                <footer>
+                    <button name="action_apply_mapping" string="Apply"
+                            type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
+

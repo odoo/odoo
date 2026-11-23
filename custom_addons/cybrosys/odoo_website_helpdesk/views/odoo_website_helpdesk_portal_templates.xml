@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Template for portal breadcrumbs displaying upcoming tickets -->
+    <template id="portal_my_home_menu_tickets"
+              name="Portal layout : upcoming tickets"
+              inherit_id="portal.portal_breadcrumbs" priority="30">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'ticket'">
+                <a t-if="ticket" t-attf-href="/my/tickets">/ Helpdesk Tickets
+                </a>
+                <t t-else="">/ Helpdesk Tickets</t>
+            </li>
+            <li t-if="ticket" class="breadcrumb-item active">
+                /
+                <t t-esc="details['display_name']"/>
+            </li>
+        </xpath>
+    </template>
+    <!-- Template for the "Tickets" section in the portal home -->
+    <template id="portal_my_home_helpdesk" name="Tickets"
+              inherit_id="portal.portal_my_home" priority="1"
+              customize_show="True">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">Tickets</t>
+                <t t-set="url" t-value="'/my/tickets'"/>
+                <t t-set="placeholder_count" t-value="'ticket_count'"/>
+                <t t-set="icon" t-value="'./odoo_website_helpdesk/static/description/assets/icons/service-black.png'"/>
+                <t t-set="text">Follow, view or download your helpdesk tickets</t>
+            </t>
+        </xpath>
+    </template>
+    <!-- Template for displaying My Tickets portal page -->
+    <template id="portal_my_tickets" name="My Tickets">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">My Tickets</t>
+            </t>
+            <t t-call="odoo_website_helpdesk.ticket_table"/>
+        </t>
+    </template>
+    <!-- Template for displaying ticket table -->
+
+    <template id="ticket_table">
+        <div class="search_ticket">
+            <t t-if="tickets" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>
+                            <span class='d-none d-md-inline'>Ticket #</span>
+                        </th>
+                        <th class="text-right">Subject</th>
+                        <th style="display:none;" class="text-right">Priority
+                        </th>
+                        <th class="text-right">Date</th>
+                        <th class="text-right">Stage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="tickets" t-as="ticket">
+                        <tr>
+                            <td id="my_selector">
+                                <a id="popover"
+                                   t-attf-href="/my/tickets/{{ticket.id}}">
+                                    <t t-esc="ticket.name" t-value="ticket.id"/>
+                                </a>
+                            </td>
+                            <td style="display:none;">
+                                <span t-field="ticket.name"/>
+                            </td>
+                            <td style="display:none;">
+                                <span t-field="ticket.subject"/>
+                            </td>
+                            <td style="display:none;">
+                                <span t-field="ticket.description"/>
+                            </td>
+                            <td style="display:none;">
+                                <span t-field="ticket.cost"/>
+                            </td>
+                            <td class="text-right">
+                                <span t-field="ticket.subject"/>
+                            </td>
+                            <td class="text-right" style="display:none;">
+                                <span t-field="ticket.priority"/>
+                            </td>
+                            <td class="text-right">
+                                <span t-field="ticket.create_date"
+                                      t-options="{'widget': 'date'}"/>
+                                &amp;nbsp;
+                                <span class='d-none d-md-inline'
+                                      t-field="ticket.create_date"
+                                      t-options="{'time_only': True}"/>
+                            </td>
+                            <td class="text-right">
+                                <span t-field="ticket.stage_id.name"/>
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </t>
+            <p t-else="">
+                There are currently no tickets issued for your account.
+            </p>
+        </div>
+    </template>
+    <!-- Template for displaying ticket details -->
+    <template id="portal_ticket_details" name="My Tickets">
+        <t t-call="portal.portal_layout">
+            <div class="row mt16 o_portal_helpdesk_sidebar">
+                <!-- Sidebar -->
+                <t t-call="portal.portal_record_sidebar">
+                    <t t-set="classes" t-value="'col-lg-auto d-print-none'"/>
+                    <t t-set="title">
+                        <h4 class="mb-0">
+                            <t t-esc="details['display_name']"/>
+                        </h4>
+                    </t>
+                    <t t-set="entries">
+                        <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
+                            <li class="list-group-item d-grid align-content-start">
+                                <a class="btn btn-primary fa fa-download"
+                                   t-attf-href="/my/tickets/download/{{details.id}}"
+                                   target="_blank" style="margin-right: 10px;">
+                                    Download
+                                </a>
+                            </li>
+                            <li class="list-group-item d-grid align-content-start" >
+                                <div class="small mb-1">
+                                    <strong class="text-muted">Your Contact
+                                    </strong>
+                                </div>
+                                <div class="row flex-nowrap">
+                                    <div class="col flex-grow-0 pe-2">
+                                        <img class="rounded-circle mr4 float-start o_portal_contact_img" style="width:100px;"
+                                             t-att-src="image_data_uri(details['customer_id'].avatar_1024)"
+                                             alt="Contact"/>
+                                    </div>
+                                    <div class="col ps-0"
+                                         style="min-width: 150px">
+                                        <span t-esc="details['customer_id']"
+                                              t-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": True}'/>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </t>
+                </t>
+                <!-- Page content -->
+                <div id="helpdesk_content"
+                     class="col-12 col-lg justify-content-end">
+                    <div t-attf-class="card #{'pb-5' if report_type == 'html' else ''}"
+                         id="portal_doc_content">
+                        <t t-call="odoo_website_helpdesk.helpdesk_content_preview"/>
+                    </div>
+                    <!-- chatter -->
+                    <div id="helpdesk_ticket_communication" class="mt-4">
+                        <h2>History</h2>
+                        <t t-call="portal.message_thread">
+                            <t t-set="object" t-value="details"/>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    <!-- Template for displaying ticket content preview -->
+    <template id="helpdesk_content_preview" name="Sales Order Portal Content">
+        <div id="introduction"
+             t-attf-class="pb-2 pt-3 #{'card-header bg-white' if report_type == 'html' else ''}"
+             style="height:700px;">
+            <div class="container">
+                <h4 class="mb-0" style="margin-left:15px;">
+                    <b>
+                        <t t-esc="details['display_name']"/>
+                    </b>
+                </h4>
+                <hr style="width:100%"/>
+            </div>
+            <table class="table table-borderless">
+                <tr>
+                    <th>Ticket Type</th>
+                    <td>
+                        <t t-esc="details['ticket_type_id'].name"/>
+                    </td>
+                    <th>Create Date</th>
+                    <td>
+                        <t t-esc="details['create_date']"/>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Last Update Date</th>
+                    <td>
+                        <t t-esc="details['last_update_date']"/>
+                    </td>
+                    <th>Person Name</th>
+                    <td>
+                        <t t-esc="details['customer_id'].name"/>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Ticket Subject</th>
+                    <td>
+                        <t t-esc="details['subject']"/>
+                    </td>
+                    <th>Email</th>
+                    <td>
+                        <t t-esc="details['customer_id'].email"/>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Category</th>
+                    <td>
+                        <t t-esc="details['category_id'].name"/>
+                    </td>
+                    <th>Replied Date</th>
+                    <td>
+                        <t t-esc="details['replied_date']"/>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Priority</th>
+                    <td>
+                        <t t-esc="details['priority']"/>
+                    </td>
+                    <th>Consultant</th>
+                    <td>
+                        <t t-esc="details['assigned_user_id'].name"/>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td>
+                        <t t-esc="details['stage_id'].name"/>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <t t-esc="details['description']"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </template>
+    <!--        Template for displaying tickets grouped by certain criteria in a table format.-->
+    <template id="ticket_group_by_table">
+        <t t-if="tickets" t-call="portal.portal_table">
+            <thead>
+                <tr class="active">
+                    <th>
+                        <span class="d-none d-md-inline">Ticket #</span>
+                    </th>
+                    <th class="text-right">Subject</th>
+                    <th style="display:none;" class="text-right">Priority
+                    </th>
+                    <th class="text-right">Date</th>
+                    <th class="text-right">Stage</th>
+                </tr>
+            </thead>
+            <tbody>
+                <t t-foreach="tickets" t-as="ticket">
+                    <tr>
+                        <t t-if="ticket['name'] != '' ">
+                            <th class="table-light" colspan="4">
+                                <t t-esc="ticket['name']"/>
+                            </th>
+                        </t>
+                    </tr>
+                    <t t-foreach="ticket['data']" t-as="ticket">
+                        <t t-foreach="ticket" t-as="data">
+
+                            <tr>
+                                <td id="my_selector">
+                                    <a id="popover"
+                                       t-attf-href="/my/tickets/{{ticket.id}}">
+                                        <t t-esc="ticket.name" t-value="ticket.id"/>
+                                    </a>
+                                </td>
+                                <td style="display:none;">
+                                    <span t-field="data.name"/>
+                                </td>
+                                <td style="display:none;">
+                                    <span t-field="data.subject"/>
+                                </td>
+                                <td style="display:none;">
+                                    <span t-field="data.description"/>
+                                </td>
+                                <td style="display:none;">
+                                    <span t-field="data.cost"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-field="data.subject"/>
+                                </td>
+                                <td class="text-right" style="display:none;">
+                                    <span t-field="data.priority"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-field="data.create_date"
+                                          t-options="{'widget': 'date'}"/>
+                                    &amp;nbsp;
+                                    <span class="d-none d-md-inline"
+                                          t-field="data.create_date"
+                                          t-options="{'time_only': True}"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-field="data.stage_id.name"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </t>
+                </t>
+            </tbody>
+        </t>
+        <p t-else="">There are currently no tickets issued for your
+            account.
+        </p>
+    </template>
+</odoo>
