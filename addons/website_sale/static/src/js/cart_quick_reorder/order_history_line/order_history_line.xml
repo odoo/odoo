@@ -43,7 +43,7 @@
                 <input
                     type="text"
                     class="o_wsale_quick_reorder_qty_input form-control text-center"
-                    t-att-value="this.parseInt(this.state.quantity)"
+                    t-att-value="this.state.quantity"
                     t-on-input="(event) => this.updateQuantity(event.target.value)"
                     t-on-keydown="(event) => event.key === 'Enter' and this.doReorder()"
                     t-ref="this.qtyInput"

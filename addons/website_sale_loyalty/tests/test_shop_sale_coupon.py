@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import timedelta
+from unittest.mock import patch
 
 from odoo import fields, http
 from odoo.exceptions import ValidationError
@@ -481,12 +482,35 @@ class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
             Cart().cart()
 
             # Check that the coupon stay applied
-            self.assertEqual(
-                bool(result.get("message", False)),
-                True,
-                "Apply a coupon twice should display an error message",
+            self.assertFalse(result["success"], "Apply a coupon twice should fail")
+            self.assertTrue(
+                result.get("message"), "Apply a coupon twice should display an error message"
             )
             self.assertEqual(order.amount_total, 90.0, "Apply a coupon twice shouldn't delete it")
+
+    def test_05_apply_coupon_code_reward_failure(self):
+        """Ensure that a reward failing to apply is reported as such, with its error message."""
+        product = self.env["product.product"].create({
+            "name": "Product",
+            "list_price": 100,
+            "sale_ok": True,
+            "taxes_id": [],
+            "is_published": True,
+        })
+        order = self._create_so(order_line=[Command.create({"product_id": product.id})])
+
+        with (
+            self.mock_request(path="/shop/cart", sale_order_id=order.id),
+            patch.object(
+                self.env.registry["sale.order"],
+                "_apply_program_reward",
+                return_value={"error": "Reward error"},
+            ),
+        ):
+            result = WebsiteSale().pricelist_apply(promo=self.coupon.code)
+
+        self.assertEqual(result, {"success": False, "message": "Reward error"})
+        self.assertEqual(order.amount_total, 100.0, "The coupon shouldn't be applied.")
 
     def test_03_remove_coupon_with_different_taxes_on_products(self):
         """Test the removal of a coupon from an order containing products with various tax rates,

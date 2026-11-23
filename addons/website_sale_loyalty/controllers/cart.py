@@ -89,6 +89,13 @@ class Cart(WebsiteSaleCart):
                     program.trigger == "with_code"
                     or (program.trigger == "auto" and program.applies_on == "future")
                 )
+                # The programs showing their code details only show the balance of gift cards, and
+                # promo codes never show points.
+                shows_portal_points = (
+                    not show_code_details
+                    and program.program_type != "promo_code"
+                    and program.portal_visible
+                )
                 reward_data.append({
                     "id": reward.id,
                     "description": reward.description,
@@ -112,15 +119,13 @@ class Cart(WebsiteSaleCart):
                         else request.env._("Claim")
                     ),
                     "show_points": (
-                        program.portal_visible
-                        and not program.is_nominative
-                        and not show_code_details
+                        (show_code_details and program.program_type == "gift_card")
+                        or (shows_portal_points and not program.is_nominative)
                     ),
                     "show_required_points": (
-                        program.portal_visible
+                        shows_portal_points
                         and program.is_nominative
                         and program.program_type != "ewallet"
-                        and not show_code_details
                     ),
                     "show_code_details": show_code_details,
                     "show_ewallet_points": program.program_type == "ewallet",

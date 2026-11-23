@@ -5,6 +5,7 @@ from werkzeug.urls import url_encode, url_parse
 from odoo.exceptions import UserError
 from odoo.http import request, route
 
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.website_sale.controllers import main
 
 
@@ -21,7 +22,6 @@ class WebsiteSale(main.WebsiteSale):
         if coupon_status.get("error"):
             result.update({"success": False, "message": coupon_status["error"]})
         elif "error" not in coupon_status:
-            reward_successfully_applied = True
             if len(coupon_status) == 1:
                 coupon, rewards = next(iter(coupon_status.items()))
                 if len(rewards) == 1:
@@ -29,18 +29,19 @@ class WebsiteSale(main.WebsiteSale):
                 else:
                     reward = reward_id in rewards.ids and rewards.browse(reward_id)
                 if reward and (not reward.multi_product or self.env.context.get("product_id")):
-                    reward_successfully_applied = self._apply_reward(order_sudo, reward, coupon)
+                    reward_status = self._apply_reward(order_sudo, reward, coupon)
+                    if not reward_status["success"]:
+                        return reward_status
 
-            if reward_successfully_applied:
-                # refresh rewards
-                order_sudo._update_programs_and_rewards()
-                order_sudo._auto_apply_rewards()
-                result.update({
-                    "success": True,
-                    "message": self.env._(
-                        "You have successfully applied the following code: %(code)s.", code=promo
-                    ),
-                })
+            # refresh rewards
+            order_sudo._update_programs_and_rewards()
+            order_sudo._auto_apply_rewards()
+            result.update({
+                "success": True,
+                "message": self.env._(
+                    "You have successfully applied the following code: %(code)s.", code=promo
+                ),
+            })
         return result
 
     def _promo_code_unavailable_warning(self):
@@ -103,16 +104,39 @@ class WebsiteSale(main.WebsiteSale):
                         and program_sudo.program_type not in ("ewallet", "loyalty")
                     )
                 ):
-                    return self.pricelist_apply(code, reward_id=reward_id)
+                    result = self.pricelist_apply(code, reward_id=reward_id)
+                    return self._add_cart_amount(order_sudo, result)
         if coupon:
-            return self._apply_reward(order_sudo, reward_sudo, coupon)
+            result = self._apply_reward(order_sudo, reward_sudo, coupon)
+            return self._add_cart_amount(order_sudo, result)
         return {"success": False}
+
+    def _add_cart_amount(self, order_sudo, result):
+        """Add the new amount of the order to the result of a successful reward claim.
+
+        :param sale.order order_sudo: The current cart.
+        :param dict result: The result of the reward claim.
+        :return: The result, with the `amount` and `minor_amount` of the order if successful.
+        :rtype: dict
+        """
+        if result.get("success"):
+            result.update({
+                "amount": order_sudo.amount_total,
+                "minor_amount": (
+                    order_sudo.amount_total
+                    and payment_utils.to_minor_currency_units(
+                        order_sudo.amount_total, order_sudo.currency_id
+                    )
+                ),
+            })
+        return result
 
     def _apply_reward(self, order, reward, coupon):
         """Try to apply the given program reward.
 
-        :returns: whether the reward was successfully applied
-        :rtype: bool
+        :return: The status of the application, in the format
+                 {'success': bool, 'message': str}, with a message only if it failed.
+        :rtype: dict
         """
         product_id = self.env.context.get("product_id")
         product = product_id and self.env["product.product"].sudo().browse(product_id)

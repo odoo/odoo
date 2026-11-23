@@ -9,7 +9,7 @@ export class OrderHistoryLine extends Component {
     qtyInput = signal.ref();
 
     setup() {
-        this.state = proxy({ quantity: this.props.line.product_uom_qty });
+        this.state = proxy({ quantity: parseInt(this.props.line.product_uom_qty) });
 
         onPatched(() => {
             if (this.props.focus) {
@@ -18,12 +18,8 @@ export class OrderHistoryLine extends Component {
         });
     }
 
-    parseInt(value) {
-        return parseInt(value);
-    }
-
-    updateQuantity(quantity) {
-        this.state.quantity = quantity;
+    updateQuantity(value) {
+        this.state.quantity = parseInt(value) || 0;
     }
 
     async doReorder() {

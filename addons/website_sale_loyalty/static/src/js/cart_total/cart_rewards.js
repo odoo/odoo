@@ -1,4 +1,5 @@
 import { Component, onWillUpdateProps, t, useProps, proxy, usePlugin } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
 import { useService } from "@web/core/utils/hooks";
@@ -33,13 +34,17 @@ export class CartRewards extends Component {
             reward_id: reward.id,
             code: coupon.coupon_code,
             product_id: reward.multi_product ? this.selectedProductIds[reward.id] : false,
+        }).finally(() => {
+            this.pendingRewardIds[reward.id] = false;
         });
 
         if (data.success) {
             await this.cartService.loadCart({ force: true });
+            this.cartService.bus.trigger("cart_amount_changed", [data.amount, data.minor_amount]);
         } else {
-            this.notifications.add(data.message, { type: "danger" });
+            this.notifications.add(data.message || _t("The reward could not be claimed."), {
+                type: "danger",
+            });
         }
-        this.pendingRewardIds[reward.id] = false;
     }
 }

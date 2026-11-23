@@ -21,7 +21,7 @@ export class CartQuickReorder extends Component {
         });
 
         onPatched(() => {
-            if (!this.data.order_history.length) {
+            if (!this.orderHistory.length) {
                 const offCanvas = Offcanvas.getInstance(this.offCanvasRef());
                 if (offCanvas) {
                     offCanvas.hide();
@@ -31,7 +31,7 @@ export class CartQuickReorder extends Component {
     }
 
     async handleReorder(lineData) {
-        await this.cartService.add(
+        const quantity = await this.cartService.add(
             {
                 productTemplateId: lineData.product_tmpl_id,
                 productId: lineData.product_id,
@@ -48,6 +48,9 @@ export class CartQuickReorder extends Component {
                 renderShorterCartSummary: !this.cartService.state.lines.cart_lines?.length,
             }
         );
+        if (quantity) {
+            await this.cartService.loadCart({ force: true, withHistory: true });
+        }
     }
 
     get quickReorderTooltip() {

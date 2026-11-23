@@ -8,13 +8,13 @@
 
     <t t-inherit="website_sale.CartLinesQuantity" t-inherit-mode="extension">
         <t t-set="showQuantitySelector" position="attributes">
-            <attribute name="t-value" separator=" || " add="!this.props.line.reward_type == 'product'"/>
+            <attribute name="t-value" separator=" and " add="this.props.line.reward_type !== 'product'"/>
         </t>
     </t>
 
     <t t-inherit="website_sale.CartProductPrice" t-inherit-mode="extension">
         <span position="attributes">
-            <attribute name="t-attf-class">o_reward_{{this.props.line.reward_type}}</attribute>
+            <attribute name="t-att-class">line?.reward_type and `o_reward_${line.reward_type}`</attribute>
         </span>
     </t>
 

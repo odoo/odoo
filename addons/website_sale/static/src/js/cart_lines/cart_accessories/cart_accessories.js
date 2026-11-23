@@ -13,7 +13,7 @@ export class CartAccessories extends Component {
     }
 
     async addToCart(accessoryProduct) {
-        await this.cartService.add(
+        const quantity = await this.cartService.add(
             {
                 productTemplateId: accessoryProduct.product_tmpl_id,
                 productId: accessoryProduct.id,
@@ -27,6 +27,9 @@ export class CartAccessories extends Component {
                 showQuantity: this.cartService.state.is_quantity_view_active,
             }
         );
+        if (quantity) {
+            await this.cartService.loadCart({ force: true, withHistory: true });
+        }
     }
 
     _getOptionalAddToCartParams() {

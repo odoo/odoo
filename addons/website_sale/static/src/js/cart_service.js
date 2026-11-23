@@ -45,8 +45,9 @@ const AUTOCLOSE_NOTIFICATION_DELAY = 4000;
  *    - The OWL cart components (`CartLines`, `CartTotal`, `CartSummary`, `CartQuickReorder`, ...)
  *      read from this shared state instead of each fetching their own data, and re-render
  *      automatically when it changes;
- *    - Every cart action reloads the state once it is done, so that all components stay in sync
- *      without re-rendering server-side fragments.
+ *    - Cart updates reload the state once they are done, so that all components stay in sync
+ *      without re-rendering server-side fragments. Additions don't, as most of them happen outside
+ *      of the cart page: callers displaying the cart must reload it themselves.
  *
  * The service also exposes a {@link bus} on which the following events are triggered:
  *    - `cart_amount_changed`: triggered after a cart line is updated, with the new
@@ -653,7 +654,6 @@ export class CartService {
                 items: data.tracking_info,
             });
         }
-        await this.loadCart({ force: true, withHistory: true });
         if (shouldRedirectToCart) {
             redirect('/shop/cart');
             return data.quantity;
@@ -773,9 +773,9 @@ export class CartService {
      * @returns {void}
      */
     _setCartState(data) {
-        Object.assign(this.state.lines, data.lines || {});
-        Object.assign(this.state.totals, data.totals || {});
-        Object.assign(this.state.history, data.history || {});
+        this.state.lines = data.lines;
+        this.state.totals = data.totals;
+        this.state.history = data.history;
         this.state.currency_id = data.currency_id;
         this.state.is_quantity_view_active = data.is_quantity_view_active;
         this.state.is_wishlist_view_active = data.is_wishlist_view_active;

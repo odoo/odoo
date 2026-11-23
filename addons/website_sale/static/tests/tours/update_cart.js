@@ -50,7 +50,7 @@ registry.category("web_tour.tours").add("website_sale.update_cart", {
         },
         {
             trigger:
-                '#wrap:not(:has(#suggested_products a[name="o_cart_line_product_link"]>h6:contains("Storage Box")))',
+                '#wrap:not(:has(#cart_products a[name="o_cart_line_product_link"]>h6:contains("Storage Box")))',
         },
         {
             content: "add one more",

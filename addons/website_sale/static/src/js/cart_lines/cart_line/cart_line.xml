@@ -163,15 +163,22 @@
                 class="me-md-2 text-muted text-nowrap opacity-50"
                 t-out="this.env.formatPrice(this.props.line.displayed_unit_price * this.props.line.product_uom_qty)"
             />
-            <t t-call="website_sale.CartProductPrice" price="this.env.formatPrice(this.props.line.product_price)"/>
+            <t
+                t-call="website_sale.CartProductPrice"
+                price="this.env.formatPrice(this.props.line.product_price)"
+                line="this.props.line"
+            />
         </h6>
         <div
             t-if="this.cartService.state.show_product_reference_price and this.props.line.base_unit_price"
             class="cart_product_base_unit_price d-block text-muted text-end"
         >
             <small class="o_product_price_unit text-muted d-block">
-                (<t t-call="website_sale.CartProductPrice" price="this.env.formatPrice(this.props.line.base_unit_price)"/>
-                / <span class="oe_custom_base_unit" t-out="this.props.line.base_unit_name"/>)
+                (<t
+                    t-call="website_sale.CartProductPrice"
+                    price="this.env.formatPrice(this.props.line.base_unit_price)"
+                    line="this.props.line"
+                />/ <span class="oe_custom_base_unit" t-out="this.props.line.base_unit_name"/>)
             </small>
         </div>
     </t>
@@ -199,6 +206,12 @@
         </a>
     </t>
 
+    <!--
+        Params:
+            - price: The formatted price to display.
+            - line: The cart line whose price is displayed, if any (e.g. not for accessories).
+                    Used in one of the overrides.
+    -->
     <t t-name="website_sale.CartProductPrice">
         <span t-out="price" style="white-space: nowrap;"/>
     </t>

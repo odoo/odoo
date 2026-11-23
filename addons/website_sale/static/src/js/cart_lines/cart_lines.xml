@@ -7,7 +7,7 @@
                 <CartLine line="line" t-props="this.cartLinesProps"/>
             </t>
             <CartAccessories
-                t-if="this.data.accessories.length"
+                t-if="this.data.accessories?.length"
                 t-props="this.cartAccessoriesProps"
             />
         </div>
