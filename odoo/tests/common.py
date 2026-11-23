@@ -1231,6 +1231,31 @@ class CrossModule(case.TestCase):
         result['module'] = None
         return result
 
+    def setUp(self):
+        super().setUp()
+        self._module_stats = defaultdict(result.Stat)
+
+    def get_stats_entries(self, stat):
+        # Split this test's stats across the modules
+        if not hasattr(self, '_module_stats') or not self._module_stats:
+            return super().get_stats_entries(stat)
+        module_stats = self._module_stats
+        accounted = sum(module_stats.values(), result.Stat())
+        entries = {
+            self._get_module_stats_id(module): module_stat
+            for module, module_stat in module_stats.items()
+        }
+        remainder = result.Stat(
+            time=max(0.0, stat.time - accounted.time),
+            queries=max(0, stat.queries - accounted.queries),
+        )
+        entries[self.id()] = entries.get(self.id(), result.Stat()) + remainder
+        return entries
+
+    def _get_module_stats_id(self, module):
+        _, _, suffix = self.id().partition('.tests.')
+        return f'odoo.addons.{module}.tests.{suffix}'
+
 
 class Like:
     """
@@ -1732,6 +1757,7 @@ class ChromeBrowser:
         self._request_id = itertools.count()
         self._result = Future()
         self.error_checker = None
+        self.console_hook = None
         self.had_failure = False
         # maps request_id to Futures
         self._responses = {}
@@ -2188,6 +2214,8 @@ class ChromeBrowser:
         _logger = self._logger.getChild('browser')
         if self._result.done() and IGNORED_MSGS(message):
             log_type = 'dir'
+        if self.console_hook:
+            self.console_hook(message)
         _logger.log(
             self._TO_LEVEL.get(log_type, logging.INFO),
             "%s%s",
@@ -2356,10 +2384,11 @@ which leads to stray network requests and inconsistencies."""
         self._logger.info('Ready code last try result: %s', result)
         return False
 
-    def _wait_code_ok(self, code, timeout, error_checker=None):
+    def _wait_code_ok(self, code, timeout, error_checker=None, console_hook=None):
         if timeout:
             timeout *= self.throttling_factor
         self.error_checker = error_checker
+        self.console_hook = console_hook
         self._logger.info('Evaluate test code "%s"', code)
         start = time.time()
         try:
@@ -2991,7 +3020,7 @@ class HttpCase(TransactionCase):
                 ],
             }
 
-    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, success_signal=DEFAULT_SUCCESS_SIGNAL, debug=False, cpu_throttling=None, stat_name='browser_js', **kw):
+    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, success_signal=DEFAULT_SUCCESS_SIGNAL, debug=False, cpu_throttling=None, console_hook=None, stat_name='browser_js', **kw):
         """ Test JavaScript code running in the browser.
 
         To signal success test do: `console.log()` with the expected `success_signal`. Default is "test successful"
@@ -3012,6 +3041,8 @@ class HttpCase(TransactionCase):
         :param bool debug: automatically open a fullscreen Chrome window with opened devtools and a debugger breakpoint set at the start of the tour.
             The tour is ran with the `debug=assets` query parameter. When an error is thrown, the debugger stops on the exception.
         :param int cpu_throttling: CPU throttling rate as a slowdown factor (1 is no throttle, 2 is 2x slowdown, etc)
+        :param console_hook: function called with every console message received from the browser
+            (regardless of its level), e.g. to collect stats out of the test's own logging
         :param string stat_name: `collect_stats` leaf name for this call
         """
         if not self.env.registry.loaded:
@@ -3090,7 +3121,7 @@ class HttpCase(TransactionCase):
 
             error = None
             try:
-                browser._wait_code_ok(code, timeout, error_checker=error_checker)
+                browser._wait_code_ok(code, timeout, error_checker=error_checker, console_hook=console_hook)
             except ChromeBrowserException as chrome_browser_exception:
                 error = chrome_browser_exception
             if error:  # dont keep initial traceback, keep that outside of except
