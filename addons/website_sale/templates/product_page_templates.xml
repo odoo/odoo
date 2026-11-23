@@ -42,6 +42,8 @@
                        o_wsale_product_page_opt_image_ratio_mobile_{{website.product_page_image_ratio_mobile}}
                        o_wsale_product_page_opt_image_radius_{{website.product_page_image_roundness}}
                     "
+                    t-attf-style="--o-wsale-image-ratio: {{website.product_page_image_ratio.replace('_', '/')}};
+                       {{website.product_page_image_ratio_mobile != 'auto' and '--o-wsale-image-ratio-mobile: ' + website.product_page_image_ratio_mobile.replace('_', '/')}}"
                     t-att-data-view-track="view_track and '1' or '0'"
                     t-att-data-name="combination_info['display_name']"
                 >
