@@ -183,8 +183,8 @@ export class CarouselSlider extends Interaction {
         // If before the slide, the focused element was another indicator, move
         // the focus to the newly active indicator.
         if (
-            this.el.contains(document.activeElement) &&
-            document.activeElement.matches(
+            this.el.contains(this.document.activeElement) &&
+            this.document.activeElement.matches(
                 `.carousel-indicators > :is(button, li):not([data-bs-slide-to="${nextItemIndex}"])`
             )
         ) {

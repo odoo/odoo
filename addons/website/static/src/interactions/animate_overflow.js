@@ -33,7 +33,7 @@ export class AnimateOverflow extends Interaction {
         // other conditions (for example: an animated image in a block which is
         // hidden on mobile would not have the issue).
         this.forceOverflowXYHidden = [...animatedElements].some(
-            (el) => window.getComputedStyle(el).transform !== "none"
+            (el) => this.window.getComputedStyle(el).transform !== "none"
         );
     }
 

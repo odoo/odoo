@@ -20,7 +20,7 @@ export class SearchBarResults extends Interaction {
                     position: "absolute !important",
                     "max-width": `${bcr.width}px !important`,
                     "max-height": `max(40vh, ${
-                        document.body.clientHeight - bcr.bottom - 16
+                        this.document.body.clientHeight - bcr.bottom - 16
                     }px) !important`,
                     "min-width": `${this.autocompleteMinWidth}px`,
                 };
@@ -81,18 +81,18 @@ export class SearchBarResults extends Interaction {
 
         // Adjust the menu's position based on the scroll height.
         this.isDropup = false;
-        if (this.el.getBoundingClientRect().bottom > document.documentElement.offsetHeight) {
+        if (this.el.getBoundingClientRect().bottom > this.document.documentElement.offsetHeight) {
             // If the menu overflows below the page, we reduce its height.
             this.el.style.overflowY = "auto";
             // We then recheck if the menu still overflows below the page.
-            if (this.el.getBoundingClientRect().bottom > document.documentElement.offsetHeight) {
+            if (this.el.getBoundingClientRect().bottom > this.document.documentElement.offsetHeight) {
                 // If the menu still overflows below the viewport after its
                 // height has been reduced, we position it where most space is
                 // available
                 const searchPosition = this.searchBarEl.getBoundingClientRect();
                 this.isDropup =
                     searchPosition.top >
-                    document.documentElement.offsetHeight - searchPosition.bottom;
+                    this.document.documentElement.offsetHeight - searchPosition.bottom;
             }
         }
     }
@@ -126,7 +126,7 @@ export class SearchBarResults extends Interaction {
             case "ArrowDown": {
                 ev.preventDefault();
                 const focusableEls = [this.inputEl, ...this.el.children];
-                const focusedEl = document.activeElement;
+                const focusedEl = this.document.activeElement;
                 const currentIndex = focusableEls.indexOf(focusedEl) || 0;
                 const delta = ev.key === "ArrowUp" ? focusableEls.length - 1 : 1;
                 const nextIndex = (currentIndex + delta) % focusableEls.length;

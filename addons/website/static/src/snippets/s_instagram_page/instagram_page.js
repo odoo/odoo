@@ -20,7 +20,7 @@ export class InstagramPage extends Interaction {
     };
 
     setup() {
-        this.iframeEl = document.createElement("iframe");
+        this.iframeEl = this.document.createElement("iframe");
         this.iframeEl.setAttribute("scrolling", "no");
         this.iframeEl.setAttribute("aria-label", _t("Instagram"));
         this.iframeEl.classList.add("w-100");

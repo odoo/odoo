@@ -65,7 +65,7 @@ export class Parallax extends Interaction {
         if (this.speed === 0 || this.speed === 1) {
             return;
         }
-        this.viewportHeight = document.body.clientHeight;
+        this.viewportHeight = this.document.body.clientHeight;
         this.parallaxHeight = this.targetEl.getBoundingClientRect().height;
 
         // The parallax is in the viewport if it is between these two values

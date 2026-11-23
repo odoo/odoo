@@ -38,7 +38,7 @@ export class Animation extends BaseAnimation {
         this.isAnimated = false;
         this.isAnimateOnScroll = this.el.classList.contains("o_animate_on_scroll");
         this.isResetting = false;
-        const style = window.getComputedStyle(this.el);
+        const style = this.window.getComputedStyle(this.el);
         this.playState = style.animationPlayState;
         this.delay = undefined;
     }
@@ -76,7 +76,7 @@ export class Animation extends BaseAnimation {
                 }
                 this.isAnimating = false;
                 this.isAnimated = true;
-                window.dispatchEvent(new Event("resize"));
+                this.window.dispatchEvent(new Event("resize"));
             };
             for (const eventName of [
                 "webkitAnimationEnd",
@@ -111,7 +111,7 @@ export class Animation extends BaseAnimation {
                 const out = el.classList.contains("o_animate_out");
                 const ratio =
                     (out ? elTop + elHeight : elTop) / (windowsHeight - windowsHeight / start);
-                const duration = parseFloat(window.getComputedStyle(el).animationDuration);
+                const duration = parseFloat(this.window.getComputedStyle(el).animationDuration);
                 const delay = (ratio - 1) * (duration * end);
                 this.delay = (out ? -duration - delay : delay) + "s";
                 this.isAnimating = true;

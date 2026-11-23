@@ -155,7 +155,7 @@ export class Form extends Interaction {
 
         // Add the files zones where the file blocks will be displayed.
         this.el.querySelectorAll("input[type=file]").forEach((inputEl) => {
-            const filesZoneEl = document.createElement("DIV");
+            const filesZoneEl = this.document.createElement("DIV");
             filesZoneEl.classList.add("o_files_zone", "row", "gx-1");
             inputEl.parentNode.insertBefore(filesZoneEl, inputEl);
         });
@@ -211,7 +211,7 @@ export class Form extends Interaction {
         // in edit mode to keep the form linked to its predefined server
         // values (e.g., the default `job_id` value on the application form
         // for a given job).
-        const dataForValues = getParsedDataFor(this.el.id, document) || {};
+        const dataForValues = getParsedDataFor(this.el.id, this.document) || {};
         const initialValuesToReset = new Map(
             [...this.initialValues.entries()].filter(
                 ([input]) => !dataForValues[input.name] || input.name === "email_to"
@@ -325,7 +325,7 @@ export class Form extends Interaction {
         // Because, using t-att- inside form make it non-editable
         // Data-fill-with attribute is given during registry and is used by
         // to know which user data should be used to prfill fields.
-        let dataForValues = getParsedDataFor(this.el.id, document);
+        let dataForValues = getParsedDataFor(this.el.id, this.document);
         // On the "edit_translations" mode, a <span/> with a translated term
         // will replace the attribute value, leading to some inconsistencies
         // (setting again the <span> on the attributes after the editor's
@@ -524,7 +524,7 @@ export class Form extends Interaction {
                                 }
                             }
                             if (successPage.charAt(0) === "#") {
-                                const successAnchorEl = document.getElementById(
+                                const successAnchorEl = this.document.getElementById(
                                     successPage.substring(1)
                                 );
                                 if (successAnchorEl) {
@@ -735,7 +735,7 @@ export class Form extends Interaction {
         // Highlight the first invalid field
         if (firstInvalidInput) {
             firstInvalidInput.focus();
-            const viewportHeight = document.defaultView.innerHeight;
+            const viewportHeight = this.window.innerHeight;
             const inputHeight = firstInvalidInput.getBoundingClientRect().height;
             scrollTo(firstInvalidInput, { forcedOffset: viewportHeight / 2 - inputHeight / 2 });
         }
@@ -1149,7 +1149,7 @@ export class Form extends Interaction {
      * @param {HTMLElement} inputEl the file input
      */
     createAddFilesButton(inputEl) {
-        const addFilesButtonEl = document.createElement("INPUT");
+        const addFilesButtonEl = this.document.createElement("INPUT");
         addFilesButtonEl.classList.add("o_add_files_button", "form-control");
         addFilesButtonEl.type = "button";
         addFilesButtonEl.value = inputEl.hasAttribute("multiple")

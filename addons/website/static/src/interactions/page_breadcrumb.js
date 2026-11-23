@@ -5,7 +5,7 @@ export class PageBreadcrumb extends Interaction {
     static selector = ".o_page_breadcrumb";
 
     start() {
-        this.headerEl = document.querySelector("#top");
+        this.headerEl = this.document.querySelector("#top");
         // Watch the header element so we can reposition the breadcrumb whenever
         // the header's height changes (e.g. on resize or style updates).
         const updatePageBreadcrumbOnResize = this.protectSyncAfterAsync(

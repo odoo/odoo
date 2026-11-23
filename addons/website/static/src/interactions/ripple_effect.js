@@ -24,7 +24,7 @@ export class RippleEffect extends Interaction {
      */
     onClick(ev) {
         if (!this.rippleEl) {
-            this.rippleEl = document.createElement("span");
+            this.rippleEl = this.document.createElement("span");
             this.rippleEl.classList.add("o_ripple_item");
             this.rippleEl.style.animationDuration = `${this.duration}ms`;
             this.insert(this.rippleEl, this.el);
@@ -37,8 +37,8 @@ export class RippleEffect extends Interaction {
         }
 
         const rect = this.el.getBoundingClientRect();
-        const offsetY = rect.top + window.scrollY;
-        const offsetX = rect.left + window.scrollX;
+        const offsetY = rect.top + this.window.scrollY;
+        const offsetX = rect.left + this.window.scrollX;
         // The diameter need to be recomputed because a change of window width
         // can affect the size of a button (e.g. media queries).
         const diameter = Math.max(this.el.clientWidth, this.el.clientHeight);
