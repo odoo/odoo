@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_debit_note_inherit_l10n_th_edi_inet" model="ir.ui.view">
+        <field name="name">account.debit.note.form.inherit.l10n_th_edi_inet</field>
+        <field name="model">account.debit.note</field>
+        <field name="inherit_id" ref="account_debit_note.view_account_debit_note"/>
+        <field name="arch" type="xml">
+            <field name="reason" position="attributes">
+                <attribute name="invisible" separator="or" add="l10n_th_edi_available_reasons"/>
+            </field>
+            <field name="reason" position="after">
+                <field name="l10n_th_edi_debit_note_reason"
+                       widget="filterable_selection"
+                       options="{'whitelist_fname': 'l10n_th_edi_available_reasons'}"
+                       invisible="not l10n_th_edi_available_reasons"
+                       required="l10n_th_edi_available_reasons"/>
+                <field name="l10n_th_edi_other_reason"
+                       invisible="l10n_th_edi_debit_note_reason not in ('DBNG99', 'DBNS99')"
+                       required="l10n_th_edi_debit_note_reason in ('DBNG99', 'DBNS99')"/>
+            </field>
+        </field>
+    </record>
+</odoo>

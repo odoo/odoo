@@ -16,6 +16,20 @@
                     <field name="qr_code" class="oe_inline"/>
                 </setting>
             </xpath>
+            <xpath expr="//block[@id='peppol']" position="after">
+                <block title="Thailand e-Tax Invoice" id="l10n_th_edi" invisible="country_code != 'TH'">
+                    <setting id="l10n_th_edi_activate_setting"
+                             string="e-Tax Invoice"
+                             help="Issue e-Tax invoices and submit them to the Revenue Department through INET."
+                             documentation="/applications/finance/fiscal_localizations/thailand.html"
+                             invisible="module_l10n_th_edi_inet">
+                        <button string="Activate INET"
+                                type="object"
+                                name="action_l10n_th_activate_edi_inet"
+                                class="btn btn-primary mt-2"/>
+                    </setting>
+                </block>
+            </xpath>
         </field>
     </record>
 
