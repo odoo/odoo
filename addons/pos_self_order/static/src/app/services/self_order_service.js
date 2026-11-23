@@ -783,6 +783,7 @@ export class SelfOrder extends Reactive {
             line.delete();
         }
 
+        this.currentOrder.general_customer_note = this.currentOrder.uiState.lastGeneralCustomerNote;
         this.currentOrder.recomputeChanges();
         if (Math.max(this.currentOrder.lines.map((l) => l.qty)) <= 0) {
             this.router.navigate("default");
@@ -811,7 +812,8 @@ export class SelfOrder extends Reactive {
 
     async sendDraftOrderToServer() {
         if (
-            Object.keys(this.currentOrder.changes).length === 0 ||
+            (Object.keys(this.currentOrder.changes).length === 0 &&
+                !this.currentOrder.hasGeneralNoteChange) ||
             this.currentOrder.lines.length === 0
         ) {
             return this.currentOrder;
