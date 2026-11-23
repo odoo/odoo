@@ -28,7 +28,7 @@ class HrLeave(models.Model):
     def write(self, vals):
         res = super().write(vals)
         fields_to_check = {'number_of_days', 'request_date_from', 'request_date_to', 'state', 'employee_id', 'holiday_status_id'}
-        if not any(field for field in fields_to_check if field in vals):
+        if not any(field for field in fields_to_check if field in vals) or vals.get('state') in ['refuse']:
             return res
         self._check_overtime_deductible(self)
         return res
