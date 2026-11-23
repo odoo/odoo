@@ -55,13 +55,14 @@ class Assets(models.AbstractModel):
         """
         custom_url = self._make_custom_asset_url(url, bundle)
         datas = base64.b64encode((content or "\n").encode("utf-8"))
+        mimetype = 'text/javascript' if file_type == 'js' else 'text/scss'
 
         # Check if the file to save had already been modified
         custom_attachment = self._get_custom_attachment(custom_url)
         if custom_attachment:
             # If it was already modified, simply override the corresponding
             # attachment content
-            custom_attachment.write({"datas": datas})
+            custom_attachment.write({"datas": datas, "mimetype": mimetype})
             self.env.registry.clear_cache('assets')
         else:
             # If not, create a new attachment to copy the original scss/js file
@@ -69,7 +70,7 @@ class Assets(models.AbstractModel):
             new_attach = {
                 'name': url.split("/")[-1],
                 'type': "binary",
-                'mimetype': (file_type == 'js' and 'text/javascript' or 'text/scss'),
+                'mimetype': mimetype,
                 'datas': datas,
                 'url': custom_url,
                 **self._save_asset_attachment_hook(),
