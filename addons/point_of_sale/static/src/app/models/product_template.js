@@ -23,10 +23,15 @@ export class ProductTemplate extends ProductTemplateAccounting {
 
     async _onScaleNotAvailable() {}
 
+    _skipUomSelection() {
+        return this.isCombo();
+    }
+
     isConfigurable() {
         return (
             this.attribute_line_ids.map((a) => a.active !== false && a.product_template_value_ids)
-                .length >= 1
+                .length >= 1 ||
+            (!this._skipUomSelection() && this.uom_ids.length)
         );
     }
 
@@ -36,7 +41,8 @@ export class ProductTemplate extends ProductTemplateAccounting {
             this.isCombo() ||
             (this.isConfigurable() &&
                 activeLines.length > 0 &&
-                activeLines.some((l) => l.attribute_id.create_variant === "no_variant"))
+                activeLines.some((l) => l.attribute_id.create_variant === "no_variant")) ||
+            (!this._skipUomSelection() && this.uom_ids.length)
         );
     }
 
@@ -165,6 +171,33 @@ export class ProductTemplate extends ProductTemplateAccounting {
             this.cachedValues[key] = computeFunc();
         }
         return this.cachedValues[key];
+    }
+
+    getUomPriceFactor(uom) {
+        return uom ? uom.getFactorTo(this.uom_id) : 1;
+    }
+
+    getUomPrice(
+        pricelist,
+        quantity,
+        uom,
+        priceExtra = 0,
+        variant = false,
+        originalLine = false,
+        relatedLines = []
+    ) {
+        return (
+            this.getPrice(
+                pricelist,
+                quantity,
+                priceExtra,
+                false,
+                variant,
+                originalLine,
+                relatedLines,
+                uom
+            ) * this.getUomPriceFactor(uom)
+        );
     }
 
     onUpdate() {

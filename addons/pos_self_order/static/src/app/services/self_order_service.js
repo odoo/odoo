@@ -171,9 +171,18 @@ export class SelfOrder {
                 });
                 return;
             }
-            const product = this.models["product.product"].filter(
+            let product = this.models["product.product"].filter(
                 (p) => p.barcode === ev.detail.barcode
             )?.[0];
+            let uom = null;
+            if (!product) {
+                const productPackaging = this.models["product.uom"].getBy(
+                    "barcode",
+                    ev.detail.barcode
+                );
+                uom = productPackaging && productPackaging.uom_id;
+                product = productPackaging && productPackaging.product_id;
+            }
             if (!product) {
                 this.notification.add(_t("Product not found"), {
                     type: "danger",
@@ -191,7 +200,7 @@ export class SelfOrder {
                 this.router.navigate("product", { id: productTemplate.id });
                 return;
             }
-            this.addToCart(productTemplate, 1, "", {}, {});
+            this.addToCart(productTemplate, 1, "", {}, {}, {}, uom);
             this.router.navigate("cart");
         });
     }
@@ -420,7 +429,8 @@ export class SelfOrder {
         customer_note,
         selectedValues = {},
         customValues = {},
-        comboValues = {}
+        comboValues = {},
+        uom = null
     ) {
         this.resetTip();
         const values = getOrderLineValues(
@@ -430,7 +440,8 @@ export class SelfOrder {
             customer_note,
             selectedValues,
             customValues,
-            comboValues
+            comboValues,
+            uom
         );
         const newLine = this.models["pos.order.line"].create(values);
         const lineToMerge = this.currentOrder.lines.find(
@@ -1164,11 +1175,11 @@ export class SelfOrder {
         return result;
     }
 
-    getProductPriceInfo(productTemplate, product) {
+    getProductPriceInfo(productTemplate, product, uom = null, qty = 1, priceExtra = 0) {
         const order = this.currentOrder;
         const pricelist = order.preset_id?.pricelist_id || this.config.pricelist_id;
         const productVariant = product || productTemplate.product_variant_ids[0];
-        const price = productTemplate.getPrice(pricelist, 1, 0, false, productVariant);
+        const price = productTemplate.getUomPrice(pricelist, qty, uom, priceExtra, productVariant);
         const taxesData = (productVariant || productTemplate).getTaxDetails({
             overridedValues: {
                 price,

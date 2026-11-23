@@ -182,7 +182,10 @@ class PosOrder(models.Model):
             if excluded_ids & set(combination.ids):
                 raise UserError(_("Invalid product configuration"))
 
-            return [command, id_to_use, {
+            if (uom_id := line_data.get('product_uom_id')) and uom_id not in (product.uom_id | product.product_tmpl_id.uom_ids).ids:
+                raise UserError(_("Invalid product unit of measure"))
+
+            line_vals = {
                 'combo_id': line_data.get('combo_id'),
                 'product_id': line_data.get('product_id'),
                 'tax_ids': tax_ids.ids,
@@ -200,7 +203,11 @@ class PosOrder(models.Model):
                 'combo_parent_id': line_data.get('combo_parent_id'),
                 'combo_item_id': line_data.get('combo_item_id'),
                 'combo_line_ids': [id for id in line_data.get('combo_line_ids', []) if isinstance(id, int)],
-            }]
+            }
+            # Without a UoM in the payload, an updated line keeps its own.
+            if uom_id:
+                line_vals['product_uom_id'] = uom_id
+            return [command, id_to_use, line_vals]
         return []
 
     @api.model
@@ -267,8 +274,8 @@ class PosOrder(models.Model):
                 raise UserError(_("Error while creating the order. Please try again."))
             order['session_id'] = pos_config.current_session_id.id
 
-        fiscal_position_id = preset_id.fiscal_position_id if preset_id else pos_config.default_fiscal_position_id
-        pricelist_id = preset_id.pricelist_id if preset_id else pos_config.pricelist_id
+        fiscal_position_id = preset_id.fiscal_position_id if preset_id and preset_id.fiscal_position_id else pos_config.default_fiscal_position_id
+        pricelist_id = preset_id.pricelist_id if preset_id and preset_id.pricelist_id else pos_config.pricelist_id
         lines = [self._check_pos_order_lines(pos_config, order, line, fiscal_position_id) for line in order.get('lines', [])]
         lines = [line for line in lines if len(line)]
         payment_lines = self._check_pos_order_payment(device_type, order, order.get("payment_ids"))
@@ -435,7 +442,7 @@ class PosOrder(models.Model):
         pricelist = self.pricelist_id
         selected_attributes = line.attribute_value_ids
         product = line.product_id.with_context(line.product_id._get_product_price_context(selected_attributes))
-        price = price or pricelist._get_product_price(product, 1.0, currency=self.currency_id)
+        price = price or pricelist._get_product_price(product, line.qty, uom=line.product_uom_id, currency=self.currency_id)
         line.price_unit = price
         line.tax_ids = line.product_id.taxes_id._filter_taxes_by_company(self.company_id)
         self._compute_line_subtotals(line)

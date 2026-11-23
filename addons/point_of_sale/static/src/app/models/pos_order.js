@@ -311,11 +311,11 @@ export class PosOrder extends PosOrderAccounting {
     }
 
     setLinePriceFromPriceList(line, pricelist) {
-        const newPrice = line.product_id.product_tmpl_id.getPrice(
+        const newPrice = line.product_id.product_tmpl_id.getUomPrice(
             pricelist,
             line.getQuantity(),
+            line.product_uom_id,
             line.getPriceExtra(),
-            false,
             line.product_id
         );
         line.setUnitPrice(newPrice);
@@ -710,7 +710,10 @@ export class PosOrder extends PosOrderAccounting {
     getLinesToCompute() {
         return this.lines.filter(
             (line) =>
-                line.price_type === "original" &&
+                (line.price_type === "original" ||
+                    (line.product_uom_id &&
+                        line.price_type === "automatic" &&
+                        line.product_uom_id.id !== line.product_id.uom_id.id)) &&
                 !(line.combo_line_ids?.length || line.combo_parent_id)
         );
     }

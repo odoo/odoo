@@ -14,3 +14,15 @@ class StockRule(models.Model):
     @api.model
     def _get_scheduler_tasks_to_do(self):
         return super()._get_scheduler_tasks_to_do() + 1
+
+    def _get_custom_move_fields(self):
+        fields = super()._get_custom_move_fields()
+        if self.env['stock.move']._has_pos_order_line_access():
+            fields += ['pos_order_line_ids']
+        return fields
+
+    def _push_prepare_move_copy_values(self, move_to_copy):
+        vals = super()._push_prepare_move_copy_values(move_to_copy)
+        if self.env['stock.move']._has_pos_order_line_access():
+            vals['pos_order_line_ids'] = move_to_copy.pos_order_line_ids.ids
+        return vals

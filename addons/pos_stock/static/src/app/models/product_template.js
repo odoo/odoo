@@ -14,4 +14,8 @@ patch(ProductTemplate.prototype, {
             (pickingType.use_create_lots || pickingType.use_existing_lots)
         );
     },
+
+    _skipUomSelection() {
+        return super._skipUomSelection() || this.tracking === "serial";
+    },
 });

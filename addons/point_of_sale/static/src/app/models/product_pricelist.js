@@ -83,8 +83,9 @@ export class ProductPricelist extends Base {
         this.uiState.generalRulesIds[index] = item.id;
     }
 
-    findBestRule(rules, quantity) {
+    findBestRule(rules, quantity, uom = false, productUom = false) {
         const now = DateTime.now();
+        const selectedUom = uom || productUom;
         let bestRule = null;
         for (const rule of rules) {
             if (rule.date_start && rule.date_start > now) {
@@ -93,7 +94,16 @@ export class ProductPricelist extends Base {
             if (rule.date_end && rule.date_end < now) {
                 continue;
             }
-            if (!rule.min_quantity || rule.min_quantity <= quantity) {
+            if (rule.uom_id && selectedUom && rule.uom_id.id !== selectedUom.id) {
+                continue;
+            }
+            // Same as _is_applicable_for: the quantity stays in the selected UoM when it is
+            // the product or rule UoM, otherwise it is compared in the product UoM.
+            const qtyToConsider =
+                !uom || [productUom?.id, rule.uom_id?.id].includes(uom.id)
+                    ? quantity
+                    : quantity * uom.getFactorTo(productUom);
+            if (!rule.min_quantity || rule.min_quantity <= qtyToConsider) {
                 if (!bestRule || rule.min_quantity > bestRule.min_quantity) {
                     bestRule = rule;
                 }
