@@ -509,7 +509,10 @@ class TestMailMessageAccess(MessageAccessCommon):
         """ Unlink access check for internal users """
         for msg, msg_vals, should_crash, reason in [
             # document based
-            (self.record_portal.message_ids[0], {}, False, 'W Access on record'),
+            (self.record_portal.message_ids[0], {}, True, 'W Access on record but not author'),
+            (self.record_portal.message_ids[0], {
+                'author_id': self.user_portal.partner_id.id,
+            }, False, 'W Access on record and author'),
             (self.record_internal_ro.message_ids[0], {}, True, 'R Access on record'),
             # notified
             (self.record_admin.message_ids[0], {
@@ -531,7 +534,10 @@ class TestMailMessageAccess(MessageAccessCommon):
         """ Unlink access check for portal users. """
         for msg, msg_vals, should_crash, reason in [
             # document based
-            (self.record_portal.message_ids[0], {}, False, 'W Access on record but unlink limited'),
+            (self.record_portal.message_ids[0], {}, True, 'W Access on record but not author'),
+            (self.record_portal.message_ids[0], {
+                'author_id': self.user_portal.partner_id.id,
+            }, False, 'W Access on record and author'),
             (self.record_portal_ro.message_ids[0], {}, True, 'R Access on record'),
             # notified
             (self.record_admin.message_ids[0], {
@@ -617,6 +623,9 @@ class TestMailMessageAccess(MessageAccessCommon):
         with self.assertRaises(AccessError):
             test_record.with_user(self.user_portal_2).read(['name'])
         message = test_record.message_ids[0].with_user(self.user_portal)
+        with self.assertRaises(AccessError):
+            message.write({'body': 'Updated'})
+        message.sudo().author_id = self.user_portal.partner_id
         message.write({'body': 'Updated'})
         with self.assertRaises(AccessError):
             message.with_user(self.user_portal_2).read(['subject'])
