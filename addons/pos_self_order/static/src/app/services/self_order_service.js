@@ -811,6 +811,7 @@ export class SelfOrder extends Reactive {
             line.delete();
         }
 
+        this.currentOrder.general_customer_note = this.currentOrder.uiState.lastGeneralCustomerNote;
         this.currentOrder.recomputeChanges();
         if (Math.max(this.currentOrder.lines.map((l) => l.qty)) <= 0) {
             this.router.navigate("default");
@@ -838,6 +839,7 @@ export class SelfOrder extends Reactive {
     }
 
     async sendDraftOrderToServer() {
+<<<<<<< 19c123142bc56a5d82f4d21658253fe71da8d48b
         return this.orderSyncMutex.exec(() => this._sendDraftOrderToServer());
     }
 
@@ -847,6 +849,20 @@ export class SelfOrder extends Reactive {
         // tip is excluded from `changes`, so a tip-only update still needs a sync
         if ((Object.keys(order.changes).length === 0 && !hasTipLine) || order.lines.length === 0) {
             return order;
+||||||| 0a6b16e7d80802c8eb252960ef77cd1dd7f2f4b1
+        if (
+            Object.keys(this.currentOrder.changes).length === 0 ||
+            this.currentOrder.lines.length === 0
+        ) {
+            return this.currentOrder;
+=======
+        if (
+            (Object.keys(this.currentOrder.changes).length === 0 &&
+                !this.currentOrder.hasGeneralNoteChange) ||
+            this.currentOrder.lines.length === 0
+        ) {
+            return this.currentOrder;
+>>>>>>> 9337b2c388a1a278aa069f71f0106819c4ccc5c8
         }
 
         try {

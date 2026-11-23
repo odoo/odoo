@@ -4,12 +4,18 @@ import { location } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 import { definePosSelfModels } from "../data/generate_model_definitions";
+<<<<<<< 19c123142bc56a5d82f4d21658253fe71da8d48b
 import {
     addComboProduct,
     getFilledSelfOrder,
     mockLNAPermissionCheck,
     setupSelfPosEnv,
 } from "../utils";
+||||||| 0a6b16e7d80802c8eb252960ef77cd1dd7f2f4b1
+import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+=======
+import { MockServer, patchWithCleanup } from "@web/../tests/web_test_helpers";
+>>>>>>> 9337b2c388a1a278aa069f71f0106819c4ccc5c8
 
 definePosSelfModels();
 
@@ -935,6 +941,32 @@ test("sendDraftOrderToServer updateLastOrderChange", async () => {
     await store.addToCart(product1, 1, "");
     await store.sendDraftOrderToServer();
     expect(Object.keys(order.prep_order_ids[0].prep_line_ids)).toHaveLength(3);
+});
+
+test("confirmOrder syncs a general note added after the first sync", async () => {
+    const store = await setupSelfPosEnv("mobile");
+    const order = await getFilledSelfOrder(store);
+    await store.confirmOrder();
+
+    order.general_customer_note = "No onions";
+    await store.confirmOrder();
+
+    const [serverOrder] = MockServer.env["pos.order"].read([order.id], ["general_customer_note"]);
+    expect(serverOrder.general_customer_note).toBe("No onions");
+});
+
+test("cancelOrder reverts an unsent general note", async () => {
+    const store = await setupSelfPosEnv("mobile");
+    const order = await getFilledSelfOrder(store);
+    await store.confirmOrder();
+
+    order.general_customer_note = "No onions";
+    store.cancelOrder();
+    expect(order.general_customer_note).toBe("");
+    await store.confirmOrder();
+
+    const [serverOrder] = MockServer.env["pos.order"].read([order.id], ["general_customer_note"]);
+    expect(serverOrder.general_customer_note).toBe("");
 });
 
 describe("setOrderPrices", () => {

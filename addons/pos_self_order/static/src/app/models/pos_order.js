@@ -10,6 +10,13 @@ patch(PosOrder.prototype, {
         this.uiState = {
             ...this.uiState,
             lineChanges: this.uiState.lineChanges || {},
+<<<<<<< 19c123142bc56a5d82f4d21658253fe71da8d48b
+||||||| 0a6b16e7d80802c8eb252960ef77cd1dd7f2f4b1
+            receiptReady: false,
+=======
+            lastGeneralCustomerNote: this.uiState.lastGeneralCustomerNote || "",
+            receiptReady: false,
+>>>>>>> 9337b2c388a1a278aa069f71f0106819c4ccc5c8
         };
     },
     get unsentLines() {
@@ -38,11 +45,15 @@ patch(PosOrder.prototype, {
             return acc;
         }, {});
     },
+    get hasGeneralNoteChange() {
+        return this.general_customer_note !== this.uiState.lastGeneralCustomerNote;
+    },
     get isTakeaway() {
         return this.preset_id?.service_at !== "table" && this.config.use_presets;
     },
     recomputeChanges() {
         const lines = this.lines;
+        this.uiState.lastGeneralCustomerNote = this.general_customer_note;
         for (const line of lines) {
             if (!line.isSynced) {
                 continue;
