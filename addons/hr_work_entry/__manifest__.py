@@ -18,7 +18,6 @@
         'views/resource_calendar_views.xml',
         'views/hr_time_rule_views.xml',
         'views/menuitems.xml',
-        'wizard/hr_time_rule_regenerate_wizard_views.xml',
         'security/ir.access.csv',
     ],
     'demo': [

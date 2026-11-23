@@ -560,7 +560,7 @@ class TestHrAttendance(HttpCase, TransactionCase):
         }])
 
 
-@tagged('attendance_process', 'post_install', '-at_install')
+@tagged('attendance_process')
 class TestAbsenceDetectionCron(TransactionCase):
 
     @classmethod
@@ -616,7 +616,7 @@ class TestAbsenceDetectionCron(TransactionCase):
 
         self.env['hr.attendance']._cron_absence_detection()
 
-        tech_atts = self.env['hr.attendance'].with_context(active_test=False).search([
+        tech_atts = self.env['hr.attendance'].search([
             ('employee_id', '=', self.absent_employee.id),
             ('in_mode', '=', 'technical'),
         ])
@@ -652,12 +652,11 @@ class TestAbsenceDetectionCron(TransactionCase):
             'check_out': datetime(2024, 1, 1, 12, 0),
             'state': 'refused',
         })
-        att = self.env['hr.attendance'].create({
+        self.env['hr.attendance'].create({
             'employee_id': self.absent_employee.id,
             'check_in': datetime(2024, 1, 1, 13, 0),
             'check_out': datetime(2024, 1, 1, 14, 0),
         })
-        att._trigger_time_rules(include_deficit=True)
         outputs = self.env['hr.attendance'].search([
             ('employee_id', '=', self.absent_employee.id),
             ('time_rule_id', '=', rule.id),
@@ -974,8 +973,7 @@ class TestAttendanceValidationTimeRules(TransactionCase):
         })
         self.assertRecordValues(afternoon, [{'is_late_check_in': False, 'is_undertime': False, 'state': 'validated'}])
         self.assertAlmostEqual(self._get_overtime_hours(), 1 / 6, msg="The review ran the time rules")
-        # the time rules archived the afternoon and split it: the regular hours and the extra 10 minutes
-        self.assertFalse(afternoon.active)
+        # the time rules split the afternoon in place: the regular hours and the extra 10 minutes
         day = self.env['hr.attendance'].search([('employee_id', '=', self.employee.id), ('date', '=', date(2024, 1, 1))])
         self.assertEqual(len(day), 2)
         holiday.date_from = datetime(2024, 1, 1, 10, 0)

@@ -132,9 +132,6 @@
                     <button name="action_refuse" string="Refuse" type="object"
                             groups="hr_attendance.group_hr_attendance_officer"
                             invisible="context.get('my_attendances')"/>
-                    <button name="action_reprocess_time_rules" type="object"
-                            string="Reprocess Time Rules"
-                            groups="hr_attendance.group_hr_attendance_user"/>
                 </header>
                 <field name="employee_id" widget="many2one_avatar_employee"
                        column_invisible="context.get('my_attendances')"/>

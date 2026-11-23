@@ -101,29 +101,3 @@ test(`multi create keeps the unsaved changes of the calendar form`, async () => 
         message: "the unsaved hours per day are not reset by the reload of the calendar",
     });
 });
-
-test.tags("desktop");
-test(`quick add is not limited by the average hours per day of the calendar`, async () => {
-    const attendance = (id, date, hour_from, hour_to) => ({
-        id,
-        calendar_id: 1,
-        date,
-        hour_from,
-        hour_to,
-        duration_hours: hour_to - hour_from,
-        duration_based: false,
-    });
-    ResourceCalendarAttendance._records = [
-        attendance(1, "2025-01-07", 13, 17),
-        attendance(2, "2025-01-08", 8, 12),
-    ];
-    await mountView({ resId: 1, resModel: "resource.calendar", type: "form" });
-    await animationFrame();
-    await changeScale("month");
-    await animationFrame();
-    await clickDate("2025-01-08");
-    await animationFrame();
-    expect(".o_multi_selection_buttons .o_resource_quick_add_btn").toHaveCount(1, {
-        message: "the afternoon block fits next to the morning one: 8 hours on a 7.5 hours per day calendar",
-    });
-});

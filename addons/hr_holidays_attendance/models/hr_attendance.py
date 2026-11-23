@@ -11,12 +11,6 @@ _TIME_FIELDS = frozenset({'check_in', 'check_out', 'employee_id'})
 class HrAttendance(models.Model):
     _inherit = 'hr.attendance'
 
-    allocation_log_ids = fields.One2many(
-        'hr.time.rule.allocation.log', 'res_id',
-        string="Allocation Credits",
-        domain=[('res_model', '=', 'hr.attendance')],
-    )
-
     has_time_off_conflict = fields.Boolean(
         string="On Time Off", compute='_compute_has_time_off_conflict', search='_search_has_time_off_conflict',
         help="The attendance overlaps an approved time off of the employee.")
@@ -92,18 +86,3 @@ class HrAttendance(models.Model):
     def _reverse_credits_on_unlink(self):
         """Reverse the allocation credits logged on the deleted attendances."""
         self.env['hr.time.rule']._reverse_allocation_credits('hr.attendance', self.ids)
-
-    @api.ondelete(at_uninstall=False)
-    def _cleanup_orphaned_sources_on_unlink(self):
-        if self.env.context.get('skip_time_rules'):
-            return
-        orphaned = self._get_orphaned_sources_on_unlink()
-        if not orphaned:
-            return
-        # clear fk first, outputs still exist and would block source deletion
-        src_field = self._time_rule_source_field
-        self.with_context(active_test=False, skip_time_rules=True).write({src_field: False})
-        orphaned.with_context(active_test=False, skip_time_rules=True).sudo().unlink()
-
-    def _time_rule_wizard_extra_domain(self):
-        return [('state', '=', 'validated')]

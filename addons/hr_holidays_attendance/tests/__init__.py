@@ -9,4 +9,3 @@ from . import test_time_rule_pipeline
 from . import test_time_rule_allocation_log
 from . import test_performance
 from . import test_holidays_overtime
-from . import test_regenerate_wizard

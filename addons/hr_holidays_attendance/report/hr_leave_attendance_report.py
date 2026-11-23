@@ -280,7 +280,6 @@ class HrLeaveAttendanceReport(models.Model):
                 ON ec.employee_id = att.employee_id
         CROSS JOIN bounds AS b
              WHERE att.state = 'validated'
-               AND att.active
                AND att.check_in >= b.date_from - INTERVAL '1 day'
                AND att.check_in < b.date_to + INTERVAL '2 days'
           GROUP BY att.employee_id, ec.tz, check_date
@@ -299,7 +298,6 @@ class HrLeaveAttendanceReport(models.Model):
                 ON wet.id = lv.work_entry_type_id
         CROSS JOIN bounds AS b
              WHERE lv.state = 'validate'
-               AND lv.active
                AND lv.date_from < b.date_to + INTERVAL '2 days'
                AND lv.date_to >= b.date_from - INTERVAL '1 day'
         """)

@@ -76,11 +76,6 @@ class TestTimeRulePipeline(TransactionCase):
             self.assertAlmostEqual(entry['duration'], exp_dur, places=5)
             self.assertEqual(entry['work_entry_type_id'].code, exp_type.code)
 
-    def _run_deficit_day_cron(self, for_date):
-        """Simulate the day-undertime cron as if running the morning after for_date."""
-        with freeze_time(for_date + timedelta(days=1)):
-            self.env['hr.attendance']._cron_process_day_undertime_rules()
-
     def test_no_overtime(self):
 
         vals = self.cal_version.generate_work_entries(date(2022, 12, 12), date(2022, 12, 12))
@@ -175,28 +170,23 @@ class TestTimeRulePipeline(TransactionCase):
         ])
 
     def test_attendance_unlink_removes_outputs(self):
-        """Saturday source archived, output child created; unlinking the archived source orphans the child."""
+        """Saturday source repurposed in-place as OT; unlinking it leaves no orphan records."""
         att = self.env['hr.attendance'].create({
             'employee_id': self.cal_emp.id,
             'check_in': datetime(2022, 12, 10, 11),  # Saturday -> all excess
             'check_out': datetime(2022, 12, 10, 17),
         })
-        output = att.overtime_attendance_ids
-        self.assertEqual(len(output), 1, "One output child for the fully-excess attendance")
-        self.assertEqual(output.work_entry_type_id, self.overtime_type)
-        child_id = output.id
+        att.invalidate_recordset()
+        self.assertEqual(att.work_entry_type_id, self.overtime_type,
+                         "Source WET changed to overtime type (in-place repurpose)")
+        self.assertFalse(att.overtime_attendance_ids,
+                         "No child records; source IS the OT")
         att_id = att.id
-
-        # unlink the archived source (skip_time_rules to avoid re-triggering engine)
-        att.with_context(active_test=False).sudo().browse(att_id).with_context(skip_time_rules=True).unlink()
-
+        att.unlink()
         self.assertFalse(
-            self.env['hr.attendance'].with_context(active_test=False).search([('id', '=', att_id)]),
-            "Archived source deleted",
+            self.env['hr.attendance'].search([('id', '=', att_id)]),
+            "Record deleted; no OT entry remains for this slot",
         )
-        orphan = self.env['hr.attendance'].sudo().search([('id', '=', child_id)])
-        self.assertEqual(len(orphan), 1, "Output child survives source deletion as a stale orphan")
-        self.assertFalse(orphan.source_attendance_id, "source_attendance_id nulled after parent deleted")
 
     # Public holiday interaction TODO: public holiday cases needs a second look
     def _make_public_holiday(self, date_from, date_to, work_entry_type):
@@ -715,7 +705,7 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertFalse(output_atts, "No check_out -> no output attendances from time rules")
 
     def test_attendance_write_triggers_time_rule_recompute(self):
-        """Extending the active remainder triggers re-evaluation and creates a correctly-sized new output."""
+        """Extending check_out after manually deleting the stale OT output creates a correctly-sized new one."""
         att = self.env['hr.attendance'].create({
             'employee_id': self.cal_emp.id,
             'check_in': datetime(2022, 12, 12, 8),
@@ -729,17 +719,10 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertAlmostEqual(output_before.worked_hours, 2.0, places=5,
                                msg="Initial overtime should be 2h")
 
-        # in the archive+create pattern the source is archived; the active remainder
-        # (the non-OT portion) is what the user interacts with to extend the attendance
-        remainder = self.env['hr.attendance'].search([
-            ('source_attendance_id', '=', att.id),
-            ('time_rule_id', '=', False),
-        ])
-        self.assertEqual(len(remainder), 1)
-
-        # unlink the output, then extend the remainder from 16:00 to 20:00 -> 12h -> 4h excess
+        # extending att (now shrunk to 16h) to 20h overlaps the OT child (16h-18h)
+        # -> must delete the output first, then extend
         output_before.unlink()
-        remainder.write({'check_out': datetime(2022, 12, 12, 20)})
+        att.write({'check_out': datetime(2022, 12, 12, 20)})  # 12h worked -> 4h excess
 
         output_after = self.env['hr.attendance'].search([
             ('employee_id', '=', self.cal_emp.id),
@@ -747,34 +730,71 @@ class TestTimeRulePipeline(TransactionCase):
         ])
         self.assertEqual(len(output_after), 1, "One new OT output after extending and re-evaluating")
         self.assertAlmostEqual(output_after.worked_hours, 4.0, places=5,
-                               msg="Extended remainder (8h-20h) -> 12h worked -> 4h overtime")
+                               msg="Extended attendance (8h-20h) -> 12h worked -> 4h overtime")
 
     def test_source_output_cleared_when_excess_drops(self):
-        """Stale OT output persists after re-evaluation — engine is additive-only."""
+        """Shrinking check_out re-evaluates but stale OT child persists (engine is additive-only)."""
         att = self.env['hr.attendance'].create({
             'employee_id': self.cal_emp.id,
             'check_in': datetime(2022, 12, 12, 8),
-            'check_out': datetime(2022, 12, 12, 18),  # 10h -> 2h excess
+            'check_out': datetime(2022, 12, 12, 18),  # 10h -> 2h excess -> source shrunk, output child created
         })
-        # source is archived; remainder (08:00-16:00) and output (16:00-18:00) are active children
-        remainder = self.env['hr.attendance'].search([
-            ('source_attendance_id', '=', att.id),
-            ('time_rule_id', '=', False),
-        ])
-        self.assertEqual(len(remainder), 1)
-        self.assertAlmostEqual(remainder.worked_hours, 8.0, places=5, msg="Remainder covers 8h non-OT")
+        att.invalidate_recordset()
+        # source is shrunk to 16:00 (OT starts after check_in); it stays active
+        self.assertEqual(att.check_out, datetime(2022, 12, 12, 16), "Source shrunk to first OT start")
 
-        # shrink the remainder back to 08:00-08:00 (0h) -> re-evaluates with 0 excess
-        remainder.write({'check_out': datetime(2022, 12, 12, 8)})
+        att.write({'check_out': datetime(2022, 12, 12, 16)})  # no-op value; triggers re-evaluation
 
+        att.invalidate_recordset()
         output_atts = self.env['hr.attendance'].search([
             ('source_attendance_id', '=', att.id),
-            ('time_rule_id', '!=', False),
         ])
         # stale output persists: engine is additive-only, no automatic cleanup when excess drops
         self.assertEqual(len(output_atts), 1,
                          "Stale OT child persists even though excess dropped to zero")
         self.assertAlmostEqual(output_atts.worked_hours, 2.0, places=5)
+
+    def test_weekly_output_persists_when_week_excess_drops(self):
+        """Reducing Mon so the weekly total drops to threshold: stale weekly output persists (additive-only)."""
+        self.time_rule.active = False
+        weekly_rule = self.env['hr.time.rule'].create({
+            'name': 'Weekly OT',
+            'working_hours_mode': 'week',
+            'expected_hours': 40.0,
+            'work_entry_type_id': self.overtime_type.id,
+            'condition_work_entry_type_ids': [self.att_type.id],
+        })
+        # Mon-Fri: Mon 10h, Tue-Fri 8h each -> 42h total -> 2h weekly excess
+        mon = self.env['hr.attendance'].create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 12, 8),
+            'check_out': datetime(2022, 12, 12, 18),  # 10h
+        })
+        for day in range(13, 17):
+            self.env['hr.attendance'].create({
+                'employee_id': self.cal_emp.id,
+                'check_in': datetime(2022, 12, day, 8),
+                'check_out': datetime(2022, 12, day, 16),  # 8h
+            })
+        weekly_outputs = self.env['hr.attendance'].search([
+            ('employee_id', '=', self.cal_emp.id),
+            ('time_rule_id', '!=', False),
+            ('time_rule_id', '=', weekly_rule.id),
+        ])
+        self.assertEqual(len(weekly_outputs), 1, "2h weekly output should exist")
+        self.assertAlmostEqual(weekly_outputs.worked_hours, 2.0, places=5)
+
+        # Reduce Mon to 8h -> week total drops to 40h -> no new output, but stale one persists
+        mon.write({'check_out': datetime(2022, 12, 12, 16)})
+
+        weekly_outputs = self.env['hr.attendance'].search([
+            ('employee_id', '=', self.cal_emp.id),
+            ('time_rule_id', '!=', False),
+            ('time_rule_id', '=', weekly_rule.id),
+        ])
+        self.assertEqual(len(weekly_outputs), 1,
+                         "Stale weekly output persists; engine is additive-only")
+        self.assertAlmostEqual(weekly_outputs.worked_hours, 2.0, places=5)
 
     def test_time_rule_recompute_scoped_to_date_range(self):
 
@@ -816,17 +836,11 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertEqual(len(output_atts), 1, "One output attendance for the excess")
         self.assertEqual(output_atts.time_rule_id, self.time_rule)
 
+        att.invalidate_recordset()
         output_dur = output_atts.worked_hours
         self.assertAlmostEqual(output_dur, 6.0, places=5, msg="Output covers the 6h excess")
-        # source is archived; remainder child holds the on-schedule hours
-        self.assertFalse(att.active, "Source archived after rule fires")
-        remainder = self.env['hr.attendance'].search([
-            ('source_attendance_id', '=', att.id),
-            ('time_rule_id', '=', False),
-        ])
-        remainder_dur = sum(r.worked_hours for r in remainder)
-        self.assertAlmostEqual(remainder_dur + output_dur, 14.0, places=5,
-                               msg="Remainder + output must total the original attendance duration")
+        self.assertAlmostEqual(att.worked_hours + output_dur, 14.0, places=5,
+                               msg="Shrunk source + output must total the original attendance duration")
 
     def test_deficit_rule(self):
 
@@ -843,7 +857,6 @@ class TestTimeRulePipeline(TransactionCase):
             'check_in': datetime(2022, 12, 12, 8),
             'check_out': datetime(2022, 12, 12, 12),
         })
-        self._run_deficit_day_cron(date(2022, 12, 12))
         output_atts = self.env['hr.attendance'].search([
             ('employee_id', '=', self.cal_emp.id),
             ('time_rule_id', '!=', False),
@@ -926,8 +939,7 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertIsNotNone(result)
         new_records, source_ids, excess_alloc, _deficit_alloc = result
         self.assertEqual(set(source_ids), {att.id})
-        output_records = new_records.filtered('time_rule_id')
-        self.assertEqual(output_records.work_entry_type_id, self.overtime_type)
+        self.assertEqual(new_records.work_entry_type_id, self.overtime_type)
         self.assertEqual(len(excess_alloc), 1)
 
     def test_refuse_attendance_refuses_outputs_and_reverses_credits(self):
@@ -1004,10 +1016,10 @@ class TestTimeRulePipeline(TransactionCase):
         )
 
     def test_allocation_inplace_update(self):
-        """Allocation must be created when the whole source is excess (archive+create path).
+        """Allocation must be created even when the source record is updated in-place (whole source is excess).
 
         Saturday attendance: 6h, schedule=0h -> all 6h is excess.
-        The source is archived, an output child is created with the OT type.
+        The source is repurposed in-place as the OT record (no child output created).
         Rule: output WET=OT, 100% allocation rate.
         Expected: 6h * 100% / 8h/day = 0.75 compensatory days allocated.
         """
@@ -1022,15 +1034,17 @@ class TestTimeRulePipeline(TransactionCase):
             'leave_compensation_rate': 1.0,
             'allocation_type_id': comp_type.id,
         })
-        # Saturday: 0h scheduled -> all 6h excess -> source archived, output child created
+        # Saturday: 0h scheduled -> all 6h excess -> source repurposed in-place as OT
         att = self.env['hr.attendance'].create({
             'employee_id': self.cal_emp.id,
             'check_in': datetime(2022, 12, 10, 10),   # Saturday
             'check_out': datetime(2022, 12, 10, 16),   # 6h
         })
-        output = att.overtime_attendance_ids
-        self.assertEqual(len(output), 1, "One output child for the fully-excess attendance")
-        self.assertEqual(output.work_entry_type_id, self.overtime_type)
+        att.invalidate_recordset()
+        self.assertEqual(att.work_entry_type_id, self.overtime_type,
+                         "Source should be repurposed in-place as OT (prerequisite)")
+        self.assertFalse(att.overtime_attendance_ids,
+                         "No child outputs; source IS the OT record (in-place update)")
 
         allocation = self.env['hr.leave.allocation'].sudo().search([
             ('employee_id', '=', self.cal_emp.id),
@@ -1694,14 +1708,16 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertEqual(len(output_atts), 1, "One output attendance for the lunch window")
         self.assertAlmostEqual(output_atts.worked_hours, 1.0, places=5, msg="1h lunch excess")
 
-        # source is archived; both head [8:00-12:00] and tail [13:00-20:00] are remainder children
+        # Source is shrunk to [8:00-12:00] (head); tail [13:00-20:00] becomes a remainder child
+        att.invalidate_recordset()
+        self.assertEqual(att.check_out, datetime(2022, 12, 12, 12), "Source shrunk to first OT start")
+
         remainder_atts = self.env['hr.attendance'].search([
             ('source_attendance_id', '=', att.id),
             ('time_rule_id', '=', False),
-        ], order='check_in asc')
-        self.assertEqual(len(remainder_atts), 2, "Head [8:00-12:00] and tail [13:00-20:00] are both remainder children")
-        self.assertAlmostEqual(remainder_atts[0].worked_hours, 4.0, places=5, msg="Head [8:00-12:00] = 4h")
-        self.assertAlmostEqual(remainder_atts[1].worked_hours, 7.0, places=5, msg="Tail [13:00-20:00] = 7h")
+        ])
+        self.assertEqual(len(remainder_atts), 1, "Only the tail [13:00-20:00] is a remainder child; head is the source")
+        self.assertAlmostEqual(remainder_atts.worked_hours, 7.0, places=5, msg="Tail remainder [13:00-20:00] = 7h")
 
     def test_source_zeroed_when_entire_attendance_is_excess(self):
 
@@ -1710,14 +1726,14 @@ class TestTimeRulePipeline(TransactionCase):
             'check_in': datetime(2022, 12, 10, 11),   # Saturday
             'check_out': datetime(2022, 12, 10, 17),
         })
-        # entire attendance is excess -> source archived, one output child created
-        output = att.overtime_attendance_ids
-        self.assertEqual(len(output), 1, "One output child for the fully-excess attendance")
-        self.assertEqual(output.work_entry_type_id, self.overtime_type,
-                         "Output WET is the overtime type")
-        self.assertEqual(output.time_rule_id, self.time_rule,
-                         "Output time_rule_id set to the firing rule")
-        self.assertAlmostEqual(output.worked_hours, 6.0, places=5)
+        att.invalidate_recordset()
+        self.assertEqual(att.work_entry_type_id, self.overtime_type,
+                         "Source WET changed to overtime type")
+        self.assertEqual(att.time_rule_id, self.time_rule,
+                         "Source time_rule_id set to the firing rule")
+        self.assertFalse(att.overtime_attendance_ids,
+                         "No child output records; source IS the output")
+        self.assertAlmostEqual(att.worked_hours, 6.0, places=5)
 
     def test_multiple_timing_windows_create_separate_outputs(self):
 
@@ -1816,7 +1832,6 @@ class TestTimeRulePipeline(TransactionCase):
             'check_in': datetime(2022, 12, 12, 8),
             'check_out': datetime(2022, 12, 12, 12),
         })
-        self._run_deficit_day_cron(date(2022, 12, 12))
         allocation.invalidate_recordset()
         self.assertAlmostEqual(
             allocation.number_of_days, 9.5, places=5,
@@ -1824,7 +1839,7 @@ class TestTimeRulePipeline(TransactionCase):
         )
 
     def test_deficit_no_wet_still_deducts_allocation(self):
-        """Undertime rule without output WET still deducts from allocation, without splitting the source."""
+        """undertime rule without output WET still deducts from an existing allocation."""
         comp_type = self.env['hr.work.entry.type'].create({
             'name': 'Flexi No WET', 'code': 'FLEXNOWET',
             'requires_allocation': True,
@@ -1844,22 +1859,17 @@ class TestTimeRulePipeline(TransactionCase):
             'leave_compensation_rate': 1.0,
             'allocation_type_id': comp_type.id,
         })
-        att = self.env['hr.attendance'].create({
+        # 4h worked on an 8h day -> 4h deficit -> 4h / 8h_per_day = 0.5 days deducted
+        self.env['hr.attendance'].create({
             'employee_id': self.cal_emp.id,
             'check_in': datetime(2022, 12, 12, 8),
             'check_out': datetime(2022, 12, 12, 12),
         })
-        self._run_deficit_day_cron(date(2022, 12, 12))
         allocation.invalidate_recordset()
         self.assertAlmostEqual(
             allocation.number_of_days, 9.5, places=5,
             msg="10 - 0.5 (4h deficit / 8h per day) = 9.5 days remaining",
         )
-        # no output type: the missing hours only move the allocation, the attendance is not
-        # split (an output with the source type would count the missing hours as worked)
-        att.invalidate_recordset()
-        self.assertTrue(att.active, "nothing to split: the source attendance stays active")
-        self.assertFalse(self.env['hr.attendance'].search([('source_attendance_id', '=', att.id)]))
 
     def test_daily_and_weekly_rules_combined(self):
         """Daily and weekly rules fire independently: 2h daily OT on Mon + 2h weekly OT from the 42h week."""
@@ -1946,7 +1956,6 @@ class TestTimeRulePipeline(TransactionCase):
             'check_in': datetime(2022, 12, 12, 8),
             'check_out': datetime(2022, 12, 12, 13),  # 5h
         })
-        self._run_deficit_day_cron(date(2022, 12, 12))
         output_atts = self.env['hr.attendance'].search([
             ('employee_id', '=', self.cal_emp.id),
             ('time_rule_id', '!=', False),
@@ -1983,7 +1992,6 @@ class TestTimeRulePipeline(TransactionCase):
             'check_in': datetime(2022, 12, 12, 8),
             'check_out': datetime(2022, 12, 12, 12),  # 4h
         })
-        self._run_deficit_day_cron(date(2022, 12, 12))
         self.assertAlmostEqual(_deficit_hours(), 4.0, places=5, msg="4h worked -> 4h deficit")
 
         # deficit output occupies 13h-17h and would block the afternoon attendance
@@ -1999,7 +2007,6 @@ class TestTimeRulePipeline(TransactionCase):
             'check_in': datetime(2022, 12, 12, 13),
             'check_out': datetime(2022, 12, 12, 17),  # +4h = 8h total
         })
-        self._run_deficit_day_cron(date(2022, 12, 12))
         self.assertAlmostEqual(_deficit_hours(), 0.0, places=5,
                                msg="8h worked -> no deficit output created")
 
@@ -2162,6 +2169,29 @@ class TestTimeRulePipeline(TransactionCase):
         ])
         return sum(a.worked_hours for a in atts)
 
+    def test_public_holiday_create_does_not_clear_overtime(self):
+        """Adding a PH after OT exists leaves OT stale (additive-only; no cleanup on re-eval)."""
+        self.time_rule.apply_on_public_holidays = False
+        public_type = self.env['hr.work.entry.type'].create({
+            'name': 'Public Holiday', 'code': 'PHCLEAR', 'count_as': 'absence',
+        })
+        self.env['hr.attendance'].create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 12, 6),
+            'check_out': datetime(2022, 12, 12, 20),
+        })
+        self.assertAlmostEqual(
+            self._ot_hours_on_day(self.cal_emp, date(2022, 12, 12)), 6.0, places=5,
+            msg="6h OT before PH is added",
+        )
+        self._make_public_holiday(
+            datetime(2022, 12, 12, 0, 0, 0), datetime(2022, 12, 12, 23, 59, 59), public_type,
+        )
+        self.assertAlmostEqual(
+            self._ot_hours_on_day(self.cal_emp, date(2022, 12, 12)), 6.0, places=5,
+            msg="OT output persists (stale) after PH added; engine does not delete existing outputs",
+        )
+
     def test_public_holiday_unlink_restores_overtime(self):
         """Deleting a PH triggers re-evaluation and creates fresh 6h OT output."""
         self.time_rule.apply_on_public_holidays = False
@@ -2184,6 +2214,52 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertAlmostEqual(
             self._ot_hours_on_day(self.cal_emp, date(2022, 12, 12)), 6.0, places=5,
             msg="6h OT restored after PH deleted",
+        )
+
+    def test_public_holiday_write_date_shifts_overtime(self):
+        """Moving a PH between worked days doesn't change existing OT (additive-only; no cleanup on re-eval)."""
+        self.time_rule.apply_on_public_holidays = False
+        public_type = self.env['hr.work.entry.type'].create({
+            'name': 'Public Holiday', 'code': 'PHSHIFT', 'count_as': 'absence',
+        })
+        for day in (12, 13):
+            self.env['hr.attendance'].create({
+                'employee_id': self.cal_emp.id,
+                'check_in': datetime(2022, 12, day, 6),
+                'check_out': datetime(2022, 12, day, 20),
+            })
+        self.assertAlmostEqual(
+            self._ot_hours_on_day(self.cal_emp, date(2022, 12, 12)), 6.0, places=5,
+            msg="Mon: 6h OT before PH",
+        )
+        self.assertAlmostEqual(
+            self._ot_hours_on_day(self.cal_emp, date(2022, 12, 13)), 6.0, places=5,
+            msg="Tue: 6h OT before PH",
+        )
+
+        ph = self._make_public_holiday(
+            datetime(2022, 12, 12, 0, 0, 0), datetime(2022, 12, 12, 23, 59, 59), public_type,
+        )
+        self.assertAlmostEqual(
+            self._ot_hours_on_day(self.cal_emp, date(2022, 12, 12)), 6.0, places=5,
+            msg="Mon OT persists (stale) despite PH; engine does not clear existing outputs",
+        )
+        self.assertAlmostEqual(
+            self._ot_hours_on_day(self.cal_emp, date(2022, 12, 13)), 6.0, places=5,
+            msg="Tue OT unaffected by Mon PH",
+        )
+
+        ph.write({
+            'date_from': datetime(2022, 12, 13, 0, 0, 0),
+            'date_to': datetime(2022, 12, 13, 23, 59, 59),
+        })
+        self.assertAlmostEqual(
+            self._ot_hours_on_day(self.cal_emp, date(2022, 12, 12)), 6.0, places=5,
+            msg="Mon OT persists (stale) after PH moved to Tue",
+        )
+        self.assertAlmostEqual(
+            self._ot_hours_on_day(self.cal_emp, date(2022, 12, 13)), 6.0, places=5,
+            msg="Tue OT persists (stale) after PH moved there; engine does not clear existing outputs",
         )
 
     def test_public_holiday_update_after_time_rule_output(self):
@@ -2437,31 +2513,25 @@ class TestTimeRulePipeline(TransactionCase):
             'check_out': datetime(2022, 12, 13, 6),   # Tue 06:00
         })
 
-        self._run_deficit_day_cron(date(2022, 12, 13))
         att1_ot = att1.overtime_attendance_ids.filtered(
             lambda a: a.time_rule_id == self.time_rule
         )
-        att2_ot = att2.overtime_attendance_ids.filtered(
-            lambda a: a.time_rule_id == self.time_rule
+        att2_deficit = att2.overtime_attendance_ids.filtered(
+            lambda a: a.time_rule_id == deficit_rule
         )
-        # deficit output is linked to att2's Tue remainder (not att2 directly)
-        att2_deficit = self.env['hr.attendance'].search([
-            ('employee_id', '=', self.cal_emp.id),
-            ('time_rule_id', '=', deficit_rule.id),
-        ])
 
         self.assertAlmostEqual(
             sum(a.worked_hours for a in att1_ot), 2.0, places=5,
             msg="att1: 10h worked, 8h threshold -> 2h OT child",
         )
-        # att2's Mon portion (22:00-24:00) is the 2h excess tail.
-        # In the new arch att2 is archived; an output child carries the Mon OT span.
-        self.assertFalse(att2.active, "att2 archived: Mon 22:00-24:00 is the 2h OT tail")
-        self.assertEqual(len(att2_ot), 1, "One OT output child linked to att2")
-        self.assertEqual(att2_ot.work_entry_type_id, self.overtime_type,
-                         "att2's Mon OT child has overtime type")
-        self.assertAlmostEqual(att2_ot.worked_hours, 2.0, places=5,
-                               msg="att2's OT output child spans Mon 22:00-24:00 (2h)")
+        # att2's Mon portion (22:00-24:00) is the 2h excess tail (Mon ATT total = att1(8h)+att2(2h)=10h)
+        # -> att2 repurposed in-place as 2h OT; no separate OT child linked to att2
+        att2.invalidate_recordset()
+        self.assertEqual(att2.work_entry_type_id, self.overtime_type,
+                         "att2 type-changed in-place: Mon 22:00-24:00 is the 2h OT tail")
+        self.assertEqual(att2.time_rule_id, self.time_rule)
+        self.assertAlmostEqual(att2.worked_hours, 2.0, places=5,
+                               msg="att2 now spans 22:00-24:00 (2h)")
         self.assertAlmostEqual(
             sum(a.worked_hours for a in att2_deficit), 2.0, places=5,
             msg="att2 Tue portion (00:00-06:00, 6h) < 8h threshold -> 2h deficit output",
@@ -2654,7 +2724,6 @@ class TestTimeRulePipeline(TransactionCase):
             'check_in': datetime(2022, 12, 12, 8),
             'check_out': datetime(2022, 12, 12, 12),
         })
-        self._run_deficit_day_cron(date(2022, 12, 12))
         output_atts = self.env['hr.attendance'].search([
             ('employee_id', '=', self.cal_emp.id),
             ('time_rule_id', '!=', False),
@@ -2689,7 +2758,6 @@ class TestTimeRulePipeline(TransactionCase):
             'check_in': datetime(2022, 12, 12, 8),
             'check_out': datetime(2022, 12, 12, 12),
         })
-        self._run_deficit_day_cron(date(2022, 12, 12))
         output_atts = self.env['hr.attendance'].search([
             ('employee_id', '=', self.cal_emp.id),
             ('time_rule_id', '!=', False),
@@ -2720,7 +2788,6 @@ class TestTimeRulePipeline(TransactionCase):
             'check_in': datetime(2022, 12, 12, 8),
             'check_out': datetime(2022, 12, 12, 12),
         })
-        self._run_deficit_day_cron(date(2022, 12, 12))
         output_atts = self.env['hr.attendance'].search([
             ('employee_id', '=', self.cal_emp.id),
             ('time_rule_id', '!=', False),
@@ -2761,7 +2828,6 @@ class TestTimeRulePipeline(TransactionCase):
             'check_in': datetime(2022, 12, 12, 8),
             'check_out': datetime(2022, 12, 12, 12),
         })
-        self._run_deficit_day_cron(date(2022, 12, 12))
         output_atts = self.env['hr.attendance'].search([
             ('employee_id', '=', self.cal_emp.id),
             ('time_rule_id', '!=', False),
@@ -2838,7 +2904,6 @@ class TestTimeRulePipeline(TransactionCase):
             'check_in': datetime(2022, 12, 12, 8),
             'check_out': datetime(2022, 12, 12, 12),
         })
-        self._run_deficit_day_cron(date(2022, 12, 12))
         alloc.invalidate_recordset()
         self.assertAlmostEqual(alloc.number_of_days, -0.25, places=5,
                                 msg="day 1: 0.25 - 0.5 = -0.25")
@@ -2859,7 +2924,6 @@ class TestTimeRulePipeline(TransactionCase):
             'check_in': datetime(2022, 12, 14, 8),
             'check_out': datetime(2022, 12, 14, 12),
         })
-        self._run_deficit_day_cron(date(2022, 12, 14))
         alloc.invalidate_recordset()
         self.assertAlmostEqual(alloc.number_of_days, 0.0, places=5,
                                 msg="day 3: 0.5 - 0.5 = 0.0")
@@ -2870,7 +2934,6 @@ class TestTimeRulePipeline(TransactionCase):
             'check_in': datetime(2022, 12, 15, 8),
             'check_out': datetime(2022, 12, 15, 9),
         })
-        self._run_deficit_day_cron(date(2022, 12, 15))
         alloc.invalidate_recordset()
         self.assertAlmostEqual(alloc.number_of_days, -0.875, places=5,
                                 msg="day 4: 0 - 0.875 = -0.875")
@@ -2881,7 +2944,6 @@ class TestTimeRulePipeline(TransactionCase):
             'check_in': datetime(2022, 12, 16, 8),
             'check_out': datetime(2022, 12, 16, 15),
         })
-        self._run_deficit_day_cron(date(2022, 12, 16))
         alloc.invalidate_recordset()
         self.assertAlmostEqual(alloc.number_of_days, -1.0, places=5,
                                 msg="day 5: -0.875 - 0.125 = -1.0")
@@ -2892,7 +2954,6 @@ class TestTimeRulePipeline(TransactionCase):
             'check_in': datetime(2022, 12, 19, 8),
             'check_out': datetime(2022, 12, 19, 15),
         })
-        self._run_deficit_day_cron(date(2022, 12, 19))
         alloc.invalidate_recordset()
         self.assertAlmostEqual(alloc.number_of_days, -1.125, places=5,
                                 msg="day 6: -1.0 - 0.125 = -1.125")
@@ -2966,7 +3027,6 @@ class TestTimeRulePipeline(TransactionCase):
             'check_in': datetime(2022, 12, 12, 8),
             'check_out': datetime(2022, 12, 12, 9),
         })
-        self._run_deficit_day_cron(date(2022, 12, 12))
         alloc = _comp_alloc()
         self.assertTrue(alloc, "deficit must create an allocation when none exists")
         self.assertEqual(alloc.date_from, date(2022, 12, 12),
@@ -3052,7 +3112,6 @@ class TestTimeRulePipeline(TransactionCase):
             'check_in': datetime(2022, 12, 12, 8),
             'check_out': datetime(2022, 12, 12, 12),
         })
-        self._run_deficit_day_cron(date(2022, 12, 12))
         output_atts = self.env['hr.attendance'].search([
             ('employee_id', '=', self.cal_emp.id),
             ('time_rule_id', '!=', False),
@@ -3102,7 +3161,6 @@ class TestTimeRulePipeline(TransactionCase):
             'check_in': datetime(2022, 12, 12, 8),
             'check_out': datetime(2022, 12, 12, 12),
         })
-        self._run_deficit_day_cron(date(2022, 12, 12))
         output_atts = self.env['hr.attendance'].search([
             ('employee_id', '=', self.cal_emp.id),
             ('time_rule_id', '!=', False),
@@ -3211,6 +3269,47 @@ class TestTimeRuleCronBehavior(TransactionCase):
         finally:
             rule.write({'active': False})
 
+    def test_day_and_week_cron_independence_overtime_attendance(self):
+        day_rule = self.env['hr.time.rule'].create({
+            'name': 'Daily > 4h',
+            'working_hours_mode': 'day',
+            'expected_hours': 4,
+            'work_entry_type_id': self.day_ot_type.id,
+            'condition_work_entry_type_ids': [self.att_type.id],
+        })
+        week_rule = self.env['hr.time.rule'].create({
+            'name': 'Weekly > 5h',
+            'working_hours_mode': 'week',
+            'expected_hours': 5,
+            'work_entry_type_id': self.week_ot_type.id,
+            'condition_work_entry_type_ids': [self.att_type.id, self.day_ot_type.id],
+        })
+        try:
+            with freeze_time('2022-12-12'):
+                att = self.env['hr.attendance'].create({
+                    'employee_id': self.emp.id,
+                    'check_in': datetime(2022, 12, 12, 8),
+                    'check_out': datetime(2022, 12, 12, 14),  # 6h
+                })
+                day_h = sum(o.worked_hours for o in self._outputs_for(att.id, self.day_ot_type))
+                week_h = sum(o.worked_hours for o in self._outputs_for(att.id, self.week_ot_type))
+                self.assertAlmostEqual(day_h, 2.0, places=5, msg="2h daily OT created immedaitely")
+                self.assertAlmostEqual(week_h, 0.0, places=5, msg="week rules wait for the cron")
+
+            with freeze_time('2022-12-19'):
+                # Mon 2022-12-19: week cron processes Mon 12 - Sun 18.
+                self.env['hr.attendance']._cron_process_week_time_rules()
+
+            day_h = sum(o.worked_hours for o in self._outputs_for(att.id, self.day_ot_type))
+            week_h = sum(o.worked_hours for o in self._outputs_for(att.id, self.week_ot_type))
+            self.assertAlmostEqual(day_h, 1.0, places=5,
+                msg="Day OT cut by weekly rule (last 1 hour is converted into weekly overtime)")
+            self.assertAlmostEqual(week_h, 1.0, places=5,
+                msg="1h weekly OT by week cron (6h - 5h threshold)")
+        finally:
+            day_rule.write({'active': False})
+            week_rule.write({'active': False})
+
     def test_retroactive_attendance_triggers_immediate_reprocess(self):
         rule = self.env['hr.time.rule'].create({
             'name': 'All hours -> daily OT (retro)',
@@ -3293,18 +3392,13 @@ class TestTimeRulePipelineLeaves(TransactionCase):
         return leave.with_context({})
 
     def _outputs(self, leave, out_type=None):
-        domain = [('source_leave_id', '=', leave.id), ('time_rule_id', '!=', False)]
+        domain = [('source_leave_id', '=', leave.id)]
         if out_type:
             domain.append(('work_entry_type_id', '=', out_type.id))
         return self.env['hr.leave'].sudo().search(domain)
 
     def _output_hours(self, leave, out_type=None):
         return sum((l.date_to - l.date_from).total_seconds() / 3600 for l in self._outputs(leave, out_type))
-
-    def _run_deficit_day_cron(self, for_date):
-        """Simulate the day-undertime cron as if running the morning after for_date."""
-        with freeze_time(for_date + timedelta(days=1)):
-            self.env['hr.leave']._cron_process_day_undertime_rules()
 
     def test_past_leave_exceed_creates_output(self):
 
@@ -3335,7 +3429,6 @@ class TestTimeRulePipelineLeaves(TransactionCase):
         })
         try:
             leave = self._make_leave(datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 14))  # 6h past
-            self._run_deficit_day_cron(date(2022, 12, 12))
             self.assertTrue(self._outputs(leave), "Past leave with less_than rule must produce output")
         finally:
             rule.write({'active': False})
@@ -3812,21 +3905,6 @@ class TestTimeRulePipelineLeaves(TransactionCase):
             rule1.write({'active': False})
             rule2.write({'active': False})
 
-    def _tree_outputs(self, root, out_type=None):
-        """find outputs reachable from root through the source_leave_id chain"""
-        all_ids = {root.id}
-        frontier = {root.id}
-        Leave = self.env['hr.leave'].sudo().with_context(active_test=False)
-        while frontier:
-            children = Leave.search([('source_leave_id', 'in', list(frontier))])
-            new_ids = set(children.ids) - all_ids
-            all_ids.update(new_ids)
-            frontier = new_ids
-        domain = [('id', 'in', list(all_ids - {root.id})), ('time_rule_id', '!=', False)]
-        if out_type:
-            domain.append(('work_entry_type_id', '=', out_type.id))
-        return Leave.search(domain)
-
     def test_day_and_week_cron_independence_undertime_leave(self):
 
         day_rule = self.env['hr.time.rule'].create({
@@ -3852,19 +3930,19 @@ class TestTimeRulePipelineLeaves(TransactionCase):
         try:
             with freeze_time('2022-12-12'):
                 leave = self._make_leave(datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 14))
-                self.assertFalse(self._tree_outputs(leave), "Today's undertime should wait for the day cron")
+                self.assertFalse(self._outputs(leave), "Today's undertime should wait for the day cron")
 
             with freeze_time('2022-12-13'):
                 self.env['hr.leave']._cron_process_day_undertime_rules()
 
-            self.assertTrue(self._tree_outputs(leave, self.out_type), "Day cron must fire the undertime day rule")
-            self.assertFalse(self._tree_outputs(leave, out_type_week), "Day cron must not fire the week rule")
+            self.assertTrue(self._outputs(leave, self.out_type), "Day cron must fire the undertime day rule")
+            self.assertFalse(self._outputs(leave, out_type_week), "Day cron must not fire the week rule")
 
             with freeze_time('2022-12-19'):  # Monday: week Dec 12-18 complete
                 self.env['hr.leave']._cron_process_week_time_rules()
 
-            self.assertTrue(self._tree_outputs(leave, out_type_week), "Week cron must fire the week rule")
-            self.assertTrue(self._tree_outputs(leave, self.out_type), "Week cron must not clear the day output")
+            self.assertTrue(self._outputs(leave, out_type_week), "Week cron must fire the week rule")
+            self.assertTrue(self._outputs(leave, self.out_type), "Week cron must not clear the day output")
         finally:
             day_rule.write({'active': False})
             week_rule.write({'active': False})
@@ -3909,7 +3987,7 @@ class TestTimeRulePipelineLeaves(TransactionCase):
             rule.write({'active': False})
 
     def test_source_entire_leave_is_excess(self):
-        """expected_hours=0: entire leave is excess -> source archived, one output child created."""
+        """expected_hours=0: entire leave is excess -> source repurposed in-place (no child, no archive)."""
         rule = self.env['hr.time.rule'].create({
             'name': 'All hours out (entire excess)',
             'working_hours_mode': 'day',
@@ -3920,16 +3998,16 @@ class TestTimeRulePipelineLeaves(TransactionCase):
         })
         try:
             leave = self._make_leave(datetime(2022, 12, 13, 8), datetime(2022, 12, 13, 14))  # 6h
+            leave.invalidate_recordset()
+            self.assertEqual(leave.work_entry_type_id, self.out_type, "Source WET changed to output type")
+            self.assertEqual(leave.time_rule_id, rule, "Source time_rule_id set to the firing rule")
             self.assertFalse(leave.source_leave_id, "Source is still top-level (no source_leave_id)")
-            output = leave.output_leave_ids
-            self.assertEqual(len(output), 1, "One output child for the fully-excess leave")
-            self.assertEqual(output.work_entry_type_id, self.out_type, "Output WET is the output type")
-            self.assertEqual(output.time_rule_id, rule, "Output time_rule_id set to the firing rule")
+            self.assertFalse(leave.output_leave_ids, "No child records; source IS the output")
         finally:
             rule.write({'active': False})
 
     def test_second_leave_entirely_excess_type_changed(self):
-        """leave_b starts exactly at the threshold point -> entirely excess -> archived, output child created."""
+        """leave_b starts exactly at the threshold point -> entirely excess -> type-changed in-place."""
         rule = self.env['hr.time.rule'].create({
             'name': 'Exceed 2h/day (two-leave type-change)',
             'working_hours_mode': 'day',
@@ -3945,12 +4023,13 @@ class TestTimeRulePipelineLeaves(TransactionCase):
             leave_b = self._make_leave(  # triggers joint evaluation; leave_b start == threshold point
                 datetime(2022, 12, 13, 10), datetime(2022, 12, 13, 12),
             )
+            leave_b.invalidate_recordset()
             self.assertFalse(self._outputs(leave_a), "leave_a exactly at threshold: no excess, no child")
+            self.assertEqual(leave_b.work_entry_type_id, self.out_type,
+                             "leave_b entirely excess: type-changed in-place")
+            self.assertEqual(leave_b.time_rule_id, rule)
             self.assertFalse(leave_b.source_leave_id)
-            output_b = leave_b.output_leave_ids
-            self.assertEqual(len(output_b), 1, "leave_b entirely excess: one output child created")
-            self.assertEqual(output_b.work_entry_type_id, self.out_type)
-            self.assertEqual(output_b.time_rule_id, rule)
+            self.assertFalse(leave_b.output_leave_ids, "No children; leave_b IS the output")
         finally:
             rule.write({'active': False})
 
@@ -3990,9 +4069,9 @@ class TestTimeRulePipelineLeaves(TransactionCase):
         })
         try:
             leave = self._make_leave(datetime(2022, 12, 14, 8), datetime(2022, 12, 14, 14))
-            output = leave.output_leave_ids
-            self.assertEqual(len(output), 1, "Precondition: source archived, output child blocks the slot")
-            self.assertEqual(output.work_entry_type_id, self.out_type)
+            leave.invalidate_recordset()
+            self.assertEqual(leave.work_entry_type_id, self.out_type,
+                             "Precondition: source type-changed in-place -> time_rule_id set")
 
             with self.assertRaises(ValidationError):
                 self._make_leave(datetime(2022, 12, 14, 8), datetime(2022, 12, 14, 14))
@@ -4028,20 +4107,11 @@ class TestTimeRulePipelineLeaves(TransactionCase):
             'condition_work_entry_type_ids': [src_wet.id],
         })
 
-        def _att_tree_outputs(root, wet=None):
-            """find outputs reachable from root through the source chain"""
-            all_ids = {root.id}
-            frontier = {root.id}
-            Att = self.env['hr.attendance'].sudo().with_context(active_test=False)
-            while frontier:
-                children = Att.search([('source_attendance_id', 'in', list(frontier))])
-                new_ids = set(children.ids) - all_ids
-                all_ids.update(new_ids)
-                frontier = new_ids
-            domain = [('id', 'in', list(all_ids - {root.id})), ('time_rule_id', '!=', False)]
+        def _att_outputs(att, wet=None):
+            domain = [('source_attendance_id', '=', att.id), ('time_rule_id', '!=', False)]
             if wet:
                 domain.append(('work_entry_type_id', '=', wet.id))
-            return Att.search(domain)
+            return self.env['hr.attendance'].sudo().search(domain)
 
         try:
             with freeze_time('2022-12-12'):
@@ -4052,20 +4122,19 @@ class TestTimeRulePipelineLeaves(TransactionCase):
                     'work_entry_type_id': src_wet.id,
                     'state': 'validated',
                 })
-                self.assertFalse(_att_tree_outputs(att), "Today: both rules deferred")
+                self.assertFalse(_att_outputs(att), "Today: both rules deferred")
 
             with freeze_time('2022-12-13'):
                 self.env['hr.attendance']._cron_process_day_undertime_rules()
 
-            day_outs = _att_tree_outputs(att, day_out_type)
-            self.assertTrue(day_outs, "Day cron must fire the day rule")
-            self.assertFalse(_att_tree_outputs(att, week_out_type), "Day cron must not fire the week rule")
+            self.assertTrue(_att_outputs(att, day_out_type), "Day cron must fire the day rule")
+            self.assertFalse(_att_outputs(att, week_out_type), "Day cron must not fire the week rule")
 
             with freeze_time('2022-12-19'):  # Monday: week Dec 12-18 complete
                 self.env['hr.attendance']._cron_process_week_time_rules()
 
-            self.assertTrue(_att_tree_outputs(att, week_out_type), "Week cron must fire the week rule")
-            self.assertTrue(_att_tree_outputs(att, day_out_type), "Week cron must not clear the day output")
+            self.assertTrue(_att_outputs(att, week_out_type), "Week cron must fire the week rule")
+            self.assertTrue(_att_outputs(att, day_out_type), "Week cron must not clear the day output")
         finally:
             day_rule.write({'active': False})
             week_rule.write({'active': False})
@@ -4325,7 +4394,6 @@ class TestTimeRulePipelineLeaves(TransactionCase):
         try:
             # leave_a: 3h -> deficit 5h (8h threshold - 3h) -> deducts 5/8 = 0.625d
             self._make_leave(datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 11))
-            self._run_deficit_day_cron(date(2022, 12, 12))
             allocation.invalidate_recordset()
             self.assertAlmostEqual(allocation.number_of_days, 9.375, places=5,
                                    msg="10d - 5h/8h = 9.375d after first leave")
@@ -4339,7 +4407,6 @@ class TestTimeRulePipelineLeaves(TransactionCase):
 
             # leave_b: 5h fills the deficit slot -> combined 8h -> deficit 0h -> deduction reversal
             self._make_leave(datetime(2022, 12, 12, 11), datetime(2022, 12, 12, 16))
-            self._run_deficit_day_cron(date(2022, 12, 12))
             allocation.invalidate_recordset()
             self.assertAlmostEqual(allocation.number_of_days, 10.0, places=5,
                                    msg="combined 8h meets threshold → no deficit → prior deduction reversed → 10.0d")
@@ -4378,8 +4445,6 @@ class TestTimeRulePipelineLeaves(TransactionCase):
         })
         try:
             leave = self._make_leave(datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 14))  # 6h
-            with freeze_time('2022-12-13'):
-                self.env['hr.leave']._cron_process_day_undertime_rules()
             self.assertTrue(self._outputs(leave),
                             "Deficit always proceeds: output leave created")
             alloc.invalidate_recordset()
