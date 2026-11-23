@@ -476,7 +476,8 @@ class DiscussChannel(models.Model):
 
     def action_reset_invitation_uuid(self):
         self.ensure_one()
-        if self.self_member_id.channel_role not in ("admin", "owner"):
+        # sudo: discuss.channel.member - anyone can have access to their own role
+        if self.self_member_id.sudo().channel_role not in ("admin", "owner"):
             raise AccessError(self.env._("Only channel owners or administrators can reset the invite link."))
         self.uuid = self._generate_random_token()
 
