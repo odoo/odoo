@@ -1,7 +1,14 @@
 import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
-import { describe, expect, getFixture, test } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-mock";
+import {
+    animationFrame,
+    beforeEach,
+    describe,
+    expect,
+    getFixture,
+    mockMatchMedia,
+    test,
+} from "@odoo/hoot";
 import { manuallyDispatchProgrammaticEvent, queryOne, queryRect, scroll } from "@odoo/hoot-dom";
 
 setupInteractionWhiteList("website.parallax");
@@ -22,19 +29,33 @@ const getTemplate = function (options = {}) {
     `;
 };
 
+const simulateScroll = async function (fixture, target) {
+    await scroll(fixture, { y: target });
+    await manuallyDispatchProgrammaticEvent(document, "scroll");
+    await scroll(fixture, { y: target + 1 });
+    await manuallyDispatchProgrammaticEvent(document, "scroll");
+};
+
 const simulateScrolls = async function (fixture) {
     fixture.style.overflow = "scroll";
     const spacings = [];
     for (const target of [0, 1000, 1200]) {
-        await scroll(fixture, { y: target });
-        await manuallyDispatchProgrammaticEvent(document, "scroll");
-        await scroll(fixture, { y: target + 1 });
-        await manuallyDispatchProgrammaticEvent(document, "scroll");
+        await simulateScroll(fixture, target);
         const spacing = queryRect(".s_parallax_bg").bottom - queryRect("section:first").bottom;
         spacings.push(spacing);
     }
     return spacings;
 };
+
+const expectToHaveNoParallaxStyles = function (bg) {
+    expect(bg.style.top).toBe("");
+    expect(bg.style.bottom).toBe("");
+    expect(bg.style.transform).toBe("");
+};
+
+beforeEach(() => {
+    mockMatchMedia({ "prefers-reduced-motion": "no-preference" });
+});
 
 test("parallax is started when there is an element .parallax", async () => {
     const { core } = await startInteractions(getTemplate());
@@ -80,6 +101,28 @@ test("[scroll down] s_parallax_bg does not move when the speed is 1", async () =
     for (let i = 0; i < spacings.length - 1; i++) {
         expect(Math.round(spacings[i] - spacings[i + 1])).toBe(0);
     }
+});
+
+test("s_parallax_bg does not move while prefers-reduced-motion is reduce", async () => {
+    mockMatchMedia({ "prefers-reduced-motion": "reduce" });
+    await startInteractions(getTemplate({ speed: 2.5 }));
+    const fixture = getFixture();
+    fixture.style.overflow = "scroll";
+    const bg = queryOne(".s_parallax_bg");
+    expectToHaveNoParallaxStyles(bg);
+    await simulateScroll(fixture, 500);
+    expectToHaveNoParallaxStyles(bg);
+    mockMatchMedia({ "prefers-reduced-motion": "no-preference" });
+    await animationFrame();
+    await simulateScroll(fixture, 400);
+    expect(bg.style.top).not.toBe("");
+    expect(bg.style.bottom).not.toBe("");
+    expect(bg.style.transform).not.toBe("");
+    mockMatchMedia({ "prefers-reduced-motion": "reduce" });
+    await animationFrame();
+    expectToHaveNoParallaxStyles(bg);
+    await simulateScroll(fixture, 800);
+    expectToHaveNoParallaxStyles(bg);
 });
 
 test("parallax on carousel-item uses parent height", async () => {

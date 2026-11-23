@@ -35,10 +35,16 @@
             }
         }
 
-        &:not([class*="s_blog_posts_effect"]) .s_blog_post_big_picture_infos {
+        @mixin -big-picture-no-effect() {
+            .s_blog_post_big_picture_infos {
                 display: flex;
                 flex-direction: column;
                 justify-content: space-around;
+            }
+        }
+
+        &:not([class*="s_blog_posts_effect"]) {
+            @include -big-picture-no-effect();
         }
 
         &.s_blog_posts_effect_marley, &.s_blog_posts_effect_chico {
@@ -56,7 +62,7 @@
                     font-size: var(--o-bs-font-size-lg);
                 }
 
-                .s_blog_posts_post:hover {
+                .s_blog_posts_post:hover, .s_blog_posts_post:focus-within {
                     .s_blog_post_big_picture_title {
                         transform: translateY(50%);
                         opacity: 0;
@@ -73,7 +79,7 @@
                     font-size: var(--o-bs-font-size-base);
                 }
 
-                .s_blog_posts_post:hover {
+                .s_blog_posts_post:hover, .s_blog_posts_post:focus-within {
                     .s_blog_post_big_picture_title {
                         transform: translateY(-25%);
                         opacity: 1;
@@ -108,7 +114,7 @@
                 opacity: 0;
             }
 
-            .s_blog_posts_post:hover {
+            .s_blog_posts_post:hover, .s_blog_posts_post:focus-within {
                 .s_blog_posts_post_cover_hidden, .s_blog_post_big_picture_infos:before {
                     opacity: 1;
                 }
@@ -143,7 +149,7 @@
                 z-index: 1;
             }
 
-            .s_blog_posts_post:hover::before {
+            .s_blog_posts_post:hover::before, .s_blog_posts_post:focus-within::before {
                 opacity: 1;
                 transform: scale3d(1, 1, 1);
             }
@@ -166,10 +172,47 @@
                 pointer-events: none;
             }
 
-            .s_blog_posts_post:hover {
+            .s_blog_posts_post:hover, .s_blog_posts_post:focus-within {
                 .o_record_cover_image, &::before {
                     opacity: 1;
                     transform: scale3d(1, 1, 1);
+                }
+            }
+        }
+
+        // When the user prefers reduced motion, the hover effects are not
+        // applied: fall back on the layout without effect ("None").
+        @media (prefers-reduced-motion: reduce) {
+            &[class*="s_blog_posts_effect"], &[class*="s_blog_posts_effect"][class*="s_blog_posts_post_picture_size"] {
+                @include -big-picture-no-effect();
+
+                .s_dynamic_snippet_content {
+                    text-align: unset;
+                }
+
+                .s_blog_posts_post_author {
+                    font-size: unset;
+                }
+
+                .s_blog_posts_post_cover_header {
+                    height: auto;
+                }
+
+                .s_blog_posts_post, .s_blog_posts_post:hover, .s_blog_posts_post:focus-within {
+                    &::before, .s_blog_post_big_picture_infos::before {
+                        content: none;
+                    }
+
+                    .s_blog_post_big_picture_title, .s_blog_posts_post_cover_hidden {
+                        transform: none;
+                        transition: none;
+                        opacity: 1;
+                    }
+
+                    .o_record_cover_image {
+                        transform: none;
+                        transition: none;
+                    }
                 }
             }
         }

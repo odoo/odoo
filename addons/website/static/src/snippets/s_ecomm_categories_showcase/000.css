@@ -86,6 +86,17 @@
         &.first-large-layout .s_ecomm_categories_showcase_block:first-child {
             flex: 2;
         }
+
+        @media (prefers-reduced-motion: reduce) {
+            .s_ecomm_categories_showcase_wrapper:hover .s_ecomm_categories_showcase_block:hover,
+            .s_ecomm_categories_showcase_wrapper .s_ecomm_categories_showcase_block:focus-within {
+                flex: 1;
+            }
+    
+            &.first-large-layout .s_ecomm_categories_showcase_block:first-child {
+                flex: 1;
+            }
+        }
     }
 
     &.o_min_height_short {

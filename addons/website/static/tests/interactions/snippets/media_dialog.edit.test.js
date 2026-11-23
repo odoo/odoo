@@ -1,5 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { queryOne } from "@odoo/hoot-dom";
+import { mockMatchMedia } from "@odoo/hoot-mock";
 import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
 import { switchToEditMode } from "../../helpers";
 
@@ -35,6 +36,7 @@ test("media video: iframe replaced in edition if not present", async () => {
 });
 
 test("media video: video file rebuilt in edition if not present", async () => {
+    mockMatchMedia({ "prefers-reduced-motion": "no-preference" });
     const { core } = await startInteractions(
         `
         <div style="background-color: white;">
