@@ -383,7 +383,7 @@ class AccountEdiFormat(models.Model):
             "CesAmt": self._l10n_in_round_value(tax_details_by_code.get("cess_amount", 0.00)),
             "CesNonAdvlAmt": self._l10n_in_round_value(
                 tax_details_by_code.get("cess_non_advol_amount", 0.00)),
-            "StateCesRt": self._l10n_in_round_value(tax_details_by_code.get("state_cess_rate_amount", 0.00), 3),
+            "StateCesRt": self._l10n_in_round_value(tax_details_by_code.get("state_cess_rate", 0.00), 3),
             "StateCesAmt": self._l10n_in_round_value(tax_details_by_code.get("state_cess_amount", 0.00)),
             "StateCesNonAdvlAmt": self._l10n_in_round_value(
                 tax_details_by_code.get("state_cess_non_advol_amount", 0.00)),

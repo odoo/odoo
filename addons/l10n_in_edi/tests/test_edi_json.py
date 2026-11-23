@@ -894,3 +894,23 @@ class TestEdiJson(L10nInTestInvoicingCommon):
                   }
                 }
             )
+
+    def test_edi_json_state_cess_rate(self):
+        state_cess_tag = self.env.ref('l10n_in.tax_tag_state_cess')
+        repartition_lines = [
+            Command.create({'repartition_type': 'base'}),
+            Command.create({'repartition_type': 'tax', 'tag_ids': [Command.set(state_cess_tag.ids)]}),
+        ]
+        state_cess_1 = self.env['account.tax'].create({
+            'name': 'State Cess 1%',
+            'amount': 1.0,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+            'invoice_repartition_line_ids': repartition_lines,
+            'refund_repartition_line_ids': repartition_lines,
+        })
+        invoice = self.init_invoice(
+            "out_invoice", post=True, products=self.product_a, taxes=self.sgst_sale_5 + state_cess_1,
+        )
+        line_json = self._generate_json(invoice)['ItemList'][0]
+        self.assertEqual(line_json['StateCesRt'], 1.0)
