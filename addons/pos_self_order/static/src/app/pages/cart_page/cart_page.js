@@ -644,16 +644,12 @@ export class CartPage extends Component {
             return;
         }
         this.setTip(false);
-        // Update combo first
-        for (const cline of line.combo_line_ids) {
-            this.changeQuantity(cline, increase);
-        }
-
-        increase ? line.qty++ : line.qty--;
-
-        if (line.qty <= 0) {
+        const newQty = line.qty + (increase ? 1 : -1);
+        if (newQty <= 0) {
             this.removeLine(line);
+            return;
         }
+        line.setQuantity(newQty);
     }
 
     getCustomValue(line, attr) {

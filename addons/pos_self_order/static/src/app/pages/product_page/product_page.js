@@ -107,11 +107,11 @@ export class ProductPage extends Component {
 
         const order = this.selfOrder.currentOrder;
         const pricelist = order.pricelist_id;
-        const price = this.props.productTemplate.getPrice(
+        const price = this.props.productTemplate.getUomPrice(
             pricelist,
-            1,
+            this.state.qty,
+            this.getSelectedUom(),
             priceExtra,
-            false,
             productVariant
         );
         const product = productVariant || this.props.productTemplate;
@@ -136,6 +136,10 @@ export class ProductPage extends Component {
         );
     }
 
+    getSelectedUom() {
+        return this.state.selectedValues[this.productTemplate.id]?.selectedUoMValue || null;
+    }
+
     addToCart() {
         if (!this.isAddToCartEnabled()) {
             return;
@@ -145,7 +149,9 @@ export class ProductPage extends Component {
             this.state.qty,
             "",
             this.getSelectedAttributesValues(),
-            this.state.selectedValues[this.productTemplate.id]?.getAllCustomValues()
+            this.state.selectedValues[this.productTemplate.id]?.getAllCustomValues(),
+            {},
+            this.getSelectedUom()
         );
 
         const historyState = history.state || {};

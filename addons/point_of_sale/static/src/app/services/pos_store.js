@@ -999,14 +999,16 @@ export class PosStore extends WithLazyGetterTrap {
                     : values.filter((value) => attrValueIds.has(value.id))
             );
         }
-        if (
-            attributeLinesValues.some(
-                (values) =>
-                    values.length > 1 ||
-                    values[0].is_custom ||
-                    values[0].attribute_id.display_type === "multi"
-            )
-        ) {
+        const hasConfigurableAttributes = attributeLinesValues.some(
+            (values) =>
+                values.length > 1 ||
+                values[0].is_custom ||
+                values[0].attribute_id.display_type === "multi"
+        );
+        const skipConfigure =
+            opts.code && this.models["product.uom"].getBy("barcode", opts.code.code);
+        const skipUom = pTemplate._skipUomSelection() || opts.hideUoMSelection;
+        if (hasConfigurableAttributes || (pTemplate.uom_ids.length && !skipUom && !skipConfigure)) {
             const forceVariantValue =
                 opts.forceVariantValue ||
                 (variantProduct ? variantProduct.product_template_attribute_value_ids : undefined);
@@ -1016,6 +1018,7 @@ export class PosStore extends WithLazyGetterTrap {
                 forceVariantValue,
                 line: opts.line,
                 comboItem: opts.comboItem,
+                hideUoMSelection: opts.hideUoMSelection,
             });
         }
         return {
@@ -1146,6 +1149,7 @@ export class PosStore extends WithLazyGetterTrap {
             qty: order.preset_id?.is_return ? -1 : 1,
             tax_ids: productTemplate.taxes_id.map((tax) => ["link", tax]),
             product_id: productTemplate.product_variant_ids[0],
+            product_uom_id: productTemplate.uom_id,
             ...vals,
         };
 
@@ -1284,7 +1288,7 @@ export class PosStore extends WithLazyGetterTrap {
      * Handle price unit for the order line.
      */
     handlePriceUnit(values, order, price_unit) {
-        if (!values.product_tmpl_id.isCombo() && price_unit === undefined) {
+        if (!values.product_tmpl_id.isCombo() && price_unit === undefined && !values.price_unit) {
             values.price_unit = values.product_id.getPrice(
                 order.pricelist_id,
                 values.qty,
@@ -1404,6 +1408,17 @@ export class PosStore extends WithLazyGetterTrap {
                     candidate = result["product.product"][0];
                 }
 
+                const uom = this.models["uom.uom"].get(payload.product_uom_id);
+                const isDifferentUom = uom && uom.id !== productTemplate.uom_id.id;
+                const price_unit = isDifferentUom
+                    ? productTemplate.getUomPrice(
+                          this.getOrder().pricelist_id,
+                          values.qty,
+                          uom,
+                          values.price_extra + payload.price_extra,
+                          values.product_id
+                      )
+                    : values.price_unit;
                 Object.assign(values, {
                     attribute_value_ids: payload.attribute_value_ids.map((id) => [
                         "link",
@@ -1421,7 +1436,10 @@ export class PosStore extends WithLazyGetterTrap {
                     ),
                     price_extra: values.price_extra + payload.price_extra,
                     qty: payload.qty || values.qty,
+                    price_unit: price_unit,
+                    price_type: isDifferentUom ? "automatic" : values.price_type,
                     product_id: candidate || productTemplate.product_variant_ids[0],
+                    product_uom_id: uom || values.product_uom_id,
                 });
             } else {
                 return false;

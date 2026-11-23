@@ -39,11 +39,11 @@ patch(PosStore.prototype, {
         if (values.product_id.tracking === "lot") {
             const productTemplate = values.product_id.product_tmpl_id;
             const related_lines = [];
-            const price = productTemplate.getPrice(
+            const price = productTemplate.getUomPrice(
                 order.pricelist_id,
                 values.qty,
+                selectedOrderline.product_uom_id,
                 values.price_extra,
-                false,
                 values.product_id,
                 selectedOrderline,
                 related_lines
