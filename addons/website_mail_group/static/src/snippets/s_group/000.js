@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import MailGroup from "@mail_group/js/mail_group";
@@ -25,19 +24,13 @@ MailGroup.include({
             return;
         }
 
-        this.$el.removeClass('d-none');
-
         const userEmail = response.email;
         this.isMember = response.is_member;
 
         if (userEmail && userEmail.length) {
             const emailInput = this.$el.find('.o_mg_subscribe_email');
             emailInput.val(userEmail);
-            emailInput.attr('readonly', 1);
-        }
-
-        if (this.isMember) {
-            this.$el.find('.o_mg_subscribe_btn').text(_t('Unsubscribe')).removeClass('btn-primary').addClass('btn-outline-primary');
+            emailInput.addClass('d-none');
         }
 
         this.$el.data('isMember', this.isMember);
