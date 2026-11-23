@@ -46,6 +46,11 @@ class ChatbotScriptStep(models.Model):
         string="Operator Expertise",
         help="When forwarding live chat conversations, the chatbot will prioritize users with matching expertise.",
     )
+    welcome_message = fields.Html(
+        string="Welcome Message",
+        translate=True,
+        help="Message sent on behalf of the operator once they join the conversation.",
+    )
 
     @api.depends("sequence", "chatbot_script_id")
     @api.depends_context('lang')

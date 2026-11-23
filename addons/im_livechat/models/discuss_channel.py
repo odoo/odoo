@@ -18,6 +18,7 @@ from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.addons.mail.tools.discuss import Store
 
 _lt = LazyTranslate(__name__)
+CHATBOT_WELCOME_MESSAGE = object()
 
 
 def is_livechat_channel(channel):
@@ -958,8 +959,9 @@ class DiscussChannel(models.Model):
             self.env["chatbot.message"].sudo().create(chatbot_message_vals)
 
         author_history = self.env["im_livechat.channel.member.history"]
+        is_welcome_message = self.env.context.get("livechat_message") is CHATBOT_WELCOME_MESSAGE
         # sudo - discuss.channel: accessing history to update its state is acceptable
-        if message.author_id or message.author_guest_id:
+        if (message.author_id or message.author_guest_id) and not is_welcome_message:
             author_history = self.sudo().livechat_channel_member_history_ids.filtered(
                 lambda h: (
                     h.partner_id == message.author_id
@@ -1082,6 +1084,13 @@ class DiscussChannel(models.Model):
                 message_type="notification",
                 subtype_xmlid="mail.mt_important_notification",
             )
+            if chatbot_script_step.welcome_message:
+                channel_sudo.with_context(livechat_message=CHATBOT_WELCOME_MESSAGE).message_post(
+                    author_id=human_operator.partner_id.id,
+                    body=chatbot_script_step.welcome_message,
+                    message_type="comment",
+                    subtype_xmlid="mail.mt_comment",
+                )
             bot_member.exists().unlink()
 
             # finally, rename the channel to include the operator's name
