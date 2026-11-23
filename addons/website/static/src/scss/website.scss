@@ -1880,6 +1880,10 @@ header {
         @include o-apply-colors('header-sales_four-custom');
         @include o-add-gradient('menu-secondary-gradient');
     }
+} @else if o-website-value('header-template') == 'search' {
+    .o_grid_header_3_cols:has(.o_header_search_right_col.order-0) .navbar-brand {
+        order: 1;
+    }
 }
 
 .o_grid_header_3_cols {
