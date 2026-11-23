@@ -4448,6 +4448,13 @@ class MailThread(models.AbstractModel):
 
         # finally send OOO messages
         original_subject = msg_vals['subject'] if 'subject' in (msg_vals or {}) else message.subject
+        # OOO quotes the replied message: keep it internal if replying to internal content
+        subtype_id = msg_vals['subtype_id'] if 'subtype_id' in (msg_vals or {}) else message.subtype_id.id
+        is_internal = msg_vals['is_internal'] if 'is_internal' in (msg_vals or {}) else message.is_internal
+        if is_internal or self.env['mail.message.subtype'].browse(subtype_id).internal:
+            ooo_subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
+        else:
+            ooo_subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
         for user in ooo_users.filtered(lambda u: u.partner_id not in already_mailed):
             body = self.env['ir.qweb']._render(
                 'mail.message_notification_out_of_office',
@@ -4476,7 +4483,7 @@ class MailThread(models.AbstractModel):
                 outgoing_email_to=email_to,
                 partner_ids=recipient.ids,
                 subject=_('Auto: %(subject)s', subject=(original_subject or self.display_name)),
-                subtype_id=self.env.ref('mail.mt_comment').id,  # TDE check: note ? but what about portal / internal ?
+                subtype_id=ooo_subtype_id,
             )
         return ooo_messages
 

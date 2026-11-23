@@ -1851,6 +1851,27 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                 self.assertNotIn(self.partner_admin, message.notified_partner_ids)
                 self.assertEqual(self._new_msgs, message, 'A non notified parent author should not send an OOO reply')
 
+    @users('employee')
+    def test_post_with_out_of_office_internal(self):
+        """ OOO replies quote the replied message: replying to internal content
+        (note) should be internal too, not to leak it to portal users. """
+        test_record = self.env['mail.test.simple'].browse(self.test_record.ids)
+        self._setup_out_of_office(self.user_admin)
+
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            message = test_record.message_post(
+                body='Internal stuff',
+                message_type='comment',
+                partner_ids=self.partner_admin.ids,
+                subtype_xmlid='mail.mt_note',
+            )
+
+        ooo_message = self._new_msgs - message
+        self.assertEqual(ooo_message.author_id, self.partner_admin)
+        self.assertEqual(ooo_message.message_type, 'out_of_office')
+        self.assertEqual(ooo_message.notified_partner_ids, self.partner_employee, 'Author should still receive the OOO reply')
+        self.assertEqual(ooo_message.subtype_id, self.env.ref('mail.mt_note'))
+
 
 @tagged('mail_post')
 class TestMessagePostHelpers(TestMessagePostCommon):
