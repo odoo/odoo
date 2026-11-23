@@ -162,13 +162,18 @@ export function makeActionManager(env, router = _router) {
     // ---------------------------------------------------------------------------
 
     /**
-     * Create an array of virtual controllers based on the current state of the
-     * router.
+     * Create an array of virtual controllers based on the given state.
      *
+     * @private
+     * @param {object} state
      * @returns {Promise<object[]>} an array of virtual controllers
      */
-    async function _controllersFromState() {
-        const state = router.current;
+    async function _controllersFromState(state) {
+        const currentState = JSON.parse(browser.sessionStorage.getItem("current_state") || "{}");
+        const comparable = (s) => router.stateToUrl(omit(s, "debug", "lang"));
+        if (comparable(currentState) === comparable(state)) {
+            state = currentState;
+        }
         if (!state?.actionStack?.length) {
             return [];
         }
@@ -876,7 +881,7 @@ export function makeActionManager(env, router = _router) {
                         if (controller.isMounted) {
                             return;
                         }
-                        pushState(nextStack);
+                        pushState(nextStack, { sync: true });
                     },
                 });
                 if (action.target !== "new") {
@@ -981,6 +986,7 @@ export function makeActionManager(env, router = _router) {
                         "current_action",
                         action._originalAction || "{}"
                     );
+                    browser.sessionStorage.setItem("current_lang", user.lang);
                 }
                 resolve();
                 env.bus.trigger("ACTION_MANAGER:UI-UPDATED", _getActionMode(action));
@@ -1697,13 +1703,21 @@ export function makeActionManager(env, router = _router) {
 
     /**
      * Restores a stack of virtual controllers from the current contents of the
-     * URL and performs a "doAction" on the last one.
+     * state (usually router.current) and performs a "doAction" on the last one.
      *
+     * @private
+     * @param {object} [state]
      * @returns {Promise<boolean>} true if doAction was performed
      */
-    async function loadState() {
-        const newStack = await _controllersFromState();
-        const actionParams = _getActionParams();
+    async function loadState(state = router.current) {
+        const lang = browser.sessionStorage.getItem("current_lang");
+        if (lang && lang !== user.lang) {
+            browser.sessionStorage.removeItem("current_action");
+            browser.sessionStorage.removeItem("current_lang");
+            browser.sessionStorage.removeItem("current_state");
+        }
+        const newStack = await _controllersFromState(state);
+        const actionParams = _getActionParams(state);
         if (actionParams) {
             // Params valid => performs a "doAction"
             const { actionRequest, options } = actionParams;
@@ -1718,10 +1732,7 @@ export function makeActionManager(env, router = _router) {
         }
     }
 
-    function pushState(cStack = controllerStack) {
-        if (!cStack.length) {
-            return;
-        }
+    function makeState(cStack) {
         const actions = cStack.map((controller) => {
             const { action, props, displayName } = controller;
             const actionState = { displayName };
@@ -1763,10 +1774,19 @@ export function makeActionManager(env, router = _router) {
         if (currentState) {
             stateKeys.push(...Object.keys(omit(currentState, ...PATH_KEYS)));
         }
-        Object.assign(newState, pick(newState.actionStack.at(-1), ...stateKeys));
+        return Object.assign(newState, pick(newState.actionStack.at(-1), ...stateKeys));
+    }
+
+    function pushState(cStack = controllerStack, options) {
+        if (!cStack.length) {
+            return;
+        }
+
+        const newState = makeState(cStack);
+        browser.sessionStorage.setItem("current_state", JSON.stringify(newState));
 
         cStack.at(-1).state = newState;
-        router.pushState(newState, { replace: true });
+        router.pushState(newState, Object.assign({ replace: true }, options));
     }
     return {
         doAction,
