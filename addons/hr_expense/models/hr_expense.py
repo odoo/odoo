@@ -501,6 +501,13 @@ class HrExpense(models.Model):
     def _compute_total_amount_currency(self):
         AccountTax = self.env['account.tax']
         for expense in self.filtered('product_has_cost'):
+            if not expense.company_id:
+                # This would be happening when emptying the required company_id field, triggering the "onchange"s.
+                # A traceback would occur because company_currency_id would be set to False.
+                # Instead of using the env company, recomputing the interface just to be blocked when trying to save
+                # we choose not to recompute anything and wait for a proper company to be inputted.
+                continue
+
             base_line = expense._prepare_base_line_for_taxes_computation(price_unit=expense.price_unit, quantity=expense.quantity)
             AccountTax._add_tax_details_in_base_line(base_line, expense.company_id)
             AccountTax._round_base_lines_tax_details([base_line], expense.company_id)

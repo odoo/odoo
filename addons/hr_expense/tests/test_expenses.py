@@ -1191,7 +1191,7 @@ class TestExpenses(TestExpenseCommon):
         expense = self.create_expenses({
                 'name': 'Company PC 1000 + 15%',
                 'employee_id': self.expense_employee.id,
-                'product_id': self.product_c.id,
+                'product_id': self.product_a.id,
                 'total_amount_currency': 1000.00,
                 'date': '2021-10-12',
                 'payment_mode': 'company_account',
@@ -1201,8 +1201,11 @@ class TestExpenses(TestExpenseCommon):
         form = Form(expense)
         form.company_id = self.env['res.company']
         self.assertEqual(form.is_editable, False)
+        self.assertEqual(form.total_amount_currency, 1000)
+
         form.company_id = self.env.company
         self.assertEqual(form.is_editable, True)
+        self.assertEqual(form.total_amount_currency, 800)
 
     def test_expense_branch_company(self):
         """
