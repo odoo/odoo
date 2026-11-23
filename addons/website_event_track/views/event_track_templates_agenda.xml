@@ -179,14 +179,14 @@
         <div class="o_we_agenda_card d-flex flex-column h-100">
             <div class="o_we_agenda_card_content position-relative d-flex flex-column justify-content-center my-1">
                 <div class="o_we_agenda_card_title mb-1">
-                    <a t-if="not (is_html_empty(track.description) and is_html_empty(track.partner_biography)) and (track.website_published or is_event_user)"
+                    <a t-if="not (is_html_empty(track.description) and all(is_html_empty(biography) for biography in track.speaker_ids.mapped('biography'))) and (track.website_published or is_event_user)"
                        t-att-href="'/event/%s/track/%s' % (slug(event), slug(track))" class="text-reset fw-bold stretched-link">
                         <t t-out="track.name"/>
                     </a>
                     <span t-else="" class="fw-bold" t-out="track.name"/>
                 </div>
-                <div class="opacity-75 text-center" t-if="track.partner_tag_line">
-                    <small t-out="track.partner_tag_line"/>
+                <div class="opacity-75 text-center" t-if="track.speaker_tag_line">
+                    <small t-out="track.speaker_tag_line"/>
                 </div>
             </div>
             <div class="o_we_agenda_card_filter_badges justify-content-center align-items-end pb-1">

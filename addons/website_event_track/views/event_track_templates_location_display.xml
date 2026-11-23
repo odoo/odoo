@@ -2,16 +2,16 @@
 <odoo>
 
 <template id="event_track_location_display_speaker" name="Location Display Speaker">
-    <div t-if="track.image or track.partner_name"
+    <div t-foreach="track.speaker_ids.filtered(lambda speaker: speaker.image or speaker.name)" t-as="speaker"
         t-attf-class="o_wevent_location_display_speaker d-inline-flex align-items-start gap-3 #{'o_wevent_location_display_speaker_live' if is_live else ''}">
-        <div t-if="track.image" class="flex-shrink-0 rounded overflow-hidden" t-field="track.image"
+        <div t-if="speaker.image" class="flex-shrink-0 rounded overflow-hidden" t-field="speaker.image"
             t-options="{'widget': 'image', 'class': 'o_wevent_location_display_speaker_image object-fit-cover', 'max_width': '256'}"/>
         <div>
-            <h5 t-if="track.partner_name" t-attf-class="mb-0 #{'h3' if is_live else 'h4'}" t-field="track.partner_name"/>
+            <h5 t-if="speaker.name" t-attf-class="mb-0 #{'h3' if is_live else 'h4'}" t-field="speaker.name"/>
             <div t-attf-class="text-white-75 #{'fs-4' if is_live else 'fs-5'}">
-                <span t-if="track.partner_function" t-field="track.partner_function"/>
-                <t t-if="track.partner_function and track.partner_company_name"> · </t>
-                <span t-if="track.partner_company_name" t-field="track.partner_company_name"/>
+                <span t-if="speaker.function" t-field="speaker.function"/>
+                <t t-if="speaker.function and speaker.company_name"> · </t>
+                <span t-if="speaker.company_name" t-field="speaker.company_name"/>
             </div>
         </div>
     </div>

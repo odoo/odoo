@@ -33,6 +33,7 @@
         <field name="arch" type="xml">
             <kanban highlight_color="color" default_group_by="stage_id" quick_create_view="website_event_track.event_track_view_form_quick_create">
                 <field name="website_url"/>
+                <field name="has_conflict"/>
                 <field name="legend_blocked"/>
                 <field name="legend_normal"/>
                 <field name="legend_done"/>
@@ -47,7 +48,13 @@
                     <t t-name="card">
                         <field name="name" class="fw-medium fs-5"/>
                         <div t-if="duration" class="d-flex"><field name="duration" widget="float_time"/>hours</div>
+                        <div t-if="record.has_conflict.raw_value">
+                            <span class="badge text-bg-danger">
+                                <field name="conflict_count"/> conflict(s)
+                            </span>
+                        </div>
                         <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
+                        <field name="speaker_ids" widget="many2many_tags" class="text-muted"/>
                         <footer class="pt-0">
                             <div class="d-flex align-items-center">
                                 <field name="priority" widget="priority"/>
@@ -55,9 +62,6 @@
                             </div>
                             <div class="d-flex ms-auto align-items-center">
                                 <field name="kanban_state" widget="state_selection" groups="base.group_user"/>
-                                <div t-att-title="record.partner_id.value">
-                                    <field name="partner_id" widget="image" options="{'preview_image': 'avatar_128'}" class="o_avatar rounded ms-1"/>
-                                </div>
                             </div>
                         </footer>
                     </t>
@@ -74,8 +78,9 @@
             <calendar date_start="date" date_stop="date_end" string="Event Tracks" color="location_id" event_limit="5">
                 <field name="location_id" filters="1"/>
                 <field name="event_id"/>
-                <field name="partner_id" avatar_field="avatar_128"/>
+                <field name="speaker_ids" widget="many2many_tags"/>
                 <field name="user_id" avatar_field="avatar_128"/>
+                <field name="conflict_count" string="Conflicts" invisible="not conflict_count"/>
             </calendar>
         </field>
     </record>
@@ -87,14 +92,17 @@
             <search string="Event Tracks">
                 <field name="name"/>
                 <field name="tag_ids"/>
-                <field name="partner_id" string="Speaker" filter_domain="[
-                    '|', '|', '|', '|',
-                    ('partner_id', 'ilike', self), ('partner_name', 'ilike', self),
-                    ('contact_email', 'ilike', self), ('partner_email', 'ilike', self), ('partner_company_name', 'ilike', self)]"/>
+                <field name="speaker_ids" string="Speaker" filter_domain="[
+                    '|', '|', '|',
+                    ('speaker_ids.partner_id', 'ilike', self), ('speaker_ids.name', 'ilike', self),
+                    ('speaker_ids.email', 'ilike', self), ('speaker_ids.company_name', 'ilike', self)]"/>
+                <field name="partner_id" string="Contact" filter_domain="[
+                    '|', ('partner_id', 'ilike', self), ('contact_email', 'ilike', self)]"/>
                 <field name="location_id"/>
                 <field name="event_id"/>
                 <field name="stage_id"/>
                 <filter string="My Tracks" name="my_tracks" domain="[('user_id', '=', uid)]"/>
+                <filter string="Conflicts" name="conflicts" domain="[('has_conflict', '=', True)]"/>
                 <separator/>
                 <filter string="Published" name="filter_published" domain="[('website_published', '=', True)]"/>
                 <separator/>
@@ -145,6 +153,18 @@
                         <field name="is_published" widget="website_redirect_button"/>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="alert alert-warning mb-3" role="alert" invisible="not has_conflict">
+                        <div invisible="not has_location_conflict">
+                            This location is already booked by another track at the same time.
+                        </div>
+                        <div invisible="not has_speaker_conflict">
+                            A speaker of this track is already scheduled for another track at the same time.
+                        </div>
+                        <button name="action_view_conflicting_tracks" type="object" class="btn-link p-0"
+                                icon="east">
+                            <field name="conflict_count" class="me-1"/> conflicting track(s)
+                        </button>
+                    </div>
                     <div class="d-flex gap-4 mb-3">
                         <div class="flex-grow-1">
                             <label for="name"/>
@@ -168,31 +188,54 @@
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                             <field name="color" widget="color_picker"/>
                         </group>
+                        <group string="Contact" name="contact">
+                            <field name="partner_id" string="Contact" context="{'default_phone': contact_phone, 'default_email': contact_email}"/>
+                            <field name="contact_email" string="Email" readonly="partner_id" widget="email"/>
+                            <field name="contact_phone" string="Phone" class="o_force_ltr" readonly="partner_id" widget="phone"/>
+                        </group>
                     </group>
                     <notebook>
-                        <page string="Speaker" name="speaker">
-                            <group string="Contact Details" class="display-flex justify-content-between">
-                                <group>
-                                    <field name="partner_id" context="{'default_phone': contact_phone, 'default_email': contact_email}"/>
-                                    <field name="contact_email" readonly="partner_id"/>
-                                    <field name="contact_phone" class="o_force_ltr" readonly="partner_id"/>
-                                </group>
-                            </group>
-                            <group string="Speaker Bio" class="display-flex justify-content-between">
-                                <group>
-                                    <field name="partner_name"/>
-                                    <field name="partner_email"/>
-                                    <field name="partner_phone" class="o_force_ltr"/>
-                                    <field name="partner_function"/>
-                                    <field name="partner_company_name"/>
-                                </group>
-                                <group>
-                                    <field name="image" nolabel="1" widget="image" class="oe_avatar"/>
-                                </group>
-                            </group>
-                            <group>
-                                <field name="partner_biography" string="Biography" placeholder='e.g. "John Doe was born in..."'/>
-                            </group>
+                        <page string="Speakers" name="speaker">
+                            <field name="speaker_ids" mode="kanban">
+                                <kanban>
+                                    <field name="sequence" widget="handle"/>
+                                    <templates>
+                                        <t t-name="card" class="flex-row gap-2">
+                                            <main class="gap-2">
+                                                <div>
+                                                    <field name="name" class="fw-bold"/>
+                                                    <div t-if="record.function.raw_value or record.company_name.raw_value" class="text-muted">
+                                                        <field name="function"/>
+                                                        <span t-if="record.function.raw_value and record.company_name.raw_value"> at </span>
+                                                        <field name="company_name"/>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div t-if="record.email.raw_value" class="text-truncate">
+                                                        <i class="oi oi-fw oi-filled me-1 text-muted" data-icon="mail" title="Email"/>
+                                                        <field name="email"/>
+                                                    </div>
+                                                    <div t-if="record.phone.raw_value" class="d-flex align-items-baseline">
+                                                        <i class="oi oi-fw oi-filled me-1 text-muted" data-icon="phone" title="Phone"/>
+                                                        <field name="phone"/>
+                                                    </div>
+                                                </div>
+                                                <field name="biography" class="o_line_clamp o_line_clamp_3 small"/>
+                                                <footer t-if="record.partner_id.raw_value" class="text-muted small">
+                                                    <i class="oi oi-fw me-1" data-icon="person" title="Contact"/>
+                                                    <field name="partner_id"/>
+                                                </footer>
+                                            </main>
+                                            <aside class="d-flex flex-column justify-content-between align-items-end gap-2">
+                                                <field t-if="record.image.raw_value" name="image" class="w-100 m-0" widget="image"
+                                                    options="{'img_class': 'w-100 rounded border object-fit-contain'}" alt="Speaker photo"/>
+                                                <img t-else="" src="/base/static/img/avatar_grey.png"
+                                                    class="w-100 rounded border object-fit-contain" alt="Speaker photo"/>
+                                            </aside>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                            </field>
                         </page>
                         <page string="Description" name="description">
                             <field name="description" placeholder='e.g. "This talk will be about..."'/>
@@ -227,12 +270,14 @@
         <field name="name">event.track.list</field>
         <field name="model">event.track</field>
         <field name="arch" type="xml">
-            <list string="Event Track" multi_edit="1">
+            <list string="Event Track" multi_edit="1" decoration-danger="has_conflict">
                 <field name="name"/>
-                <field name="partner_name" string="Speaker Name"/>
+                <field name="date" optional="show"/>
+                <field name="date_end" optional="hide"/>
+                <field name="speaker_ids" widget="many2many_tags" string="Speakers"/>
                 <field name="partner_id" optional="hide"/>
-                <field name="partner_email" optional="hide"/>
-                <field name="partner_phone" optional="hide"/>
+                <field name="contact_email" optional="hide"/>
+                <field name="contact_phone" optional="hide"/>
                 <field name="event_id" column_invisible="context.get('default_event_id')"/>
                 <field name="wishlisted_by_default" optional="hide"/>
                 <field name="wishlist_visitor_count" optional="hide"/>
@@ -240,6 +285,9 @@
                 <field name="color" string="Color" widget="color_picker"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
                 <field name="location_id"/>
+                <field name="has_conflict" column_invisible="True"/>
+                <field name="conflict_count" string="Conflicts" optional="show"
+                    decoration-danger="conflict_count &gt; 0"/>
             </list>
         </field>
     </record>

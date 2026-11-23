@@ -85,10 +85,10 @@ class EventEvent(models.Model):
             return vals
         performers = {
             # sudo only reads is_company to pick the schema type; the displayed
-            # name comes from the track's own partner_name, never the partner.
-            track.partner_name: 'Organization' if track.partner_id.sudo().is_company else 'Person'
-            for track in self.track_ids
-            if track.is_published and track.partner_name
+            # name comes from the speaker's own name, never the partner.
+            speaker.name: 'Organization' if speaker.partner_id.sudo().is_company else 'Person'
+            for speaker in self.track_ids.filtered('is_published').speaker_ids
+            if speaker.name
         }
         if performers:
             vals['performer'] = [

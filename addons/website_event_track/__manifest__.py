@@ -4,7 +4,7 @@
     'name': 'Advanced Events',
     'category': 'Marketing',
     'summary': 'Sponsors, Tracks, Agenda, Event News',
-    'version': '1.3',
+    'version': '1.4',
     'depends': ['website_event'],
     'data': [
         'data/event_data.xml',
@@ -20,6 +20,7 @@
         'views/event_track_templates_page.xml',
         'views/event_track_templates_proposal.xml',
         'views/event_track_views.xml',
+        'views/event_track_speaker_views.xml',
         'views/event_track_location_views.xml',
         'views/event_track_tag_views.xml',
         'views/event_track_stage_views.xml',

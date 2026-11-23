@@ -1,3 +1,4 @@
+from odoo import Command
 from odoo.addons.mail.tests.common import MailCase
 from odoo.addons.website_event.tests.common import TestEventOnlineCommon
 from odoo.tests import tagged, users
@@ -31,18 +32,34 @@ class TestTrackMailFeatures(TestEventOnlineCommon, MailCase):
                 'contact_email': False,
                 'event_id': cls.event_0.id,
                 'name': 'Partner (no contact_email) and speaker email',
-                'partner_email': '"Speaker" <speaker@test.example.com>',
+                'speaker_ids': [Command.create({'email': '"Speaker" <speaker@test.example.com>'})],
                 'partner_id': cls.event_customer.id,
             }, {
                 'event_id': cls.event_0.id,
                 'name': 'Partner (wrong email) and speaker email',
-                'partner_email': '"Speaker" <speaker@test.example.com>',
+                'speaker_ids': [Command.create({'email': '"Speaker" <speaker@test.example.com>'})],
                 'partner_id': cls.event_customer_wrongemail.id,
             }, {
                 'contact_email': '"Contact" <contact@test.example.com>',
                 'event_id': cls.event_0.id,
                 'name': 'Speaker and contact emails (no partner)',
-                'partner_email': '"Speaker" <speaker@test.example.com>',
+                'speaker_ids': [Command.create({'email': '"Speaker" <speaker@test.example.com>'})],
+            }, {
+                'event_id': cls.event_0.id,
+                'name': 'Several speakers and a contact',
+                'partner_id': cls.event_customer.id,
+                'speaker_ids': [
+                    Command.create({'email': '"Speaker" <speaker@test.example.com>'}),
+                    Command.create({'partner_id': cls.event_customer_wrongemail.id}),
+                    Command.create({'name': 'Speaker without email'}),
+                ],
+            }, {
+                'event_id': cls.event_0.id,
+                'name': 'Speakers only (no contact)',
+                'speaker_ids': [
+                    Command.create({'email': '"Speaker" <speaker@test.example.com>'}),
+                    Command.create({'partner_id': cls.event_customer.id}),
+                ],
             },
         ])
 
@@ -61,24 +78,34 @@ class TestTrackMailFeatures(TestEventOnlineCommon, MailCase):
                 'email_cc': '', 'email_to': '',
                 'partner_ids': self.event_customer.ids,
             },
-            # contact(_email) > partner_email (speaker info)
+            # partner > contact_email
             self.tracks[2].id: {
                 'email_cc': '', 'email_to': '',
                 'partner_ids': self.event_customer.ids,
             },
-            # contact wins (whatever email)
+            # contact wins, speakers are never recipients
             self.tracks[3].id: {
                 'email_cc': '', 'email_to': '',
                 'partner_ids': self.event_customer.ids,
             },
-            # wrong email -> fallback on valid speaker email
+            # wrong email: the contact stays, no fallback on the speaker email
             self.tracks[4].id: {
-                'email_cc': '', 'email_to': '"Speaker" <speaker@test.example.com>',
-                'partner_ids': [],
+                'email_cc': '', 'email_to': '',
+                'partner_ids': self.event_customer_wrongemail.ids,
             },
-            # no partner: contact then speaker
+            # no partner: contact only
             self.tracks[5].id: {
                 'email_cc': '', 'email_to': '"Contact" <contact@test.example.com>',
+                'partner_ids': [],
+            },
+            # several speakers: the contact only
+            self.tracks[6].id: {
+                'email_cc': '', 'email_to': '',
+                'partner_ids': self.event_customer.ids,
+            },
+            # speakers without contact: nobody
+            self.tracks[7].id: {
+                'email_cc': '', 'email_to': '',
                 'partner_ids': [],
             },
         }
@@ -128,7 +155,7 @@ class TestTrackMailFeatures(TestEventOnlineCommon, MailCase):
                     'recipient_type': 'to',
                 },
             ],
-            # contact wins (whatever email)
+            # contact wins, speakers are never suggested
             [
                 {
                     'create_values': {},
@@ -136,15 +163,9 @@ class TestTrackMailFeatures(TestEventOnlineCommon, MailCase):
                     'name': self.event_customer.name,
                     'partner_id': self.event_customer.id,
                     'recipient_type': 'to',
-                }, {
-                    'create_values': {},
-                    'email': 'speaker@test.example.com',
-                    'name': 'Speaker',
-                    'partner_id': False,
-                    'recipient_type': 'to',
                 },
             ],
-            # partner with wrong email: add speaker as fallback
+            # partner with wrong email: no fallback on the speaker email
             [
                 {
                     'create_values': {},
@@ -152,15 +173,9 @@ class TestTrackMailFeatures(TestEventOnlineCommon, MailCase):
                     'name': self.event_customer_wrongemail.name,
                     'partner_id': self.event_customer_wrongemail.id,
                     'recipient_type': 'to',
-                }, {
-                    'create_values': {},
-                    'email': 'speaker@test.example.com',
-                    'name': 'Speaker',
-                    'partner_id': False,
-                    'recipient_type': 'to',
                 },
             ],
-            # no partner: contact then speaker
+            # no partner: contact only
             [
                 {
                     'create_values': {},
@@ -170,6 +185,18 @@ class TestTrackMailFeatures(TestEventOnlineCommon, MailCase):
                     'recipient_type': 'to',
                 },
             ],
+            # several speakers: the contact only
+            [
+                {
+                    'create_values': {},
+                    'email': self.event_customer.email_normalized,
+                    'name': self.event_customer.name,
+                    'partner_id': self.event_customer.id,
+                    'recipient_type': 'to',
+                },
+            ],
+            # speakers without contact: nobody
+            [],
         ]
 
         suggested_all = tracks._message_get_suggested_recipients_batch()

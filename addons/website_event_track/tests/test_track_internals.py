@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from freezegun import freeze_time
 from unittest.mock import patch
 
-from odoo import fields
+from odoo import Command, fields
 from odoo.addons.website.models.ir_http import IrHttp
 from odoo.addons.website_event.tests.common import TestEventOnlineCommon
 from odoo.tests.common import tagged, users
@@ -18,8 +18,6 @@ class TestTrackData(TestEventOnlineCommon):
     def test_track_duration(self):
         """ Test updating duration / end date """
         event = self.event_0.with_env(self.env)
-        customer = self.event_customer.with_env(self.env)
-
         now = datetime(2025, 3, 5, 14, 0, 0)
         with freeze_time(now):
             tracks = self.env['event.track'].create([
@@ -28,48 +26,40 @@ class TestTrackData(TestEventOnlineCommon):
                     'duration': 4.5,
                     'event_id': event.id,
                     'name': 'Date + duration',
-                    'partner_id': customer.id,
                 }, {
                     'date': now,
                     'date_end': now + timedelta(hours=6, minutes=15),
                     'event_id': event.id,
                     'name': 'Date + end',
-                    'partner_id': customer.id,
                 }, {
                     'date': now,
                     'duration': False,
                     'event_id': event.id,
                     'name': 'Start only (duration False)',
-                    'partner_id': customer.id,
                 }, {
                     'date': now,
                     'event_id': event.id,
                     'name': 'Start only (default duration)',
-                    'partner_id': customer.id,
                 }, {
                     'duration': 3.75,
                     'event_id': event.id,
                     'name': 'Duration only',
-                    'partner_id': customer.id,
                 }, {
                     'duration': False,
                     'date_end': now,
                     'event_id': event.id,
                     'name': 'End only (duration False)',
-                    'partner_id': customer.id,
                 }, {
                     'duration': 2.5,
                     'date_end': now,
                     'event_id': event.id,
                     'name': 'End + duration',
-                    'partner_id': customer.id,
                 }, {
                     'date': now,
                     'date_end': now + timedelta(hours=6, minutes=15),
                     'duration': 10,
                     'event_id': event.id,
                     'name': 'Date + end + duration (such schrizo)',
-                    'partner_id': customer.id,
                 },
             ])
 
@@ -95,12 +85,11 @@ class TestTrackData(TestEventOnlineCommon):
         self.assertEqual(tracks[0].duration, 12)
 
     @users('user_eventmanager')
-    def test_track_partner_sync(self):
-        """ Test registration computed fields about partner """
+    def test_track_speaker_partner_sync(self):
+        """ Test speaker values computed from their contact """
         test_email = '"Nibbler In Space" <nibbler@futurama.example.com>'
         test_phone = '0456001122'
         test_bio = '<p>UserInput</p>'
-        # test_bio_void = '<p><br/></p>'
 
         event = self.env['event.event'].browse(self.event_0.ids)
         customer = self.env['res.partner'].browse(self.event_customer.id)
@@ -109,57 +98,67 @@ class TestTrackData(TestEventOnlineCommon):
         new_track = self.env['event.track'].create({
             'event_id': event.id,
             'name': 'Mega Track',
-            'partner_id': customer.id,
+            'speaker_ids': [Command.create({'partner_id': customer.id})],
         })
-        self.assertEqual(new_track.partner_id, customer)
-        self.assertEqual(new_track.partner_name, customer.name)
-        self.assertEqual(new_track.partner_email, customer.email)
-        self.assertEqual(new_track.partner_phone, customer.phone)
-        self.assertEqual(new_track.partner_biography, customer.website_description)
-        self.assertIn(customer.name, new_track.partner_biography, 'Low-level test: ensure correctly updated')
+        speaker = new_track.speaker_ids
+        self.assertEqual(speaker.partner_id, customer)
+        self.assertEqual(speaker.name, customer.name)
+        self.assertEqual(speaker.email, customer.email)
+        self.assertEqual(speaker.phone, customer.phone)
+        self.assertEqual(speaker.biography, customer.website_description)
+        self.assertIn(customer.name, speaker.biography, 'Low-level test: ensure correctly updated')
 
         # partial update
         new_track = self.env['event.track'].create({
             'event_id': event.id,
             'name': 'Mega Track',
-            'partner_id': customer.id,
-            'partner_name': 'Nibbler In Space',
-            'partner_email': test_email,
+            'speaker_ids': [Command.create({
+                'partner_id': customer.id,
+                'name': 'Nibbler In Space',
+                'email': test_email,
+            })],
         })
-        self.assertEqual(new_track.partner_id, customer)
+        speaker = new_track.speaker_ids
+        self.assertEqual(speaker.partner_id, customer)
         self.assertEqual(
-            new_track.partner_name, 'Nibbler In Space',
-            'Track should take user input over computed partner value')
+            speaker.name, 'Nibbler In Space',
+            'Speaker should take user input over computed partner value')
         self.assertEqual(
-            new_track.partner_email, test_email,
-            'Track should take user input over computed partner value')
+            speaker.email, test_email,
+            'Speaker should take user input over computed partner value')
         self.assertEqual(
-            new_track.partner_phone, customer.phone,
-            'Track should take partner value if not user input')
+            speaker.phone, customer.phone,
+            'Speaker should take partner value if not user input')
 
         # already filled information should not be updated
         new_track = self.env['event.track'].create({
             'event_id': event.id,
             'name': 'Mega Track',
-            'partner_name': 'Nibbler In Space',
-            'partner_phone': test_phone,
-            'partner_biography': test_bio,
+            'speaker_ids': [Command.create({
+                'name': 'Nibbler In Space',
+                'phone': test_phone,
+                'biography': test_bio,
+            })],
         })
-        self.assertEqual(new_track.partner_name, 'Nibbler In Space')
-        self.assertEqual(new_track.partner_email, False)
-        self.assertEqual(new_track.partner_phone, test_phone)
-        self.assertEqual(new_track.partner_biography, test_bio)
-        new_track.write({'partner_id': customer.id})
-        self.assertEqual(new_track.partner_id, customer)
+        speaker = new_track.speaker_ids
+        self.assertEqual(speaker.name, 'Nibbler In Space')
+        self.assertEqual(speaker.email, False)
+        self.assertEqual(speaker.phone, test_phone)
+        self.assertEqual(speaker.biography, test_bio)
+        speaker.write({'partner_id': customer.id})
         self.assertEqual(
-            new_track.partner_name, 'Nibbler In Space',
-            'Track customer should not take over existing value')
+            speaker.name, 'Nibbler In Space',
+            'Speaker contact should not take over existing value')
         self.assertEqual(
-            new_track.partner_email, customer.email,
-            'Track customer should take over empty value')
+            speaker.email, customer.email,
+            'Speaker contact should take over empty value')
         self.assertEqual(
-            new_track.partner_phone, test_phone,
-            'Track customer should not take over existing value')
+            speaker.phone, test_phone,
+            'Speaker contact should not take over existing value')
+        self.assertEqual(
+            speaker.biography, test_bio,
+            'Speaker contact should not take over existing value')
+        self.assertFalse(new_track.contact_email, 'Speaker contact is not the track contact')
 
         # contacts fields should be updated with track customer
         new_track = self.env['event.track'].create({
@@ -177,6 +176,7 @@ class TestTrackData(TestEventOnlineCommon):
         self.assertEqual(
             new_track.contact_phone, customer.phone,
             'Track customer should take over existing contact phone value')
+        self.assertFalse(new_track.speaker_ids, 'Track contact is not a speaker')
 
 
 class TestTrackSuggestions(TestEventOnlineCommon):
