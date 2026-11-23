@@ -871,37 +871,21 @@ a.no-decoration {
    ============================================================================= */
 
 /* ==== Utilities ============================================================== */
-$-product-ratios-map: (
-    'auto': auto,
-    '21_9': 21/9,
-    '16_9': 16/9,
-     '4_3': 4/3,
-     '6_5': 6/5,
-     '1_1': 1/1,
-     '4_5': 4/5,
-     '2_3': 2/3,
-);
+/* The product page template and the image viewer give the ratios in their style */
+#product_detail,
+.o_wsale_image_viewer_carousel {
+    --o-wsale-product-image-ratio: var(--o-wsale-image-ratio);
 
-@each $-ratio-name, $-ratio-value in $-product-ratios-map {
-    .o_wsale_image_viewer_ratio_#{$-ratio-name},
-    .o_wsale_product_page_opt_image_ratio_#{$-ratio-name} {
-        --o-wsale-product-image-ratio: #{$-ratio-value};
-        --o-wsale-product-thumbnail-ratio: #{if($-ratio-name == 'auto', 1, $-ratio-value)};
-        @if($-ratio-name == 'auto') {
-            & img {
-                object-fit: contain !important;
-            }
-        }
+    @media (max-width: 767.98px) {
+        --o-wsale-product-image-ratio: var(--o-wsale-image-ratio-mobile, var(--o-wsale-image-ratio));
     }
 }
-@each $-ratio-name, $-ratio-value in $-product-ratios-map {
-    @if($-ratio-name != 'auto') {
-        .o_wsale_image_viewer_ratio_mobile_#{$-ratio-name},
-        .o_wsale_product_page_opt_image_ratio_mobile_#{$-ratio-name} {
-            @media (max-width: 767.98px) {
-                --o-wsale-product-image-ratio: #{$-ratio-value};
-            }
-        }
+
+.o_wsale_product_page_opt_image_ratio_auto {
+    --o-wsale-product-thumbnail-ratio: 1;
+
+    & img {
+        object-fit: contain !important;
     }
 }
 
@@ -1486,7 +1470,7 @@ $-product-radius-map: (
                     & > div,
                     & > div > img {
                         border-radius: MIN(var(--o-wsale-product-image-radius), var(--border-radius));
-                        aspect-ratio: var(--o-wsale-product-thumbnail-ratio);
+                        aspect-ratio: var(--o-wsale-product-thumbnail-ratio, var(--o-wsale-product-image-ratio));
                     }
 
                     .o_product_video_thumb {

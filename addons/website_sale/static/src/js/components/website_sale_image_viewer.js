@@ -91,6 +91,15 @@ export class ProductImageViewer extends Dialog {
         return `transform: translate(${this.imageTranslate.x}px, ${this.imageTranslate.y}px);`;
     }
 
+    get ratioStyle() {
+        const { imageRatio, imageRatioMobile } = this.viewerProps;
+        const style = `--o-wsale-image-ratio: ${imageRatio.replace("_", "/")};`;
+        if (imageRatioMobile === "auto") {
+            return style;
+        }
+        return `${style} --o-wsale-image-ratio-mobile: ${imageRatioMobile.replace("_", "/")};`;
+    }
+
     previousImage() {
         this.selectedImage =
             this.images[

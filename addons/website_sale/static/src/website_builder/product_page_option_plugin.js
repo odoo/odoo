@@ -163,11 +163,30 @@ export class ProductPageContainerOrderAction extends BasePreviewableProductPageA
 export class ProductPageImageRatioAction extends BasePreviewableProductPageAction {
     static id = "productPageImageRatio";
     static rpcParameterName = "product_page_image_ratio";
+
+    apply(context) {
+        const { editingElement, value } = context;
+        editingElement.style.setProperty("--o-wsale-image-ratio", value.replace("_", "/"));
+        return super.apply(context);
+    }
 }
 
 export class ProductPageImageRatioMobileAction extends BasePreviewableProductPageAction {
     static id = "productPageImageRatioMobile";
     static rpcParameterName = "product_page_image_ratio_mobile";
+
+    apply(context) {
+        const { editingElement, value } = context;
+        if (value === "auto") {
+            editingElement.style.removeProperty("--o-wsale-image-ratio-mobile");
+        } else {
+            editingElement.style.setProperty(
+                "--o-wsale-image-ratio-mobile",
+                value.replace("_", "/")
+            );
+        }
+        return super.apply(context);
+    }
 }
 
 export class ProductPageImageWidthAction extends BasePreviewableProductPageAction {
