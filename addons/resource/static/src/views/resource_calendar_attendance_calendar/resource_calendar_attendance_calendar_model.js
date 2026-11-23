@@ -249,7 +249,7 @@ export class ResourceCalendarAttendanceCalendarModel extends CalendarModel {
         return { hour_from, hour_to, duration_hours };
     }
 
-    getQuickAddBlockTitle(record) {
+    getQuickAddBlockTitle(_record) {
         return "";
     }
 
