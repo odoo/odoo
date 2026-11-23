@@ -119,13 +119,7 @@ export class SelectMenu extends Component {
 
         this.selectedChoice = this.getSelectedChoice(this.props);
         onWillUpdateProps((nextProps) => {
-            const choicesChanged = this.state.choices !== nextProps.choices;
-            if (choicesChanged) {
-                this.state.choices = nextProps.choices;
-            }
-            if (choicesChanged || this.props.value !== nextProps.value) {
-                this.selectedChoice = this.getSelectedChoice(nextProps);
-            }
+            this.selectedChoice = this.getSelectedChoice(nextProps);
         });
         useLayoutEffect(
             () => {
@@ -372,8 +366,9 @@ export class SelectMenu extends Component {
             }
         } else if (!this.selectedChoice || this.selectedChoice.value !== value) {
             this.props.onSelect(value);
-            if (this.state.choices && this.state.choices.length) {
-                this.updateInputValue(this.state.choices.find((c) => c.value === value).label);
+            const choice = this.getSelectedChoice({ ...this.props, value });
+            if (choice) {
+                this.updateInputValue(choice.label);
             }
         }
         this.clearInputValue();
