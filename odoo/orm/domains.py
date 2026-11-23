@@ -2044,20 +2044,20 @@ def _operator_expr_eval(condition, model):
     except Exception:  # noqa: BLE001
         condition._raise(f"Invalid expression: {expr!r}")
         assert False, 'unreachable'
-    if not value:
-        return Domain.FALSE
+    if isinstance(value, Domain):
+        if condition.operator != 'in.expr':
+            condition._raise("invalid operator for a domain dynamic value")
+        return value
     from .models import BaseModel  # noqa: PLC0415
     if isinstance(value, BaseModel):
         field = condition._field(model)
         if (field.model_name if field.name == 'id' else field.comodel_name) != value._name:
             condition._raise(f"Cannot compare {field} and {value}")
         value = value.ids
-    elif isinstance(value, Domain):
-        if condition.operator != 'in.expr':
-            condition._raise("invalid operator for a domain value")
-        return DomainCondition(condition.field_expr, 'any', value)
+    elif not value:
+        return Domain.FALSE
     elif not isinstance(value, COLLECTION_TYPES):
-        value = [value]
+        condition._raise('dynamic value is not a collection')
     operator, _dot, _expr = condition.operator.rpartition('.')
     return DomainCondition(condition.field_expr, operator, value)
 
