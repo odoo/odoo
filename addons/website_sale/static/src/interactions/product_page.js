@@ -317,7 +317,13 @@ export class ProductPage extends Interaction {
     _getVisuallyOrderedProductImages(salePage) {
         const images = [...salePage.querySelectorAll(".product_detail_img")];
         if (this._getProductImageContainerSelector() === "#o-grid-product") {
-            return images.sort((a, b) => a.offsetTop - b.offsetTop);
+            // Images on the same row share the same offsetTop (e.g. 100% width
+            // layout), so break ties with offsetLeft to follow reading order.
+            const rowDirection = localization.direction === "rtl" ? -1 : 1;
+            return images.sort(
+                (a, b) =>
+                    a.offsetTop - b.offsetTop || rowDirection * (a.offsetLeft - b.offsetLeft)
+            );
         }
         return images;
     }
