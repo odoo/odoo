@@ -188,6 +188,7 @@ class PurchaseBillLineMatch(models.Model):
                 remaining_matching_bills.purchase_line_id = po_lines[-1].id
                 matching_bill_line_to_remove |= remaining_matching_bills
 
+        matching_bill_line_to_remove.filtered(lambda line: line.parent_state == 'draft')._compute_account_id()
         residual_purchase_order_lines -= po_lines_to_remove
         residual_account_move_lines -= matching_bill_line_to_remove
 

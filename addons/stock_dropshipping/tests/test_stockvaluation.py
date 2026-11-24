@@ -331,3 +331,35 @@ class TestStockValuation(ValuationReconciliationTestCommon):
         valuation_aml = closing_move.line_ids.filtered(
             lambda line: line.account_id == stock_valuation_account)
         self.assertRecordValues(valuation_aml, [{'debit': 10.0, 'credit': 0.0}])
+
+    def test_dropship_bill_matching_expense_account(self):
+        """A vendor bill created without purchase order, for a real-time valued
+        product, is matched afterwards to a dropship purchase order line through
+        the bill matching. The dropship never enters the company's stock, so the
+        bill line is moved from the stock valuation account to the expense account.
+        """
+        dropshipping_route = self.quick_ref('stock_dropshipping.route_drop_shipping')
+        vendor = self.env['res.partner'].create({'name': 'vendor1'})
+        self.product1.write({
+            'route_ids': [Command.set(dropshipping_route.ids)],
+            'seller_ids': [Command.create({'partner_id': vendor.id, 'price': 8})],
+        })
+        sale_order = self.env['sale.order'].sudo().create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({'product_id': self.product1.id})],
+        })
+        sale_order.action_confirm()
+        purchase_order = self.env['purchase.order'].search([('reference_ids', '=', sale_order.stock_reference_ids.id)])
+        purchase_order.button_confirm()
+        sale_order.with_user(self.res_users_stock_user).picking_ids.button_validate()
+
+        bill = self.init_invoice('in_invoice', partner=vendor, products=[self.product1])
+        self.assertEqual(bill.invoice_line_ids.account_id, self.company_data['default_account_stock_valuation'])
+
+        self.env['account.move.line'].flush_model()
+        match_lines_action = purchase_order.action_bill_matching()
+        self.env['purchase.bill.line.match'].search(match_lines_action['domain']).action_match_lines()
+        self.assertRecordValues(bill.invoice_line_ids, [{
+            'purchase_line_id': purchase_order.order_line.id,
+            'account_id': self.company_data['default_account_expense'].id,
+        }])
