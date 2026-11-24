@@ -242,8 +242,8 @@ export declare function getDefault(type: any): (() => any) | undefined;
  * input is never mutated; objects are copied along the changed paths only, so
  * if nothing is filled in, `value` is returned as is.
  *
- * Note that this only recurses through object shapes, tuples and arrays
- * (unions are ambiguous, records have no fixed keys).
+ * Note that this only recurses through object shapes, tuples, arrays and
+ * intersections: other types expose nothing to walk.
  */
 export declare function applyDefaults<T>(value: unknown, type: T): StripBrands<T>;
 declare function anyType(): Type<any>;
@@ -274,6 +274,12 @@ declare function promiseType(): Type<Promise<void>>;
 declare function promiseType<T>(type: T): Type<Promise<StripBrands<T>>>;
 declare function recordType(): Type<Record<PropertyKey, any>>;
 declare function recordType<V>(valueType: V): Type<Record<PropertyKey, StripBrands<V>>>;
+declare function setType(): Type<Set<any>>;
+declare function setType<V>(): Type<Set<V>>;
+declare function setType<V>(valueType: V): Type<Set<StripBrands<V>>>;
+declare function mapType(): Type<Map<any, any>>;
+declare function mapType<K, V>(): Type<Map<K, V>>;
+declare function mapType<K extends {}, V extends {}>(keyType: K, valueType: V): Type<Map<StripBrands<K>, StripBrands<V>>>;
 declare function tuple<const T extends unknown[]>(types: T): Type<StripBrandsAll<T>>;
 declare function union<T extends unknown[]>(types: T): Type<StripBrands<T[number]>>;
 declare function reactiveValueType(): Type<ReactiveValue<any>>;
@@ -291,6 +297,7 @@ declare const types: {
 	function: typeof functionType;
 	instanceOf: typeof instanceType;
 	literal: typeof literalType;
+	map: typeof mapType;
 	number: typeof numberType;
 	object: typeof objectType;
 	or: typeof union;
@@ -298,6 +305,7 @@ declare const types: {
 	record: typeof recordType;
 	ref: typeof ref;
 	selection: typeof literalSelection;
+	set: typeof setType;
 	signal: typeof reactiveValueType;
 	strictObject: typeof strictObjectType;
 	string: typeof stringType;
@@ -499,7 +507,7 @@ export interface SignalOptions<TValue, TElem = TValue> {
 	/** Custom equality used by `set` to decide whether to notify (see Equals). */
 	equals?: Equals<TValue>;
 }
-declare function triggerSignal(signal: Signal<any>): void;
+declare function triggerSignal(value: ReactiveValue<any, any>): void;
 declare function signalRef(): Signal<HTMLElement | null>;
 declare function signalRef<T extends Constructor<HTMLElement>>(type: T): Signal<InstanceType<T> | null>;
 declare function signalArray<T>(): Signal<T[]>;
@@ -577,7 +585,12 @@ export interface AsyncComputed<T> {
 	(): T | undefined;
 	loading(): boolean;
 	error(): Error | null;
-	refresh(): void;
+	/**
+	 * Re-runs the fetcher, even if no dependency changed. The re-run itself is
+	 * batched like any other effect, but it counts as in flight right away: the
+	 * returned promise (same as `currentPromise()`) resolves once it settles.
+	 */
+	refresh(): Promise<void>;
 	dispose(): void;
 	/**
 	 * Returns a promise that resolves as soon as no run is in flight: if a run
@@ -732,6 +745,7 @@ export declare function htmlEscape(str: any): Markup;
 export declare function markup(strings: TemplateStringsArray, ...placeholders: unknown[]): Markup;
 export declare function markup(value: string): Markup;
 declare class Fiber {
+	static maxRenderIterations: number;
 	node: ComponentNode;
 	bdom: BDom | null;
 	root: RootFiber | null;
@@ -895,8 +909,26 @@ declare class Scheduler {
 	frame: number;
 	delayedRenders: Fiber[];
 	processing: boolean;
+	recycled: Fiber[];
+	resetPending: boolean;
 	constructor();
 	addFiber(fiber: Fiber): void;
+	/**
+	 * Called each time makeRootFiber recycles an uncommitted fiber. A render
+	 * loop (#1968) is driven by microtasks only, so the timeout scheduled here
+	 * cannot run while it spins, and the recycle count climbs until it is
+	 * detected. Updates coming from separate tasks (timers, network) while
+	 * commits are on hold, e.g. in a hidden tab where rAF does not run (#2062),
+	 * let the timeout run in between and reset the count.
+	 */
+	trackRecycle(fiber: Fiber): void;
+	/**
+	 * Clears the recycle count of fibers whose render is complete and only
+	 * waiting to be committed. Fibers whose root still waits on async work
+	 * (e.g. onWillStart) keep their count: a loop going through async code keeps
+	 * its root incomplete, and must still be detected.
+	 */
+	resetRecycleCounts(): void;
 	/**
 	 * Process all current tasks. This only applies to the fibers that are ready.
 	 * Other tasks are left unchanged.
