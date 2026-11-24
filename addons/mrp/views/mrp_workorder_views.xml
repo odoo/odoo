@@ -145,7 +145,7 @@
                 <attribute name="column_invisible">parent.state == 'done'</attribute>
             </xpath>
             <xpath expr="//field[@name='name']" position='before'>
-                <field name="sequence" widget="handle" column_invisible="parent.state != 'draft'"/>
+                <field name="sequence" widget="handle" column_invisible="not parent.id or parent.state in ['done', 'cancel'] or parent.allow_workorder_dependencies"/>
             </xpath>
         </field>
     </record>
