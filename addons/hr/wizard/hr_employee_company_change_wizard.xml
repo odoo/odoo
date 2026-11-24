@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="hr_employee_company_change_wizard_view_form" model="ir.ui.view">
+        <field name="name">hr.employee.company.change.wizard.form</field>
+        <field name="model">hr.employee.company.change.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Move employee to a new company">
+                <field name="version_id" invisible="1"/> <!-- the version moved, needed to compute the dates -->
+                <field name="company_id" invisible="1"/> <!-- the new company, set from the employee form -->
+                <field name="min_date" invisible="1"/> <!-- the minimum effective date, for the date picker -->
+                <p>
+                    You can't change the company on a contract with payslips.<br/>
+                    Please provide the effective date of the change after payslips period.
+                </p>
+                <group>
+                    <field name="date_version" widget="date_dynamic_min" options="{'min_date_field': 'min_date'}"/>
+                </group>
+                <footer>
+                    <button name="action_confirm" string="Confirm" type="object" class="btn btn-primary"/>
+                    <button string="Discard" special="cancel" class="btn btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

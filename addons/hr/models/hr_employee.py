@@ -84,6 +84,13 @@ class HrEmployee(models.Model):
         ui_required=True
     )
     versions_count = fields.Integer(string="Employee Records Count", compute='_compute_versions_count', groups="hr.group_hr_user")
+    version_company_ids = fields.Many2many(
+        'res.company',
+        string="Employee Records Companies",
+        compute='_compute_version_company_ids',
+        search='_search_version_company_ids',
+        compute_sudo=True,
+    )
     version_revision = fields.Char(compute="_compute_version_revision", groups="hr.group_hr_user")
 
     contract_template_id = fields.Many2one(
@@ -778,7 +785,7 @@ class HrEmployee(models.Model):
             employee.split_legal_name = employee.company_country_code in splitting_country_codes
 
     @api.depends('current_version_id')
-    @api.depends_context('version_id')
+    @api.depends_context('version_id', 'allowed_company_ids')
     def _compute_version_id(self):
         """Compute ``version_id``, the version that the inherited (``_inherits``) fields read and write.
 
@@ -788,16 +795,44 @@ class HrEmployee(models.Model):
         past or future version)::
 
             employee.with_context(version_id=old_version.id).wage
+
+        When the context restricts the companies (``allowed_company_ids``, as
+        in the web client) and the current version belongs to another company
+        (e.g. the employee moved to another company), it is the version that
+        would be current among the versions of the allowed companies. Searching
+        on inherited fields still uses ``current_version_id``
+        (:meth:`_compute_sql_version_id`).
         """
         context_version_id = self.env.context.get('version_id', False)
         context_version = self.env['hr.version'].browse(context_version_id).exists() if context_version_id else self.env['hr.version']
+        allowed_company_ids = self.env.context.get('allowed_company_ids')
+        today = fields.Date.context_today(self)
 
         for employee in self:
             if context_version.employee_id == employee:
                 version = context_version
             else:
                 version = employee.current_version_id
+                if allowed_company_ids and version.company_id and version.company_id.id not in allowed_company_ids:
+                    company_versions = employee.version_ids.filtered(lambda v: v.company_id.id in allowed_company_ids)
+                    past_versions = company_versions.filtered(lambda v: v.date_version <= today)
+                    if past_versions:
+                        version = max(past_versions, key=lambda v: v.date_version)
+                    elif company_versions:
+                        version = min(company_versions, key=lambda v: v.date_version)
             employee.version_id = version
+
+    @api.depends('version_ids.company_id')
+    def _compute_version_company_ids(self):
+        for employee in self:
+            employee.version_company_ids = employee.version_ids.company_id
+
+    def _search_version_company_ids(self, operator, value):
+        if operator != 'in':
+            return NotImplemented
+        return Domain('id', 'in', self.env['hr.version']._search(
+            Domain('company_id', 'in', value),
+        ).select(SQL('employee_id')))
 
     def _compute_child_count(self):
         employee_read_group = self._read_group(
@@ -871,7 +906,7 @@ class HrEmployee(models.Model):
                 location_type = 'other'
             employee.work_location_type = location_type
 
-    @api.depends('version_ids.date_version', 'version_ids.active')
+    @api.depends('version_ids.date_version', 'version_ids.active', 'version_ids.company_id')
     def _compute_current_version_id(self):
         """Compute the stored ``current_version_id``.
 
@@ -883,7 +918,8 @@ class HrEmployee(models.Model):
 
         When the current version is replaced by a version with another
         timezone, the timezone of the employee's user follows
-        (:meth:`_sync_user_tz`).
+        (:meth:`_sync_user_tz`). The company of the employee is the one of
+        its current version (:meth:`_sync_company`).
         """
         today = fields.Date.context_today(self)
         current_version_per_employee = {}
@@ -912,6 +948,17 @@ class HrEmployee(models.Model):
                     employees_tz_changed |= employee
                 employee.current_version_id = new_current_version
         employees_tz_changed._sync_user_tz()
+        self.filtered(
+            lambda e: e.current_version_id.company_id and e.company_id != e.current_version_id.company_id,
+        )._sync_company()
+
+    def _sync_company(self):
+        """Write the company of the current version of the employees on them (through their resource).
+
+        Only done when it differs, not to recompute the fields depending on the company of the employee.
+        """
+        for employee in self:
+            employee.resource_id.sudo().company_id = employee.current_version_id.company_id
 
     def _sync_user_tz(self):
         """Write the timezone of the current version of the employees on their user (same company)."""
@@ -2468,6 +2515,13 @@ class HrEmployee(models.Model):
                 employee.message_post(body=self.env._(
                     'Additional Information: \n %(description)s',
                     description=vals.get('departure_description')))
+        if 'company_id' in vals:
+            # without payslips, the employee is moved with all its versions (see hr.version._get_company_change_date);
+            # the company dependent values written with it take precedence on the reset ones
+            vals = dict(vals)
+            company = self.env['res.company'].browse(self._fields['company_id'].convert_to_cache(vals.pop('company_id'), self))
+            for version in self.version_ids.filtered(lambda v: v.company_id != company):
+                version.write(version._get_company_change_values(company))
         # Only one write call for all the fields from hr.version
         new_vals = vals.copy()
         version_vals = {val: new_vals.pop(val) for val in vals if val in self._fields and self._fields[val].inherited}
@@ -2568,14 +2622,58 @@ class HrEmployee(models.Model):
                         employee[field] = False
         return res
 
-    @api.onchange('company_id')
-    def _onchange_company_id(self):
-        if self._origin:
-            return {'warning': {
-                'title': self.env._("Warning"),
-                'message': self.env._("To avoid multi company issues (losing the access to your previous contracts, leaves, ...), you should create another employee in the new company instead.")
-            }}
-        return None
+    def action_change_company(self, company_id):
+        """Return the action moving the employee to the company ``company_id``, or ``False`` if the company can
+        directly be changed on the employee (with all its versions).
+
+        Called by the company field of the employee form when another company is selected: once versions are
+        covered by payslips (see :meth:`hr.version._get_company_change_date`), the employee can only be moved to
+        another company from an effective date after them (see :meth:`_move_to_company`). Single employee only.
+
+        :param int company_id: the new company
+        :rtype: dict or bool
+        """
+        self.ensure_one()
+        self.check_access('write')
+        if not any(version._get_company_change_date() for version in self.version_ids):
+            return False
+        return {
+            'type': 'ir.actions.act_window',
+            'name': self.env._("Move employee to a new company"),
+            'res_model': 'hr.employee.company.change.wizard',
+            'views': [(False, 'form')],
+            'target': 'new',
+            'context': {
+                'default_version_id': self.version_id.id,
+                'default_company_id': company_id,
+                'dialog_size': 'medium',
+            },
+        }
+
+    def _move_to_company(self, company, date):
+        """Move the employee to ``company`` from ``date``.
+
+        A new open-ended contract starts on ``date`` on a version belonging to ``company`` (see
+        :meth:`hr.version._get_company_change_values`); the contract running on ``date`` ends the day before.
+        The employee belongs to ``company`` once that version is the current one. Single employee only.
+
+        :param company: the new company
+        :type company: res.company
+        :param datetime.date date: the effective date of the move
+        :return: the version starting on ``date``
+        :rtype: hr.version
+        """
+        self.ensure_one()
+        contract_date_start = self.sudo()._get_contract_dates(date)[0]
+        if contract_date_start and contract_date_start < date:
+            self._get_version(date).contract_date_end = date - relativedelta(days=1)
+        contract_values = {'contract_date_start': date, 'contract_date_end': False}
+        if version := self.version_ids.filtered(lambda v: v.date_version == date):
+            version.write(contract_values)
+        else:
+            version = self.create_version({'date_version': date, **contract_values})
+        version.write(version._get_company_change_values(company))
+        return version
 
     def _load_scenario(self):
         demo_tag = self.env.ref('hr.employee_category_demo', raise_if_not_found=False)

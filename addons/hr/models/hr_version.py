@@ -40,7 +40,7 @@ class HrVersion(models.Model):
     def _get_hr_responsible_domain(self):
         return [('share', '=', False), ('company_ids', 'in', self.env.company.ids), ('all_group_ids', 'in', self.env.ref('hr.group_hr_user').id)]
 
-    company_id = fields.Many2one('res.company', compute='_compute_company_id', readonly=False,
+    company_id = fields.Many2one('res.company', compute='_compute_company_id', readonly=False, copy=True,
                                  store=True, index=True, default=lambda self: self.env.company, tracking=1)
     employee_id = fields.Many2one(
         'hr.employee',
@@ -202,8 +202,10 @@ class HrVersion(models.Model):
         'The Home-Work Distance must be non negative.',
     )
 
-    @api.depends('employee_id.company_id')
+    @api.depends('employee_id')
     def _compute_company_id(self):
+        # A version takes the company of its employee when assigned to it. The versions of an employee may then
+        # belong to different companies: the company of the employee follows the one of its current version.
         for version in self:
             if version.employee_id:
                 version.company_id = version.employee_id.company_id
@@ -282,6 +284,57 @@ class HrVersion(models.Model):
                         version.employee_id.display_name))
             if not contract_period_exists:
                 dates_per_employee[version.employee_id].append((version.contract_date_start, version.contract_date_end, version))
+
+    def _get_company_change_date(self):
+        """Return the first date from which the employee of the version can be moved to another company.
+
+        ``False`` (no restriction) by default: the company is then changed on the version itself. Overridden
+        to forbid changing the company on a period covered by payslips. Single version only.
+
+        :rtype: datetime.date or bool
+        """
+        self.ensure_one()
+        return False
+
+    def _get_company_change_values(self, company):
+        """Return the values moving the version to ``company``.
+
+        Besides ``company_id``, the company dependent fields of the version that are not allowed in ``company``
+        are emptied, the work location is chosen in ``company`` as when creating a version in it (see
+        :meth:`_compute_work_location_id`), the work address follows the work location, or becomes the one of
+        ``company`` when it was the one of the old company, the working schedule is replaced by the one of
+        ``company`` and the timezone becomes the one of ``company``. Single version only.
+
+        :param company: the new company
+        :type company: res.company
+        :rtype: dict
+        """
+        self.ensure_one()
+        values = {'company_id': company.id}
+        for field_name, field in self._fields.items():
+            if field.type == 'many2one' and field.check_company and self[field_name] \
+                    and not self[field_name].filtered_domain(self[field_name]._check_company_domain(company)):
+                values[field_name] = False
+        work_location = self.work_location_id
+        if not work_location or work_location.company_id not in company.parent_ids:
+            work_location = self.env['hr.work.location']
+            if self.env['hr.work.location'].has_access('read'):
+                work_location = self.env['hr.work.location'].search([
+                    ('company_id', 'in', company.parent_ids.ids),
+                    ('location_type', '=', 'office'),
+                ])
+                work_location = work_location if len(work_location) == 1 else self.env['hr.work.location']
+            values['work_location_id'] = work_location.id
+        if work_location.address_id:
+            values['address_id'] = work_location.address_id.id
+        elif 'address_id' in values or self.address_id.id == self._get_default_address_id():
+            values['address_id'] = company.partner_id.address_get(['default'])['default']
+        calendar = self.resource_calendar_id
+        if calendar.company_id and calendar.company_id not in company.parent_ids and company.resource_calendar_id:
+            values['resource_calendar_id'] = company.resource_calendar_id.id
+        if company.tz:
+            values['tz'] = company.tz
+        return values
 
     def check_contract_finished(self):
         """Raise if the version has an open-ended contract (start date but no end date).
@@ -441,8 +494,9 @@ class HrVersion(models.Model):
         the current version.
 
         :raise ValidationError: when unassigning or archiving all the versions
-            of an employee, or writing contract dates on versions of different
-            contracts at once
+            of an employee, writing contract dates on versions of different
+            contracts at once, or changing the company of a version that cannot
+            change company anymore (see :meth:`_get_company_change_date`)
         """
         if self.env.context.get('import_file') and vals.get('date_version'):
             target_date = fields.Date.to_date(vals['date_version'])
@@ -460,6 +514,13 @@ class HrVersion(models.Model):
                 records = self - to_exclude
                 return records.write(vals) if records else True
 
+        if 'company_id' in vals:
+            company_id = self._fields['company_id'].convert_to_cache(vals['company_id'], self)
+            for version in self:
+                if version.company_id.id != company_id and version._get_company_change_date():
+                    raise ValidationError(self.env._(
+                        "You can't change the company on a contract with payslips. Move the employee to the new "
+                        "company from an effective date after the payslips period instead."))
         if 'hr_responsible_id' in vals:
             new_responsible = self.env['res.users'].browse(vals['hr_responsible_id'])
             for version in self:

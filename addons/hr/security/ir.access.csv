@@ -3,7 +3,7 @@ access_hr_employee_category_user,hr.employee.category.user,hr.employee.category,
 access_hr_employee_category_emp,hr.employee.category.emp,hr.employee.category,base.group_user,r,
 access_hr_employee_user,hr.employee user,hr.employee,hr.group_hr_user,crud,
 access_hr_employee_system_user,hr.employee system user,hr.employee,base.group_system,r,
-hr_employee_comp_rule,Employee multi company rule,hr.employee,,crud,"[('company_id', 'in', company_ids + [False])]"
+hr_employee_comp_rule,Employee multi company rule,hr.employee,,crud,"['|', ('company_id', 'in', company_ids + [False]), ('version_company_ids', 'in', company_ids)]"
 access_hr_employee_public_user,hr.employee_public,hr.employee.public,base.group_user,r,
 access_hr_employee_resource_user,resource.resource.user,resource.resource,hr.group_hr_user,crud,
 access_hr_department_user,hr.department.user,hr.department,hr.group_hr_user,crd,
@@ -79,3 +79,4 @@ ir_rule_hr_headcount_multi_company,HR Headcount: Multi Company,hr.headcount,,cru
 access_hr_headcount_line,access_hr_headcount_line,hr.headcount.line,hr.group_hr_user,crud,
 ir_rule_hr_headcount_line_multi_company,HR Headcount Line: Multi Company,hr.headcount.line,,crud,"[('headcount_id.company_id', 'in', company_ids)]"
 access_hr_headcount_working_rate,access_hr_headcount_working_rate,hr.headcount.working.rate,hr.group_hr_user,crd,
+access_hr_employee_company_change_wizard,HR: Allow HR officers to move employees to another company,hr.employee.company.change.wizard,hr.group_hr_user,crud,
