@@ -92,6 +92,7 @@ export class ScaleInterface extends Reactive {
             decimalAccuracy,
             unitPrice,
         };
+        this.weight = 0;
     }
 
     /** @param {number} newWeight */

@@ -47,16 +47,20 @@ class ScaleDriver(SerialDriver):
         self._actions["read_once"] = self._read_once
         self.net_weight_char = b'N'
         self.tare_mode = False
+        self.weight_changed = True
 
     def _read_once(self, data: dict):
-        """Reads the scale current weight value and pushes it to the frontend."""
-        self.last_sent_value = self._read_weight()
+        weight = self._read_weight()
+        weight_changed = self.weight_changed or weight != self.last_sent_value
+        self.weight_changed = False
+        self.last_sent_value = weight
         if data.get("detailed_response"):
             return {
-                "weight": self.last_sent_value,
+                "weight": weight,
                 "tare_mode": self.tare_mode,
+                "weight_changed": weight_changed,
             }
-        return self.last_sent_value
+        return weight
 
     def _read_weight(self) -> float:
         """Asks for a new weight from the scale, checks if it is valid
@@ -76,6 +80,8 @@ class ScaleDriver(SerialDriver):
         """Reads the device's weight value, and pushes that value to the frontend."""
         with self._device_lock:
             weight = self._read_weight()
+            if weight != self.last_sent_value:
+                self.weight_changed = True
             if weight != self.last_sent_value or self.data["status"] == "error":
                 self.last_sent_value = weight
                 self.data.update({"status": "success", "result": weight})
