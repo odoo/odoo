@@ -63,6 +63,16 @@ class Data_RecycleRecord(models.Model):
             records += [r for r in recs]
         return records
 
+    def action_open_original_record(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': self.res_model_name,
+            'res_id': self.res_id,
+            'views': [(False, 'form')],
+            'context': {'create': False, 'edit': False},
+        }
+
     def action_validate(self):
         records_done = self.env['data_recycle.record']
         record_ids_to_archive = defaultdict(list)
