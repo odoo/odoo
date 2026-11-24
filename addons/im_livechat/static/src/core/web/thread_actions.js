@@ -7,10 +7,10 @@ import { patch } from "@web/core/utils/patch";
 import { joinChannelAction } from "@mail/discuss/core/public_web/thread_actions";
 
 registerThreadAction("livechat-info", {
-    condition: ({ channel, owner, store }) =>
+    condition: ({ ancestors, channel, store }) =>
         channel?.channel_type === "livechat" &&
         store.self_user?.share === false &&
-        !owner.isDiscussSidebarChannelActions,
+        !ancestors.inMessagingMenu,
     icon: "info",
     name: _t("Information"),
     panel: {
@@ -25,15 +25,15 @@ registerThreadAction("livechat-info", {
         },
         props: ({ thread }) => ({ thread }),
     },
-    sequence: ({ owner }) => (owner.isDiscussContent ? 40 : 10),
-    sequenceGroup: ({ owner }) => (owner.isDiscussContent ? 10 : 7),
+    sequence: ({ ancestors }) => (ancestors.inDiscussContent ? 40 : 10),
+    sequenceGroup: ({ ancestors }) => (ancestors.inDiscussContent ? 10 : 7),
 });
 registerThreadAction("livechat-status", {
-    condition: ({ channel, store, owner }) =>
+    condition: ({ ancestors, channel, store }) =>
         channel?.channel_type === "livechat" &&
         store.has_access_livechat &&
         !channel.livechat_end_dt &&
-        !owner.isDiscussContent,
+        !ancestors.inDiscussContent,
     icon: ({ channel, store }) => {
         const btn = store.livechatStatusButtons.find(
             (btn) => btn.status === channel.livechat_status
@@ -52,8 +52,8 @@ registerThreadAction("livechat-status", {
         component: LivechatStatusSelection,
         props: ({ thread }) => ({ thread }),
     },
-    sequence: ({ owner }) => (owner.isDiscussSidebarChannelActions ? 10 : 5),
-    sequenceGroup: ({ owner }) => (owner.isDiscussSidebarChannelActions ? 5 : 7),
+    sequence: ({ ancestors }) => (ancestors.inMessagingMenu ? 10 : 5),
+    sequenceGroup: ({ ancestors }) => (ancestors.inMessagingMenu ? 5 : 7),
 });
 
 patch(joinChannelAction, {

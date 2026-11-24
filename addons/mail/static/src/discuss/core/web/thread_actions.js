@@ -7,12 +7,12 @@ export const expandDiscussSequenceGroup = 5;
 export const expandDiscussSequenceQuick = 0;
 
 registerThreadAction("expand-discuss", {
-    condition: ({ ancestors, channel, owner, store }) =>
+    condition: ({ ancestors, channel, store }) =>
         user.isRegularUser &&
         channel &&
         ancestors.inChatWindow &&
         !store.ui.isSmall() &&
-        !owner.isDiscussSidebarChannelActions,
+        !ancestors.inMessagingMenu,
     icon: "expand_content",
     name: _t("Open in Discuss"),
     onSelected({ channel, store }) {
@@ -32,10 +32,10 @@ registerThreadAction("expand-discuss", {
     sequenceQuick: expandDiscussSequenceQuick,
 });
 registerThreadAction("advanced-settings", {
-    condition: ({ channel, owner }) =>
+    condition: ({ ancestors, channel }) =>
         ["channel", "group"].includes(channel?.channel_type) &&
         ["owner", "admin"].includes(channel.self_member_id?.channel_role) &&
-        !owner.isDiscussContent,
+        !ancestors.inDiscussContent,
     onSelected: ({ channel, store }) => {
         store.env.services.action.doAction({
             type: "ir.actions.act_window",
@@ -52,7 +52,7 @@ registerThreadAction("advanced-settings", {
     sequenceGroup: 30,
 });
 registerThreadAction("view-recordings", {
-    condition: ({ channel, owner }) => channel && !owner.isDiscussContent,
+    condition: ({ ancestors, channel }) => channel && !ancestors.inDiscussContent,
     async onSelected({ channel, store }) {
         const action = await store.orm.call("discuss.channel", "action_view_recordings", [
             [channel.id],

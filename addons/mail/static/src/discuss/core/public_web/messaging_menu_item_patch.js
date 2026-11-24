@@ -28,7 +28,6 @@ const messagingMenuItemPatch = {
             "channel",
             types.instanceOf(this.store["discuss.channel"]).optional()
         );
-        this.isDiscussSidebarChannelActions = true;
         this.threadActions = useThreadActions({ thread: () => this.channel?.thread });
         onClickIntent(this.root, () => this.channel?.thread.prefetchInitialMessages(), {
             ignoreSelector: ".o-mail-MessagingMenu-actions",
