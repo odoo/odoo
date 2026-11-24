@@ -1,8 +1,8 @@
-import { useProps, t } from "@odoo/owl";
+import { useProps, usePlugin, t } from "@odoo/owl";
 import { CopyClipboardCharField, copyClipboardCharField, copyClipboardFieldProps } from "@web/views/fields/copy_clipboard/copy_clipboard_field";
 import { CharField } from "@web/views/fields/char/char_field";
 import { GenerateContentAndCopyButton } from "../../buttons/generate_content_and_copy_button";
-import { useService } from "@web/core/utils/hooks";
+import { ORM } from "@web/core/orm_plugin";
 import { omit } from "@web/core/utils/objects";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -16,10 +16,7 @@ class RecruitmentCopyClipboardCharField extends CopyClipboardCharField {
         contentGenerationFunctionName: t.string().optional(),
     });
 
-    setup() {
-        super.setup();
-        this.orm = useService("orm");
-    }
+    orm = usePlugin(ORM);
 
     get fieldProps() {
         return omit(super.fieldProps, "displayedValue", "contentGenerationFunctionName");
