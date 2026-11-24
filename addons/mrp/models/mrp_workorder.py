@@ -65,7 +65,7 @@ class MrpWorkorder(models.Model):
     is_produced = fields.Boolean(string="Has Been Produced",
         compute='_compute_is_produced')
     state = fields.Selection([
-        ('blocked', 'Blocked'),
+        ('blocked', 'Pending'),
         ('ready', 'To Do'),
         ('progress', 'In Progress'),
         ('done', 'Done'),
