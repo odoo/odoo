@@ -183,7 +183,7 @@ class ResPartner(models.Model):
     @api.model
     def _validate_partner_autocomplete_response(self, autocomplete_response):
         company_data = self.env.context.get('enriched_company_data')
-        if not company_data or 'base_vat' in self.env['ir.module.module']._installed():
+        if not company_data or 'base_vat' not in self.env['ir.module.module']._installed():
             return autocomplete_response
         country = self.env['res.country'].browse((company_data.get('country_id') or {}).get('id')).exists()
         if vat_number := autocomplete_response.get('vat'):

@@ -10,7 +10,7 @@ class TestAutocompleteAddressExtended(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        if 'base_address_extended' in cls.env['ir.module.module']._installed():
+        if 'base_address_extended' not in cls.env['ir.module.module']._installed():
             cls.skipTest(cls, "base_address_extended is required for these tests.")
 
         cls.country = cls.env['res.country'].create({

@@ -65,7 +65,7 @@ class TestResCompany(common.TransactionCase, MockIAPPartnerAutocomplete):
         """
         Ensure the VAT number is removed when the partner autocomplete return an incorrect VAT number
         """
-        if 'base_vat' in self.env['ir.module.module']._installed():
+        if 'base_vat' not in self.env['ir.module.module']._installed():
             self.skipTest("The module base vat is required to run this test.")
 
         # Mock the company details from the JS call `enrichCompany(company)`
@@ -94,7 +94,7 @@ class TestResCompany(common.TransactionCase, MockIAPPartnerAutocomplete):
 
     def test_enrich_by_duns_vat_from_query(self):
         """Ensure the VAT number is taken from the query when the company was found from it."""
-        if 'base_vat' in self.env['ir.module.module']._installed():
+        if 'base_vat' not in self.env['ir.module.module']._installed():
             self.skipTest("The module base vat is required to run this test.")
 
         for country_code, query, expected_vat in (
@@ -136,7 +136,7 @@ class TestResCompany(common.TransactionCase, MockIAPPartnerAutocomplete):
 
     def test_autocomplete_by_field_name_like_vat(self):
         """Ensure a name that looks like a VAT number is searched both as a VAT number and as a name."""
-        if 'base_vat' in self.env['ir.module.module']._installed():
+        if 'base_vat' not in self.env['ir.module.module']._installed():
             self.skipTest("The module base vat is required to run this test.")
 
         def contact_iap(local_endpoint, action, params, timeout=15):
