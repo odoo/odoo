@@ -2395,6 +2395,59 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
 
         self.assertEqual(sale_order.amount_unpaid, 0.0)
 
+    def test_pos_downpayment_deducted_once_by_final_invoice(self):
+        self.main_pos_config.down_payment_product_id = self.env.ref('pos_sale.default_downpayment_product')
+        self.product_a.invoice_policy = 'delivery'
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product_a.id,
+                'product_uom_qty': 1,
+                'price_unit': 100,
+                'tax_id': False,
+            })],
+        })
+        sale_order.action_confirm()
+        self.main_pos_config.open_ui()
+        self.env['pos.order'].sync_from_ui([{
+            'amount_paid': 100, 'amount_return': 0, 'amount_tax': 0, 'amount_total': 100,
+            'company_id': self.env.company.id,
+            'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+            'fiscal_position_id': False,
+            'partner_id': self.partner_a.id,
+            'pricelist_id': self.main_pos_config.available_pricelist_ids[0].id,
+            'lines': [Command.create({
+                'discount': 0, 'pack_lot_ids': [], 'price_unit': 100, 'qty': 1, 'tax_ids': [],
+                'product_id': self.main_pos_config.down_payment_product_id.id,
+                'price_subtotal': 100, 'price_subtotal_incl': 100,
+                'sale_order_origin_id': sale_order.id,
+            })],
+            'name': 'Order 00044-003-0017',
+            'session_id': self.main_pos_config.current_session_id.id,
+            'sequence_number': 1,
+            'payment_ids': [Command.create({
+                'amount': 100,
+                'name': fields.Datetime.now(),
+                'payment_method_id': self.main_pos_config.payment_method_ids[0].id,
+            })],
+            'user_id': self.env.uid,
+            'uuid': str(uuid4()),
+        }])
+        product_line = sale_order.order_line.filtered(lambda l: l.product_id == self.product_a)
+        downpayment_line = sale_order.order_line.filtered(lambda l: l.is_downpayment and not l.display_type)
+        self.assertEqual(downpayment_line.qty_invoiced, 1)
+
+        product_line.qty_delivered = 1
+        invoice = sale_order._create_invoices(final=True)
+        invoice.action_post()
+        self.assertEqual(invoice.amount_total, 0)
+        self.assertEqual(downpayment_line.qty_to_invoice, 0)
+
+        product_line.qty_delivered = 0
+        credit_note = sale_order._create_invoices(final=True)
+        self.assertEqual(credit_note.move_type, 'out_refund')
+        self.assertEqual(credit_note.amount_total, 100)
+
     def test_settle_so_custom_attribute_value(self):
         """When settling a sale order (e.g. from the website) in POS, free-text custom
         attribute values must appear in the orderline's product name via
