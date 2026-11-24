@@ -6,6 +6,7 @@ from zoneinfo import ZoneInfo
 
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
+from lxml import etree
 
 from odoo import fields, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
@@ -499,6 +500,43 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         valid_ids3 = wizard3.valid_work_entry_type_ids.ids
         self.assertIn(self.holidays_type_2.id, valid_ids3,
             "Allocation-required type should appear when all employees have valid allocations")
+
+    def test_group_time_off_wizard_types_of_selected_employees(self):
+        """The time types of the group time off are the ones of the selected employees, not of the user: the ones
+        without allocation, and the ones allocated to all of them over the whole period. The time types not selectable
+        in time off are left to the allowed ones."""
+        employee = self.env['hr.employee'].create({'name': 'Rambo'})
+        not_selectable_type = self.holidays_type_1.copy({'name': 'Not Selectable', 'time_off_selectable': False})
+        # the user has an allocation of the type, the selected employee too, until the 10th
+        self.env['hr.leave.allocation'].create([{
+            'name': 'Alloc',
+            'employee_id': allocated_employee.id,
+            'work_entry_type_id': self.holidays_type_2.id,
+            'number_of_days': 5,
+            'date_from': date(2020, 1, 1),
+            'date_to': date(2020, 1, 10),
+        } for allocated_employee in self.env.user.employee_id | employee]).action_approve()
+
+        wizard = self.env['hr.leave.generate.multi.wizard'].new({
+            'date_from': date(2020, 1, 2),
+            'date_to': date(2020, 1, 2),
+        })
+        # without employee, the time off is generated for all of them: no type requiring an allocation
+        self.assertIn(self.holidays_type_1, wizard.valid_work_entry_type_ids._origin)
+        self.assertIn(not_selectable_type, wizard.valid_work_entry_type_ids._origin)
+        self.assertNotIn(self.holidays_type_2, wizard.valid_work_entry_type_ids._origin)
+        wizard.employee_ids = employee
+        self.assertIn(self.holidays_type_2, wizard.valid_work_entry_type_ids._origin)
+        # the allocation doesn't cover the whole period
+        wizard.date_to = date(2020, 1, 20)
+        self.assertNotIn(self.holidays_type_2, wizard.valid_work_entry_type_ids._origin)
+
+        # the form proposes the valid types, not the ones the user has an allocation of
+        arch = self.env['hr.leave.generate.multi.wizard'].get_view(
+            self.env.ref('hr_holidays.hr_leave_generate_multi_wizard_view_form').id)['arch']
+        type_domain = etree.fromstring(arch).xpath("//field[@name='work_entry_type_id']")[0].get('domain')
+        self.assertIn('valid_work_entry_type_ids', type_domain)
+        self.assertNotIn('has_valid_allocation', type_domain)
 
     @users('Titus')
     def test_create_group_leave_form_allocation_mode_without_hr_right(self):
