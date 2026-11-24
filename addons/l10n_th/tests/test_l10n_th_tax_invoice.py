@@ -347,6 +347,22 @@ class TestL10nTHTaxInvoice(AccountTestInvoicingCommon):
         self.invoice.invoice_line_ids.tax_ids = False
         self.assertEqual(self.invoice.l10n_th_tax_invoice_ids.mapped('state'), ['cancel', 'cancel'])
 
+    def test_partial_payment_tax_invoice_total_is_the_amount_paid(self):
+        """The cash basis entries round the base of each line (3 x 33.33, then 3 x 66.67), the tax invoices must still total the payments."""
+        self.invoice.invoice_line_ids = [
+            self._prepare_invoice_line(price_unit=100, tax_ids=self.tax_on_payment)
+            for _i in range(3)
+        ]
+        self.invoice.action_post()
+
+        self._register_payment(self.invoice, amount=107.0)
+        self._register_payment(self.invoice, amount=214.0)
+
+        self.assertRecordValues(self.invoice.l10n_th_tax_invoice_ids, [
+            {'total_amount': 107.0, 'vat_amount': 7.0, 'amount_residual': 214.0},
+            {'total_amount': 214.0, 'vat_amount': 14.0, 'amount_residual': 0.0},
+        ])
+
     def test_tax_invoice_created_for_mixed_tax_exigibility(self):
         """Ensure invoice with mixed tax exigibility creates separate tax invoices with correct amounts."""
 
