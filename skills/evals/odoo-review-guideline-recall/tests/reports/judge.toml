@@ -1,0 +1,59 @@
+# LLM judge: recall of the seeded issues in one area.
+# Area: QWeb PDF reports.
+# Rules: odoo-guidelines guidelines/reports.md.
+# One binary criterion per issue; the area's score is the share found.
+[judge]
+judge = "anthropic/claude-opus-5-5"
+files = ["/logs/verifier/review.md"]
+reasoning_effort = "high"
+guard = "flag"
+
+[[criterion]]
+name = "rp1_docs_missing"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/report/booking_report.py`, line 17:
+_get_report_values returns no docs (nor doc_ids, doc_model) while the
+template loops over docs; a custom _get_report_values must add them itself.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "rp2_t_lang_without_t_call"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/report/booking_report.xml`, line 17:
+t-lang is set on a <div>, not on a node carrying t-call: QWeb raises a
+SyntaxError when the report is rendered. Move the translated part into its
+own template called with t-call and t-lang.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "rp3_needless_rebrowse"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/report/booking_report.py`, line 20:
+The report re-browses every booking in the holder's language (localized)
+while the template reads no translatable field from it (name, dates): a
+needless cost.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""

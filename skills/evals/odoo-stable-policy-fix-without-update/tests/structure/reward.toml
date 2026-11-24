@@ -1,0 +1,10 @@
+# The commit checks are all-or-nothing; the message format checks give partial credit.
+[scoring.commit]
+aggregation = "all-pass"
+
+[scoring.message_format]
+aggregation = "weighted-mean"
+
+[[reward]]
+aggregation = "weighted-mean"
+weights = { commit = 1.0, message_format = 1.0 }

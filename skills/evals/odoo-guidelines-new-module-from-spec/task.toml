@@ -1,0 +1,38 @@
+schema_version = "1.4"
+
+[task]
+name = "odoo/odoo-guidelines-new-module-from-spec"
+description = "Build a feature on master from a business spec: printing shipping labels and other reports straight to Epson ePOS and Zebra ZPL network printers (the printer module and stock_delivery's use of it, removed from the checkout); graded on whether it runs, the spec's behaviours, and the house rules of the odoo-guidelines, odoo-web-guidelines and odoo-security skills."
+keywords = ["odoo", "new-module", "feature", "skills", "odoo-guidelines", "odoo-web-guidelines", "odoo-security"]
+
+[metadata]
+skill = "odoo-guidelines"
+odoo_version = "master"
+# The checkout is master at this commit, without the printer module and what
+# stock_delivery built on it (environment/remove.patch), folded into that
+# commit.
+base_commit = "c8d7430e3e15acc9224c53fe6c512414107897c3"
+# The feature came with odoo/odoo 416f6c07faa4 (20.0, April 2026), after the
+# evaluated models' training data: probed, none of them knew the module. The
+# oracle puts back master's code; the coverage judges read it as a reference.
+reference_commit = "416f6c07faa4107d2f41ea2528a23f28cea5d08d"
+
+[verifier]
+# Two installs of the touched modules (stock_delivery pulls sale_stock and
+# delivery), with and without demo data, the checks, an upgrade and the
+# modules' tests, then the judges.
+timeout_sec = 3600.0
+# The verifier reads the checkout as root; test.sh marks /app safe.
+user = "root"
+
+[verifier.env]
+# The LLM judges in tests/coverage and tests/guidelines need it.
+ANTHROPIC_API_KEY = "${ANTHROPIC_API_KEY}"
+
+[agent]
+timeout_sec = 3600.0
+
+[environment]
+build_timeout_sec = 2400.0
+cpus = 2
+memory_mb = 4096

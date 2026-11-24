@@ -1,0 +1,144 @@
+# LLM judge: recall of the seeded issues in one area.
+# Area: Module structure and file naming.
+# Rules: odoo-guidelines guidelines/module_structure.md.
+# One binary criterion per issue; the area's score is the share found.
+[judge]
+judge = "anthropic/claude-opus-5-5"
+files = ["/logs/verifier/review.md"]
+reasoning_effort = "high"
+guard = "flag"
+
+[[criterion]]
+name = "st1_one_model_per_file"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 227:
+models/booking.py holds two models, equipment.booking and
+equipment.booking.lines, and is not named after its model: one model per
+file, named after the model (equipment_booking.py, and a separate file for
+the lines). Flagging either half (two models in one file, or the file name)
+passes.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "st2_views_file_suffix"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/views/booking.xml`:
+The backend views file views/booking.xml lacks the _views suffix
+(equipment_booking_views.xml).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "st3_templates_file_suffix"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/views/portal.xml`:
+The portal QWeb pages are in views/portal.xml instead of a *_templates.xml
+file (equipment_booking_portal_templates.xml or similar).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "st4_security_file_name"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/security/groups.xml`:
+The group is declared in security/groups.xml instead of
+security/equipment_booking_security.xml.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "st5_controller_file_name"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/controllers/booking_portal.py`, line 14:
+The controller extending portal's CustomerPortal is
+controllers/booking_portal.py; a controller extending another module's
+controller is named after that module (controllers/portal.py).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "st6_report_files_split"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/report/booking_report.xml`, line 13:
+report/booking_report.xml holds both the report action and the QWeb
+template; a printable report splits the action (*_reports.xml) from the
+template (*_templates.xml).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "st7_file_name_identifier"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/data/mail-templates.xml`:
+data/mail-templates.xml has a hyphen in its name; file names are lowercase
+Python identifiers ([a-z0-9_]), and a data file takes the _data suffix
+(mail_template_data.xml).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "st8_wizard_file_names"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/wizard/wizard.py`, line 6:
+The wizard equipment.booking.extend is in wizard/wizard.py and
+wizard/wizard_views.xml; wizard files are named after the transient model
+(equipment_booking_extend.py, equipment_booking_extend_views.xml).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""

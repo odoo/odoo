@@ -1,0 +1,98 @@
+diff --git a/addons/mail/data/mail_templates_chatter.xml b/addons/mail/data/mail_templates_chatter.xml
+index 6dd3247a..54e297c2 100644
+--- a/addons/mail/data/mail_templates_chatter.xml
++++ b/addons/mail/data/mail_templates_chatter.xml
+@@ -80,7 +80,7 @@
+         <template id="mail_tracking_template">
+ <div t-if="trackingValues">
+     <t t-foreach="trackingValues" t-as="val">
+-        <em t-if="val.get('company_name')" t-out="val['company_name'] + ': '"/><t t-out="val['old_value']" t-if="val['old_value']"/> → <b t-out="val['new_value']"/> <i>(<t t-out="val['field_label']"/>)</i><br t-if="val_index &lt; len(trackingValues) - 1"/>
++        <em t-if="val.get('company_name')" t-out="val['company_name'] + ': '"/><t t-out="val['old_value']" t-if="val['old_value']"/><b t-out="val['new_value']"/><i t-out="val['field_label']"/><br/>
+     </t>
+ </div></template>
+ 
+diff --git a/addons/mail/models/mail_thread.py b/addons/mail/models/mail_thread.py
+index a11bf457..48526393 100644
+--- a/addons/mail/models/mail_thread.py
++++ b/addons/mail/models/mail_thread.py
+@@ -3148,7 +3148,7 @@ class MailThread(models.AbstractModel):
+         DESC -> most important one is given last to be inserted last (see
+         'mail_tracking' module). HTML therefore needs to reverse ordering. """
+         tracking_html = self.env['ir.qweb']._render(
+-            "mail.mail_tracking_template", {'trackingValues': list(reversed(tracking_values))}
++            "mail.mail_tracking_template", {'trackingValues': reversed(tracking_values)}
+         ).strip()
+         return append_content_to_html(
+             body, tracking_html,
+diff --git a/addons/mail/static/src/core/common/message.scss b/addons/mail/static/src/core/common/message.scss
+index 298691df..5408b13a 100644
+--- a/addons/mail/static/src/core/common/message.scss
++++ b/addons/mail/static/src/core/common/message.scss
+@@ -106,16 +106,6 @@
+     i {
+         color: $text-muted;
+     }
+-
+-    // Stable fix: new tracking bodies miss the last `<br>` element
+-    // to be able to not add the arrow
+-    & > div:last-child:not(:has(br:last-child)) {
+-        b::before,
+-        i::before,
+-        i::after {
+-            content: none !important;
+-        }
+-    }
+ }
+ 
+ .o-mail-Message-bubble {
+diff --git a/addons/mail/tests/common.py b/addons/mail/tests/common.py
+index 5ef3d325..32f9bc96 100644
+--- a/addons/mail/tests/common.py
++++ b/addons/mail/tests/common.py
+@@ -1107,8 +1107,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
+         # previous without div / beginning string
+         # track_re = re.compile(r'(?:^|<br>)(?P<pre>.*?)<b>(?P<post>.*?)</b><i>(?P<key>.*?)</i>')
+         track_re = re.compile(
+-            r'(?:<em>(?P<company>[^>]+)</em>)?(?P<pre>[^<>]+?) → '
+-            r'<b>(?P<post>.*?)</b> <i>\((?P<key>.*?)\)</i>'
++            r'(?:<em>(?P<company>[^>]+)</em>)?(?P<pre>[^<>]+)<b>(?P<post>.*?)</b><i>(?P<key>.*?)</i><br>'
+         )
+         for match in track_re.finditer(body_html):
+             _company, pre, post, key = match.group('company'), match.group('pre'), match.group('post'), match.group('key')
+diff --git a/addons/test_mail/tests/test_mail_push.py b/addons/test_mail/tests/test_mail_push.py
+index 1bad6e45..d4ddb016 100644
+--- a/addons/test_mail/tests/test_mail_push.py
++++ b/addons/test_mail/tests/test_mail_push.py
+@@ -419,7 +419,7 @@ class TestWebPushNotification(SMSCommon):
+         push_to_end_point.assert_called_once()
+         payload_value = json.loads(push_to_end_point.call_args.kwargs['payload'])
+         self.assertEqual(
+-            f'{container_update_subtype.description}\n{container.name} → *{container2.name}* ({container.name})',
++            f'{container_update_subtype.description}\n{container.name}*{container2.name}* {container.name}',
+             payload_value['options']['body'],
+             'Tracking changes should be included in push notif payload'
+         )
+diff --git a/addons/test_mail/tests/test_message_track.py b/addons/test_mail/tests/test_message_track.py
+index b0d2ff8e..7b6d1db1 100644
+--- a/addons/test_mail/tests/test_message_track.py
++++ b/addons/test_mail/tests/test_message_track.py
+@@ -1137,15 +1137,15 @@ class TestTrackingInternals(TestTrackingCommon):
+                         ],
+                     }
+                 )
+-                self.assertRegex(new_message.body, f'{expected_start} → <b>{expected_end}</b> <i>\\(Datetime\\)</i>')
+-                self.assertRegex(new_message.body, f'None → <b>{expected_date}</b> <i>\\(Date\\)</i>')
++                self.assertRegex(new_message.body, f'{expected_start}<b>{expected_end}</b><i>Datetime</i>')
++                self.assertRegex(new_message.body, f'None<b>{expected_date}</b><i>Date</i>')
+                 self.assertRegex(
+                     new_message.body,
+-                    f'{expected_start} → <b>None</b> <i>\\(Properties: Property Datetime\\)</i>',
++                    f'{expected_start}<b>None</b><i>Properties: Property Datetime</i>',
+                 )
+                 self.assertRegex(
+                     new_message.body,
+-                    f'{expected_date} → <b>None</b> <i>\\(Properties: Property Date\\)</i>',
++                    f'{expected_date}<b>None</b><i>Properties: Property Date</i>',
+                 )
+ 
+     @users('employee')

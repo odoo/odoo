@@ -1,0 +1,15 @@
+[FIX] l10n_it_stock_ddt: duplicate label on the country code field
+
+stock_account defines country_code on stock.picking with the label
+"Country Code", which is also the label l10n_it_country_code gets from
+the field it relates to. Every module load logs
+
+    Two fields (l10n_it_country_code, country_code) of stock.picking()
+    have the same label: Country Code.
+
+which runbot counts as an error, so every build of the branch is red.
+
+Master drops l10n_it_country_code for country_code (3b9c1f0e7d2a). On
+a released version the field stays: custom modules and views may read
+it, and the views installed on existing databases reference it. The
+warning is only about the label, so give the field one of its own.

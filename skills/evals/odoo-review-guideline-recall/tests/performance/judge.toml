@@ -1,0 +1,91 @@
+# LLM judge: recall of the seeded issues in one area.
+# Area: Performance.
+# Rules: odoo-guidelines guidelines/performance.md.
+# One binary criterion per issue; the area's score is the share found.
+[judge]
+judge = "anthropic/claude-opus-5-5"
+files = ["/logs/verifier/review.md"]
+reasoning_effort = "high"
+guard = "flag"
+
+[[criterion]]
+name = "pf1_search_count_in_loop"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/res_partner.py`, line 20:
+_compute_booking_count runs one search_count per partner; use one
+_read_group over all partners.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "pf2_create_in_loop"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/wizard/wizard.py`, line 22:
+action_extend creates one accessory line per product in a loop; build the
+vals list and create once.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "pf3_browse_in_loop"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/res_partner.py`, line 46:
+_get_equipment_in_use browses the equipment one id at a time, defeating
+prefetch; browse(equipment_ids) once.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "pf4_filtered_after_search"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/res_partner.py`, line 36:
+_get_upcoming_bookings filters state in Python after the search; put the
+condition in the domain.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "pf5_nested_loop"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/models/booking.py`, line 101:
+_validate_no_overlap loads every non-cancelled booking of the equipment,
+history included, and compares each checked booking with all of them in a
+nested loop; restrict the search to overlapping periods (or group by
+equipment) instead of an O(n*m) scan.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""

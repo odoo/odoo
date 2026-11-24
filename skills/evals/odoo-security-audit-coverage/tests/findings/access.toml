@@ -1,0 +1,76 @@
+# Findings judge, Access rows and field-level access in security/ and models/.
+# One file per group: a single judge call with every criterion exceeds the
+# structured-output size the API accepts. The answer key is solution/security_review.md.
+[judge]
+judge = "anthropic/claude-opus-5-5"
+files = ["/logs/verifier/security_review.md"]
+reasoning_effort = "high"
+guard = "flag"
+
+[[criterion]]
+name = "portal_create_write_on_leases"
+type = "binary"
+description = """
+The review in /logs/verifier/security_review.md reports that security/ir.access.csv grants portal users create and/or write on rental.lease (the row access_rental_lease_portal_edit, operation 'cu').
+The issue must be identified at that place (file, method, route, or field);
+a generic remark that does not point at it fails. A missing or empty review
+fails.
+"""
+
+[[criterion]]
+name = "write_row_without_tenant_domain"
+type = "binary"
+description = """
+The review in /logs/verifier/security_review.md reports that the tenant domain is only on the portal read row of rental.lease while the portal edit row has no domain, so a portal user can write (or create) leases of other tenants. Reporting that the edit row lacks the tenant restriction passes.
+The issue must be identified at that place (file, method, route, or field);
+a generic remark that does not point at it fails. A missing or empty review
+fails.
+"""
+
+[[criterion]]
+name = "no_company_restriction"
+type = "binary"
+description = """
+The review in /logs/verifier/security_review.md reports that rental.property (or rental.lease) has a company_id but security/ir.access.csv has no company restriction row, so records leak across companies.
+The issue must be identified at that place (file, method, route, or field);
+a generic remark that does not point at it fails. A missing or empty review
+fails.
+"""
+
+[[criterion]]
+name = "api_token_without_groups"
+type = "binary"
+description = """
+The review in /logs/verifier/security_review.md reports that the listing_api_token field of rental.property has no groups restriction, so every internal user can read the token.
+The issue must be identified at that place (file, method, route, or field);
+a generic remark that does not point at it fails. A missing or empty review
+fails.
+"""
+
+[[criterion]]
+name = "related_iban_sudo"
+type = "binary"
+description = """
+The review in /logs/verifier/security_review.md reports that a tenant can read
+the IBAN of any property's owner through the owner_bank_account field of
+rental.lease, a related field computed as superuser through property_id,
+although tenants have no access to properties: the tenant changes the lease's
+property_id (through the write access or the update route) and reads the
+other owner's IBAN on the lease. Describing that pivot anywhere in the review
+passes, including inside another finding (for instance the one on the update
+route or on the edit access row), and so does naming the related field
+computed as superuser as the leak. Reporting only the IBAN leak of the public
+/rental/properties route does not pass, nor does calling the tenant's own
+IBAN on their lease intended without the pivot.
+A missing or empty review fails.
+"""
+
+[[criterion]]
+name = "related_attachment_sudo"
+type = "binary"
+description = """
+The review in /logs/verifier/security_review.md reports that contract_file on rental.lease is a related field onto ir.attachment through the writable contract_attachment_id, so any attachment's content can be read.
+The issue must be identified at that place (file, method, route, or field);
+a generic remark that does not point at it fails. A missing or empty review
+fails.
+"""

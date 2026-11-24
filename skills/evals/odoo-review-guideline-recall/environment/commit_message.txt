@@ -1,0 +1,19 @@
+[ADD] equipment_booking: book shared equipment
+
+Teams share projectors, vans and measuring tools, and today they book
+them in a spreadsheet: two people regularly show up for the same van,
+and customers who rent equipment have to call to know when it is free.
+
+This module lets employees and portal customers book a bookable piece
+of equipment for a period. Bookings of the same equipment cannot
+overlap, the holder gets a reminder the day before, and a label with a
+check-in code is printed for each booking. Cancelling a booking
+notifies the equipment's technician, so the slot can be offered again.
+A booking board shows, per piece of equipment, the bookings confirmed
+or in use and how many are late, so the desk sees what goes out.
+
+Maintenance equipment gets a "Booking Holder" assignment: the owner of
+a booked piece of equipment is the holder of its current booking. To
+compute it, the owner methods now receive the date. The serial number
+field is renamed serial_number, the name the booking labels and the
+portal use.

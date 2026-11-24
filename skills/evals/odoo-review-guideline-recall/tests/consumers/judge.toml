@@ -1,0 +1,47 @@
+# LLM judge: recall of the seeded issues in one area.
+# Area: Code the diff never shows.
+# Rules: odoo-review skill, Code the diff never shows.
+# One binary criterion per issue; the area's score is the share found.
+[judge]
+judge = "anthropic/claude-opus-5-5"
+files = ["/logs/verifier/review.md"]
+reasoning_effort = "high"
+guard = "flag"
+
+[[criterion]]
+name = "rv1_override_signature"
+type = "binary"
+description = """
+Seeded issue in `addons/maintenance/models/maintenance.py`, line 174:
+_compute_owner now calls
+_get_owner_methods_by_equipment_assign_to(date=...), but the overrides in
+hr_maintenance and fleet_maintenance take no date argument: computing the
+owner raises a TypeError wherever one of them is installed. Naming one of
+those overrides (or the existing overrides in general, found by searching
+for them) passes.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "rv2_field_rename"
+type = "binary"
+description = """
+Seeded issue in `addons/maintenance/models/maintenance.py`, line 142:
+The rename of maintenance.equipment.serial_no to serial_number is not
+carried to its consumers: stock_maintenance (a @depends and a view),
+fleet_maintenance and hr_maintenance (views) still use serial_no and fail to
+install or load. Naming one of those modules passes.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""

@@ -1,0 +1,29 @@
+schema_version = "1.4"
+
+[task]
+name = "odoo/odoo-security-audit-coverage"
+description = "Security review of a synthetic Odoo module in which every pattern of the odoo-security skill is planted; graded on which issues the review finds."
+keywords = ["odoo", "security", "audit", "skills", "odoo-security", "synthetic"]
+
+[metadata]
+skill = "odoo-security"
+odoo_version = "20.0"
+# The checkout is at this commit, with the property_rental module committed on top.
+base_commit = "c6f3b034f29220afa236737ab79d1228bdc9f3c0"
+
+[verifier]
+timeout_sec = 900.0
+# The verifier reads the checkout as root; test.sh marks /app safe.
+user = "root"
+
+[verifier.env]
+# The LLM judges in tests/findings and tests/process need it.
+ANTHROPIC_API_KEY = "${ANTHROPIC_API_KEY}"
+
+[agent]
+timeout_sec = 1800.0
+
+[environment]
+build_timeout_sec = 2400.0
+cpus = 2
+memory_mb = 4096

@@ -1,0 +1,5 @@
+id,name,model_id,group_id/id,operation,domain
+access_rental_property_user,rental.property.user,rental.property,base.group_user,crud,
+access_rental_lease_user,rental.lease.user,rental.lease,base.group_user,crud,
+access_rental_lease_portal_read,rental.lease.portal.read,rental.lease,base.group_portal,r,"[('tenant_id', '=', user.partner_id.id)]"
+access_rental_lease_portal_edit,rental.lease.portal.edit,rental.lease,base.group_portal,cu,

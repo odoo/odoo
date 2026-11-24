@@ -1,0 +1,71 @@
+From 9e2d7c4b1a6f3e8d5c0b7a9f2e4d6c8b1a3f5e7d Mon Sep 17 00:00:00 2001
+From: Nora Beck <nobe@odoo.com>
+Date: Thu, 1 Oct 2026 09:41:18 +0000
+Subject: [PATCH] [FIX] l10n_it_stock_ddt: crash when renaming a warehouse
+ sequence
+
+Steps to reproduce:
+- In an Italian company, open Inventory > Configuration > Operation Types
+- Open the Delivery Orders type of a warehouse, change its sequence
+  prefix and its warehouse in the same edit, save
+
+Problem:
+A traceback is raised:
+
+    KeyError: 'warehouse_ids'
+
+write() reads vals['warehouse_ids'] where the key is 'warehouse_id', so
+the DDT sequence cannot follow the warehouse.
+
+Solution:
+Read the right key. While at it, pass the warehouse record to
+_get_dtt_ir_seq_vals instead of an id, so it stops browsing it.
+
+closes odoo/odoo#292440
+
+Signed-off-by: Elias Fontaine (elfo) <elfo@odoo.com>
+---
+ addons/l10n_it_stock_ddt/models/stock_picking.py | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/addons/l10n_it_stock_ddt/models/stock_picking.py b/addons/l10n_it_stock_ddt/models/stock_picking.py
+index 344d5ef65322..fbe3e99f0848 100644
+--- a/addons/l10n_it_stock_ddt/models/stock_picking.py
++++ b/addons/l10n_it_stock_ddt/models/stock_picking.py
+@@ -60,11 +60,10 @@ class StockPickingType(models.Model):
+ 
+     l10n_it_ddt_sequence_id = fields.Many2one('ir.sequence')
+ 
+-    def _get_dtt_ir_seq_vals(self, warehouse_id, sequence_code):
++    def _get_dtt_ir_seq_vals(self, warehouse, sequence_code):
+         ir_seq_prefix = sequence_code + 'DDT'
+-        if warehouse_id:
+-            wh = self.env['stock.warehouse'].browse(warehouse_id)
+-            ir_seq_name = _('%(warehouse)s Sequence %(code)s', warehouse=wh.name, code=sequence_code)
++        if warehouse:
++            ir_seq_name = _('%(warehouse)s Sequence %(code)s', warehouse=warehouse.name, code=sequence_code)
+         else:
+             ir_seq_name = _('Sequence %(code)s', code=sequence_code)
+         return ir_seq_name, ir_seq_prefix
+@@ -77,7 +76,8 @@ class StockPickingType(models.Model):
+                 # fetch sequence_code from sequence_id since related fields aren't in vals during create (even precomputed)
+                 if vals.get('sequence_id') and not vals.get('sequence_code'):
+                     vals['sequence_code'] = self.env['ir.sequence'].browse(vals['sequence_id']).prefix
+-                ir_seq_name, ir_seq_prefix = self._get_dtt_ir_seq_vals(vals.get('warehouse_id'), vals['sequence_code'])
++                warehouse = self.env['stock.warehouse'].browse(vals.get('warehouse_id'))
++                ir_seq_name, ir_seq_prefix = self._get_dtt_ir_seq_vals(warehouse, vals['sequence_code'])
+                 vals['l10n_it_ddt_sequence_id'] = self.env['ir.sequence'].create({
+                         'name': ir_seq_name,
+                         'prefix': ir_seq_prefix,
+@@ -90,7 +90,7 @@ class StockPickingType(models.Model):
+     def write(self, vals):
+         if 'sequence_code' in vals:
+             for picking_type in self.filtered(lambda p: p.l10n_it_ddt_sequence_id):
+-                warehouse = picking_type.warehouse_id.id if 'warehouse_id' not in vals else vals['warehouse_ids']
++                warehouse = self.env['stock.warehouse'].browse(vals['warehouse_id']) if 'warehouse_id' in vals else picking_type.warehouse_id
+                 ir_seq_name, ir_seq_prefix = self._get_dtt_ir_seq_vals(warehouse, vals['sequence_code'])
+                 picking_type.l10n_it_ddt_sequence_id.write({
+                         'name': ir_seq_name,
+-- 
+2.54.0
+

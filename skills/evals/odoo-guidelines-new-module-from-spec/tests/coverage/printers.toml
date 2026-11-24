@@ -1,0 +1,137 @@
+# LLM judge: does the feature cover the behaviours of the spec?
+# Behaviours of /home/odoo/spec.md about configuring printers; one binary criterion each,
+# judged on the agent's new modules (every text file of them) and on its
+# changes to existing modules. The reference is the code the spec was written
+# from (the printer module and what stock_delivery built on it; the agent
+# never saw it): it shows one way to implement each behaviour, not the only
+# correct one. Whether the code runs is measured in tests/runtime; how it
+# follows the house rules, in tests/guidelines.
+[judge]
+judge = "anthropic/claude-opus-5-5"
+files = ["/logs/verifier/module_source.txt", "/logs/verifier/existing_changes.diff"]
+reference = "/tests/coverage/reference.txt"
+reasoning_effort = "high"
+guard = "flag"
+
+[[criterion]]
+name = "printer_record"
+type = "binary"
+description = """
+A printer has a name, a network address (IP or host name, possibly with a
+port or path), and a kind, ZPL or ePOS, ZPL by default.
+
+Passes when the agent's code (the new modules in
+/logs/verifier/module_source.txt and the changes to existing modules in
+/logs/verifier/existing_changes.diff) implements this behaviour, in its own
+design and with its own names: the reference only shows one way to do it.
+Fails when the behaviour is missing, or when the code that implements it is
+clearly wrong (it cannot work as written).
+"""
+
+[[criterion]]
+name = "reports_linked_both_ways"
+type = "binary"
+description = """
+The printers of a report can be edited both on the printer and on the
+report's form, where a Printers field sits next to the paper format.
+
+Passes when the agent's code (the new modules in
+/logs/verifier/module_source.txt and the changes to existing modules in
+/logs/verifier/existing_changes.diff) implements this behaviour, in its own
+design and with its own names: the reference only shows one way to do it.
+Fails when the behaviour is missing, or when the code that implements it is
+clearly wrong (it cannot work as written).
+"""
+
+[[criterion]]
+name = "kind_with_name"
+type = "binary"
+description = """
+Where printers are listed for picking (the selection dialog, for example),
+their kind is shown with their name, such as "ZPL - Packing station".
+
+Passes when the agent's code (the new modules in
+/logs/verifier/module_source.txt and the changes to existing modules in
+/logs/verifier/existing_changes.diff) implements this behaviour, in its own
+design and with its own names: the reference only shows one way to do it.
+Fails when the behaviour is missing, or when the code that implements it is
+clearly wrong (it cannot work as written).
+"""
+
+[[criterion]]
+name = "manage_printers_menu"
+type = "binary"
+description = """
+Printers are managed from Inventory: Configuration > Reporting > Manage
+Printers.
+
+Passes when the agent's code (the new modules in
+/logs/verifier/module_source.txt and the changes to existing modules in
+/logs/verifier/existing_changes.diff) implements this behaviour, in its own
+design and with its own names: the reference only shows one way to do it.
+Fails when the behaviour is missing, or when the code that implements it is
+clearly wrong (it cannot work as written).
+"""
+
+[[criterion]]
+name = "printer_access"
+type = "binary"
+description = """
+Any internal user can create and edit printers; inventory managers can also
+delete them.
+
+Passes when the agent's code (the new modules in
+/logs/verifier/module_source.txt and the changes to existing modules in
+/logs/verifier/existing_changes.diff) implements this behaviour, in its own
+design and with its own names: the reference only shows one way to do it.
+Fails when the behaviour is missing, or when the code that implements it is
+clearly wrong (it cannot work as written).
+"""
+
+[[criterion]]
+name = "reset_page"
+type = "binary"
+description = """
+A Reset Linked Printers page lists the reports with printers remembered in
+this browser, each with a button to forget its choice, and its menu
+(Configuration > Reporting) is available to every inventory user while the
+other Configuration sections stay restricted as before.
+
+Passes when the agent's code (the new modules in
+/logs/verifier/module_source.txt and the changes to existing modules in
+/logs/verifier/existing_changes.diff) implements this behaviour, in its own
+design and with its own names: the reference only shows one way to do it.
+Fails when the behaviour is missing, or when the code that implements it is
+clearly wrong (it cannot work as written).
+"""
+
+[[criterion]]
+name = "demo_printers"
+type = "binary"
+description = """
+Demo data has an emulated Zebra (ZPL) and an emulated ePOS printer, and the
+Zebra one prints the ZPL product labels.
+
+Passes when the agent's code (the new modules in
+/logs/verifier/module_source.txt and the changes to existing modules in
+/logs/verifier/existing_changes.diff) implements this behaviour, in its own
+design and with its own names: the reference only shows one way to do it.
+Fails when the behaviour is missing, or when the code that implements it is
+clearly wrong (it cannot work as written).
+"""
+
+[[criterion]]
+name = "extensible_kinds"
+type = "binary"
+description = """
+Other modules can add kinds of printers later: the way a kind is printed is
+looked up by kind (a registry or an equivalent extension point), and the
+server-side preparation of the documents can be extended.
+
+Passes when the agent's code (the new modules in
+/logs/verifier/module_source.txt and the changes to existing modules in
+/logs/verifier/existing_changes.diff) implements this behaviour, in its own
+design and with its own names: the reference only shows one way to do it.
+Fails when the behaviour is missing, or when the code that implements it is
+clearly wrong (it cannot work as written).
+"""
