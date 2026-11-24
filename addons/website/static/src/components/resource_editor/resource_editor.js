@@ -121,6 +121,7 @@ export class ResourceEditor extends Component {
         this.incomingOperations = computed(() => this.computeIncomingOperations());
         this.outgoingOperations = computed(() => this.computeOutgoingOperations());
         this.codeEditorMarkers = computed(() => this.computeCodeEditorMarkers());
+        this.hasUnsavedChanges = computed(() => this.computeHasUnsavedChanges());
         // the row to reveal in the code editor (see `CodeEditorWithGutterMarkers`).
         this.revealRow = signal(null);
         this.aceEditor = null;
@@ -450,6 +451,18 @@ export class ResourceEditor extends Component {
     // -------------------------------------------------------------------------
     // Methods
     // -------------------------------------------------------------------------
+
+    /**
+     * Tell if a resource has unsaved changes.
+     *
+     * @returns {boolean}
+     */
+    computeHasUnsavedChanges() {
+        const { xml, js, scss } = this.state.resources;
+        return [xml, js, scss].some((resources) =>
+            Object.values(resources).some((resource) => resource.dirty)
+        );
+    }
 
     /**
      * Checks resource is customized or not.
@@ -881,7 +894,10 @@ export class ResourceEditor extends Component {
         if (this.state.type === "xml") {
             const { isValid, error } = checkXML(this.state.currentResource.arch);
             if (isValid) {
-                this.state.currentResource.arch = formatXML(this.state.currentResource.arch);
+                const formattedArch = formatXML(this.state.currentResource.arch);
+                if (formattedArch !== this.state.currentResource.arch) {
+                    this.onEditorChange(formattedArch);
+                }
             } else {
                 this.errors.push({ error, resource: this.state.currentResource });
             }
