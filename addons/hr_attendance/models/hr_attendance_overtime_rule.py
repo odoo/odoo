@@ -155,7 +155,9 @@ class HrAttendanceOvertimeRule(models.Model):
 
         employee = attendances.employee_id
         if self.expected_hours_from_contract and not context_expected_duration:
-            if employee.version_id.is_flexible:
+            # The version of the period (its last day, as in _get_period_keys), not the current one
+            version = employee.sudo()._get_version(stop.date()) if employee else self.env['hr.version']
+            if version.is_flexible:
                 date_start = date_end = start.date()
                 if self.quantity_period == 'week':
                     date_start -= timedelta(days=date_start.weekday())  # Monday
