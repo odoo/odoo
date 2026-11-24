@@ -697,7 +697,10 @@ pivotRegistry.add("ODOO", {
         field.groupable &&
         !field.isCustomField &&
         ["many2one", "char", "one2many", "many2many", "selection"].includes(field.type),
-    isGroupable: (field) => field.groupable && pivotNormalizationValueRegistry.contains(field.type),
+    // Property definitions have no groupable attribute, they can all be grouped on
+    isGroupable: (field) =>
+        (field.groupable || field.is_property) &&
+        pivotNormalizationValueRegistry.contains(field.type),
 });
 
 supportedPivotPositionalFormulaRegistry.add("ODOO", true);
