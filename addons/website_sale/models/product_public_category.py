@@ -154,13 +154,23 @@ class ProductPublicCategory(models.Model):
             Domain([("active", "=", True), ("is_published", "=", True)])
             & website.sale_product_domain()
         )
-        # Bypass access rules in the subquery to avoid adding `has_published_products = True` twice.
-        subquery = self._search(
-            Domain("product_tmpl_ids", "any", published_products_domain), bypass_access=True
-        )
+        products = self.env["product.template"]._search(published_products_domain)
+        field = self._fields["product_tmpl_ids"]
+        # Look for one published product per category: as a semi-join, PostgreSQL would
+        # match the whole catalogue against the whole relation table instead.
         parents_and_self_have_published_products = SQL(
-            "SELECT unnest(string_to_array(left(c.parent_path, -1), '/'))::integer FROM %s c",
-            subquery.subselect(subquery.table.parent_path),
+            """
+            SELECT unnest(string_to_array(left(c.parent_path, -1), '/'))::integer
+              FROM %(table)s c
+             WHERE (SELECT 1 FROM %(relation)s r
+                     WHERE r.%(column1)s = c.id AND r.%(column2)s IN %(products)s
+                     LIMIT 1) IS NOT NULL
+            """,
+            table=SQL.identifier(self._table),
+            relation=SQL.identifier(field.relation),
+            column1=SQL.identifier(field.column1),
+            column2=SQL.identifier(field.column2),
+            products=products.subselect(),
         )
 
         return Domain("id", "any", parents_and_self_have_published_products)
