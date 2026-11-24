@@ -14,7 +14,10 @@ class TestRazorpayPosRequest(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env.company.currency_id = cls.env.ref('base.INR')
+        company = cls.add_class_company('base.test_company_template', {
+            'currency_id': cls.env.ref('base.INR').id,
+        })
+        cls.env = cls.env(context={**cls.env.context, 'allowed_company_ids': company.ids})
         cls.payment_method = cls.env['pos.payment.method'].create({
             'name': 'RazorPay',
             'type': 'bank',
@@ -51,7 +54,11 @@ class TestRazorpayPosRequest(TransactionCase):
                 'referenceId': 'Hoot/ORDER0001',
             })
 
-        self.assertEqual(result, {'success': True, 'p2pRequestId': '12345'})
+        self.assertEqual(result, {
+            'success': True,
+            'p2pRequestId': '12345',
+            'signature': self.payment_method._razorpay_sign_transaction('12345', 'Hoot/ORDER0001', 100),
+        })
         self.assertEqual(calls[0]['url'], f'{DEMO_P2P_URL}pay')
         self.assertEqual(calls[0]['json'], {
             'pushTo': {'deviceId': 'my_razorpay_device_serial_no|ezetap_android'},

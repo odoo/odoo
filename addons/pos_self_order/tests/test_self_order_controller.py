@@ -7,6 +7,7 @@ from unittest.mock import patch
 
 import odoo.tests
 from odoo import Command, fields
+from odoo.tools import mute_logger
 
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
 
@@ -264,6 +265,26 @@ class TestSelfOrderController(SelfOrderCommonTest):
         pos_order = self.env['pos.order'].browse(data['pos.order'][0]['id'])
 
         self.assertEqual(len(pos_order.payment_ids), 1)
+
+    @mute_logger('odoo.addons.pos_self_order.models.pos_order')
+    def test_process_order_in_kiosk_rejects_unverified_payment(self):
+        self.pos_config.self_ordering_mode = 'kiosk'
+        self.pos_config.with_user(self.pos_user).open_ui()
+
+        order_data = self._create_order_data(
+            state='draft',
+            product=self.cola,
+            qty=3,
+            price_unit=1.0,
+            price_subtotal_incl=3.0,
+            payments=[[0, 0, {"payment_method_id": self.bank_payment_method.id, "amount": 3.0}]]
+        )
+
+        with patch.object(self.env.registry['pos.payment.method'], '_is_valid_self_order_payment', return_value=False):
+            data = self.make_request_to_controller('/pos-self-order/process-order/kiosk', order_data)
+        pos_order = self.env['pos.order'].browse(data['pos.order'][0]['id'])
+
+        self.assertFalse(pos_order.payment_ids)
 
     def test_process_order_in_mobile_does_not_allow_payment(self):
         self.pos_config.self_ordering_mode = 'mobile'
