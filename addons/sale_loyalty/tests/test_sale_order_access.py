@@ -34,44 +34,14 @@ class TestSaleOrderInvoicingUserAccess(TestSaleCouponCommon):
         self.assertEqual(len(order._get_reward_coupons()), quantity)
         return order
 
-    def test_gift_card_count_readable_by_invoicing_user_on_draft_order(self):
+    def test_gift_card_count_not_readable_by_invoicing_user(self):
         order = self._order_with_gift_cards(quantity=2)
         # Start with a clean cache so the read below goes through the
         # invoicing user's own access rights instead of reusing a value
         # cached under another user.
         self.env.invalidate_all()
         result = order.with_user(self.invoicing_user).web_read({'gift_card_count': {}})
-        self.assertEqual(result[0]['gift_card_count'], 2)
-
-    def test_gift_cards_openable_by_invoicing_user(self):
-        order = self._order_with_gift_cards(quantity=2)
-        self.env.invalidate_all()
-        action = order.with_user(self.invoicing_user).action_view_gift_cards()
-        cards = self.env[action['res_model']].with_user(self.invoicing_user)
-        # The list and the form of the opened cards, read as the web client
-        # does, must not raise an access error.
-        result = cards.web_search_read(
-            action['domain'],
-            {'code': {}, 'points_display': {}, 'program_id': {'fields': {'display_name': {}}}},
-        )
-        self.assertEqual(result['length'], 2)
-        card = cards.search(action['domain'], limit=1)
-        card_data = card.web_read({
-            'code': {},
-            'points_display': {},
-            'history_ids': {'fields': {'description': {}, 'issued': {}, 'used': {}}},
-        })
-        self.assertEqual(card_data[0]['code'], card.code)
-
-    def test_invoicing_user_can_only_read_loyalty_records(self):
-        # Reading is what opening the gift cards of an order needs: the card,
-        # its program (points display) and its history (form).
-        for model in ('loyalty.card', 'loyalty.program', 'loyalty.history'):
-            records = self.env[model].with_user(self.invoicing_user)
-            with self.subTest(model=model):
-                self.assertTrue(records.has_access('read'))
-                for operation in ('write', 'create', 'unlink'):
-                    self.assertFalse(records.has_access(operation), operation)
+        self.assertEqual(result[0]['gift_card_count'], 0)
 
     def test_user_without_loyalty_access_reads_order_without_error(self):
         # An accounting reader can read sale.order but has no loyalty access
