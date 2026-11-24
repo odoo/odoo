@@ -24,6 +24,7 @@ import {
     asyncStep,
     defineActions,
     getService,
+    makeKwArgs,
     makeServerError,
     mockService,
     onRpc,
@@ -33,6 +34,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { DELAY_FOR_SPINNER } from "@mail/chatter/web_portal/chatter";
+import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 import { queryFirst, waitFor } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
@@ -933,4 +935,52 @@ test("late suggested recipients don't overwrite the next record's recipients", a
     await animationFrame();
     expect(".o-mail-RecipientsInput .o_tag_badge_text:text('Jane Doe')").toHaveCount(1);
     expect(".o-mail-RecipientsInput .o_tag_badge_text:text('Mitchell Admin')").toHaveCount(0);
+});
+
+test("mention received after the chatter is loaded is not marked as read on scroll", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Harry Potter" });
+    const authorId = pyEnv["res.partner"].create({ name: "Demo" });
+    pyEnv["mail.message"].create(
+        Array(15)
+            .fill(0)
+            .map(() => ({
+                body: "Non Empty Body ".repeat(25),
+                model: "res.partner",
+                res_id: partnerId,
+            }))
+    );
+    onRpc("mail.message", "mark_all_as_read", () => asyncStep("mark_all_as_read"));
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains(".o-mail-Message", { count: 15 });
+    const messageId = pyEnv["mail.message"].create({
+        author_id: authorId,
+        body: "@Mitchell Admin",
+        needaction: true,
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: serverState.partnerId,
+    });
+    const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
+    pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", {
+        message_id: messageId,
+        store_data: new mailDataHelpers.Store(
+            pyEnv["mail.message"].browse(messageId),
+            makeKwArgs({ for_current_user: true, add_followers: true })
+        ).get_result(),
+    });
+    await contains(".o-mail-MessagingMenu-counter", { text: "1" });
+    await click(".o-mail-Message:eq(0)");
+    await scroll(".o-mail-Chatter", 100);
+    await scroll(".o-mail-Chatter", 0);
+    await animationFrame();
+    expect.verifySteps([]);
+    await contains(".o-mail-MessagingMenu-counter", { text: "1" });
 });

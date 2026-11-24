@@ -712,14 +712,27 @@ export class Thread extends Record {
         }
     }
 
-    async markAllMessagesAsRead() {
-        await this.store.env.services.orm.silent.call("mail.message", "mark_all_as_read", [
-            [
-                ["model", "=", this.model],
-                ["res_id", "=", this.id],
-            ],
-        ]);
-        this.message_needaction_counter = 0;
+    async markAllMessagesAsRead(lastMessageId) {
+        const domain = [
+            ["model", "=", this.model],
+            ["res_id", "=", this.id],
+        ];
+        if (lastMessageId) {
+            domain.push(["id", "<=", lastMessageId]);
+        }
+        await this.store.env.services.orm.silent.call("mail.message", "mark_all_as_read", [domain]);
+        if (!lastMessageId) {
+            this.message_needaction_counter = 0;
+            return;
+        }
+        // The bus notification of this read must not decrease the counter a second time.
+        const readMessages = this.needactionMessages.filter(
+            (message) => message.id <= lastMessageId
+        );
+        for (const message of readMessages) {
+            message.needaction = false;
+        }
+        this.message_needaction_counter = this.needactionMessages.length;
     }
 
     async markAsFetched() {
@@ -730,6 +743,7 @@ export class Thread extends Record {
 
     /**
      * @param {Object} [options] used in overrides
+     * @param {boolean} [options.onlyDisplayed] keep the needaction messages not displayed unread
      */
     markAsRead(options) {
         const newestPersistentMessage = this.newestPersistentOfAllMessage;
@@ -739,8 +753,12 @@ export class Thread extends Record {
                 .then(() => this.markAsRead(options));
             return;
         }
-        if (this.message_needaction_counter > 0) {
-            this.markAllMessagesAsRead();
+        const lastMessageId = options?.onlyDisplayed && this.newestPersistentMessage?.id;
+        const hiddenCount = lastMessageId
+            ? this.needactionMessages.filter((message) => message.id > lastMessageId).length
+            : 0;
+        if (this.message_needaction_counter > hiddenCount) {
+            this.markAllMessagesAsRead(hiddenCount ? lastMessageId : undefined);
         }
     }
 
