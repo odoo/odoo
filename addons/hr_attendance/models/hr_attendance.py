@@ -511,7 +511,8 @@ class HrAttendance(models.Model):
           give the mode. The kiosk, the systray, the automatic check-out and the time rules write as superuser and
           keep their mode.
         - An attendance changed by its employee goes back to To Review, so the time rules ignore it until a manager
-          reviews it again. An attendance changed by a manager keeps its state, and :meth:`_auto_review` may review
+          reviews it again. So does an attendance that a manager gives to an employee they do not manage (their own),
+          and its times become encoded by hand. An attendance changed by a manager keeps its state, and :meth:`_auto_review` may review
           it.
         - The time rule outputs of the attendance are flagged as out of date (``source_stale``).
         - The issues of the days of the attendance are recomputed, and :meth:`_auto_review` may review the other
@@ -529,7 +530,12 @@ class HrAttendance(models.Model):
         if not changes_reviewed_fields and not changes_refusal:
             return super().write(vals)
 
-        edited_by_manager, edited_by_employee = self.partitioned(lambda a: self.env.su or a.is_manager)
+        # Giving an attendance to an employee the user does not manage (their own) is not a manager's edit: it must not
+        # keep a review state that the user may not give.
+        gives_to_unmanaged = not self._is_manager_of_new_employee(vals)
+        edited_by_manager, edited_by_employee = self.partitioned(
+            lambda a: self.env.su or (a.is_manager and not gives_to_unmanaged),
+        )
         # A time changed by a user is encoded by hand. The kiosk, the systray, the automatic check-out and the time
         # rules write as superuser and keep their mode.
         manual_modes = {}
@@ -549,8 +555,15 @@ class HrAttendance(models.Model):
             self.sudo().overtime_attendance_ids if changes_reviewed_fields else self.env["hr.attendance"]
         )
 
+        # A device recorded the times of another employee: they are encoded by hand for the new one, so that the
+        # review by exception does not review them without a manager.
+        moved_to_unmanaged = edited_by_employee.filtered(
+            lambda a: gives_to_unmanaged and a.employee_id.id != vals["employee_id"],
+        )
+
         super(HrAttendance, edited_by_manager).write(manager_vals)
-        super(HrAttendance, edited_by_employee).write(employee_vals)
+        super(HrAttendance, edited_by_employee - moved_to_unmanaged).write(employee_vals)
+        super(HrAttendance, moved_to_unmanaged).write({**employee_vals, "in_mode": "manual", "out_mode": "manual"})
 
         if stale_time_rule_attendances:
             stale_time_rule_attendances.exists().with_context(skip_time_rules=True).write({"source_stale": True})
@@ -568,7 +581,7 @@ class HrAttendance(models.Model):
 
         - Only an attendance manager can give an attendance to another employee than the user.
         - Only an attendance manager can review an attendance or set its mode to a device mode, see
-          :meth:`_requires_attendance_manager`.
+          :meth:`_requires_attendance_manager`, and only for an employee they manage.
 
         :raise AccessError: if the user may not write the values
         """
@@ -582,8 +595,22 @@ class HrAttendance(models.Model):
             raise AccessError(
                 self.env._("You can only assign attendances to yourself or to the employees whose attendances you manage.")
             )
-        if self._requires_attendance_manager(vals) and not all(self.mapped("is_manager")):
+        if self._requires_attendance_manager(vals) and (
+            not all(self.mapped("is_manager")) or not self._is_manager_of_new_employee(vals)
+        ):
             raise AccessError(self.env._("Only the attendance managers of the employees can review their attendances."))
+
+    def _is_manager_of_new_employee(self, vals):
+        """Return whether the user manages the employee that the values give the attendances to, if they give one.
+
+        :param dict vals: the values to write
+        :rtype: bool
+        """
+        return (
+            self.env.su
+            or not vals.get("employee_id")
+            or bool(self.env["hr.employee"].browse(vals["employee_id"])._filter_attendance_managed_by_current_user())
+        )
 
     @api.model
     def _requires_attendance_manager(self, vals):
