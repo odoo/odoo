@@ -29,7 +29,8 @@ export class ColorPickerField extends Component {
     }
 
     switchColor(colorIndex) {
-        this.props.record.update({ [this.props.name]: colorIndex });
+        const record = this.props.record;
+        record.update({ [this.props.name]: colorIndex }, { save: !record.isInEdition});
         this.dropdownState.close();
     }
 }
