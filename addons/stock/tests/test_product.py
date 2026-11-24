@@ -587,3 +587,41 @@ class TestProductPostInstall(TestStockCommon):
         })
 
         self.assertEqual(product.serial_prefix_format, 'TCLPP')
+
+    def test_product_abc_category(self):
+        """
+        Test the abc category of a product
+        Here products get categorised in threee categories A, B and C
+        products in category A are products that account for 80 percent of value for a given time period
+        products in category B are products that account for the next 15 percent of value
+        finally category C are products that contribute only 5% to the total value.
+        To calculate the categories the following steps are needed
+        for every products calculate the value that it contributes by calculating value * quantity of the out moves to customers.
+        Take the sum of the contributed value of each product to get the percentage that each product contributes to the total.
+        Sort this in descending order and calculate the cumulative contribution for each product
+        example:
+        product    | quantity | value | total value | percentage contribution | cumulative | ABC category |
+        product 1  |    2     |   35  |     70      |        .7               |     0.7    |      A       | 0.7 <= 0.8 so this still belongs in category A
+        product 2  |    3     |   8   |     24      |        .24              |     0.94   |      B       | 0.8 < 0.94 <= 0.95 so this belong in category B
+        product 3  |    6     |   1   |     6       |        .06              |     1      |      C       | 0.95 < 1 <= 1 so this belongs in C
+                                        sum: 100
+        """
+
+        products = self.env['product.product'].create([
+            {'name': f'Product {i}', 'standard_price': price}
+            for i, price in enumerate([35.0, 8.0, 1.0], start=1)
+        ])
+
+        self.env['stock.move'].create([
+            {
+                'product_id': prod.id,
+                'product_uom_qty': qty,
+                'quantity': qty,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
+                'state': 'done',
+            }
+            for prod, qty in zip(products, [2.0, 3.0, 6.0])
+        ])
+
+        self.assertEqual(products.mapped('abc_report_category'), ['a', 'b', 'c'])

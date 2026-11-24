@@ -5,6 +5,7 @@ from ast import literal_eval
 from collections import defaultdict
 from collections.abc import Iterable
 from dateutil.relativedelta import relativedelta
+from datetime import datetime
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
@@ -116,6 +117,92 @@ class ProductProduct(models.Model):
     show_qty_update_button = fields.Boolean(compute='_compute_show_qty_update_button')
     valid_ean = fields.Boolean('Barcode is valid EAN', compute='_compute_valid_ean')
     lot_properties_definition = fields.PropertiesDefinition('Lot Properties')
+    abc_report_category = fields.Selection([
+            ('a', 'Category A (Top 80%)'),
+            ('b', 'Category B (Next 15%)'),
+            ('c', 'Category C (Bottom 5%)')],
+            string='ABC Category',
+            compute='_compute_abc_category',
+            compute_sql='_compute_sql_abc_category',
+            compute_sudo=True,
+            )
+
+    @api.depends_context('company')
+    def _compute_abc_category(self):
+        """Used for Form views, List views, and Python logic."""
+        a_ids, b_ids = self._get_abc_classification_ids()
+        a_set, b_set = set(a_ids), set(b_ids)
+
+        for record in self:
+            if record.id in a_set:
+                record.abc_report_category = 'a'
+            elif record.id in b_set:
+                record.abc_report_category = 'b'
+            else:
+                record.abc_report_category = 'c'
+
+    def _compute_sql_abc_category(self, table):
+        """Used for Pivot views, Group Bys, and SQL queries."""
+        a_ids, b_ids = self._get_abc_classification_ids()
+
+        def _sql_tuple(ids):
+            if not ids:
+                return (-1, -1)
+            if len(ids) == 1:
+                return (ids[0], -1)
+            return tuple(ids)
+
+        return SQL(
+            """
+                CASE
+                    WHEN %s IN %s THEN 'a'
+                    WHEN %s IN %s THEN 'b'
+                    ELSE 'c'
+                END
+            """,
+            table.id,
+            _sql_tuple(a_ids),
+            table.id,
+            _sql_tuple(b_ids),
+        )
+
+    def _get_abc_classification_ids(self):
+        company = self.env.company
+
+        domain = [
+            ('company_id', '=', company.id),
+            ('state', '!=', 'cancel'),
+            ('date', '>', datetime.now() - relativedelta(weeks=52)),
+            ('location_id.usage', 'in', ('internal', 'transit')),
+            ('location_dest_id.usage', 'not in', ('internal', 'transit')),
+        ]
+
+        moves = self.env['stock.move'].sudo().search(domain)
+
+        turnover = {}
+        for move in moves:
+            product = move.product_id
+            cost = product.with_company(company).standard_price or 1.0
+            qty = move.quantity or move.product_uom_qty or 0.0
+            val = qty * cost
+            if val > 0:
+                turnover[product.id] = turnover.get(product.id, 0.0) + val
+
+        grand_total = sum(turnover.values())
+        sorted_items = sorted(turnover.items(), key=lambda x: x[1], reverse=True)
+
+        a_ids, b_ids = [], []
+        if grand_total > 0:
+            cum_val = 0.0
+            for item_id, val in sorted_items:
+                cum_val += val
+                ratio = cum_val / grand_total
+                if not a_ids or ratio <= 0.80:
+                    a_ids.append(item_id)
+                elif not b_ids or ratio <= 0.95:
+                    b_ids.append(item_id)
+
+        return a_ids, b_ids
 
     @api.depends('product_tmpl_id')
     def _compute_show_qty_status_button(self):
