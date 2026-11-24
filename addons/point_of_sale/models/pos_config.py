@@ -1494,3 +1494,20 @@ class PosConfig(models.Model):
             rounding_method = self.rounding_method
 
         return rounding_method
+
+    def _webrtc_signal(self, message):
+        """ Relay a WebRTC signaling message to the devices of the config, through the bus.
+
+        `announce` is broadcast when a device joins (no `to`), or sent to one device to ask
+        it to connect. `offer` and `answer` carry the session description of a connection.
+        """
+        self.ensure_one()
+        if (
+            not isinstance(message, dict)
+            or message.get("type") not in ("announce", "offer", "answer")
+            or not isinstance(message.get("from"), str)
+            or not isinstance(message.get("to", ""), str)
+            or (message["type"] != "announce" and not isinstance(message.get("sdp"), dict))
+        ):
+            raise ValidationError(_("Invalid WebRTC signaling message."))
+        self._notify("WEBRTC_SIGNAL", message)

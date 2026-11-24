@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.WebrtcDebugWidget">
+        <div class="o-debug-widget-btn open position-absolute align-items-center justify-content-center d-flex cursor-pointer shadow-sm bg-info text-white"
+            t-att-style="this.props.besideDebugWidget ? 'right: 70px' : ''"
+            t-on-click="this.open"
+            data-tooltip="WebRTC debug"
+            data-tooltip-delay="0">
+            <i class="oi" data-icon="account_tree" aria-hidden="true"/>
+        </div>
+    </t>
+</templates>

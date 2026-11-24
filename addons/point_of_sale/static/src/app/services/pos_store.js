@@ -50,6 +50,8 @@ import { GeneratePrinterData } from "../utils/printer/generate_printer_data";
 import { ComboSuggestion } from "../models/utils/combo_suggestion";
 import { PosRouterPlugin } from "@point_of_sale/app/plugins/pos_router_plugin";
 import { CustomerDisplayTerminalPlugin } from "@point_of_sale/app/plugins/customer_display_terminal_plugin";
+import { WebRtcPlugin } from "@point_of_sale/app/webrtc/webrtc_plugin";
+import { WebrtcDebugWidget } from "@point_of_sale/app/webrtc/debug/webrtc_debug_widget";
 import { SIZES } from "@web/core/ui/ui_utils";
 import { PosAccessRightPlugin } from "@point_of_sale/app/plugins/access_right_plugin";
 import { SnoozeDialog } from "@point_of_sale/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog";
@@ -75,6 +77,7 @@ export class PosStore extends WithLazyGetterTrap {
     router = usePlugin(PosRouterPlugin);
     customerDisplay = usePlugin(CustomerDisplayTerminalPlugin);
     accessRight = usePlugin(PosAccessRightPlugin);
+    webrtc = usePlugin(WebRtcPlugin);
 
     static excludedLazyGetters = [
         "defaultPage",
@@ -177,6 +180,12 @@ export class PosStore extends WithLazyGetterTrap {
         if (debugMode.isActive()) {
             registry.category("main_components").add("DebugWidget", {
                 Component: DebugWidget,
+            });
+        }
+        if (new URLSearchParams(location.search).get("debug_webrtc") === "1") {
+            registry.category("main_components").add("WebrtcDebugWidget", {
+                Component: WebrtcDebugWidget,
+                props: { besideDebugWidget: debugMode.isActive() },
             });
         }
 
@@ -936,6 +945,8 @@ export class PosStore extends WithLazyGetterTrap {
         }
 
         await this.deviceSync.readDataFromServer();
+        // Not awaited: joining the WebRTC mesh must not delay the loading.
+        this.webrtc.start({ configId: odoo.pos_config_id, accessToken: odoo.access_token });
     }
 
     get productViewMode() {
