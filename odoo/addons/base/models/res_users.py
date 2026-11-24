@@ -325,9 +325,6 @@ class ResUsers(models.Model):
           validation method
         * return the ``auth_info``
 
-        When trying to check for credentials validity, call
-        :meth:`_check_credentials` instead.
-
         Credentials are considered to be untrusted user input, for more
         information please check :meth:`authenticate`
 
