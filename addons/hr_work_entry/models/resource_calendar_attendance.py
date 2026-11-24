@@ -20,13 +20,15 @@ class ResourceCalendarAttendance(models.Model):
 
     @api.depends('calendar_id.company_id')
     def _compute_allowed_work_entry_type_ids(self):
+        # the types of the country, else the generic ones (country without types or no country)
+        types_by_country = dict(self.env['hr.work.entry.type']._read_group(
+            [('country_id', 'in', self.calendar_id.company_id.sudo().country_id.ids + [False])],
+            ['country_id'], ['id:recordset'],
+        ))
+        generic_types = types_by_country.get(self.env['res.country'], self.env['hr.work.entry.type'])
         for attendance in self:
             country = attendance.calendar_id.company_id.sudo().country_id
-            if not country or not self.env['hr.work.entry.type'].search_count([('country_id', '=', country.id)], limit=1):
-                domain = [('country_id', '=', False)]
-            else:
-                domain = [('country_id', '=', country.id)]
-            attendance.allowed_work_entry_type_ids = self.env['hr.work.entry.type'].search(domain)
+            attendance.allowed_work_entry_type_ids = types_by_country.get(country) or generic_types
 
     def _compute_display_name(self):
         attendances_without_type = self.env['resource.calendar.attendance']

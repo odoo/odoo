@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from lxml import etree
+
 from odoo.exceptions import UserError
 from odoo.tests import TransactionCase, tagged
 
@@ -224,3 +226,40 @@ class TestWorkEntryType(TransactionCase):
         self.assertFalse(rule.country_id)
         self.assertIn(be_type, rule.country_work_entry_type_ids,
             "A rule without company nor country should offer the time types of the active company's country")
+
+    def test_schedule_time_type_domains(self):
+        """ The time type dropdowns of the working schedules keep the country domain of the
+        model, and the public holidays (absences) are not limited to working time types. """
+        def view_domain(model, view_xmlid, view_type):
+            arch = self.env[model].get_views([(self.env.ref(view_xmlid).id, view_type)])['views'][view_type]['arch']
+            node = etree.fromstring(arch).xpath("//field[@name='work_entry_type_id']")[0]
+            return node.get('domain') or self.env[model].fields_get(['work_entry_type_id'])['work_entry_type_id']['domain']
+
+        for view_xmlid, view_type in [
+            ('resource.view_resource_calendar_attendance_tree', 'list'),
+            ('resource.view_resource_calendar_attendance_form', 'form'),
+            ('hr_work_entry.view_resource_calendar_multi_create_form', 'form'),
+        ]:
+            domain = view_domain('resource.calendar.attendance', view_xmlid, view_type)
+            self.assertIn('resource_calendar_selectable', domain, view_xmlid)
+            self.assertIn('allowed_work_entry_type_ids', domain, view_xmlid)
+
+        for view_xmlid, view_type in [
+            ('resource.resource_calendar_leave_tree', 'list'),
+            ('resource.resource_calendar_leave_form', 'form'),
+        ]:
+            domain = view_domain('resource.calendar.leaves', view_xmlid, view_type)
+            self.assertNotIn('resource_calendar_selectable', domain, view_xmlid)
+            self.assertIn('allowed_work_entry_type_ids', domain, view_xmlid)
+
+        company = self.env['res.company'].create({'name': 'BE Co', 'country_id': self.env.ref('base.be').id})
+        calendar = self.env['resource.calendar'].create({'name': 'BE Calendar', 'company_id': company.id})
+        public_holiday = self.env['resource.calendar.leaves'].create({
+            'name': 'Public Holiday',
+            'calendar_id': calendar.id,
+            'company_id': company.id,
+            'date_from': '2031-12-26 00:00:00',
+            'date_to': '2031-12-26 23:59:59',
+        })
+        self.assertEqual(public_holiday.work_entry_type_id.code, '006.00')
+        self.assertIn(public_holiday.work_entry_type_id, public_holiday.allowed_work_entry_type_ids)
