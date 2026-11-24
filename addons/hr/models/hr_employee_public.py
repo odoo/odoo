@@ -23,6 +23,7 @@ class HrEmployeePublic(models.Model):
     member_of_department = fields.Boolean(compute='_compute_member_of_department', search='_search_part_of_department')
     job_id = fields.Many2one('hr.job', readonly=True)
     company_id = fields.Many2one('res.company', readonly=True)
+    version_company_ids = fields.Many2many('res.company', compute='_compute_version_company_ids', search='_search_version_company_ids')
     address_id = fields.Many2one('res.partner', readonly=True)
     mobile_phone = fields.Char(readonly=True)
     work_phone = fields.Char(readonly=True)
@@ -188,6 +189,15 @@ class HrEmployeePublic(models.Model):
         :rtype: list[str]
         """
         return []
+
+    def _compute_version_company_ids(self):
+        for employee in self:
+            employee.version_company_ids = employee.company_id
+
+    def _search_version_company_ids(self, operator, value):
+        if operator != 'in':
+            return NotImplemented
+        return [('company_id', 'in', value)]
 
     def _search_part_of_department(self, operator, value):
         if operator != 'in':
