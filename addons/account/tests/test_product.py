@@ -2,6 +2,7 @@
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo import Command
+from odoo.exceptions import ValidationError
 from odoo.tests import Form, tagged
 from odoo.tests.common import new_test_user
 
@@ -183,3 +184,16 @@ class TestProduct(AccountTestInvoicingCommon):
         self.assertFalse(Product._retrieve_product(name='Wireless bluetooth speaker'))
         self.assertEqual(product_A, Product._retrieve_product(name='Network Cable'))
         self.assertEqual(product_A, Product._retrieve_product(name='network cables'))  # case insensitive exact match
+
+    def test_uom_change_blocked_by_posted_invoice(self):
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        uom_dozen = self.env.ref('uom.product_uom_dozen')
+        self.init_invoice('out_invoice', products=self.product_a, post=True)
+        self.assertEqual(self.product_a.uom_id, uom_unit)
+        # writing the same UoM is allowed
+        self.product_a.uom_id = uom_unit
+        with self.assertRaises(ValidationError):
+            self.product_a.uom_id = uom_dozen
+        # a product that is not invoiced can change its UoM
+        self.product_b.uom_id = uom_dozen
+        self.assertEqual(self.product_b.uom_id, uom_dozen)
