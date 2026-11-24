@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, time, timedelta
 from unittest.mock import patch
 
 from odoo.exceptions import ValidationError
@@ -180,6 +180,7 @@ class TestLeaveOutsideSchedule(TestHrHolidaysCommon):
             'name': 'Test Fully Flexible Employee',
             'company_id': self.company.id,
             'resource_calendar_id': fully_flexible_calendar.id,
+            'tz': 'UTC',
         })
         leave = self.env['hr.leave'].with_context(tracking_disable=True).create({
             'employee_id': flexible_employee.id,
@@ -189,8 +190,8 @@ class TestLeaveOutsideSchedule(TestHrHolidaysCommon):
             'request_duration': 'full',
             'number_of_hours': 8,
         })
-        self.assertEqual(leave.request_hour_from, 8.0)
-        self.assertEqual(leave.request_hour_to, 16.0)
+        self.assertEqual((leave.date_from, leave.date_to),
+                         (datetime.combine(self.saturday, time(8)), datetime.combine(self.saturday, time(16))))
 
     def test_hour_unit_working_time_night_shift_crossing_midnight(self):
         """ A night shift running from 22:00 to 02:00 keeps its four hours across the

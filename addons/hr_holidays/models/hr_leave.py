@@ -1348,6 +1348,9 @@ class HrLeave(models.Model):
                 if leave.request_date_to != new_request_date_to:
                     changes['request_date_to'] = new_request_date_to
                 if float_compare(leave.request_hour_to, new_request_hour_to, precision_digits=2) != 0:
+                    if not leave.request_hour_from and not leave.request_hour_to:
+                        # unset hours follow the schedule: an end set alone would start the request at midnight
+                        changes['request_hour_from'] = time_to_float(leave.date_from.replace(tzinfo=UTC).astimezone(leave_tz).time())
                     changes['request_hour_to'] = new_request_hour_to
                 if changes:
                     # create() protects these fields while its inverses run, so an
