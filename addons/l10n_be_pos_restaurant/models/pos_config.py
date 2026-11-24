@@ -33,6 +33,11 @@ class PosConfig(models.Model):
                     'record': takeout_tax,
                     'noupdate': True,
                 }])
+
+            tax_alcohol = ChartTemplate.ref('tax_alcohol_luxury', raise_if_not_found=False)
+            if tax_alcohol:
+                tax_alcohol.fiscal_position_ids = [Command.link(fp.id)]
+
             presets = self.env['pos.preset']
             presets |= self.env.ref('pos_restaurant.pos_takeout_preset', raise_if_not_found=False) or presets
             presets |= self.env.ref('pos_restaurant.pos_delivery_preset', raise_if_not_found=False) or presets
