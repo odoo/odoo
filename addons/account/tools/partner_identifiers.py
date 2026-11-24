@@ -43,7 +43,7 @@ GLN_SHARED_VALS = {
     'validation_function': ean.validate,
 }
 
-SHADOWS_GLN = ['HR_EN', 'HU_EN', 'NZ_EN']
+SHADOWS_GLN = ['HR_EN', 'NZ_EN']
 
 TIN_CATEGORIES = ['TIN', 'VAT', 'GST']
 
@@ -369,11 +369,10 @@ IDENTIFIERS_METADATA = {
         'countries': ['HR'],
     },
     'HU_EN': {
-        **GLN_SHARED_VALS,
         'sequence': 10,
         'label': _lt('Company Registry'),
         'help': _lt('Hungarian company registry number.'),
-        'placeholder': _lt('12345678-1-11 or 8071592153'),
+        'placeholder': '01-09-123456',
         'category': 'EN',
         'countries': ['HU'],
     },
