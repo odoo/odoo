@@ -6,3 +6,15 @@
 .o_many2many_avatar_user_no_wrap div {
    flex-wrap: nowrap !important;
 }
+
+.o_project_task_card_empty_assignee {
+    font-size: var(--Tag-font-size, var(--o-bs-font-size-sm));
+}
+
+.o_project_task_card_empty_assignee i.oi {
+    font-size: var(
+        --Avatar-size,
+        var(--o-avatar-size)
+    );
+    transform: scaleX(-1);
+}
