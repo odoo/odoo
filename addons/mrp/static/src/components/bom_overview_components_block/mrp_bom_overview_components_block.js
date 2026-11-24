@@ -16,7 +16,6 @@ export class BomOverviewComponentsBlock extends Component {
         currentWarehouseId: t.number().optional(),
         data: t.object(),
         precision: t.number(),
-        changeFolded: t.function(),
     });
 
     setup() {
@@ -27,7 +26,7 @@ export class BomOverviewComponentsBlock extends Component {
             unfoldAll: this.props.unfoldAll,
         });
         if (this.props.unfoldAll) {
-            this.props.changeFolded({ ids: this.childIds, isFolded: false });
+            this.overviewPlugin.updateFolded(this.childIds, false);
         }
 
         this.overviewPlugin.onToggleFoldAll((isFolded) => this._onToggleFoldAll(isFolded));
@@ -39,14 +38,14 @@ export class BomOverviewComponentsBlock extends Component {
                 oldChildIds.forEach((id) => delete this.state[id]);
                 this.childIds.forEach((id) => (this.state[id] = true));
                 this.state.unfoldAll = false;
-                this.props.changeFolded({ ids: oldChildIds, isFolded: true });
+                this.overviewPlugin.updateFolded(oldChildIds, true);
             },
             { initialRun: false }
         );
 
         onWillUnmount(() => {
             if (this.hasComponents) {
-                this.props.changeFolded({ ids: this.childIds, isFolded: true });
+                this.overviewPlugin.updateFolded(this.childIds, true);
             }
         });
     }
@@ -56,14 +55,14 @@ export class BomOverviewComponentsBlock extends Component {
         const newState = !this.state[foldId];
         this.state[foldId] = newState;
         this.state.unfoldAll = false;
-        this.props.changeFolded({ ids: [foldId], isFolded: newState });
+        this.overviewPlugin.updateFolded([foldId], newState);
     }
 
     _onToggleFoldAll(isFolded) {
         const allChildIds = this.childIds;
         this.state.unfoldAll = !isFolded;
         allChildIds.forEach((id) => (this.state[id] = isFolded));
-        this.props.changeFolded({ ids: allChildIds, isFolded });
+        this.overviewPlugin.updateFolded(allChildIds, isFolded);
     }
 
     //---- Getters ----

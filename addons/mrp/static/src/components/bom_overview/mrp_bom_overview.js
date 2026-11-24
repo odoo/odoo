@@ -41,6 +41,8 @@ export class BomOverviewComponent extends Component {
         });
 
         providePlugins([MrpOverviewPlugin]);
+        this.overviewPlugin = usePlugin(MrpOverviewPlugin);
+        this.overviewPlugin.onUpdateFolded((foldInfo) => this.onChangeFolded(foldInfo));
 
         onWillStart(async () => {
             await this.getWarehouses();
@@ -109,11 +111,11 @@ export class BomOverviewComponent extends Component {
     //---- Handlers ----
 
     onChangeFolded(foldInfo) {
-        const { ids, isFolded } = foldInfo;
+        const { indexes, isFolded } = foldInfo;
         const operation = isFolded ? "delete" : "add";
-        ids.forEach((id) => {
-            if (isFolded || this.foldableIds.has(id)) {
-                this.unfoldedIds[operation](id);
+        indexes.forEach((index) => {
+            if (isFolded || this.foldableIds.has(index)) {
+                this.unfoldedIds[operation](index);
             }
         });
         if (this.unfoldedIds.size === 0) {

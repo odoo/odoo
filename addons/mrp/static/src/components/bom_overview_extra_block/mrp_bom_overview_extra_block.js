@@ -16,7 +16,6 @@ export class BomOverviewExtraBlock extends Component {
         showOptions: t.object(),
         data: t.object(),
         precision: t.number(),
-        changeFolded: t.function(),
     });
 
     setup() {
@@ -25,7 +24,7 @@ export class BomOverviewExtraBlock extends Component {
             isFolded: !this.props.unfoldAll,
         });
         if (this.props.unfoldAll) {
-            this.props.changeFolded({ ids: [this.identifier], isFolded: false });
+            this.overviewPlugin.updateFolded([this.identifier], false);
         }
 
         this.overviewPlugin.onToggleFoldAll((isFolded) => this._onToggleFoldAll(isFolded));
@@ -34,14 +33,14 @@ export class BomOverviewExtraBlock extends Component {
             () => [this.props.data.product_id],
             () => {
                 this.state.isFolded = true;
-                this.props.changeFolded({ ids: [this.identifier], isFolded: true });
+                this.overviewPlugin.updateFolded([this.identifier], true);
             },
             { initialRun: false }
         );
 
         onWillUnmount(() => {
             // Need to notify main component that the block was folded so it doesn't appear on the PDF.
-            this.props.changeFolded({ ids: [this.identifier], isFolded: true });
+            this.overviewPlugin.updateFolded([this.identifier], true);
         });
     }
 
@@ -50,12 +49,12 @@ export class BomOverviewExtraBlock extends Component {
     onToggleFolded() {
         const newState = !this.state.isFolded;
         this.state.isFolded = newState;
-        this.props.changeFolded({ ids: [this.identifier], isFolded: newState });
+        this.overviewPlugin.updateFolded([this.identifier], newState);
     }
 
     _onToggleFoldAll(isFolded) {
         this.state.isFolded = isFolded;
-        this.props.changeFolded({ ids: [this.identifier], isFolded });
+        this.overviewPlugin.updateFolded([this.identifier], isFolded);
     }
 
     //---- Getters ----
