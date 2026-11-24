@@ -126,16 +126,13 @@ export class Thread extends Component {
             },
             { ready: false }
         );
-        this.loadNewerState = useVisible(
-            this.present,
-            async () => {
-                await this.scroll.waitForIdle();
-                if (this.loadNewerState.isVisible && this.shouldTriggerLoadOnVisible) {
-                    this.props.thread.fetchMoreMessages({ epoch: LIST_LOADER_EPOCH.NEWER });
-                }
-            },
-            { ready: false }
-        );
+        const loadNewerIfVisible = async () => {
+            await this.scroll.waitForIdle();
+            if (this.loadNewerState.isVisible && this.shouldTriggerLoadOnVisible) {
+                this.props.thread.fetchMoreMessages({ epoch: LIST_LOADER_EPOCH.NEWER });
+            }
+        };
+        this.loadNewerState = useVisible(this.present, loadNewerIfVisible, { ready: false });
         this.messageSelection = useMessageSelection();
         this.presentThresholdState = useVisible(this.presentThresholdRef, () =>
             this.updateShowJumpPresent()
@@ -209,6 +206,16 @@ export class Thread extends Component {
         useOnChange(
             () => [this.props.thread.loadNewer],
             () => this.updateShowJumpPresent()
+        );
+        // The present stays visible while newer messages are loading: load the next page then.
+        useOnChange(
+            () => [this.props.thread.loadNewer],
+            (loadNewer) => {
+                if (loadNewer) {
+                    loadNewerIfVisible();
+                }
+            },
+            { initialRun: false }
         );
         useOnChange(
             () => [this.props.jumpPresent],
