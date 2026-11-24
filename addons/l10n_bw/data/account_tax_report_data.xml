@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="bw_tax_report" model="account.report">
+        <field name="name">VAT Return</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.bw"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="bw_tax_report_no_vat" model="account.report.column">
+                <field name="name">a. VAT Exclusive Value</field>
+                <field name="expression_label">no_vat</field>
+            </record>
+            <record id="bw_tax_report_vat" model="account.report.column">
+                <field name="name">b. VAT</field>
+                <field name="expression_label">vat</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="bw_tax_report_title_output" model="account.report.line">
+                <field name="name">VAT declared (Output tax)</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="bw_tax_report_title_output_goods_services" model="account.report.line">
+                        <field name="name">Goods and services supplied</field>
+                        <field name="children_ids">
+                            <record id="bw_tax_report_line_01" model="account.report.line">
+                                <field name="name">1 - Exempt supplies</field>
+                                <field name="code">bw_vat_01</field>
+                                <field name="expression_ids">
+                                    <record id="bw_tax_report_line_01_no_vat" model="account.report.expression">
+                                        <field name="label">no_vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-bw_vat_01_no_vat</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="bw_tax_report_line_02" model="account.report.line">
+                                <field name="name">2 - Zero rated supplies</field>
+                                <field name="code">bw_vat_02</field>
+                                <field name="expression_ids">
+                                    <record id="bw_tax_report_line_02_no_vat" model="account.report.expression">
+                                        <field name="label">no_vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-bw_vat_02_no_vat</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="bw_tax_report_line_03" model="account.report.line">
+                                <field name="name">3 - Standard rated supplies</field>
+                                <field name="code">bw_vat_03</field>
+                                <field name="expression_ids">
+                                    <record id="bw_tax_report_line_03_no_vat" model="account.report.expression">
+                                        <field name="label">no_vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-bw_vat_03_no_vat</field>
+                                    </record>
+                                    <record id="bw_tax_report_line_03_vat" model="account.report.expression">
+                                        <field name="label">vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-bw_vat_03_vat</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="bw_tax_report_title_output_capital_goods" model="account.report.line">
+                        <field name="name">Capital goods sold</field>
+                        <field name="children_ids">
+                            <record id="bw_tax_report_line_04" model="account.report.line">
+                                <field name="name">4 - Exempt capital goods</field>
+                                <field name="code">bw_vat_04</field>
+                                <field name="expression_ids">
+                                    <record id="bw_tax_report_line_04_no_vat" model="account.report.expression">
+                                        <field name="label">no_vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-bw_vat_04_no_vat</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="bw_tax_report_line_05" model="account.report.line">
+                                <field name="name">5 - Zero rated capital goods</field>
+                                <field name="code">bw_vat_05</field>
+                                <field name="expression_ids">
+                                    <record id="bw_tax_report_line_05_no_vat" model="account.report.expression">
+                                        <field name="label">no_vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-bw_vat_05_no_vat</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="bw_tax_report_line_06" model="account.report.line">
+                                <field name="name">6 - Standard rated capital goods</field>
+                                <field name="code">bw_vat_06</field>
+                                <field name="expression_ids">
+                                    <record id="bw_tax_report_line_06_no_vat" model="account.report.expression">
+                                        <field name="label">no_vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-bw_vat_06_no_vat</field>
+                                    </record>
+                                    <record id="bw_tax_report_line_06_vat" model="account.report.expression">
+                                        <field name="label">vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-bw_vat_06_vat</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="bw_tax_report_title_output_adjustments" model="account.report.line">
+                        <field name="name">Adjustments (e.g. change of use)</field>
+                        <field name="children_ids">
+                            <record id="bw_tax_report_line_07" model="account.report.line">
+                                <field name="name">7 - Exempt adjustments</field>
+                                <field name="code">bw_vat_07</field>
+                                <field name="expression_ids">
+                                    <record id="bw_tax_report_line_07_no_vat" model="account.report.expression">
+                                        <field name="label">no_vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-bw_vat_07_no_vat</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="bw_tax_report_line_08" model="account.report.line">
+                                <field name="name">8 - Zero rated adjustments</field>
+                                <field name="code">bw_vat_08</field>
+                                <field name="expression_ids">
+                                    <record id="bw_tax_report_line_08_no_vat" model="account.report.expression">
+                                        <field name="label">no_vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-bw_vat_08_no_vat</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="bw_tax_report_line_09" model="account.report.line">
+                                <field name="name">9 - Standard rated adjustments</field>
+                                <field name="code">bw_vat_09</field>
+                                <field name="expression_ids">
+                                    <record id="bw_tax_report_line_09_no_vat" model="account.report.expression">
+                                        <field name="label">no_vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-bw_vat_09_no_vat</field>
+                                    </record>
+                                    <record id="bw_tax_report_line_09_vat" model="account.report.expression">
+                                        <field name="label">vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-bw_vat_09_vat</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="bw_tax_report_line_20" model="account.report.line">
+                        <field name="name">20 - Reverse charge (imported services)</field>
+                        <field name="code">bw_vat_20</field>
+                        <field name="expression_ids">
+                            <record id="bw_tax_report_line_20_no_vat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">bw_vat_20_no_vat</field>
+                            </record>
+                            <record id="bw_tax_report_line_20_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-bw_vat_20_vat</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="bw_tax_report_line_10" model="account.report.line">
+                        <field name="name">10 - Total output</field>
+                        <field name="code">bw_vat_10</field>
+                        <field name="expression_ids">
+                            <record id="bw_tax_report_line_10_no_vat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">bw_vat_01.no_vat + bw_vat_02.no_vat + bw_vat_03.no_vat + bw_vat_04.no_vat + bw_vat_05.no_vat + bw_vat_06.no_vat + bw_vat_07.no_vat + bw_vat_08.no_vat + bw_vat_09.no_vat + bw_vat_20.no_vat</field>
+                            </record>
+                            <record id="bw_tax_report_line_10_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">bw_vat_03.vat + bw_vat_06.vat + bw_vat_09.vat + bw_vat_20.vat</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="bw_tax_report_title_input" model="account.report.line">
+                <field name="name">VAT claimed (Input tax)</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="bw_tax_report_line_11" model="account.report.line">
+                        <field name="name">11 - Local purchases and expenses</field>
+                        <field name="code">bw_vat_11</field>
+                        <field name="expression_ids">
+                            <record id="bw_tax_report_line_11_no_vat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">bw_vat_11_no_vat</field>
+                            </record>
+                            <record id="bw_tax_report_line_11_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">bw_vat_11_vat</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="bw_tax_report_line_12" model="account.report.line">
+                        <field name="name">12 - Capital goods purchased (local)</field>
+                        <field name="code">bw_vat_12</field>
+                        <field name="expression_ids">
+                            <record id="bw_tax_report_line_12_no_vat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">bw_vat_12_no_vat</field>
+                            </record>
+                            <record id="bw_tax_report_line_12_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">bw_vat_12_vat</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="bw_tax_report_line_13" model="account.report.line">
+                        <field name="name">13 - Imported purchases</field>
+                        <field name="code">bw_vat_13</field>
+                        <field name="expression_ids">
+                            <record id="bw_tax_report_line_13_no_vat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">bw_vat_13_no_vat</field>
+                            </record>
+                            <record id="bw_tax_report_line_13_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">bw_vat_13_vat</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="bw_tax_report_line_14" model="account.report.line">
+                        <field name="name">14 - Imported capital goods</field>
+                        <field name="code">bw_vat_14</field>
+                        <field name="expression_ids">
+                            <record id="bw_tax_report_line_14_no_vat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">bw_vat_14_no_vat</field>
+                            </record>
+                            <record id="bw_tax_report_line_14_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">bw_vat_14_vat</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="bw_tax_report_line_15" model="account.report.line">
+                        <field name="name">15 - Second-hand goods</field>
+                        <field name="code">bw_vat_15</field>
+                        <field name="expression_ids">
+                            <record id="bw_tax_report_line_15_no_vat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">bw_vat_15_no_vat</field>
+                            </record>
+                            <record id="bw_tax_report_line_15_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">bw_vat_15_vat</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="bw_tax_report_line_16" model="account.report.line">
+                        <field name="name">16 - Adjustments (bad debts, credit notes issued)</field>
+                        <field name="code">bw_vat_16</field>
+                        <field name="expression_ids">
+                            <record id="bw_tax_report_line_16_no_vat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">bw_vat_16_no_vat</field>
+                            </record>
+                            <record id="bw_tax_report_line_16_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">bw_vat_16_vat</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="bw_tax_report_line_17" model="account.report.line">
+                        <field name="name">17 - Transfer duty</field>
+                        <field name="code">bw_vat_17</field>
+                        <field name="expression_ids">
+                            <record id="bw_tax_report_line_17_no_vat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">bw_vat_17_no_vat</field>
+                            </record>
+                            <record id="bw_tax_report_line_17_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">bw_vat_17_vat</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="bw_tax_report_line_21" model="account.report.line">
+                        <field name="name">21 - Reverse charge (imported services)</field>
+                        <field name="code">bw_vat_21</field>
+                        <field name="expression_ids">
+                            <record id="bw_tax_report_line_21_no_vat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">bw_vat_21_no_vat</field>
+                            </record>
+                            <record id="bw_tax_report_line_21_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">bw_vat_21_vat</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="bw_tax_report_line_18" model="account.report.line">
+                        <field name="name">18 - Total input</field>
+                        <field name="code">bw_vat_18</field>
+                        <field name="expression_ids">
+                            <record id="bw_tax_report_line_18_no_vat" model="account.report.expression">
+                                <field name="label">no_vat</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">bw_vat_11.no_vat + bw_vat_12.no_vat + bw_vat_13.no_vat + bw_vat_14.no_vat + bw_vat_15.no_vat + bw_vat_16.no_vat + bw_vat_17.no_vat + bw_vat_21.no_vat</field>
+                            </record>
+                            <record id="bw_tax_report_line_18_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">bw_vat_11.vat + bw_vat_12.vat + bw_vat_13.vat + bw_vat_14.vat + bw_vat_15.vat + bw_vat_16.vat + bw_vat_17.vat + bw_vat_21.vat</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="bw_tax_report_title_payable" model="account.report.line">
+                <field name="name">VAT payable / refundable</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="bw_tax_report_line_19" model="account.report.line">
+                        <field name="name">19 - Amount payable / (refundable)</field>
+                        <field name="code">bw_vat_19</field>
+                        <field name="expression_ids">
+                            <record id="bw_tax_report_line_19_vat" model="account.report.expression">
+                                <field name="label">vat</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">bw_vat_10.vat - bw_vat_18.vat</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>
