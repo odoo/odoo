@@ -1222,4 +1222,6 @@ class ProductProduct(models.Model):
     def _update_uom(self, to_uom_id):
         """ Hook to handle an UoM modification. Avoid recomputation and just replace the
         many2one field on the impacted models."""
+        sellers = self.env['product.supplierinfo'].search([('product_tmpl_id', 'in', self.product_tmpl_id.ids)])
+        sellers.filtered(lambda seller: seller.product_uom_id == seller.product_tmpl_id.uom_id).product_uom_id = to_uom_id
         return True

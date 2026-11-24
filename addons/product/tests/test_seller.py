@@ -191,3 +191,27 @@ class TestSeller(TransactionCase):
         self.assertIn('C2CCODE', product_with_partner.display_name)
         self.product_service.purchase_ok = False
         self.assertNotIn('C2CCODE', product_with_partner.display_name)
+
+    def test_70_seller_uom_follows_product_uom(self):
+        """Vendor lines in the product's unit follow a change of that unit, the
+        ones in another unit are kept."""
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        uom_dozen = self.env.ref('uom.product_uom_dozen')
+        uom_kg = self.env.ref('uom.product_uom_kgm')
+        seller_unit, seller_dozen = self.env['product.supplierinfo'].create([{
+            'partner_id': self.asustec.id,
+            'product_tmpl_id': self.product_consu.product_tmpl_id.id,
+            'price': 5,
+        }, {
+            'partner_id': self.camptocamp.id,
+            'product_tmpl_id': self.product_consu.product_tmpl_id.id,
+            'product_uom_id': uom_dozen.id,
+            'price': 50,
+        }])
+        self.assertEqual(seller_unit.product_uom_id, uom_unit)
+
+        self.product_consu.product_tmpl_id.uom_id = uom_kg
+
+        self.assertEqual(seller_unit.product_uom_id, uom_kg)
+        self.assertEqual(seller_unit.price_discounted, 5)
+        self.assertEqual(seller_dozen.product_uom_id, uom_dozen)
