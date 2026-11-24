@@ -171,4 +171,4 @@ class ResCompany(models.Model):
         if vat.startswith('ES'):
             vat = vat[2:]
 
-        return re.fullmatch(r"(\d{8}[TRWAGMYFPDXBNJZSQVHLCKE]|[XYZ]\d{7}[TRWAGMYFPDXBNJZSQVHLCKE]|E\d{7}[A-J0-9])", vat) or False
+        return re.fullmatch(r"(\d{8}[TRWAGMYFPDXBNJZSQVHLCKE]|[XYZ]\d{7}[TRWAGMYFPDXBNJZSQVHLCKE]|[EJ]\d{7}[A-J0-9])", vat) or False
