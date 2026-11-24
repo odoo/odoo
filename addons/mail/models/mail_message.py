@@ -785,16 +785,17 @@ class MailMessage(models.Model):
     def _get_with_access(self, mode="read", **kwargs):
         if not self:
             return self
+        # access params are document-specific: check them for every model
+        # sudo: mail.message - check parameters whatever actual user rights
+        for res_model in set(self.sudo().mapped('model')) if kwargs else ():
+            if invalid := (set(kwargs) - self.env[res_model or 'mail.thread']._get_allowed_access_params()):
+                raise ValueError(f"Invalid parameters to _get_with_access: {invalid}")
+
         if self.env.user._is_admin():
             return self
         valid = self.sudo(False)._filtered_access(mode)
-        for res_model, model_messages in (self - valid).grouped('model').items():
-            # sanity check on kwargs
-            allowed_params = self.env[res_model or 'mail.thread']._get_allowed_access_params()
-            if invalid := (set(kwargs) - allowed_params):
-                _logger.warning("Invalid parameters to _get_with_access: %s", invalid)
-
-            if res_model and (res_ids := set(model_messages.filtered('res_id').mapped('res_id'))):
+        for res_model, model_messages in (self - valid).filtered('model').grouped('model').items():
+            if res_ids := set(model_messages.filtered('res_id').mapped('res_id')):
                 # note that this is still sequential (per document), currently ok
                 # as mostly called on 1 message - batch only for specific public
                 # access, where message count should be low

@@ -549,6 +549,15 @@ class TestMailMessageAccess(MessageAccessCommon):
             messages_all.with_user(self.user_portal).fetch(['subject'])
         messages_all.with_user(self.user_admin).fetch(['subject'])
 
+    def test_access_read_params_invalid(self):
+        """ Access parameters are limited and enforced (document-specific), including
+        when access is granted without them (admin, author). """
+        message_su = self.record_portal.message_ids[0].sudo()
+        message_su.author_id = self.partner_employee
+        for user in self.user_admin + self.user_employee + self.user_portal:
+            with self.subTest(user=user.name), self.assertRaises(ValueError):
+                message_su.with_user(user)._get_with_access(invalid_param=True)
+
     def test_access_read_orphan(self):
         """ Message of a removed document is not accessible, and does not crash
         access check of other messages checked in batch. """
