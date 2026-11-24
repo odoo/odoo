@@ -65,8 +65,8 @@ export class CallPreview extends Component {
                 .optional(),
         });
         this.dialog = useService("dialog");
-        this.rtc = useService("discuss.rtc");
         this.store = useService("mail.store");
+        this.rtc = this.store.rtc;
         this.ui = usePlugin(UIPlugin);
         this.state = proxy({ audioStream: null, isCameraActive: false });
         useOnChange(

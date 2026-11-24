@@ -1,6 +1,6 @@
-import { proxy } from "@odoo/owl";
+import { AttachmentUploadPlugin } from "@mail/core/common/attachment_upload_plugin";
 
-import { useService } from "@web/core/utils/hooks";
+import { proxy, usePlugin } from "@odoo/owl";
 
 export function dataUrlToBlob(data, type) {
     const binData = window.atob(data);
@@ -11,7 +11,7 @@ export function dataUrlToBlob(data, type) {
 
 export class AttachmentUploader {
     constructor(thread, { composer } = {}) {
-        this.attachmentUploadService = useService("mail.attachment_upload");
+        this.attachmentUploadService = usePlugin(AttachmentUploadPlugin);
         Object.assign(this, { thread, composer });
     }
 

@@ -28,7 +28,7 @@ export class MessagingMenuCallParticipants extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.rtc = useService("discuss.rtc");
+        this.rtc = this.store.rtc;
         this.channel = useProps.static("channel", t.instanceOf(this.store["discuss.channel"]));
         useOnChange(
             () => [this.canToggle(), this.selfInCall()],

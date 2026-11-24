@@ -1,8 +1,8 @@
-import { AttachmentUploadService } from "@mail/core/common/attachment_upload_service";
+import { AttachmentUploadPlugin } from "@mail/core/common/attachment_upload_plugin";
 
 import { patch } from "@web/core/utils/patch";
 
-patch(AttachmentUploadService.prototype, {
+patch(AttachmentUploadPlugin.prototype, {
     async upload(thread, composer, file, options) {
         if (thread.channel?.channel_type === "livechat" && thread.isTransient) {
             const channel = await this.env.services["im_livechat.livechat"].persist(thread);

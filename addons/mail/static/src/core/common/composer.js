@@ -1,5 +1,6 @@
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
+import { ComposerPlugin } from "@mail/core/common/composer_plugin";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
 import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
 import {
@@ -216,7 +217,7 @@ export class Composer extends Component {
         );
         this.ui = usePlugin(UIPlugin);
         this.recordLink = usePlugin(RecordLinkPlugin);
-        this.composerService = useService("mail.composer");
+        this.composerService = usePlugin(ComposerPlugin);
         this.inputContainerRef = signal.ref(HTMLSpanElement);
         this.pickerContainerRef = signal.ref(HTMLDivElement);
         this.state = proxy({

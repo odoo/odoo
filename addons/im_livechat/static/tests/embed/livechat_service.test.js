@@ -93,11 +93,11 @@ test("Only necessary requests are made when creating a new chat", async () => {
     await start({ authenticateAs: false, waitUntilSubscribe: false });
     await waitFor(".o-livechat-LivechatButton:count(1)");
     await waitStoreFetch([
+        ["init_livechat", livechatChannelId],
         "init_messaging",
         // Called because mail/core/public_web is loaded in test bundle, and it cannot be
         // restricted to logged in users.
         "/mail/messaging_menu/initialize_counters",
-        ["init_livechat", livechatChannelId],
     ]);
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-Message", { text: "Hello, how may I help you?" });

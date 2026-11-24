@@ -1,8 +1,8 @@
-import { AttachmentUploadService } from "@mail/core/common/attachment_upload_service";
+import { AttachmentUploadPlugin } from "@mail/core/common/attachment_upload_plugin";
 
 import { patch } from "@web/core/utils/patch";
 
-patch(AttachmentUploadService.prototype, {
+patch(AttachmentUploadPlugin.prototype, {
     _makeAttachmentData(upload, tmpId, thread, tmpUrl) {
         const attachmentData = super._makeAttachmentData(...arguments);
         if (upload.data.get("voice")) {

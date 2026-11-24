@@ -1,9 +1,9 @@
-import { AttachmentUploadService } from "@mail/core/common/attachment_upload_service";
+import { AttachmentUploadPlugin } from "@mail/core/common/attachment_upload_plugin";
 
 import { patch } from "@web/core/utils/patch";
 
-patch(AttachmentUploadService.prototype, {
-    _buildFormData(formData, file, thread, composer, tmpId, options) {
+patch(AttachmentUploadPlugin.prototype, {
+    _buildFormData(formData, file, thread, _composer, _tmpId, _options) {
         super._buildFormData(...arguments);
         if (thread.rpcParams.hash && thread.rpcParams.pid) {
             formData.append("hash", thread.rpcParams.hash);

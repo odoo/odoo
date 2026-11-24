@@ -1,6 +1,6 @@
 import { waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
 
-import { OutOfFocusService } from "@mail/core/common/out_of_focus_service";
+import { OutOfFocusPlugin } from "@mail/core/common/out_of_focus_plugin";
 import { SoundEffectsPlugin } from "@mail/core/common/sound_effects_plugin";
 import { DiscussApp } from "@mail/core/public_web/discuss_app/discuss_app_model";
 import {
@@ -64,6 +64,7 @@ import { Settings } from "@mail/core/common/settings_model";
 import { toRawValue } from "@mail/utils/common/local_storage";
 import { range } from "@web/core/utils/numbers";
 import { Message } from "@mail/core/common/message";
+import { ComposerPlugin } from "@mail/core/common/composer_plugin";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -266,7 +267,7 @@ test("Posting message should transform relevant data to emoji.", async () => {
         channel_type: "channel",
     });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     await focus(".o-mail-Composer-html");
     await insertTextInComposer(".o-mail-Composer", "test :P :laughing:");
@@ -1182,7 +1183,7 @@ test("out-of-focus notif on needaction message in channel", async () => {
         channel_type: "channel",
         name: "General",
     });
-    patch(OutOfFocusService.prototype, {
+    patch(OutOfFocusPlugin.prototype, {
         sendNotification({ title, icon }) {
             expect.step(`notification:${title}:${new URL(icon, getOrigin()).pathname}`);
         },
@@ -1231,7 +1232,7 @@ test("receive new chat message: out of odoo focus (notification, chat)", async (
         ],
         channel_type: "chat",
     });
-    patch(OutOfFocusService.prototype, {
+    patch(OutOfFocusPlugin.prototype, {
         sendNotification({ title, icon }) {
             expect.step(`notification:${title}:${new URL(icon, getOrigin()).pathname}`);
         },
@@ -1278,7 +1279,7 @@ test("receive new group message: out of odoo focus (notification, nameless group
         ],
         channel_type: "group",
     });
-    patch(OutOfFocusService.prototype, {
+    patch(OutOfFocusPlugin.prototype, {
         sendNotification({ title, icon }) {
             expect.step(`notification:${title}:${new URL(icon, getOrigin()).pathname}`);
         },
@@ -1487,7 +1488,7 @@ test("out-of-focus notif respects push subscription eligibility", async () => {
     pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const partnerId = pyEnv["res.partner"].create({ name: "Hagrid" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
-    patch(OutOfFocusService.prototype, {
+    patch(OutOfFocusPlugin.prototype, {
         async notify() {
             expect.step("notification handled");
             await super.notify(...arguments);
@@ -1540,7 +1541,7 @@ test("out-of-focus notif body shows attachment symbol for attachment-only messag
         res_id: false,
         res_model: "mail.compose.message",
     });
-    patch(OutOfFocusService.prototype, {
+    patch(OutOfFocusPlugin.prototype, {
         sendNotification({ message }) {
             expect.step(message);
         },
@@ -1609,7 +1610,7 @@ test("inbox notifs shouldn't play sound nor open chat bubble", async () => {
     const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
     pyEnv["discuss.channel"].create({ name: "general", channel_type: "channel" });
-    patch(OutOfFocusService.prototype, {
+    patch(OutOfFocusPlugin.prototype, {
         _playSound() {
             expect.step("play_sound");
         },
@@ -2083,7 +2084,7 @@ test("Can post message with only attachment", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     onRpcBefore("/mail/message/post", () => new Promise(() => {}));
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     await waitFor(".o-mail-Composer input[type=file]:count(1)");
     const file = new File(["hello, world"], "text.txt", { type: "text/plain" });

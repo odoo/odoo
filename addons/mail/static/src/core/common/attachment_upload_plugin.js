@@ -1,37 +1,45 @@
-import { EventBus, usePlugin } from "@odoo/owl";
+import { StorePlugin } from "@mail/core/common/store_plugin";
+
+import { EventBus, Plugin, usePlugin } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
-import { registry } from "@web/core/registry";
+import { services } from "@web/core/services";
+import { useEnv } from "@web/owl2/utils";
 
-export class AttachmentUploadService {
-    constructor(env, services) {
-        this.setup(env, services);
-    }
+/** Records reach this plugin as `store.attachmentUpload`. */
+export class AttachmentUploadPlugin extends Plugin {
+    /**
+     * Started with the store it uses (see `StorePlugin`), after the legacy `file_upload`
+     * service it reads from `env.services`.
+     */
+    static sequence = 110;
 
-    setup(env, services) {
-        this.env = env;
-        this.fileUploadService = services["file_upload"];
+    #fileUploadService;
+    #nextId = -1;
+    /** @type {Map<number, (value?: void) => void} */
+    #resolveUploadByAttachmentId = new Map();
+    #deletingAttachmentIds = new Set();
+    #fileUploadBus = new EventBus();
+    /** @type {Map<number, {composer: import("models").Composer, thread: import("models").Thread}>} */
+    #targetsByTmpId = new Map();
+
+    setup() {
+        this.env = useEnv();
+        this.#fileUploadService = this.env.services["file_upload"];
         /** @type {import("@mail/core/common/store_plugin").Store} */
-        this.store = services["mail.store"];
+        this.store = usePlugin(StorePlugin);
+        this.store.attachmentUpload = this;
         this.notificationService = usePlugin(NotificationPlugin);
-
-        this.nextId = -1;
         this.abortByAttachmentId = new Map();
-        /** @type {Map<number, (value?: void) => void} */
-        this.resolveUploadByAttachmentId = new Map();
-        this.deletingAttachmentIds = new Set();
         this.uploadingAttachmentIds = new Set();
-        this._fileUploadBus = new EventBus();
-        /** @type {Map<number, {composer: import("models").Composer, thread: import("models").Thread}>} */
-        this.targetsByTmpId = new Map();
-        this.fileUploadService.bus.addEventListener(
+        this.#fileUploadService.bus.addEventListener(
             "FILE_UPLOAD_ADDED",
             ({ detail: { upload } }) => {
                 const tmpId = parseInt(upload.data.get("temporary_id"));
                 if (!this.uploadingAttachmentIds.has(tmpId)) {
                     return;
                 }
-                const { thread, composer } = this.targetsByTmpId.get(tmpId);
+                const { thread, composer } = this.#targetsByTmpId.get(tmpId);
                 const tmpUrl = upload.data.get("tmp_url");
                 this.abortByAttachmentId.set(tmpId, upload.xhr.abort.bind(upload.xhr));
                 const attachment = this.store["ir.attachment"].insert(
@@ -40,14 +48,14 @@ export class AttachmentUploadService {
                 composer?.attachments.push(attachment);
             }
         );
-        this.fileUploadService.bus.addEventListener(
+        this.#fileUploadService.bus.addEventListener(
             "FILE_UPLOAD_LOADED",
             ({ detail: { upload } }) => {
                 const tmpId = parseInt(upload.data.get("temporary_id"));
                 if (!this.uploadingAttachmentIds.has(tmpId)) {
                     return;
                 }
-                const resolveUpload = this.resolveUploadByAttachmentId.get(tmpId);
+                const resolveUpload = this.#resolveUploadByAttachmentId.get(tmpId);
                 if (upload.xhr.status === 413) {
                     this.notificationService.add(_t("File too large"), { type: "danger" });
                     resolveUpload();
@@ -67,18 +75,18 @@ export class AttachmentUploadService {
                     this._cleanupUploading(tmpId);
                     return;
                 }
-                const { thread, composer } = this.targetsByTmpId.get(tmpId);
+                const { thread, composer } = this.#targetsByTmpId.get(tmpId);
                 this._processLoaded(thread, composer, response, tmpId, resolveUpload);
             }
         );
-        this.fileUploadService.bus.addEventListener(
+        this.#fileUploadService.bus.addEventListener(
             "FILE_UPLOAD_ERROR",
             ({ detail: { upload } }) => {
                 const tmpId = parseInt(upload.data.get("temporary_id"));
                 if (!this.uploadingAttachmentIds.has(tmpId)) {
                     return;
                 }
-                const resolveUpload = this.resolveUploadByAttachmentId.get(tmpId);
+                const resolveUpload = this.#resolveUploadByAttachmentId.get(tmpId);
                 resolveUpload();
                 this._cleanupUploading(tmpId);
             }
@@ -99,19 +107,19 @@ export class AttachmentUploadService {
             }
         }
         resolveUpload(attachment);
-        this._fileUploadBus.trigger("UPLOAD", thread);
+        this.#fileUploadBus.trigger("UPLOAD", thread);
         this._cleanupUploading(tmpId);
     }
 
     _cleanupUploading(tmpId) {
         this.abortByAttachmentId.delete(tmpId);
-        this.resolveUploadByAttachmentId.delete(tmpId);
+        this.#resolveUploadByAttachmentId.delete(tmpId);
         this.uploadingAttachmentIds.delete(tmpId);
-        this.targetsByTmpId.delete(tmpId);
+        this.#targetsByTmpId.delete(tmpId);
         this.store["ir.attachment"].get(tmpId)?.delete();
     }
 
-    getUploadURL(thread) {
+    getUploadURL(_thread) {
         return "/mail/attachment/upload";
     }
 
@@ -122,7 +130,7 @@ export class AttachmentUploadService {
     cancelUploads(attachments) {
         for (const att of attachments) {
             const tmpId = att.id;
-            const resolveUpload = this.resolveUploadByAttachmentId.get(tmpId);
+            const resolveUpload = this.#resolveUploadByAttachmentId.get(tmpId);
             const abort = this.abortByAttachmentId.get(tmpId);
             this._cleanupUploading(tmpId);
             resolveUpload();
@@ -138,10 +146,10 @@ export class AttachmentUploadService {
      */
     async unlink(attachments, options) {
         const attachmentsToUnlink = attachments.filter((attachment) => {
-            if (this.deletingAttachmentIds.has(attachment.id)) {
+            if (this.#deletingAttachmentIds.has(attachment.id)) {
                 return false;
             }
-            this.deletingAttachmentIds.add(attachment.id);
+            this.#deletingAttachmentIds.add(attachment.id);
             return true;
         });
 
@@ -149,21 +157,21 @@ export class AttachmentUploadService {
             await this.store.removeAttachments(attachmentsToUnlink, options);
         } finally {
             for (const attachment of attachmentsToUnlink) {
-                this.deletingAttachmentIds.delete(attachment.id);
+                this.#deletingAttachmentIds.delete(attachment.id);
             }
         }
     }
 
     async upload(thread, composer, file, options) {
-        const tmpId = this.nextId--;
+        const tmpId = this.#nextId--;
         const tmpURL = URL.createObjectURL(file);
         return this._upload(thread, composer, file, options, tmpId, tmpURL);
     }
 
     async _upload(thread, composer, file, options, tmpId, tmpURL) {
-        this.targetsByTmpId.set(tmpId, { composer, thread });
+        this.#targetsByTmpId.set(tmpId, { composer, thread });
         this.uploadingAttachmentIds.add(tmpId);
-        await this.fileUploadService
+        await this.#fileUploadService
             .upload(this.getUploadURL(thread), [file], {
                 buildFormData: (formData) => {
                     this._buildFormData(formData, tmpURL, thread, composer, tmpId, options);
@@ -175,7 +183,7 @@ export class AttachmentUploadService {
                 }
             });
         const { promise: uploadPromise, resolve: resolveUpload } = Promise.withResolvers();
-        this.resolveUploadByAttachmentId.set(tmpId, resolveUpload);
+        this.#resolveUploadByAttachmentId.set(tmpId, resolveUpload);
         return uploadPromise;
     }
 
@@ -184,7 +192,7 @@ export class AttachmentUploadService {
      * @param {(thread: import("models").Thread) => void} onFileUploaded
      */
     onFileUploaded(thread, onFileUploaded) {
-        this._fileUploadBus.addEventListener("UPLOAD", ({ detail }) => {
+        this.#fileUploadBus.addEventListener("UPLOAD", ({ detail }) => {
             if (thread()?.eq(detail)) {
                 onFileUploaded(detail);
             }
@@ -217,11 +225,4 @@ export class AttachmentUploadService {
     }
 }
 
-export const attachmentUploadService = {
-    dependencies: ["file_upload", "mail.store"],
-    start(env, services) {
-        return new AttachmentUploadService(env, services);
-    },
-};
-
-registry.category("services").add("mail.attachment_upload", attachmentUploadService);
+services.add(AttachmentUploadPlugin);

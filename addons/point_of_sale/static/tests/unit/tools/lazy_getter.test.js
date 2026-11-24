@@ -17,9 +17,21 @@ import { services } from "@web/core/services";
 import { zip } from "@web/core/utils/arrays";
 import { PosDataPlugin } from "@point_of_sale/app/plugins/pos_data_plugin";
 import { PosTicketPrinterPlugin } from "@point_of_sale/app/plugins/pos_ticket_printer_plugin";
+import { AttachmentUploadPlugin } from "@mail/core/common/attachment_upload_plugin";
+import { ChatHubPlugin } from "@mail/core/common/chat_hub";
+import { MailCoreCommonPlugin } from "@mail/core/common/mail_core_common_plugin";
+import { OutOfFocusPlugin } from "@mail/core/common/out_of_focus_plugin";
 import { RecordLinkPlugin } from "@mail/core/common/record_link_plugin";
 import { StorePlugin } from "@mail/core/common/store_plugin";
+import { MailCorePublicWebPlugin } from "@mail/core/public_web/mail_core_public_web_plugin";
+import { MailCoreWebPlugin } from "@mail/core/web/mail_core_web_plugin";
 import { CameraPreviewPlugin } from "@mail/discuss/call/common/camera_preview_plugin";
+import { RtcPlugin } from "@mail/discuss/call/common/rtc_plugin";
+import { DiscussCoreCommonPlugin } from "@mail/discuss/core/common/discuss_core_common_plugin";
+import { BusConnectionAlertPlugin } from "@mail/discuss/core/public_web/bus_connection_alert";
+import { DiscussCorePublicWebPlugin } from "@mail/discuss/core/public_web/discuss_core_public_web_plugin";
+import { DiscussCoreWebPlugin } from "@mail/discuss/core/web/discuss_core_web_plugin";
+import { VoiceMessagePlugin } from "@mail/discuss/voice_message/common/voice_message_plugin";
 
 /**
  * @param {string} value
@@ -149,13 +161,37 @@ class Root extends Component {
 test("each getter should only be called once and only when needed", async () => {
     clearRegistry(registry.category("services"));
     // these plugins need the legacy services that were just cleared
+    services.delete(AttachmentUploadPlugin);
+    services.delete(BusConnectionAlertPlugin);
     services.delete(CameraPreviewPlugin);
+    services.delete(ChatHubPlugin);
+    services.delete(DiscussCoreCommonPlugin);
+    services.delete(DiscussCorePublicWebPlugin);
+    services.delete(DiscussCoreWebPlugin);
+    services.delete(MailCoreCommonPlugin);
+    services.delete(MailCorePublicWebPlugin);
+    services.delete(MailCoreWebPlugin);
+    services.delete(OutOfFocusPlugin);
     services.delete(RecordLinkPlugin);
+    services.delete(RtcPlugin);
     services.delete(StorePlugin);
+    services.delete(VoiceMessagePlugin);
     after(() => {
+        services.add(AttachmentUploadPlugin);
+        services.add(BusConnectionAlertPlugin);
         services.add(CameraPreviewPlugin);
+        services.add(ChatHubPlugin);
+        services.add(DiscussCoreCommonPlugin);
+        services.add(DiscussCorePublicWebPlugin);
+        services.add(DiscussCoreWebPlugin);
+        services.add(MailCoreCommonPlugin);
+        services.add(MailCorePublicWebPlugin);
+        services.add(MailCoreWebPlugin);
+        services.add(OutOfFocusPlugin);
         services.add(RecordLinkPlugin);
+        services.add(RtcPlugin);
         services.add(StorePlugin);
+        services.add(VoiceMessagePlugin);
     });
 
     patchWithCleanup(PosDataPlugin.prototype, {
@@ -229,13 +265,37 @@ test("each getter should only be called once and only when needed", async () => 
 test("only dependent components rerender", async () => {
     clearRegistry(registry.category("services"));
     // these plugins need the legacy services that were just cleared
+    services.delete(AttachmentUploadPlugin);
+    services.delete(BusConnectionAlertPlugin);
     services.delete(CameraPreviewPlugin);
+    services.delete(ChatHubPlugin);
+    services.delete(DiscussCoreCommonPlugin);
+    services.delete(DiscussCorePublicWebPlugin);
+    services.delete(DiscussCoreWebPlugin);
+    services.delete(MailCoreCommonPlugin);
+    services.delete(MailCorePublicWebPlugin);
+    services.delete(MailCoreWebPlugin);
+    services.delete(OutOfFocusPlugin);
     services.delete(RecordLinkPlugin);
+    services.delete(RtcPlugin);
     services.delete(StorePlugin);
+    services.delete(VoiceMessagePlugin);
     after(() => {
+        services.add(AttachmentUploadPlugin);
+        services.add(BusConnectionAlertPlugin);
         services.add(CameraPreviewPlugin);
+        services.add(ChatHubPlugin);
+        services.add(DiscussCoreCommonPlugin);
+        services.add(DiscussCorePublicWebPlugin);
+        services.add(DiscussCoreWebPlugin);
+        services.add(MailCoreCommonPlugin);
+        services.add(MailCorePublicWebPlugin);
+        services.add(MailCoreWebPlugin);
+        services.add(OutOfFocusPlugin);
         services.add(RecordLinkPlugin);
+        services.add(RtcPlugin);
         services.add(StorePlugin);
+        services.add(VoiceMessagePlugin);
     });
 
     patchWithCleanup(PosDataPlugin.prototype, {

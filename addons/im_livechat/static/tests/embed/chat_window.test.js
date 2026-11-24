@@ -18,13 +18,14 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { Attachment } from "@mail/core/common/attachment_model";
-import { describe, expect, mockFetch, test } from "@odoo/hoot";
+import { MailCorePublicWebPlugin } from "@mail/core/public_web/mail_core_public_web_plugin";
+import { after, describe, expect, mockFetch, test } from "@odoo/hoot";
 import { waitFor, waitForNone } from "@odoo/hoot-dom";
 import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
 import { location } from "@web/core/browser/browser";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { rpc } from "@web/core/network/rpc";
-import { registry } from "@web/core/registry";
+import { services } from "@web/core/services";
 import { patch } from "@web/core/utils/patch";
 import { getOrigin } from "@web/core/utils/urls";
 import { session } from "@web/session";
@@ -156,7 +157,8 @@ test("Logged-in visitor can join a call before the store is initialized", async 
         livechat_channel_id: livechatChannelId,
     });
     setupChatHub({ opened: [channelId] });
-    registry.category("services").remove("mail.core.public.web");
+    services.delete(MailCorePublicWebPlugin);
+    after(() => services.add(MailCorePublicWebPlugin));
     await start({ authenticateAs: { login: "joel", password: "joel" }, waitUntilSubscribe: false });
     await contains(".o-mail-ChatWindow");
     await withUser(serverState.userId, () =>

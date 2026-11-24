@@ -1,5 +1,6 @@
-import { Component } from "@odoo/owl";
+import { Component, Plugin } from "@odoo/owl";
 import { registry } from "@web/core/registry";
+import { services } from "@web/core/services";
 import { useService } from "@web/core/utils/hooks";
 
 export class BusConnectionAlert extends Component {
@@ -11,12 +12,11 @@ export class BusConnectionAlert extends Component {
     }
 }
 
-export const connectionAlertService = {
-    dependencies: ["bus.monitoring_service", "mail.store"],
-    start() {
+export class BusConnectionAlertPlugin extends Plugin {
+    setup() {
         registry
             .category("main_components")
             .add("bus.ConnectionAlert", { Component: BusConnectionAlert });
-    },
-};
-registry.category("services").add("bus.connection_alert", connectionAlertService);
+    }
+}
+services.add(BusConnectionAlertPlugin);

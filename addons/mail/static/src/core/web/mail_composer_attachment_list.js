@@ -1,3 +1,4 @@
+import { usePlugin } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import {
@@ -7,6 +8,7 @@ import {
 import { Many2XBinary } from "@web/views/fields/many2x_binary/many2x_binary";
 import { FullComposerBusPlugin } from "@mail/core/web/full_composer_bus_plugin";
 import { useMaybePlugin } from "@mail/utils/common/hooks";
+import { AttachmentUploadPlugin } from "@mail/core/common/attachment_upload_plugin";
 
 export class MailComposerAttachmentBinary extends Many2XBinary {
     static template = "mail.MailComposerAttachmentBinary";
@@ -21,7 +23,7 @@ export class MailComposerAttachmentList extends Many2ManyBinaryField {
     setup() {
         super.setup();
         this.mailStore = useService("mail.store");
-        this.attachmentUploadService = useService("mail.attachment_upload");
+        this.attachmentUploadService = usePlugin(AttachmentUploadPlugin);
         this.fullComposerBus = useMaybePlugin(FullComposerBusPlugin)?.bus;
     }
     /**

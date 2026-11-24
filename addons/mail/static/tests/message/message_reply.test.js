@@ -9,6 +9,7 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
+import { ComposerPlugin } from "@mail/core/common/composer_plugin";
 import { describe, expect, test } from "@odoo/hoot";
 import { waitFor, waitForNone } from "@odoo/hoot-dom";
 import { disableAnimations } from "@odoo/hoot-mock";
@@ -190,7 +191,7 @@ test("reply to logged note in chatter keeps prefilled mention in html composer",
         ])[0],
     });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openFormView("res.partner", serverState.partnerId);
     await hover(".o-mail-Message:contains('Test message from B')");
     await click(".o-mail-Message:contains('Test message from B') [title='Expand']");
@@ -322,7 +323,7 @@ test("Click reply to note again preserves composer content", async () => {
         },
     ]);
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openFormView("res.partner", serverState.partnerId);
     await hover(".o-mail-Message:contains(I am Justice)");
     await click(".o-mail-Message:contains(I am Justice) [title='Expand']");

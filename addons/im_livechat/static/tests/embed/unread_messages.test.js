@@ -66,8 +66,8 @@ test("new message from operator displays unread counter", async () => {
         authenticateAs: { ...pyEnv["mail.guest"].read(guestId)[0], _name: "mail.guest" },
     });
     await waitStoreFetch([
-        "init_messaging",
         "init_livechat",
+        "init_messaging",
         "discuss.channel",
         "/discuss/channel/messages",
     ]);
@@ -93,7 +93,7 @@ test("focus on unread livechat marks it as read", async () => {
     const userId = serverState.userId;
     listenStoreFetch(["init_messaging", "init_livechat"]);
     await start({ authenticateAs: false, waitUntilSubscribe: false });
-    await waitStoreFetch(["init_messaging", "init_livechat"]);
+    await waitStoreFetch(["init_livechat", "init_messaging"]);
     await click(".o-livechat-LivechatButton");
     // Wait for bus subscription to be done after persisting the thread:
     // presence of the message is not enough (temporary message).
@@ -159,8 +159,8 @@ test("new message from operator is automatically translated", async () => {
         authenticateAs: { ...pyEnv["mail.guest"].read(guestId)[0], _name: "mail.guest" },
     });
     await waitStoreFetch([
-        "init_messaging",
         "init_livechat",
+        "init_messaging",
         "discuss.channel",
         "/discuss/channel/messages",
     ]);

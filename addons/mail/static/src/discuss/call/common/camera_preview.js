@@ -1,3 +1,4 @@
+import { StorePlugin } from "@mail/core/common/store_plugin";
 import { CameraPreviewPlugin } from "@mail/discuss/call/common/camera_preview_plugin";
 
 import {
@@ -12,8 +13,6 @@ import {
     useProps,
 } from "@odoo/owl";
 
-import { useService } from "@web/core/utils/hooks";
-
 export class CameraPreview extends Component {
     static template = "discuss.CameraPreview";
 
@@ -24,7 +23,7 @@ export class CameraPreview extends Component {
             onCameraStateChange: types.function([types.boolean()]).optional(() => () => {}),
         });
         this.cameraPreview = usePlugin(CameraPreviewPlugin);
-        this.rtc = useService("discuss.rtc");
+        this.rtc = usePlugin(StorePlugin).rtc;
         this.state = this.cameraPreview.state;
         this.cameraPreviewAcquired = false;
         this.isMounted = false;

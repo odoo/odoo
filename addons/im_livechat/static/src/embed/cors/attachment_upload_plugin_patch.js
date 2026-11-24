@@ -1,9 +1,9 @@
-import { AttachmentUploadService } from "@mail/core/common/attachment_upload_service";
+import { AttachmentUploadPlugin } from "@mail/core/common/attachment_upload_plugin";
 
 import { patch } from "@web/core/utils/patch";
 import { url } from "@web/core/utils/urls";
 
-patch(AttachmentUploadService.prototype, {
+patch(AttachmentUploadPlugin.prototype, {
     getUploadURL(thread) {
         if (thread.channel?.channel_type === "livechat") {
             return url("/im_livechat/cors/attachment/upload");

@@ -1,7 +1,7 @@
-import { OutOfFocusService } from "@mail/core/common/out_of_focus_service";
+import { OutOfFocusPlugin } from "@mail/core/common/out_of_focus_plugin";
 import { patch } from "@web/core/utils/patch";
 
-patch(OutOfFocusService.prototype, {
+patch(OutOfFocusPlugin.prototype, {
     onWindowFocus() {
         super.onWindowFocus();
         this.store.updateAppBadge();

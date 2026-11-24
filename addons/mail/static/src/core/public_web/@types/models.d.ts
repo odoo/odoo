@@ -5,6 +5,7 @@ declare module "models" {
     export interface Store {
         discuss: DiscussApp;
         messagingMenu: MessagingMenu;
+        notificationPermission: import("@mail/core/common/notification_permission_plugin").NotificationPermissionPlugin;
         showPushPermissionRequest: boolean;
     }
     export interface Thread {

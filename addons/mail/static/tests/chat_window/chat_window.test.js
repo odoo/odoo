@@ -29,6 +29,7 @@ import {
     insertTextInComposer,
     setSelectionInComposer,
 } from "@mail/../tests/mail_test_helpers_composer";
+import { ComposerPlugin } from "@mail/core/common/composer_plugin";
 import { describe, expect, press, test, waitFor, waitForNone } from "@odoo/hoot";
 import { mockDate, tick } from "@odoo/hoot-mock";
 import {
@@ -92,7 +93,7 @@ for (const htmlEnabled of [false, true]) {
         setupChatHub({ opened: [channelId] });
         await start();
         if (htmlEnabled) {
-            getService("mail.composer").setHtmlComposer();
+            getService(ComposerPlugin).setHtmlComposer();
         }
         await insertTextInComposer(".o-mail-ChatWindow .o-mail-Composer", "Hello");
         await press(["control", "z"]);
@@ -108,7 +109,7 @@ test("chat window: format the composer text with a hotkey", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     setupChatHub({ opened: [channelId] });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await insertTextInComposer(".o-mail-ChatWindow .o-mail-Composer", "Hello");
     await setSelectionInComposer(".o-mail-ChatWindow .o-mail-Composer", { start: 0, end: 5 });
     await press(["control", "5"]);

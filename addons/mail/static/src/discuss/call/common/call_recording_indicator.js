@@ -1,5 +1,5 @@
-import { Component, signal, t, useProps } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
+import { StorePlugin } from "@mail/core/common/store_plugin";
+import { Component, signal, t, usePlugin, useProps } from "@odoo/owl";
 import { useHover } from "@mail/utils/common/hooks";
 
 export class CallRecordingIndicator extends Component {
@@ -9,7 +9,7 @@ export class CallRecordingIndicator extends Component {
     rootRef = signal.ref();
 
     setup() {
-        this.rtc = useService("discuss.rtc");
+        this.rtc = usePlugin(StorePlugin).rtc;
         this.rootHover = useHover(this.rootRef);
     }
 }

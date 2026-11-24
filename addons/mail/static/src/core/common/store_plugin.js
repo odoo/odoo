@@ -206,6 +206,14 @@ export class Store extends BaseStore {
     soundEffects;
     /** @type {ImStatusPlugin} */
     imStatus;
+    /** @type {import("@mail/core/common/out_of_focus_plugin").OutOfFocusPlugin} */
+    outOfFocus;
+    /** @type {import("@mail/core/common/attachment_upload_plugin").AttachmentUploadPlugin} */
+    attachmentUpload;
+    /** @type {import("@mail/core/common/notification_permission_plugin").NotificationPermissionPlugin} */
+    notificationPermission;
+    /** @type {import("@mail/discuss/voice_message/common/voice_message_plugin").VoiceMessagePlugin} */
+    voiceMessage;
 
     /** @param {Readonly<Record<string, any>>} [ancestors] @see useAncestors */
     discussDropdownMenuClass(ancestors) {
@@ -415,44 +423,6 @@ export class Store extends BaseStore {
         );
     }
 
-    async requestStartMeeting() {
-        const rtc = this.env.services["discuss.rtc"];
-        if (rtc.channel) {
-            const hasConfirmed = await rtc.askCallSwitchConfirmation({
-                confirmIcon: "videocam",
-                confirmLabel: _t("Start Meeting"),
-                description: _t(
-                    "You will leave the ongoing call and automatically join the new meeting."
-                ),
-                message: _t("Start a new Meeting?"),
-                title: _t("New Meeting Confirmation"),
-            });
-            if (!hasConfirmed) {
-                return;
-            }
-        }
-        await this.startMeeting();
-    }
-
-    async startMeeting() {
-        const localizedDatetime = this.store.self?.tz
-            ? DateTime.now().setZone(this.store.self?.tz)
-            : DateTime.now().toLocal();
-        const formatDate = localizedDatetime.toLocaleString(
-            { month: "short", day: "numeric" },
-            { locale: user.lang }
-        );
-        /** @type {import("models").DiscussChannel} */
-        const channel = await this.createGroupChat({
-            name: _t("Meeting, %(date)s", { date: formatDate }),
-            default_display_mode: "video_full_screen",
-            users_to: [this.self_user.id],
-        });
-        await this.chatHub.initPromise;
-        channel.chatWindow?.update({ autofocus: 0 });
-        await this.env.services["discuss.rtc"].startMeetingCall(channel, { fullscreen: true });
-    }
-
     handleClickOnLink(ev, thread) {
         const link = ev.composedPath()[0].closest("a");
         if (!link) {
@@ -539,7 +509,7 @@ export class Store extends BaseStore {
 
     onPushNotificationDisplayed(payload) {
         if (["mail.thread", "discuss.channel"].includes(payload.model)) {
-            this.env.services["mail.out_of_focus"]._playSound();
+            this.outOfFocus._playSound();
         }
     }
 
@@ -774,7 +744,7 @@ export class Store extends BaseStore {
      *  the messages of that record.
      */
     async removeAttachments(attachments, { keepOnMessages = false } = {}) {
-        const uploadService = this.env.services["mail.attachment_upload"];
+        const uploadService = this.attachmentUpload;
         const uploading = [];
         if (uploadService) {
             for (const att of attachments) {
