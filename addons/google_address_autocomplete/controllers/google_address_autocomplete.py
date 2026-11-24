@@ -2,13 +2,14 @@
 
 import logging
 from pprint import pformat
+from urllib.parse import quote_plus
 
 import requests
 
 from odoo import _, http
 from odoo.exceptions import AccessError
 from odoo.http import request
-from odoo.tools import html2plaintext
+from odoo.tools import html2plaintext, str2bool
 
 _logger = logging.getLogger(__name__)
 
@@ -36,6 +37,8 @@ FIELDS_MAPPING = {
 FIELDS_PRIORITY = ['country', 'street_number', 'locality', 'postal_town', 'route', 'postal_code',
                    'administrative_area_level_1', 'administrative_area_level_2']
 GOOGLE_PLACES_ENDPOINT = 'https://maps.googleapis.com/maps/api/place'
+GOOGLE_PLACES_NEW_ENDPOINT = 'https://places.googleapis.com/v1'
+USE_PLACES_API_NEW_PARAM = 'google_address_autocomplete.use_places_api_new'
 TIMEOUT = 2.5
 
 
@@ -171,6 +174,9 @@ class AutoCompleteController(http.Controller):
             types = res.pop('types')
             res['type'] = next(filter(FIELDS_MAPPING.get, types), types[0])
 
+        return self._google_components_to_standard_address(address, results, html_address)
+
+    def _google_components_to_standard_address(self, address, results, html_address):
         # Sort the result by their priority.
         results.sort(key=lambda r: FIELDS_PRIORITY.index(r['type']) if r['type'] in FIELDS_PRIORITY else 100)
 
@@ -193,9 +199,101 @@ class AutoCompleteController(http.Controller):
     def _call_google_route(self, route, params):
         return requests.get(f'{GOOGLE_PLACES_ENDPOINT}{route}', params=params, timeout=TIMEOUT).json()
 
+    # ------------------------------------------------------------
+    # Places API (New)
+    # ------------------------------------------------------------
+
+    def _perform_place_search_new(self, partial_address, api_key=None, session_id=None, language_code=None, country_code=None):
+        minimal_input_size = int(request.env['ir.config_parameter'].sudo().get_param('google_address_autocomplete.minimal_partial_address_size', '5'))
+        if len(partial_address) <= minimal_input_size:
+            return {
+                'results': [],
+                'session_id': session_id,
+            }
+
+        params = {
+            'input': partial_address,
+            'includedPrimaryTypes': ['street_address', 'premise', 'subpremise', 'route'],
+        }
+        if country_code:
+            params['includedRegionCodes'] = [country_code]
+        if language_code:
+            params['languageCode'] = language_code
+        if session_id:
+            params['sessionToken'] = session_id
+
+        results = self._call_google_route_new(
+            '/places:autocomplete', api_key,
+            'suggestions.placePrediction.placeId,suggestions.placePrediction.text.text',
+            params, method='POST',
+        )
+        predictions = [suggestion['placePrediction'] for suggestion in results.get('suggestions', []) if 'placePrediction' in suggestion]
+
+        # Convert google specific format to standard format.
+        return {
+            'results': [{
+                'formatted_address': prediction['text']['text'],
+                'google_place_id': prediction['placeId'],
+            } for prediction in predictions],
+            'session_id': session_id
+        }
+
+    def _perform_complete_place_search_new(self, address, api_key=None, google_place_id=None, language_code=None, session_id=None):
+        params = {}
+        if language_code:
+            params['languageCode'] = language_code
+        if session_id:
+            params['sessionToken'] = session_id
+
+        results = self._call_google_route_new(
+            f'/places/{quote_plus(google_place_id or "")}', api_key,
+            'addressComponents,adrFormatAddress', params,
+        )
+
+        try:
+            html_address = results['adrFormatAddress']
+            components = results['addressComponents']  # Get rid of useless extra data
+        except KeyError:
+            return {'address': None}
+
+        # Keep only the first known type from the list of types
+        results = [{
+            'long_name': component.get('longText', ''),
+            'short_name': component.get('shortText', ''),
+            'type': next(filter(FIELDS_MAPPING.get, types), types[0] if types else None),
+        } for component in components for types in [component.get('types', [])]]
+
+        return self._google_components_to_standard_address(address, results, html_address)
+
+    def _call_google_route_new(self, route, api_key, field_mask, params, method='GET'):
+        """ Call the Google Places API (New). The API key and field mask are sent as headers,
+        the other params in the JSON body for POST requests or in the query string otherwise.
+        Errors are logged and an empty dict is returned. """
+        headers = {
+            'X-Goog-Api-Key': api_key,
+            'X-Goog-FieldMask': field_mask,
+        }
+        payload = {'json': params} if method == 'POST' else {'params': params}
+        try:
+            response = requests.request(method, f'{GOOGLE_PLACES_NEW_ENDPOINT}{route}', headers=headers, timeout=TIMEOUT, **payload)
+            results = response.json()
+        except (requests.exceptions.RequestException, ValueError) as e:
+            _logger.error("Google Places API call to %s failed: %s", route, e)
+            return {}
+        if not response.ok:
+            # The API (New) reports errors with an HTTP error status and an {"error": {"message": ...}} body
+            error_message = results.get('error', {}).get('message') if isinstance(results, dict) else None
+            _logger.error("Google Places API call to %s failed (HTTP %s): %s", route, response.status_code, error_message or response.text)
+            return {}
+        return results
+
     def _get_api_key(self, use_employees_key):
         assert request.env.user._is_internal()
         return request.env['ir.config_parameter'].sudo().get_param('google_address_autocomplete.google_places_api_key')
+
+    def _use_places_api_new(self, use_employees_key):
+        assert request.env.user._is_internal()
+        return str2bool(request.env['ir.config_parameter'].sudo().get_param(USE_PLACES_API_NEW_PARAM, 'False'), default=False)
 
     @http.route('/autocomplete/address', methods=['POST'], type='jsonrpc', auth='public', website=True)
     def _autocomplete_address(self, partial_address, session_id=None, use_employees_key=None):
@@ -208,6 +306,8 @@ class AutoCompleteController(http.Controller):
                 'results': [],
                 'session_id': session_id
             }
+        if self._use_places_api_new(use_employees_key):
+            return self._perform_place_search_new(partial_address, session_id=session_id, api_key=api_key)
         return self._perform_place_search(partial_address, session_id=session_id, api_key=api_key)
 
     @http.route('/autocomplete/address_full', methods=['POST'], type='jsonrpc', auth='public', website=True)
@@ -216,5 +316,8 @@ class AutoCompleteController(http.Controller):
             api_key = self._get_api_key(use_employees_key)
         except AssertionError:
             raise AccessError(_("You don't have access to the full autocomplete feature."))
+        if self._use_places_api_new(use_employees_key):
+            return self._perform_complete_place_search_new(address, google_place_id=google_place_id,
+                                                           session_id=session_id, api_key=api_key, **kwargs)
         return self._perform_complete_place_search(address, google_place_id=google_place_id,
                                                    session_id=session_id, api_key=api_key, **kwargs)

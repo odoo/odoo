@@ -152,3 +152,15 @@ def make_mock_google_route(on_call=None):
             }
 
     return _call_google_route
+
+
+class MockResponse:
+    """ Mock of a `requests` response, as returned by the Places API (New) """
+    def __init__(self, json_data, status_code=200):
+        self.json_data = json_data
+        self.status_code = status_code
+        self.ok = status_code < 400
+        self.text = str(json_data)
+
+    def json(self):
+        return self.json_data
