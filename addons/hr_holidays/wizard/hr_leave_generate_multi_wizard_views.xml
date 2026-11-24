@@ -25,17 +25,7 @@
                         <field name="hour_to" required="work_entry_type_request_unit != 'hour'" widget="float_time_selection" class="o_hr_narrow_field"/>
                     </div>
                     <field name="work_entry_type_id" widget="many2one_work_entry_type" class="w-100"
-                        domain="[
-                            ('id', 'in', allowed_work_entry_type_ids),
-                            '|',
-                                ('requires_allocation', '=', False),
-                                '&amp;',
-                                    ('has_valid_allocation', '=', True),
-                                    '|',
-                                        ('allows_negative', '=', True),
-                                        '&amp;',
-                                            ('virtual_remaining_leaves', '>', 0),
-                                            ('allows_negative', '=', False),]"/>
+                        domain="[('id', 'in', allowed_work_entry_type_ids), ('id', 'in', valid_work_entry_type_ids)]"/>
                 </group>
                 <field name="name" widget="text" placeholder="e.g. Compensatory time off, Company unavailability, ..."/>
                 <footer>

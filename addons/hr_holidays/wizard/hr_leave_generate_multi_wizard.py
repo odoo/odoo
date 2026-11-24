@@ -131,11 +131,12 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
             },
         }
 
-    @api.depends("employee_ids", "date_from")
+    @api.depends("employee_ids", "date_from", "date_to")
     def _compute_valid_work_entry_type_ids(self):
-        alloc_types, no_alloc_types = self.env["hr.work.entry.type"].search([
-            ('time_off_selectable', '=', True),
-        ]).partitioned('requires_allocation')
+        """The time types without allocation, and the ones with a valid allocation for all the selected employees.
+        Without employee, the time off is generated for all of them: only the time types without allocation.
+        The time types selectable in time off are the allowed ones, ``time_off_selectable`` is not checked here."""
+        alloc_types, no_alloc_types = self.env["hr.work.entry.type"].search([]).partitioned('requires_allocation')
         allocations = self.env['hr.leave.allocation'].search([
             ('work_entry_type_id', 'in', alloc_types.ids),
             ('employee_id', 'in', self.employee_ids.ids),
