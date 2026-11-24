@@ -25,7 +25,7 @@ import unicodedata
 import warnings
 import zlib
 from collections import defaultdict
-from collections.abc import Iterable, Iterator, Mapping, MutableMapping, MutableSet, Reversible, Set as AbstractSet
+from collections.abc import Collection, Iterable, Iterator, Mapping, MutableMapping, MutableSet, Reversible, Set as AbstractSet
 from contextlib import ContextDecorator, contextmanager
 from difflib import HtmlDiff
 from functools import lru_cache, reduce, wraps
@@ -45,7 +45,7 @@ from .float_utils import float_round
 from .which import which
 
 if typing.TYPE_CHECKING:
-    from collections.abc import Callable, Collection, Sequence
+    from collections.abc import Callable, Sequence
     from odoo.api import Environment
     from odoo.addons.base.models.res_lang import LangData
 
@@ -76,6 +76,7 @@ __all__ = [
     'format_time',
     'frozendict',
     'get_lang',
+    'get_object_size',
     'groupby',
     'hash_sign',
     'hmac',
@@ -1940,6 +1941,60 @@ def has_list_types(values, types: tuple[type, ...]) -> bool:
         isinstance(values, (list, tuple)) and len(values) == len(types)
         and all(map(isinstance, values, types))
     )
+
+
+def get_object_size(
+        obj,
+        *,
+        cache_info: str = '',
+        seen_ids: set[int] | None = None,
+        class_slots: dict[int, Iterable[str]] | None = None
+    ) -> int:
+    """ A non-thread-safe recursive object size estimator """
+    from odoo.api import Environment  # noqa: PLC0415
+    from odoo.models import BaseModel  # noqa: PLC0415
+
+    if seen_ids is None:
+        # count internal constants as 0 bytes
+        # just adding some immortal objects (PEP-0683: immortal objects)
+        seen_ids = set(map(id, (None, False, True, (), b'', '', -1, 0, 1, 2, 3, 4, 5)))
+    if class_slots is None:
+        class_slots = {}  # {class_id: combined_slots}
+    total_size = 0
+    objects = [obj]
+
+    while objects:
+        cur_obj = objects.pop()
+        if id(cur_obj) in seen_ids:
+            continue
+
+        if cache_info and isinstance(cur_obj, (BaseModel, Environment)):
+            _logger.error('%s is cached by %s', cur_obj, cache_info)
+            continue
+
+        seen_ids.add(id(cur_obj))
+        total_size += sys.getsizeof(cur_obj)
+
+        if hasattr(cur_obj, '__slots__'):
+            cur_obj_cls = type(cur_obj)
+            attributes = class_slots.get(id(cur_obj_cls))
+            if attributes is None:
+                class_slots[id(cur_obj_cls)] = attributes = tuple({
+                    f'_{cls.__name__}{attr}' if attr.startswith('__') else attr
+                    for cls in cur_obj_cls.__mro__
+                    for attr in getattr(cls, '__slots__', ())
+                })
+            objects.extend(getattr(cur_obj, attr, None) for attr in attributes)
+        if hasattr(cur_obj, '__dict__'):
+            objects.append(cur_obj.__dict__)
+
+        if isinstance(cur_obj, Mapping):
+            objects.extend(cur_obj.values())
+            objects.extend(cur_obj.keys())
+        elif isinstance(cur_obj, Collection) and not isinstance(cur_obj, (str, bytes, bytearray)):
+            objects.extend(cur_obj)
+
+    return total_size
 
 
 def named_to_positional_printf(string: str, args: Mapping) -> tuple[str, tuple]:
