@@ -206,11 +206,14 @@ class SaleOrderLine(models.Model):
                     if move.state != 'done':
                         continue
                     qty += move.product_uom._compute_quantity(move.quantity, line.product_uom_id, rounding_method='HALF-UP')
+                delivery_locations = outgoing_moves.location_dest_id
                 for move in incoming_moves:
-                    # An unlinked move coming from a customer is still a real return, only skip unlinked non-returns (dropship receipts).
+                    # A move coming back from a customer or from where the line delivers is a return even when it is not
+                    # linked to its delivery, skip the other ones (dropship receipts, inter-company resupplies).
                     if move.state != 'done' or (
                         not move.origin_returned_move_id
-                        and not move.location_id._is_outgoing()
+                        and move.location_id.usage != 'customer'
+                        and move.location_id not in delivery_locations
                         and line.product_uom_qty > 0
                         and not move.picking_id.return_id
                     ):
