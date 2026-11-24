@@ -99,6 +99,11 @@ class PosCategory(models.Model):
             if category.hour_until and category.hour_after and category.hour_until < category.hour_after:
                 raise ValidationError(_('The Availability Until must be greater than Availability After.'))
 
+    @api.model
+    def name_create(self, name):
+        category = self.create({'name': name})
+        return category.id, category.display_name
+
     def copy_data(self, default=None):
         default = dict(default or {})
         vals_list = super().copy_data(default=default)
