@@ -726,6 +726,7 @@ test("parseDateTime: arab locale, latin numbering system as input", async () => 
         lang: "ar_001",
         lang_parameters: {
             date_format: "%d %b, %Y",
+            numbering: "arab",
             time_format: "%H:%M:%S",
         },
     });

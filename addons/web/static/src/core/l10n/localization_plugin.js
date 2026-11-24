@@ -19,19 +19,6 @@ import { registry } from "@web/core/registry";
 
 const { Settings } = luxon;
 
-/** @type {[RegExp, string][]} */
-const NUMBERING_SYSTEMS = [
-    [/^ar-(sa|sy|001)$/i, "arab"],
-    [/^bn/i, "beng"],
-    [/^bo/i, "tibt"],
-    // [/^fa/i, "Farsi (Persian)"], // No numberingSystem found in Intl
-    // [/^(hi|mr|ne)/i, "Hindi"], // No numberingSystem found in Intl
-    // [/^my/i, "Burmese"], // No numberingSystem found in Intl
-    [/^pa-in/i, "guru"],
-    [/^ta/i, "tamldec"],
-    [/.*/i, "latn"],
-];
-
 export class LocalizationPlugin extends Plugin {
     // we need the localization plugin to start (and be ready) before the rest
     // of the code can use translated strings, so we define here a low sequence
@@ -91,12 +78,6 @@ export class LocalizationPlugin extends Plugin {
 
         const locale = user.lang || browser.navigator.language;
         Settings.defaultLocale = locale;
-        for (const [re, numberingSystem] of NUMBERING_SYSTEMS) {
-            if (re.test(locale)) {
-                Settings.defaultNumberingSystem = numberingSystem;
-                break;
-            }
-        }
         localization.locale = locale;
         localization.code = jsToPyLocale(locale);
     }
@@ -148,6 +129,7 @@ export class LocalizationPlugin extends Plugin {
             thousandsSep: userLocalization.thousands_sep,
             weekStart: userLocalization.week_start,
         });
+        Settings.defaultNumberingSystem = userLocalization.numbering || "latn";
     }
 }
 

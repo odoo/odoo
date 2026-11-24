@@ -553,6 +553,7 @@ describe("DateTimeInput (datetime)", () => {
         defineParams({
             lang_parameters: {
                 date_format: "%d %b, %Y",
+                numbering: "arab",
                 time_format: "%H:%M:%S",
             },
         });

@@ -549,6 +549,7 @@ class IrHttp(models.AbstractModel):
             "decimal_point": lang_data.decimal_point,
             "thousands_sep": lang_data.thousands_sep,
             "week_start": int(lang_data.week_start),
+            "numbering": lang_data.numbering,
         } if lang_data else None
 
         # Regional languages (ll_CC) must inherit/override their parent lang (ll), but this is

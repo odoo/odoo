@@ -88,7 +88,8 @@ class ResLang(models.CachedModel):
     _cached_data_domain = [('active', '=', True)]
     _cached_data_fields = (
         'name', 'code', 'iso_code', 'url_code', 'active', 'direction', 'date_format',
-        'time_format', 'week_start', 'grouping', 'decimal_point', 'thousands_sep', 'flag_image_url',
+        'time_format', 'week_start', 'grouping', 'decimal_point', 'thousands_sep', 'numbering',
+        'flag_image_url',
     )
 
     _disallowed_datetime_patterns = list(tools.misc.DATETIME_FORMATS_MAP)
@@ -134,6 +135,15 @@ class ResLang(models.CachedModel):
              "The Indian Grouping will represent 123456789 to be 12,34,56,789.00")
     decimal_point = fields.Char(string='Decimal Separator', required=True, default='.', trim=False)
     thousands_sep = fields.Char(string='Thousands Separator', default=',', trim=False)
+    numbering = fields.Selection([
+        ('latn', "Latin Digits (0123456789)"),
+        ('arab', "Arabic-Indic Digits (٠١٢٣٤٥٦٧٨٩)"),
+        ('beng', "Bengali Digits (০১২৩৪৫৬৭৮৯)"),
+        ('guru', "Gurmukhi Digits (੦੧੨੩੪੫੬੭੮੯)"),
+        ('tamldec', "Tamil Digits (௦௧௨௩௪௫௬௭௮௯)"),
+        ('tibt', "Tibetan Digits (༠༡༢༣༤༥༦༧༨༩)"),
+    ], string='Numbering System', required=True, default='latn',
+        help="Digits used to display dates and times.")
 
     @api.depends('code', 'flag_image')
     def _compute_field_flag_image_url(self):
