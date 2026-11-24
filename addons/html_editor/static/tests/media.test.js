@@ -1,7 +1,7 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { click, dblclick, press, waitFor, waitForNone } from "@odoo/hoot-dom";
-import { animationFrame, tick } from "@odoo/hoot-mock";
-import { makeMockEnv, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { animationFrame, Deferred, tick } from "@odoo/hoot-mock";
+import { contains, makeMockEnv, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor } from "./_helpers/editor";
 import { getContent } from "./_helpers/selection";
 import { insertText } from "./_helpers/user_actions";
@@ -303,4 +303,31 @@ test("documents tab domain excludes uploaded fonts and their css", async () => {
     await animationFrame();
     await click(".nav-link:contains('Documents')");
     expect.verifySteps(["fonts excluded from attachments domain"]);
+});
+
+test("should show a loader and disable the button while uploading from URL", async () => {
+    onRpc("ir.attachment", "search_read", () => []);
+    const uploadDeferred = new Deferred();
+    patchWithCleanup(ImageSelector.prototype, {
+        async validateUrl() {
+            return { isValidUrl: true, isValidFileFormat: true };
+        },
+        uploadUrl: () => uploadDeferred,
+    });
+    const env = await makeMockEnv();
+    const { editor } = await setupEditor("<p>a[]bc</p>", { env });
+    await insertText(editor, "/image");
+    await waitFor(".o-we-powerbox");
+    await press("Enter");
+    await contains(".o_upload_media_url_button").click();
+    await contains(".o_we_url_input").edit("https://www.odoo.com/image.png", { confirm: false });
+    await waitFor(".o_we_url_success");
+
+    await click(".o_upload_media_url_button");
+    await animationFrame();
+    expect(".o_upload_media_url_button").not.toBeEnabled();
+    expect(".o_we_url_loading").toHaveCount(1);
+
+    uploadDeferred.resolve();
+    await waitForNone(".o_we_url_loading");
 });
