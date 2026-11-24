@@ -651,7 +651,9 @@
             <field name="priority">999</field>
             <field name="arch" type="xml">
                 <xpath expr="//list" position="attributes">
-                    <attribute name="js_class">account_x2many_list</attribute>
+                    <attribute name="js_class"/> <!-- override "account_tree" -->
+                    <attribute name="action">action_open_business_doc</attribute>
+                    <attribute name="type">object</attribute>
                     <attribute name="create">false</attribute>
                 </xpath>
                 <xpath expr="//field[@name='name']" position="attributes">
