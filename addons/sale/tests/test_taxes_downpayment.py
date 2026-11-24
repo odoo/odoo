@@ -445,13 +445,13 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
                 # Down payment section line:
                 {'tax_ids': [],                     'amount_currency': 0.0,         'balance': 0.0},
                 # Down payment:
-                {'tax_ids': tax_15.ids,             'amount_currency': 360.0,       'balance': 180.0},
+                {'tax_ids': tax_15.ids,             'amount_currency': 360.0,       'balance': 120.0},
                 # Tax 15%:
                 {'tax_ids': [],                     'amount_currency': -180.0,      'balance': -90.0},
                 # Tax 15%:
-                {'tax_ids': [],                     'amount_currency': 54.0,        'balance': 27.0},
+                {'tax_ids': [],                     'amount_currency': 54.0,        'balance': 18.0},
                 # Receivable line:
-                {'tax_ids': [],                     'amount_currency': 966.0,       'balance': 483.0},
+                {'tax_ids': [],                     'amount_currency': 966.0,       'balance': 552.0},
             ])
 
     def test_down_payment_invoice_then_refunded_then_invoiced_again(self):

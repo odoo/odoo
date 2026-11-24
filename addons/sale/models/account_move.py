@@ -173,6 +173,15 @@ class AccountMove(models.Model):
         self.ensure_one()
         return self.line_ids.sale_line_ids and all(sale_line.is_downpayment for sale_line in self.line_ids.sale_line_ids) or False
 
+    def _get_product_base_line_currency_rate(self, product_line):
+        # EXTENDS 'account'
+        if product_line.quantity < 0:
+            dp_so_lines = product_line.sale_line_ids.filtered('is_downpayment')
+            dp_lines = dp_so_lines.invoice_lines.filtered(lambda l: l.move_id._is_downpayment())
+            if dp_lines:
+                return dp_lines[0].currency_rate
+        return super()._get_product_base_line_currency_rate(product_line)
+
     def _get_sale_order_invoiced_amount(self, order):
         """
         Consider all lines on any invoice in self that stem from the sales order `order`. (All those invoices belong to order.company_id)
