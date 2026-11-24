@@ -21,8 +21,9 @@
 
     <record id="action_fs_cash_flow" model="ir.actions.client">
         <field name="name">Cash Flow Statement</field>
-        <field name="tag">account_fs_report.placeholder</field>
+        <field name="tag">account_fs_report.main</field>
         <field name="path">cash-flow</field>
+        <field name="context" eval="{'report_id': ref('account_fs_report.fs_report_cash_flow')}"/>
     </record>
 
     <record id="action_fs_general_ledger" model="ir.actions.client">

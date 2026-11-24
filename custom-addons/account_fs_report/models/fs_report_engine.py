@@ -225,6 +225,8 @@ class FsReportEngine(models.AbstractModel):
     def get_report_data(self, report_id, options):
         self = self.with_context(allowed_company_ids=options['company_ids'])
         report = self.env['fs.report'].browse(report_id)
+        if report.report_type == 'cash_flow':
+            return self.env['fs.cash.flow'].get_report_data(report, options)
         columns = options['columns']
         n = len(columns)
         Account = self.env['account.account'].sudo()
@@ -385,7 +387,12 @@ class FsReportEngine(models.AbstractModel):
     @api.model
     def get_account_lines(self, line_id, options):
         self = self.with_context(allowed_company_ids=options['company_ids'])
+        # Cash Flow uses string layout ids (opening_balance, …), not fs.report.line.
+        if isinstance(line_id, str) or options.get('report_type') == 'cash_flow':
+            return self.env['fs.cash.flow'].get_account_lines(line_id, options)
         line = self.env['fs.report.line'].browse(line_id)
+        if not line.exists():
+            return self.env['fs.cash.flow'].get_account_lines(line_id, options)
         report = line.report_id
         is_period = report.report_type == 'period'
         wanted = {t.strip() for t in (line.account_types or '').split(',') if t.strip()}
@@ -498,7 +505,7 @@ class FsReportEngine(models.AbstractModel):
             (options.get('company_ids') or [self.env.company.id])[0]
         )
         start_day, start_month = self._fiscal_period_start_day_month(company)
-        range_mode = target_report.report_type == 'period'
+        range_mode = target_report.report_type in ('period', 'cash_flow')
 
         if not range_mode:
             # Target is single-date (e.g. P&amp;L → BS): keep as-of, drop range start.

@@ -11,7 +11,8 @@ class FsReport(models.Model):
     code = fields.Char(required=True)
     report_type = fields.Selection(
         [('balance_sheet', 'As-of date (Balance Sheet)'),
-         ('period', 'Date range (P&L, Cash Flow)')],
+         ('period', 'Date range (P&L)'),
+         ('cash_flow', 'Cash Flow Statement (Direct)')],
         required=True, default='balance_sheet')
     line_ids = fields.One2many('fs.report.line', 'report_id', string='Lines')
 

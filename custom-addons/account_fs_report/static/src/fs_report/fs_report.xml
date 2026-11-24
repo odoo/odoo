@@ -31,8 +31,9 @@
                             fiscalStartMonth="this.state.fiscalStartMonth"
                             onPeriodSelected.bind="this.onDatePeriodSelected"
                         />
-                        <!-- Comparison (Enterprise AccountReportFilterComparison) -->
+                        <!-- Comparison (Enterprise AccountReportFilterComparison; hidden on Cash Flow Direct) -->
                         <FsReportFilterComparison
+                            t-if="this.showComparisonFilter"
                             compare="this.state.compare"
                             numberPeriod="this.state.numberPeriod"
                             periodOrder="this.state.periodOrder"

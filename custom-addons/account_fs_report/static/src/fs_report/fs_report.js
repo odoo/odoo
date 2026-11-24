@@ -99,9 +99,14 @@ export class FsReport extends Component {
         return this.props.action.context.report_id;
     }
 
-    /** Enterprise filter_date.range_mode — true for P&L / period reports. */
+    /** Enterprise filter_date.range_mode — true for P&L / Cash Flow. */
     get isRangeMode() {
-        return this.reportType === "period";
+        return this.reportType === "period" || this.reportType === "cash_flow";
+    }
+
+    /** Enterprise Direct CF: filter_period_comparison=False. */
+    get showComparisonFilter() {
+        return this.reportType !== "cash_flow";
     }
 
     get showHorizontalSplit() {
@@ -425,6 +430,9 @@ export class FsReport extends Component {
                 base_report_line_id: this.state.baseReportLineId || false,
             },
             growth_display: this.state.growthDisplay,
+            unfold_all: this.state.unfoldAll,
+            report_type: this.reportType,
+            report_id: this.reportId,
         };
     }
 
@@ -601,6 +609,9 @@ export class FsReport extends Component {
         const accountsOpen = row.kind === "line" && Boolean(this.state.accountLines[row.id]);
         if (hasReportChildren || accountsOpen) {
             classes += " unfolded";
+        }
+        if (row.css_class) {
+            classes += ` ${row.css_class}`;
         }
         return classes;
     }
@@ -826,6 +837,15 @@ export class FsReport extends Component {
         }
         this.state.lines = data.lines;
         this.state.hasUnposted = Boolean(data.has_unposted);
+        // Cash Flow (and any line with embedded accounts + default_unfolded):
+        // seed account expansions without a second RPC (Enterprise always returns AMLs).
+        const seeded = {};
+        for (const line of data.lines || []) {
+            if (line.accounts?.length && (this.state.unfoldAll || line.default_unfolded)) {
+                seeded[line.id] = line.accounts;
+            }
+        }
+        this.state.accountLines = seeded;
         this.state.loading = false;
         this.saveSessionOptions();
         if (this.state.unfoldAll) {
@@ -921,14 +941,20 @@ export class FsReport extends Component {
             return;
         }
         if (this.state.accountLines[line.id]) {
-            delete this.state.accountLines[line.id];
+            const next = { ...this.state.accountLines };
+            delete next[line.id];
+            this.state.accountLines = next;
+            return;
+        }
+        if (line.accounts?.length) {
+            this.state.accountLines = { ...this.state.accountLines, [line.id]: line.accounts };
             return;
         }
         const accounts = await this.orm.call("fs.report.engine", "get_account_lines", [
             line.id,
             this.options,
         ]);
-        this.state.accountLines[line.id] = accounts;
+        this.state.accountLines = { ...this.state.accountLines, [line.id]: accounts };
     }
 
     onOpenAccount(account) {
