@@ -1033,6 +1033,14 @@ class OrderedSet[T](MutableSet[T]):
     def __len__(self):
         return len(self._map)
 
+    def __eq__(self, other):
+        # faster than Set.__eq__, which checks elements one by one
+        if isinstance(other, OrderedSet):
+            return self._map.keys() == other._map.keys()
+        return self._map.keys() == other
+
+    __hash__ = None  # mutable, like set
+
     def __and__(self, other):
         # preserve order of this set
         if not isinstance(other, Iterable):
