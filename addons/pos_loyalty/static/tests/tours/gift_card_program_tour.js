@@ -137,7 +137,7 @@ registry.category("web_tour.tours").add("MultiplePhysicalGiftCardProgramSaleTour
             ProductScreen.clickDisplayedProduct("Gift Card"),
             PosLoyalty.clickGiftCardProgram("Gift Cards1"),
             PosLoyalty.createManualGiftCard("test_card_0000", 125),
-            PosLoyalty.clickGiftCardProgram("Gift Cards"),
+            PosLoyalty.clickGiftCardProgram("Gift Cards1"),
             ProductScreen.selectedOrderlineHas("Gift Card", "1.00", "125"),
             PosLoyalty.orderTotalIs("125"),
             PosLoyalty.finalizeOrder("Cash", "125"),
