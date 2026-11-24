@@ -164,6 +164,7 @@ class LeaveReport(models.Model):
                         sub.active_employee,
                         GREATEST(sub.cumul_rem_days - COALESCE(LAG(sub.cumul_rem_days) OVER w, 0), 0) as number_of_days,
                         GREATEST(sub.cumul_rem_hours - COALESCE(LAG(sub.cumul_rem_hours) OVER w, 0), 0) as number_of_hours,
+                        sub.number_of_days / NULLIF(sub.number_of_hours, 0) as days_per_hour,
                         sub.department_id,
                         sub.leave_type,
                         sub.state,
@@ -205,7 +206,9 @@ class LeaveReport(models.Model):
                     SELECT
 						fb.employee_id as employee_id,
 						fb.active_employee as active_employee,
-						fb.number_of_days as number_of_days,
+                        CASE WHEN lt.request_unit = 'hour' THEN
+                            COALESCE(fb.number_of_hours * fb.days_per_hour, 0)
+                        ELSE fb.number_of_days END as number_of_days,
 						fb.number_of_hours as number_of_hours,
 						fb.department_id as department_id,
 						fb.leave_type as leave_type,
@@ -215,6 +218,7 @@ class LeaveReport(models.Model):
 						'left' as holiday_status,
 						fb.company_id as company_id
                     FROM fifo_balances fb
+                    JOIN hr_leave_type lt ON lt.id = fb.leave_type
                     WHERE fb.number_of_days >= 0
 
                     /* Planned and taken leave requests */
