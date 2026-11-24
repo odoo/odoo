@@ -1,6 +1,6 @@
 {
     'name': 'Financial Statements (Community)',
-    'version': '20.0.1.0.0',
+    'version': '20.0.1.9.6',
     'category': 'Accounting/Accounting',
     'depends': ['account'],
     'data': [

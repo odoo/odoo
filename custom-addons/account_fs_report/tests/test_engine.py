@@ -101,7 +101,7 @@ class TestFsReportEngine(AccountTestInvoicingCommon):
             'company_ids': company.ids,
             'target_move': 'posted',
             'columns': [{'label': 'As of', 'date_to': as_of}],
-        })
+        })['lines']
         amounts = {row['code']: row['columns'][0] for row in rows}
         self.assertAlmostEqual(amounts['TA'], amounts['TLE'])
         self.assertAlmostEqual(amounts['CYE'], 250.0)
@@ -148,7 +148,7 @@ class TestFsReportEngine(AccountTestInvoicingCommon):
             'company_ids': company.ids,
             'target_move': 'posted',
             'columns': [{'label': 'cur', 'date_to': '2026-12-31'}],
-        })
+        })['lines']
         amounts = {row['code']: row['columns'][0] for row in rows}
         self.assertAlmostEqual(amounts['TA'], amounts['TLE'])
 
@@ -165,7 +165,7 @@ class TestFsReportEngine(AccountTestInvoicingCommon):
         }
         before = {
             row['code']: row['columns'][0]
-            for row in self.env['fs.report.engine'].get_report_data(report.id, options)
+            for row in self.env['fs.report.engine'].get_report_data(report.id, options)['lines']
         }
         retained = self.env['account.account'].create({
             'name': 'Retained Earnings Test',
@@ -200,7 +200,7 @@ class TestFsReportEngine(AccountTestInvoicingCommon):
         move.action_post()
         after = {
             row['code']: row['columns'][0]
-            for row in self.env['fs.report.engine'].get_report_data(report.id, options)
+            for row in self.env['fs.report.engine'].get_report_data(report.id, options)['lines']
         }
         self.assertAlmostEqual(after['CYE'] - before['CYE'], 5000.0)
         self.assertAlmostEqual(after['EQ'], before['EQ'])
@@ -218,7 +218,7 @@ class TestFsReportEngine(AccountTestInvoicingCommon):
         }
         before = {
             row['code']: row['columns'][0]
-            for row in self.env['fs.report.engine'].get_report_data(report.id, options)
+            for row in self.env['fs.report.engine'].get_report_data(report.id, options)['lines']
         }
         unaffected = self.env['account.account'].create({
             'name': 'Unaffected Earnings Test',
@@ -253,7 +253,7 @@ class TestFsReportEngine(AccountTestInvoicingCommon):
         move.action_post()
         after = {
             row['code']: row['columns'][0]
-            for row in self.env['fs.report.engine'].get_report_data(report.id, options)
+            for row in self.env['fs.report.engine'].get_report_data(report.id, options)['lines']
         }
         self.assertAlmostEqual(after['CYE'] - before['CYE'], 2000.0)
         self.assertAlmostEqual(after['EQ'], before['EQ'])
@@ -265,7 +265,7 @@ class TestFsReportEngine(AccountTestInvoicingCommon):
             'target_move': 'posted',
             'journal_ids': [],
             'columns': [{'label': 'cur', 'date_to': fields.Date.today()}],
-        })
+        })['lines']
         self.assertEqual(
             [r['code'] for r in rows],
             ['TA', 'CA', 'BANK', 'REC', 'CAO', 'PRE', 'FA', 'NCA',
@@ -323,14 +323,14 @@ class TestFsReportEngine(AccountTestInvoicingCommon):
         }
         amounts = {
             row['code']: row['columns'][0]
-            for row in self.env['fs.report.engine'].get_report_data(report.id, options)
+            for row in self.env['fs.report.engine'].get_report_data(report.id, options)['lines']
         }
         self.assertAlmostEqual(amounts['CYE'], 4000.0)
         self.assertAlmostEqual(amounts['PYE'], 10000.0)
         options['columns'] = [{'label': 'cur', 'date_to': '2025-03-31'}]
         amounts = {
             row['code']: row['columns'][0]
-            for row in self.env['fs.report.engine'].get_report_data(report.id, options)
+            for row in self.env['fs.report.engine'].get_report_data(report.id, options)['lines']
         }
         self.assertAlmostEqual(amounts['CYE'], 10000.0)
         self.assertAlmostEqual(amounts['PYE'], 0.0)
@@ -432,7 +432,7 @@ class TestFsReportEngine(AccountTestInvoicingCommon):
             'journal_ids': [],
             'columns': [{'label': 'cur', 'date_to': '2025-12-31'}],
         }
-        rows = self.env['fs.report.engine'].get_report_data(report.id, options)
+        rows = self.env['fs.report.engine'].get_report_data(report.id, options)['lines']
         amounts = {row['code']: row['columns'][0] for row in rows}
         self.assertAlmostEqual(amounts['BANK'], 90000.0)
         self.assertAlmostEqual(amounts['EQ'], 100000.0)
@@ -442,7 +442,7 @@ class TestFsReportEngine(AccountTestInvoicingCommon):
         self.assertAlmostEqual(amounts['TA'], amounts['TLE'])
 
         options['columns'] = [{'label': 'cur', 'date_to': '2024-12-31'}]
-        rows = self.env['fs.report.engine'].get_report_data(report.id, options)
+        rows = self.env['fs.report.engine'].get_report_data(report.id, options)['lines']
         codes = {row['code'] for row in rows}
         self.assertNotIn('CTA', codes)
         self.assertNotIn('OCI', codes)
@@ -518,7 +518,7 @@ class TestFsReportEngine(AccountTestInvoicingCommon):
             'journal_ids': [],
             'columns': [{'label': 'cur', 'date_to': '2025-06-30'}],
         }
-        rows = self.env['fs.report.engine'].get_report_data(report.id, options)
+        rows = self.env['fs.report.engine'].get_report_data(report.id, options)['lines']
         amounts = {row['code']: row['columns'][0] for row in rows}
         self.assertAlmostEqual(amounts['CYE'], 52417.13, places=2)
         self.assertAlmostEqual(amounts['BANK'], 37500.0, places=2)

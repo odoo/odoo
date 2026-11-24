@@ -10,7 +10,8 @@ class FsReportController(http.Controller):
     def export_xlsx(self, report_id, options, **kw):
         report_id = int(report_id)
         options = json.loads(options)
-        rows = request.env['fs.report.engine'].get_report_data(report_id, options)
+        data = request.env['fs.report.engine'].get_report_data(report_id, options)
+        rows = data['lines'] if isinstance(data, dict) else data
         report = request.env['fs.report'].browse(report_id)
         buf = io.BytesIO()
         wb = xlsxwriter.Workbook(buf, {'in_memory': True})
@@ -60,21 +61,24 @@ class FsReportController(http.Controller):
         ws.set_column(0, 0, 45)
         ws.set_column(1, len(options['columns']), 18)
         wb.close()
+        file_name = report.get_default_report_filename(options, 'xlsx')
         return request.make_response(buf.getvalue(), headers=[
             ('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
-            ('Content-Disposition', content_disposition(report.name + '.xlsx')),
+            ('Content-Disposition', content_disposition(file_name)),
         ])
 
     @http.route('/account_fs_report/export/pdf', type='http', auth='user')
     def export_pdf(self, report_id, options, **kw):
         report_id = int(report_id)
         options = json.loads(options)
-        rows = request.env['fs.report.engine'].get_report_data(report_id, options)
+        data = request.env['fs.report.engine'].get_report_data(report_id, options)
+        rows = data['lines'] if isinstance(data, dict) else data
         report = request.env['fs.report'].browse(report_id)
         pdf, _ = request.env['ir.actions.report']._render_qweb_pdf(
             'account_fs_report.report_fs_pdf', res_ids=[report_id],
             data={'rows': rows, 'options': options, 'title': report.name})
+        file_name = report.get_default_report_filename(options, 'pdf')
         return request.make_response(pdf, headers=[
             ('Content-Type', 'application/pdf'),
-            ('Content-Disposition', content_disposition(report.name + '.pdf')),
+            ('Content-Disposition', content_disposition(file_name)),
         ])

@@ -12,6 +12,7 @@
       <field name="report_id" ref="fs_report_balance_sheet"/>
       <field name="sequence">10</field><field name="code">TA</field><field name="name">ASSETS</field>
       <field name="formula_type">none</field>
+      <field name="horizontal_split_side">left</field>
     </record>
     <record id="bs_current_assets" model="fs.report.line">
       <field name="report_id" ref="fs_report_balance_sheet"/><field name="parent_id" ref="bs_assets"/>
@@ -49,36 +50,43 @@
       <field name="formula_type">account_type</field><field name="account_types">asset_non_current</field>
     </record>
 
-    <!-- LIABILITIES (sign -1 so credits show positive) -->
+    <!-- LIABILITIES (sign -1 so credits show positive; green_on_positive=False like Enterprise) -->
     <record id="bs_liab_equity" model="fs.report.line">
       <field name="report_id" ref="fs_report_balance_sheet"/>
       <field name="sequence">20</field><field name="code">TL</field><field name="name">LIABILITIES</field>
       <field name="formula_type">none</field>
+      <field name="green_on_positive" eval="False"/>
+      <field name="horizontal_split_side">right</field>
     </record>
     <record id="bs_current_liab" model="fs.report.line">
       <field name="report_id" ref="fs_report_balance_sheet"/><field name="parent_id" ref="bs_liab_equity"/>
       <field name="sequence">10</field><field name="code">CL</field><field name="name">Current Liabilities</field>
       <field name="formula_type">none</field>
+      <field name="green_on_positive" eval="False"/>
     </record>
     <record id="bs_cl_other" model="fs.report.line">
       <field name="report_id" ref="fs_report_balance_sheet"/><field name="parent_id" ref="bs_current_liab"/>
       <field name="sequence">10</field><field name="code">CLO</field><field name="name">Current Liabilities</field>
       <field name="formula_type">account_type</field><field name="account_types">liability_current</field><field name="sign">-1</field>
+      <field name="green_on_positive" eval="False"/>
     </record>
     <record id="bs_credit_card" model="fs.report.line">
       <field name="report_id" ref="fs_report_balance_sheet"/><field name="parent_id" ref="bs_current_liab"/>
       <field name="sequence">15</field><field name="code">CC</field><field name="name">Credit Card</field>
       <field name="formula_type">account_type</field><field name="account_types">liability_credit_card</field><field name="sign">-1</field>
+      <field name="green_on_positive" eval="False"/>
     </record>
     <record id="bs_payable" model="fs.report.line">
       <field name="report_id" ref="fs_report_balance_sheet"/><field name="parent_id" ref="bs_current_liab"/>
       <field name="sequence">20</field><field name="code">PAY</field><field name="name">Payables</field>
       <field name="formula_type">account_type</field><field name="account_types">liability_payable</field><field name="sign">-1</field>
+      <field name="green_on_positive" eval="False"/>
     </record>
     <record id="bs_ncl" model="fs.report.line">
       <field name="report_id" ref="fs_report_balance_sheet"/><field name="parent_id" ref="bs_liab_equity"/>
       <field name="sequence">20</field><field name="code">NCL</field><field name="name">Non-current Liabilities</field>
       <field name="formula_type">account_type</field><field name="account_types">liability_non_current</field><field name="sign">-1</field>
+      <field name="green_on_positive" eval="False"/>
     </record>
 
     <!-- EQUITY (& EARNINGS) -->
@@ -86,6 +94,7 @@
       <field name="report_id" ref="fs_report_balance_sheet"/>
       <field name="sequence">30</field><field name="code">EQE</field><field name="name">EQUITY (&amp; EARNINGS)</field>
       <field name="formula_type">none</field>
+      <field name="horizontal_split_side">right</field>
     </record>
     <record id="bs_retained" model="fs.report.line">
       <field name="report_id" ref="fs_report_balance_sheet"/><field name="parent_id" ref="bs_equity"/>
@@ -122,11 +131,13 @@
       <field name="hide_if_zero" eval="True"/>
     </record>
 
-    <!-- TOTAL -->
+    <!-- TOTAL — Enterprise LE expression green_on_positive=False → red on increase -->
     <record id="bs_total_le" model="fs.report.line">
       <field name="report_id" ref="fs_report_balance_sheet"/>
       <field name="sequence">40</field><field name="code">TLE</field><field name="name">LIABILITIES + EQUITY</field>
       <field name="formula_type">aggregation</field><field name="aggregation">TL+EQE</field>
+      <field name="green_on_positive" eval="False"/>
+      <field name="horizontal_split_side">right</field>
     </record>
   </data>
 </odoo>
