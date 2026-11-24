@@ -161,3 +161,31 @@ class TestWebsiteSaleFuzzy(TransactionCase):
         self.assertFalse(fuzzy_term)
         self.assertEqual(count, 1)
         self.assertEqual(details[0]['results'].ids, self.valid_product.ids)
+
+    def test_exact_match_ranked_first_for_multiword_search(self):
+        website = self.env.ref('website.default_website')
+        ingredients = [
+            'Bacon', 'Cheddar', 'Avocado', 'Jalapeno', 'Mushroom',
+            'Onion', 'Tomato', 'Pickles', 'Egg', 'Truffle',
+        ]
+        for idx, ingredient in enumerate(ingredients, start=1):
+            self.env['product.template'].create({
+                'name': f'Burger with {ingredient}',
+                'is_published': True,
+                'website_sequence': idx,
+            })
+
+        options = {
+            'displayImage': False,
+            'displayDescription': False,
+            'displayExtraLink': False,
+            'displayDetail': False,
+            'allowFuzzy': True,
+        }
+        results_count, results, fuzzy_term = website._search_with_fuzzy(
+            'products_only', 'Burger with Truffle', 5, 'website_sequence asc', options
+        )
+        self.assertFalse(fuzzy_term)
+        self.assertEqual(results_count, 10)
+        self.assertEqual(len(results[0]['results']), 5)
+        self.assertEqual(results[0]['results'][0].name, 'Burger with Truffle')
