@@ -430,7 +430,8 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         """
         Tests that the MO cannot be confirmed if the linked project does not
         have an analytic account set on all plans mandatory for the
-        'Manufacturing Order' business domain.
+        'Manufacturing Order' business domain. An MO without project is
+        confirmed.
         """
         self.env.user.group_ids += self.env.ref('mrp.group_mrp_routings')
         self.applicability.business_domain = 'manufacturing_order'
@@ -444,15 +445,16 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         })
         self.project[f'{new_analytic_plan._column_name()}'] = new_analytic_account  # Create a new AA and link it to another plan of the project
 
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = self.product
-        mo_form.bom_id = self.bom
-        mo_form.product_qty = 1
-        mo_form.project_id = self.project
-        mo = mo_form.save()
+        mo, mo_without_project = self.env['mrp.production'].create([
+            {'product_id': self.product.id, 'project_id': self.project.id},
+            {'product_id': self.product.id},
+        ])
 
         with self.assertRaisesRegex(ValidationError, "The Project linked to the Manufacturing Order is missing a mandatory distribution"):
             mo.action_confirm()
+
+        mo_without_project.action_confirm()
+        self.assertEqual(mo_without_project.state, 'confirmed')
 
     def test_bom_aal_generation(self):
         """ This test ensure that when a project is set on a BOM, the aal are correctly generated when the workorder of
