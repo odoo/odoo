@@ -2,6 +2,7 @@
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.fields import Command
 from odoo.addons.mail.tools.discuss import Store
 
 
@@ -62,8 +63,9 @@ class MailPoll(models.Model):
         stores = Store.Stores()
         self.poll_end_dt = fields.Datetime.now()
         for poll in self:
-            thread_by_poll[poll].with_context(mail_end_poll=poll).message_post(
+            thread_by_poll[poll].message_post(
                 body="",
+                ended_poll_ids=[Command.link(poll.id)],
                 message_type="comment",
                 subtype_xmlid="mail.mt_comment",
             )
