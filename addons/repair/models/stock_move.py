@@ -308,6 +308,12 @@ class StockMove(models.Model):
             return []
         return super(StockMove, self)._split(qty, restrict_partner_id)
 
+    def _action_replenish(self, values=False):
+        values = values or {}
+        if self.repair_id:
+            values['reference_ids'] = self.reference_ids
+        super()._action_replenish(values)
+
     def action_show_details(self):
         action = super().action_show_details()
         if self.repair_line_type == 'recycle':
