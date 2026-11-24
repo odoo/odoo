@@ -122,7 +122,7 @@ class SaleOrderLine(models.Model):
             and website.prevent_sale
             and website._prevent_product_sale(
                 self.product_template_id,
-                sum(self._get_lines_with_price().mapped("price_unit")) == 0,
+                self.currency_id.is_zero(sum(self._get_lines_with_price().mapped("price_unit"))),
             )
             # Only allow zero-price exemption for zero_price mode, not for category-based prevention
             and not (
