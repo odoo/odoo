@@ -242,5 +242,7 @@ class ResCompany(models.Model):
                     ],
                 ])
             taxes_to_activate = taxes.filtered_domain(activate_domain)
+            # activate child taxes with their parents
+            taxes_to_activate |= taxes_to_activate.children_tax_ids
             taxes_to_activate.active = True
             (taxes - taxes_to_activate).active = False
