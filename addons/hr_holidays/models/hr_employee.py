@@ -643,7 +643,7 @@ class HrEmployee(models.Model):
         :param work_entry_types: ``hr.work.entry.type`` records to consider
         :param datetime.date target_date: date of the balance, today by default; the accrual
             allocations include what they will have accrued by then
-        :param bool ignore_future: only consider requests starting by ``target_date`` and no
+        :param bool ignore_future: only consider leaves and allocations starting by ``target_date`` and no
             future accrual
         :param dict precomputed_allocations: ``{allocation: allocation_data}`` already computed
             for ``target_date`` (see ``hr.leave.allocation._process_accrual_plans()``), used as
@@ -689,11 +689,14 @@ class HrEmployee(models.Model):
         for leave in leaves:
             leaves_per_employee_type[leave.employee_id][allocation_type_per_leave_type[leave.work_entry_type_id]] |= leave
 
-        allocations = self.env['hr.leave.allocation'].with_context(active_test=False).search([
+        allocations_domain = [
             ('employee_id', 'in', employees.ids),
             ('work_entry_type_id', 'in', work_entry_types.ids),
             ('state', '=', 'validate'),
-        ])
+        ]
+        if ignore_future:
+            allocations_domain.append(('date_from', '<=', target_date))
+        allocations = self.env['hr.leave.allocation'].with_context(active_test=False).search(allocations_domain)
         allocations_per_employee_type = defaultdict(lambda: defaultdict(lambda: self.env['hr.leave.allocation']))
         for allocation in allocations:
             allocations_per_employee_type[allocation.employee_id][allocation.work_entry_type_id] |= allocation
