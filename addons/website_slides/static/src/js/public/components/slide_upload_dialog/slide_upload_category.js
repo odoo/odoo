@@ -121,8 +121,8 @@ export class SlideUploadCategory extends Component {
 
     onClickCreateTagBtn(tagName) {
         const tempId = uniqueId("temp");
-        this.state.choices.tags.push({ value: tempId, label: tagName });
-        this.state.choices.tagIds.push(tempId);
+        this.state.choices.tags = [...this.state.choices.tags, { value: tempId, label: tagName }];
+        this.state.choices.tagIds = [...this.state.choices.tagIds, tempId];
     }
 
     // Form
