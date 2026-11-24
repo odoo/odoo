@@ -248,10 +248,10 @@
                 <header>
                     <button name="action_validate" string="Approve" type="object"
                             class="btn-primary"
-                            invisible="state != 'draft' or not check_out or not is_manager"
+                            invisible="state != 'draft' or not check_out or not is_manager or not id"
                             groups="hr_attendance.group_hr_attendance_officer"/>
                     <button name="action_refuse" string="Refuse" type="object"
-                            invisible="state not in ('draft', 'validated') or not is_manager"
+                            invisible="state not in ('draft', 'validated') or not is_manager or not id"
                             groups="hr_attendance.group_hr_attendance_officer"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,validated"
                            options="{'clickable': '1'}" readonly="not is_manager or not id"/>
