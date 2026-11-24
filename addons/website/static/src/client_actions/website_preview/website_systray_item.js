@@ -45,6 +45,10 @@ export class WebsiteSystrayItem extends Component {
         return this.website.isRestrictedEditor;
     }
 
+    get isDesigner() {
+        return this.website.isDesigner;
+    }
+
     get hasEditableRecordInBackend() {
         return this.website.hasEditableRecordInBackend;
     }

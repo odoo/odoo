@@ -117,7 +117,7 @@ class IrHttp(models.AbstractModel):
         if not request:
             yield from super()._generate_routing_rules(modules, converters)
             return
-        website_id = self.env.website.id or self.env.context['host_id']
+        website_id = self.env.website.id or self.env.context.get('host_id')
         logger.debug("_generate_routing_rules for website: %s", website_id)
         rewrites = self._get_rewrites(website_id)
         self._rewrite_len.__cache__.add_value(self, website_id, cache_value=len(rewrites))
@@ -276,12 +276,11 @@ class IrHttp(models.AbstractModel):
         the URL matches.
         """
         Module = self.env['ir.module.module']
-        if not request or not url or not url.startswith('/'):
+        if not url or not url.startswith('/'):
             return Module
+        router = self.routing_map().bind('')
         try:
-            rule, _args = request.env['ir.http'].routing_map().bind_to_environ(
-                request.httprequest.environ,
-            ).match(path_info=url, return_rule=True)
+            rule, _args = router.match(path_info=url, return_rule=True)
         except (werkzeug.exceptions.NotFound, werkzeug.exceptions.MethodNotAllowed, werkzeug.routing.RequestRedirect):
             return Module
         if not rule.endpoint.routing.get('website'):
