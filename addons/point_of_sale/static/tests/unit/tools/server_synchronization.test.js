@@ -200,3 +200,28 @@ test("Closing the session from another device sends an order synced as draft the
     expect(syncedStates).toEqual(["paid"]);
     expect(order.isUnsyncedPaid).toBe(false);
 });
+
+test("A read answered after a local edit does not overwrite it", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    await store.syncAllOrders();
+    const line = order.lines[0];
+    const serverQty = line.qty;
+
+    const staleData = {
+        "pos.order": [{ ...order.raw }],
+        "pos.order.line": order.lines.map((l) => ({ ...l.raw })),
+    };
+    const answer = Promise.withResolvers();
+    onRpc("pos.order", "read_pos_orders", () => answer.promise);
+
+    const read = store.data.loadServerOrders([["id", "=", order.id]]);
+    await tick();
+    line.setQuantity(serverQty + 2);
+    answer.resolve(staleData);
+    const orders = await read;
+
+    expect(line.qty).toBe(serverQty + 2);
+    expect(order.isDirty()).toBe(true);
+    expect(orders.map((o) => o.id)).toEqual([order.id]);
+});
