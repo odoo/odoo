@@ -2607,6 +2607,26 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             for i, expected_state in enumerate(expected_states):
                 self.assertEqual(attendees[i].state, expected_state)
 
+    @users('attendee_user')
+    @patch_api
+    def test_recurrence_synced_by_attendee_keeps_organizer_calendar(self):
+        """ Syncing the attendee's copy of a recurrence must not move it out of the organizer's calendar. """
+        organizer_calendar = self.organizer_user.primary_calendar_id
+        recurrence = self.generate_recurring_event(
+            mock_dt="2024-04-20",
+            google_id="abcd7",
+            rrule="FREQ=WEEKLY;COUNT=3;BYDAY=WE",
+            start=datetime(2024, 3, 20, 9, 0),
+            stop=datetime(2024, 3, 20, 10, 0),
+            calendar_id=organizer_calendar.id,
+            partner_ids=[Command.set([self.organizer_user.partner_id.id, self.attendee_user.partner_id.id])],
+        )
+        google_events = self.google_respond_to_recurrent_event_with_option_all_events(recurrence, 'accepted')
+        self.env['calendar.recurrence']._sync_google2odoo(GoogleEvent(google_events), self.env.user.primary_calendar_id)
+
+        self.assertEqual(recurrence.calendar_id, organizer_calendar)
+        self.assertGoogleEventNotDeleted()
+
     @users('organizer_user')
     @patch.object(GoogleCalendarService, 'get_events')
     def test_accepting_recurrent_event_with_all_following_option_synced_by_organizer(self, mock_get_events):
