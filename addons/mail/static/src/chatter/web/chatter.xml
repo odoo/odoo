@@ -19,7 +19,7 @@
                     <button class="o-mail-Chatter-logNote btn text-nowrap" t-att-class="{
                         'btn-primary active': this.state.composerType === 'note',
                         'btn-secondary': this.state.composerType !== 'note',
-                    }" t-att-disabled="!this.state.thread.canPostMessage and this.thread().id and this.thread().id" data-hotkey="shift+m" t-on-click="() => this.toggleComposer('note')">
+                    }" t-att-disabled="!this.state.thread.canPostMessage and this.thread().id" data-hotkey="shift+m" t-on-click="() => this.toggleComposer('note')">
                         Log note
                     </button>
                     <button t-if="this.webChatterProps.has_activities" class="o-mail-Chatter-activity btn btn-secondary text-nowrap"
