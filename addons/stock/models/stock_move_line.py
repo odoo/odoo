@@ -1441,6 +1441,8 @@ class StockMoveLine(models.Model):
                     continue
                 # Otherwise, split the move.
                 qty = qty_by_move[move]
+                if move.product_id.uom_id.is_zero(qty):
+                    raise UserError(_("You cannot add operations with zero quantity to a wave transfer."))
                 new_move = move._split(qty)
                 new_move[0]['move_line_ids'] = [Command.set(move_lines.ids)]
                 picking_to_wave_vals['move_ids'] += [Command.create(new_move[0])]
