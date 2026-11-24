@@ -20,7 +20,7 @@
                         }"
                         attrs="{
                             'data-period-type': dateFilter.key,
-                            'date-mode': 'single',
+                            'date-mode': this.dateModeAttr,
                         }"
                         onSelected="() => this.selectDateFilter(dateFilter.key)"
                         closingMode="'none'"
@@ -65,14 +65,16 @@
                     }"
                     attrs="{
                         'data-period-type': 'custom',
-                        'date-mode': 'single',
+                        'date-mode': this.dateModeAttr,
                     }"
                     onSelected="() => this.selectDateFilter('custom')"
                     closingMode="'none'"
                 >
-                    <div class="filter_name">Specific Date</div>
+                    <div t-if="!this.isRangeMode" class="filter_name">Specific Date</div>
+                    <div t-else="" class="filter_name">Custom Dates</div>
+
                     <div
-                        t-if="this.isFilterDateSelected('custom') or this.isFilterDateSelected('year')"
+                        t-if="!this.isRangeMode and (this.isFilterDateSelected('custom') or this.isFilterDateSelected('year'))"
                         class="d-flex justify-content-center flex-grow-1"
                     >
                         <DateTimeInput
@@ -80,6 +82,26 @@
                             class="'o-navigable'"
                             value="this.customDateTo"
                             onChange="(dateTo) => this.setCustomDateTo(dateTo)"
+                        />
+                    </div>
+
+                    <div
+                        t-elif="this.isRangeMode and (this.isFilterDateSelected('custom') or this.isFilterDateSelected('year'))"
+                        class="d-flex justify-content-center flex-grow-1"
+                    >
+                        <DateTimeInput
+                            type="'date'"
+                            class="'o-navigable'"
+                            value="this.customDateFrom"
+                            onChange="(dateFrom) => this.setCustomDateFrom(dateFrom)"
+                        />
+                        <span class="d-flex align-items-center">to</span>
+                        <DateTimeInput
+                            type="'date'"
+                            class="'o-navigable'"
+                            value="this.customDateTo"
+                            onChange="(dateTo) => this.setCustomDateTo(dateTo)"
+                            minDate="this.customDateFrom"
                         />
                     </div>
                 </DropdownItem>

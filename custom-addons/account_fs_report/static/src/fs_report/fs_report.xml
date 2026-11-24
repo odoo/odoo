@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="account_fs_report.FsReport">
-        <div class="o_action o_fs_report">
+        <div class="o_action o_fs_report" t-ref="this.rootRef">
             <ControlPanel>
                 <!-- Enterprise: Print (primary) always visible -->
                 <t t-set-slot="control-panel-buttons">
@@ -20,11 +20,13 @@
                 </t>
                 <t t-set-slot="control-panel-actions">
                     <div class="d-flex gap-1 flex-wrap">
-                        <!-- Date (as-of): Enterprise AccountReportFilterDate single mode -->
+                        <!-- Date: Enterprise AccountReportFilterDate (single BS / range P&L) -->
                         <FsReportFilterDate
-                            t-key="this.state.fiscalStartMonth + '-' + this.state.fiscalStartDay"
+                            t-key="this.reportType + '-' + this.state.fiscalStartMonth + '-' + this.state.fiscalStartDay"
+                            dateFrom="this.state.dateFrom"
                             dateTo="this.state.asOf"
                             periodType="this.state.periodType"
+                            rangeMode="this.isRangeMode"
                             fiscalStartDay="this.state.fiscalStartDay"
                             fiscalStartMonth="this.state.fiscalStartMonth"
                             onPeriodSelected.bind="this.onDatePeriodSelected"
@@ -36,7 +38,10 @@
                             periodOrder="this.state.periodOrder"
                             growthDisplay="this.state.growthDisplay"
                             customDate="this.state.customDate"
+                            customDateFrom="this.state.customDateFrom"
                             asOf="this.state.asOf"
+                            dateFrom="this.state.dateFrom"
+                            rangeMode="this.isRangeMode"
                             baseReportLineId="this.state.baseReportLineId"
                             reportId="this.reportId"
                             onComparisonChange.bind="this.onComparisonChange"
@@ -47,6 +52,7 @@
                             unfoldAll="this.state.unfoldAll"
                             hide0Lines="this.state.hide0Lines"
                             horizontalSplit="this.state.horizontalSplit"
+                            showHorizontalSplit="this.showHorizontalSplit"
                             onToggleDraftEntries.bind="this.onToggleDraftEntries"
                             onToggleUnfoldAll.bind="this.onToggleUnfoldAll"
                             onToggleHide0Lines.bind="this.onToggleHide0Lines"

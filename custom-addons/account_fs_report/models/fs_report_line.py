@@ -26,6 +26,8 @@ class FsReportLine(models.Model):
     green_on_positive = fields.Boolean(default=True)
     unfold_accounts = fields.Boolean(default=True)
     hide_if_zero = fields.Boolean(default=False)
+    # Enterprise account.report.line.hierarchy_level (-1 = derive from parent tree).
+    hierarchy_level = fields.Integer(default=-1)
     # Enterprise account.report.line.horizontal_split_side (Balance Sheet split).
     horizontal_split_side = fields.Selection(
         selection=[('left', 'Left'), ('right', 'Right')],

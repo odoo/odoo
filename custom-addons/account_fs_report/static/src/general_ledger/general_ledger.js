@@ -1,102 +1,166 @@
 import { Component, onWillStart, proxy, signal, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { formatDate, serializeDate } from "@web/core/l10n/dates";
+import { serializeDate } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { user } from "@web/core/user";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
+import { useSetupAction } from "@web/search/action_hook";
 import { formatMonetary } from "@web/views/fields/formatters";
 import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
+import { FsReportFilterDate } from "../fs_report/filter_date";
+import { computePeriodRange } from "../fs_report/period_utils";
 import { getRoundingUnitNames, roundForUnit, roundingUnitLabel } from "../fs_report/rounding";
+import { formatDate } from "@web/core/l10n/dates";
 
 const { DateTime } = luxon;
 
 export class FsGeneralLedger extends Component {
     static template = "account_fs_report.FsGeneralLedger";
-    static components = { ControlPanel, Dropdown, DropdownItem };
+    static components = { ControlPanel, Dropdown, DropdownItem, FsReportFilterDate };
     props = useProps(standardActionServiceProps);
 
-    dateFromRef = signal.ref();
-    dateToRef = signal.ref();
+    rootRef = signal.ref();
 
     setup() {
         this.orm = useService("orm");
         this.action = useService("action");
         this.loadToken = 0;
         this.roundingUnitNames = getRoundingUnitNames("$");
-        const params = this.props.action.params || {};
-        const incoming = params.options || {};
-        const ctx = this.props.action.context || {};
-        const filterAccounts = incoming.filter_accounts || ctx.default_filter_accounts || "";
+        useSetupAction({
+            rootRef: this.rootRef,
+            getLocalState: () => ({
+                keep_journal_groups_options: true,
+                ...this.serializeFilterState(),
+            }),
+        });
+        if (this.props?.state?.keep_journal_groups_options !== undefined) {
+            this.props.action.keep_journal_groups_options = true;
+        }
+
+        const today = DateTime.utc().startOf("day");
         this.state = proxy({
             loading: true,
             lines: [],
             currencyId: user.activeCompany.currency_id,
             hasUnposted: false,
-            filterAccounts,
-            accountIds: incoming.account_ids || [],
-            dateFrom: incoming.date_from
-                ? DateTime.fromISO(incoming.date_from)
-                : DateTime.now().startOf("year"),
-            dateTo: incoming.date_to
-                ? DateTime.fromISO(incoming.date_to)
-                : DateTime.now().startOf("day"),
-            targetMove: incoming.target_move || "posted",
-            journalIds: incoming.journal_ids || [],
-            unfoldedAccountIds: incoming.unfolded_account_ids || [],
-            searchInput: filterAccounts,
+            filterAccounts: "",
+            accountIds: [],
+            dateFrom: today.startOf("year"),
+            dateTo: today,
+            periodType: "year",
+            fiscalStartDay: 1,
+            fiscalStartMonth: 1,
+            targetMove: "posted",
+            journalIds: [],
+            unfoldedAccountIds: [],
+            searchInput: "",
             roundingUnit: "decimals",
         });
-        const component = this;
-        this.dateFromPicker = useDateTimePicker({
-            target: this.dateFromRef,
-            get pickerProps() {
-                return { value: component.state.dateFrom, type: "date" };
-            },
-            onApply: (date) => {
-                if (!date) {
-                    return;
-                }
-                this.state.dateFrom = date.startOf("day");
-                this.reload();
-            },
-        });
-        this.dateToPicker = useDateTimePicker({
-            target: this.dateToRef,
-            get pickerProps() {
-                return { value: component.state.dateTo, type: "date" };
-            },
-            onApply: (date) => {
-                if (!date) {
-                    return;
-                }
-                this.state.dateTo = date.startOf("day");
-                this.reload();
-            },
-        });
-        onWillStart(async () => {
-            const companies = await this.orm.read("res.company", [user.activeCompany.id], ["currency_id"]);
-            if (companies[0]?.currency_id) {
-                const currencies = await this.orm.read(
-                    "res.currency",
-                    [companies[0].currency_id[0]],
-                    ["symbol"]
-                );
-                if (currencies[0]?.symbol) {
-                    this.roundingUnitNames = getRoundingUnitNames(currencies[0].symbol);
-                }
-            }
-            await this.reload();
-        });
+
+        onWillStart(() => this.start());
     }
 
     get companyIds() {
         const current = user.activeCompany;
         const ids = user.activeCompanies.map((company) => company.id);
         return [current.id, ...ids.filter((id) => id !== current.id)];
+    }
+
+    sessionOptionsID() {
+        const mainId = user.activeCompany.id;
+        const otherIds = user.activeCompanies
+            .filter((company) => company.id !== mainId)
+            .map((company) => company.id)
+            .sort((a, b) => a - b);
+        return `account_fs_report:general_ledger:${[mainId, ...otherIds].join(",")}`;
+    }
+
+    serializeFilterState() {
+        return {
+            date_from: serializeDate(this.state.dateFrom),
+            date_to: serializeDate(this.state.dateTo),
+            period_type: this.state.periodType,
+            target_move: this.state.targetMove,
+            journal_ids: this.state.journalIds || [],
+            filter_accounts: this.state.filterAccounts,
+            account_ids: this.state.accountIds || [],
+            unfolded_account_ids: this.state.unfoldedAccountIds || [],
+            rounding_unit: this.state.roundingUnit,
+            search_input: this.state.searchInput,
+        };
+    }
+
+    parseOptionDate(value) {
+        if (!value) {
+            return null;
+        }
+        return DateTime.fromISO(value, { zone: "utc" }).startOf("day");
+    }
+
+    applyFilterState(saved) {
+        if (!saved) {
+            return;
+        }
+        if (saved.date_from) {
+            this.state.dateFrom = this.parseOptionDate(saved.date_from);
+        }
+        if (saved.date_to) {
+            this.state.dateTo = this.parseOptionDate(saved.date_to);
+        }
+        // Accept snake_case (action params / session) and camelCase (localState).
+        const periodType = saved.period_type || saved.periodType;
+        if (periodType) {
+            this.state.periodType = periodType;
+        }
+        if (saved.target_move) {
+            this.state.targetMove = saved.target_move;
+        }
+        if (Array.isArray(saved.journal_ids)) {
+            this.state.journalIds = saved.journal_ids;
+        }
+        if (saved.filter_accounts !== undefined) {
+            this.state.filterAccounts = saved.filter_accounts || "";
+            this.state.searchInput = saved.search_input ?? this.state.filterAccounts;
+        }
+        if (Array.isArray(saved.account_ids)) {
+            this.state.accountIds = saved.account_ids;
+        }
+        if (Array.isArray(saved.unfolded_account_ids)) {
+            this.state.unfoldedAccountIds = saved.unfolded_account_ids;
+        }
+        if (saved.rounding_unit) {
+            this.state.roundingUnit = saved.rounding_unit;
+        }
+    }
+
+    loadIncomingFilterState() {
+        const local = this.props.state;
+        if (local?.date_to || local?.period_type || local?.periodType) {
+            return local;
+        }
+        const params = this.props.action.params || {};
+        const ignoreSession = Boolean(params.ignore_session);
+        if (!ignoreSession) {
+            try {
+                const raw = window.sessionStorage.getItem(this.sessionOptionsID());
+                if (raw) {
+                    return JSON.parse(raw);
+                }
+            } catch {
+                // ignore
+            }
+        }
+        return params.options || null;
+    }
+
+    saveSessionOptions() {
+        window.sessionStorage.setItem(
+            this.sessionOptionsID(),
+            JSON.stringify(this.serializeFilterState())
+        );
     }
 
     get options() {
@@ -141,8 +205,8 @@ export class FsGeneralLedger extends Component {
         return rows;
     }
 
-    formatDateValue(date) {
-        return formatDate(date);
+    formatDateValue(value) {
+        return formatDate(value);
     }
 
     formatAmount(value) {
@@ -180,9 +244,65 @@ export class FsGeneralLedger extends Component {
         return "";
     }
 
+    async start() {
+        const companies = await this.orm.read(
+            "res.company",
+            [user.activeCompany.id],
+            ["currency_id", "fiscalyear_last_day", "fiscalyear_last_month"]
+        );
+        const company = companies[0];
+        if (company?.currency_id) {
+            const currencies = await this.orm.read(
+                "res.currency",
+                [company.currency_id[0]],
+                ["symbol"]
+            );
+            if (currencies[0]?.symbol) {
+                this.roundingUnitNames = getRoundingUnitNames(currencies[0].symbol);
+            }
+        }
+        if (company) {
+            const lastMonth = parseInt(company.fiscalyear_last_month, 10) || 12;
+            const lastDay = company.fiscalyear_last_day || 31;
+            const defaultYear = lastMonth === 2 && lastDay === 29 ? 2024 : 2025;
+            const fyEnd = DateTime.utc(defaultYear, lastMonth, lastDay);
+            const fyStart = fyEnd.plus({ days: 1 });
+            this.state.fiscalStartDay = fyStart.day;
+            this.state.fiscalStartMonth = fyStart.month;
+        }
+        // Enterprise GL default: this fiscal year (range).
+        const today = DateTime.utc().startOf("day");
+        const [dateFrom, dateTo] = computePeriodRange(
+            today,
+            this.state.fiscalStartDay,
+            this.state.fiscalStartMonth,
+            12
+        );
+        this.state.periodType = "year";
+        this.state.dateFrom = dateFrom;
+        this.state.dateTo = dateTo;
+
+        const ctx = this.props.action.context || {};
+        if (ctx.default_filter_accounts && !this.props.state?.filter_accounts) {
+            this.state.filterAccounts = ctx.default_filter_accounts;
+            this.state.searchInput = ctx.default_filter_accounts;
+        }
+        this.applyFilterState(this.loadIncomingFilterState());
+        delete this.props.action.params?.ignore_session;
+        await this.reload();
+    }
+
+    onDatePeriodSelected({ periodType, dateFrom, dateTo }) {
+        this.state.periodType = periodType;
+        this.state.dateFrom = dateFrom ? dateFrom.startOf("day") : this.state.dateFrom;
+        this.state.dateTo = dateTo.startOf("day");
+        this.reload();
+    }
+
     async reload() {
         const token = ++this.loadToken;
         this.state.loading = true;
+        this.saveSessionOptions();
         const data = await this.orm.call("fs.general.ledger", "get_report_data", [this.options]);
         if (token !== this.loadToken) {
             return;
@@ -191,6 +311,7 @@ export class FsGeneralLedger extends Component {
         this.state.currencyId = data.currency_id;
         this.state.hasUnposted = data.has_unposted;
         this.state.loading = false;
+        this.saveSessionOptions();
     }
 
     onSearchSubmit(ev) {
@@ -207,18 +328,14 @@ export class FsGeneralLedger extends Component {
 
     onSetRoundingUnit(unit) {
         this.state.roundingUnit = unit;
+        this.saveSessionOptions();
     }
 
-    openDateFromPicker() {
-        this.dateFromPicker.open();
-    }
-
-    openDateToPicker() {
-        this.dateToPicker.open();
-    }
-
-    onPrint() {
-        window.print();
+    async onOpenUnpostedMoves() {
+        const action = await this.orm.call("fs.general.ledger", "open_unposted_moves", [
+            this.options,
+        ]);
+        return this.action.doAction(action);
     }
 
     async onToggleAccount(line) {
@@ -232,13 +349,6 @@ export class FsGeneralLedger extends Component {
             this.state.unfoldedAccountIds = [...this.state.unfoldedAccountIds, id];
         }
         await this.reload();
-    }
-
-    async onOpenUnpostedMoves() {
-        const action = await this.orm.call("fs.general.ledger", "open_unposted_moves", [
-            this.options,
-        ]);
-        return this.action.doAction(action);
     }
 
     async onOpenJournalItems(line, ev) {
@@ -261,6 +371,10 @@ export class FsGeneralLedger extends Component {
             views: [[false, "form"]],
             target: "current",
         });
+    }
+
+    onPrint() {
+        window.print();
     }
 }
 

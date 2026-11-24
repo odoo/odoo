@@ -7,8 +7,7 @@ import { RecordSelector } from "@web/core/record_selectors/record_selector";
 import { formatDate } from "@web/core/l10n/dates";
 
 /**
- * Balance Sheet comparison filter — mirrors Enterprise AccountReportFilterComparison
- * (single-date / as-of mode).
+ * Mirrors Enterprise AccountReportFilterComparison (single + range modes).
  */
 export class FsReportFilterComparison extends Component {
     static template = "account_fs_report.FsReportFilterComparison";
@@ -19,11 +18,18 @@ export class FsReportFilterComparison extends Component {
         periodOrder: t.string(),
         growthDisplay: t.string(),
         customDate: t.any(),
+        customDateFrom: t.any().optional(),
         asOf: t.any(),
+        dateFrom: t.any().optional(),
+        rangeMode: t.boolean().optional(false),
         baseReportLineId: t.any().optional(),
         reportId: t.number(),
         onComparisonChange: t.function(),
     });
+
+    get isRangeMode() {
+        return Boolean(this.props.rangeMode);
+    }
 
     get availablePeriodOrder() {
         return { descending: _t("Descending"), ascending: _t("Ascending") };
@@ -47,6 +53,12 @@ export class FsReportFilterComparison extends Component {
             return _t("%s Previous Years", this.props.numberPeriod);
         }
         if (this.props.compare === "custom") {
+            if (this.isRangeMode && this.props.customDateFrom) {
+                return _t("%(date_from)s - %(date_to)s", {
+                    date_from: formatDate(this.props.customDateFrom),
+                    date_to: formatDate(this.props.customDate),
+                });
+            }
             return formatDate(this.props.customDate);
         }
         if (this.props.compare === "report_line" && this.props.baseReportLineId) {
@@ -74,12 +86,16 @@ export class FsReportFilterComparison extends Component {
     }
 
     selectFilter(filter) {
-        // Enterprise Specific Date defaults comparison date_to to the current as-of.
+        // Enterprise defaults custom comparison dates to the current period.
         if (filter === "custom") {
-            this.props.onComparisonChange({
+            const patch = {
                 compare: "custom",
                 customDate: this.props.asOf || this.props.customDate,
-            });
+            };
+            if (this.isRangeMode) {
+                patch.customDateFrom = this.props.dateFrom || this.props.customDateFrom || this.props.asOf;
+            }
+            this.props.onComparisonChange(patch);
             return;
         }
         this.props.onComparisonChange({ compare: filter });
@@ -99,6 +115,22 @@ export class FsReportFilterComparison extends Component {
         this.props.onComparisonChange({
             compare: "custom",
             customDate: dateTo.startOf("day"),
+        });
+    }
+
+    setCustomDateFrom(dateFrom) {
+        if (!dateFrom) {
+            return;
+        }
+        const nextFrom = dateFrom.startOf("day");
+        let nextTo = this.props.customDate;
+        if (!nextTo || nextTo < nextFrom) {
+            nextTo = nextFrom;
+        }
+        this.props.onComparisonChange({
+            compare: "custom",
+            customDateFrom: nextFrom,
+            customDate: nextTo,
         });
     }
 

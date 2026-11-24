@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="0">
+    <record id="fs_report_profit_and_loss" model="fs.report">
+      <field name="name">Profit and Loss</field>
+      <field name="code">PL</field>
+      <field name="report_type">period</field>
+    </record>
+
+    <!-- Enterprise profit_and_loss.xml line tree (flat; hierarchy_level 0/1). -->
+    <record id="pl_revenue" model="fs.report.line">
+      <field name="report_id" ref="fs_report_profit_and_loss"/>
+      <field name="sequence">10</field>
+      <field name="code">REV</field>
+      <field name="name">Revenue</field>
+      <field name="hierarchy_level">1</field>
+      <field name="formula_type">account_type</field>
+      <field name="account_types">income</field>
+      <field name="sign">-1</field>
+    </record>
+
+    <record id="pl_cost_sales" model="fs.report.line">
+      <field name="report_id" ref="fs_report_profit_and_loss"/>
+      <field name="sequence">20</field>
+      <field name="code">COS</field>
+      <field name="name">Costs of Revenue</field>
+      <field name="hierarchy_level">1</field>
+      <field name="formula_type">account_type</field>
+      <field name="account_types">expense_direct_cost</field>
+      <field name="green_on_positive" eval="False"/>
+    </record>
+
+    <record id="pl_gross_profit" model="fs.report.line">
+      <field name="report_id" ref="fs_report_profit_and_loss"/>
+      <field name="sequence">30</field>
+      <field name="code">GRP</field>
+      <field name="name">Gross Profit</field>
+      <field name="hierarchy_level">0</field>
+      <field name="formula_type">aggregation</field>
+      <field name="aggregation">REV-COS</field>
+    </record>
+
+    <record id="pl_expense" model="fs.report.line">
+      <field name="report_id" ref="fs_report_profit_and_loss"/>
+      <field name="sequence">40</field>
+      <field name="code">EXP</field>
+      <field name="name">Operating Expenses</field>
+      <field name="hierarchy_level">1</field>
+      <field name="formula_type">account_type</field>
+      <field name="account_types">expense</field>
+      <field name="green_on_positive" eval="False"/>
+    </record>
+
+    <record id="pl_operating_income" model="fs.report.line">
+      <field name="report_id" ref="fs_report_profit_and_loss"/>
+      <field name="sequence">50</field>
+      <field name="code">INC</field>
+      <field name="name">Operating Income (or Loss)</field>
+      <field name="hierarchy_level">0</field>
+      <field name="formula_type">aggregation</field>
+      <field name="aggregation">REV-COS-EXP</field>
+    </record>
+
+    <record id="pl_other_income" model="fs.report.line">
+      <field name="report_id" ref="fs_report_profit_and_loss"/>
+      <field name="sequence">60</field>
+      <field name="code">OIN</field>
+      <field name="name">Other Income</field>
+      <field name="hierarchy_level">1</field>
+      <field name="formula_type">account_type</field>
+      <field name="account_types">income_other</field>
+      <field name="sign">-1</field>
+    </record>
+
+    <record id="pl_other_expenses" model="fs.report.line">
+      <field name="report_id" ref="fs_report_profit_and_loss"/>
+      <field name="sequence">70</field>
+      <field name="code">OEXP</field>
+      <field name="name">Other Expenses</field>
+      <field name="hierarchy_level">1</field>
+      <field name="formula_type">account_type</field>
+      <field name="account_types">expense_depreciation,expense_other</field>
+      <field name="green_on_positive" eval="False"/>
+    </record>
+
+    <record id="pl_net_profit" model="fs.report.line">
+      <field name="report_id" ref="fs_report_profit_and_loss"/>
+      <field name="sequence">80</field>
+      <field name="code">NEP</field>
+      <field name="name">Net Profit</field>
+      <field name="hierarchy_level">0</field>
+      <field name="formula_type">aggregation</field>
+      <field name="aggregation">REV+OIN-COS-EXP-OEXP</field>
+    </record>
+
+    <record id="pl_allocations" model="fs.report.line">
+      <field name="report_id" ref="fs_report_profit_and_loss"/>
+      <field name="sequence">90</field>
+      <field name="code">ALLOC</field>
+      <field name="name">Allocations and Withdrawals</field>
+      <field name="hierarchy_level">1</field>
+      <field name="formula_type">account_type</field>
+      <field name="account_types">equity_unaffected,equity_retained</field>
+    </record>
+  </data>
+</odoo>

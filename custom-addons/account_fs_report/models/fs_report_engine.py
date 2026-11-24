@@ -1,9 +1,20 @@
+import datetime
 import json
 import re
+from ast import literal_eval
 from datetime import timedelta
 
+from dateutil.relativedelta import relativedelta
+
 from odoo import _, api, fields, models
+from odoo.addons.web.controllers.utils import clean_action
 from odoo.tools.misc import format_amount
+
+_MONTHS_PER_PERIOD = {
+    'month': 1,
+    'quarter': 3,
+    'year': 12,
+}
 
 CLOSING_PREFIXES = ('asset', 'liability')
 PL_TYPES = ('income', 'income_other', 'expense', 'expense_other',
@@ -95,6 +106,26 @@ class FsReportEngine(models.AbstractModel):
         for acc_id, hist, close in self._collect(options, domain, date_to):
             h, c = res.get(acc_id, (0.0, 0.0))
             res[acc_id] = (h + hist, c + close)
+        return res
+
+    @api.model
+    def _period_balances_by_account(self, options, date_from, date_to):
+        """{account_id: (hist, hist)} for move lines in [date_from, date_to].
+
+        Enterprise P&L domain engine uses strict_range (date_from..date_to) with
+        entry-date FX conversion (hist). Closing rate is unused for period reports.
+        """
+        date_from = fields.Date.to_date(date_from)
+        date_to = fields.Date.to_date(date_to)
+        domain = self._base_domain(options) + [
+            ('date', '>=', date_from),
+            ('date', '<=', date_to),
+        ]
+        res = {}
+        for acc_id, hist, _close in self._collect(options, domain, date_to):
+            h, _ = res.get(acc_id, (0.0, 0.0))
+            total = h + hist
+            res[acc_id] = (total, total)
         return res
 
     @api.model
@@ -197,13 +228,21 @@ class FsReportEngine(models.AbstractModel):
         columns = options['columns']
         n = len(columns)
         Account = self.env['account.account'].sudo()
+        is_period = report.report_type == 'period'
 
         per_col = []
         for col in columns:
-            bal = self._balances_by_account(options, col['date_to'])
-            types = {a.id: a.account_type for a in Account.browse(list(bal))}
-            cur, prev = self._earnings(options, col['date_to'])
-            per_col.append((bal, types, cur, prev))
+            if is_period:
+                bal = self._period_balances_by_account(
+                    options, col['date_from'], col['date_to'],
+                )
+                types = {a.id: a.account_type for a in Account.browse(list(bal))}
+                per_col.append((bal, types, 0.0, 0.0))
+            else:
+                bal = self._balances_by_account(options, col['date_to'])
+                types = {a.id: a.account_type for a in Account.browse(list(bal))}
+                cur, prev = self._earnings(options, col['date_to'])
+                per_col.append((bal, types, cur, prev))
 
         lines = report.line_ids.sorted('sequence')
         by_code = {l.code: l for l in lines}
@@ -218,7 +257,11 @@ class FsReportEngine(models.AbstractModel):
                     for a, (h, c) in bal.items():
                         t = types[a]
                         if t in wanted:
-                            total += c if t.startswith(CLOSING_PREFIXES) else h
+                            # Period (P&L): always entry-date hist. BS: closing for BS accounts.
+                            if is_period:
+                                total += h
+                            else:
+                                total += c if t.startswith(CLOSING_PREFIXES) else h
                     vals.append(line.sign * total)
                 elif line.formula_type == 'current_earnings':
                     vals.append(line.sign * cur)
@@ -263,10 +306,12 @@ class FsReportEngine(models.AbstractModel):
         currency = self._report_company(options).currency_id
         out = []
 
-        def emit(line, level):
+        def emit(line, depth):
             vals = values.get(line.code, [0.0] * n)
             if line.hide_if_zero and all(abs(v) < EPS for v in vals):
                 return
+            # Enterprise hierarchy_level overrides tree depth when set (>= 0).
+            level = line.hierarchy_level if line.hierarchy_level >= 0 else depth
             row = {
                 'id': line.id, 'code': line.code, 'name': line.name,
                 'parent_id': line.parent_id.id or False,
@@ -293,7 +338,7 @@ class FsReportEngine(models.AbstractModel):
                     row['debug_popup_data'] = debug
             out.append(row)
             for ch in line.child_ids.sorted('sequence'):
-                emit(ch, level + 1)
+                emit(ch, depth + 1)
 
         for top in lines.filtered(lambda l: not l.parent_id).sorted('sequence'):
             emit(top, 0)
@@ -341,16 +386,26 @@ class FsReportEngine(models.AbstractModel):
     def get_account_lines(self, line_id, options):
         self = self.with_context(allowed_company_ids=options['company_ids'])
         line = self.env['fs.report.line'].browse(line_id)
+        report = line.report_id
+        is_period = report.report_type == 'period'
         wanted = {t.strip() for t in (line.account_types or '').split(',') if t.strip()}
         Account = self.env['account.account'].sudo()
         n = len(options['columns'])
         out = {}
         for i, col in enumerate(options['columns']):
-            bal = self._balances_by_account(options, col['date_to'])
+            if is_period:
+                bal = self._period_balances_by_account(
+                    options, col['date_from'], col['date_to'],
+                )
+            else:
+                bal = self._balances_by_account(options, col['date_to'])
             for acc_id, (h, c) in bal.items():
                 acc = Account.browse(acc_id)
                 if acc.account_type in wanted:
-                    val = c if acc.account_type.startswith(CLOSING_PREFIXES) else h
+                    if is_period:
+                        val = h
+                    else:
+                        val = c if acc.account_type.startswith(CLOSING_PREFIXES) else h
                     row = out.setdefault(acc_id, {
                         'id': acc_id,
                         'name': acc.display_name,
@@ -368,53 +423,165 @@ class FsReportEngine(models.AbstractModel):
         return self.env['fs.general.ledger'].caret_option_open_general_ledger(options, params)
 
     @api.model
+    def execute_action(self, options, params=None):
+        """Enterprise account.report.execute_action — e.g. CYE line → Profit and Loss.
+
+        Opens ``line.action_id``. When the target is another FS client report, build
+        options via the same previous_options rules as Enterprise ``get_options``.
+        """
+        params = params or {}
+        action_id = int(params.get('actionId'))
+        action = self.env['ir.actions.actions'].sudo().browse(action_id)
+        action_type = action.type
+        action = self.env[action_type].sudo().browse(action_id)
+        action_read = clean_action(action.read()[0], env=action.env)
+
+        if action_type == 'ir.actions.client' and action.tag == 'account_fs_report.main':
+            action_read['params'] = {
+                'options': self._options_for_linked_report(options, action_read),
+                'ignore_session': True,
+            }
+
+        if params.get('id'):
+            context = action_read.get('context') and literal_eval(str(action_read['context'])) or {}
+            model_id = params['id'] if isinstance(params['id'], int) else params['id']
+            context.setdefault('active_id', model_id)
+            action_read['context'] = context
+
+        return action_read
+
+    @api.model
+    def _compute_period_range(self, date_in_period, months_per_period, start_day=1, start_month=1):
+        """Enterprise account.report._compute_period_range."""
+        date_in_period = fields.Date.to_date(date_in_period)
+        aligned_date = date_in_period + relativedelta(days=-(start_day - 1))
+        year = aligned_date.year
+        month_offset = aligned_date.month - start_month
+        period_number = (month_offset // months_per_period) + 1
+        if date_in_period < datetime.date(date_in_period.year, start_month, start_day):
+            year -= 1
+            period_number = ((12 + month_offset) // months_per_period) + 1
+        month_delta = period_number * months_per_period
+        end_date = datetime.date(year, start_month, 1) + relativedelta(
+            months=month_delta, days=start_day - 2,
+        )
+        start_date = datetime.date(year, start_month, 1) + relativedelta(
+            months=month_delta - months_per_period, day=start_day,
+        )
+        return start_date, end_date
+
+    @api.model
+    def _fiscal_period_start_day_month(self, company):
+        """Day/month after fiscalyear last day — same as FS client fiscalStart*."""
+        last_month = int(company.fiscalyear_last_month or 12)
+        last_day = company.fiscalyear_last_day or 31
+        default_year = 2024 if last_month == 2 and last_day == 29 else 2025
+        fy_start = datetime.date(default_year, last_month, last_day) + relativedelta(days=1)
+        return fy_start.day, fy_start.month
+
+    @api.model
+    def _linked_report_dates(self, options, target_report):
+        """Enterprise ``_init_options_date`` for previous_options → target report.
+
+        Balance Sheet is single-date; P&amp;L is range_mode. Critical cases:
+        - ``today`` → range: [FY start, as-of] with period_type ``custom``
+          (not full fiscal year end — matches CYE ``from_fiscalyear``).
+        - ``month`` / ``quarter`` / ``year`` → that period's [from, to].
+        - ``custom`` → keep bounds; fill date_from with FY start when missing.
+        """
+        date_opts = options.get('date') or {}
+        today = fields.Date.context_today(self)
+        date_to = fields.Date.to_date(date_opts['date_to']) if date_opts.get('date_to') else today
+        date_from = fields.Date.to_date(date_opts['date_from']) if date_opts.get('date_from') else None
+        period_type = date_opts.get('period_type') or 'today'
+        company = self.env['res.company'].browse(
+            (options.get('company_ids') or [self.env.company.id])[0]
+        )
+        start_day, start_month = self._fiscal_period_start_day_month(company)
+        range_mode = target_report.report_type == 'period'
+
+        if not range_mode:
+            # Target is single-date (e.g. P&amp;L → BS): keep as-of, drop range start.
+            if period_type in _MONTHS_PER_PERIOD:
+                _start, date_to = self._compute_period_range(
+                    date_to, _MONTHS_PER_PERIOD[period_type], start_day, start_month,
+                )
+            return False, date_to, period_type if period_type != 'custom' else 'custom'
+
+        # Range mode (P&amp;L)
+        if period_type == 'today':
+            date_from = company.compute_fiscalyear_dates(date_to)['date_from']
+            period_type = 'custom'
+        elif period_type == 'custom':
+            if not date_from:
+                date_from = company.compute_fiscalyear_dates(date_to)['date_from']
+        elif period_type in _MONTHS_PER_PERIOD:
+            date_from, date_to = self._compute_period_range(
+                date_to, _MONTHS_PER_PERIOD[period_type], start_day, start_month,
+            )
+        else:
+            if not date_from:
+                date_from = company.compute_fiscalyear_dates(date_to)['date_from']
+            period_type = 'custom'
+
+        return date_from, date_to, period_type
+
+    @api.model
+    def _options_for_linked_report(self, options, action_read):
+        """Map current options onto target FS filter state (applyFilterState keys).
+
+        Mirrors Enterprise ``target_report.get_options(previous_options=options)``.
+        """
+        context = action_read.get('context') or {}
+        if isinstance(context, str):
+            context = literal_eval(context)
+        report_id = context.get('report_id')
+        target = self.env['fs.report'].browse(report_id) if report_id else self.env['fs.report']
+        date_from, date_to, period_type = self._linked_report_dates(options, target)
+        comparison = options.get('comparison') or {}
+
+        return {
+            'periodType': period_type,
+            'date_from': fields.Date.to_string(date_from) if date_from else False,
+            'date_to': fields.Date.to_string(date_to),
+            'customDate': fields.Date.to_string(date_to),
+            'customDateFrom': fields.Date.to_string(date_from) if date_from else False,
+            'targetMove': options.get('target_move', 'posted'),
+            'journalIds': options.get('journal_ids') or [],
+            'compare': comparison.get('filter') or 'no_comparison',
+            'numberPeriod': comparison.get('number_period') or 1,
+            'periodOrder': comparison.get('period_order') or 'descending',
+            'growthDisplay': options.get('growth_display') or 'percent',
+            'roundingUnit': options.get('rounding_unit') or 'decimals',
+        }
+
+    @api.model
     def action_audit_cell(self, options, params):
         """Enterprise action_audit_cell: open Journal Items for the clicked figure."""
         self = self.with_context(allowed_company_ids=options['company_ids'])
         column_index = params.get('column_index', len(options['columns']) - 1)
-        date_to = options['columns'][column_index]['date_to']
-        domain = self._base_domain(options) + [
-            ('display_type', 'not in', ('line_section', 'line_subsection', 'line_note')),
-        ]
-
+        column = options['columns'][column_index]
+        # Pass column dates through options.date so JI search defaults match Enterprise.
+        audit_options = {
+            **options,
+            'date': {
+                **(options.get('date') or {}),
+                'date_from': column.get('date_from') or False,
+                'date_to': column['date_to'],
+                'period_type': (options.get('date') or {}).get('period_type') or 'custom',
+            },
+        }
+        Gl = self.env['fs.general.ledger']
         account_id = params.get('account_id')
         line_id = params.get('line_id')
+
         if account_id:
-            domain += [
-                ('account_id', '=', account_id),
-                ('date', '<=', date_to),
-            ]
-        elif line_id:
-            line = self.env['fs.report.line'].browse(line_id)
-            if line.formula_type == 'account_type':
-                types = [t.strip() for t in (line.account_types or '').split(',') if t.strip()]
-                domain += [
-                    ('account_id.account_type', 'in', types),
-                    ('date', '<=', date_to),
-                ]
-            elif line.formula_type in ('current_earnings', 'previous_earnings'):
-                company = self._report_company(options)
-                fy_start = company.compute_fiscalyear_dates(fields.Date.to_date(date_to))['date_from']
-                domain.append(('account_id.account_type', 'in', list(EARNINGS_TYPES)))
-                if line.formula_type == 'current_earnings':
-                    domain += [
-                        ('date', '>=', fields.Date.to_string(fy_start)),
-                        ('date', '<=', date_to),
-                    ]
-                else:
-                    domain.append(('date', '<', fields.Date.to_string(fy_start)))
-            else:
-                return {
-                    'type': 'ir.actions.client',
-                    'tag': 'display_notification',
-                    'params': {
-                        'title': _('Audit'),
-                        'message': _('This line has no journal items to audit.'),
-                        'type': 'warning',
-                        'sticky': False,
-                    },
-                }
-        else:
+            return Gl._journal_items_action(audit_options, {
+                'account_id': account_id,
+                'group_by_account': False,
+            })
+
+        if not line_id:
             return {
                 'type': 'ir.actions.client',
                 'tag': 'display_notification',
@@ -426,23 +593,49 @@ class FsReportEngine(models.AbstractModel):
                 },
             }
 
-        action = self.env['ir.actions.act_window']._for_xml_id('account.action_account_moves_all')
-        action.update({
-            'name': _('Journal Items'),
-            'domain': domain,
-            # Enterprise audit opens list/pivot/graph/kanban with Balance Sheet breadcrumb.
-            'view_mode': 'list,pivot,graph,kanban',
-            'views': [
-                (False, 'list'),
-                (False, 'pivot'),
-                (False, 'graph'),
-                (False, 'kanban'),
-            ],
-            'context': {
-                **dict(self.env.context),
-                'create': 0,
-                'search_default_posted': 1 if options.get('target_move', 'posted') == 'posted' else 0,
-                'search_default_group_by_account': 0 if account_id else 1,
+        line = self.env['fs.report.line'].browse(line_id)
+        if line.formula_type == 'account_type':
+            types = [t.strip() for t in (line.account_types or '').split(',') if t.strip()]
+            return Gl._journal_items_action(audit_options, {
+                'group_by_account': True,
+                'extra_domain': [('account_id.account_type', 'in', types)],
+            })
+
+        if line.formula_type in ('current_earnings', 'previous_earnings'):
+            company = self._report_company(options)
+            fy_start = company.compute_fiscalyear_dates(fields.Date.to_date(column['date_to']))['date_from']
+            extra = [('account_id.account_type', 'in', list(EARNINGS_TYPES))]
+            if line.formula_type == 'current_earnings':
+                audit_options = {
+                    **audit_options,
+                    'date': {
+                        **audit_options['date'],
+                        'date_from': fields.Date.to_string(fy_start),
+                        'date_to': column['date_to'],
+                    },
+                }
+            else:
+                # Before FY start — no date_from search; keep bound in domain.
+                audit_options = {
+                    **audit_options,
+                    'date': {
+                        **audit_options['date'],
+                        'date_from': False,
+                        'date_to': fields.Date.to_string(fy_start - timedelta(days=1)),
+                    },
+                }
+            return Gl._journal_items_action(audit_options, {
+                'group_by_account': True,
+                'extra_domain': extra,
+            })
+
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Audit'),
+                'message': _('This line has no journal items to audit.'),
+                'type': 'warning',
+                'sticky': False,
             },
-        })
-        return action
+        }

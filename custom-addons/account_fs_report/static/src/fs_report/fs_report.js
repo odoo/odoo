@@ -1,4 +1,4 @@
-import { Component, onWillStart, proxy, useProps } from "@odoo/owl";
+import { Component, onWillStart, proxy, signal, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { formatDate, serializeDate } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
@@ -9,13 +9,21 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
+import { useSetupAction } from "@web/search/action_hook";
 import { download } from "@web/core/network/download";
 import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
 import { FsReportDebugPopover } from "./debug_popover";
 import { FsReportFilterComparison } from "./filter_comparison";
 import { FsReportFilterDate } from "./filter_date";
 import { FsReportFilterExtraOptions } from "./filter_extra_options";
-import { shiftPreviousPeriodDate, shiftSameLastYearDate } from "./period_utils";
+import {
+    buildRangeDateLabel,
+    computePeriodRange,
+    shiftPreviousPeriodDate,
+    shiftPreviousPeriodRange,
+    shiftSameLastYearDate,
+    shiftSameLastYearRange,
+} from "./period_utils";
 import { formatReportAmount, getRoundingUnitNames, roundingUnitLabel } from "./rounding";
 
 const { DateTime } = luxon;
@@ -32,10 +40,24 @@ export class FsReport extends Component {
     };
     props = useProps(standardActionServiceProps);
 
+    rootRef = signal.ref();
+
     setup() {
         this.orm = useService("orm");
         this.action = useService("action");
         this.ui = useService("ui");
+        // Enterprise: export filters on leave so breadcrumb restore keeps Fiscal Year etc.
+        useSetupAction({
+            rootRef: this.rootRef,
+            // Enterprise: keep_journal_groups_options marks breadcrumb restore; also export filters.
+            getLocalState: () => ({
+                keep_journal_groups_options: true,
+                ...this.serializeFilterState(),
+            }),
+        });
+        if (this.props?.state?.keep_journal_groups_options !== undefined) {
+            this.props.action.keep_journal_groups_options = true;
+        }
         this.debugPopover = usePopover(FsReportDebugPopover, {
             closeOnClickAway: true,
             position: localization.direction === "rtl" ? "left" : "right",
@@ -43,9 +65,11 @@ export class FsReport extends Component {
         this.loadToken = 0;
         this.roundingUnitNames = getRoundingUnitNames("$", "USD");
         this.currencyDecimalPlaces = 2;
+        this.reportType = "balance_sheet";
         this.state = proxy({
             // Enterprise account_reports filters use DateTime.utc() for as-of dates.
             asOf: DateTime.utc().startOf("day"),
+            dateFrom: false,
             periodType: "today",
             fiscalStartDay: 1,
             fiscalStartMonth: 1,
@@ -55,6 +79,7 @@ export class FsReport extends Component {
             growthDisplay: "percent",
             // Enterprise Specific Date defaults to the current as-of date.
             customDate: DateTime.utc().startOf("day"),
+            customDateFrom: false,
             baseReportLineId: false,
             targetMove: "posted",
             journalIds: [],
@@ -72,6 +97,159 @@ export class FsReport extends Component {
 
     get reportId() {
         return this.props.action.context.report_id;
+    }
+
+    /** Enterprise filter_date.range_mode — true for P&L / period reports. */
+    get isRangeMode() {
+        return this.reportType === "period";
+    }
+
+    get showHorizontalSplit() {
+        return !this.isRangeMode;
+    }
+
+    /**
+     * Enterprise controller.sessionOptionsID — persist filters per report + companies
+     * so breadcrumb / menu reopen keeps Fiscal Year (etc.) after GL / Journal Items.
+     */
+    sessionOptionsID() {
+        const mainId = user.activeCompany.id;
+        const otherIds = user.activeCompanies
+            .filter((company) => company.id !== mainId)
+            .map((company) => company.id)
+            .sort((a, b) => a - b);
+        return `account_fs_report:${this.reportId}:${[mainId, ...otherIds].join(",")}`;
+    }
+
+    hasSessionOptions() {
+        return Boolean(window.sessionStorage.getItem(this.sessionOptionsID()));
+    }
+
+    saveSessionOptions() {
+        window.sessionStorage.setItem(
+            this.sessionOptionsID(),
+            JSON.stringify(this.serializeFilterState())
+        );
+    }
+
+    sessionOptions() {
+        try {
+            return JSON.parse(window.sessionStorage.getItem(this.sessionOptionsID()));
+        } catch {
+            return null;
+        }
+    }
+
+    serializeFilterState() {
+        return {
+            periodType: this.state.periodType,
+            date_from: this.state.dateFrom ? serializeDate(this.state.dateFrom) : false,
+            date_to: serializeDate(this.state.asOf),
+            compare: this.state.compare,
+            numberPeriod: this.state.numberPeriod,
+            periodOrder: this.state.periodOrder,
+            growthDisplay: this.state.growthDisplay,
+            customDate: this.state.customDate ? serializeDate(this.state.customDate) : false,
+            customDateFrom: this.state.customDateFrom
+                ? serializeDate(this.state.customDateFrom)
+                : false,
+            baseReportLineId: this.state.baseReportLineId || false,
+            targetMove: this.state.targetMove,
+            journalIds: this.state.journalIds || [],
+            roundingUnit: this.state.roundingUnit,
+            unfoldAll: this.state.unfoldAll,
+            hide0Lines: this.state.hide0Lines,
+            horizontalSplit: this.state.horizontalSplit,
+        };
+    }
+
+    parseOptionDate(value) {
+        if (!value) {
+            return null;
+        }
+        return DateTime.fromISO(value, { zone: "utc" }).startOf("day");
+    }
+
+    applyFilterState(saved) {
+        if (!saved) {
+            return;
+        }
+        const periodType = saved.periodType || saved.period_type;
+        if (periodType) {
+            this.state.periodType = periodType;
+        }
+        if (saved.date_to) {
+            this.state.asOf = this.parseOptionDate(saved.date_to);
+        }
+        if (saved.date_from) {
+            this.state.dateFrom = this.parseOptionDate(saved.date_from);
+        } else if (saved.date_from === false) {
+            this.state.dateFrom = false;
+        }
+        if (saved.compare) {
+            this.state.compare = saved.compare;
+        }
+        if (saved.numberPeriod >= 1) {
+            this.state.numberPeriod = saved.numberPeriod;
+        }
+        if (saved.periodOrder) {
+            this.state.periodOrder = saved.periodOrder;
+        }
+        if (saved.growthDisplay) {
+            this.state.growthDisplay = saved.growthDisplay;
+        }
+        if (saved.customDate) {
+            this.state.customDate = this.parseOptionDate(saved.customDate);
+        }
+        if (saved.customDateFrom) {
+            this.state.customDateFrom = this.parseOptionDate(saved.customDateFrom);
+        } else if (saved.customDateFrom === false) {
+            this.state.customDateFrom = false;
+        }
+        if (saved.baseReportLineId !== undefined) {
+            this.state.baseReportLineId = saved.baseReportLineId;
+        }
+        if (saved.targetMove) {
+            this.state.targetMove = saved.targetMove;
+        }
+        if (Array.isArray(saved.journalIds)) {
+            this.state.journalIds = saved.journalIds;
+        }
+        if (saved.roundingUnit) {
+            this.state.roundingUnit = saved.roundingUnit;
+        }
+        if (typeof saved.unfoldAll === "boolean") {
+            this.state.unfoldAll = saved.unfoldAll;
+        }
+        if (typeof saved.hide0Lines === "boolean") {
+            this.state.hide0Lines = saved.hide0Lines;
+        }
+        if (typeof saved.horizontalSplit === "boolean") {
+            this.state.horizontalSplit = saved.horizontalSplit;
+        }
+    }
+
+    /**
+     * Restore priority (Enterprise controller.loadReportOptions):
+     * 1) action.params.options when ignore_session (CYE → P&L / linked report)
+     * 2) props.state from getLocalState (breadcrumb)
+     * 3) sessionStorage (menu reopen)
+     */
+    loadIncomingFilterState() {
+        const params = this.props.action.params || {};
+        const ignoreSession = Boolean(params.ignore_session);
+        // Enterprise: ignore_session always wins over session (and over stale local state).
+        if (ignoreSession && params.options) {
+            return params.options;
+        }
+        const local = this.props.state;
+        if (local?.date_to || local?.periodType || local?.period_type) {
+            return local;
+        }
+        if (!ignoreSession && this.hasSessionOptions()) {
+            return this.sessionOptions();
+        }
+        return params.options || null;
     }
 
     get companyIds() {
@@ -131,9 +309,9 @@ export class FsReport extends Component {
         return roundingUnitLabel(unit, this.roundingUnitNames);
     }
 
-    /** Enterprise: one or two tables when horizontal_split is on. */
+    /** Enterprise: one or two tables when horizontal_split is on (BS only). */
     get splitSides() {
-        return this.state.horizontalSplit ? ["left", "right"] : ["left"];
+        return this.state.horizontalSplit && this.showHorizontalSplit ? ["left", "right"] : ["left"];
     }
 
     /**
@@ -143,13 +321,40 @@ export class FsReport extends Component {
     get comparisonPeriods() {
         const periods = [];
         if (this.state.compare === "custom") {
-            periods.push(this.column(this.state.customDate));
+            if (this.isRangeMode) {
+                periods.push(this.column(
+                    this.state.customDateFrom || this.state.dateFrom,
+                    this.state.customDate,
+                    "custom"
+                ));
+            } else {
+                periods.push(this.column(false, this.state.customDate, "custom"));
+            }
             return periods;
         }
         if (
             this.state.compare !== "previous_period" &&
             this.state.compare !== "same_last_year"
         ) {
+            return periods;
+        }
+        if (this.isRangeMode) {
+            let dateFrom = this.state.dateFrom;
+            let dateTo = this.state.asOf;
+            for (let index = 0; index < this.state.numberPeriod; index++) {
+                if (this.state.compare === "previous_period") {
+                    [dateFrom, dateTo] = shiftPreviousPeriodRange(
+                        dateFrom,
+                        dateTo,
+                        this.state.periodType,
+                        this.state.fiscalStartDay,
+                        this.state.fiscalStartMonth
+                    );
+                } else {
+                    [dateFrom, dateTo] = shiftSameLastYearRange(dateFrom, dateTo);
+                }
+                periods.push(this.column(dateFrom, dateTo));
+            }
             return periods;
         }
         let cursor = this.state.asOf;
@@ -164,16 +369,44 @@ export class FsReport extends Component {
             } else {
                 cursor = shiftSameLastYearDate(cursor);
             }
-            periods.push(this.column(cursor));
+            periods.push(this.column(false, cursor));
         }
         return periods;
     }
 
+    get currentPeriodColumn() {
+        if (this.isRangeMode) {
+            return this.column(this.state.dateFrom, this.state.asOf);
+        }
+        return this.column(false, this.state.asOf);
+    }
+
+    get dateString() {
+        if (this.isRangeMode) {
+            return buildRangeDateLabel(
+                this.state.dateFrom,
+                this.state.asOf,
+                this.state.periodType,
+                this.state.fiscalStartDay,
+                this.state.fiscalStartMonth
+            );
+        }
+        return _t("As of %s", formatDate(this.state.asOf));
+    }
+
     get options() {
         // Enterprise descending: [current, ...previous periods]
-        let columns = [this.column(this.state.asOf), ...this.comparisonPeriods];
+        let columns = [this.currentPeriodColumn, ...this.comparisonPeriods];
         if (this.state.periodOrder === "ascending") {
             columns = columns.slice().reverse();
+        }
+        const date = {
+            string: this.dateString,
+            date_to: serializeDate(this.state.asOf),
+            period_type: this.state.periodType,
+        };
+        if (this.isRangeMode && this.state.dateFrom) {
+            date.date_from = serializeDate(this.state.dateFrom);
         }
         return {
             company_ids: this.companyIds,
@@ -181,11 +414,7 @@ export class FsReport extends Component {
                 id: company.id,
                 name: company.name,
             })),
-            date: {
-                string: _t("As of %s", formatDate(this.state.asOf)),
-                date_to: serializeDate(this.state.asOf),
-                period_type: this.state.periodType,
-            },
+            date,
             target_move: this.state.targetMove,
             journal_ids: this.state.journalIds,
             columns,
@@ -309,7 +538,11 @@ export class FsReport extends Component {
             if (row.kind === "spacer") {
                 continue;
             }
-            const isZero = (row.columns || []).every((value) => Math.abs(value || 0) < 0.005);
+            const columns = row.columns || [];
+            // Empty columns → treat as zero (Enterprise: all numeric cells is_zero).
+            const isZero =
+                columns.length === 0 ||
+                columns.every((value) => Math.abs(Number(value) || 0) < 0.005);
             if (!hasVisibleChildren.has(row.id) && isZero) {
                 row.visible = false;
             } else {
@@ -321,11 +554,25 @@ export class FsReport extends Component {
         }
     }
 
-    column(date) {
+    column(dateFrom, dateTo, periodType = null) {
+        const type = periodType || this.state.periodType;
+        if (this.isRangeMode && dateFrom) {
+            return {
+                label: buildRangeDateLabel(
+                    dateFrom,
+                    dateTo,
+                    type,
+                    this.state.fiscalStartDay,
+                    this.state.fiscalStartMonth
+                ),
+                date_from: serializeDate(dateFrom),
+                date_to: serializeDate(dateTo),
+            };
+        }
         // Enterprise _build_date_label (single mode): "As of <date>"
         return {
-            label: _t("As of %s", formatDate(date)),
-            date_to: serializeDate(date),
+            label: _t("As of %s", formatDate(dateTo)),
+            date_to: serializeDate(dateTo),
         };
     }
 
@@ -397,7 +644,12 @@ export class FsReport extends Component {
         if (!row.action_id) {
             return;
         }
-        await this.action.doAction(row.action_id);
+        // Enterprise line_name.triggerAction → account.report.execute_action
+        const action = await this.orm.call("fs.report.engine", "execute_action", [
+            this.options,
+            { id: row.id, actionId: row.action_id },
+        ]);
+        return this.action.doAction(action);
     }
 
     async onAuditAmount(row, columnIndex, ev) {
@@ -431,11 +683,18 @@ export class FsReport extends Component {
     }
 
     async start() {
-        const companies = await this.orm.read(
-            "res.company",
-            [user.activeCompany.id],
-            ["currency_id", "fiscalyear_last_day", "fiscalyear_last_month"]
-        );
+        const [reports, companies] = await Promise.all([
+            this.orm.read("fs.report", [this.reportId], ["name", "code", "report_type"]),
+            this.orm.read(
+                "res.company",
+                [user.activeCompany.id],
+                ["currency_id", "fiscalyear_last_day", "fiscalyear_last_month"]
+            ),
+        ]);
+        const report = reports[0];
+        if (report?.report_type) {
+            this.reportType = report.report_type;
+        }
         const company = companies[0];
         if (company?.currency_id) {
             const currencies = await this.orm.read(
@@ -461,16 +720,36 @@ export class FsReport extends Component {
             this.state.fiscalStartDay = fyStart.day;
             this.state.fiscalStartMonth = fyStart.month;
         }
+        // Enterprise P&L default_opening_date_filter = this_year.
+        if (this.isRangeMode) {
+            const today = DateTime.utc().startOf("day");
+            const [dateFrom, dateTo] = computePeriodRange(
+                today,
+                this.state.fiscalStartDay,
+                this.state.fiscalStartMonth,
+                12
+            );
+            this.state.periodType = "year";
+            this.state.dateFrom = dateFrom;
+            this.state.asOf = dateTo;
+            this.state.customDate = dateTo;
+            this.state.customDateFrom = dateFrom;
+        }
+        // Enterprise: restore session (or action.params.options) after defaults so
+        // breadcrumb / reopen keeps Fiscal Year 2025 after visiting GL / journal.
+        this.applyFilterState(this.loadIncomingFilterState());
+        delete this.props.action.params?.ignore_session;
         await this.reload();
     }
 
-    onDatePeriodSelected({ periodType, dateTo }) {
+    onDatePeriodSelected({ periodType, dateFrom, dateTo }) {
         this.state.periodType = periodType;
         this.state.asOf = dateTo.startOf("day");
-        // Keep Specific Date aligned with as-of until the user picks another date
-        // while custom comparison is inactive (Enterprise comparison.date_to default).
+        this.state.dateFrom = dateFrom ? dateFrom.startOf("day") : false;
+        // Keep custom comparison defaults aligned with the active period (Enterprise).
         if (this.state.compare !== "custom") {
             this.state.customDate = this.state.asOf;
+            this.state.customDateFrom = this.state.dateFrom;
         }
         this.reload();
     }
@@ -482,6 +761,7 @@ export class FsReport extends Component {
 
     onSetRoundingUnit(unit) {
         this.state.roundingUnit = unit;
+        this.saveSessionOptions();
     }
 
     /** Enterprise all_entries toggle → Draft Entries. */
@@ -515,20 +795,27 @@ export class FsReport extends Component {
         this.state.accountLines = accountLines;
     }
 
-    /** Enterprise hide_0_lines — client-side visibility only (no reload). */
+    /** Enterprise hide_0_lines — client-side visibility only (no reload). BS + P&L. */
     onToggleHide0Lines() {
         this.state.hide0Lines = !this.state.hide0Lines;
+        // Drop cached account expansions' visibility by rebuilding rows on next render.
+        this.state.accountLines = { ...this.state.accountLines };
+        this.saveSessionOptions();
     }
 
     /** Enterprise horizontal_split — Assets left / Liabilities+Equity right. */
     onToggleHorizontalSplit() {
         this.state.horizontalSplit = !this.state.horizontalSplit;
+        this.saveSessionOptions();
     }
 
     async reload() {
         const token = ++this.loadToken;
         this.state.loading = true;
         this.state.accountLines = {};
+        // Persist filters before RPC so breadcrumb back from GL/journal keeps them
+        // even if the user navigates away while loading (Enterprise session parity).
+        this.saveSessionOptions();
         // report_line % mode still needs balances for the current as-of column only.
         const data = await this.orm.call("fs.report.engine", "get_report_data", [
             this.reportId,
@@ -540,6 +827,7 @@ export class FsReport extends Component {
         this.state.lines = data.lines;
         this.state.hasUnposted = Boolean(data.has_unposted);
         this.state.loading = false;
+        this.saveSessionOptions();
         if (this.state.unfoldAll) {
             await this.unfoldAllLines();
         }

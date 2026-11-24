@@ -180,13 +180,21 @@ class FsGeneralLedger(models.AbstractModel):
                 "targeting accounts."
             ))
         account = self.env['account.account'].browse(account_id)
-        date_to = fields.Date.to_date(options['columns'][-1]['date_to'])
+        column = options['columns'][-1]
+        date_to = fields.Date.to_date(column['date_to'])
         company = self.env['res.company'].browse(options['company_ids'][0])
-        date_from = company.compute_fiscalyear_dates(date_to)['date_from']
+        if column.get('date_from'):
+            date_from = fields.Date.to_date(column['date_from'])
+        else:
+            date_from = company.compute_fiscalyear_dates(date_to)['date_from']
+        date_opts = options.get('date') or {}
         gl_options = {
             'company_ids': options['company_ids'],
             'date_from': fields.Date.to_string(date_from),
             'date_to': fields.Date.to_string(date_to),
+            'period_type': date_opts.get('period_type') or (
+                'custom' if column.get('date_from') else 'year'
+            ),
             'target_move': options.get('target_move', 'posted'),
             'journal_ids': options.get('journal_ids') or [],
             'filter_accounts': account.code or account.name or '',
@@ -207,29 +215,89 @@ class FsGeneralLedger(models.AbstractModel):
         return action
 
     @api.model
-    def open_journal_items(self, options, params):
-        account_id = params.get('account_id')
-        if not account_id:
-            raise UserError(_("Missing account for Journal Items."))
-        domain = self._aml_base_domain(options) + [
-            ('account_id', '=', account_id),
-            ('date', '<=', options['date_to']),
+    def _journal_items_action(self, options, params=None):
+        """Mirror Enterprise account.report.open_journal_items (search defaults + views).
+
+        params keys: account_id, group_by_account, view_ref, extra_domain, name
+        """
+        params = params or {}
+        date_opts = options.get('date') or {}
+        date_from = date_opts.get('date_from') or options.get('date_from') or False
+        date_to = date_opts.get('date_to') or options.get('date_to')
+        if not date_to and options.get('columns'):
+            date_to = options['columns'][-1].get('date_to')
+            date_from = date_from or options['columns'][-1].get('date_from') or False
+
+        posted = options.get('target_move', 'posted') == 'posted' and not options.get('all_entries')
+        ctx = {
+            **dict(self.env.context),
+            'active_test': False,
+            'create': 0,
+            'search_default_group_by_account': 1 if params.get('group_by_account') else 0,
+            'search_default_posted': 1 if posted else 0,
+            'date_from': date_from or False,
+            'date_to': date_to,
+            'expand': 1,
+        }
+        if date_from:
+            ctx['search_default_date_between'] = 1
+        else:
+            ctx['search_default_date_before'] = 1
+
+        action_domain = [
+            ('display_type', 'not in', ('line_section', 'line_subsection', 'line_note')),
+            ('parent_state', '!=', 'cancel'),
         ]
+        company_ids = options.get('company_ids')
+        if company_ids:
+            action_domain.append(('company_id', 'in', company_ids))
+        journal_ids = options.get('journal_ids') or []
+        if journal_ids:
+            if len(journal_ids) == 1:
+                ctx['search_default_journal_id'] = journal_ids
+            else:
+                ctx['search_default_journal_ids'] = True
+                ctx['journal_ids'] = journal_ids
+
+        account_id = params.get('account_id')
+        if account_id:
+            ctx['active_id'] = account_id
+            ctx['search_default_account_id'] = [account_id]
+
+        extra_domain = params.get('extra_domain') or []
+        if extra_domain:
+            action_domain = action_domain + list(extra_domain)
+
+        view_id = False
+        view_ref = params.get('view_ref')
+        if view_ref:
+            view_id = self.env.ref(view_ref).id
+
         action = self.env['ir.actions.act_window']._for_xml_id('account.action_account_moves_all')
         action.update({
-            'name': _('Journal Items'),
-            'domain': domain,
+            'name': params.get('name') or _('Journal Items'),
+            'domain': action_domain,
             'view_mode': 'list,pivot,graph,kanban',
             'views': [
-                (False, 'list'),
+                (view_id, 'list'),
                 (False, 'pivot'),
                 (False, 'graph'),
                 (False, 'kanban'),
             ],
-            'context': {
-                **dict(self.env.context),
-                'create': 0,
-                'search_default_posted': 1 if options.get('target_move', 'posted') == 'posted' else 0,
-            },
+            'context': ctx,
         })
+        if view_id:
+            action['view_id'] = view_id
         return action
+
+    @api.model
+    def open_journal_items(self, options, params):
+        """Enterprise GL Journal Items button — partner view + cumulated balance, no group-by."""
+        account_id = params.get('account_id')
+        if not account_id:
+            raise UserError(_("Missing account for Journal Items."))
+        return self._journal_items_action(options, {
+            'account_id': account_id,
+            'group_by_account': False,
+            'view_ref': 'account_fs_report.view_move_line_account',
+        })

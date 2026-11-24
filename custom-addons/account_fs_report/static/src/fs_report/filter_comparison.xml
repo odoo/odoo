@@ -76,6 +76,36 @@
                 </div>
 
                 <DropdownItem
+                    t-if="this.isRangeMode"
+                    class="{
+                        'selected': this.props.compare === 'custom',
+                        'dropdown-item': true,
+                        'date': true,
+                    }"
+                    onSelected="() => this.selectFilter('custom')"
+                    closingMode="'none'"
+                >
+                    <label class="d-flex align-items-center">Custom Dates</label>
+                    <div
+                        class="d-flex flex-row"
+                        t-att-class="this.props.compare !== 'custom' ? 'invisible' : ''"
+                    >
+                        <DateTimeInput
+                            type="'date'"
+                            value="this.props.customDateFrom"
+                            onChange="(dateFrom) => this.setCustomDateFrom(dateFrom)"
+                        />
+                        <label class="d-flex align-items-center">to</label>
+                        <DateTimeInput
+                            type="'date'"
+                            value="this.props.customDate"
+                            onChange="(dateTo) => this.setCustomDate(dateTo)"
+                        />
+                    </div>
+                </DropdownItem>
+
+                <DropdownItem
+                    t-if="!this.isRangeMode"
                     class="{
                         'selected': this.props.compare === 'custom',
                         'dropdown-item': true,

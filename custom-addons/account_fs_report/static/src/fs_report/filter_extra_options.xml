@@ -7,7 +7,7 @@
                 <t t-out="this.selectedExtraOptions"/>
             </button>
             <t t-set-slot="content">
-                <!-- Enterprise filterExtraOptionsData (non-ui_filter): Draft Entries, Unfold All -->
+                <!-- Enterprise non-ui_filter: Draft Entries, Unfold All -->
                 <DropdownItem
                     class="{ 'selected': this.props.allEntries }"
                     onSelected="() => this.props.onToggleDraftEntries()"
@@ -23,18 +23,20 @@
                     Unfold All
                 </DropdownItem>
 
+                <!-- Enterprise ui_filter section — Hide lines at 0 on BS and P&amp;L -->
                 <div class="dropdown-divider"/>
-
-                <!-- Enterprise ui_filter options -->
                 <DropdownItem
                     class="{ 'selected': this.props.hide0Lines }"
                     onSelected="() => this.props.onToggleHide0Lines()"
+                    closingMode="'none'"
                 >
                     Hide lines at 0
                 </DropdownItem>
                 <DropdownItem
+                    t-if="this.props.showHorizontalSplit"
                     class="{ 'selected': this.props.horizontalSplit }"
                     onSelected="() => this.props.onToggleHorizontalSplit()"
+                    closingMode="'none'"
                 >
                     Split Horizontally
                 </DropdownItem>

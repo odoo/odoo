@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="account_fs_report.FsGeneralLedger">
-        <div class="o_action o_fs_report o_fs_general_ledger">
+        <div class="o_action o_fs_report o_fs_general_ledger" t-ref="this.rootRef">
             <ControlPanel>
                 <t t-set-slot="control-panel-buttons">
                     <button class="btn btn-primary text-nowrap" t-on-click="this.onPrint">Print</button>
@@ -20,25 +20,17 @@
                                 role="searchbox"
                             />
                         </form>
-                        <!-- Date range (Enterprise single control) -->
-                        <Dropdown>
-                            <button class="btn btn-secondary">
-                                <i class="oi oi-filled me-1" data-icon="calendar_today"/>
-                                <t t-out="this.formatDateValue(this.state.dateFrom)"/>
-                                <span> - </span>
-                                <t t-out="this.formatDateValue(this.state.dateTo)"/>
-                            </button>
-                            <t t-set-slot="content">
-                                <div class="px-3 py-2 d-flex flex-column gap-2">
-                                    <button class="btn btn-secondary" t-ref="this.dateFromRef" t-on-click="this.openDateFromPicker">
-                                        From <t t-out="this.formatDateValue(this.state.dateFrom)"/>
-                                    </button>
-                                    <button class="btn btn-secondary" t-ref="this.dateToRef" t-on-click="this.openDateToPicker">
-                                        To <t t-out="this.formatDateValue(this.state.dateTo)"/>
-                                    </button>
-                                </div>
-                            </t>
-                        </Dropdown>
+                        <!-- Enterprise AccountReportFilterDate (range) — button shows "2025" for FY -->
+                        <FsReportFilterDate
+                            t-key="this.state.fiscalStartMonth + '-' + this.state.fiscalStartDay + '-' + this.state.periodType"
+                            dateFrom="this.state.dateFrom"
+                            dateTo="this.state.dateTo"
+                            periodType="this.state.periodType"
+                            rangeMode="true"
+                            fiscalStartDay="this.state.fiscalStartDay"
+                            fiscalStartMonth="this.state.fiscalStartMonth"
+                            onPeriodSelected.bind="this.onDatePeriodSelected"
+                        />
                         <!-- Posted / Draft -->
                         <Dropdown>
                             <button class="btn btn-secondary">
