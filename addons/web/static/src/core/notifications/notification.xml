@@ -6,7 +6,7 @@
             <span t-attf-class="o_notification_bar bg-{{this.props.type}} rounded-start"/>
             <div class="d-flex align-items-start w-100 py-2 ps-2 border border-start-0 rounded-end text-break">
                 <div class="o_notification_body d-flex flex-wrap flex-md-nowrap flex-grow-1 justify-content-between justify-content-md-normal">
-                    <span class="o_notification_content o_line_clamp w-auto w-md-100 align-self-start" t-att-title="this.props.message">
+                    <span class="o_notification_content o_line_clamp w-auto w-md-100 align-self-start">
                         <!-- TODO-IPB: at the end, title has to be removed, but the change is too important to do all in once now -->
                         <t t-if="this.props.title"><t t-out="this.props.title"/>. </t>
                         <t t-out="this.props.message"/>
