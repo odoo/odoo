@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from unittest.mock import patch
+
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 
@@ -53,3 +55,13 @@ class TestPaymentProvider(MercadoPagoCommon):
         """Test that an absent website language falls back to the default locale."""
         locale = self.provider.with_context(lang=None)._mercado_pago_get_locale()
         self.assertEqual(locale, "en-US")
+
+    def test_other_providers_receive_the_refresh_token_flag(self):
+        with patch(
+            'odoo.addons.payment.models.payment_provider.PaymentProvider._build_request_headers',
+            return_value={},
+        ) as build_headers_mock:
+            self.dummy_provider._build_request_headers(
+                'POST', '/token', None, is_refresh_token_request=True
+            )
+        self.assertTrue(build_headers_mock.call_args.kwargs.get('is_refresh_token_request'))

@@ -282,6 +282,7 @@ class PaymentProvider(models.Model):
                 *args,
                 idempotency_key=idempotency_key,
                 is_proxy_request=is_proxy_request,
+                is_refresh_token_request=is_refresh_token_request,
                 **kwargs,
             )
 
