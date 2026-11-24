@@ -43,10 +43,13 @@
         .o_resource_editor_resource_info {
             color: #ebecee;
         }
+        /* Use the accent color for links. The default link color has a bad contrast on the dark background. */
+        a, .btn-link {
+            color: var(--o-we-ace-accent-color);
+        }
         .o_resource_editor_modified_by {
             margin-left: calc(var(--o-bs-grid-gutter-width) / 4);
             vertical-align: baseline;
-            color: var(--o-we-ace-accent-color);
         }
     }
 
