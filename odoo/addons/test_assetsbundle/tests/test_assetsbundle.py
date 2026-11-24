@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import Counter
+from contextlib import contextmanager
 import os
 import time
 from unittest import skip
@@ -12,7 +13,7 @@ import unittest
 
 import odoo.modules
 from odoo import api
-from odoo.addons.base.models.assetsbundle import AssetsBundle, XMLAssetError, ANY_UNIQUE
+from odoo.addons.base.models.assetsbundle import AssetsBundle, XMLAssetError, ANY_UNIQUE, asset_file_ident
 from odoo.addons.base.models.ir_asset import AssetPaths
 from odoo.addons.base.models.ir_attachment import IrAttachment
 from odoo.modules import Manifest
@@ -20,8 +21,6 @@ from odoo.tests import HttpCase, tagged
 from odoo.tests.common import TransactionCase
 from odoo.tools import mute_logger
 from odoo.tools.misc import file_path
-
-GETMTINE = os.path.getmtime
 
 # ruff: noqa: S320
 
@@ -121,9 +120,16 @@ class FileTouchable(AddonManifestPatched):
         super(FileTouchable, self).setUp()
         self.touches = {}
 
+    @contextmanager
     def _touch(self, filepath, touch_time=None):
         self.touches[filepath] = touch_time or time.time()
-        return patch('os.path.getmtime', lambda filename: self.touches.get(filename) or GETMTINE(filename))
+
+        def fake_hash(filename):
+            return f'touched-{self.touches[filename]}' if filename in self.touches else asset_file_ident(filename)
+
+        with patch('odoo.addons.base.models.assetsbundle.asset_file_ident', fake_hash), \
+             patch('odoo.addons.base.models.ir_asset.asset_file_ident', fake_hash):
+            yield
 
 
 @tagged('at_install', '-post_install')

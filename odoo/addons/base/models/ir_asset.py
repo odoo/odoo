@@ -9,6 +9,8 @@ from odoo.modules import Manifest
 from odoo.tools import misc
 from odoo.tools.constants import ASSET_EXTENSIONS, EXTERNAL_ASSET, BINARY_EXTENSIONS
 
+from odoo.addons.base.models.assetsbundle import asset_file_ident
+
 _logger = getLogger(__name__)
 
 DEFAULT_SEQUENCE = 16
@@ -45,7 +47,7 @@ def is_wildcard_glob(path):
 
 def _glob_static_file(pattern):
     files = glob(pattern, recursive=True)
-    return sorted((file, os.path.getmtime(file)) for file in files if file.rsplit('.', 1)[-1] in ASSET_EXTENSIONS)
+    return sorted((file, asset_file_ident(file)) for file in files if file.rsplit('.', 1)[-1] in ASSET_EXTENSIONS)
 
 
 class IrAsset(models.Model):

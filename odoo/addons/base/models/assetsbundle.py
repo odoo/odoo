@@ -22,6 +22,23 @@ from odoo.tools.misc import file_open, file_path
 
 _logger = logging.getLogger(__name__)
 
+__content_hash_cache = {}
+
+
+def asset_file_ident(path):
+    if os.environ.get('ODOO_USE_MTIME_ASSET_IDENT'):
+        return os.path.getmtime(path)
+    st = os.stat(path)
+    key = (st.st_mtime_ns, st.st_size, st.st_ino)
+    cached = __content_hash_cache.get(path)
+    if cached and cached[0] == key:
+        return cached[1]
+    with open(path, 'rb') as f:
+        digest = hashlib.sha1(f.read()).hexdigest()
+    __content_hash_cache[path] = (key, digest)
+    return digest
+
+
 ANY_UNIQUE = '_' * 7
 EXTENSIONS = (".js", ".css", ".scss", ".sass", ".xml")
 
@@ -811,7 +828,7 @@ class WebAsset(object):
             except Exception:  # most likely nor a file or an attachment, skip it
                 pass
             if self._filename and self.bundle.is_debug_assets:  # usually _last_modified should be set exept in debug=assets
-                self._last_modified = os.path.getmtime(self._filename)
+                self._last_modified = asset_file_ident(self._filename)
             elif self._ir_attach:
                 self._last_modified = self._ir_attach.write_date.timestamp()
             if not self._last_modified:
