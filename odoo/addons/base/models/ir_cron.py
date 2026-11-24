@@ -5,7 +5,6 @@ import copy
 import logging
 import math
 import os
-import threading
 import time
 import typing
 from datetime import datetime, timedelta, UTC
@@ -14,7 +13,7 @@ import psycopg2
 import psycopg2.errors
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, sql_db
+from odoo import api, fields, models, netsvc, sql_db
 from odoo.exceptions import ConcurrencyError, LockError, UserError
 from odoo.http.dispatcher import serialize_exception
 from odoo.modules import Manifest
@@ -187,8 +186,7 @@ class IrCron(models.Model):
         """ Execute every job ready to be run on this database. """
         try:
             db = sql_db.db_connect(db_name)
-            threading.current_thread().dbname = db_name
-            with db.cursor() as cron_cr:
+            with netsvc.ExecutionInfo('cron', db_name=db_name), db.cursor() as cron_cr:
                 cls = IrCron
                 cls._check_version(cron_cr)
                 jobs = cls._get_all_ready_jobs(cron_cr)
@@ -208,9 +206,6 @@ class IrCron(models.Model):
             raise
         except Exception:
             _logger.warning('Exception in cron:', exc_info=True)
-        finally:
-            if hasattr(threading.current_thread(), 'dbname'):
-                del threading.current_thread().dbname
 
     @staticmethod
     def _process_jobs_loop(cron_cr: Cursor, *, job_ids: Iterable[int] = ()) -> None:

@@ -56,7 +56,7 @@ from werkzeug.exceptions import BadRequest
 import odoo.cli
 import odoo.models
 import odoo.orm.registry
-from odoo import api, fields
+from odoo import api, fields, netsvc
 from odoo.exceptions import AccessError
 from odoo.fields import Command
 from odoo.http import request, request_var
@@ -131,8 +131,9 @@ def get_db_name():
     # use the one on the thread (which means if it is provided on
     # the command-line, this will break when installing another
     # database from XML-RPC).
-    if not dbnames and hasattr(threading.current_thread(), 'dbname'):
-        return threading.current_thread().dbname
+
+    if not dbnames and (name := netsvc.ExecutionInfo.get().db_name):
+        return name
     if len(dbnames) > 1:
         sys.exit("-d/--database/db_name has multiple database, please provide a single one")
     return dbnames[0]
@@ -2034,7 +2035,9 @@ class ChromeBrowser:
             ws.close()
 
     def _receive(self, dbname):
-        threading.current_thread().dbname = dbname
+        # just enter the context, this is called in a separated thread
+        execution_info = netsvc.ExecutionInfo('chrome', db_name=dbname)
+        execution_info.__enter__()  # ruff: ignore[unnecessary-dunder-call]
         try:
             self._receive_events()
         finally:
@@ -2859,8 +2862,9 @@ class HttpCase(TransactionCase):
 
         request_threads = get_http_request_threads()
         for thread in request_threads:
+            info = getattr(thread, 'dumpstack_info', None)
             self._logger.info("Stop waiting for thread %s handling request for url %s",
-                                    thread.name, getattr(thread, 'url', '<UNKNOWN>'))
+                                    thread.name, (info and info.url) or '<UNKNOWN>')
 
         if request_threads:
             self._logger.info('remaining requests')

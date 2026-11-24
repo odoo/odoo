@@ -1,8 +1,6 @@
-import contextvars
 import functools
 import logging
 import pprint
-import threading
 import time
 import typing
 from http import HTTPStatus
@@ -23,14 +21,13 @@ from odoo.logging import (
     TRUE_COLOR_PATTERN,
     YELLOW,
 )
+from odoo.netsvc import ExecutionInfo
 from odoo.tools import config, frozendict
-from odoo.tools.misc import real_time
 
 from .requestlib import DEFAULT_MAX_CONTENT_LENGTH, MAX_FORM_SIZE
 
 __all__ = (
     'http_log',
-    'reset_thread_info',
 )
 
 _HTTP_FORMAT = '%(remote_addr)s %(ident)s %(http_auth)s [%(date)s] "%(http_request_line)s" %(http_response_status)s %(http_response_body)s %(query_count)s %(query_time)s %(remaining_time)s %(cursor_mode)s'
@@ -64,39 +61,6 @@ _NO_BODY_STATUS = {
 }
 
 
-def reset_thread_info():
-    t0 = real_time()
-    current_thread = threading.current_thread()
-    current_thread.query_count = 0
-    current_thread.query_time = 0
-    current_thread.perf_t0 = t0
-    current_thread.cursor_mode = None
-    current_thread.rpc_model_method = None
-    current_thread.req_ident = None
-
-
-def run_in_isolated_context(callback, /, *a, **kw):
-    current_thread = threading.current_thread()
-    query_count = current_thread.query_count
-    query_time = current_thread.query_time
-    perf_t0 = current_thread.perf_t0
-    cursor_mode = current_thread.cursor_mode
-    rpc_model_method = current_thread.rpc_model_method
-    req_ident = current_thread.req_ident
-
-    reset_thread_info()
-
-    try:
-        return contextvars.Context().run(callback, *a, **kw)
-    finally:
-        current_thread.query_count += query_count  # +=
-        current_thread.query_time += query_time  # +=
-        current_thread.perf_t0 = perf_t0
-        current_thread.cursor_mode = cursor_mode
-        current_thread.rpc_model_method = rpc_model_method
-        current_thread.req_ident = req_ident
-
-
 def http_log(
     level,
     msg,
@@ -109,18 +73,17 @@ def http_log(
         return
 
     now = time.time()
-    real_now = real_time()
-    current_thread = threading.current_thread()
+    info = ExecutionInfo.get()
     extra = dict(
         _HTTP_EXTRA,
-        query_count=current_thread.query_count,
-        query_time=current_thread.query_time,
-        remaining_time=real_now - current_thread.perf_t0 - current_thread.query_time,
+        query_count=info.db_stats.count,
+        query_time=info.db_stats.time,
+        remaining_time=info.total_time() - info.db_stats.time,
         date=format_date_time(now),
     )
-    if th_cursor_mode := current_thread.cursor_mode:
+    if th_cursor_mode := info.cursor_mode:
         extra['cursor_mode'] = th_cursor_mode
-    if th_req_ident := current_thread.req_ident:
+    if th_req_ident := info.req_ident:
         ident_type, ident = th_req_ident
         ident_type = {'session': 'S', 'bearer': 'B'}.get(ident_type, '?')
         extra['ident'] = f'{ident_type}/{ident}'
@@ -129,7 +92,7 @@ def http_log(
         extra['http_headers'] = req.headers
         extra['http_request_line'] = ((
             b'%(method)s %(target)s#%(rpc)s HTTP/%(version)s'
-            if (rmm := current_thread.rpc_model_method) else
+            if (rmm := info.rpc_model_method) else
             b'%(method)s %(target)s HTTP/%(version)s'
         ) % {
             b'method': req.method if req else b'-',

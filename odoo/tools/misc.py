@@ -851,33 +851,31 @@ def dumpstacks(sig=None, frame=None, thread_idents=None, log_level=logging.INFO)
         return None
 
     # code from http://stackoverflow.com/questions/132058/getting-stack-trace-from-a-running-python-application#answer-2569696
-    # modified for python 2.5 compatibility
-    threads_info = {th.ident: {'repr': repr(th),
-                               'uid': getattr(th, 'uid', 'n/a'),
-                               'dbname': getattr(th, 'dbname', 'n/a'),
-                               'url': getattr(th, 'url', 'n/a'),
-                               'query_count': getattr(th, 'query_count', 'n/a'),
-                               'query_time': getattr(th, 'query_time', None),
-                               'perf_t0': getattr(th, 'perf_t0', None)}
-                    for th in threading.enumerate()}
+    threads_info = {
+        th.ident: {
+            'repr': repr(th),
+            'info': getattr(th, 'dumpstack_info', None)
+        }
+        for th in threading.enumerate()
+    }
     for threadId, stack in sys._current_frames().items():
         if not thread_idents or threadId in thread_idents:
-            thread_info = threads_info.get(threadId, {})
-            query_time = thread_info.get('query_time')
-            perf_t0 = thread_info.get('perf_t0')
-            remaining_time = None
-            if query_time is not None and perf_t0:
-                remaining_time = '%.3f' % (real_time() - perf_t0 - query_time)
-                query_time = '%.3f' % query_time
+            thread_repr = threads_info.get(threadId, {}).get('repr', threadId)
+            if thread_info := threads_info.get(threadId, {}).get('info'):
+                query_time = thread_info.db_stats.time
+                info_header = " [%s] (db:%s) (uid:%s) (url:%s) (qc:%s qt:%.3f pt:%.3f)" % (
+                    thread_info.name,
+                    thread_info.db_name or 'n/a',
+                    thread_info.uid or 'n/a',
+                    thread_info.url or 'n/a',
+                    thread_info.db_stats.count,
+                    query_time,
+                    thread_info.total_time() - query_time,
+                )
+            else:
+                info_header = ""
             # qc:query_count qt:query_time pt:python_time (aka remaining time)
-            code.append("\n# Thread: %s (db:%s) (uid:%s) (url:%s) (qc:%s qt:%s pt:%s)" %
-                        (thread_info.get('repr', threadId),
-                         thread_info.get('dbname', 'n/a'),
-                         thread_info.get('uid', 'n/a'),
-                         thread_info.get('url', 'n/a'),
-                         thread_info.get('query_count', 'n/a'),
-                         query_time or 'n/a',
-                         remaining_time or 'n/a'))
+            code.append("\n# Thread: %s%s" % (thread_repr, info_header))
 
             env = find_env(stack)
             if env:
