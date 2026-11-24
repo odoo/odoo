@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
+        <t name="invoice_title" position="replace">
+            <t name="invoice_title">Original Tax Invoice</t>
+        </t>
+        <t name="credit_note_title" position="replace">
+            <t name="credit_note_title">Original Tax Credit Note</t>
+        </t>
+        <t name="self_billing_invoice_title" position="replace">
+            <t name="self_billing_invoice_title">Recipient-Created Tax Invoice</t>
+        </t>
+    </template>
+
+    <template id="report_invoice" inherit_id="account.report_invoice">
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+            <t t-elif="o._get_name_invoice_report() == 'l10n_bw.report_invoice_document'"
+               t-call="l10n_bw.report_invoice_document"
+               t-lang="lang"/>
+        </xpath>
+    </template>
+</odoo>
