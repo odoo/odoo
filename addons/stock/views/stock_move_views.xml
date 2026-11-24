@@ -369,7 +369,7 @@
                                     <field name="uom_id" widget="many2one_uom" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" readonly="state in ('done', 'cancel')"/>
                                 </div>
                                 <field name="lot_ids" widget="many2many_tags" string="Lot/Serial Numbers" invisible="not product_id or has_tracking not in ['lot', 'serial']" readonly="state in ('done', 'cancel')" domain="[('product_id', '=', product_id), ('id', 'in', context.get('lot_ids'))] if context.get('lot_ids') else [('product_id', '=', product_id)]"/>
-                                <field name="scrap_reason_tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" readonly="state == 'cancel'"/>
+                                <field name="scrap_reason_tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" readonly="state == 'cancel'"/>
                             </group>
                             <group>
                                 <field name="location_id" options="{'no_create': True}" readonly="state in ('done', 'cancel')" groups="stock.group_stock_multi_locations"/>
@@ -401,7 +401,10 @@
                     <field name="location_id" string="Source Location" groups="stock.group_stock_multi_locations"/>
                     <field name="location_dest_id" string="Scrap Location" groups="stock.group_stock_multi_locations"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="state"/>
+                    <field name="state" widget="badge"
+                        decoration-muted="state == 'draft'"
+                        decoration-info="state == 'assigned'"
+                        decoration-success="state == 'done'"/>
                 </list>
             </field>
         </record>
