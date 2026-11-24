@@ -129,10 +129,10 @@ class StockLocation(models.Model):
             location.net_weight = weight_by_location[location]['net_weight']
             location.forecast_weight = weight_by_location[location]['forecast_weight']
 
-    @api.depends('name', 'location_id.complete_name', 'usage')
+    @api.depends('name', 'location_id.complete_name')
     def _compute_complete_name(self):
         for location in self:
-            if location.location_id and location.usage != 'view':
+            if location.location_id:
                 location.complete_name = '%s/%s' % (location.location_id.complete_name, location.name)
             else:
                 location.complete_name = location.name
