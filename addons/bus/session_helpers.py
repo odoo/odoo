@@ -1,7 +1,5 @@
 import hashlib
 import hmac
-import os
-import time
 import typing
 
 from odoo.api import SUPERUSER_ID, Environment
@@ -18,11 +16,6 @@ if typing.TYPE_CHECKING:
 # The session-token query has a registry level shape (SELECT/FROM/JOIN/GROUP BY)
 # and a per user WHERE (`res_users.id = <uid>`).
 _query_params_by_dbname = LRU(8192)
-
-# Last seen (mtime, inode) of each sid's session file. `SessionStore.save()` always
-# rewrites via a fresh mkstemp+os.replace. Inode is used to tiebreak two writes that would
-# land on the same mtime.
-_stat_by_sid = LRU(8192)
 
 
 def _get_session_token_query_params(cr, uids):
@@ -62,7 +55,6 @@ def check_sessions(cr, sessions):
         the checked session's ``sid`` when a rotation happened.
     """
     store = session_store()
-    now = time.time()
     resolved_by_sid: dict[OldSID, ResolvedSession] = {}
     to_check_by_sid = {}
     for stored_session in sessions:
@@ -71,30 +63,8 @@ def check_sessions(cr, sessions):
         if stored_session.uid is None:
             resolved_by_sid[stored_session.sid] = stored_session  # No user, no token to match.
             continue
-        try:
-            # Open instead of stat (close to open consistency): NFS clients cache file
-            # attributes for seconds (acregmin/acregmax) which could hide a delete from
-            # another node sharing `session_dir`. Opening forces a revalidation.
-            with open(store.get_session_path(stored_session.sid), "rb", buffering=0) as f:
-                st = os.fstat(f.fileno())
-                session_stat = (st.st_mtime_ns, st.st_ino)
-        except (OSError, ValueError):
-            continue  # Session wasn't found on disk (= outdated).
-        if _stat_by_sid.get(stored_session.sid) == session_stat:
-            stored = stored_session  # Unchanged since last check.
-        else:
-            stored = store.get(stored_session.sid)
-            if stored.is_new:
-                continue  # Session wasn't found on disk (= outdated).
-            _stat_by_sid[stored_session.sid] = session_stat
-        if "next_sid" in stored:
-            stored = store.get(stored["next_sid"])
-            if stored.is_new:
-                continue
-        store.delete_old_sessions(stored)
-        if "deletion_time" in stored and stored["deletion_time"] <= now:
-            continue
-        to_check_by_sid[stored_session.sid] = stored
+        if stored := store.get_latest(stored_session):
+            to_check_by_sid[stored_session.sid] = stored
     if not to_check_by_sid:
         return resolved_by_sid
     uids = {session.uid for session in to_check_by_sid.values()}
