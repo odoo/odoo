@@ -142,3 +142,44 @@ class TestWebsiteSaleDeliveryController(PaymentCommon, SaleCommon):
             self.Controller.shop_confirm_order()
 
         self.assertEqual(order.amount_delivery, 10.0)
+
+    def test_delivery_rate_includes_taxes_of_parent_company(self):
+        """The delivery rate shown at checkout should include the taxes of the delivery product
+        when the order belongs to a branch, which uses the taxes of its parent company."""
+        branch = self.env['res.company'].create({
+            'name': "Branch",
+            'parent_id': self.env.company.id,
+        })
+        tax = self.env['account.tax'].create({
+            'name': "Delivery 15%",
+            'amount': 15.0,
+            'company_id': self.env.company.id,
+        })
+        delivery_product = self.env['product.product'].create({
+            'name': "Delivery",
+            'type': 'service',
+            'list_price': 100.0,
+            'taxes_id': tax.ids,
+        })
+        carrier = self.env['delivery.carrier'].create({
+            'name': "Fixed",
+            'delivery_type': 'fixed',
+            'fixed_price': 100.0,
+            'product_id': delivery_product.id,
+        })
+        branch_website = self.env['website'].create({
+            'name': "Branch Website",
+            'company_id': branch.id,
+            'show_line_subtotals_tax_selection': 'tax_included',
+        })
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'company_id': branch.id,
+            'website_id': branch_website.id,
+            'order_line': [Command.create({'product_id': self.product.id})],
+        })
+
+        with MockRequest(self.env, website=branch_website):
+            rate = Delivery._get_rate(carrier, order)
+
+        self.assertEqual(rate['price'], 115.0)
