@@ -126,9 +126,6 @@ class Id(Field[IdType | typing.Literal[False], typing.Any]):
     def __set__(self, record, value):
         raise TypeError("field 'id' cannot be assigned")
 
-    def convert_to_column(self, value, record, values=None, validate=True):
-        return value
-
     def convert_to_cache(self, value, records, validate=True):
         return value
 

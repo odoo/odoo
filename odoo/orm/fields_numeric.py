@@ -39,9 +39,6 @@ class Integer(Field[int, int]):
     def convert_to_record(self, value, record):
         return value or 0
 
-    def convert_to_read(self, value: int | None, record, use_display_name=True) -> int | None:
-        return value
-
     def convert_to_export(self, value, record):
         if value or value == 0:
             return value
@@ -285,9 +282,6 @@ class Monetary(Field[float, float]):
 
     def convert_to_record(self, value, record):
         return value or 0.0
-
-    def convert_to_read(self, value, record, use_display_name=True):
-        return value
 
     def convert_to_write(self, value, record):
         return value
