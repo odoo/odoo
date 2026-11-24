@@ -2,6 +2,37 @@
 <odoo>
     <data>
 
+        <record model="ir.ui.view" id="res_device_view_search">
+            <field name="name">res.device.search</field>
+            <field name="model">res.device</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="user_id"/>
+                    <field name="ip_address"/>
+                    <field name="session_identifier"/>
+                    <filter name="all" string="All"
+                        context="{'res_device_include_revoked': True}"/>
+                    <filter name="revoked" string="Revoked" domain="[('revoked', '=', True)]"
+                        context="{'res_device_include_revoked': True}"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="res_session_view_search">
+            <field name="name">res.session.search</field>
+            <field name="model">res.session</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="user_id"/>
+                    <field name="session_identifier"/>
+                    <filter name="all" string="All"
+                        context="{'res_device_include_revoked': True}"/>
+                    <filter name="revoked" string="Revoked" domain=" [('revoked', '=', True)]"
+                        context="{'res_device_include_revoked': True}"/>
+                </search>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="res_device_view_form">
             <field name="name">res.device.form</field>
             <field name="model">res.device</field>
@@ -31,7 +62,7 @@
             <field name="name">res.device.list</field>
             <field name="model">res.device</field>
             <field name="arch" type="xml">
-                <list default_order="last_activity desc">
+                <list default_order="last_activity desc" decoration-muted="revoked">
                     <field name="session_identifier" optional="hide"/>
                     <field name="user_id"/>
                     <field name="first_activity"/>
@@ -42,6 +73,7 @@
                     <field name="platform"/>
                     <field name="browser"/>
                     <field name="user_agent" optional="hide"/>
+                    <field name="revoked" optional="show"/>
                 </list>
             </field>
         </record>
@@ -84,7 +116,7 @@
             <field name="name">res.session.list</field>
             <field name="model">res.session</field>
             <field name="arch" type="xml">
-                <list default_order="last_activity desc">
+                <list default_order="last_activity desc" decoration-muted="revoked">
                     <field name="session_identifier"/>
                     <field name="user_id"/>
                     <field name="ip_address"/>
@@ -92,7 +124,8 @@
                     <field name="last_activity"/>
                     <field name="country" optional="hidden"/>
                     <field name="city" optional="hidden"/>
-                    <button type="object" name="revoke" string="Revoke" class="btn btn-secondary"/>
+                    <field name="revoked" optional="show"/>
+                    <button type="object" name="revoke" string="Revoke" class="btn btn-secondary" invisible="revoked"/>
                 </list>
             </field>
         </record>

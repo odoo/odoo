@@ -712,3 +712,24 @@ class TestDevice(TestHttpBase):
             ip=TEST_IP, headers={'User-Agent': UA_DEVICE_2}, allow_redirects=False,
         )
         self.assertEqual(res_2.status_code, 200, 'Second device must be trusted')
+
+    def test_include_revoked_via_context(self):
+        now = datetime.now()
+        revoked_log = self.env['res.device.log'].create({
+            'session_identifier': '123456789',
+            'user_id': self.env.uid,
+            'ip_address': TEST_IP,
+            'user_agent': USER_AGENT_linux_chrome,
+            'first_activity': now,
+            'last_activity': now,
+            'revoked': True,
+        })
+        domain = [('session_identifier', '=', '123456789')]
+
+        for model in ('res.device', 'res.session'):
+            with self.subTest(model=model):
+                Model = self.env[model]
+                self.assertFalse(Model.search(domain))
+                records = Model.with_context(res_device_include_revoked=True).search(domain)
+                self.assertEqual(records.ids, revoked_log.ids)
+                self.assertTrue(records.revoked)
