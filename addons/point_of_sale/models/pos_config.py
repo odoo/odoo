@@ -1,9 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+import logging
 from collections import defaultdict
 from datetime import datetime, timedelta
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 from babel.dates import format_date
 
@@ -17,6 +18,8 @@ from odoo.tools.misc import get_lang
 
 DEFAULT_LIMIT_LOAD_PRODUCT = 5000
 DEFAULT_LIMIT_LOAD_PARTNER = 100
+
+_logger = logging.getLogger(__name__)
 
 
 class PosConfig(models.Model):
@@ -1494,3 +1497,57 @@ class PosConfig(models.Model):
             rounding_method = self.rounding_method
 
         return rounding_method
+
+    _WEBRTC_PEER_GROUPS = frozenset({"terminal", "customer_display"})
+
+    # Reached only through controllers/webrtc.py's WebrtcRoutes, which owns the auth
+    # boundary for both the authenticated terminal and the public customer display.
+    def _webrtc_announce(self, peer_id, peer_group, identifier=None):
+        self.ensure_one()
+        try:
+            UUID(peer_id, version=4)
+        except (ValueError, AttributeError, TypeError):
+            raise ValidationError(_("Invalid peer ID."))
+        if peer_group not in self._WEBRTC_PEER_GROUPS:
+            raise ValidationError(_("Invalid peer group."))
+        if identifier is not None and (not isinstance(identifier, str) or not 0 < len(identifier) <= 64):
+            raise ValidationError(_("Invalid device identifier."))
+
+        session = self.env["pos.session"].search([
+            ("config_id", "=", self.id),
+            ("state", "in", ["opened", "opening_control"]),
+        ], limit=1)
+        if not session:
+            raise AccessError(_("Access denied"))
+
+        self._notify("WEBRTC_PEER_ANNOUNCE", {
+            "peer_id": peer_id,
+            "peer_group": peer_group,
+            "peer_identifier": identifier,
+        })
+        return {
+            "uuid": peer_id,
+            "bus_channel": self.access_token,
+            "peer_group": peer_group,
+        }
+
+    def _webrtc_signal(self, msg, peer_group):
+        self.ensure_one()
+        session = self.env["pos.session"].search([
+            ("config_id", "=", self.id),
+            ("state", "in", ["opened", "opening_control"]),
+        ], limit=1)
+        if not session:
+            raise AccessError(_("Access denied"))
+
+        sig_type = msg.get("type")
+        if sig_type not in ("offer", "answer", "ice"):
+            raise ValidationError(_("Invalid WebRTC signal type."))
+        if not isinstance(msg.get("to"), str) or not isinstance(msg.get("from"), str):
+            raise ValidationError(_("Invalid WebRTC signal payload."))
+        if sig_type in ("offer", "answer") and not isinstance(msg.get("sdp"), dict):
+            raise ValidationError(_("Invalid WebRTC signal payload."))
+        if sig_type == "ice" and not isinstance(msg.get("candidate"), dict):
+            raise ValidationError(_("Invalid WebRTC signal payload."))
+
+        self._notify("WEBRTC_SIGNAL", {**msg, "group": peer_group})

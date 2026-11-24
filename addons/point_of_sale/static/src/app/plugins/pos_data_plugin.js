@@ -1,6 +1,7 @@
 import { signal, Plugin, usePlugin, markRaw, proxy, onWillStart, useListener } from "@odoo/owl";
 import { BusPlugin } from "@bus/services/bus_plugin";
 import { ORM } from "@web/core/orm_plugin";
+import { WebRtcPlugin } from "@point_of_sale/app/webrtc/webrtc_plugin";
 import { Mutex } from "@web/core/utils/concurrency";
 import { debounce } from "@web/core/utils/timing";
 import IndexedDB from "../models/utils/indexed_db";
@@ -39,6 +40,7 @@ export class PosDataPlugin extends Plugin {
     debugMode = usePlugin(DebugModePlugin);
     bus = usePlugin(BusPlugin);
     orm = usePlugin(ORM);
+    webrtc = usePlugin(WebRtcPlugin);
     syncInProgress = signal(false);
     dataLoadedFromCache = signal(false);
     localUnsyncedPaidOrderUuids = signal.Set(new Set()); // UUIDs of paid orders written to IndexedDB but not yet confirmed synced to the server.
@@ -83,6 +85,17 @@ export class PosDataPlugin extends Plugin {
         await this.initializeDeviceIdentifier();
         await this.initializeDataRelation();
         this.heartbeat();
+        this.initializeWebRtc();
+    }
+
+    initializeWebRtc() {
+        // Not awaited: joining the mesh needs the server and must not delay the loading.
+        this.webrtc.init({
+            group: "terminal",
+            identifier: this.device.identifier,
+            configId: odoo.pos_config_id,
+            accessToken: odoo.access_token,
+        });
     }
 
     async initializeDeviceIdentifier() {
@@ -194,6 +207,7 @@ export class PosDataPlugin extends Plugin {
 
     reconnectWebSocket() {
         this.initializeWebsocket();
+        this.webrtc.reAnnounce();
     }
 
     connectWebSocket(channel, method) {

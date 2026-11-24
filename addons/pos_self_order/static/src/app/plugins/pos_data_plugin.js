@@ -37,6 +37,9 @@ export const unpatchSelf = patch(PosDataPlugin.prototype, {
     async initializeDeviceIdentifier() {
         return false;
     },
+    initializeWebRtc() {
+        return false;
+    },
     requestPersistentStorage() {
         // Nothing critical in indexedDB here; don't prompt customers' devices.
     },

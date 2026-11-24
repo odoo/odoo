@@ -1,17 +1,20 @@
+import uuid
 from unittest.mock import patch
 
 from freezegun import freeze_time
 
 import odoo
+from odoo.exceptions import AccessError, ValidationError
 
 from odoo.addons.point_of_sale.models.pos_order import TRACKING_NUMBER_SEQUENCE_CODE
 from odoo.addons.point_of_sale.models.pos_payment_method import PosPaymentMethod
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 
+_NOTIFY_PATH = "odoo.addons.point_of_sale.models.pos_bus_mixin.PosBusMixin._notify"
+
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestBackend(TestPoSCommon):
-
     _test_user_groups = None  # FIXME list needed groups
 
     @classmethod
@@ -196,3 +199,102 @@ class TestBackend(TestPoSCommon):
             ['2030-01-08', '2030-01-10'],
         )
         self.assertTrue(other_range.exists())
+
+    def test_webrtc_announce(self):
+        with self.assertRaises(AccessError):
+            self.basic_config._webrtc_announce(str(uuid.uuid4()), "terminal")
+
+        self.basic_config.open_ui()
+
+        # happy path without device_uuid: peer_device_uuid is None in notification
+        peer_id = str(uuid.uuid4())
+        with patch(_NOTIFY_PATH) as mock:
+            result = self.basic_config._webrtc_announce(peer_id, "terminal")
+        self.assertEqual(result["uuid"], peer_id)
+        self.assertEqual(result["bus_channel"], self.basic_config.access_token)
+        self.assertEqual(result["peer_group"], "terminal")
+        mock.assert_called_once_with("WEBRTC_PEER_ANNOUNCE", {
+            "peer_id": peer_id,
+            "peer_group": "terminal",
+            "peer_device_uuid": None,
+        })
+
+        # device_uuid is forwarded to notification
+        peer_id = str(uuid.uuid4())
+        device_uuid = str(uuid.uuid4())
+        with patch(_NOTIFY_PATH) as mock:
+            self.basic_config._webrtc_announce(peer_id, "terminal", device_uuid)
+        mock.assert_called_once_with("WEBRTC_PEER_ANNOUNCE", {
+            "peer_id": peer_id,
+            "peer_group": "terminal",
+            "peer_device_uuid": device_uuid,
+        })
+
+        # invalid device_uuid is rejected
+        with self.assertRaises(ValidationError):
+            self.basic_config._webrtc_announce(str(uuid.uuid4()), "terminal", "not-a-uuid")
+
+        # all valid peer groups are accepted
+        for group in ("terminal", "customer_display"):
+            with self.subTest(group=group):
+                result = self.basic_config._webrtc_announce(str(uuid.uuid4()), group)
+                self.assertEqual(result["peer_group"], group)
+
+        # invalid UUID is rejected
+        with self.assertRaises(ValidationError):
+            self.basic_config._webrtc_announce("not-a-uuid", "terminal")
+
+        # invalid peer group is rejected
+        with self.assertRaises(ValidationError):
+            self.basic_config._webrtc_announce(str(uuid.uuid4()), "invalid_group")
+
+    def test_webrtc_signal(self):
+        # no active session is rejected
+        with self.assertRaises(AccessError):
+            self.basic_config._webrtc_signal({"type": "offer", "from": "a", "to": "b", "sdp": {}}, "terminal")
+
+        self.basic_config.open_ui()
+
+        # offer: valid, notifies with full message
+        msg = {"type": "offer", "from": "a", "to": "b", "sdp": {"type": "offer", "sdp": "v=0"}}
+        with patch(_NOTIFY_PATH) as mock:
+            self.basic_config._webrtc_signal(msg, "terminal")
+        mock.assert_called_once_with("WEBRTC_SIGNAL", {**msg, "group": "terminal"})
+
+        # a caller-supplied "group" in the message is overridden by the stamped one
+        msg = {"type": "offer", "from": "a", "to": "b", "sdp": {"type": "offer", "sdp": "v=0"}, "group": "terminal"}
+        with patch(_NOTIFY_PATH) as mock:
+            self.basic_config._webrtc_signal(msg, "customer_display")
+        mock.assert_called_once_with("WEBRTC_SIGNAL", {**msg, "group": "customer_display"})
+
+        # answer: valid
+        msg = {"type": "answer", "from": "a", "to": "b", "sdp": {"type": "answer", "sdp": "v=0"}}
+        with patch(_NOTIFY_PATH) as mock:
+            self.basic_config._webrtc_signal(msg, "terminal")
+        mock.assert_called_once_with("WEBRTC_SIGNAL", {**msg, "group": "terminal"})
+
+        # ice: valid
+        msg = {"type": "ice", "from": "a", "to": "b", "candidate": {"candidate": "candidate:..."}}
+        with patch(_NOTIFY_PATH) as mock:
+            self.basic_config._webrtc_signal(msg, "terminal")
+        mock.assert_called_once_with("WEBRTC_SIGNAL", {**msg, "group": "terminal"})
+
+        # invalid signal type is rejected
+        with self.assertRaises(ValidationError):
+            self.basic_config._webrtc_signal({"type": "hack", "from": "a", "to": "b"}, "terminal")
+
+        # offer/answer without sdp is rejected
+        with self.assertRaises(ValidationError):
+            self.basic_config._webrtc_signal({"type": "offer", "from": "a", "to": "b"}, "terminal")
+        with self.assertRaises(ValidationError):
+            self.basic_config._webrtc_signal({"type": "answer", "from": "a", "to": "b"}, "terminal")
+
+        # ice without candidate is rejected
+        with self.assertRaises(ValidationError):
+            self.basic_config._webrtc_signal({"type": "ice", "from": "a", "to": "b"}, "terminal")
+
+        # missing from/to is rejected
+        with self.assertRaises(ValidationError):
+            self.basic_config._webrtc_signal({"type": "offer", "to": "b", "sdp": {}}, "terminal")
+        with self.assertRaises(ValidationError):
+            self.basic_config._webrtc_signal({"type": "offer", "from": "a", "sdp": {}}, "terminal")
