@@ -25,7 +25,7 @@ class AccountMove(models.Model):
         posted = super()._post(soft)  # We need the move name to be set, but we also need to know which move are posted for the first time.
 
         vehicle_lines = posted.line_ids.filtered(
-            lambda line: line.vehicle_id and line.move_id.move_type == 'in_invoice' and line.display_type == 'product'
+            lambda line: line.vehicle_id and line.move_id.move_type in ('in_invoice', 'in_refund') and line.display_type == 'product'
         )
         val_list = []
 

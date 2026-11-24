@@ -398,3 +398,23 @@ class TestFleetVehicleLogServices(AccountTestInvoicingCommon):
 
         with self.assertRaises(ValidationError):
             service.account_move_line_ids = [Command.link(other_line.id)]
+
+    def test_service_vendor_refund(self):
+        """ A vendor refund linked to a vehicle must decrease the vehicle's cost. """
+        self.service_line.price_unit = 1000
+        self.bill.action_post()
+        self.assertEqual(self.car_1.log_services.amount, 1000)
+
+        # Partial refund of the bill, keeping the vehicle on the line
+        refund = self.bill._reverse_moves([{'invoice_date': '2019-01-02', 'date': '2019-01-02'}])
+        refund_line = refund.invoice_line_ids
+        self.assertEqual(refund_line.vehicle_id, self.car_1)
+        refund_line.price_unit = 500
+        refund.action_post()
+
+        refund_service = refund_line.vehicle_log_service_id
+        self.assertEqual(len(refund_service), 1)
+        self.assertEqual(refund_service.vehicle_id, self.car_1)
+        self.assertEqual(refund_service.amount, -500)
+        self.assertEqual(len(self.car_1.log_services), 2)
+        self.assertEqual(sum(self.car_1.log_services.mapped('amount')), 500)
