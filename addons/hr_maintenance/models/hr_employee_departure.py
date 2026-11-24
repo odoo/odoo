@@ -14,7 +14,7 @@ class HrEmployeeDeparture(models.Model):
             if not equipments:
                 continue
             if len(equipments) == 1:
-                departure.employee_id.message_post(body=self.env._("1 equipment has been unassigned from %s", self.employee_id.name))
+                departure.employee_id.message_post(body=self.env._("1 equipment has been unassigned from %s", departure.employee_id.name))
             else:
                 departure.employee_id.message_post(body=self.env._(
                     "%(equipments_count)s equipments have been unassigned from %(employee_name)s",
