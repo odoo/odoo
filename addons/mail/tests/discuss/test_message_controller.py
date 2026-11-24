@@ -2,6 +2,8 @@
 
 import json
 
+from markupsafe import Markup
+
 import odoo
 from odoo import Command, fields
 from odoo.http.stream import STATIC_CACHE_LONG
@@ -351,6 +353,7 @@ class TestMessageLinks(MailCommon, HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._create_portal_user()
 
         cls.user_employee_1 = mail_new_test_user(cls.env, login='tao1', groups='base.group_user', name='Tao Lee')
         cls.public_channel = cls.env['discuss.channel']._create_channel(name='Public Channel1', group_id=None)
@@ -385,3 +388,27 @@ class TestMessageLinks(MailCommon, HttpCase):
         note = self.public_channel.message_post(body='Public Channel Note', subtype_xmlid='mail.mt_note')
         res = self.url_open(f'/mail/message/{note.id}')
         self.assertEqual(res.url, self.base_url() + f'/web/login?redirect=/mail/message/{note.id}')
+
+    def test_message_link_store_by_share_users(self):
+        """ Messages linked in a body are sent to share users only when they can read them. """
+        guest = self.env['mail.guest'].create({'name': 'Guest'})
+        self.public_channel._add_members(guests=guest)
+        other_channel = self.env['discuss.channel']._create_channel(name='Other Public', group_id=None)
+        linked_public = other_channel.message_post(body='Public', message_type='comment', subtype_xmlid='mail.mt_comment')
+        linked_private = self.private_group.message_post(body='Private', message_type='comment', subtype_xmlid='mail.mt_comment')
+        links = Markup('').join(
+            Markup('<a href="/mail/message/%s" class="o_message_redirect" data-oe-model="mail.message" data-oe-id="%s">#%s</a>') % (msg.id, msg.id, msg.id)
+            for msg in linked_public + linked_private
+        )
+        self.public_channel.message_post(body=links, message_type='comment', subtype_xmlid='mail.mt_comment')
+        for login, guest_cookie in ((None, guest), (self.user_portal.login, None)):
+            with self.subTest(login=login):
+                self.authenticate(login, login)
+                if guest_cookie:
+                    self.opener.cookies[guest_cookie._cookie_name] = guest_cookie._format_auth_cookie()
+                data = self.make_jsonrpc_request(
+                    "/mail/store", {"fetch_params": [["/discuss/channel/messages", {"channel_id": self.public_channel.id}]]},
+                )
+                message_ids = {vals["id"] for vals in data["mail.message"]}
+                self.assertIn(linked_public.id, message_ids)
+                self.assertNotIn(linked_private.id, message_ids)

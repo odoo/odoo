@@ -17,7 +17,12 @@ class WebclientController(ThreadController):
     def _process_request_loop(self, store: Store, fetch_params):
         # aggregate of messages to return, to batch them in a single query when all the fetch
         # params have been processed
-        request.update_context(messages=request.env["mail.message"], add_inbox_fields=False, add_chatter_fields=False)
+        # sudo: mail.message - public has no access on messages, aggregated messages are access-checked
+        request.update_context(
+            messages=request.env["mail.message"].sudo(request.env.user._is_public()),
+            add_inbox_fields=False,
+            add_chatter_fields=False,
+        )
         super()._process_request_loop(store, fetch_params)
         if messages := request.env.context["messages"]:
             fields_params = {
