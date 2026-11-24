@@ -431,8 +431,6 @@ class ResCompany(models.Model):
                     raise UserError(_("Your identifier does not have a valid format. Expected format: %s.", identifier_invalid.get('example')))
                 raise UserError(_("Your identifier does not have a valid format."))
             raise UserError(_("Your identifier is invalid."))
-        if can_connect_vals.get('db_invalid'):
-            raise UserError(_("The database you are trying to connect to is not suitable for Peppol."))
         if not can_connect_vals.get('auth_required'):
             return None
         if can_connect_vals.get('kyc_error'):
