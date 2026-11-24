@@ -129,6 +129,7 @@ var owl = (() => {
     ComputationFlags2[ComputationFlags2["STATE_MASK"] = 3] = "STATE_MASK";
     ComputationFlags2[ComputationFlags2["DERIVED"] = 4] = "DERIVED";
     ComputationFlags2[ComputationFlags2["IMMEDIATE"] = 8] = "IMMEDIATE";
+    ComputationFlags2[ComputationFlags2["DISPOSED"] = 16] = "DISPOSED";
     return ComputationFlags2;
   })(ComputationFlags || {});
   var atomSymbol = /* @__PURE__ */ Symbol("Atom");
@@ -189,6 +190,9 @@ var owl = (() => {
     if (hasError) {
       throw error;
     }
+  }
+  function invalidateComputation(computation) {
+    onWriteAtom({ value: void 0, observers: /* @__PURE__ */ new Set([computation]) });
   }
   var batchProcessEffects = batched(processEffects);
   function processEffects() {
@@ -744,11 +748,15 @@ var owl = (() => {
     };
     return readSignal;
   }
-  function triggerSignal(signal2) {
-    if (typeof signal2 !== "function" || signal2[atomSymbol]?.type !== "signal") {
-      throw new OwlError(`Value is not a signal (${signal2})`);
+  function triggerSignal(value) {
+    const atom = typeof value === "function" ? value[atomSymbol] : void 0;
+    if (atom?.type === "signal") {
+      onWriteAtom(atom);
+    } else if (atom?.flags & 4) {
+      invalidateComputation(atom);
+    } else {
+      throw new OwlError(`Value is not a signal or a computed (${value})`);
     }
-    onWriteAtom(signal2[atomSymbol]);
   }
   function signalRef() {
     return buildSignal(null, (atom) => atom.value);
@@ -845,7 +853,26 @@ var owl = (() => {
         } else {
           removeSources(computation);
         }
-        return fn();
+        if (computation.flags & 16) {
+          return void 0;
+        }
+        let result;
+        try {
+          result = fn();
+        } finally {
+          if (computation.flags & 16) {
+            setComputation(void 0);
+            unsubscribeEffect(computation);
+            setComputation(computation);
+          }
+        }
+        if (computation.flags & 16 && typeof result === "function") {
+          setComputation(void 0);
+          result();
+          setComputation(computation);
+          return void 0;
+        }
+        return result;
       },
       immediate ? 8 | 1 : 1
       /* STALE */
@@ -861,7 +888,7 @@ var owl = (() => {
       throw error;
     }
     return function cleanupEffect2() {
-      computation.flags &= ~3;
+      computation.flags = computation.flags & ~3 | 16;
       const previousComputation = getCurrentComputation();
       setComputation(void 0);
       unsubscribeEffect(computation);
@@ -872,7 +899,7 @@ var owl = (() => {
     removeSources(effect2);
     cleanupEffect(effect2);
     for (const childEffect of effect2.observers) {
-      childEffect.flags &= ~3;
+      childEffect.flags = childEffect.flags & ~3 | 16;
       unsubscribeEffect(childEffect);
     }
     effect2.observers.clear();
@@ -880,8 +907,8 @@ var owl = (() => {
   function cleanupEffect(effect2) {
     const cleanupFn = effect2.value;
     if (cleanupFn && typeof cleanupFn === "function") {
-      cleanupFn();
       effect2.value = void 0;
+      cleanupFn();
     }
   }
   function asyncComputed(fetcher, options = {}) {
@@ -892,6 +919,7 @@ var owl = (() => {
     const scope = getScope();
     let runId = 0;
     let runController = null;
+    let isDisposed = false;
     let inFlight = false;
     let pending = null;
     function beginRun() {
@@ -949,6 +977,7 @@ var owl = (() => {
       );
     });
     function dispose() {
+      isDisposed = true;
       runId++;
       stopEffect();
       runController?.abort();
@@ -961,7 +990,15 @@ var owl = (() => {
     const read = (() => value());
     read.loading = () => loading();
     read.error = () => error();
-    read.refresh = () => refreshTick.set(refreshTick() + 1);
+    read.refresh = () => {
+      if (isDisposed) {
+        return Promise.resolve();
+      }
+      refreshTick.set(refreshTick() + 1);
+      runId++;
+      beginRun();
+      return read.currentPromise();
+    };
     read.dispose = dispose;
     read.currentPromise = () => {
       if (!inFlight) {
@@ -1024,11 +1061,14 @@ ${issueStrings}`);
           parent.issueDepth = this.issueDepth + depthOffset;
         }
       },
+      withEntry(key, value2) {
+        return createContext(issues, value2, this.path.concat(key), this);
+      },
       withIssues(issues2) {
         return createContext(issues2, this.value, this.path, this, 0);
       },
       withKey(key) {
-        return createContext(issues, this.value[key], this.path.concat(key), this);
+        return this.withEntry(key, this.value[key]);
       }
     };
   }
@@ -1325,6 +1365,42 @@ ${issueStrings}`);
       }
     });
   }
+  function setType(valueType) {
+    return makeType(function validateSet(context) {
+      if (!(context.value instanceof Set)) {
+        context.addIssue({ message: "value is not a set" });
+        return;
+      }
+      if (!valueType) {
+        return;
+      }
+      let index = 0;
+      for (const value of context.value) {
+        context.withEntry(index++, value).validate(valueType);
+      }
+    });
+  }
+  function mapType(keyType, valueType) {
+    return makeType(function validateMap(context) {
+      if (!(context.value instanceof Map)) {
+        context.addIssue({ message: "value is not a map" });
+        return;
+      }
+      if (!keyType && !valueType) {
+        return;
+      }
+      let index = 0;
+      for (const [key, value] of context.value) {
+        if (keyType) {
+          context.withEntry([index, "key"], key).validate(keyType);
+        }
+        if (valueType) {
+          context.withEntry([index, "value"], value).validate(valueType);
+        }
+        index++;
+      }
+    });
+  }
   function tuple(types22) {
     const validate = makeType(function validateTuple(context) {
       if (!Array.isArray(context.value)) {
@@ -1384,6 +1460,7 @@ ${issueStrings}`);
     function: functionType,
     instanceOf: instanceType,
     literal: literalType,
+    map: mapType,
     number: numberType,
     object: objectType,
     or: union,
@@ -1391,6 +1468,7 @@ ${issueStrings}`);
     record: recordType,
     ref,
     selection: literalSelection,
+    set: setType,
     signal: reactiveValueType,
     strictObject: strictObjectType,
     string: stringType,
@@ -1733,6 +1811,7 @@ ${issueStrings}`);
   }
   function useOnChange(dependencies, callback, { initialRun = true } = {}) {
     const deps = computed(dependencies, { equals: shallowEqual });
+    const scope = useScope();
     let skipRun = !initialRun;
     useEffect(() => {
       const args = deps();
@@ -1740,7 +1819,16 @@ ${issueStrings}`);
         skipRun = false;
         return;
       }
-      return untrack(() => callback(...args));
+      try {
+        return untrack(() => callback(...args));
+      } finally {
+        if (!scope.isDestroyed()) {
+          try {
+            deps();
+          } catch {
+          }
+        }
+      }
     });
   }
   function useListener(target, eventName, handler, eventParams) {
@@ -1805,7 +1893,7 @@ ${issueStrings}`);
   }
 
   // ../owl-runtime/dist/owl-runtime.es.js
-  var version = "3.0.0-alpha.50";
+  var version = "3.0.0-beta.1";
   var fibersInError = /* @__PURE__ */ new WeakMap();
   var nodeErrorHandlers = /* @__PURE__ */ new WeakMap();
   function invokeErrorHandlers(node, error, finalize, markFibers) {
@@ -3417,7 +3505,6 @@ ${issueStrings}`);
     }
     vnode.remove();
   }
-  var MAX_RENDER_ITERATIONS = 1e3;
   var APPLIED_TO_DOM = 1;
   function makeChildFiber(node, parent) {
     let current = node.fiber;
@@ -3432,6 +3519,7 @@ ${issueStrings}`);
     if (current) {
       let root = current.root;
       current.renderState += 2;
+      node.app.scheduler.trackRecycle(current);
       root.locked = true;
       root.setCounter(root.counter + 1 - cancelFibers(current.children));
       root.locked = false;
@@ -3485,7 +3573,15 @@ ${issueStrings}`);
     }
     return result;
   }
-  var Fiber = class {
+  var Fiber = class _Fiber {
+    // Max times a given fiber may be recycled before being committed to the DOM
+    // before we treat it as an infinite render loop. Only a self-retriggering
+    // loop ever approaches this (#1968). Recycles spread over separate tasks
+    // while the render is complete and only waiting to be committed do not count
+    // (see Scheduler.trackRecycle): commits may legitimately be on hold for a
+    // long time, e.g. in a hidden tab where rAF does not run (#2062). Static so
+    // that tests can lower it.
+    static maxRenderIterations = 1e3;
     node;
     bdom = null;
     root;
@@ -3494,9 +3590,10 @@ ${issueStrings}`);
     children = [];
     // Packs the "applied to DOM" flag (bit 0, see APPLIED_TO_DOM) together with
     // the number of times this uncommitted fiber has been recycled by
-    // makeRootFiber (bits 1 and up). The recycle count climbs without bound only
-    // in a render loop (#1968); it shares a slot with the flag so the many
-    // fibers that are never recycled don't pay for a dedicated field.
+    // makeRootFiber since the scheduler last cleared it (bits 1 and up). The recycle
+    // count climbs without bound only in a render loop (#1968); it shares a slot
+    // with the flag so the many fibers that are never recycled don't pay for a
+    // dedicated field.
     renderState = 0;
     deep = false;
     childrenMap = {};
@@ -3535,11 +3632,11 @@ ${issueStrings}`);
       const node = this.node;
       const root = this.root;
       if (root) {
-        if (this.renderState >> 1 > MAX_RENDER_ITERATIONS) {
+        if (this.renderState >> 1 > _Fiber.maxRenderIterations) {
           handleError({
             node,
             error: new OwlError(
-              `Maximum render iterations (${MAX_RENDER_ITERATIONS}) exceeded. Component "${node.componentName}" is stuck in a render loop: rendering it keeps triggering another render before the DOM is updated. A common cause is updating reactive state during render or setup() \u2014 e.g. calling a parent's state setter from a child's setup().`
+              `Maximum render iterations (${_Fiber.maxRenderIterations}) exceeded. Component "${node.componentName}" is stuck in a render loop: rendering it keeps triggering another render before the DOM is updated. A common cause is updating reactive state during render or setup() \u2014 e.g. calling a parent's state setter from a child's setup().`
             )
           });
           return;
@@ -3977,6 +4074,7 @@ ${issueStrings}`);
   if (typeof window !== "undefined") {
     requestAnimationFrame = window.requestAnimationFrame.bind(window);
   }
+  var setTimeout = globalThis.setTimeout.bind(globalThis);
   var Scheduler = class _Scheduler {
     // capture the value of requestAnimationFrame as soon as possible, to avoid
     // interactions with other code, such as test frameworks that override them
@@ -3986,11 +4084,52 @@ ${issueStrings}`);
     frame = 0;
     delayedRenders = [];
     processing = false;
+    // fibers with a non-zero recycle count, see trackRecycle
+    recycled = [];
+    resetPending = false;
     constructor() {
       this.requestAnimationFrame = _Scheduler.requestAnimationFrame;
     }
     addFiber(fiber) {
       this.tasks.add(fiber.root);
+    }
+    /**
+     * Called each time makeRootFiber recycles an uncommitted fiber. A render
+     * loop (#1968) is driven by microtasks only, so the timeout scheduled here
+     * cannot run while it spins, and the recycle count climbs until it is
+     * detected. Updates coming from separate tasks (timers, network) while
+     * commits are on hold, e.g. in a hidden tab where rAF does not run (#2062),
+     * let the timeout run in between and reset the count.
+     */
+    trackRecycle(fiber) {
+      if (fiber.renderState >> 1 === 1) {
+        this.recycled.push(fiber);
+      }
+      if (!this.resetPending) {
+        this.resetPending = true;
+        setTimeout(() => this.resetRecycleCounts());
+      }
+    }
+    /**
+     * Clears the recycle count of fibers whose render is complete and only
+     * waiting to be committed. Fibers whose root still waits on async work
+     * (e.g. onWillStart) keep their count: a loop going through async code keeps
+     * its root incomplete, and must still be detected.
+     */
+    resetRecycleCounts() {
+      this.resetPending = false;
+      const pending = [];
+      for (let f of this.recycled) {
+        if (f.node.fiber !== f || f.node.status === STATUS.DESTROYED) {
+          continue;
+        }
+        if (f.root.counter === 0) {
+          f.renderState &= APPLIED_TO_DOM;
+        } else {
+          pending.push(f);
+        }
+      }
+      this.recycled = pending;
     }
     /**
      * Process all current tasks. This only applies to the fibers that are ready.
@@ -5059,8 +5198,8 @@ ${issueStrings}`);
   };
   var __info__ = {
     version: App.version,
-    date: "2026-10-19T09:38:55.520Z",
-    hash: "7e1f64ac",
+    date: "2026-11-24T10:38:05.163Z",
+    hash: "b09b0725",
     url: "https://github.com/odoo/owl"
   };
 
@@ -7234,5 +7373,4 @@ ${code}
   };
   return __toCommonJS(index_exports);
 })();
-
-owl = {...owl};
+owl = { ...owl };
