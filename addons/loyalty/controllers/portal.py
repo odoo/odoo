@@ -4,7 +4,6 @@ from odoo import fields
 from odoo.http import request, route
 
 from odoo.addons.portal.controllers.portal import CustomerPortal
-from odoo.addons.portal.controllers.portal import pager as portal_pager
 
 
 class CustomerPortalLoyalty(CustomerPortal):
@@ -32,70 +31,12 @@ class CustomerPortalLoyalty(CustomerPortal):
             )
         return values
 
-    def _get_loyalty_searchbar_sortings(self):
-        return {
-            "date": {"label": self.env._("Date"), "order": "points_changed_date desc"},
-            "used": {"label": self.env._("Used"), "order": "used desc"},
-            "description": {"label": self.env._("Description"), "order": "description desc"},
-            "issued": {"label": self.env._("Issued"), "order": "issued desc"},
-        }
-
-    @route(
-        [
-            "/my/loyalty_card/<int:card_id>/history",
-            "/my/loyalty_card/<int:card_id>/history/page/<int:page>",
-        ],
-        type="http",
-        auth="user",
-        website=True,
-    )
-    def portal_my_loyalty_card_history(self, card_id, page=1, sortby="date", **_kwargs):
-        card_sudo = (
-            self
-            .env["loyalty.card"]
-            .sudo()
-            .search([("id", "=", int(card_id)), ("partner_id", "=", self.env.user.partner_id.id)])
-        )
-        if not card_sudo:
-            return request.redirect("/my")
-
-        LoyaltyHistorySudo = self.env["loyalty.history"].sudo()
-        searchbar_sortings = self._get_loyalty_searchbar_sortings()
-        order = searchbar_sortings[sortby]["order"]
-        lines_count = LoyaltyHistorySudo.search_count([("card_id", "=", card_id)])
-        pager = portal_pager(
-            url="/my/loyalty_card/<int:card_id>/history",
-            url_args={"sortby": sortby, "card_id": card_id},
-            total=lines_count,
-            page=page,
-            step=self._items_per_page,
-        )
-        history_lines = LoyaltyHistorySudo.search(
-            domain=[
-                ("card_id", "=", card_id),
-                ("card_id.partner_id", "=", self.env.user.partner_id.id),
-            ],
-            order=order,
-            limit=self._items_per_page,
-            offset=pager["offset"],
-        )
-        values = {
-            "pager": pager,
-            "searchbar_sortings": searchbar_sortings,
-            "page_name": "loyalty_history",
-            "sortby": sortby,
-            "history_lines": history_lines,
-            "card": card_sudo,
-        }
-
-        return request.render("loyalty.loyalty_card_history_template", values)
-
     @route("/my/loyalty_card/<int:card_id>/values", type="jsonrpc", auth="user")
-    def portal_get_card_history_values(self, card_id):
-        """Retrieve card history values for portal card dialog.
+    def portal_get_card_values(self, card_id):
+        """Retrieve card values for portal card dialog.
 
         :param card_id(str): The ID of the loyalty card.
-        :return(dict): A dictionary with card history values.
+        :return(dict): A dictionary with card values.
         """
         card_sudo = (
             self
@@ -107,19 +48,6 @@ class CustomerPortalLoyalty(CustomerPortal):
             return {}
 
         program_type = card_sudo.program_id.program_type
-        rewards = (
-            self
-            .env["loyalty.reward"]
-            .sudo()
-            .search(
-                [
-                    ("program_id", "=", card_sudo.program_id.id),
-                    ("required_points", "<=", card_sudo.points),
-                ],
-                order="required_points desc",
-                limit=3,
-            )
-        )
         return {
             "card": {
                 "id": card_sudo.id,
@@ -128,22 +56,4 @@ class CustomerPortalLoyalty(CustomerPortal):
                 "code": card_sudo.code,
             },
             "program": {"program_name": card_sudo.program_id.name, "program_type": program_type},
-            "history_lines": [
-                {
-                    "order_id": line.order_id,
-                    "description": line.description,
-                    "order_portal_url": line._get_order_portal_url(),
-                    "points": f"{'-' if line.issued < line.used else '+'}"
-                    f"{card_sudo._format_points(abs(line.issued - line.used))}",
-                }
-                for line in card_sudo.history_ids[:5]
-            ],
-            "rewards": [
-                {
-                    "description": reward.description,
-                    "points": card_sudo._format_points(reward.required_points),
-                }
-                for reward in rewards
-            ],
-            "img_path": f"/loyalty/static/src/img/{program_type}.svg",
         }
