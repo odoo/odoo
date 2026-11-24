@@ -444,9 +444,12 @@ class HolidaysAllocation(models.Model):
             level_ids = allocation.accrual_plan_id.level_ids
             if not level_ids:
                 continue
-            if not date_to:
+            if date_to:
+                alloc_date_to = date_to
+            else:
                 employee_tz = timezone(allocation.employee_id.tz or 'UTC')
-                date_to = datetime.now(employee_tz).date()
+                alloc_date_to = datetime.now(employee_tz).date()
+
             # "cache" leaves taken, as it gets recomputed every time allocation.number_of_days is assigned to. Without this,
             # every loop will take 1+ second. It can be removed if computes don't chain in a way to always reassign accrual plan
             # even if the value doesn't change. This is the best performance atm.
@@ -456,7 +459,7 @@ class HolidaysAllocation(models.Model):
             # first time the plan is run, initialize nextcall and take carryover / level transition into account
             if not allocation.nextcall:
                 # Accrual plan is not configured properly or has not started
-                if date_to < first_level_start_date:
+                if alloc_date_to < first_level_start_date:
                     continue
                 allocation.lastcall = max(allocation.lastcall, first_level_start_date) if allocation.lastcall else first_level_start_date
                 allocation.actual_lastcall = allocation.lastcall
@@ -475,7 +478,7 @@ class HolidaysAllocation(models.Model):
             # all subsequent runs, at every loop:
             # get current level and normal period boundaries, then set nextcall, adjusted for level transition and carryover
             # add days, trimmed if there is a maximum_leave
-            while allocation.nextcall <= date_to:
+            while allocation.nextcall <= alloc_date_to:
                 if allocation.holiday_status_id.request_unit in ["day", "half_day"]:
                     leaves_taken = _get_leaves_taken(allocation)
                 else:
@@ -611,8 +614,8 @@ class HolidaysAllocation(models.Model):
                 allocation.actual_lastcall = allocation.nextcall
                 allocation.nextcall = nextcall
                 allocation.already_accrued = False
-                if force_period and allocation.nextcall > date_to:
-                    allocation.nextcall = date_to
+                if force_period and allocation.nextcall > alloc_date_to:
+                    allocation.nextcall = alloc_date_to
                     force_period = False
 
             # if plan.accrued_gain_time == 'start', process next period and set flag 'already_accrued', this will skip adding days
