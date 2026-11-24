@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import calendar
+import re
 
 from collections import defaultdict, OrderedDict
 from datetime import timedelta
@@ -113,9 +114,9 @@ class StockLocation(models.Model):
             has_parent = location.location_id
             if not short_name and has_parent:
                 if formatted_display_name:
-                    location.display_name = f"--{location.location_id.complete_name}/--{location.name}"
+                    location.display_name = f"--{location.location_id.complete_name} / --{location.name}"
                 else:
-                    location.display_name = f"{location.location_id.complete_name}/{location.name}"
+                    location.display_name = f"{location.location_id.complete_name} / {location.name}"
             if formatted_display_name and self.env.context.get('show_empty') and location.is_empty:
                 location.display_name += self.env._("\t--Empty--")
 
@@ -133,7 +134,7 @@ class StockLocation(models.Model):
     def _compute_complete_name(self):
         for location in self:
             if location.location_id:
-                location.complete_name = '%s/%s' % (location.location_id.complete_name, location.name)
+                location.complete_name = '%s / %s' % (location.location_id.complete_name, location.name)
             else:
                 location.complete_name = location.name
 
@@ -282,12 +283,12 @@ class StockLocation(models.Model):
     @api.model
     def name_create(self, name):
         if name:
-            name_split = name.split('/')
+            name_split = re.split(r' ?/ ?', name)
             parent_location = self.env['stock.location'].search([
-                ('complete_name', '=', '/'.join(name_split[:-1])),
+                ('complete_name', '=', ' / '.join(name_split[:-1])),
             ], limit=1)
             new_location = self.create({
-                'name': name.split('/')[-1],
+                'name': name_split[-1],
                 'location_id': parent_location.id if parent_location else False,
             })
             return new_location.id, new_location.display_name

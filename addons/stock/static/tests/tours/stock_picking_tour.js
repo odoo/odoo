@@ -346,7 +346,7 @@ registry.category("web_tour.tours").add("test_add_new_line_in_detailled_op", {
         {
             content: "Check that the first line is associated with LOT001 for a quantity of 0.00",
             trigger:
-                ".modal-content .o_data_row:has(.o_field_pick_from input:value(WH/Stock - LOT001)):has(.o_field_float[name=quantity] input:value(0.00))",
+                ".modal-content .o_data_row:has(.o_field_pick_from input:value(WH / Stock - LOT001)):has(.o_field_float[name=quantity] input:value(0.00))",
         },
         {
             trigger: ".modal-content .o_field_x2many_list_row_add > button",
@@ -372,7 +372,7 @@ registry.category("web_tour.tours").add("test_add_new_line_in_detailled_op", {
         {
             content: "Remove the newly created line",
             trigger:
-                ".modal-content .o_data_row:has(.o_field_pick_from input:value(WH/Stock - LOT001)):has(.o_field_float[name=quantity] input:value(0.00)) .o_list_record_remove",
+                ".modal-content .o_data_row:has(.o_field_pick_from input:value(WH / Stock - LOT001)):has(.o_field_float[name=quantity] input:value(0.00)) .o_list_record_remove",
             run: "click",
         },
         {
@@ -383,12 +383,12 @@ registry.category("web_tour.tours").add("test_add_new_line_in_detailled_op", {
         {
             content: "Check that the first line is associated with LOT001",
             trigger:
-                ".modal-content .o_data_row:nth-child(1):has(.o_field_pick_from:contains(WH/Stock - LOT001))",
+                ".modal-content .o_data_row:nth-child(1):has(.o_field_pick_from:contains(WH / Stock - LOT001))",
         },
         {
             content: "Check that the second line is associated with LOT002",
             trigger:
-                ".modal-content .o_data_row:nth-child(2):has(.o_field_pick_from:contains(WH/Stock - LOT002))",
+                ".modal-content .o_data_row:nth-child(2):has(.o_field_pick_from:contains(WH / Stock - LOT002))",
         },
         {
             content: "Modify the quant associated to the second line to fully use LOT003",
@@ -414,8 +414,8 @@ registry.category("web_tour.tours").add("test_add_new_line_in_detailled_op", {
         },
         ...checkTableStructure(
             [
-                { quant_id: "WH/Stock - LOT001", quantity: "8.00" },
-                { quant_id: "WH/Stock - LOT003", quantity: "10.00" },
+                { quant_id: "WH / Stock - LOT001", quantity: "8.00" },
+                { quant_id: "WH / Stock - LOT003", quantity: "10.00" },
             ],
             18
         ),
@@ -447,24 +447,24 @@ registry.category("web_tour.tours").add("test_add_new_line_in_detailled_op", {
         {
             content: "Check the new line is in table",
             trigger:
-                ".modal .o_list_table:has([name=quant_id] input:value(WH/Stock - LOT001)):has([name=quantity] input:value(2.00))",
+                ".modal .o_list_table:has([name=quant_id] input:value(WH / Stock - LOT001)):has([name=quantity] input:value(2.00))",
         },
         ...checkTableStructure(
             [
-                { quant_id: "WH/Stock - LOT001", quantity: "2.00" },
-                { quant_id: "WH/Stock - LOT001", quantity: "8.00" },
-                { quant_id: "WH/Stock - LOT003", quantity: "10.00" },
+                { quant_id: "WH / Stock - LOT001", quantity: "2.00" },
+                { quant_id: "WH / Stock - LOT001", quantity: "8.00" },
+                { quant_id: "WH / Stock - LOT003", quantity: "10.00" },
             ],
             20
         ),
         {
             content: "Modify the quant associated to the third line to use LOT002",
             trigger:
-                ".modal-content .o_data_row:has(.o_field_pick_from:contains(WH/Stock - LOT003)) .o_field_pick_from",
+                ".modal-content .o_data_row:has(.o_field_pick_from:contains(WH / Stock - LOT003)) .o_field_pick_from",
             run: "click",
         },
         {
-            trigger: ".modal-content .o_data_row .o_field_pick_from input:value(WH/Stock - LOT003)",
+            trigger: ".modal-content .o_data_row .o_field_pick_from input:value(WH / Stock - LOT003)",
             run: "edit LOT002",
         },
         {
@@ -473,9 +473,9 @@ registry.category("web_tour.tours").add("test_add_new_line_in_detailled_op", {
         },
         ...checkTableStructure(
             [
-                { quant_id: "WH/Stock - LOT001", quantity: "2.00" },
-                { quant_id: "WH/Stock - LOT001", quantity: "8.00" },
-                { quant_id: "WH/Stock - LOT002", quantity: "10.00" },
+                { quant_id: "WH / Stock - LOT001", quantity: "2.00" },
+                { quant_id: "WH / Stock - LOT001", quantity: "8.00" },
+                { quant_id: "WH / Stock - LOT002", quantity: "10.00" },
             ],
             20
         ),
@@ -487,14 +487,14 @@ registry.category("web_tour.tours").add("test_add_new_line_in_detailled_op", {
         },
         {
             trigger:
-                ".modal-content .o_data_row:has(.o_field_pick_from input:value(WH/Stock - LOT002)) .o_data_cell[name=quantity] input",
+                ".modal-content .o_data_row:has(.o_field_pick_from input:value(WH / Stock - LOT002)) .o_data_cell[name=quantity] input",
             run: "edit 15 && click body",
         },
         ...checkTableStructure(
             [
-                { quant_id: "WH/Stock - LOT001", quantity: "2.00" },
-                { quant_id: "WH/Stock - LOT001", quantity: "8.00" },
-                { quant_id: "WH/Stock - LOT002", quantity: "15.00" },
+                { quant_id: "WH / Stock - LOT001", quantity: "2.00" },
+                { quant_id: "WH / Stock - LOT001", quantity: "8.00" },
+                { quant_id: "WH / Stock - LOT002", quantity: "15.00" },
             ],
             25
         ),
@@ -506,8 +506,8 @@ registry.category("web_tour.tours").add("test_add_new_line_in_detailled_op", {
         },
         ...checkTableStructure(
             [
-                { quant_id: "WH/Stock - LOT001", quantity: "2.00" },
-                { quant_id: "WH/Stock - LOT002", quantity: "15.00" },
+                { quant_id: "WH / Stock - LOT001", quantity: "2.00" },
+                { quant_id: "WH / Stock - LOT002", quantity: "15.00" },
             ],
             17
         ),
@@ -530,16 +530,16 @@ registry.category("web_tour.tours").add("test_add_new_line_in_detailled_op", {
         },
         {
             trigger:
-                ".modal .o_list_table:has([name=quant_id] input:value(WH/Stock - LOT001)):has([name=quantity] input:value(3.00))",
+                ".modal .o_list_table:has([name=quant_id] input:value(WH / Stock - LOT001)):has([name=quantity] input:value(3.00))",
         },
         {
             trigger: ".modal-content .o_list_number:contains(20.00)",
         },
         ...checkTableStructure(
             [
-                { quant_id: "WH/Stock - LOT001", quantity: "2.00" },
-                { quant_id: "WH/Stock - LOT001", quantity: "3.00" },
-                { quant_id: "WH/Stock - LOT002", quantity: "15.00" },
+                { quant_id: "WH / Stock - LOT001", quantity: "2.00" },
+                { quant_id: "WH / Stock - LOT001", quantity: "3.00" },
+                { quant_id: "WH / Stock - LOT002", quantity: "15.00" },
             ],
             20
         ),

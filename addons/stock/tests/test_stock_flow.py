@@ -2905,13 +2905,13 @@ class TestStockFlowPostInstall(TestStockCommon):
             else ignore prefixes
         """
         parent_location = self.env['stock.location'].create({'name': 'ParentLocation'})
-        new_location_id = self.env['stock.location'].name_create('ParentLocation/TestLocation1')[0]
+        new_location_id = self.env['stock.location'].name_create('ParentLocation / TestLocation1')[0]
         new_location = self.env['stock.location'].browse(new_location_id)
         self.assertEqual(new_location.name, 'TestLocation1')
-        self.assertEqual(new_location.complete_name, 'ParentLocation/TestLocation1')
+        self.assertEqual(new_location.complete_name, 'ParentLocation / TestLocation1')
         self.assertEqual(new_location.location_id, parent_location)
 
-        new_location_complete_name = self.env['stock.location'].name_create('FauxParentLocation/TestLocation2')[1]
+        new_location_complete_name = self.env['stock.location'].name_create('FauxParentLocation / TestLocation2')[1]
         self.assertEqual(new_location_complete_name, 'TestLocation2')
 
         new_location_complete_name = self.env['stock.location'].name_create('NoPrefixLocation')[1]

@@ -32,7 +32,7 @@ registry.category("web_tour.tours").add("test_stock_picking_batch_sm_to_sml_sync
         },
         {
             trigger:
-                ".modal:contains(Open: Stock Move) .o_field_pick_from > .o_many2one:contains('WH/Stock/Shelf A')",
+                ".modal:contains(Open: Stock Move) .o_field_pick_from > .o_many2one:contains('WH / Stock / Shelf A')",
             run: "click",
         },
         {
@@ -76,7 +76,7 @@ registry.category("web_tour.tours").add("test_stock_picking_batch_sm_to_sml_sync
         {
             content: "Click in cell to start edition",
             trigger:
-                ".modal:contains(Open: Stock Move) .o_field_pick_from > .o_many2one:contains('WH/Stock/Shelf A')",
+                ".modal:contains(Open: Stock Move) .o_field_pick_from > .o_many2one:contains('WH / Stock / Shelf A')",
             run: "click",
         },
         {
