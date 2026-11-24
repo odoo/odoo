@@ -1610,6 +1610,9 @@ class AccountMove(models.Model):
                 move.invoice_payments_widget = False
 
     def _get_product_base_line_currency_rate(self, product_line):
+        dp_lines = product_line.quantity < 0 and product_line._get_downpayment_lines()
+        if dp_lines:
+            return dp_lines[0].currency_rate
         if self.is_invoice(include_receipts=True):
             return self.invoice_currency_rate
         return abs(product_line.amount_currency / product_line.balance) if product_line.balance else 0.0
