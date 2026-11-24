@@ -121,6 +121,7 @@ a dependency towards website editing and customization capabilities.""",
             ("include", "html_editor.assets_editor"),
             "web/static/src/core/avatar/avatar.scss",
             "web/static/src/core/dropdown/dropdown.scss",
+            "web/static/src/core/file_viewer/file_viewer.scss",
             "web/static/src/core/emoji_picker/**/*",
             ("remove", "web/static/src/core/emoji_picker/emoji_data.js"),
             # ensure core.scss before any other style
