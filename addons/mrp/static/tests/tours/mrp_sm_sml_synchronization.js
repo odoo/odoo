@@ -47,7 +47,7 @@ registry.category("web_tour.tours").add('test_manufacturing_and_byproduct_sm_to_
             run: "click",
         },
         {
-            trigger: ".modal .modal-body .o_data_row > td:contains('WH/Stock')",
+            trigger: ".modal .modal-body .o_data_row > td:contains('WH / Stock')",
             run: "click",
         },
         {
@@ -97,7 +97,7 @@ registry.category("web_tour.tours").add('test_manufacturing_and_byproduct_sm_to_
             run: "click",
         },
         {
-            trigger: ".modal .modal-body .o_data_row > td:contains('WH/Stock')",
+            trigger: ".modal .modal-body .o_data_row > td:contains('WH / Stock')",
             run: "click",
         },
         {
@@ -130,7 +130,7 @@ registry.category("web_tour.tours").add('test_manufacturing_and_byproduct_sm_to_
             run: "click",
         },
         {
-            trigger: ".modal .modal-body .o_data_row > td:contains('WH/Stock')",
+            trigger: ".modal .modal-body .o_data_row > td:contains('WH / Stock')",
             run: "click",
         },
         {
