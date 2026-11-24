@@ -250,6 +250,7 @@ export class PosTicketPrinterPlugin extends Plugin {
             this.showPrinterErrorDialog(
                 status.message,
                 () => this.printWithFallback(...arguments),
+                true,
                 () => this.printWeb(iframe)
             );
         }
