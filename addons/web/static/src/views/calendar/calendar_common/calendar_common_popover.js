@@ -54,6 +54,7 @@ export class CalendarCommonPopover extends Component {
         const { meta } = this.props.model;
         // the popover of an event in a CSS color takes the first color of the palette
         const color = getPaletteColor(this.props.record.colorIndex) || "var(--o-colors-0)";
+        const { badgeColorClass = "" } = this.props.record;
         return {
             close: this.props.close,
             fields: meta.fields,
@@ -61,7 +62,7 @@ export class CalendarCommonPopover extends Component {
             resId: this.resId,
             popoverNode: meta.popoverNode,
             readonly: this.readonly,
-            rootClass: "o_calendar_popover o_calendar_color",
+            rootClass: `o_calendar_popover o_calendar_color ${badgeColorClass}`,
             rootStyle: `--o-calendar-color: ${color};`,
             context: meta.context,
             reloadOnClose: () => this.props.model.load(),

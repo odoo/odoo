@@ -19,6 +19,7 @@ import { useDebounced } from "@web/core/utils/timing";
 import { Model } from "@web/model/model";
 import { getFieldsSpec } from "@web/model/relational_model/utils";
 import { computeAggregatedValue } from "@web/views/utils";
+import { getBadgeColorClass } from "@web/views/calendar/utils";
 
 const { DateTime } = luxon;
 
@@ -137,6 +138,9 @@ export class CalendarModel extends Model {
             this.meta.fieldMapping.all_day ||
             this.meta.fields[this.meta.fieldMapping.date_start].type === "date"
         );
+    }
+    get hasBadgeColors() {
+        return this.meta.fields[this.meta.fieldMapping.color]?.type === "integer";
     }
     get hasEditDialog() {
         return this.meta.hasEditDialog;
@@ -835,6 +839,7 @@ export class CalendarModel extends Model {
 
         const colorValue = rawRecord[fieldMapping.color];
         const colorIndex = Array.isArray(colorValue) ? colorValue[0] : colorValue;
+        const badgeColorClass = this.hasBadgeColors ? getBadgeColorClass(colorIndex) : "";
 
         const title = rawRecord[fieldMapping.create_name_field || "display_name"];
 
@@ -848,6 +853,7 @@ export class CalendarModel extends Model {
             endType,
             duration,
             colorIndex,
+            badgeColorClass,
             isHatched: rawRecord["is_hatched"] || false,
             isStriked: rawRecord["is_striked"] || false,
             isTimeHidden: isTimeHidden || !showTime,
@@ -1097,6 +1103,7 @@ export class CalendarModel extends Model {
             active: previousFilter ? previousFilter.active : true,
             canRemove: false,
             colorIndex,
+            badgeColorClass: this.hasBadgeColors ? getBadgeColorClass(colorIndex) : "",
             hasAvatar: !!value,
         };
     }
@@ -1138,6 +1145,7 @@ export class CalendarModel extends Model {
             active,
             canRemove: true,
             colorIndex,
+            badgeColorClass: this.hasBadgeColors ? getBadgeColorClass(colorIndex) : "",
             hasAvatar: !!value,
         };
     }
@@ -1150,10 +1158,13 @@ export class CalendarModel extends Model {
         const value = user[userFieldName];
 
         let colorIndex = value;
+        // The id of the user is no index of the color list: no badge tones
+        let badgeColorClass = "";
         const rawRecord = rawRecords.find((r) => r[filterInfo.writeFieldName][0] === value);
         if (filterInfo.colorFieldName && rawRecord) {
             const colorValue = rawRecord[filterInfo.colorFieldName];
             colorIndex = Array.isArray(colorValue) ? colorValue[0] : colorValue;
+            badgeColorClass = this.hasBadgeColors ? getBadgeColorClass(colorIndex) : "";
         }
 
         return {
@@ -1164,6 +1175,7 @@ export class CalendarModel extends Model {
             active: previousFilter ? previousFilter.active : true,
             canRemove: false,
             colorIndex,
+            badgeColorClass,
             hasAvatar: !!value,
         };
     }

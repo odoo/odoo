@@ -67,7 +67,8 @@ export class CalendarYearPopover extends Component {
     getRecordClass(record) {
         const { colorIndex } = record;
         const color = getColor(colorIndex);
-        return color && typeof color === "number" ? "o_calendar_color" : "";
+        const { badgeColorClass = "" } = record;
+        return color && typeof color === "number" ? `o_calendar_color ${badgeColorClass}` : "";
     }
     getRecordStyle(record) {
         const color = getColor(record.colorIndex);
