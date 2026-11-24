@@ -263,7 +263,7 @@ class IrHttp(models.AbstractModel):
 
     @api.ormcache('website_id', cache='routing')
     def _get_disabled_modules(self, website_id):
-        """Frozenset of module names whose that are disabled on the given
+        """Frozenset of module names that are disabled on the given
         website. Cached in the 'routing' group: should be cleared on module
         install/uninstall and on `website.disabled_module_ids` writes.
         """

@@ -278,11 +278,12 @@ class WebsiteMenu(models.Model):
                     visible = False
 
             # Hide menus whose route belongs to a module disabled on this
-            # website (internal users keep them so they can re-enable).
+            # website. Designers keep them (and bypass the route 404 in
+            # ir_http) so they can still reach the page to re-enable it.
             if (
                 visible and request and menu.url
                 and menu.url not in ('#', '#top', '#bottom')
-                and not menu.env.user._is_internal()
+                and not menu.env.user.has_group('website.group_website_designer')
             ):
                 website_id = menu.website_id.id or current_website_id
                 disabled = website_id and IrHttp._get_disabled_modules(website_id)
