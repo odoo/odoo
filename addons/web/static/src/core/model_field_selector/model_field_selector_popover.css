@@ -1,16 +1,30 @@
 .o_model_field_selector_popover {
-    width: 17rem;
-    max-height: 40vh;
+    @media screen and (min-width: 768px), print and (min-width: 188mm) {
+        width: 17rem;
+        max-height: 40vh;
+    }
+    /* same scrollbar as the home menu */
+    scrollbar-color: color-mix(in srgb, var(--o-bs-body-color) 50%, transparent) transparent;
 
-    .o_model_field_selector_popover_body {
-        .o_model_field_selector_popover_page {
-            > .o_model_field_selector_popover_item {
-                background: var(--o-bs-dropdown-bg);
+    .o_model_field_selector_popover_page {
+        --dropdown-bg: var(--popover-bg);
+    }
 
-                &.active button {
-                    background: var(--o-bs-dropdown-link-hover-bg);
-                }
-            }
-        }
+    .o_model_field_selector_popover_item:hover {
+        background-color: var(--o-bs-dropdown-link-hover-bg);
+    }
+
+    .o_model_field_selector_popover_item_name {
+        --btn-active-border-color: transparent;
+
+        padding: var(--dropdown-item-padding-y) var(--dropdown-item-padding-x);
+    }
+
+    .o_model_field_selector_popover_item_relation {
+        --btn-hover-bg: var(--o-view-background-color);
+    }
+
+    .o_model_field_selector_input:not(:focus) {
+        border-color: var(--ModelFieldSelectorInput-border-color, var(--o-gray-300));
     }
 }

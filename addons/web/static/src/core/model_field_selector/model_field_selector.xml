@@ -3,15 +3,13 @@
 
     <t t-name="web._ModelFieldSelector">
         <div class="o_model_field_selector d-flex" aria-atomic="true" t-att-class="this.props.readonly ? 'o_read_mode' : 'o_edit_mode o_input'" t-on-click="(ev) => this.openPopover(ev.currentTarget)">
-            <div class="o_model_field_selector_value flex-grow-1 h-100" tabindex="0" t-att-data-tooltip="this.state.displayNames.join(' > ')" data-tooltip-position="top">
-                <t t-foreach="this.state.displayNames" t-as="displayName" t-key="displayName_index">
-                    <t t-if="!displayName_first">
-                        <i class="oi m-1" data-icon="chevron_forward" role="img" aria-label="Followed by" data-tooltip="Followed by" />
-                    </t>
-                    <span t-attf-class="o_model_field_selector_chain_part text-truncate d-inline-block align-middle mb-1 #{this.props.readonly ? 'border-0 fw-bolder' : 'px-1'}">
-                        <t t-out="displayName" />
-                    </span>
+            <div class="o_model_field_selector_value d-flex align-items-center flex-grow-1 min-w-0 h-100" tabindex="0" t-att-data-tooltip="this.state.displayNames.join(' > ')" data-tooltip-position="top">
+                <t t-set="chainPartClass" t-value="'o_model_field_selector_chain_part d-inline-block rounded px-1 align-middle text-truncate ' + (this.props.readonly ? '' : 'border bg-100')"/>
+                <t t-if="this.state.displayNames.length > 1">
+                    <span class="flex-shrink-0" t-att-class="chainPartClass">...</span>
+                    <i class="oi m-1 pe-none" data-icon="chevron_forward" role="img" aria-label="Followed by" title="Followed by"/>
                 </t>
+                <span t-if="this.state.displayNames.length" t-att-class="chainPartClass" t-out="this.state.displayNames.at(-1)"/>
             </div>
             <div t-if="!this.props.readonly and this.state.isInvalid" class="o_model_field_selector_controls ms-2" tabindex="0">
                 <i class="oi text-warning o_model_field_selector_warning" data-icon="warning" role="alert"  aria-label="Invalid field chain" data-tooltip="Invalid field chain"/>
@@ -19,6 +17,7 @@
             <div t-if="!this.props.readonly and this.props.allowEmpty and this.state.displayNames.length" class="o_model_field_selector_controls ms-2" tabindex="0">
                 <i class="oi" data-icon="close" t-on-click.stop="this.clear" aria-label="Clear" data-tooltip="Clear"/>
             </div>
+            <i t-if="!this.props.readonly" class="oi ms-2 align-self-center" data-icon="arrow_drop_down" aria-hidden="true"/>
         </div>
     </t>
 

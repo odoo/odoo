@@ -1,6 +1,6 @@
 import { render } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
-import { queryAllTexts } from "@odoo/hoot-dom";
+import { click, press, queryAllTexts, waitForNone } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { Component, proxy, xml } from "@odoo/owl";
 import {
@@ -16,6 +16,7 @@ import {
     contains,
     defineModels,
     fields,
+    isSmall,
     models,
     mountWithCleanup,
     onRpc,
@@ -64,6 +65,16 @@ function addProperties() {
     Product._records[1].definitions = [{ name: "xpad_prop_1", string: "P1", type: "date" }];
 }
 
+/**
+ * On small screens, the popover is a bottom sheet that only closes through its
+ * backdrop, after its slide out animation.
+ */
+async function clickAway() {
+    await click(isSmall() ? ".o_bottom_sheet_backdrop" : document.body);
+    await waitForNone(".o_model_field_selector_popover");
+    await animationFrame();
+}
+
 test("creating a field chain from scratch", async () => {
     const getValueFromDOM = (root) =>
         queryAllTexts(".o_model_field_selector_chain_part", { root }).join(" -> ");
@@ -92,7 +103,7 @@ test("creating a field chain from scratch", async () => {
     const fieldSelector = await mountWithCleanup(Parent);
 
     await openModelFieldSelectorPopover();
-    expect("input.o_input[placeholder='Search...']").toBeFocused();
+    expect("input.o_model_field_selector_input[placeholder='Search for a field']").toBeFocused();
     expect(".o_model_field_selector_popover").toHaveCount(1);
 
     // The field selector popover should contain the list of "partner"
@@ -124,14 +135,14 @@ test("creating a field chain from scratch", async () => {
     });
     await contains(".o_model_field_selector_popover_item_name:last").click();
     expect(".o_model_field_selector_popover").toHaveCount(0);
-    expect(getValueFromDOM()).toBe("Product -> Product Name");
+    expect(getValueFromDOM()).toBe("... -> Product Name");
     expect.verifySteps(["update: product_id.name"]);
 
     // Remove the current selection and recreate it again
     await openModelFieldSelectorPopover();
     await contains(".o_model_field_selector_popover_prev_page").click();
-    await contains(".o_model_field_selector_popover_close").click();
-    expect.verifySteps(["update: product_id"]);
+    await press("escape");
+    await expect.waitForSteps(["update: product_id"]);
 
     await openModelFieldSelectorPopover();
     expect(
@@ -141,7 +152,7 @@ test("creating a field chain from scratch", async () => {
     await followRelation();
     await contains(".o_model_field_selector_popover_item_name:last").click();
     expect(".o_model_field_selector_popover").toHaveCount(0);
-    expect(getValueFromDOM()).toBe("Product -> Product Name");
+    expect(getValueFromDOM()).toBe("... -> Product Name");
     expect.verifySteps(["update: product_id.name"]);
 });
 
@@ -165,7 +176,7 @@ test("default field chain should set the page data correctly", async () => {
         "Last Modified on",
         "Product",
     ]);
-    expect(".o_model_field_selector_popover_item:last").toHaveClass("active");
+    expect(".o_model_field_selector_popover_item:last").toHaveClass("focus");
 });
 
 test("use the filter option", async () => {
@@ -330,7 +341,7 @@ test("Using back button in popover", async () => {
     }
 
     await mountWithCleanup(Parent);
-    expect(getModelFieldSelectorValues()).toEqual(["Partner", "Foo"]);
+    expect(getModelFieldSelectorValues()).toEqual(["...", "Foo"]);
     expect(".o_model_field_selector i.o_model_field_selector_warning").toHaveCount(0);
 
     await openModelFieldSelectorPopover();
@@ -490,7 +501,7 @@ test("Edit path in popover debug input", async () => {
     await contains(".o_model_field_selector_popover .o_model_field_selector_debug").edit(
         "partner_id.bar"
     );
-    expect(getModelFieldSelectorValues()).toEqual(["Partner", "Bar"]);
+    expect(getModelFieldSelectorValues()).toEqual(["...", "Bar"]);
 });
 
 test("title on first four pages", async () => {
@@ -514,12 +525,6 @@ test("title on first four pages", async () => {
 
     await followRelation();
     expect(getTitle()).toBe("Mother");
-
-    await followRelation();
-    expect(getTitle()).toBe("... > Mother");
-
-    await followRelation();
-    expect(getTitle()).toBe("... > Mother");
 });
 
 test("start on complex path and click prev", async () => {
@@ -546,28 +551,28 @@ test("start on complex path and click prev", async () => {
     await openModelFieldSelectorPopover();
     // viewing third page
     // mother is selected on that page
-    expect(getTitle()).toBe("... > Father");
+    expect(getTitle()).toBe("Father");
     expect(getFocusedFieldName()).toBe("Mother");
-    expect(getModelFieldSelectorValues()).toEqual(["Mother", "Father", "Mother"]);
+    expect(getModelFieldSelectorValues()).toEqual(["...", "Mother"]);
 
     // select Father on third page and go to next page
     // no selection on fourth page --> first item is focused
     await followRelation();
-    expect(getTitle()).toBe("... > Father");
+    expect(getTitle()).toBe("Father");
     expect(getFocusedFieldName()).toBe("Created on");
-    expect(getModelFieldSelectorValues()).toEqual(["Mother", "Father", "Father"]);
+    expect(getModelFieldSelectorValues()).toEqual(["...", "Father"]);
 
     // go back to third page. Nothing has changed
     await clickPrev();
-    expect(getTitle()).toBe("... > Father");
+    expect(getTitle()).toBe("Father");
     expect(getFocusedFieldName()).toBe("Father");
-    expect(getModelFieldSelectorValues()).toEqual(["Mother", "Father", "Father"]);
+    expect(getModelFieldSelectorValues()).toEqual(["...", "Father"]);
 
     // go back to second page. Nothing has changed.
     await clickPrev();
     expect(getTitle()).toBe("Mother");
     expect(getFocusedFieldName()).toBe("Father");
-    expect(getModelFieldSelectorValues()).toEqual(["Mother", "Father"]);
+    expect(getModelFieldSelectorValues()).toEqual(["...", "Father"]);
 
     // go back to first page. Nothing has changed.
     await clickPrev();
@@ -612,12 +617,12 @@ test("support of invalid paths (allowEmpty=false)", async () => {
 
     parent.state.path = `foo.a`;
     await animationFrame();
-    expect(getModelFieldSelectorValues()).toEqual(["Foo", "a"]);
+    expect(getModelFieldSelectorValues()).toEqual(["...", "a"]);
     expect(".o_model_field_selector_warning").toHaveCount(1);
 
     parent.state.path = `a.foo`;
     await animationFrame();
-    expect(getModelFieldSelectorValues()).toEqual(["a", "foo"]);
+    expect(getModelFieldSelectorValues()).toEqual(["...", "foo"]);
     expect(".o_model_field_selector_warning").toHaveCount(1);
 });
 
@@ -656,12 +661,12 @@ test("support of invalid paths (allowEmpty=true)", async () => {
 
     parent.state.path = `foo.a`;
     await animationFrame();
-    expect(getModelFieldSelectorValues()).toEqual(["Foo", "a"]);
+    expect(getModelFieldSelectorValues()).toEqual(["...", "a"]);
     expect(".o_model_field_selector_warning").toHaveCount(1);
 
     parent.state.path = `a.foo`;
     await animationFrame();
-    expect(getModelFieldSelectorValues()).toEqual(["a", "foo"]);
+    expect(getModelFieldSelectorValues()).toEqual(["...", "foo"]);
     expect(".o_model_field_selector_warning").toHaveCount(1);
 });
 
@@ -712,14 +717,14 @@ test("debug input", async () => {
     expect(getModelFieldSelectorValues()).toEqual(["a"]);
     expect(".o_model_field_selector_warning").toHaveCount(1);
 
-    await contains(".o_model_field_selector_popover_close").click();
+    await clickAway();
 
     await openModelFieldSelectorPopover();
     await contains(".o_model_field_selector_debug").edit("foo");
     expect(getModelFieldSelectorValues()).toEqual(["Foo"]);
     expect(".o_model_field_selector_warning").toHaveCount(0);
 
-    await contains(".o_model_field_selector_popover_close").click();
+    await clickAway();
 });
 
 test("focus on search input", async () => {
@@ -734,10 +739,10 @@ test("focus on search input", async () => {
 
     await mountWithCleanup(Parent);
     await openModelFieldSelectorPopover();
-    expect(".o_model_field_selector_popover_search .o_input").toBeFocused();
+    expect(".o_model_field_selector_popover_search .o_model_field_selector_input").toBeFocused();
 
     await followRelation();
-    expect(".o_model_field_selector_popover_search .o_input").toBeFocused();
+    expect(".o_model_field_selector_popover_search .o_model_field_selector_input").toBeFocused();
 });
 
 test("support properties", async () => {
@@ -793,16 +798,16 @@ test("support properties", async () => {
     expect('.o_model_field_selector_popover_item[data-name="xphone_prop_2"]').toHaveCount(1);
     expect('.o_model_field_selector_popover_item[data-name="xpad_prop_1"]').toHaveCount(1);
     expect(getDisplayedFieldNames()).toEqual([
-        "P1 (xphone)\nxphone_prop_1 (boolean)",
-        "P1 (xpad)\nxpad_prop_1 (date)",
-        "P2 (xphone)\nxphone_prop_2 (char)",
+        "P1 (xphone)",
+        "P1 (xpad)",
+        "P2 (xphone)",
     ]);
 
     await contains(
         '.o_model_field_selector_popover_item[data-name="xphone_prop_2"] .o_model_field_selector_popover_item_name'
     ).click();
     expect.verifySteps(["properties.xphone_prop_2"]);
-    expect(".o_model_field_selector_value").toHaveText("PropertiesP2");
+    expect(".o_model_field_selector_value span:last").toHaveText("P2");
     expect(".o_model_field_selector_warning").toHaveCount(0);
 });
 
@@ -829,8 +834,8 @@ test("search on field string and name in debug mode", async () => {
     ).edit("uct", { confirm: false });
     await runAllTimers();
     expect(getDisplayedFieldNames()).toEqual([
-        "Product\nproduct_id (many2one)",
-        "Some string\nucit (char)",
+        "Product",
+        "Some string",
     ]);
 });
 
@@ -918,7 +923,7 @@ test("Modify path in popover debug input and click away", async () => {
     );
     expect(getModelFieldSelectorValues()).toEqual(["Foo"]);
 
-    await contains(".o_model_field_selector_popover_close").click();
+    await clickAway();
     expect(getModelFieldSelectorValues()).toEqual(["foooooo"]);
     expect.verifySteps(["foooooo"]);
 });
