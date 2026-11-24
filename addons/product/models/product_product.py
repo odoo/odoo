@@ -49,6 +49,7 @@ class ProductProduct(models.Model):
         min_display_digits='Product Price',
         readonly=False,
         store=True,
+        company_dependent=True,
         help="The sale price can be set manually or computed from the product template. Click on the 'Configure Variants' button to set the extra attribute prices.")
 
     default_code = fields.Char('Internal Reference', index=True)
@@ -642,6 +643,7 @@ class ProductProduct(models.Model):
         return self.base_unit_count and price / self.base_unit_count
 
     @api.depends('lst_price', 'base_unit_count')
+    @api.depends_context('company')
     def _compute_base_unit_price(self):
         for product in self:
             if not product.id:
@@ -898,9 +900,46 @@ class ProductProduct(models.Model):
         )
         # Make sure the `create_product_product` context is not kept, unless it was already set.
         products = products.with_env(self.env)
+        # a template created with its variant gets its sales price in all the companies, the
+        # variants of an existing template get its sales price of each company
+        with_new_template = products.browse(
+            product.id
+            for product, vals in zip(products, vals_list)
+            if 'product_tmpl_id' not in vals
+        )
+        with_new_template.product_tmpl_id._set_list_price_in_all_companies()
+        (products - with_new_template)._set_lst_price_in_all_companies()
         if any('barcode' in vals or 'company_id' in vals for vals in vals_list):
             products._check_barcode_uniqueness()
         return products
+
+    def _set_lst_price_in_all_companies(self):
+        """Set the sales price of the variants in all the companies: the template sales price of
+        each company plus the variant extra of the current company."""
+        if not self:
+            return
+        self.flush_recordset(['lst_price'])
+        self.product_tmpl_id.flush_recordset(['list_price'])
+        self.env.cr.execute(SQL(
+            """
+            UPDATE product_product product
+               SET lst_price = (
+                   SELECT jsonb_object_agg(
+                       company.id::text,
+                       COALESCE((template.list_price ->> company.id::text)::numeric, 0)
+                       + COALESCE((product.lst_price ->> %(company_id)s)::numeric, 0)
+                       - COALESCE((template.list_price ->> %(company_id)s)::numeric, 0)
+                   )
+                     FROM res_company company
+               )
+              FROM product_template template
+             WHERE template.id = product.product_tmpl_id
+               AND product.id = ANY(%(ids)s)
+            """,
+            company_id=str(self.env.company.id),
+            ids=self.ids,
+        ))
+        self.invalidate_recordset(['lst_price'])
 
     def write(self, vals):
         res = super().write(vals)
