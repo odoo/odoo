@@ -28,7 +28,7 @@ function connectionReady(p2p) {
 
 async function mockPeerToPeerCallEnvironment({ channelId, remoteSessionId }) {
     await start();
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     const localUserP2P = getService(DiscussP2PPlugin).p2p;
     const remoteUserP2P = new PeerToPeer({
         notificationRoute: "/mail/rtc/session/notify_call_members",

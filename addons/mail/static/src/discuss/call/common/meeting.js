@@ -48,8 +48,8 @@ export class Meeting extends Component {
             isPip: types.boolean().optional(),
         });
         this.store = useService("mail.store");
+        this.rtc = this.store.rtc;
         this.ui = usePlugin(UIPlugin);
-        this.rtc = useService("discuss.rtc");
         useAncestors({
             inDiscussCallTheme: true,
             inDiscussCallView: true,

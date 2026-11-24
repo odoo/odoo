@@ -13,7 +13,7 @@ const EXT_ID = "mdiacebcbkmjjlpclnbcgiepgifcnpmg";
 
 export class PttExtensionPlugin extends Plugin {
     /**
-     * `discuss.rtc` is a legacy service that depends on this plugin: read it lazily from
+     * The store, which holds `rtc`, starts after this plugin: read it lazily from
      * `env.services`.
      *
      * @private
@@ -65,7 +65,7 @@ export class PttExtensionPlugin extends Plugin {
             return;
         }
         // Plugins start before the legacy services: `env.services` is unset until then.
-        const rtc = this.env.services?.["discuss.rtc"];
+        const rtc = this.env.services?.["mail.store"]?.rtc;
         if (!rtc && data.type !== "answer-is-enabled") {
             return;
         }

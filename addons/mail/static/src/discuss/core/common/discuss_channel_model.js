@@ -13,7 +13,7 @@ const commandRegistry = registry.category("discuss.channel_commands");
 const { DateTime } = luxon;
 
 /** @import { AwaitChatHubInit } from "@mail/core/common/chat_hub_model" */
-/** @typedef {import("@mail/discuss/call/common/rtc_service").ContextOptions} ContextOptions */
+/** @typedef {import("@mail/discuss/call/common/rtc_model").ContextOptions} ContextOptions */
 
 export class DiscussChannel extends Record {
     static _name = "discuss.channel";

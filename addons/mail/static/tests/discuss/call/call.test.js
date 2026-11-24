@@ -35,7 +35,7 @@ import {
     CROSS_TAB_HOST_MESSAGE,
     CROSS_TAB_INIT_TIMEOUT,
     Rtc,
-} from "@mail/discuss/call/common/rtc_service";
+} from "@mail/discuss/call/common/rtc_model";
 import { ChannelMember } from "@mail/discuss/core/common/channel_member_model";
 import { Meeting } from "@mail/discuss/call/common/meeting";
 import { POLL_CLOSE_WINDOW_TIMEOUT } from "@mail/core/common/mail_popout_plugin";
@@ -100,7 +100,7 @@ test("basic rendering", async () => {
     await waitFor(
         ".o-discuss-CallMenu-actionsAudioBars .o-discuss-TalkingAudioBars:not(.o-isTalking):count(1)"
     );
-    Object.assign(getService("discuss.rtc").selfSession, { is_muted: false, isTalking: true });
+    Object.assign(getService("mail.store").rtc.selfSession, { is_muted: false, isTalking: true });
     await waitFor(
         "button[aria-label='Voice Settings'] .o-discuss-TalkingAudioBars.o-isTalking:count(1)"
     );
@@ -122,7 +122,7 @@ test("show the recording indicator to all and the stop control to recorders", as
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     await openDiscuss(channelId);
     await contains("[title='Start Call']:count(1)").click();
     await waitFor(".o-discuss-Call:count(1)");
@@ -231,7 +231,7 @@ test("start a recording alone in a call", async () => {
     await openDiscuss(channelId);
     await contains("[title='Start Call']:count(1)").click();
     await waitFor(".o-discuss-CallParticipantCard:count(1)");
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     rtc.can_record_audio = true;
     rtc.can_record_video = true;
     patch(rtc, {
@@ -452,7 +452,7 @@ async function startCallWithRecordingPermissions() {
     await openDiscuss(channelId);
     await contains("[title='Join Call']:count(1)").click();
     await waitFor(".o-discuss-CallParticipantCard[aria-label='Mitchell Admin']:count(1)");
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     rtc.can_record_audio = true;
     rtc.can_record_video = true;
     return rtc;
@@ -608,7 +608,7 @@ test("starting a plain call from the Discuss app stays inline (no meeting view)"
             expect.step(`play - ${name}`);
         },
     });
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     await openDiscuss(channelId);
     await contains("[title='Start Call']:count(1)").click();
     await waitFor(".o-discuss-Call:count(1)");
@@ -885,7 +885,7 @@ test("Inset card removed while being dragged", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const env = await start();
-    const rtc = env.services["discuss.rtc"];
+    const rtc = env.services["mail.store"].rtc;
     await openDiscuss(channelId);
     await click("[title='Start Call']");
     await click("[title='Share Screen']");
@@ -1018,7 +1018,7 @@ test("Fullscreen button enters browser fullscreen; the menu then offers Wide Vie
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     await openDiscuss(channelId);
     await contains("[title='Start Call']:count(1)").click();
     await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
@@ -1051,7 +1051,7 @@ test("Fullscreen button label reflects a denied browser fullscreen request", asy
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     await openDiscuss(channelId);
     await contains("[title='Start Call']:count(1)").click();
     await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
@@ -1070,7 +1070,7 @@ test("Leaving browser fullscreen externally (e.g. Escape) closes the meeting vie
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     await openDiscuss(channelId);
     await contains("[title='Start Call']:count(1)").click();
     await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
@@ -1089,7 +1089,7 @@ test("Closing picture-in-picture from browser fullscreen restores the windowed m
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     await openDiscuss(channelId);
     await contains("[title='Start Call']:count(1)").click();
     await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
@@ -1115,7 +1115,7 @@ test("Minimize button leaves the meeting view like pressing Escape", async () =>
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     await openDiscuss(channelId);
     await contains("[title='Start Call']:count(1)").click();
     await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
@@ -2154,7 +2154,7 @@ test("dynamic focus switches to talking participant", async () => {
     });
 
     await start();
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     await openDiscuss(channelId);
     await contains("[title='Join Call']:count(1)").click();
     await waitFor(".o-discuss-CallParticipantCard[aria-label='Mitchell Admin']:count(1)");
@@ -2193,7 +2193,7 @@ test("Shows warning badge on mic/camera on non-granted permission in meeting con
         channel_id: channelId,
     });
     await start();
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     rtc.microphonePermission = "denied";
     rtc.cameraPermission = "denied";
     await openDiscuss(channelId);
@@ -2245,7 +2245,7 @@ test("only notified of a call disconnection when the server ends the session", a
     // A session removal that does not come from leaving locally is a server disconnection.
     await contains("[title='Start Call']:enabled:count(1)").click();
     await waitFor(".o-discuss-Call:count(1)");
-    pyEnv["discuss.channel.rtc.session"].unlink([getService("discuss.rtc").selfSession.id]);
+    pyEnv["discuss.channel.rtc.session"].unlink([getService("mail.store").rtc.selfSession.id]);
     await waitForNone(".o-discuss-Call");
     await waitFor(".o_notification:text('Disconnected from the call by the server'):count(1)");
     await expect.waitForSteps(["notifyServerDisconnect"]);
@@ -2309,7 +2309,7 @@ test("all streams are properly closed when abruptly disconnected", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     await openDiscuss(channelId);
     await contains("[title='Start Call']:count(1)").click();
     await waitFor(".o-discuss-Call:count(1)");
@@ -2433,7 +2433,7 @@ test("stopping the screen share sends the microphone alone", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const env = await start();
-    const rtc = env.services["discuss.rtc"];
+    const rtc = env.services["mail.store"].rtc;
     await openDiscuss(channelId);
     await click("[title='Start Call']");
     await waitFor("[title='Mute']:count(1)");
@@ -2449,7 +2449,7 @@ test("losing the microphone keeps sharing the screen audio", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const env = await start();
-    const rtc = env.services["discuss.rtc"];
+    const rtc = env.services["mail.store"].rtc;
     await openDiscuss(channelId);
     await click("[title='Start Call']");
     await waitFor("[title='Mute']:count(1)");
@@ -2624,7 +2624,7 @@ test("Meeting chat panel excludes call notifications for 'New Meeting' channels"
     mockDate("2026-01-01 10:00:00");
     const pyEnv = await startServer();
     await start();
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     await openDiscuss(MENU_ACTIVE_IDS.MEETING);
     await contains("[title='New Meeting']:count(1)").click();
     await contains(".o-dropdown-item:text('Start Now'):count(1)").click();
@@ -2703,7 +2703,7 @@ test("shows a presenter bar when screen-sharing in discuss calls and meetings", 
     ]);
     const env = await start();
     const network = await makeMockRtcNetwork({ env, channelId });
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     await openDiscuss(channelId);
     await contains("[title='Start Call']:count(1)").click();
     await waitFor(".o-discuss-Call:count(1)");
@@ -2881,7 +2881,7 @@ test("Change layout dialog closes when the call is removed by the server", async
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     await openDiscuss(channelId);
     await contains("[title='Start Call']:count(1)").click();
     await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
@@ -2992,7 +2992,7 @@ test("fullscreen hint is shown once the microphone warning is dismissed and anot
     });
     setupChatHub({ opened: [channelId] });
     const env = await start();
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     const network = await makeMockRtcNetwork({ env, channelId });
     const aliceRemote = network.makeMockRemote(aliceMemberId);
     await contains("[title='Join Call']:count(1)").click();
@@ -3017,7 +3017,7 @@ test("fullscreen hint is not shown for own camera", async () => {
     });
     setupChatHub({ opened: [channelId] });
     const env = await start();
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     const network = await makeMockRtcNetwork({ env, channelId });
     const aliceRemote = network.makeMockRemote(aliceMemberId);
     await contains("[title='Join Call']:count(1)").click();
@@ -3041,7 +3041,7 @@ test("fullscreen hint is shown when another participant shares their screen", as
     });
     setupChatHub({ opened: [channelId] });
     const env = await start();
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     const network = await makeMockRtcNetwork({ env, channelId });
     const aliceRemote = network.makeMockRemote(aliceMemberId);
     await contains("[title='Join Call']:count(1)").click();
@@ -3061,7 +3061,7 @@ test("fullscreen hint is not shown in the Discuss app", async () => {
     });
     setupChatHub({ opened: [channelId] });
     const env = await start();
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     const network = await makeMockRtcNetwork({ env, channelId });
     const aliceRemote = network.makeMockRemote(aliceMemberId);
     await contains("[title='Join Call']:count(1)").click();
@@ -3087,7 +3087,7 @@ test("fullscreen hint closes when picture-in-picture or More is open", async () 
     });
     setupChatHub({ opened: [channelId] });
     const env = await start();
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     const network = await makeMockRtcNetwork({ env, channelId });
     const aliceRemote = network.makeMockRemote(aliceMemberId);
     await contains("[title='Join Call']").click();
@@ -3113,7 +3113,7 @@ test("fullscreen hint does not come back after entering fullscreen", async () =>
     });
     setupChatHub({ opened: [channelId] });
     const env = await start();
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     const network = await makeMockRtcNetwork({ env, channelId });
     const aliceRemote = network.makeMockRemote(aliceMemberId);
     await contains("[title='Join Call']").click();
@@ -3204,7 +3204,7 @@ test("remote audio monitors are closed when replaced or when the remote leaves",
             }
         },
     });
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     const bobSession = getService("mail.store")["discuss.channel.rtc.session"].get(bobSessionId);
     const firstUpdate = rtc.updateStream(bobSession, firstTrack);
     const replacedMonitor = audioContexts.at(-1);

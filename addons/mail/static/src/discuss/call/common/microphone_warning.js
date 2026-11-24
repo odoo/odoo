@@ -1,5 +1,5 @@
-import { Component, useProps, types as t } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
+import { StorePlugin } from "@mail/core/common/store_plugin";
+import { Component, types as t, usePlugin, useProps } from "@odoo/owl";
 
 export class MicrophoneWarning extends Component {
     static template = "discuss.MicrophoneWarning";
@@ -9,7 +9,7 @@ export class MicrophoneWarning extends Component {
 
     setup() {
         super.setup();
-        this.rtc = useService("discuss.rtc");
+        this.rtc = usePlugin(StorePlugin).rtc;
     }
 
     onClickClose() {
