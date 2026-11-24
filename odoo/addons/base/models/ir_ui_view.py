@@ -345,7 +345,7 @@ actual arch.
                 # instead, we want to continue using the form view.
                 # This can happen when an invalid xpath has been forcibly written without checking
                 # Via SQL or during the upgrade process
-                source = view.with_context(ir_ui_view_tree_cut_off_view=view)._get_combined_arch()
+                source = view._get_invalid_locators_arch()
             except (ValidationError, ValueError):  # Xpath syntax Invalid , Xpath element unfound
                 # Flagging The field as not empty and with custom information.
                 # We don't do anything with the object, but the information
@@ -393,6 +393,9 @@ actual arch.
                         #   Invalid separator for python expressions in attributes
                         pass
             view.invalid_locators = invalid_locators
+
+    def _get_invalid_locators_arch(self):
+        return self.with_context(ir_ui_view_tree_cut_off_view=self)._get_combined_arch()
 
     def _compute_xml_id(self):
         xml_ids = collections.defaultdict(list)
