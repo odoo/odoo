@@ -45,3 +45,14 @@ test("Negate the unit price from the numpad in price mode", async () => {
     await orderSummary.updateSelectedOrderline({ buffer: "-0", key: "-" });
     expect(line.price_unit).toBe(-3);
 });
+
+test("Negate from the numpad with no selected line", async () => {
+    const store = await setupPosEnv();
+    const order = store.addNewOrder();
+    const orderSummary = await mountWithCleanup(OrderSummary, {});
+    for (const mode of ["quantity", "discount", "price"]) {
+        store.numpadMode = mode;
+        await orderSummary.updateSelectedOrderline({ buffer: "-0", key: "-" });
+    }
+    expect(order.lines).toHaveLength(0);
+});

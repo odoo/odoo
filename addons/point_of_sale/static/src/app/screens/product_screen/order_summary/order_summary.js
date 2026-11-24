@@ -161,7 +161,7 @@ export class OrderSummary extends Component {
         const order = this.pos.getOrder();
         const selectedLine = order.getSelectedOrderline();
         // Handling negation of value on first input
-        if (buffer === "-0" && key == "-") {
+        if (selectedLine && buffer === "-0" && key == "-") {
             if (this.pos.numpadMode === "quantity" && !selectedLine.refunded_orderline_id) {
                 buffer = selectedLine.getQuantity() * -1;
             } else if (this.pos.numpadMode === "discount") {
