@@ -26,7 +26,10 @@
                                 t-out="ptal.ptalDisplayName"
                             />
                         </t>
-                        <small t-elif="this.props.isConfigurable">Click to configure</small>
+                        <t t-elif="this.props.isConfigurable">
+                            <small t-if="this.props.isSelected">Configured</small>
+                            <small t-else="">Click to configure</small>
+                        </t>
                     </div>
                     <BadgeExtraPrice
                         t-if="this.props.extraPrice"
