@@ -1,4 +1,4 @@
-import { proxy } from "@odoo/owl";
+import { proxy, signal } from "@odoo/owl";
 import { Plugin, shared } from "@html_editor/plugin";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { withSequence } from "@html_editor/utils/resource";
@@ -29,6 +29,8 @@ import { CustomizeWebsiteVariableAction } from "../customize_website_plugin";
 import { EditHeadBodyDialog } from "@website/components/edit_head_body_dialog/edit_head_body_dialog";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { ImageSize } from "@html_builder/plugins/image/image_size";
+import { ThemeAccessibilityDialog } from "./theme_accessibility_dialog";
+import { ThemeColorsPreviewDialog } from "./theme_colors_preview_dialog";
 
 /**
  * @typedef {import("@html_builder/core/builder_options_plugin").BuilderOptionContainer[]} theme_options
@@ -90,6 +92,7 @@ function parseFontFaceWeight(weightDescriptor) {
 
 export class ThemeTabPlugin extends Plugin {
     static id = "themeTab";
+    static dependencies = ["builderActions"];
     static shared = shared([
         "getGrayParams",
         "getGrays",
@@ -97,9 +100,14 @@ export class ThemeTabPlugin extends Plugin {
         "setGrayParams",
         "buildGray",
         "getFontWeights",
+        "closeThemeColorsPreview",
+        "isThemeColorsPreviewOpen",
+        "openThemeColorsPreview",
     ]);
     grayParams = {};
     grays = proxy({});
+    closeColorsPreviewDialog = null;
+    isColorsPreviewOpen = signal(false);
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
@@ -312,6 +320,12 @@ export class ThemeTabPlugin extends Plugin {
         }
 
         const optionsArray = Array.isArray(options) ? options : [options];
+        const hasAccessibilityTest = [
+            "website-settings",
+            "theme-button",
+            "theme-input",
+            "theme-link",
+        ].includes(id);
         optionsArray.forEach((option) => {
             option.selector = "*";
         });
@@ -324,8 +338,74 @@ export class ThemeTabPlugin extends Plugin {
             isClonable: false,
             isRemovable: false,
             options: optionsArray,
-            optionsContainerTopButtons: [],
+            optionsContainerTopButtons: [
+                {
+                    class: `oi oi-fw btn ${hasAccessibilityTest ? "btn-light" : "btn-info"}`,
+                    handler: () => this.openAccessibilityCheck(id, name || _t("Theme")),
+                    icon: "accessibility_new",
+                    title: _t("Check accessibility"),
+                },
+            ],
         };
+    }
+
+    openAccessibilityCheck(id, title) {
+        if (id === "website-settings") {
+            this.openThemeColorsPreview({ autoCheck: true });
+            return;
+        }
+        this.services.dialog.add(ThemeAccessibilityDialog, {
+            containerId: id,
+            document: this.document,
+            title: _t("Accessibility: %(title)s", { title }),
+        });
+    }
+
+    isThemeColorsPreviewOpen() {
+        return this.isColorsPreviewOpen();
+    }
+
+    /**
+     * Opens the colors preview, replacing the one already open so that a
+     * single preview document receives the color changes.
+     *
+     * @param {Object} [options]
+     * @param {boolean} [options.autoCheck] check the color accessibility
+     *      once the preview is loaded
+     */
+    openThemeColorsPreview({ autoCheck = false } = {}) {
+        this.closeThemeColorsPreview();
+        const close = this.services.dialog.add(
+            ThemeColorsPreviewDialog,
+            {
+                applyColor: (params, value) =>
+                    this.dependencies.builderActions.applyAction("customizeWebsiteColor", {
+                        editingElement: this.document.body,
+                        params,
+                        value,
+                    }),
+                autoCheck,
+                onIframeLoad: (previewDocument) => {
+                    this.config.extraPreviewDocument = previewDocument;
+                },
+            },
+            {
+                onClose: () => {
+                    if (this.closeColorsPreviewDialog !== close) {
+                        return;
+                    }
+                    this.closeColorsPreviewDialog = null;
+                    this.config.extraPreviewDocument = null;
+                    this.isColorsPreviewOpen.set(false);
+                },
+            }
+        );
+        this.closeColorsPreviewDialog = close;
+        this.isColorsPreviewOpen.set(true);
+    }
+
+    closeThemeColorsPreview() {
+        this.closeColorsPreviewDialog?.();
     }
 }
 

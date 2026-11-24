@@ -54,3 +54,26 @@ test("theme colors preview modal", async () => {
     await contains(".o_hb_snippets_tabs button[data-name=blocks]").click();
     await waitForNone(".o_theme_colors_preview_dialog");
 });
+
+test("accessibility check and colors preview share a single dialog", async () => {
+    await setupWebsiteBuilder("");
+
+    await contains(".o_hb_snippets_tabs button[data-name=theme]").click();
+    await contains(
+        ".o_theme_tab [data-container-title='Website'] button[title='Check accessibility']"
+    ).click();
+    await animationFrame();
+    expect(".o_theme_colors_preview_dialog").toHaveCount(1);
+
+    await contains(".o_hb_tab_content .o_hb_theme_color_slider_btn").click();
+    expect(".o_theme_tab button[title='Colors preview']").toHaveAttribute(
+        "data-icon",
+        "visibility_off"
+    );
+    await contains(".o_theme_tab button[title='Colors preview']").click();
+    await waitForNone(".o_theme_colors_preview_dialog");
+
+    await contains(".o_theme_tab button[title='Colors preview']").click();
+    await animationFrame();
+    expect(".o_theme_colors_preview_dialog").toHaveCount(1);
+});

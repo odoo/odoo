@@ -7,7 +7,7 @@
                     extraClasses="'btn-secondary p-0 d-flex o_hb_theme_color_slider_btn'"
                     darkBackground="true"
                     openByDefault="!!this.highlightThemeRow.colorPresetToShow()"
-                    onClose="() => this.closeThemeColorsPreviewDialog?.()">
+                    onClose="() => this.dependencies.themeTab.closeThemeColorsPreview()">
                     <div class="d-flex w-100">
                         <t t-foreach="[1,2,3,4,5]" t-as="i" t-key="i">
                             <span class="flex-grow-1 o_preview_alpha_background"
@@ -17,7 +17,7 @@
                     </div>
                     <t t-set-slot="sliding_panel_top_options">
                         <button class="o_hb_btn btn btn-primary ms-auto oi oi-fw" t-on-click="this.toggleThemeColorsPreview"
-                            t-att-data-icon="this.isThemeColorsPreviewOpen() ? 'visibility_off' : 'visibility'"
+                            t-att-data-icon="this.dependencies.themeTab.isThemeColorsPreviewOpen() ? 'visibility_off' : 'visibility'"
                             title="Colors preview" aria-label="Colors preview" type="button">
                         </button>
                     </t>
