@@ -57,6 +57,7 @@ class Cart(PaymentPortal):
         })
         if order_sudo:
             order_sudo.order_line.filtered(lambda sol: sol.product_id and not sol.product_id.active).unlink()
+            order_sudo._set_unpublished_lines_warning()
             values['suggested_products'] = order_sudo._cart_accessories()
             values.update(self._get_express_shop_payment_values(order_sudo))
 

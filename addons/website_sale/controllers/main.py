@@ -1744,7 +1744,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         - it exists and is in the draft state;
         - it contains products (i.e., order lines);
-        - either the user is logged in, or public orders are allowed.
+        - either the user is logged in, or public orders are allowed;
+        - it does not contain products unpublished since they were added;
 
         :param sale.order order_sudo: The cart to check.
         :return: None if the cart is valid; otherwise, a redirection to the appropriate page.
@@ -1773,6 +1774,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 "Some products in your cart are not available for purchase in your"
                 " country. Please remove them or contact us."
             )
+            return request.redirect('/shop/cart')
+
+        # Check that the cart does not contain products unpublished since they were added.
+        if order_sudo._set_unpublished_lines_warning():
             return request.redirect('/shop/cart')
 
     def _check_addresses(self, order_sudo):

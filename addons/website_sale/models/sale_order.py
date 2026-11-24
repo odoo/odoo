@@ -927,12 +927,61 @@ class SaleOrder(models.Model):
                 and line.product_id.service_tracking not in allowed_types
         )
 
+    def _get_unpublished_lines(self):
+        """ Return the cart lines whose product has been unpublished since it was added to the cart.
+
+        Only goods shown in the cart are considered, so that the customer can always see and
+        remove the line blocking the checkout. Services are ignored: event tickets, booths,
+        appointments or rewards are sold through products that are never published.
+        Like `product.product._is_add_to_cart_allowed`, publication is checked on the current
+        website and administrators are not restricted.
+
+        :rtype: sale.order.line
+        """
+        self.ensure_one()
+
+        if self.env.user._is_system():
+            return self.env['sale.order.line']
+
+        saleable_types = self.env['product.template']._get_saleable_tracking_types()
+        return self.order_line.filtered(
+            lambda line:
+                line._show_in_cart()
+                and line.product_id.sale_ok
+                and line.product_id.service_tracking in saleable_types
+                and not line.product_id.website_published
+        )
+
+    def _set_unpublished_lines_warning(self):
+        """ Warn the customer about the cart lines whose product has been unpublished.
+
+        The warning is set on both the lines and the order, the order one listing the unavailable
+        products since line warnings are not displayed for unsellable lines in the cart.
+
+        :return: The unpublished lines.
+        :rtype: sale.order.line
+        """
+        self.ensure_one()
+        unpublished_lines = self._get_unpublished_lines()
+        if unpublished_lines:
+            unpublished_lines.shop_warning = self.env._("This product is no longer available.")
+            self.shop_warning = self.env._(
+                "The following products are no longer available: %(products)s. Please remove them"
+                " to proceed to checkout.",
+                products=", ".join(unpublished_lines.mapped('name_short')),
+            )
+        return unpublished_lines
+
     def _is_cart_ready(self):
         """ Whether the cart is valid and can be confirmed (and paid for)
 
         :rtype: bool
         """
-        return bool(self.order_line) and not self._get_zero_priced_lines()
+        return (
+            bool(self.order_line)
+            and not self._get_zero_priced_lines()
+            and not self._get_unpublished_lines()
+        )
 
     def _check_cart_is_ready_to_be_paid(self):
         """ Whether the cart is valid and the user can proceed to the payment
