@@ -51,7 +51,7 @@
         content: "";
     }
 
-    &.o_kanban_record_colored:not(.o_colorlist_color_0)::after {
+    &.o_kanban_record_colored:where(:not(.o_colorlist_color_0))::after {
         border-left: var(--border-width) solid rgb(from var(--o-colorlist-color) r g b / 0.5);
         border-right: calc(var(--o-bs-border-width) * 2) solid var(--o-colorlist-color);
     }
