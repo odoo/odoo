@@ -13,7 +13,7 @@ patch(Composer.prototype, {
     },
 
     get showComposerAvatar() {
-        return super.showComposerAvatar || (this.compact && this.props.composer.portalComment);
+        return super.showComposerAvatar || (this.compact && this.props.composer().portalComment);
     },
 
     get wysiwygConfig() {

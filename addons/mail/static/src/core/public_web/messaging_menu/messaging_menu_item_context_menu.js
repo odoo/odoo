@@ -1,10 +1,9 @@
 import { Action } from "@mail/core/common/action";
 import { ActionList } from "@mail/core/common/action_list";
-import { propStatic, usePropsPlus } from "@mail/utils/common/hooks";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { IsolatedDropdown } from "@mail/core/public_web/messaging_menu/isolated_dropdown";
 
-import { Component, t } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 import { DropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useService } from "@web/core/utils/hooks";
@@ -17,12 +16,12 @@ export class MessagingMenuItemContextMenu extends Component {
         super.setup();
         this.ancestors = useAncestors();
         this.store = useService("mail.store");
-        this.props = usePropsPlus({
-            actionsList: propStatic(
-                t.signal(t.array(t.or([t.instanceOf(Action), t.array(t.instanceOf(Action))])))
+        this.props = useProps({
+            actionsList: t.signal(
+                t.array(t.or([t.instanceOf(Action), t.array(t.instanceOf(Action))]))
             ),
             /** Anchor element, owned by the parent and bound here with `t-ref`. */
-            anchorRef: propStatic(t.signal(t.instanceOf(HTMLElement))),
+            anchorRef: t.signal(t.instanceOf(HTMLElement), { settable: true }),
             dropdownState: t.instanceOf(DropdownState),
             /** @see import("@mail/core/common/action_list").ActionPanelContainer */
             panelContainer: t.function().optional(),

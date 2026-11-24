@@ -12,8 +12,11 @@ export class MessagingMenuEmptyChannel extends Component {
 
     setup() {
         super.setup(...arguments);
-        this.props = useProps({ title: types.string(), subtitle: types.string().optional() });
-        this.close = useProps.static("close", types.function().optional());
+        this.props = useProps({
+            close: types.function().optional().static(),
+            subtitle: types.string().optional(),
+            title: types.string(),
+        });
         this.store = useService("mail.store");
         this.ui = usePlugin(UIPlugin);
         useEffect(() => {
@@ -31,7 +34,7 @@ export class MessagingMenuEmptyChannel extends Component {
 
     onClickFindMoreChannels() {
         this.env.services.action.doAction("mail.discuss_channel_action");
-        this.close?.();
+        this.props.close?.();
     }
 
     /** @param {import("models").DiscussChannel} channel */
