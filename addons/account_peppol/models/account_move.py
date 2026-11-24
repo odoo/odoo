@@ -44,6 +44,14 @@ class AccountMove(models.Model):
         self.peppol_move_state = False
         self.sending_data = False
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_peppol_sent(self):
+        if any(move.is_sale_document(include_receipts=True) and move.peppol_is_sent for move in self):
+            raise UserError(_(
+                "You cannot delete invoices that were sent via Peppol / PDP. "
+                "If you need to modify them, you must issue a credit or debit note."
+            ))
+
     def _compute_display_send_button(self):
         # EXTENDS 'account'
         super()._compute_display_send_button()
