@@ -1,11 +1,13 @@
-import { Component, proxy, t, useProps } from "@odoo/owl";
+import { Component, onMounted, proxy, signal, t, useProps } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
+import { LOG_TYPES } from "@point_of_sale/app/webrtc/webrtc_log_plugin";
 
 const STATE_BADGES = {
     connected: "text-bg-success",
     connecting: "text-bg-info",
     disconnected: "text-bg-warning",
+    reconnecting: "text-bg-warning",
     failed: "text-bg-danger",
     closed: "text-bg-danger",
 };
@@ -20,7 +22,13 @@ export class WebrtcDebugPopup extends Component {
     setup() {
         this.pos = usePos();
         this.webrtc = this.pos.webrtc;
+        this.logger = this.webrtc.logger;
+        this.logTypes = Object.keys(LOG_TYPES);
         this.state = proxy({ tab: "actions" });
+
+        // Focus the dialog, not its first tab (which would show a focus ring).
+        this.modalRef = signal.ref();
+        onMounted(() => this.modalRef()?.focus());
     }
 
     get peers() {
@@ -29,6 +37,14 @@ export class WebrtcDebugPopup extends Component {
             state,
             badgeClass: STATE_BADGES[state] || "text-bg-secondary",
         }));
+    }
+
+    logBadgeClass(type) {
+        return `text-bg-${LOG_TYPES[type]?.badge || "secondary"}`;
+    }
+
+    formatTime(time) {
+        return time.toLocaleTimeString([], { hour12: false });
     }
 
     broadcastHi() {

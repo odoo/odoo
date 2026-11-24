@@ -8,4 +8,4 @@ class PosWebrtcController(http.Controller):
     def webrtc_signal(self, config_id, message):
         config = request.env["pos.config"].browse(config_id)
         config.check_access("read")
-        config._webrtc_signal(message)
+        config._webrtc_signal(message, config._get_webrtc_session_tag(request.session.sid))

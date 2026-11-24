@@ -34,6 +34,7 @@ from . import res_company
 from . import res_config_settings
 from . import res_groups
 from . import ir_http
+from . import ir_websocket
 from . import pos_payment
 from . import pos_payment_method
 from . import pos_bill

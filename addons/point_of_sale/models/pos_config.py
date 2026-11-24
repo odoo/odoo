@@ -12,8 +12,13 @@ from odoo import SUPERUSER_ID, Command, _, api, fields, models, tools
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.http.session import STORED_SESSION_BYTES
 from odoo.tools import SQL, convert
 from odoo.tools.misc import get_lang
+
+# A session description with its candidates is a few KB.
+WEBRTC_MAX_MESSAGE_SIZE = 64 * 1024
+WEBRTC_MAX_ID_LENGTH = 64
 
 DEFAULT_LIMIT_LOAD_PRODUCT = 5000
 DEFAULT_LIMIT_LOAD_PARTNER = 100
@@ -1495,19 +1500,60 @@ class PosConfig(models.Model):
 
         return rounding_method
 
-    def _webrtc_signal(self, message):
-        """ Relay a WebRTC signaling message to the devices of the config, through the bus.
+    def _webrtc_signal(self, message, sender_tag):
+        """ Relay a WebRTC signaling message to the devices of the config, through the bus
+        (channel `(config, "webrtc")`, only given to the users who can read the config).
 
         `announce` is broadcast when a device joins (no `to`), or sent to one device to ask
-        it to connect. `offer` and `answer` carry the session description of a connection.
+        it to connect. `offer` and `answer` are sent to one device: they carry the `attempt`
+        number of the connection and its session description (`sdp`).
+
+        :param sender_tag: tag of the session of the sender (see `_get_webrtc_session_tag`):
+            the id of the sending device must end with it, so that nobody can send messages
+            as another device, whose id is seen by every device of the config.
         """
         self.ensure_one()
-        if (
-            not isinstance(message, dict)
-            or message.get("type") not in ("announce", "offer", "answer")
-            or not isinstance(message.get("from"), str)
-            or not isinstance(message.get("to", ""), str)
-            or (message["type"] != "announce" and not isinstance(message.get("sdp"), dict))
-        ):
+        if not self._is_valid_webrtc_signal(message):
             raise ValidationError(_("Invalid WebRTC signaling message."))
-        self._notify("WEBRTC_SIGNAL", message)
+        if not message["from"].endswith(f".{sender_tag}"):
+            raise AccessError(_("This WebRTC device id belongs to another session."))
+        # Not on the access token channel of the config (see `ir.websocket`). The
+        # type has the config id: the tabs of a browser share their bus.
+        self.env["bus.bus"]._sendone((self, "webrtc"), f"WEBRTC_SIGNAL-{self.id}", message)
+
+    @api.model
+    def _get_webrtc_session_tag(self, sid):
+        """ The tag that ends the WebRTC ids of the devices of the session `sid`.
+
+        Only the first part of the session id is used: it is kept when the session is
+        rotated (every few hours, see `SESSION_ROTATION_INTERVAL`), while the PoS stays open.
+        """
+        return tools.hmac(self.env(su=True), "pos-webrtc-session", sid[:STORED_SESSION_BYTES])[:16]
+
+    @api.model
+    def _is_valid_webrtc_signal(self, message):
+        """ Whether `message` follows the signaling protocol exactly: the devices of the
+        config get it as is. """
+        def is_id(value):
+            return isinstance(value, str) and 0 < len(value) <= WEBRTC_MAX_ID_LENGTH
+
+        if not isinstance(message, dict) or not is_id(message.get("from")):
+            return False
+        if message.get("type") == "announce":
+            keys = {"type", "from", "to"} if "to" in message else {"type", "from"}
+        elif message.get("type") in ("offer", "answer"):
+            keys = {"type", "from", "to", "attempt", "sdp"}
+            attempt, sdp = message.get("attempt"), message.get("sdp")
+            if (
+                type(attempt) is not int or attempt <= 0
+                or not isinstance(sdp, dict) or set(sdp) != {"type", "sdp"}
+                or sdp["type"] != message["type"] or not isinstance(sdp["sdp"], str)
+            ):
+                return False
+        else:
+            return False
+        return (
+            set(message) == keys
+            and ("to" not in message or (is_id(message["to"]) and message["to"] != message["from"]))
+            and len(json.dumps(message).encode()) <= WEBRTC_MAX_MESSAGE_SIZE
+        )
