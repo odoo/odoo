@@ -427,6 +427,38 @@ class TestPackingDelivery(TestPackingCommon):
         self.assertTrue(move_line_1.result_package_id, 'A package should have been created for the selected move line')
         self.assertFalse(move_line_2.result_package_id, 'The other move line should not be packed')
 
+    def test_put_in_pack_split_in_several_packages_weight(self):
+        """ Splitting a move line in several packages with the put in pack wizard should give each
+        package its own shipping weight, not the weight of the whole move line.
+        """
+        self.env['stock.quant']._update_available_quantity(self.product_aw, self.stock_location, 10.0)
+        picking_ship = self.env['stock.picking'].create({
+            'partner_id': self.env['res.partner'].sudo().create({'name': 'A partner'}).id,
+            'picking_type_id': self.picking_type_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'carrier_id': self.test_carrier.id,
+        })
+        move_line = self.env['stock.move.line'].create({
+            'product_id': self.product_aw.id,
+            'uom_id': self.uom_kg.id,
+            'picking_id': picking_ship.id,
+            'quantity': 10,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picked': True,
+        })
+        pack_action = move_line.action_put_in_pack()
+        pack_wiz = self.env['stock.put.in.pack'].with_context(pack_action['context']).create({})
+        self.assertEqual(pack_wiz.shipping_weight, 24.0)  # 2.4 * 10
+        pack_wiz.package_capacity = 5
+        pack_wiz.action_put_in_pack()
+
+        packages = picking_ship.move_line_ids.result_package_id
+        self.assertEqual(len(packages), 2)
+        self.assertEqual(packages.mapped('shipping_weight'), [12.0, 12.0])  # 2.4 * 5
+        self.assertEqual(picking_ship.shipping_weight, 24.0)
+
     def test_multi_level_package_weight(self):
         self.warehouse_1.delivery_steps = 'ship_only'
         self.productA.weight = 2
