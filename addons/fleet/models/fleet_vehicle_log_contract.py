@@ -42,7 +42,7 @@ class FleetVehicleLogContract(models.Model):
     expires_today = fields.Boolean(compute='_compute_days_left')
     has_open_contract = fields.Boolean(compute='_compute_has_open_contract')
     insurer_id = fields.Many2one('res.partner', 'Vendor')
-    purchaser_id = fields.Many2one(related='vehicle_id.driver_id', string='Driver')
+    purchaser_id = fields.Many2one('res.partner', string='Driver', compute='_compute_purchaser_id', store=True, readonly=False, precompute=True)
     ins_ref = fields.Char('Reference', size=64, copy=False)
     state = fields.Selection(
         [('futur', 'New'),
@@ -72,6 +72,11 @@ class FleetVehicleLogContract(models.Model):
             if name and record.cost_subtype_id.name:
                 name = record.cost_subtype_id.name + ' ' + name
             record.name = name
+
+    @api.depends('vehicle_id')
+    def _compute_purchaser_id(self):
+        for contract in self:
+            contract.purchaser_id = contract.vehicle_id.driver_id
 
     @api.depends('vehicle_id', 'cost_subtype_id')
     def _compute_has_open_contract(self):
