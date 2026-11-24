@@ -340,7 +340,7 @@ class TestUBLDE(TestUBLCommon):
         )
         xml_etree = self.get_xml_tree_from_string(self.env['account.edi.xml.cii']._export_invoice(bill)[0])
         ship_to = xml_etree.find('.//{*}ShipToTradeParty')
-        self.assertEqual(ship_to.findtext('{*}Name'), our_delivery.name)
+        self.assertEqual(ship_to.findtext('{*}Name'), our_delivery.display_name)
         self.assertEqual(ship_to.findtext('{*}GlobalID'), '4012345000009')
 
     def test_export_import_refund_xrehnung(self):
