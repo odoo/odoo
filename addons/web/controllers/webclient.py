@@ -193,7 +193,7 @@ class ModelTranslations(http.Controller):
                 rec_context = record.with_context(lang=target_lang, edit_translations=True)
                 rec_context.fetch([field_name])
                 result["xml_values"] = {
-                    target_lang: rec_context[field_name]
+                    target_lang: rec_context[field_name] or "",
                 }
             case "html" | "text":
                 result["terms"] = record.get_field_translations(field_name, (lang.code for lang in langs))[0]
