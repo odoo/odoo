@@ -615,7 +615,7 @@ Disallow: /*/shop/confirmation
             name="pricelist_selector"
             t-attf-class="#{_div_classes or 'dropdown'} o_typeahead d-print-none"
         >
-            <t t-set="active_pricelist" t-value="website.pricelist_id"/>
+            <t t-set="active_pricelist" t-value="website.pricelist_id.sudo()"/>
             <button
                 t-attf-class="dropdown-toggle #{_btn_class or 'btn btn-sm btn-secondary border-0'}"
                 type="button"
