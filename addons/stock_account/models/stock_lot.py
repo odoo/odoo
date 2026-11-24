@@ -32,6 +32,10 @@ class StockLot(models.Model):
 
         for company in self.env.companies:
             lots = lots.with_company(company.id).with_context(allowed_company_ids=company.ids)
+            # Count the lot quantities in all the valued locations of the company, including
+            # the internal ones that are not part of any warehouse (e.g. the rental location)
+            valued_location_ids = lots.env['product.product']._with_valuation_context().env.context['location']
+            lots = lots.with_context(location=valued_location_ids, strict=True)
 
             for lot in lots:
                 if not lot.lot_valuated:

@@ -340,6 +340,65 @@ class TestLotValuation(TestStockValuationCommon):
         self.assertEqual(self.lot1.with_context(to_date=after_out).product_qty, 6)
         self.assertEqual(self.lot1.with_context(to_date=after_out).total_value, 30)
 
+    def test_lot_fifo_in_valued_location_outside_warehouse(self):
+        """ A FIFO lot stored in a valued internal location that is not part of any
+        warehouse (e.g. the rental location) must keep its value and its cost. """
+        product = self.env['product.product'].create({
+            **self.product_common_vals,
+            'name': 'Lot Valuated FIFO Product',
+            'categ_id': self.category_fifo.id,
+            'lot_valuated': True,
+            'tracking': 'serial',
+        })
+        serial = self.env['stock.lot'].create({'name': 'SN-001', 'product_id': product.id})
+        outside_location = self.env['stock.location'].create({
+            'name': 'Valued Location Outside Warehouse',
+            'usage': 'internal',
+            'location_id': self.customer_location.id,
+            'company_id': self.company.id,
+        })
+        self.assertTrue(outside_location.is_valued_internal)
+
+        in_move = self._make_in_move(product, 1, 100, lot_ids=[serial])
+        self.assertEqual(serial.standard_price, 100)
+
+        # Move the serial out of the warehouse, to the valued internal location
+        internal_move = self.env['stock.move'].create({
+            'product_id': product.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': outside_location.id,
+            'product_uom': self.uom.id,
+            'product_uom_qty': 1,
+        })
+        internal_move._action_confirm()
+        internal_move.move_line_ids = [Command.create({
+            'product_id': product.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': outside_location.id,
+            'lot_id': serial.id,
+            'quantity': 1,
+        })]
+        internal_move.picked = True
+        internal_move._action_done()
+
+        self.assertEqual(product.total_value, 100)
+        self.assertEqual(serial.total_value, 100)
+        self.assertEqual(in_move.remaining_qty, 1)
+        self.assertEqual(in_move.remaining_value, 100)
+        quant = serial.quant_ids.filtered(lambda q: q.location_id == outside_location)
+        self.assertEqual(quant.value, 100)
+
+        # Revalue the receipt while the serial is outside of the warehouse:
+        # the cost of the serial is recomputed and must not drop to 0
+        in_move.value_manual = 120
+        self.assertEqual(serial.standard_price, 120)
+        self.assertEqual(serial.total_value, 120)
+        self.assertEqual(product.total_value, 120)
+
+        out_move = self._make_out_move(product, 1, lot_ids=[serial], location_id=outside_location.id)
+        self.assertEqual(out_move.value, 120)
+        self.assertEqual(product.total_value, 0)
+
     def test_change_standard_price(self):
         """ Changing product's standard price will reevaluate all lots """
         self._make_in_move(self.product, 10, 5, lot_ids=[self.lot1, self.lot2])
