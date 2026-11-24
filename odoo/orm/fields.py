@@ -1136,14 +1136,7 @@ class Field[T, C]:
         format for SQL conditions. This is used to compare a field's value when
         the field actually stores multiple values (translated or company-dependent).
         """
-        if value is None or value is False:
-            return None
-        if isinstance(value, str):
-            return value
-        elif isinstance(value, bytes):
-            return value.decode()
-        else:
-            return str(value)
+        return None if value is False else value
 
     def convert_to_column_insert(self, value: typing.Any, record: BaseModel, values: typing.Any = None, validate: bool = True) -> typing.Any:
         """ Convert ``value`` from the ``write`` format to the SQL parameter
@@ -1207,12 +1200,10 @@ class Field[T, C]:
         """ Convert ``value`` from the record format to the format returned by
         method :meth:`BaseModel.read`.
 
-        :param value:
-        :param record:
         :param bool use_display_name: when True, the value's display name will be
             computed using `display_name`, if relevant for the field
         """
-        return False if value is None else value
+        return value
 
     def convert_to_write(self, value: typing.Any, record: BaseModel):
         """ Convert ``value`` from any format to the format of method
