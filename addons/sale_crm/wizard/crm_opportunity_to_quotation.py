@@ -45,8 +45,12 @@ class CrmQuotationPartner(models.TransientModel):
             the freshly created opportunity view.
         """
         self.ensure_one()
-        if self.action == 'create':
-            self.lead_id._handle_partner_assignment(create_missing=True)
-        elif self.action == 'exist':
-            self.lead_id._handle_partner_assignment(force_partner_id=self.partner_id.id, create_missing=False)
-        return self.lead_id.action_new_quotation()
+        # linking a customer must not refill a company voided on the lead
+        lead = self.lead_id
+        lead_to_protect = lead if not lead.company_id else lead.browse()
+        with self.env.protecting([lead._fields['company_id']], lead_to_protect):
+            if self.action == 'create':
+                lead._handle_partner_assignment(create_missing=True)
+            elif self.action == 'exist':
+                lead._handle_partner_assignment(force_partner_id=self.partner_id.id, create_missing=False)
+        return lead.action_new_quotation()
