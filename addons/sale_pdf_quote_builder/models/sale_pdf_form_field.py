@@ -207,12 +207,11 @@ class SalePdfFormField(models.Model):
         self._create_or_update_form_fields_on_pdf_records(product_documents, "product_document")
         self._create_or_update_form_fields_on_pdf_records(quote_documents, "quotation_document")
 
-    @api.model
     def _ensure_document_not_encrypted(self, document):
         document_is_invalid = False
         try:
             document_is_invalid = pdf.PdfFileReader(io.BytesIO(document), strict=False).is_encrypted
-        except (pdf.DependencyError, pdf.PdfReadError):
+        except (pdf.DependencyError, pdf.PdfReadError, AttributeError):
             document_is_invalid = True
         if document_is_invalid:
             raise ValidationError(

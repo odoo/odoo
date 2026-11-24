@@ -6,6 +6,7 @@ from unittest.mock import patch
 
 from werkzeug.datastructures import FileStorage
 
+from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.http import Response
 from odoo.tests import Form, HttpCase, tagged
@@ -396,3 +397,19 @@ class TestPDFQuoteBuilder(SaleManagementCommon, HttpCase):
         sof.save()
 
         self.assertFalse(sof.record.quotation_document_ids)
+
+    def test_pdf_with_invalid_encryption(self):
+        """Check that a PDF with invalid encryption raises a ValidationError."""
+        invalid_pdf = (
+            b"%PDF-1.4\n"
+            b"xref\n"
+            b"0 1\n"
+            b"0000000000 65535 f \n"
+            b"trailer\n"
+            b"<< /Encrypt null >>\n"
+            b"startxref\n"
+            b"9\n"
+            b"%%EOF"
+        )
+        with self.assertRaises(ValidationError):
+            self.env["sale.pdf.form.field"]._ensure_document_not_encrypted(invalid_pdf)
