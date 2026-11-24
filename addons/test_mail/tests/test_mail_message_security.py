@@ -509,7 +509,10 @@ class TestMailMessageAccess(MessageAccessCommon):
         """ Unlink access check for internal users """
         for msg, msg_vals, should_crash, reason in [
             # document based
-            (self.record_portal.message_ids[0], {}, False, 'W Access on record'),
+            (self.record_portal.message_ids[0], {}, True, 'W Access on record but not author'),
+            (self.record_portal.message_ids[0], {
+                'author_id': self.user_portal.partner_id.id,
+            }, False, 'W Access on record and author'),
             (self.record_internal_ro.message_ids[0], {}, True, 'R Access on record'),
             # notified
             (self.record_admin.message_ids[0], {
@@ -531,7 +534,10 @@ class TestMailMessageAccess(MessageAccessCommon):
         """ Unlink access check for portal users. """
         for msg, msg_vals, should_crash, reason in [
             # document based
-            (self.record_portal.message_ids[0], {}, False, 'W Access on record but unlink limited'),
+            (self.record_portal.message_ids[0], {}, True, 'W Access on record but not author'),
+            (self.record_portal.message_ids[0], {
+                'author_id': self.user_portal.partner_id.id,
+            }, False, 'W Access on record and author'),
             (self.record_portal_ro.message_ids[0], {}, True, 'R Access on record'),
             # notified
             (self.record_admin.message_ids[0], {
@@ -608,6 +614,19 @@ class TestMailMessageAccess(MessageAccessCommon):
             (0, 0, {'res_partner_id': self.user_portal_2.partner_id.id})
         ]})
 
+    def test_access_portal_interactions_with_other_author_message(self):
+        """ Portal users can react to and star another author's message. """
+        message = self.record_portal.message_ids[0].with_user(self.user_portal)
+        message._message_add_reaction('+1')
+        self.assertTrue(message.sudo().reaction_ids.filtered(
+            lambda reaction: reaction.partner_id == self.user_portal.partner_id and reaction.content == '+1'
+        ))
+
+        message.toggle_message_starred()
+        self.assertIn(self.user_portal.partner_id, message.sudo().starred_partner_ids)
+        self.env['mail.message'].with_user(self.user_portal).unstar_all()
+        self.assertNotIn(self.user_portal.partner_id, message.sudo().starred_partner_ids)
+
     @mute_logger('odoo.addons.base.models.ir_rule')
     def test_access_write_portal_notification(self):
         """ Test updating message notification content as portal user """
@@ -617,6 +636,9 @@ class TestMailMessageAccess(MessageAccessCommon):
         with self.assertRaises(AccessError):
             test_record.with_user(self.user_portal_2).read(['name'])
         message = test_record.message_ids[0].with_user(self.user_portal)
+        with self.assertRaises(AccessError):
+            message.write({'body': 'Updated'})
+        message.sudo().author_id = self.user_portal.partner_id
         message.write({'body': 'Updated'})
         with self.assertRaises(AccessError):
             message.with_user(self.user_portal_2).read(['subject'])
