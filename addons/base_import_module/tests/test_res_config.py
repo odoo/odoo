@@ -77,3 +77,59 @@ class TestResConfigXIndustry(odoo.tests.TransactionCase):
         module = self.env['ir.module.module'].search([('name', '=', 'foo')])
         self.assertEqual(module.state, 'installed')
         self.assertTrue(module.is_industry)
+
+
+class TestResConfigXModule(odoo.tests.TransactionCase):
+    """ `x_module_<name>` fields behave like `module_<name>` ones, for fields
+    defined in data rather than in Python code. """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.module = cls.env['ir.module.module'].create({'name': 'test_local_module', 'state': 'uninstalled'})
+        cls.env['ir.model.fields'].create({
+            'model_id': cls.env['ir.model']._get_id('res.config.settings'),
+            'name': 'x_module_test_local_module',
+            'field_description': 'x_module_test_local_module',
+            'ttype': 'boolean',
+        })
+
+    def test_default_reflects_module_state(self):
+        self.assertFalse(self.env['res.config.settings'].create({}).x_module_test_local_module)
+        self.module.state = 'installed'
+        self.assertTrue(self.env['res.config.settings'].create({}).x_module_test_local_module)
+
+    def test_checked_field_installs_module(self):
+        settings = self.env['res.config.settings'].create({'x_module_test_local_module': True})
+        with patch('odoo.addons.base.models.ir_module.IrModuleModule.button_immediate_install', autospec=True) as install:
+            settings.execute()
+        install.assert_called_once_with(self.module)
+
+    def test_unchecked_field_returns_uninstall_wizard(self):
+        self.module.state = 'installed'
+        settings = self.env['res.config.settings'].create({'x_module_test_local_module': False})
+        result = settings.execute()
+        self.assertEqual(result['res_model'], 'base.module.uninstall')
+        self.assertEqual(result['context']['default_module_ids'], self.module.ids)
+
+    def test_unknown_module_is_ignored(self):
+        self.env['ir.model.fields'].create({
+            'model_id': self.env['ir.model']._get_id('res.config.settings'),
+            'name': 'x_module_test_unknown_module',
+            'field_description': 'x_module_test_unknown_module',
+            'ttype': 'boolean',
+        })
+        settings = self.env['res.config.settings'].create({'x_module_test_unknown_module': True})
+        with patch('odoo.addons.base.models.ir_module.IrModuleModule.button_immediate_install', autospec=True) as install:
+            settings.execute()
+        install.assert_not_called()
+
+    def test_non_boolean_field_raises(self):
+        self.env['ir.model.fields'].create({
+            'model_id': self.env['ir.model']._get_id('res.config.settings'),
+            'name': 'x_module_test_local_module_char',
+            'field_description': 'x_module_test_local_module_char',
+            'ttype': 'char',
+        })
+        with self.assertRaisesRegex(TypeError, "must have type 'boolean'"):
+            self.env['res.config.settings'].create({})

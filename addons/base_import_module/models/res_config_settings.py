@@ -22,10 +22,25 @@ class ResConfigSettings(models.TransientModel):
         ]
 
     @api.model
+    def _get_x_module_fields(self):
+        """ Return the list of (field_name, module_name) for fields whose name
+        starts with `x_module_`. They behave like `module_` fields, for fields
+        defined in data, whose names must start with `x_`.
+        """
+        x_module_fields = []
+        for name, field in self._fields.items():
+            if not name.startswith('x_module_'):
+                continue
+            if field.type != 'boolean':
+                raise TypeError(f"Field {field} must have type 'boolean'")
+            x_module_fields.append((name, name.removeprefix('x_module_')))
+        return x_module_fields
+
+    @api.model
     def get_values(self):
         res = super().get_values()
         IrModule = self.env['ir.module.module']
-        for name, module_name in self._get_x_industry_fields():
+        for name, module_name in [*self._get_x_industry_fields(), *self._get_x_module_fields()]:
             module = IrModule._get(module_name)
             res[name] = module.state in ('installed', 'to install', 'to upgrade')
         return res
@@ -33,24 +48,28 @@ class ResConfigSettings(models.TransientModel):
     def _get_modules_to_install(self, classified):
         to_install = super()._get_modules_to_install(classified)
         IrModule = self.env['ir.module.module']
-        for name, module_name in self._get_x_industry_fields():
-            if not self[name]:
-                continue
-            module = IrModule._get(module_name)
-            if module.state == 'installed':
-                continue
-            to_install += module or IrModule.new({'name': module_name})
+        for from_appstore, fields in [
+            (True, self._get_x_industry_fields()),
+            (False, self._get_x_module_fields()),
+        ]:
+            for name, module_name in fields:
+                if not self[name]:
+                    continue
+                module = IrModule._get(module_name)
+                if module.state == 'installed':
+                    continue
+                to_install |= IrModule.new({'name': module_name}) if from_appstore and not module else module
         return to_install
 
     def _get_modules_to_uninstall(self, classified):
         to_uninstall = super()._get_modules_to_uninstall(classified)
         IrModule = self.env['ir.module.module']
-        for name, module_name in self._get_x_industry_fields():
+        for name, module_name in [*self._get_x_industry_fields(), *self._get_x_module_fields()]:
             if self[name]:
                 continue
             module = IrModule._get(module_name)
             if module.state in ('installed', 'to upgrade'):
-                to_uninstall += module
+                to_uninstall |= module
         return to_uninstall
 
     @api.model
