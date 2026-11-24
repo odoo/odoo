@@ -39,7 +39,25 @@
             </xpath>
             <!-- After the SMS code confirmation, so "Confirm" keeps its hotkey for the participants in verification -->
             <xpath expr="//div[@name='nemhandel_check_code']" position="after">
-                <div name="mitid_authentication" invisible="l10n_dk_nemhandel_proxy_state == 'rejected' or mitid_kyc_status == 'success'">
+                <!-- The company data doesn't match the CVR register, the authentication is stopped -->
+                <div name="mitid_company_differences" invisible="not mitid_company_differences">
+                    <field name="mitid_company_differences" invisible="1"/>
+                    <div class="alert alert-warning" role="alert">
+                        <i class="fa fa-warning me-2"/>The data of your company doesn't match the CVR register.
+                        Update your company with the data of the CVR register to authenticate it.
+                    </div>
+                    <field name="mitid_company_differences_html" nolabel="1" readonly="1"/>
+                    <button name="button_mitid_update_company"
+                            type="object"
+                            class="btn-primary"
+                            data-hotkey="q"
+                            string="Update Company &amp; Authenticate"/>
+                    <button name="button_mitid_discard_company_differences"
+                            type="object"
+                            class="btn-secondary ms-2"
+                            string="Cancel"/>
+                </div>
+                <div name="mitid_authentication" invisible="l10n_dk_nemhandel_proxy_state == 'rejected' or mitid_kyc_status == 'success' or mitid_company_differences">
                     <button name="button_trigger_authentication"
                             type="object"
                             class="btn-primary"
@@ -70,4 +88,23 @@
             </xpath>
         </field>
     </record>
+
+    <template id="mitid_company_differences">
+        <table class="table table-sm mb-3">
+            <thead>
+                <tr>
+                    <th/>
+                    <th>Current value</th>
+                    <th>CVR register</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr t-foreach="differences" t-as="difference">
+                    <td class="fw-bold" t-out="difference['label']"/>
+                    <td class="text-muted" t-out="difference['current_value']"/>
+                    <td t-out="difference['cvr_value']"/>
+                </tr>
+            </tbody>
+        </table>
+    </template>
 </odoo>

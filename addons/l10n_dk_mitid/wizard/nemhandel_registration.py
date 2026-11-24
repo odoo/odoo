@@ -1,9 +1,12 @@
-from odoo import fields, models
+import logging
+
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import single_email_re
 
 from odoo.addons.iap.tools import iap_tools
 
+_logger = logging.getLogger(__name__)
 
 # TODO: test VAT, the CVR of the MitID Erhverv test organisation
 MITID_TEST_CVR = '90004317'
@@ -21,10 +24,51 @@ class NemhandelRegistration(models.TransientModel):
         related='company_id.mitid_kyc_status',
         readonly=False,
     )
+    # The differences between the company and the CVR register, found before the authentication
+    mitid_company_differences = fields.Json()
+    mitid_company_differences_html = fields.Html(compute='_compute_mitid_company_differences_html')
+
+    # -------------------------------------------------------------------------
+    # COMPUTE METHODS
+    # -------------------------------------------------------------------------
+
+    @api.depends('mitid_company_differences')
+    def _compute_mitid_company_differences_html(self):
+        for wizard in self:
+            wizard.mitid_company_differences_html = wizard.mitid_company_differences and self.env['ir.qweb']._render(
+                'l10n_dk_mitid.mitid_company_differences',
+                {'differences': wizard.mitid_company_differences},
+            )
 
     # -------------------------------------------------------------------------
     # HELPERS
     # -------------------------------------------------------------------------
+
+    def _mitid_get_company_differences(self):
+        """ Checks the company data against the CVR register before the authentication.
+
+        :return: the differences with the CVR register, see `res.company._mitid_get_company_differences`
+        """
+        self.ensure_one()
+        company = self.company_id
+        if not company.company_registry:
+            if self.edi_mode != 'demo':
+                raise UserError(self.env._("Please set the CVR number (Company ID) of your company before authenticating it."))
+            # The test authentication uses the test CVR, not the company one
+            return []
+        try:
+            company_info = company._mitid_get_company_info()
+        except Exception:  # noqa: BLE001
+            # The CVR register being unreachable must not block the authentication
+            _logger.warning("Could not check the company %s against the CVR register", company.id, exc_info=True)
+            return []
+        if error := company_info.get('error'):
+            # 102: invalid CVR, 104: CVR not found. The test companies are not in the CVR register.
+            if company_info.get('code') in {102, 104} and self.edi_mode == 'prod':
+                raise UserError(error)
+            _logger.info("Could not check the company %s against the CVR register: %s", company.id, error)
+            return []
+        return company._mitid_get_company_differences(company_info)
 
     def _get_kyb_cvr(self):
         self.ensure_one()
@@ -89,6 +133,12 @@ class NemhandelRegistration(models.TransientModel):
         self.ensure_one()
         if not self.contact_email or not single_email_re.match(self.contact_email):
             raise ValidationError(self.env._("Invalid email address '%s'", self.contact_email))
+        # The company data must match the CVR register before authenticating it
+        if differences := self._mitid_get_company_differences():
+            self.mitid_company_differences = differences
+            return self._action_open_nemhandel_form()
+        self.mitid_company_differences = False
+
         base_url = self.company_id._mitid_get_iap_url()
         response = iap_tools.iap_jsonrpc(f'{base_url}/api/id_authentication/1/authentication', params={
             'db_uuid': self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
@@ -112,6 +162,21 @@ class NemhandelRegistration(models.TransientModel):
             'url': f'{base_url}/api/id_authentication/1/authentication_portal/{response["url_hash"]}',
             'target': 'new',
         }
+
+    def button_mitid_update_company(self):
+        """ Updates the company with the data of the CVR register, then continues with the authentication. """
+        self.ensure_one()
+        self.company_id._mitid_write_cvr_values({
+            difference['field']: difference['value']
+            for difference in self.mitid_company_differences or []
+        })
+        self.mitid_company_differences = False
+        return self.button_trigger_authentication()
+
+    def button_mitid_discard_company_differences(self):
+        self.ensure_one()
+        self.mitid_company_differences = False
+        return self._action_open_nemhandel_form()
 
     def button_refresh_authentication(self):
         self.ensure_one()
