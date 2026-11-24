@@ -400,6 +400,32 @@ class TestEventNotifications(CalendarMailCommon):
             user_message = new_messages.filtered(lambda x: self.event.user_id.partner_id in x.partner_ids)
             self.assertTrue(user_message, "Organizer must receive a reminder")
 
+    def test_email_alarm_multi_company_layout(self):
+        """ Events have no company: the reminder layout must use the organizer
+        company (as the invitation does), not the company of the cron user. """
+        company_be = self.env['res.company'].create({'name': 'Test Company Belgium'})
+        organizer = new_test_user(self.env, login='organizer_be', company_id=company_be.id)
+        alarm = self.env['calendar.alarm'].create({
+            'name': 'Alarm', 'alarm_type': 'email', 'interval': 'minutes', 'duration': 20,
+        })
+        now = fields.Datetime.now()
+
+        with self.mock_mail_gateway():
+            self.env['calendar.event'].with_user(organizer).create({
+                'name': 'Multi-company event',
+                'start': now + relativedelta(minutes=15),
+                'stop': now + relativedelta(minutes=18),
+                'partner_ids': [fields.Command.link(self.customers[0].id)],
+                'alarm_ids': [fields.Command.link(alarm.id)],
+            })
+            self.env.flush_all()
+        self.assertIn(company_be.name, self._new_mails.body_html, "Invitation uses the organizer company")
+
+        # cron runs in the main company, not in the event organizer one
+        with self.mock_mail_gateway(), patch.object(fields.Datetime, 'now', lambda: now):
+            self.env['calendar.alarm_manager'].with_context(lastcall=now - relativedelta(minutes=25))._send_reminder()
+        self.assertIn(company_be.name, self._new_mails.body_html, "Reminder should use the organizer company")
+
     def test_email_alarm_recurrence(self):
         # test that only a single cron trigger is created for recurring events.
         # Once a notification has been sent, the next one should be created.

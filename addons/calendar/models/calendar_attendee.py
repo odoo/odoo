@@ -203,6 +203,7 @@ class CalendarAttendee(models.Model):
                     email_layout_xmlid='mail.mail_notification_light',
                     attachment_ids=attachment_ids,
                     force_send=False,
+                    force_email_company=self.env.context.get('calendar_use_organizer_company') and attendee.event_id.user_id.company_id,
                 )
         # batch sending at the end
         if force_send and len(notified_attendees) < force_send_limit:
