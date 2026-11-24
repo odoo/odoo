@@ -1342,6 +1342,12 @@ class HrLeave(models.Model):
                     changes['request_date_to'] = new_request_date_to
                 if float_compare(leave.request_hour_to, new_request_hour_to, precision_digits=2) != 0:
                     changes['request_hour_to'] = new_request_hour_to
+                if changes and leave.work_entry_type_request_unit == 'hour' \
+                        and not leave.request_hour_from and not leave.request_hour_to:
+                    # the hours were never set, so date_from comes from the schedule (see
+                    # _compute_date_from_to): keep that start, the end alone would move it to midnight
+                    changes['request_hour_from'] = time_to_float(
+                        leave.date_from.replace(tzinfo=UTC).astimezone(leave_tz).time())
                 if changes:
                     # create() protects these fields while its inverses run, so an
                     # assignment would reach the cache only and leave date_to stale
