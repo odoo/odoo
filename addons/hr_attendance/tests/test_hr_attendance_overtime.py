@@ -1796,6 +1796,29 @@ class TestHrAttendanceOvertime(HttpCase):
         self.ruleset.action_regenerate_overtimes()
         self.assertEqual(sum(attendances.mapped('overtime_hours')), 10)
 
+    def test_regenerate_weekly_overtime_flexible_employee_schedule_changed(self):
+        """ Regenerating the weekly overtime of a past week uses the version of that
+        week, not the current one, when the working schedule changed since. """
+        self.ruleset.rule_ids.write({
+            'expected_hours_from_contract': True,
+            'quantity_period': 'week',
+        })
+        # Monday to Friday, 10 hours a day: 50 hours worked for 40 expected hours
+        attendances = self.env['hr.attendance'].create([{
+            'employee_id': self.flexible_employee.id,
+            'check_in': datetime(2026, 5, day, 8, 0),
+            'check_out': datetime(2026, 5, day, 18, 0),
+        } for day in range(4, 9)])
+        self.assertEqual(sum(attendances.mapped('overtime_hours')), 10)
+
+        # The employee leaves the flexible schedule afterwards
+        self.flexible_employee.create_version({
+            'date_version': date(2026, 6, 1),
+            'resource_calendar_id': self.company.resource_calendar_id.id,
+        })
+        self.ruleset.action_regenerate_overtimes()
+        self.assertEqual(sum(attendances.mapped('overtime_hours')), 10)
+
     def test_overtime_rule_timing_adjacent_intervals(self):
         """ Test that adjacent overtime timing rules are not prematurely merged.
             Daytime: 17:00 -> 21:00 (4h)
