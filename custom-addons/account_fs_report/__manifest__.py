@@ -5,8 +5,9 @@
     'depends': ['account'],
     'data': [
         'security/ir.access.csv',
-        'views/menus.xml',
         'data/balance_sheet.xml',
+        'views/menus.xml',
+        'data/balance_sheet_links.xml',
         'views/report_pdf.xml',
     ],
     'assets': {
