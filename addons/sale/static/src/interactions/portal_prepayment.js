@@ -43,7 +43,7 @@ export class PortalPrepayment extends Interaction {
         }
         this.showPaymentModal = params.has('payment_amount')
             || params.has('amount_selection')
-            || this.el.dataset.isPartiallyPaid;
+            || this.el.dataset.isPartiallyPaid === 'true';
     }
 
     start() {
