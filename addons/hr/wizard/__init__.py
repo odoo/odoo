@@ -6,3 +6,4 @@ from . import hr_bank_account_wizard
 from . import hr_employee_create_version_wizard
 from . import hr_employee_cv_wizard
 from . import hr_resource_calendar_clear_wizard
+from . import hr_employee_company_change_wizard

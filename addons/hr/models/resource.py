@@ -6,6 +6,8 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 
 from odoo import api, fields, models
+from odoo.fields import Domain
+from odoo.tools import SQL
 from odoo.tools.intervals import Intervals
 from odoo.addons.mail.tools.discuss import Store
 
@@ -25,6 +27,19 @@ class ResourceResource(models.Model):
     hr_icon_display = fields.Selection(related='employee_id.hr_icon_display')
     employee_skill_ids = fields.One2many(related='employee_id.employee_skill_ids')
     calendar_id = fields.Many2one(compute='_compute_calendar_id', inverse='_inverse_calendar_id', store=True, readonly=False)
+
+    def _access_domain(self, operation):
+        """Grant read access to the resources of the employees having a version in the current companies.
+
+        An employee moved to another company stays visible in its old company through its versions (see
+        ``hr.employee.version_company_ids``), while its resource follows its current version: without this,
+        reading the employee (e.g. its time off status) would fail in the companies of its other versions.
+        """
+        domain = super()._access_domain(operation)
+        if operation != 'read' or domain.is_false() or domain.is_true():
+            return domain
+        versions = self.env['hr.version'].sudo()._search([('company_id', 'in', self.env.companies.ids)])
+        return domain | Domain('employee_id', 'any', Domain('id', 'in', versions.select(SQL('employee_id'))))
 
     @api.depends('employee_id.current_version_id.tz')
     def _compute_tz(self):

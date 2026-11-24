@@ -2,6 +2,7 @@
 from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.exceptions import ValidationError
+from odoo.tools import SQL
 
 
 class ResourceCalendar(models.Model):
@@ -10,6 +11,24 @@ class ResourceCalendar(models.Model):
     version_ids = fields.One2many('hr.version', 'resource_calendar_id', readonly=True, copy=False)
     employees_count = fields.Integer(string="Employees Count", compute="_compute_employees_count")
     material_resources_count = fields.Integer(string="Material Resources Count", compute="_compute_material_resources_count")
+
+    def _access_domain(self, operation):
+        """Grant read access to the working schedules of the resources of the employees having a version in the
+        current companies.
+
+        The resource of an employee moved to another company follows its current version, and so does its working
+        schedule: without this, reading the employee from the companies of its other versions (e.g. its working
+        hours) would fail (see ``resource.resource._access_domain``).
+        """
+        domain = super()._access_domain(operation)
+        if operation != 'read' or domain.is_false() or domain.is_true():
+            return domain
+        versions = self.env['hr.version'].sudo()._search([('company_id', 'in', self.env.companies.ids)])
+        resources = self.env['resource.resource'].sudo()._search([
+            ('employee_id', 'any', Domain('id', 'in', versions.select(SQL('employee_id')))),
+            ('calendar_id', '!=', False),
+        ])
+        return domain | Domain('id', 'in', resources.select(SQL('calendar_id')))
 
     @api.constrains('company_id')
     def _check_company_id(self):
