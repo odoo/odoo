@@ -644,6 +644,7 @@ class MrpBom(models.Model):
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'mrp.routing.workcenter',
+            'target': 'new',
             'context': {
                 'default_bom_id': self.id,
                 'search_default_bom_id': self.id,
