@@ -33,6 +33,16 @@ class TestHrAttendance(TransactionCase):
                 'check_out': time.strftime('%Y-%m-10 11:00'),
             })
 
+    def test_attendance_check_out_before_check_in_alone(self):
+        # the only attendance of the employee: the clean error, not a crash of the overlap check
+        employee = self.env['hr.employee'].create({'name': "Alone"})
+        attendance = self.attendance.create({
+            'employee_id': employee.id,
+            'check_in': time.strftime('%Y-%m-10 12:00'),
+        })
+        with self.assertRaisesRegex(ValidationError, 'cannot be earlier'):
+            attendance.check_out = time.strftime('%Y-%m-10 11:00')
+
     def test_attendance_no_check_out(self):
         # Make sure no second attandance without check_out can be created
         with self.assertRaises(Exception):

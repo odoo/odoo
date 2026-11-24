@@ -475,7 +475,8 @@ class HrAttendance(models.Model):
         )
         candidates_by_employee = candidates.grouped('employee_id')
         for employee, attendances in self.grouped('employee_id').items():
-            employee_candidates = list(candidates_by_employee[employee])
+            # empty when the only attendance of the employee is the one being made invalid
+            employee_candidates = list(candidates_by_employee.get(employee, []))
             check_ins = [candidate.check_in for candidate in employee_candidates]
             open_candidates = [candidate for candidate in employee_candidates if not candidate.check_out]
             for attendance in attendances:
