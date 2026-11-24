@@ -84,6 +84,8 @@ class SaleOrderLine(models.Model):
             # Nothing to do, onchange was triggered because of the compute
             return
         discount = self._get_discount()
+        if not discount:
+            return
         margin_per_qty = self.margin / product_qty
         computed_price = (margin_per_qty + self.purchase_price) / discount
         self._set_price_incl_taxes(computed_price)
