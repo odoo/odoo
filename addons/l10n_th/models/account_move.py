@@ -220,9 +220,10 @@ class AccountMove(models.Model):
 
         tax_invoice_vals = []
 
+        cash_basis_values_per_move = th_cash_basis_entries.tax_cash_basis_rec_id._collect_tax_cash_basis_values()
         ratio_per_partial = {
             partial_vals['partial'].id: partial_vals['percentage']
-            for move_values in th_cash_basis_entries.tax_cash_basis_rec_id._collect_tax_cash_basis_values().values()
+            for move_values in cash_basis_values_per_move.values()
             for partial_vals in move_values.get('partials', [])
         }
 
@@ -251,7 +252,10 @@ class AccountMove(models.Model):
                 tax_exigibility='on_payment',
                 ratio=ratio,
             )
-            total_amount = entry.amount_total_in_currency_signed
+            # The cash basis entry rounds each line separately: its total may not be the amount paid.
+            cash_basis_lines = cash_basis_values_per_move[original_move.id]['to_process_lines']
+            cash_basis_amount = -sum(line.amount_currency for _type, line in cash_basis_lines)
+            total_amount = original_move.currency_id.round(cash_basis_amount * ratio)
             amount_paid = sum(
                 ti.total_amount
                 for ti in original_move.l10n_th_tax_invoice_ids
