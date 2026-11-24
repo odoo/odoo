@@ -200,6 +200,40 @@ class TestBackend(TestPoSCommon):
         )
         self.assertTrue(other_range.exists())
 
+    def test_notify_synchronisation(self):
+        categories = self.env["pos.category"].create([{"name": "Test Category 1"}])
+        expected = self.env["pos.category"]._load_pos_data_read(categories, self.basic_config)
+
+        with patch(_NOTIFY_PATH) as mock:
+            self.basic_config.notify_synchronisation()
+            self.basic_config.notify_synchronisation(records={"pos.category": categories})
+            self.basic_config.notify_synchronisation(deleted_record_ids={"pos.category": [1, 2]})
+            self.basic_config.notify_synchronisation(
+                records={"pos.category": categories},
+                deleted_record_ids={"pos.category": [2]},
+            )
+
+        calls = [c.args for c in mock.mock_calls]
+        self.assertEqual(
+            sum(1 for args in calls if args and args[0] == "SERVER_SYNCHRONISATION"),
+            3,
+        )
+        self.assertIn(
+            ("SERVER_SYNCHRONISATION", {"records": {"pos.category": expected}}),
+            calls,
+        )
+        self.assertIn(
+            ("SERVER_SYNCHRONISATION", {"deleted_record_ids": {"pos.category": [1, 2]}}),
+            calls,
+        )
+        self.assertIn(
+            ("SERVER_SYNCHRONISATION", {
+                "records": {"pos.category": expected},
+                "deleted_record_ids": {"pos.category": [2]},
+            }),
+            calls,
+        )
+
     def test_webrtc_announce(self):
         with self.assertRaises(AccessError):
             self.basic_config._webrtc_announce(str(uuid.uuid4()), "terminal")

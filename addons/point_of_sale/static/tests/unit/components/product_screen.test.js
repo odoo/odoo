@@ -231,6 +231,27 @@ test("price numpad button follows the restrict price control setting", async () 
     expect(isPriceDisabled()).toBe(true);
 });
 
+test("onWillRender creates a new order when current order is paid remotely and no empty order exists", async () => {
+    const { store, order } = await mountProductScreen();
+    order.state = "paid";
+    await animationFrame();
+    expect(store.getOrder()).not.toBe(order);
+    expect(store.getOrder().state).toBe("draft");
+});
+
+test("onWillRender switches to existing empty order when current order is paid remotely", async () => {
+    const { store, order, productScreen } = await mountProductScreen();
+    await productScreen.addProductToOrder(store.models["product.template"].get(5));
+
+    const emptyOrder = store.addNewOrder();
+    await animationFrame();
+
+    order.state = "paid";
+    await animationFrame();
+
+    expect(store.getOrder()).toBe(emptyOrder);
+});
+
 test("multiplePrinter using mock records", async () => {
     const store = await setupPosEnv();
     const printer = store.ticketPrinter;

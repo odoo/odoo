@@ -71,7 +71,7 @@ class PosMakePayment(models.TransientModel):
             if order.state in {'paid', 'done'}:
                 order.write({'date_order': fields.Datetime.now()})
                 order._send_order()
-                order.config_id.notify_synchronisation(order.config_id.current_session_id.id, 0)
+                order.config_id.notify_synchronisation({'pos.order': order})
             return {'type': 'ir.actions.act_window_close'}
 
         return self.launch_payment()

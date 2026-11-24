@@ -240,87 +240,24 @@ class PosConfig(models.Model):
         year_2_digits = str(datetime.now().year)[-2:]
         return f"{year_2_digits}{device_identifier}-{self.id}-{next_number}", False
 
-    def notify_synchronisation(self, session_id, device_identifier, records={}):
-        self._notify_synchronisation(session_id, device_identifier, records)
-
-    def _notify_synchronisation(self, session_id, device_identifier, records={}, deleted_record_ids=None):
+    def notify_synchronisation(self, records=None, deleted_record_ids=None):
         self.ensure_one()
-        models = []
-        search_params = {}
-
-        for model, ids in records.items():
-            models.append(model)
-            search_params[model] = {
-                'domain': [('id', 'in', ids)],
+        payload = {}
+        if records:
+            payload['records'] = {
+                model: self.env[model]._load_pos_data_read(recordset, self)
+                for model, recordset in records.items()
             }
-
-        if len(models) == 0:
-            self._notify('SYNCHRONISATION', {
-                'static_records': {},
-                'session_id': session_id,
-                'device_identifier': device_identifier,
-                'records': records,
-            })
-            return
-
-        static_records = self.current_session_id.load_data({
-            'models': models,
-            'records': {},
-            'search_params': search_params,
-            'only_records': True,
-        })
-
-        self._notify('SYNCHRONISATION', {
-            'static_records': static_records,
-            'deleted_record_ids': deleted_record_ids,
-            'session_id': session_id,
-            'device_identifier': device_identifier,
-            'records': records,
-        })
-
-        for config in self.trusted_config_ids:
-            config._notify('SYNCHRONISATION', {
-                'static_records': static_records,
-                'session_id': config.current_session_id.id,
-                'login_number': 0,
-                'records': records,
-            })
+        if deleted_record_ids:
+            payload['deleted_record_ids'] = deleted_record_ids
+        if payload:
+            for config in self | self.trusted_config_ids:
+                config._notify('SERVER_SYNCHRONISATION', payload)
 
     def _get_paid_orders_config_domain(self):
         """Domain on pos.order matching configs whose paid orders are visible from this config."""
         self.ensure_one()
         return Domain('config_id', 'in', (self | self.trusted_config_ids).ids)
-
-    def read_config_open_orders(self, domain, record_ids=[]):
-        delete_record_ids = {}
-        dynamic_records = {}
-
-        for model, dom in domain.items():
-            ids = record_ids.get(model, [])
-            browsed = self.env[model].browse(ids)
-
-            dynamic_records[model] = self.env[model].search(dom)
-            delete_record_ids[model] = browsed.filtered(lambda r: not r.exists()).ids
-            # Cancelled orders must be forced deleted from the user interface.
-            if model == "pos.order":
-                delete_record_ids[model] += browsed.exists().filtered(lambda r: r.state == "cancel").ids
-
-        pos_order_data = dynamic_records.get('pos.order') or self.env['pos.order']
-        data = pos_order_data.read_pos_data([], self)
-
-        for key, records in dynamic_records.items():
-            fields = self.env[key]._load_pos_data_fields(self)
-            ids = list(set(records.ids + [record['id'] for record in data.get(key, [])]))
-            dynamic_records[key] = self.env[key].browse(ids).read(fields, load=False)
-
-        for key, value in data.items():
-            if key not in dynamic_records:
-                dynamic_records[key] = value
-
-        return {
-            'dynamic_records': dynamic_records,
-            'deleted_record_ids': delete_record_ids,
-        }
 
     @api.model
     def load_pos_data_force_loading(self):

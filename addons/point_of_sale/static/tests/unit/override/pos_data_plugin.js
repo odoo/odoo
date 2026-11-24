@@ -22,7 +22,10 @@ patch(PosDataPlugin.prototype, {
     initIndexedDB() {
         return true;
     },
-    initListeners() {
+    dynamicModelListener() {
+        return true;
+    },
+    staticModelListener() {
         return true;
     },
     synchronizeLocalDataInIndexedDB() {

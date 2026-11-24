@@ -14,13 +14,13 @@ patch(PaymentScreen.prototype, {
             if (!this.pos.config.module_pos_restaurant) {
                 return false;
             }
-            // Must be done in onWillStart readDataFromServer will make
-            // this.currentOrder undefined during an animation frame,
-            // so we must read data from the server beforehand.
+            // Must be done in onWillStart: applying a sync can make
+            // this.currentOrder undefined during an animation frame, so the
+            // pending device synchronisations are applied beforehand.
             try {
                 const firstLine = this.currentOrder.lines[0];
                 const uuidBefore = this.currentOrder?.uuid;
-                await this.pos.deviceSync.readDataFromServer();
+                await this.pos.data._syncQueue;
                 const uuidAfter = firstLine?.order_id?.uuid;
 
                 // If an order is merged its uuid will change, so we need

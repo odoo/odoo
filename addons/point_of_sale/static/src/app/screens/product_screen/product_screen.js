@@ -89,7 +89,10 @@ export class ProductScreen extends Component {
             // If its a shared order it can be paid from another POS
             if (this.currentOrder?.state !== "draft" && !this.isValidatingOrder) {
                 const { table_id, preset_id } = this.currentOrder ?? {};
-                this.pos.addNewOrder({ table_id, preset_id });
+                const data = Object.fromEntries(
+                    Object.entries({ table_id, preset_id }).filter(([, value]) => value)
+                );
+                this.pos.setOrder(this.pos.getEmptyOrder(data));
             }
         });
 
