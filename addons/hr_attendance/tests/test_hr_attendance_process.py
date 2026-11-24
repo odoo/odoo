@@ -1034,6 +1034,26 @@ class TestAttendanceValidationTimeRules(TransactionCase):
         ])
 
     @freeze_time('2024-01-03 06:00:00')
+    def test_officer_gives_kiosk_attendances_to_self(self):
+        """Attendances an officer gives to themselves are their own edit: they go back to To Review, and their times
+        become encoded by hand, so the review by exception does not review them once the day has no issue left."""
+        self.env.company.attendance_validation = 'exception_validation'
+        officer = new_test_user(
+            self.env, login='att_officer_move',
+            groups='base.group_user,hr_attendance.group_hr_attendance_own,hr_attendance.group_hr_attendance_officer',
+        )
+        self.employee.attendance_manager_id = officer
+        officer_employee = self.env['hr.employee'].create({'name': 'Officer', 'user_id': officer.id, 'tz': 'UTC'})
+        morning, afternoon = self._create_kiosk_attendances(((8, 0), (12, 0)), ((13, 0), (17, 0)))
+        self.assertRecordValues(morning | afternoon, [{'state': 'validated'}, {'state': 'validated'}])
+        morning.with_user(officer).write({'employee_id': officer_employee.id})
+        afternoon.with_user(officer).write({'employee_id': officer_employee.id})
+        self.assertRecordValues(morning | afternoon, [
+            {'employee_id': officer_employee.id, 'state': 'draft', 'in_mode': 'manual', 'out_mode': 'manual'},
+            {'employee_id': officer_employee.id, 'state': 'draft', 'in_mode': 'manual', 'out_mode': 'manual'},
+        ])
+
+    @freeze_time('2024-01-03 06:00:00')
     def test_issues_follow_the_other_attendances_of_the_day(self):
         """Refusing, resetting or deleting an attendance moves the issues of the other attendances of its day."""
         morning, afternoon = self._create_kiosk_attendances(((8, 30), (12, 0)), ((13, 0), (16, 30)))
