@@ -19,22 +19,25 @@ class TestUpdateEmployeesCommon(BaseCommon):
 class TestUpdateEmployeesWithoutUser(TestUpdateEmployeesCommon):
 
     def test_count_employees(self):
+        company = self.env['res.company'].create({'name': 'OTHER COMPANY'})
         Employee = self.env['hr.employee']
         before = self._count()
-        Employee.create({'name': 'No user'})
+        Employee.create({'name': 'No user', 'company_id': company.id})
         Employee.create({
             'name': 'Portal',
+            'company_id': company.id,
             'user_id': mail_new_test_user(self.env, login='update_portal', groups='base.group_portal').id,
         })
         archived_user = mail_new_test_user(self.env, login='update_archived', groups='base.group_user')
         archived_user.active = False
-        Employee.create({'name': 'Archived user', 'user_id': archived_user.id})
+        Employee.create({'name': 'Archived user', 'user_id': archived_user.id, 'company_id': company.id})
         self.assertEqual(self._count(), before)
         Employee.create({
             'name': 'Internal',
+            'company_id': company.id,
             'user_id': mail_new_test_user(self.env, login='update_internal', groups='base.group_user').id,
         })
-        employee = Employee.create({'name': 'Archived employee'})
+        employee = Employee.create({'name': 'Archived employee', 'company_id': company.id})
         # Employee without activity shouldn't count
         self.assertEqual(self._count(), before)
 
