@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<template id="template" xml:space="preserve">
+
+    <t t-name="mrp.ForecastWidget">
+        <a t-on-click="this.showPopup"
+           t-att-class="this.props.record.data.state == 'cancel' ? 'invisible' : ''"
+           t-attf-class="oi cursor-pointer {{ this.props.record.data.forecasted_issue ? 'text-danger' : '' }}"
+           data-icon="area_chart"/>
+    </t>
+
+    <t t-name="mrp.ForecastPopover">
+        <div class="p-2">
+            <h6>Availability</h6>
+            <table class="table table-borderless table-sm">
+                <tbody>
+                    <tr t-if="['draft', 'to_close', 'done'].includes(this.props.record.data.state)">
+                        <td>Forecasted</td>
+                        <td class="text-end">
+                            <b t-out="this.format(this.props.infos.forecasted, this.props.infos.digits)"/>
+                        </td>
+                        <td t-if="this.props.infos.show_uoms"><span t-out="this.props.infos.product_uom"/></td>
+                    </tr>
+                    <tr t-if="this.props.record.data.state == 'draft'">
+                        <td>Max Producible</td>
+                        <td class="text-end">
+                            <b t-out="this.format(this.props.infos.max_producible, this.props.infos.digits)"/>
+                        </td>
+                        <td t-if="this.props.infos.show_uoms"><span t-out="this.props.infos.production_uom"/></td>
+                    </tr>
+                    <tr t-if="['confirmed', 'progress'].includes(this.props.record.data.state)">
+                        <td>Ready To Produce</td>
+                        <td class="text-end">
+                            <b t-out="this.format(this.props.infos.ready_to_produce, this.props.infos.digits)" t-attf-class="{{ this.readyToProduceClasses }}"/>
+                        </td>
+                        <td t-if="this.props.infos.show_uoms"><span t-out="this.props.infos.production_uom"/></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button class="text-start btn btn-link" type="button" t-on-click="this.openForecast">
+                <i class="oi oi-fw o_button_icon" data-icon="east"></i>
+                View Forecast
+            </button>
+        </div>
+    </t>
+    
+</template>

@@ -391,7 +391,6 @@
                             <field name="product_tracking" invisible="1"/> <!-- drives readonly of qty_producing and invisible of the lot/serial block and its buttons -->
                             <field name="product_id" context="{'default_is_storable': True}" readonly="state != 'draft'" default_focus="1" placeholder="Product to build..."/>
                             <field name="product_tmpl_id" invisible="1"/> <!-- passed as default_product_tmpl_id in the context of bom_id -->
-                            <field name="forecasted_issue" invisible="1"/> <!-- drives invisible of the two forecast report buttons -->
                             <field name="company_id" invisible="1"/> <!-- passed as default_company_id in the context of move_raw_ids and move_byproduct_ids -->
                             <field name="product_description_variants" invisible="product_description_variants in (False, '')" readonly="state != 'draft'"/>
                             <label for="bom_id" name="bom_label"/>
@@ -427,8 +426,7 @@
                                 <label for="uom_id" string="" class="oe_inline"/>
                                 <field name="uom_id" options="{'no_open': True, 'no_create': True, 'quantity_field': 'product_qty'}" groups="uom.group_uom" widget="many2one_uom" readonly="state != 'draft'" class="flex-grow-0" style="width:auto!important"/>
                                 <span name="to_produce" class='fw-bold text-nowrap'>To Produce</span>
-                                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="area_chart" invisible="forecasted_issue"/>
-                                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="area_chart" invisible="not forecasted_issue" class="text-danger"/>
+                                <widget name="mrp_forecast_widget" invisible="not id"/>
                             </div>
                             <label for="lot_producing_ids" invisible="state in ('draft', 'cancel') or not product_tracking or (state == 'done' and product_tracking == 'serial' and product_qty > 1)"/>
                             <div class="o_row" invisible="state in ('draft', 'cancel') or not product_tracking or (state == 'done' and product_tracking == 'serial' and product_qty > 1)">
