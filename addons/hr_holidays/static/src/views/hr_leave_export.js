@@ -1,8 +1,10 @@
 import { download } from "@web/core/network/download";
 import { _t } from "@web/core/l10n/translation";
 
+// The "id" label must stay the exact field label: the import only auto-maps a column to
+// the External ID when its header matches it, otherwise re-importing creates duplicates.
 export const TIME_OFF_EXPORT_FIELDS = [
-    { name: "id", label: _t("External ID (update only)") },
+    { name: "id", label: _t("External ID") },
     { name: "employee_id", label: _t("Employee") },
     { name: "work_entry_type_id/id", label: _t("Time Type/External ID") },
     { name: "request_date_from", label: _t("Request Start Date") },

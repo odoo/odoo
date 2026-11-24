@@ -1536,7 +1536,7 @@ class HrLeave(models.Model):
                     date_to=format_date(self.env, holiday.date_to),
                 )
                 if self.env.context.get('import_file'):
-                    message += _("To import it as a new time off request instead, leave the External ID column empty.")
+                    message += "\n" + _("To import it as a new time off request instead, leave the External ID column empty.")
                 raise ValidationError(message)
 
     @api.constrains('employee_id')
