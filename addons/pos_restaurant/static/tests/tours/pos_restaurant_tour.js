@@ -277,6 +277,7 @@ registry.category("web_tour.tours").add("test_pos_restaurant_course", {
             ProductScreen.clickDisplayedProduct("Minute Maid"),
             ProductScreen.clickCourseButton(),
             ProductScreen.clickOrderButton(true),
+            FloorScreen.coursesToFireInTableIs("5", "1"),
             FloorScreen.clickTable("5"),
             // Check only 2 courses are there and empty course gets removed on clicking Order button
             negateStep(ProductScreen.checkCourseAtIndex(2, "Course 3")),

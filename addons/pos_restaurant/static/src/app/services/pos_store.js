@@ -1050,6 +1050,7 @@ patch(PosStore.prototype, {
         // This information in uiState came by websocket
         // If the table is not synced, we need to count the unsynced orders
         let changeCount = 0;
+        let courseCount = 0;
         const tableOrders = this.models["pos.order"].filter(
             (o) => o.table_id?.id === tableId && !o.finalized
         );
@@ -1057,9 +1058,10 @@ patch(PosStore.prototype, {
         for (const order of tableOrders) {
             const changes = order.preparationChanges;
             changeCount += changes.quantity;
+            courseCount += order.course_ids.filter((course) => course.isReadyToFire()).length;
         }
 
-        return { changes: changeCount };
+        return { changes: changeCount, courses: courseCount };
     },
 
     initFloorPlan() {
