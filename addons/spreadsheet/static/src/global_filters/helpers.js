@@ -899,7 +899,7 @@ export async function getFacetInfo(env, filter, filterValue) {
         }
     }
     return {
-        title: filter.label,
+        title: _t(filter.label), // Label is extracted from the spreadsheet json file
         values,
         id: filter.id,
         separator,

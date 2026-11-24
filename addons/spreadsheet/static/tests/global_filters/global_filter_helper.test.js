@@ -14,7 +14,7 @@ import {
     getDateDomainDurationInDays,
     assertDateDomainEqual,
 } from "@spreadsheet/../tests/helpers/date_domain";
-import { makeMockEnv, allowTranslations } from "@web/../tests/web_test_helpers";
+import { makeMockEnv, allowTranslations, patchTranslations } from "@web/../tests/web_test_helpers";
 import { getOperatorLabel } from "@web/core/tree_editor/tree_editor_operator_editor";
 
 import { defineSpreadsheetModels } from "../helpers/data";
@@ -500,6 +500,17 @@ test("getFacetInfo for text values", async () => {
         separator: "or",
         values: ["hello"],
     });
+});
+
+test("getFacetInfo translates the filter label", async () => {
+    patchTranslations({ spreadsheet: { "Text Filter": "Filtre texte" } });
+    const filter = {
+        type: "text",
+        label: "Text Filter",
+        id: "1",
+    };
+    const facet = await getFacetInfo({}, filter, { operator: "ilike", strings: ["hello"] });
+    expect(facet.title.toString()).toBe("Filtre texte");
 });
 
 test("getFacetInfo for date values", async () => {
