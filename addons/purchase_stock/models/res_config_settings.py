@@ -10,6 +10,8 @@ class ResConfigSettings(models.TransientModel):
     module_stock_dropshipping = fields.Boolean("Dropshipping")
     days_to_purchase = fields.Integer(
         related='company_id.days_to_purchase', readonly=False)
+    freight_product_id = fields.Many2one(
+        related='company_id.freight_product_id', readonly=False)
     is_installed_sale = fields.Boolean(string="Is the Sale Module Installed")
 
     @api.model
