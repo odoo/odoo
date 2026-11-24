@@ -35,3 +35,13 @@ class TestCODPaymentTransaction(CashOnDeliveryCommon):
             order.amount_total,
             msg="The order must remain payable from the Point of Sale",
         )
+
+    def test_marking_the_order_as_paid_cancels_its_pending_cod_transaction(self):
+        self._disable_post_process_patcher()
+        tx = self._create_cod_transaction()
+        with mute_logger("odoo.addons.sale.models.payment_transaction"):
+            self._run_post_processing()
+        action = self.sale_order.action_register_payment()
+        self.env["account.payment"].with_context(action["context"]).create({}).action_post()
+
+        self.assertEqual(tx.state, "cancel")

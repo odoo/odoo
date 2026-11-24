@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import (
+    account_payment,
     delivery_carrier,
     delivery_price_rule,
     delivery_zip_prefix,

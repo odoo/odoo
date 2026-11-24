@@ -167,8 +167,8 @@ class AccountMove(models.Model):
                 order_payments = invoice.line_ids.sale_line_ids.order_id.payment_ids.filtered(
                     lambda payment: (
                         payment.payment_type == "inbound"
-                        and payment.state == "paid"
-                        and not payment.invoice_ids
+                        and payment.state in ("paid", "reconciled")
+                        and not payment.invoice_ids.filtered(lambda move: move.state != "cancel")
                     )
                 )
                 invoice.matched_payment_ids |= order_payments

@@ -22,8 +22,12 @@ export class CollectPaymentCogMenu extends Component {
     setup() {
         this.action = useService("action");
         onWillStart(async () => {
-            this.canRegisterPayment = await user.hasGroup("account.group_account_invoice");
+            this.isInvoicingUser = await user.hasGroup("account.group_account_invoice");
         });
+    }
+
+    get canRegisterPayment() {
+        return this.isInvoicingUser;
     }
 
     async openPaymentLinkWizard() {

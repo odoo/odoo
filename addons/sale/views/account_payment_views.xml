@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_account_payment_form" model="ir.ui.view">
+        <field name="name">account.payment.form.inherit.sale</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <field name="memo" position="after">
+                <field name="sale_order_id" invisible="not sale_order_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="account_payment_view_form_mark_as_paid" model="ir.ui.view">
+        <field name="name">account.payment.form.mark.as.paid</field>
+        <field name="model">account.payment</field>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <form string="Pay">
+                <field name="partner_id" invisible="1"/>
+                <field name="payment_type" invisible="1"/>
+                <field name="partner_type" invisible="1"/>
+                <field name="sale_order_id" invisible="1"/>
+                <group>
+                    <group>
+                        <field
+                            name="journal_id"
+                            domain="[('id', 'in', available_journal_ids)]"
+                            options="{'no_open': True, 'no_create': True}"
+                            required="1"
+                        />
+                        <field
+                            name="payment_method_line_id"
+                            context="{'hide_payment_journal_id': 1}"
+                            options="{'no_create': True, 'no_open': True}"
+                            required="1"
+                        />
+                    </group>
+                    <group>
+                        <label for="amount"/>
+                        <div name="amount_div" class="d-flex align-items-center gap-1">
+                            <field name="amount"/>
+                            <field
+                                name="currency_id"
+                                options="{'no_create': True, 'no_open': True}"
+                                groups="base.group_multi_currency"
+                            />
+                        </div>
+                        <field name="date" string="Payment Date"/>
+                        <field name="memo"/>
+                    </group>
+                </group>
+                <footer>
+                    <button
+                        string="Create Payment"
+                        name="action_post"
+                        type="object"
+                        class="oe_highlight"
+                        data-hotkey="q"
+                    />
+                    <button class="btn btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>
