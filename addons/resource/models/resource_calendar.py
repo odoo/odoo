@@ -407,7 +407,10 @@ class ResourceCalendar(models.Model):
             end_datetime = end_dt.astimezone(tz)
 
             for resource in tz_resources:
-                if resource and not resource_calendars.get(resource, False):
+                if lunch and resource and (not resource_calendars.get(resource, False) or resource_calendars[resource].flexible_hours):
+                    # Flexible and fully flexible resources have no lunch intervals
+                    result_per_resource_id[resource.id] = Intervals([], keep_distinct=True)
+                elif resource and not resource_calendars.get(resource, False):
                     # If the resource is fully flexible, return the whole period from start_dt to end_dt with a dummy attendance
                     hours = (end_dt - start_dt).total_seconds() / 3600
                     days = hours / 24

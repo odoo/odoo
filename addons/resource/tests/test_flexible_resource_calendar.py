@@ -182,3 +182,42 @@ class TestFlexibleResourceCalendar(TransactionCase):
             (2025, 52): 40.0,
             (2026, 1): 40.0,
         }, "weeks are well computed when ")
+
+    def test_lunch_intervals_flexible_resource_on_fixed_calendar(self):
+        """ Requesting lunch intervals on a fixed calendar for resources whose own calendar is
+        flexible (or missing) must not return the virtual flexible work schedule. """
+        fixed_calendar = self.env['resource.calendar'].create({
+            'name': 'Fixed with lunch',
+            'tz': 'UTC',
+            'attendance_ids': [(5, 0, 0)] + [
+                (0, 0, {'name': name, 'dayofweek': str(day), 'hour_from': hour_from, 'hour_to': hour_to, 'day_period': period})
+                for day in range(5)
+                for name, hour_from, hour_to, period in [
+                    ('Morning', 8, 12, 'morning'),
+                    ('Lunch', 12, 13, 'lunch'),
+                    ('Afternoon', 13, 17, 'afternoon'),
+                ]
+            ],
+        })
+        flex_calendar = self.env['resource.calendar'].create({
+            'name': 'Flexible 8h/day 40h/week',
+            'tz': 'UTC',
+            'flexible_hours': True,
+            'hours_per_day': 8.0,
+            'hours_per_week': 40.0,
+            'full_time_required_hours': 40.0,
+        })
+        flex_resource = self.env['resource.resource'].create({
+            'name': 'Flexible resource',
+            'tz': 'UTC',
+            'calendar_id': flex_calendar.id,
+        })
+        start = UTC.localize(datetime(2025, 7, 28))
+        end = UTC.localize(datetime(2025, 8, 3, 23, 59, 59))
+
+        lunches = fixed_calendar._attendance_intervals_batch(start, end, resources=flex_resource | self.fully_flex_resource, lunch=True)
+        self.assertFalse(list(lunches[flex_resource.id]), "A flexible resource should not get lunch intervals")
+        self.assertFalse(list(lunches[self.fully_flex_resource.id]), "A fully flexible resource should not get lunch intervals")
+
+        # The lunch intervals of the fixed calendar itself are still returned
+        self.assertEqual(len(list(lunches[False])), 5)
