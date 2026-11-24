@@ -672,3 +672,42 @@ class TestReportSession(TestPoSCommon):
             payment_method_closing={self.bank_pm1.id: 40, self.bank_split_pm1.id: 30})
         self.assertEqual(set(session.correction_move_ids.line_ids.mapped('name')), {'Banque', 'Banque fractionnée'})
         self.assertEqual(get_differences(session), {self.bank_pm1.id: -20, self.bank_split_pm1.id: -10})
+
+    def test_report_cash_in_out_expected_balance(self):
+        """Cash in and cash out movements must be included in expected cash balance."""
+        product = self.create_product('Product A', self.categ_basic, 260)
+        self.config.open_ui()
+        session = self.config.current_session_id
+        session.set_opening_control(0, None)
+
+        order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': session.id,
+            'partner_id': self.partner_a.id,
+            'lines': [Command.create({
+                'name': "OL/0001",
+                'product_id': product.id,
+                'price_unit': 260,
+                'discount': 0,
+                'qty': 1,
+                'tax_ids': [],
+                'price_subtotal': 260,
+                'price_subtotal_incl': 260,
+            })],
+            'pricelist_id': self.config.pricelist_id.id,
+            'amount_paid': 260.0,
+            'amount_total': 260.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'to_invoice': False,
+        })
+        self.make_payment(order, self.cash_pm1, 260.0)
+
+        session.try_cash_in_out('in', 500.0, 'deposit', self.env.user.partner_id.id)
+        session.try_cash_in_out('out', 700.0, 'withdraw', self.env.user.partner_id.id)
+
+        session.close_session_from_ui(payment_method_closing={self.cash_pm1.id: 60.0})
+
+        report = self.env['report.point_of_sale.report_saledetails'].get_sale_details(session_ids=[session.id])
+        cash_payment = next(p for p in report['payments'] if p.get('cash'))
+        self.assertEqual(cash_payment['money_difference'], 0.0)
