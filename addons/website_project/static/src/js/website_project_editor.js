@@ -49,6 +49,7 @@ FormEditorRegistry.add('create_task', {
         relation: 'project.project',
         string: _t('Project'),
         createAction: 'project.open_view_project_all',
+        domain: [['privacy_visibility', '!=', 'followers']]
     }],
     successPage: '/your-task-has-been-submitted',
 });
