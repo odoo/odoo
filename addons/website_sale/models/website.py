@@ -1227,7 +1227,9 @@ class Website(models.Model):
         # If the sale of zero-priced products should be prevented.
         if self.prevent_sale_for == "zero_price":
             if is_zero_price_product is None:
-                is_zero_price_product = not product_or_template._get_contextual_price()
+                is_zero_price_product = self.currency_id.is_zero(
+                    product_or_template._get_contextual_price()
+                )
             return is_zero_price_product
 
         # If the sale of products in specific categories should be prevented.
