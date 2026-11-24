@@ -1,9 +1,10 @@
-import { Plugin, signal } from "@odoo/owl";
+import { Plugin, signal, usePlugin } from "@odoo/owl";
 import { services } from "@web/core/services";
 import { session } from "@web/session";
 import { rpc } from "@web/core/network/rpc";
 import { getOnNotified, uuidv4 } from "@point_of_sale/utils";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
+import { WebRtcPlugin } from "@point_of_sale/app/webrtc/webrtc_plugin";
 
 export const CONSOLE_COLOR = "#F5B427";
 
@@ -13,6 +14,7 @@ export const CONSOLE_COLOR = "#F5B427";
  */
 export class CustomerDisplayPlugin extends Plugin {
     data = signal({});
+    webrtc = usePlugin(WebRtcPlugin);
 
     setup() {
         this.deviceId = uuidv4();
@@ -39,6 +41,20 @@ export class CustomerDisplayPlugin extends Plugin {
             this._onDataReceived.bind(this)
         );
         this.channel.onmessage = this._onDataReceived.bind(this);
+
+        // Peer-to-peer channel with the paired terminal; the mesh only accepts
+        // terminals with the same device identifier.
+        this.webrtc.register("update_customer_display", (peer, payload) => {
+            if (peer.group === "terminal" && peer.identifier === session.identifier) {
+                this._onDataReceived(payload);
+            }
+        });
+        this.webrtc.init({
+            group: "customer_display",
+            identifier: session.identifier,
+            configId: session.config_id,
+            accessToken: session.access_token,
+        });
 
         this._announce("ADD");
 

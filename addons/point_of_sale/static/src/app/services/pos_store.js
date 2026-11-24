@@ -3162,6 +3162,7 @@ export class PosStore extends WithLazyGetterTrap {
             scale: this.scale,
             bus: this.bus,
             getQrData: () => this.customerDisplayQrData,
+            requestUpdate: () => this.debounceUpdateCustomerDisplay(),
         });
         // model-event map that should trigger a customer display update.
         const customerDisplayEventListeners = {

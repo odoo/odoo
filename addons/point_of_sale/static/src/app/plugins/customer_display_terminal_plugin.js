@@ -4,6 +4,7 @@ import { rpc } from "@web/core/network/rpc";
 import { formatCurrency } from "@web/core/currency";
 import { getOnNotified, getColorScheme } from "@point_of_sale/utils";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
+import { WebRtcPlugin } from "@point_of_sale/app/webrtc/webrtc_plugin";
 
 export const CONSOLE_COLOR = "#F5B427";
 
@@ -16,12 +17,16 @@ export const CONSOLE_COLOR = "#F5B427";
  * none is connected. A display announces itself with `ADD` and leaves with
  * `REMOVE`; the terminal asks with `PING` when it starts, which every live
  * display answers with `ADD`, so a terminal that reloads still finds them.
+ *
+ * Payloads go peer-to-peer over WebRTC when a paired display is connected to
+ * this terminal, and through the server (bus) otherwise.
  */
 export class CustomerDisplayTerminalPlugin extends Plugin {
     /** Ids of the displays known to be listening. Empty means nobody is watching. */
     connectedDevices = signal.Set(new Set());
 
     orm = usePlugin(ORM);
+    webrtc = usePlugin(WebRtcPlugin);
 
     setup() {
         // Everything the terminal is given through `init`: the bus, the device
@@ -33,12 +38,27 @@ export class CustomerDisplayTerminalPlugin extends Plugin {
         // Fallback communication channel used when the request fails (e.g. network loss).
         // NOTE: Works only between contexts within the same browser (tabs/windows sharing the same origin).
         this.channel = new BroadcastChannel("UPDATE_CUSTOMER_DISPLAY");
+
+        // A display that just connected over WebRTC has nothing to show yet:
+        // ask for a fresh payload rather than replaying a possibly stale one.
+        this.webrtc.registerSnapshot("update_customer_display", {
+            build: (peer) => {
+                if (
+                    peer.group === "customer_display" &&
+                    peer.identifier === this.context.identifier
+                ) {
+                    this.context.requestUpdate?.();
+                }
+                return null;
+            },
+            apply: () => {},
+        });
     }
 
     /**
      * @param {Object} [context] - what this terminal talks with and for:
      *   `bus`, `identifier`, `configId`, `accessToken`, `models`, `scale`,
-     *   `GeneratePrinterData` and `getQrData`. Called again to hand over late dependencies.
+     *   `GeneratePrinterData`, `getQrData` and `requestUpdate`. Called again to hand over late dependencies.
      */
     init(context = {}) {
         Object.assign(this.context, context);
@@ -66,7 +86,7 @@ export class CustomerDisplayTerminalPlugin extends Plugin {
     }
 
     get hasConnectedDisplay() {
-        return this.connectedDevices().size > 0;
+        return this.connectedDevices().size > 0 || this.webrtc.isConnectedTo("customer_display");
     }
 
     /**
@@ -138,6 +158,13 @@ export class CustomerDisplayTerminalPlugin extends Plugin {
             return;
         }
         const payloadStr = JSON.stringify(payload);
+        // Only paired displays (same device identifier) join this terminal's mesh.
+        if (this.webrtc.isConnectedTo("customer_display")) {
+            this.webrtc.sendToGroup("customer_display", [
+                { action: "update_customer_display", args: [payloadStr] },
+            ]);
+            return;
+        }
         try {
             await this.orm.call("pos.config", "update_customer_display", [
                 [odoo.pos_config_id],
