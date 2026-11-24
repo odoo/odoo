@@ -1247,15 +1247,12 @@ class Base_ImportImport(models.TransientModel):
                 translated_fields.add(field.split(LANGUAGE_SEPARATOR, 1)[0])
 
         for field in filter(None, fields):
-            match field.split(LANGUAGE_SEPARATOR, 1):
-                case [f]:
-                    if f not in translated_fields:
-                        basemap.setdefault(f, len(import_fields))
-                        import_fields.append(f)
-                case [f, _]:
-                    if f not in basemap:
-                        basemap[f] = len(import_fields)
-                        import_fields.append(f)
+            f = field.split(LANGUAGE_SEPARATOR, 1)[0]
+            if f in translated_fields and f in basemap:
+                # translated field already has its slot (all its columns merge into one dict)
+                continue
+            basemap.setdefault(f, len(import_fields))
+            import_fields.append(f)
 
         if not import_fields:
             raise ImportValidationError(_("You must configure at least one field to import"))

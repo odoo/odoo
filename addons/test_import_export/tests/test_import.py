@@ -1287,6 +1287,36 @@ foo3,Invalid Country\n"""),
             ],
         ])
 
+    def test_extract_translation_not_adjacent(self):
+        """ A translated field column without language, followed by other
+        columns before its first language column, must not break extraction.
+        """
+        content = (
+            b'.id,name,normal,name@fr_FR\n'
+            b'1,Test,normal,TestFr\n'
+        )
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'import.base.translation',
+            'file': BinaryBytes(content),
+            'file_type': 'text/csv',
+        })
+        data, fields = import_wizard._convert_import_data(
+            ['.id', 'name', 'normal', 'name@fr_FR'],
+            {'quoting': '"', 'separator': ',', 'has_headers': True},
+        )
+
+        self.assertEqual(fields, ['.id', 'name', 'normal'])
+        self.assertEqual(data, [
+            [
+                '1',
+                {
+                    'en_US': ['Test'],
+                    'fr_FR': ['TestFr'],
+                },
+                'normal',
+            ],
+        ])
+
     def test_import_translation(self):
         self.env['res.lang']._activate_lang('fr_FR')
         import_wizard = self.env['base_import.import'].create({
