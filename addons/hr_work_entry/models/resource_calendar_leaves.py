@@ -35,13 +35,16 @@ class ResourceCalendarLeaves(models.Model):
 
     @api.depends('calendar_id.company_id', 'company_id')
     def _compute_allowed_work_entry_type_ids(self):
+        countries = self.calendar_id.company_id.country_id | self.company_id.country_id | self.env.company.country_id
+        # the types of the country, else the generic ones (country without types or no country)
+        types_by_country = dict(self.env['hr.work.entry.type']._read_group(
+            [('country_id', 'in', countries.ids + [False])],
+            ['country_id'], ['id:recordset'],
+        ))
+        generic_types = types_by_country.get(self.env['res.country'], self.env['hr.work.entry.type'])
         for leave in self:
             country = leave.calendar_id.company_id.country_id or leave.company_id.country_id or self.env.company.country_id
-            if not country or not self.env['hr.work.entry.type'].search_count([('country_id', '=', country.id)], limit=1):
-                domain = [('country_id', '=', False)]
-            else:
-                domain = [('country_id', '=', country.id)]
-            leave.allowed_work_entry_type_ids = self.env['hr.work.entry.type'].search(domain)
+            leave.allowed_work_entry_type_ids = types_by_country.get(country) or generic_types
 
     def _copy_leave_vals(self):
         res = super()._copy_leave_vals()
