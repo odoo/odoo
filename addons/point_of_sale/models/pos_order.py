@@ -24,13 +24,15 @@ from odoo.tools import (
     frozendict,
 )
 
+from .pos_snapshot import snapshot
+
 _logger = logging.getLogger(__name__)
 TRACKING_NUMBER_SEQUENCE_CODE = 'pos.order.tracking.number'
 
 
 class PosOrder(models.Model):
     _name = 'pos.order'
-    _inherit = ["portal.mixin", "pos.bus.mixin", "pos.order.receipt", "pos.load.mixin", "mail.thread"]
+    _inherit = ["portal.mixin", "pos.bus.mixin", "pos.order.receipt", "pos.load.mixin", "mail.thread", "pos.snapshot.mixin"]
     _description = "Point of Sale Order"
     _order = "date_order desc, name desc, id desc"
     _mailing_enabled = True
@@ -550,6 +552,57 @@ class PosOrder(models.Model):
         # Cancel orders before deletion to trigger notifications and keep the UI in sync
         if order_to_cancel:
             order_to_cancel.action_pos_order_cancel()
+
+    @snapshot(version=1)
+    def _snapshot_taxes(self):
+        """Tax and base amounts of sales and refunds, per tax."""
+        totals = {
+            'sale': defaultdict(lambda: [0.0, 0.0]),
+            'refund': defaultdict(lambda: [0.0, 0.0]),
+            'sale_base': 0.0,
+            'refund_base': 0.0,
+        }
+
+        for line in self.lines.filtered(lambda line: line.order_id.state in ('paid', 'done')):
+            if line._is_discount_product():
+                continue
+
+            order = line.order_id
+            is_refund = order.is_refund_or_negative()
+            discount_factor = 1 - (line.discount or 0.0) / 100.0
+            taxes = line.tax_ids_after_fiscal_position
+            if taxes:
+                computed = taxes.sudo().compute_all(
+                    line.price_unit * discount_factor,
+                    line.currency_id,
+                    line.qty,
+                    product=line.product_id,
+                    partner=order.partner_id or False,
+                )
+                tax_lines = [(tax['id'], tax['amount'], line.currency_id.round(tax['base'])) for tax in computed['taxes']]
+                line_base = computed['total_excluded']
+            else:
+                line_base = line.price_subtotal_incl
+                tax_lines = [(0, 0.0, line_base)]
+
+            kind = 'refund' if is_refund else 'sale'
+            totals[f'{kind}_base'] += line_base
+            kind_totals = totals[kind]
+            for tax_id, tax_amount, base_amount in tax_lines:
+                total = kind_totals[str(tax_id)]
+                total[0] += tax_amount
+                total[1] += base_amount
+
+        return {**totals, 'sale': dict(totals['sale']), 'refund': dict(totals['refund'])}
+
+    @snapshot(version=1)
+    def _snapshot_discounts(self):
+        """Number and amount of discounts on paid orders."""
+        lines = self.lines.filtered(lambda line: line.order_id.state in ('paid', 'done') and line._has_discount())
+        return {
+            'count': len(lines),
+            'amount': sum(line._get_discount_amount_for_report() for line in lines),
+        }
 
     @api.model_create_multi
     def create(self, vals_list):

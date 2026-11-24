@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
 
-    <record id="ir_cron_snooze_cleanup" model="ir.cron">
-        <field name="name">POS: Product Snooze cleanup</field>
-        <field name="model_id" ref="point_of_sale.model_pos_snooze"/>
+    <record id="ir_cron_pos_daily_maintenance" model="ir.cron">
+        <field name="name">POS: Daily Maintenance</field>
+        <field name="model_id" ref="point_of_sale.model_pos_config"/>
         <field name="state">code</field>
-        <field name="code">model._cron_clean_records()</field>
+        <field name="code">env['pos.snooze']._cron_clean_records()
+env['pos.snapshot']._cron_build()
+        </field>
         <field name="active" eval="True"/>
         <field name="interval_number">1</field>
         <field name="interval_type">days</field>

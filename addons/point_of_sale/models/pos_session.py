@@ -542,6 +542,7 @@ class PosSession(models.Model):
             'state': 'closed',
             'stop_at': self.stop_at or fields.Datetime.now(),
         })
+        self.env['pos.snapshot']._enqueue(self)
         self._get_closed_orders().write({'state': 'done'})
         self.env.flush_all()  # ensure sale.report is up to date
         return {'status': True}
