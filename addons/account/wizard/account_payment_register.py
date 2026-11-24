@@ -1,5 +1,6 @@
 from collections import defaultdict
 from datetime import date
+import math
 
 import markupsafe
 
@@ -610,7 +611,7 @@ class AccountPaymentRegister(models.TransientModel):
     def _compute_actionable_errors(self):
         for wizard in self:
             actionable_errors = {}
-            if unreconciled_matched_payments := wizard.line_ids.move_id.reconciled_payment_ids.filtered(lambda p: not p.is_reconciled and not p.is_matched and p.state == 'paid'):
+            if unreconciled_matched_payments := wizard.line_ids.move_id._get_unreconciled_paid_payments():
                 actionable_errors['unreconciled_matched_payments'] = {
                     'message': self.env._("Amount of %(amount).2f %(currency)s is already paid. Make sure you don't pay twice.",
                         amount=wizard.unreconciled_paid_amount,
@@ -653,13 +654,20 @@ class AccountPaymentRegister(models.TransientModel):
                 total_amount += comp_curr._convert(amount_residual, wizard_curr, self.company_id, self.payment_date)
         return total_amount
 
-    def _get_total_amounts_to_pay(self, batch_results):
+    def _get_total_amounts_to_pay(self, batch_results, deduct_already_paid=False):
+        """ Compute the amounts to pay for the given batches, in the wizard currency.
+
+        :param batch_results:       The batches, see '_get_batches'.
+        :param deduct_already_paid: Deduct the payments already paid but not yet reconciled. The deduction
+                                    is capped, for each move, at what the move contributes to each amount.
+        """
         self.ensure_one()
         next_payment_date = self._get_next_payment_date_in_context()
         amount_per_line_common = []
         amount_per_line_by_default = []
         amount_per_line_full_amount = []
         amount_per_line_for_difference = []
+        already_paid_deductions = defaultdict(float)
         epd_applied = False
         first_installment_mode = False
         all_lines = self.env['account.move.line']
@@ -668,17 +676,27 @@ class AccountPaymentRegister(models.TransientModel):
         all_lines = all_lines.sorted(key=lambda line: (line.move_id, line.date_maturity or date.max))
         for lines in all_lines.grouped('move_id').values():
             installments = lines._get_installments_data(payment_currency=self.currency_id, payment_date=self.payment_date, next_payment_date=next_payment_date)
+            # The early payment discount is lost as soon as the move is paid in several parts.
+            is_epd_lost = bool(lines.move_id._get_unreconciled_paid_payments())
+            move_common = []
+            move_by_default = []
+            move_full_amount = []
+            move_for_difference = []
             last_installment_mode = False
             for installment in installments:
                 line = installment['line']
                 if installment['type'] == 'early_payment_discount':
-                    epd_applied = True
-                    amount_per_line_by_default.append(installment)
-                    amount_per_line_for_difference.append({
+                    full_installment = {
                         **installment,
                         'amount_residual_currency': line.amount_residual_currency,
                         'amount_residual': line.amount_residual,
-                    })
+                    }
+                    if is_epd_lost:
+                        move_common.append(full_installment)
+                    else:
+                        epd_applied = True
+                        move_by_default.append(installment)
+                        move_for_difference.append(full_installment)
                     continue
 
                 # Installments.
@@ -689,15 +707,15 @@ class AccountPaymentRegister(models.TransientModel):
                     and installment['type'] in ('overdue', 'next', 'before_date')
                 ):
                     if installment['type'] == 'overdue':
-                        amount_per_line_common.append(installment)
+                        move_common.append(installment)
                     elif installment['type'] == 'before_date':
-                        amount_per_line_common.append(installment)
+                        move_common.append(installment)
                         first_installment_mode = 'before_date'
                     elif installment['type'] == 'next':
                         if last_installment_mode in ('next', 'overdue', 'before_date'):
-                            amount_per_line_full_amount.append(installment)
+                            move_full_amount.append(installment)
                         elif not last_installment_mode:
-                            amount_per_line_common.append(installment)
+                            move_common.append(installment)
                             # if we have several moves and one of them has as first installment, a 'next', we want
                             # the whole batches to have a mode of 'next', overriding an 'overdue' on another move
                             first_installment_mode = 'next'
@@ -705,7 +723,25 @@ class AccountPaymentRegister(models.TransientModel):
                     first_installment_mode = first_installment_mode or last_installment_mode
                     continue
 
-                amount_per_line_common.append(installment)
+                move_common.append(installment)
+
+            amount_per_line_common += move_common
+            amount_per_line_by_default += move_by_default
+            amount_per_line_full_amount += move_full_amount
+            amount_per_line_for_difference += move_for_difference
+
+            if deduct_already_paid and (already_paid := self._get_already_paid_amount(lines.move_id, self.currency_id)):
+                common = self._convert_to_wizard_currency(move_common)
+                by_default = self._convert_to_wizard_currency(move_by_default)
+                for_difference = self._convert_to_wizard_currency(move_for_difference)
+                full_amount = self._convert_to_wizard_currency(move_full_amount)
+                for key, move_amount in (
+                    ('amount_by_default', common + by_default),
+                    ('full_amount', common + by_default + full_amount),
+                    ('amount_for_difference', common + for_difference),
+                    ('full_amount_for_difference', common + for_difference + full_amount),
+                ):
+                    already_paid_deductions[key] += self._cap_already_paid_amount(already_paid, move_amount)
 
         common = self._convert_to_wizard_currency(amount_per_line_common)
         by_default = self._convert_to_wizard_currency(amount_per_line_by_default)
@@ -718,11 +754,11 @@ class AccountPaymentRegister(models.TransientModel):
 
         return {
             # default amount shown in the wizard (different from full for installments)
-            'amount_by_default': abs(common + by_default),
-            'full_amount': abs(common + by_default + full_amount),
+            'amount_by_default': abs(common + by_default - already_paid_deductions['amount_by_default']),
+            'full_amount': abs(common + by_default + full_amount - already_paid_deductions['full_amount']),
             # for_difference is used to compute the difference for the Early Payment Discount
-            'amount_for_difference': abs(common + for_difference),
-            'full_amount_for_difference': abs(common + for_difference + full_amount),
+            'amount_for_difference': abs(common + for_difference - already_paid_deductions['amount_for_difference']),
+            'full_amount_for_difference': abs(common + for_difference + full_amount - already_paid_deductions['full_amount_for_difference']),
             'epd_applied': epd_applied,
             'installment_mode': first_installment_mode,
             'lines': lines,
@@ -733,7 +769,7 @@ class AccountPaymentRegister(models.TransientModel):
         if not self.can_edit_wizard or not self.currency_id:
             return
 
-        total_amount_values = self._get_total_amounts_to_pay(self._get_batches())
+        total_amount_values = self._get_amounts_left_to_pay()
         is_custom_user_amount = all(
             not self.currency_id.is_zero(self.amount - total_amount_values[amount_field])
             for amount_field in ('amount_by_default', 'amount_for_difference', 'full_amount', 'full_amount_for_difference')
@@ -771,11 +807,59 @@ class AccountPaymentRegister(models.TransientModel):
             if not wizard.journal_id or not wizard.currency_id or not wizard.payment_date or wizard.custom_user_amount:
                 wizard.amount = wizard.amount
             else:
-                total_amount_values = wizard._get_total_amounts_to_pay(wizard._get_batches())
-                if total_amount_values['epd_applied']:
-                    wizard.amount = total_amount_values['amount_by_default']
-                else:
-                    wizard.amount = max(0.0, total_amount_values['amount_by_default'] - wizard.unreconciled_paid_amount)
+                wizard.amount = wizard._get_amounts_left_to_pay()['amount_by_default']
+
+    def _get_amounts_left_to_pay(self):
+        """ Same as '_get_total_amounts_to_pay' for the wizard batches, but without the amount of the
+        payments already paid and not yet reconciled.
+        """
+        self.ensure_one()
+        return self._get_total_amounts_to_pay(self._get_batches(), deduct_already_paid=True)
+
+    def _get_already_paid_amount(self, move, currency):
+        """ Amount, in `currency`, of the payments of `move` already paid but not yet reconciled,
+        plus the early payment discount they got.
+        """
+        self.ensure_one()
+        unreconciled_paid_amount = move._get_unreconciled_paid_amount(currency=currency)
+        if not unreconciled_paid_amount:
+            return 0.0
+        epd_discount = move.currency_id._convert(
+            move._get_unreconciled_payment_epd_discount(),
+            currency,
+            self.company_id,
+            self.payment_date or fields.Date.context_today(self),
+        )
+        return unreconciled_paid_amount + epd_discount
+
+    @api.model
+    def _cap_already_paid_amount(self, already_paid, amount):
+        """ Part of `already_paid` (unsigned) to deduct from the signed `amount` of a move: it brings the
+        amount closer to zero, without crossing it.
+        """
+        return math.copysign(min(already_paid, abs(amount)), amount)
+
+    def _get_already_paid_deduction(self, lines):
+        """ Signed amount, in the currency of `lines`, to deduct from their residual amount because of the
+        payments of their moves already paid but not yet reconciled. Capped, for each move, at the residual
+        of its lines.
+        """
+        self.ensure_one()
+        return sum(
+            self._cap_already_paid_amount(
+                self._get_already_paid_amount(move, move_lines.currency_id),
+                sum(move_lines.mapped('amount_residual_currency')),
+            )
+            for move, move_lines in lines.grouped('move_id').items()
+        )
+
+    def _is_move_eligible_for_early_payment_discount(self, move, currency):
+        """ The early payment discount is lost as soon as the move is paid in several parts. """
+        self.ensure_one()
+        return (
+            move._is_eligible_for_early_payment_discount(currency, self.payment_date)
+            and not move._get_unreconciled_paid_payments()
+        )
 
     @api.depends('amount')
     def _compute_installments_mode(self):
@@ -783,7 +867,7 @@ class AccountPaymentRegister(models.TransientModel):
             if not wizard.journal_id or not wizard.currency_id:
                 wizard.installments_mode = wizard.installments_mode
             else:
-                total_amount_values = wizard._get_total_amounts_to_pay(wizard._get_batches())
+                total_amount_values = wizard._get_amounts_left_to_pay()
                 if wizard.currency_id.compare_amounts(wizard.amount, total_amount_values['full_amount']) == 0:
                     wizard.installments_mode = 'full'
                 elif wizard.currency_id.compare_amounts(wizard.amount, total_amount_values['amount_by_default']) == 0:
@@ -798,7 +882,7 @@ class AccountPaymentRegister(models.TransientModel):
                 wizard.installments_switch_amount = wizard.installments_switch_amount
                 wizard.installments_switch_html = wizard.installments_switch_html
             else:
-                total_amount_values = wizard._get_total_amounts_to_pay(wizard._get_batches())
+                total_amount_values = wizard._get_amounts_left_to_pay()
                 html_lines = []
                 if wizard.installments_mode == 'full':
                     is_full_match = (
@@ -852,7 +936,7 @@ class AccountPaymentRegister(models.TransientModel):
             if not wizard.journal_id or not wizard.currency_id or not wizard.payment_date:
                 wizard.early_payment_discount_mode = wizard.early_payment_discount_mode
             else:
-                total_amount_values = wizard._get_total_amounts_to_pay(wizard._get_batches())
+                total_amount_values = wizard._get_amounts_left_to_pay()
                 wizard.early_payment_discount_mode = (
                     total_amount_values['epd_applied']
                     and (
@@ -865,7 +949,7 @@ class AccountPaymentRegister(models.TransientModel):
     def _compute_payment_difference(self):
         for wizard in self:
             if wizard.payment_date:
-                total_amount_values = wizard._get_total_amounts_to_pay(wizard._get_batches())
+                total_amount_values = wizard._get_amounts_left_to_pay()
                 if wizard.installments_mode in ('overdue', 'next', 'before_date'):
                     wizard.payment_difference = total_amount_values['amount_for_difference'] - wizard.amount
                 elif wizard.installments_mode == 'full':
@@ -943,22 +1027,7 @@ class AccountPaymentRegister(models.TransientModel):
     @api.depends('line_ids.move_id.reconciled_payment_ids', 'company_id', 'currency_id')
     def _compute_unreconciled_paid_amount(self):
         for wizard in self:
-            paid_payments = wizard.line_ids.move_id.reconciled_payment_ids.filtered(
-                lambda p: (
-                    not p.is_reconciled
-                    and not p.is_matched
-                    and p.state == 'paid'
-                )
-            )
-            wizard.unreconciled_paid_amount = sum(
-                payment.currency_id._convert(
-                    payment.amount,
-                    wizard.currency_id,
-                    wizard.company_id,
-                    payment.date
-                )
-                for payment in paid_payments
-            )
+            wizard.unreconciled_paid_amount = wizard.line_ids.move_id._get_unreconciled_paid_amount(currency=wizard.currency_id) if wizard.currency_id else 0.0
 
     @api.depends('company_currency_id', 'source_currency_id', 'currency_id', 'payment_date', 'company_id')
     def _compute_exchange_rate(self):
@@ -1078,7 +1147,7 @@ class AccountPaymentRegister(models.TransientModel):
             if self.early_payment_discount_mode:
                 epd_aml_values_list = []
                 for aml in batch_result['lines']:
-                    if aml.move_id._is_eligible_for_early_payment_discount(self.currency_id, self.payment_date):
+                    if self._is_move_eligible_for_early_payment_discount(aml.move_id, self.currency_id):
                         epd_aml_values_list.append({
                             'aml': aml,
                             'amount_currency': -aml.amount_residual_currency,
@@ -1154,12 +1223,20 @@ class AccountPaymentRegister(models.TransientModel):
         total_amount_values = self._get_total_amounts_to_pay([batch_result])
         total_amount = total_amount_values['amount_by_default']
         currency = self.env['res.currency'].browse(batch_values['source_currency_id'])
+        # Payments already paid but not yet reconciled with these lines: don't pay twice.
+        already_paid_deduction = self._get_already_paid_deduction(batch_result['lines'])
+        if not currency.is_zero(already_paid_deduction):
+            residual_sign = 1 if sum(batch_result['lines'].mapped('amount_residual_currency')) > 0 else -1
+            already_paid = residual_sign * already_paid_deduction
+        else:
+            already_paid = 0.0
         if total_amount_values['epd_applied']:
-            payment_vals['amount'] = total_amount
+            payment_vals['amount'] = max(0.0, total_amount - already_paid)
 
             epd_aml_values_list = []
             for aml in batch_result['lines']:
-                if aml.move_id._is_eligible_for_early_payment_discount(currency, self.payment_date):
+                # The moves with an unreconciled payment lost their discount: they are not part of it.
+                if self._is_move_eligible_for_early_payment_discount(aml.move_id, currency):
                     epd_aml_values_list.append({
                         'aml': aml,
                         'amount_currency': -aml.amount_residual_currency,
@@ -1172,6 +1249,8 @@ class AccountPaymentRegister(models.TransientModel):
                 ._get_invoice_counterpart_amls_for_early_payment_discount(epd_aml_values_list, open_balance)
             for aml_values_list in early_payment_values.values():
                 payment_vals['write_off_line_vals'] += aml_values_list
+        elif already_paid:
+            payment_vals['amount'] = max(0.0, batch_values['source_amount_currency'] - already_paid)
 
         return payment_vals
 
@@ -1344,11 +1423,18 @@ class AccountPaymentRegister(models.TransientModel):
             for batch_result in batches:
                 batch_result['lines'] &= lines_to_pay
 
-            to_process.extend({
-                    'create_vals': self._create_payment_vals_from_batch(batch_result),
+            for batch_result in batches:
+                payment_vals = self._create_payment_vals_from_batch(batch_result)
+                # Skip the batches fully covered by payments already paid but not yet reconciled.
+                if self.env['res.currency'].browse(payment_vals['currency_id']).is_zero(payment_vals['amount']):
+                    continue
+                to_process.append({
+                    'create_vals': payment_vals,
                     'to_reconcile': batch_result['lines'],
                     'batch': batch_result,
-                } for batch_result in batches)
+                })
+            if not to_process:
+                raise UserError(_("Everything is already paid by payments that are not reconciled yet, so no payment registration is necessary."))
 
         lines = self.env['account.move.line'].union(batch_result['lines'] for batch_result in batches)
         from_sibling_companies = self._from_sibling_companies(lines)
