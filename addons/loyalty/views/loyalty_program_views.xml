@@ -8,12 +8,35 @@
         <field name="arch" type="xml">
             <form string="Discount &amp; Loyalty">
                 <header>
-                    <button name="%(loyalty_generate_wizard_action)d" string="Generate Coupons" class="btn-primary" type="action"
-                        invisible="program_type != 'coupons'"/>
-                    <button name="%(loyalty_generate_wizard_action)d" string="Generate Gift Cards" class="btn-primary" type="action"
-                        invisible="program_type != 'gift_card'"/>
-                    <button name="%(loyalty_generate_wizard_action)d" string="Generate eWallet" class="btn-primary" type="action"
-                        invisible="program_type != 'ewallet'" context="{'default_mode': 'selected'}"/>
+                    <button
+                        name="%(loyalty_generate_wizard_action)d"
+                        string="Generate Coupons"
+                        class="btn-primary"
+                        type="action"
+                        invisible="program_type != 'coupons'"
+                    />
+                    <button
+                        name="%(loyalty_generate_wizard_action)d"
+                        string="Generate Gift Cards"
+                        class="btn-primary"
+                        type="action"
+                        invisible="program_type != 'gift_card'"
+                        context="{
+                            'default_coupon_qty': 1,
+                            'default_points_granted': 50
+                        }"
+                    />
+                    <button
+                        name="%(loyalty_generate_wizard_action)d"
+                        string="Generate eWallet"
+                        class="btn-primary"
+                        type="action"
+                        invisible="program_type != 'ewallet'"
+                        context="{
+                            'default_mode': 'selected',
+                            'default_points_granted': 0
+                        }"
+                    />
                 </header>
                 <sheet>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
@@ -68,25 +91,10 @@
                                 <p class="text-muted" invisible="program_type != 'next_order_coupons'" colspan="2">
                                     Drive repeat purchases by sending a unique, single-use coupon code for the next purchase when a customer buys something in your store.
                                 </p>
-                                <p class="text-muted" invisible="program_type != 'gift_card'" colspan="2">
-                                    Gift Cards are created manually or automatically sent by email when the customer orders a gift card product.
-                                    <br/>
-                                    Then, Gift Cards can be used to pay orders.
-                                </p>
-                                <p class="text-muted" invisible="program_type != 'ewallet'" colspan="2">
-                                    eWallets are created manually or automatically when the customer orders a eWallet product.
-                                    <br/>
-                                    Then, eWallets are proposed during the checkout, to pay orders.
-                                </p>
                             </div>
                             <label
-                                string="Gift Card Products"
-                                invisible="program_type != 'gift_card'"
-                                for="trigger_product_ids"
-                            />
-                            <label
-                                string="eWallet Products"
-                                invisible="program_type != 'ewallet'"
+                                string="Sold by"
+                                invisible="program_type not in ['gift_card', 'ewallet']"
                                 for="trigger_product_ids"
                             />
                             <div
@@ -96,13 +104,13 @@
                                 <field
                                     name="trigger_product_ids"
                                     widget="many2many_tags"
+                                    options="{'on_tag_click': 'open_form'}"
                                     context="{
                                         'loyalty_is_gift_card_product': program_type == 'gift_card'
                                     }"
                                 />
                             </div>
                             <field name="payment_program_discount_product_id" groups="base.group_no_one" invisible="program_type not in ('gift_card', 'ewallet')"/>
-                            <field name="mail_template_id" invisible="program_type not in ('gift_card', 'ewallet')" context="{'default_model': 'loyalty.card'}"/>
                             <label for="limit_usage" invisible="program_type in ('gift_card', 'ewallet')"/>
                             <span invisible="program_type in ('gift_card', 'ewallet')">
                                 <field name="limit_usage" class="oe_inline"/>
@@ -205,6 +213,18 @@
                                 <field name="available_on" invisible="1"/> <!-- target of the <label for="available_on"> of this form -->
                                 <div id="o_loyalty_program_availabilities" invisible="1"/>
                                 <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
+                            </group>
+                        </page>
+                        <page
+                            string="Communications"
+                            name="gift_ewallet_communications"
+                            invisible="program_type not in ('gift_card', 'ewallet')"
+                        >
+                            <group>
+                                <field
+                                    name="mail_template_id"
+                                    context="{'default_model': 'loyalty.card'}"
+                                />
                             </group>
                         </page>
                     </notebook>
