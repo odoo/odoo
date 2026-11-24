@@ -24,6 +24,7 @@ function addProductandPay() {
 
         PaymentScreen.totalIs("1,000.00"),
         PaymentScreen.clickPaymentMethod("QRIS", true, { amount: "1,000.00" }),
+        PaymentScreen.clickSendButton(),
     ].flat();
 }
 
@@ -35,7 +36,7 @@ registry.category("web_tour.tours").add("PaymentScreenQRISPaymentFail", {
             addProductandPay(),
             isQRDisplayedinDialog(),
             Dialog.confirm(),
-            Dialog.is({ title: "Payment Status Update" }),
+            Dialog.is({ title: "QR payment pending" }),
         ].flat(),
 });
 
@@ -59,9 +60,12 @@ registry.category("web_tour.tours").add("PayementScreenQRISFetchQR", {
             addProductandPay(),
             isQRDisplayedinDialog(),
             Dialog.discard(),
+            PaymentScreen.clickCancelButton(),
             PaymentScreen.clickPaymentMethod("QRIS", true),
+            PaymentScreen.clickSendButton(),
             isQRDisplayedinDialog(),
             Dialog.discard(),
+            PaymentScreen.clickCancelButton(),
             PaymentScreen.clickRetryButton(),
             isQRDisplayedinDialog(),
         ].flat(),
@@ -74,13 +78,16 @@ registry.category("web_tour.tours").add("PayementScreenQRISChangeAmount", {
             addProductandPay(),
             isQRDisplayedinDialog(),
             Dialog.discard(),
+            PaymentScreen.clickCancelButton(),
             PaymentScreen.clickBack(),
             ProductScreen.clickDisplayedProduct("Test Product"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentlineDelButton("QRIS", "1,000.00"),
             PaymentScreen.clickPaymentMethod("QRIS", true, { amount: "2,000.00" }),
+            PaymentScreen.clickSendButton(),
             isQRDisplayedinDialog(),
             Dialog.discard(),
+            PaymentScreen.clickCancelButton(),
             PaymentScreen.clickRetryButton(),
             isQRDisplayedinDialog(),
         ].flat(),

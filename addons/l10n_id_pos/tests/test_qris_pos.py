@@ -62,6 +62,13 @@ class TestPosQris(TestPointOfSaleHttpCommon):
             'receivable_account_id': cls.pos_receivable_bank.id,
             'company_id': cls.company.id,
         })
+        cls.qris_electronic_payment = cls.env['pos.electronic.payment'].sudo().create({
+            'name': 'QRIS',
+            'bank_account_id': cls.acc_qris_id.id,
+            'integration_type': 'qr',
+            'payment_provider': 'bank_qr',
+            'qr_code_method': 'id_qr',
+        })
         cls.qris_pm = cls.env['pos.payment.method'].sudo().create({
             'name': 'QRIS',
             'type': 'bank',
@@ -69,8 +76,7 @@ class TestPosQris(TestPointOfSaleHttpCommon):
             'receivable_account_id': cls.pos_receivable_bank.id,
             'outstanding_account_id': cls.outstanding_bank.id,
             'company_id': cls.company.id,
-            'payment_method_type': 'bank_qr_code',
-            'qr_code_method': 'id_qr'
+            'electronic_payment_id': cls.qris_electronic_payment.id,
         })
 
         cls.main_pos_config = cls.env['pos.config'].sudo().create({
@@ -150,9 +156,9 @@ class TestPosQris(TestPointOfSaleHttpCommon):
             }
 
         with patch('odoo.addons.l10n_id.models.res_bank._l10n_id_make_qris_request', side_effect=_patched_make_qris_request):
-            qr_value = self.qris_pm.get_qr_code_value(1000, 'Order 00042', '', self.company.currency_id.id, False)
+            result = self.qris_electronic_payment.start_payment(1000, self.company.currency_id.id, {"order_number": "00042"})
 
-        self.assertEqual(qr_value, qris_content)
+        self.assertEqual(result['qr_code'], qris_content)
 
     def test_tour_qris_payment_fail(self):
         """ Add products, show QR code and confirm. When confirming, the result will be status
