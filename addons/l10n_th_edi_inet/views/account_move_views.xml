@@ -11,6 +11,11 @@
                         string="Send to INET"
                         groups="account.group_account_invoice"
                         invisible="state != 'posted' or l10n_th_edi_state not in ('ready_to_send', 'error', 'processing', 'unknown')"/>
+                <button name="action_l10n_th_edi_inet_update_rd_state"
+                        type="object"
+                        string="Update RD Status"
+                        groups="account.group_account_invoice"
+                        invisible="l10n_th_edi_rd_state not in ('waiting', 'sending', 'in_review') or not l10n_th_edi_inet_transaction_code"/>
             </header>
             <xpath expr="//page[@id='other_tab']" position="after">
                 <page id="l10n_th_edi_tab"
@@ -64,6 +69,12 @@
                         class="btn-link"
                         groups="account.group_account_invoice"
                         invisible="state != 'posted' or l10n_th_edi_state not in ('ready_to_send', 'error', 'processing', 'unknown')"/>
+                <button name="action_l10n_th_edi_inet_update_rd_state"
+                        type="object"
+                        string="Update RD Status"
+                        class="btn-link"
+                        groups="account.group_account_invoice"
+                        invisible="l10n_th_edi_rd_state not in ('waiting', 'sending', 'in_review') or not l10n_th_edi_inet_transaction_code"/>
             </xpath>
         </field>
     </record>

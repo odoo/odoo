@@ -207,6 +207,10 @@ class L10nThEdiInetDocument(models.AbstractModel):
         else:
             self._l10n_th_edi_inet_update_rd_state(response)
 
+    def action_l10n_th_edi_inet_update_rd_state(self):
+        for document in self:
+            document._l10n_th_edi_inet_fetch_rd_state()
+
     @api.model
     def _cron_l10n_th_edi_inet_update_rd_states(self):
         """ Fallback for the webhooks that did not reach Odoo. """
