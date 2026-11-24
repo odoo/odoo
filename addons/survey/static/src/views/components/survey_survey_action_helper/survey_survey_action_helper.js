@@ -1,5 +1,5 @@
 import { useService } from '@web/core/utils/hooks';
-import { Component, onWillStart } from '@odoo/owl';
+import { Component, onWillStart, proxy } from '@odoo/owl';
 
 export class SurveySurveyActionHelper extends Component {
     static template = 'survey.SurveySurveyActionHelper';
@@ -8,12 +8,20 @@ export class SurveySurveyActionHelper extends Component {
         this.orm = useService('orm');
         this.action = useService('action');
 
+        this.state = proxy({ surveyTemplateData: {} });
+
         onWillStart(async () => {
-            this.surveyTemplateData = await this.orm.call(
-                'survey.survey',
-                'get_survey_templates_data',
-                []
-            );
+            this.state.surveyTemplateData = await this.orm
+                .cache({
+                    type: 'disk',
+                    update: 'always',
+                    callback: (result, hasChanged) => {
+                        if (hasChanged) {
+                            this.state.surveyTemplateData = result;
+                        }
+                    },
+                })
+                .call('survey.survey', 'get_survey_templates_data', []);
         });
     }
 
