@@ -9,6 +9,7 @@ import { buildSampleORM } from "./sample_server";
 
 import {
     EventBus,
+    onWillDestroy,
     onWillStart,
     onWillUnmount,
     onWillUpdateProps,
@@ -42,6 +43,8 @@ export class Model {
      */
     constructor(env, params, services) {
         this.env = env;
+        /** @type {(() => boolean) | undefined} whether the component using the model is alive */
+        this.isAlive = params.isAlive;
         this.orm = services.orm;
         this.bus = new EventBus();
         this.isReady = signal(false);
@@ -130,11 +133,15 @@ export function useModel(ModelClass, params, options = {}) {
         services[key] = useService(key);
     }
     services.orm = services.orm || useService("orm");
+    if (!("isAlive" in params)) {
+        params.isAlive = () => !scope.isDestroyed();
+    }
     const model = new ModelClass(env, params, services);
 
     const onUpdate = () => scope.render(true);
     model.bus.addEventListener("update", onUpdate);
     onWillUnmount(() => model.bus.removeEventListener("update", onUpdate));
+    onWillDestroy(() => model.bus.trigger("WILL_DESTROY"));
 
     onWillStart(async () => {
         await options.beforeFirstLoad?.();
@@ -173,6 +180,7 @@ export function useModelWithSampleData(ModelClass, params, options = {}) {
     const onUpdate = () => scope.render(true);
     model.bus.addEventListener("update", onUpdate);
     onWillUnmount(() => model.bus.removeEventListener("update", onUpdate));
+    onWillDestroy(() => model.bus.trigger("WILL_DESTROY"));
 
     const globalState = compProps.globalState || {};
     const localState = compProps.state || {};
