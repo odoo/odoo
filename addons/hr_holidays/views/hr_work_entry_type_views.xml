@@ -52,6 +52,8 @@
                     <group>
                         <group name="leave_validation" id="time_off_requests" string="Time Off Requests">
                             <field name="leave_validation_type" string="Approval" widget="radio"/>
+                            <field name="pool_id" options="{'no_create': True}"/>
+                            <field name="pool_sequence" invisible="not pool_id"/>
                         </group>
                         <group name="allocation_validation" id="allocation_requests" string="Allocation">
                             <field name="requires_allocation" string="Requires Allocation"/>
