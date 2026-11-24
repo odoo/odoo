@@ -545,7 +545,8 @@ class MrpWorkorder(models.Model):
             productions_to_update = self.production_id.filtered(lambda p: p.state != 'done' and not p.bom_id.continuous)
             productions_to_update.qty_producing = values['qty_produced']
             if not self.env.context.get('bypass_change_producing') and not workorder.production_bom_id.continuous:
-                productions_to_update._change_producing()
+                for production in productions_to_update:
+                    production._change_producing()
         for workorder in workorders_with_new_wc:
             workorder.duration_expected = workorder._get_duration_expected()
             if workorder.date_start:
