@@ -5,7 +5,7 @@
             <field name="name">Field Recycle Record List</field>
             <field name="model">data_recycle.record</field>
             <field name="arch" type="xml">
-                <list js_class="data_recycle_list" sample="1" create="0" export_xlsx="0">
+                <list js_class="data_recycle_list" sample="1" create="0" export_xlsx="0" action="action_open_original_record" type="object">
                     <header>
                         <button icon="check" name="action_validate" type="object" string="Validate" class="btn-secondary"/>
                         <button icon="close" name="action_discard" type="object" string="Archive Suggestions" class="btn-secondary"/>
