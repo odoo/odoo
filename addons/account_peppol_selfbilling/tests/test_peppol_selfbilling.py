@@ -1,4 +1,5 @@
 from odoo import Command
+from odoo.exceptions import UserError
 from odoo.tests.common import tagged, freeze_time
 from odoo.addons.account_peppol.tests.test_peppol_messages import TestPeppolMessageCommon, FAKE_UUID
 
@@ -67,3 +68,22 @@ class TestPeppolSelfBilling(TestPeppolMessageCommon):
             }],
         )
         self.assertTrue(bool(vendor_bill.ubl_cii_xml_id))
+
+    def test_delete_self_billed_invoices(self):
+        """Sent self-billed invoices cannot be deleted, received ones can, like vendor bills."""
+        def create_move(move_type, journal):
+            return self.env['account.move'].create({
+                'move_type': move_type,
+                'journal_id': journal.id,
+                'partner_id': self.valid_partner.id,
+            })
+
+        sale_journal = self.company_data['default_journal_sale']
+        sale_journal.is_self_billing = True
+        sent_invoice = create_move('in_invoice', self.self_billing_journal)
+        received_invoice = create_move('out_invoice', sale_journal)
+        (sent_invoice + received_invoice).peppol_move_state = 'done'
+
+        with self.assertRaisesRegex(UserError, "sent via Peppol"):
+            sent_invoice._unlink_except_peppol_sent()
+        received_invoice._unlink_except_peppol_sent()

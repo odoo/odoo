@@ -32,6 +32,13 @@ class AccountMove(models.Model):
             and self.journal_id.is_self_billing
         )
 
+    def _is_peppol_outgoing(self):
+        # EXTENDS 'account_peppol'
+        # Self-billed invoices are sent from a purchase journal and received in a sale journal
+        if self.journal_id.is_self_billing:
+            return self.is_purchase_document(include_receipts=True)
+        return super()._is_peppol_outgoing()
+
     def _get_last_sequence_domain(self, relaxed=False):
         # EXTENDS 'account'
         where_string, param = super()._get_last_sequence_domain(relaxed)
