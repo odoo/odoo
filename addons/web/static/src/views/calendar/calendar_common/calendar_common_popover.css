@@ -83,9 +83,9 @@
 
 .o_calendar_popover.o_calendar_color .o_popover_header {
     --CwPopover-color-subtle: color-mix(in srgb, var(--o-white) 55%, var(--o-calendar-color, var(--o-colorlist-color)));
-    --card-border-color: var(--CwPopover-color-subtle);
-    background-color: hsl(from var(--CwPopover-color-subtle) h s min(l + 10, 100));
-    color: var(--o-black);
+    --card-border-color: var(--o-colorlist-bg-subtle, var(--CwPopover-color-subtle));
+    background-color: var(--o-colorlist-bg-subtle, hsl(from var(--CwPopover-color-subtle) h s min(l + 10, 100)));
+    color: var(--o-colorlist-text-emphasis, var(--o-black));
 }
 
 /* Multi create (TODO: move) */

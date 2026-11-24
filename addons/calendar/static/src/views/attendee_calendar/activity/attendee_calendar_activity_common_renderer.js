@@ -3,7 +3,7 @@ import { AttendeeCalendarCommonRenderer } from "@calendar/views/attendee_calenda
 import { patch } from "@web/core/utils/patch";
 import { renderToFragment } from "@web/core/utils/render";
 import { useCalendarPopover } from "@web/views/calendar/hooks/calendar_popover_hook";
-import { getColor } from "@web/views/calendar/utils";
+import { getBadgeColorClass, getColor } from "@web/views/calendar/utils";
 import { useService } from "@web/core/utils/hooks";
 
 /**
@@ -46,12 +46,13 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
             return super.eventClassNames(...arguments);
         }
         const record = this.props.model.activities[event.id];
+        const color = record && (getColor(record.colorIndex) || 0);
         return [
             "o_event",
             "o_activity_event",
             "o_event_allday",
             ...(record
-                ? ["o_calendar_color", `o_colorlist_color_${getColor(record.colorIndex) || 0}`]
+                ? ["o_calendar_color", `o_colorlist_color_${color}`, getBadgeColorClass(color)]
                 : []),
         ];
     },
@@ -109,7 +110,7 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
             },
             `o_calendar_popover o_calendar_activity_popover card o_calendar_color o_colorlist_color_${
                 getColor(activityEvent.colorIndex) || 0
-            }`
+            } ${getBadgeColorClass(getColor(activityEvent.colorIndex) || 0)}`
         );
     },
 

@@ -30,9 +30,9 @@
     }
 
     &.o_calendar_color {
-        --o-calendar-popover-color: var(--o-calendar-color);
-        --o-calendar-popover-color--subtle: color-mix(in srgb, var(--o-white) 55%, var(--o-calendar-popover-color));
+        --o-calendar-popover-color: var(--o-colorlist-border, var(--o-calendar-color));
+        --o-calendar-popover-color--subtle: var(--o-colorlist-bg-subtle, color-mix(in srgb, var(--o-white) 55%, var(--o-calendar-color)));
 
-        color: var(--o-black);
+        color: var(--o-colorlist-text-emphasis, var(--o-black));
     }
 }

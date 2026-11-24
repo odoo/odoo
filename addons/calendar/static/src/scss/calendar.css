@@ -85,12 +85,7 @@
     }
 
     &.o_activity_event {
-        /* For the user activity events, use the user color with */
-        /* a slight change so that activities can be spotted */
-        /* more easily in the calendar view. */
-        &.o_calendar_color {
-            --fc-event-color: color-mix(in srgb, var(--o-white) 80%, var(--o-colorlist-color));
-        }
+        border-style: dashed;
     }
 
     &.o_calendar_event_draft::after {

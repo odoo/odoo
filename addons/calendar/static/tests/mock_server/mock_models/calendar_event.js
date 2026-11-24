@@ -21,6 +21,7 @@ export class CalendarEvent extends models.ServerModel {
     user_id = fields.Many2one({ default: serverState.userId });
     partner_id = fields.Many2one({ default: serverState.partnerId });
     partner_ids = fields.Many2many({ default: [[6, 0, [serverState.partnerId]]] });
+    calendar_color = fields.Integer();
 
     has_access() {
         return true;

@@ -347,6 +347,9 @@ export class CalendarCommonRenderer extends Component {
             if (typeof getColor(record.colorIndex) !== "string") {
                 classesToAdd.push("o_calendar_color");
             }
+            if (record.badgeColorClass) {
+                classesToAdd.push(record.badgeColorClass);
+            }
 
             if (record.isHatched) {
                 classesToAdd.push("o_event_hatched");

@@ -65,7 +65,8 @@ export class CalendarFilterSection extends Component {
 
     getFilterColor(filter) {
         const color = filter.colorIndex !== null && getColor(filter.colorIndex);
-        return typeof color === "number" ? "o_calendar_filter_color" : "";
+        const { badgeColorClass = "" } = filter;
+        return typeof color === "number" ? `o_calendar_filter_color ${badgeColorClass}` : "";
     }
 
     getFilterStyle(filter) {

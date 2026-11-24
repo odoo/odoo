@@ -1,3 +1,5 @@
+import { ColorList } from "@web/core/colorlist/colorlist";
+
 export function convertRecordToEvent(record, forceAllDay = false) {
     const allDay =
         forceAllDay || record.isAllDay || record.end.diff(record.start, "hours").hours >= 24;
@@ -52,6 +54,12 @@ export function getColor(key) {
 export function getPaletteColor(key) {
     const color = getColor(key);
     return typeof color === "string" ? "" : `var(--o-colors-${color || 0})`;
+}
+
+export function getBadgeColorClass(colorIndex) {
+    return Number.isInteger(colorIndex) && colorIndex >= 0 && colorIndex < ColorList.COLORS.length
+        ? `o_badge_color_${colorIndex}`
+        : "";
 }
 
 /**
