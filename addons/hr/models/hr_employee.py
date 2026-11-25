@@ -503,6 +503,10 @@ class HrEmployee(models.Model):
                 first_id = str(ordered[0][0])
                 if new_salary_distribution[first_id]['amount_is_percentage']:
                     new_salary_distribution[first_id]['amount'] += removed_percentage
+                elif len(ordered) > 1 and not added_ids:
+                    # Only fixed amounts are left: the last account of the Salary Allocation gets the rest of the salary.
+                    last_id = str(max(ordered, key=lambda x: x[1].get('sequence', 0))[0])
+                    new_salary_distribution[last_id] = dict(new_salary_distribution[last_id], amount=100.0, amount_is_percentage=True)
 
             # Add new entries with remaining %
             total_allocated = sum(d['amount'] for d in new_salary_distribution.values() if d['amount_is_percentage'])
@@ -536,12 +540,16 @@ class HrEmployee(models.Model):
                 is_percentage = ba_values.get('amount_is_percentage', True)
                 if is_percentage and (not isinstance(amount, (float, int)) or not (0 <= amount <= 100)):
                     raise ValidationError(self.env._("Each amount percentage must be a number between 0 and 100."))
+                if not is_percentage and (not isinstance(amount, (float, int)) or amount <= 0):
+                    raise ValidationError(self.env._("Each fixed amount must be greater than 0."))
                 if is_percentage:
                     check_total = True
                     total += amount
 
             if check_total and not float_is_zero(total - 100.0, precision_digits=4):
                 raise ValidationError(self.env._("Total salary distribution on bank accounts must be exactly 100%."))
+            if len(dist) > 1 and not check_total:
+                raise ValidationError(self.env._("At least one bank account must receive a percentage of the remaining salary."))
 
     @api.model
     def _create(self, data_list):
@@ -3388,7 +3396,7 @@ class HrEmployee(models.Model):
                 employee.primary_bank_account_id = False
 
     def get_accounts_with_fixed_allocations(self):
-        """Return the bank accounts receiving a fixed amount (not a percentage) of the salary.
+        """Return the bank accounts receiving a fixed amount (not a percentage) of the salary, in their Salary Allocation order.
 
         Based on ``salary_distribution`` (``{str(bank_account_id): {'sequence',
         'amount', 'amount_is_percentage'}}``); accounts absent from it count as
@@ -3399,7 +3407,7 @@ class HrEmployee(models.Model):
         self.ensure_one()
         return self.bank_account_ids.filtered(
             lambda a: not self.salary_distribution.get(str(a.id), {}).get('amount_is_percentage', True)
-        )
+        ).sorted(lambda a: self.salary_distribution[str(a.id)].get('sequence', float('inf')))
 
     def get_bank_account_salary_allocation(self, account_id):
         """Return the salary allocation of a bank account from ``salary_distribution``.
