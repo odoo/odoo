@@ -27,7 +27,7 @@
                                         <td t-esc="defaultCashDetails.name"/>
                                         <td t-esc="env.pos.format_currency(defaultCashDetails.amount)"/>
                                         <td class="flex" t-on-input="(event) => this.handleInputChange(defaultCashDetails.id, event)">
-                                            <input class="pos-input" t-ref="closingCashInput"/>
+                                            <input class="pos-input" t-ref="closingCashInput" t-on-keypress="_onAmountKeypress" />
                                             <div class="button icon" t-on-click="openDetailsPopup">
                                                 <i class="fa fa-calculator" role="img" title="Open the money details popup"/>
                                             </div>
