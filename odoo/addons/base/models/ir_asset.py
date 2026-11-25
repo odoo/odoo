@@ -200,10 +200,9 @@ class IrAsset(models.Model):
             self._process_path(bundle, asset.directive, asset.target, asset.path, asset_paths, seen, addons, installed, bundle_start_index, **assets_params)
 
         # 2. Process all addons' manifests.
-        for addon in addons:
-            for command in Manifest.for_addon(addon)._Manifest__manifest_cached['assets'].get(bundle, ()):
-                directive, target, path_def = self._process_command(command)
-                self._process_path(bundle, directive, target, path_def, asset_paths, seen, addons, installed, bundle_start_index, **assets_params)
+        for command in asset_paths.get_manifest_commands(bundle, addons):
+            directive, target, path_def = self._process_command(command)
+            self._process_path(bundle, directive, target, path_def, asset_paths, seen, addons, installed, bundle_start_index, **assets_params)
 
         # 3. Process the rest of 'ir.asset' records
         for asset in assets.filtered(lambda a: a.sequence >= DEFAULT_SEQUENCE):
@@ -428,6 +427,17 @@ class AssetPaths:
     def __init__(self):
         self.list = []
         self.memo = set()
+        self.manifest_assets = None
+
+    def get_manifest_commands(self, bundle, addons):
+        """Returns the commands of the addons' manifests for the given bundle, in addons order."""
+        if self.manifest_assets is None or self.manifest_assets[0] != addons:
+            commands_by_bundle = {}
+            for addon in addons:
+                for name, commands in Manifest.for_addon(addon)._Manifest__manifest_cached['assets'].items():
+                    commands_by_bundle.setdefault(name, []).extend(commands)
+            self.manifest_assets = (list(addons), commands_by_bundle)
+        return self.manifest_assets[1].get(bundle, ())
 
     def index(self, path, bundle):
         """Returns the index of the given path in the current assets list."""
