@@ -22,6 +22,22 @@ from odoo.tools.misc import clean_context, format_date, format_duration
 from odoo.tools.translate import _
 
 
+def _hours_per_day(intervals):
+    """Sum the hours of timezone-aware intervals day by day, splitting them at midnight.
+
+    :return: ``{date: hours}``
+    :rtype: defaultdict
+    """
+    result = defaultdict(float)
+    for start, stop, _meta in intervals:
+        while start < stop:
+            midnight = datetime.combine(start.date() + timedelta(days=1), time.min, tzinfo=start.tzinfo)
+            end_of_day = min(stop, midnight)
+            result[start.date()] += (end_of_day - start).total_seconds() / 3600
+            start = end_of_day
+    return result
+
+
 def get_employee_from_context(values, context, user_employee_id):
     employee_ids_list = [value[2] for value in values.get('employee_ids', []) if len(value) == 3 and value[0] == Command.SET]
     employee_ids = employee_ids_list[-1] if employee_ids_list else []
@@ -1092,6 +1108,15 @@ class HrLeave(models.Model):
                     days = (leave.request_date_to - leave.request_date_from).days + 1
                     hours_per_day = calendar.hours_per_day if calendar else leave.employee_id.sudo().resource_calendar_id.hours_per_day
                     hours = days * (hours_per_day or HOURS_PER_DAY)
+            elif leave._is_custom_hours_on_duration_based_schedule(calendar):
+                # The attendances of such a schedule only have a duration, their hours are an
+                # arbitrary window centered on 12:00 that the user never sees: count the requested
+                # length instead of its overlap with that window.
+                days, hours = leave._get_custom_hours_duration(
+                    calendar,
+                    domain=domain,
+                    compute_leaves=not leave.work_entry_type_id.include_public_holidays_in_duration,
+                )
             else:
                 work_days_data = work_days_data_mapped[leave.date_from, leave.date_to, leave.work_entry_type_id.include_public_holidays_in_duration, calendar][leave.employee_id.id]
                 hours, days = work_days_data['hours'], work_days_data['days']
@@ -1115,6 +1140,137 @@ class HrLeave(models.Model):
                 hours = ceil((leave.date_to - leave.date_from).total_seconds()) / 3600
             result[leave.id] = (days, hours)
         return result
+
+    def _is_custom_hours_on_duration_based_schedule(self, calendar):
+        """Tell whether the request is an absence in hours on a schedule made of durations only.
+
+        The attendances of such a schedule name no clock hour: their window centered on 12:00 is
+        not shown to the user, so the request counts its own length (see
+        :meth:`_get_custom_hours_duration`) and not its overlap with that window.
+
+        :param calendar: ``resource.calendar`` the duration is counted on
+        :rtype: bool
+        """
+        self.ensure_one()
+        work_entry_type = self.work_entry_type_id
+        return (work_entry_type.count_as == 'absence' and work_entry_type.request_unit == 'hour'
+                and work_entry_type.count_days_as != 'calendar'
+                and bool(calendar) and not calendar._is_flexible() and calendar._is_duration_based())
+
+    def _get_custom_hours_availability(self, calendar, tz, first_day, last_day, domain=None, compute_leaves=True):
+        """Hours the schedule leaves to an absence each day, on a duration based schedule.
+
+        A day offers the hours the schedule expects on it minus the ones that other leaves
+        already take. The attendances are the whole days ones, not clipped to the request.
+
+        :param calendar: the duration based ``resource.calendar`` of the employee
+        :param tz: ``ZoneInfo`` of the employee
+        :param datetime first_day: timezone-aware start of the first day
+        :param datetime last_day: timezone-aware end of the last day
+        :param domain: leave domain of the leaves deducted, see ``_leave_intervals_batch``
+        :param bool compute_leaves: ``False`` to deduct no leave
+        :return: ``({day: available hours}, leave intervals deducted)``
+        :rtype: tuple
+        """
+        self.ensure_one()
+        resource = self.employee_id.resource_id
+        resources_per_tz = {tz: resource}
+        leave_intervals = Intervals([])
+        if compute_leaves:
+            # the work intervals leave out the attendances counted as an absence, which an employee
+            # may not read: ask for them with a domain matching no leave, those are deducted below
+            attendance_intervals = calendar._work_intervals_batch(
+                first_day, last_day, resources_per_tz, domain=[('id', '=', 0)])[resource.id]
+            leave_intervals = calendar._leave_intervals_batch(
+                first_day, last_day, resources_per_tz, domain)[resource.id]
+        else:
+            attendance_intervals = calendar._attendance_intervals_batch(
+                first_day, last_day, resources_per_tz)[resource.id]
+        capacity_hours = _hours_per_day(attendance_intervals)
+        # merged, so that overlapping leaves (e.g. a public holiday) are not counted twice
+        taken_hours = _hours_per_day(Intervals(list(leave_intervals)))
+        available_hours = defaultdict(float, {
+            day: hours - min(taken_hours[day], hours) for day, hours in capacity_hours.items()
+        })
+        return available_hours, leave_intervals
+
+    def _get_custom_hours_duration(self, calendar, domain=None, compute_leaves=True):
+        """Duration of an absence in hours of an employee whose schedule is duration based.
+
+        Each day counts the requested length (without the time overlapping a public holiday or
+        another leave when ``compute_leaves``), capped at the hours the schedule leaves available
+        that day (see :meth:`_get_custom_hours_availability`). A day without attendance is never
+        counted.
+
+        :param calendar: the duration based ``resource.calendar`` of the employee
+        :param domain: leave domain of the leaves deducted, see ``_leave_intervals_batch``
+        :param bool compute_leaves: ``False`` to deduct no leave
+        :return: ``(number_of_days, number_of_hours)``
+        :rtype: tuple
+        """
+        self.ensure_one()
+        tz = ZoneInfo(self.employee_id._get_tz(date=self.date_from))
+        date_from = self.date_from.replace(tzinfo=UTC).astimezone(tz)
+        date_to = self.date_to.replace(tzinfo=UTC).astimezone(tz)
+        available_hours, leave_intervals = self._get_custom_hours_availability(
+            calendar, tz,
+            datetime.combine(date_from.date(), time.min, tzinfo=tz),
+            datetime.combine(date_to.date() + timedelta(days=1), time.min, tzinfo=tz),
+            domain=domain, compute_leaves=compute_leaves)
+
+        requested = Intervals([(date_from, date_to, self)]) - leave_intervals
+        hours = 0.0
+        worked_intervals = []
+        for day, requested_hours in _hours_per_day(requested).items():
+            day_hours = min(requested_hours, available_hours[day])
+            if day_hours:
+                hours += day_hours
+                day_start = datetime.combine(day, time.min, tzinfo=tz)
+                worked_intervals.append((day_start, day_start + timedelta(hours=day_hours), self))
+        days = calendar._get_attendance_intervals_days_data(worked_intervals)['days']
+        return days, hours
+
+    def _plan_custom_hours_end(self, hours, calendar, compute_leaves=True):
+        """End of an absence in hours of ``hours`` from ``date_from``, on a duration based schedule.
+
+        The inverse of :meth:`_get_custom_hours_duration`: the first day counts from
+        ``date_from`` on, the next ones from their start, each up to the hours left available
+        that day, without the time of other leaves.
+
+        :param float hours: duration to give to the request
+        :param calendar: the duration based ``resource.calendar`` of the employee
+        :param bool compute_leaves: ``False`` to deduct no leave
+        :return: the timezone-aware end, ``None`` if the hours do not fit in the days of the request
+        :rtype: datetime | None
+        """
+        self.ensure_one()
+        tz = ZoneInfo(self.employee_id._get_tz(date=self.date_from))
+        date_from = self.date_from.replace(tzinfo=UTC).astimezone(tz)
+        domain = [('count_as', '=', 'absence'),
+                  '|', ('holiday_id', '=', False),
+                  ('holiday_id', 'not in', (self | self.source_leave_id).ids)]
+        first_day = datetime.combine(self.request_date_from, time.min, tzinfo=tz)
+        last_day = datetime.combine(self.request_date_to + timedelta(days=1), time.min, tzinfo=tz)
+        available_hours, leave_intervals = self._get_custom_hours_availability(
+            calendar, tz, first_day, last_day, domain=domain, compute_leaves=compute_leaves)
+
+        remaining = hours
+        day_start = first_day
+        while day_start < last_day:
+            day_end = datetime.combine(day_start.date() + timedelta(days=1), time.min, tzinfo=tz)
+            free_intervals = list(Intervals([(max(day_start, date_from), day_end, self)]) - leave_intervals)
+            counted_hours = min(
+                sum((stop - start).total_seconds() / 3600 for start, stop, _meta in free_intervals),
+                available_hours[day_start.date()])
+            if float_compare(remaining, counted_hours, precision_digits=2) <= 0:
+                for start, stop, _meta in free_intervals:
+                    free_hours = (stop - start).total_seconds() / 3600
+                    if float_compare(remaining, free_hours, precision_digits=2) <= 0:
+                        return start + timedelta(hours=remaining)
+                    remaining -= free_hours
+            remaining -= counted_hours
+            day_start = day_end
+        return None
 
     @api.depends('date_from', 'date_to', 'resource_calendar_id')
     def _compute_duration(self):
@@ -1316,6 +1472,14 @@ class HrLeave(models.Model):
             worked_hours = calendar.get_work_hours_count(days_start, days_end, compute_leaves=compute_leaves)
             if leave._plans_hours_on_the_clock(worked_hours):
                 request_date_hour_to = leave.date_from + relativedelta(hours=leave.number_of_hours)
+            elif leave._is_custom_hours_on_duration_based_schedule(calendar):
+                # the window of the attendances is not real: plan the hours like they are counted
+                request_date_hour_to = leave._plan_custom_hours_end(
+                    leave.number_of_hours, calendar, compute_leaves=compute_leaves)
+                if not request_date_hour_to:
+                    raise ValidationError(self.env._(
+                        "A duration of %s per day does not fit in the working time of the selected dates.",
+                        format_duration(leave.number_of_hours)))
             else:
                 request_date_hour_to = calendar.plan_hours(
                     leave.number_of_hours,
