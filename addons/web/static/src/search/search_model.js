@@ -1,5 +1,5 @@
 import { computed, EventBus, proxy, signal, toRaw, usePlugin } from "@odoo/owl";
-import { router } from "@web/core/browser/router";
+import { location } from "@web/core/browser/browser";
 import { makeContext } from "@web/core/context";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { Domain } from "@web/core/domain";
@@ -72,6 +72,12 @@ const { DateTime } = luxon;
  */
 
 const DEFAULT_GROUPBY_ID = -1;
+
+/**
+ * Length above which a URL may be refused by some browsers, servers or proxies.
+ * The search is not written in the URL above it.
+ */
+export const MAX_SAFE_URL_LENGTH = 2000;
 
 /** @todo rework doc */
 // interface SectionCommon { // check optional keys
@@ -334,6 +340,7 @@ export class SearchModel extends EventBus {
 
         if (config.state) {
             this._importState(config.state);
+            this.isSearchInUrl = Boolean(config.state.isSearchInUrl);
             this.__legacyParseSearchPanelArchAnyway(searchViewDescription, searchViewFields);
             this.display = this._getDisplay(config.display);
             this._reconciliateFavorites();
@@ -381,11 +388,14 @@ export class SearchModel extends EventBus {
         const defaultFavoriteId = this._createGroupOfFavorites(this.irFilters || []);
 
         // Activate filters if necessary (from url or saved filters)
-        const { domain: urlDomain, groupBy: urlGroupBy, orderBy: urlOrderBy } = router.current;
+        const { domain: urlDomain, groupBy: urlGroupBy, orderBy: urlOrderBy } =
+            config.urlSearch || {};
         let useUrl = urlDomain || urlGroupBy || urlOrderBy;
         if (useUrl) {
             useUrl = this._tryApplySharedFilters(urlDomain, urlGroupBy, urlOrderBy); // Returns False if no filters could be activated
         }
+        // the search is written in the URL once it differs from the default one
+        this.isSearchInUrl = Boolean(useUrl);
         if (!useUrl) {
             const activateFavorite = "activateFavorite" in config ? config.activateFavorite : true;
             this._activateDefaultSearchItems(activateFavorite ? defaultFavoriteId : null);
@@ -736,7 +746,34 @@ export class SearchModel extends EventBus {
     exportState() {
         const state = { query: [], searchItems: {} };
         execute(mapToArray, this, state);
+        state.isSearchInUrl = this.isSearchInUrl;
         return state;
+    }
+
+    /**
+     * Returns the current search as written in the URL of the action (same
+     * parameters as generateQueryString), so that a reload or a copied URL
+     * restores it. Keys are undefined, i.e. removed from the URL, as long as
+     * the search is the default one, or when it would make the URL too long.
+     * @returns {{ domain?: string, groupBy?: string, orderBy?: string }}
+     */
+    getUrlSearchState() {
+        const state = { domain: undefined, groupBy: undefined, orderBy: undefined };
+        if (!this.isSearchInUrl) {
+            return state;
+        }
+        // The search panel is left out: its selection is not restored from the
+        // URL, and some apps (e.g. Documents) already keep it in the URL path.
+        const values = this._getUrlSearchValues({ withSearchPanel: false });
+        const url = new URL(location.href);
+        for (const key in state) {
+            url.searchParams.delete(key);
+        }
+        const query = new URLSearchParams(values).toString();
+        if (url.href.length + query.length + 1 > MAX_SAFE_URL_LENGTH) {
+            return state;
+        }
+        return Object.assign(state, values);
     }
 
     /**
@@ -1408,8 +1445,9 @@ export class SearchModel extends EventBus {
     }
 
     /**
-     * Creates 1 "Shared" filter from URl encoded domain.
-     * @param {string} urlDomain - Uri encoded domain
+     * Creates 1 "Shared" filter from the URL domain.
+     * The router already decodes the query string: values are used as is.
+     * @param {string} urlDomain - domain from the URL
      * @param {{ anyErrors: boolean, anySuccess: boolean }} urlApplyStatus
      */
     _createUrlFilter(urlDomain, urlApplyStatus) {
@@ -1417,11 +1455,10 @@ export class SearchModel extends EventBus {
             return;
         }
         try {
-            const decodedDomain = decodeURIComponent(urlDomain);
             this.createNewFilters([
                 {
                     description: "Shared",
-                    domain: new Domain(decodedDomain).toString(),
+                    domain: new Domain(urlDomain).toString(),
                     name: "sharedDomainFromUrl",
                 },
             ]);
@@ -1433,12 +1470,12 @@ export class SearchModel extends EventBus {
 
     /**
      * Recreates GroupBys (including sub items and order) filter from encoded parameters
-     * @param {string} urlGroupBy - encoded list of fields to group by
+     * @param {string} urlGroupBy - JSON list of fields to group by
      * @param {{ anyErrors: boolean, anySuccess: boolean }} urlApplyStatus
      */
     _createUrlGroupBy(urlGroupBy, urlApplyStatus) {
         try {
-            const decodedGroupBys = urlGroupBy ? JSON.parse(decodeURIComponent(urlGroupBy)) : [];
+            const decodedGroupBys = urlGroupBy ? JSON.parse(urlGroupBy) : [];
             if (decodedGroupBys.length === 0) {
                 return;
             }
@@ -1451,7 +1488,7 @@ export class SearchModel extends EventBus {
 
     /**
      * Recreates ordering logic (either from fields or groupBy)
-     * @param {Object} urlOrderBy - encoded orderBy (can be multiple)
+     * @param {string} urlOrderBy - JSON orderBy (can be multiple)
      * @param {{ anyErrors: boolean, anySuccess: boolean }} urlApplyStatus
      */
     _createUrlOrderBy(urlOrderBy, urlApplyStatus) {
@@ -1459,7 +1496,7 @@ export class SearchModel extends EventBus {
             return;
         }
         try {
-            this.globalOrderBy = JSON.parse(decodeURIComponent(urlOrderBy));
+            this.globalOrderBy = JSON.parse(urlOrderBy);
             const orderByCount = this.globalOrderBy.find((o) => o.name == "__count");
             if (orderByCount) {
                 this.orderByCount = orderByCount.asc ? "Asc" : "Desc";
@@ -1475,20 +1512,34 @@ export class SearchModel extends EventBus {
      * @return {string} eg. "domain=...,&orderBy=...". Can be empty and never start with "?".
      */
     generateQueryString() {
-        const { preFavorite } = this._getIrFilterDescription();
-        const { domain, groupBys, orderBy } = preFavorite; // No need for context, as its only used for groupBys
+        return Object.entries(this._getUrlSearchValues())
+            .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+            .join("&");
+    }
 
-        const queryParts = [];
+    /**
+     * @param {Object} [params]
+     * @param {boolean} [params.withSearchPanel=true]
+     * @returns {{ domain?: string, groupBy?: string, orderBy?: string }} the
+     *  current search, as query parameter values (not encoded)
+     */
+    _getUrlSearchValues({ withSearchPanel = true } = {}) {
+        const { preFavorite } = this._getIrFilterDescription();
+        const { groupBys, orderBy } = preFavorite; // No need for context, as its only used for groupBys
+        const domain = withSearchPanel
+            ? preFavorite.domain
+            : this._getDomain({ raw: true, withGlobal: false, withSearchPanel: false }).toString();
+        const values = {};
         if (domain !== "[]") {
-            queryParts.push(`domain=${encodeURIComponent(domain)}`);
+            values.domain = domain;
         }
         if (groupBys.length > 0) {
-            queryParts.push(`groupBy=${encodeURIComponent(JSON.stringify(groupBys))}`);
+            values.groupBy = JSON.stringify(groupBys);
         }
         if (orderBy.length > 0) {
-            queryParts.push(`orderBy=${encodeURIComponent(JSON.stringify(orderBy))}`);
+            values.orderBy = JSON.stringify(orderBy);
         }
-        return queryParts.join("&");
+        return values;
     }
 
     /**
@@ -2693,6 +2744,7 @@ export class SearchModel extends EventBus {
         if (this.blockNotification) {
             return;
         }
+        this.isSearchInUrl = true;
 
         this._reset();
 

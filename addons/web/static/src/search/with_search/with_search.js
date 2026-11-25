@@ -38,6 +38,10 @@ export const withSearchProps = {
     searchMenuTypes: t.array(t.string()).optional(),
     canOrderByCount: t.boolean().optional(),
     defaultGroupBy: t.array(t.string()).optional(),
+
+    // search written in the URL of the action
+    urlSearch: t.object().optional(),
+    updateUrlSearch: t.function().optional(),
 };
 
 export class WithSearch extends Component {
@@ -71,7 +75,10 @@ export class WithSearch extends Component {
             : null;
         useSubEnv({ searchModel: this.searchModel, searchPanelState });
 
-        useBus(this.searchModel, "update", () => render(this));
+        useBus(this.searchModel, "update", () => {
+            render(this);
+            this.updateUrlSearch();
+        });
         useSetupAction({
             getGlobalState: () => ({
                 searchModel: JSON.stringify(this.searchModel.exportState()),
@@ -94,6 +101,7 @@ export class WithSearch extends Component {
                 delete config.globalState;
             }
             await this.searchModel.load(config);
+            this.updateUrlSearch();
         });
 
         onWillUpdateProps(async (nextProps) => {
@@ -105,5 +113,13 @@ export class WithSearch extends Component {
             }
             await this.searchModel.reload(config);
         });
+    }
+
+    /**
+     * Writes the current search in the URL of the action, if the view is the
+     * main view of an action (see View).
+     */
+    updateUrlSearch() {
+        this.props.updateUrlSearch?.(this.searchModel.getUrlSearchState());
     }
 }

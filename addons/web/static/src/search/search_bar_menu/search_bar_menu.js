@@ -7,6 +7,7 @@ import { registry } from "@web/core/registry";
 import { sortBy } from "@web/core/utils/arrays";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { location } from "@web/core/browser/browser";
+import { MAX_SAFE_URL_LENGTH } from "@web/search/search_model";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { useCommand } from "@web/core/commands/command_hook";
 import { AccordionItem } from "@web/core/dropdown/accordion_item";
@@ -258,10 +259,15 @@ export class SearchBarMenu extends Component {
      * clipboard if possible. This url is parsed to reactivate filters if in route.
      */
     async shareViewUrl() {
-        let shareUrl = location.href;
+        // The URL may already contain the search (see SearchModel.getUrlSearchState)
+        const url = new URL(location.href);
+        for (const key of ["domain", "groupBy", "orderBy"]) {
+            url.searchParams.delete(key);
+        }
+        let shareUrl = url.href;
         const extra = this.env.searchModel.generateQueryString();
         if (extra) {
-            const [base, hash = ""] = location.href.split("#");
+            const [base, hash = ""] = shareUrl.split("#");
             shareUrl = base + (base.includes("?") ? "&" : "?") + extra + (hash ? "#" + hash : "");
         }
 
@@ -279,8 +285,7 @@ export class SearchBarMenu extends Component {
             return;
         }
 
-        const maxSafeUrlLength = 2000; // Chrome v.143. working up to 450000 chars and firefox > 500000 chars
-        if (shareUrl.length < maxSafeUrlLength) {
+        if (shareUrl.length < MAX_SAFE_URL_LENGTH) {
             this.notificationService.add(_t("Link copied to clipboard"), { type: "success" });
         } else {
             this.notificationService.add(

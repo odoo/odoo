@@ -1,5 +1,5 @@
 import { beforeEach, expect, test, waitFor, fill } from "@odoo/hoot";
-import { animationFrame, press, queryAllTexts } from "@odoo/hoot-dom";
+import { animationFrame, press, queryAllTexts, runAllTimers } from "@odoo/hoot-dom";
 import {
     contains,
     defineModels,
@@ -16,12 +16,18 @@ import {
     toggleSearchBarMenu,
     webModels,
     defineActions,
+    getFacetTexts,
+    mountWebClient,
     mountWithCleanup,
+    switchView,
 } from "@web/../tests/web_test_helpers";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { Domain } from "@web/core/domain";
+import { parseSearchQuery } from "@web/core/browser/router";
+import { pick } from "@web/core/utils/objects";
 import { redirect } from "@web/core/utils/urls";
-import { browser } from "@web/core/browser/browser";
+import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
+import { browser, location } from "@web/core/browser/browser";
 import { WebClient } from "@web/webclient/webclient";
 
 class MockPurchaseOrders extends models.Model {
@@ -44,6 +50,14 @@ class MockPurchaseOrders extends models.Model {
 
 const SHARE_KEY = "Share\nALT + SHIFT + H";
 
+/**
+ * Search of an URL query string, as given by the action plugin to the view of
+ * the action loaded from that URL.
+ */
+function fromUrl(query) {
+    return pick(parseSearchQuery(query), "domain", "groupBy", "orderBy");
+}
+
 const { ResCompany, ResPartner, ResUsers } = webModels;
 defineModels({ MockPurchaseOrders, ResCompany, ResPartner, ResUsers });
 
@@ -59,8 +73,11 @@ beforeEach(() => {
 });
 
 test("URL with single filter creates filter with domain", async () => {
-    redirect("?domain=" + encodeURIComponent('[["state", "=", "sent"]]'));
-    const searchBar = await mountWithSearch(SearchBar, { resModel: "mock.purchase.order" });
+    const urlSearch = fromUrl("?domain=" + encodeURIComponent('[["state", "=", "sent"]]'));
+    const searchBar = await mountWithSearch(SearchBar, {
+        resModel: "mock.purchase.order",
+        urlSearch,
+    });
 
     expect(`.o_searchview .o_searchview_facet`).toHaveCount(1);
     expect(searchBar.env.searchModel.domain).toEqual([["state", "=", "sent"]]);
@@ -76,8 +93,11 @@ test("URL with single filter creates filter with domain", async () => {
 
 test("URL with multiple filters creates shared filter", async () => {
     const domain = '["&", ["state", "=", "sent"], ["partner_id", "ilike", "me"]]';
-    redirect("?domain=" + encodeURIComponent(domain));
-    const searchBar = await mountWithSearch(SearchBar, { resModel: "mock.purchase.order" });
+    const urlSearch = fromUrl("?domain=" + encodeURIComponent(domain));
+    const searchBar = await mountWithSearch(SearchBar, {
+        resModel: "mock.purchase.order",
+        urlSearch,
+    });
     expect(`.o_searchview .o_searchview_facet`).toHaveCount(1); // Only show 1 "shared filter"
     expect(searchBar.env.searchModel.domain).toEqual([
         "&",
@@ -92,8 +112,9 @@ test("URL with multiple filters creates shared filter", async () => {
 });
 
 test("URL with single existing groupBy activates it", async () => {
-    redirect("?groupBy=" + encodeURIComponent('["partner_id"]'));
+    const urlSearch = fromUrl("?groupBy=" + encodeURIComponent('["partner_id"]'));
     const searchBar = await mountWithSearch(SearchBar, {
+        urlSearch,
         resModel: "mock.purchase.order",
         searchMenuTypes: ["groupBy"],
         searchViewId: false,
@@ -103,8 +124,9 @@ test("URL with single existing groupBy activates it", async () => {
 });
 
 test("URL with multiple groupBy (incl. custom), creates and activates single groupBy", async () => {
-    redirect("?groupBy=" + encodeURIComponent('["state", "partner_id"]'));
+    const urlSearch = fromUrl("?groupBy=" + encodeURIComponent('["state", "partner_id"]'));
     const searchBar = await mountWithSearch(SearchBar, {
+        urlSearch,
         resModel: "mock.purchase.order",
         searchMenuTypes: ["groupBy"],
         searchViewId: false,
@@ -118,8 +140,9 @@ test("URL with multiple groupBy (incl. custom), creates and activates single gro
 });
 
 test("URL groupBy with sub-items activated", async () => {
-    redirect("?groupBy=" + encodeURIComponent('["date_order:year"]'));
+    const urlSearch = fromUrl("?groupBy=" + encodeURIComponent('["date_order:year"]'));
     const searchBar = await mountWithSearch(SearchBar, {
+        urlSearch,
         resModel: "mock.purchase.order",
         searchMenuTypes: ["groupBy"],
         searchViewId: false,
@@ -130,8 +153,9 @@ test("URL groupBy with sub-items activated", async () => {
 test("URL with groupBy and orderBy activates ordered groupBy", async () => {
     const encodedgroupBy = encodeURIComponent('["partner_id"]');
     const encodedorderBy = encodeURIComponent('[{"name":"__count", "asc": false}]');
-    redirect("?groupBy=" + encodedgroupBy + "&orderBy=" + encodedorderBy);
+    const urlSearch = fromUrl("?groupBy=" + encodedgroupBy + "&orderBy=" + encodedorderBy);
     const searchBar = await mountWithSearch(SearchBar, {
+        urlSearch,
         resModel: "mock.purchase.order",
         searchMenuTypes: ["groupBy"],
         searchViewId: false,
@@ -147,9 +171,10 @@ test("URL with filter + groupBy + orderBy activates filters", async () => {
     const groupBy = encodeURIComponent('["partner_id"]');
     const orderBy = encodeURIComponent('[{"name":"__count","asc":true}]');
     const url = "?domain=" + domain + "&groupBy=" + groupBy + "&orderBy=" + orderBy;
-    redirect(url);
+    const urlSearch = fromUrl(url);
 
     const searchBar = await mountWithSearch(SearchBar, {
+        urlSearch,
         resModel: "mock.purchase.order",
         searchMenuTypes: ["groupBy"],
         searchViewId: false,
@@ -177,9 +202,10 @@ test("Bad URL with 1 faulty part still gets applied", async () => {
     const groupBy = encodeURIComponent('["partner_id"]');
     const orderBy = encodeURIComponent('[{"name":"__count","as'); // Simulate faulty dict due to copy error
     const url = "?domain=" + domain + "&groupBy=" + groupBy + "&orderBy=" + orderBy;
-    redirect(url);
+    const urlSearch = fromUrl(url);
 
     const searchBar = await mountWithSearch(SearchBar, {
+        urlSearch,
         resModel: "mock.purchase.order",
         searchMenuTypes: ["groupBy"],
         searchViewId: false,
@@ -200,9 +226,10 @@ test("Bad URL reverts to default filters", async () => {
         },
     });
 
-    redirect("?domain=" + encodeURIComponent('[["state", "=",]]'));
+    const urlSearch = fromUrl("?domain=" + encodeURIComponent('[["state", "=",]]'));
 
     const searchBar = await mountWithSearch(SearchBar, {
+        urlSearch,
         resModel: "mock.purchase.order",
         searchMenuTypes: ["filter", "groupBy"],
         searchViewId: false,
@@ -221,9 +248,10 @@ test("Bad URL reverts to default filters", async () => {
 });
 
 test("Good URL does not apply default filters", async () => {
-    redirect("?domain=" + encodeURIComponent('[["state", "=", "sent"]]'));
+    const urlSearch = fromUrl("?domain=" + encodeURIComponent('[["state", "=", "sent"]]'));
 
     const searchBar = await mountWithSearch(SearchBar, {
+        urlSearch,
         resModel: "mock.purchase.order",
         searchViewId: false,
         searchViewArch: `
@@ -295,7 +323,7 @@ test("hotkey sharing available after dialog", async () => {
 test.tags("desktop"); // mountView hides search Bar on mobile (but not mountWithSearch)
 test("URL with single filter triggers RPC and filters record list", async () => {
     const encodedDomain = encodeURIComponent('[["state", "=", "sent"]]');
-    redirect("?domain=" + encodedDomain);
+    const urlSearch = fromUrl("?domain=" + encodedDomain);
     // In this test we focus on the RPC which is triggered by mounting a view list
     let expectedDomain = [["state", "=", "sent"]];
     onRpc(async (params) => {
@@ -305,6 +333,7 @@ test("URL with single filter triggers RPC and filters record list", async () => 
         }
     });
     await mountView({
+        urlSearch,
         type: "list",
         resModel: "mock.purchase.order",
         arch: `<list> <field name="state"/> </list>`,
@@ -492,8 +521,9 @@ test("hotkey sharing keeps a relative date filter relative in the URL", async ()
 });
 
 test("URL with filter keeps the saved favorites available", async () => {
-    redirect("?domain=" + encodeURIComponent('[["state", "=", "sent"]]'));
+    const urlSearch = fromUrl("?domain=" + encodeURIComponent('[["state", "=", "sent"]]'));
     await mountWithSearch(SearchBar, {
+        urlSearch,
         resModel: "mock.purchase.order",
         searchMenuTypes: ["filter", "favorite"],
         searchViewId: false,
@@ -517,4 +547,153 @@ test("URL with filter keeps the saved favorites available", async () => {
     expect(queryAllTexts(".o_favorite_menu .o_menu_item")).toEqual(["My favorite", "Save search"]);
     await toggleMenuItem("My favorite");
     expect(queryAllTexts(".o_searchview_facet")).toEqual(["My favorite"]);
+});
+
+/**
+ * Search written live in the URL of the action
+ */
+
+function defineUrlSearchActions() {
+    defineActions([
+        {
+            id: 1,
+            name: "Purchase Orders",
+            type: "ir.actions.act_window",
+            views: [
+                [false, "list"],
+                [false, "kanban"],
+            ],
+            res_model: "mock.purchase.order",
+        },
+        {
+            id: 2,
+            name: "Other Purchase Orders",
+            type: "ir.actions.act_window",
+            views: [[false, "list"]],
+            res_model: "mock.purchase.order",
+        },
+    ]);
+    MockPurchaseOrders._views = {
+        list: `<list><field name="state"/></list>`,
+        kanban: `
+            <kanban>
+                <templates><t t-name="card"><field name="state"/></t></templates>
+            </kanban>`,
+        search: `
+            <search>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+            </search>`,
+    };
+}
+
+async function getUrlParams() {
+    await runAllTimers();
+    return new URL(location.href).searchParams;
+}
+
+test.tags("desktop");
+test("default search is not written in the URL", async () => {
+    defineUrlSearchActions();
+    redirect("/odoo/action-1");
+    await mountWebClient();
+    expect(getFacetTexts()).toEqual([]);
+    expect([...(await getUrlParams()).keys()]).toEqual([]);
+});
+
+test.tags("desktop");
+test("search changes are written in the URL and kept on view switch", async () => {
+    defineUrlSearchActions();
+    redirect("/odoo/action-1");
+    await mountWebClient();
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Draft");
+    let params = await getUrlParams();
+    expect(new Domain(params.get("domain")).toList()).toEqual([["state", "=", "draft"]]);
+
+    await switchView("kanban");
+    params = await getUrlParams();
+    expect(params.get("view_type")).toBe("kanban");
+    expect(new Domain(params.get("domain")).toList()).toEqual([["state", "=", "draft"]]);
+
+    await contains(".o_facet_remove").click();
+    expect((await getUrlParams()).has("domain")).toBe(false);
+});
+
+test.tags("desktop");
+test("search from the URL is applied, and kept in the URL", async () => {
+    defineUrlSearchActions();
+    redirect("/odoo/action-1?domain=" + encodeURIComponent('[["state", "=", "sent"]]'));
+    await mountWebClient();
+    expect(getFacetTexts()).toEqual(["Shared"]);
+    expect(`.o_data_row`).toHaveCount(2);
+    const params = await getUrlParams();
+    expect(new Domain(params.get("domain")).toList()).toEqual([["state", "=", "sent"]]);
+});
+
+test.tags("desktop");
+test("search from the URL is not applied to the action opened again or afterwards", async () => {
+    defineUrlSearchActions();
+    redirect("/odoo/action-1?domain=" + encodeURIComponent('[["state", "=", "sent"]]'));
+    await mountWebClient();
+    expect(getFacetTexts()).toEqual(["Shared"]);
+
+    await getService("action").doAction(2);
+    await animationFrame();
+    expect(getFacetTexts()).toEqual([]);
+    expect((await getUrlParams()).has("domain")).toBe(false);
+
+    await getService("action").doAction(1, { clearBreadcrumbs: true });
+    await animationFrame();
+    expect(getFacetTexts()).toEqual([]);
+    expect((await getUrlParams()).has("domain")).toBe(false);
+});
+
+test.tags("desktop");
+test("search from the URL is not applied in a dialog", async () => {
+    defineUrlSearchActions();
+    redirect("/odoo/action-1?domain=" + encodeURIComponent('[["state", "=", "sent"]]'));
+    await mountWebClient();
+    getService("dialog").add(SelectCreateDialog, {
+        resModel: "mock.purchase.order",
+        title: "Select",
+    });
+    await animationFrame();
+    expect(`.modal .o_list_view`).toHaveCount(1);
+    expect(`.modal .o_searchview_facet`).toHaveCount(0);
+    expect(`.modal .o_data_row`).toHaveCount(3);
+});
+
+test.tags("desktop");
+test("search too long for the URL is applied but not written", async () => {
+    defineUrlSearchActions();
+    const values = Array.from({ length: 300 }, (_, i) => `"value ${i}"`).join(", ");
+    const domain = `["|", ["state", "=", "sent"], ["state", "in", [${values}]]]`;
+    redirect("/odoo/action-1?domain=" + encodeURIComponent(domain));
+    await mountWebClient();
+    expect(getFacetTexts()).toEqual(["Shared"]);
+    expect(`.o_data_row`).toHaveCount(2);
+    expect((await getUrlParams()).has("domain")).toBe(false);
+});
+
+test.tags("desktop");
+test("search panel selection is not written in the URL", async () => {
+    defineUrlSearchActions();
+    MockPurchaseOrders._views.search = `
+        <search>
+            <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+            <searchpanel>
+                <field name="state" select="one"/>
+            </searchpanel>
+        </search>`;
+    redirect("/odoo/action-1");
+    await mountWebClient();
+    await contains(`.o_search_panel_category_value:contains("Sent") header`).click();
+    expect(`.o_data_row`).toHaveCount(2);
+    expect((await getUrlParams()).has("domain")).toBe(false);
+
+    // a facet is written, without the search panel domain
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Draft");
+    const params = await getUrlParams();
+    expect(new Domain(params.get("domain")).toList()).toEqual([["state", "=", "draft"]]);
 });

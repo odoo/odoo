@@ -1145,8 +1145,15 @@ describe(`new urls`, () => {
         expect(`.o_list_view .o_data_row`).toHaveCount(1);
 
         await animationFrame(); // pushState is debounced
-        expect(location.href).toBe("http://example.com/odoo/action-3");
-        expect.verifySteps(["pushState http://example.com/odoo/action-3"]);
+        // the search is written in the URL
+        const urlWithSearch = `http://example.com/odoo/action-3?domain=${encodeURIComponent(
+            '[("foo", "=", "yop")]'
+        )}`;
+        expect(location.href).toBe(urlWithSearch);
+        expect.verifySteps([
+            "pushState http://example.com/odoo/action-3",
+            `pushState ${urlWithSearch}`,
+        ]);
     });
 
     test(`initial action crashes`, async () => {

@@ -485,6 +485,11 @@ export class View extends Component {
         if (irFilters) {
             wsProps.irFilters = irFilters;
         }
+        // Only the views of an action receive updateActionState. Form views
+        // keep their record in the URL, not a search.
+        if (props.updateActionState && props.type !== "form") {
+            wsProps.updateUrlSearch = props.updateActionState;
+        }
 
         if (descr.display) {
             // FIXME: there's something inelegant here: display might come from

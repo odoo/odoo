@@ -595,6 +595,7 @@ test(`properly push globalState`, async () => {
             {
                 action: 4,
                 displayName: "Partners Action 4",
+                domain: '[("foo", "ilike", "blip")]',
                 view_type: "kanban",
             },
             {
@@ -611,7 +612,8 @@ test(`properly push globalState`, async () => {
     browser.history.back(); // Click on back button
     await animationFrame();
 
-    // The search Model should be restored
+    // The search Model should be restored, and written in the URL
     expect(queryAllTexts(".o_facet_value")).toEqual(["blip"]);
-    expect(location.href).toBe("http://example.com/odoo/action-4");
+    const domain = encodeURIComponent('[("foo", "ilike", "blip")]');
+    expect(location.href).toBe(`http://example.com/odoo/action-4?domain=${domain}`);
 });

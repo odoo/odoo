@@ -65,6 +65,7 @@ class BlankComponent extends Component {
 }
 
 const actionHandlersRegistry = registry.category("action_handlers");
+const URL_SEARCH_KEYS = ["domain", "groupBy", "orderBy"];
 const actionRegistry = registry.category("actions");
 
 /** @typedef {number|false} ActionId */
@@ -666,6 +667,12 @@ export class ActionPlugin extends Plugin {
                     options.props.globalState = state.globalState;
                 }
             }
+            // Search written in the URL (see SearchModel.getUrlSearchState): only
+            // given to the multi-record view of the action loaded from the URL.
+            const urlSearch = pick(state, ...URL_SEARCH_KEYS);
+            if (!state.resId && Object.keys(urlSearch).length) {
+                options.props = { ...options.props, urlSearch };
+            }
         } else if (state.model) {
             if (state.resId || state.view_type === "form") {
                 if (!lastAction.id && lastAction.res_model === state.model) {
@@ -874,7 +881,14 @@ export class ActionPlugin extends Plugin {
         };
         viewProps.updateActionState = (controller, patchState) => {
             const oldState = { ...currentState };
-            Object.assign(currentState, patchState);
+            for (const [key, value] of Object.entries(patchState)) {
+                // an undefined value removes the key from the state (and the URL)
+                if (value === undefined) {
+                    delete currentState[key];
+                } else {
+                    currentState[key] = value;
+                }
+            }
             const changed = !shallowEqual(currentState, oldState);
             if (changed && target !== "new" && controller.isMounted) {
                 this.#pushState();
