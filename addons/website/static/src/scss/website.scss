@@ -1029,6 +1029,11 @@ font[class*='bg-'] {
     position: absolute;
     inset: 0;
 }
+body:not(.editor_enable) .o_background_video[style*="--o-bg-video-poster"]:not([data-need-cookies-approval]) {
+    background-image: var(--o-bg-video-poster);
+    background-position: center;
+    background-size: cover;
+}
 .o_background_video, .parallax {
     @extend %o-we-background-layer-parent;
 }

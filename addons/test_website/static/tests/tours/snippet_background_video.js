@@ -20,6 +20,9 @@ registerWebsitePreviewTour(
                     getThumbnailUrl(videoId) {
                         return "/web/image/mock-thumbnail-url-" + videoId;
                     },
+                    getPosterUrl(videoId) {
+                        return "/web/image/mock-poster-url-" + videoId;
+                    },
                 });
             },
         },

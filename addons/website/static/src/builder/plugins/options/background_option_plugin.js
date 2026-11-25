@@ -3,8 +3,28 @@ import { registry } from "@web/core/registry";
 import { withSequence } from "@html_editor/utils/resource";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { _t } from "@web/core/l10n/translation";
-import { VideoSelector } from "@html_editor/main/media/media_dialog/video_selector";
+import {
+    VideoSelector,
+    VIDEO_PROVIDERS,
+} from "@html_editor/main/media/media_dialog/video_selector";
 import { getBgImageURLFromEl } from "@html_builder/utils/utils_css";
+
+const MIN_POSTER_WIDTH = 640;
+
+function getImageWidth(src) {
+    return new Promise((resolve) => {
+        const imgEl = new Image();
+        imgEl.onload = () => resolve(imgEl.naturalWidth);
+        imgEl.onerror = () => resolve(0);
+        imgEl.src = src;
+    });
+}
+
+async function getPosterUrl({ platform, videoId, options, thumbnailUrl }) {
+    const posterUrl = await VIDEO_PROVIDERS[platform].getPosterUrl(videoId, options);
+    const isLargeEnough = posterUrl && (await getImageWidth(posterUrl)) >= MIN_POSTER_WIDTH;
+    return isLargeEnough ? posterUrl : thumbnailUrl;
+}
 
 function getBgVideoOrParallax(editingElement) {
     // Make sure parallax and video element are considered to be below the
@@ -92,11 +112,12 @@ export class WebsiteBackgroundVideoPlugin extends Plugin {
                     },
                 ],
                 visibleTabs: ["VIDEO_BACKGROUND"],
-                save: (media) => {
+                save: async (media, [videoData]) => {
                     const playerEl = media.querySelector("iframe, video");
                     resolve({
                         src: playerEl.getAttribute("src"),
                         isVideoFile: playerEl.tagName === "VIDEO",
+                        posterUrl: await getPosterUrl(videoData),
                     });
                 },
             });
@@ -104,12 +125,16 @@ export class WebsiteBackgroundVideoPlugin extends Plugin {
         });
     }
     applyReplaceBackgroundVideo({ editingElement, loadResult, params: { forceClean = false } }) {
-        const { src: mediaSrc, isVideoFile } = loadResult || {};
+        const { src: mediaSrc, isVideoFile, posterUrl } = loadResult || {};
         if (!forceClean && !mediaSrc) {
             // No video has been chosen by the user on the media dialog
             return;
         }
         editingElement.classList.toggle("o_background_video", !!mediaSrc);
+        editingElement.style.setProperty(
+            "--o-bg-video-poster",
+            posterUrl ? `url("${posterUrl}")` : ""
+        );
         if (mediaSrc) {
             editingElement.dataset.bgVideoSrc = mediaSrc;
             if (isVideoFile) {

@@ -173,6 +173,15 @@ export class VideoFile {
     }
 
     /**
+     * @see AbstractThirdPartyVideo.getPosterUrl
+     *
+     * @return {string} url
+     */
+    static getPosterUrl() {
+        return "";
+    }
+
+    /**
      * @see AbstractThirdPartyVideo.createPlayerElement
      *
      * @param {Object} videoData @see getVideoUrlData

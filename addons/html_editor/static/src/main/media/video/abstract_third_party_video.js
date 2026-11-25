@@ -61,6 +61,49 @@ export class AbstractThirdPartyVideo {
         return "";
     }
 
+    /**
+     * Returns the url for the poster image of the video, its thumbnail unless
+     * the video provider has a larger image.
+     *
+     * @param {string} videoId
+     * @param {Object} options
+     * @return {string|Promise<string>} url
+     */
+    static getPosterUrl(videoId, options = {}) {
+        return this.getThumbnailUrl?.(videoId, options) || "";
+    }
+
+    /**
+     * The message asking the player to report the playback of the video, for
+     * the video providers whose player is able to.
+     *
+     * @type {Object|null}
+     */
+    static playbackSubscription = null;
+
+    /**
+     * Tells whether the message sent by the player means that it is ready to
+     * receive the playback subscription. A player is always considered ready
+     * once loaded.
+     *
+     * @param {Object} _message
+     * @return {boolean}
+     */
+    static isReadyMessage(_message) {
+        return false;
+    }
+
+    /**
+     * Tells whether the message sent by the player reports that the video is
+     * playing.
+     *
+     * @param {Object} _message
+     * @return {boolean}
+     */
+    static isPlayingMessage(_message) {
+        return false;
+    }
+
     // ------------------------------------------------------
     // Methods common to all video providers are implemented here.
     // ------------------------------------------------------
