@@ -33,6 +33,11 @@ export class CallPreview extends Component {
         "hasSettingsAtBottom?",
     ];
     static components = { ActionList, DeviceSelect };
+    /**
+     * ids of the latest camera and microphone requests, older ones are discarded. An object so
+     * that the template, whose `this` inherits from the component, increments the same ids.
+     */
+    requestIds = { camera: 0, mic: 0 };
 
     setup() {
         this.dialog = useService("dialog");
@@ -222,19 +227,21 @@ export class CallPreview extends Component {
     }
 
     async enableMicrophone() {
+        const micRequestId = ++this.requestIds.mic;
         if (
             this.rtc.microphonePermission !== "granted" &&
             !(await this.rtc.askForBrowserPermission({ audio: true }))
         ) {
             return;
         }
-        this.state.audioStream = await navigator.mediaDevices.getUserMedia({
+        const audioStream = await navigator.mediaDevices.getUserMedia({
             audio: this.store.settings.audioConstraints,
         });
-        if (status(this) === "destroyed") {
-            closeStream(this.state.audioStream);
+        if (status(this) === "destroyed" || micRequestId !== this.requestIds.mic) {
+            closeStream(audioStream);
             return;
         }
+        this.state.audioStream = audioStream;
         if (this.audioRef.el) {
             this.audioRef.el.srcObject = this.state.audioStream;
         }
@@ -242,6 +249,7 @@ export class CallPreview extends Component {
     }
 
     disableMicrophone() {
+        this.requestIds.mic++;
         closeStream(this.state.audioStream);
         this.state.audioStream = null;
         if (this.audioRef.el) {
@@ -267,25 +275,25 @@ export class CallPreview extends Component {
     }
 
     async enableCamera() {
+        const cameraRequestId = ++this.requestIds.camera;
         if (
             this.rtc.cameraPermission !== "granted" &&
             !(await this.rtc.askForBrowserPermission({ video: true }))
         ) {
             return;
         }
-        this.state.videoStream = await navigator.mediaDevices.getUserMedia({
+        const videoStream = await navigator.mediaDevices.getUserMedia({
             video: this.store.settings.cameraConstraints,
         });
+        if (status(this) === "destroyed" || cameraRequestId !== this.requestIds.camera) {
+            closeStream(videoStream);
+            return;
+        }
+        this.state.videoStream = videoStream;
         if (!this.videoRef.el) {
             return;
         }
-        if (status(this) === "destroyed") {
-            closeStream(this.state.videoStream);
-            return;
-        }
-        if (this.videoRef.el) {
-            this.videoRef.el.srcObject = this.state.videoStream;
-        }
+        this.videoRef.el.srcObject = this.state.videoStream;
         this.props.onSettingsChanged?.({ camera: true });
         if (this.store.settings.useBlur) {
             await this.enableBlur();
@@ -293,6 +301,7 @@ export class CallPreview extends Component {
     }
 
     disableCamera() {
+        this.requestIds.camera++;
         closeStream(this.state.videoStream);
         this.state.videoStream = null;
         this.state.blurManager?.close();
@@ -324,10 +333,15 @@ export class CallPreview extends Component {
         if (!this.videoRef.el) {
             return;
         }
+        const cameraRequestId = this.requestIds.camera;
+        this.state.blurManager?.close();
         try {
             this.state.blurManager = await this.rtc.applyBlurEffect(this.state.videoStream);
             this.videoRef.el.srcObject = await this.state.blurManager.stream;
         } catch (_e) {
+            if (cameraRequestId !== this.requestIds.camera) {
+                return;
+            }
             this.notification.add(_e.message, { type: "warning" });
             this.disableBlur();
         }
