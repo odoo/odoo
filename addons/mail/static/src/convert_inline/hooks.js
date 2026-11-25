@@ -4,8 +4,10 @@ import { registry } from "@web/core/registry";
 import { renderToElement, renderToFragment } from "@web/core/utils/render";
 import { EmailHtmlConverter } from "@mail/convert_inline/email_html_converter";
 import { loadIframeBundles, loadIframe } from "@mail/convert_inline/iframe_utils";
+import { useService } from "@web/core/utils/hooks";
 import { Mutex } from "@web/core/utils/concurrency";
 import { DIMENSIONS } from "@mail/convert_inline/core/utils";
+import { _t } from "@web/core/l10n/translation";
 
 /**
  * Hook to handle email HTML conversion in a mail HtmlField.
@@ -193,5 +195,61 @@ export function useEmailHtmlConverter({ Plugins, bundles = [], targetRef, isVisi
          * @param {Number} dimensions.height
          */
         updateLayoutDimensions,
+    };
+}
+
+/**
+ * Return functions ensuring that every SVG and WEBP images are converted
+ * to PNG, and create an attachment for every b64 encoded image, to ensure every
+ * image src is not a data url.
+ * Prevent the user from making additional changes during the operation.
+ * Depends on @see EmailImageFormatPlugin
+ */
+export function useEmailPendingImageTools({
+    getLastChangeId = () => 0,
+    setLastChangeId = () => {},
+} = {}) {
+    const ui = useService("ui");
+    return {
+        prepareSaveWithPendingImages: ({ editor }) => {
+            editor.shared.emailImageFormat.setImageIdentity();
+        },
+        savePendingImages: async ({ content, editor }) => {
+            const operation = editor.shared.operation ?? {
+                next: async (fn) => {
+                    try {
+                        ui.block({ message: _t("Saving email optimized images...") });
+                        await fn();
+                    } finally {
+                        ui.unblock();
+                    }
+                },
+            };
+            await operation.next(
+                async () => {
+                    try {
+                        await editor.shared.emailImageFormat.sanitizeImages(content);
+                    } finally {
+                        const lastChangeIdSnapshot = getLastChangeId();
+                        if (
+                            editor.shared.history.commit() &&
+                            getLastChangeId() === lastChangeIdSnapshot + 1
+                        ) {
+                            // All pending image changes were done in both the
+                            // content clone and the editable, so if an editor
+                            // commit was made during this operation, it is
+                            // reasonable to assume that the changes it contains
+                            // were also done in content, which will be sent to the
+                            // server. Therefore this commit onChange should not
+                            // have increased lastChangeId and the snapshotted value
+                            // is restored, allowing the field to not be dirty after
+                            // updateValue.
+                            setLastChangeId(lastChangeIdSnapshot);
+                        }
+                    }
+                },
+                { canTimeout: false, shouldInterceptClick: true }
+            );
+        },
     };
 }

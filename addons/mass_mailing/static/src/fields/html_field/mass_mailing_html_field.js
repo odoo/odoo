@@ -4,7 +4,7 @@ import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import { MAIN_PLUGINS as MAIN_EDITOR_PLUGINS } from "@html_editor/plugin_sets";
 import { normalizeHTML, parseHTML } from "@html_editor/utils/html";
 import { fixInvalidHTML } from "@html_editor/utils/sanitize";
-import { useEmailHtmlConverter } from "@mail/convert_inline/hooks";
+import { useEmailHtmlConverter, useEmailPendingImageTools } from "@mail/convert_inline/hooks";
 import { MassMailingIframe } from "@mass_mailing/iframe/mass_mailing_iframe";
 import { ThemeSelectorIframe } from "@mass_mailing/themes/theme_selector/theme_selector_iframe";
 import {
@@ -73,6 +73,10 @@ export class MassMailingHtmlField extends HtmlField {
                 ...registry.category("mass-mailing-html-conversion-plugins").getAll(),
             ],
             bundles: ["mass_mailing.assets_iframe_style"],
+        });
+        this.imageTools = useEmailPendingImageTools({
+            getLastChangeId: () => this.lastChangeId,
+            setLastChangeId: (id) => (this.lastChangeId = id),
         });
         this.themeService = useService("mass_mailing.themes");
         Object.assign(this.state, {
@@ -252,6 +256,10 @@ export class MassMailingHtmlField extends HtmlField {
         this.state.key++;
     }
 
+    onEditorReady() {
+        return this.commitChanges();
+    }
+
     /**
      * @override
      */
@@ -287,8 +295,8 @@ export class MassMailingHtmlField extends HtmlField {
             allowTextColumnResize: false,
             record: this.props.record,
             mobileBreakpoint: "md",
-            defaultImageMimetype: "image/png",
-            onEditorReady: () => this.commitChanges(),
+            onEditorReady: () => this.onEditorReady(),
+            measureReference: this.converter.measureReference,
             mediaModalParams: { ...config.mediaModalParams, validateUrl },
         };
     }
@@ -304,9 +312,14 @@ export class MassMailingHtmlField extends HtmlField {
         }
         return {
             ...config,
-            onEditorReady: () => this.commitChanges(),
+            onEditorReady: () => this.onEditorReady(),
+            measureReference: this.converter.measureReference,
             mediaModalParams: { ...config.mediaModalParams, validateUrl },
-            Plugins: [...MAIN_EDITOR_PLUGINS, ...DYNAMIC_FIELD_PLUGINS]
+            Plugins: [
+                ...MAIN_EDITOR_PLUGINS,
+                ...DYNAMIC_FIELD_PLUGINS,
+                ...registry.category("mail-core-plugins").getAll(),
+            ]
                 .filter((P) => !["banner", "prompt", "link"].includes(P.id))
                 .concat(registry.category("mass_mailing-basic-editor-plugins").getAll()),
         };
@@ -414,6 +427,22 @@ export class MassMailingHtmlField extends HtmlField {
             });
         }
         return super.commitChanges(...arguments);
+    }
+
+    /**
+     * @see useEmailPendingImageTools
+     * @override
+     */
+    prepareSaveWithPendingImages() {
+        this.imageTools.prepareSaveWithPendingImages({ editor: this.editor });
+    }
+
+    /**
+     * @see useEmailPendingImageTools
+     * @override
+     */
+    async savePendingImages(content) {
+        await this.imageTools.savePendingImages({ content, editor: this.editor });
     }
 
     /**
