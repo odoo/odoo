@@ -1,7 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import ast
+import json
 
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 from odoo.tools.misc import clean_context
 
 
@@ -39,6 +41,25 @@ class IrFilters(models.Model):
         "CHECK(sort IS NULL OR jsonb_typeof(sort::jsonb) = 'array')",
         "Invalid sort definition",
     )
+
+    @api.constrains('sort', 'model_id')
+    def _check_sort(self):
+        for ir_filter in self:
+            if ir_filter.model_id not in self.env:
+                continue
+            try:
+                sort = json.loads(ir_filter.sort)
+            except (TypeError, ValueError):
+                continue  # invalid JSON is rejected by _check_sort_json
+            Model = self.env[ir_filter.model_id].sudo()
+            for term in sort:
+                try:
+                    Model._order_to_sql(term, Model._as_query(ordered=False))
+                except ValueError:
+                    raise ValidationError(self.env._(
+                        "The filter %(filter_name)s cannot be sorted by \"%(sort_term)s\": this field does not exist or cannot be used for sorting (e.g. One2many and Many2many fields).",
+                        filter_name=ir_filter.name, sort_term=term,
+                    )) from None
 
     def _sanitize_shared_context(self):
         for shared_filter in self.filtered(lambda f: f.user_ids != self.env.user and f.context.strip()):
