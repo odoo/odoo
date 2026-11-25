@@ -984,7 +984,9 @@ class ProjectTask(models.Model):
         return task_mapping, task_dependencies
 
     def _portal_get_parent_hash_token(self, pid):
-        return self.project_id._sign_token(pid)
+        if self.project_id:
+            return self.project_id._sign_token(pid)
+        return super()._portal_get_parent_hash_token(pid)
 
     def _resolve_copied_dependencies(self, copied_tasks):
         task_mapping, task_dependencies = self._create_task_mapping(copied_tasks)
