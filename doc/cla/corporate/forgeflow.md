@@ -27,3 +27,4 @@ Marina Alapont marina.alapont@forgeflow.com https://github.com/MarinaAForgeFlow
 Thiago Mulero thiago.mulero@forgeflow.com https://github.com/ThiagoMForgeFlow
 Laura Cazorla laura.cazorla@forgeflow.com https://github.com/LauraCForgeFlow
 Alex Paris alex.paris@forgeflow.com https://github.com/AlexPForgeFlow
+Laura Valls laura.valls@forgeflow.com https://github.com/LauraVForgeFlow
