@@ -9,11 +9,18 @@
                 <notebook invisible="payment_provider != 'razorpay'">
                     <page name="settings" string="Razorpay">
                         <group>
-                            <field name="razorpay_username" invisible="payment_provider != 'razorpay'" required="payment_provider == 'razorpay'"/>
-                            <field name="razorpay_tid" invisible="payment_provider != 'razorpay'" required="payment_provider == 'razorpay'"/>
-                            <field name="razorpay_api_key" invisible="payment_provider != 'razorpay'" required="payment_provider == 'razorpay'"/>
-                            <field name="razorpay_test_mode" invisible="payment_provider != 'razorpay'" required="payment_provider == 'razorpay'"/>
-                            <field name="razorpay_allowed_payment_modes" invisible="payment_provider != 'razorpay'" required="payment_provider == 'razorpay'"/>
+                            <group>
+                                <field name="razorpay_username" required="payment_provider == 'razorpay'"/>
+                                <field name="razorpay_tid" required="payment_provider == 'razorpay'"/>
+                                <field name="razorpay_api_key" required="payment_provider == 'razorpay'"/>
+                                <field name="razorpay_test_mode"/>
+                                <field name="razorpay_allowed_payment_modes" required="payment_provider == 'razorpay'"/>
+                            </group>
+                            <group>
+                                <div class="d-flex justify-content-end" colspan="2">
+                                    <button name="action_razorpay_test_creds" type="object" string="Test" class="btn-primary text-nowrap" groups="point_of_sale.group_pos_manager"/>
+                                </div>
+                            </group>
                         </group>
                     </page>
                 </notebook>
