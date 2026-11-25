@@ -4,9 +4,8 @@ import { fieldRegistry } from "../fields/field";
 
 /**
  * @typedef {import("../fields/field").FieldNode} FieldNode
- * @typedef {import("./form_model").Specification} Specification
- * @typedef {Record<string, { fields: Record<string, any> }>} RelatedModels
- *  description of the fields of each model, from the view
+ * @typedef {import("../views/view_models").Specification} Specification
+ * @typedef {import("../views/view_models").RelatedModels} RelatedModels
  *
  * @typedef {{
  *  template: string;

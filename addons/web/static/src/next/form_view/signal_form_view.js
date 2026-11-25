@@ -1,4 +1,5 @@
 import { registry } from "@web/core/registry";
+import { buildSpecification } from "../views/view_models";
 import { FormModel } from "./form_model";
 import { SignalFormController } from "./signal_form_controller";
 import { SignalFormRenderer } from "./signal_form_renderer";
@@ -41,21 +42,6 @@ function getFieldNames(arch) {
         .map((el) => el.getAttribute("name"))
         .filter((name) => name !== "id");
     return [...new Set(names)];
-}
-
-/**
- * The `specification` of `web_read` and `web_save`: the fields of the arch,
- * with the display name of related records.
- *
- * @param {Record<string, any>} fields
- * @param {string[]} fieldNames
- */
-function buildSpecification(fields, fieldNames) {
-    const specification = {};
-    for (const name of fieldNames) {
-        specification[name] = fields[name].relation ? { fields: { display_name: {} } } : {};
-    }
-    return specification;
 }
 
 registry.category("views").add("signal_form", signalFormView);

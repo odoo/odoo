@@ -1,4 +1,5 @@
 import { Component, t, useProps } from "@odoo/owl";
+import { displayValue } from "../fields/display_value";
 
 const EDITABLE_TYPES = ["char", "text"];
 
@@ -25,17 +26,6 @@ export class SignalFormRenderer extends Component {
      * @param {string} name
      */
     displayValue(name) {
-        const value = this.props.record[name]();
-        switch (this.props.fields[name].type) {
-            case "many2one":
-                return value ? value.display_name() : "";
-            case "one2many":
-            case "many2many":
-                return (value || []).map((record) => record.display_name()).join(", ");
-            default:
-                return value === false || value === null || value === undefined
-                    ? ""
-                    : String(value);
-        }
+        return displayValue(this.props.record[name](), this.props.fields[name]);
     }
 }
