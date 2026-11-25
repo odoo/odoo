@@ -314,7 +314,6 @@ class Website(models.Model):
         comodel_name="product.pricelist",
         compute="_compute_pricelist_id",
         compute_sudo=True,
-        inverse="_inverse_pricelist_id",
     )
     currency_id = fields.Many2one(
         string="Default Currency",
@@ -342,14 +341,6 @@ class Website(models.Model):
         self.pricelist_id = self.env["product.pricelist"].browse(
             request and hasattr(request, "pricelist") and request.pricelist.id
         )
-
-    def _inverse_pricelist_id(self):
-        # TODO remove inverse in master
-        logger.warning(
-            "Updating the request pricelist through the pricelist_id field should be avoided, use"
-            " _set_current_pricelist instead",
-        )
-        self._set_current_pricelist(self.pricelist_id)
 
     @api.depends("pricelist_id", "company_id")
     def _compute_currency_id(self):

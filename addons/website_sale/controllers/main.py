@@ -2,7 +2,6 @@
 
 import itertools
 from collections import defaultdict
-from datetime import datetime
 from urllib.parse import parse_qs, urlencode, urlparse, urlsplit
 
 from werkzeug.exceptions import Forbidden, NotFound
@@ -324,16 +323,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 search, min_price, max_price, on_sale=on_sale, in_stock=in_stock, **post
             ),
         )
-
-        # Check if we need to refresh the cached pricelist
-        # TODO: remove in master, the session key is no longer set since 19.0
-        now = datetime.timestamp(datetime.now())
-        if "website_sale_pricelist_time" in request.session:
-            pricelist_save_time = request.session["website_sale_pricelist_time"]
-            if pricelist_save_time < now - 60 * 60:
-                self.env.website._set_current_pricelist(False)
-                # restart the counter
-                request.session["website_sale_pricelist_time"] = now
 
         filter_by_price_enabled = website.is_view_active("website_sale.filter_products_price")
         if filter_by_price_enabled:
