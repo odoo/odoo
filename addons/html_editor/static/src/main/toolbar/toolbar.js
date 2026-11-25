@@ -50,7 +50,9 @@ export class Toolbar extends Component {
 
     setup() {
         this.state = proxy(this.props.state);
-        this.shouldFocusFirstButton = false;
+        // Buttons displayed before expanding the toolbar, to focus the first
+        // new one once expanded
+        this.buttonsBeforeExpand = null;
         useFocusTooltip(this.toolbarEl);
 
         const isFocusOutsideToolbar = () =>
@@ -72,15 +74,29 @@ export class Toolbar extends Component {
         });
 
         onPatched(() => {
-            if (this.shouldFocusFirstButton) {
-                this.shouldFocusFirstButton = false;
-                this.focusFirstToolbarButton();
+            if (this.buttonsBeforeExpand) {
+                const buttonsBeforeExpand = this.buttonsBeforeExpand;
+                this.buttonsBeforeExpand = null;
+                this.focusFirstNewToolbarButton(buttonsBeforeExpand);
             }
         });
     }
 
     focusFirstToolbarButton() {
         this.toolbarEl()?.querySelector("button:not([disabled])").focus();
+    }
+
+    /**
+     * Focuses the first enabled button that was not displayed before, so that
+     * keyboard users continue with the buttons the expansion revealed instead
+     * of going through the toolbar again. Falls back to the first button.
+     *
+     * @param {Set<HTMLButtonElement>} buttonsBefore
+     */
+    focusFirstNewToolbarButton(buttonsBefore) {
+        const buttons = [...(this.toolbarEl()?.querySelectorAll("button:not([disabled])") || [])];
+        const firstNewButton = buttons.find((buttonEl) => !buttonsBefore.has(buttonEl));
+        (firstNewButton || buttons[0])?.focus();
     }
 
     onKeyDown(ev) {
@@ -155,7 +171,7 @@ export class Toolbar extends Component {
         const isToggledFromKeyboard = button.isActive !== undefined && ev.detail === 0;
         if (button.id === "expand_toolbar") {
             // Toolbar update is async, defer focus until after OWL re-renders the DOM.
-            this.shouldFocusFirstButton = true;
+            this.buttonsBeforeExpand = new Set(this.toolbarEl().querySelectorAll("button"));
         } else if (isToggledFromKeyboard) {
             buttonEl.focus();
         } else if (!button.opensUi) {

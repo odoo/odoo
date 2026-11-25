@@ -199,7 +199,7 @@ test("Tab should move the focus between toolbar button groups", async () => {
         .map((group) => group.querySelector("button:not([disabled])"))
         .filter(Boolean);
     expect(firstButtons.length).toBeGreaterThan(2);
-    // First button should be focused after expanding toolbar
+    await press("Home");
     expect(firstButtons[0]).toBeFocused();
 
     for (let i = 1; i < firstButtons.length; i++) {
@@ -237,7 +237,6 @@ test("Home and End should move the focus to the first and last toolbar buttons",
 
     await expandToolbar();
     const toolbarBtns = queryAll(".o-we-toolbar button:not([disabled])");
-    expect(toolbarBtns[0]).toBeFocused();
 
     await press("End");
     expect(toolbarBtns.at(-1)).toBeFocused();
@@ -300,7 +299,7 @@ test("focus should be trap in toolbar on arrow left/right keys", async () => {
 
     await expandToolbar();
     const toolbarBtns = queryAll(".o-we-toolbar button:not([disabled])");
-    // First button should be focused after expanding toolbar
+    await press("Home");
     expect(toolbarBtns[0]).toBeFocused();
 
     for (let i = 1; i < toolbarBtns.length; i++) {
@@ -545,7 +544,7 @@ test("a toolbar button with opensUi does not restore the focus to the editable",
 });
 
 test.tags("desktop");
-test("expanding toolbar from table cell selection should focus first expanded button", async () => {
+test("expanding toolbar from table cell selection should focus the first new button", async () => {
     const contentBefore = unformat(`
         <table class="table table-bordered o_table">
             <tbody>
@@ -564,11 +563,31 @@ test("expanding toolbar from table cell selection should focus first expanded bu
     await waitFor(".o-we-toolbar");
 
     expect(".o-we-toolbar").toHaveAttribute("data-namespace", "table");
+    const buttonsBefore = new Set(queryAll(".o-we-toolbar button"));
     await expandToolbar();
 
     expect(".o-we-toolbar").toHaveAttribute("data-namespace", "expanded");
-    const toolbarBtns = queryAll(".o-we-toolbar button:not([disabled])");
-    expect(toolbarBtns[0]).toBeFocused();
+    const newButtons = queryAll(".o-we-toolbar button:not([disabled])").filter(
+        (button) => !buttonsBefore.has(button)
+    );
+    expect(newButtons.length).toBeGreaterThan(0);
+    expect(newButtons[0]).toBeFocused();
+});
+
+test.tags("desktop");
+test("expanding the text toolbar should focus the first new button", async () => {
+    await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+    const buttonsBefore = new Set(queryAll(".o-we-toolbar button"));
+
+    await expandToolbar();
+    const buttons = queryAll(".o-we-toolbar button:not([disabled])");
+    const newButtons = buttons.filter((button) => !buttonsBefore.has(button));
+    // The buttons displayed before expanding are kept, so that the first new
+    // button is not the first button of the toolbar
+    expect(newButtons.length).toBeGreaterThan(0);
+    expect(buttons[0]).not.toBe(newButtons[0]);
+    expect(newButtons[0]).toBeFocused();
 });
 
 test.tags("desktop");
