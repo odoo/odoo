@@ -2,32 +2,32 @@
 <templates xml:space="preserve">
 
     <t t-name="web.next.CharField">
-        <span t-if="this.field.props.readonly" t-out="this.field.value() or ''"/>
+        <span t-if="this.field.readonly" t-out="this.field.value() or ''"/>
         <input t-else=""
                class="o_input"
                type="text"
                autocomplete="off"
-               t-att-id="this.field.props.id"
+               t-att-id="this.field.id"
                t-att-value="this.field.value() or ''"
                t-on-change="(ev) => this.field.value.set(ev.target.value)"/>
     </t>
 
     <t t-name="web.next.BooleanField">
-        <CheckBox id="this.field.props.id"
+        <CheckBox id="this.field.id"
                   className="'d-inline-block'"
                   value="!!this.field.value()"
-                  disabled="this.field.props.readonly"
+                  disabled="this.field.readonly"
                   onChange="(value) => this.field.value.set(value)"/>
     </t>
 
     <t t-name="web.next.NumericField">
-        <span t-if="this.field.props.readonly" t-out="this.format(this.field.value())"/>
+        <span t-if="this.field.readonly" t-out="this.format(this.field.value())"/>
         <input t-else=""
                class="o_input"
                t-att-class="{ o_field_invalid: this.invalid() }"
                inputmode="decimal"
                autocomplete="off"
-               t-att-id="this.field.props.id"
+               t-att-id="this.field.id"
                t-att-value="this.format(this.field.value())"
                t-on-change="this.onChange"/>
     </t>

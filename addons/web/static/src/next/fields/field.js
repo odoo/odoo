@@ -42,9 +42,10 @@ const fieldProps = {
 };
 
 /**
- * Declares the props of a field component, and gives the value of its field:
- * call `value()` to read it, `value.set(newValue)` to write it. Both follow
- * the props: they use the record and the field the component has now.
+ * Declares the props of a field component, and returns the field: its
+ * `record`, `name`, `id`, `readonly` and `node`, and its `value`: call
+ * `value()` to read it, `value.set(newValue)` to write it. All of them follow
+ * the props: they give the record and the field the component has now.
  *
  *     class CharField extends Component {
  *         static template = xml`<input t-att-value="this.field.value()"/>`;
@@ -52,13 +53,15 @@ const fieldProps = {
  *     }
  */
 export function useField() {
+    // the props are read through signals, so the field is the props object
+    // itself, plus the value
     const props = useProps(fieldProps);
     /** @type {import("../model/fields").FieldSignal<any>} */
     const value = Object.assign(() => props.record[props.name](), {
         /** @param {any} newValue */
         set: (newValue) => props.record[props.name].set(newValue),
     });
-    return { props, value };
+    return Object.assign(props, { value });
 }
 
 /**

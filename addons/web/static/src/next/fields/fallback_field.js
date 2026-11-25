@@ -11,6 +11,6 @@ export class FallbackField extends Component {
     field = useField();
 
     text() {
-        return displayValue(this.field.value(), this.field.props.node.field);
+        return displayValue(this.field.value(), this.field.node.field);
     }
 }
