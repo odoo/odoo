@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import os
+from contextlib import contextmanager
+from contextvars import ContextVar
 from glob import glob
 from logging import getLogger
 from werkzeug import urls
@@ -45,9 +47,27 @@ def is_wildcard_glob(path):
     return '*' in path or '[' in path or ']' in path or '?' in path
 
 
+_glob_cache = ContextVar('glob_cache', default=None)
+
+
+@contextmanager
+def glob_cache():
+    token = _glob_cache.set({})
+    try:
+        yield
+    finally:
+        _glob_cache.reset(token)
+
+
 def _glob_static_file(pattern):
+    cache = _glob_cache.get()
+    if cache is not None and pattern in cache:
+        return cache[pattern]
     files = glob(pattern, recursive=True)
-    return sorted((file, file_content_hash(file)) for file in files if file.rsplit('.', 1)[-1] in ASSET_EXTENSIONS)
+    result = sorted((file, file_content_hash(file)) for file in files if file.rsplit('.', 1)[-1] in ASSET_EXTENSIONS)
+    if cache is not None:
+        cache[pattern] = result
+    return result
 
 
 class IrAsset(models.Model):
