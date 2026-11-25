@@ -244,22 +244,28 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _get_route_module(cls, rule):
-        """Return the module that defined the route.
+        """Return the name of the addon that introduced the route (or None).
+
+        Computed lazily on first lookup and memoized on the endpoint's routing
+        dict, so each endpoint pays the MRO walk at most once.
         """
-        # Fallback, equivalent but self-contained, in case the `original_module`
-        # addition to odoo/http/routing_map.py is not accepted upstream. It
-        # mirrors the merge in _generate_routing_rules: walk the controller MRO
-        # base-most first and return the first class that declares `routes`.
-        # Keep in sync with routing_map.py if the merge order ever changes.
-        # ctrl = rule.endpoint.func.__self__
-        # name = rule.endpoint.func.__name__
-        # for klass in reversed(type(ctrl).mro()[:-2]):  # base-most first
-        #     member = klass.__dict__.get(name)
-        #     if member is not None and getattr(member, 'original_routing', {}).get('routes'):
-        #         path = klass.__module__.split('.')
-        #         return path[2] if path[:2] == ['odoo', 'addons'] else None
-        # return None
-        return rule.endpoint.routing.get('original_module')
+        routing = rule.endpoint.routing
+        if 'original_module' not in routing:
+            routing['original_module'] = cls._compute_route_module(rule)
+        return routing['original_module']
+
+    @classmethod
+    def _compute_route_module(cls, rule):
+        # Walk the controller MRO base-most first; the addon that introduced the
+        # route is the first ancestor whose method declares `routes` (later bare
+        # @route() overrides don't steal ownership).
+        ctrl, name = rule.endpoint.func.__self__, rule.endpoint.func.__name__
+        for klass in reversed(type(ctrl).mro()[:-2]):
+            member = klass.__dict__.get(name)
+            if member is not None and getattr(member, 'original_routing', {}).get('routes'):
+                path = klass.__module__.split('.')
+                return path[2] if path[:2] == ['odoo', 'addons'] else None
+        return None
 
     @api.ormcache('website_id', cache='routing')
     def _get_disabled_modules(self, website_id):
