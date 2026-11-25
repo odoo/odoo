@@ -53,16 +53,16 @@ class PluginParent extends Component {
     props = useProps({
         providedPlugins: types.array(),
         registerCallback: types.function(),
-        configPlugins: types.object(),
+        owlPluginsConfig: types.object(),
     });
 
     setup() {
         const { stores } = useSpreadsheetProviders({
-            model: this.props.configPlugins.model,
+            model: this.props.owlPluginsConfig.model,
             spreadsheetRef: signal.ref(),
             getPopoverContainerRect: () => ({ x: 0, y: 0, width: 1000, height: 1000 }),
         });
-        providePlugins(this.props.providedPlugins, this.props.configPlugins);
+        providePlugins(this.props.providedPlugins, this.props.owlPluginsConfig);
 
         const scope = useScope();
         const getPlugin = createGetPluginFunctionFromScope(scope);
@@ -72,7 +72,7 @@ class PluginParent extends Component {
     }
 }
 
-export function makeOwlPluginManager(providedPlugins, configPlugins) {
+export function makeOwlPluginManager(providedPlugins, owlPluginsConfig) {
     const app = new App({ test: true, translateFn: _t });
 
     let getPlugin = undefined;
@@ -87,7 +87,7 @@ export function makeOwlPluginManager(providedPlugins, configPlugins) {
                 scope = params.scope;
                 container = params.container;
             },
-            configPlugins,
+            owlPluginsConfig,
         },
     });
 
