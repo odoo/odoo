@@ -21,14 +21,14 @@
     </t>
 
     <t t-name="web.next.NumericField">
-        <span t-if="this.field.readonly" t-out="this.format(this.field.value())"/>
+        <span t-if="this.field.readonly" t-out="this.formattedValue()"/>
         <input t-else=""
                class="o_input"
                t-att-class="{ o_field_invalid: this.invalid() }"
                inputmode="decimal"
                autocomplete="off"
                t-att-id="this.field.id"
-               t-att-value="this.format(this.field.value())"
+               t-att-value="this.formattedValue()"
                t-on-change="this.onChange"/>
     </t>
 

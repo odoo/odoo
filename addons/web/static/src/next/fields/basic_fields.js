@@ -1,4 +1,4 @@
-import { Component, signal } from "@odoo/owl";
+import { Component, computed, signal } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { formatFloat, formatInteger } from "@web/views/fields/formatters";
 import { parseFloat, parseInteger } from "@web/views/fields/parsers";
@@ -32,6 +32,8 @@ class NumericField extends Component {
     format = formatInteger;
     /** @type {(value: string) => number} */
     parse = parseInteger;
+
+    formattedValue = computed(() => this.format(this.field.value()));
 
     /**
      * @param {Event & { target: HTMLInputElement }} ev
