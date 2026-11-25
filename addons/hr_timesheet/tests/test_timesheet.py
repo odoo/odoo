@@ -944,3 +944,17 @@ class TestTimesheet(TestCommonTimesheet):
             self.project,
             self.env['project.project'].search([('is_project_overtime', '=', True)])
         )
+
+    def test_search_remaining_hours_percentage_task(self):
+        """A task with overtime compared to the allocated. It has a negative hours percentage.
+        If we try to find the task, we must find it."""
+        self.task1.allocated_hours = 10
+        self.env['account.analytic.line'].create({
+            'name': 'Extra hours',
+            'task_id': self.task1.id,
+            'unit_amount': 15,
+            'employee_id': self.empl_employee.id,
+        })
+        self.env.flush_all()
+        tasks = self.env['project.task'].search([('remaining_hours_percentage', '<', 0)])
+        self.assertIn(self.task1, tasks)
