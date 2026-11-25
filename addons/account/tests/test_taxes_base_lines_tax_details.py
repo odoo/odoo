@@ -309,3 +309,14 @@ class TestTaxesBaseLinesTaxDetails(TestTaxCommon):
         }]
         for i, data in enumerate(aggregated_data.values()):
             self.assertDictEqual(expected_values[i], data)
+
+    def test_base_line_fallback_currency(self):
+        """ Test tax computation when base line dictionary has no currency. """
+        self.env.company.tax_calculation_rounding_method = 'round_per_line'
+        base_line = self.env['account.tax']._prepare_base_line_for_taxes_computation({
+            'price_unit': 100.0,
+            'quantity': 1.0,
+            'tax_ids': self.percent_tax(21.0),
+        })
+        self.env['account.tax']._add_tax_details_in_base_line(base_line, self.env.company)
+        self.assertEqual(base_line['currency_id'], self.env.company.currency_id)

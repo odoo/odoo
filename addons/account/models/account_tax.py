@@ -1635,8 +1635,8 @@ class AccountTax(models.Model):
         currency = (
             load('currency_id', None)
             or load('company_currency_id', None)
-            or load('company_id', self.env['res.company']).currency_id
-            or self.env['res.currency']
+            or load('company_id', self.env.company).currency_id
+            or self.env.company.currency_id
         )
 
         base_line = {
@@ -1737,8 +1737,8 @@ class AccountTax(models.Model):
         currency = (
             load('currency_id', None)
             or load('company_currency_id', None)
-            or load('company_id', self.env['res.company']).currency_id
-            or self.env['res.currency']
+            or load('company_id', self.env.company).currency_id
+            or self.env.company.currency_id
         )
 
         return {
