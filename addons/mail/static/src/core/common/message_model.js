@@ -1,6 +1,7 @@
 import { isEmptyBlock } from "@html_editor/utils/dom_info";
 
 import { fields, Record } from "@mail/model/export";
+import { formatDateSimpleWithDay, formatDatetimeMedium } from "@mail/utils/common/dates";
 import {
     convertBrToLineBreak,
     decorateEmojis,
@@ -288,25 +289,9 @@ export class Message extends Record {
             .replace(" ", " "); // so that AM/PM are properly wrapped
     }
 
-    dateSimpleWithDay = this.computed(() => {
-        const userLocale = { locale: user.lang };
-        const startOfToday = this.store.startOfToday;
-        if (this.datetime.hasSame(startOfToday, "day")) {
-            return this.datetime.toLocaleString(DateTime.TIME_SIMPLE, userLocale);
-        }
-        if (this.datetime.hasSame(startOfToday.minus({ day: 1 }), "day")) {
-            return _t("Yesterday at %(time)s", {
-                time: this.datetime.toLocaleString(DateTime.TIME_SIMPLE, userLocale),
-            });
-        }
-        if (this.datetime.hasSame(startOfToday, "year")) {
-            return this.datetime.toLocaleString(
-                { ...DateTime.DATETIME_MED, year: undefined },
-                userLocale
-            );
-        }
-        return this.datetime.toLocaleString({ ...DateTime.DATETIME_MED }, userLocale);
-    });
+    dateSimpleWithDay = this.computed(() =>
+        formatDateSimpleWithDay(this.datetime, this.store.startOfToday)
+    );
 
     get datetime() {
         return this.date || DateTime.now();
@@ -334,9 +319,7 @@ export class Message extends Record {
         return this.selvesBySequence[0]?.self;
     }
 
-    datetimeMedium = this.computed(() =>
-        this.datetime.toLocaleString({ ...DateTime.DATETIME_MED }, { locale: user.lang })
-    );
+    datetimeMedium = this.computed(() => formatDatetimeMedium(this.datetime));
 
     isSelfMentioned = this.computed(() =>
         this.partner_ids.some((partner) =>

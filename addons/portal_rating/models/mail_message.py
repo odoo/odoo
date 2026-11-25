@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models
-from odoo.tools import format_datetime
+from odoo import fields, models
 
 
 class MailMessage(models.Model):
@@ -63,7 +62,7 @@ class MailMessage(models.Model):
         publisher_id, publisher_name = rating_values['publisher_id'] or [False, '']
         rating_values['publisher_avatar'] = f'/web/image/res.partner/{publisher_id}/avatar_128/50x50' if publisher_id else ''
         rating_values['publisher_comment'] = rating_values['publisher_comment'] or ''
-        rating_values['publisher_datetime'] = format_datetime(self.env, rating_values['publisher_datetime'])
+        rating_values['publisher_datetime'] = fields.Datetime.to_string(rating_values['publisher_datetime'])
         rating_values['publisher_id'] = publisher_id
         rating_values['publisher_name'] = publisher_name
         return rating_values

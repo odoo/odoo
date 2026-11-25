@@ -6,9 +6,11 @@ declare module "models" {
     export interface Rating {
         publisher_avatar: string|undefined;
         publisher_comment: string|undefined;
-        publisher_datetime: string|undefined;
+        publisher_datetime: import("luxon").DateTime|false|undefined;
         publisher_id: number|false|undefined;
         publisher_name: string|undefined;
+        publisherDateText: string|false|undefined;
+        publisherDatetimeMedium: string|false|undefined;
     }
     export interface ResPartner {
         is_user_publisher: boolean|undefined;
