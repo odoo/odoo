@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, click } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
-import { contains } from "@web/../tests/web_test_helpers";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import {
     addOption,
     defineWebsiteModels,
@@ -57,6 +57,7 @@ test("should have the theme tab", async () => {
     expect(".color-combination-button[data-color='o_cc1']").toHaveClass("selected");
 });
 
+<<<<<<< 31bcd537dd80d69414056d9a5908023da7b0d468
 test("should work with color transition", async () => {
     addOption({
         selector: ".test-options-target",
@@ -80,6 +81,22 @@ test("should work with color transition", async () => {
     expect(":iframe .test-options-target").toHaveStyle("color: rgb(0, 0, 255)");
 });
 
+||||||| 439a87cce19fb4a27cd901807f31d13299e13659
+=======
+test("should not allow editing color combinations as restricted editor", async () => {
+    onRpc("has_group", ({ args }) => args[1] !== "website.group_website_designer");
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderColorPicker enabledTabs="['custom', 'theme']" styleAction="'background-color'"/>`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+    await contains(".we-bg-options-container .o_we_color_preview").click();
+    await contains("button.theme-tab").click();
+    expect(".o-hb-edit-color-combination").toHaveCount(0);
+});
+
+>>>>>>> 699764b80424e16f62d54603e29048654dc6fead
 test("should support colors defined using the color function", async () => {
     addOption({
         selector: ".test-color",
