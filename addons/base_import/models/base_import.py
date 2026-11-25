@@ -1046,7 +1046,7 @@ class Import(models.TransientModel):
         fields_tree = self.get_fields_tree(self.res_model)
         try:
             file_length, rows = self._read_file(options)
-            if file_length <= 0:
+            if file_length <= 0 or not rows:
                 raise ImportValidationError(_("Import file has no content or is corrupt"))
 
             preview = rows[:count]
@@ -1055,6 +1055,8 @@ class Import(models.TransientModel):
             if options.get('has_headers') and preview:
                 # We need the header types before matching columns to fields
                 headers = preview.pop(0)
+                if not preview:
+                    raise ImportValidationError(_("Import file has no content or is corrupt"))
                 header_types = self._extract_headers_types(headers, preview, options)
             else:
                 header_types, headers = {}, []
@@ -1143,6 +1145,7 @@ class Import(models.TransientModel):
                 # in case of UnicodeDecodeError (or csv.Error
                 # compounded with UnicodeDecodeError)
                 'preview': preview,
+                'options': options,
             }
 
     @api.model

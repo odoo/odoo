@@ -435,6 +435,41 @@ class TestPreview(TransactionCase):
         ])
         self.assertEqual(result['preview'], [['foo', 'bar', 'qux'], ['1', '3', '5'], ['2', '4', '6']])
 
+    @unittest.skipUnless(can_import('openpyxl'), "openpyxl not available")
+    def test_xlsx_empty_or_header_only_first_sheet(self):
+        import openpyxl  # noqa: PLC0415
+
+        wb = openpyxl.Workbook()
+        ws_header_only = wb.active
+        ws_header_only.title = 'Header Only'
+        ws_header_only.append(['name'])
+        wb.create_sheet('Empty')
+        ws_data = wb.create_sheet('Data')
+        ws_data.append(['name', 'Some Value'])
+        ws_data.append(['foo', 1])
+        buf = io.BytesIO()
+        wb.save(buf)
+
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'import.preview',
+            'file': buf.getvalue(),
+            'file_type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        })
+
+        result = import_wizard.parse_preview({'has_headers': True})
+        self.assertEqual(result.get('error'), "Import file has no content or is corrupt")
+        self.assertEqual(result['options']['sheets'], ['Header Only', 'Empty', 'Data'])
+        self.assertEqual(result['options']['sheet'], 'Header Only')
+
+        result = import_wizard.parse_preview({'has_headers': True, 'sheet': 'Empty'})
+        self.assertEqual(result.get('error'), "Import file has no content or is corrupt")
+        self.assertEqual(result['options']['sheets'], ['Header Only', 'Empty', 'Data'])
+        self.assertEqual(result['options']['sheet'], 'Empty')
+
+        result = import_wizard.parse_preview({'has_headers': True, 'sheet': 'Data'})
+        self.assertIsNone(result.get('error'))
+        self.assertEqual(result['preview'], [['foo'], ['1']])
+
     @unittest.skipUnless(can_import('odf'), "ODFPY not available")
     def test_ods_success(self):
         file_content = file_open('test_import_export/data/test_import.ods', 'rb').read()
