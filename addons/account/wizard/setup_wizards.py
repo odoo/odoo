@@ -20,6 +20,7 @@ class AccountFinancialYearOp(models.TransientModel):
                                              required=True,
                                              help="The last day of the month will be used if the chosen day doesn't exist.")
     company_vat_disabled = fields.Boolean(related="company_id.vat_disabled", readonly=False)
+    company_vat_disabled_available = fields.Boolean(related="company_id.vat_disabled_available")
 
     @api.depends('company_id.account_opening_move_id')
     def _compute_opening_move_posted(self):
