@@ -1,6 +1,7 @@
 import logging
 import json
 import time
+from datetime import datetime, timedelta
 from xmlrpc.client import Fault
 
 from passlib.totp import TOTP
@@ -193,3 +194,13 @@ class TestTOTPEnableSearch(TransactionCase):
         matched = self._search_consistent([('totp_enabled', 'in', [True, False])])
         self.assertIn(self.user_no_totp, matched)
         self.assertIn(self.user_with_totp, matched)
+
+
+class TestTOTPDevices(TransactionCase):
+
+    def test_generate_device_updates_trusted_device_ids(self):
+        user = new_test_user(self.env, login='totp_device_user', groups='base.group_user')
+        self.assertFalse(user.totp_trusted_device_ids)  # load the devices in cache
+        self.env['auth_totp.device'].with_user(user)._generate(
+            'browser', 'Test device', datetime.now() + timedelta(days=1))
+        self.assertEqual(len(user.totp_trusted_device_ids), 1)
