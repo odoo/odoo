@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models
+from odoo import fields, models
 
 
 class ReportDeca(models.AbstractModel):
@@ -13,11 +13,12 @@ class ReportDeca(models.AbstractModel):
         kg_uom = self.env.ref('uom.product_uom_kgm')
         m3_uom = self.env.ref('uom.product_uom_cubic_meter')
 
-        def _get_destination_key(picking):
+        def _get_deca_key(picking):
             consignee = picking.sale_id.partner_id if 'sale_id' in picking._fields and picking.sale_id else picking.partner_id
-            return (picking.partner_id, consignee)
+            scheduled_date = fields.Date.context_today(picking, picking.date_done or picking.scheduled_date)
+            return (picking.partner_id, consignee, scheduled_date)
 
-        pickings_by_destination = pickings.grouped(_get_destination_key)
+        pickings_by_destination = pickings.grouped(_get_deca_key)
         pickings_data = [
             self._get_pickings_data(destination_pickings, kg_uom, m3_uom)
             for destination_pickings in pickings_by_destination.values()
@@ -151,5 +152,6 @@ class ReportDeca(models.AbstractModel):
             'company_id': pickings[0].company_id,
             'consignee_id': consignee_id,
             'delivery_address': pickings[0].partner_id,
+            'scheduled_date': fields.Date.context_today(pickings[0], pickings[0].date_done or pickings[0].scheduled_date),
             'reference': ', '.join(pickings.mapped('name')),
         }
