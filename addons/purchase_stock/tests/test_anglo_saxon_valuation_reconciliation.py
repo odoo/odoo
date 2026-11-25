@@ -280,7 +280,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
 
         price_diff_line = invoice.line_ids.filtered(lambda l: l.account_id == self.stock_account_product_categ.property_account_creditor_price_difference_categ)
         self.assertTrue(len(price_diff_line) == 1, "A price difference line should be created")
-        self.assertAlmostEqual(price_diff_line.balance, 192.31)
+        self.assertAlmostEqual(price_diff_line.balance, 166.67)
         self.assertAlmostEqual(price_diff_line.price_subtotal, 5000.0)
 
         picking = self.env['stock.picking'].search([('purchase_id', '=', purchase_order.id)])
@@ -288,6 +288,48 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
 
         valuation_line = picking.move_ids.mapped('account_move_ids.line_ids').filtered(lambda x: x.account_id.id == interim_account_id)
         self.assertTrue(valuation_line.full_reconcile_id, "The reconciliation should be total at that point.")
+
+    def test_price_difference_bill_rate_after_reset_to_draft(self):
+        """The price difference lines of a bill are valued at the rate of the
+        bill, also when the bill is posted again after a newer rate exists."""
+        self.stock_account_product_categ.property_account_creditor_price_difference_categ = self.company_data['default_account_stock_price_diff']
+        test_product = self.test_product_delivery
+        test_product.categ_id.property_cost_method = 'standard'
+        test_product.standard_price = 10.0
+        date_bill = '2021-01-01'
+        date_new_rate = '2021-01-10'
+        self.env['res.currency.rate'].create({
+            'name': date_bill,
+            'rate': 2.0,
+            'currency_id': self.other_currency.id,
+            'company_id': self.env.company.id,
+        })
+
+        purchase_order = self._create_purchase(test_product, date_bill, price_unit=30.0)
+        with freeze_time(date_bill):
+            self._process_pickings(purchase_order.picking_ids)
+            invoice = self._create_invoice_for_po(purchase_order, date_bill)
+            invoice.action_post()
+        price_diff_account = self.company_data['default_account_stock_price_diff']
+        price_diff_line = invoice.line_ids.filtered(lambda l: l.account_id == price_diff_account)
+        self.assertRecordValues(price_diff_line, [{'amount_currency': 10.0, 'balance': 5.0}])
+
+        invoice.button_draft()
+        self.env['res.currency.rate'].create({
+            'name': date_new_rate,
+            'rate': 4.0,
+            'currency_id': self.other_currency.id,
+            'company_id': self.env.company.id,
+        })
+        with freeze_time(date_new_rate):
+            invoice.action_post()
+        self.assertEqual(invoice.invoice_currency_rate, 2.0)
+        price_diff_line = invoice.line_ids.filtered(lambda l: l.account_id == price_diff_account)
+        self.assertRecordValues(price_diff_line, [{'amount_currency': 10.0, 'balance': 5.0}])
+        interim_account = self.company_data['default_account_stock_in']
+        interim_lines = invoice.line_ids.filtered(lambda l: l.account_id == interim_account)
+        self.assertTrue(interim_lines.full_reconcile_id)
+        self.assertFalse(interim_lines.full_reconcile_id.exchange_move_id)
 
     def test_reconcile_cash_basis_bill(self):
         ''' Test the generation of the CABA move after bill payment

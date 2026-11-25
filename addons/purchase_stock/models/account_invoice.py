@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, api
+from odoo import models, api
 from odoo.tools import float_compare, float_is_zero
 from odoo.tools.misc import groupby
 
@@ -78,11 +78,7 @@ class AccountMove(models.Model):
                         'price_unit': price_unit_val_dif,
                         'price_subtotal': relevant_qty * price_unit_val_dif,
                         'amount_currency': relevant_qty * price_unit_val_dif,
-                        'balance': line.currency_id._convert(
-                            relevant_qty * price_unit_val_dif,
-                            line.company_currency_id,
-                            line.company_id, fields.Date.today(),
-                        ),
+                        'balance': line.company_currency_id.round(relevant_qty * price_unit_val_dif / line.currency_rate),
                         'account_id': debit_pdiff_account.id,
                         'analytic_distribution': line.analytic_distribution,
                         'display_type': 'cogs',
@@ -102,11 +98,7 @@ class AccountMove(models.Model):
                         'price_unit': -price_unit_val_dif,
                         'price_subtotal': relevant_qty * -price_unit_val_dif,
                         'amount_currency': relevant_qty * -price_unit_val_dif,
-                        'balance': line.currency_id._convert(
-                            relevant_qty * -price_unit_val_dif,
-                            line.company_currency_id,
-                            line.company_id, fields.Date.today(),
-                        ),
+                        'balance': line.company_currency_id.round(relevant_qty * -price_unit_val_dif / line.currency_rate),
                         'account_id': line.account_id.id,
                         'analytic_distribution': line.analytic_distribution,
                         'display_type': 'cogs',
