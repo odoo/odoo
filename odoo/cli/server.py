@@ -11,6 +11,7 @@ GNU Public Licence.
 """
 
 import atexit
+import gc
 import logging
 import os
 import sys
@@ -136,6 +137,9 @@ def main(args):
 
     setup_pid_file()
     rc = server.start(preload=config['db_name'], stop=stop)
+    if stop:
+        # the garbage collection of the whole heap at exit is slow with a big registry
+        gc.freeze()
     sys.exit(rc)
 
 
