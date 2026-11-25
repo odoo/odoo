@@ -6,7 +6,7 @@ export const STATUS_COLORS = {
     'at_risk': 22,
     'off_track': 23,
     'on_hold': 21,
-    'done': 24,
+    'done': 25,
 };
 
 export const STATUS_COLOR_PREFIX = 'o_status o_status_bubble mx-0 o_color_bubble_';

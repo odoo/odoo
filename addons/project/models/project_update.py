@@ -11,7 +11,7 @@ STATUS_COLOR = {
     'at_risk': 22,  # orange
     'off_track': 23,  # red / danger
     'on_hold': 21,  # light blue
-    'done': 24,  # purple
+    'done': 25,  # purple
     False: 0,  # default grey -- for studio
     # Only used in project.task
     'to_define': 0,
