@@ -33,11 +33,21 @@ export class SaleTemplateDropdown extends Component {
 
     async onWillStart() {
         this.state.canManageTemplates = await user.hasGroup("sales_team.group_sale_manager");
-        this.state.quotationTemplates = await this.orm.searchRead(
-            "sale.order.template",
-            [["template_type", "=", "quotation"]],
-            ["id", "name"]
-        ).catch(() => []);
+        this.state.quotationTemplates = await this.orm
+            .cache({
+                type: "disk",
+                update: "always",
+                callback: (result, hasChanged) => {
+                    if (hasChanged) {
+                        this.state.quotationTemplates = result;
+                    }
+                },
+            })
+            .searchRead(
+                "sale.order.template",
+                [["template_type", "=", "quotation"]],
+                ["id", "name"]
+            ).catch(() => []);
     }
 
     async _saveIfNeeded() {
