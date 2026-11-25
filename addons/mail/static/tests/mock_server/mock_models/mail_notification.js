@@ -1,7 +1,21 @@
 import { models } from "@web/../tests/web_test_helpers";
+import { serializeDateTime } from "@web/core/l10n/dates";
+
+const { DateTime } = luxon;
 
 export class MailNotification extends models.ServerModel {
     _name = "mail.notification";
+
+    /** @type {typeof models.Model["prototype"]["create"]} */
+    create(vals) {
+        for (const values of Array.isArray(vals) ? vals : [vals]) {
+            // only inbox notifications are read by their recipient, other ones are read at creation
+            if ((values.notification_type ?? "inbox") !== "inbox" && !("read_date" in values)) {
+                values.read_date = serializeDateTime(DateTime.now());
+            }
+        }
+        return super.create(vals);
+    }
 
     /** @param {number[]} ids */
     _filtered_for_web_client(ids) {
