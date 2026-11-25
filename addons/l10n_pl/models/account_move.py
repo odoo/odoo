@@ -30,18 +30,6 @@ class AccountMove(models.Model):
         compute='_compute_l10n_pl_show_mpp_warning',
     )
 
-    @api.depends('country_code')
-    def _compute_show_taxable_supply_date(self):
-        super()._compute_show_taxable_supply_date()
-        for move in self.filtered(lambda m: m.country_code == 'PL' and m.move_type != 'entry' and (m.state == 'draft' or m.taxable_supply_date)):
-            move.show_taxable_supply_date = True
-
-    @api.depends('country_code')
-    def _compute_taxable_supply_date_placeholder(self):
-        super()._compute_taxable_supply_date_placeholder()
-        for move in self.filtered(lambda m: m.country_code == 'PL'):
-            move.taxable_supply_date_placeholder = self.env._("Invoice Date")
-
     @api.depends(
         'l10n_pl_show_mpp',
         'commercial_partner_id.is_company',
@@ -89,11 +77,6 @@ class AccountMove(models.Model):
         for move in self:
             move.l10n_pl_show_mpp_warning = move._l10n_pl_is_mpp_mandatory() and move.l10n_pl_mpp == 'no_mpp'
 
-    def _get_accounting_date_source(self):
-        return (self.country_code == 'PL' and self.taxable_supply_date) or super()._get_accounting_date_source()
-
-    def _get_invoice_currency_rate_date(self):
-        return (self.country_code == 'PL' and self.taxable_supply_date) or super()._get_invoice_currency_rate_date()
-
-    def _get_default_currency_rate_date(self):
-        return (self.country_code == 'PL' and self.taxable_supply_date) or super()._get_default_currency_rate_date()
+    def _is_taxable_supply_date_used(self):
+        # EXTENDS 'account'
+        return self.country_code == 'PL' or super()._is_taxable_supply_date_used()

@@ -879,7 +879,7 @@ class AccountMove(models.Model):
 
     def _get_accounting_date_source(self):
         self.ensure_one()
-        return self.invoice_date or self.date
+        return self._get_taxable_supply_tax_point() or self.invoice_date or self.date
 
     @api.depends('invoice_date', 'company_id', 'move_type', 'taxable_supply_date')
     def _compute_date(self):
@@ -1113,21 +1113,49 @@ class AccountMove(models.Model):
     def _compute_delivery_date(self):
         pass
 
-    @api.depends('delivery_date')
+    def _is_delivery_date_expected(self):
+        """ Whether the localization of the move expects a delivery date on its sale documents, so it
+        is shown even while empty. To extend per country.
+        """
+        self.ensure_one()
+        return False
+
+    @api.depends('country_code', 'move_type', 'delivery_date')
     def _compute_show_delivery_date(self):
         for move in self:
-            move.show_delivery_date = move.delivery_date and move.is_sale_document()
+            move.show_delivery_date = move.is_sale_document() and bool(move.delivery_date or move._is_delivery_date_expected())
+
+    def _is_taxable_supply_date_used(self):
+        """ Whether the localization of the move uses the taxable supply date as tax point: the field is
+        shown, and it sets the accounting date, hence the VAT period, and the currency rate date, the
+        invoice date being used while it is empty. To extend per country.
+        """
+        self.ensure_one()
+        return False
+
+    def _get_taxable_supply_tax_point(self):
+        """ The taxable supply date when it sets the accounting and currency rate dates, else False. """
+        self.ensure_one()
+        return self._is_taxable_supply_date_used() and self.taxable_supply_date
 
     def _compute_taxable_supply_date(self):
         pass
 
+    @api.depends('country_code', 'move_type', 'state', 'taxable_supply_date')
     def _compute_show_taxable_supply_date(self):
         for move in self:
-            move.show_taxable_supply_date = False
+            move.show_taxable_supply_date = (
+                move._is_taxable_supply_date_used()
+                and move.move_type != 'entry'
+                and (move.state == 'draft' or bool(move.taxable_supply_date))
+            )
 
+    @api.depends('country_code')
     def _compute_taxable_supply_date_placeholder(self):
         for move in self:
-            move.taxable_supply_date_placeholder = ''
+            move.taxable_supply_date_placeholder = (
+                self.env._("Invoice Date") if move._is_taxable_supply_date_used() else ''
+            )
 
     @api.depends('journal_id', 'statement_line_id')
     def _compute_currency_id(self):
@@ -1140,13 +1168,20 @@ class AccountMove(models.Model):
             )
             invoice.currency_id = currency
 
+    def _get_currency_rate_date_source(self):
+        """ The date the currency rate is taken at when it isn't the invoice date, else False. To extend
+        per country.
+        """
+        self.ensure_one()
+        return self._get_taxable_supply_tax_point()
+
     def _get_invoice_currency_rate_date(self):
         self.ensure_one()
-        return self.invoice_date or fields.Date.context_today(self)
+        return self._get_currency_rate_date_source() or self.invoice_date or fields.Date.context_today(self)
 
     def _get_default_currency_rate_date(self):
         self.ensure_one()
-        return self.invoice_date or self.create_date.date()
+        return self._get_currency_rate_date_source() or self.invoice_date or self.create_date.date()
 
     def _get_expected_currency_rate_at(self, date):
         self.ensure_one()

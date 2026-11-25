@@ -1,2 +1,3 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from . import test_l10n_sk_qr_code
+from . import test_taxable_supply_date_with_lock_dates

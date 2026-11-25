@@ -170,17 +170,9 @@ class AccountMove(models.Model):
             return self.l10n_hu_payment_mode
         return {'cash': 'CASH', 'bank': 'TRANSFER'}.get(self.preferred_payment_method_line_id.journal_id.type, False)
 
-    def _get_invoice_currency_rate_date(self):
-        self.ensure_one()
-        if self.country_code == 'HU' and self.delivery_date:
-            return self.delivery_date
-        return super()._get_invoice_currency_rate_date()
-
-    def _get_default_currency_rate_date(self):
-        self.ensure_one()
-        if self.country_code == 'HU' and self.delivery_date:
-            return self.delivery_date
-        return super()._get_default_currency_rate_date()
+    def _get_currency_rate_date_source(self):
+        # EXTENDS 'account'
+        return (self.country_code == 'HU' and self.delivery_date) or super()._get_currency_rate_date_source()
 
     @api.depends('l10n_hu_edi_messages')
     def _compute_message_html(self):
