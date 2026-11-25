@@ -206,14 +206,12 @@ class HrVersion(models.Model):
 
     @api.depends('work_location_id')
     def _compute_address_id(self):
-        # the work address is the address of the work location, the company's address without one. Taken when the
-        # work location is set: a later change of the address of the location does not rewrite the versions (nor the
-        # periods already declared with them)
+        # the work address is the address of the work location, the company's address without one (no work location,
+        # or one at home): the work address is hidden, it must not keep the address of a former work location. Taken
+        # when the work location is set: a later change of the address of the location does not rewrite the versions
+        # (nor the periods already declared with them)
         for version in self:
-            if version.work_location_id.address_id:
-                version.address_id = version.work_location_id.address_id
-            elif not version.address_id:
-                version.address_id = version._get_default_address_id()
+            version.address_id = version.work_location_id.address_id or version._get_default_address_id()
 
     @api.depends('company_id')
     def _compute_work_location_id(self):
