@@ -635,6 +635,7 @@
         </field>
     </record>
 
+<<<<<<< 82814d168ebf14d9445e284d6ac2c2bb5ea2acaf
     <record id="hr_attendance_action_to_review" model="ir.actions.server">
         <field name="name">To Review</field>
         <field name="path">attendances-to-review</field>
@@ -642,6 +643,176 @@
         <field name="group_ids" eval="[(4, ref('hr_attendance.group_hr_attendance_officer'))]"/>
         <field name="state">code</field>
         <field name="code">action = model._get_to_review_action()</field>
+||||||| d3c2acb75e7fd9f31d8e41071cde3fd1bf5ee74b
+    <record id="hr_attendance_management_view_filter" model="ir.ui.view">
+        <field name="name">hr_attendance_management_view_filter</field>
+        <field name="model">hr.attendance</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="employee_id"/>
+                <field name="department_id" operator="child_of"/>
+                <filter string="My Attendances" name="myattendances" domain="[('employee_id.user_id', '=', uid)]" />
+                <filter string="My Team" name="myteam" domain="[('employee_id.parent_id.user_id', '=', uid)]"/>
+                <separator/>
+                <filter string="To Validate" name="to_approve" domain="[('state', '=', 'draft')]"/>
+                <filter string="Validated" name="state_validated" domain="[('state', '=', 'validated')]"/>
+                <filter string="Refused" name="state_refused" domain="[('state', '=', 'refused')]"/>
+                <separator/>
+                <filter string="Date" name="check_in_filter" date="check_in"/>
+                <separator/>
+                <filter
+                    string="Active Employees"
+                    name="activeemployees"
+                    domain="[('employee_id.active', '=', True)]"/>
+                <filter
+                    string="Archived Employees"
+                    name="archivedemployees"
+                    domain="[('employee_id.active', '=', False)]"/>
+                <group>
+                    <filter string="Employee" name="employee" context="{'group_by': 'employee_id'}"/>
+                    <filter string="Date" name="groupby_date" context="{'group_by': 'check_in'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_attendance_tree_management" model="ir.ui.view">
+        <field name="name">hr.attendance.list</field>
+        <field name="model">hr.attendance</field>
+        <field name="arch" type="xml">
+            <list string="Employee attendances" create="0">
+                <field name="employee_id" widget="many2one_avatar_employee" readonly="1"/>
+                <field name="check_in" readonly="1"/>
+                <field name="check_out" readonly="1"/>
+                <field name="break_duration" readonly="1" widget="float_time"/>
+                <field name="worked_hours" readonly="1" string="Worked Time" widget="float_time"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'validated'"
+                       decoration-warning="state == 'draft'"
+                       decoration-danger="state == 'refused'"
+                       readonly="1"/>
+                <button name="action_validate" string="Validate" type="object"
+                        icon="check"
+                        invisible="state != 'draft'"
+                        groups="hr_attendance.group_hr_attendance_officer"/>
+                <button name="action_refuse" string="Refuse" type="object"
+                        icon="close"
+                        invisible="state not in ('draft', 'validated')"
+                        groups="hr_attendance.group_hr_attendance_officer"/>
+                <button name="action_reset_to_draft" string="Reset to Draft" type="object"
+                        icon="undo"
+                        invisible="state != 'refused'"
+                        groups="hr_attendance.group_hr_attendance_officer"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_attendance_management_action" model="ir.actions.act_window">
+        <field name="name">Management</field>
+        <field name="res_model">hr.attendance</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="hr_attendance_management_view_filter"/>
+        <field name="view_id" ref="view_attendance_tree_management"/>
+        <field name="context">
+            {
+                "search_default_to_approve" : 1,
+                "search_default_activeemployees": 1,
+            }
+        </field>
+        <field name="domain">[('check_out', '!=', False)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No attendance records found
+            </p><p>
+                The attendance reporting of your employees will be displayed here.
+            </p>
+        </field>
+=======
+    <record id="hr_attendance_management_view_filter" model="ir.ui.view">
+        <field name="name">hr_attendance_management_view_filter</field>
+        <field name="model">hr.attendance</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="employee_id"/>
+                <field name="department_id" operator="child_of"/>
+                <filter string="My Attendances" name="myattendances" domain="[('employee_id.user_id', '=', uid)]" />
+                <filter string="My Team" name="myteam" domain="[('employee_id.parent_id.user_id', '=', uid)]"/>
+                <separator/>
+                <filter string="To Validate" name="to_approve" domain="[('state', '=', 'draft')]"/>
+                <filter string="Validated" name="state_validated" domain="[('state', '=', 'validated')]"/>
+                <filter string="Refused" name="state_refused" domain="[('state', '=', 'refused')]"/>
+                <separator/>
+                <filter string="Date" name="check_in_filter" date="check_in"/>
+                <separator/>
+                <filter
+                    string="Active Employees"
+                    name="activeemployees"
+                    domain="[('employee_id.active', '=', True)]"/>
+                <filter
+                    string="Archived Employees"
+                    name="archivedemployees"
+                    domain="[('employee_id.active', '=', False)]"/>
+                <group>
+                    <filter string="Employee" name="employee" context="{'group_by': 'employee_id'}"/>
+                    <filter string="Date" name="groupby_date" context="{'group_by': 'check_in'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_attendance_tree_management" model="ir.ui.view">
+        <field name="name">hr.attendance.list</field>
+        <field name="model">hr.attendance</field>
+        <field name="arch" type="xml">
+            <list string="Employee attendances" create="0">
+                <field name="employee_id" widget="many2one_avatar_employee" readonly="1"/>
+                <field name="check_in" readonly="1"/>
+                <field name="check_out" readonly="1"/>
+                <field name="break_duration" readonly="1" widget="float_time"/>
+                <field name="worked_hours" readonly="1" string="Worked Time" widget="float_time"/>
+                <field name="work_entry_type_id" readonly="1" optional="show" groups="hr.group_hr_user"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'validated'"
+                       decoration-warning="state == 'draft'"
+                       decoration-danger="state == 'refused'"
+                       readonly="1"/>
+                <button name="action_validate" string="Validate" type="object"
+                        icon="check"
+                        invisible="state != 'draft'"
+                        groups="hr_attendance.group_hr_attendance_officer"/>
+                <button name="action_refuse" string="Refuse" type="object"
+                        icon="close"
+                        invisible="state not in ('draft', 'validated')"
+                        groups="hr_attendance.group_hr_attendance_officer"/>
+                <button name="action_reset_to_draft" string="Reset to Draft" type="object"
+                        icon="undo"
+                        invisible="state != 'refused'"
+                        groups="hr_attendance.group_hr_attendance_officer"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_attendance_management_action" model="ir.actions.act_window">
+        <field name="name">Management</field>
+        <field name="res_model">hr.attendance</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="hr_attendance_management_view_filter"/>
+        <field name="view_id" ref="view_attendance_tree_management"/>
+        <field name="context">
+            {
+                "search_default_to_approve" : 1,
+                "search_default_activeemployees": 1,
+            }
+        </field>
+        <field name="domain">[('check_out', '!=', False)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No attendance records found
+            </p><p>
+                The attendance reporting of your employees will be displayed here.
+            </p>
+        </field>
+>>>>>>> 68d23176d840c9afa47f0eee179c3118e793df1c
     </record>
 
     <record id="hr_attendance_action_greeting_message" model="ir.actions.client">
