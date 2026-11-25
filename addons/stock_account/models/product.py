@@ -5,7 +5,7 @@ from datetime import datetime
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
-from odoo.tools import SQL, split_every
+from odoo.tools import frozendict, SQL, split_every
 
 
 class ProductTemplate(models.Model):
@@ -368,17 +368,28 @@ class ProductProduct(models.Model):
 
     @api.model
     def _get_valuation_contexts(self, companies):
+        """ Build a mapping between companies and
+            valuation context.
+
+        :return: context dictionary.
+        :rtype: dict[self.env['res.company'], frozendict]
+        """
         Location = self.env['stock.location'].with_context(active_test=False, allowed_company_ids=companies.ids)
         locations_by_company = dict(Location._read_group([('is_valued_internal', '=', True)], ['company_id'], ['id:recordset']))
-        return {
-            company: self.with_context(
-                allowed_company_ids=company.ids,
-                location=locations_by_company.get(company, Location).ids,
-                owners=[False, company.partner_id.id],
-                strict=True,
-            )
-            for company in companies
-        }
+        multi_comp_locations = self.env['stock.location']
+        if self.env.context.get('allowed_company_ids', []):
+            # Get multi-comp locations
+            multi_comp_locations = self.env['stock.location'].with_context(active_test=False).search([
+                ('is_valued_internal', '=', True),
+            ])
+        context_by_company = {}
+        for company in companies:
+            context_by_company[company] = frozendict({
+                "location": (locations_by_company.get(company, Location) | multi_comp_locations).ids,
+                "strict": True,
+                "owners": [False, company.partner_id.id],
+            })
+        return context_by_company
 
     def _get_remaining_moves(self):
         moves_qty_by_product = {}
