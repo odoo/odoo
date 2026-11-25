@@ -4538,16 +4538,14 @@ class AccountTax(models.Model):
         if tax_values.get('amount_type') != 'fixed':
             return
 
-        invoice = tax_values.get('invoice_predictive', {}).get('invoice')
-        company_id = invoice.company_id.id if invoice else False
         calculated_amount = tax_values.get('amount', 0.0)
         reason = (tax_values.get('name') or '').strip().lower()
         type_tax_use = tax_values.get('type_tax_use')
 
-        # ignore values param as it has a flawed static_domain, but we have to use it in the function signature
+        # only use the company from the values param: its static_domain is flawed (exact name)
         def search_fixed_tax_fuzzy(values):
             candidate_taxes = self.search([
-                ('company_id', 'in', [company_id, False]),
+                *self._check_company_domain(values['company']),
                 ('amount_type', '=', 'fixed'),
                 ('type_tax_use', '=', type_tax_use),
                 ('amount', '>=', calculated_amount - 0.01),
@@ -4567,7 +4565,6 @@ class AccountTax(models.Model):
             return self
 
         cache_key = (
-            company_id,
             type_tax_use,
             calculated_amount,
             reason,
@@ -4643,6 +4640,7 @@ class AccountTax(models.Model):
                         tax = self.search(full_domain, order=','.join(orders), limit=1)
                     elif search_method:
                         tax = search_method({
+                            'company': company,
                             **criteria,
                             'static_domain': expression.AND([tax_domain, static_domain]),
                         })
