@@ -257,3 +257,19 @@ class TestVatNumbers(TransactionCase):
         ro_country = self.env.ref('base.ro').id
         partner_ro = self.env['res.partner'].create({'name': 'Test Peppol RO', 'country_id': ro_country, 'vat': '1234567897'})
         self.assertEqual(partner_ro.vat, '1234567897', "The RO prefix should not be appended for Romania (CUI exception).")
+
+    def test_vat_np(self):
+        """Test valid VAT number is accepted for Nepal"""
+        test_partner = self.env["res.partner"].create({"name": "NP Partner", "country_id": self.env.ref("base.np").id})
+        # Valid Nepal VAT: length must be 9
+        test_partner.write({"vat": "123456789"})
+        self.assertEqual(test_partner.vat, "123456789")
+
+        # Invalid Nepal VAT
+        msg = "The VAT number.*does not seem to be valid"
+        with self.assertRaisesRegex(ValidationError, msg):
+            test_partner.write({"vat": "1234"})           # length is too short
+        with self.assertRaisesRegex(ValidationError, msg):
+            test_partner.write({"vat": "1234567891234"})  # length is too long
+        with self.assertRaisesRegex(ValidationError, msg):
+            test_partner.write({"vat": "123$!-567"})      # contains special character
