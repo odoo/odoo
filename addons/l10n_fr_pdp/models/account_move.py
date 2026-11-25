@@ -7,6 +7,7 @@ from markupsafe import Markup
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import frozendict, html2plaintext
+from odoo.tools.misc import formatLang
 
 from odoo.addons.l10n_fr_pdp.models.account_edi_proxy_user import STATUS_TO_PROCESS_CONDITION_CODE_PDP
 from odoo.addons.l10n_fr_pdp.models.account_edi_xml_ubl_21_fr import CPRO_CUSTOMIZATION_ID, EN16931_CUSTOMIZATION_ID
@@ -119,6 +120,15 @@ class AccountMove(models.Model):
         store=True,
         readonly=True,
         copy=False,
+    )
+
+    l10n_fr_pdp_late_payment_penalties_rate = fields.Float(
+        string="Late Payment Penalties Rate",
+        default=10.0,
+        digits=(16, 2),
+        copy=False,
+        readonly=True,
+        help="Late payment penalties rate that applied when the invoice was posted.",
     )
 
     @api.depends('pdp_is_sent')
@@ -291,7 +301,7 @@ class AccountMove(models.Model):
         payment_term = self.invoice_payment_term_id
         return {
             'PMT': self.env._("In the event of late payment, a flat-rate fee of €40 for collection costs will be charged (Articles L.441-10 and D.441-5 of the Code de commerce)."),
-            'PMD': self.env._("Late payment penalties at an annual rate of 10% are applied if the payment is made after the due date."),
+            'PMD': self._l10n_fr_pdp_get_late_payment_penalty_note(),
             'AAB': html2plaintext(payment_term.note) if payment_term.early_discount else self.env._("No discount for early payment."),
         }
 
@@ -327,7 +337,61 @@ class AccountMove(models.Model):
         pdp_moves._compute_l10n_fr_pdp_status()
         for company, moves in self.filtered('pdp_can_send_response').grouped('company_id').items():
             company.account_peppol_edi_user._pdp_send_response(moves, 'AP')
+        res._l10n_fr_pdp_set_late_payment_penalties_rate()
         return res
+
+    def _l10n_fr_pdp_is_late_payment_penalties_applicable(self):
+        self.ensure_one()
+        return (
+            self.state == 'posted'
+            and self.is_sale_document(include_receipts=False)
+            and self.company_id.l10n_fr_pdp_late_payment_penalties_applicable
+        )
+
+    def _l10n_fr_pdp_set_late_payment_penalties_rate(self):
+        moves_by_company_and_period = {}
+        periods_by_company = {}
+        for move in self:
+            if not move._l10n_fr_pdp_is_late_payment_penalties_applicable():
+                continue
+            period_start = move.company_id._l10n_fr_pdp_get_semester_start(move.invoice_date)
+            key = (move.company_id, period_start)
+            moves_by_company_and_period.setdefault(key, self.env['account.move'])
+            moves_by_company_and_period[key] |= move
+            periods_by_company.setdefault(move.company_id, set()).add(period_start)
+
+        rates_by_company = {
+            company: company._l10n_fr_pdp_get_late_payment_penalties_rates(period_starts)
+            for company, period_starts in periods_by_company.items()
+        }
+
+        for (company, period_start), moves in moves_by_company_and_period.items():
+            rate = rates_by_company[company].get(period_start)
+            if rate is None:
+                rate = company.l10n_fr_pdp_manual_late_payment_penalties_rate
+                moves.l10n_fr_pdp_late_payment_penalties_rate = rate
+                formatted_rate = formatLang(self.env, rate, digits=0 if rate.is_integer() else 2)
+                warning = self.env._(
+                    "The late payment penalty rate could not be updated. "
+                    "The current rate of %(rate)s%% was used. If necessary, reset "
+                    "the invoice to draft and adjust the rate manually in the Accounting "
+                    "settings, or contact Odoo Support.",
+                    rate=formatted_rate,
+                )
+                for move in moves:
+                    move._message_log(body=warning)
+            else:
+                moves.l10n_fr_pdp_late_payment_penalties_rate = rate
+
+    def _l10n_fr_pdp_get_late_payment_penalty_note(self):
+        self.ensure_one()
+        rate = self.l10n_fr_pdp_late_payment_penalties_rate
+        formatted_rate = formatLang(self.env, rate, digits=0 if rate.is_integer() else 2)
+        return self.env._(
+            "Late payment penalties at an annual rate of %(rate)s%% are applied "
+            "if the payment is made after the due date.",
+            rate=formatted_rate,
+        )
 
     def _track_execute(self, track_init_values, trackings, track_records=None):
         filtered_trackings = {}

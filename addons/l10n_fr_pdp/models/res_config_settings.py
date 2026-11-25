@@ -37,6 +37,18 @@ class ResConfigSettings(models.TransientModel):
         """,
     )
 
+    l10n_fr_pdp_late_payment_penalties_applicable = fields.Boolean(
+        related='company_id.l10n_fr_pdp_late_payment_penalties_applicable',
+    )
+    l10n_fr_pdp_manual_late_payment_penalties_rate = fields.Float(
+        related='company_id.l10n_fr_pdp_manual_late_payment_penalties_rate',
+        readonly=False,
+    )
+    l10n_fr_pdp_late_payment_penalties_automatic = fields.Boolean(
+        related='company_id.l10n_fr_pdp_late_payment_penalties_automatic',
+        readonly=False,
+    )
+
     def action_open_peppol_form(self):
         self.ensure_one()
         if self.country_code != 'FR' and self.routing_scheme != '0225':

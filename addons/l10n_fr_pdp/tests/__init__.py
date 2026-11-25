@@ -2,7 +2,9 @@ from . import common
 from . import test_cii_export_facturx_fr
 from . import test_cii_import_facturx_fr
 from . import test_flow_lifecycle
+from . import test_late_payment_penalties
 from . import test_messages
 from . import test_partner
+from . import test_pdp_notes
 from . import test_user
 from . import test_xml_ubl_21_fr
