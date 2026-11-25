@@ -25,12 +25,9 @@ patch(GeneratePrinterData.prototype, {
         // the creation order says nothing about where it is displayed.
         const courseRank = new Map(order.courses.map((course, rank) => [course.id, rank]));
         const sortKeys = new Map(
-            lines.map((line, index) => [
+            lines.map((line) => [
                 line,
-                [
-                    line.is_service_fee_line ? 1 : 0,
-                    courseRank.get(order.lines[index].course_id?.id) ?? -1,
-                ],
+                [line.is_service_fee_line ? 1 : 0, courseRank.get(line.course_id) ?? -1],
             ])
         );
         return lines.toSorted((a, b) => {
