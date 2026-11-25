@@ -363,6 +363,7 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
             ],
             'taxes_id': tax,
         })
+        product.attribute_line_ids.product_template_value_ids.show_price_extra = True
 
         with MockRequest(self.env, website=self.website):
             ptav_price_extra = self.pc_controller._get_ptav_price_extra(
