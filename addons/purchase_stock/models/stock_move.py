@@ -235,6 +235,12 @@ class StockMove(models.Model):
         self.ensure_one()
         return quantity
 
+    def _get_dropshipped_price_unit(self):
+        self.ensure_one()
+        if self.purchase_line_id:
+            return self.purchase_line_id.with_context(conversion_date=self.date)._get_stock_move_price_unit()
+        return super()._get_dropshipped_price_unit()
+
     def _get_value_from_quotation(self, quantity, at_date=None):
         # TODO: Start from global value
         if not self.purchase_line_id:
