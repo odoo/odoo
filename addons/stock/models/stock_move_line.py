@@ -369,7 +369,11 @@ class StockMoveLine(models.Model):
         updates = {}
         for key, model in triggers:
             if key in vals:
-                updates[key] = vals[key] if isinstance(vals[key], models.BaseModel) else self.env[model].browse(vals[key])
+                key_record = vals[key] if isinstance(vals[key], models.BaseModel) else self.env[model].browse(vals[key])
+                for ml in self:
+                    if ml[key] != key_record:  # Writing the same value is not considered an update
+                        updates[key] = key_record
+                        break
 
         if 'result_package_id' in updates:
             for ml in self.filtered(lambda ml: ml.package_level_id):
