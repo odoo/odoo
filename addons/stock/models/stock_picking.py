@@ -998,7 +998,9 @@ class Picking(models.Model):
 
                         move_lines_without_package_level.package_level_id = package_level_ids[0]
                         for pl in package_level_ids:
-                            pl.location_dest_id = self._get_entire_pack_location_dest(pl.move_line_ids) or picking.location_dest_id.id
+                            location_dest_id = self._get_entire_pack_location_dest(pl.move_line_ids) or picking.location_dest_id.id
+                            if pl.location_dest_id.id != location_dest_id:
+                                pl.location_dest_id = location_dest_id
 
     def _get_lot_move_lines_for_sanity_check(self, none_done_picking_ids, separate_pickings=True):
         """ Get all move_lines with tracked products that need to be checked over in the sanity check.
