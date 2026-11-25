@@ -98,12 +98,15 @@
                             <span><t t-out="this.props.info.marginCurrency"/> (<t t-out="this.props.info.marginPercent"/>%) </span>
                         </t>
                     </div>
-                    <div class="grid gap-2 mt-3">
-                        <t t-foreach="productInfo.pricelists" t-as="pricelist" t-key="pricelist.name">
-                            <label class="fw-bold" t-out="pricelist.name"/>
-                            <span t-out="this.pos.formatCurrency(pricelist.price)"/>
-                        </t>
-                    </div>
+                    <t t-if="productInfo.pricelists?.length">
+                        <h3 class="section-title mt-3">Pricelists</h3>
+                        <div class="grid gap-2">
+                            <t t-foreach="productInfo.pricelists" t-as="pricelist" t-key="pricelist.name">
+                                <label class="fw-bold" t-out="pricelist.name"/>
+                                <span t-out="this.pos.formatCurrency(pricelist.price)"/>
+                            </t>
+                        </div>
+                    </t>
                 </div>
                 <div class="section-order text-start">
                     <h3 class="section-title">Order</h3>
