@@ -127,9 +127,6 @@ export class AddSnippetDialog extends Component {
             }
             return loadBundle(bundleName, loadOptions);
         };
-        this.props.editor.processThrough("snippet_preview_dialog_stylesheets_processors", {
-            iframe: this.iframeRef(),
-        });
         const editorPreviewAssetsBundles = this.props.editor.getResource(
             "snippet_preview_dialog_bundles"
         );
@@ -140,6 +137,10 @@ export class AddSnippetDialog extends Component {
             ),
             ...this.getDefaultAssets().map((assetName) => loadBundle(assetName, loadOptions)),
         ]);
+        // After the bundles: a processor may replace one.
+        this.props.editor.processThrough("snippet_preview_dialog_stylesheets_processors", {
+            iframe: this.iframeRef(),
+        });
     }
 
     getDefaultAssets() {
