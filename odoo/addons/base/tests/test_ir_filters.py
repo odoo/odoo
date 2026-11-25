@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
+import json
 import logging
 
 from odoo import exceptions
@@ -81,6 +82,32 @@ class TestGetFilters(FiltersCase):
             dict(name='a', is_default=False, user_ids=[], domain='[]', context='{}', sort='[]'),
             dict(name='c', is_default=False, user_ids=[self.USER_NG[0]], domain='[]', context='{}', sort='[]'),
         ])
+
+
+class TestFiltersSort(FiltersCase):
+
+    def test_sort_on_non_sortable_field(self):
+        Filters = self.env['ir.filters'].with_user(self.USER_ID)
+        ir_filter = Filters.create({
+            'name': 'sorted',
+            'model_id': 'ir.filters',
+            'sort': json.dumps(['name desc', 'action_id']),
+        })
+
+        for sort in (['user_ids asc'], ['name', 'user_ids desc'], ['not_a_field']):
+            with self.subTest(sort=sort):
+                with self.assertRaises(exceptions.ValidationError):
+                    Filters.create({
+                        'name': 'unsortable',
+                        'model_id': 'ir.filters',
+                        'sort': json.dumps(sort),
+                    })
+                with self.assertRaises(exceptions.ValidationError):
+                    ir_filter.sort = json.dumps(sort)
+
+        # the sort is checked against the filter's model
+        with self.assertRaises(exceptions.ValidationError):
+            ir_filter.model_id = 'res.partner'
 
 
 @tagged('post_install', '-at_install', 'migration')
