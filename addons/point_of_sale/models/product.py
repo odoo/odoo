@@ -164,7 +164,8 @@ class ProductProduct(models.Model):
 
     def _get_archived_combinations_per_product_tmpl_id(self, product_tmpl_ids):
         archived_combinations = {}
-        for product_tmpl in self.env['product.template'].browse(product_tmpl_ids):
+        product_tmpls = self.env['product.template'].browse(product_tmpl_ids)
+        for product_tmpl in product_tmpls.filtered('attribute_line_ids'):
             attribute_exclusions = product_tmpl._get_attribute_exclusions()
             archived_combinations[product_tmpl.id] = attribute_exclusions['archived_combinations']
             excluded = {}
