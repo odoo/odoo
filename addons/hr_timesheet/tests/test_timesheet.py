@@ -1187,3 +1187,27 @@ class TestTimesheet(TestCommonTimesheet):
         self.assertFalse(future_timesheet.exists(), "Future timesheets must be deleted when an employee with a departure date is archived.")
         self.assertFalse(employee_no_wizard.active, "The second employee should be archived.")
         self.assertTrue(future_timesheet_no_wizard.exists(), "Future timesheets must NOT be deleted when an employee is archived without the departure wizard.")
+
+
+@tagged('at_install', '-post_install')
+class TestTimesheetPortal(TestCommonTimesheet):
+
+    def test_portal_timesheets_of_project_manager(self):
+        """
+        Check that the portal of a project manager lists the timesheets but not the other analytic lines.
+        """
+        project_manager = new_test_user(self.env, login='project_manager', groups='project.group_project_manager')
+        timesheet, analytic_line = self.env['account.analytic.line'].create([{
+            'name': 'Timesheet',
+            'project_id': self.project_customer.id,
+            'employee_id': self.empl_employee.id,
+            'unit_amount': 1,
+        }, {
+            'name': 'Vendor bill line',
+            'account_id': self.analytic_account.id,
+            'amount': -100,
+        }])
+        portal_domain = self.env['account.analytic.line'].with_user(project_manager)._timesheet_get_portal_domain()
+        self.assertRecordValues((timesheet | analytic_line).filtered_domain(portal_domain), [
+            {'name': 'Timesheet', 'project_id': self.project_customer.id},
+        ])

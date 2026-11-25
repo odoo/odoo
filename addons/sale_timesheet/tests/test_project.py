@@ -181,6 +181,28 @@ class TestProject(TestCommonSaleTimesheet):
         self.project_global.account_id.invalidate_recordset()
         self.assertEqual(self.project_global.analytic_account_balance, expected_analytic_account_balance)
 
+    def test_real_margins_of_project_manager(self):
+        """
+        Check that the real margins of a project show its vendor bills to a project manager without accounting rights.
+        """
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_b.id,
+            'invoice_date': '2026-01-01',
+            'invoice_line_ids': [Command.create({
+                'product_id': self.company_data['product_order_cost'].id,
+                'quantity': 1,
+                'price_unit': 100.0,
+                'analytic_distribution': {self.project_global.account_id.id: 100},
+            })],
+        })
+        bill.action_post()
+        project_manager = self.user_employee_without_sales_access
+        action = self.project_global.with_user(project_manager).action_real_margin()
+        self.assertRecordValues(self.env['account.analytic.line'].with_user(project_manager).search(action['domain']), [
+            {'move_line_id': bill.invoice_line_ids.id, 'amount': -100.0},
+        ])
+
     def test_open_product_form_with_default_service_policy(self):
         form = Form(self.env['product.product'].with_context(
             default_type='service',
