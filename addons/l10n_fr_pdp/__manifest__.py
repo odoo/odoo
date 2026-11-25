@@ -27,6 +27,7 @@
         'wizard/account_move_send_views.xml',
         'wizard/pdp_registration_views.xml',
         'wizard/pdp_response_wizard_views.xml',
+        'wizard/l10n_fr_pdp_partner_lookup_views.xml',
     ],
     'assets': {
         'web.assets_backend': [
