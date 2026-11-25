@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models
+from odoo import api, models
 from odoo.fields import Domain
 
 
@@ -23,3 +23,14 @@ class StockRule(models.Model):
     def _get_moves_to_assign_domain(self, company_id):
         domain = super()._get_moves_to_assign_domain(company_id)
         return Domain(domain) & Domain('is_subcontract', '=', False)
+
+
+class StockRoute(models.Model):
+    _inherit = "stock.route"
+
+    @api.model
+    def _get_standard_global_routes_values(self):
+        return {
+            **super()._get_standard_global_routes_values(),
+            'mrp_subcontracting.route_resupply_subcontractor_mto': {'sequence': 15, 'product_selectable': False, 'warehouse_selectable': True},
+        }
