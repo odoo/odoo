@@ -2,6 +2,11 @@ import { Component, t, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 /**
+ * @import { ResolveProps, StripBrands } from "@odoo/owl"
+ * @import { FieldSignal } from "../model/fields"
+ */
+
+/**
  * The components that display a field, by widget name or by field type: the
  * widget of a field node wins over its type, and a field whose widget and type
  * are both unknown is displayed as text (see `FallbackField`).
@@ -47,16 +52,22 @@ const fieldProps = {
  * `value()` to read it, `value.set(newValue)` to write it. All of them follow
  * the props: they give the record and the field the component has now.
  *
+ * The type of the value is given as an Owl type, as for `useConfig`:
+ *
  *     class CharField extends Component {
  *         static template = xml`<input t-att-value="this.field.value()"/>`;
- *         field = useField();
+ *         field = useField(t.string()); // field.value(): string
  *     }
+ *
+ * @template T
+ * @param {T} _type the Owl type of the value. It only types the field: the
+ *  value is not checked against it.
+ * @returns {ResolveProps<typeof fieldProps> & { value: FieldSignal<StripBrands<T>> }}
  */
-export function useField() {
+export function useField(_type) {
     // the props are read through signals, so the field is the props object
     // itself, plus the value
     const props = useProps(fieldProps);
-    /** @type {import("../model/fields").FieldSignal<any>} */
     const value = Object.assign(() => props.record[props.name](), {
         /** @param {any} newValue */
         set: (newValue) => props.record[props.name].set(newValue),

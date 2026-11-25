@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, t } from "@odoo/owl";
 import { displayValue } from "./display_value";
 import { useField } from "./field";
 
@@ -8,7 +8,7 @@ import { useField } from "./field";
 export class FallbackField extends Component {
     static template = "web.next.FallbackField";
 
-    field = useField();
+    field = useField(t.any());
 
     text() {
         return displayValue(this.field.value(), this.field.node.field);

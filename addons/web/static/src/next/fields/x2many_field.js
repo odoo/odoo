@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, t } from "@odoo/owl";
 import { ListRenderer } from "../list_view/list_renderer";
 import { fieldRegistry, useField } from "./field";
 
@@ -10,7 +10,7 @@ export class X2ManyField extends Component {
     static template = "web.next.X2ManyField";
     static components = { ListRenderer };
 
-    field = useField();
+    field = useField(t.array());
 }
 
 fieldRegistry.add("one2many", X2ManyField).add("many2many", X2ManyField);

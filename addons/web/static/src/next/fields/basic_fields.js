@@ -1,4 +1,4 @@
-import { Component, computed, signal } from "@odoo/owl";
+import { Component, computed, signal, t } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { formatFloat, formatInteger } from "@web/views/fields/formatters";
 import { parseFloat, parseInteger } from "@web/views/fields/parsers";
@@ -7,14 +7,14 @@ import { fieldRegistry, useField } from "./field";
 export class CharField extends Component {
     static template = "web.next.CharField";
 
-    field = useField();
+    field = useField(t.or([t.string(), t.literal(false)]));
 }
 
 export class BooleanField extends Component {
     static template = "web.next.BooleanField";
     static components = { CheckBox };
 
-    field = useField();
+    field = useField(t.boolean());
 }
 
 /**
@@ -25,7 +25,7 @@ export class BooleanField extends Component {
 class NumericField extends Component {
     static template = "web.next.NumericField";
 
-    field = useField();
+    field = useField(t.number());
     invalid = signal(false);
 
     /** @type {(value: number | false) => string} */
