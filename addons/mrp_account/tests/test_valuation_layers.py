@@ -84,6 +84,30 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         unbuild_form.save().action_unbuild()
         self.assertEqual(self.glass.total_value, 30)
 
+    def test_fifo_unbuild_component_in_other_uom(self):
+        """ The BoM consumes a Dozen of a FIFO component stocked in Units. The
+        unbuild gives it back in Dozen, and its remaining value is the full value
+        of the 12 Units it brings back to stock.
+        """
+        self.glass.categ_id = self.category_fifo
+        bom = self.env['mrp.bom'].create({
+            'product_id': self.dining_table.id,
+            'product_tmpl_id': self.dining_table.product_tmpl_id.id,
+            'bom_line_ids': [Command.create({'product_id': self.glass.id, 'product_qty': 1, 'product_uom_id': self.dozen.id})],
+        })
+        self._make_in_move(self.glass, 24, 10)
+        mo = self._create_mo(bom, 1)
+        self._produce(mo)
+        mo.button_mark_done()
+
+        unbuild = self.env['mrp.unbuild'].create({'mo_id': mo.id})
+        unbuild.action_unbuild()
+        glass_move = unbuild.produce_line_ids.filtered(lambda move: move.product_id == self.glass)
+        self.assertRecordValues(glass_move, [
+            {'quantity': 1, 'value': 120, 'remaining_qty': 12, 'remaining_value': 120},
+        ])
+        self.assertEqual(self.glass.total_value, 240)
+
     def test_fifo_produce_deliver_return_unbuild(self):
         self.glass.categ_id = self.category_fifo
         self._make_in_move(self.glass, 1, 10)
