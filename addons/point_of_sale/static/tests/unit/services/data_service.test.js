@@ -141,6 +141,30 @@ describe("data_service", () => {
         expect(allRequestedModels).toInclude("product.product");
     });
 
+    test("indexedDB is not read again for the write dates of what is already known", async () => {
+        const store = await setupPosEnv();
+        const data = store.data;
+        const order = await getFilledOrder(store);
+        const cachedData = { "ir.ui.view": [] };
+        localStorage.setItem(`pos_data_params_${odoo.pos_config_id}`, "{}");
+        patch(data, {
+            getCachedServerDataFromIndexedDB: async () => cachedData,
+            async getCachedServerIdsFromIndexedDB(models, cached) {
+                expect.step({ models, cached: cached === cachedData });
+                return super.getCachedServerIdsFromIndexedDB(...arguments);
+            },
+        });
+
+        await data.missingRecursive({
+            "pos.order": [{ ...order.raw, id: 5000 }],
+            "pos.order.line": order.lines.map((line) => ({ ...line.raw, order_id: 5000 })),
+        });
+        expect.verifySteps([]);
+
+        await data.initData();
+        expect.verifySteps([{ models: [], cached: true }]);
+    });
+
     test("websocket reconnections don't duplicate the notification listeners", async () => {
         const store = await setupPosEnv();
         const bus = store.data.bus;
