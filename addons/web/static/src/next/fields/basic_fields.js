@@ -1,42 +1,20 @@
-import { Component, signal, useProps } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { formatFloat, formatInteger } from "@web/views/fields/formatters";
 import { parseFloat, parseInteger } from "@web/views/fields/parsers";
-import { fieldProps, fieldRegistry } from "./field";
+import { fieldRegistry, useField } from "./field";
 
 export class CharField extends Component {
     static template = "web.next.CharField";
 
-    props = useProps(fieldProps);
-
-    get value() {
-        return this.props.record[this.props.name]() || "";
-    }
-
-    /**
-     * @param {Event & { target: HTMLInputElement }} ev
-     */
-    onChange(ev) {
-        this.props.record[this.props.name].set(ev.target.value);
-    }
+    field = useField();
 }
 
 export class BooleanField extends Component {
     static template = "web.next.BooleanField";
     static components = { CheckBox };
 
-    props = useProps(fieldProps);
-
-    get value() {
-        return Boolean(this.props.record[this.props.name]());
-    }
-
-    /**
-     * @param {boolean} value
-     */
-    onChange(value) {
-        this.props.record[this.props.name].set(value);
-    }
+    field = useField();
 }
 
 /**
@@ -47,17 +25,13 @@ export class BooleanField extends Component {
 class NumericField extends Component {
     static template = "web.next.NumericField";
 
-    props = useProps(fieldProps);
+    field = useField();
     invalid = signal(false);
 
     /** @type {(value: number | false) => string} */
     format = formatInteger;
     /** @type {(value: string) => number} */
     parse = parseInteger;
-
-    get formattedValue() {
-        return this.format(this.props.record[this.props.name]());
-    }
 
     /**
      * @param {Event & { target: HTMLInputElement }} ev
@@ -71,7 +45,7 @@ class NumericField extends Component {
             return;
         }
         this.invalid.set(false);
-        this.props.record[this.props.name].set(value);
+        this.field.value.set(value);
     }
 }
 

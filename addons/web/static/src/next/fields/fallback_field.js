@@ -1,6 +1,6 @@
-import { Component, useProps } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { displayValue } from "./display_value";
-import { fieldProps } from "./field";
+import { useField } from "./field";
 
 /**
  * The value of a field that has no component yet, as readonly text.
@@ -8,9 +8,9 @@ import { fieldProps } from "./field";
 export class FallbackField extends Component {
     static template = "web.next.FallbackField";
 
-    props = useProps(fieldProps);
+    field = useField();
 
-    get value() {
-        return displayValue(this.props.record[this.props.name](), this.props.node.field);
+    text() {
+        return displayValue(this.field.value(), this.field.props.node.field);
     }
 }
