@@ -61,7 +61,7 @@ class TestPhCommon(AccountTestInvoicingCommon):
             'parent_id': cls.partner_b.id,
         })
 
-    def _render(self, invoice, report='account.report_invoice'):
+    def _render(self, invoice, report='account.report_invoice_with_payments'):
         html, _ = self.env['ir.actions.report']._render_qweb_html(report, invoice.ids)
         return html.decode()
 
