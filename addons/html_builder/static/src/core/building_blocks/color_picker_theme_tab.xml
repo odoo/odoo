@@ -25,7 +25,8 @@
                         </span>
                     </div>
                 </button>
-                <button t-on-click="() => this.props.editColorCombination(number)"
+                <button t-if="this.props.editColorCombination"
+                    t-on-click="() => this.props.editColorCombination(number)"
                     class="o-hb-edit-color-combination o_colorpicker_ignore fa fa-pencil btn ms-1 px-1"
                     title="Edit"/>
             </div>

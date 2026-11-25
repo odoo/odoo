@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, click } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
-import { contains } from "@web/../tests/web_test_helpers";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import {
     addOption,
     defineWebsiteModels,
@@ -54,6 +54,19 @@ test("should have the theme tab", async () => {
     await contains(".we-bg-options-container .o_we_color_preview").click();
     await contains("button.theme-tab").click();
     expect(".color-combination-button[data-color='o_cc1']").toHaveClass("selected");
+});
+
+test("should not allow editing color combinations as restricted editor", async () => {
+    onRpc("has_group", ({ args }) => args[1] !== "website.group_website_designer");
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderColorPicker enabledTabs="['custom', 'theme']" styleAction="'background-color'"/>`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+    await contains(".we-bg-options-container .o_we_color_preview").click();
+    await contains("button.theme-tab").click();
+    expect(".o-hb-edit-color-combination").toHaveCount(0);
 });
 
 test("should support colors defined using the color function", async () => {
