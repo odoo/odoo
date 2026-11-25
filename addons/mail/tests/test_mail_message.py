@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models
+from odoo import Command, models
 from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.models import mail_message as mail_message_module
 from odoo.addons.mail.tests import common
@@ -119,6 +119,16 @@ class TestMailMessage(common.MailCommon, HttpCase):
                     ["id:count"],
                     limit=100,
                 )
+
+    def test_mail_message_search_needaction_many_messages(self):
+        notified = self._add_messages(
+            self.env.company, "Notified note",
+            notification_ids=[Command.create({"res_partner_id": self.partner_employee.id, "notification_type": "inbox"})],
+        )
+        self._add_messages(self.env.company, "Other notes", count=5)
+        messages = self.env["mail.message"].with_user(self.user_employee)
+        with patch.object(mail_message_module, "MAX_SEARCH_LIMIT", 5):
+            self.assertEqual(messages.search([("needaction", "=", True)]), notified)
 
     @users("employee")
     def test_unlink_failure_message_notify_author(self):
