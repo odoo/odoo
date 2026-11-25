@@ -360,3 +360,48 @@ test("Pricelist: rule whose pricelist is missing from the PoS does not break loa
 
     expect(rule.pricelist_id).toBe(undefined);
 });
+
+test("Pricelist: global rules keep the order of item_ids", async () => {
+    const store = await setupPosEnv();
+    const globalRule = (id) => ({
+        id,
+        pricelist_id: 91,
+        product_tmpl_id: false,
+        product_id: false,
+        categ_id: false,
+        base: "list_price",
+        compute_price: "fixed",
+        fixed_price: id,
+        min_quantity: 0,
+    });
+    const [pricelist] = store.models.loadConnectedData({
+        "product.pricelist": [
+            {
+                id: 91,
+                name: "Ordered Rules Pricelist",
+                display_name: "Ordered Rules Pricelist",
+                currency_id: 1,
+                item_ids: [912, 999, 910, 911],
+            },
+        ],
+        "product.pricelist.item": [globalRule(910), globalRule(911), globalRule(912)],
+    })["product.pricelist"];
+
+    expect(pricelist.getGlobalRulesIds()).toEqual([912, 910, 911]);
+    const product = store.models["product.template"].get(5).product_variant_ids[0];
+    expect(product.getPrice(pricelist, 1, 0, false, product)).toBe(912);
+
+    // The position cache Map must be reused across lookups while item_ids is unchanged
+    const cachedMap = pricelist.itemPositionById;
+    expect(pricelist.getItemPosition(store.models["product.pricelist.item"].get(910))).toBe(2);
+    expect(pricelist.getItemPosition(store.models["product.pricelist.item"].get(911))).toBe(3);
+    expect(pricelist.getItemPosition(store.models["product.pricelist.item"].get(912))).toBe(0);
+    expect(pricelist.itemPositionById).toBe(cachedMap);
+
+    // Replacing an item while keeping the same item_ids length rebuilds the cache and finds it
+    store.models["product.pricelist.item"].get(910).delete();
+    const rule913 = store.models["product.pricelist.item"].create(globalRule(913));
+    expect(pricelist.raw.item_ids.length).toBe(4);
+    expect(pricelist.getItemPosition(rule913)).toBe(3);
+    expect(pricelist.itemPositionById).not.toBe(cachedMap);
+});

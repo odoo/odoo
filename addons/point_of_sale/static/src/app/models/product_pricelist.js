@@ -1,5 +1,6 @@
 import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
+import { RAW_SYMBOL } from "./related_models/utils";
 
 const { DateTime } = luxon;
 
@@ -22,6 +23,30 @@ export class ProductPricelist extends Base {
         this.rulesByTmplId = {};
         this.uiState.generalRulesIdsByCateg = {};
         this.uiState.generalRulesIds = {};
+        this.itemPositionById = null;
+        this.indexedItemIds = null;
+        this.indexedItemIdsCount = 0;
+    }
+
+    getItemPosition(item) {
+        const itemIds = this[RAW_SYMBOL].item_ids;
+        if (!itemIds?.size) {
+            return -1;
+        }
+        const needsRebuild =
+            !this.itemPositionById ||
+            this.indexedItemIds !== itemIds ||
+            itemIds.size !== this.indexedItemIdsCount;
+        if (needsRebuild || (!this.itemPositionById.has(item.id) && itemIds.has(item.id))) {
+            let index = 0;
+            this.itemPositionById = new Map();
+            for (const id of itemIds) {
+                this.itemPositionById.set(id, index++);
+            }
+            this.indexedItemIds = itemIds;
+            this.indexedItemIdsCount = itemIds.size;
+        }
+        return this.itemPositionById.get(item.id) ?? -1;
     }
 
     getCategoryRulesIds(categoryIds) {
@@ -71,6 +96,7 @@ export class ProductPricelist extends Base {
             return;
         }
 
+        index ??= this.getItemPosition(item);
         if (categ_id) {
             if (!this.uiState.generalRulesIdsByCateg[categ_id]) {
                 this.uiState.generalRulesIdsByCateg[categ_id] = {};
