@@ -307,3 +307,30 @@ test("use the company related to what is being edited", async () => {
     favoriteColors.useCompany(3);
     expect(favoriteColors.companyId).toBe(1);
 });
+
+test("favorite colors are not offered by public editors", async () => {
+    // Public editors (forum, blog comments, portal chatter) run with the
+    // frontend session, which has no company: even an administrator then
+    // neither gets favorite colors nor the right to add some.
+    patchWithCleanup(user, {
+        allowedCompanies: [],
+        get activeCompany() {
+            return undefined;
+        },
+    });
+    await mountWithCleanup(ColorPicker, {
+        props: {
+            state: {
+                selectedColor: "",
+                defaultTab: "favorite",
+            },
+            applyColor() {},
+            enabledTabs: ["solid", "custom"],
+        },
+    });
+    expect(user.isAdmin).toBe(true);
+    expect(user.allowedCompanies).toEqual([]);
+    expect(".o_font_color_selector .btn-tab").toHaveCount(2);
+    expect(".o_font_color_selector .favorite-tab").toHaveCount(0);
+    expect(".o_color_picker_favorite_tab").toHaveCount(0);
+});
