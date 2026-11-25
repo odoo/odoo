@@ -12,7 +12,7 @@ patch(PosOrder.prototype, {
                 this.update({ partner_id: this.config._tw_walk_in_customer });
             }
             if (this.partner_id) {
-                this.l10n_tw_edi_is_b2b = this.partner_id.commercial_partner_id.is_company;
+                this.l10n_tw_edi_is_b2b = (this.partner_id.commercial_partner_id || this.partner_id).is_company;
             }
         }
     },
@@ -23,7 +23,7 @@ patch(PosOrder.prototype, {
             if (partner) {
                 this.setToInvoice(true);
                 this.setEcpayInvoiceInfo({ l10n_tw_edi_is_print: true });
-                this.l10n_tw_edi_is_b2b = partner.commercial_partner_id.is_company;
+                this.l10n_tw_edi_is_b2b = (partner.commercial_partner_id || partner).is_company;
             } else {
                 this.setToInvoice(false);
                 this.setEcpayInvoiceInfo({});
