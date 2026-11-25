@@ -6,6 +6,32 @@ import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { BarcodeParser } from "@barcodes/js/barcode_parser";
 import { GS1BarcodeError } from "@barcodes_gs1_nomenclature/js/barcode_parser";
 import { logPosMessage } from "../utils/pretty_console_log";
+import { ConnectionLostError } from "@web/core/network/rpc";
+
+async function fetchNomenclature(orm, nomenclatureId) {
+    const key = `pos_barcode_nomenclature_${session.db}_${nomenclatureId}`;
+    try {
+        const nomenclature = await BarcodeParser.fetchNomenclature(orm, nomenclatureId);
+        try {
+            localStorage.setItem(key, JSON.stringify(nomenclature));
+        } catch {
+            // A full storage only loses the offline copy
+        }
+        return nomenclature;
+    } catch (error) {
+        if (error instanceof ConnectionLostError) {
+            try {
+                const storedNomenclature = localStorage.getItem(key);
+                if (storedNomenclature) {
+                    return JSON.parse(storedNomenclature);
+                }
+            } catch {
+                // Ignore corrupted or inaccessible cached nomenclature
+            }
+        }
+        throw error;
+    }
+}
 
 export class BarcodeReader {
     constructor(parser, services) {
@@ -125,16 +151,13 @@ export const barcodeReaderService = {
 
         try {
             if (session.nomenclature_id) {
-                const nomenclature = await BarcodeParser.fetchNomenclature(
-                    orm,
-                    session.nomenclature_id
-                );
+                const nomenclature = await fetchNomenclature(orm, session.nomenclature_id);
                 const parser = new BarcodeParser({ nomenclature });
                 barcodeReader = new BarcodeReader(parser, deps);
             }
 
             if (session.fallback_nomenclature_id && barcodeReader) {
-                const fallbackNomenclature = await BarcodeParser.fetchNomenclature(
+                const fallbackNomenclature = await fetchNomenclature(
                     orm,
                     session.fallback_nomenclature_id
                 );
