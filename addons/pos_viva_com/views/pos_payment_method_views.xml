@@ -9,13 +9,20 @@
                 <notebook invisible="payment_provider != 'viva_com'">
                     <page name="settings" string="Viva Com">
                         <group>
-                            <field name="viva_com_merchant_id" invisible="payment_provider != 'viva_com'" required="payment_provider == 'viva_com'"/>
-                            <field name="viva_com_api_key" invisible="payment_provider != 'viva_com'" required="payment_provider == 'viva_com'"/>
-                            <field name="viva_com_client_id" invisible="payment_provider != 'viva_com'" required="payment_provider == 'viva_com'"/>
-                            <field name="viva_com_client_secret" invisible="payment_provider != 'viva_com'" required="payment_provider == 'viva_com'"/>
-                            <field name="viva_com_test_mode" invisible="payment_provider != 'viva_com'" required="payment_provider == 'viva_com'"/>
-                            <field name="viva_com_terminal_id" invisible="payment_provider != 'viva_com'" required="payment_provider == 'viva_com'"/>
-                            <field name="viva_com_webhook_endpoint" invisible="payment_provider != 'viva_com' or not id" required="payment_provider == 'viva_com'" widget="CopyClipboardChar"/>
+                            <group>
+                                <field name="viva_com_merchant_id" invisible="payment_provider != 'viva_com'" required="payment_provider == 'viva_com'"/>
+                                <field name="viva_com_api_key" invisible="payment_provider != 'viva_com'" required="payment_provider == 'viva_com'"/>
+                                <field name="viva_com_client_id" invisible="payment_provider != 'viva_com'" required="payment_provider == 'viva_com'"/>
+                                <field name="viva_com_client_secret" invisible="payment_provider != 'viva_com'" required="payment_provider == 'viva_com'"/>
+                                <field name="viva_com_test_mode" invisible="payment_provider != 'viva_com'" required="payment_provider == 'viva_com'"/>
+                                <field name="viva_com_terminal_id" invisible="payment_provider != 'viva_com'" required="payment_provider == 'viva_com'"/>
+                                <field name="viva_com_webhook_endpoint" invisible="payment_provider != 'viva_com' or not id" required="payment_provider == 'viva_com'" widget="CopyClipboardChar"/>
+                            </group>
+                            <group>
+                                <div class="d-flex justify-content-end" colspan="2">
+                                    <button name="action_viva_com_test" type="object" string="Test" class="btn-primary text-nowrap" groups="point_of_sale.group_pos_manager"/>
+                                </div>
+                            </group>
                         </group>
                     </page>
                 </notebook>
