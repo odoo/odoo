@@ -22,7 +22,8 @@ export class SectionLineRecord extends Record {
                     }
                 }
             }
-            if ("section_uom_id" in changes) {
+            // No conversion factor can be computed when either unit is missing.
+            if ("section_uom_id" in changes && changes.section_uom_id && this.data.section_uom_id) {
                 const uoms = await this.model.orm
                     .cache({ type: "disk" })
                     .read(

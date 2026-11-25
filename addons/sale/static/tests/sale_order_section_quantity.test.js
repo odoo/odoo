@@ -375,6 +375,21 @@ test("Changing a section's UoM to an incompatible one doesn't change its lines",
     expect.verifySteps(["web_save"]);
 });
 
+test("Clearing a section's UoM doesn't apply a ratio to its lines", async () => {
+    onRpc("batch_onchange_sol", () => expect.step("batch_onchange_sol"));
+
+    await mountView({ type: "form", resModel: "sale.order", resId: 1 });
+
+    await contains(".o_data_row:contains(Sec4):first [name=product_and_description]").click();
+    await contains(".o_selected_row [name=section_uom_id] input", { visible: false }).clear({
+        confirm: "blur",
+    });
+
+    expect.verifySteps([]);
+    expect(".o_data_row:contains(Sec4-r1) td[name=sol_qty]").toHaveText("1.00");
+    expect(".o_data_row:contains(Sec4-sub1-r1) td[name=sol_qty]").toHaveText("1.00");
+});
+
 test("Discarding a section's quantity change restores its lines", async () => {
     onRpc("batch_onchange_sol", () => {
         expect.step("batch_onchange_sol");
