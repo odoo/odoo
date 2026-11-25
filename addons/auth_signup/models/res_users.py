@@ -68,6 +68,9 @@ class ResUsers(models.Model):
                 # user exists, modify it according to values
                 values.pop('login', None)
                 values.pop('name', None)
+                if partner.tz:
+                    # only keep existing users' tz, new users' tz is overwritten at first login anyway
+                    values.pop('tz', None)
                 partner_user.write(values)
                 if not partner_user.login_date and partner_user._is_internal():
                     partner_user._notify_inviter()

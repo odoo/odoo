@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import contextlib
 import json
 import logging
+from zoneinfo import ZoneInfo
 
 import werkzeug.urls
 from werkzeug.exceptions import BadRequest
@@ -12,6 +14,7 @@ from odoo.http.requestlib import fragment_to_query_string
 from odoo.http.router import db_filter
 from odoo.http.session import authenticate
 from odoo.modules.registry import Registry
+from odoo.tools.date_utils import all_timezones
 from odoo.tools.misc import clean_context
 
 from odoo.addons.auth_signup.controllers.main import AuthSignupHome as Home
@@ -105,6 +108,12 @@ class OAuthController(Controller):
 
         provider = state['p']
         request.update_context(**clean_context(state.get('c', {})))
+        if browser_tz := request.cookies.get('tz'):
+            tz = None
+            with contextlib.suppress(KeyError, ValueError):
+                tz = ZoneInfo(browser_tz).key
+            if tz in all_timezones:
+                request.update_context(signup_tz=tz)
         try:
             # auth_oauth may create a new user, the commit makes it
             # visible to authenticate()'s own transaction below

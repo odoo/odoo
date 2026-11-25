@@ -91,7 +91,7 @@ class ResUsers(models.Model):
         oauth_uid = validation['user_id']
         email = validation.get('email', 'provider_%s_user_%s' % (provider, oauth_uid))
         name = validation.get('name', email)
-        return {
+        values = {
             'name': name,
             'login': email,
             'email': email,
@@ -100,6 +100,10 @@ class ResUsers(models.Model):
             'oauth_access_token': params['access_token'],
             'active': True,
         }
+        tz = self.env.context.get('signup_tz')
+        if tz:
+            values['tz'] = tz
+        return values
 
     @api.model
     def _auth_oauth_signin(self, provider, validation, params):
