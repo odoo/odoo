@@ -14,7 +14,7 @@ from odoo.addons.resource.models.resource import HOURS_PER_DAY
 from odoo.addons.hr_holidays.models.hr_leave import get_employee_from_context
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.translate import _
-from odoo.tools.float_utils import float_round
+from odoo.tools.float_utils import float_compare, float_round
 from odoo.tools.date_utils import get_timedelta
 from odoo.osv import expression
 
@@ -151,6 +151,14 @@ class HolidaysAllocation(models.Model):
     def _check_date_from_date_to(self):
         if any(allocation.date_to and allocation.date_from > allocation.date_to for allocation in self):
             raise UserError(_("The Start Date of the Validity Period must be anterior to the End Date."))
+
+    @api.constrains('number_of_days')
+    def _check_number_of_days_vs_taken(self):
+        for allocation in self:
+            if allocation.allocation_type == 'regular' \
+                    and allocation.holiday_status_id.requires_allocation == 'yes' \
+                    and float_compare(allocation.number_of_days, allocation.leaves_taken, precision_digits=2) < 0:
+                raise ValidationError(_('You cannot allocate fewer days than the %s already taken on this allocation.', allocation.leaves_taken))
 
     # The compute does not get triggered without a depends on record creation
     # aka keep the 'useless' depends
@@ -709,6 +717,18 @@ class HolidaysAllocation(models.Model):
         linked_requests = self.mapped('linked_request_ids')
         if linked_requests:
             linked_requests.action_refuse()
+        self.activity_update()
+        return True
+
+    def action_edit(self):
+        if any(allocation.state != 'validate' for allocation in self):
+            raise UserError(self.env._('Only approved allocations can be edited.'))
+        if any(allocation.linked_request_ids for allocation in self):
+            raise UserError(self.env._('This allocation was split into one allocation per employee. '
+                            'Please edit those allocations instead.'))
+        for allocation in self:
+            allocation._check_approval_update('validate')
+        self.write({'state': 'confirm', 'approver_id': False})
         self.activity_update()
         return True
 
