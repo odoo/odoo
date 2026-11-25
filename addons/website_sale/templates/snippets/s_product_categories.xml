@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="s_product_categories" name="Product Categories">
+        <div
+            class="s_product_categories pt-3 pb-4 o_not_editable"
+            t-att-data-parent-category-id="product_category and product_category.id"
+            t-att-data-show-parent="product_category and 'true'"
+        />
+    </template>
+
+    <template id="s_mega_menu_odoo_menu" inherit_id="website.s_mega_menu_odoo_menu">
+        <xpath expr="//div[hasclass('row')][not(hasclass('oe_structure'))]" position="replace">
+            <div class="row row-cols-lg-4 s_product_categories_menu">
+                <t
+                    t-foreach="env['product.public.category']._get_product_categories_snippet_top_categories()"
+                    t-as="product_category"
+                >
+                    <t
+                        t-snippet-call="website_sale.s_product_categories"
+                        string="Product Categories"
+                    />
+                </t>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>

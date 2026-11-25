@@ -30,6 +30,7 @@ from . import (
     test_performance,
     test_pricelist,
     test_product_attribute_value_config,
+    test_product_categories_snippet,
     test_product_configurator,
     test_product_filters,
     test_product_image,

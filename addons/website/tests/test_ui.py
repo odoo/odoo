@@ -428,6 +428,10 @@ class TestUiTranslate(odoo.tests.HttpCase):
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestUi(HttpCaseWithWebsiteUser):
 
+    def _use_original_odoo_menu_template(self):
+        # Other modules (e.g. website_sale) change the content of the "Odoo Menu" template
+        self.env.ref('website.s_mega_menu_odoo_menu').inherit_children_ids.active = False
+
     def test_01_admin_tour_homepage(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'homepage', login='admin')
 
@@ -549,9 +553,11 @@ class TestUi(HttpCaseWithWebsiteUser):
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'carousel_content_removal', login='admin')
 
     def test_16_website_edit_megamenu(self):
+        self._use_original_odoo_menu_template()
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'edit_megamenu', login='admin')
 
     def test_website_megamenu_active_nav_link(self):
+        self._use_original_odoo_menu_template()
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'megamenu_active_nav_link', login='admin')
 
     def test_17_website_edit_menus(self):
@@ -623,6 +629,7 @@ class TestUi(HttpCaseWithWebsiteUser):
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'text_animations', login='admin')
 
     def test_31_website_edit_megamenu_big_icons_subtitles(self):
+        self._use_original_odoo_menu_template()
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'edit_megamenu_big_icons_subtitles', login='admin')
 
     def test_32_website_background_colorpicker(self):

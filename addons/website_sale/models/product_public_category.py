@@ -129,7 +129,7 @@ class ProductPublicCategory(models.Model):
             # Only take the current category and its 4 closest parents to avoid having too long
             # URLs. This number should stay in sync with the category route computation.
             category_slugs = [slug(cat) for cat in category.parents_and_self[-5:]]
-            category.website_url = f"{SHOP_PATH}/category/{"/".join(category_slugs)}"
+            category.website_url = f"{SHOP_PATH}/category/{'/'.join(category_slugs)}"
         super(ProductPublicCategory, self - assignable_categories)._compute_website_url()
 
     @api.depends_context("company", "website_id")
@@ -229,6 +229,54 @@ class ProductPublicCategory(models.Model):
             for parent_category, child_count in child_count_by_parent
             if parent_category
         ]
+
+    @api.model
+    def _get_product_categories_snippet_top_categories(self):
+        """Return the top-level categories with no parent set.
+
+        :rtype: product.public.category
+        """
+        domain = self._get_available_category_domain(self.env.website.id)
+        return self.search(domain & Domain("parent_id", "=", False))
+
+    @api.model
+    def _prepare_product_categories_snippet_data(self, category_ids):
+        """Return the categories details, with their children.
+
+        :param list category_ids: IDs of the categories.
+        :return: The categories that can be displayed, by ID, as dicts with the `category` and its
+                 `child_categories`.
+        :rtype: dict
+        """
+        domain = self._get_available_category_domain(self.env.website.id)
+        categories = self.search(domain & Domain("id", "in", category_ids))
+        children_by_parent = self.search(
+            domain & Domain("parent_id", "in", categories.ids)
+        ).grouped("parent_id")
+        return {
+            category.id: {
+                "category": category._prepare_product_categories_snippet_category_data(),
+                "child_categories": [
+                    child._prepare_product_categories_snippet_category_data()
+                    for child in children_by_parent.get(category, [])
+                ],
+            }
+            for category in categories
+        }
+
+    def _prepare_product_categories_snippet_category_data(self):
+        """Return the data of a category.
+
+        :return: The `id`, `name`, `url` of the category, and whether it is `unpublished`.
+        :rtype: dict
+        """
+        self.ensure_one()
+        return {
+            "id": self.id,
+            "name": self.name,
+            "url": self.website_url,
+            "unpublished": not self.has_published_products,
+        }
 
     @api.model
     def _get_available_category_domain(self, website_id):
