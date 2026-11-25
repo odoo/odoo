@@ -422,6 +422,38 @@ test("scroller pointer to reach next step", async () => {
     expect(".o_tour_pointer").toHaveCount(0);
 });
 
+test("no scroller pointer when the page is the scroll parent", async () => {
+    Tour._records = [{ name: "tour_des_flandres" }];
+    disableAnimations();
+
+    registry.category("web_tour.tours").add("tour_des_flandres", {
+        steps: () => [{ trigger: "button.inc", content: "Click to increment", run: "click" }],
+    });
+    class Root extends Component {
+        static components = { Counter };
+        static template = xml/*html*/ `
+            <div class="scrollable-parent" style="height: 100px;">
+                <div style="height: 300px" />
+                <Counter />
+            </div>
+        `;
+    }
+
+    await mountWithCleanup(Root);
+    // The page is the scroll parent and its content overflows it,
+    // the trigger is below its bounding rect, but visible in the viewport.
+    Object.defineProperty(document, "scrollingElement", {
+        configurable: true,
+        get: () => queryFirst(".scrollable-parent"),
+    });
+    after(() => delete document.scrollingElement);
+    await getService("tour_service").startTour("tour_des_flandres", { mode: "manual" });
+
+    await animationFrame();
+    await contains(".o_tour_pointer_tip").hover();
+    expect(".o_tour_pointer_content span").toHaveText("Click to increment");
+});
+
 test("scroller pointer to reach next step (X axis)", async () => {
     Tour._records = [{ name: "tour_des_flandres" }];
     disableAnimations();

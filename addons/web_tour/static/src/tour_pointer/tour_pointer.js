@@ -316,7 +316,15 @@ export class TourPointer extends Component {
             return "unknown";
         }
         const rect = this.trigger.getBoundingClientRect();
-        const containerRect = this.scrollParent.getBoundingClientRect();
+        // If the scroll parent is the page itself (<html> or <body>), its bounding
+        // rectangle is not the visible area: it moves up when scrolling, and its
+        // content can overflow it (e.g. `html { height: 100% }`). A visible trigger
+        // can thus be reported as out of the container, so in this case use the viewport instead.
+        const doc = this.scrollParent.ownerDocument;
+        const containerRect =
+            this.scrollParent === doc.scrollingElement
+                ? new DOMRect(0, 0, doc.documentElement.clientWidth, doc.documentElement.clientHeight)
+                : this.scrollParent.getBoundingClientRect();
         if (rect.bottom <= containerRect.top) {
             return "out-top";
         } else if (rect.top >= containerRect.bottom) {
