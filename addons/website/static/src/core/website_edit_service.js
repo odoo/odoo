@@ -320,6 +320,12 @@ export const websiteEditService = {
 
         // Transfer the iframe website_edit service to the EditInteractionPlugin
         const handlePluginLoaded = (ev) => {
+            if (
+                ev.editableDocument &&
+                ev.editableDocument !== publicInteractions.el?.ownerDocument
+            ) {
+                return;
+            }
             ev.currentTarget.dispatchEvent(
                 new CustomEvent("transfer_website_edit_service", {
                     detail: {
@@ -347,9 +353,13 @@ export const websiteEditService = {
                 handlePluginLoaded
             );
         };
+        // `beforeunload` is not triggered when the iframe is removed from the
+        // DOM, but `pagehide` is.
         window.addEventListener("beforeunload", removeParentListeners);
+        window.addEventListener("pagehide", removeParentListeners);
         onWillDestroy(() => {
             window.removeEventListener("beforeunload", removeParentListeners);
+            window.removeEventListener("pagehide", removeParentListeners);
             removeParentListeners();
         });
 

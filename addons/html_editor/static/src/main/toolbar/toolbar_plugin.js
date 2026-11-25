@@ -425,7 +425,7 @@ export class ToolbarPlugin extends Plugin {
         // raw setTimeout that isn't cancelled by `destroy`). At that point the
         // editable's document is detached and `defaultView` is null, which would
         // crash in `getFilteredTargetedNodes`. Bail out early in that case.
-        if (this.isDestroyed || !this.document.isConnected) {
+        if (this.isDestroyed) {
             return;
         }
         // Ignore toolbar updates while a preview is active. The toolbar will be

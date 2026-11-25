@@ -85,7 +85,6 @@ export class WebsiteBuilderClientAction extends Component {
         this.iframefallback = signal.ref();
         this.newInstalledModule = router.current.module_installed;
 
-        this.websiteContent = signal.ref();
         this.builderSidebarRef = signal.ref();
         this.cleanups = [];
 
@@ -95,7 +94,25 @@ export class WebsiteBuilderClientAction extends Component {
         this.snippetsTemplate = "website.snippets";
 
         this.containerRef = signal.ref();
-        this.state = proxy({ isEditing: false, showSidebar: true, key: 1, is404: false });
+        this.state = proxy({
+            isEditing: false,
+            showSidebar: true,
+            key: 1,
+            is404: false,
+            // A reload loads the page in a new iframe: the previous one is
+            // kept until no builder uses it anymore (see `reloadIframe`).
+            iframes: [],
+            currentIframeId: 1,
+        });
+        this.previousIframes = [];
+        // Key of the builder currently in the DOM (null if none).
+        this.renderedBuilderKey = null;
+        const onRendered = () => {
+            this.renderedBuilderKey = this.state.isEditing ? this.state.key : null;
+            this.removeUnusedIframes();
+        };
+        onMounted(onRendered);
+        onPatched(onRendered);
         this.websiteContext = proxy(this.websiteService.context);
 
         const scope = useScope();
@@ -126,11 +143,11 @@ export class WebsiteBuilderClientAction extends Component {
 
         onWillStart(async () => {
             const updateWebsiteId = (websiteId) => {
-                const encodedPath = encodeURIComponent(this.path);
-                this.initialUrl = `/website/force/${encodeURIComponent(
-                    websiteId
-                )}?path=${encodedPath}`;
                 this.websiteService.currentWebsiteId = websiteId;
+                this.state.iframes.push({
+                    id: this.state.currentIframeId,
+                    src: this.getIframeSrc(this.path),
+                });
             };
             const proms = [
                 this.websiteService.fetchWebsites(),
@@ -254,6 +271,37 @@ export class WebsiteBuilderClientAction extends Component {
 
     get testMode() {
         return false;
+    }
+
+    /**
+     * @returns {HTMLIFrameElement|null} the iframe displaying the current page
+     */
+    websiteContent() {
+        return this.iframeContainerRef()?.querySelector(
+            `:scope > iframe[data-iframe-id="${this.state.currentIframeId}"]`
+        );
+    }
+
+    getIframeSrc(path) {
+        const websiteId = encodeURIComponent(this.websiteService.currentWebsiteId);
+        return `/website/force/${websiteId}?path=${encodeURIComponent(path)}`;
+    }
+
+    /**
+     * Removes the previous iframes once their page is replaced and no builder
+     * uses them anymore, so that an editor never outlives its document.
+     */
+    removeUnusedIframes() {
+        const unusedIds = this.previousIframes
+            .filter(
+                ({ builderKey, isReplaced }) =>
+                    isReplaced && (builderKey === null || builderKey !== this.renderedBuilderKey)
+            )
+            .map(({ id }) => id);
+        if (unusedIds.length) {
+            this.previousIframes = this.previousIframes.filter(({ id }) => !unusedIds.includes(id));
+            this.state.iframes = this.state.iframes.filter(({ id }) => !unusedIds.includes(id));
+        }
     }
 
     get websiteBuilderProps() {
@@ -608,10 +656,11 @@ export class WebsiteBuilderClientAction extends Component {
     async reloadEditor(url, reloadContext) {
         this.reloadContext = reloadContext || null;
         this.newInstalledModule = undefined;
-        await this.reloadIframe(this.state.isEditing, url);
-        // Disable the current instance of the builder and trigger a new
-        // instance of it with `t-key`
+        // Disable the current instance of the builder: it stays displayed, on
+        // its own (previous) iframe, until the new instance is mounted.
         this.builderSidebarRef().firstElementChild.classList.add("o_builder_disabled");
+        await this.reloadIframe(this.state.isEditing, url);
+        // Trigger a new instance of the builder with `t-key`
         this.state.key++;
     }
 
@@ -639,30 +688,43 @@ export class WebsiteBuilderClientAction extends Component {
         }
     }
 
+    /**
+     * Loads the page in a new iframe instead of reloading the current one: a
+     * builder (and its editor) may still use the current document until it is
+     * replaced by a new instance. The previous iframe stays displayed above
+     * the new one and is removed once no builder uses it anymore.
+     *
+     * @param {Boolean} isEditing
+     * @param {string} [url] the page to load, the current one by default
+     */
     async reloadIframe(isEditing = true, url) {
         this.ui.block();
-        this.preparePublicRootReady();
+        const currentLocation = this.websiteContent().contentWindow.location;
+        let path = currentLocation.pathname + currentLocation.search + currentLocation.hash;
+        if (url) {
+            const urlObj = new URL(url, currentLocation);
+            if (urlObj.origin !== currentLocation.origin) {
+                console.error("Tried to change the iframe's origin. Reloading instead");
+            } else {
+                path = urlObj.pathname.split("/").map(encodeURIComponent).join("/");
+                if (history.state?.skipRouteChange) {
+                    history.pushState({}, "", new URL(path, currentLocation));
+                }
+            }
+        }
         this.setIframeLoaded();
         this.websiteService.websiteRootInstance = undefined;
-        if (url) {
-            const baseUrl = new URL(this.websiteContent().contentWindow.location);
-            const urlObj = new URL(url, baseUrl);
-            const pathSegments = urlObj.pathname.split("/").map(encodeURIComponent);
-            const encodedPath = pathSegments.join("/");
-            const newUrl = new URL(encodedPath, baseUrl);
-            if (newUrl.origin !== baseUrl.origin) {
-                console.error("Tried to change the iframe's origin. Reloading instead");
-                this.websiteContent().contentWindow.location.reload();
-            } else {
-                if (history.state?.skipRouteChange) {
-                    history.pushState({}, "", newUrl);
-                }
-                this.websiteContent().contentWindow.location.href = newUrl;
-            }
-        } else {
-            this.websiteContent().contentWindow.location.reload();
-        }
+        const previousIframe = {
+            id: this.state.currentIframeId,
+            builderKey: this.renderedBuilderKey,
+            isReplaced: false,
+        };
+        this.previousIframes.push(previousIframe);
+        this.state.currentIframeId++;
+        this.state.iframes.push({ id: this.state.currentIframeId, src: this.getIframeSrc(path) });
         await this.loadIframeAndBundles(isEditing);
+        previousIframe.isReplaced = true;
+        this.removeUnusedIframes();
         this.ui.unblock();
     }
 
