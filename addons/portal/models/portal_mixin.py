@@ -63,9 +63,9 @@ class PortalMixin(models.AbstractModel):
         if share_token and hasattr(self, 'access_token'):
             self.check_access('read')
             params['access_token'] = self._portal_ensure_token()
-        if pid:
+        if pid and (sign_token := self._sign_token(pid)):
             params['pid'] = pid
-            params['hash'] = self._sign_token(pid)
+            params['hash'] = sign_token
         if signup_partner and hasattr(self, 'partner_id') and self.partner_id:
             params.update(self.partner_id.signup_get_auth_param()[self.partner_id.id])
 
