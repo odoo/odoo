@@ -1,9 +1,13 @@
-from odoo import api, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
 class AccountPayment(models.Model):
     _inherit = 'account.payment'
+
+    # The withholding lines derive from the payment amount, which the checks determine: create the lines after the
+    # checks, so that their amounts are protected while creating the checks triggers their recomputation.
+    withholding_line_ids = fields.One2many(write_sequence=30)
 
     @api.constrains('state', 'withholding_line_ids')
     def _check_withholding_line_sequence_number(self):

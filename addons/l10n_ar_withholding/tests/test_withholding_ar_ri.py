@@ -1404,3 +1404,39 @@ class TestArWithholdingArRi(TestArCommon):
         invoice = self.create_invoice(post=False, partner_id=False)
         wizard = self.create_payment_register(invoice)
         self.assertEqual(len(wizard.withholding_line_ids), 0)
+
+    def test_withholding_and_checks_manual_amount_kept(self):
+        """ A withholding amount manually adjusted on a check payment must survive the save of the wizard and the
+        creation of the payment: creating the checks determines the payment amount, which must not recompute the
+        withholding lines, or the payment entry would not balance.
+        """
+        # A bill of 1,200 without VAT, of which 1% is withheld: 12.
+        self.tax_wth_purchase_iibb_untaxed.amount = -1.0
+        own_check_line = self.own_check_payment_method_line()
+        invoice = self.create_invoice(price_unit=1200.0, tax_ids=self.tax_0)
+        self.env['l10n_ar.partner.tax'].create({
+            'partner_id': self.res_partner_adhoc.id,
+            'company_id': invoice.company_id.id,
+            'tax_id': self.tax_wth_purchase_iibb_untaxed.id,
+        })
+
+        with Form(self.payment_register(invoice)) as pay_form:
+            pay_form.journal_id = own_check_line.journal_id
+            pay_form.payment_method_line_id = own_check_line
+            with pay_form.l10n_latam_new_check_ids.new() as check_line:
+                check_line.name = 'CHK-001'
+                check_line.payment_date = datetime.today()
+                check_line.amount = 1000.0
+            # Pay the whole bill, and raise the withholding from 12 to 200 so that the net is the check.
+            pay_form.amount = 1200.0
+            with pay_form.withholding_line_ids.edit(0) as line:
+                line.amount = 200.0
+            self.assertEqual(pay_form.withholding_net_amount, 1000.0)
+        wizard = pay_form.save()
+
+        self.assertRecordValues(wizard, [{'amount': 1200.0, 'withholding_net_amount': 1000.0}])
+        self.assertRecordValues(wizard.withholding_line_ids, [{'base_amount': 1200.0, 'amount': 200.0}])
+        # The manual amount must also be kept on the payment, for its entry to balance.
+        payment = self.env['account.payment'].browse(wizard.action_create_payments()['res_id'])
+        self.assertRecordValues(payment, [{'amount': 1200.0}])
+        self.assertRecordValues(payment.withholding_line_ids, [{'base_amount': 1200.0, 'amount': 200.0}])
