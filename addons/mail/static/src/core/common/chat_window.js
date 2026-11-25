@@ -1,6 +1,6 @@
 import { ActionList } from "@mail/core/common/action_list";
-import { Composer } from "@mail/core/common/composer";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
+import { LazyComposer } from "@mail/core/common/lazy_composer";
 import { Thread } from "@mail/core/common/thread";
 import { AutoresizeInput } from "@mail/core/common/autoresize_input";
 import { CountryFlag } from "@mail/core/common/country_flag";
@@ -38,8 +38,8 @@ export class ChatWindow extends Component {
         DiscussAvatar,
         Dropdown,
         Thread,
-        Composer,
         AutoresizeInput,
+        Composer: LazyComposer,
         Typing,
     };
     static template = "mail.ChatWindow";
