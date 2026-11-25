@@ -8,9 +8,14 @@ export class BurgerUserMenu extends UserMenu {
         onMenuClicked: t.function().optional(),
     });
     _onItemClicked(callback) {
-        return (ev) => {
-            callback(ev);
-            this.props.onMenuClicked?.(ev);
+        return async (ev) => {
+            // The callback may rely on this component (e.g. an orm call):
+            // closing the burger menu destroys it, so wait for the callback.
+            try {
+                await callback(ev);
+            } finally {
+                this.props.onMenuClicked?.(ev);
+            }
         };
     }
 }

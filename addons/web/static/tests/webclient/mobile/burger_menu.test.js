@@ -7,6 +7,7 @@ import {
     defineMenus,
     getService,
     mountWithCleanup,
+    onRpc,
     patchWithCleanup,
     useTestClientAction,
 } from "@web/../tests/web_test_helpers";
@@ -190,4 +191,28 @@ test("Burger menu closes when click on user menu item", async () => {
     await animationFrame();
     expect(queryAll(".o_burger_menu", { root: document.body })).toHaveCount(0);
     expect.verifySteps(["callback ring_item"]);
+});
+
+test("Burger menu: user menu item waits for a slow server reply", async () => {
+    const actionGet = Promise.withResolvers();
+    onRpc("res.users", "action_get", () => actionGet.promise);
+
+    await mountWithCleanup(WebClient);
+    await contains(".o_mobile_menu_toggle", { root: document.body }).click();
+    await contains(".o_user_menu_mobile a:contains(My Preferences)", {
+        root: document.body,
+    }).click();
+    expect(queryAll(".test_client_action", { root: document.body })).toHaveCount(0);
+
+    actionGet.resolve({
+        type: "ir.actions.client",
+        tag: "__test__client__action__",
+        params: { description: "Preferences" },
+    });
+    await animationFrame();
+    await animationFrame();
+    expect(queryAll(".o_burger_menu", { root: document.body })).toHaveCount(0);
+    expect(queryAll(".test_client_action", { root: document.body })).toHaveText(
+        "ClientAction_Preferences"
+    );
 });
