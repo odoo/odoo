@@ -1,5 +1,5 @@
 import { test, expect, describe } from "@odoo/hoot";
-import { MockServer } from "@web/../tests/web_test_helpers";
+import { MockServer, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
 import { getFilledOrder, setupPosEnv } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
@@ -35,6 +35,29 @@ describe("data_service", () => {
         await store.data.initData();
 
         expect(getTemplate(key).outerHTML).not.toInclude("<div>old</div>");
+    });
+
+    test("a full local storage does not block the opening", async () => {
+        const store = await setupPosEnv();
+        patchWithCleanup(localStorage, {
+            setItem() {
+                throw new DOMException("The quota has been exceeded.", "QuotaExceededError");
+            },
+        });
+        patchWithCleanup(window, { alert: (message) => expect.step(message) });
+        patchWithCleanup(store.data.notification, {
+            add: (message, options) => expect.step([message.toString(), options.type]),
+        });
+
+        const data = await store.data.loadInitialData();
+
+        expect.verifySteps([
+            [
+                "The browser storage is full: new orders may not be created. Ask your administrator to free some space in this browser.",
+                "warning",
+            ],
+        ]);
+        expect(data["pos.config"]).toHaveLength(1);
     });
 
     test("localDeleteCascade", async () => {
