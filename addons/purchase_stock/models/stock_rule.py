@@ -156,7 +156,7 @@ class StockRule(models.Model):
                     po_line_values.append(self.env['purchase.order.line']._prepare_purchase_order_line_from_procurement(
                         *procurement, po))
                     # Check if we need to advance the order date for the new line
-                    date_planned = po.date_planned or min(v['date_planned'] for v in po_line_values)
+                    date_planned = po_line_values[-1]['date_planned']
                     order_date_planned = date_planned - relativedelta(
                         days=procurement.values['supplier'].delay)
                     if fields.Date.to_date(order_date_planned) < fields.Date.to_date(po.date_order):
