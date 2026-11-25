@@ -1851,6 +1851,7 @@ class SaleOrder(models.Model):
                 or (
                     tx.state == "done"
                     and tx.payment_id.move_id.state == "posted"
+                    and (not tx.payment_id.move_id or tx.payment_id.move_id.state == "posted")
                     and not tx.payment_id.is_reconciled
                 )
             )

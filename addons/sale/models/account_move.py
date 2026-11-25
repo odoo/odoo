@@ -166,8 +166,14 @@ class AccountMove(models.Model):
 
         for invoice in posted.filtered(lambda move: move.is_invoice()):
             payments = invoice.mapped("transaction_ids.payment_id").filtered(
-                lambda x: x.state in ("paid", "reconciled")
+                lambda x: x.state in ("in_process", "paid", "reconciled") and not x.is_reconciled
             )
+            for payment in payments.filtered(lambda p: not p.move_id):
+                if not payment.outstanding_account_id:
+                    payment.outstanding_account_id = payment._get_outstanding_account(payment.payment_type)
+                payment._generate_journal_entry()
+                payment.move_id.filtered(lambda m: m.state == "draft").action_post()
+
             move_lines = payments.move_id.line_ids.filtered(
                 lambda line: (
                     line.account_type in ("asset_receivable", "liability_payable")

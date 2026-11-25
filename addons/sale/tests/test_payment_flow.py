@@ -853,3 +853,33 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
                 "total": 20.0,
             },
         )
+
+    def test_prepayment_reconciles_on_invoice_confirmation(self):
+        """Ensure an online prepayment on a confirmed SO is linked to the manually created invoice
+        and automatically reconciled upon invoice confirmation."""
+        self.sale_order.prepayment_percent = 0.5
+        prepayment_amount = self.sale_order.amount_total * self.sale_order.prepayment_percent
+
+        tx = self._create_transaction(
+            flow="redirect",
+            amount=prepayment_amount,
+            sale_order_ids=[self.sale_order.id],
+            state="done",
+        )
+        with mute_logger("odoo.addons.sale.models.payment_transaction"):
+            self._run_post_processing()
+
+        self.assertEqual(self.sale_order.state, "sale")
+        self.assertTrue(tx.payment_id)
+        self.assertFalse(tx.payment_id.is_reconciled)
+
+        invoice = self.sale_order._create_invoices()
+        self.assertEqual(invoice.transaction_ids, tx)
+        self.assertEqual(invoice.payment_state, "not_paid")
+
+        invoice.action_post()
+
+        self.assertEqual(invoice.state, "posted")
+        self.assertEqual(invoice.payment_state, "partial")
+        self.assertEqual(invoice.amount_residual, self.sale_order.amount_total - prepayment_amount)
+        self.assertTrue(tx.payment_id.is_reconciled)
