@@ -3679,3 +3679,178 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                          (overtime_rule.work_entry_type_id,
                           self._utc(self._wall(self.monday, 16)), self._utc(self._wall(self.monday, 18))),
                          "the 2 hours beyond the schedule are overtime")
+
+    def _duration_based_absence_in_hours(self, **vals):
+        """ An absence in hours, to approve when ``leave_validation_type`` is given as ``hr``
+        (an approved request on a day without schedule is refused). """
+        return self.env['hr.work.entry.type'].create({
+            'name': 'Custom hours absence', 'code': 'test_custom_hours_absence',
+            'requires_allocation': False, 'leave_validation_type': 'no_validation',
+            'request_unit': 'hour', 'unit_of_measure': 'hour', 'count_as': 'absence',
+            **vals,
+        })
+
+    def _duration_based_calendar_of(self, hours_per_weekday):
+        """ ``{weekday: hours}`` told as durations: such a schedule names no clock hour. """
+        return self.env['resource.calendar'].create({
+            'name': 'duration based',
+            'company_id': self.company.id,
+            'attendance_ids': [(5, 0, 0)] + [
+                (0, 0, {'dayofweek': str(day), 'hour_from': 0, 'hour_to': 0,
+                        'day_period': 'full_day', 'duration_hours': hours})
+                for day, hours in hours_per_weekday.items()
+            ],
+        })
+
+    def test_custom_hours_on_a_duration_based_schedule_count_the_requested_length(self):
+        """ The hours of such a schedule are a window centered on 12:00 nobody sees: a request
+        counts its length, up to the hours of the day, not its overlap with that window. """
+        calendar = self._duration_based_calendar()
+        for hour_from, hour_to, expected_hours in (
+            (12, 16, 4), (12, 15, 3), (12, 17, 5),
+            (7, 17, 8),  # up to the hours of the day
+            (6, 10, 4), (8, 16, 8),
+        ):
+            with self.subTest(hour_from=hour_from, hour_to=hour_to):
+                leave = self._leave(self.holidays_type_hours, employee=self._employee_on(calendar),
+                                    request_hour_from=hour_from, request_hour_to=hour_to)
+                self.assertAlmostEqual(leave.number_of_hours, expected_hours)
+                self.assertAlmostEqual(leave.number_of_days, expected_hours / 8, places=2,
+                                       msg="the days follow the hours")
+                self.assertEqual(leave.duration_display, f"{expected_hours}:00 hours")
+
+    def test_custom_hours_on_a_duration_based_schedule_on_a_day_off(self):
+        saturday = self.monday - timedelta(days=2)
+        absence = self._duration_based_absence_in_hours(leave_validation_type='hr')
+        leave = self._leave(absence, employee=self._employee_on(self._duration_based_calendar()),
+                            request_date_from=saturday, request_hour_from=10, request_hour_to=14)
+        self.assertEqual((leave.number_of_hours, leave.number_of_days), (0, 0))
+
+    def test_custom_hours_on_a_duration_based_schedule_leave_out_public_holidays(self):
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Global Time Off',
+            'date_from': self._utc(self._wall(self.monday, 13)),
+            'date_to': self._utc(self._wall(self.monday, 15)),
+        })
+        leave = self._leave(self.holidays_type_hours,
+                            employee=self._employee_on(self._duration_based_calendar()),
+                            request_hour_from=12, request_hour_to=17)
+        self.assertAlmostEqual(leave.number_of_hours, 3)
+        self.assertAlmostEqual(leave.number_of_days, 3 / 8, places=2)
+
+    def test_custom_hours_on_a_duration_based_schedule_over_several_days(self):
+        """ Each day is capped by its own hours, the first one starts at the requested hour,
+        the last one ends at it and the days in between are whole. """
+        calendar = self._duration_based_calendar_of({0: 8, 1: 4, 2: 8})
+        employee = self._employee_on(calendar)
+        leave = self._leave(self.holidays_type_hours, employee=employee,
+                            request_date_to=self.tuesday, request_hour_from=12, request_hour_to=17)
+        # Monday from 12:00 (12h, up to 8h) + Tuesday until 17:00 (17h, up to 4h)
+        self.assertAlmostEqual(leave.number_of_hours, 12)
+        self.assertAlmostEqual(leave.number_of_days, 2)
+
+        leave = self._leave(self.holidays_type_hours, employee=self._employee_on(calendar, 'Edges'),
+                            request_date_to=self.wednesday, request_hour_from=18, request_hour_to=3)
+        # Monday from 18:00 (6h), Tuesday in full (4h), Wednesday until 03:00 (3h)
+        self.assertAlmostEqual(leave.number_of_hours, 13)
+
+    def test_custom_hours_on_a_duration_based_schedule_cap_counts_the_other_leaves(self):
+        """ Requests of the same day cannot add up to more than the hours of that day. """
+        employee = self._employee_on(self._duration_based_calendar())
+        first = self._leave(self.holidays_type_hours, employee=employee,
+                            request_hour_from=8, request_hour_to=10)
+        first.action_approve()  # only approved absences take hours
+        second = self._leave(self.holidays_type_hours, employee=employee,
+                             request_hour_from=12, request_hour_to=20)
+        self.assertAlmostEqual(first.number_of_hours, 2)
+        self.assertAlmostEqual(second.number_of_hours, 6)
+        self.assertAlmostEqual(second.number_of_days, 6 / 8, places=2)
+
+    def test_custom_hours_on_a_duration_based_schedule_cap_counts_the_public_holidays(self):
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Global Time Off',
+            'date_from': self._utc(self._wall(self.monday, 12)),
+            'date_to': self._utc(self._wall(self.monday, 13)),
+        })
+        leave = self._leave(self.holidays_type_hours,
+                            employee=self._employee_on(self._duration_based_calendar()),
+                            request_hour_from=7, request_hour_to=17)
+        # 10h requested - 1h of public holiday = 9h, but only 8h - 1h are left in that day
+        self.assertAlmostEqual(leave.number_of_hours, 7)
+
+    def test_custom_hours_set_on_a_duration_based_schedule_plan_the_end_like_they_are_counted(self):
+        """ The duration typed moves the end of the request, which must give that duration back. """
+        calendar = self._duration_based_calendar()
+        for hour_from, hours, expected_hour_to in ((8, 3, 11), (6, 4, 10), (12, 5, 17), (9, 8, 17)):
+            with self.subTest(hour_from=hour_from, hours=hours):
+                leave = self._leave(self.holidays_type_hours, employee=self._employee_on(calendar),
+                                    request_hour_from=hour_from, request_hour_to=hour_from + 1)
+                with Form(leave) as form:
+                    form.number_of_hours = hours
+                self.assertEqual((leave.request_hour_to, leave.number_of_hours), (expected_hour_to, hours))
+
+        leave = self._leave(self.holidays_type_hours, employee=self._employee_on(calendar, 'Too long'),
+                            request_hour_from=8, request_hour_to=9)
+        with self.assertRaises(ValidationError), Form(leave) as form:
+            form.number_of_hours = 10  # more than the hours of the day
+
+    def test_custom_hours_set_on_a_duration_based_schedule_skip_the_public_holidays(self):
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Global Time Off',
+            'date_from': self._utc(self._wall(self.monday, 12)),
+            'date_to': self._utc(self._wall(self.monday, 13)),
+        })
+        leave = self._leave(self.holidays_type_hours,
+                            employee=self._employee_on(self._duration_based_calendar()),
+                            request_hour_from=8, request_hour_to=9)
+        with Form(leave) as form:
+            form.number_of_hours = 5
+        self.assertEqual((leave.request_hour_to, leave.number_of_hours), (14, 5),
+                         "08:00 -> 12:00 and 13:00 -> 14:00")
+
+    def test_custom_hours_set_on_a_duration_based_schedule_over_several_days(self):
+        leave = self._leave(self.holidays_type_hours,
+                            employee=self._employee_on(self._duration_based_calendar()),
+                            request_date_to=self.wednesday, request_hour_from=8, request_hour_to=17)
+        with Form(leave) as form:
+            form.number_of_hours = 20
+        # Monday from 08:00 (8h), Tuesday in full (8h), Wednesday until 04:00 (4h)
+        self.assertEqual((leave.request_date_to, leave.request_hour_to, leave.number_of_hours),
+                         (self.wednesday, 4, 20))
+
+    def test_custom_hours_on_a_duration_based_schedule_by_an_employee(self):
+        """ An employee has no right on the versions nor the work entry types: the duration and
+        the end planned from a duration typed must not need any elevated right. """
+        self.employee_emp.resource_calendar_id = self._duration_based_calendar()
+        to_approve = self._duration_based_absence_in_hours(leave_validation_type='hr')
+        leave = self.env['hr.leave'].with_user(self.user_employee).create({
+            'name': 'My leave', 'employee_id': self.employee_emp.id, 'work_entry_type_id': to_approve.id,
+            'request_date_from': self.monday, 'request_date_to': self.monday,
+            'request_hour_from': 12, 'request_hour_to': 17,
+        })
+        self.assertEqual((leave.state, leave.number_of_hours), ('confirm', 5))
+        self.assertFalse(leave.work_entry_type_increases_duration)  # computed as the employee
+
+        with Form(leave) as form:
+            form.number_of_hours = 3
+        self.assertEqual((leave.request_hour_to, leave.number_of_hours), (15, 3))
+
+    def test_custom_hours_on_a_schedule_with_clock_hours_count_the_overlap(self):
+        calendar = self.env['resource.calendar'].create({
+            'name': 'clock hours', 'company_id': self.company.id,
+            'attendance_ids': [(5, 0, 0)] + [
+                (0, 0, {'dayofweek': str(day), 'hour_from': 8, 'hour_to': 16, 'day_period': 'full_day'})
+                for day in range(5)
+            ],
+        })
+        leave = self._leave(self.holidays_type_hours, employee=self._employee_on(calendar),
+                            request_hour_from=12, request_hour_to=17)
+        self.assertAlmostEqual(leave.number_of_hours, 4)
+
+    def test_custom_hours_working_time_on_a_duration_based_schedule_is_left_alone(self):
+        """ Only absences are concerned: a working time in hours stays on the clock. """
+        worked = self._duration_based_absence_in_hours(
+            code='test_custom_hours_worked', name='Custom hours worked', count_as='working_time')
+        leave = self._leave(worked, employee=self._employee_on(self._duration_based_calendar()),
+                            request_hour_from=6, request_hour_to=18)
+        self.assertAlmostEqual(leave.number_of_hours, 12)
