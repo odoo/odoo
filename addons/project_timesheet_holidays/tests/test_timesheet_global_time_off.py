@@ -20,6 +20,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         # for the standard calendar and one for the one we created)
         self.test_company = self.env['res.company'].create({
             'name': 'My Test Company',
+            'tz': 'UTC',
         })
 
         attendance_ids = [
