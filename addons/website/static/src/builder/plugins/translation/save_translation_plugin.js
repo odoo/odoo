@@ -29,7 +29,7 @@ export class SaveTranslationPlugin extends Plugin {
 
         // This is not a good way to handle characters that needs escaping, as
         // attribute's text ends up escaped several times after save. But this
-        // keeps the previous behavior: the `EscapeTextNodesPlugin` takes care
+        // keeps the previous behavior: the `WebsiteSavePlugin` takes care
         // of escaping the content of text nodes (as the content of the
         // translation may come from xml nodes of a qweb view).
         // TODO: find a good solution to handle translation's escaping
