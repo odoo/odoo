@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Добавление навигационных иконок на страницу корзины -->
+    <template id="cart_nav_icons" inherit_id="website_sale.cart">
+        <xpath expr="//div[hasclass('container')]" position="before">
+            <div class="container py-3">
+                <div class="desktop-nav-icons d-none d-md-flex mx-auto" style="display: flex !important; max-width: 240px; align-items: center; justify-content: center; gap: 20px;">
+                    <a href="/shop" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if request.httprequest.path == '/shop' else '' }}">
+                        <i class="fa fa-home"></i>
+                    </a>
+                    <a href="/videos" class="nav-icon-btn">
+                        <i class="fa fa-play"></i>
+                    </a>
+                    <a href="/shop/cart" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if '/shop/cart' in request.httprequest.path else '' }}">
+                        <i class="fa fa-shopping-cart"></i>
+                    </a>
+                    <a href="/profile" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if '/profile' in request.httprequest.path else '' }}">
+                        <i class="fa fa-user"></i>
+                    </a>
+                </div>
+            </div>
+        </xpath>
+    </template>
+    
+    <!-- Добавление навигационных иконок на страницу заказа -->
+    <template id="checkout_nav_icons" inherit_id="website_sale.checkout">
+        <xpath expr="//div[hasclass('container')]" position="before">
+            <div class="container py-3">
+                <div class="desktop-nav-icons d-none d-md-flex mx-auto" style="display: flex !important; max-width: 240px; align-items: center; justify-content: center; gap: 20px;">
+                    <a href="/shop" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if request.httprequest.path == '/shop' else '' }}">
+                        <i class="fa fa-home"></i>
+                    </a>
+                    <a href="/videos" class="nav-icon-btn">
+                        <i class="fa fa-play"></i>
+                    </a>
+                    <a href="/shop/cart" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if '/shop/cart' in request.httprequest.path else '' }}">
+                        <i class="fa fa-shopping-cart"></i>
+                    </a>
+                    <a href="/profile" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if '/profile' in request.httprequest.path else '' }}">
+                        <i class="fa fa-user"></i>
+                    </a>
+                </div>
+            </div>
+        </xpath>
+    </template>
+    
+    <!-- Добавление навигационных иконок на страницу профиля -->
+    <template id="profile_nav_icons" inherit_id="multi_vendor_marketplace.custom_user_profile">
+        <xpath expr="//div[hasclass('container')]" position="before">
+            <div class="container py-3">
+                <div class="desktop-nav-icons d-none d-md-flex mx-auto" style="display: flex !important; max-width: 240px; align-items: center; justify-content: center; gap: 20px;">
+                    <a href="/shop" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if request.httprequest.path == '/shop' else '' }}">
+                        <i class="fa fa-home"></i>
+                    </a>
+                    <a href="/videos" class="nav-icon-btn">
+                        <i class="fa fa-play"></i>
+                    </a>
+                    <a href="/shop/cart" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if '/shop/cart' in request.httprequest.path else '' }}">
+                        <i class="fa fa-shopping-cart"></i>
+                    </a>
+                    <a href="/profile" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if '/profile' in request.httprequest.path else '' }}">
+                        <i class="fa fa-user"></i>
+                    </a>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>
