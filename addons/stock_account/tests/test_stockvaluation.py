@@ -3247,6 +3247,8 @@ class TestStockValuation(TestStockValuationCommon):
         fifo_move = self._make_in_move(self.product_fifo, 1, unit_cost=10, uom_id=self.env.ref('uom.product_uom_dozen').id)
         self._make_out_move(self.product_fifo, 4)
         self.assertRecordValues(fifo_move, [{'value': 120, 'remaining_qty': 8, 'remaining_value': 80}])
+        out_move = self._make_out_move(self.product_fifo, 10)
+        self.assertEqual(out_move.value, 100)
 
     def test_product_valuation_scrap_different_uom(self):
         product = self.product_avco

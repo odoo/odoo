@@ -568,8 +568,9 @@ class ProductProduct(models.Model):
             quantity -= in_qty
         # When we required more quantity than available we extrapolate with the last known price
         if quantity > 0:
-            if last_move and last_move.quantity:
-                fifo_cost += quantity * (last_move.value / last_move.quantity)
+            last_valued_qty = last_move._get_valued_qty() if last_move else 0
+            if not self.uom_id.is_zero(last_valued_qty):
+                fifo_cost += quantity * (last_move.value / last_valued_qty)
             else:
                 fifo_cost += quantity * self.standard_price
         return fifo_cost
