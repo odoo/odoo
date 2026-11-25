@@ -9,7 +9,9 @@ import { user } from "@web/core/user";
  * to date by the changes of the current user (the changes of other users only
  * show up after a reload, or along with a change of the current user).
  *
- * Every method works on the active company, unless another one is given.
+ * Every method works on the company in use, unless another one is given: the
+ * active company, unless another one related to what is being edited is used
+ * (see `useCompany`).
  */
 export class FavoriteColorsPlugin extends Plugin {
     #orm = usePlugin(ORM);
@@ -21,12 +23,38 @@ export class FavoriteColorsPlugin extends Plugin {
             ])
         )
     );
+    #usedCompanyId = signal(undefined);
+
+    /**
+     * @returns {number | undefined} id of the company in use
+     */
+    get companyId() {
+        return this.#usedCompanyId() ?? user.activeCompany?.id;
+    }
+
+    /**
+     * Uses the favorite colors of the given company, which is related to what
+     * is being edited (e.g. the company of a website), until the returned
+     * function is called. Nothing changes if the company is not allowed to the
+     * user, as its colors are then unknown.
+     *
+     * @param {number} companyId
+     * @returns {() => void} restores the company used before
+     */
+    useCompany(companyId) {
+        if (!(companyId in this.#colorsByCompany())) {
+            return () => {};
+        }
+        const previousCompanyId = this.#usedCompanyId();
+        this.#usedCompanyId.set(companyId);
+        return () => this.#usedCompanyId.set(previousCompanyId);
+    }
 
     /**
      * @param {number} [companyId]
      * @returns {string[]}
      */
-    getColors(companyId = user.activeCompany?.id) {
+    getColors(companyId = this.companyId) {
         return this.#colorsByCompany()[companyId] || [];
     }
 
@@ -37,7 +65,7 @@ export class FavoriteColorsPlugin extends Plugin {
      * @param {number} [companyId]
      * @returns {boolean}
      */
-    canEdit(companyId = user.activeCompany?.id) {
+    canEdit(companyId = this.companyId) {
         return companyId in this.#colorsByCompany() && user.isAdmin;
     }
 
@@ -45,7 +73,7 @@ export class FavoriteColorsPlugin extends Plugin {
      * @param {string} color
      * @param {number} [companyId]
      */
-    async add(color, companyId = user.activeCompany?.id) {
+    async add(color, companyId = this.companyId) {
         color = color.toUpperCase();
         const colors = this.getColors(companyId);
         if (!colors.includes(color)) {
@@ -57,7 +85,7 @@ export class FavoriteColorsPlugin extends Plugin {
      * @param {string} color
      * @param {number} [companyId]
      */
-    async remove(color, companyId = user.activeCompany?.id) {
+    async remove(color, companyId = this.companyId) {
         const colors = this.getColors(companyId);
         if (colors.includes(color)) {
             const newColors = colors.filter((c) => c !== color);

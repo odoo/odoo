@@ -2,7 +2,16 @@ import { Builder } from "@html_builder/builder";
 import { CORE_PLUGINS, MAIN_PLUGINS } from "@html_builder/core/core_plugins";
 import { removePlugins } from "@html_builder/utils/utils";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { Component, onMounted, onWillStart, useProps, t } from "@odoo/owl";
+import { FavoriteColorsPlugin } from "@html_editor/components/color_picker/favorite_colors_plugin";
+import {
+    Component,
+    onMounted,
+    onWillDestroy,
+    onWillStart,
+    useProps,
+    t,
+    usePlugin,
+} from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -41,6 +50,11 @@ export class WebsiteBuilder extends Component {
         this.dialog = useService("dialog");
         this.websiteEditService =
             this.websiteService.websiteRootInstance?.env.services["website_edit"];
+        // Use the favorite colors of the company of the website.
+        const restoreFavoriteColorsCompany = usePlugin(FavoriteColorsPlugin).useCompany(
+            this.websiteService.currentWebsite?.company_id
+        );
+        onWillDestroy(restoreFavoriteColorsCompany);
         useSetupAction({
             beforeUnload: (ev) => this.onBeforeUnload(ev),
             beforeLeave: () => this.onBeforeLeave(),

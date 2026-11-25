@@ -8,6 +8,7 @@ import {
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
+import { cookie } from "@web/core/browser/cookie";
 import { user } from "@web/core/user";
 import { ColorPicker } from "@html_editor/components/color_picker/color_picker";
 import { FavoriteColorsPlugin } from "@html_editor/components/color_picker/favorite_colors_plugin";
@@ -273,4 +274,36 @@ test("favorite colors are kept by company", async () => {
         ["add_favorite_color", [[2], "#B5D6A5"]],
         ["remove_favorite_color", [[2], "#00FFFF"]],
     ]);
+});
+
+test("use the company related to what is being edited", async () => {
+    // Company 2 is allowed but not active, company 3 is not allowed.
+    cookie.set("cids", "1");
+    serverState.companies = [
+        { ...serverState.companies[0], favorite_colors: ["#FF9C00"] },
+        { id: 2, name: "Other", currency_id: 1, favorite_colors: ["#00FFFF"] },
+    ];
+    onRpc("res.company", "add_favorite_color", ({ args }) => {
+        expect.step(["add_favorite_color", args]);
+        return ["#00FFFF", args[1]];
+    });
+    await makeTestApp();
+    const favoriteColors = getService(FavoriteColorsPlugin);
+    expect(favoriteColors.companyId).toBe(1);
+    expect(favoriteColors.getColors()).toEqual(["#FF9C00"]);
+
+    const restore = favoriteColors.useCompany(2);
+    expect(favoriteColors.companyId).toBe(2);
+    expect(favoriteColors.getColors()).toEqual(["#00FFFF"]);
+    expect(favoriteColors.canEdit()).toBe(true);
+    await favoriteColors.add("#B5D6A5");
+    expect.verifySteps([["add_favorite_color", [[2], "#B5D6A5"]]]);
+
+    restore();
+    expect(favoriteColors.companyId).toBe(1);
+    expect(favoriteColors.getColors()).toEqual(["#FF9C00"]);
+
+    // The colors of a company which is not allowed are unknown: nothing changes.
+    favoriteColors.useCompany(3);
+    expect(favoriteColors.companyId).toBe(1);
 });
