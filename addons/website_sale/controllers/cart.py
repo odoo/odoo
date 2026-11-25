@@ -573,7 +573,7 @@ class Cart(PaymentPortal):
         :return: The tracking information.
         """
         lines = order_sudo.order_line.filtered(
-            lambda line: line.id in line_ids
+            lambda line: line.id in line_ids and line.product_id
         )
         return [
             {

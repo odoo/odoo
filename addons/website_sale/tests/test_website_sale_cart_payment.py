@@ -64,6 +64,20 @@ class WebsiteSaleCartPayment(PaymentHttpCommon, WebsiteSaleCommon):
         with self.assertRaises(JsonRpcException, msg='odoo.exceptions.ValidationError'):
             self.make_jsonrpc_request(url, route_kwargs)
 
+    def test_confirmation_page_with_note_line(self):
+        """The confirmation page shown after paying must not crash on lines without a product,
+        like notes and sections."""
+        self.cart.order_line = [Command.create({'display_type': 'line_note', 'name': "Gift wrap"})]
+        self.tx._set_done()
+        self.tx._post_process()
+        self.assertEqual(self.cart.state, 'sale')
+
+        self.authenticate(None, None, session_extra={'sale_last_order_id': self.cart.id})
+        response = self.url_open('/shop/confirmation')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(self.cart.name, response.text)
+
     def test_payment_confirmation_mail(self):
         """Check that a salesperson gets assigned when sending payment confirmation mails."""
         salesperson = self.env.ref('base.user_admin')
