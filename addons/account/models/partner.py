@@ -963,6 +963,10 @@ class ResPartner(models.Model):
         self.ensure_one()
         return (self.additional_identifiers or {}).get(identifier_type)
 
+    @api.model
+    def _is_valid_identifier(self, key, value):
+        return validate_identifier(key, value)['valid']
+
     def _set_additional_identifier(self, identifier_type, value):
         """ Write helper for adding identifier in the JSON.
         It validates, normalizes, deduce siblings and inserts the value.

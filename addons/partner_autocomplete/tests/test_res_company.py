@@ -115,6 +115,29 @@ class TestResCompany(common.TransactionCase, MockIAPPartnerAutocomplete):
                 result = self.env['res.partner'].with_context(enriched_company_data=suggestion).enrich_by_duns('123456789')
                 self.assertEqual(result.get('vat'), expected_vat)
 
+    def test_enrich_by_duns_with_incorrect_additional_identifiers(self):
+        """
+        Ensure the additional identifiers are removed when the partner autocomplete returns an invalid value
+        (e.g. the Croatian MB instead of a GLN in HR_EN)
+        """
+        if 'base_vat' not in self.env['ir.module.module']._installed():
+            self.skipTest("The module base vat is required to run this test.")
+
+        hr_company_data = {
+            'duns': '672827474',
+            'name': 'Test HR Company',
+            'country_id': {
+                'id': self.ref('base.hr'), 'display_name': 'Croatia'
+            },
+        }
+
+        def patched_request(self_api, endpoint, params, timeout=15):
+            return {'data': {'additional_identifiers': {'DUNS': '672827474', 'HR_EN': '02342359'}}}, False
+
+        with patch.object(self.env.registry['iap.autocomplete.api'], '_request_partner_autocomplete', patched_request):
+            result = self.env['res.partner'].with_context(enriched_company_data=hr_company_data).enrich_by_duns('672827474')
+        self.assertEqual(result.get('additional_identifiers'), {'DUNS': '672827474'})
+
     def test_enrich_with_industry_id(self):
         """Test that the industry ID is extracted from the enrichment data."""
         company = self.env['res.company'].create({
