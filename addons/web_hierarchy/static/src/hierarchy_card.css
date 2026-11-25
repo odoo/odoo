@@ -2,69 +2,19 @@
     width: 250px;
     min-height: 130px;
 
-    .o_hierarchy_node_button_container {
-        height: 30px;
+    > * {
+        height: 100%;
     }
 
-    &.o_hierarchy_dragged {
-        margin: 0px;
-        .o_hierarchy_node {
-            background-color: var(--hierarchy_element_dragged-background);
-        }
+    .o_hierarchy_node:hover {
+        cursor: pointer;
     }
 
-    &.o_hierarchy_hover {
-        .o_hierarchy_node {
-            background-color: var(--hierarchy_element_hover-background);
-            border: 3px solid green !important;
-        }
+    .o_hierarchy_node_color:where(.o_colorlist_color_0) {
+        background-color: var(--gray-200);
     }
 
-    .o_hierarchy_node {
-        &:hover {
-            cursor: pointer;
-        }
-
-        .o_hierarchy_node_header {
-            height: 30px;
-
-            div.o_field_background_image {
-                width: 48px;
-                height: 48px;
-                margin-bottom: -24px;
-                transform: translateY(-24px);
-                z-index: 1;
-
-                > img {
-                    border-radius: 50%;
-                }
-            }
-        }
-
-        .o_hierarchy_node_body {
-            height: 65px;
-
-            .o_employee_availability {
-                position: absolute;
-                top: 4px;
-                right: 2px;
-            }
-        }
-
-        .o_hierarchy_node_footer {
-            height: 30px;
-        }
-
-        .o_hierarchy_node_color:where(.o_colorlist_color_0) {
-            background-color: var(--gray-200);
-        }
-
-        .o_hierarchy_node_color:where(:not(.o_colorlist_color_0)) {
-            background: color-mix(in srgb, var(--o-colorlist-color) 20%, transparent);
-        }
-    }
-
-    .o_hierarchy_node_button {
-        grid-template-columns: 50px 1fr 50px;
+    .o_hierarchy_node_color:where(:not(.o_colorlist_color_0)) {
+        background: color-mix(in srgb, var(--o-colorlist-color) 20%, transparent);
     }
 }

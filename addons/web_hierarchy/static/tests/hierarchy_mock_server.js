@@ -1,76 +1,71 @@
 import { onRpc } from "@web/../tests/web_test_helpers";
 
+/**
+ * Mock of `hierarchy_read` (see `web_hierarchy/models/models.py`): the records matching
+ * the domain are organized in trees (a record whose parent is not displayed is a root, a
+ * cycle is broken on its first record), then loaded breadth-first, up to `limit`, the
+ * children of each record being sorted by decreasing number of children.
+ */
 onRpc("hierarchy_read", function hierarchyRead({ model, args, kwargs }) {
-    const [domain, specification, parentFieldName, childFieldName, order] = args;
-    kwargs.order = order;
-    if (!(parentFieldName in specification)) {
-        specification[parentFieldName] = { fields: { display_name: {} } };
-    }
-    const result = this.env[model].web_search_read(domain, specification, kwargs);
-    let focusedRecordId = false;
-    let fetchChildIdsForAllRecords = false;
-    if (!result.length) {
-        return [];
-    }
-    const records = result.records;
-    if (result.length === 1) {
-        const record = records[0];
-        let domain = [
-            [parentFieldName, "=", record.id],
-            ["id", "!=", record.id],
-        ];
-        if (record[parentFieldName]) {
-            focusedRecordId = record.id;
-            const parentResId = record[parentFieldName].id;
-            domain = [
-                ["id", "!=", record.id],
-                "|",
-                ["id", "=", parentResId],
-                [parentFieldName, "in", [parentResId, record.id]],
-            ];
-        }
-        records.push(
-            ...(this.env[model].web_search_read(domain, specification, kwargs)?.records || [])
-        );
-    } else {
-        fetchChildIdsForAllRecords = true;
-    }
-    const childrenIdsPerRecordId = {};
-    if (!childFieldName) {
-        const parentResIds = [];
-        for (const rec of records) {
-            if (rec[parentFieldName]) {
-                parentResIds.push(rec[parentFieldName].id);
-            }
-        }
-        const recordIds = records.map((rec) => rec.id);
-        const groups = this.env[model].formatted_read_group({
-            ...kwargs,
-            domain: [
-                [
-                    parentFieldName,
-                    "in",
-                    fetchChildIdsForAllRecords
-                        ? recordIds
-                        : recordIds.filter((id) => !parentResIds.includes(id)),
-                ],
-            ],
-            groupby: [parentFieldName],
-            aggregates: ["id:array_agg"],
-        });
-        for (const group of groups) {
-            childrenIdsPerRecordId[group[parentFieldName][0]] = group["id:array_agg"];
+    const [domain, specification, parentFieldName] = args;
+    const { limit } = kwargs;
+    const Model = this.env[model];
+
+    const ids = Model.search(domain);
+    const displayed = new Set(ids);
+    const parentOf = new Map(Model.browse(ids).map((record) => [record.id, record[parentFieldName]]));
+
+    const roots = [];
+    const children = new Map(ids.map((id) => [id, []]));
+    for (const id of ids) {
+        const parentId = parentOf.get(id);
+        if (parentId && parentId !== id && displayed.has(parentId)) {
+            children.get(parentId).push(id);
+        } else {
+            roots.push(id);
         }
     }
-    if (focusedRecordId || Object.keys(childrenIdsPerRecordId).length) {
-        for (const record of records) {
-            if (record.id in childrenIdsPerRecordId) {
-                record.__child_ids__ = childrenIdsPerRecordId[record.id];
-            }
-            if (record.id === focusedRecordId) {
-                record.__focus__ = true;
-            }
+
+    const reached = new Set();
+    const visit = (rootId) => {
+        reached.add(rootId);
+        const stack = [rootId];
+        while (stack.length) {
+            const id = stack.pop();
+            const kept = children.get(id).filter((childId) => !reached.has(childId));
+            children.set(id, kept);
+            kept.forEach((childId) => reached.add(childId));
+            stack.push(...kept);
+        }
+    };
+    roots.forEach(visit);
+    for (const id of ids) {
+        if (!reached.has(id)) {
+            roots.push(id);
+            visit(id);
         }
     }
-    return records;
+    children.set(false, roots);
+
+    const opened = [];
+    const queue = [false];
+    let remaining = limit ?? ids.length;
+    for (let i = 0; i < queue.length && remaining > 0; i++) {
+        const parentId = queue[i];
+        const childIds = children.get(parentId);
+        if (childIds.length) {
+            childIds.sort((a, b) => children.get(b).length - children.get(a).length);
+            const taken = childIds.slice(0, remaining);
+            remaining -= taken.length;
+            opened.push([parentId, taken]);
+            queue.push(...taken);
+        }
+    }
+
+    const selected = opened.flatMap(([, taken]) => taken);
+    return {
+        records: selected.length ? Model.web_read(selected, specification) : [],
+        length: ids.length,
+        children: opened,
+    };
 });

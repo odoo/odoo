@@ -2,18 +2,21 @@
 <templates>
     <t t-name="web_hierarchy.HierarchyButtons">
         <div class="d-flex o_grid_buttons">
-            <div class="me-2" t-if="this.props.archInfo.activeActions.create and (!this.props.archInfo.createInline or this.displayNoContent)">
+            <div class="me-2" t-if="this.props.archInfo.activeActions.create">
                 <button class="btn btn-primary o_hierarchy_button_add"
                         type="button"
-                        t-on-click="this.props.createRecord">
+                        t-on-click="this.onClickCreate">
                     New
                 </button>
             </div>
         </div>
     </t>
     <t t-name="web_hierarchy.HierarchyView">
-        <div t-attf-class="o_hierarchy_view {{ this.isMobile ? 'o_action_delegate_scroll' : '' }} {{ this.props.className }}" t-ref="this.rootRef">
-            <Layout className="(this.model.useSampleModel ? 'o_view_sample_data' : '') + ' d-flex'" display="this.props.display">
+        <div
+            t-attf-class="o_hierarchy_view {{ this.uiService.isSmall ? 'o_action_delegate_scroll' : '' }} {{ this.props.className }}"
+            t-ref="this.rootRef"
+        >
+            <Layout className="'d-flex'" display="this.props.display">
                 <t t-set-slot="control-panel-additional-actions">
                     <CogMenu/>
                 </t>
@@ -24,14 +27,26 @@
                     <SearchBar toggler="this.searchBarToggler"/>
                 </t>
                 <t t-set-slot="control-panel-navigation-additional">
+                    <div
+                        t-if="this.model.root?.count > 0"
+                        class="o_cp_pager o_hierarchy_pager text-nowrap align-self-stretch" role="search"
+                    >
+                        <HierarchyPager
+                            offset="this.model.root.offset"
+                            limit="this.model.root.limit"
+                            total="this.model.root.count"
+                            onUpdate="({ offset, limit }) => this.model.root.load({ offset, limit })"
+                        />
+                    </div>
                     <t t-component="this.searchBarToggler.component" t-props="this.searchBarToggler.props"/>
                 </t>
-                <t t-set-slot="default" t-slot-scope="layout">
-                <t t-if="this.displayNoContent">
-					<ActionHelper noContentHelp="this.props.info.noContentHelp"/>
-                </t>
+                <t t-set-slot="default">
+                    <t t-if="this.displayNoContent()">
+                        <ActionHelper noContentHelp="this.props.info.noContentHelp"/>
+                    </t>
                     <t t-component="this.props.Renderer"
                         model="this.model"
+                        list="this.model.root"
                         openRecord.bind="this.openRecord"
                         archInfo="this.props.archInfo"
                     />

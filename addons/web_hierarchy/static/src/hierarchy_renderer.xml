@@ -1,39 +1,86 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <templates>
 
+    <t t-name="web_hierarchy.HierarchyZoomController">
+        <div class="o_hierarchy_controls d-flex align-items-center p-3 gap-2">
+            <div class="d-flex gap-1 p-1 bg-view border rounded-3 shadow-sm" role="group" aria-label="Zoom">
+                <button class="btn btn-light" t-on-click="this.props.panAndZoom.zoomOut" title="Zoom Out">
+                    <i class="oi" data-icon="remove" aria-hidden="true"/>
+                </button>
+                <button
+                    type="button"
+                    class="o_hierarchy_zoom_level btn btn-light px-0"
+                    title="Reset Zoom"
+                    t-on-click="() => this.props.panAndZoom.zoom(1)"
+                >
+                    <t t-out="Math.round(100 * this.props.panAndZoom.scale())"/>%
+                </button>
+                <button class="btn btn-light" t-on-click="this.props.panAndZoom.zoomIn" title="Zoom In">
+                    <i class="oi" data-icon="add" aria-hidden="true"/>
+                </button>
+                <button
+                    class="btn btn-light"
+                    t-on-click="() => this.props.panAndZoom.fitGraphToView()"
+                    title="Fit Graph to View"
+                >
+                    <i class="oi" data-icon="fullscreen" aria-hidden="true"/>
+                </button>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="web_hierarchy.HierarchyNode">
+        <div
+            class="o_hierarchy_node_container"
+            t-ref="this.props.layout.nodeRefs"
+            t-att-class="{ 'o_hierarchy_node_dragged': this.dragging() }"
+            t-att-data-id="this.id()"
+            t-att-style="this.style()"
+            t-on-pointerdown="this.onPointerDown"
+        >
+            <HierarchyCard
+                className="'o_hierarchy_node'"
+                archInfo="this.props.cardArchInfo"
+                openRecord="this.props.openRecord"
+                record="this.props.node.record"
+                showAncestorBtn="this.props.node.hasHiddenParent"
+                showChildrenBtn="this.props.node.hasHiddenChildren"
+            />
+        </div>
+    </t>
+
+    <t t-name="web_hierarchy.HierarchyEdge">
+        <path
+            class="o_hierarchy_edge"
+            t-att-data-edge="this.props.edge.key"
+            t-att-d="this.props.layout.getEdgePath(this.props.edge)"
+            fill="transparent"
+        />
+    </t>
+
     <t t-name="web_hierarchy.HierarchyRenderer">
-        <div class="o_hierarchy_renderer o_renderer w-100 d-flex justify-content-center" t-ref="this.rendererRef">
-            <div class="o_hierarchy_container d-flex flex-column w-100 w-lg-75 h-100 p-2">
-                <t t-foreach="this.rows" t-as="row" t-key="row_index">
-                    <t t-set="previousRow" t-value="!row_first ? this.rows[row_index - 1] : null"/>
-                    <t t-if="!row_first">
-                        <div t-if="row.parentNode and previousRow.nodes.length > 1"
-                            class="o_hierarchy_parent_node_container d-flex justify-content-center align-items-center"
-                        >
-                            <img t-if="this.props.archInfo.avatarField"
-                                t-att-src="'/web/image/' + row.parentNode.model.resModel + '/' + row.parentNode.resId + '/' + this.props.archInfo.avatarField"
-                                t-on-error="(ev) => ev.target.style.display = 'none'" class="o_avatar rounded me-2"/>
-                            <span t-out="row.parentNode.data.display_name || row.parentNode.data.name"/>
-                        </div>
-                        <div class="o_hierarchy_separator d-flex">
-                            <div class="o_hierarchy_line_part o_hierarchy_line_left"></div>
-                            <div class="o_hierarchy_line_part o_hierarchy_line_right"></div>
-                        </div>
+        <div
+            class="o_hierarchy_renderer o_renderer flex-grow-1 position-relative overflow-hidden bg-100"
+            t-ref="this.editor"
+            t-att-class="{'o_hierarchy_ready': this.isFitted()}"
+        >
+            <div class="o_hierarchy_canvas" t-ref="this.canvas">
+                <svg class="o_hierarchy_edges" xmlns="http://www.w3.org/2000/svg">
+                    <t t-foreach="this.graphLayout.edges()" t-as="edge" t-key="edge.key">
+                        <HierarchyEdge edge="edge" layout="this.graphLayout"/>
                     </t>
-                    <div class="o_hierarchy_row row justify-content-center flex-wrap row-cols-2 row-cols-lg-5 g-2 g-lg-3"
-                        t-att-class="{ 'pb-4': row_last }" t-att-data-parent-node-id="row.parentNode?.id"
-                        t-att-data-row-id="row_index"
-                    >
-                        <t t-foreach="row.nodes" t-as="node" t-key="node.id">
-                            <HierarchyCard
-                                node="node"
-                                openRecord="this.props.openRecord"
-                                archInfo="this.props.archInfo"
-                            />
-                        </t>
-                    </div>
+                </svg>
+                <t t-foreach="this.graphLayout.nodes()" t-as="node" t-key="node.record.resId">
+                    <HierarchyNode
+                        node="node"
+                        layout="this.graphLayout"
+                        scale="this.panAndZoom.scale"
+                        cardArchInfo="this.props.archInfo.cardArchInfo"
+                        openRecord="this.props.openRecord"
+                    />
                 </t>
             </div>
+            <HierarchyZoomController panAndZoom="this.panAndZoom" />
         </div>
     </t>
 

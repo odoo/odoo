@@ -21,9 +21,6 @@ You can track your vendors, customers and other contacts.
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
     'assets': {
-        'web.assets_backend': [
-            'contacts/static/src/views/contacts_hierarchy/contacts_hierarchy_card.css',
-        ],
         'web.assets_tests': [
             'contacts/static/tests/tours/**/*',
         ],
