@@ -578,7 +578,8 @@ class HrAttendance(models.Model):
     def _check_write_access(self, vals):
         """Check that the user may write the values on the attendances.
 
-        - Only an attendance manager can give an attendance to another employee than the user.
+        - Only an attendance manager can give an attendance to another employee than the user, and only a user who may
+          edit their own attendances (``group_hr_attendance_own``) can give one to themselves.
         - Only an attendance manager can review an attendance or set its mode to a device mode, see
           :meth:`_requires_attendance_manager`, and only for an employee they manage.
 
@@ -588,7 +589,10 @@ class HrAttendance(models.Model):
             return
         if (
             vals.get("employee_id")
-            and vals["employee_id"] not in self.env.user.employee_ids.ids
+            and not (
+                vals["employee_id"] in self.env.user.employee_ids.ids
+                and self.env.user.has_group("hr_attendance.group_hr_attendance_own")
+            )
             and not self.env["hr.employee"].browse(vals["employee_id"])._filter_attendance_managed_by_current_user()
         ):
             raise AccessError(
