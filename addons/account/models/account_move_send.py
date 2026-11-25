@@ -5,6 +5,7 @@ from markupsafe import Markup
 
 from odoo import Command, _, api, models, modules, tools
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import OrderedSet
 
 from odoo.addons.account.tools import after_commit
 
@@ -599,7 +600,7 @@ class AccountMoveSend(models.AbstractModel):
         # We must ensure the newly created PDF are added. At this point, the PDF has been generated but not added
         # to 'mail_attachments_widget'.
         mail_attachments_widget = move_data.get('mail_attachments_widget')
-        seen_attachment_ids = set()
+        seen_attachment_ids = OrderedSet()
         to_exclude = {x['name'] for x in mail_attachments_widget if x.get('skip')}
         for attachment_data in self._get_invoice_extra_attachments_data(move) + mail_attachments_widget:
             if attachment_data['name'] in to_exclude and not attachment_data.get('manual'):
