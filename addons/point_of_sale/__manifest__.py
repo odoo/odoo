@@ -280,6 +280,8 @@
             "point_of_sale/static/src/app/components/validation_animation/**/*",
             "point_of_sale/static/src/app/components/feedback_payment_summary/**/*",
             "point_of_sale/static/src/app/utils/pretty_console_log.js",
+            "point_of_sale/static/src/app/webrtc/**/*",
+            "point_of_sale/static/src/app/components/popups/webrtc_debug_popup/*",
         ],
         'point_of_sale.customer_display_assets_dark': [
             ('include', 'point_of_sale.customer_display_assets'),

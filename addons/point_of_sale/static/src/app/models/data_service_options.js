@@ -43,14 +43,7 @@ export class DataServiceOptions {
     }
 
     get dynamicModels() {
-        return [
-            "pos.order",
-            "pos.order.line",
-            "pos.payment",
-            "product.attribute.custom.value",
-            "pos.prep.order",
-            "pos.prep.line",
-        ];
+        return Object.keys(this.databaseTable);
     }
 
     get databaseIndex() {

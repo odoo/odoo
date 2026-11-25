@@ -32,6 +32,7 @@ export const setupPosEnv = async () => {
     serverState.currencies = ResCurrency._records;
 
     assignDialogTestEnv();
+    onRpc("pos.config", "webrtc_announce", () => true);
     await makeTestApp();
     onRpc("/css", () => "");
     const store = getService("pos");
@@ -619,3 +620,9 @@ export function addTestTerminals(store, count = 2) {
     store.paymentMethods.initDefaults();
     return terminals;
 }
+
+export const freezeDate = (date) => {
+    const timestamp = typeof date === "number" ? date : new Date(date).getTime();
+    patchWithCleanup(Date, { now: () => timestamp });
+    return timestamp;
+};
