@@ -523,6 +523,7 @@
                 <field name="check_out" readonly="1"/>
                 <field name="break_duration" readonly="1" widget="float_time"/>
                 <field name="worked_hours" readonly="1" string="Worked Time" widget="float_time"/>
+                <field name="work_entry_type_id" readonly="1" optional="show" groups="hr.group_hr_user"/>
                 <field name="state" widget="badge"
                        decoration-success="state == 'validated'"
                        decoration-warning="state == 'draft'"
