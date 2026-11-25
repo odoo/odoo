@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import UTC, date, datetime
+from unittest.mock import patch
 
 from odoo.addons.hr.tests.common import TestHrCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
@@ -261,3 +262,34 @@ class TestMultiCompany(TestHrCommon):
 
         calendar.with_context(allowed_company_ids=(self.company_a | self.company_b).ids).write({'calendar_type': 'variable'})
         self.assertEqual(calendar.calendar_type, 'variable')
+
+    def test_version_company_of_employee(self):
+        """A version created for an employee of another company than the current one belongs to the employee's company."""
+        Version = self.env['hr.version'].with_company(self.company_a)
+        version = Version.create({'employee_id': self.employee_other_b.id, 'date_version': date(2026, 2, 1)})
+        self.assertEqual(version.company_id, self.company_b)
+
+        result = Version.with_context(import_file=True).load(
+            ['employee_id/.id', 'date_version'], [[str(self.employee_other_b.id), '2026-03-01']])
+        self.assertFalse(result['messages'])
+        imported = Version.browse(result['ids'])
+        self.assertEqual(imported.company_id, self.company_b)
+
+        # a re-import updates the version found, without writing its company
+        written_vals = []
+        write = type(Version).write
+
+        def spy_write(records, vals):
+            written_vals.append(vals)
+            return write(records, vals)
+
+        with patch.object(type(Version), 'write', spy_write):
+            result = Version.with_context(import_file=True).load(
+                ['employee_id/.id', 'date_version', 'name'], [[str(self.employee_other_b.id), '2026-03-01', 'Re-imported']])
+        self.assertFalse(result['messages'])
+        self.assertEqual(result['ids'], imported.ids)
+        self.assertEqual(imported.name, 'Re-imported')
+        self.assertFalse([vals for vals in written_vals if 'company_id' in vals])
+
+        template = Version.create({'name': 'Contract Template', 'date_version': date(2026, 1, 1)})
+        self.assertEqual(template.company_id, self.company_a, "a version without employee is in the current company")
