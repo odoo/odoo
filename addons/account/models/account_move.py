@@ -6112,6 +6112,11 @@ class AccountMove(models.Model):
         if invoice_line_id := self.env.context.get('cogs_origin_line_id'):
             invoice_line_ids = self.env['account.move.line'].browse(invoice_line_id)
 
+        invoice_lines_to_check = self.line_ids
+        if line_ids := self.env.context.get('cogs_invoice_line_ids'):
+            invoice_lines_to_check = self.env['account.move.line'].browse(line_ids)
+        cogs_by_origin = invoice_lines_to_check.filtered(lambda l: l.display_type == 'cogs').grouped('cogs_origin_id')
+
         lines_vals_list = []
         for line in invoice_line_ids:
             if not line._use_inventory_valuation():
@@ -6132,11 +6137,7 @@ class AccountMove(models.Model):
             if self.company_currency_id.is_zero(balance) or float_is_zero(price_unit, precision_digits=price_unit_prec):
                 continue
 
-            invoice_lines_to_check = self.line_ids
-            if line_ids := self.env.context.get('cogs_invoice_line_ids'):
-                invoice_lines_to_check = self.env['account.move.line'].browse(line_ids)
-
-            cogs_lines = invoice_lines_to_check.filtered(lambda l: l.display_type == 'cogs' and l.cogs_origin_id == line)
+            cogs_lines = cogs_by_origin.get(line, self.env['account.move.line'])
             existing_balance = sum(cogs_lines.filtered(lambda l: l.account_id == stock_account).mapped('balance'))
 
             common_vals = self._get_cogs_common_vals(line)
