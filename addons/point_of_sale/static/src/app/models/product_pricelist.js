@@ -22,6 +22,19 @@ export class ProductPricelist extends Base {
         this.rulesByTmplId = {};
         this.uiState.generalRulesIdsByCateg = {};
         this.uiState.generalRulesIds = {};
+        this.itemPositionById = null;
+        this.indexedItemIdsCount = 0;
+    }
+
+    getItemPosition(item) {
+        if (!this.itemPositionById?.has(item.id)) {
+            const itemIds = this.raw.item_ids;
+            if (!this.itemPositionById || itemIds.length !== this.indexedItemIdsCount) {
+                this.itemPositionById = new Map(itemIds.map((id, index) => [id, index]));
+                this.indexedItemIdsCount = itemIds.length;
+            }
+        }
+        return this.itemPositionById.get(item.id) ?? -1;
     }
 
     getCategoryRulesIds(categoryIds) {

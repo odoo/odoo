@@ -360,3 +360,34 @@ test("Pricelist: rule whose pricelist is missing from the PoS does not break loa
 
     expect(rule.pricelist_id).toBe(undefined);
 });
+
+test("Pricelist: global rules keep the order of item_ids", async () => {
+    const store = await setupPosEnv();
+    const globalRule = (id) => ({
+        id,
+        pricelist_id: 91,
+        product_tmpl_id: false,
+        product_id: false,
+        categ_id: false,
+        base: "list_price",
+        compute_price: "fixed",
+        fixed_price: id,
+        min_quantity: 0,
+    });
+    const [pricelist] = store.models.loadConnectedData({
+        "product.pricelist": [
+            {
+                id: 91,
+                name: "Ordered Rules Pricelist",
+                display_name: "Ordered Rules Pricelist",
+                currency_id: 1,
+                item_ids: [912, 999, 910, 911],
+            },
+        ],
+        "product.pricelist.item": [globalRule(910), globalRule(911), globalRule(912)],
+    })["product.pricelist"];
+
+    expect(pricelist.getGlobalRulesIds()).toEqual([912, 910, 911]);
+    const product = store.models["product.template"].get(5).product_variant_ids[0];
+    expect(product.getPrice(pricelist, 1, 0, false, product)).toBe(912);
+});
