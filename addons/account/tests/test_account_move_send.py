@@ -488,6 +488,39 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
             content='access_token=',
         )
 
+    def test_move_composer_attachments_order(self):
+        """ The sent email lists the invoice PDF first, then the other files in
+        the order of the wizard, as some recipients only read the first file. """
+        test_move = self.test_account_moves[2]
+        test_customer = self.test_customers[2]
+        composer = self.env['account.move.send.wizard'].with_context(active_model='account.move', active_ids=test_move.ids).create({
+            'sending_methods': ['email'],
+        })
+
+        # Create the manual attachments in the reverse order of the wizard, so
+        # that the expected order differs from the increasing ID order.
+        attachment_b = self.env['ir.attachment'].create({'name': "attachment_b.txt", 'raw': b'b'})
+        attachment_a = self.env['ir.attachment'].create({'name': "attachment_a.txt", 'raw': b'a'})
+        composer.mail_attachments_widget = composer.mail_attachments_widget + [
+            {
+                'id': attachment.id,
+                'name': attachment.name,
+                'mimetype': attachment.mimetype,
+                'placeholder': False,
+                'manual': True,
+            }
+            for attachment in attachment_a + attachment_b
+        ]
+
+        with self.mock_mail_gateway(mail_unlink_sent=False):
+            composer.action_send_and_print(allow_fallback_pdf=True)
+
+        sent_email = self._find_sent_email_wemail(test_customer.email_formatted)
+        self.assertEqual(
+            [name for name, _content, _mimetype in sent_email['attachments']],
+            [f'{test_move.name}.pdf', attachment_a.name, attachment_b.name],
+        )
+
     def test_invoice_email_subtitle_from_sale_order(self):
         """ Test email notification subtitle for Invoice created from Sale Order. """
         self.ensure_installed('sale')
