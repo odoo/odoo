@@ -1,5 +1,6 @@
 import uuid
 from lxml import etree, html
+from markupsafe import escape as markup_escape
 
 from odoo import api, models
 from odoo.addons.base.models.ir_ui_view import MOVABLE_BRANDING
@@ -66,6 +67,7 @@ class IrUiView(models.Model):
                 arch_tree.attrib[attr] = attributes[attr]
             else:
                 del arch_tree.attrib[attr]
+        self._process_html_into_arch(arch_tree)
         xml_arch = etree.tostring(arch_tree, encoding='utf-8')
         new_snippet_view_values = {
             'name': name,
@@ -185,6 +187,13 @@ class IrUiView(models.Model):
         if attributes.get('contenteditable') == 'true':
             del attributes['contenteditable']
         return attributes
+
+    @api.model
+    def _process_html_into_arch(self, tree):
+        for el in tree.xpath('descendant-or-self::*[not(ancestor-or-self::*[name()="script" or name()="style"])]'):
+            el.text = el.text and markup_escape(el.text)
+            for child in el:
+                child.tail = child.tail and markup_escape(child.tail)
 
     @api.model
     def _get_snippet_addition_view_key(self, template_key, key):

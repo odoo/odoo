@@ -3,21 +3,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { isZWS } from "@html_editor/utils/dom_info";
 import { _t } from "@web/core/l10n/translation";
 import { EDITOR_MUTATION_TYPES } from "@html_editor/core/dom_observer_plugin";
-import { escapeTextNodes } from "@html_builder/utils/escaping";
 import { selectElements } from "@html_editor/utils/dom_traversal";
-
-export class EscapeTextNodesPlugin extends Plugin {
-    static id = "escapeTextNodes";
-    /** @type {import("plugins").BuilderResources} */
-    resources = {
-        clean_for_save_processors: withSequence(100, (rootEl, { saveSnippet } = {}) => {
-            if (saveSnippet) {
-                escapeTextNodes(rootEl);
-            }
-            return rootEl;
-        }),
-    };
-}
 
 /** @typedef {import("plugins").CSSSelector} CSSSelector */
 
