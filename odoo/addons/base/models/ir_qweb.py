@@ -406,7 +406,7 @@ from odoo.http import request
 from odoo.tools.profiler import QwebTracker
 from odoo.exceptions import UserError
 
-from odoo.addons.base.models.assetsbundle import AssetsBundle
+from odoo.addons.base.models.assetsbundle import AssetsBundle, attachments_cache
 from odoo.addons.base.models.ir_asset import glob_cache
 from odoo.addons.base.models.ir_ui_view import MOVABLE_BRANDING
 from odoo.tools.constants import SCRIPT_EXTENSIONS, STYLE_EXTENSIONS, TEMPLATE_EXTENSIONS, FONT_EXTENSIONS
@@ -3050,6 +3050,7 @@ class IrQweb(models.AbstractModel):
         return [node[1]['href'] for node in asset_nodes if node[0] == 'link']
 
     @glob_cache()
+    @attachments_cache()
     def _pregenerate_assets_bundles(self):
         """
         Pregenerates all assets that may be used in web pages to speedup first loading.

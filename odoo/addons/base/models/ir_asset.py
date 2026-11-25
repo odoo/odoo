@@ -194,7 +194,15 @@ class IrAsset(models.Model):
         # of the CURRENT bundle.
         bundle_start_index = len(asset_paths.list)
 
-        assets = self._get_related_assets([('bundle', '=', bundle)], **assets_params).filtered('active')
+        # POC: the same bundles are included many times during pregenerate
+        cache = _glob_cache.get()
+        cache_key = ('related_assets', bundle, tuple(sorted(assets_params.items())))
+        if cache is not None and cache_key in cache:
+            assets = cache[cache_key]
+        else:
+            assets = self._get_related_assets([('bundle', '=', bundle)], **assets_params).filtered('active')
+            if cache is not None:
+                cache[cache_key] = assets
         # 1. Process the first sequence of 'ir.asset' records
         for asset in assets.filtered(lambda a: a.sequence < DEFAULT_SEQUENCE):
             self._process_path(bundle, asset.directive, asset.target, asset.path, asset_paths, seen, addons, installed, bundle_start_index, **assets_params)
