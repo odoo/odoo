@@ -9,6 +9,7 @@ from werkzeug.urls import url_encode
 
 from odoo import _, http
 from odoo.exceptions import AccessError
+from odoo.fields import Domain
 from odoo.http import Response, request
 from odoo.http.stream import STATIC_CACHE
 from odoo.tools import consteq
@@ -272,12 +273,15 @@ class MailController(http.Controller):
     @http.route('/mail/message/<int:message_id>', type='http', auth='public')
     @add_guest_to_context
     def mail_thread_message_redirect(self, message_id, **kwargs):
-        message = request.env['mail.message'].search([('id', '=', message_id)])
+        # sudo: mail.message - public has no read access, check access below without leaking model / res_id
+        message_su = request.env['mail.message'].sudo().search(
+            Domain('id', '=', message_id) & request.env['mail.message']._get_search_domain_share()
+        )
+        message = message_su._get_with_access()
         if not message:
             if request.env.user._is_public():
                 return request.redirect(f'/web/login?redirect=/mail/message/{message_id}')
             raise NotFound()
-
         return self._redirect_to_record(message.model, message.res_id, highlight_message_id=message_id)
 
     # web_editor routes need to be kept otherwise mail already sent won't be able to load icons anymore
