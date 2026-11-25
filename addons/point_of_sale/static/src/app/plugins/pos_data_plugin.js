@@ -22,6 +22,7 @@ import { Base, createRelatedModels } from "@point_of_sale/app/models/related_mod
 import { registry } from "@web/core/registry";
 import { services } from "@web/core/services";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
 
 const { DateTime } = luxon;
 const CONSOLE_COLOR = "#28ffeb";
@@ -39,6 +40,7 @@ export class PosDataPlugin extends Plugin {
     debugMode = usePlugin(DebugModePlugin);
     bus = usePlugin(BusPlugin);
     orm = usePlugin(ORM);
+    notification = usePlugin(NotificationPlugin);
     syncInProgress = signal(false);
     dataLoadedFromCache = signal(false);
     localUnsyncedPaidOrderUuids = signal.Set(new Set()); // UUIDs of paid orders written to IndexedDB but not yet confirmed synced to the server.
@@ -552,7 +554,25 @@ export class PosDataPlugin extends Plugin {
                     testLocalData,
                 ]);
                 params = this.getFieldsAndRelations(data);
-                localStorage.setItem(key, JSON.stringify(params));
+                try {
+                    localStorage.setItem(key, JSON.stringify(params));
+                } catch (error) {
+                    // A full storage must not block the opening: these parameters only
+                    // let the next opening read the indexedDB before the server answers.
+                    logPosMessage(
+                        "DataService",
+                        "loadInitialData",
+                        "Unable to store the data parameters in the local storage",
+                        CONSOLE_COLOR,
+                        [error]
+                    );
+                    this.notification.add(
+                        _t(
+                            "The browser storage is full: new orders may not be created. Ask your administrator to free some space in this browser."
+                        ),
+                        { type: "warning", sticky: true }
+                    );
+                }
                 await this.initIndexedDB(params);
                 this.dataLoadedFromCache.set(true);
             }
