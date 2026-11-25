@@ -854,7 +854,6 @@ class ProductTemplate(models.Model):
     def _set_list_price_in_all_companies(self):
         """Set the sales price of the shared templates in the other companies, which can then
         change their own."""
-        self.product_variant_ids.flush_recordset(['lst_price'])  # compute it in this company first
         companies = self.env['res.company'].sudo().search([('id', '!=', self.env.company.id)])
         shared_templates = self.filtered(lambda template: not template.company_id)
         for template in shared_templates.sudo().with_context(mail_notrack=True):
@@ -866,9 +865,6 @@ class ProductTemplate(models.Model):
             products = self.filtered(lambda template: template.uom_id.id != vals['uom_id']).product_variant_ids
             products.sudo().with_context(skip_uom_conversion=True)._update_uom(vals['uom_id'])
         res = super().write(vals)
-        if 'list_price' in vals:
-            # recompute the variant sales price in the company of the written sales price
-            self.with_context(active_test=False).product_variant_ids.flush_recordset(['lst_price'])
         if (self.env.context.get("create_product_product", True) and 'attribute_line_ids' in vals) or (vals.get('active') and len(self.product_variant_ids) == 0):
             self.with_context(with_warning_too_many_combination=True)._create_variant_ids()
         if 'active' in vals and not vals.get('active'):
@@ -1145,16 +1141,17 @@ class ProductTemplate(models.Model):
             single_value_lines = lines_without_no_variants.filtered(lambda ptal: len(ptal.product_template_value_ids._only_active()) == 1)
             if single_value_lines:
                 # Writing product_template_attribute_value_ids below invalidates
-                # price_extra, which triggers recompute of the stored lst_price
-                # and wipes user-set overrides. Protect lst_price on variants
+                # price_extra, which triggers recompute of the stored company_price_ids
+                # and wipes user-set overrides. Protect company_price_ids on variants
                 # whose value diverges from the computed one (= manual override);
                 # non-overridden variants are left to the recompute so they
                 # correctly pick up the new ptav's price_extra.
-                overridden = all_variants.filtered(
-                    lambda v: v.lst_price != v.list_price + v.price_extra,
-                )
-                lst_price_field = self.env['product.product']._fields['lst_price']
-                with self.env.protecting([lst_price_field], overridden):
+                overridden = all_variants.filtered(lambda v: any(
+                    company_price.lst_price != company_price.computed_lst_price
+                    for company_price in v.company_price_ids
+                ))
+                company_prices_field = self.env['product.product']._fields['company_price_ids']
+                with self.env.protecting([company_prices_field], overridden):
                     for variant in all_variants:
                         combination = variant.product_template_attribute_value_ids | single_value_lines.product_template_value_ids._only_active()
                         # Do not add single value if the resulting combination would

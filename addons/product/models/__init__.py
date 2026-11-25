@@ -6,6 +6,7 @@
 # `product.template` should be initialised before `product.product`
 from . import product_template
 from . import product_product
+from . import product_product_company_price
 
 from . import ir_attachment
 from . import product_attribute

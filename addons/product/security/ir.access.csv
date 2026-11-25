@@ -18,6 +18,8 @@ access_product_pricelist_item_manager,product.pricelist.item.manager,product.pri
 product_pricelist_item_comp_rule,product pricelist item company rule,product.pricelist.item,,crud," ['|', ('company_id', 'parent_of', company_ids), ('company_id', '=', False)]"
 access_product_product_employee,product.product employee,product.product,base.group_user,r,
 access_product_product_manager,product.product manager,product.product,product.group_product_manager,crud,
+access_product_product_company_price_employee,product.product.company.price employee,product.product.company.price,base.group_user,r,
+access_product_product_company_price_manager,product.product.company.price manager,product.product.company.price,product.group_product_manager,crud,
 access_product_attribute,product.attribute,product.attribute,base.group_user,r,
 access_product_attribute_manager,product.attribute manager,product.attribute,product.group_product_manager,crud,
 access_product_attribute_value,product.attribute value,product.attribute.value,base.group_user,r,
