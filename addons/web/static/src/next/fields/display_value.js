@@ -1,6 +1,6 @@
 /**
- * The value of a field as text, whatever its type: for views that display
- * fields without their components.
+ * The value of a field as text, whatever its type: for fields that have no
+ * component yet.
  *
  * Values without a text form (binary content, json, properties) are not
  * displayed.

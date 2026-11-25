@@ -31,7 +31,7 @@ class Partner extends models.Model {
 defineModels([Partner]);
 
 const arch = `
-    <list js_class="signal_list">
+    <list js_class="next_list">
         <field name="name"/>
         <field name="email" optional="hide"/>
         <field name="display_name" column_invisible="True"/>
@@ -39,7 +39,7 @@ const arch = `
         <field name="state"/>
     </list>`;
 
-test("signal_list displays the records", async () => {
+test("next_list displays the records", async () => {
     await mountView({ resModel: "partner", type: "list", arch });
     expect(queryAllTexts("thead th")).toEqual(["Name", "Parent", "State"]);
     expect(queryAllTexts(".o_data_row:eq(0) .o_data_cell")).toEqual(["first record", "", "Draft"]);
@@ -51,7 +51,7 @@ test("signal_list displays the records", async () => {
     expect(".o_data_row").toHaveCount(3);
 });
 
-test("signal_list opens a record in the form view", async () => {
+test("next_list opens a record in the form view", async () => {
     await mountView({
         resModel: "partner",
         type: "list",
@@ -64,7 +64,7 @@ test("signal_list opens a record in the form view", async () => {
     expect.verifySteps([[2, [1, 2, 3]]]);
 });
 
-test("signal_list creates a record in the form view", async () => {
+test("next_list creates a record in the form view", async () => {
     await mountView({
         resModel: "partner",
         type: "list",
@@ -77,11 +77,11 @@ test("signal_list creates a record in the form view", async () => {
     expect.verifySteps(["createRecord"]);
 });
 
-test("signal_list loads the records page by page", async () => {
+test("next_list loads the records page by page", async () => {
     await mountView({
         resModel: "partner",
         type: "list",
-        arch: `<list js_class="signal_list" limit="2"><field name="name"/></list>`,
+        arch: `<list js_class="next_list" limit="2"><field name="name"/></list>`,
     });
     expect(queryAllTexts(".o_data_cell")).toEqual(["first record", "second record"]);
     expect(getPagerValue()).toEqual([1, 2]);

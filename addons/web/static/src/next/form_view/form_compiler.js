@@ -1,7 +1,6 @@
 import { xml } from "@odoo/owl";
 import { append, createElement, createTextNode, getTag } from "@web/core/utils/xml";
-import { FallbackField } from "../fields/fallback_field";
-import { fieldRegistry } from "../fields/field";
+import { buildSpecification, parseFieldNode } from "../views/field_nodes";
 
 /**
  * @typedef {import("../fields/field").FieldNode} FieldNode
@@ -40,61 +39,6 @@ export function compileFormArch(arch, { resModel, relatedModels }) {
         fieldNodes,
         specification: buildSpecification(Object.values(fieldNodes)),
     };
-}
-
-/**
- * The `specification` of `web_read` and `web_save` for the given field nodes:
- * the fields of x2many sub-views, and the display name of other relations.
- *
- * @param {FieldNode[]} nodes
- * @returns {Specification}
- */
-function buildSpecification(nodes) {
-    /** @type {Specification} */
-    const specification = {};
-    for (const node of nodes) {
-        let fieldSpec = {};
-        if (node.list) {
-            fieldSpec = { fields: buildSpecification(node.list.columns) };
-        } else if (node.relation) {
-            fieldSpec = { fields: { display_name: {} } };
-        }
-        specification[node.name] = mergeSpecifications(specification[node.name], fieldSpec);
-    }
-    return specification;
-}
-
-/**
- * A field can appear more than once in an arch: it reads what all its nodes
- * read.
- *
- * @param {{ fields?: Specification } | undefined} a
- * @param {{ fields?: Specification }} b
- */
-function mergeSpecifications(a, b) {
-    if (!a?.fields || !b.fields) {
-        return a?.fields ? a : b;
-    }
-    const fields = { ...a.fields };
-    for (const [name, spec] of Object.entries(b.fields)) {
-        fields[name] = mergeSpecifications(fields[name], spec);
-    }
-    return { fields };
-}
-
-/**
- * The component of a field: the one of its widget, else the one of its type,
- * else one that displays its value as text.
- *
- * @param {string | null} widget
- * @param {string} type
- */
-function getFieldComponent(widget, type) {
-    return (
-        (widget && fieldRegistry.get(widget, null)) ||
-        fieldRegistry.get(type, null) ||
-        FallbackField
-    );
 }
 
 /**
@@ -218,7 +162,7 @@ class FormCompiler {
      * @returns {FieldNode}
      */
     registerField(el) {
-        const node = this.parseField(el, this.resModel);
+        const node = parseFieldNode(el, this.resModel, this.relatedModels);
         node.id = `${node.name}_${(this.fieldCounts[node.name] ||= 0)}`;
         this.fieldCounts[node.name]++;
         this.fieldNodes[node.id] = node;
@@ -364,78 +308,5 @@ class FormCompiler {
             div.setAttribute("style", el.getAttribute("style"));
         }
         return div;
-    }
-
-    /**
-     * Describes a field node of the arch, or of a sub-view: its widget, and
-     * the columns of its list for an x2many. The id is set by the caller.
-     *
-     * @param {Element} el
-     * @param {string} modelName
-     * @returns {FieldNode}
-     */
-    parseField(el, modelName) {
-        const name = el.getAttribute("name");
-        const field = this.relatedModels[modelName]?.fields[name];
-        if (!field) {
-            throw new Error(`Field "${name}" does not exist on model "${modelName}"`);
-        }
-        const widget = el.getAttribute("widget") || null;
-        /** @type {FieldNode} */
-        const node = {
-            id: name,
-            name,
-            type: field.type,
-            relation: field.relation || null,
-            field,
-            widget,
-            string: el.getAttribute("string") || field.string || name,
-            readonly: Boolean(field.readonly),
-            className: el.getAttribute("class"),
-            style: el.getAttribute("style"),
-            Widget: getFieldComponent(widget, field.type),
-        };
-        if (field.type === "one2many" || field.type === "many2many") {
-            node.list = { columns: this.parseListColumns(el, field.relation) };
-        }
-        return node;
-    }
-
-    /**
-     * The fields of the list sub-view of an x2many field node. Without one, the
-     * list shows the display name of the records.
-     *
-     * @param {Element} el
-     * @param {string} comodelName
-     * @returns {FieldNode[]}
-     */
-    parseListColumns(el, comodelName) {
-        const list = [...el.children].find((child) => getTag(child, true) === "list");
-        if (!list) {
-            return [
-                {
-                    id: "display_name_0",
-                    name: "display_name",
-                    type: "char",
-                    relation: null,
-                    field: { type: "char" },
-                    widget: null,
-                    string: "",
-                    readonly: true,
-                    className: null,
-                    style: null,
-                    Widget: getFieldComponent(null, "char"),
-                },
-            ];
-        }
-        const columns = [];
-        for (const child of list.children) {
-            if (getTag(child, true) === "field") {
-                const column = this.parseField(child, comodelName);
-                column.id = `${column.name}_${columns.length}`;
-                columns.push(column);
-            }
-        }
-        return columns;
     }
 }

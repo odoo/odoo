@@ -10,23 +10,6 @@ import { Model as RecordModel } from "../model/model";
  */
 
 /**
- * The `specification` of the given fields of a model: the display name of
- * related records, nothing more.
- *
- * @param {Record<string, any>} fields description of the fields of the model
- * @param {string[]} fieldNames
- * @returns {Specification}
- */
-export function buildSpecification(fields, fieldNames) {
-    /** @type {Specification} */
-    const specification = {};
-    for (const name of fieldNames) {
-        specification[name] = fields[name].relation ? { fields: { display_name: {} } } : {};
-    }
-    return specification;
-}
-
-/**
  * The models of the store: the main one, and the comodels the specification
  * reaches, each with the fields the specification reads on it. No class
  * declares them in advance: their fields are the ones of the view. They are

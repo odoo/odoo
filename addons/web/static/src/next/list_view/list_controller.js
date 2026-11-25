@@ -4,15 +4,15 @@ import { Layout } from "@web/search/layout";
 import { usePager } from "@web/search/pager_hook";
 import { standardViewProps } from "@web/views/standard_view_props";
 
-export class SignalListController extends Component {
-    static template = "web.SignalListController";
+export class ListController extends Component {
+    static template = "web.next.ListController";
     static components = { Layout };
 
     props = useProps({
         ...standardViewProps,
         Model: t.function(),
         Renderer: t.function(),
-        /** @type {any} see `getColumns` in the view */
+        /** @type {any} field nodes, see `FieldNode` */
         columns: t.array(),
         specification: t.object(),
     });
