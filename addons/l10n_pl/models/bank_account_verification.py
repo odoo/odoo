@@ -237,7 +237,7 @@ class BankAccountVerification(models.Model):
                 continue
 
         # Filter create values if a verification already exists
-        failed_verifications = verifications.filtered(lambda verif: verif.verification_status in ('incomplete_partner', 'partner_not_found', 'error'))
+        failed_verifications = verifications.filtered(lambda verif: verif.verification_status in ('incomplete_partner', 'not_found_partner', 'error'))
         partner_bank_vat2failed_verification = failed_verifications.grouped(lambda verif: (verif.partner_bank_account_number, verif.partner_vat))
         partner_bank_vat2verification = verifications.grouped(lambda verif: (verif.partner_bank_account_number, verif.partner_vat))
         to_create = []
@@ -269,7 +269,7 @@ class BankAccountVerification(models.Model):
         :return: response
         """
         params = params or {}
-        url = urljoin('https://wl-api.mf.gov.pl/api', endpoint)
+        url = urljoin('https://wykazpodatnikowvat.mf.gov.pl/api', endpoint)
         response = requests.request(
             'GET',
             url,
