@@ -319,7 +319,8 @@ class TestFutureLeavesCommon(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
+        cls.company = cls.env['res.company'].create({'name': 'Accrual Company'})
+        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True, allowed_company_ids=cls.company.ids))
         cls.employee = cls.env['hr.employee'].create({'name': 'Accrual Employee'})
         cls.work_entry_type = cls._create_work_entry_type('Accrued Time Off', 'ACCR', allows_negative=False)
         cls.accrual_plan = cls._create_accrual_plan(cls.work_entry_type)
