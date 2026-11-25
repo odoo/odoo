@@ -978,6 +978,35 @@ class AccountTax(models.Model):
                 results['batch_per_tax'][batch_tax.id] = batch
         return results
 
+    def _get_subsequent_taxes_per_tax(self):
+        subsequent_taxes_per_tax = {}
+        subsequent_taxes = self.env['account.tax']
+        for tax in reversed(self):
+            subsequent_taxes_per_tax[tax.id] = subsequent_taxes if tax.include_base_amount else self.env['account.tax']
+            if tax.is_base_affected:
+                subsequent_taxes |= tax
+        return subsequent_taxes_per_tax
+
+    @api.model
+    def _prepare_taxes_data_without_amounts(self, base_line):
+        sorted_taxes, group_per_tax = base_line['tax_ids']._flatten_taxes_and_sort_them()
+        if base_line['filter_tax_function']:
+            sorted_taxes = sorted_taxes.filtered(base_line['filter_tax_function'])
+        subsequent_taxes_per_tax = sorted_taxes._get_subsequent_taxes_per_tax()
+
+        taxes_data = []
+        for tax in sorted_taxes:
+            tax_data = {
+                'tax': tax,
+                'taxes': subsequent_taxes_per_tax[tax.id],
+                'group': group_per_tax.get(tax.id) or self.env['account.tax'],
+                'is_reverse_charge': False,
+            }
+            taxes_data.append(tax_data)
+            if tax.has_negative_factor and base_line['special_type'] != 'non_deductible':
+                taxes_data.append({**tax_data, 'is_reverse_charge': True})
+        return taxes_data
+
     def _propagate_extra_taxes_base(self, tax, taxes_data, special_mode=False):
         """ In some cases, depending the computation order of taxes, the special_mode or the configuration
         of taxes (price included, affect base of subsequent taxes, etc), some taxes need to affect the base and
@@ -1269,11 +1298,10 @@ class AccountTax(models.Model):
 
         # Mark the base to be computed in the descending order. The order doesn't matter for no special mode or 'total_excluded' but
         # it must be in the reverse order when special_mode is 'total_included'.
-        subsequent_taxes = self.env['account.tax']
-        for tax in reversed(sorted_taxes):
+        computed_taxes = sorted_taxes.filtered(lambda tax: 'tax_amount' in taxes_data[tax.id])
+        subsequent_taxes_per_tax = computed_taxes._get_subsequent_taxes_per_tax()
+        for tax in reversed(computed_taxes):
             tax_data = taxes_data[tax.id]
-            if 'tax_amount' not in tax_data:
-                continue
 
             # Base amount.
             tax_id_str = str(tax.id)
@@ -1289,18 +1317,13 @@ class AccountTax(models.Model):
             tax_data['base'] = base
 
             # Subsequent taxes.
-            tax_data['taxes'] = self.env['account.tax']
-            if tax.include_base_amount:
-                tax_data['taxes'] |= subsequent_taxes
+            tax_data['taxes'] = subsequent_taxes_per_tax[tax.id]
 
             # Reverse charge.
             if tax.has_negative_factor:
                 reverse_charge_tax_data = reverse_charge_taxes_data[tax.id]
                 reverse_charge_tax_data['base'] = base
                 reverse_charge_tax_data['taxes'] = tax_data['taxes']
-
-            if tax.is_base_affected:
-                subsequent_taxes |= tax
 
         taxes_data_list = []
         for tax_data in taxes_data.values():
@@ -2430,64 +2453,33 @@ class AccountTax(models.Model):
         :param company:                 The company owning the base line.
         :param include_caba_tags:       Indicate if the cash basis tags need to be taken into account.
         """
-        is_refund = base_line['is_refund']
+        self._add_accounting_keys_to_base_line_tax_details(base_line, company, include_caba_tags=include_caba_tags)
+
         currency = base_line['currency_id']
-        product = base_line['product_id']
         company_currency = company.currency_id
-        if is_refund:
-            repartition_lines_field = 'refund_repartition_line_ids'
-        else:
-            repartition_lines_field = 'invoice_repartition_line_ids'
-
-        # Tags on the base line.
-        taxes_data = base_line['tax_details']['taxes_data']
-        base_line['tax_tag_ids'] = self.env['account.account.tag']
-        product_tags = self.env['account.account.tag']
-        if product:
-            countries = {tax_data['tax'].country_id for tax_data in taxes_data}
-            countries.add(False)
-            product_tags = product.sudo().account_tag_ids
-            base_line['tax_tag_ids'] |= product_tags
-
-        for tax_data in taxes_data:
-            tax = tax_data['tax']
-
-            # Tags on the base line.
-            if not tax_data['is_reverse_charge'] and (include_caba_tags or tax.tax_exigibility == 'on_invoice'):
-                base_line['tax_tag_ids'] |= tax[repartition_lines_field].filtered(lambda x: x.repartition_type == 'base').tag_ids
+        for tax_data in base_line['tax_details']['taxes_data']:
+            tax_rep_sign = -1.0 if tax_data['is_reverse_charge'] else 1.0
 
             # Compute repartition lines amounts.
-            if tax_data['is_reverse_charge']:
-                tax_reps = tax[repartition_lines_field].filtered(lambda x: x.repartition_type == 'tax' and x.factor < 0.0)
-                tax_rep_sign = -1.0
-            else:
-                tax_reps = tax[repartition_lines_field].filtered(lambda x: x.repartition_type == 'tax' and x.factor >= 0.0)
-                tax_rep_sign = 1.0
-
             total_tax_rep_amounts = {
                 'tax_amount_currency': 0.0,
                 'tax_amount': 0.0,
             }
-            tax_reps_data = tax_data['tax_reps_data'] = []
-            for tax_rep in tax_reps:
+            for tax_rep_data in tax_data['tax_reps_data']:
+                tax_rep = tax_rep_data['tax_rep']
                 tax_amount_currency = tax_data.get('tax_amount_currency')
 
                 if self.env.context.get('compute_all_use_raw_base_lines'):
                     tax_amount_currency = tax_data.get('raw_tax_amount_currency')
 
-                tax_rep_data = {
-                    'tax_rep': tax_rep,
-                    'tax_amount_currency': currency.round(tax_amount_currency * tax_rep.factor * tax_rep_sign),
-                    'tax_amount': company_currency.round(tax_data['tax_amount'] * tax_rep.factor * tax_rep_sign),
-                    'account': tax_rep._get_aml_target_tax_account(force_caba_exigibility=include_caba_tags) or base_line['account_id'],
-                }
+                tax_rep_data['tax_amount_currency'] = currency.round(tax_amount_currency * tax_rep.factor * tax_rep_sign)
+                tax_rep_data['tax_amount'] = company_currency.round(tax_data['tax_amount'] * tax_rep.factor * tax_rep_sign)
                 total_tax_rep_amounts['tax_amount_currency'] += tax_rep_data['tax_amount_currency']
                 total_tax_rep_amounts['tax_amount'] += tax_rep_data['tax_amount']
-                tax_reps_data.append(tax_rep_data)
 
             # Distribute the delta on the repartition lines.
             sorted_tax_reps_data = sorted(
-                tax_reps_data,
+                tax_data['tax_reps_data'],
                 key=lambda tax_rep: (-abs(tax_rep['tax_amount_currency']), -abs(tax_rep['tax_amount'])),
             )
             for delta_suffix, delta_currency in (
@@ -2514,6 +2506,41 @@ class AccountTax(models.Model):
                 )
                 for target_factor, amount_to_distribute in zip(target_factors, amounts_to_distribute):
                     target_factor['tax_rep_data'][field] += amount_to_distribute
+
+    @api.model
+    def _add_accounting_keys_to_base_line_tax_details(self, base_line, company, include_caba_tags=False):
+        product = base_line['product_id']
+        if base_line['is_refund']:
+            repartition_lines_field = 'refund_repartition_line_ids'
+        else:
+            repartition_lines_field = 'invoice_repartition_line_ids'
+
+        # Tags on the base line.
+        taxes_data = base_line['tax_details']['taxes_data']
+        base_line['tax_tag_ids'] = self.env['account.account.tag']
+        product_tags = self.env['account.account.tag']
+        if product:
+            product_tags = product.sudo().account_tag_ids
+            base_line['tax_tag_ids'] |= product_tags
+
+        for tax_data in taxes_data:
+            tax = tax_data['tax']
+
+            # Tags on the base line.
+            if not tax_data['is_reverse_charge'] and (include_caba_tags or tax.tax_exigibility == 'on_invoice'):
+                base_line['tax_tag_ids'] |= tax[repartition_lines_field].filtered(lambda x: x.repartition_type == 'base').tag_ids
+
+            if tax_data['is_reverse_charge']:
+                tax_reps = tax[repartition_lines_field].filtered(lambda x: x.repartition_type == 'tax' and x.factor < 0.0)
+            else:
+                tax_reps = tax[repartition_lines_field].filtered(lambda x: x.repartition_type == 'tax' and x.factor >= 0.0)
+            tax_data['tax_reps_data'] = [
+                {
+                    'tax_rep': tax_rep,
+                    'account': tax_rep._get_aml_target_tax_account(force_caba_exigibility=include_caba_tags) or base_line['account_id'],
+                }
+                for tax_rep in tax_reps
+            ]
 
         subsequent_tags_per_tax = defaultdict(lambda: self.env['account.account.tag'])
         for tax_data in reversed(taxes_data):
