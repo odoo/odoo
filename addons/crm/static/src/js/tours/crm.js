@@ -33,16 +33,10 @@ registry.category("web_tour.tours").add('crm_tour', {
     run: "edit Brandon Freeman",
 }, {
     isActive: ["auto"],
-    trigger: ".ui-menu-item > a:contains('Brandon Freeman')",
+    trigger: ".ui-menu-item > a:contains('Brandon Freeman'), .o_kanban_quick_create .o_m2o_dropdown_option_create",
     run: "click",
 }, {
-    isActive: ["manual"],
-    trigger: ".o_kanban_quick_create .o_m2o_dropdown_option_create",
-    content: _t("Create your new contact."),
-    tooltipPosition: "top",
-    run: "click",
-}, {
-    trigger: ".o_kanban_quick_create .o_field_widget[name='name'] input:value('Brandon Freeman')",
+    trigger: ".o_kanban_quick_create .o_field_widget[name='name'] input:value(/./)",
 }, {
     trigger: ".o_kanban_quick_create .o_kanban_add",
     content: markup(_t("Now, <b>add your Opportunity</b> to your Pipeline.")),

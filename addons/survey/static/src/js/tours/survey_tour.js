@@ -8,9 +8,8 @@ registry.category("web_tour.tours").add('survey_tour', {
     steps: () => [
     ...stepUtils.goToAppSteps('survey.menu_surveys', markup(_t("Ready to change the way you <b>gather data</b>?"))),
 {
-    trigger: '.btn-outline-primary.o_survey_load_sample',
-    content: markup(_t("Load a <b>sample Survey</b> to get started quickly.")),
-    tooltipPosition: 'left',
+    trigger: 'article .o_survey_kanban_card div:contains("Feedback Form")',
+    content: _t('Open the "Feedback Form" survey'),
     run: "click",
 }, {
     trigger: 'button[name=action_test_survey]',
@@ -24,25 +23,58 @@ registry.category("web_tour.tours").add('survey_tour', {
     run: "click",
 },
 {
-    trigger: '.o_survey_question span:contains("How frequently")',
+    trigger: '.o_survey_question:contains("How frequently") input',
+    content: _t("Pick an answer!"),
+    tooltipPosition: 'left',
+    run: 'click'
+},
+{
+    trigger: '.o_survey_question:contains("How many") input',
+    content: _t("Enter a number!"),
+    tooltipPosition: 'left',
+    run: 'edit 5'
 },
 {
     trigger: 'button[type=submit]',
-    content: _t("Whenever you pick an answer, Odoo saves it for you."),
+    content: _t("Let's continue to the next page!"),
     tooltipPosition: 'bottom',
     run: "click",
 },
 {
-    trigger: '.o_survey_question span:contains("How many")',
+    trigger: '.o_survey_question:contains("Which of") input',
+    content: _t("Let's pick an answer again!"),
+    tooltipPosition: 'left',
+    run: 'click'
 },
 {
-    trigger: 'button[type=submit]',
-    content: _t("Only a single question left!"),
+    trigger: '.o_survey_question:contains("What do") tbody tr:eq(0) input',
+    content: _t("Just one question left!"),
     tooltipPosition: 'bottom',
     run: "click",
 },
 {
-    trigger: '.o_survey_question span:contains("How likely")',
+    trigger: '.o_survey_question:contains("What do") tbody tr:eq(1) input',
+    content: _t("Matrix questions have multiple lines!"),
+    tooltipPosition: 'bottom',
+    run: "click",
+},
+{
+    trigger: '.o_survey_question:contains("What do") tbody tr:eq(2) input',
+    content: _t("Answer every one of them!"),
+    tooltipPosition: 'bottom',
+    run: "click",
+},
+{
+    trigger: '.o_survey_question:contains("What do") tbody tr:eq(3) input',
+    content: _t("Here you go!"),
+    tooltipPosition: 'bottom',
+    run: "click",
+},
+{
+    trigger: '.o_survey_question:contains("What do") tbody tr:eq(4) input',
+    content: _t("Finally!"),
+    tooltipPosition: 'bottom',
+    run: "click",
 },
 {
     trigger: 'button[value=finish]',
@@ -70,9 +102,14 @@ registry.category("web_tour.tours").add('survey_tour', {
     tooltipPosition: 'bottom',
     run: "click",
 }, {
-    trigger: '.breadcrumb a:contains("Feedback Form")',
-    content: _t("Use the breadcrumbs to quickly go back to the dashboard."),
-    tooltipPosition: 'bottom',
+    trigger: '.breadcrumb-item',
+    content: _t("Use the breadcrumbs to quickly go back to the survey."),
+    tooltipPosition: 'top',
+    run: "click",
+}, {
+    trigger: '.o_popover .o-dropdown-item',
+    content: _t("Use the breadcrumbs to quickly go back to the survey."),
+    tooltipPosition: 'right',
     run: "click",
 }
 ]});
