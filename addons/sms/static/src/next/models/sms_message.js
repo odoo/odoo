@@ -1,7 +1,7 @@
 import { Message } from "@mail/next/models/message";
 import { smsMessageFields } from "./sms_message_fields.generated";
 
-/** @import { Extension } from "@web/next/model/model" */
+/** @import { Extension } from "@web/next/store/model" */
 
 export class SmsMessage extends /** @type {Extension<typeof Message, typeof smsMessageFields>} */ (
     Message

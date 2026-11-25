@@ -73,7 +73,7 @@ class TestJsFieldsClasses(BaseCase):
 
     def test_declaration(self):
         classes, warnings = self.scan("""
-            import { Model } from "@web/next/model/model";
+            import { Model } from "@web/next/store/model";
             import { resPartnerFields } from "./partner_fields.generated";
 
             /** @extends {Model<typeof resPartnerFields>} */
@@ -90,7 +90,7 @@ class TestJsFieldsClasses(BaseCase):
     def test_declaration_import(self):
         # an alias, and a relative import
         classes, _ = self.scan("""
-            import { BUILD, Model as RecordModel } from "../model/model";
+            import { BUILD, Model as RecordModel } from "../store/model";
 
             export class Partner extends RecordModel {
                 static _name = 'res.partner';
@@ -118,7 +118,7 @@ class TestJsFieldsClasses(BaseCase):
     def test_extension(self):
         classes, _ = self.scan("""
             import { Partner } from "@web/core/partner_model";
-            /** @import { Extension } from "@web/next/model/model" */
+            /** @import { Extension } from "@web/next/store/model" */
 
             export class MailPartner extends /** @type {Extension<typeof Partner, {}>} */ (
                 /** @type {any} */ (Partner)
@@ -164,7 +164,7 @@ class TestJsFieldsGenerate(TransactionCase):
             ]
         }
         self.write("base", "partner_model.js", """
-            import { Model } from "@web/next/model/model";
+            import { Model } from "@web/next/store/model";
 
             export class Partner extends Model {
                 static _name = "res.partner";
@@ -195,8 +195,8 @@ class TestJsFieldsGenerate(TransactionCase):
         """
         content, notes = self.generate("base", options)
         self.assertEqual(content, header(options) + dedent("""
-            import { fields } from "@web/next/model/fields";
-            /** @import { Many2one, One2many } from "@web/next/model/fields" */
+            import { fields } from "@web/next/store/fields";
+            /** @import { Many2one, One2many } from "@web/next/store/fields" */
             /** @import { Partner } from "@base/partner_model" */
 
             export const resPartnerFields = {
@@ -221,7 +221,7 @@ class TestJsFieldsGenerate(TransactionCase):
         """
         content, _ = self.generate("base", options)
         self.assertEqual(content, header(options) + dedent("""
-            import { fields } from "@web/next/model/fields";
+            import { fields } from "@web/next/store/fields";
 
             export const nothing = {};
         """))

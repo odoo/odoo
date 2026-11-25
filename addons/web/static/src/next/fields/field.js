@@ -3,7 +3,7 @@ import { registry } from "@web/core/registry";
 
 /**
  * @import { ResolveProps, StripBrands } from "@odoo/owl"
- * @import { FieldSignal } from "../model/fields"
+ * @import { FieldSignal } from "../store/fields"
  */
 
 /**

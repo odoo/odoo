@@ -1,4 +1,4 @@
-import { Model } from "@web/next/model/model";
+import { Model } from "@web/next/store/model";
 import { smsSmsFields } from "./sms_fields.generated";
 
 /** @extends {Model<typeof smsSmsFields>} */

@@ -1,7 +1,7 @@
 import { Partner } from "@web/next/models/partner";
 import { mailPartnerFields } from "./mail_partner_fields.generated";
 
-/** @import { Extension } from "@web/next/model/model" */
+/** @import { Extension } from "@web/next/store/model" */
 
 export class MailPartner
     extends /** @type {Extension<typeof Partner, typeof mailPartnerFields>} */ (Partner)

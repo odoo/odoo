@@ -3,8 +3,8 @@
 // model: mail.message
 // exclude: incoming_email_cc, incoming_email_to, outgoing_email_to
 
-import { fields } from "@web/next/model/fields";
-/** @import { Many2many, Many2one, One2many } from "@web/next/model/fields" */
+import { fields } from "@web/next/store/fields";
+/** @import { Many2many, Many2one, One2many } from "@web/next/store/fields" */
 /** @import { MailPartner } from "@mail/next/models/mail_partner" */
 /** @import { Message } from "@mail/next/models/message" */
 

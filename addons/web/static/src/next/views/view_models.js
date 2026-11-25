@@ -1,5 +1,5 @@
-import { fieldFromDefinition } from "../model/fields";
-import { Model as RecordModel } from "../model/model";
+import { fieldFromDefinition } from "../store/fields";
+import { Model as RecordModel } from "../store/model";
 
 /**
  * @typedef {{ [fieldName: string]: { fields?: Specification } }} Specification

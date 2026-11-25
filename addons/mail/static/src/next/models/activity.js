@@ -1,4 +1,4 @@
-import { Model } from "@web/next/model/model";
+import { Model } from "@web/next/store/model";
 import { mailActivityFields } from "./activity_fields.generated";
 
 /** @import { User } from "@web/next/models/user" */

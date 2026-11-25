@@ -17,9 +17,9 @@ export class FormController extends Component {
 
     model = useModel(this.props.Model, {
         resModel: this.props.resModel,
-        resId: this.props.resId || false,
         specification: this.props.archInfo.specification,
         relatedModels: this.props.relatedModels,
-        context: this.props.context,
+        isMonoRecord: true,
+        resId: this.props.resId || false,
     });
 }

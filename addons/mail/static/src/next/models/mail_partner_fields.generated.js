@@ -4,8 +4,8 @@
 // addons: mail
 // export: mailPartnerFields
 
-import { fields } from "@web/next/model/fields";
-/** @import { Many2many, Many2one, One2many } from "@web/next/model/fields" */
+import { fields } from "@web/next/store/fields";
+/** @import { Many2many, Many2one, One2many } from "@web/next/store/fields" */
 /** @import { Activity } from "@mail/next/models/activity" */
 /** @import { MailPartner } from "@mail/next/models/mail_partner" */
 /** @import { Message } from "@mail/next/models/message" */

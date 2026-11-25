@@ -2,13 +2,13 @@ import { animationFrame, describe, expect, test } from "@odoo/hoot";
 import { Component, computed, onPatched, signal, useEffect, useScope, xml } from "@odoo/owl";
 import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
-import { toCommands } from "@web/next/model/commands";
-import { fieldFromDefinition, fields } from "@web/next/model/fields";
-import { Model } from "@web/next/model/model";
-import { Store } from "@web/next/model/store";
+import { toCommands } from "@web/next/store/commands";
+import { fieldFromDefinition, fields } from "@web/next/store/fields";
+import { Model } from "@web/next/store/model";
+import { Store } from "@web/next/store/store";
 
-/** @import { Many2many, Many2one, One2many } from "@web/next/model/fields" */
-/** @import { Extension } from "@web/next/model/model" */
+/** @import { Many2many, Many2one, One2many } from "@web/next/store/fields" */
+/** @import { Extension } from "@web/next/store/model" */
 
 describe.current.tags("headless");
 

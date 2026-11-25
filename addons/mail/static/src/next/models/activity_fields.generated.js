@@ -3,8 +3,8 @@
 // model: mail.activity
 // fields: can_write, date_deadline, note, res_model, state, summary, user_id
 
-import { fields } from "@web/next/model/fields";
-/** @import { Many2one } from "@web/next/model/fields" */
+import { fields } from "@web/next/store/fields";
+/** @import { Many2one } from "@web/next/store/fields" */
 /** @import { User } from "@web/next/models/user" */
 
 export const mailActivityFields = {

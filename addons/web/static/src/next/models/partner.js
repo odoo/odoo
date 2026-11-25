@@ -1,5 +1,5 @@
 import { computed } from "@odoo/owl";
-import { Model } from "@web/next/model/model";
+import { Model } from "@web/next/store/model";
 import { resPartnerFields } from "./partner_fields.generated";
 
 /** @extends {Model<typeof resPartnerFields>} */

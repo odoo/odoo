@@ -4,7 +4,7 @@
 // addons: sms
 // export: smsMessageFields
 
-import { fields } from "@web/next/model/fields";
+import { fields } from "@web/next/store/fields";
 
 export const smsMessageFields = {
     has_sms_error: fields.Boolean(),

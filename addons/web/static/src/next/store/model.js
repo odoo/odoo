@@ -56,7 +56,7 @@ export const BUILD = Symbol("build");
 //
 // Extending it, in another addon:
 //
-//     /** @import { Extension } from "@web/next/model/model" */
+//     /** @import { Extension } from "@web/next/store/model" */
 //
 //     const mailPartnerFields = {
 //         im_status: fields.Char(),

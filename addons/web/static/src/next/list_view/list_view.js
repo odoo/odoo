@@ -1,14 +1,15 @@
 import { registry } from "@web/core/registry";
+import { RelModel } from "../rel_model/rel_model";
 import { buildSpecification, parseListColumns } from "../views/field_nodes";
 import { ListController } from "./list_controller";
-import { ListModel } from "./list_model";
 import { ListRenderer } from "./list_renderer";
 
 /**
  * The list view on top of the record store:
  *
  * - the arch describes the columns, and the fields to load;
- * - the model loads a page of records into a store, for the current search;
+ * - the model loads a page of records into a store, for the current search
+ *   (see `RelModel`);
  * - the controller creates the model, adds the pager and the "New" button,
  *   and opens a record in the form view of the action when it is clicked;
  * - the renderer displays the records with the components of their fields,
@@ -21,7 +22,7 @@ export const listView = {
     // records are not grouped
     searchMenuTypes: ["filter", "favorite"],
     Controller: ListController,
-    Model: ListModel,
+    Model: RelModel,
     Renderer: ListRenderer,
 
     props: (genericProps, view) => {

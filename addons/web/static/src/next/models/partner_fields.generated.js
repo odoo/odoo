@@ -4,8 +4,8 @@
 // fields: active, child_ids, country_id, email, is_company, name, parent_id, phone,
 //     user_ids
 
-import { fields } from "@web/next/model/fields";
-/** @import { Many2one, One2many } from "@web/next/model/fields" */
+import { fields } from "@web/next/store/fields";
+/** @import { Many2one, One2many } from "@web/next/store/fields" */
 /** @import { Country } from "@web/next/models/country" */
 /** @import { Partner } from "@web/next/models/partner" */
 /** @import { User } from "@web/next/models/user" */

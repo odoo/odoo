@@ -1,5 +1,5 @@
 import { computed } from "@odoo/owl";
-import { Model } from "@web/next/model/model";
+import { Model } from "@web/next/store/model";
 import { mailMessageFields } from "./message_fields.generated";
 
 /** @import { Partner } from "@web/next/models/partner" */

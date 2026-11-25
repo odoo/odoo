@@ -1,14 +1,15 @@
 import { registry } from "@web/core/registry";
+import { RelModel } from "../rel_model/rel_model";
 import { compileFormArch } from "./form_compiler";
 import { FormController } from "./form_controller";
-import { FormModel } from "./form_model";
 import { FormRenderer } from "./form_renderer";
 
 /**
  * The form view on top of the record store:
  *
  * - the arch is compiled into a template, and describes the fields to load;
- * - the model loads one record into a store, saves it and discards its changes;
+ * - the model loads one record into a store, saves it and discards its changes
+ *   (see `RelModel`);
  * - the controller creates the model, and adds the save and discard buttons;
  * - the renderer displays the record with the compiled template.
  *
@@ -18,7 +19,7 @@ export const formView = {
     type: "form",
     searchMenuTypes: [],
     Controller: FormController,
-    Model: FormModel,
+    Model: RelModel,
     Renderer: FormRenderer,
 
     props: (genericProps, view) => {

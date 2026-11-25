@@ -2,8 +2,8 @@
 //
 // model: sms.sms
 
-import { fields } from "@web/next/model/fields";
-/** @import { Many2one } from "@web/next/model/fields" */
+import { fields } from "@web/next/store/fields";
+/** @import { Many2one } from "@web/next/store/fields" */
 /** @import { MailPartner } from "@mail/next/models/mail_partner" */
 /** @import { SmsMessage } from "@sms/next/models/sms_message" */
 

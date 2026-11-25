@@ -14,7 +14,7 @@
 
 // Declaring a relation, with its type:
 //
-//     /** @import { Many2one } from "@web/next/model/fields" */
+//     /** @import { Many2one } from "@web/next/store/fields" */
 //     /** @import { Partner } from "./partner" */
 //
 //     static fields = {

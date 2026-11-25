@@ -3,8 +3,8 @@
 // model: res.users
 // fields: active, login, name, partner_id, share
 
-import { fields } from "@web/next/model/fields";
-/** @import { Many2one } from "@web/next/model/fields" */
+import { fields } from "@web/next/store/fields";
+/** @import { Many2one } from "@web/next/store/fields" */
 /** @import { Partner } from "@web/next/models/partner" */
 
 export const resUsersFields = {
