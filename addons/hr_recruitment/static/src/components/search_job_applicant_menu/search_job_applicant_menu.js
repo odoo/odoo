@@ -1,9 +1,10 @@
-import { Component, markup } from "@odoo/owl";
+import { Component, usePlugin } from "@odoo/owl";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
+import { user } from "@web/core/user";
 import { useEnv } from "@web/owl2/utils";
 import { STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
+import { ActionPlugin } from "@web/webclient/actions/action_plugin";
 
 const cogMenuRegistry = registry.category("cogMenu");
 
@@ -18,23 +19,21 @@ export class SearchJobApplicant extends Component {
     static template = "hr_recruitment.SearchJobApplicant";
     static components = { DropdownItem };
 
-    setup() {
-        this.action = useService("action");
-    }
+    action = usePlugin(ActionPlugin);
 
     //---------------------------------------------------------------------
     // Protected
     //---------------------------------------------------------------------
 
-    async openMatchingJobApplicants() {
+    openMatchingJobApplicants() {
         const { globalContext } = this.env.searchModel;
-        const action = await this.env.services.orm.call(
-            "hr.job",
-            "action_job_add_applicants",
-            [globalContext.active_id]
-        );
-        action.help = markup(action.help);
-        return this.action.doAction(action);
+        return this.action.doActionButton({
+            type: "object",
+            resModel: "hr.job",
+            name: "action_job_add_applicants",
+            resId: globalContext.active_id,
+            context: user.context, // orm.call used to add the user context (lang/tz) automatically
+        });
     }
 }
 

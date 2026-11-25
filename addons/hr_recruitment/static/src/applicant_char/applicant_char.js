@@ -1,15 +1,12 @@
+import { usePlugin } from "@odoo/owl";
 import { CharField, charField } from "@web/views/fields/char/char_field";
 import { registry } from "@web/core/registry";
-
-import { useService } from "@web/core/utils/hooks";
+import { ActionPlugin } from "@web/webclient/actions/action_plugin";
 
 export class ApplicantCharField extends CharField {
     static template = "hr_recruitment.ApplicantCharField";
-    setup() {
-        super.setup();
 
-        this.action = useService("action");
-    }
+    action = usePlugin(ActionPlugin);
 
     onClick() {
         const record = this.props.record.data;

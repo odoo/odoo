@@ -2,7 +2,6 @@ import { Component, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useChart } from "@web/core/utils/chart_hook";
-import { useService } from "@web/core/utils/hooks";
 import { formatFloat } from "@web/views/fields/formatters";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
@@ -27,10 +26,6 @@ export class GaugeChartWidget extends Component {
     });
 
     chart = useChart(() => this.getChartConfig());
-
-    setup() {
-        this.orm = useService("orm");
-    }
 
     get chartTitle() {
         return this.props.title || _t("Job Position Matching");

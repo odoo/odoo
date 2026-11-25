@@ -1,14 +1,8 @@
 
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
 import { Many2ManyTagsField, many2ManyTagsField } from "@web/views/fields/many2many_tags/many2many_tags_field";
 
 export class ApplicantLineMany2Many extends Many2ManyTagsField {
-    setup() {
-        super.setup(...arguments);
-        this.orm = useService("orm");
-    }
-
     getTagProps(record){
         let applicant_name = record.data.display_name;
         let name = applicant_name;
