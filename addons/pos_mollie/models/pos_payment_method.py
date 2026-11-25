@@ -1,6 +1,6 @@
 import re
 
-from odoo import _, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, ValidationError
 from odoo.tools import hash_sign
 
@@ -17,7 +17,32 @@ class PosPaymentMethod(models.Model):
         return super()._allowed_actions_in_self_order() + ["mollie_create_payment", "mollie_cancel_payment", "mollie_get_payment"]
 
     mollie_terminal_id = fields.Char("Mollie Terminal ID", copy=False)
-    mollie_payment_provider_id = fields.Many2one("payment.provider", domain=[("code", "=", "mollie")])
+    mollie_payment_provider_id = fields.Many2one(
+        "payment.provider",
+        domain=[("code", "=", "mollie")],
+        compute="_compute_mollie_payment_provider_id",
+        store=True,
+        readonly=False,
+    )
+
+    @api.depends("payment_provider", "company_id")
+    def _compute_mollie_payment_provider_id(self):
+        Provider = self.env["payment.provider"].sudo()
+        for method in self:
+            if method.payment_provider != "mollie" or not method.company_id:
+                method.mollie_payment_provider_id = False
+                continue
+            # A branch company may use the provider of a parent company.
+            providers = Provider.search([
+                ("code", "=", "mollie"),
+                *Provider._check_company_domain(method.company_id),
+            ])
+            own_provider = providers.filtered(lambda p: p.company_id == method.company_id)
+            method.mollie_payment_provider_id = (own_provider or providers)[:1]
+
+    def action_mollie_open_provider(self):
+        self.ensure_one()
+        return self.mollie_payment_provider_id._get_records_action()
 
     def _check_mollie_access(self, pos_session_id=None, payment_id=None):
         if not self.env.su and not self.env.user.has_group("point_of_sale.group_pos_user"):
@@ -82,6 +107,35 @@ class PosPaymentMethod(models.Model):
         self._fetch_mollie_payment(payment_id, pos_session_id)
         response = self.sudo().mollie_payment_provider_id._send_api_request("DELETE", f"/payments/{payment_id}")
         return self._parse_mollie_payment(response)
+
+    def action_mollie_test(self):
+        """ Test if the terminal appears in the list of connected devices on Mollie API """
+        self.ensure_one()
+        self._check_mollie_access()
+        provider = self.sudo().mollie_payment_provider_id
+        if not (self.mollie_terminal_id and provider.mollie_api_key):
+            raise ValidationError(_('Please set Mollie credentials for the terminal id and api key %s.', provider.display_name))
+        response = provider._send_api_request("GET", f"/terminals/{self.mollie_terminal_id}")
+        values = {key: response.get(key) for key in ("description", "status", "mode", "brand", "model", "serialNumber", "currency")}
+        message = _(
+            "%(description)s\n"
+            "Status: %(status)s\n"
+            "Mode: %(mode)s\n"
+            "Brand: %(brand)s\n"
+            "Model: %(model)s\n"
+            "Serial Number: %(serialNumber)s\n"
+            "Supported currency: %(currency)s",
+            **values,
+        )
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "message": message,
+                "type": "success" if values["status"] == "active" else "warning",
+                "className": "text-prewrap o_line_clamp_10",
+            },
+        }
 
     def mollie_get_payment(self, payment_id: str, pos_session_id: int, payment_uuid: str | None = None):
         self.ensure_one()

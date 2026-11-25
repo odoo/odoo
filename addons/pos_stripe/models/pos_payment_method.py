@@ -36,13 +36,16 @@ class PosPaymentMethod(models.Model):
                      terminal=payment_method.stripe_serial_number, payment_method=existing_payment_method.display_name))
 
     def _get_stripe_payment_provider(self):
-        stripe_payment_provider = self.env['payment.provider'].search([
+        company = self[:1].company_id or self.env.company
+        Provider = self.env['payment.provider']
+        providers = Provider.search([
             ('code', '=', 'stripe'),
-            ('company_id', '=', self.env.company.id)
-        ], limit=1)
+            *Provider._check_company_domain(company),
+        ])
+        stripe_payment_provider = providers.filtered(lambda p: p.company_id == company)[:1] or providers[:1]
 
         if not stripe_payment_provider:
-            raise UserError(_("Stripe payment provider for company %s is missing", self.env.company.name))
+            raise UserError(_("Stripe payment provider for company %s is missing", company.name))
 
         return stripe_payment_provider
 

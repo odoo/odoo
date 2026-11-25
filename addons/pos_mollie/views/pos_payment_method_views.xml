@@ -9,8 +9,17 @@
                 <notebook invisible="payment_provider != 'mollie'">
                     <page name="settings" string="Mollie">
                         <group>
-                            <field name="mollie_payment_provider_id" invisible="payment_provider != 'mollie'" required="payment_provider == 'mollie'"/>
-                            <field name="mollie_terminal_id" invisible="payment_provider != 'mollie'" required="payment_provider == 'mollie'"/>
+                            <group>
+                                <field name="mollie_terminal_id" required="payment_provider == 'mollie'"/>
+                                <div colspan="2" class="mt16" groups="base.group_system">
+                                    <button name="action_mollie_open_provider" type="object" icon="east" string="Don't forget to set the API key on the Mollie payment provider before using this payment method." class="btn-link"/>
+                                </div>
+                            </group>
+                            <group>
+                                <div class="d-flex justify-content-end" colspan="2">
+                                    <button name="action_mollie_test" type="object" string="Test" class="btn-primary text-nowrap" groups="point_of_sale.group_pos_manager"/>
+                                </div>
+                            </group>
                         </group>
                     </page>
                 </notebook>
