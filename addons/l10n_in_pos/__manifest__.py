@@ -9,13 +9,14 @@
         'point_of_sale'
     ],
     'data': [
-        'views/pos_order_line_views.xml',
+        'views/pos_order_views.xml',
         'views/pos_payment_method_views.xml',
         'views/report_invoice.xml',
         'views/product_view.xml',
         'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
         'data/pos_bill_data.xml',
+        'data/pos_config_data.xml',
         'receipt/pos_order_receipt.xml',
     ],
     'demo': [
@@ -29,6 +30,9 @@
         ],
         'web.assets_tests': [
             'l10n_in_pos/static/tests/tours/**/*',
+        ],
+        'web.assets_unit_tests': [
+            'l10n_in_pos/static/tests/unit/**/*',
         ],
         'point_of_sale.customer_display_assets': [
             'l10n_in_pos/static/src/customer_display/**/*',

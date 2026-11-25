@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_order_tree_l10n_in_pos" model="ir.ui.view">
+        <field name="name">pos.order.list.inherit.l10n_in_pos</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_tree"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="account_move" optional="hide" />
+                <field name="l10n_in_b2c_invoice_number" optional="hide" width="130px" decoration-danger="is_singly_invoiced and not reversed_move_ids"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_pos_order_filter_l10n_in_pos" model="ir.ui.view">
+        <field name="name">pos.order.list.select.inherit.l10n_in_pos</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_filter"/>
+        <field name="arch" type="xml">
+            <field name="pos_reference" position="after">
+                <field name="account_move" string="Invoice Number"
+                    filter_domain="['|', ('account_move.name', 'ilike', self), ('l10n_in_b2c_invoice_number', 'ilike', self)]"/>
+            </field>
+            <filter name="cancelled" position="after">
+                <separator/>
+                <filter string="Cancelled B2C Invoices" name="l10n_in_b2c_cancelled"
+                    domain="[
+                        ('l10n_in_b2c_invoice_number', '!=', False),
+                        ('account_move', '!=', False),
+                        ('account_move.pos_session_sales_id', '=', False),
+                        ('account_move.pos_session_refunds_id', '=', False),
+                        ('account_move.pos_session_correction_id', '=', False),
+                        ('reversed_move_ids', 'not any', [('move_type', '=', 'out_refund')]),
+                    ]"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="view_pos_pos_form_inherit" model="ir.ui.view">
+        <field name="name">pos.order.form.inherit.l10n_in_pos</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list[@name='order_line_list']/field[@name='is_edited']" position="before">
+                <field name="l10n_in_hsn_code" optional="hide"/>
+            </xpath>
+            <field name="is_edited" position="after">
+                <label for="l10n_in_b2c_invoice_number" invisible="country_code != 'IN'"/>
+                <div class="o_row" invisible="country_code != 'IN'">
+                    <field name="l10n_in_b2c_invoice_number"/>
+                    <span class="oi text-danger" data-icon="error" role="img"
+                        title="Replaced by its invoice: counted as cancelled in the GSTR-1 document summary"
+                        aria-label="Replaced by its invoice: counted as cancelled in the GSTR-1 document summary"
+                        invisible="not l10n_in_b2c_invoice_number or not is_singly_invoiced or reversed_move_ids"/>
+                </div>
+            </field>
+        </field>
+    </record>
+</odoo>

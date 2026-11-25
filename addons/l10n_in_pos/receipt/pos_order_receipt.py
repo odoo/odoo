@@ -16,6 +16,9 @@ class PosOrderReceipt(models.AbstractModel):
             l10n_in_hsn_summary = self.env['account.tax']._l10n_in_get_hsn_summary_table(base_lines, False)
             data['extra_data']['l10n_in_hsn_summary'] = l10n_in_hsn_summary
             data['conditions']['code_in'] = self.company_id.country_id.code == 'IN'
+            data['extra_data']['l10n_in_invoice_number'] = (
+                (self.is_singly_invoiced and self.account_move.name) or self.l10n_in_b2c_invoice_number
+            )
 
             for summary in data['extra_data']['l10n_in_hsn_summary'].get('items'):
                 if summary.get('tax_amount_igst') is not None:

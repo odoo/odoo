@@ -11,6 +11,9 @@ patch(GeneratePrinterData.prototype, {
         if (this.order.isInCompany) {
             data.conditions.code_in = this.order.isInCompany;
             data.extra_data.l10n_in_hsn_summary = this.order._prepareL10nInHsnSummary();
+            data.extra_data.l10n_in_invoice_number =
+                (this.order.is_singly_invoiced && this.order.invoiceName) ||
+                this.order.l10n_in_b2c_invoice_number;
         }
 
         return data;

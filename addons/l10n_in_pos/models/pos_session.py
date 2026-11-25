@@ -1,4 +1,6 @@
-from odoo import models
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import Command, fields, models
 
 
 class PosSession(models.Model):
@@ -28,6 +30,11 @@ class PosSession(models.Model):
         )
 
     def _prepare_account_move_line_commands_for_reversal(self, order, original_move):
+        if order._l10n_in_is_reversed_by_credit_note():
+            # Priced like the invoice lines: a credit note computes its taxes from the unit prices.
+            lines = order.with_context(pos_invoice_group_move_type='out_invoice')._prepare_account_move_line_data(False)
+            return [Command.create(line['account.move.line']) for line in lines]
+
         commands = super()._prepare_account_move_line_commands_for_reversal(order, original_move)
         if not order.config_id.company_id.l10n_in_gst_registration_type:
             return commands
@@ -59,3 +66,21 @@ class PosSession(models.Model):
         if gst_sessions:
             tax_tags_dict = self.env['account.move.line']._get_l10n_in_tax_tag_ids()
             (gst_sessions.sale_move_ids | gst_sessions.refund_move_ids).line_ids._set_l10n_in_gstr_section(tax_tags_dict)
+
+    def _prepare_partial_reversal_move_vals(self, orders, original_move, line_commands):
+        vals = super()._prepare_partial_reversal_move_vals(orders, original_move, line_commands)
+        if orders._l10n_in_is_reversed_by_credit_note():
+            today = fields.Date.context_today(self)
+            vals.update({
+                'move_type': 'out_refund',
+                'journal_id': orders.config_id.journal_id.id,
+                'partner_id': orders.partner_id.id,
+                'currency_id': orders.currency_id.id,
+                'date': today,
+                'invoice_date': today,
+                'ref': self.env._('Reversal of B2C invoice %s', orders.l10n_in_b2c_invoice_number),
+                # Reported on the B2C side like the closing entry it reverses, not as a sale to the customer.
+                'l10n_in_gst_treatment': original_move.l10n_in_gst_treatment,
+                'l10n_in_state_id': original_move.l10n_in_state_id.id,
+            })
+        return vals

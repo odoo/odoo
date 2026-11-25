@@ -7,6 +7,7 @@ from . import product_template
 from . import account_move
 from . import account_move_line
 from . import account_tax
+from . import ir_sequence
 from . import pos_bill
 from . import pos_session
 from . import pos_order
@@ -14,3 +15,4 @@ from . import pos_config
 from . import pos_payment_method
 from . import res_partner_bank
 from . import res_company
+from . import res_config_settings

@@ -42,7 +42,7 @@ class TestGenericIN(TestGenericLocalization, CommonPosTest):
     def test_generic_localization(self):
         _, html = super().test_generic_localization()
         self.assertTrue("HSN Code" in html)
-        self.assertTrue("Tax Invoice" in html)
+        self.assertIn("Invoice:", html)
 
     def _get_refund_receipt_html(self, to_invoice=False):
         _, refund = self.create_backend_pos_order({
@@ -68,7 +68,7 @@ class TestGenericIN(TestGenericLocalization, CommonPosTest):
         return refund.order_receipt_generate_html()
 
     def test_refund_order_receipt(self):
-        self.assertIn("R-INVOICE", self._get_refund_receipt_html())
+        self.assertRegex(self._get_refund_receipt_html(), r"Invoice:\s*R\d{2}/")
 
     def test_refund_invoice_order_receipt(self):
-        self.assertIn("Tax R-Invoice", self._get_refund_receipt_html(to_invoice=True))
+        self.assertIn("Invoice:", self._get_refund_receipt_html(to_invoice=True))

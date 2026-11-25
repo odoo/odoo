@@ -10,6 +10,23 @@
                     <span>Please note that the kiosk for INR currency only works with Razorpay terminal</span>
                 </div>
             </xpath>
+            <block id="pos_accounting_section" position="inside">
+                <setting id="l10n_in_pos_b2c_invoice_sequence"
+                    string="B2C Invoice Sequence"
+                    help="Invoice and refund invoice numbers of the B2C orders, e.g. P26/07/000000007 and R26/07/000000004."
+                    invisible="country_code != 'IN'">
+                    <div class="content-group mt16">
+                        <div class="row">
+                            <label for="pos_l10n_in_b2c_sequence_prefix" class="col-lg-4 o_light_label"/>
+                            <field name="pos_l10n_in_b2c_sequence_prefix" readonly="pos_has_active_session"/>
+                        </div>
+                        <div class="row">
+                            <label for="pos_l10n_in_b2c_refund_sequence_prefix" class="col-lg-4 o_light_label"/>
+                            <field name="pos_l10n_in_b2c_refund_sequence_prefix" readonly="pos_has_active_session"/>
+                        </div>
+                    </div>
+                </setting>
+            </block>
         </field>
     </record>
 </odoo>

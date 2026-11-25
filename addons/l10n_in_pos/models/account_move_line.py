@@ -26,7 +26,7 @@ class AccountMoveLine(models.Model):
 
         in_pos_closing_and_reversed_lines = self.filtered(
             lambda l: l.move_id.country_code == 'IN'
-            and l.move_id.move_type == 'entry'
+            and l.move_id.move_type in ('entry', 'out_refund')
             and l.display_type in ('product', 'tax')
             and (l.move_id.sudo().pos_session_ids or l.move_id.sudo().reversed_pos_order_id)
         )

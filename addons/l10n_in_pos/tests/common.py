@@ -87,6 +87,19 @@ class TestInPosBase(TestPoSCommon):
         results = self.env['pos.order'].sync_from_ui([order_data])
         return self.env['pos.order'].browse([o['id'] for o in results['pos.order']])
 
+    def _create_refund_order(self, order, ui_args=None):
+        """Helper to refund the single line of a POS order."""
+        return self._create_order({
+            'pos_order_ui_args': {'is_refund': True},
+            'pos_order_lines_ui_args': [{
+                'product': self.product_a,
+                'quantity': -1.0,
+                'refunded_orderline_id': order.lines.id,
+            }],
+            'payments': [(self.bank_pm1, -105.0)],
+            **(ui_args or {}),
+        })
+
     @classmethod
     def _create_categ_anglo(cls):
         # Stock Valuation support is currently not implemented for Indian localization.
