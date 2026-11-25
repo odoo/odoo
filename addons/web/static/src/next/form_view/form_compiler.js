@@ -1,5 +1,6 @@
 import { xml } from "@odoo/owl";
 import { append, createElement, createTextNode, getTag } from "@web/core/utils/xml";
+import { FallbackField } from "../fields/fallback_field";
 import { fieldRegistry } from "../fields/field";
 
 /**
@@ -79,6 +80,21 @@ function mergeSpecifications(a, b) {
         fields[name] = mergeSpecifications(fields[name], spec);
     }
     return { fields };
+}
+
+/**
+ * The component of a field: the one of its widget, else the one of its type,
+ * else one that displays its value as text.
+ *
+ * @param {string | null} widget
+ * @param {string} type
+ */
+function getFieldComponent(widget, type) {
+    return (
+        (widget && fieldRegistry.get(widget, null)) ||
+        fieldRegistry.get(type, null) ||
+        FallbackField
+    );
 }
 
 /**
@@ -365,21 +381,19 @@ class FormCompiler {
             throw new Error(`Field "${name}" does not exist on model "${modelName}"`);
         }
         const widget = el.getAttribute("widget") || null;
-        const Widget = fieldRegistry.get(widget || field.type, null);
-        if (!Widget) {
-            throw new Error(`No field component for "${widget || field.type}" (field "${name}")`);
-        }
         /** @type {FieldNode} */
         const node = {
             id: name,
             name,
             type: field.type,
             relation: field.relation || null,
+            field,
             widget,
             string: el.getAttribute("string") || field.string || name,
             readonly: Boolean(field.readonly),
+            className: el.getAttribute("class"),
             style: el.getAttribute("style"),
-            Widget,
+            Widget: getFieldComponent(widget, field.type),
         };
         if (field.type === "one2many" || field.type === "many2many") {
             node.list = { columns: this.parseListColumns(el, field.relation) };
@@ -404,11 +418,13 @@ class FormCompiler {
                     name: "display_name",
                     type: "char",
                     relation: null,
+                    field: { type: "char" },
                     widget: null,
                     string: "",
                     readonly: true,
+                    className: null,
                     style: null,
-                    Widget: fieldRegistry.get("char"),
+                    Widget: getFieldComponent(null, "char"),
                 },
             ];
         }

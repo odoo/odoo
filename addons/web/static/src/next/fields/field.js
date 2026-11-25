@@ -3,7 +3,8 @@ import { registry } from "@web/core/registry";
 
 /**
  * The components that display a field, by widget name or by field type: the
- * widget of a field node wins over its type.
+ * widget of a field node wins over its type, and a field whose widget and type
+ * are both unknown is displayed as text (see `FallbackField`).
  */
 export const fieldRegistry = registry.category("next_fields");
 
@@ -15,9 +16,11 @@ export const fieldRegistry = registry.category("next_fields");
  *  name: string;
  *  type: string;
  *  relation: string | null;
+ *  field: Record<string, any>;
  *  widget: string | null;
  *  string: string;
  *  readonly: boolean;
+ *  className: string | null;
  *  style: string | null;
  *  Widget: typeof Component;
  *  list?: { columns: FieldNode[] };
@@ -63,6 +66,7 @@ export class Field extends Component {
         return {
             [`o_field_${node.widget || node.type}`]: true,
             o_readonly_modifier: this.isReadonly,
+            ...(node.className && { [node.className]: true }),
         };
     }
 }
