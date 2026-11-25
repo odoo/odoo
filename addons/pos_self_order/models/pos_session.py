@@ -19,7 +19,7 @@ class PosSession(models.Model):
 
     @api.model
     def _load_pos_self_data_domain(self, data):
-        return [('config_id', '=', data['pos.config'].id), ('state', 'not in', ['closed', 'closing_control'])]
+        return [('config_id', '=', data['pos.config'].id), ('state', '!=', 'closed')]
 
     def _load_pos_data_read(self, records, config):
         read_records = super()._load_pos_data_read(records, config)

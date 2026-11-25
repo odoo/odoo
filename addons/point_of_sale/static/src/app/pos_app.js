@@ -71,7 +71,7 @@ export class Chrome extends Component {
                 event.returnValue = confirmationMessage;
                 return confirmationMessage;
             }
-            if (this.pos?.session?.state === "opening_control") {
+            if (this.pos?.session?.state === "draft") {
                 browser.sessionStorage.setItem("pos_reload_recovery", String(this.pos.session.id));
                 const data = JSON.stringify({
                     jsonrpc: "2.0",

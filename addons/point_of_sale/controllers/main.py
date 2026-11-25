@@ -57,7 +57,7 @@ class PosController(PortalAccount):
         if not is_internal_user:
             return request.not_found()
         domain = [
-                ('state', 'in', ['opening_control', 'opened']),
+                ('state', '!=', 'closed'),
                 ('user_id', '=', request.session.uid),
                 ]
         if config_id and request.env['pos.config'].sudo().browse(int(config_id)).exists():
@@ -70,7 +70,7 @@ class PosController(PortalAccount):
         # session.
         if not pos_session and config_id:
             domain = [
-                ('state', 'in', ['opening_control', 'opened']),
+                ('state', '!=', 'closed'),
                 ('config_id', '=', int(config_id)),
             ]
             pos_session = request.env['pos.session'].sudo().search(domain, limit=1)

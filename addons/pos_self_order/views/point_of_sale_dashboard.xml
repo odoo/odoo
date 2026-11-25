@@ -50,6 +50,12 @@
                 <field name="self_ordering_mode" invisible="1" />
                 <attribute name="invisible">self_ordering_mode == 'kiosk'</attribute>
             </xpath>
+            <xpath expr="//span[@name='session_draft_label']" position="attributes">
+                <attribute name="t-if">record.self_ordering_mode.raw_value != 'mobile'</attribute>
+            </xpath>
+            <xpath expr="//span[@name='session_draft_label']" position="after">
+                <span t-else="" title="The register is not opened yet, customers can only order for later.">Open for pre-orders</span>
+            </xpath>
         </field>
     </record>
 </odoo>

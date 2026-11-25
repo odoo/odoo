@@ -50,9 +50,8 @@ class PosSession(models.Model):
     closing_notes = fields.Text(string="Closing Notes")
     state = fields.Selection(
         [
-            ('opening_control', 'Opening Control'),
+            ('draft', 'Opening'),
             ('opened', 'In Progress'),
-            ('closing_control', 'Closing Control'),
             ('closed', 'Closed & Posted'),
         ],
         string='Status',
@@ -60,7 +59,7 @@ class PosSession(models.Model):
         readonly=True,
         index=True,
         copy=False,
-        default='opening_control',
+        default='draft',
     )
 
     # Cash control fields
@@ -309,8 +308,8 @@ class PosSession(models.Model):
             return {
                 'status': 'success',
             }
-        if self.state != 'opening_control' or len(self.order_ids) > 0:
-            raise UserError(_("You can only cancel a session that is in opening control state and has no orders."))
+        if self.state != 'draft' or len(self.order_ids) > 0:
+            raise UserError(_("You can only cancel a session that is not opened yet and has no orders."))
         self._delete_session()
         return {
             'status': 'success',
@@ -716,7 +715,7 @@ class PosSession(models.Model):
 
         DO NOT INHERIT THIS METHOD. Inherit _set_opening_control_data instead.
         """
-        if self.state != 'opening_control':
+        if self.state != 'draft':
             return {
                 'pos.session': self._load_pos_data_read(self, self.config_id)
             }

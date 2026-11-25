@@ -79,7 +79,7 @@ class PosOrder(models.Model):
         """
         draft = order.get('state') == 'draft'
         pos_session = self.env['pos.session'].browse(order['session_id'])
-        if pos_session.state == 'closing_control' or pos_session.state == 'closed':
+        if pos_session.state == 'closed':
             pos_session = self._get_valid_session(order)
             order['session_id'] = pos_session.id
 

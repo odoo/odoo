@@ -70,7 +70,6 @@
                 <field name="current_session_id"/>
                 <field name="current_session_state"/>
                 <field name="access_token"/>
-                <field name="pos_session_state"/>
                 <field name="pos_session_duration"/>
                 <field name="currency_id"/>
                 <field name="statistics_for_current_session" />
@@ -111,10 +110,8 @@
                         <div name="card_title" class="mb-1 ms-2">
                             <div class="d-flex align-items-center gap-2">
                                 <field name="name" class="fw-bold fs-4 text-truncate"/>
-                                <div t-if="record.pos_session_state.raw_value == 'opening_control'" class="badge rounded text-bg-info flex-shrink-0 m-auto">Opening Control</div>
-                                <div t-if="!record.current_session_id.raw_value &amp;&amp; record.pos_session_username.value" class="badge rounded text-bg-info text-truncate">Opened by <field name="pos_session_username"/></div>
-                                <div t-if="record.pos_session_state.raw_value == 'closing_control'" class="badge rounded text-bg-info flex-shrink-0 m-auto">Closing Control</div>
-                                <div t-if="record.pos_session_state.raw_value == 'opened' and record.pos_session_duration.raw_value > 1" t-attf-class="badge rounded bg-#{record.pos_session_duration.raw_value > 3 and 'danger' or 'warning'} flex-shrink-0 m-auto"
+                                <div name="session_draft_badge" t-if="record.current_session_state.raw_value == 'draft'" class="badge rounded text-bg-info flex-shrink-0 m-auto"><span name="session_draft_label">Opening</span></div>
+                                <div t-if="record.current_session_state.raw_value == 'opened' and record.pos_session_duration.raw_value > 1" t-attf-class="badge rounded bg-#{record.pos_session_duration.raw_value > 3 and 'danger' or 'warning'} flex-shrink-0 m-auto"
                                         title="The session has been opened for an unusually long period. Please consider closing.">
                                         To Close
                                 </div>
@@ -123,28 +120,27 @@
                         <div class="row g-0 pb-2 ms-2 mt-4">
                             <div name="card_left" class="col-12 col-md-6 d-flex flex-wrap align-items-start gap-2 mb-2 mb-md-0">
                                 <div class="d-flex flex-column gap-2">
-                                    <div t-if="record.current_session_state.raw_value != 'closing_control'">
-                                        <widget name="pos_open_ui_button" action="action_open_ui"/>
-                                    </div>
-                                    <button t-else="" class="btn btn-secondary" name="open_existing_session_cb" type="object">Close</button>
+                                    <widget name="pos_open_ui_button" action="action_open_ui"/>
                                     <field class="mt-2" name="current_user_id" widget="many2one_avatar_user" />
                                 </div>
                             </div>
                             <div class="col-12 col-md-6">
                                 <t t-set="statistics" t-value="record.statistics_for_current_session.raw_value" />
                                 <t t-if="statistics">
-                                    <div t-if="statistics.date.is_started" class="row">
-                                        <div class="col-5">
-                                            <span>Date</span>
+                                    <t t-if="statistics.date.is_started">
+                                        <div class="row">
+                                            <div class="col-5">
+                                                <span>Date</span>
+                                            </div>
+                                            <span t-out="statistics.date.start_date" class="col-7"/>
                                         </div>
-                                        <span t-out="statistics.date.start_date" class="col-7"/>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-5">
-                                            <span>Opening</span>
+                                        <div class="row">
+                                            <div class="col-5">
+                                                <span>Opening Cash</span>
+                                            </div>
+                                            <span name="opening_cash" t-out="statistics.cash.opening_cash" class="col-7"/>
                                         </div>
-                                        <span name="opening_cash" t-out="statistics.cash.opening_cash" class="col-7"/>
-                                    </div>
+                                    </t>
                                     <div t-if="statistics.orders.paid.display" class="row">
                                         <div class="col-5">
                                             <span>Sold</span>

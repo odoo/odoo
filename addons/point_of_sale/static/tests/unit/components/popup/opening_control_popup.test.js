@@ -10,7 +10,7 @@ definePosModels();
 
 const setupOpeningControlPopup = async ({ sessionDeleted }) => {
     const store = await setupPosEnv();
-    store.session.state = "opening_control";
+    store.session.state = "draft";
     patch(location, {
         reload: () => expect.step("reload"),
     });
@@ -30,7 +30,7 @@ test("confirm reloads the page when the session has been deleted", async () => {
     await popup.confirm();
 
     expect.verifySteps(["reload"]);
-    expect(store.session.state).toBe("opening_control");
+    expect(store.session.state).toBe("draft");
 });
 
 test("confirm rethrows the error when the session still exists", async () => {
@@ -39,5 +39,5 @@ test("confirm rethrows the error when the session still exists", async () => {
     await expect(popup.confirm()).rejects.toThrow();
 
     expect.verifySteps([]);
-    expect(store.session.state).toBe("opening_control");
+    expect(store.session.state).toBe("draft");
 });
