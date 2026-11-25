@@ -241,7 +241,7 @@ class BankAccountVerification(models.Model):
                 continue
 
         # Filter create values if a verification already exists
-        failed_verifications = verifications.filtered(lambda verif: verif.verification_status in ('incomplete_partner', 'partner_not_found', 'error'))
+        failed_verifications = verifications.filtered(lambda verif: verif.verification_status in ('incomplete_partner', 'not_found_partner', 'error'))
         partner_bank_vat2failed_verification = failed_verifications.grouped(lambda verif: (verif.partner_bank_account_number, verif.partner_vat))
         partner_bank_vat2verification = verifications.grouped(lambda verif: (verif.partner_bank_account_number, verif.partner_vat))
         to_create = []
@@ -275,7 +275,7 @@ class BankAccountVerification(models.Model):
         params = params or {}
         if not endpoint.startswith('/api/search/nips/') or '://' in endpoint or endpoint.startswith('//'):
             raise ValueError("Invalid Polish bank verification API endpoint")
-        url = f'https://wl-api.mf.gov.pl{endpoint}'
+        url = f'https://wykazpodatnikowvat.mf.gov.pl{endpoint}'
         response = requests.request(
             'GET',
             url,
