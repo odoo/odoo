@@ -335,6 +335,39 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
         """
         self.assertEqual(self._get_service_fee_receipt_info('fixed')['description'], "")
 
+    def test_receipt_combo_unit_price(self):
+        """ A combo's unit price is the total of its items for one combo. """
+        product_b, product_c = self.env['product.product'].create([{
+            'name': name,
+            'available_in_pos': True,
+            'list_price': price,
+            'taxes_id': [Command.clear()],
+        } for name, price in [('Product B', 5.0), ('Product C', 3.0)]])
+        combo = self.env['product.combo'].create({
+            'name': 'Test Combo',
+            'combo_item_ids': [
+                Command.create({'product_id': product_b.id}),
+                Command.create({'product_id': product_c.id}),
+            ],
+        })
+        combo_product = self.env['product.product'].create({
+            'name': 'Combo Product',
+            'type': 'combo',
+            'combo_ids': [Command.link(combo.id)],
+            'taxes_id': [Command.clear()],
+        })
+        order, _ = self.create_backend_pos_order({
+            'pos_config': self.main_pos_config,
+            'line_data': [
+                {'product_id': combo_product.id, 'qty': 2, 'price_unit': 0},
+                {'product_id': product_b.id, 'qty': 2},
+                {'product_id': product_c.id, 'qty': 2},
+            ],
+        })
+        order.lines[1:].combo_parent_id = order.lines[0]
+        parent_data = order._order_receipt_generate_line_data()[0]
+        self.assertEqual(parent_data['unit_price'], order._order_receipt_format_currency(8))  # (2 * 5 + 2 * 3) / 2
+
     def test_split_per_product_preserves_combo_children(self):
         """Test that split_per_product keeps combo parent + children on the same ticket."""
         category_a = self.env['pos.category'].create({'name': 'Category A'})
