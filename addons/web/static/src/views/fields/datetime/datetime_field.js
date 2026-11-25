@@ -168,8 +168,8 @@ export class DateTimeField extends Component {
         // Subscribes to changes made on the picker state
         this.state = proxy(dateTimePicker.state);
         this.picker = proxy({ activeInput: "" });
-        this.openPicker = dateTimePicker.open;
-        this.isPickerOpen = dateTimePicker.isOpen;
+        this.openPicker = dateTimePicker.open.bind(dateTimePicker);
+        this.isPickerOpen = dateTimePicker.isOpen.bind(dateTimePicker);
 
         useLayoutEffect(
             () => {

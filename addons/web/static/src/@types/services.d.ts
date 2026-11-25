@@ -2,7 +2,7 @@ declare module "services" {
     import { ServicesRegistryShape } from "registries";
 
     import { commandService } from "@web/core/commands/command_service";
-    import { datetimePickerService } from "@web/core/datetime/datetimepicker_service";
+    import { datetimePickerService } from "@web/core/datetime/datetimepicker_plugin";
     import { dialogService } from "@web/core/dialog/dialog_plugin";
     import { effectService } from "@web/core/effects/effect_plugin";
     import { fieldService } from "@web/core/field_service";
