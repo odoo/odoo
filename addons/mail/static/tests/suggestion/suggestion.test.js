@@ -21,7 +21,6 @@ import {
 } from "@mail/../tests/mail_test_helpers_composer";
 import { after, expect, describe, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
-import { onWillUpdateProps } from "@odoo/owl";
 import {
     Command,
     contains,
@@ -33,9 +32,7 @@ import {
 import { patch } from "@web/core/utils/patch";
 
 import { MENTION_AMOUNT_WARNING } from "@mail/core/common/composer";
-import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { NavigableList } from "@mail/core/common/navigable_list";
-import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { press, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { ConnectionAbortedError, rpc, rpcBus } from "@web/core/network/rpc";
 import { range } from "@web/core/utils/numbers";
@@ -550,27 +547,16 @@ test("select @ mention from the suggestion list being filtered", async () => {
         ],
     });
     const filtering = Promise.withResolvers();
-    const listRendered = Promise.withResolvers();
-    let suggestionList;
     patch(NavigableList.prototype, {
-        setup() {
-            super.setup();
-            suggestionList = this;
-        },
-    });
-    patch(DiscussAvatar.prototype, {
-        setup() {
-            super.setup();
-            if (!useAncestors().inNavigableList) {
-                return;
+        get sortedOptions() {
+            // Render the previous options while the props already hold the filtered ones, as in
+            // the frame between owl assigning the new props and patching the list.
+            if (this.props.options.length === 1 && this.renderedOptions) {
+                filtering.resolve();
+                return this.renderedOptions;
             }
-            // Simulate a slow render of the filtered list, keeping the previous search on screen.
-            onWillUpdateProps(() => {
-                if (suggestionList.props.options.length === 1) {
-                    filtering.resolve();
-                    return listRendered.promise;
-                }
-            });
+            this.renderedOptions = [...super.sortedOptions];
+            return this.renderedOptions;
         },
     });
     await start();
@@ -581,7 +567,6 @@ test("select @ mention from the suggestion list being filtered", async () => {
     await filtering.promise;
     await waitFor(".o-mail-Composer-suggestion:count(3)");
     await click(".o-mail-Composer-suggestion strong", { text: "TestPartner" });
-    listRendered.resolve();
     await containsTextInComposer(".o-mail-Composer", "\uFEFF@TestPartner\uFEFF\u00a0");
 });
 
