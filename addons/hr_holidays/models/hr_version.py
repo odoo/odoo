@@ -4,6 +4,7 @@ from datetime import date, UTC
 from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.exceptions import ValidationError
+from odoo.tools import float_compare
 
 
 class HrVersion(models.Model):
@@ -48,6 +49,7 @@ class HrVersion(models.Model):
                 created_versions |= super().create(vals)
                 continue
             leaves = self._get_leaves_from_vals(vals)
+            prefilled_leaves = self._get_leaves_with_prefilled_hours(leaves)
             contract_date_start = fields.Date.to_date(vals.get('contract_date_start'))
             is_created = False
             for leave in leaves:
@@ -59,9 +61,10 @@ class HrVersion(models.Model):
                 overlapping_contracts = self._check_overlapping_contract(leave)
                 if len(overlapping_contracts.resource_calendar_id) > 1:
                     all_new_leave_origin, all_new_leave_vals = self._populate_all_new_leave_vals_from_split_leave(
-                        all_new_leave_origin, all_new_leave_vals, overlapping_contracts, leave, leaves_state)
+                        all_new_leave_origin, all_new_leave_vals, overlapping_contracts, leave, leaves_state,
+                        prefilled_leaves)
                 else:
-                    self._update_leave_calendar(leave, overlapping_contracts)
+                    self._update_leave_calendar(leave, overlapping_contracts, prefilled_leaves)
             # TODO FIXME
             # to keep creation order, not ideal but ok for now.
             if not is_created:
@@ -115,6 +118,7 @@ class HrVersion(models.Model):
             )
             min_date = max(new_contract_date_start, new_date_version)
             contract_leaves[contract.id] = contract._get_leaves(extra_domain=extra_domain, min_date=min_date)
+        prefilled_leaves = self._get_leaves_with_prefilled_hours(self.env['hr.leave'].union(contract_leaves.values()))
 
         result = super().write(vals)
 
@@ -125,9 +129,10 @@ class HrVersion(models.Model):
                 if len(overlapping_contracts.resource_calendar_id) > 1:
                     leaves_state = self._update_leave_state(leave, leaves_state, True)
                     all_new_leave_origin, all_new_leave_vals = self._populate_all_new_leave_vals_from_split_leave(
-                        all_new_leave_origin, all_new_leave_vals, overlapping_contracts, leave, leaves_state)
+                        all_new_leave_origin, all_new_leave_vals, overlapping_contracts, leave, leaves_state,
+                        prefilled_leaves)
                 else:
-                    self._update_leave_calendar(leave, overlapping_contracts)
+                    self._update_leave_calendar(leave, overlapping_contracts, prefilled_leaves)
 
         try:
             if all_new_leave_vals:
@@ -221,11 +226,14 @@ class HrVersion(models.Model):
         """
         return leave._get_overlapping_contracts().sorted('date_start')
 
-    def _update_leave_calendar(self, leave, overlapping_contracts):
+    def _update_leave_calendar(self, leave, overlapping_contracts, prefilled_leaves=None):
         """Give ``leave`` the schedule of the first overlapping version and recompute its dates.
+
+        A request in hours gets new hours only if it is in ``prefilled_leaves``.
 
         :param leave: ``hr.leave``
         :param overlapping_contracts: see :meth:`_check_overlapping_contract`
+        :param prefilled_leaves: see :meth:`_get_leaves_with_prefilled_hours`
         """
         if not overlapping_contracts:
             return
@@ -233,14 +241,65 @@ class HrVersion(models.Model):
         if leave.resource_calendar_id == first_contract.resource_calendar_id:
             return
         leave.resource_calendar_id = first_contract.resource_calendar_id
-        if leave.work_entry_type_request_unit != 'hour':
-            leave.with_context(
-                leave_fast_create=True,
-                leave_skip_date_check=True,
-                leave_skip_state_check=True,
-            )._compute_date_from_to()
-            if leave.state == 'validate':
-                leave._validate_leave_request()
+        has_prefilled_hours = leave in (prefilled_leaves or self.env['hr.leave'])
+        if leave.work_entry_type_request_unit == 'hour' and not has_prefilled_hours:
+            return
+        leave = leave.with_context(
+            leave_fast_create=True,
+            leave_skip_date_check=True,
+            leave_skip_state_check=True,
+        )
+        if has_prefilled_hours:
+            hour_from, hour_to = self._get_prefilled_hours(leave)
+            leave.write({'request_hour_from': hour_from, 'request_hour_to': hour_to})
+        leave._compute_date_from_to()
+        if leave.state == 'validate':
+            leave._validate_leave_request()
+
+    def _get_leaves_with_prefilled_hours(self, leaves):
+        """Return the requests of ``leaves`` in hours whose hours come from their schedule.
+
+        Call it before the schedule changes. A request created without a duration also gets
+        Full Day, so the hours are compared with the ones the schedule prefills.
+
+        :param leaves: ``hr.leave``
+        """
+        def has_prefilled_hours(leave):
+            if leave.work_entry_type_request_unit != 'hour' or leave.request_duration == 'specific':
+                return False
+            # Without hours the request already follows its schedule
+            if not leave.request_hour_from and not leave.request_hour_to:
+                return True
+            hour_from, hour_to = self._get_prefilled_hours(leave)
+            return (
+                not float_compare(hour_from, leave.request_hour_from, precision_digits=2)
+                and not float_compare(hour_to, leave.request_hour_to, precision_digits=2)
+            )
+
+        return leaves.filtered(has_prefilled_hours)
+
+    def _get_prefilled_hours(self, leave):
+        """Return the hours the schedule of its dates prefills for ``leave``.
+
+        They are computed on a draft, so that the request gets both hours in one write. Written
+        one by one, a request of one day would for a moment end before it starts, for example
+        from 10:00 to 0:00.
+
+        :param leave: ``hr.leave``
+        :return: ``(hour_from, hour_to)``
+        """
+        draft = leave.new(origin=leave)
+        self._prefill_hours(draft)
+        return draft.request_hour_from, draft.request_hour_to
+
+    def _prefill_hours(self, draft):
+        """Prefill the hours of ``draft`` again from the schedule of its dates.
+
+        :param draft: new ``hr.leave``
+        """
+        # Working time keeps the hours it finds as chosen ones, so they are reset first
+        draft.update({'request_hour_from': 0.0, 'request_hour_to': 0.0})
+        draft._apply_request_duration()
 
     def _update_leave_state(self, leave, leaves_state, refuse_leave=False):
         """Remember the state of ``leave``, then refuse it or reset it to ``'confirm'``.
@@ -260,11 +319,13 @@ class HrVersion(models.Model):
                 leave.action_back_to_approval()
         return leaves_state
 
-    def _populate_all_new_leave_vals_from_split_leave(self, all_new_leave_origin, all_new_leave_vals, overlapping_contracts, leave, leaves_state):
+    def _populate_all_new_leave_vals_from_split_leave(self, all_new_leave_origin, all_new_leave_vals, overlapping_contracts, leave, leaves_state, prefilled_leaves=None):
         """Prepare one request per overlapping version to replace ``leave``.
 
-        The parts keep the original state, except the last one which is to approve again.
+        The parts keep the original state, except the last one which is to approve again. The
+        parts of a request in ``prefilled_leaves`` take the hours of their own version.
 
+        :param prefilled_leaves: see :meth:`_get_leaves_with_prefilled_hours`
         :return: ``(all_new_leave_origin, all_new_leave_vals)``, extended
         :rtype: tuple
         """
@@ -278,6 +339,8 @@ class HrVersion(models.Model):
                 'state': leaves_state[leave.id] if overlapping_contract.id != last_version.id else 'confirm',
             })[0]
             new_leave = self.env['hr.leave'].new(new_leave_vals)
+            if leave in (prefilled_leaves or self.env['hr.leave']):
+                self._prefill_hours(new_leave)
             new_leave._compute_date_from_to()
             new_leave._compute_duration()
             # Could happen for part-time contract, that time off is not necessary
