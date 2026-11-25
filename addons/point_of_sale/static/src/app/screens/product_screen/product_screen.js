@@ -278,10 +278,15 @@ export class ProductScreen extends Component {
             this.pos.numpadMode = buttonValue;
             return;
         }
-        if (this.pos.getOrder().isRefund && buttonValue !== "Backspace") {
+        const line = this.currentOrder?.getSelectedOrderline();
+        if (
+            line?.refunded_orderline_id &&
+            ["price", "discount"].includes(this.pos.numpadMode) &&
+            buttonValue !== "Backspace"
+        ) {
             return this.dialog.add(AlertDialog, {
                 title: _t("%s update not allowed", this.pos.numpadMode),
-                body: _t("You can not change the %s of the refund order.", this.pos.numpadMode),
+                body: _t("You can not change the %s of a refunded line.", this.pos.numpadMode),
             });
         }
         this.numberBuffer.sendKey(buttonValue);

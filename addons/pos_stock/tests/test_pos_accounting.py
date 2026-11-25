@@ -73,7 +73,6 @@ class TestPosAccountingStock(TestPosAccounting, ValuationReconciliationTestCommo
             products=[[self.product_21, {'qty': -30}]],
             extra_data={
                 'partner_id': self.partner_1.id,
-                'is_refund': True,
                 'refunded_order_id': order.id,
             },
         )
@@ -135,7 +134,6 @@ class TestPosAccountingStock(TestPosAccounting, ValuationReconciliationTestCommo
             products=[[self.product_21, {'qty': -30}]],
             extra_data={
                 'partner_id': self.partner_1.id,
-                'is_refund': True,
                 'refunded_order_id': order.id,
             },
         )

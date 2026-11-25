@@ -438,7 +438,6 @@ patch(PosStore.prototype, {
             this.config.module_pos_restaurant &&
             this.router.currentScreen() === "ProductScreen" &&
             !data.table_id &&
-            !data.is_refund &&
             this.getOrder()?.finalized &&
             this.selectedTable
         ) {

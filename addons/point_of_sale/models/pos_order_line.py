@@ -62,6 +62,7 @@ class PosOrderLine(models.Model):
     refunded_qty = fields.Float('Refunded Quantity', compute='_compute_refund_qty', help='Number of items refunded in this orderline.')
     uuid = fields.Char(string='Uuid', readonly=True, default=lambda self: str(uuid4()), copy=False)
     note = fields.Char('Product Note')
+    is_refund = fields.Boolean(string='Is Refund', compute='_compute_is_refund', store=True)
 
     combo_parent_id = fields.Many2one('pos.order.line', string='Combo Parent', index='btree_not_null')  # FIXME rename to parent_line_id
     combo_line_ids = fields.One2many('pos.order.line', 'combo_parent_id', string='Combo Lines')  # FIXME rename to child_line_ids
@@ -88,11 +89,16 @@ class PosOrderLine(models.Model):
         return [
             'id', 'qty', 'attribute_value_ids', 'custom_attribute_value_ids', 'price_unit',
             'uuid', 'price_subtotal', 'price_subtotal_incl', 'order_id', 'note', 'price_type',
-            'product_id', 'discount', 'tax_ids', 'customer_note',
+            'product_id', 'discount', 'tax_ids', 'customer_note', 'is_refund',
             'refunded_qty', 'price_extra', 'full_product_name', 'refunded_orderline_id',
             'combo_parent_id', 'combo_line_ids', 'combo_item_id', 'refund_orderline_ids',
             'extra_tax_data', 'write_date', 'prep_line_ids',
         ]
+
+    @api.depends('qty')
+    def _compute_is_refund(self):
+        for line in self:
+            line.is_refund = line.qty < 0
 
     @api.depends('refund_orderline_ids', 'refund_orderline_ids.order_id.state')
     def _compute_refund_qty(self):
@@ -168,7 +174,6 @@ class PosOrderLine(models.Model):
         tax_ids_after_fiscal_position = fpos.map_tax(self.tax_ids)
         price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
         line_qty = qty or self.qty
-        line_qty = -abs(line_qty) if self.order_id.is_refund_or_negative() else line_qty  # All lines quantity must be negative in refund
         taxes = tax_ids_after_fiscal_position.compute_all(
             price,
             self.order_id.currency_id,
@@ -241,7 +246,8 @@ class PosOrderLine(models.Model):
     @api.depends('price_subtotal', 'total_cost')
     def _compute_margin(self):
         for line in self:
-            sign = -1 if line.order_id.is_refund_or_negative() else 1
+            # price_subtotal is signed by the order direction, see setOrderPrices
+            sign = -1 if line.order_id.is_refund else 1
             if line.product_id.type == 'combo':
                 line.margin = 0
                 line.margin_percent = 0
@@ -286,10 +292,10 @@ class PosOrderLine(models.Model):
     ##############################################################
     def _prepare_base_lines_for_taxes_computation(self):
         base_lines = []
-        is_order_refund = self.order_id.is_refund_or_negative()  # All lines are refunds or not
-        # A consolidated invoice signs lines by the group's move_type, not each order's own.
-        group_move_type = self.env.context.get('pos_invoice_group_move_type')
-        is_refund_document = (group_move_type == 'out_refund') if group_move_type else is_order_refund
+        # Lines are expressed in the direction of the document: in an out_refund, a returned item
+        # has a positive quantity and a sold item a negative one. Defaults to the order's own
+        # direction, 'out_invoice' gives the real signed quantities (used for the order totals).
+        move_type = self.env.context.get('pos_move_type')
         commercial_partner = self.order_id.partner_id.commercial_partner_id
         fiscal_position = self.order_id.fiscal_position_id
 
@@ -308,6 +314,10 @@ class PosOrderLine(models.Model):
             if fiscal_position:
                 account = fiscal_position.map_account(account)
 
+            # Refund lines are rounded apart from sale lines (taxes rounded globally are
+            # grouped by 'is_refund'), so a refund mirrors the amounts of the original sale.
+            is_refund = line.is_refund
+            is_refund_document = move_type == 'out_refund' if move_type else line.order_id.is_refund
             quantity = line.qty * (-1 if is_refund_document else 1)
             extra_tax_data = line.extra_tax_data
             if extra_tax_data and quantity * extra_tax_data.get('quantity', quantity) < 0:
@@ -325,7 +335,7 @@ class PosOrderLine(models.Model):
                     quantity=quantity,
                     discount=line.discount,
                     account_id=account,
-                    is_refund=is_refund_document,
+                    is_refund=is_refund,
                     sign=-1 if is_refund_document else 1,
                     extra_tax_data=extra_tax_data,
                 ),

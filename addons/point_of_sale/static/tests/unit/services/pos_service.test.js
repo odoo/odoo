@@ -937,12 +937,10 @@ describe("pos_store.js", () => {
         // No payment lines
         expect(getOpts()).toEqual(expectedWithFastPM);
         // Refund order
-        order.is_refund = true;
         const paymentline = createPaymentLine(store, order, card);
         expect(getOpts()).toEqual(expectedWithoutFastPM);
 
         // No refund + positive payment
-        order.is_refund = false;
         expect(getOpts()).toEqual(expectedWithoutFastPM);
 
         // No refund + negative payment

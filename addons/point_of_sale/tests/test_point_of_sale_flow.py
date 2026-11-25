@@ -1737,7 +1737,6 @@ class TestPointOfSaleFlow(CommonPosTest):
 
         order, refund = (
             self.create_backend_pos_order({
-                'order_data': {'is_refund': quantity < 0},
                 'line_data': [{'product_id': product.id, 'qty': quantity}, discount_line(quantity)],
             })[0]
             for quantity in (2, -2)

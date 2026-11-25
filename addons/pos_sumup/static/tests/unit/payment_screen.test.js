@@ -17,7 +17,7 @@ const setupRefundOrder = async (originalPaidWithSumup) => {
 
     const originalOrder = await getFilledOrder(store);
 
-    const refundOrder = store.addNewOrder({ is_refund: true });
+    const refundOrder = store.addNewOrder();
     await store.addLineToOrder(
         {
             product_tmpl_id: store.models["product.template"].get(5),

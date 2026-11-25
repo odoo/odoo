@@ -34,7 +34,7 @@ test("showPaymentMethod", async () => {
     expect(comp.showPaymentMethod(card)).toBe(true);
 
     // Is Refund + no payment interface
-    order.is_refund = true;
+    order.lines.map((line) => line.setQuantity(-line.qty));
     expect(comp.showPaymentMethod(card)).toBe(true);
 
     // Is Refund + payment interface not supporting refunds

@@ -43,11 +43,9 @@ describe("restaurant pos_store.js", () => {
         order.state = "paid";
         expect(store.addNewOrder().table_id.id).toBe(table.id);
 
-        // An explicit table and refunds are kept as requested
+        // An explicit table is kept as requested
         store.setOrder(order);
         expect(store.addNewOrder({ table_id: otherTable }).table_id.id).toBe(otherTable.id);
-        store.setOrder(order);
-        expect(Boolean(store.addNewOrder({ is_refund: true }).table_id)).toBe(false);
     });
 
     test("addNewOrder after a local payment does not reuse the paid table", async () => {

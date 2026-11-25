@@ -709,7 +709,6 @@ for (const roundingCase of cashRoundingCases) {
             roundingCase.price
         );
         if (roundingCase.isRefund) {
-            order.is_refund = true;
             order.lines.map((line) => line.setQuantity(-line.qty));
         }
         const expectedLineName = order.lines[0].product_id.display_name;

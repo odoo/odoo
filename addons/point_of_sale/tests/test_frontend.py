@@ -1024,7 +1024,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'FiscalPositionNoTaxRefund', login="pos_user")
         order = self.env['pos.order'].search([])
-        self.assertTrue(order[0].name == order[1].name + " REFUND")
+        self.assertTrue(order[0].is_refund)
+        self.assertTrue(order[0].name.endswith(" - REFUND"))
 
     def test_limited_product_pricelist_loading(self):
         self.env['ir.config_parameter'].sudo().set_int('point_of_sale.limited_product_count', 1)

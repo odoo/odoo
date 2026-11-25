@@ -821,9 +821,6 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
                             'refunded_orderline_id': first_order.lines[0].id,
                         },
                     ],
-                    'pos_order_ui_args': {
-                        'is_refund': True,
-                    },
                 })
             wizard = self.env['myinvois.consolidate.invoice.wizard'].create({
                 'date_from': '2025-01-01',
@@ -856,9 +853,6 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
                             'refunded_orderline_id': first_order.lines[0].id,
                         },
                     ],
-                    'pos_order_ui_args': {
-                        'is_refund': True,
-                    },
                 })
             wizard = self.env['myinvois.consolidate.invoice.wizard'].create({
                 'date_from': '2025-01-01',
@@ -893,9 +887,6 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
                 # Fails, the order should be invoiced in such a case
                 with self.assertRaises(UserError):
                     self._create_order({
-                        'pos_order_ui_args': {
-                            'is_refund': True,
-                        },
                         'pos_order_lines_ui_args': [
                             {
                                 'product': self.product_one,
@@ -907,9 +898,6 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
                 # If it is, it will work
                 self.invoicing_customer.write({'vat': 'EI00000000010', 'l10n_my_identification_number': 'NA'})
                 self._create_order({
-                    'pos_order_ui_args': {
-                        'is_refund': True,
-                    },
                     'pos_order_lines_ui_args': [
                         {
                             'product': self.product_one,
@@ -930,9 +918,6 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
                 # Fails, the order should be invoiced in such a case
                 with self.assertRaises(UserError):
                     self._create_order({
-                        'pos_order_ui_args': {
-                            'is_refund': True,
-                        },
                         'pos_order_lines_ui_args': [
                             {
                                 'product': self.product_one,
@@ -943,9 +928,6 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
                     })
                 # If invoicing is checked, it will work.
                 self._create_order({
-                    'pos_order_ui_args': {
-                        'is_refund': True,
-                    },
                     'pos_order_lines_ui_args': [
                         {
                             'product': self.product_one,
@@ -965,9 +947,6 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
                 # Fails, you shouldn't invoice an order that hasn't been sent to myinvois yet.
                 with self.assertRaises(UserError):
                     self._create_order({
-                        'pos_order_ui_args': {
-                            'is_refund': True,
-                        },
                         'pos_order_lines_ui_args': [
                             {
                                 'product': self.product_one,
@@ -977,9 +956,6 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
                         ], 'customer': self.invoicing_customer, 'is_invoiced': True,
                     })
                 self._create_order({
-                    'pos_order_ui_args': {
-                        'is_refund': True,
-                    },
                     'pos_order_lines_ui_args': [
                         {
                             'product': self.product_one,
@@ -1013,9 +989,6 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
             # We then create the refund for the order
             with self.with_pos_session(), patch(CONTACT_PROXY_METHOD, new=self._mock_successful_submission):
                 self._create_order({
-                    'pos_order_ui_args': {
-                        'is_refund': True,
-                    },
                     'pos_order_lines_ui_args': [
                         {
                             'product': self.product_one,
@@ -1139,9 +1112,6 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
             # We then create the refund for the first_order
             with self.with_pos_session(), patch(CONTACT_PROXY_METHOD, new=self._mock_successful_submission):
                 self._create_order({
-                    'pos_order_ui_args': {
-                        'is_refund': True,
-                    },
                     'pos_order_lines_ui_args': [
                         {
                             'product': product_1,

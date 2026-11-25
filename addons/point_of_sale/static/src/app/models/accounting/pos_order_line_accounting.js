@@ -79,20 +79,16 @@ export class PosOrderlineAccounting extends Base {
     }
 
     get priceIncl() {
-        return this.currency.round(this.prices.total_included * this.order_id.orderSign);
+        return this.currency.round(this.prices.total_included);
     }
     get priceExcl() {
-        return this.currency.round(this.prices.total_excluded * this.order_id.orderSign);
+        return this.currency.round(this.prices.total_excluded);
     }
     get priceInclNoDiscount() {
-        return this.currency.round(
-            this.prices.no_discount_total_included * this.order_id.orderSign
-        );
+        return this.currency.round(this.prices.no_discount_total_included);
     }
     get priceExclNoDiscount() {
-        return this.currency.round(
-            this.prices.no_discount_total_excluded * this.order_id.orderSign
-        );
+        return this.currency.round(this.prices.no_discount_total_excluded);
     }
 
     /**
@@ -153,14 +149,14 @@ export class PosOrderlineAccounting extends Base {
     }
 
     isRefund() {
-        return this.order_id.isRefund;
+        return this.is_refund;
     }
 
     getUnitPriceFromDisplayPrice(price) {
         const special_mode =
             this.config.iface_tax_included === "total" ? "total_included" : "total_excluded";
 
-        const targetTotalIncluded = Number(price) / this.order_id.orderSign;
+        const targetTotalIncluded = Number(price);
         if (!Number.isFinite(targetTotalIncluded)) {
             return 0.0;
         }
@@ -190,11 +186,11 @@ export class PosOrderlineAccounting extends Base {
     }
 
     getQuantityFromDisplayPrice(price) {
-        return this.displayPriceUnit ? price / this.order_id.orderSign / this.displayPriceUnit : 0;
+        return this.displayPriceUnit ? price / this.displayPriceUnit : 0;
     }
 
     getDisplayPriceFromQuantity(quantity) {
-        return quantity * this.order_id.orderSign * this.displayPriceUnit;
+        return quantity * this.displayPriceUnit;
     }
 
     /**

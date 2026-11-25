@@ -496,7 +496,7 @@ class PosConfig(models.Model):
         }
 
         all_paid_orders = session.order_ids.filtered(lambda o: o.state in ['paid', 'done'])
-        refund_orders, non_refund_orders = all_paid_orders.partitioned(lambda o: o.is_refund_or_negative())
+        refund_orders, non_refund_orders = all_paid_orders.partitioned(lambda o: o.is_refund)
         draft_orders = session.order_ids.filtered(lambda o: o.state == 'draft')
 
         # calculate total refunded amount per original order for refund count check

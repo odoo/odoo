@@ -115,7 +115,6 @@ test("[Old Tour] test_cash_rounding_halfup_add_invoice_line_not_only_round_cash_
 
     const order2 = store.addNewOrder();
     order2.pricelist_id = false;
-    order.is_refund = true;
     await store.addLineToOrder({ product_tmpl_id: product, qty: -1 }, order2);
     expect(order2.displayPrice).toBe(-15.72);
     expect(order2.priceExcl).toBe(-13.67);
@@ -149,7 +148,6 @@ test("[Old Tour] test_cash_rounding_halfup_add_invoice_line_not_only_round_cash_
 
     const order2 = store.addNewOrder();
     order2.pricelist_id = false;
-    order2.is_refund = true;
     await store.addLineToOrder({ product_tmpl_id: product, qty: -1 }, order2);
     expect(order2.displayPrice).toBe(-15.72);
     expect(order2.priceExcl).toBe(-13.67);
@@ -188,7 +186,6 @@ test("[Old Tour] test_cash_rounding_down_add_invoice_line_not_only_round_cash_me
 
     const order2 = store.addNewOrder();
     order2.pricelist_id = false;
-    order2.is_refund = true;
     await store.addLineToOrder({ product_tmpl_id: product, qty: -1 }, order2);
     expect(order2.displayPrice).toBe(-15.72);
     expect(order2.priceExcl).toBe(-13.67);
@@ -222,7 +219,6 @@ test("[Old Tour] test_cash_rounding_halfup_add_invoice_line_only_round_cash_meth
 
     const order2 = store.addNewOrder();
     order2.pricelist_id = false;
-    order2.is_refund = true;
     await store.addLineToOrder({ product_tmpl_id: product, qty: -1 }, order2);
     expect(order2.displayPrice).toBe(-15.72);
     expect(order2.priceExcl).toBe(-13.67);
@@ -256,7 +252,6 @@ test("[Old Tour] test_cash_rounding_halfup_add_invoice_line_only_round_cash_meth
 
     const order2 = store.addNewOrder();
     order2.pricelist_id = false;
-    order2.is_refund = true;
     await store.addLineToOrder({ product_tmpl_id: product, qty: -1 }, order2);
     expect(order2.displayPrice).toBe(-15.72);
     expect(order2.priceExcl).toBe(-13.67);
@@ -291,7 +286,6 @@ test("[Old Tour] test_cash_rounding_with_change", async () => {
 
     const order2 = store.addNewOrder();
     order2.pricelist_id = false;
-    order2.is_refund = true;
     await store.addLineToOrder({ product_tmpl_id: product, qty: -1 }, order2);
     expect(order2.displayPrice).toBe(-15.72);
     expect(order2.priceExcl).toBe(-13.67);
@@ -322,7 +316,6 @@ test("[Old Tour] test_cash_rounding_only_cash_method_with_change", async () => {
 
     const order2 = store.addNewOrder();
     order2.pricelist_id = false;
-    order2.is_refund = true;
     await store.addLineToOrder({ product_tmpl_id: product, qty: -1 }, order2);
     expect(order2.displayPrice).toBe(-15.72);
     expect(order2.priceExcl).toBe(-13.67);

@@ -242,9 +242,9 @@ class TestPosMargin(TestPoSCommon):
 
         # create orders
         orders = [
-            self.create_ui_order_data([(product1, -1)], pos_order_ui_args={'is_refund': True}),
-            self.create_ui_order_data([(product2, -1)], pos_order_ui_args={'is_refund': True}),
-            self.create_ui_order_data([(product1, -2), (product2, -2)], pos_order_ui_args={'is_refund': True}),
+            self.create_ui_order_data([(product1, -1)]),
+            self.create_ui_order_data([(product2, -1)]),
+            self.create_ui_order_data([(product1, -2), (product2, -2)]),
         ]
 
         # sync orders

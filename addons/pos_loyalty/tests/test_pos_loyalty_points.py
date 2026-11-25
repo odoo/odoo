@@ -258,7 +258,6 @@ class TestPOSLoyaltyPoints(TestPointOfSaleHttpCommon):
                 self.whiteboard_pen_product, -1, 50,
                 refunded_orderline_id=origin_order.lines[:1].id,
             )],
-            is_refund=True,
         )
 
         card.invalidate_recordset()
@@ -293,7 +292,6 @@ class TestPOSLoyaltyPoints(TestPointOfSaleHttpCommon):
                 gift_card_product, -1, 50,
                 refunded_orderline_id=origin_order.lines[:1].id,
             )],
-            is_refund=True,
         )
 
         card.invalidate_recordset()
@@ -349,7 +347,6 @@ class TestPOSLoyaltyPoints(TestPointOfSaleHttpCommon):
                 self.whiteboard_pen_product, -1, 100,
                 refunded_orderline_id=product_line.id,
             )],
-            is_refund=True,
         )
 
         card.invalidate_recordset()
@@ -384,7 +381,6 @@ class TestPOSLoyaltyPoints(TestPointOfSaleHttpCommon):
                 self.whiteboard_pen_product, -1, 50,
                 refunded_orderline_id=product_line.id,
             )],
-            is_refund=True,
         )
 
         card.invalidate_recordset()

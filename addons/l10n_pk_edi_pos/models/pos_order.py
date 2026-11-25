@@ -133,7 +133,7 @@ class PosOrder(models.Model):
 
     def _l10n_pk_edi_pos_wrong_way_lines(self):
         self.ensure_one()
-        sign = -1 if self.is_refund_or_negative() else 1
+        sign = -1 if self.is_refund else 1
         return self._l10n_pk_edi_pos_reported_lines().filtered(lambda ln: sign * ln.qty < 0)
 
     def _l10n_pk_edi_pos_check_lines(self):
@@ -220,7 +220,7 @@ class PosOrder(models.Model):
     def _l10n_pk_edi_pos_line_details(self):
         self.ensure_one()
         currency = self.currency_id
-        is_refund = self.is_refund_or_negative()
+        is_refund = self.is_refund
         lines = self._l10n_pk_edi_pos_reported_lines()
         base_lines = lines._prepare_base_lines_for_taxes_computation()
         AccountTax = self.env['account.tax']
@@ -285,7 +285,7 @@ class PosOrder(models.Model):
         posid = self.config_id._l10n_pk_edi_pos_credentials()[0]
         items = self._l10n_pk_edi_pos_line_details()
         fee_amount = currency.round(sum(self._l10n_pk_edi_pos_fee_lines().mapped('price_subtotal_incl')))
-        is_refund = self.is_refund_or_negative()
+        is_refund = self.is_refund
         partner = self.partner_id
         ref_usin = None
         if is_refund and self.refunded_order_id:

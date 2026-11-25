@@ -563,7 +563,6 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         order = self.create_pos_order(
             payment_method=[[self.cash_pm, {'amount': -1}]],
             products=[[zero_amount_product, {'qty': -1}]],
-            extra_data={'is_refund': True},
         )
         session.close_session_from_ui({self.cash_pm.id: 0})
         self.assertEqual(session.state, 'closed')
@@ -721,7 +720,6 @@ class TestPosAccounting(AccountTestInvoicingCommon):
             payment_method=[[self.cash_pm, {'amount': -10.6}]],
             products=[[self.product_6, {'qty': -1}]],
             extra_data={
-                'is_refund': True,
                 'partner_id': self.partner_1.id,
                 'to_invoice': True,
             },
@@ -754,7 +752,6 @@ class TestPosAccounting(AccountTestInvoicingCommon):
             ],
             extra_data={
                 'partner_id': self.partner_1.id,
-                'is_refund': True,
             },
         )
         self.close_session()
@@ -775,7 +772,6 @@ class TestPosAccounting(AccountTestInvoicingCommon):
             products=[[self.product_6, {'qty': -1}]],
             extra_data={
                 'partner_id': self.partner_1.id,
-                'is_refund': True,
                 'refunded_order_id': order.id,
             },
         )
@@ -894,7 +890,7 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         refund = self.create_pos_order(
             payment_method=[[self.cash_pm, {'amount': -10.6}]],
             products=[[self.product_6, {'qty': -1}]],
-            extra_data={'partner_id': self.partner_1.id, 'is_refund': True, 'refunded_order_id': order.id},
+            extra_data={'partner_id': self.partner_1.id, 'refunded_order_id': order.id},
         )
         self.assertEqual(self.product_6.qty_available, 100)
         self.create_pos_order(
@@ -946,7 +942,6 @@ class TestPosAccounting(AccountTestInvoicingCommon):
             ],
             extra_data={
                 'partner_id': self.partner_1.id,
-                'is_refund': True,
                 'refunded_order_id': order.id,
             },
         )
@@ -1029,7 +1024,6 @@ class TestPosAccounting(AccountTestInvoicingCommon):
             ],
             extra_data={
                 'partner_id': self.partner_1.id,
-                'is_refund': True,
                 'refunded_order_id': order.id,
                 'to_invoice': True,
             },
@@ -1108,7 +1102,6 @@ class TestPosAccounting(AccountTestInvoicingCommon):
             payment_method=[[self.cash_pm, {'amount': -10.9}]],         # Total amount of the order is 5 + 6% tax + 5 + 12% tax = 10.9
             extra_data={
                 'partner_id': self.partner_1.id,
-                'is_refund': True,
                 'refunded_order_id': order.id,
                 'to_invoice': True,
             },
@@ -1171,7 +1164,6 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         session |= create_session_with_single_order(
             payment_method=[[self.bank_pm, {'amount': -10.6}]],
             products=[[self.product_6, {'qty': -1}]],
-            extra_data={'is_refund': True},
         )
         session |= create_session_with_single_order(
             payment_method=[[self.cash_pm, {'amount': 11.2}]],
@@ -1180,7 +1172,6 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         session |= create_session_with_single_order(
             payment_method=[[self.cash_pm, {'amount': -11.2}]],
             products=[[self.product_12, {'qty': -1}]],
-            extra_data={'is_refund': True},
         )
         payments = self.env['account.payment'].search(
             [('pos_session_id', 'in', session.ids)],
@@ -1225,7 +1216,6 @@ class TestPosAccounting(AccountTestInvoicingCommon):
             payment_method=[[self.bank_pm, {'amount': -10.6}]],
             products=[[self.product_6, {'qty': -1}]],
             extra_data={
-                'is_refund': True,
                 'partner_id': self.partner_1.id,
                 'to_invoice': True,
             },
@@ -1242,7 +1232,6 @@ class TestPosAccounting(AccountTestInvoicingCommon):
             payment_method=[[self.cash_pm, {'amount': -11.2}]],
             products=[[self.product_12, {'qty': -1}]],
             extra_data={
-                'is_refund': True,
                 'partner_id': self.partner_1.id,
                 'to_invoice': True,
             },
@@ -1571,7 +1560,6 @@ class TestPosAccounting(AccountTestInvoicingCommon):
                 payment_method=[[self.bank_pm, {'amount': -10.6}]],
                 products=[[self.product_6, {'qty': -1}]],
                 extra_data={
-                    'is_refund': True,
                     'refunded_order_id': order.id,
                 },
             )
@@ -1589,7 +1577,6 @@ class TestPosAccounting(AccountTestInvoicingCommon):
                 payment_method=[[self.bank_pm, {'amount': -10.6}]],
                 products=[[self.product_6, {'qty': -1}]],
                 extra_data={
-                    'is_refund': True,
                     'refunded_order_id': order.id,
                 },
             )
