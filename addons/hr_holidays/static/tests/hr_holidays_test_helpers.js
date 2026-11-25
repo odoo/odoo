@@ -3,6 +3,7 @@ import { ResUsers } from "@hr_holidays/../tests/mock_server/mock_models/res_user
 import { ResPartner } from "@hr_holidays/../tests/mock_server/mock_models/res_partner";
 import { HrEmployee } from "@hr_holidays/../tests/mock_server/mock_models/hr_employee";
 import { HrLeave } from "@hr_holidays/../tests/mock_server/mock_models/hr_leave";
+import { HrLeaveAllocation } from "@hr_holidays/../tests/mock_server/mock_models/hr_leave_allocation";
 import { HrDepartment } from "@hr_holidays/../tests/mock_server/mock_models/hr_department";
 import { HrWorkEntryType } from "@hr_holidays/../tests/mock_server/mock_models/hr_work_entry_type";
 import { hrModels } from "@hr/../tests/hr_test_helpers";
@@ -19,4 +20,5 @@ export const hrHolidaysModels = {
     HrDepartment,
     HrWorkEntryType,
     HrLeave,
+    HrLeaveAllocation,
 };

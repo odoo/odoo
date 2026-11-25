@@ -367,6 +367,7 @@ class HrLeaveAllocation(models.Model):
         ))
         for allocation in self:
             country = allocation.employee_company_id.country_id
+            # keep country matching in sync with has_requestable_work_entry_type
             allocation.allowed_work_entry_type_ids = work_entry_types_by_country.get(country, self.env['hr.work.entry.type'])
 
     @api.depends('accrual_plan_id')
@@ -1229,6 +1230,15 @@ class HrLeaveAllocation(models.Model):
     ####################################################
     # Business methods
     ####################################################
+
+    @api.model
+    @api.readonly
+    def has_requestable_work_entry_type(self):
+        """Return whether the current user can request an allocation in the current company."""
+        if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+            return True
+        domain = Domain(self._domain_work_entry_type_id()) & Domain('country_id', '=', self.env.company.country_id.id)
+        return bool(self.env['hr.work.entry.type'].search_count(domain, limit=1))
 
     def action_approve(self):
         """Approve the allocations: validate them, or give the first approval (``'validate1'``).

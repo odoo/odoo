@@ -26,6 +26,10 @@ class TimeOffCalendarControllerHrLeave extends TimeOffCalendarController {
     }
 }
 
+class TimeOffManagementCalendarController extends TimeOffCalendarControllerHrLeave {
+    showAllocationRequest = false;
+}
+
 export const timeOffCalendarHrLeaveView = {
     ...calendarView,
     Controller: TimeOffCalendarControllerHrLeave,
@@ -42,5 +46,6 @@ registry.category("views").add("time_off_calendar_dashboard", {
 
 registry.category("views").add("time_off_management_calendar", {
     ...timeOffCalendarHrLeaveView,
+    Controller: TimeOffManagementCalendarController,
     buttonTemplate: "hr_holidays.CalendarController.ManagementButtons",
 });
