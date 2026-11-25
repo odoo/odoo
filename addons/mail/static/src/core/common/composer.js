@@ -21,6 +21,7 @@ import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 
 import { rpc } from "@web/core/network/rpc";
+import { registry } from "@web/core/registry";
 import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { getViewportDimensions, useViewportChange } from "@web/core/utils/dvu";
@@ -1295,3 +1296,5 @@ export class Composer extends Component {
         }
     }
 }
+
+registry.category("lazy_components").add("mail.Composer", Composer);
