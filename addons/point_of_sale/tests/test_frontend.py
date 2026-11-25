@@ -10,7 +10,7 @@ from unittest.mock import patch
 from unittest import skip
 from odoo import Command, api
 
-from odoo.tools import BinaryBytes, DEFAULT_SERVER_DATE_FORMAT
+from odoo.tools import BinaryBytes, DEFAULT_SERVER_DATE_FORMAT, config
 from odoo.tests import tagged, loaded_demo_data
 from odoo.addons.account.tests.common import TestTaxCommon, AccountTestInvoicingHttpCommon
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
@@ -43,9 +43,10 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
 
     def get_method_additional_tags(self, test_method):
         additional_tags = super().get_method_additional_tags(test_method)
-        method_source = inspect.getsource(test_method)
-        if "self.start_pos_tour" in method_source:
-            additional_tags.append("is_tour")
+        if config['test_tags'] and 'is_tour' in config['test_tags']:
+            method_source = inspect.getsource(test_method)
+            if "self.start_pos_tour" in method_source:
+                additional_tags.append("is_tour")
         return additional_tags
 
     def start_pos_tour(self, tour_name, login="pos_user", **kwargs):
