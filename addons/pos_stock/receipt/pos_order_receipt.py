@@ -8,7 +8,7 @@ class PosOrderReceipt(models.AbstractModel):
     def _order_receipt_generate_line_data(self):
         line_data = super()._order_receipt_generate_line_data()
 
-        for data, line in zip(line_data, self.lines):
+        for line, data in zip(self._get_receipt_lines(), line_data):
             data['lot_names'] = False
             if line.pack_lot_ids:
                 lot_label = _("Lot") if line.product_id.tracking == "lot" else _("SN")
