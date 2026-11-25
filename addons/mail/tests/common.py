@@ -1831,6 +1831,7 @@ class MailCommon(MailCase):
             'country_id': cls.env.ref("base.be").id,
             'email': 'your.company@example.com',  # ensure email for various fallbacks
             'name': 'YourTestCompany',  # force for reply_to computation
+            'state_id': False,  # demo data sets a US state, inconsistent with country
         })
         with patch.object(ResUsers, '_notify_security_setting_update', side_effect=lambda *args, **kwargs: None):
             cls.user_admin.write({
