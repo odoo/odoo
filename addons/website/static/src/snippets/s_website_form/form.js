@@ -1197,7 +1197,13 @@ export class Form extends Interaction {
         if (inputEl.matches(".o_other_input.d-none")) {
             return false;
         }
-        return this.isFieldVisible(inputEl.closest(".s_website_form_field"));
+        const fieldEl = inputEl.closest(".s_website_form_field");
+        // A file input cannot hold a default value: in an always hidden field,
+        // the visitor can never fill it, so it must not block the submission.
+        if (inputEl.type === "file" && fieldEl.matches(".s_website_form_field_hidden")) {
+            return false;
+        }
+        return this.isFieldVisible(fieldEl);
     }
 
     /**
