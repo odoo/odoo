@@ -12,13 +12,16 @@ export class SignalFormController extends Component {
         Model: t.function(),
         Renderer: t.function(),
         fieldNames: t.array(t.string()),
+        specification: t.object(),
     });
 
     model = useModel(this.props.Model, {
         resModel: this.props.resModel,
         resId: this.props.resId || false,
-        fields: this.props.fields,
-        fieldNames: this.props.fieldNames,
+        specification: this.props.specification,
+        relatedModels: this.props.relatedModels || {
+            [this.props.resModel]: { fields: this.props.fields },
+        },
         context: this.props.context,
     });
 }

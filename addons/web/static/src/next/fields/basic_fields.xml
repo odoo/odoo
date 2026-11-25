@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.next.CharField">
+        <span t-if="this.props.readonly" t-out="this.value"/>
+        <input t-else=""
+               class="o_input"
+               type="text"
+               autocomplete="off"
+               t-att-id="this.props.id"
+               t-att-value="this.value"
+               t-on-change="this.onChange"/>
+    </t>
+
+    <t t-name="web.next.BooleanField">
+        <CheckBox id="this.props.id"
+                  className="'d-inline-block'"
+                  value="this.value"
+                  disabled="this.props.readonly"
+                  onChange="(value) => this.onChange(value)"/>
+    </t>
+
+    <t t-name="web.next.NumericField">
+        <span t-if="this.props.readonly" t-out="this.formattedValue"/>
+        <input t-else=""
+               class="o_input"
+               t-att-class="{ o_field_invalid: this.invalid() }"
+               inputmode="decimal"
+               autocomplete="off"
+               t-att-id="this.props.id"
+               t-att-value="this.formattedValue"
+               t-on-change="this.onChange"/>
+    </t>
+
+</templates>
