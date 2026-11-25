@@ -38,6 +38,26 @@ class TestResConfigSettings(TestSaleProjectCommon):
             'project_id': cls.project_global.id,
         })
 
+    def test_settings_save_without_toggling_milestone_feature(self):
+        """ `set_values` is called on every save of the settings: as long as the
+            milestones feature is not toggled, it must leave the service policy of
+            the products sold on a milestone's sale order line untouched.
+        """
+        self.product_milestone.service_policy = 'ordered_prepaid'
+
+        # Save the settings without changing the milestones feature, the way the
+        # web client does when any other setting is edited.
+        self.env['res.config.settings'].create({}).execute()
+
+        self.assertEqual(
+            self.product_milestone.service_policy,
+            'ordered_prepaid',
+            'Saving unrelated settings should not convert the product of a sale order line linked to a milestone.')
+        self.assertEqual(
+            self.product_milestone_sale_line.qty_delivered_method,
+            'milestones',
+            'Saving unrelated settings should not change the quantity delivered method of the sale order line.')
+
     def test_disable_and_enable_project_milestone_feature(self):
         self.assertTrue(self.env.user.has_group('project.group_project_milestone'), 'The Project Milestones feature should be enabled.')
 
