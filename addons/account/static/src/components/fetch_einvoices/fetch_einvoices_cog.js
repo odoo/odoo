@@ -122,7 +122,10 @@ export const fetchEInvoicesActionMenu = {
             return false;
         }
 
-        return Boolean(await getActionData(searchModel));
+        const visibilitySearchModel = Object.create(searchModel, {
+            orm: { value: searchModel.orm.cache({ maxAge: 60_000 }) },
+        });
+        return Boolean(await getActionData(visibilitySearchModel));
     },
 };
 
