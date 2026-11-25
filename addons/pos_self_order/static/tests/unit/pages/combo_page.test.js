@@ -172,3 +172,82 @@ test("getComboPrice takes quantity into account without any combo choice", async
     comp.state.qty = 3;
     expect(comp.getComboPrice()).toBe(unitPrice * 3);
 });
+
+const setupSingleItemUpsell = (models) => {
+    const upsell = models["product.combo"].get(1);
+    upsell.qty_max = 1;
+    upsell.combo_item_ids = [models["product.combo.item"].get(1)];
+    return models["product.template"].get(7);
+};
+
+test("an upsell choice holding a single product is still displayed", async () => {
+    const store = await setupSelfPosEnv();
+    const models = store.models;
+    const comboProduct = setupSingleItemUpsell(models);
+
+    expect(store.showComboSelectionPage(comboProduct).show).toBe(true);
+
+    const comp = await mountWithCleanup(ComboPage, {
+        props: { productTemplate: comboProduct },
+    });
+    expect(comp.comboChoices.map((c) => c.id)).toEqual([1, 2]);
+    expect(comp.getSelectedItems()).toHaveLength(0);
+});
+
+test("an upsell choice is unselected when its selected product is clicked again", async () => {
+    const store = await setupSelfPosEnv();
+    const models = store.models;
+    const comboProduct = setupSingleItemUpsell(models);
+    const upsellItem = models["product.combo.item"].get(1);
+
+    const comp = await mountWithCleanup(ComboPage, {
+        props: { productTemplate: comboProduct },
+    });
+
+    comp.selectItem(upsellItem);
+    comp.onChoiceClicked(0);
+    expect(comp.getItemState(upsellItem).selected).toBe(true);
+
+    comp.selectItem(upsellItem);
+    expect(comp.getItemState(upsellItem).selected).toBe(false);
+    expect(comp.state.selectedChoiceIndex).toBe(0);
+    expect(comp.getComboSelection()).toHaveLength(0);
+});
+
+test("an included choice stays selected when its product is clicked again", async () => {
+    const store = await setupSelfPosEnv();
+    const models = store.models;
+    const comboProduct = setupSingleItemUpsell(models);
+    const upsellItem = models["product.combo.item"].get(1);
+    const includedItem = models["product.combo.item"].get(3);
+
+    const comp = await mountWithCleanup(ComboPage, {
+        props: { productTemplate: comboProduct },
+    });
+
+    comp.selectItem(upsellItem);
+    expect(comp.state.selectedChoiceIndex).toBe(1);
+    comp.selectItem(includedItem);
+
+    comp.onChoiceClicked(1);
+    expect(comp.getItemState(includedItem).selected).toBe(true);
+
+    comp.selectItem(includedItem);
+    comp.onChoiceClicked(1);
+    expect(comp.getItemState(includedItem).selected).toBe(true);
+});
+
+test("an included choice hidden from the page is still added to the order", async () => {
+    const store = await setupSelfPosEnv();
+    const models = store.models;
+    const comboProduct = setupSingleItemUpsell(models);
+    // Only one product, so the included choice is not displayed as a step.
+    models["product.combo"].get(2).combo_item_ids = [models["product.combo.item"].get(3)];
+
+    const comp = await mountWithCleanup(ComboPage, {
+        props: { productTemplate: comboProduct },
+    });
+    expect(comp.comboChoices.map((c) => c.id)).toEqual([1]);
+
+    expect(comp.getComboSelection().map((s) => s.combo_item_id.id)).toEqual([3]);
+});

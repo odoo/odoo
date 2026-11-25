@@ -262,6 +262,7 @@ export class SelfOrder extends Reactive {
         for (const combo of product.combo_ids) {
             const { combo_item_ids } = combo;
             if (
+                combo.is_upsell ||
                 combo_item_ids.length > 1 ||
                 combo.qty_max > 1 ||
                 this.isProductConfigurable(combo_item_ids[0]?.product_id)

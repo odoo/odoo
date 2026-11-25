@@ -59,10 +59,18 @@ export class ComboPage extends Component {
         const combo = this.props.productTemplate.combo_ids;
         return combo.filter(
             (c) =>
+                c.is_upsell ||
                 c.qty_max > 1 ||
                 c.combo_item_ids.length > 1 ||
                 (c.combo_item_ids.some((c) => c.product_id.attribute_line_ids.length !== 0) &&
                     !c.combo_item_ids.every((c) => c.product_id.isCombo()))
+        );
+    }
+
+    get autoSelectedChoices() {
+        const displayedIds = new Set(this.comboChoices.map((choice) => choice.id));
+        return this.props.productTemplate.combo_ids.filter(
+            (choice) => !displayedIds.has(choice.id) && choice.combo_item_ids.length
         );
     }
 
@@ -92,8 +100,13 @@ export class ComboPage extends Component {
         }
 
         if (!this.hasMultiItemSelection) {
+            const wasSelected = Boolean(this.currentChoiceState.selectedItems?.[item.id]);
             this.currentChoiceState.selectedItems = {};
             this.currentChoiceState.selectedItemsOrder = [];
+            if (wasSelected && this.selectedChoice.is_upsell) {
+                this.currentChoiceState.displayAttributesOfItem = false;
+                return;
+            }
         } else if (!this.canAddMoreItems()) {
             return;
         }
@@ -478,7 +491,7 @@ export class ComboPage extends Component {
     }
 
     getComboSelection() {
-        return this.getSelection().flatMap((choice) =>
+        const selection = this.getSelection().flatMap((choice) =>
             choice.combo_items.map((item) => ({
                 combo_item_id: item.combo_item_id,
                 qty: item.qty,
@@ -492,6 +505,18 @@ export class ComboPage extends Component {
                 },
             }))
         );
+        for (const choice of this.autoSelectedChoices) {
+            selection.push({
+                combo_item_id: choice.combo_item_ids[0],
+                qty: 1,
+                configuration: {
+                    attribute_custom_values: [],
+                    attribute_value_ids: [],
+                    price_extra: 0,
+                },
+            });
+        }
+        return selection;
     }
 
     addToCart() {

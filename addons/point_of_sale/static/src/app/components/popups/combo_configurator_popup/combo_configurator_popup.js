@@ -152,12 +152,18 @@ export class ComboConfiguratorPopup extends Component {
 
     shouldShowCombo(combo) {
         const items = combo.combo_item_ids;
-        return items.length > 1 || combo.qty_max > 1 || items[0]?.product_id?.isConfigurable();
+        return (
+            combo.is_upsell ||
+            items.length > 1 ||
+            combo.qty_max > 1 ||
+            items[0]?.product_id?.isConfigurable()
+        );
     }
 
     autoSelectSingleChoices() {
         this.props.productTemplate.combo_ids.forEach((combo) => {
             if (
+                !combo.is_upsell &&
                 combo.combo_item_ids.length === 1 &&
                 !combo.combo_item_ids[0].product_id.isConfigurable()
             ) {
@@ -264,6 +270,10 @@ export class ComboConfiguratorPopup extends Component {
     async onClickProduct(product, combo_item) {
         const productTmpl = product.product_tmpl_id;
         const combo = combo_item.combo_id;
+        if (this.canDeselectComboItem(combo, combo_item)) {
+            this.state.qty[combo.id][combo_item.id] = 0;
+            return;
+        }
         if (
             !this.state.qty[combo.id][combo_item.id] &&
             this.pos.isProductSnoozed(productTmpl) &&
@@ -276,6 +286,12 @@ export class ComboConfiguratorPopup extends Component {
         } else {
             this.onClickSimpleProduct(combo_item, combo);
         }
+    }
+
+    canDeselectComboItem(combo, combo_item) {
+        return Boolean(
+            combo.is_upsell && combo.qty_max === 1 && this.state.qty[combo.id][combo_item.id]
+        );
     }
 
     resetSingleQtyMaxCombo(combo) {
