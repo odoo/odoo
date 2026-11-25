@@ -55,7 +55,7 @@ export class FontSizeSelector extends Component {
             this.onCustomFontSizeInput.bind(this),
             200
         );
-        useToolbarDropdownFocus(this.dropdown, this.fontSizeSelector);
+        useToolbarDropdownFocus(this.dropdown, this.fontSizeSelector, this.menuRef);
         this.preview = useToolbarDropdownPreview({
             dropdown: this.dropdown,
             menuRef: this.menuRef,

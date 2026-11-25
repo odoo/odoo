@@ -21,7 +21,19 @@ export function useDropdownAutoVisibility(overlayState, popoverRef) {
     });
 }
 
-export function useToolbarDropdownFocus(dropdown, buttonRef) {
+/**
+ * Manages the focus of a toolbar dropdown:
+ * - Escape moves the focus back to the dropdown toggle,
+ * - when the dropdown is opened from the keyboard, its active item (i.e. the
+ *   current value) gets the focus, so that keyboard and screen reader users
+ *   start from it. Without active item, the focus stays on the toggle: focusing
+ *   another item would preview it.
+ *
+ * @param {Object} dropdown state of the dropdown, as returned by `useDropdownState`
+ * @param {() => HTMLElement | null} buttonRef dropdown toggle reference
+ * @param {() => HTMLElement | null} menuRef dropdown menu reference
+ */
+export function useToolbarDropdownFocus(dropdown, buttonRef, menuRef) {
     useListener(
         document,
         "keydown",
@@ -32,6 +44,23 @@ export function useToolbarDropdownFocus(dropdown, buttonRef) {
         },
         { capture: true }
     );
+    // A click triggered by the keyboard (Enter or Space) has no `detail`.
+    // Opening the dropdown with the arrows does not trigger a click.
+    let isOpenedByPointer = false;
+    useListener(buttonRef, "click", (ev) => {
+        isOpenedByPointer = ev.detail !== 0;
+    });
+    useEffect(() => {
+        const menuEl = menuRef();
+        if (!dropdown.isOpen) {
+            isOpenedByPointer = false;
+            return;
+        }
+        if (!menuEl || isOpenedByPointer || document.activeElement !== untrack(buttonRef)) {
+            return;
+        }
+        menuEl.querySelector(".o-dropdown-item.active")?.focus();
+    });
 }
 
 /**
@@ -118,4 +147,7 @@ export function useFocusTooltip(containerRef) {
         tooltip.open(el, { tooltip: el.title });
     });
     useListener(containerRef, "focusout", () => tooltip.close());
+    // e.g. a dropdown opened from the keyboard while its toggle keeps the
+    // focus (capture, as dropdown toggles stop the propagation of clicks)
+    useListener(containerRef, "click", () => tooltip.close(), { capture: true });
 }

@@ -575,6 +575,92 @@ test("expanding toolbar from table cell selection should focus the first new but
 });
 
 test.tags("desktop");
+test("opening a toolbar dropdown with the keyboard should focus its active item", async () => {
+    const { el } = await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+    await expandToolbar();
+    const focusToolbarButton = async (name) => {
+        await press("Home");
+        const buttonCount = queryAll(".o-we-toolbar button").length;
+        for (let i = 0; i < buttonCount; i++) {
+            if (document.activeElement.getAttribute("name") === name) {
+                break;
+            }
+            await press("ArrowRight");
+        }
+        expect(`.o-we-toolbar button[name='${name}']`).toBeFocused();
+    };
+
+    // With an active item (left alignment): it gets the focus, its preview
+    // does not change the content
+    await focusToolbarButton("text_align");
+    await press("Enter");
+    await waitFor(".o-we-toolbar-dropdown .o-dropdown-item.active:focus");
+    expect(getContent(el)).toBe("<p>[test]</p>");
+    await press("Escape");
+    await expectElementCount(".o-we-toolbar-dropdown", 0);
+    expect(".o-we-toolbar button[name='text_align']").toBeFocused();
+
+    // Without active item (no list): the focus stays on the toggle, and its
+    // tooltip is closed
+    await focusToolbarButton("list_selector");
+    await waitFor(".o-tooltip");
+    await press("Enter");
+    await waitFor(".o-we-toolbar-dropdown");
+    expect(".o-we-toolbar button[name='list_selector']").toBeFocused();
+    await expectElementCount(".o-tooltip", 0);
+    expect(getContent(el)).toBe("<p>[test]</p>");
+});
+
+test.tags("desktop");
+test("opening a dropdown with the keyboard after a pointer released outside of its button should focus its active item", async () => {
+    await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+    await expandToolbar();
+    // Pressing the dropdown button, then releasing the pointer elsewhere: no
+    // click, the dropdown stays closed
+    await pointerDown(".o-we-toolbar button[name='text_align']");
+    await pointerUp(document.body);
+    await animationFrame();
+    await expectElementCount(".o-we-toolbar-dropdown", 0);
+    expect(".o-we-toolbar button[name='text_align']").toBeFocused();
+    await press("Enter");
+    await waitFor(".o-we-toolbar-dropdown .o-dropdown-item.active:focus");
+});
+
+test.tags("desktop");
+test("opening a table border dropdown with the keyboard should focus its active item", async () => {
+    await setupEditor(
+        unformat(`
+            <table class="table table-bordered o_table">
+                <tbody>
+                    <tr>
+                        <td><p>[a<br></p></td><td><p>b]<br></p></td>
+                    </tr>
+                </tbody>
+            </table>`)
+    );
+    await waitFor(".o-we-toolbar");
+    for (const name of ["table_border_width", "table_border_style"]) {
+        await press(["alt", "f"]);
+        const buttonCount = queryAll(".o-we-toolbar button").length;
+        for (let i = 0; i < buttonCount; i++) {
+            if (document.activeElement.getAttribute("name") === name) {
+                break;
+            }
+            await press("ArrowRight");
+        }
+        expect(`.o-we-toolbar button[name='${name}']`).toBeFocused();
+        await press("Enter");
+        await waitFor(".o-we-toolbar-dropdown .o-dropdown-item.active:focus");
+        await press("Escape");
+        await expectElementCount(".o-we-toolbar-dropdown", 0);
+        expect(`.o-we-toolbar button[name='${name}']`).toBeFocused();
+        await press("Escape");
+    }
+});
+
+test.tags("desktop");
 test("expanding the text toolbar should focus the first new button", async () => {
     await setupEditor("<p>[test]</p>");
     await waitFor(".o-we-toolbar");

@@ -29,7 +29,7 @@ export class ImageToolbarDropdown extends Component {
         this.state = proxy(this.props.getDisplay());
         this.menuRef = signal.ref();
         this.dropdown = useDropdownState();
-        useToolbarDropdownFocus(this.dropdown, this.imageToolbarBtn);
+        useToolbarDropdownFocus(this.dropdown, this.imageToolbarBtn, this.menuRef);
         useDropdownAutoVisibility(this.env.overlayState, this.menuRef);
         this.preview = useToolbarDropdownPreview({
             dropdown: this.dropdown,

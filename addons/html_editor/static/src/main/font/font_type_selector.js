@@ -27,7 +27,7 @@ export class FontTypeSelector extends Component {
         this.menuRef = signal.ref();
         this.dropdown = useDropdownState();
         useDropdownAutoVisibility(this.env.overlayState, this.menuRef);
-        useToolbarDropdownFocus(this.dropdown, this.fontTypeSelector);
+        useToolbarDropdownFocus(this.dropdown, this.fontTypeSelector, this.menuRef);
         this.preview = useToolbarDropdownPreview({
             dropdown: this.dropdown,
             menuRef: this.menuRef,

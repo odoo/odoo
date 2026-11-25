@@ -27,7 +27,7 @@ export class ImageAlignSelector extends Component {
         this.state = proxy(this.props.getDisplay());
         this.menuRef = signal.ref();
         this.dropdown = useDropdownState();
-        useToolbarDropdownFocus(this.dropdown, this.imageAlignSelector);
+        useToolbarDropdownFocus(this.dropdown, this.imageAlignSelector, this.menuRef);
         useDropdownAutoVisibility(this.env.overlayState, this.menuRef);
         this.preview = useToolbarDropdownPreview({
             dropdown: this.dropdown,

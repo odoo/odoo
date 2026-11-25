@@ -27,7 +27,7 @@ export class TableAlignSelector extends Component {
         this.state = proxy(this.props.getDisplay());
         this.menuRef = signal.ref();
         this.dropdown = useDropdownState();
-        useToolbarDropdownFocus(this.dropdown, this.tableAlignSelector);
+        useToolbarDropdownFocus(this.dropdown, this.tableAlignSelector, this.menuRef);
         useDropdownAutoVisibility(this.env.overlayState, this.menuRef);
         useFocusTooltip(this.menuRef);
     }

@@ -7,6 +7,7 @@ import { getToolbarAriaLabel, toolbarButtonProps } from "@html_editor/main/toolb
 import {
     useDropdownAutoVisibility,
     useFocusTooltip,
+    useToolbarDropdownFocus,
     useToolbarDropdownPreview,
 } from "@html_editor/toolbar_dropdown_hook";
 
@@ -20,6 +21,8 @@ export class TableBorderStyleSelector extends Component {
     });
     static components = { Dropdown, PreviewableDropdownItem };
 
+    buttonRef = signal.ref();
+
     setup() {
         this.items = this.props.getItems();
         this.state = proxy(this.props.getDisplay());
@@ -32,6 +35,7 @@ export class TableBorderStyleSelector extends Component {
             previewableOperation: this.props.previewableOperation,
         });
         useFocusTooltip(this.menuRef);
+        useToolbarDropdownFocus(this.dropdown, this.buttonRef, this.menuRef);
     }
 
     ariaLabel = computed(() => {
