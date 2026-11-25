@@ -956,6 +956,28 @@ class TestStockQuant(TestStockCommon):
         self.assertEqual(len(quant), 1)
         self.assertEqual(quant.lot_id.name, 'Michel')
 
+    def test_serial_quantity_check(self):
+        """
+        Verify that quantity cannot be > 1 and < 0
+        if lot_id is provided, but can be if it is not.
+        """
+        lot = self.env['stock.lot'].create({'name': 'SN-TEST', 'product_id': self.product_serial.id})
+        Quant = self.env['stock.quant'].with_context(inventory_mode=True)
+        for qty in [-1, -3, 2]:
+            with self.assertRaises(ValidationError):
+                Quant.create({
+                    'product_id': self.product_serial.id,
+                    'location_id': self.stock_location.id,
+                    'lot_id': lot.id,
+                    'inventory_quantity_auto_apply': qty,
+                })
+            quant = Quant.create({
+                'product_id': self.product_serial.id,
+                'location_id': self.stock_location.id,
+                'inventory_quantity_auto_apply': qty,
+            })
+            self.assertEqual(quant.inventory_quantity_auto_apply, qty)
+
     def test_update_quant_with_forbidden_field(self):
         """
         Test that updating a quant with a forbidden field raise an error.
