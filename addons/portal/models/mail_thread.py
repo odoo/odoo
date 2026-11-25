@@ -34,9 +34,10 @@ class MailThread(models.AbstractModel):
             # notifying other customers that need it
             access_token = self.sudo()._portal_ensure_token()
             local_msg_vals = dict(msg_vals or {})
-            local_msg_vals['access_token'] = access_token
-            local_msg_vals['pid'] = customer.id
-            local_msg_vals['hash'] = self._sign_token(customer.id)
+            if access_token:
+                local_msg_vals['access_token'] = access_token
+            if sign_token := self._sign_token(customer.id):
+                local_msg_vals.update(pid=customer.id, hash=sign_token)
             # sudo: mail.thread - user posting with read access should be able to get/create signup
             # token when notifying other customers that need it
             local_msg_vals.update(customer.sudo().signup_get_auth_param()[customer.id])
@@ -76,9 +77,15 @@ class MailThread(models.AbstractModel):
                 model_name=self._name,
                 field_name=self._mail_post_token_field
             ))
+        # no token, no signature, easing further checks
+        if not self[self._mail_post_token_field]:
+            return ''
         # sign token
+        return self._build_sign_token((self.env.cr.dbname, self[self._mail_post_token_field], pid))
+
+    @api.model
+    def _build_sign_token(self, token):
         secret = self.env["ir.config_parameter"].sudo().get_str("database.secret")
-        token = (self.env.cr.dbname, self[self._mail_post_token_field], pid)
         return hmac.new(secret.encode('utf-8'), repr(token).encode('utf-8'), hashlib.sha256).hexdigest()
 
     def _portal_get_parent_hash_token(self, pid):
