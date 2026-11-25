@@ -46,6 +46,8 @@ class BankAccountAllocationWizard(models.TransientModel):
 
         for index, line in enumerate(self.allocation_ids):
             line_amount = float_round(line.amount, precision_digits=2, rounding_method="DOWN")
+            if line.amount_type != 'percentage' and line_amount <= 0:
+                raise ValidationError(self.env._("Each fixed amount must be greater than 0."))
             distribution[str(line.bank_account_id.id)] = {
                 'amount': line_amount,
                 'sequence': line.sequence,
