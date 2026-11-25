@@ -2558,7 +2558,9 @@ class HrEmployee(models.Model):
             user_fields_to_empty = self._get_user_m2o_to_empty_on_archived_employees()
             employee_domain = Domain.OR(Domain(field, 'in', archived_employees.ids) for field in employee_fields_to_empty)
             user_domain = Domain.OR(Domain(field, 'in', archived_employees.user_id.ids) for field in user_fields_to_empty)
-            employees = self.env['hr.employee'].search(employee_domain | user_domain)
+            # sudo: the references are emptied on all the employees, also on the fields restricted to some groups
+            # (e.g. the attendance approver) and in the companies the user does not access
+            employees = self.env['hr.employee'].sudo().search(employee_domain | user_domain)
             for employee in employees:
                 for field in employee_fields_to_empty:
                     if employee[field] in archived_employees:

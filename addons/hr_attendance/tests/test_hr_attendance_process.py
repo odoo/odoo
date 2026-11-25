@@ -185,6 +185,16 @@ class TestHrAttendance(HttpCase, TransactionCase):
             self.assertEqual(test_attendance.check_out, fields.Datetime.now())
             self.assertEqual(test_attendance.worked_hours, 8.0)
 
+    def test_archive_attendance_approver(self):
+        """The attendance approver is emptied when their employee is archived, also by an HR officer without
+        attendance rights, like the other approvers."""
+        approver_user = new_test_user(self.env, login='archived_approver', groups='base.group_user,hr_attendance.group_hr_attendance_officer')
+        approver = self.env['hr.employee'].create({'name': 'Approver', 'user_id': approver_user.id})
+        self.test_employee.attendance_manager_id = approver_user
+
+        approver.with_user(self.hr_user).action_archive()
+        self.assertFalse(self.test_employee.attendance_manager_id)
+
     def test_break_duration_updates_worked_hours(self):
         attendance = self.env['hr.attendance'].create({
             'employee_id': self.test_employee.id,

@@ -165,6 +165,9 @@ class HrEmployee(models.Model):
             elif not employee.attendance_manager_id:
                 employee.attendance_manager_id = False
 
+    def _get_user_m2o_to_empty_on_archived_employees(self):
+        return super()._get_user_m2o_to_empty_on_archived_employees() + ['attendance_manager_id']
+
     def action_archive(self):
         """Archive the employees and check out their open attendances (now)."""
         res = super().action_archive()
