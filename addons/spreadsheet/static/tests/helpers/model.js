@@ -31,11 +31,20 @@ export function setupDataSourceEvaluation(model) {
     });
 }
 
-export function makeSpreadsheetActionTestEnv(model, createMockApp = true) {
+/**
+ * @param {object} params
+ * @param {boolean} [params.createMockApp]
+ * @param {Array} [params.providedPlugins] owl plugins to provide
+ * @param {Array} [params.owlPluginsConfig] config of the owl plugins
+ */
+export function makeSpreadsheetActionTestEnv(model, params) {
     let container = undefined;
     let getPlugin = undefined;
-    if (createMockApp) {
-        ({ getPlugin, container } = makeOwlPluginManager([], { model }));
+    if (params.createMockApp) {
+        ({ getPlugin, container } = makeOwlPluginManager(params.providedPlugins || [], {
+            model,
+            ...params.owlPluginsConfig,
+        }));
     } else {
         container = new DependencyContainer();
         container.inject(ModelStore, model);
@@ -45,7 +54,7 @@ export function makeSpreadsheetActionTestEnv(model, createMockApp = true) {
         container.dispose();
     });
 
-    if (createMockApp) {
+    if (params.createMockApp) {
         // stores use owl plugins in their constructor, which requires the owl scope of the mock app
         for (const store of globalStores.getAll()) {
             container.get(store);
@@ -71,6 +80,8 @@ export function makeSpreadsheetActionTestEnv(model, createMockApp = true) {
  * @param {ServerData} [params.serverData] Data to be injected in the mock server
  * @param {function} [params.mockRPC] Mock rpc function
  * @param {boolean} [params.createMockApp]
+ * @param {Array} [params.providedPlugins] owl plugins to provide
+ * @param {Array} [params.owlPluginsConfig] config of the owl plugins
  * @returns {Promise<{ model: OdooSpreadsheetModel, env: Object }>}
  */
 export async function createModelWithDataSource(params = {}) {
@@ -87,11 +98,18 @@ export async function createModelWithDataSource(params = {}) {
         },
     });
     markRaw(model);
-    Object.assign(env, makeSpreadsheetActionTestEnv(model, params.createMockApp));
+    Object.assign(
+        env,
+        makeSpreadsheetActionTestEnv(model, {
+            createMockApp: params.createMockApp ?? true,
+            providedPlugins: params.providedPlugins,
+            owlPluginsConfig: params.owlPluginsConfig,
+        })
+    );
 
     setupDataSourceEvaluation(model);
     await animationFrame(); // initial async formulas loading
-    return { model, env };
+    return { model, env, getPlugin: env.getPlugin };
 }
 
 /**

@@ -99,13 +99,17 @@ export async function insertPivotInSpreadsheet(model, pivotId, params) {
  * @param {function} [params.mockRPC]
  * @param {"dynamic"|"static"} [params.pivotType]
  * @param {boolean} [params.createMockApp]
- * @returns {Promise<{ model: OdooSpreadsheetModel, env: object, pivotId: string}>}
+ * @param {Array} [params.providedPlugins] owl plugins to provide
+ * @param {Array} [params.owlPluginsConfig] config of the owl plugins
+ * @returns {Promise<{ model: OdooSpreadsheetModel, env: object, pivotId: string, getPlugin: (plugin: any) => any }>}
  */
 export async function createSpreadsheetWithPivot(params = {}) {
-    const { model, env } = await createModelWithDataSource({
+    const { model, env, getPlugin } = await createModelWithDataSource({
         mockRPC: params.mockRPC,
         serverData: params.serverData,
         createMockApp: params.createMockApp,
+        providedPlugins: params.providedPlugins,
+        owlPluginsConfig: params.owlPluginsConfig,
     });
     const arch = params.arch || getBasicPivotArch();
     const pivotId = "PIVOT#1";
@@ -115,7 +119,7 @@ export async function createSpreadsheetWithPivot(params = {}) {
         actionXmlId: params.actionXmlId,
     });
     await waitForDataLoaded(model);
-    return { model, env, pivotId };
+    return { model, env, pivotId, getPlugin };
 }
 
 /**
