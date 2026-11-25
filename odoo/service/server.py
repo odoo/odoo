@@ -130,6 +130,9 @@ class RequestHandler(werkzeug.serving.WSGIRequestHandler):
         # timeout to avoid chrome headless preconnect during tests
         if config['test_enable'] or config['test_file']:
             self.timeout = 5
+        else:
+            sock_timeout = os.environ.get("ODOO_HTTP_SOCKET_TIMEOUT")
+            self.timeout = float(sock_timeout) if sock_timeout else 2
         # flag the current thread as handling a http request
         super(RequestHandler, self).setup()
         me = threading.current_thread()
@@ -196,7 +199,7 @@ class RequestHandler(werkzeug.serving.WSGIRequestHandler):
             self.wfile = BytesIO()
 
     def log_error(self, format, *args):
-        if format == "Request timed out: %r" and config['test_enable']:
+        if format == "Request timed out: %r":
             _logger.info(format, *args)
         else:
             super().log_error(format, *args)
