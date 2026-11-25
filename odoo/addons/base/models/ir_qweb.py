@@ -3119,8 +3119,8 @@ class IrQweb(models.AbstractModel):
             for fname in glob.iglob('**/src/**/*.js', root_dir=manifest.static_path, recursive=True):
                 with file_open(opj(manifest.static_path, fname)) as f:
                     fcontent = f.read()
-                    if match := lazy_bundle_regex.search(fcontent):
-                        bundles.add(match[2])
+                if 'loadBundle' in fcontent:
+                    bundles.update(match[2] for match in lazy_bundle_regex.finditer(fcontent))
         return bundles
 
 
