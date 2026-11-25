@@ -97,7 +97,7 @@ class PosPaymentMethod(models.Model):
             resp = session.request(action, endpoint, json=data, timeout=TIMEOUT)
         except requests.exceptions.RequestException as e:
             return {'error': _("There are some issues between us and Viva.com, try again later.%s)", e)}
-        if resp.text and resp.json().get('detail') == 'Could not validate credentials':
+        if resp.text and isinstance(resp.json(), dict) and resp.json().get('detail') == 'Could not validate credentials':
             try:
                 session.headers.update(self._bearer_token(session))
             except UserError as e:
@@ -212,6 +212,28 @@ class PosPaymentMethod(models.Model):
     def _load_pos_data_fields(self, config):
         return [*super()._load_pos_data_fields(config), 'viva_com_terminal_id']
 
+    def _viva_display_notification(self, message, level='warning'):
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "type": level,
+                "message": message,
+            },
+        }
+
+    def action_viva_com_test(self):
+        if not self.env.user.has_group('point_of_sale.group_pos_user'):
+            raise AccessError(_("Only 'group_pos_user' are allowed to send a Viva.com payment request"))
+        endpoint = "devices:search"
+        response = self._call_viva_com(endpoint, 'post', {})
+        if isinstance(response, dict) and response.get('error'):
+            return self._viva_display_notification(response.get('error'), level='warning')
+        for terminal in response:
+            if isinstance(terminal, dict) and terminal.get('terminalId') == self.viva_com_terminal_id:
+                return self._viva_display_notification(_("Terminal %s is ready to use.", self.viva_com_terminal_id), level='success')
+        return self._viva_display_notification(_("Could not find a connected terminal with the ID %s. Please check the terminal ID and try again.", self.viva_com_terminal_id), level='warning')
+
     def viva_com_send_payment_request(self, data):
         if not self.env.user.has_group('point_of_sale.group_pos_user'):
             raise AccessError(_("Only 'group_pos_user' are allowed to send a Viva.com payment request"))
@@ -268,6 +290,9 @@ class PosPaymentMethod(models.Model):
             )
             if not self.viva_com_webhook_verification_key:
                 raise UserError(_("Can't update payment method. Please check the data and update it."))
+
+        if "viva_com_client_id" in vals or "viva_com_client_secret" in vals or "viva_com_test_mode" in vals:
+            self.viva_com_bearer_token = False
 
         return record
 
