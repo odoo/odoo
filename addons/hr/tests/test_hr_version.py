@@ -1129,8 +1129,9 @@ class TestHrVersion(TestHrCommon):
         employee.version_id.work_location_id = self.work_location
         self.assertEqual(employee.version_id.address_id, third_address)
 
+        # without a work location, the hidden work address does not keep the one of the former work location
         employee.version_id.work_location_id = False
-        self.assertEqual(employee.version_id.address_id, third_address)
+        self.assertEqual(employee.version_id.address_id.commercial_partner_id, company_address)
         no_location = self.env['hr.employee'].create({'name': 'No location'})
         self.assertEqual(no_location.version_id.address_id.commercial_partner_id, company_address)
 
