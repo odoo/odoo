@@ -464,13 +464,19 @@ export class PosDataPlugin extends Plugin {
         return results;
     }
 
-    async getCachedServerIdsFromIndexedDB(models = []) {
-        const allModels = this.indexedDB.dbStores.map((store) => store[1]);
-        const modelsToIgnore = allModels.filter((model) => !models.includes(model));
-        const data = await this.indexedDB.readAllExceptStores(modelsToIgnore);
+    async getCachedServerIdsFromIndexedDB(models = [], cachedData = null) {
+        let data = cachedData;
+        if (!data) {
+            const allModels = this.indexedDB.dbStores.map((store) => store[1]);
+            const modelsToIgnore = allModels.filter((model) => !models.includes(model));
+            data = await this.indexedDB.readAllExceptStores(modelsToIgnore);
+        }
         const results = {};
 
         for (const name in data) {
+            if (models.length > 0 && !models.includes(name)) {
+                continue;
+            }
             results[name] = data[name].reduce((acc, item) => {
                 if (typeof item.id === "number") {
                     // deserializeDateTime(item.write_date) is precise to the second,
@@ -541,7 +547,10 @@ export class PosDataPlugin extends Plugin {
         try {
             if (!this.network.offline) {
                 if (this.indexedDB) {
-                    recordsWriteDate = await this.getCachedServerIdsFromIndexedDB();
+                    recordsWriteDate = await this.getCachedServerIdsFromIndexedDB(
+                        [],
+                        params ? localData : null
+                    );
                 }
 
                 const testLocalData = {
@@ -1066,9 +1075,9 @@ export class PosDataPlugin extends Plugin {
             }
         }
         data.models = [...new Set(data.models)];
-        data.records = await this.getCachedServerIdsFromIndexedDB(data.models);
 
         if (data.models.length > 0) {
+            data.records = await this.getCachedServerIdsFromIndexedDB(data.models);
             await this.callRelated(
                 "pos.session",
                 "load_data",
