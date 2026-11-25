@@ -21,6 +21,8 @@ test("open/close temporary channel", async () => {
     await startServer();
     await loadDefaultEmbedConfig();
     await start({ authenticateAs: false, waitUntilSubscribe: false });
+    await contains(".o-livechat-LivechatButton[aria-label='Chat with us']");
+    await contains(".o-livechat-LivechatButton [data-icon='mode_comment'][aria-hidden='true']");
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-ChatWindow");
     await contains(".o-livechat-LivechatButton", { count: 0 });
@@ -61,6 +63,10 @@ test("clicking on notification opens the chat", async () => {
         },
     });
     await start({ authenticateAs: false, waitUntilSubscribe: false });
+    await contains(".o-livechat-LivechatButton:not([aria-label])", {
+        text: "Need help? Chat with us.",
+    });
+    await contains(".o-livechat-LivechatButton [data-icon='mode_comment'][aria-hidden='true']");
     await click(".o-livechat-LivechatButton-notification", {
         text: "Need help? Chat with us.",
     });

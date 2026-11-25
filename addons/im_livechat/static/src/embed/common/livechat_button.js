@@ -1,3 +1,4 @@
+import { _t } from "@web/core/l10n/translation";
 import { useLayoutEffect } from "@web/owl2/utils";
 import { Component, proxy, signal, untrack } from "@odoo/owl";
 
@@ -34,6 +35,12 @@ export class LivechatButton extends Component {
     onClick() {
         this.state.animateNotification = false;
         this.livechatService.open();
+    }
+
+    get ariaLabel() {
+        return this.store.livechat_rule?.action === "display_button_and_text"
+            ? undefined
+            : _t("Chat with us");
     }
 
     get isShown() {
