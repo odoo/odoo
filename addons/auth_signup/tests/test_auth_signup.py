@@ -165,10 +165,59 @@ class TestAuthSignupFlow(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
         from odoo.orm.environments import Transaction  # noqa: PLC0415
 
         self.env['ir.config_parameter'].sudo().set_str('auth_signup.invitation_scope', 'b2c')
-        with patch.object(Transaction, 'invalidate_ormcache') as invalidate_ormcache:
-            self.env['res.users'].sudo().signup({
-                'login': 'cache_signup@example.com',
-                'name': 'Cache Signup',
-                'password': 'cache_signup_password',
-            })
+
+        self.authenticate(None, None)
+        self.opener.cookies['tz'] = 'Europe/Brussels'
+        payload = {
+            'login': 'cache_signup@example.com',
+            'name': 'Cache Signup',
+            'password': 'cache_signup_password',
+            'confirm_password': 'cache_signup_password',
+            'csrf_token': self.csrf_token(),
+        }
+        signup_url = self._get_free_signup_url()
+
+        with (
+            patch.object(Transaction, 'invalidate_ormcache') as invalidate_ormcache,
+            self.patch_captcha_signup(),
+        ):
+            self.url_open(signup_url, data=payload, allow_redirects=False)
+
+        new_user = self.env['res.users'].search([('login', '=', 'cache_signup@example.com')])
+        self.assertTrue(new_user)
+        self.assertEqual(new_user.tz, 'Europe/Brussels')
+        self.assertTrue(new_user.login_date)
+        invalidate_ormcache.assert_not_called()
+
+    def test_token_signup_does_not_invalidate_cache(self):
+        from odoo.orm.environments import Transaction  # noqa: PLC0415
+
+        partner = self.env['res.partner'].create({
+            'name': 'cache token',
+            'email': 'cache_token@example.com',
+            'tz': 'America/New_York',
+        })
+        partner.signup_prepare()
+
+        self.authenticate(None, None)
+        self.opener.cookies['tz'] = 'Europe/Brussels'
+        payload = {
+            'login': 'cache_token@example.com',
+            'name': 'cache token',
+            'password': 'mypassword',
+            'confirm_password': 'mypassword',
+            'csrf_token': self.csrf_token(),
+        }
+        signup_url = partner._get_signup_url()
+
+        with (
+            patch.object(Transaction, 'invalidate_ormcache') as invalidate_ormcache,
+            self.patch_captcha_signup(),
+        ):
+            self.url_open(signup_url, data=payload, allow_redirects=False)
+
+        new_user = partner.user_ids
+        self.assertTrue(new_user)
+        self.assertEqual(new_user.tz, 'Europe/Brussels')  # tz comes from browser, not stored partner's tz
+        self.assertTrue(new_user.login_date)
         invalidate_ormcache.assert_not_called()
