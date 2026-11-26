@@ -1,7 +1,6 @@
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
-import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
-import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
+import { DropzonePlugin } from "@web/core/dropzone/dropzone_plugin";
 import {
     MAIL_HTML_PLUGINS,
     MAIL_HTML_PLUGINS_SMALL_UI,
@@ -23,7 +22,6 @@ import {
     parseAndTransform,
     trimEmptyBlocksAround,
 } from "@mail/utils/common/format";
-import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 
 import { rpc } from "@web/core/network/rpc";
@@ -282,20 +280,17 @@ export class Composer extends Component {
                     this.props.composer().isEditComposerVisible = Boolean(isVisible);
                 });
             }
-            useCustomDropzone(
-                this.props.dropzoneRef,
-                MailAttachmentDropzone,
-                {
-                    extraClass: "o-mail-Composer-dropzone",
-                    onDrop: this.onDropFile,
-                },
-                () =>
+            const removeDropzone = usePlugin(DropzonePlugin).add(this.props.dropzoneRef, {
+                extraClass: "o-mail-Composer-dropzone",
+                onDrop: this.onDropFile,
+                isEnabled: () =>
                     this.props.allowUpload &&
                     (!this.store.rtc.isFullscreen || this.ancestors.inMeetingView) &&
                     (this.props.composer().message
                         ? this.props.composer().isEditComposerVisible
-                        : !this.thread?.messageInEdition?.composer?.isEditComposerVisible)
-            );
+                        : !this.thread?.messageInEdition?.composer?.isEditComposerVisible),
+            });
+            onWillDestroy(removeDropzone);
         }
         onExternalClick(this.rootRef, () => {
             // Clicking away cancels the selection, so that a later insertion
@@ -752,11 +747,9 @@ export class Composer extends Component {
         return Boolean(this.readyEditor()?.shared.suggestion.hasSuggestions());
     }
 
-    onDropFile(ev) {
-        if (isDragSourceExternalFile(ev.dataTransfer)) {
-            for (const file of ev.dataTransfer.files) {
-                this.attachmentUploader.uploadFile(file);
-            }
+    onDropFile(files) {
+        for (const file of files) {
+            this.attachmentUploader.uploadFile(file);
         }
     }
 

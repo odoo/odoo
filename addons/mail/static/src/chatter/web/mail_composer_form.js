@@ -1,13 +1,20 @@
 import { formView } from "@web/views/form/form_view";
 import { registry } from "@web/core/registry";
-import { EventBus, providePlugins, t, useOnChange, usePlugin, useProps } from "@odoo/owl";
+import {
+    EventBus,
+    onWillDestroy,
+    providePlugins,
+    t,
+    useOnChange,
+    usePlugin,
+    useProps,
+} from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { formControllerProps } from "@web/views/form/form_controller";
-import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
+import { DropzonePlugin } from "@web/core/dropzone/dropzone_plugin";
 import { _t } from "@web/core/l10n/translation";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { ORM } from "@web/core/orm_plugin";
-import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
 import { FullComposerBusPlugin } from "@mail/core/web/full_composer_bus_plugin";
 import { useMailComposerAttachmentsUploader } from "@mail/core/web/mail_composer_attachment_hook";
 
@@ -104,10 +111,10 @@ export class MailComposerFormRenderer extends formView.Renderer {
 
         // Add file dropzone on full mail composer:
         const doUpload = useMailComposerAttachmentsUploader();
-        useCustomDropzone(this.rootRef, MailAttachmentDropzone, {
-            /** @param {Event} event */
-            onDrop: (event) => doUpload(event.dataTransfer.files),
+        const removeDropzone = usePlugin(DropzonePlugin).add(this.rootRef, {
+            onDrop: (files) => doUpload(files),
         });
+        onWillDestroy(removeDropzone);
 
         /** @param {function} */
         const onCloseWizardModal = (callback) => {
