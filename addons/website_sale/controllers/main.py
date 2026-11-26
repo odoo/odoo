@@ -16,6 +16,7 @@ from odoo.http import request, route
 from odoo.tools import SQL, clean_context, float_round, groupby, lazy, str2bool
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import LazyTranslate, _
+from odoo.tools.urls import urljoin as url_join
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.controllers import portal as payment_portal
@@ -887,13 +888,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
                     '@type': 'ListItem',
                     'position': 1,
                     'name': 'All Products',
-                    'item': f'{base_url}{self._get_shop_path()}',
+                    'item': url_join(base_url, request.env['ir.http']._url_for(self._get_shop_path())),
                 },
                 {
                     '@type': 'ListItem',
                     'position': 2,
                     'name': category.name,
-                    'item': f'{base_url}{self._get_shop_path(category)}',
+                    'item': url_join(base_url, request.env['ir.http']._url_for(self._get_shop_path(category))),
                 },
                 {
                     '@type': 'ListItem',
