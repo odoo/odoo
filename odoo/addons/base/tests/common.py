@@ -64,6 +64,7 @@ class BaseCommon(TransactionCase):
     @classmethod
     def setup_other_currency(cls, code, **kwargs):
         rates = kwargs.pop('rates', [])
+        company_id = kwargs.pop('company_id', False)
         currency = cls._enable_currency(code)
         currency.rate_ids.unlink()
         currency.write({
@@ -72,7 +73,7 @@ class BaseCommon(TransactionCase):
                 {
                     'name': rate_date,
                     'rate': rate,
-                    'company_id': cls.env.company.id,
+                    'company_id': company_id or cls.env.company.id,
                 }
             ) for rate_date, rate in rates],
             **kwargs,

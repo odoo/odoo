@@ -201,21 +201,23 @@ class AccountPayment(models.Model):
             return super()._prepare_move_liquidity_lines(default_vals)
 
         liquidity_vals = []
-        payment_currency = self.currency_id
         check_suffix = ''.join([item[1] for item in self._get_aml_default_display_name_list()])
         line_common_vals = {
             'currency_id': self.currency_id.id,
             'partner_id': self.partner_id.id,
             'account_id': self.outstanding_account_id.id,
         }
+        # Each check takes its share of the liquidity balance, like the counterpart line, and the rounding difference
+        # goes to the biggest check.
+        checks_amount = sum(l10n_latam_checks.mapped('amount'))
+        check_balances = {
+            check: self.company_currency_id.round(default_vals['balance'] * check.amount / checks_amount)
+            for check in l10n_latam_checks
+        }
+        biggest_check = max(l10n_latam_checks, key=lambda check: check.amount)
+        check_balances[biggest_check] += default_vals['balance'] - sum(check_balances.values())
         for check in l10n_latam_checks:
             liquidity_amount = check.amount if self.payment_type == 'inbound' else -check.amount
-            balance = payment_currency._convert(
-                liquidity_amount,
-                self.company_id.currency_id,
-                self.company_id,
-                check.payment_date,
-            )
             liquidity_vals.append({
                 'name': _(
                     "Check %(check_number)s - %(suffix)s",
@@ -224,7 +226,7 @@ class AccountPayment(models.Model):
                 ),
                 'date_maturity': check.payment_date,
                 'amount_currency': liquidity_amount,
-                'balance': balance,
+                'balance': self.company_currency_id.round(check_balances[check]),
                 'l10n_latam_check_ids': [Command.set(check.ids)] if is_own_check_payment else [],
                 **line_common_vals,
             })
