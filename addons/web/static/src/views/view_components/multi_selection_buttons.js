@@ -21,6 +21,7 @@ import { CallbackRecorder, useSetupAction } from "@web/search/action_hook";
 import { FormArchParser } from "@web/views/form/form_arch_parser";
 import { ViewPlugin } from "@web/views/view_plugin";
 import { MultiCreatePopover } from "./multi_create_popover";
+import { localizeDigits } from "@web/core/l10n/numbering";
 
 export const multiSelectionButtonsProps = {
     reactive: t.object({
@@ -42,6 +43,8 @@ export class MultiSelectionButtons extends Component {
     static components = {
         Popover: MultiCreatePopover,
     };
+
+    localizeDigits = localizeDigits;
 
     props = useProps(multiSelectionButtonsProps);
     viewService = usePlugin(ViewPlugin);

@@ -13,6 +13,7 @@ import { useBus, useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import { standardFieldProps } from "../standard_field_props";
+import { localizeDigits } from "@web/core/l10n/numbering";
 
 export const domainFieldProps = {
     ...standardFieldProps,
@@ -29,6 +30,9 @@ export class DomainField extends Component {
     static components = {
         DomainSelector,
     };
+
+    localizeDigits = localizeDigits;
+
     props = useProps(domainFieldProps);
 
     debugMode = usePlugin(DebugModePlugin);

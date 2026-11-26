@@ -12,10 +12,10 @@
                 </t>
                 <span> / </span>
                 <t t-if="this.props.updateTotal">
-                    <span class="o_pager_limit o_pager_limit_fetch" t-att-class="{ 'disabled': this.state.isDisabled }" t-on-click.stop="this.updateTotal"><t t-out="this.props.total"/>+</span>
+                    <span class="o_pager_limit o_pager_limit_fetch" t-att-class="{ 'disabled': this.state.isDisabled }" t-on-click.stop="this.updateTotal"><t t-out="this.formattedTotal"/>+</span>
                 </t>
                 <t t-else="">
-                    <span class="o_pager_limit" t-out="this.props.total"/>
+                    <span class="o_pager_limit" t-out="this.formattedTotal"/>
                 </t>
             </span>
             <span class="btn-group d-print-none" aria-atomic="true">

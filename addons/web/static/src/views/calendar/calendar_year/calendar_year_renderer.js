@@ -4,6 +4,7 @@ import {
     convertRecordToEvent,
     getColor,
     getPaletteColor,
+    getFullCalendarLocale,
     getFullCalendarTimeZone,
     joinClasses,
 } from "@web/views/calendar/utils";
@@ -91,7 +92,7 @@ export class CalendarYearRenderer extends Component {
             firstDay: this.props.model.firstDayOfWeek,
             headerToolbar: false,
             height: "100%",
-            locale: luxon.Settings.defaultLocale,
+            locale: getFullCalendarLocale(),
             navLinks: false,
             nowIndicator: true,
             showNonCurrentDates: false,

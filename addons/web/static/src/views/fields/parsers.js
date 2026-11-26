@@ -1,4 +1,5 @@
 import { parseDate, parseDateTime } from "@web/core/l10n/dates";
+import { normalizeDigits } from "@web/core/l10n/numbering";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { ArithmeticOperation } from "@web/model/relational_model/operation";
@@ -127,6 +128,7 @@ export class DurationParseError extends Error {}
  * @returns {number} a float
  */
 export function parseFloat(value, { allowOperation = false, digits } = {}) {
+    value = normalizeDigits(value);
     const operation = allowOperation
         ? ArithmeticOperation.parse(value, (expr) =>
               evaluateMathematicalExpression(expr, {}, (v) => parseFloat(v, { digits }))
@@ -157,6 +159,7 @@ export function parseFloat(value, { allowOperation = false, digits } = {}) {
  * @returns {number|import("@web/model/relational_model/operation").Operation} a float or an Operation
  */
 export function parseFloatTime(value, unit = "hours") {
+    value = normalizeDigits(value);
     // Tolerate a trailing operator (e.g. "1h+"): the user is still typing.
     const evaluateDurationFormula = (expr) => {
         const result = evaluateMathematicalExpression(expr.replace(/[-+*/]\s*$/, ""), {}, (v) =>
@@ -286,6 +289,7 @@ function parseDuration(value, unit = "hours") {
  * @returns {number} an integer
  */
 export function parseInteger(value, { allowOperation = false } = {}) {
+    value = normalizeDigits(value);
     const operation = allowOperation
         ? ArithmeticOperation.parse(value, (expr) =>
               evaluateMathematicalExpression(expr, {}, parseInteger)

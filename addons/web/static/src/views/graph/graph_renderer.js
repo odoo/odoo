@@ -23,6 +23,7 @@ import { cookie } from "@web/core/browser/cookie";
 import { createElementWithContent } from "@web/core/utils/html";
 import { ReportViewMeasures } from "@web/views/view_components/report_view_measures";
 import { Widget } from "@web/views/widgets/widget";
+import { localizeDigits } from "@web/core/l10n/numbering";
 
 const NO_DATA = _t("No data");
 const formatters = registry.category("formatters");
@@ -278,7 +279,7 @@ export class GraphRenderer extends Component {
             return formatter(value, options);
         }
         if (allIntegers && !largeNumber) {
-            return String(value);
+            return localizeDigits(value);
         }
         if (largeNumber) {
             return formatFloat(value, { humanReadable: true, decimals: 2, minDigits: 1 });
@@ -642,7 +643,9 @@ export class GraphRenderer extends Component {
                 }
                 boxColor = dataset.backgroundColor[index];
                 const totalData = dataset.data.reduce((a, b) => a + b, 0);
-                percentage = totalData && ((dataset.data[index] * 100) / totalData).toFixed(2);
+                percentage =
+                    totalData &&
+                    localizeDigits(((dataset.data[index] * 100) / totalData).toFixed(2));
             } else {
                 if (groupBy.length > 1) {
                     label = `${label} / ${dataset.label}`;

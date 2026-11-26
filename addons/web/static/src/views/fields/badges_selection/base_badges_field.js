@@ -4,6 +4,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { useNavigation } from "@web/core/navigation/navigation";
+import { localizeDigits } from "@web/core/l10n/numbering";
 
 const DROPDOWN_ITEM_LIMIT = 8;
 export const baseBadgesFieldProps = {
@@ -81,7 +82,7 @@ export class BaseBadgesField extends Component {
 
     get extraBadgeLabel() {
         const hiddenCount = this.props.options.length - this.props.badgeLimit;
-        return `+${hiddenCount}`;
+        return `+${localizeDigits(hiddenCount)}`;
     }
 
     get hasMoreThanMax() {

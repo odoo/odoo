@@ -12,6 +12,7 @@ import { useDebounced } from "@web/core/utils/timing";
 import { ColumnProgress } from "@web/views/view_components/column_progress";
 import { GroupConfigMenu } from "@web/views/view_components/group_config_menu";
 import { QuickCreateState } from "./kanban_record_quick_create";
+import { localizeDigits } from "@web/core/l10n/numbering";
 
 class KanbanHeaderTooltip extends Component {
     static template = "web.KanbanGroupTooltip";
@@ -24,6 +25,9 @@ class KanbanHeaderTooltip extends Component {
 export class KanbanHeader extends Component {
     static template = "web.KanbanHeader";
     static components = { ColumnProgress, Dropdown, DropdownItem, GroupConfigMenu };
+
+    localizeDigits = localizeDigits;
+
     props = useProps({
         activeActions: t.object(),
         canQuickCreate: t.boolean(),
@@ -128,7 +132,13 @@ export class KanbanHeader extends Component {
 
         return fieldNames
             .filter((fieldName) => values[fieldName])
-            .map((fieldName) => ({ title: tooltipInfo[fieldName], value: values[fieldName] }));
+            .map((fieldName) => ({
+                title: tooltipInfo[fieldName],
+                value:
+                    typeof values[fieldName] === "number"
+                        ? localizeDigits(values[fieldName])
+                        : values[fieldName],
+            }));
     });
 
     async quickCreate() {

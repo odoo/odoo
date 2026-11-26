@@ -9,6 +9,7 @@ import { rankInterval } from "@web/search/utils/dates";
 import { getGroupBy } from "@web/search/utils/group_by";
 import { GROUPABLE_TYPES } from "@web/search/utils/misc";
 import { computeReportMeasures, processMeasure } from "@web/views/utils";
+import { localizeDigits } from "@web/core/l10n/numbering";
 
 export const SEP = " / ";
 
@@ -396,7 +397,7 @@ export class GraphModel extends Model {
                 if (type === "boolean") {
                     label = `${val}`; // toUpperCase?
                 } else if (type === "integer") {
-                    label = val === false ? "0" : `${val}`;
+                    label = localizeDigits(val === false ? "0" : `${val}`);
                 } else if (val === false) {
                     label = this._getDefaultFilterLabel(gb);
                 } else if (["many2many", "many2one"].includes(type)) {
@@ -410,7 +411,7 @@ export class GraphModel extends Model {
                         numbers[id] = Object.keys(numbers).length + 1;
                     }
                     const num = numbers[id];
-                    label = num === 1 ? name : `${name} (${num})`;
+                    label = num === 1 ? name : `${name} (${localizeDigits(num)})`;
                 } else if (type === "selection") {
                     const selected = fields[fieldName].selection.find((s) => s[0] === val);
                     label = selected[1];

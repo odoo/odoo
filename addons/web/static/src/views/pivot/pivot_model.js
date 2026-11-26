@@ -9,6 +9,7 @@ import {
 } from "@web/model/currency_aggregates";
 import { addPropertyFieldDefs, Model } from "@web/model/model";
 import { computeReportMeasures, processMeasure } from "@web/views/utils";
+import { localizeDigits } from "@web/core/l10n/numbering";
 
 /**
  * Pivot Model
@@ -1115,7 +1116,7 @@ export class PivotModel extends Model {
         data.numbering[fieldName][name] = data.numbering[fieldName][name] || {};
         const numbers = data.numbering[fieldName][name];
         numbers[id] = numbers[id] || Object.keys(numbers).length + 1;
-        return name + (numbers[id] > 1 ? "  (" + numbers[id] + ")" : "");
+        return name + (numbers[id] > 1 ? "  (" + localizeDigits(numbers[id]) + ")" : "");
     }
 
     /**
@@ -1463,7 +1464,7 @@ export class PivotModel extends Model {
                 if (fieldName === "id" && Array.isArray(value)) {
                     return value[1];
                 }
-                return value || "0";
+                return localizeDigits(value || "0");
             }
         }
         if (value === false) {

@@ -1,5 +1,6 @@
 import { Component, onMounted, Portal, signal, t, useProps } from "@odoo/owl";
-import { formatFloat, formatMonetary } from "@web/views/fields/formatters";
+import { roundDecimals } from "@web/core/utils/numbers";
+import { formatMonetary } from "@web/views/fields/formatters";
 
 export class ProductCatalogOrderLine extends Component {
     static template = "product.ProductCatalogOrderLine";
@@ -67,9 +68,7 @@ export class ProductCatalogOrderLine extends Component {
     }
 
     get quantity() {
-        const digits = [false, this.env.precision];
-        const options = { digits, decimalPoint: ".", thousandsSep: "" };
-        return parseFloat(formatFloat(this.props.quantity, options));
+        return roundDecimals(this.props.quantity, this.env.precision ?? 2);
     }
 
     get uomSelectStyle() {

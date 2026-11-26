@@ -7,14 +7,14 @@
                 <div t-if="this.group.isFolded" class="o_column_title d-flex align-items-center pb-1 fs-4 lh-1 text-nowrap opacity-50 opacity-100-hover flex-grow-1 gap-1"
                      t-on-mouseenter="this.onTitleMouseEnter" t-on-mouseleave="this.onTitleMouseLeave">
                     <t t-out="this.odoomark(this.group.displayName)"></t>
-                    <span t-if="this.group.count > 0 and !this.props.list.model.useSampleModel" t-out="'(' + this.group.count + ')'"/>
+                    <span t-if="this.group.count > 0 and !this.props.list.model.useSampleModel" t-out="'(' + this.localizeDigits(this.group.count) + ')'"/>
                 </div>
                 <div t-if="!this.group.isFolded"
                     class="o_column_title flex-grow-1 min-w-0 mw-100 gap-1 d-flex fs-4 fw-bold align-top text-900"
                       t-on-mouseenter="this.onTitleMouseEnter" t-on-mouseleave="this.onTitleMouseLeave"
                 >
                     <span class="text-truncate" t-out="this.odoomark(this.group.displayName)"/>
-                    <span t-if="!this.progressBar and !this.props.list.model.useSampleModel" t-out="'(' + this.group.count + ')'"/>
+                    <span t-if="!this.progressBar and !this.props.list.model.useSampleModel" t-out="'(' + this.localizeDigits(this.group.count) + ')'"/>
                 </div>
                 <t t-if="this.uiService.isSmall or !this.group.isFolded">
                     <GroupConfigMenu t-props="this.configMenuProps"/>

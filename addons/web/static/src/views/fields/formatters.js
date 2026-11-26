@@ -6,6 +6,7 @@ import {
     today,
 } from "@web/core/l10n/dates";
 import { localization as l10n } from "@web/core/l10n/localization";
+import { localizeDigits } from "@web/core/l10n/numbering";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { humanSize } from "@web/core/utils/binary";
@@ -293,7 +294,9 @@ export function formatDuration(value, options = {}) {
         duration.minutes = 0;
     }
 
+    // latin digits, localized at the end with the numbering system of the language
     let durationParts = new Intl.DurationFormat(l10n.locale, {
+        numberingSystem: "latn",
         style: options.numeric ? "digital" : "narrow",
         hoursDisplay: unit === "hours" || options.numeric ? "always" : "auto",
         minutesDisplay: "always",
@@ -326,7 +329,7 @@ export function formatDuration(value, options = {}) {
         formattedValue = formattedValue.trim();
     }
 
-    return `${isNegative ? "-" : ""}${formattedValue}`;
+    return localizeDigits(`${isNegative ? "-" : ""}${formattedValue}`);
 }
 
 /**
@@ -389,7 +392,7 @@ export function formatInteger(value, options = {}) {
     }
     const grouping = options.grouping || l10n.grouping;
     const thousandsSep = "thousandsSep" in options ? options.thousandsSep : l10n.thousandsSep;
-    return insertThousandsSep(value.toFixed(0), thousandsSep, grouping);
+    return localizeDigits(insertThousandsSep(value.toFixed(0), thousandsSep, grouping));
 }
 formatInteger.extractOptions = ({ attrs, options }) => ({
     decimals: options.decimals || 0,

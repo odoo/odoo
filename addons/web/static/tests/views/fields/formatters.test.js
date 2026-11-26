@@ -267,3 +267,15 @@ test("formatBinary", () => {
     expect(formatBinary({filename: "toto", size: 6})).toBe("toto");
     expect(formatBinary({content: "aGVsbG8="})).toBe("(file)");
 });
+
+test("numbers are formatted with the numbering system of the language", () => {
+    patchWithCleanup(luxon.Settings, { defaultNumberingSystem: "arab" });
+    expect(formatFloat(1234.5)).toBe("١,٢٣٤.٥٠");
+    expect(formatFloat(1234567, { humanReadable: true })).toBe("١M");
+    expect(formatInteger(1234)).toBe("١,٢٣٤");
+    expect(formatPercentage(0.125)).toBe("١٢.٥%");
+    expect(formatFloatTime(1.5)).toBe("١h ٣٠m");
+    expect(formatFloatTime(1.5, { numeric: true })).toBe("١:٣٠");
+    expect(formatBinary({ filename: "", size: 2048 })).toBe("٢.٠٠ kB");
+    expect(formatInteger(false)).toBe("");
+});

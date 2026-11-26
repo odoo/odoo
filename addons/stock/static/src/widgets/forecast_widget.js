@@ -1,6 +1,6 @@
 import { FloatField, floatField } from "@web/views/fields/float/float_field";
 import { formatDate } from "@web/core/l10n/dates";
-import { formatFloat } from "@web/views/fields/formatters";
+import { roundDecimals } from "@web/core/utils/numbers";
 import { registry } from "@web/core/registry";
 import { ActionPlugin } from "@web/webclient/actions/action_plugin";
 import { onWillStart, usePlugin } from "@odoo/owl";
@@ -13,7 +13,7 @@ export class ForecastWidgetField extends FloatField {
         this.orm = usePlugin(ORM);
 
         const digits = this.props.record.fields.forecast_availability.digits;
-        this.options = { digits, thousandsSep: "", decimalPoint: "." };
+        this.precision = digits?.[1] ?? 2;
 
         onWillStart(async () => {
             const rootContext = this.env.model.root.context;
@@ -43,11 +43,11 @@ export class ForecastWidgetField extends FloatField {
     }
 
     get forecastAvailability() {
-        return parseFloat(formatFloat(this.props.record.data.forecast_availability, this.options));
+        return roundDecimals(this.props.record.data.forecast_availability, this.precision);
     }
 
     get productQty() {
-        return parseFloat(formatFloat(this.props.record.data.product_qty, this.options));
+        return roundDecimals(this.props.record.data.product_qty, this.precision);
     }
 
     get willBeFulfilled() {

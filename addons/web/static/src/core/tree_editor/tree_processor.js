@@ -13,6 +13,7 @@ import { constructTreeFromDomain } from "./construct_tree_from_domain";
 import { disambiguate, getResModel, isId } from "./utils";
 import { introduceVirtualOperators } from "./virtual_operators";
 import { InRange } from "./tree_editor_components";
+import { localizeDigits } from "@web/core/l10n/numbering";
 
 /**
  * @param {import("@web/core/tree_editor/condition_tree").Value} val
@@ -37,6 +38,9 @@ function formatValue(val, disambiguate, fieldDef, displayNames) {
         if (label !== undefined) {
             val = label;
         }
+    }
+    if (typeof val === "number") {
+        return localizeDigits(val);
     }
     if (typeof val === "string") {
         if (fieldDef?.type === "datetime") {
@@ -263,7 +267,11 @@ export const treeProcessorService = {
                 if (valueType === "relativeRange") {
                     let [, , range, unit] = value;
                     unit = Math.abs(range) > 1 ? unit + "s" : unit;
-                    values = [Number(range) > 0 ? "next" : "last", Math.abs(range), unit]; // eg. last 7 months
+                    values = [
+                        Number(range) > 0 ? "next" : "last",
+                        localizeDigits(Math.abs(range)),
+                        unit,
+                    ]; // eg. last 7 months
                 } else {
                     values = [InRange.options.find(([t]) => t === valueType)[1].toString()];
                 }

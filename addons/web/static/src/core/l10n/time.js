@@ -1,5 +1,6 @@
 import { localization } from "@web/core/l10n/localization";
 import { memoize } from "@web/core/utils/functions";
+import { normalizeDigits } from "@web/core/l10n/numbering";
 
 const { DateTime, Info } = luxon;
 
@@ -273,7 +274,7 @@ export function normalizeTimeStr(timeStr, keepSeparators = false) {
         return false;
     }
 
-    timeStr = timeStr.trim().toLowerCase();
+    timeStr = normalizeDigits(timeStr.trim().toLowerCase());
 
     for (const map of NUMERAL_MAPS) {
         for (let i = 0; i < map.length; i++) {

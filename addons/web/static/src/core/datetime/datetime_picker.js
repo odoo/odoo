@@ -4,6 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { MAX_VALID_DATE, MIN_VALID_DATE, clampDate, isInRange, today } from "../l10n/dates";
 import { localization } from "../l10n/localization";
 import { ensureArray } from "../utils/arrays";
+import { localizeDigits } from "@web/core/l10n/numbering";
 import { TimePicker } from "@web/core/time_picker/time_picker";
 import { Time } from "@web/core/l10n/time";
 import { range } from "@web/core/utils/numbers";
@@ -115,7 +116,7 @@ const toDateItem = ({ isOutOfRange = false, isValid = true, label, range, extraC
     includesToday: isInRange(today(), range),
     isOutOfRange,
     isValid,
-    label: String(range[0][label]),
+    label: localizeDigits(String(range[0][label])),
     range,
     extraClass,
 });
@@ -125,7 +126,7 @@ const toDateItem = ({ isOutOfRange = false, isValid = true, label, range, extraC
  * @returns {WeekItem}
  */
 const toWeekItem = (weekDayItems) => ({
-    number: weekDayItems[3].range[0].weekNumber,
+    number: localizeDigits(weekDayItems[3].range[0].weekNumber),
     days: weekDayItems,
 });
 
@@ -139,7 +140,7 @@ const PRECISION_LEVELS = new Map()
         nextTitle: _t("Next month"),
         prevTitle: _t("Previous month"),
         step: { month: 1 },
-        getTitle: (date) => `${date.monthShort} ${date.year}`,
+        getTitle: (date) => localizeDigits(`${date.monthShort} ${date.year}`),
         getItems: (date, { maxDate, minDate, showWeekNumbers, isDateValid, dayCellClass }) => {
             const startDates = [date];
 
@@ -218,7 +219,7 @@ const PRECISION_LEVELS = new Map()
         nextTitle: _t("Next year"),
         prevTitle: _t("Previous year"),
         step: { year: 1 },
-        getTitle: (date) => String(date.year),
+        getTitle: (date) => localizeDigits(String(date.year)),
         getItems: (date, { maxDate, minDate }) => {
             const startOfYear = date.startOf("year");
             return range(12).map((month) => {
@@ -237,7 +238,8 @@ const PRECISION_LEVELS = new Map()
         nextTitle: _t("Next decade"),
         prevTitle: _t("Previous decade"),
         step: { year: 10 },
-        getTitle: (date) => `${getStartOfDecade(date) - 1} - ${getStartOfDecade(date) + 10}`,
+        getTitle: (date) =>
+            localizeDigits(`${getStartOfDecade(date) - 1} - ${getStartOfDecade(date) + 10}`),
         getItems: (date, { maxDate, minDate }) => {
             const startOfDecade = date.startOf("year").set({ year: getStartOfDecade(date) });
             return range(-GRID_MARGIN, GRID_COUNT + GRID_MARGIN).map((i) => {
@@ -257,7 +259,8 @@ const PRECISION_LEVELS = new Map()
         nextTitle: _t("Next century"),
         prevTitle: _t("Previous century"),
         step: { year: 100 },
-        getTitle: (date) => `${getStartOfCentury(date) - 10} - ${getStartOfCentury(date) + 100}`,
+        getTitle: (date) =>
+            localizeDigits(`${getStartOfCentury(date) - 10} - ${getStartOfCentury(date) + 100}`),
         getItems: (date, { maxDate, minDate }) => {
             const startOfCentury = date.startOf("year").set({ year: getStartOfCentury(date) });
             return range(-GRID_MARGIN, GRID_COUNT + GRID_MARGIN).map((i) => {

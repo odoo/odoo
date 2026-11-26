@@ -1,4 +1,5 @@
 import { browser } from "../browser/browser";
+import { localizeDigits } from "../l10n/numbering";
 import { registry } from "../registry";
 import { Transition } from "../transition";
 import { useBus } from "../utils/hooks";
@@ -22,7 +23,7 @@ export class PagerIndicator extends Component {
 
     pagerUpdate({ detail }) {
         this.state.value = detail.value;
-        this.state.total = detail.total;
+        this.state.total = localizeDigits(detail.total);
         browser.clearTimeout(this.startShowTimer);
         this.state.show = true;
         this.startShowTimer = browser.setTimeout(() => {
