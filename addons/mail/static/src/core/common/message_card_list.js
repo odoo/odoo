@@ -1,12 +1,12 @@
 import { Message } from "@mail/core/common/message";
 import { MessageHighlightPlugin } from "@mail/core/common/message_highlight_plugin";
-import { useMaybePlugin, useVisible } from "@mail/utils/common/hooks";
+import { useVisible } from "@mail/utils/common/hooks";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
 import { Component, signal, t, usePlugin, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { UIPlugin } from "@web/core/ui/ui_plugin";
-import { useService } from "@web/core/utils/hooks";
+import { useMaybePlugin, useService } from "@web/core/utils/hooks";
 
 export class MessageCardList extends Component {
     static components = { Message };

@@ -13,7 +13,6 @@ import {
     useOnChange,
     usePlugin,
     useProps,
-    useScope,
 } from "@odoo/owl";
 
 import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permission_denied_dialog";
@@ -22,20 +21,6 @@ import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { useService } from "@web/core/utils/hooks";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { UIPlugin } from "@web/core/ui/ui_plugin";
-
-/**
- * Version of usePlugin() where the plugin is allowed to not be provided by any parented component.
- *
- * @template T
- * @param {T extends import("@odoo/owl").PluginConstructor} pluginType
- * @returns {import("@odoo/owl").PluginInstance<T>|undefined}
- */
-export function useMaybePlugin(pluginType) {
-    if (useScope().pluginManager?.getPluginById(pluginType.id)) {
-        return usePlugin(pluginType);
-    }
-    return undefined;
-}
 
 /**
  * @param {() => HTMLElement} target

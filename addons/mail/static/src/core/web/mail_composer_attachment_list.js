@@ -1,12 +1,11 @@
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
+import { useMaybePlugin, useService } from "@web/core/utils/hooks";
 import {
     many2ManyBinaryField,
     Many2ManyBinaryField,
 } from "@web/views/fields/many2many_binary/many2many_binary_field";
 import { Many2XBinary } from "@web/views/fields/many2x_binary/many2x_binary";
 import { FullComposerBusPlugin } from "@mail/core/web/full_composer_bus_plugin";
-import { useMaybePlugin } from "@mail/utils/common/hooks";
 
 export class MailComposerAttachmentBinary extends Many2XBinary {
     static template = "mail.MailComposerAttachmentBinary";

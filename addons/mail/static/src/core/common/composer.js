@@ -10,12 +10,7 @@ import {
 import { groupAttachments } from "@mail/utils/common/attachments";
 import { MessageHighlightPlugin } from "@mail/core/common/message_highlight_plugin";
 import { RecordLinkPlugin } from "@mail/core/common/record_link_plugin";
-import {
-    onExternalClick,
-    propComputed,
-    useMaybePlugin,
-    useVisible,
-} from "@mail/utils/common/hooks";
+import { onExternalClick, propComputed, useVisible } from "@mail/utils/common/hooks";
 import {
     addLink,
     htmlToTextContentInline,
@@ -55,7 +50,7 @@ import {
 
 import { _t } from "@web/core/l10n/translation";
 import { UIPlugin } from "@web/core/ui/ui_plugin";
-import { useService } from "@web/core/utils/hooks";
+import { useMaybePlugin, useService } from "@web/core/utils/hooks";
 import {
     htmlFormatList,
     htmlJoin,

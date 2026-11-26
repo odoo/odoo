@@ -1,8 +1,8 @@
 import { MessageHighlightPlugin } from "@mail/core/common/message_highlight_plugin";
-import { useForwardRefsToParent, useMaybePlugin } from "@mail/utils/common/hooks";
+import { useForwardRefsToParent } from "@mail/utils/common/hooks";
 import { Component, htmlEscape, markup, signal, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { useService } from "@web/core/utils/hooks";
+import { useMaybePlugin, useService } from "@web/core/utils/hooks";
 
 export class NotificationMessage extends Component {
     static template = "mail.NotificationMessage";

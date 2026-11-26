@@ -1,11 +1,11 @@
 import { StorePlugin } from "@mail/core/common/store_plugin";
 import { Thread } from "@mail/core/common/thread_model";
-import { useMaybePlugin } from "@mail/utils/common/hooks";
 import { getInnerHtml } from "@mail/utils/common/html";
 import { SearchStatePlugin } from "@mail/utils/common/search_state_plugin";
 
 import { computed, signal, t, useConfig, usePlugin } from "@odoo/owl";
 
+import { useMaybePlugin } from "@web/core/utils/hooks";
 import { createDocumentFragmentFromContent } from "@web/core/utils/html";
 import { escapeRegExp } from "@web/core/utils/strings";
 

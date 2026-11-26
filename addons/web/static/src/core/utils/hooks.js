@@ -11,6 +11,7 @@ import {
     useApp,
     useEffect,
     useOnChange,
+    usePlugin,
     useScope,
 } from "@odoo/owl";
 import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
@@ -450,4 +451,19 @@ export function useBackButton(handler, shouldEnable) {
     onMounted(updateRegistration);
     onPatched(updateRegistration);
     onWillUnmount(unregister);
+}
+
+/**
+ * Version of usePlugin() where the plugin is allowed to not be provided by
+ * any parent component.
+ *
+ * @template T
+ * @param {T extends import("@odoo/owl").PluginConstructor} pluginType
+ * @returns {import("@odoo/owl").PluginInstance<T>|undefined}
+ */
+export function useMaybePlugin(pluginType) {
+    if (useScope().pluginManager?.getPluginById(pluginType.id)) {
+        return usePlugin(pluginType);
+    }
+    return undefined;
 }

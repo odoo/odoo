@@ -19,14 +19,14 @@
         </BuilderSelect>
     </BuilderRow>
     <t t-if="!this.isActiveItem(prefix + '_direction_none_opt')">
-        <BuilderRow level="1" label.translate="Scroll Speed">
+        <BuilderRow level="true" label.translate="Scroll Speed">
             <BuilderRange styleAction="'--marquee-animation-speed'"
                 min="1"
                 max="10"
                 step="1"
                 unit="'s'"/>
         </BuilderRow>
-        <BuilderRow t-if="this.state.hasPauseButton" label.translate="Pause Button" tooltip.translate="Allow your visitors to pause the animation" level="1">
+        <BuilderRow t-if="this.state.hasPauseButton" label.translate="Pause Button" tooltip.translate="Allow your visitors to pause the animation" level="true">
             <BuilderCheckbox classAction="'o_marquee_pause_btn_hidden'" inverseAction="true"/>
         </BuilderRow>
         <BuilderRow label.translate="Hover effect">

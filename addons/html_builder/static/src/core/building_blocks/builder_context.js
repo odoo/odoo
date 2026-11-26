@@ -1,6 +1,11 @@
-import { Component, t, useProps, xml } from "@odoo/owl";
+import { Component, Plugin, providePlugins, t, useConfig, useProps, xml } from "@odoo/owl";
+import { useMaybePlugin } from "@web/core/utils/hooks";
 import { basicContainerBuilderComponentProps, useBuilderComponent } from "../utils";
 import { BuilderComponent } from "./builder_component";
+
+export class BuilderLevelPlugin extends Plugin {
+    level = useConfig("level", t.number().optional(0));
+}
 
 export class BuilderContext extends Component {
     static components = { BuilderComponent };
@@ -13,9 +18,16 @@ export class BuilderContext extends Component {
     props = useProps({
         ...basicContainerBuilderComponentProps,
         slots: t.object(),
+        level: t.boolean().optional(false),
     });
 
     setup() {
         useBuilderComponent(this.props);
+
+        // Without `level`, children inherit the parent's level plugin as is.
+        if (this.props.level) {
+            const parentLevel = useMaybePlugin(BuilderLevelPlugin)?.level ?? 0;
+            providePlugins([BuilderLevelPlugin], { level: parentLevel + 1 });
+        }
     }
 }

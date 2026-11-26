@@ -17,27 +17,29 @@
                 <BuilderCheckbox dataAttributeAction="'mapSidebar'" id="'sidebar_opt'"
                     dataAttributeActionValue="'true'" />
             </BuilderRow>
-            <BuilderRow label.translate="Hide Offscreen"
-                tooltip.translate="Hides elements outside the current map view"
-                t-if="this.isActiveItem('sidebar_opt')" level="1" preview="false">
-                <BuilderCheckbox dataAttributeAction="'mapHideOffscreenLocations'"
-                    dataAttributeActionValue="'true'" action="'hideLocationsOffscreen'" />
-            </BuilderRow>
-            <BuilderRow label.translate="Display Searchbar" t-if="this.isActiveItem('sidebar_opt')" level="1"
-                preview="false">
-                <BuilderCheckbox dataAttributeAction="'mapSearchbar'" dataAttributeActionValue="'true'" id="'searchbar_opt'"/>
-            </BuilderRow>
-            <BuilderRow label.translate="Placeholder" t-if="this.isActiveItem('searchbar_opt')" level="2">
-                <BuilderTextInput dataAttributeAction="'mapSearchbarPlaceholder'" preview="false" default.translate="Zip or City"/>
-            </BuilderRow>
-            <BuilderRow label.translate="Sidebar Location" t-if="this.isActiveItem('sidebar_opt')" level="1">
-                <BuilderButtonGroup dataAttributeAction="'mapSidebarLocation'" preview="false">
-                    <BuilderButton ltrRtlMapping="'left-right'" title.translate="Left" dataAttributeActionValue="'left'"
-                        iconImg="'/website/static/src/img/snippets_options/pos_left.svg'" />
-                    <BuilderButton ltrRtlMapping="'left-right'" title.translate="Right" dataAttributeActionValue="'right'"
-                        iconImg="'/website/static/src/img/snippets_options/pos_right.svg'" />
-                </BuilderButtonGroup>
-            </BuilderRow>
+            <BuilderContext level="true">
+                <BuilderRow label.translate="Hide Offscreen"
+                    tooltip.translate="Hides elements outside the current map view"
+                    t-if="this.isActiveItem('sidebar_opt')" preview="false">
+                    <BuilderCheckbox dataAttributeAction="'mapHideOffscreenLocations'"
+                        dataAttributeActionValue="'true'" action="'hideLocationsOffscreen'" />
+                </BuilderRow>
+                <BuilderRow label.translate="Display Searchbar" t-if="this.isActiveItem('sidebar_opt')"
+                    preview="false">
+                    <BuilderCheckbox dataAttributeAction="'mapSearchbar'" dataAttributeActionValue="'true'" id="'searchbar_opt'"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Placeholder" t-if="this.isActiveItem('searchbar_opt')" level="true">
+                    <BuilderTextInput dataAttributeAction="'mapSearchbarPlaceholder'" preview="false" default.translate="Zip or City"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Sidebar Location" t-if="this.isActiveItem('sidebar_opt')">
+                    <BuilderButtonGroup dataAttributeAction="'mapSidebarLocation'" preview="false">
+                        <BuilderButton ltrRtlMapping="'left-right'" title.translate="Left" dataAttributeActionValue="'left'"
+                            iconImg="'/website/static/src/img/snippets_options/pos_left.svg'" />
+                        <BuilderButton ltrRtlMapping="'left-right'" title.translate="Right" dataAttributeActionValue="'right'"
+                            iconImg="'/website/static/src/img/snippets_options/pos_right.svg'" />
+                    </BuilderButtonGroup>
+                </BuilderRow>
+            </BuilderContext>
             <BuilderRow label.translate="Details">
                 <BuilderSelect dataAttributeAction="'mapDetails'" preview="false">
                     <BuilderSelectItem dataAttributeActionValue="'area'" title.translate="Area"
@@ -46,23 +48,25 @@
                         Tooltip</BuilderSelectItem>
                 </BuilderSelect>
             </BuilderRow>
-            <BuilderRow label.translate="Phone Number" preview="false" level="1">
-                <BuilderCheckbox dataAttributeAction="'mapShowPhone'" dataAttributeActionValue="'true'"
-                    action="'storeLocatorOptionalField'" actionParam="'phone'"/>
-            </BuilderRow>
-            <BuilderRow label.translate="Email" preview="false" level="1">
-                <BuilderCheckbox dataAttributeAction="'mapShowEmail'" dataAttributeActionValue="'true'"
-                    action="'storeLocatorOptionalField'" actionParam="'email'"/>
-            </BuilderRow>
-            <BuilderRow label.translate="Website" preview="false" level="1">
-                <BuilderCheckbox dataAttributeAction="'mapShowWebsite'" dataAttributeActionValue="'true'"
-                    action="'storeLocatorOptionalField'" actionParam="'website'"/>
-            </BuilderRow>
-            <BuilderRow label.translate="Image" preview="false" level="1"
-                t-if="this.isActiveItem('details_area')">
-                <BuilderCheckbox dataAttributeAction="'mapShowImage'" dataAttributeActionValue="'true'"
-                    action="'storeLocatorOptionalField'" actionParam="'image_256'"/>
-            </BuilderRow>
+            <BuilderContext level="true" preview="false">
+                <BuilderRow label.translate="Phone Number">
+                    <BuilderCheckbox dataAttributeAction="'mapShowPhone'" dataAttributeActionValue="'true'"
+                        action="'storeLocatorOptionalField'" actionParam="'phone'"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Email">
+                    <BuilderCheckbox dataAttributeAction="'mapShowEmail'" dataAttributeActionValue="'true'"
+                        action="'storeLocatorOptionalField'" actionParam="'email'"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Website">
+                    <BuilderCheckbox dataAttributeAction="'mapShowWebsite'" dataAttributeActionValue="'true'"
+                        action="'storeLocatorOptionalField'" actionParam="'website'"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Image"
+                    t-if="this.isActiveItem('details_area')">
+                    <BuilderCheckbox dataAttributeAction="'mapShowImage'" dataAttributeActionValue="'true'"
+                        action="'storeLocatorOptionalField'" actionParam="'image_256'"/>
+                </BuilderRow>
+            </BuilderContext>
         </t>
         <BuilderRow>
             <div class="d-flex flex-column w-100">

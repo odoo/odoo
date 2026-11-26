@@ -1,9 +1,9 @@
 import { PortalChatterPlugin } from "@portal/chatter/portal/portal_chatter_plugin";
 import { Chatter } from "@mail/chatter/web_portal_project/chatter";
-import { useMaybePlugin } from "@mail/utils/common/hooks";
 
-import { patch } from "@web/core/utils/patch";
 import { onWillPatch, signal, useEffect } from "@odoo/owl";
+import { useMaybePlugin } from "@web/core/utils/hooks";
+import { patch } from "@web/core/utils/patch";
 
 patch(Chatter.prototype, {
     setup() {
