@@ -217,6 +217,6 @@ registry.category("web_tour.tours").add("test_edit_payments_with_tip", {
             TipScreen.clickSettle(),
             Dialog.confirm(),
             // Edit payment button shouldn't be available for posted orders
-            negateStep({ trigger: ".feedback-screen .edit-order-payment:contains(Edit Payment)" }),
+            negateStep({ trigger: ".feedback-screen .edit-order-payment" }),
         ].flat(),
 });
