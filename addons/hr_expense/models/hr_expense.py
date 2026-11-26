@@ -723,12 +723,14 @@ class HrExpense(models.Model):
 
     def check_amount_not_zero(self, vals):
         error_msgs = []
-        if 'total_amount' in vals:
-            if any(expense.company_currency_id.is_zero(vals['total_amount']) for expense in self):
-                error_msgs.append(_("You cannot set the expense total to 0 if it's linked to a report."))
-        if 'total_amount_currency' in vals:
-            if any(expense.currency_id.is_zero(vals['total_amount_currency']) for expense in self):
-                error_msgs.append(_("You cannot set the expense total in currency to 0 if it's linked to a report."))
+        sheet_id = vals.get('sheet_id')
+        linked = self.filtered(lambda expense: sheet_id and expense.sheet_id.id != sheet_id)
+        expenses = self if 'total_amount' in vals else linked
+        if any(expense.company_currency_id.is_zero(vals.get('total_amount', expense.total_amount)) for expense in expenses):
+            error_msgs.append(_("You cannot set the expense total to 0 if it's linked to a report."))
+        expenses = self if 'total_amount_currency' in vals else linked
+        if any(expense.currency_id.is_zero(vals.get('total_amount_currency', expense.total_amount_currency)) for expense in expenses):
+            error_msgs.append(_("You cannot set the expense total in currency to 0 if it's linked to a report."))
         if error_msgs:
             raise UserError("\n".join(error_msgs))
 
