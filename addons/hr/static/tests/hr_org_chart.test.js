@@ -1,7 +1,7 @@
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { expect, test } from "@odoo/hoot";
 import { queryOne } from "@odoo/hoot-dom";
-import { defineModels, fields, models, mountView, onRpc } from "@web/../tests/web_test_helpers";
+import { contains, defineModels, fields, models, mountView, onRpc } from "@web/../tests/web_test_helpers";
 
 class Employee extends models.Model {
     _name = "hr.employee";
@@ -215,5 +215,57 @@ test("hr org chart: basic manager render", async () => {
     });
     expect(".o_org_chart_entry_self").toHaveCount(1, {
         message: "the chart should have only once the current employee",
+    });
+});
+test("hr org chart: click on more managers button", async () => {
+    const makeManager = (id) => ({
+        direct_sub_count: 1,
+        id,
+        indirect_sub_count: 1,
+        job_id: id,
+        job_name: `Job ${id}`,
+        link: "fake_link",
+        name: `Manager ${id}`,
+    });
+
+    onRpc("/hr/get_org_chart", async (request) => {
+        const { params } = await request.json();
+        const maxLevel = params.context.max_level;
+        expect.step(`get_org_chart (max_level: ${maxLevel})`);
+        return {
+            children: [],
+            managers: Array.from({ length: maxLevel ? 3 : 2 }, (_, i) => makeManager(i + 1)),
+            managers_more: !maxLevel,
+            self: {
+                direct_sub_count: 0,
+                id: 1,
+                indirect_sub_count: 0,
+                job_id: 1,
+                job_name: "Gooroo",
+                link: "fake_link",
+                name: "Jethalal",
+            },
+        };
+    });
+    onRpc("/hr/get_redirect_model", () => "hr.employee");
+    await mountView({
+        type: "form",
+        resModel: "hr.employee",
+        arch: `
+            <form>
+                <field name="child_ids" widget="hr_org_chart"/>
+                <field name="id" invisible="1"/>
+            </form>`,
+        resId: 1,
+    });
+    expect.verifySteps(["get_org_chart (max_level: null)"]);
+    expect(".o_org_chart_group_up .o_org_chart_entry_manager").toHaveCount(2, {
+        message: "the chart should initially display 2 managers",
+    });
+    expect(".o_employee_more_managers").toHaveCount(1);
+    await contains(".o_employee_more_managers").click();
+    expect.verifySteps(["get_org_chart (max_level: 100)"]);
+    expect(".o_org_chart_group_up .o_org_chart_entry_manager").toHaveCount(3, {
+        message: "the chart should display the full manager hierarchy after clicking 'More'",
     });
 });
