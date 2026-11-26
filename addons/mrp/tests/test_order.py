@@ -5719,6 +5719,21 @@ class TestMrpOrder(TestMrpCommon):
         mo.button_plan()
         self.assertTrue(mo.is_planned)
 
+    def test_mo_manual_deadline_kept_on_plan(self):
+        """ The deadline set manually on a MO must not be reset to the deadline
+        of its finished moves when the MO is rescheduled and planned again. """
+        deadline = fields.Datetime.now() + timedelta(days=10)
+        mo = self.env['mrp.production'].create({
+            'bom_id': self.bom_3.id,
+            'date_deadline': deadline - timedelta(days=5),
+        })
+        mo.button_plan()
+        with Form(mo) as mo_form:
+            mo_form.date_deadline = deadline
+            mo_form.date_start = fields.Datetime.now() + timedelta(days=2)
+        mo.button_plan()
+        self.assertEqual(mo.date_deadline, deadline)
+
 
 @tagged('-at_install', 'post_install')
 class TestMrpOrderPostInstall(TestMrpCommon):
