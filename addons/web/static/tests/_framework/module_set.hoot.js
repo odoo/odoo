@@ -15,7 +15,7 @@ import {
 import { collectGarbageAndReport } from "@web/../lib/hoot/core/gc";
 
 import { disposeBootstrapInstances } from "./bootstrap.hoot";
-import { mockAssetsFactory } from "./mock_assets.hoot";
+import { mockAssetsFactory, mockEmojiLoaderFactory } from "./mock_assets.hoot";
 import { mockBrowserFactory } from "./mock_browser.hoot";
 import { mockCurrencyFactory } from "./mock_currency.hoot";
 import { mockFunctionsFactory } from "./mock_functions.hoot";
@@ -488,12 +488,12 @@ const CSRF_TOKEN = odoo.csrf_token;
 const DEFAULT_ADDONS = ["base", "web"];
 const MODULE_MOCKS_BY_NAME = new Map([
     // Fixed modules
-    ["@web/core/emoji_picker/emoji_loader", mockFixedFactory],
     ["@web/core/template_inheritance", mockFixedFactory],
     // Other mocks
     ["@web/core/assets", mockAssetsFactory],
     ["@web/core/browser/browser", mockBrowserFactory],
     ["@web/core/currency", mockCurrencyFactory],
+    ["@web/core/emoji_picker/emoji_loader", mockEmojiLoaderFactory],
     ["@web/core/templates", mockTemplatesFactory],
     ["@web/core/user", mockUserFactory],
     ["@web/core/utils/functions", mockFunctionsFactory],

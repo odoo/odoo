@@ -1,6 +1,7 @@
 import {
     after,
     animationFrame,
+    before,
     beforeEach,
     describe,
     expect,
@@ -12,6 +13,7 @@ import {
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { assets, loadBundle, loadCSS, loadJS } from "@web/core/assets";
+import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
 
 describe.current.tags("headless");
 
@@ -222,5 +224,39 @@ describe("cache shared by 2 tests", () => {
             [document, "SCRIPT", "text/javascript", "file1.js"],
             [document, "SCRIPT", "text/javascript", "file2.js"],
         ]);
+    });
+});
+
+describe("emoji loader shared by 2 tests", () => {
+    let loadingPromise;
+
+    before(() => {
+        loadingPromise = emojiLoader._loadingPromise;
+        emojiLoader._loadingPromise = null;
+    });
+
+    after(() => {
+        emojiLoader._loadingPromise = loadingPromise;
+    });
+
+    beforeEach(() => {
+        patchWithCleanup(assets, { globalCache: new Map() });
+        mockFetch((route) => {
+            expect.step(`fetch bundle: ${route.pathname}`);
+            // Simulate a response that comes after the end of the test.
+            return new Promise(() => {});
+        });
+    });
+
+    test("emojiLoader: bundle still pending at the end of the test", async () => {
+        emojiLoader.load();
+        await animationFrame();
+        expect.verifySteps(["fetch bundle: /web/bundle/web.assets_emoji"]);
+    });
+
+    test("emojiLoader: load bundle left pending by the previous test", async () => {
+        emojiLoader.load();
+        await animationFrame();
+        expect.verifySteps(["fetch bundle: /web/bundle/web.assets_emoji"]);
     });
 });

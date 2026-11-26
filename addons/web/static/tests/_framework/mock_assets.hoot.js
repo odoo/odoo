@@ -33,6 +33,22 @@ function startWithMockModules(moduleName, mockModules) {
     return result;
 }
 
+/**
+ * @param {Promise<unknown>} promise
+ * @param {() => void} forget
+ */
+function forgetIfPendingAfterTest(promise, forget) {
+    let isPending = true;
+    const onSettled = () => (isPending = false);
+    promise.then(onSettled, onSettled);
+    // Forget a promise pending at the end of its test: Hoot never settles its fetch.
+    after(() => {
+        if (isPending) {
+            forget();
+        }
+    });
+}
+
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
@@ -56,12 +72,8 @@ export function mockAssetsFactory(name) {
             const isCached = globalCache.has(bundleName);
             const promise = getBundle(bundleName);
             if (!isCached) {
-                let isPending = true;
-                const onSettled = () => (isPending = false);
-                promise.then(onSettled, onSettled);
-                // Remove a bundle pending at the end of its test: Hoot never settles its fetch.
-                after(() => {
-                    if (isPending && globalCache.get(bundleName) === promise) {
+                forgetIfPendingAfterTest(promise, () => {
+                    if (globalCache.get(bundleName) === promise) {
                         globalCache.delete(bundleName);
                     }
                 });
@@ -69,5 +81,32 @@ export function mockAssetsFactory(name) {
             return promise;
         };
         return assetsModule;
+    };
+}
+
+/**
+ * @param {string} name
+ */
+export function mockEmojiLoaderFactory(name) {
+    return function mockEmojiLoader() {
+        if (loader.modules.has(name)) {
+            return loader.modules.get(name);
+        }
+        const emojiLoaderModule = loader.startModule(name);
+        const { emojiLoader } = emojiLoaderModule;
+        const { load } = emojiLoader;
+        emojiLoader.load = function mockLoad() {
+            const isLoading = Boolean(emojiLoader._loadingPromise);
+            const promise = load.call(emojiLoader, ...arguments);
+            if (!isLoading) {
+                forgetIfPendingAfterTest(promise, () => {
+                    if (emojiLoader._loadingPromise === promise) {
+                        emojiLoader._loadingPromise = null;
+                    }
+                });
+            }
+            return promise;
+        };
+        return emojiLoaderModule;
     };
 }
