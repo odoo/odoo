@@ -3,6 +3,7 @@ import { closestBlock, isBlock } from "../utils/blocks";
 import {
     isAllowedContent,
     isButton,
+    closestSvgRoot,
     isContentEditable,
     isEmpty,
     isInPre,
@@ -278,7 +279,7 @@ export class DeletePlugin extends Plugin {
      */
     deleteBackward(selection, granularity) {
         const { endContainer, endOffset } = this.getNormalizedRange(selection);
-        if (!closestElement(endContainer).isContentEditable) {
+        if (!isContentEditable(closestElement(endContainer))) {
             return;
         }
 
@@ -310,7 +311,7 @@ export class DeletePlugin extends Plugin {
      */
     deleteForward(selection, granularity) {
         const { startContainer, startOffset } = this.getNormalizedRange(selection);
-        if (!closestElement(startContainer).isContentEditable) {
+        if (!isContentEditable(closestElement(startContainer))) {
             return;
         }
 
@@ -691,11 +692,11 @@ export class DeletePlugin extends Plugin {
             if (
                 isUnremovable ||
                 (!this.dependencies.selection.isNodeEditable(node) &&
-                    !node.parentElement?.isContentEditable)
+                    !isContentEditable(node.parentElement))
             ) {
                 return false;
             }
-            if (node.hasChildNodes() && node.isContentEditable) {
+            if (node.hasChildNodes() && isContentEditable(node)) {
                 node.before(...node.childNodes);
                 node.remove();
                 return false;
@@ -1193,7 +1194,7 @@ export class DeletePlugin extends Plugin {
             }
 
             // Define context: search is restricted to the closest editable root.
-            const isEditableRoot = (n) => n.isContentEditable && !n.parentNode.isContentEditable;
+            const isEditableRoot = (n) => isContentEditable(n) && !isContentEditable(n.parentNode);
             const editableRoot = findUpTo(node, this.editable.parentNode, isEditableRoot);
 
             let blockSwitch;
@@ -1359,6 +1360,11 @@ export class DeletePlugin extends Plugin {
     // If leaf is part of a contenteditable=false tree, consider its root as the
     // leaf instead.
     adjustedLeaf(leaf, refEditableRoot) {
+        // An inline SVG is a single leaf when seen from outside.
+        const svg = leaf && closestSvgRoot(leaf);
+        if (svg && !svg.contains(refEditableRoot)) {
+            return svg;
+        }
         const isNonEditable = (node) => !isContentEditable(node);
         const nonEditableRoot = leaf && findFurthest(leaf, refEditableRoot, isNonEditable);
         return nonEditableRoot || leaf;

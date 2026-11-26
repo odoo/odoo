@@ -5,7 +5,7 @@ import { getState, isFakeLineBreak, prepareUpdate } from "../utils/dom_state";
 import { DIRECTIONS, leftPos, rightPos } from "../utils/position";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { closestBlock, isBlock } from "../utils/blocks";
-import { nextLeaf } from "../utils/dom_info";
+import { isContentEditable, nextLeaf } from "../utils/dom_info";
 
 /**
  * @typedef {(() => void)[]} on_will_break_line_handlers
@@ -39,7 +39,7 @@ export class LineBreakPlugin extends Plugin {
             // this.shared.collapseIfZWS();
             this.dependencies.delete.deleteSelection();
             selection = this.dependencies.selection.getEditableSelection();
-        } else if (!closestElement(selection.anchorNode).isContentEditable) {
+        } else if (!isContentEditable(closestElement(selection.anchorNode))) {
             selection = this.dependencies.selection.getEditableSelection();
         }
 

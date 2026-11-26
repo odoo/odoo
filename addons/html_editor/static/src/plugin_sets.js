@@ -33,6 +33,7 @@ import { FontFamilyPlugin } from "./main/font/font_family_plugin";
 import { TranslatePlugin } from "./main/translate/translate_plugin";
 import { HintPlugin } from "./main/hint_plugin";
 import { InlineCodePlugin } from "./main/inline_code";
+import { InlineSvgPlugin } from "./main/inline_svg_plugin";
 import { LinkPastePlugin } from "./main/link/link_paste_plugin";
 import { LinkPlugin } from "./main/link/link_plugin";
 import { LinkSelectionPlugin } from "./main/link/link_selection_plugin";
@@ -149,6 +150,7 @@ export const MAIN_PLUGINS = [
     LinkPlugin,
     LinkPastePlugin,
     FeffPlugin,
+    InlineSvgPlugin,
     LinkSelectionPlugin,
     PowerButtonsPlugin,
     MoveNodePlugin,

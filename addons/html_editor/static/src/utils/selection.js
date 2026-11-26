@@ -1,5 +1,6 @@
 import { closestBlock, isBlock } from "./blocks";
 import {
+    closestSvgRoot,
     getDeepestPosition,
     isContentEditable,
     isNotEditableNode,
@@ -263,7 +264,14 @@ export function normalizeDeepCursorPosition(node, offset) {
         }
     }
     if (el) {
-        const leftInlineNode = leftLeafOnlyInScopeNotBlockEditablePath(el, elOffset).next().value;
+        // An inline SVG is a single leaf when seen from outside.
+        const asLeaf = (leaf) => {
+            const svg = leaf && closestSvgRoot(leaf);
+            return svg && !svg.contains(el) ? svg : leaf;
+        };
+        const leftInlineNode = asLeaf(
+            leftLeafOnlyInScopeNotBlockEditablePath(el, elOffset).next().value
+        );
         let leftVisibleEmpty = false;
         if (leftInlineNode) {
             leftVisibleEmpty =
@@ -271,12 +279,13 @@ export function normalizeDeepCursorPosition(node, offset) {
             [node, offset] = leftVisibleEmpty ? rightPos(leftInlineNode) : endPos(leftInlineNode);
         }
         if (!leftInlineNode || leftVisibleEmpty) {
-            const rightInlineNode = rightLeafOnlyInScopeNotBlockEditablePath(el, elOffset).next()
-                .value;
+            const rightInlineNode = asLeaf(
+                rightLeafOnlyInScopeNotBlockEditablePath(el, elOffset).next().value
+            );
             if (rightInlineNode) {
                 const closest = closestElement(rightInlineNode);
                 const rightVisibleEmpty =
-                    isSelfClosingElement(rightInlineNode) || !closest || !closest.isContentEditable;
+                    isSelfClosingElement(rightInlineNode) || !isContentEditable(closest);
                 if (!(leftVisibleEmpty && rightVisibleEmpty)) {
                     [node, offset] = rightVisibleEmpty
                         ? leftPos(rightInlineNode)

@@ -1,6 +1,6 @@
 import { Plugin, shared } from "@html_editor/plugin";
 import { cleanEmptyAncestors, cleanTextNode } from "@html_editor/utils/dom";
-import { isTextNode, isZwnbsp } from "@html_editor/utils/dom_info";
+import { isContentEditable, isSvgElement, isTextNode, isZwnbsp } from "@html_editor/utils/dom_info";
 import { prepareUpdate } from "@html_editor/utils/dom_state";
 import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
 import { leftPos, rightPos } from "@html_editor/utils/position";
@@ -101,7 +101,7 @@ export class FeffPlugin extends Plugin {
                 excludeParam?.(node) ||
                 (this.checkPredicates("is_feff_legit_predicates", node) ?? false);
         }
-        const isEditable = (node) => node.parentElement.isContentEditable;
+        const isEditable = (node) => isContentEditable(node.parentElement);
         const isFocusedLink = (node) => closestElement(node, "a.o_link_in_selection");
         const composedFilter = (node) =>
             this.hasFeff(node) && isEditable(node) && !exclude(node) && !isFocusedLink(node);
@@ -117,7 +117,9 @@ export class FeffPlugin extends Plugin {
                 cursors,
                 (node) =>
                     node.hasAttribute("data-oe-zws-empty-inline") ||
-                    this.dependencies.properties.get(node, "removable", true) !== true
+                    this.dependencies.properties.get(node, "removable", true) !== true ||
+                    // E.g. an empty SVG <text> is still meaningful.
+                    isSvgElement(node)
             );
             restoreSpaces();
         }

@@ -111,6 +111,11 @@ export function isBlock(node) {
         // block.
         return false;
     }
+    if (node.namespaceURI === "http://www.w3.org/2000/svg" && tagName !== "SVG") {
+        // The content of an inline SVG is not laid out in CSS boxes: only the
+        // <svg> itself can be a block.
+        return false;
+    }
     // The node might not be in the DOM, in which case it has no CSS values.
     if (!node.isConnected) {
         return blockTagNames.includes(tagName);
