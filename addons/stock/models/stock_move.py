@@ -1541,6 +1541,8 @@ Please change the quantity done or the rounding precision in your settings.""",
         keys = (self.reference_ids, self.location_id, self.location_dest_id, self.picking_type_id)
         if self.move_orig_ids.picking_id and not self.reference_ids:
             keys += (self.move_orig_ids.picking_id, )
+        if self.partner_id and not self.reference_ids:
+            keys += (self.partner_id,)
         return keys
 
     def _search_picking_for_assignation_domain(self):
