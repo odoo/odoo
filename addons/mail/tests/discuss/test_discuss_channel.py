@@ -1508,6 +1508,31 @@ class TestChannelInternals(MailCommon, HttpCase):
         self.assertFalse(meeting.default_display_mode)
 
     @users("employee")
+    def test_convert_meeting_to_group_chat(self):
+        meeting = self.env["discuss.channel"]._create_group(
+            users_to=self.user_employee,
+            default_display_mode="video_full_screen",
+        )
+        self.authenticate(self.env.user.login, self.env.user.login)
+        with self.assertNoLogs("odoo.http", "WARNING"):  # no read-only retry
+            self.make_jsonrpc_request(
+                "/mail/store",
+                {
+                    "fetch_params": [
+                        [
+                            "/discuss/channel/meeting_to_group_chat",
+                            {"channel_id": meeting.id},
+                        ],
+                    ],
+                },
+            )
+        self.assertFalse(meeting.default_display_mode)
+        self.assertIn(
+            'data-oe-type="meeting_to_group_chat"',
+            meeting.message_ids[0].body,
+        )
+
+    @users("employee")
     def test_chat_is_kept_when_its_correspondent_is_deleted(self):
         partner = self.env["res.partner"].sudo().create({"name": "Gone Correspondent"})
         chat = self.env["discuss.channel"]._get_or_create_chat(partner.ids)
