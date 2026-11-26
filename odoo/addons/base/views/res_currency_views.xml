@@ -17,6 +17,7 @@
             <field name="arch" type="xml">
                 <list string="Currency Rates" editable="bottom">
                     <field name="name"/>
+                    <field name="currency_id" column_invisible="True"/> <!-- needed for default_currency_id and the rate computes on new lines -->
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="company_rate" digits="[12,12]"/>
                     <field name="inverse_company_rate" digits="[12,12]"/>
