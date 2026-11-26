@@ -191,3 +191,22 @@ class TestOwnChecks(L10nLatamCheckTest):
             lambda l: l.account_id.account_type in ('asset_receivable', 'liability_payable')
         )
         self.assertTrue(payment_line.reconciled, "Original payment line should be reconciled with the void move")
+
+    def test_own_checks_other_currency_balanced(self):
+        """ The rounding difference of the checks goes to the biggest one: 30 EUR at 3.0 = 10.00 = 3.34 + 3.33 + 3.33. """
+        eur = self.setup_other_currency('EUR', rates=[('2017-01-01', 3)], company_id=self.bank_journal.company_id.id)
+        payment = self.env['account.payment'].create({
+            'payment_type': 'outbound',
+            'partner_id': self.partner_a.id,
+            'journal_id': self.bank_journal.id,
+            'currency_id': eur.id,
+            'date': '2017-01-01',
+            'payment_method_line_id': self.bank_journal._get_available_payment_method_lines('outbound').filtered_domain([('code', '=', 'own_checks')])[:1].id,
+            'l10n_latam_new_check_ids': [Command.create({'payment_date': '2017-06-01', 'amount': 10.0}) for _i in range(3)],
+        })
+        payment.action_post()
+        self.assertRecordValues(payment.l10n_latam_new_check_ids.outstanding_line_id, [
+            {'amount_currency': -10.0, 'balance': -3.34},
+            {'amount_currency': -10.0, 'balance': -3.33},
+            {'amount_currency': -10.0, 'balance': -3.33},
+        ])
