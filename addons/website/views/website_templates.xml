@@ -1044,7 +1044,7 @@
                     <!-- Brand -->
                     <t t-call="website.placeholder_header_brand"
                         _link_class.f="mw-100 mx-auto"/>
-                    <ul class="o_header_search_right_col navbar-nav align-items-center gap-2 ms-auto ps-4 w-75">
+                    <ul class="o_header_search_right_col navbar-nav align-items-center justify-content-end gap-2 ms-auto ps-4 w-75">
                         <!-- Search bar -->
                         <t t-call="website.placeholder_header_search_box"
                             _submit_classes.f="rounded-end-pill pe-3 bg-o-color-3"
@@ -1082,7 +1082,7 @@
         <attribute name="_link_class.f">order-1 mx-auto mw-100</attribute>
     </xpath>
     <xpath expr="//ul[hasclass('o_header_search_right_col')]" position="attributes">
-        <attribute name="class" add="order-0 me-4" remove="ps-3 ms-auto" separator=" "/>
+        <attribute name="class" add="order-0 me-4" remove="ps-4 ms-auto justify-content-end" separator=" "/>
     </xpath>
 </template>
 
