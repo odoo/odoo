@@ -40,7 +40,6 @@ export class CustomMediaDialog extends MediaDialog {
                 oldMediaNode: this.props.media,
                 selectedMedia: nonPreloadedAttachments,
                 extraClassesToAdd: this.extraClassesToAdd(),
-                extraClassesToRemove: this.initialIconClasses,
             });
             const savedAttachments = elements.map((element) => ({
                 id: parseInt(element.dataset.attachmentId),

@@ -37,7 +37,7 @@ export function extractUnmappedAttachmentsIds(content) {
  * @typedef {((arg: { newMediaEl: HTMLElement }) => void)[]} on_media_replaced_handlers
  *
  * @typedef {{
- *      id: "DOCUMENTS" | "ICONS" | "IMAGES" | "VIDEOS";
+ *      id: "DOCUMENTS" | "IMAGES" | "VIDEOS";
  *      title: import("plugins").LazyTranslatedString;
  *      Component: import("@odoo/owl").Component;
  *      sequence: number;
@@ -137,11 +137,8 @@ export class MediaPlugin extends Plugin {
             categoryId: "media",
             commandId: "insertMedia",
             // Evaluation is deferred because this.availableTabs is only ready after setup.
-            // Icons have their own command, see the icon plugin.
             get keywords() {
-                return self.availableTabs
-                    .filter((tab) => tab.id !== TABS.ICONS.id)
-                    .map((tab) => tab.title);
+                return self.availableTabs.map((tab) => tab.title);
             },
         };
     }
@@ -266,7 +263,6 @@ export class MediaPlugin extends Plugin {
             oldMediaNode: sourceEl,
             selectedMedia: [{ ...attachment, mediaType: "attachment" }],
             extraClassesToAdd: [],
-            extraClassesToRemove: [],
         });
         await this.triggerAsync("on_will_save_media_dialog_handlers", [imageEl], { node });
         await this.onSaveMediaDialog(imageEl, { node });

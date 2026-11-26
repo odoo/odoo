@@ -34,17 +34,27 @@ test("The Replace option of an icon opens the icon picker", async () => {
     expect(":iframe .oi").toHaveClass("oi-filled");
 });
 
-test("The icons of the social media snippet are still replaced from the media dialog", async () => {
-    // They can be replaced by an image as well.
+test("The icons of the social media snippet are replaced from the icon picker", async () => {
     await setupWebsiteBuilder(
         `<div class="s_social_media" data-snippet="s_social_media">
             <a href="https://www.example.com"><i class="oi" data-icon="search"/></a>
         </div>`
     );
     await dblclick(":iframe .s_social_media .oi");
+    await waitFor(".o-IconPicker");
+    expect(".o_select_media_dialog").toHaveCount(0);
+});
+
+test("The images of the social media snippet are only replaced by images", async () => {
+    await setupWebsiteBuilder(
+        `<div class="s_social_media" data-snippet="s_social_media">
+            <a href="https://www.example.com"><img class="social_media_img" src="/web/static/img/logo.png"/></a>
+        </div>`
+    );
+    await dblclick(":iframe .s_social_media img");
     await waitFor(".o_select_media_dialog");
-    expect(".o-IconPicker").toHaveCount(0);
-    expect(".o_select_media_dialog .nav-link:contains('Images')").toHaveCount(1);
+    expect(".o_select_media_dialog .o_notebook_headers .nav-link").toHaveCount(1);
+    expect(".o_select_media_dialog .o_notebook_headers .nav-link").toHaveText("Images");
 });
 
 function mockIconFontCustomization() {

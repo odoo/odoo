@@ -820,6 +820,9 @@ class HTML_Editor(Controller):
         else:
             return {'error': response.status_code}
 
+    # TODO: remove with the IconSelector component, once Studio no longer uses
+    # it (task-5469997); the icon picker uses `/html_editor/icons` instead.
+    # `search_icons` itself stays: enterprise ai_website uses it.
     @route('/html_editor/icons_search', type='jsonrpc', auth='user', replica=True)
     def icons_search(self, needle=''):
         """Search icons by name and tags.

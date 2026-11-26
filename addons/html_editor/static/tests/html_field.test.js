@@ -1365,7 +1365,6 @@ test("MediaDialog contains 'Videos' tab by default in html field", async () => {
     expect(queryAllTexts(".o_select_media_dialog .nav-tabs .nav-item")).toEqual([
         "Images",
         "Documents",
-        "Icons",
         "Videos",
     ]);
 });
@@ -1391,7 +1390,6 @@ test("MediaDialog does not contain 'Videos' tab in html field when 'allowVideo' 
     expect(queryAllTexts(".o_select_media_dialog .nav-tabs .nav-item")).toEqual([
         "Images",
         "Documents",
-        "Icons",
     ]);
 });
 
@@ -1423,7 +1421,6 @@ test("MediaDialog does not contain 'Videos' tab when sanitize = true and embedde
     expect(queryAllTexts(".o_select_media_dialog .nav-tabs .nav-item")).toEqual([
         "Images",
         "Documents",
-        "Icons",
     ]);
 });
 
@@ -1455,7 +1452,6 @@ test("MediaDialog contains 'Videos' tab when sanitize_tags = true and 'allowVide
     expect(queryAllTexts(".o_select_media_dialog .nav-tabs .nav-item")).toEqual([
         "Images",
         "Documents",
-        "Icons",
         "Videos",
     ]);
 });
@@ -1512,7 +1508,6 @@ test("MediaDialog does not contain 'Documents' tab in html field when 'allowMedi
     await expectElementCount(".o_select_media_dialog", 1);
     expect(queryAllTexts(".o_select_media_dialog .nav-tabs .nav-item")).toEqual([
         "Images",
-        "Icons",
         "Videos",
     ]);
 });

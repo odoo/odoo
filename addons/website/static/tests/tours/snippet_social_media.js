@@ -38,20 +38,26 @@ const preventRaceConditionStep = [
 const replaceIconByImage = function (url) {
     return [
         {
-            content: "Replace the icon by an image",
+            content: "Open the icon picker to replace the icon",
             trigger: `:iframe .s_social_media a[href='${url}'] i.oi`,
             run: "dblclick",
         },
         {
-            content: "Go to the Images tab in the media dialog",
-            trigger:
-                ".o_select_media_dialog .o_notebook_headers .nav-item button:contains('Images')",
-            run: "click",
+            content: "Upload an image instead of the icon",
+            trigger: ".o-IconPicker .o-IconPicker-upload",
+            async run() {
+                // Stand in for the file selector the upload button opens.
+                const blob = await (await fetch("/web/static/img/logo.png")).blob();
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(new File([blob], "logo.png", { type: "image/png" }));
+                const inputEl = document.querySelector(".o-IconPicker input[type=file]");
+                inputEl.files = dataTransfer.files;
+                inputEl.dispatchEvent(new Event("change", { bubbles: true }));
+            },
         },
         {
-            content: "Select the image",
-            trigger: ".o_select_media_dialog .o_button_area[aria-label='landscape_md_1.jpg']",
-            run: "click",
+            content: "Check that the icon is replaced by the image",
+            trigger: `:iframe .s_social_media a[href='${url}'] img`,
         },
         ...preventRaceConditionStep,
     ];
@@ -193,7 +199,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Select a new icon",
-            trigger: ".o_select_media_dialog [data-icon='favorite']",
+            trigger: ".o-IconPicker .o-IconPicker-icon[data-icon='favorite']:not(.oi-filled)",
             run: "click",
         },
         {

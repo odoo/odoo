@@ -1,5 +1,4 @@
 import { ImageSelector } from "./image_selector";
-import { IconSelector } from "./icon_selector";
 import { _t } from "@web/core/l10n/translation";
 
 export const TABS = {
@@ -8,12 +7,6 @@ export const TABS = {
         title: _t("Images"),
         Component: ImageSelector,
         sequence: 10,
-    },
-    ICONS: {
-        id: "ICONS",
-        title: _t("Icons"),
-        Component: IconSelector,
-        sequence: 20,
     },
 };
 
@@ -36,22 +29,12 @@ export async function renderMedia({
     oldMediaNode,
     selectedMedia,
     extraClassesToAdd,
-    extraClassesToRemove,
 }) {
     const activeTabComponent = availableTabs[activeTab].Component;
     const elements = await activeTabComponent.createElements(selectedMedia, { orm: orm, document });
     elements.forEach((element) => {
         if (oldMediaNode) {
-            const oldMediaClasses = [...oldMediaNode.classList].filter(
-                // If we replace an existing icon from the media dialog, we
-                // don't want to keep the filled state if the new icon is not
-                // filled. We also want to remove FA classes in case we replace
-                // a legacy FA icon.
-                (cls) =>
-                    !["oi-filled", "fab", "fad", "far", "fa"].includes(cls) &&
-                    !cls.startsWith("fa-")
-            );
-            element.classList.add(...oldMediaClasses);
+            element.classList.add(...oldMediaNode.classList);
             const style = oldMediaNode.getAttribute("style");
             if (style) {
                 element.setAttribute("style", style);
@@ -100,7 +83,6 @@ export async function renderMedia({
 
         element.classList.add(...extraClassesToAdd);
 
-        element.classList.remove(...extraClassesToRemove);
         element.classList.remove("o_modified_image_to_save");
         element.classList.remove("oe_edited_link");
         element.classList.add(...activeTabComponent.mediaSpecificClasses);

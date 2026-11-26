@@ -264,7 +264,7 @@ test("Edit share icon", async () => {
     await dragAndDropSnippet("s_inline_text");
     await dragAndDropSnippet("s_share");
     await contains(":iframe .s_share a i").dblclick();
-    expect(".modal-content").toBeDisplayed();
+    expect(".o-IconPicker").toBeDisplayed();
     await press("Escape");
     await contains(":iframe .s_share a").dblclick();
     await animationFrame();

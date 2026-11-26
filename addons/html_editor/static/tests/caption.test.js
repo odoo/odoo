@@ -555,11 +555,10 @@ test("remove caption when replacing an image with other media", async () => {
     onRpc("ir.attachment", "search_read", () => [
         {
             id: 1,
-            name: "logo",
-            mimetype: "image/png",
-            image_src: "/web/static/img/logo2.png",
-            access_token: false,
+            name: "file.txt",
+            mimetype: "text/plain",
             public: true,
+            image_src: "",
         },
     ]);
     const { el } = await setupEditorWithEmbeddedCaption(
@@ -575,13 +574,13 @@ test("remove caption when replacing an image with other media", async () => {
     await waitFor(".o-we-toolbar button[name='replace_image']");
     await click("button[name='replace_image']");
     await waitFor(".o_select_media_dialog");
-    await click(".modal .modal-body .nav-item:nth-child(3) button"); // Icons
-    await waitFor(".modal .modal-body [data-icon='favorite']");
-    await click(".modal .modal-body [data-icon='favorite']");
+    await click(".modal .modal-body .nav-link:contains('Documents')");
+    await waitFor(".o_we_attachment_highlight .o_button_area");
+    await click(".o_we_attachment_highlight .o_button_area");
+    await waitFor(".odoo-editor-editable .o_file_box");
     expect("img[src='/web/static/img/logo.png']").toHaveCount(0);
-    expect(getContent(el)).toBe(
-        '<p>\ufeff<span class="oi" data-icon="favorite" contenteditable="false">\u200b</span>[]\ufeff</p><p>abc</p>'
-    );
+    expect("figure, figcaption").toHaveCount(0);
+    expect(getContent(el)).toInclude("<p>abc</p>");
 });
 
 test("edit caption after replacing image", async () => {

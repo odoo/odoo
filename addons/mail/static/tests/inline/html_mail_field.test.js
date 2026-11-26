@@ -168,11 +168,10 @@ test("HtmlMail add icon and save inline html", async function () {
         </form>`,
     });
     setSelectionInHtmlField();
-    await insertText(htmlEditor, "/image");
+    await insertText(htmlEditor, "/icon");
     await press("enter");
 
-    await contains("button.nav-link:contains('Icons')").click();
-    await contains("span[data-icon='local_bar']").click();
+    await contains(".o-IconPicker-icon[data-icon='local_bar']").click();
 
     await clickSave();
     await expect.waitForSteps(["web_save"]);

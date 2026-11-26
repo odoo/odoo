@@ -21,7 +21,7 @@ import { patch } from "@web/core/utils/patch";
 
 describe.current.tags("desktop");
 
-test("should add an icon from the media modal dialog", async () => {
+test("should add an icon from the icon picker", async () => {
     const { getEditor } = await setupHTMLBuilder(`<p>x</p>`);
     const editor = getEditor();
     const p = editor.document.querySelector("p");
@@ -32,11 +32,10 @@ test("should add an icon from the media modal dialog", async () => {
         focusNode: p,
         focusOffset: 1,
     });
-    await insertText(editor, "/image");
+    await insertText(editor, "/icon");
     await animationFrame();
     await contains(".o-we-command").click();
-    await contains(".modal .modal-body .nav-item:nth-child(3) button").click();
-    await contains(".modal .modal-body [data-icon='favorite']").click();
+    await contains(".o-IconPicker-icon[data-icon='favorite']:not(.oi-filled)").click();
     expect(p).toHaveInnerHTML(
         `x<span class="oi" data-icon="favorite" contenteditable="false">\u200b</span>`
     );

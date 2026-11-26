@@ -86,11 +86,15 @@ export class MediaWebsitePlugin extends Plugin {
 
     /**
      * Opens the media dialog to replace the selected media, or the icon picker
-     * to replace an icon (see `isReplacedFromIconPicker`).
+     * to replace an icon.
      *
      * @param {HTMLElement} mediaEl the media element to replace
      */
     async replaceMedia(mediaEl) {
+        if (isIconElement(mediaEl)) {
+            this.dependencies.icon.openIconPicker({ iconEl: mediaEl });
+            return;
+        }
         const sel = this.dependencies.selection.getEditableSelection();
         const editableEl =
             closestElement(mediaEl || sel.startContainer, ".o_savable") || this.editable;
@@ -99,27 +103,7 @@ export class MediaWebsitePlugin extends Plugin {
             "replace_media_dialog_params_processors",
             this.getMediaDialogProps({ mediaEl, closestSnippetEl, editableEl })
         );
-        if (this.isReplacedFromIconPicker(mediaEl, params)) {
-            this.dependencies.icon.openIconPicker({ iconEl: mediaEl });
-            return;
-        }
         await this.dependencies.media.openMediaDialog(params, editableEl);
-    }
-
-    /**
-     * An icon is replaced from the icon picker, unless the media dialog params
-     * explicitly allow other kinds of media in its place (e.g. an image for
-     * the icons of the social media snippets).
-     *
-     * @param {HTMLElement} mediaEl
-     * @param {Object} params the media dialog params
-     * @returns {boolean}
-     */
-    isReplacedFromIconPicker(mediaEl, params) {
-        return (
-            isIconElement(mediaEl) &&
-            (!params.visibleTabs || params.visibleTabs.every((tab) => tab === "ICONS"))
-        );
     }
 
     getMediaDialogProps({ mediaEl, closestSnippetEl, editableEl }) {

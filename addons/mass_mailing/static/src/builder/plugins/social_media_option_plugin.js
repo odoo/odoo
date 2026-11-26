@@ -53,7 +53,6 @@ export class MassMailingSocialMediaOptionPlugin extends Plugin {
         ],
         clean_for_save_processors: this.cleanForSave.bind(this),
         normalize_processors: this.normalize.bind(this),
-        replace_media_dialog_params_processors: this.applyIconsMediaDialogParams.bind(this),
     };
 
     setup() {
@@ -110,16 +109,6 @@ export class MassMailingSocialMediaOptionPlugin extends Plugin {
             }
         }
         return rootEl;
-    }
-
-    applyIconsMediaDialogParams(params) {
-        if (
-            params.node?.nodeType === Node.ELEMENT_NODE &&
-            params.node.matches(".s_social_media .s_social_media_links .oi")
-        ) {
-            params.visibleTabs = ["ICONS"];
-        }
-        return params;
     }
 
     renderPlaceholderEl() {
