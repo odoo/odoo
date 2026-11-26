@@ -1,12 +1,12 @@
-import { AttachmentUploadService } from "@mail/core/common/attachment_upload_service";
+import { AttachmentUploadPlugin } from "@mail/core/common/attachment_upload_plugin";
 
 import { patch } from "@web/core/utils/patch";
 import { session } from "@web/session";
 import { _t } from "@web/core/l10n/translation";
 
-patch(AttachmentUploadService.prototype, {
-    setup(env, services) {
-        super.setup(env, services);
+patch(AttachmentUploadPlugin.prototype, {
+    setup() {
+        super.setup();
         this.uploadingCloudFiles = new Map();
         window.addEventListener('beforeunload', () =>
             this.abortByAttachmentId.forEach(abort => abort())

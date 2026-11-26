@@ -8,6 +8,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { Store } from "@mail/../tests/mock_server/store";
+import { OutOfFocusPlugin } from "@mail/core/common/out_of_focus_plugin";
 import { describe, expect, test } from "@odoo/hoot";
 import { getService, serverState } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
@@ -34,7 +35,7 @@ for (const subscribed of [false, true]) {
                 };
             },
         });
-        patch(getService("mail.out_of_focus"), {
+        patch(getService(OutOfFocusPlugin), {
             sendNotification() {
                 expect.step("local notification");
             },

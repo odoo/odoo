@@ -1,5 +1,6 @@
 import { dataUrlToBlob } from "@mail/core/common/attachment_uploader_hook";
-import { onWillStart, Component, signal, useProps } from "@odoo/owl";
+import { AttachmentUploadPlugin } from "@mail/core/common/attachment_upload_plugin";
+import { onWillStart, Component, signal, usePlugin, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
@@ -22,7 +23,7 @@ export class AccountMoveSendAttachmentsSelector extends Component {
     setup() {
         this.orm = useService("orm");
         this.mailStore = useService("mail.store");
-        this.attachmentUploadService = useService("mail.attachment_upload");
+        this.attachmentUploadService = usePlugin(AttachmentUploadPlugin);
 
         onWillStart(async () => {
             const moveAttachments = await this.orm.searchRead(

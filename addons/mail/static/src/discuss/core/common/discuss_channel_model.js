@@ -13,7 +13,7 @@ const commandRegistry = registry.category("discuss.channel_commands");
 const { DateTime } = luxon;
 
 /** @import { AwaitChatHubInit } from "@mail/core/common/chat_hub_model" */
-/** @typedef {import("@mail/discuss/call/common/rtc_service").ContextOptions} ContextOptions */
+/** @typedef {import("@mail/discuss/call/common/rtc_model").ContextOptions} ContextOptions */
 
 export class DiscussChannel extends Record {
     static _name = "discuss.channel";
@@ -769,7 +769,7 @@ export class DiscussChannel extends Record {
     /** @param {import("models").Message} message */
     async notifyMessageToUser(message) {
         if (this.shouldNotifyMessageToUser(message)) {
-            this.store.env.services["mail.out_of_focus"].notify(message, this.thread);
+            this.store.outOfFocus.notify(message, this.thread);
         }
     }
 

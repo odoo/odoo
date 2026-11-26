@@ -13,6 +13,7 @@ import {
     getEditorFromComposerEl,
     insertTextInComposer,
 } from "@mail/../tests/mail_test_helpers_composer";
+import { ComposerPlugin } from "@mail/core/common/composer_plugin";
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, queryFirst, waitUntil } from "@odoo/hoot-dom";
 import { getService } from "@web/../tests/web_test_helpers";
@@ -145,7 +146,7 @@ test("html composer does not linkify URLs of inline code on post", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     await insertTextInComposer(".o-mail-Composer", "see `https://www.odoo.com` please");
     await contains(".o-mail-Composer-html code.o_inline_code");

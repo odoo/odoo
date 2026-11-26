@@ -1,3 +1,4 @@
+import { VoiceMessagePlugin } from "@mail/discuss/voice_message/common/voice_message_plugin";
 import {
     Component,
     computed,
@@ -65,7 +66,7 @@ export class VoicePlayer extends Component {
         this.props = useProps({
             attachment: types.instanceOf(this.store["ir.attachment"]),
         });
-        this.voiceMessageService = useService("discuss.voice_message");
+        this.voiceMessageService = usePlugin(VoiceMessagePlugin);
         this.notification = usePlugin(NotificationPlugin);
         this.state = proxy({
             playing: false,

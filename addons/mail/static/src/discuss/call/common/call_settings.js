@@ -39,7 +39,7 @@ export class CallSettings extends Component {
         this.notification = usePlugin(NotificationPlugin);
         this.showCameraPreview = signal(false);
         this.store = useService("mail.store");
-        this.rtc = useService("discuss.rtc");
+        this.rtc = this.store.rtc;
         this.microphoneVolume = useMicrophoneVolume();
         this.pttExtService = usePlugin(PttExtensionPlugin);
         useListener(window, "keydown", (ev) => this._onKeyDown(ev), { capture: true });

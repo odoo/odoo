@@ -1,21 +1,24 @@
-import { proxy } from "@odoo/owl";
+import { BusPlugin } from "@bus/services/bus_plugin";
+import { OutOfFocusPlugin } from "@mail/core/common/out_of_focus_plugin";
+import { StorePlugin } from "@mail/core/common/store_plugin";
 
-import { registry } from "@web/core/registry";
+import { Plugin, usePlugin } from "@odoo/owl";
 
-export class MailCoreWeb {
-    /**
-     * @param {import("@web/env").OdooEnv} env
-     * @param {import("services").ServiceFactories} services
-     */
-    constructor(env, services) {
-        this.env = env;
-        this.busService = services.bus_service;
-        this.store = services["mail.store"];
-    }
+import { GlobalBusPlugin } from "@web/core/global_bus_plugin";
+import { services } from "@web/core/services";
+
+export class MailCoreWebPlugin extends Plugin {
+    /** Started with the store it uses (see `StorePlugin`). */
+    static sequence = 110;
+
+    #busService = usePlugin(BusPlugin);
+    #bus = usePlugin(GlobalBusPlugin).bus;
+    #outOfFocus = usePlugin(OutOfFocusPlugin);
+    #store = usePlugin(StorePlugin);
 
     setup() {
-        this.busService.subscribe("mail.activity/updated", (payload, { id: notifId }) => {
-            if (notifId <= this.store.activity_counter_bus_id) {
+        this.#busService.subscribe("mail.activity/updated", (payload, { id: notifId }) => {
+            if (notifId <= this.#store.activity_counter_bus_id) {
                 return;
             }
             let countDiff = 0;
@@ -26,36 +29,36 @@ export class MailCoreWeb {
             } else if (payload.activity_deleted) {
                 countDiff = -1;
             }
-            this.store.activityCounter = Math.max(this.store.activityCounter + countDiff, 0);
+            this.#store.activityCounter = Math.max(this.#store.activityCounter + countDiff, 0);
         });
-        this.env.bus.addEventListener("mail.message/delete", ({ detail: { message } }) => {
+        this.#bus.addEventListener("mail.message/delete", ({ detail: { message } }) => {
             if (message.needaction) {
                 this._dropFromNotificationCounter([message.id]);
             }
         });
-        this.busService.subscribe("mail.message/notification", (payload, { id: notifId }) => {
+        this.#busService.subscribe("mail.message/notification", (payload, { id: notifId }) => {
             const { message_id: messageId, store_data } = payload;
-            this.store.insert(store_data);
+            this.#store.insert(store_data);
             /** @type {import("models").Message} */
-            const message = this.store["mail.message"].get(messageId);
+            const message = this.#store["mail.message"].get(messageId);
             if (message.thread && notifId > message.thread.message_needaction_counter_bus_id) {
                 message.thread.message_needaction_counter++;
             }
-            if (this.store.self_user?.im_status !== "busy") {
-                this.store.env.services["mail.out_of_focus"].notify(message);
+            if (this.#store.self_user?.im_status !== "busy") {
+                this.#outOfFocus.notify(message);
             }
         });
-        this.busService.subscribe("mail.message/mark_as_unread", (payload, { id: notifId }) => {
+        this.#busService.subscribe("mail.message/mark_as_unread", (payload, { id: notifId }) => {
             const { message_ids: messageIds, store_data } = payload;
-            this.store.insert(store_data);
+            this.#store.insert(store_data);
             for (const messageId of messageIds) {
-                const message = this.store["mail.message"].get(messageId);
+                const message = this.#store["mail.message"].get(messageId);
                 if (message.thread && notifId > message.thread.message_needaction_counter_bus_id) {
                     message.thread.message_needaction_counter++;
                 }
             }
         });
-        this.busService.subscribe("mail.message/mark_as_read", (payload, { id: notifId }) => {
+        this.#busService.subscribe("mail.message/mark_as_read", (payload, { id: notifId }) => {
             const { message_ids: messageIds } = payload;
             const unloadedMessageIds = [];
             for (const messageId of messageIds) {
@@ -64,7 +67,7 @@ export class MailCoreWeb {
                 // Furthermore, server should not send back all messageIds marked as read
                 // but something like last read messageId or something like that.
                 // (just imagine you mark 1000 messages as read ... )
-                const message = this.store["mail.message"].get(messageId);
+                const message = this.#store["mail.message"].get(messageId);
                 if (!message) {
                     unloadedMessageIds.push(messageId);
                     continue;
@@ -90,7 +93,7 @@ export class MailCoreWeb {
             "message",
             ({ data: { action, data } }) => {
                 if (action === "OPEN_RECORD") {
-                    this.store["mail.thread"].insert({ id: data.id, model: data.model }).open();
+                    this.#store["mail.thread"].insert({ id: data.id, model: data.model }).open();
                 }
             }
         );
@@ -103,7 +106,7 @@ export class MailCoreWeb {
      * @param {number[]} messageIds
      */
     _dropFromNotificationCounter(messageIds) {
-        const tab = this.store.messagingMenu.notificationTab;
+        const tab = this.#store.messagingMenu.notificationTab;
         // Notifications handled by email have no tab, hence no counter to update.
         if (!tab) {
             return;
@@ -113,17 +116,4 @@ export class MailCoreWeb {
     }
 }
 
-export const mailCoreWeb = {
-    dependencies: ["bus_service", "mail.store"],
-    /**
-     * @param {import("@web/env").OdooEnv} env
-     * @param {import("services").ServiceFactories} services
-     */
-    start(env, services) {
-        const mailCoreWeb = proxy(new MailCoreWeb(env, services));
-        mailCoreWeb.setup();
-        return mailCoreWeb;
-    },
-};
-
-registry.category("services").add("mail.core.web", mailCoreWeb);
+services.add(MailCoreWebPlugin);

@@ -157,7 +157,7 @@ For more specific needs, you may also assign custom-defined actions
     # undeclared model or field is not supported.
     #
     # A lazy bundle loaded after the store is made never runs its patch of
-    # `Store.setup`: what it starts on the store (an `onChange`) goes in a service.
+    # `Store.setup`: what it starts on the store (an `onChange`) goes in a plugin.
     #
     # Overrides for a specific folder must be declared in all the corresponding
     # bundles. In particular, overrides of common need to be in all 4 bundles.
@@ -366,7 +366,7 @@ For more specific needs, you may also assign custom-defined actions
         ],
         'im_livechat.assets_embed_cors': [
             ('include', 'im_livechat.assets_embed_external'),
-            ('remove', 'mail/static/src/core/common/out_of_focus_service_patch.js'),
+            ('remove', 'mail/static/src/core/common/out_of_focus_plugin_patch.js'),
             ('remove', 'web/static/src/core/browser/title_plugin.js'),
         ],
         'im_livechat.embed_assets_unit_tests_setup': [

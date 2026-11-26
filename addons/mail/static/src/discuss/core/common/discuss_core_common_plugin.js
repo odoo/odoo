@@ -1,31 +1,32 @@
+import { BusPlugin } from "@bus/services/bus_plugin";
+import { PresencePlugin } from "@bus/services/presence_plugin";
+import { StorePlugin } from "@mail/core/common/store_plugin";
 import { ChannelMember } from "@mail/discuss/core/common/channel_member_model";
 
-import { proxy } from "@odoo/owl";
+import { Plugin, usePlugin } from "@odoo/owl";
 
-import { registry } from "@web/core/registry";
+import { GlobalBusPlugin } from "@web/core/global_bus_plugin";
+import { services } from "@web/core/services";
 
-export class DiscussCoreCommon {
-    /**
-     * @param {import("@web/env").OdooEnv} env
-     * @param {import("services").ServiceFactories} services
-     */
-    constructor(env, services) {
-        this.busService = services.bus_service;
-        this.env = env;
-        this.presence = services.presence;
-        this.store = services["mail.store"];
-    }
+export class DiscussCoreCommonPlugin extends Plugin {
+    /** Started with the store it uses (see `StorePlugin`). */
+    static sequence = 110;
+
+    #busService = usePlugin(BusPlugin);
+    #bus = usePlugin(GlobalBusPlugin).bus;
+    #presence = usePlugin(PresencePlugin);
+    store = usePlugin(StorePlugin);
 
     setup() {
-        this.busService.subscribe("discuss.channel/delete", (payload, metadata) => {
+        this.#busService.subscribe("discuss.channel/delete", (payload, metadata) => {
             const channel = this.store["discuss.channel"].insert(payload.id);
             this._handleNotificationChannelDelete(channel, metadata);
         });
-        this.busService.subscribe("discuss.channel/new_message", (payload, metadata) => {
+        this.#busService.subscribe("discuss.channel/new_message", (payload, metadata) => {
             this.store.insert(payload.store_data);
             this._handleNotificationNewMessage(payload, metadata);
         });
-        this.env.bus.addEventListener("mail.message/delete", ({ detail: { message, notifId } }) => {
+        this.#bus.addEventListener("mail.message/delete", ({ detail: { message, notifId } }) => {
             const self_member_id = message.channel_id?.self_member_id;
             if (self_member_id) {
                 if (
@@ -38,7 +39,7 @@ export class DiscussCoreCommon {
             }
         });
         this.store.onChange(
-            () => [this.presence.isOdooFocused()],
+            () => [this.#presence.isOdooFocused()],
             (isOdooFocused) => {
                 if (isOdooFocused) {
                     return;
@@ -68,10 +69,10 @@ export class DiscussCoreCommon {
      * @param {import("models").DiscussChannel} channel
      * @param {{ notifId: number}} metadata
      */
-    async _handleNotificationChannelDelete(channel, metadata) {
+    async _handleNotificationChannelDelete(channel, _metadata) {
         await channel.closeChatWindow();
         channel.messages.splice(0, channel.messages.length);
-        this.env.bus.trigger("discuss.channel/delete", { channel });
+        this.#bus.trigger("discuss.channel/delete", { channel });
         channel.delete();
     }
 
@@ -131,7 +132,7 @@ export class DiscussCoreCommon {
         ) {
             channel.markAsRead();
         }
-        this.env.bus.trigger("discuss.channel/new_message", { channel, message, silent });
+        this.#bus.trigger("discuss.channel/new_message", { channel, message, silent });
         const authorMember = channel.channel_member_ids.find((member) =>
             member.persona?.eq(message.author)
         );
@@ -141,17 +142,4 @@ export class DiscussCoreCommon {
     }
 }
 
-export const discussCoreCommon = {
-    dependencies: ["bus_service", "mail.out_of_focus", "mail.store", "presence"],
-    /**
-     * @param {import("@web/env").OdooEnv} env
-     * @param {import("services").ServiceFactories} services
-     */
-    start(env, services) {
-        const discussCoreCommon = proxy(new DiscussCoreCommon(env, services));
-        discussCoreCommon.setup(env, services);
-        return discussCoreCommon;
-    },
-};
-
-registry.category("services").add("discuss.core.common", discussCoreCommon);
+services.add(DiscussCoreCommonPlugin);

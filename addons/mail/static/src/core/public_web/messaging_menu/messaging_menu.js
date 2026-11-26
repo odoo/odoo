@@ -9,6 +9,7 @@ import { onClickIntent, useOnBottomScrolled, usePeek } from "@mail/utils/common/
 import { SearchStatePlugin } from "@mail/utils/common/search_state_plugin";
 import { computedShallowEqual, incrementFn } from "@mail/utils/common/signal";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
+import { NotificationPermissionPlugin } from "@mail/core/common/notification_permission_plugin";
 
 import {
     Component,
@@ -132,7 +133,7 @@ export class MessagingMenu extends Component {
         super.setup();
         this.ancestors = useAncestors();
         this.dialog = useService("dialog");
-        this.notification = useService("mail.notification.permission");
+        this.notification = usePlugin(NotificationPermissionPlugin);
         this.store = useService("mail.store");
         this.ui = usePlugin(UIPlugin);
         this.selectedState = useProps.static(

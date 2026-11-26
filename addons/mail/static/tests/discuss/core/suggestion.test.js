@@ -11,6 +11,7 @@ import {
     getEditorFromComposerEl,
     insertTextInComposer,
 } from "@mail/../tests/mail_test_helpers_composer";
+import { ComposerPlugin } from "@mail/core/common/composer_plugin";
 import { describe, expect, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
 import { Command, contains, getService, serverState } from "@web/../tests/web_test_helpers";
@@ -41,7 +42,7 @@ test("display command suggestions on typing '/'", async () => {
         channel_type: "channel",
     });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     await focus(".o-mail-Composer-html");
     await insertTextInComposer(".o-mail-Composer", "/");
@@ -65,7 +66,7 @@ test("use a command for a specific channel type", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     await focus(".o-mail-Composer-html");
     await insertTextInComposer(".o-mail-Composer", "/");
@@ -98,7 +99,7 @@ test("command suggestion should only open if command is the first character", as
         channel_type: "channel",
     });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     await focus(".o-mail-Composer-html");
     await insertTextInComposer(".o-mail-Composer", "bluhbluh");
@@ -245,7 +246,7 @@ test("command suggestion are shown after deleting a character", async () => {
         ],
     });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     await focus(".o-mail-Composer-html");
     await insertTextInComposer(".o-mail-Composer", "/he");

@@ -1,13 +1,12 @@
 import { DiscussClientAction } from "@mail/core/public_web/discuss_app/client_action";
 import "@mail/discuss/core/public/discuss_app/client_action_patch";
 
-import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 
 patch(DiscussClientAction.prototype, {
     setup() {
         super.setup(...arguments);
-        this.rtc = useService("discuss.rtc");
+        this.rtc = this.store.rtc;
     },
     async restoreDiscussThread() {
         await super.restoreDiscussThread(...arguments);

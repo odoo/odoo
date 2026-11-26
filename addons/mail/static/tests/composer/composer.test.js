@@ -60,6 +60,7 @@ import { Composer, MENTION_AMOUNT_WARNING } from "@mail/core/common/composer";
 import { RecordLinkPlugin } from "@mail/core/common/record_link_plugin";
 import { click as hootClick, press, waitFor, waitForNone, waitUntil } from "@odoo/hoot-dom";
 import { MailComposerFormController } from "@mail/chatter/web/mail_composer_form";
+import { ComposerPlugin } from "@mail/core/common/composer_plugin";
 import { getIndexedDB } from "../mail_test_helpers";
 import { waitNotifications } from "@bus/../tests/bus_test_helpers";
 
@@ -123,7 +124,7 @@ test("composer text input placeholder should contain channel name when thread do
         name: "General",
     });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     await waitFor(
         ".o-mail-Composer-html.odoo-editor-editable .o-we-hint[o-we-hint-text='Message #General…']:count(1)"
@@ -157,7 +158,7 @@ test("composer input placeholder in channel thread", async () => {
         parent_channel_id: channelId,
     });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(subchannelID);
     await waitFor(
         ".o-mail-Composer-html.odoo-editor-editable .o-we-hint[o-we-hint-text='Message \"ThreadFromGeneral\"']:count(1)"
@@ -179,7 +180,7 @@ test("add an emoji", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "swamp-safari" });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     await contains("button[title='Add Emojis']:count(1)").click();
     await contains(".o-Emoji:text('😤'):count(1)").click();
@@ -191,7 +192,7 @@ test("press Enter with emoji suggestions inserts emoji and does not send", async
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "swamp-safari" });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     await focus(".o-mail-Composer-html");
     await insertTextInComposer(".o-mail-Composer", ":smil");
@@ -225,7 +226,7 @@ test("emojis are auto-substituted from text", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     await focus(".o-mail-Composer-html");
     await insertTextInComposer(".o-mail-Composer", ":)");
@@ -259,7 +260,7 @@ test("Exiting emoji picker brings the focus back to the Composer textarea", asyn
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     await contains("button[title='Add Emojis']:count(1)").click();
     await waitFor(".o-mail-Composer-html.odoo-editor-editable:not(:focus):count(1)");
@@ -285,7 +286,7 @@ test("add an emoji after some text", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "beyblade-room" });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     await focus(".o-mail-Composer-html");
     await insertTextInComposer(".o-mail-Composer", "Blabla");
@@ -519,7 +520,7 @@ test("send message only once when ENTER twice quickly", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "nether-picnic" });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     await focus(".o-mail-Composer-html");
     await insertTextInComposer(".o-mail-Composer", "test message");
@@ -645,7 +646,7 @@ test("do not post message on channel with 'SHIFT-Enter' keyboard shortcut", asyn
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     await focus(".o-mail-Composer-html");
     await insertTextInComposer(".o-mail-Composer", "Test");
@@ -676,7 +677,7 @@ test("post message on channel with 'Enter' keyboard shortcut", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     await focus(".o-mail-Composer-html");
     await insertTextInComposer(".o-mail-Composer", "Test");
@@ -751,7 +752,7 @@ test("composer text input placeholder should contain correspondent name when thr
         channel_type: "chat",
     });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     await waitFor(
         ".o-mail-Composer-html.odoo-editor-editable .o-we-hint[o-we-hint-text='Message Marc Demo…']:count(1)"
@@ -833,7 +834,7 @@ test("quick edit last self-message from UP arrow", async () => {
         res_id: channelId,
     });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     await waitFor(".o-mail-Message-content:text('Test'):count(1)");
     await waitForNone(".o-mail-Message .o-mail-Composer");
@@ -965,7 +966,7 @@ test("composer: paste attachments", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     const text = new File(["hello, world"], "text.txt", { type: "text/plain" });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     await waitFor(".o-mail-Composer-html.odoo-editor-editable:count(1)");
     await waitForNone(".o-mail-AttachmentList .o-mail-AttachmentContainer");
@@ -1136,7 +1137,7 @@ test('display canned response suggestions on typing "::"', async () => {
         substitution: "Hello! How are you?",
     });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     await focus(".o-mail-Composer-html");
     await insertTextInComposer(".o-mail-Composer", "::");
@@ -1182,7 +1183,7 @@ test("select a canned response suggestion", async () => {
         substitution: "Hello! How are you?",
     });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     await focus(".o-mail-Composer-html");
     await insertTextInComposer(".o-mail-Composer", "::");
@@ -1230,7 +1231,7 @@ test("select a canned response suggestion with some text", async () => {
         substitution: "Hello! How are you?",
     });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     await focus(".o-mail-Composer-html");
     await insertTextInComposer(".o-mail-Composer", "bluhbluh ");
@@ -1449,7 +1450,7 @@ test("can quickly add emoji with ':' keyword", async () => {
         ],
     });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     await focus(".o-mail-Composer-html");
     await insertTextInComposer(".o-mail-Composer", ":sweat");
@@ -1811,7 +1812,7 @@ test("pasted message url in a link is not a message link", async () => {
         res_id: channelId,
     });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     await focus(".o-mail-Composer-html");
     const editor = getEditorFromComposerEl(".o-mail-Composer");
@@ -1854,7 +1855,7 @@ test("pasted link to a message of another database is not a message link", async
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     await focus(".o-mail-Composer-html");
     pasteHtml(
@@ -1902,7 +1903,7 @@ test("pasted message link with its own label keeps it", async () => {
         expect(args.post_data.body).toInclude(`>this discussion</a>`);
     });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     await focus(".o-mail-Composer-html");
     pasteHtml(
@@ -1974,7 +1975,7 @@ test.tags("html composer");
 test("html composer: send a message in a chatter", async () => {
     await startServer();
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openFormView("res.partner", serverState.partnerId);
     await click("button:text('Send message')");
     await focus(".o-mail-Composer-html");
@@ -1987,7 +1988,7 @@ test.tags("html composer");
 test("html composer: send a message with styling", async () => {
     await startServer();
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openFormView("res.partner", serverState.partnerId);
     await click("button:text('Send message')");
     await focus(".o-mail-Composer-html");
@@ -2007,13 +2008,13 @@ test("switching between text and html composer keeps the content", async () => {
     await insertTextInComposer(".o-mail-Composer", "Hello");
     // The plugins of the editor are set at its creation: it is re-created on a switch.
     let editor = getEditorFromComposerEl(".o-mail-Composer");
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await waitUntil(() => editor.isDestroyed);
     await containsTextInComposer(".o-mail-Composer", "Hello");
     await insertTextInComposer(".o-mail-Composer", " `World`");
     await waitFor(".o-mail-Composer-html code.o_inline_code:text('World'):count(1)");
     editor = getEditorFromComposerEl(".o-mail-Composer");
-    getService("mail.composer").setTextComposer();
+    getService(ComposerPlugin).setTextComposer();
     await waitUntil(() => editor.isDestroyed);
     await waitFor(
         ".o-mail-Composer-html:contains('Hello') code.o_inline_code:text('World'):count(1)"
@@ -2046,7 +2047,7 @@ test("send a message end with a space clears the composer", async () => {
         name: "General",
     });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     await focus(".o-mail-Composer-html");
     await insertTextInComposer(".o-mail-Composer", "Hello ");
@@ -2063,7 +2064,7 @@ test("parse link correctly in html composer", async () => {
         name: "General",
     });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     await focus(".o-mail-Composer-html");
     await insertTextInComposer(".o-mail-Composer", "www.google.com");
@@ -2082,7 +2083,7 @@ test("pasted code keeps its line breaks and indentation, pasted text its formatt
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     await focus(".o-mail-Composer-html.odoo-editor-editable");
     const editor = {
@@ -2101,7 +2102,7 @@ test("pasted code copied with its white-space keeps its line breaks", async () =
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     await focus(".o-mail-Composer-html.odoo-editor-editable");
     const editor = {
@@ -2126,7 +2127,7 @@ test("mention insertion adds FEFF markers for safe cursor placement", async () =
         name: "General",
     });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     await focus(".o-mail-Composer-html");
     await insertTextInComposer(".o-mail-Composer", "@admin");
@@ -2142,7 +2143,7 @@ test("mentions can be correctly selected with ctrl+A and deleted", async () => {
         name: "General",
     });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     await focus(".o-mail-Composer-html");
     // partner beginning of the message
@@ -2194,7 +2195,7 @@ test("mentions can be correctly cut with ctrl+A and ctrl+X", async () => {
         name: "General",
     });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     await insertTextInComposer(".o-mail-Composer", "@admin");
     await contains(".o-mail-NavigableList-item:text('Mitchell Admin'):count(1)").click();
@@ -2410,7 +2411,7 @@ for (const htmlEnabled of [false, true]) {
         });
         await start();
         if (htmlEnabled) {
-            getService("mail.composer").setHtmlComposer();
+            getService(ComposerPlugin).setHtmlComposer();
         }
         await openDiscuss(generalId);
         await focus(".o-mail-Composer-html");
@@ -2443,7 +2444,7 @@ for (const htmlEnabled of [false, true]) {
         });
         await start();
         if (htmlEnabled) {
-            getService("mail.composer").setHtmlComposer();
+            getService(ComposerPlugin).setHtmlComposer();
         }
         await openDiscuss(generalId);
         await focus(".o-mail-Composer-html");
@@ -2469,7 +2470,7 @@ for (const htmlEnabled of [false, true]) {
         });
         await start();
         if (htmlEnabled) {
-            getService("mail.composer").setHtmlComposer();
+            getService(ComposerPlugin).setHtmlComposer();
         }
         await openDiscuss(channelId);
         await focus(".o-mail-Composer-html");
@@ -2501,7 +2502,7 @@ for (const htmlEnabled of [false, true]) {
         });
         await start();
         if (htmlEnabled) {
-            getService("mail.composer").setHtmlComposer();
+            getService(ComposerPlugin).setHtmlComposer();
         }
         await openDiscuss(generalId);
         await focus(".o-mail-Composer-html");
@@ -2543,7 +2544,7 @@ for (const htmlEnabled of [false, true]) {
         });
         await start();
         if (htmlEnabled) {
-            getService("mail.composer").setHtmlComposer();
+            getService(ComposerPlugin).setHtmlComposer();
         }
         await openDiscuss(channelId);
         await focus(".o-mail-Composer-html");
@@ -2589,7 +2590,7 @@ for (const htmlEnabled of [false, true]) {
             });
             await start();
             if (htmlEnabled) {
-                getService("mail.composer").setHtmlComposer();
+                getService(ComposerPlugin).setHtmlComposer();
             }
             await openDiscuss(generalId);
             await focus(".o-mail-Composer-html");
@@ -2653,7 +2654,7 @@ for (const htmlEnabled of [false, true]) {
             });
             await start();
             if (htmlEnabled) {
-                getService("mail.composer").setHtmlComposer();
+                getService(ComposerPlugin).setHtmlComposer();
             }
             await openDiscuss(generalId);
             await hover(".o-mail-Message");

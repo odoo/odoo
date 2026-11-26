@@ -1,10 +1,11 @@
 import { dataUrlToBlob } from "@mail/core/common/attachment_uploader_hook";
+import { AttachmentUploadPlugin } from "@mail/core/common/attachment_upload_plugin";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { useX2ManyCrud } from "@web/views/fields/relational_utils";
 import { Record } from "@web/model/relational_model/record";
 
-import { Component, types, useProps } from "@odoo/owl";
+import { Component, types, usePlugin, useProps } from "@odoo/owl";
 import { FileUploader } from "@web/views/fields/file_handler";
 
 import { useMailComposerAttachmentsUploader } from "./mail_composer_attachment_hook";
@@ -16,7 +17,7 @@ export class MailComposerAttachmentSelector extends Component {
     setup() {
         this.props = useProps({ record: types.instanceOf(Record) });
         this.mailStore = useService("mail.store");
-        this.attachmentUploadService = useService("mail.attachment_upload");
+        this.attachmentUploadService = usePlugin(AttachmentUploadPlugin);
         this.operations = useX2ManyCrud(() => this.props.record.data["attachment_ids"], true);
         this.doUpload = useMailComposerAttachmentsUploader();
     }

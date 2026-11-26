@@ -1,3 +1,4 @@
+import { ComposerPlugin } from "@mail/core/common/composer_plugin";
 import { registry } from "@web/core/registry";
 
 // Skip the toolbar of the chatter composer, as it can stay open behind the dialog.
@@ -15,8 +16,8 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_html_compo
             content: "Wait for the chatter to be fully loaded",
             trigger: ".o-mail-Chatter",
             async run() {
-                const composerService = odoo.__WOWL_DEBUG__.root.env.services["mail.composer"];
-                composerService.setHtmlComposer();
+                const { pluginManager } = odoo.__WOWL_DEBUG__.root.__owl__;
+                pluginManager.getPlugin(ComposerPlugin).setHtmlComposer();
             },
         },
         {

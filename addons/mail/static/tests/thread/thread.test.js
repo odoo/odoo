@@ -26,6 +26,7 @@ import { Message } from "@mail/core/common/message_model";
 import { Thread } from "@mail/core/common/thread";
 import { ScrollManager } from "@mail/utils/common/scroll";
 import { UseForwardRefsToParent } from "@mail/utils/common/hooks";
+import { ComposerPlugin } from "@mail/core/common/composer_plugin";
 
 import { describe, expect, test } from "@odoo/hoot";
 import {
@@ -905,7 +906,7 @@ test("Opening thread with needaction messages should mark all messages of thread
         ignoreParamKeys: ["is_prefetch"],
     });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     await expect.waitForSteps([
         `store fetch: /discuss/channel/messages - {"channel_id":${channelId},"fetch_params":{"limit":60,"around":0}}`,

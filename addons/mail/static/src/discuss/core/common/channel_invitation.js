@@ -44,6 +44,7 @@ export class ChannelInvitation extends Component {
         this.ancestors = useAncestors();
         this.orm = usePlugin(ORM);
         this.store = useService("mail.store");
+        this.rtc = this.store.rtc;
         this.props = useProps({
             channel: t.instanceOf(this.store["discuss.channel"]).optional(),
             className: t.string().optional(),
@@ -56,7 +57,6 @@ export class ChannelInvitation extends Component {
                 })
                 .optional(),
         });
-        this.rtc = useService("discuss.rtc");
         this.sequential = useSequential();
         this.state = proxy({
             hasPendingRequest: false,

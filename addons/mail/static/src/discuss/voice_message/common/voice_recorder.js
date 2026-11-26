@@ -12,14 +12,14 @@ import {
 import { BaseAction } from "@mail/core/common/action_list";
 
 import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permission_denied_dialog";
-import { loadLamejs } from "@mail/discuss/voice_message/common/voice_message_service";
+import { loadLamejs } from "@mail/discuss/voice_message/common/voice_message_plugin";
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
 import { _t } from "@web/core/l10n/translation";
 import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
 import { useService } from "@web/core/utils/hooks";
 import { Mp3Encoder } from "./mp3_encoder";
 
-/** @typedef {import("@mail/discuss/call/common/rtc_service").ContextOptions} ContextOptions */
+/** @typedef {import("@mail/discuss/call/common/rtc_model").ContextOptions} ContextOptions */
 
 export class VoiceRecorder extends Component {
     static template = "mail.VoiceRecorder";

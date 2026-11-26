@@ -17,7 +17,7 @@ export class MeetingReadyBanner extends Component {
         super.setup();
         this.openChannelInvitationDialog = openChannelInvitationDialog;
         this.store = useService("mail.store");
-        this.rtc = useService("discuss.rtc");
+        this.rtc = this.store.rtc;
     }
 
     /** @returns {import("models").DiscussChannel|undefined} channel hosting the call. */

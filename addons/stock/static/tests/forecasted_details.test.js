@@ -1,8 +1,12 @@
-import { before, expect, test } from "@odoo/hoot";
+import { ChatHubPlugin } from "@mail/core/common/chat_hub";
+import { MailCorePublicWebPlugin } from "@mail/core/public_web/mail_core_public_web_plugin";
+import { BusConnectionAlertPlugin } from "@mail/discuss/core/public_web/bus_connection_alert";
+import { after, before, expect, test } from "@odoo/hoot";
 import { xml } from "@odoo/owl";
 import { ForecastedDetails } from "@stock/stock_forecasted/forecasted_details";
 import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
+import { services as pluginServices } from "@web/core/services";
 
 before(() => {
     // Remove mail services and components
@@ -11,7 +15,7 @@ before(() => {
         if (
             name.startsWith("mail.") ||
             name.startsWith("discuss.") ||
-            ["bus.connection_alert", "bus.monitoring_service"].includes(name)
+            name === "bus.monitoring_service"
         ) {
             services.remove(name);
         }
@@ -23,6 +27,15 @@ before(() => {
             main_components.remove(name);
         }
     }
+    // These mail plugins need the mail services and models removed above.
+    pluginServices.delete(BusConnectionAlertPlugin);
+    pluginServices.delete(ChatHubPlugin);
+    pluginServices.delete(MailCorePublicWebPlugin);
+    after(() => {
+        pluginServices.add(BusConnectionAlertPlugin);
+        pluginServices.add(ChatHubPlugin);
+        pluginServices.add(MailCorePublicWebPlugin);
+    });
 });
 
 test("forecast detail sameDocument receipt date", async () => {

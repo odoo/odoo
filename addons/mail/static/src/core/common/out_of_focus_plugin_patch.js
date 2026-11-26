@@ -1,9 +1,9 @@
-import { OutOfFocusService } from "./out_of_focus_service";
+import { OutOfFocusPlugin } from "@mail/core/common/out_of_focus_plugin";
 import { usePlugin } from "@odoo/owl";
 import { TitlePlugin } from "@web/core/browser/title_plugin";
 import { patch } from "@web/core/utils/patch";
 
-patch(OutOfFocusService.prototype, {
+patch(OutOfFocusPlugin.prototype, {
     setup() {
         super.setup(...arguments);
         this.title = usePlugin(TitlePlugin);

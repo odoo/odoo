@@ -98,7 +98,7 @@ test("Renders the call settings", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     patchUiSize({ size: SIZES.SM });
     await start();
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     await openDiscuss(channelId);
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await waitFor("[title='Open Actions Menu']:count(1)");
@@ -314,7 +314,7 @@ test("Changing inputs in Call Settings should pre-ask for browser permission", a
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     patchUiSize({ size: SIZES.SM });
     await start();
-    getService("discuss.rtc").microphonePermission = "granted";
+    getService("mail.store").rtc.microphonePermission = "granted";
     await openDiscuss(channelId);
     await waitFor("[title='Open Actions Menu']:count(1)");
     await contains("[title='Open Actions Menu']:count(1)").click();
@@ -337,7 +337,7 @@ test("Can preview camera in the video settings tab", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     patchUiSize({ size: SIZES.SM });
     await start();
-    getService("discuss.rtc").cameraPermission = "granted";
+    getService("mail.store").rtc.cameraPermission = "granted";
     await openDiscuss(channelId);
     await waitFor("[title='Open Actions Menu']:count(1)");
     await contains("[title='Open Actions Menu']:count(1)").click();
@@ -348,7 +348,7 @@ test("Can preview camera in the video settings tab", async () => {
     await waitUntil(() => video.srcObject);
     await contains(".o-discuss-CallSettings-item[aria-label='Preview Camera']:count(1)").click();
     await waitForNone(".o-discuss-CallSettings video");
-    getService("discuss.rtc").cameraPermission = "denied";
+    getService("mail.store").rtc.cameraPermission = "denied";
     await waitForNone(".o-discuss-CallSettings-item[aria-label='Preview Camera']");
 });
 
@@ -360,7 +360,7 @@ test("Disables camera preview when camera capture fails", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     patchUiSize({ size: SIZES.SM });
     await start();
-    getService("discuss.rtc").cameraPermission = "granted";
+    getService("mail.store").rtc.cameraPermission = "granted";
     await openDiscuss(channelId);
     await waitFor("[title='Open Actions Menu']:count(1)");
     await contains("[title='Open Actions Menu']:count(1)").click();

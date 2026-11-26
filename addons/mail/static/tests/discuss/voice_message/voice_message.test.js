@@ -11,7 +11,7 @@ import { describe, expect, mockDate, queryOne, test, waitFor, waitForNone } from
 import { Command, contains, serverState } from "@web/../tests/web_test_helpers";
 
 import { Mp3Encoder } from "@mail/discuss/voice_message/common/mp3_encoder";
-import { loadLamejs } from "@mail/discuss/voice_message/common/voice_message_service";
+import { loadLamejs } from "@mail/discuss/voice_message/common/voice_message_plugin";
 import { VoicePlayer } from "@mail/discuss/voice_message/common/voice_player";
 import { patchable } from "@mail/discuss/voice_message/common/voice_recorder";
 import { patch } from "@web/core/utils/patch";

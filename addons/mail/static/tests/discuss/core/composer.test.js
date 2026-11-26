@@ -14,6 +14,7 @@ import {
     insertTextInComposer,
 } from "@mail/../tests/mail_test_helpers_composer";
 import { Thread } from "@mail/core/common/thread_model";
+import { ComposerPlugin } from "@mail/core/common/composer_plugin";
 import { describe, expect, test, waitFor, waitForNone } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { contains, getService, serverState } from "@web/../tests/web_test_helpers";
@@ -101,7 +102,7 @@ test("html composer: send a message in a channel", async () => {
         channel_type: "channel",
     });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     await containsTextInComposer(".o-mail-Composer", "");
     await focus(".o-mail-Composer-html");
@@ -125,7 +126,7 @@ test("html composer: trim boundary empty formatting on send", async () => {
         body = args.post_data.body;
     });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     await focus(".o-mail-Composer-html");
     triggerHotkey("Enter");

@@ -32,6 +32,7 @@ import { MailMessage } from "@mail/../tests/mock_server/mock_models/mail_message
 import { Gif } from "@mail/core/common/gif";
 import { Message } from "@mail/core/common/message";
 import { LONG_PRESS_DELAY } from "@mail/utils/common/hooks";
+import { ComposerPlugin } from "@mail/core/common/composer_plugin";
 import { describe, expect, queryAll, test } from "@odoo/hoot";
 import {
     animationFrame,
@@ -108,7 +109,7 @@ test("edit a message with styling keeps the styling", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
@@ -132,7 +133,7 @@ test("edit a message styling", async () => {
         message_type: "comment",
     });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     await waitFor(".o-mail-Message[data-persistent] strong:contains(Hello world):count(1)");
     await waitForNone(".o-mail-Message[data-persistent] em:contains(Hello world)");
@@ -772,7 +773,7 @@ test("mentions and special mentions are kept when editing message", async () => 
         message_type: "comment",
     });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     await mailContains(".o-mail-Message:has(:text('Hello @Mitchell Admin and @everyone'))", {
         contains: [
@@ -3095,7 +3096,7 @@ test("(edited) label is not included in editor when editing an already-edited me
         message_type: "comment",
     });
     await start();
-    getService("mail.composer").setHtmlComposer();
+    getService(ComposerPlugin).setHtmlComposer();
     await openDiscuss(channelId);
     // First edit to produce an "(edited)" label in the body
     await hover(".o-mail-Message");

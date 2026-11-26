@@ -6,7 +6,7 @@ import { registry } from "@web/core/registry";
 import { useRootCreator } from "@web/core/utils/hooks";
 
 export const livechatBootService = {
-    dependencies: ["discuss.rtc", "mail.store", "im_livechat.livechat"],
+    dependencies: ["mail.store", "im_livechat.livechat"],
 
     /**
      * To be overriden in tests.
@@ -24,7 +24,7 @@ export const livechatBootService = {
         const rootEl = makeRoot(target);
         const createRoot = useRootCreator();
         makeShadow(rootEl).then((shadow) => {
-            services["discuss.rtc"].rootEl = shadow;
+            services["mail.store"].rtc.rootEl = shadow;
             const root = createRoot(LivechatRoot, {
                 env: Object.assign(Object.create(env), {
                     rootId: rootEl.getAttribute("id"),

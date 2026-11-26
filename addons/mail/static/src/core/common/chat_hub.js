@@ -1,7 +1,7 @@
 import { ActionList } from "@mail/core/common/action_list";
 import { ChatWindow } from "@mail/core/common/chat_window";
 import { useHover, useMovable } from "@mail/utils/common/hooks";
-import { Component, computed, proxy, signal, useListener } from "@odoo/owl";
+import { Component, computed, Plugin, proxy, signal, useListener } from "@odoo/owl";
 
 import { Action } from "@mail/core/common/action";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
@@ -10,6 +10,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { services } from "@web/core/services";
 import { useService } from "@web/core/utils/hooks";
 import { ChatBubble } from "./chat_bubble";
 
@@ -169,10 +170,9 @@ export class ChatHub extends Component {
     }
 }
 
-export const chatHubService = {
-    dependencies: ["bus.monitoring_service", "mail.store"],
-    start() {
+export class ChatHubPlugin extends Plugin {
+    setup() {
         registry.category("main_components").add("mail.ChatHub", { Component: ChatHub });
-    },
-};
-registry.category("services").add("mail.chat_hub", chatHubService);
+    }
+}
+services.add(ChatHubPlugin);

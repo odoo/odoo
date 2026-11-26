@@ -1,6 +1,6 @@
 import { createVideoStream, defineMailModels, start } from "@mail/../tests/mail_test_helpers";
 import { CameraPreview } from "@mail/discuss/call/common/camera_preview";
-import { Rtc } from "@mail/discuss/call/common/rtc_service";
+import { Rtc } from "@mail/discuss/call/common/rtc_model";
 
 import { describe, expect, getFixture, test, waitFor, waitUntil } from "@odoo/hoot";
 
@@ -23,7 +23,7 @@ test("Camera preview shares a single stream across multiple instances", async ()
         },
     });
     await start();
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     rtc.cameraPermission = "granted";
     await mountWithCleanup(CameraPreview);
     await mountWithCleanup(CameraPreview);
@@ -39,7 +39,7 @@ test("Camera preview releases its stream when the call camera starts", async () 
         getUserMedia: () => Promise.resolve(previewStream),
     });
     await start();
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     rtc.cameraPermission = "granted";
     await mountWithCleanup(CameraPreview);
     const video = await waitFor("video:count(1)");
@@ -70,7 +70,7 @@ test("Camera preview restarts on device change and ignores stale blur results", 
         },
     });
     await start();
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     const store = getService("mail.store");
     rtc.cameraPermission = "granted";
     store.settings.useBlur = false;
@@ -131,7 +131,7 @@ test("Camera preview restarts when the device changes while blur is pending", as
         },
     });
     await start();
-    const rtc = getService("discuss.rtc");
+    const rtc = getService("mail.store").rtc;
     const store = getService("mail.store");
     rtc.cameraPermission = "granted";
     store.settings.useBlur = false;

@@ -24,8 +24,8 @@ export class CallInvitation extends Component {
     setup() {
         super.setup();
         this.getCallActionComponent = getCallActionComponent;
-        this.rtc = useService("discuss.rtc");
         this.store = useService("mail.store");
+        this.rtc = this.store.rtc;
         this.props = useProps({
             channel: types.instanceOf(this.store["discuss.channel"]),
         });

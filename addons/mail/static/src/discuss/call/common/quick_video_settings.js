@@ -15,7 +15,7 @@ export class QuickVideoSettings extends Component {
         super.setup();
         this.ancestors = useAncestors();
         this.store = useService("mail.store");
-        this.rtc = useService("discuss.rtc");
+        this.rtc = this.store.rtc;
         this.dialogService = useService("dialog");
         this.isBrowserSafari = isBrowserSafari;
     }

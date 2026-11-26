@@ -10,8 +10,8 @@ export class CallParticipantVideo extends Component {
 
     setup() {
         super.setup();
-        this.rtc = useService("discuss.rtc");
         this.store = useService("mail.store");
+        this.rtc = this.store.rtc;
         this.props = useProps({
             inset: t.boolean().optional(),
             isCropped: t.boolean().optional(),
@@ -30,7 +30,7 @@ export class CallParticipantVideo extends Component {
                 el.load();
             };
         });
-        useListener(this.env.bus, "RTC-SERVICE:PLAY_MEDIA", async () => {
+        useListener(this.env.bus, "RTC:PLAY_MEDIA", async () => {
             await this.play();
         });
     }

@@ -1,43 +1,39 @@
+import { MultiTabPlugin } from "@bus/multi_tab_plugin";
 import { SoundEffectsPlugin } from "@mail/core/common/sound_effects_plugin";
+import { StorePlugin } from "@mail/core/common/store_plugin";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 
-import { usePlugin } from "@odoo/owl";
+import { Plugin, usePlugin } from "@odoo/owl";
 import { isAndroid } from "@web/core/browser/feature_detection";
+import { GlobalBusPlugin } from "@web/core/global_bus_plugin";
 import { _t } from "@web/core/l10n/translation";
 import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
-import { registry } from "@web/core/registry";
+import { services } from "@web/core/services";
 
 const PREVIEW_MSG_MAX_SIZE = 350; // optimal for native English speakers
 
-/**
- * @typedef {Messaging} Messaging
- */
-export class OutOfFocusService {
-    /**
-     * @param {import("@web/env").OdooEnv} env
-     * @param {import("services").ServiceFactories} services
-     */
-    constructor(env, services) {
-        this.setup(env, services);
-    }
+/** Records reach this plugin as `store.outOfFocus`. */
+export class OutOfFocusPlugin extends Plugin {
+    /** Started with the store it uses (see `StorePlugin`). */
+    static sequence = 110;
 
-    setup(env, services) {
-        this.env = env;
-        this.audio = undefined;
-        this.multiTab = services.multi_tab;
-        this.notificationService = usePlugin(NotificationPlugin);
-        this.soundEffects = usePlugin(SoundEffectsPlugin);
+    #multiTab = usePlugin(MultiTabPlugin);
+    #notificationService = usePlugin(NotificationPlugin);
+    #soundEffects = usePlugin(SoundEffectsPlugin);
+    #closeFuncs = [];
+    #contributingMessageLocalIds = new Set();
+
+    setup() {
         /** @type {import("models").Store} */
-        this.store = services["mail.store"];
-        this.closeFuncs = [];
-        this.contributingMessageLocalIds = new Set();
-        env.bus.addEventListener("window_focus", () => this.onWindowFocus());
+        this.store = usePlugin(StorePlugin);
+        this.store.outOfFocus = this;
+        usePlugin(GlobalBusPlugin).bus.addEventListener("window_focus", () => this.onWindowFocus());
     }
-    async notify(message, thread) {
-        if (this.contributingMessageLocalIds.has(message.localId)) {
+    async notify(message, _thread) {
+        if (this.#contributingMessageLocalIds.has(message.localId)) {
             return;
         }
-        this.contributingMessageLocalIds.add(message.localId);
+        this.#contributingMessageLocalIds.add(message.localId);
         // Message types the server sends via web push, excluding the author.
         // Keep in sync with mail.thread._notify_get_recipients_for_extra_notifications.
         const messageTypesHandledByPush = [
@@ -102,7 +98,7 @@ export class OutOfFocusService {
      * notification.
      */
     async sendNotification({ message, sound = true, title, type, icon }) {
-        if (!this.canSendNativeNotification || !(await this.multiTab.isOnMainTab())) {
+        if (!this.canSendNativeNotification || !(await this.#multiTab.isOnMainTab())) {
             if (sound) {
                 this._playSound();
             }
@@ -129,9 +125,9 @@ export class OutOfFocusService {
     async sendOdooNotification(message, options) {
         const { sound } = options;
         delete options.sound;
-        this.closeFuncs.push(this.notificationService.add(message, options));
-        if (this.closeFuncs.length > 3) {
-            this.closeFuncs.shift()();
+        this.#closeFuncs.push(this.#notificationService.add(message, options));
+        if (this.#closeFuncs.length > 3) {
+            this.#closeFuncs.shift()();
         }
         if (sound) {
             this._playSound();
@@ -165,9 +161,9 @@ export class OutOfFocusService {
         if (
             this.canPlayAudio &&
             this.store.settings.messageSound &&
-            (await this.multiTab.isOnMainTab())
+            (await this.#multiTab.isOnMainTab())
         ) {
-            this.soundEffects.play("new-message");
+            this.#soundEffects.play("new-message");
         }
     }
 
@@ -179,23 +175,11 @@ export class OutOfFocusService {
         return Boolean(window.Notification && window.Notification.permission === "granted");
     }
     clearUnreadMessage() {
-        this.contributingMessageLocalIds.clear();
+        this.#contributingMessageLocalIds.clear();
     }
     onWindowFocus() {
         this.clearUnreadMessage();
     }
 }
 
-export const outOfFocusService = {
-    dependencies: ["multi_tab", "mail.store"],
-    /**
-     * @param {import("@web/env").OdooEnv} env
-     * @param {import("services").ServiceFactories} services
-     */
-    start(env, services) {
-        const service = new OutOfFocusService(env, services);
-        return service;
-    },
-};
-
-registry.category("services").add("mail.out_of_focus", outOfFocusService);
+services.add(OutOfFocusPlugin);

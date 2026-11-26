@@ -11,6 +11,7 @@ import { useX2ManyCrud } from "@web/views/fields/relational_utils";
 import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
 import { FullComposerBusPlugin } from "@mail/core/web/full_composer_bus_plugin";
 import { useMailComposerAttachmentsUploader } from "@mail/core/web/mail_composer_attachment_hook";
+import { AttachmentUploadPlugin } from "@mail/core/common/attachment_upload_plugin";
 
 export class MailComposerFormController extends formView.Controller {
     props = useProps({
@@ -109,7 +110,7 @@ export class MailComposerFormRenderer extends formView.Renderer {
         };
 
         // Add file dropzone on full mail composer:
-        this.attachmentUploadService = useService("mail.attachment_upload");
+        this.attachmentUploadService = usePlugin(AttachmentUploadPlugin);
         this.operations = useX2ManyCrud(() => this.props.record.data["attachment_ids"], true);
 
         const doUpload = useMailComposerAttachmentsUploader();

@@ -12,7 +12,7 @@ const attachmentPatch = {
     },
     delete() {
         if (this.voice && this.id > 0) {
-            this.store.env.services["discuss.voice_message"].activePlayer = null;
+            this.store.voiceMessage.activePlayer = null;
         }
         super.delete(...arguments);
     },
