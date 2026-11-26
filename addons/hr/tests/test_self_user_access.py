@@ -17,7 +17,7 @@ class TestSelfAccessPreferences(TestHrCommon):
         """ A simple user should be able to read all fields in the preferences form """
         james = new_test_user(self.env, login='hel', groups='base.group_user', name='Simple employee', email='ric@example.com')
         james = james.with_user(james)
-        james_bank_account = self.env['res.partner.bank'].create({'account_number': 'BE1234567890', 'partner_id': james.partner_id.id})
+        james_bank_account = self.env['res.partner.bank'].create({'account_number': 'BE71096123456769', 'partner_id': james.partner_id.id})
         self.env['hr.employee'].create({
             'name': 'James',
             'user_id': james.id,
@@ -307,11 +307,11 @@ class TestSelfAccessRights(TestHrCommon):
     def test_res_partner_bank_account_format(self):
         test_cases = [
             ('', ''),
-            ('BE12', '****'),
-            ('BE1234', '****'),
-            ('BE123456', 'BE**3456'),
-            ('BE12345678901234', 'BE**********1234'),
-            ('BE1234567890444 4 ', 'BE**********4444'),
+            ('XX12', '****'),
+            ('XX1234', '****'),
+            ('XX123456', 'XX**3456'),
+            ('XX12345678901234', 'XX**********1234'),
+            ('XX1234567890444 4 ', 'XX**********4444'),
         ]
 
         for input_number, expected_display in test_cases:

@@ -204,7 +204,7 @@ class TestMultiCompany(TestHrCommon):
 
         # Historical account created under company_a
         account_old = self.env['res.partner.bank'].create({
-            'account_number': 'BE12345678901234',
+            'account_number': 'BE07345678901234',
             'partner_id': partner.id,
             'company_id': self.company_a.id,
         })
@@ -239,7 +239,7 @@ class TestMultiCompany(TestHrCommon):
 
         # New account belonging to company_b, not yet linked in bank_account_ids
         account_unlinked = self.env['res.partner.bank'].create({
-            'account_number': 'BE99999999999999',
+            'account_number': 'BE89999999999999',
             'partner_id': partner.id,
             'company_id': self.company_b.id,
         })
