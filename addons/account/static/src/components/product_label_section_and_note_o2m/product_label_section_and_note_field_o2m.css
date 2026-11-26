@@ -1,0 +1,17 @@
+/* X2ManyField renders its buttons before the records, show them after on mobile. */
+.o_field_product_label_section_and_note_field_o2m > .o_field_x2many_kanban {
+    display: flex;
+    flex-direction: column;
+
+    > .o_x2m_control_panel {
+        order: 1;
+        margin-bottom: 0 !important;
+    }
+    .o_cp_buttons {
+        width: 100%;
+        > button {
+            flex: 1;
+            white-space: nowrap;
+        }
+    }
+}
