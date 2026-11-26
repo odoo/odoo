@@ -281,9 +281,10 @@ class TestMrpCommon(TestStockCommon):
         employees of companies the test user has no access to, which `hr`
         forbids editing.
         """
-        return self.env['resource.calendar'].sudo().search([
-            ('company_id', 'in', self.env.companies.ids + [False]),
-        ])
+        Company = self.env['res.company'].sudo()
+        return self.env['resource.calendar'].sudo().with_context(
+            allowed_company_ids=Company.search([]).ids,
+        ).search([])
 
     def full_availability(self):
         """set full availability for all calendars"""
