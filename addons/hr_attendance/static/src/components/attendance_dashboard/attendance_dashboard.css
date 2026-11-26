@@ -5,7 +5,7 @@
 }
 
 .o_attendance_kpi {
-    --o-attendance-kpi-color: var(--o-brand-primary);
+    --o-attendance-kpi-color: var(--gray-600);
     flex: 0 0 auto;
     min-width: 8.5rem;
     display: flex;
@@ -35,13 +35,9 @@
         outline-offset: 2px;
     }
 
-    &[name="to_review"] { --o-attendance-kpi-color: var(--orange); }
-    &[name="at_work"] { --o-attendance-kpi-color: var(--success); }
-    &[name="late_check_in"] { --o-attendance-kpi-color: var(--danger); }
-    &[name="early_check_out"] { --o-attendance-kpi-color: var(--purple); }
-    &[name="no_check_out"] { --o-attendance-kpi-color: var(--warning); }
-    &[name="overtime"] { --o-attendance-kpi-color: var(--blue); }
-    &[name="undertime"] { --o-attendance-kpi-color: var(--info); }
+    /* only the colors of the gantt: the attendances to review are orange, the ongoing ones are to review */
+    &[name="to_review"],
+    &[name="at_work"] { --o-attendance-kpi-color: var(--orange); }
 
     @media (max-width: 767.98px) {
         min-width: 0;
