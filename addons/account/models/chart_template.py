@@ -1087,8 +1087,14 @@ class AccountChartTemplate(models.AbstractModel):
                             reconcilable=True,
                         ).id
 
-                    elif account_ids := [rep_line['account_id'] for _command, _id, rep_line in tax_template.get('repartition_line_ids', []) if rep_line.get('account_id')]:
+                    elif (account_ids := [rep_line['account_id'] for _command, _id, rep_line in tax_template.get('repartition_line_ids', []) if rep_line.get('account_id')]) and existing_accounts.get(account_ids[0]):
                         local_account = self.env['account.account'].browse(existing_accounts[account_ids[0]])
+                        existing_accounts[account_xml_id] = create_foreign_tax_account(local_account, _("Cash basis transition account"), reconcilable=True).id
+
+                    elif local_account := self.env['account.account'].search([
+                        *self.env['account.account']._check_company_domain(company),
+                        ('account_type', 'in', ('liability_current', 'asset_current')),
+                    ], limit=1):
                         existing_accounts[account_xml_id] = create_foreign_tax_account(local_account, _("Cash basis transition account"), reconcilable=True).id
 
                     else:
