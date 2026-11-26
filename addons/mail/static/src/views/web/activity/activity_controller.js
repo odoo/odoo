@@ -87,7 +87,11 @@ export class ActivityController extends Component {
 
     scheduleActivity() {
         this.dialog.add(SelectCreateDialog, this.getSelectCreateDialogProps, {
-            onClose: () => this.model.load(this.getSearchProps()),
+            onClose: ({ noReload } = {}) => {
+                if (!noReload) {
+                    return this.model.load(this.getSearchProps());
+                }
+            },
         });
     }
 
@@ -109,7 +113,11 @@ export class ActivityController extends Component {
                 },
             },
             {
-                onClose: () => this.model.load(this.getSearchProps()),
+                onClose: ({ noReload } = {}) => {
+                    if (!noReload) {
+                        return this.model.load(this.getSearchProps());
+                    }
+                },
             }
         );
     }

@@ -859,6 +859,60 @@ test("Activity view: discard an activity creation dialog", async () => {
     await contains(".modal.o_technical_modal", { count: 0 });
 });
 
+test("Activity view: leaving the view closes the activity creation dialog", async () => {
+    registerArchs(archs);
+    onRpc("has_access", () => true);
+    let leftView = false;
+    onRpc("get_activity_data", () => {
+        if (leftView) {
+            asyncStep("get_activity_data after leaving the view");
+            // simulate a slow server: the activity view is destroyed before the reply
+            return new Promise(() => {});
+        }
+    });
+    await start();
+    await openView({
+        res_model: "mail.test.activity",
+        views: [[false, "activity"]],
+    });
+    await click(
+        ".o_activity_view  :nth-child(1 of .o_data_row) :nth-child(1 of .o_activity_empty_cell)"
+    );
+    await contains(".modal.o_technical_modal");
+    // leave the activity view (e.g. browser back) while the dialog is open
+    leftView = true;
+    await openFormView("mail.test.activity");
+    await contains(".o_action_manager .o_form_view");
+    await contains(".modal", { count: 0 });
+    await waitForSteps([]);
+});
+
+test("Activity view: leaving the view closes the schedule activity dialog", async () => {
+    registerArchs(archs);
+    MailTestActivity._views.list = `<list><field name="name"/></list>`;
+    let leftView = false;
+    onRpc("get_activity_data", () => {
+        if (leftView) {
+            asyncStep("get_activity_data after leaving the view");
+            // simulate a slow server: the activity view is destroyed before the reply
+            return new Promise(() => {});
+        }
+    });
+    await start();
+    await openView({
+        res_model: "mail.test.activity",
+        views: [[false, "activity"]],
+    });
+    await click(".o_activity_view .o_record_selector");
+    await contains(".modal .o_list_view");
+    // leave the activity view (e.g. browser back) while the dialog is open
+    leftView = true;
+    await openFormView("mail.test.activity");
+    await contains(".o_action_manager .o_form_view");
+    await contains(".modal", { count: 0 });
+    await waitForSteps([]);
+});
+
 test("Activity view: many2one_avatar_user widget in activity view", async () => {
     const [mailTestActivityId1] = pyEnv["mail.test.activity"].search([
         ["name", "=", "Meeting Room Furnitures"],
