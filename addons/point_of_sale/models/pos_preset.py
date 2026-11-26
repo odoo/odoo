@@ -75,7 +75,6 @@ class PosPreset(models.Model):
         usage = defaultdict(int)
         orders = self.env['pos.order'].search([
             ('preset_id', '=', self.id),
-            ('session_id.state', '=', 'opened'),
             ('preset_time', '>=', fields.Datetime.now()),
             ('state', 'in', ['draft', 'paid', 'done']),
             ('date_order', '>=', fields.Datetime.now() - timedelta(days=7))
