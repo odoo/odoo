@@ -81,7 +81,7 @@ class TestFlows(PaymentHttpCommon):
             )
 
             # Test content of rendered dummy redirect form
-            self.assertEqual(redirect_form_info["action"], "dummy")
+            self.assertEqual(redirect_form_info["action"], "/payment/status")
             # Public user since we didn't authenticate with a specific user
             self.assertEqual(redirect_form_info["inputs"]["user_id"], str(self.user.id))
             self.assertEqual(

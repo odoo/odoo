@@ -49,9 +49,10 @@ class PaymentCommon(BaseCommon):
             "country_id": cls.country_belgium.id,
         })
 
-        # Create a dummy provider to allow basic tests without any specific provider implementation
+        # Create a dummy provider to allow basic tests without any specific provider implementation.
+        # Its redirect form leads to the status page, as after paying on the provider's page.
         arch = """
-        <form action="dummy" method="post">
+        <form action="/payment/status" method="get">
             <input type="hidden" name="view_id" t-att-value="viewid"/>
             <input type="hidden" name="user_id" t-att-value="user_id.id"/>
         </form>
@@ -125,6 +126,53 @@ class PaymentCommon(BaseCommon):
             )
             self.post_process_mock = self._post_process_patcher.start()
             self.addCleanup(self._disable_post_process_patcher)
+        self._patch_dummy_provider_payment_flow()
+
+    def _patch_dummy_provider_payment_flow(self):
+        """Make the dummy provider accept all payment requests, like a real provider would.
+
+        Requesting the processing values of a dummy transaction records successful payment data,
+        which the processing then applies. Call `_enable_complete_payment_flow` to run the complete
+        payment flow, e.g., in tours.
+
+        :rtype: None
+        """
+
+        def _is_dummy_payment(tx, payment_data):
+            return tx.provider_code == "none" and payment_data.get("simulated_state") == "done"
+
+        def _get_specific_processing_values(tx, processing_values):
+            if tx.provider_code == "none":
+                tx._record({"reference": tx.reference, "simulated_state": "done"})
+            return og_get_specific_processing_values(tx, processing_values)
+
+        def _apply_updates(tx, payment_data):
+            if not _is_dummy_payment(tx, payment_data):
+                return og_apply_updates(tx, payment_data)
+            tx._set_done()
+
+        def _extract_amount_data(tx, payment_data):
+            if not _is_dummy_payment(tx, payment_data):
+                return og_extract_amount_data(tx, payment_data)
+            return None  # The payment data are built from the transaction; skip the amount check
+
+        PaymentTransaction = self.registry["payment.transaction"]
+        og_get_specific_processing_values = PaymentTransaction._get_specific_processing_values
+        og_apply_updates = PaymentTransaction._apply_updates
+        og_extract_amount_data = PaymentTransaction._extract_amount_data
+        self.patch(
+            PaymentTransaction, "_get_specific_processing_values", _get_specific_processing_values
+        )
+        self.patch(PaymentTransaction, "_apply_updates", _apply_updates)
+        self.patch(PaymentTransaction, "_extract_amount_data", _extract_amount_data)
+
+    def _enable_complete_payment_flow(self):
+        """Run the processing and post-processing of the dummy provider's payments.
+
+        :rtype: None
+        """
+        self._disable_process_patcher()
+        self._disable_post_process_patcher()
 
     def _disable_process_patcher(self):
         """Restore the real `_process` to test its business logic."""

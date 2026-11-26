@@ -13,7 +13,7 @@ patch(FinalSteps.prototype, {
                 expectUnloadPage: true,
             },
             wsTourUtils.goToCheckout(),
-            ...wsTourUtils.payWithTransfer({ expectUnloadPage: true }),
+            ...wsTourUtils.payWithDummy(),
         ];
     }
 

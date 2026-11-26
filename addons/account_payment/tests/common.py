@@ -46,3 +46,35 @@ class AccountPaymentCommon(PaymentCommon, AccountTestInvoicingCommon):
     def setUp(self):
         self.enable_post_process_patcher = False
         super().setUp()
+
+
+class AccountPaymentFlowCommon(PaymentCommon):
+    """Common to run complete payment flows with the dummy provider, payments included."""
+
+    def _enable_complete_payment_flow(self):
+        """Override of `payment` to let the post-processing register the dummy provider's payments.
+
+        :rtype: None
+        """
+        super()._enable_complete_payment_flow()
+
+        def _get_payment_method_information(payment_methods):
+            return {
+                **og_get_payment_method_information(payment_methods),
+                'none': {'mode': 'electronic', 'type': ('bank',)},
+            }
+
+        AccountPaymentMethod = self.registry['account.payment.method']
+        og_get_payment_method_information = AccountPaymentMethod._get_payment_method_information
+        with patch.object(
+            AccountPaymentMethod, '_get_payment_method_information', _get_payment_method_information
+        ):
+            self.env['account.payment.method'].sudo().create({
+                'name': "Dummy Method",
+                'code': 'none',
+                'payment_type': 'inbound',
+            })
+        provider_sudo = self.provider.sudo()
+        provider_sudo.journal_id = self.env['account.journal'].sudo().search(
+            provider_sudo._get_journal_domain(), limit=1
+        )  # Create the payment method line through the inverse

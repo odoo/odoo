@@ -64,11 +64,11 @@ class TestWebsiteSaleCartAbandoned(TestWebsiteSaleCartAbandonedCommon):
         add_order_line = [
             [0, 0, {"name": "The Product", "product_id": product.id, "product_uom_qty": 1}]
         ]
-        provider = cls.env["payment.provider"].create({"name": "Test", "code": "none"})
+        cls.provider = cls.env["payment.provider"].create({"name": "Test", "code": "none"})
         cls.payment_method_id = (
             cls
             .env["payment.method"]
-            .create({"name": "Payment method", "code": "unknown", "provider_id": provider.id})
+            .create({"name": "Payment method", "code": "unknown", "provider_id": cls.provider.id})
             .id
         )
         cls.so0before = cls.env["sale.order"].create({
@@ -262,7 +262,7 @@ class TestWebsiteSaleCartAbandoned(TestWebsiteSaleCartAbandonedCommon):
             "order_line": order_line,
         })
         transaction = self.env["payment.transaction"].create({
-            "provider_id": self.ref("payment.payment_provider_demo"),
+            "provider_id": self.provider.id,
             "payment_method_id": self.payment_method_id,
             "partner_id": self.customer.id,
             "reference": abandoned_sale_order.name,

@@ -8,6 +8,7 @@ from odoo.fields import Command
 from odoo.tests import HttpCase, tagged
 from odoo.tools import SQL
 
+from odoo.addons.payment.tests.common import PaymentCommon
 from odoo.addons.sale.tests.common import TestSaleCommon
 from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 from odoo.addons.website_sale_loyalty.controllers.cart import Cart
@@ -15,7 +16,7 @@ from odoo.addons.website_sale_loyalty.controllers.main import WebsiteSale
 
 
 @tagged("post_install", "-at_install")
-class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
+class WebsiteSaleLoyaltyTestUi(TestSaleCommon, PaymentCommon, HttpCase):
     _test_user_groups = None  # FIXME list needed groups
 
     @classmethod
@@ -44,16 +45,6 @@ class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
         cls.public_category = cls.env["product.public.category"].create({"name": "Public Category"})
 
     def test_01_admin_shop_sale_loyalty_tour(self):
-        if self.env["ir.module.module"]._get("payment_custom").state != "installed":
-            self.skipTest("Transfer provider is not installed")
-
-        transfer_provider = self.env.ref("payment.payment_provider_transfer")
-        transfer_provider.sudo().write({
-            "is_live": True,
-            "is_published": True,
-            "company_id": self.env.company.id,
-        })
-
         large_cabinet = self.env["product.product"].create({
             "name": "Small Cabinet",
             "list_price": 320.0,

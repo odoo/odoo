@@ -1,9 +1,11 @@
 from odoo.fields import Command
 from odoo.tests import HttpCase, tagged
 
+from odoo.addons.account_payment.tests.common import AccountPaymentFlowCommon
+
 
 @tagged("post_install", "-at_install")
-class TestGoogleAnalytics(HttpCase):
+class TestGoogleAnalytics(AccountPaymentFlowCommon, HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -45,9 +47,6 @@ class TestGoogleAnalytics(HttpCase):
             "phone": "+1 555-555-5555",
             "email": "admin@yourcompany.example.com",
         })
-        if cls.env["ir.module.module"]._get("payment_custom").state == "installed":
-            transfer_provider = cls.env.ref("payment.payment_provider_transfer")
-            transfer_provider.is_published = True
 
     def _create_test_cart(self):
         return self.env["sale.order"].create({
@@ -98,7 +97,6 @@ class TestGoogleAnalytics(HttpCase):
         )
 
     def test_purchase(self):
-        if self.env["ir.module.module"]._get("payment_custom").state != "installed":
-            self.skipTest("Transfer provider is not installed")
+        self._enable_complete_payment_flow()
         self._create_test_cart()
         self.start_tour("/shop/cart", "website_sale.google_analytics_purchase", login="admin")

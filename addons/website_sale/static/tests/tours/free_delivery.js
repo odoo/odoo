@@ -25,6 +25,6 @@ registry.category("web_tour.tours").add("website_sale.check_free_delivery", {
                 '#o_delivery_methods [name="o_delivery_method"]:contains("20.0"):contains("The Poste")',
         },
         tourUtils.confirmOrder(),
-        ...tourUtils.payWithTransfer({ expectUnloadPage: true, waitFinalizeYourPayment: true }),
+        ...tourUtils.payWithDummy(),
     ],
 });
