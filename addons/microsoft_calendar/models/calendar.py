@@ -204,7 +204,8 @@ class Meeting(models.Model):
         if self.env.user._get_microsoft_sync_status() != "sync_paused" and values.get('recurrency'):
             for event in self:
                 if not event.recurrency and not event.recurrence_id:
-                    event._microsoft_delete(event._get_organizer(), event.microsoft_id, timeout=3)
+                    if event.microsoft_id:
+                        event._microsoft_delete(event._get_organizer(), event.microsoft_id, timeout=3)
                     event.microsoft_id = False
                     event.ms_universal_event_id = False
 

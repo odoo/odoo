@@ -52,7 +52,8 @@ class RecurrenceRule(models.Model):
                     'active': False,
                     'need_sync_m': True,
                 }]
-                event._microsoft_delete(event.user_id, event.microsoft_id)
+                if event.microsoft_id:
+                    event._microsoft_delete(event.user_id, event.microsoft_id)
                 event.ms_universal_event_id = False
         self.env['calendar.event'].create(vals)
         self.calendar_event_ids.need_sync_m = False
