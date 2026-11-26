@@ -15,12 +15,12 @@ class ThemeUtils(models.AbstractModel):
         "website_sale.filmstrip_categories_large_images",
     ]
 
-    def enable_view(self, xml_id):
+    def _enable_view(self, xml_id):
         """Override of `theme.utils` to disable all category style templates when enabling one."""
         if xml_id in self.category_style_templates:
             for template in self.category_style_templates:
-                self.disable_view(template)
-        super().enable_view(xml_id)
+                self._disable_view(template)
+        super()._enable_view(xml_id)
 
     @property
     def _footer_templates(self):

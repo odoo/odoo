@@ -32,12 +32,12 @@ class TestTheme(common.TransactionCase):
                          "Only the default template should be active.")
 
         key = 'website.template_header_vertical'
-        ThemeUtils.enable_view(key)
+        ThemeUtils._enable_view(key)
         self.assertEqual(_get_header_template_key(), key,
                          "Only one template can be active at a time.")
 
         key = 'website.template_header_hamburger'
-        ThemeUtils.enable_view(key)
+        ThemeUtils._enable_view(key)
         self.assertEqual(_get_header_template_key(), key,
                          "Ensuring it works also for non default template.")
 
