@@ -1,6 +1,6 @@
 import { after, afterEach, expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";
-import { Component, onMounted, onPatched, proxy, t, useProps, xml } from "@odoo/owl";
+import { Component, onMounted, onPatched, proxy, t, toRaw, useProps, xml } from "@odoo/owl";
 import {
     WithLazyGetterTrap,
     clearGettersCache,
@@ -394,4 +394,54 @@ test("dynamically creates a lazy getter", () => {
     reactiveObj.notRelatedValue = 1;
     expect(reactiveObj.hello).toBe("Hello World");
     expect(computeCallCount).toBe(2);
+});
+
+test("computed values are created lazily on first read", () => {
+    const owl = odoo.loader.modules.get("@odoo/owl");
+    const { WithLazyGetterTrap: LazyTrap } = odoo.loader.factories
+        .get("@point_of_sale/lazy_getter")
+        .fn((dep) =>
+            dep === "@odoo/owl"
+                ? {
+                      ...owl,
+                      computed(getter, options) {
+                          expect.step(options?.name);
+                          return owl.computed(getter, options);
+                      },
+                  }
+                : odoo.loader.require(dep)
+        );
+
+    class DemoClass extends LazyTrap {
+        constructor() {
+            super({});
+            this.x = 1;
+        }
+        get doubled() {
+            return this.x * 2;
+        }
+        get tripled() {
+            return this.x * 3;
+        }
+    }
+
+    const reactiveObj = proxy(new DemoClass());
+    expect.verifySteps([]);
+
+    expect(reactiveObj.doubled).toBe(2);
+    expect.verifySteps(["lazyGetter(doubled)"]);
+
+    expect(reactiveObj.doubled).toBe(2);
+    reactiveObj.x = 4;
+    expect(reactiveObj.doubled).toBe(8);
+    expect.verifySteps([]);
+
+    expect(reactiveObj.tripled).toBe(12);
+    expect.verifySteps(["lazyGetter(tripled)"]);
+
+    // Reading another getter on the raw object does not break reactivity of existing getters
+    const rawObj = toRaw(reactiveObj);
+    expect(rawObj.tripled).toBe(12);
+    reactiveObj.x = 5;
+    expect(reactiveObj.doubled).toBe(10);
 });
