@@ -139,6 +139,7 @@ class IrAsset(models.Model):
         :returns: the list of tuples (path, addon, bundle)
         """
         installed = self._get_installed_addons_list()
+        assets_params['bundle_name'] = bundle
         addons = self._get_active_addons_list(**assets_params)
 
         asset_paths = AssetPaths()
