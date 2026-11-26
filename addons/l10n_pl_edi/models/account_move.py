@@ -349,6 +349,19 @@ class AccountMove(models.Model):
             quiet=0,
         ))
 
+    def _l10n_pl_edi_handle_ksef_unavailable(self, error, xml_content=None, session_id=None):
+        """ Hook called when the online sending of the invoice failed because KSeF is unavailable
+        (connection error, timeout or 5xx answer, see KSeFUnavailableError).
+
+        :param error: the KSeFUnavailableError raised.
+        :param xml_content: the XML bytes sent to KSeF when the sending itself failed (KSeF may have
+            received them), None when the session could not be opened.
+        :param session_id: the KSeF session used by that sending, None when it could not be opened.
+        :return: True if the invoice was handled otherwise, False to report the sending error.
+        """
+        self.ensure_one()
+        return False
+
     def _l10n_pl_edi_get_status_mapping(self):
         """
         Returns a dictionary mapping KSeF status codes to (odoo_status, message).

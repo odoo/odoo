@@ -1,16 +1,21 @@
 import base64
+import json
 from datetime import datetime, timedelta
 from hashlib import sha256
 
+import requests
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric import rsa
 from lxml import etree
 
 from odoo import Command, fields, tools
 from odoo.exceptions import UserError
 from odoo.tests import freeze_time, patch, tagged
-from odoo.tools import BinaryBytes
+from odoo.tools import BinaryBytes, mute_logger
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
+from odoo.addons.l10n_pl_edi.exceptions import KSeFRateLimitError, KSeFTimeoutError, KSeFUnavailableError
 from odoo.addons.l10n_pl_edi.models.account_move import AccountMove
 from odoo.addons.l10n_pl_edi.tools.ksef_api_service import KsefApiService
 
@@ -1299,6 +1304,129 @@ class TestL10nPlEdi(TestL10nPlEdiCommon):
         bill = self.env['account.move'].create(self.env['account.move'].l10n_pl_edi_get_ksef_bill_vals_from_xml(content))
         self.assertEqual(bill.l10n_pl_mpp, 'mpp')
 
+    @staticmethod
+    def _ksef_response(status_code, json_data=None):
+        response = requests.Response()
+        response.status_code = status_code
+        response._content = json.dumps(json_data or {}).encode()
+        return response
+
+    def test_send_invoice_offline_mode(self):
+        service = KsefApiService(self.company)
+        service.raw_symmetric_key = b'0' * 32
+        service.raw_iv = b'0' * 16
+
+        with patch(
+            'odoo.addons.l10n_pl_edi.tools.ksef_api_service.requests.request',
+            return_value=self._ksef_response(202, {'referenceNumber': 'REF'}),
+        ) as request:
+            service.send_invoice(b'<Invoice/>')
+            service.send_invoice(b'<Invoice/>', offline_mode=True)
+
+        online_payload, offline_payload = (call.kwargs['json'] for call in request.call_args_list)
+        self.assertNotIn('offlineMode', online_payload)
+        self.assertIs(offline_payload['offlineMode'], True)
+
+    @mute_logger('odoo.addons.l10n_pl_edi.tools.ksef_api_service')
+    def test_ksef_request_errors_are_typed(self):
+        service = KsefApiService(self.company)
+
+        def request_error(**kwargs):
+            with patch('odoo.addons.l10n_pl_edi.tools.ksef_api_service.requests.request', **kwargs):
+                try:
+                    service._make_request('GET', 'https://ksef.invalid')
+                except UserError as error:
+                    return error
+            return None
+
+        self.assertIsInstance(request_error(side_effect=requests.Timeout), KSeFTimeoutError)
+        self.assertIsInstance(request_error(side_effect=requests.ConnectionError), KSeFUnavailableError)
+        self.assertNotIsInstance(request_error(side_effect=requests.ConnectionError), KSeFTimeoutError)
+        self.assertIsInstance(request_error(return_value=self._ksef_response(503)), KSeFUnavailableError)
+        self.assertIsInstance(request_error(return_value=self._ksef_response(429)), KSeFRateLimitError)
+        rejection = request_error(return_value=self._ksef_response(400, {'exception': 'Invalid'}))
+        self.assertIsInstance(rejection, UserError)
+        self.assertNotIsInstance(rejection, KSeFUnavailableError)
+
+    @mute_logger('odoo.addons.l10n_pl_edi.tools.ksef_api_service')
+    def test_open_session_keeps_the_unavailable_error(self):
+        service = KsefApiService(self.company)
+        public_key = rsa.generate_private_key(public_exponent=65537, key_size=2048).public_key()
+        public_key_pem = public_key.public_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PublicFormat.SubjectPublicKeyInfo,
+        ).decode()
+
+        with (
+            patch('odoo.addons.l10n_pl_edi.tools.ksef_api_service.requests.get', side_effect=requests.ConnectionError),
+            self.assertRaises(KSeFUnavailableError),
+        ):
+            service.open_ksef_session()
+
+        with (
+            patch.object(KsefApiService, '_get_public_keys', return_value={'symmetric': public_key_pem}),
+            patch('odoo.addons.l10n_pl_edi.tools.ksef_api_service.requests.request', side_effect=requests.Timeout),
+            self.assertRaisesRegex(KSeFTimeoutError, 'Failed to open KSeF session'),
+        ):
+            service.open_ksef_session()
+
+        with (
+            patch.object(KsefApiService, '_get_public_keys', return_value={'symmetric': public_key_pem}),
+            patch(
+                'odoo.addons.l10n_pl_edi.tools.ksef_api_service.requests.request',
+                return_value=self._ksef_response(400, {'exception': 'Invalid'}),
+            ),
+            self.assertRaisesRegex(UserError, 'Failed to open KSeF session') as error,
+        ):
+            service.open_ksef_session()
+        self.assertNotIsInstance(error.exception, KSeFUnavailableError)
+
+    def test_open_session_keeps_the_rate_limit_error(self):
+        service = KsefApiService(self.company)
+        public_key = rsa.generate_private_key(public_exponent=65537, key_size=2048).public_key()
+        public_key_pem = public_key.public_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PublicFormat.SubjectPublicKeyInfo,
+        ).decode()
+        response = self._ksef_response(429)
+        response.headers['Retry-After'] = '30'
+
+        with (
+            patch.object(KsefApiService, '_get_public_keys', return_value={'symmetric': public_key_pem}),
+            patch('odoo.addons.l10n_pl_edi.tools.ksef_api_service.requests.request', return_value=response),
+            self.assertRaisesRegex(KSeFRateLimitError, 'Failed to open KSeF session') as error,
+        ):
+            service.open_ksef_session()
+        self.assertEqual(error.exception.retry_after, 30)
+
+    def test_find_invoice_in_session_uses_the_xml_hash(self):
+        service = KsefApiService(self.company)
+        expected = {'invoiceHash': 'EXPECTED', 'status': {'code': 200}}
+
+        with patch('odoo.addons.l10n_pl_edi.tools.ksef_api_service.requests.request', side_effect=[
+            self._ksef_response(200, {'invoices': [{'invoiceHash': 'OTHER'}], 'continuationToken': 'NEXT'}),
+            self._ksef_response(200, {'invoices': [expected]}),
+        ]) as request:
+            invoice = service.find_invoice_in_session('EXPECTED', session_id='SESSION-REF')
+
+        self.assertEqual(invoice, expected)
+        first_call, second_call = request.call_args_list
+        self.assertEqual(first_call.args, ('GET', 'https://api-test.ksef.mf.gov.pl/v2/sessions/SESSION-REF/invoices'))
+        self.assertNotIn('x-continuation-token', first_call.kwargs['headers'])
+        self.assertEqual(second_call.kwargs['headers']['x-continuation-token'], 'NEXT')
+
+    def test_find_invoice_in_session_stops_at_the_match(self):
+        service = KsefApiService(self.company)
+        expected = {'invoiceHash': 'EXPECTED', 'status': {'code': 200}}
+
+        with patch('odoo.addons.l10n_pl_edi.tools.ksef_api_service.requests.request', side_effect=[
+            self._ksef_response(200, {'invoices': [expected], 'continuationToken': 'NEXT'}),
+        ]) as request:
+            invoice = service.find_invoice_in_session('EXPECTED', session_id='SESSION-REF')
+
+        self.assertEqual(invoice, expected)
+        request.assert_called_once()
+
     def test_qr_link_uses_the_stored_xml_without_padding(self):
         invoice = self.standard_invoice
         invoice.action_post()
@@ -1332,3 +1460,28 @@ class TestL10nPlEdi(TestL10nPlEdiCommon):
 
         self.assertEqual(invoice.l10n_pl_edi_status, 'rejected')
         self.assertIn('Code: 550', str(invoice.l10n_pl_edi_header))
+
+    def test_l10n_pl_edi_send_ksef_unavailable_keeps_the_error(self):
+        invoice = self.standard_invoice
+        invoice.action_post()
+        invoices_data = {invoice: {'extra_edis': {'pl_ksef'}, 'invoice_edi_format': None}}
+
+        with (
+            patch.object(KsefApiService, 'open_ksef_session', side_effect=KSeFUnavailableError('KSeF API Error: 503')),
+            patch.object(KsefApiService, 'send_invoice') as send_invoice,
+        ):
+            self.env['account.move.send']._call_web_service_before_invoice_pdf_render(invoices_data)
+
+        send_invoice.assert_not_called()
+        self.assertEqual(invoices_data[invoice]['error']['errors'], ['KSeF API Error: 503'])
+        self.assertFalse(invoice.l10n_pl_edi_status)
+
+        invoices_data = {invoice: {'extra_edis': {'pl_ksef'}, 'invoice_edi_format': None}}
+        with (
+            patch.object(KsefApiService, 'open_ksef_session'),
+            patch.object(KsefApiService, 'send_invoice', side_effect=KSeFTimeoutError('KSeF API Error: timeout')),
+        ):
+            self.env['account.move.send']._call_web_service_before_invoice_pdf_render(invoices_data)
+
+        self.assertEqual(invoices_data[invoice]['error']['errors'], ['KSeF API Error: timeout'])
+        self.assertFalse(invoice.l10n_pl_edi_status)
