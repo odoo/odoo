@@ -908,6 +908,25 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             },
         ])
 
+    def test_invoice_mail_attachments_widget_unselected(self):
+        """ Test that an existing attachment with the same name as the invoice PDF, when unselected,
+        does not prevent the invoice PDF from being sent. """
+        invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
+        # E.g. a previous version of the e-invoice PDF, proposed as unselected by the attachments selector.
+        same_name = self.env['ir.attachment'].create({
+            'name': invoice._get_invoice_report_filename(),
+            'raw': b'homonym',
+            'res_model': invoice._name,
+            'res_id': invoice.id,
+        })
+        wizard = self.create_send_and_print(invoice, sending_methods=['email'])
+        wizard.mail_attachments_widget = wizard.mail_attachments_widget + [
+            {'id': same_name.id, 'name': same_name.name, 'skip': True},
+        ]
+        wizard.action_send_and_print()
+        pdf = invoice.invoice_pdf_report_id
+        self.assertEqual(self._get_mail_message(invoice).attachment_ids.checksum, pdf.checksum)
+
     def test_invoice_web_service_after_pdf_rendering(self):
         """ Test the ir.attachment for the PDF is not generated when the web service
         is called after the PDF generation but performing a cr.commit even in case of error.
