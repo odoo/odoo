@@ -1260,9 +1260,13 @@ actual arch.
                 if (res := xmlid.split('.', 1))
             )
 
-            for model_data in self.env['ir.model.data'].sudo().search(domain):
-                view = IrUiView.browse(model_data.res_id)
-                if view.exists():
+            model_datas = self.env['ir.model.data'].sudo().search_fetch(domain, ['module', 'name', 'res_id'])
+            # in batch, without the missing views (like `browse` + `exists`)
+            data_views = IrUiView.with_context(active_test=False).search_fetch(
+                Domain('id', 'in', model_datas.mapped('res_id')), field_names)
+            views_by_res_id = {view.id: view for view in data_views}
+            for model_data in model_datas:
+                if view := views_by_res_id.get(model_data.res_id):
                     view_by_id[view.id] = view
                     xmlid = f"{model_data.module}.{model_data.name}"
                     view_by_id[xmlid] = view

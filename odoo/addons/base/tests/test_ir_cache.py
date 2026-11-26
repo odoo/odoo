@@ -353,6 +353,89 @@ class TestQWebCodeCache(IrCacheCase):
         self.callee.arch = '<span>callee 2</span>'
         self.render(self.callee, '<span>callee 2</span>', generated=self.callee)
 
+    def test_query_count_hot(self):
+        """ A new transaction in a warm worker: the ormcaches are filled (the
+        compiled code of the template and of its t-calls), no query. """
+        IrQweb = self.env['ir.qweb']
+        self.render(self.caller, '<div><span>callee</span></div>', generated=self.caller + self.callee)
+        IrQweb._render(self.caller.id)
+
+        # what a new transaction does not have: the caches of the cursor and
+        # of the records
+        self.env.cr.cache.clear()
+        self.env.invalidate_all()
+        with self.assertQueries([]):
+            self.assertEqual(str(IrQweb._render(self.caller.id)), '<div><span>callee</span></div>')
+
+    def test_query_count_cold(self):
+        """ A new worker: the ormcaches are empty, the compiled code is in
+        `ir.cache`. The t-calls are resolved in batch, by key and by xmlid
+        (a view whose xmlid is not its key, found in `ir.model.data`). """
+        View = self.env['ir.ui.view']
+        callee_data = View.create({
+            'name': 'callee data', 'type': 'qweb', 'arch': '<b>data</b>',
+        })
+        self.env['ir.model.data'].create({
+            'module': 'base', 'name': 'test_code_cache_callee_data',
+            'model': 'ir.ui.view', 'res_id': callee_data.id,
+        })
+        other = View.create({
+            'name': 'other', 'type': 'qweb', 'key': 'base.test_code_cache_other',
+            'arch': '<i>other</i>',
+        })
+        caller = View.create({
+            'name': 'caller 2', 'type': 'qweb', 'key': 'base.test_code_cache_caller_2',
+            'arch': '<div>'
+                '<t t-call="base.test_code_cache_callee"/>'
+                '<t t-call="base.test_code_cache_other"/>'
+                '<t t-call="base.test_code_cache_callee_data"/>'
+            '</div>',
+        })
+        expected = '<div><span>callee</span><i>other</i><b>data</b></div>'
+        self.render(caller, expected, generated=caller + self.callee + other + callee_data)
+
+        # a new worker: no ormcache, no cache of the cursor and of the records
+        self.env.transaction.invalidate_ormcache('templates')
+        self.env.cr.cache.clear()
+        self.env.invalidate_all()
+        view_fields = (
+            '"ir_ui_view"."id", "ir_ui_view"."name", "ir_ui_view"."model", "ir_ui_view"."key", '
+            '"ir_ui_view"."priority", "ir_ui_view"."type", "ir_ui_view"."arch_db"->>%s, '
+            '"ir_ui_view"."arch_fs", "ir_ui_view"."arch_updated", "ir_ui_view"."arch_prev", '
+            '"ir_ui_view"."inherit_id", "ir_ui_view"."mode", "ir_ui_view"."notes", "ir_ui_view"."active", '
+            '"ir_ui_view"."technical_usage", "ir_ui_view"."create_uid", "ir_ui_view"."create_date", '
+            '"ir_ui_view"."write_uid", "ir_ui_view"."write_date", "ir_ui_view"."customize_show"'
+        )
+        ir_cache_lookup = """
+            WITH entry AS MATERIALIZED (
+                SELECT DISTINCT ON (key) key, version_data, version, create_date, signature
+                FROM ir_cache
+                WHERE kind = %s AND key = ANY(%s)
+                ORDER BY key, id DESC
+            ), ...
+        """
+        with self.assertQueries([
+            # the template, rendered by id
+            f'SELECT {view_fields} FROM "ir_ui_view" WHERE "ir_ui_view"."id" IN %s',
+            # the code of the template
+            ir_cache_lookup,
+            # the t-calls in batch: by key...
+            f'''SELECT {view_fields} FROM "ir_ui_view"
+               WHERE ("ir_ui_view"."active" IS TRUE AND "ir_ui_view"."key" IN %s)
+               ORDER BY "ir_ui_view"."priority", "ir_ui_view"."id"''',
+            # ... and by xmlid (the view without key)
+            '''SELECT "ir_model_data"."id", "ir_model_data"."module", "ir_model_data"."name", "ir_model_data"."res_id"
+               FROM "ir_model_data"
+               WHERE ("ir_model_data"."model" IN %s AND "ir_model_data"."module" IN %s AND "ir_model_data"."name" IN %s)
+               ORDER BY "ir_model_data"."module", "ir_model_data"."model", "ir_model_data"."name"''',
+            f'''SELECT {view_fields} FROM "ir_ui_view"
+               WHERE "ir_ui_view"."id" IN %s
+               ORDER BY "ir_ui_view"."priority", "ir_ui_view"."name", "ir_ui_view"."id"''',
+            # the code of the t-calls, in batch
+            ir_cache_lookup,
+        ]):
+            self.assertEqual(str(self.env['ir.qweb']._render(caller.id)), expected)
+
     def test_python_version(self):
         """ The code objects are not portable between versions of python: the
         version is in the key, the entries of each version are kept side by

@@ -1117,14 +1117,20 @@ class IrQweb(models.AbstractModel):
         trees loaded in batch, even if they are not rendered (e.g. a `t-call`
         in a `t-if`): they are then in `ir.cache` for the next workers. """
         ormcache = IrQweb._generate_code_cached.__cache__
+        IrUiView = self.env['ir.ui.view']
+        template_info_cache = type(IrUiView)._get_cached_template_info.__cache__
         while calls:
-            infos = self.env['ir.ui.view']._preload_views(list(calls))
+            # `calls`: (xmlid or id, id) of the templates, stored with the
+            # compiled code: the code is read without resolving the t-calls
             keys = {
-                key: info['ref'] for call in calls
-                if (info := infos.get(_id_or_xmlid(call))) and info['ref']
-                and ormcache.get_value(self, info['ref']) is None
-                and (key := repr(self._get_cache_key(info['ref'])))
+                key: ref for _call, ref in calls
+                if ormcache.get_value(self, ref) is None
+                and (key := repr(self._get_cache_key(ref)))
             }
+            # the t-calls are resolved when rendering, from the ormcache: in a
+            # cold worker, load it in batch
+            if unknown := [call for call, _ref in calls if template_info_cache.get_value(IrUiView, call) is None]:
+                IrUiView._preload_views(unknown)
             values = self.env['ir.cache']._lookup_multi('qweb', keys, version=self._get_template_cache_version_sql())
             missing_refs = [ref for ref, value in zip(keys.values(), values) if value is None]
             try:
@@ -1135,8 +1141,7 @@ class IrQweb(models.AbstractModel):
                 # QWebError) if the template is rendered, so it is not a
                 # warning here (e.g. a broken studio view, or a t-call in a
                 # t-if that is never rendered)
-                missing = {ref: infos[ref]['xmlid'] for ref in missing_refs}
-                _logger.info("Failed to preload the called templates %s: %s", missing, e)
+                _logger.info("Failed to preload the called templates %s: %s", missing_refs, e)
             calls = OrderedSet()
             for (key, ref), value in zip(keys.items(), values):
                 if value is None:
@@ -1264,8 +1269,13 @@ class IrQweb(models.AbstractModel):
             key: compile_context.get(key, False)
             for key in self._get_template_cache_keys() + ['ref', 'ref_name']
         }
-        # templates statically called, loaded in batch with the code
-        options['calls'] = self._get_called_templates(element)
+        # ids of the templates statically called, their code is loaded in
+        # batch with this one (see `_preload_code_cached`); only a preload: the
+        # t-calls are resolved when rendering
+        options['calls'] = [
+            (call, ref) for call in map(_id_or_xmlid, self._get_called_templates(element))
+            if (ref := self._get_template_info(call)['id'])
+        ]
 
         # generate code
         ref_name = compile_context['ref_name'] or ''
