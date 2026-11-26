@@ -56,16 +56,20 @@ export function insertListInSpreadsheet(model, params, mode = "static") {
  * @param {string} [params.sheetId]
  * @param {object} [params.modelConfig]
  * @param {{name: string, asc: boolean}[]} [params.orderBy]
+ * @param {Array} [params.providedPlugins] owl plugins to provide
+ * @param {Array} [params.owlPluginsConfig] config of the owl plugins
  * @param { "static" | "dynamic"} [params.mode]
  *
- * @returns { Promise<{ model: OdooSpreadsheetModel, env: Object }>}
+ * @returns { Promise<{ model: OdooSpreadsheetModel, env: Object, getPlugin: (plugin: any) => any }>}
  */
 export async function createSpreadsheetWithList(params = {}) {
-    const { model, env } = await createModelWithDataSource({
+    const { model, env, getPlugin } = await createModelWithDataSource({
         mockRPC: params.mockRPC,
         serverData: params.serverData,
         modelConfig: params.modelConfig,
         createMockApp: params.createMockApp,
+        providedPlugins: params.providedPlugins,
+        owlPluginsConfig: params.owlPluginsConfig,
     });
 
     insertListInSpreadsheet(
@@ -89,5 +93,5 @@ export async function createSpreadsheetWithList(params = {}) {
     if (!params.skipWaitForDataLoaded) {
         await waitForDataLoaded(model);
     }
-    return { model, env };
+    return { model, env, getPlugin };
 }
