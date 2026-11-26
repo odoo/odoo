@@ -187,6 +187,56 @@ describe("data_service", () => {
         expect(Object.keys(requests[0].records)).not.toInclude("res.partner");
     });
 
+    test("loadRecordsFromPos does not read indexedDB for models filtered by a domain", async () => {
+        const store = await setupPosEnv();
+        const data = store.data;
+        const requests = [];
+        const cachedModelsRead = [];
+        patch(data, {
+            async getCachedServerIdsFromIndexedDB(models) {
+                cachedModelsRead.push(models);
+                return super.getCachedServerIdsFromIndexedDB(...arguments);
+            },
+            async callRelated(model, method, args) {
+                if (method === "load_data") {
+                    requests.push(args[1]);
+                }
+                return super.callRelated(...arguments);
+            },
+        });
+        const template = MockServer.env["product.template"].create({
+            list_price: 10,
+            name: "Scanned product",
+        });
+
+        await store.loadNewProducts([["id", "=", template.id]]);
+
+        expect(cachedModelsRead.length).toBe(1);
+        expect(cachedModelsRead[0]).not.toInclude("product.template");
+        expect(cachedModelsRead[0]).toInclude("product.product");
+        expect(Object.keys(requests[0].records)).not.toInclude("product.template");
+
+        cachedModelsRead.length = 0;
+        await data.loadRecordsFromPos(
+            ["res.partner"],
+            { "res.partner": [["id", "=", 1]] },
+            {},
+            {},
+            {},
+            false
+        );
+        expect(cachedModelsRead).toEqual([]);
+
+        // missingRecursive also skips IndexedDB for models filtered by search_params.domain
+        const missingPartner = MockServer.env["res.partner"].create({ name: "Missing partner" });
+        const order = await getFilledOrder(store);
+        await data.missingRecursive({
+            "pos.order": [{ ...order.raw, id: 5001, partner_id: missingPartner }],
+        });
+        expect(cachedModelsRead.length).toBe(1);
+        expect(cachedModelsRead[0]).not.toInclude("res.partner");
+    });
+
     test("indexedDB is not read again for the write dates of what is already known", async () => {
         const store = await setupPosEnv();
         const data = store.data;

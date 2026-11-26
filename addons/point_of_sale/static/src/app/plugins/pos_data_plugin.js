@@ -1067,7 +1067,12 @@ export class PosDataPlugin extends Plugin {
         data.models = [...new Set(data.models)];
 
         if (data.models.length > 0) {
-            data.records = await this.getCachedServerIdsFromIndexedDB(data.models);
+            const modelsWithoutDomain = data.models.filter(
+                (model) => !data.search_params[model]?.domain?.length
+            );
+            data.records = modelsWithoutDomain.length
+                ? await this.getCachedServerIdsFromIndexedDB(modelsWithoutDomain)
+                : {};
             await this.callRelated(
                 "pos.session",
                 "load_data",
@@ -1096,7 +1101,10 @@ export class PosDataPlugin extends Plugin {
             }
             models = [...models];
         }
-        const localData = await this.getCachedServerIdsFromIndexedDB(models);
+        const modelsWithoutDomain = models.filter((model) => !domain[model]?.length);
+        const localData = modelsWithoutDomain.length
+            ? await this.getCachedServerIdsFromIndexedDB(modelsWithoutDomain)
+            : {};
         const search_params = {};
         for (const model of models) {
             search_params[model] = {
