@@ -325,7 +325,9 @@ class SaleOrderLine(models.Model):
         comodel_name="account.analytic.line", inverse_name="so_line", string="Analytic lines"
     )
     # precomputed as the amounts, which are precomputed, read it to prepare the tax base lines
-    analytic_distribution = fields.Json(compute="_compute_analytic_distribution", store=True, precompute=True)
+    analytic_distribution = fields.Json(
+        compute="_compute_analytic_distribution", store=True, precompute=True
+    )
 
     invoice_lines = fields.Many2many(
         comodel_name="account.move.line",
@@ -1042,12 +1044,9 @@ class SaleOrderLine(models.Model):
 
     @api.depends("product_uom_qty", "discount", "price_unit", "tax_ids", "document_tax_mode")
     def _compute_amount(self):
-        AccountTax = self.env["account.tax"]
         for line in self:
-            company = line.company_id or self.env.company
             base_line = line._prepare_base_line_for_taxes_computation()
-            AccountTax._add_tax_details_in_base_line(base_line, company)
-            AccountTax._round_base_lines_tax_details([base_line], company)
+            line._get_taxed_base_line(base_line)
             line.price_subtotal = base_line["tax_details"]["total_excluded_currency"]
             line.price_total = base_line["tax_details"]["total_included_currency"]
             line.price_tax = line.price_total - line.price_subtotal
@@ -1555,16 +1554,55 @@ class SaleOrderLine(models.Model):
 
             line.untaxed_amount_to_invoice = amount_to_invoice
 
-    @api.depends("discount", "price_total", "product_uom_qty", "qty_invoiced_posted")
+    @api.depends(
+        "discount",
+        "price_total",
+        "product_uom_qty",
+        "qty_invoiced_posted",
+        "qty_delivered",
+        "invoice_policy",
+        "document_tax_mode",
+        "tax_ids",
+    )
+    @api.depends_context("credit_limit")
     def _compute_amount_to_invoice(self):
+        if self.env.context.get("credit_limit"):
+            # Computation for credit limit.
+            for line in self:
+                if line.product_uom_qty:
+                    # The ordered quantity is what the customer committed to, delivered or not.
+                    qty_to_invoice = line.product_uom_qty - line.qty_invoiced_posted
+                    unit_price_total = line.price_total / line.product_uom_qty
+                    line.amount_to_invoice = unit_price_total * qty_to_invoice
+                else:
+                    line.amount_to_invoice = 0.0
+            return
+
+        # Computation for displaying the amount to invoice.
+        precision = self.env["decimal.precision"].precision_get("Product Unit")
         for line in self:
-            if line.product_uom_qty:
-                # The ordered quantity is what the customer committed to, delivered or not.
-                qty_to_invoice = line.product_uom_qty - line.qty_invoiced_posted
-                unit_price_total = line.price_total / line.product_uom_qty
-                line.amount_to_invoice = unit_price_total * qty_to_invoice
-            else:
-                line.amount_to_invoice = 0.0
+            uom_qty_to_consider = (
+                line.qty_delivered
+                if line.product_id.invoice_policy == "delivery"
+                else line.product_uom_qty
+            )
+            qty_to_invoice = uom_qty_to_consider - line.qty_invoiced_posted
+
+            # For standard down payments, both invoice lines (+1 and -1) are linked to
+            # the SO line, giving qty_invoiced_posted = 0 and qty_to_invoice = 0.
+            # In some flows (e.g. POS), only the deduction line (-1) is linked, giving
+            # qty_invoiced_posted = -1 and qty_to_invoice = 1, which would incorrectly
+            # add the down payment amount to amount_to_invoice.
+            if float_is_zero(qty_to_invoice, precision_digits=precision) or (
+                line.is_downpayment and line.qty_invoiced_posted < 0
+            ):
+                line.amount_to_invoice = 0
+                continue
+
+            base_line = line._prepare_base_line_for_taxes_computation()
+            base_line["quantity"] = qty_to_invoice
+            line._get_taxed_base_line(base_line)
+            line.amount_to_invoice = base_line["tax_details"]["total_included_currency"]
 
     @api.depends("price_unit", "qty_invoiced_at_date", "qty_delivered_at_date")
     @api.depends_context("accrual_entry_date")
@@ -1589,7 +1627,11 @@ class SaleOrderLine(models.Model):
             ("is_downpayment", "=", False),
             ("product_id.type", "!=", "combo"),
         ])
-        accrual_entry_date = date or fields.Date.to_date(self.env.context.get("accrual_entry_date")) or fields.Date.context_today(self)
+        accrual_entry_date = (
+            date
+            or fields.Date.to_date(self.env.context.get("accrual_entry_date"))
+            or fields.Date.context_today(self)
+        )
         domain &= Domain(
             "accrual_move_ids",
             "any" if self.env.context.get("already_accrued") else "not any",
@@ -1628,7 +1670,9 @@ class SaleOrderLine(models.Model):
             date = fields.Date.to_date(self.env.context.get("accrual_entry_date"))
         accrual_entry_date = date or fields.Date.context_today(self)
         # The date is also put in the context for the stock overrides using no date in _get_accrual_domain
-        domain = self.with_context(accrual_entry_date=fields.Date.to_string(accrual_entry_date))._get_accrual_domain(accrual_entry_date)
+        domain = self.with_context(
+            accrual_entry_date=fields.Date.to_string(accrual_entry_date)
+        )._get_accrual_domain(accrual_entry_date)
         if extra_domain:
             domain &= extra_domain
         order_lines = self.env["sale.order.line"].search(domain)
@@ -1734,6 +1778,12 @@ class SaleOrderLine(models.Model):
                 line.section_uom_id = default_uom_id
             else:
                 line.section_uom_id = False
+
+    def _get_taxed_base_line(self, base_line):
+        company = self.company_id or self.env.company
+        AccountTax = self.env["account.tax"]
+        AccountTax._add_tax_details_in_base_line(base_line, company)
+        AccountTax._round_base_lines_tax_details([base_line], company)
 
     # === CONSTRAINT METHODS ===#
 

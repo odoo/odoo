@@ -352,9 +352,7 @@ class SaleOrder(models.Model):
     amount_total = fields.Monetary(
         string="Total", store=True, compute="_compute_amounts", tracking=4
     )
-    amount_to_invoice = fields.Monetary(
-        string="Un-invoiced Balance", compute="_compute_amount_to_invoice"
-    )
+    amount_to_invoice = fields.Monetary(string="To Invoice", compute="_compute_amount_to_invoice")
     amount_invoiced = fields.Monetary(string="Already invoiced", compute="_compute_amount_invoiced")
 
     invoice_count = fields.Integer(string="Invoice Count", compute="_get_invoiced")
@@ -1058,7 +1056,7 @@ class SaleOrder(models.Model):
             "state",
         ])
 
-        accessible_orders = self.env['sale.order']._search([])
+        accessible_orders = self.env["sale.order"]._search([])
 
         result = self.env.execute_query(
             SQL(
@@ -1153,6 +1151,7 @@ class SaleOrder(models.Model):
                 record.tax_country_id = record.company_id.account_fiscal_country_id
 
     @api.depends("order_line.amount_to_invoice")
+    @api.depends_context("credit_limit")
     def _compute_amount_to_invoice(self):
         for order in self:
             order.amount_to_invoice = sum(order.order_line.mapped("amount_to_invoice"))

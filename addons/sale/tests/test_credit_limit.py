@@ -134,7 +134,9 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
         credit_note.action_post()
 
         # Check that the credit note is accounted for correctly for the amount_to_invoice
-        self.assertEqual(sale_order.amount_to_invoice, sale_order.amount_total)
+        self.assertEqual(
+            sale_order.with_context(credit_limit=True).amount_to_invoice, sale_order.amount_total
+        )
 
     def test_credit_limit_multicurrency(self):
         self.partner_a.credit_limit = 50
@@ -280,7 +282,7 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
 
         # Invoice 1 of the SOs.
         sale_order = sale_orders[0]
-        self.assertEqual(sale_order.amount_to_invoice, 1000.0)
+        self.assertEqual(sale_order.with_context(credit_limit=True).amount_to_invoice, 1000.0)
         invoice = sale_order._create_invoices(final=True)
         self.partner_a.invalidate_recordset(["credit", "credit_to_invoice"])
         self.assertEqual(invoice.amount_total, 1000.0)
@@ -306,45 +308,54 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
         self.partner_a.credit_limit = 1000.0
 
         # A quotation over the limit, for a product invoiced on delivered quantities.
-        order = self.env['sale.order'].create({
-            'partner_id': self.partner_a.id,
-            'order_line': [Command.create({
-                'product_id': self.company_data['product_delivery_no'].id,
-                'product_uom_qty': 1,
-                'price_unit': 2000.0,
-                'tax_ids': False,
-            })],
+        order = self.env["sale.order"].create({
+            "partner_id": self.partner_a.id,
+            "order_line": [
+                Command.create({
+                    "product_id": self.company_data["product_delivery_no"].id,
+                    "product_uom_qty": 1,
+                    "price_unit": 2000.0,
+                    "tax_ids": False,
+                })
+            ],
         })
         self.assertEqual(
             order.partner_credit_warning,
             "partner_a has reached its credit limit of: $\xa01,000.00\n"
-            "Total amount due (including this document): $\xa02,000.00"
+            "Total amount due (including this document): $\xa02,000.00",
         )
 
         # Confirming it hides the warning, but the customer is now committed to it.
         order.action_confirm()
-        self.partner_a.invalidate_recordset(['credit', 'credit_to_invoice'])
-        order.invalidate_recordset(['partner_credit_warning'])
+        self.partner_a.invalidate_recordset(["credit", "credit_to_invoice"])
+        order.invalidate_recordset(["partner_credit_warning"])
         self.assertFalse(order.partner_credit_warning)
-        self.assertRecordValues(self.partner_a, [{
-            'credit': 0.0,
-            'credit_to_invoice': 2000.0,  # nothing delivered yet
-        }])
+        self.assertRecordValues(
+            self.partner_a,
+            [
+                {
+                    "credit": 0.0,
+                    "credit_to_invoice": 2000.0,  # nothing delivered yet
+                }
+            ],
+        )
 
         # So the next quotation warns, whatever the invoicing policy of its product.
-        next_order = self.env['sale.order'].create({
-            'partner_id': self.partner_a.id,
-            'order_line': [Command.create({
-                'product_id': self.company_data['product_order_no'].id,
-                'product_uom_qty': 1,
-                'price_unit': 100.0,
-                'tax_ids': False,
-            })],
+        next_order = self.env["sale.order"].create({
+            "partner_id": self.partner_a.id,
+            "order_line": [
+                Command.create({
+                    "product_id": self.company_data["product_order_no"].id,
+                    "product_uom_qty": 1,
+                    "price_unit": 100.0,
+                    "tax_ids": False,
+                })
+            ],
         })
         self.assertEqual(
             next_order.partner_credit_warning,
             "partner_a has reached its credit limit of: $\xa01,000.00\n"
-            "Total amount due (including sales orders and this document): $\xa02,100.00"
+            "Total amount due (including sales orders and this document): $\xa02,100.00",
         )
 
     @users("notaccountman")
