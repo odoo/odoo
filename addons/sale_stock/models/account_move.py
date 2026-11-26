@@ -112,18 +112,19 @@ class AccountMove(models.Model):
 
         return res
 
-    @api.depends('line_ids.sale_line_ids.order_id.effective_date')
+    @api.depends('line_ids.sale_line_ids.order_id.effective_date', 'line_ids.sale_line_ids.move_ids.date')
     def _compute_delivery_date(self):
         # EXTENDS 'account'
         super()._compute_delivery_date()
         for move in self:
             if move.state != 'draft':
                 continue
-            sale_order_effective_date = list(filter(None, move.line_ids.sale_line_ids.order_id.mapped('effective_date')))
-            effective_date_res = max(sale_order_effective_date) if sale_order_effective_date else False
-            # if multiple sale order we take the bigger effective_date
-            if effective_date_res:
-                move.delivery_date = effective_date_res
+            delivery_dates = list(filter(None, (line._sale_stock_get_delivery_date() for line in move.invoice_line_ids)))
+            if not delivery_dates:
+                delivery_dates = list(filter(None, move.line_ids.sale_line_ids.order_id.mapped('effective_date')))
+            # if several deliveries are invoiced, we take the latest one
+            if delivery_dates:
+                move.delivery_date = max(delivery_dates)
 
     @api.depends('line_ids.sale_line_ids.order_id')
     def _compute_incoterm_location(self):
@@ -157,6 +158,29 @@ class AccountMove(models.Model):
 
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
+
+    def _sale_stock_get_delivery_date(self):
+        """ Return the date of the first delivery of the quantity invoiced by this line, i.e. the first
+        delivery of its sale line that is not covered by the quantity invoiced on the other posted invoices.
+        """
+        self.ensure_one()
+        if self.move_id.move_type != 'out_invoice' or len(self.sale_line_ids) != 1:
+            return False
+        sale_line = self.sale_line_ids
+        rounding = sale_line.product_uom.rounding
+        invoiced_qty = 0.0
+        for invoice_line in sale_line.invoice_lines - self:
+            if invoice_line.move_id.state != 'posted':
+                continue
+            qty = invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, sale_line.product_uom)
+            invoiced_qty += qty if invoice_line.move_id.move_type == 'out_invoice' else -qty
+        delivered_qty = 0.0
+        moves = sale_line.move_ids.filtered(lambda m: m.state == 'done' and m.location_dest_id.usage == 'customer')
+        for stock_move in moves.sorted('date'):
+            delivered_qty += stock_move.product_uom._compute_quantity(stock_move.quantity, sale_line.product_uom)
+            if float_compare(delivered_qty, invoiced_qty, precision_rounding=rounding) > 0:
+                return stock_move.date
+        return False
 
     def _sale_can_be_reinvoice(self):
         self.ensure_one()
