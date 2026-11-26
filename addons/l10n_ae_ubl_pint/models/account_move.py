@@ -94,7 +94,7 @@ class AccountMove(models.Model):
 
     def _l10n_ae_get_predefined_buyer_endpoint(self):
         """ The predefined endpoint (scheme 0235) the buyer of a customer invoice or credit note gets
-        instead of its own, None to keep its own (MoF e-invoicing guidelines, 10.2.2, 10.4, 18.3.3):
+        instead of its own, False to keep its own (MoF e-invoicing guidelines, 10.2.2, 10.4, 18.3.3):
 
         - Deemed Supply: 9900000097, whoever the buyer.
         - A buyer on Peppol keeps its own endpoint.
@@ -108,12 +108,12 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
         if not self.is_sale_document():
-            return None
+            return False
         if self._l10n_ae_has_transaction_type('01000000'):
             return '9900000097'
         buyer = self.commercial_partner_id.with_company(self.company_id)
         if buyer.peppol_verification_state == 'valid':
-            return None
+            return False
         if self._l10n_ae_has_transaction_type('00000001'):
             return '9900000099'
         return '9900000098'

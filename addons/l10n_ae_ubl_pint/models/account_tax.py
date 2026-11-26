@@ -16,11 +16,9 @@ class AccountTax(models.Model):
 
     ubl_cii_tax_category_code = fields.Selection(
         selection_add=[('N', 'N - Standard rate additional VAT')],
-        ondelete={'N': 'cascade'},
     )
     ubl_cii_tax_exemption_reason_code = fields.Selection(
         selection_add=AE_EXEMPTION_REASON_CODES,
-        ondelete={code: 'cascade' for code, label in AE_EXEMPTION_REASON_CODES},
     )
 
     @api.depends('country_code')

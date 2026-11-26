@@ -63,7 +63,8 @@ class AccountMoveLine(models.Model):
 
     def _l10n_ae_pint_get_errors(self):
         """ A tax on each line, global discounts included: without one, the export guesses 'E', which
-        then lacks its exemption reason code (ibr-167-ae, ibr-168-ae, ibr-169-ae).
+        then lacks its exemption reason code (ibr-167-ae, ibr-168-ae, ibr-169-ae). Only one, as a line
+        has one tax category (IBT-151).
         ibr-184-ae/185/186: Goods need an HS code, Services a service accounting code, Both
         one of each. Without an item type (BTAE-13 is 0..1), nothing is required.
 
@@ -77,6 +78,12 @@ class AccountMoveLine(models.Model):
             errors.append(frozendict({
                 'message': self.env._("Please set a tax on the invoice line(s)."),
                 'error_code': 'l10n_ae_pint_line_tax_missing',
+                'level': 'danger',
+            }))
+        if len(self.tax_ids) > 1:
+            errors.append(frozendict({
+                'message': self.env._("Please set only one tax on the invoice line(s)."),
+                'error_code': 'l10n_ae_pint_line_multiple_taxes',
                 'level': 'danger',
             }))
         if self.l10n_ae_item_type in ('G', 'B') and not self.l10n_ae_hs_code:
