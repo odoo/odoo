@@ -685,8 +685,9 @@ class ResourceCalendar(models.Model):
 
     def _unavailable_intervals_batch(self, start_dt, end_dt, resources_per_tz=None, domain=None):
         """ Return the periods during which resources do not work: the complement of
-        :meth:`_work_intervals_batch` within ``[start_dt, end_dt]``, expressed in UTC (used by
-        Gantt views to grey out unavailable time).
+        :meth:`_work_intervals_batch` and of the leaves counted as working time (e.g. a
+        training) within ``[start_dt, end_dt]``, expressed in UTC (used by Gantt views to grey
+        out unavailable time).
 
         For a flexible resource (according to its own calendar), only its leaves are
         unavailable, and the resource has no key at all when it has no leave (callers treat
@@ -708,6 +709,9 @@ class ResourceCalendar(models.Model):
             for _, resources in resources_per_tz.items():
                 all_resources |= set(resources)
         resources_work_intervals = self._work_intervals_batch(start_dt, end_dt, resources_per_tz, domain)
+        working_time_leaves = self._leave_intervals_batch(
+            start_dt, end_dt, resources_per_tz, [('count_as', '=', 'working_time')])
+        no_attendance = self.env['resource.calendar.attendance']
         leaves = None
         result = {}
         for resource in all_resources:
@@ -724,6 +728,8 @@ class ResourceCalendar(models.Model):
             utc_work_intervals = []
             for (start, stop, meta) in work_intervals:
                 utc_work_intervals.append((start.astimezone(UTC), stop.astimezone(UTC), meta))
+            for (start, stop, _leave) in working_time_leaves[resource.id]:
+                utc_work_intervals.append((start.astimezone(UTC), stop.astimezone(UTC), no_attendance))
 
             utc_work_intervals = Intervals(utc_work_intervals)
             full_interval_UTC = Intervals([(

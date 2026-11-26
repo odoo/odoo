@@ -3160,7 +3160,8 @@ class HrEmployee(models.Model):
         (calendar, timezone))`` periods. The result maps each employee to a
         list of ``(timezone, Intervals)`` pairs, before display conversion.
         Duration-based attendances cover whole local days; flexible schedules
-        cover their periods except for absences.
+        cover nothing. The leaves counted as working time (e.g. a training) are
+        available too.
 
         :param list leave_domain: domain on ``resource.calendar.leaves`` of the leaves that make the
             employee unavailable (``None``: all the absences, see ``_leave_intervals_batch``)
@@ -3172,9 +3173,15 @@ class HrEmployee(models.Model):
 
         work_intervals_per_calendar = {}
         leave_intervals_per_calendar = {}
+        working_time_per_calendar = {}
         for (calendar, tz), resources in resources_per_calendar.items():
             resources_per_tz = {ZoneInfo(tz): resources}
-            if not calendar._is_flexible() and not any(calendar.attendance_ids.mapped('duration_based')):
+            working_time_per_calendar[calendar, tz] = calendar._leave_intervals_batch(
+                start_dt, stop_dt, resources_per_tz=resources_per_tz, domain=[('count_as', '=', 'working_time')],
+            )
+            if calendar._is_flexible():
+                continue
+            if not any(calendar.attendance_ids.mapped('duration_based')):
                 work_intervals_per_calendar[calendar, tz] = calendar._work_intervals_batch(
                     start_dt, stop_dt, resources_per_tz=resources_per_tz, domain=leave_domain,
                 )
@@ -3184,8 +3191,6 @@ class HrEmployee(models.Model):
             leave_intervals_per_calendar[calendar, tz] = calendar._leave_intervals_batch(
                 start_dt, stop_dt, resources_per_tz=resources_per_tz, domain=leave_domain,
             )
-            if calendar._is_flexible():
-                continue
             attendance_intervals = calendar._attendance_intervals_batch(
                 start_dt, stop_dt, resources_per_tz=resources_per_tz,
             )
@@ -3209,11 +3214,12 @@ class HrEmployee(models.Model):
                     calendar,
                 )])
                 if calendar._is_flexible():
-                    intervals = period_interval - leave_intervals_per_calendar[calendar, tz][resource_id]
+                    intervals = Intervals()
                 else:
                     intervals = period_interval & work_intervals_per_calendar[calendar, tz][resource_id]
                     if (calendar, tz) in leave_intervals_per_calendar:
                         intervals -= employee._adjust_leaves(leave_intervals_per_calendar[calendar, tz][resource_id])
+                intervals |= period_interval & working_time_per_calendar[calendar, tz][resource_id]
                 result[employee].append((tz, intervals))
         return result
 
@@ -3222,8 +3228,8 @@ class HrEmployee(models.Model):
 
         The available time is computed per version in contract (calendar and
         timezone of each version): work intervals for regular calendars, whole
-        attendance days for duration-based calendars, everything but leaves for
-        flexible calendars. Unavailability is the complement within
+        attendance days for duration-based calendars, nothing for flexible
+        calendars, plus the leaves counted as working time. Unavailability is the complement within
         ``[start, stop]``; an employee without contract in the period is
         unavailable the whole period.
 
