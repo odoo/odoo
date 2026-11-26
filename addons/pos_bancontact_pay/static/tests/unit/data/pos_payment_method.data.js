@@ -9,31 +9,6 @@ patch(PosPaymentMethod.prototype, {
     _get_payment_provider_names() {
         return { ...super._get_payment_provider_names(), bancontact_pay: "Bancontact Pay" };
     },
-
-    create_bancontact_payment(id, data) {
-        if (this[id].payment_provider !== "bancontact_pay") {
-            throw new Error("Error Server: Wrong Provider");
-        }
-
-        if (data.amount < 0) {
-            throw new Error(`Failed to create payment (ERR: ${-data.amount})`);
-        }
-
-        return {
-            bancontact_id: "bancontact_id",
-            qr_code: "bancontact_qr_code",
-        };
-    },
-
-    cancel_bancontact_payment(id, bancontact_id) {
-        if (this[id].payment_provider !== "bancontact_pay") {
-            throw new Error("Error Server: Wrong Provider");
-        }
-
-        if (typeof bancontact_id === "number" && bancontact_id < 0) {
-            throw new Error(`Failed to cancel payment (ERR: ${-bancontact_id})`);
-        }
-    },
 });
 
 PosPaymentMethod._records.push(
@@ -42,9 +17,7 @@ PosPaymentMethod._records.push(
         name: "Bancontact Display",
         bancontact_usage: "display",
         payment_provider: "bancontact_pay",
-        payment_method_type: "external_qr",
-        bancontact_api_key: "display_api_key",
-        bancontact_ppid: "display_profile_id",
+        payment_method_type: "qr",
         type: "bank",
         image: false,
         sequence: 3,
@@ -55,9 +28,7 @@ PosPaymentMethod._records.push(
         name: "Bancontact Sticker 1",
         bancontact_usage: "sticker",
         payment_provider: "bancontact_pay",
-        payment_method_type: "external_qr",
-        bancontact_api_key: "sticker_api_key",
-        bancontact_ppid: "sticker_profile_id",
+        payment_method_type: "qr",
         type: "bank",
         image: false,
         sequence: 4,
@@ -68,9 +39,7 @@ PosPaymentMethod._records.push(
         name: "Bancontact Sticker 2",
         bancontact_usage: "sticker",
         payment_provider: "bancontact_pay",
-        payment_method_type: "external_qr",
-        bancontact_api_key: "sticker_api_key",
-        bancontact_ppid: "sticker_profile_id",
+        payment_method_type: "qr",
         type: "bank",
         image: false,
         sequence: 5,

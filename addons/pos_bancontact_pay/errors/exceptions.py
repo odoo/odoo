@@ -1,2 +1,0 @@
-class BancontactSignatureValidationError(Exception):
-    pass
