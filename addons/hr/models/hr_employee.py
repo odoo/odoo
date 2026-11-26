@@ -3370,10 +3370,7 @@ class HrEmployee(models.Model):
     def _get_expected_attendances(self, date_from, date_to):
         """Return the work intervals the employee is expected to attend between two datetimes.
 
-        Computed per version in contract during the period, each with its own
-        calendar and timezone, minus the leaves counted as absence. Without any
-        version in contract, the current calendar is used for the whole period.
-        Single employee only.
+        Single employee only, see :meth:`_get_expected_attendances_batch`.
 
         :param datetime.datetime date_from: timezone-aware start
         :param datetime.datetime date_to: timezone-aware end
@@ -3382,35 +3379,54 @@ class HrEmployee(models.Model):
         :rtype: Intervals
         """
         self.ensure_one()
-        valid_versions = self.sudo()._get_versions_with_contract_overlap_with_period(date_from.date(), date_to.date())
-        employee_tz = ZoneInfo(self.tz) if self.tz else None
-        if not valid_versions:
-            calendar = self.resource_calendar_id
-            resources_per_tz = self._get_resources_per_tz(date_from)
-            calendar_intervals = calendar._work_intervals_batch(
-                date_from,
-                date_to,
-                resources_per_tz=resources_per_tz,
-                compute_leaves=True,
-                domain=[('company_id', 'in', [False, self.company_id.id]), ('count_as', '=', 'absence')])[self.resource_id.id]
-            return calendar_intervals
-        duration_data = Intervals()
-        version_prev = datetime.combine(valid_versions[0].date_start, time.min, employee_tz)
-        for version in valid_versions:
-            version_start = datetime.combine(version.date_start, time.min, employee_tz)
-            contract_start = datetime.combine(version.contract_date_start, time.min, employee_tz)
-            version_end = datetime.combine(version.date_end or date.max, time.max, employee_tz)
-            calendar = version.resource_calendar_id
-            start_date = version_start if version_prev < version_start else contract_start
-            resources_per_tz = version._get_resources_per_tz()
-            version_intervals = calendar._work_intervals_batch(
-                                    max(date_from, start_date),
-                                    min(date_to, version_end),
-                                    resources_per_tz=resources_per_tz,
-                                    compute_leaves=True,
-                                    domain=[('company_id', 'in', [False, self.company_id.id]), ('count_as', '=', 'absence')])[self.resource_id.id]
-            duration_data = duration_data | version_intervals
-        return duration_data
+        return self._get_expected_attendances_batch(date_from, date_to)[self.id]
+
+    def _get_expected_attendances_batch(self, date_from, date_to):
+        """Return the work intervals each employee is expected to attend between two datetimes.
+
+        Computed per version in contract during the period, each with its own
+        calendar and timezone, minus the leaves counted as absence (a resource
+        only gets the public holidays of its company). The first version starts
+        at the start of the contract. Without any version in contract, the
+        current calendar is used for the whole period. The employees sharing a
+        calendar and a timezone are computed together, over the union of their
+        periods, then cut on each period.
+
+        :param datetime.datetime date_from: timezone-aware start
+        :param datetime.datetime date_to: timezone-aware end
+        :return: ``{employee_id: Intervals}``, intervals of
+            ``(start, stop, resource.calendar.attendance)`` with aware datetimes
+        :rtype: dict
+        """
+        versions_per_employee = self.sudo()._get_versions_with_contract_overlap_with_period(
+            date_from.date(), date_to.date()).grouped('employee_id')
+        periods_per_key = defaultdict(list)  # {(calendar, tz): [(employee, start, stop)]}
+        for employee in self:
+            versions = versions_per_employee.get(employee)
+            if not versions:
+                key = (employee.resource_calendar_id, ZoneInfo(employee._get_tz(date_from)))
+                periods_per_key[key].append((employee, date_from, date_to))
+                continue
+            for version in versions:
+                tz = ZoneInfo(version._get_tz())
+                start = datetime.combine(version.contract_date_start if version == versions[0] else version.date_start, time.min, tz)
+                stop = datetime.combine(version.date_end or date.max, time.max, tz)
+                start, stop = max(date_from, start), min(date_to, stop)
+                if start < stop:
+                    periods_per_key[version.resource_calendar_id, tz].append((employee, start, stop))
+
+        result = defaultdict(Intervals)
+        dummy = self.env['resource.calendar.attendance']
+        for (calendar, tz), periods in periods_per_key.items():
+            intervals_per_resource = calendar._work_intervals_batch(
+                min(start for _employee, start, _stop in periods),
+                max(stop for _employee, _start, stop in periods),
+                resources_per_tz={tz: self.env['resource.resource'].union(employee.resource_id for employee, *_ in periods)},
+                domain=[('count_as', '=', 'absence')],
+            )
+            for employee, start, stop in periods:
+                result[employee.id] |= intervals_per_resource[employee.resource_id.id] & Intervals([(start, stop, dummy)])
+        return {employee.id: result[employee.id] for employee in self}
 
     def _get_calendar_attendances(self, date_from, date_to):
         """Return the working time (days and hours) between two datetimes, per the calendars in contract.
