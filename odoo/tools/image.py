@@ -189,8 +189,8 @@ class ImageProcess:
         """
         if self.image and self.original_format != 'GIF' and (max_width or max_height):
             w, h = self.image.size
-            asked_width = max_width or (w * max_height) // h
-            asked_height = max_height or (h * max_width) // w
+            asked_width = max_width or max(1, (w * max_height) // h)
+            asked_height = max_height or max(1, (h * max_width) // w)
             if expand and (asked_width > w or asked_height > h):
                 self.image = self.image.resize((asked_width, asked_height))
                 self.operationsCount += 1
