@@ -96,9 +96,9 @@ class PaymentProvider(models.Model):
                     if provider.razorpay_is_oauth_supported:
                         raise ValidationError(
                             provider.env._(
-                                "Razorpay credentials are missing. Please set the state back to"
-                                " 'Disabled' and click the \"Connect\" button to set up your"
-                                " account."
+                                'Razorpay credentials are missing. Please set the status back to'
+                                ' "Disabled" and click the "Connect" button to set up your'
+                                ' account.'
                             )
                         )
                     raise ValidationError(

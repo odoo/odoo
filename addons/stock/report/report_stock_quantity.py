@@ -25,7 +25,7 @@ class ReportStockQuantity(models.Model):
         ('forecast', 'Forecasted Stock'),
         ('in', 'Forecasted Receipts'),
         ('out', 'Forecasted Deliveries'),
-    ], string='State', readonly=True)
+    ], string='Status', readonly=True)
     product_qty = fields.Float(string='Quantity', readonly=True)
     company_id = fields.Many2one('res.company', readonly=True)
     warehouse_id = fields.Many2one('stock.warehouse', readonly=True)

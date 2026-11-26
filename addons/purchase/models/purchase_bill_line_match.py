@@ -27,7 +27,7 @@ class PurchaseBillLineMatch(models.Model):
     account_move_id = fields.Many2one(comodel_name='account.move', readonly=True)
     line_amount_untaxed = fields.Monetary(readonly=True)
     currency_id = fields.Many2one(comodel_name='res.currency', readonly=True)
-    state = fields.Char(readonly=True)
+    state = fields.Char(string="Status", readonly=True)
     date = fields.Date(readonly=True)
 
     display_matching_tag = fields.Boolean(compute='_compute_display_matching_tag')

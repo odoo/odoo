@@ -91,7 +91,7 @@ class PaymentTransaction(models.Model):
         # Update the payment state.
         status = payment_data.get("status")
         if not status:
-            self._set_error(self.env._("Received data with missing payment state."))
+            self._set_error(self.env._("Received data with missing payment status."))
         elif status in PAYMENT_STATUS_MAPPING["pending"]:
             self._set_pending()
         elif status in PAYMENT_STATUS_MAPPING["done"]:

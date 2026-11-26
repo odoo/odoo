@@ -12,7 +12,7 @@
                 <filter name="filter_accounting_date_this_year" invisible="1" string="Accounting Date: This Year" domain="[('date', '&lt;', '=1m =1d +1y'), ('date', '&gt;=', '=1m =1d')]"/>
             </search>
             <filter name="user" position="after">
-                <filter string="State" name="groupby_l10n_ar_state_id" context="{'group_by': 'l10n_ar_state_id'}"/>
+                <filter string="Province" name="groupby_l10n_ar_state_id" context="{'group_by': 'l10n_ar_state_id'}"/>
                 <filter string="Account" name="groupby_account_id" context="{'group_by':'account_id'}" groups="account.group_account_readonly" />
             </filter>
         </field>

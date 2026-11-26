@@ -32,7 +32,7 @@ class ResPartner(models.Model):
             ('peppol_not_valid_format', 'Partner cannot receive format'),  # registered on Peppol but cannot receive the selected document type
             ('peppol_valid', 'Partner is on Peppol'),
         ],
-        string='E-Invoicing State',
+        string='E-Invoicing Status',
         compute="_compute_pdp_verification_display_state",
     )
 

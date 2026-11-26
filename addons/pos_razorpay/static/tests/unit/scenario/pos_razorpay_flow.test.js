@@ -66,7 +66,7 @@ test("PosRazorpayCancelTour: a cancelled payment can be retried", async () => {
     await waitFor(".modal");
     expect(document.querySelector(".modal .modal-title").textContent).toInclude("Razorpay Error");
     expect(document.querySelector(".modal .modal-body").textContent).toInclude(
-        "Razorpay POS transaction canceled successfully"
+        "Razorpay POS transaction cancelled successfully"
     );
     await contains(".modal .modal-footer .btn-primary").click();
     await animationFrame();

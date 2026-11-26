@@ -33,7 +33,7 @@ class L10nSaEdiDocument(models.Model):
     ], string="Invoice Type", readonly=True, required=True)
     res_id = fields.Many2oneReference(model_field="res_model", readonly=True, required=True, ondelete='restrict')
     attachment_id = fields.Many2one(comodel_name='ir.attachment', readonly=True)
-    state = fields.Selection(string="ZATCA State", readonly=True, selection=L10N_SA_DOCUMENT_STATES)
+    state = fields.Selection(string="ZATCA Status", readonly=True, selection=L10N_SA_DOCUMENT_STATES)
     message = fields.Html("ZATCA Errors/Warnings", translate=True, help="Detailed Errors/Warnings")
     content = fields.Binary(compute="_compute_content")
     l10n_sa_chain_index = fields.Integer(

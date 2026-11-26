@@ -29,7 +29,7 @@ class OnboardingOnboarding(models.Model):
         'onboarding.progress', 'Onboarding Progress', compute='_compute_current_progress',
         help='Onboarding Progress for the current context (company).')
     current_onboarding_state = fields.Selection(
-        ONBOARDING_PROGRESS_STATES, string='Completion State', compute='_compute_current_progress', readonly=True)
+        ONBOARDING_PROGRESS_STATES, string='Completion Status', compute='_compute_current_progress', readonly=True)
     is_onboarding_closed = fields.Boolean(string='Was panel closed?', compute='_compute_current_progress')
 
     progress_ids = fields.One2many(

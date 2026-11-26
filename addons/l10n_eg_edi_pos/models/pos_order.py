@@ -23,7 +23,7 @@ class PosOrder(models.Model):
             ('rejected', "Rejected"),
             ('rejected_test', "Rejected (Test)"),
         ],
-        string="ETA State",
+        string="ETA Status",
         copy=False,
         tracking=True,
     )

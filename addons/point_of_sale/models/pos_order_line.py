@@ -150,7 +150,7 @@ class PosOrderLine(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_order_state(self):
         if self.filtered(lambda x: x.order_id.state not in ["draft", "cancel"]):
-            raise UserError(_("You can only unlink PoS order lines that are related to orders in new or cancelled state."))
+            raise UserError(_('You can only delete PoS order lines when the order has the status "New" or "Cancelled".'))
         for line in self:
             line.order_id.has_deleted_line = True
             body = _("%(product_name)s: Deleted line (quantity: %(qty)s)", product_name=line.full_product_name, qty=line.qty)

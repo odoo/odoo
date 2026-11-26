@@ -94,7 +94,7 @@ class L10nEsEdiSiiDocument(models.Model):
             ('to_cancel', "To Cancel"),
             ('cancelled', "Cancelled"),
         ],
-        string="State",
+        string="Status",
         default='to_send',
         required=True,
     )
@@ -411,6 +411,6 @@ class L10nEsEdiSiiDocument(models.Model):
                 }
 
         for doc in self:
-            results.setdefault(doc, (False, {'response_message': self.env._("Unknown response state")}))
+            results.setdefault(doc, (False, {'response_message': self.env._("Unknown response status")}))
 
         return results

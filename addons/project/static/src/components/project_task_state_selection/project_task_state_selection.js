@@ -59,7 +59,7 @@ export class ProjectTaskStateSelection extends StateSelectionField {
         if (this.props.viewType != 'form') {
             super.setup();
         } else {
-            const commandName = _t("Set state as...");
+            const commandName = _t("Set status to...");
             useCommand(
                 commandName,
                 () => {
