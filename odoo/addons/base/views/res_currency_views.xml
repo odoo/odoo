@@ -15,7 +15,7 @@
             <field name="name">res.currency.rate.list</field>
             <field name="model">res.currency.rate</field>
             <field name="arch" type="xml">
-                <list string="Currency Rates" editable="bottom">
+                <list string="Currency Rates" editable="top">
                     <field name="name"/>
                     <field name="currency_id" column_invisible="True"/> <!-- needed for default_currency_id and the rate computes on new lines -->
                     <field name="company_id" groups="base.group_multi_company"/>
