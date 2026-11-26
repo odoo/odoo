@@ -276,14 +276,16 @@ class HTML_Editor(Controller):
             href_base (str): the url of the page containing the image.
         """
         self._clean_context()
+        env = request.env
 
         def _get_attachment_by_url(src):
             """Find attachment by url. There can be multiple matches because of
             default snippet images referencing the same image in /static/, so we
             limit to 1.
             """
-            return request.env['ir.attachment'].search(
+            attach = env['ir.attachment'].sudo().search(
                 Domain.AND([
+                    Domain('type', '=', 'binary'),
                     Domain.OR([
                         Domain('url', '=like', src),
                         Domain('url', '=like', '%s?%%' % src),
@@ -297,7 +299,8 @@ class HTML_Editor(Controller):
                             for image_mimetype in SUPPORTED_IMAGE_MIMETYPES
                         ],
                     ]),
-                ]), limit=1)
+                ]), order='public desc, id', limit=1000)
+            return attach.with_env(env)._filtered_access('read')[:1].with_prefetch()
 
         def _extract_attachment_info(attachment):
             original = (attachment.original_id or attachment)
