@@ -213,11 +213,13 @@ class HrEmployee(models.Model):
         ``leave_date_from``, ``current_leave_state`` and ``is_absent`` come from the validated
         time off in progress; ``leave_date_to`` is the day the employee is back: the first
         working day after the end of that time off or of the public holiday in progress.
+        Time off counted as working time (e.g. home working) does not make the employee away.
         """
         # Used SUPERUSER_ID to forcefully get status of other user's leave, to bypass record rule
         now = fields.Datetime.now()
         holidays = self.env['hr.leave'].sudo().search([
             ('employee_id', 'in', self.ids),
+            ('work_entry_type_id.count_as', '=', 'absence'),
             ('date_from', '<=', now),
             ('date_to', '>=', now),
             ('state', '=', 'validate'),
@@ -275,7 +277,7 @@ class HrEmployee(models.Model):
                 continue
             employee.leave_date_from = min(emp_holidays.mapped('date_from')).date()
             employee.current_leave_state = emp_holidays[0].state
-            employee.is_absent = any(e_h.work_entry_type_id.count_as == 'absence' for e_h in emp_holidays)
+            employee.is_absent = True
 
     def _compute_show_leaves(self):
         show_leaves = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
@@ -299,6 +301,7 @@ class HrEmployee(models.Model):
         today_end = today_start + timedelta(1)
         holidays = self.env['hr.leave'].sudo().search([
             ('employee_id', '!=', False),
+            ('work_entry_type_id.count_as', '=', 'absence'),
             ('state', '=', 'validate'),
             ('date_from', '<', today_end),
             ('date_to', '>=', today_start),

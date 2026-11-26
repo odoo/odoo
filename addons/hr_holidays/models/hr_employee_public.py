@@ -38,6 +38,7 @@ class HrEmployeePublic(models.Model):
         today_end = today_start + timedelta(1)
         holidays = self.env['hr.leave'].sudo().search([
             ('employee_id', '!=', False),
+            ('work_entry_type_id.count_as', '=', 'absence'),
             ('state', '=', 'validate'),
             ('date_from', '<', today_end),
             ('date_to', '>=', today_start),

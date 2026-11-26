@@ -101,6 +101,35 @@ class TestOutOfOffice(TestHrHolidaysCommon):
         self.assertEqual(employees.mapped("leave_date_to"), [date(2024, 6, 7), date(2024, 6, 6)])
 
     @freeze_time('2024-06-04')
+    def test_working_time_leave_not_ooo(self):
+        """ Time off counted as working time (e.g. home working) does not make
+        the employee away: no "Back on" date and no absence.
+        """
+        home_working = self.env['hr.work.entry.type'].create({
+            'name': 'Home Working',
+            'code': 'Home Working',
+            'count_as': 'working_time',
+            'requires_allocation': False,
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
+        })
+        leave = self.env['hr.leave'].create({
+            'employee_id': self.employee_hruser.id,
+            'work_entry_type_id': home_working.id,
+            'request_date_from': "2024-06-03",
+            'request_date_to': "2024-06-05",
+        })
+        leave.action_approve()
+        self.assertEqual(leave.state, 'validate')
+
+        employee = self.employee_hruser
+        employee.invalidate_recordset(["leave_date_to", "is_absent"])
+        self.assertFalse(employee.leave_date_to, "home working should not show a 'Back on' date")
+        self.assertFalse(employee.is_absent)
+        self.assertFalse(employee.user_id.leave_date_to)
+        self.assertNotIn(employee, self.env['hr.employee'].search([('is_absent', '=', True)]))
+
+    @freeze_time('2024-06-04')
     def test_leave_status_without_hr_access(self):
         """ The leave status is read by every internal user: it feeds the
         presence icon and the avatar card of its colleagues. Computing it must
