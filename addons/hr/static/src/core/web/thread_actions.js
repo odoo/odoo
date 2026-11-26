@@ -2,11 +2,11 @@ import { registerThreadAction } from "@mail/core/common/thread_actions";
 import { _t } from "@web/core/l10n/translation";
 
 registerThreadAction("hr-view-profile", {
-    condition: ({ ancestors, channel, owner }) =>
+    condition: ({ ancestors, channel }) =>
         channel?.channel_type === "chat" &&
         ancestors.inChatWindow &&
         channel.correspondent?.partner_id?.employeeId &&
-        !owner.isDiscussSidebarChannelActions,
+        !ancestors.inMessagingMenu,
     icon: "badge",
     iconClass: "oi-filled",
     name: _t("View Profile"),
@@ -16,8 +16,8 @@ registerThreadAction("hr-view-profile", {
         ]);
         store.env.services.action.doAction(action);
     },
-    async setup({ channel, owner }) {
-        if (!owner.props?.chatWindow) {
+    async setup({ channel, chatWindow }) {
+        if (!chatWindow) {
             return;
         }
         const partner = channel?.correspondent?.partner_id;

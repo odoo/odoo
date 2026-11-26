@@ -17,12 +17,14 @@ import { useMaybePlugin } from "@mail/utils/common/hooks";
 
 export const threadActionsRegistry = registry.category("mail.thread/actions");
 
-/** @typedef {import("@odoo/owl").Component} Component */
+/** @typedef {import("models").ChatWindow} ChatWindow */
 /** @typedef {import("models").Thread} Thread */
 /**
  * @typedef {Object} ThreadActionSpecificParams
  * @property {import("models").DiscussChannel} channel
  * @property {Thread} thread
+ * @property {ChatWindow} [chatWindow] the chat window showing the action
+ * @property {() => void} [toggleFold] folds or unfolds that chat window
  */
 /** @typedef {import("@mail/core/common/action").ActionParams<ThreadAction, UseThreadActions_Def> & ThreadActionSpecificParams} ThreadActionParams */
 /** @typedef {import("@mail/core/common/action").ActionDefinition<ThreadActionParams, ThreadAction>} ThreadActionDefinition */
@@ -48,11 +50,10 @@ export function describeThreadActionGroup(id, definition) {
 
 registerThreadAction("fold-chat-window", {
     availableOffline: true,
-    condition: ({ ancestors, owner }) =>
-        ancestors.inChatWindow && !owner.isDiscussSidebarChannelActions,
+    condition: ({ ancestors }) => ancestors.inChatWindow && !ancestors.inMessagingMenu,
     icon: "remove",
     name: _t("Fold"),
-    onSelected: ({ owner }) => owner.toggleFold(),
+    onSelected: ({ toggleFold }) => toggleFold(),
     sequence: 99,
     sequenceQuick: 20,
 });
@@ -67,16 +68,15 @@ registerThreadAction("rename-thread", {
 });
 registerThreadAction("close", {
     availableOffline: true,
-    condition: ({ ancestors, owner }) =>
-        ancestors.inChatWindow && !owner.isDiscussSidebarChannelActions,
+    condition: ({ ancestors }) => ancestors.inChatWindow && !ancestors.inMessagingMenu,
     icon: "close_small",
     name: _t("Close Chat Window (ESC)"),
-    onSelected: ({ owner }) => owner.close(),
+    onSelected: ({ chatWindow }) => chatWindow.requestClose(),
     sequence: 100,
     sequenceQuick: 10,
 });
 registerThreadAction("search-messages", {
-    condition: ({ owner, channel }) => channel && !owner.isDiscussSidebarChannelActions,
+    condition: ({ ancestors, channel }) => channel && !ancestors.inMessagingMenu,
     hotkey: "f",
     icon: "search",
     name: ({ action }) => (action.isActive ? _t("Close Search") : _t("Search Messages")),
@@ -84,8 +84,8 @@ registerThreadAction("search-messages", {
         component: SearchMessagesPanel,
         props: ({ thread }) => ({ thread }),
     },
-    sequence: ({ owner }) => (owner.isDiscussContent ? 1 : 20),
-    sequenceGroup: ({ owner }) => (owner.isDiscussContent ? 10 : 20),
+    sequence: ({ ancestors }) => (ancestors.inDiscussContent ? 1 : 20),
+    sequenceGroup: ({ ancestors }) => (ancestors.inDiscussContent ? 10 : 20),
 });
 registerThreadAction("meeting-chat", {
     availableOffline: true,
@@ -109,21 +109,34 @@ registerThreadAction("meeting-chat", {
 });
 
 export class ThreadAction extends Action {
+    /** @type {() => ChatWindow|undefined} */
+    chatWindowFn;
     /** @type {() => Thread} */
     threadFn;
+    /** @type {(() => void)|undefined} */
+    toggleFold;
 
     /**
      * @param {Object} param0
-     * @param {Thread|() => Thread} thread
+     * @param {ChatWindow|() => ChatWindow} [param0.chatWindow]
+     * @param {Thread|() => Thread} param0.thread
+     * @param {() => void} [param0.toggleFold]
      */
-    constructor({ thread }) {
+    constructor({ chatWindow, thread, toggleFold }) {
         super(...arguments);
+        this.chatWindowFn = typeof chatWindow === "function" ? chatWindow : () => chatWindow;
         this.threadFn = typeof thread === "function" ? thread : () => thread;
+        this.toggleFold = toggleFold;
     }
 
     get params() {
         const thread = this.threadFn();
-        return Object.assign(super.params, { channel: thread?.channel, thread });
+        return Object.assign(super.params, {
+            channel: thread?.channel,
+            chatWindow: this.chatWindowFn(),
+            thread,
+            toggleFold: this.toggleFold,
+        });
     }
 }
 
@@ -133,13 +146,17 @@ export class UseThreadActions extends UseActions {
 }
 
 /**
- * @param {import("@mail/core/common/action").ActionRootRefParam & {thread?: Thread|() => Thread}} [params0={}]
+ * @param {import("@mail/core/common/action").ActionRootRefParam & {chatWindow?: ChatWindow|() => ChatWindow, thread?: Thread|() => Thread, toggleFold?: () => void}} [params0={}]
+ *   `chatWindow`: when set, the chat window showing the actions. `toggleFold`: when set, folds or
+ *   unfolds that chat window.
  * @returns {UseThreadActions_Def}
  */
-export function useThreadActions({ thread, rootRef } = {}) {
+export function useThreadActions({ chatWindow, rootRef, thread, toggleFold } = {}) {
     const actions = useAction(threadActionsRegistry, UseThreadActions, ThreadAction, {
+        chatWindow,
         rootRef,
         thread,
+        toggleFold,
     });
     useAncestors({ threadActions: actions });
     return actions;

@@ -66,7 +66,11 @@ export class ChatWindow extends Component {
         });
         this.ui = usePlugin(UIPlugin);
         this.chatWindowContentRef = signal.ref(HTMLDivElement);
-        this.threadActions = useThreadActions({ thread: () => this.channel?.thread });
+        this.threadActions = useThreadActions({
+            chatWindow: () => this.props.chatWindow,
+            thread: () => this.channel?.thread,
+            toggleFold: () => this.toggleFold(),
+        });
         this.quickActionsList = computed(() =>
             this.threadActions.partition.quick.slice(0, this.ui.isSmall() ? 2 : 4).reverse()
         );

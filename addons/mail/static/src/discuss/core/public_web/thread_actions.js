@@ -14,15 +14,15 @@ export const joinChannelAction = {
     icon: "login",
     name: _t("Join Channel"),
     sequence: 20,
-    sequenceGroup: ({ owner }) => (owner.isDiscussContent ? undefined : 5),
+    sequenceGroup: ({ ancestors }) => (ancestors.inDiscussContent ? undefined : 5),
     tags: [ACTION_TAGS.PRIMARY],
 };
 registerThreadAction("join-channel", joinChannelAction);
 registerThreadAction("show-threads", {
     availableOffline: true,
-    condition: ({ channel, owner }) =>
+    condition: ({ ancestors, channel }) =>
         (channel?.hasSubChannelFeature || channel?.parent_channel_id?.hasSubChannelFeature) &&
-        !owner.isDiscussSidebarChannelActions,
+        !ancestors.inMessagingMenu,
     icon: "forum",
     name: _t("Threads"),
     panel: {

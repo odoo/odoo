@@ -34,10 +34,10 @@ registerThreadAction("camera-call", {
     tags: [ACTION_TAGS.SUCCESS, ACTION_TAGS.JOIN_LEAVE_CALL],
 });
 registerThreadAction("call-settings", {
-    condition: ({ ancestors, channel, owner, store }) =>
+    condition: ({ ancestors, channel, store }) =>
         channel?.allowCalls &&
         (ancestors.inChatWindow || store.inPublicPage) &&
-        !owner.isDiscussSidebarChannelActions,
+        !ancestors.inMessagingMenu,
     icon: "settings",
     iconClass: "oi-filled oi-fw",
     name: _t("Voice & Video Settings"),
@@ -46,8 +46,8 @@ registerThreadAction("call-settings", {
     sequenceGroup: 30,
 });
 registerThreadAction("disconnect", {
-    condition: ({ channel, owner, store }) =>
-        store.rtc.selfSession?.in(channel?.rtc_session_ids) && owner.isDiscussSidebarChannelActions,
+    condition: ({ ancestors, channel, store }) =>
+        store.rtc.selfSession?.in(channel?.rtc_session_ids) && ancestors.inMessagingMenu,
     hasBtnBg: true,
     onSelected: ({ channel, store }) => store.rtc.toggleCall(channel),
     icon: "phone",

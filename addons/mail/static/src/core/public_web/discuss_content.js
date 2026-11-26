@@ -92,7 +92,6 @@ export class DiscussContent extends Component {
             groupedActions().filter(isPanelSwitcherAction)
         );
         this.state = proxy({ jumpThreadPresent: 0 });
-        this.isDiscussContent = true;
         this.attClassObjectToString = attClassObjectToString;
         this.threadDisplayName = computed(() => this.thread?.displayName);
         this.threadDescription = computed(() => this.thread?.description);
