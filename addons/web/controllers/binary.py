@@ -5,7 +5,6 @@ import json
 import logging
 import os
 import unicodedata
-from contextlib import nullcontext
 
 import odoo
 from odoo import _, api
@@ -82,9 +81,11 @@ class Binary(Controller):
         return stream.get_response(**send_file_kwargs)
 
     @route([
-        '/web/assets/<string:unique>/<string:filename>'], type='http', auth="public", replica=True)
+        '/web/assets/<string:unique>/<string:filename>'], type='http', auth="public")  # replica=False
     def content_assets(self, filename=None, unique=ANY_UNIQUE, nocache=False, assets_params=None):
-        env = request.env  # readonly
+        # Keep me synchronized with odoo.http.router.serve_db_assets,
+        # that function is used to serve assets with a readonly cursor.
+        # This controller is only called when the attachment was missing.
         assets_params = assets_params or {}
         assert isinstance(assets_params, dict)
         debug_assets = unique == 'debug'
@@ -93,7 +94,7 @@ class Binary(Controller):
         if unique in ('any', '%'):
             unique = ANY_UNIQUE
         if unique != 'debug':
-            url = env['ir.asset']._get_asset_bundle_url(filename, unique, assets_params)
+            url = self.env['ir.asset']._get_asset_bundle_url(filename, unique, assets_params)
             assert not '%' in url
             domain = [
                 ('public', '=', True),
@@ -103,55 +104,47 @@ class Binary(Controller):
                 ('res_id', '=', 0),
                 ('create_uid', '=', api.SUPERUSER_ID),
             ]
-            attachment = env['ir.attachment'].sudo().search(domain, limit=1)
+            attachment = self.env['ir.attachment'].sudo().search(domain, limit=1)
             if attachment:
-                stream = env['ir.binary']._get_stream_from(attachment, 'raw', filename)
+                stream = self.env['ir.binary']._get_stream_from(attachment, 'raw', filename)
         if stream is None:
             # try to generate one
-            if env.cr.readonly:
-                env.cr.rollback()  # reset state to detect newly generated assets
-                cursor_manager = env.registry.cursor(readonly=False)
-            else:
-                # if we don't have a replica, the cursor is not readonly, use the same one to avoid a rollback
-                cursor_manager = nullcontext(env.cr)
-            with cursor_manager as rw_cr:
-                rw_env = api.Environment(rw_cr, env.user.id, request.env.context)
-                try:
-                    if filename.endswith('.map'):
-                        _logger.warning(".map should have been generated through debug assets, (version %s most likely outdated)", unique)
-                        raise request.not_found()
-                    bundle_name, rtl, asset_type, autoprefix = rw_env['ir.asset']._parse_bundle_name(filename, debug_assets)
-                    css = asset_type == 'css'
-                    js = asset_type == 'js'
-                    binary = asset_type == 'binary'
-                    extension = '' if '.' not in filename else filename.split('.')[-1]
-                    if binary:
-                        asset_type = extension
-                    bundle = rw_env['ir.qweb']._get_asset_bundle(
-                        bundle_name,
-                        css=css,
-                        js=js,
-                        binary=binary,
-                        debug_assets=debug_assets,
-                        rtl=rtl,
-                        autoprefix=autoprefix,
-                        assets_params=assets_params,
-                    )
-                    # check if the version matches. If not, redirect to the last version
-                    if not debug_assets and unique != ANY_UNIQUE and unique != bundle.get_version(asset_type):
-                        return request.redirect(bundle.get_link(asset_type))
-                    attachment = None
-                    if css and bundle.stylesheets:
-                        attachment = bundle.css()
-                    elif js and bundle.javascripts:
-                        attachment = bundle.js()
-                    elif binary and bundle.binaries:
-                        attachment = bundle.bin(extension)
-                    if attachment:
-                        stream = rw_env['ir.binary']._get_stream_from(attachment, 'raw', filename)
-                except ValueError as e:
-                    _logger.warning("Parsing asset bundle %s has failed: %s", filename, e)
-                    raise request.not_found() from e
+            try:
+                if filename.endswith('.map'):
+                    _logger.warning(".map should have been generated through debug assets, (version %s most likely outdated)", unique)
+                    raise request.not_found()
+                bundle_name, rtl, asset_type, autoprefix = self.env['ir.asset']._parse_bundle_name(filename, debug_assets)
+                css = asset_type == 'css'
+                js = asset_type == 'js'
+                binary = asset_type == 'binary'
+                extension = '' if '.' not in filename else filename.split('.')[-1]
+                if binary:
+                    asset_type = extension
+                bundle = self.env['ir.qweb']._get_asset_bundle(
+                    bundle_name,
+                    css=css,
+                    js=js,
+                    binary=binary,
+                    debug_assets=debug_assets,
+                    rtl=rtl,
+                    autoprefix=autoprefix,
+                    assets_params=assets_params,
+                )
+                # check if the version matches. If not, redirect to the last version
+                if not debug_assets and unique != ANY_UNIQUE and unique != bundle.get_version(asset_type):
+                    return request.redirect(bundle.get_link(asset_type))
+                attachment = None
+                if css and bundle.stylesheets:
+                    attachment = bundle.css()
+                elif js and bundle.javascripts:
+                    attachment = bundle.js()
+                elif binary and bundle.binaries:
+                    attachment = bundle.bin(extension)
+                if attachment:
+                    stream = self.env['ir.binary']._get_stream_from(attachment, 'raw', filename)
+            except ValueError as e:
+                _logger.warning("Parsing asset bundle %s has failed: %s", filename, e)
+                raise request.not_found() from e
         if stream is None:
             raise request.not_found()
         send_file_kwargs = {'as_attachment': False, 'content_security_policy': None}

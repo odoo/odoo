@@ -33,7 +33,7 @@ except ImportError:
     from werkzeug.contrib.fixers import ProxyFix
 
 import odoo.modules.db
-from odoo.api import Environment
+from odoo.api import SUPERUSER_ID, Environment
 from odoo.exceptions import AccessError, UserError
 from odoo.modules.module import (
     Manifest,
@@ -41,6 +41,7 @@ from odoo.modules.module import (
 )
 from odoo.modules.registry import Registry
 from odoo.orm.utils import RegistrySetupError
+from odoo.sql_db import db_connect
 from odoo.tools import config, file_open, file_path, profiler
 from odoo.tools.misc import submap
 
@@ -279,7 +280,10 @@ class Application:
                 elif request.db:
                     try:
                         with _get_profiler_context_manager(request):
-                            response = serve_db(request)
+                            if httprequest.path.startswith('/web/assets/'):
+                                response = serve_db_assets(request)
+                            else:
+                                response = serve_db(request)
                     except RegistryError as e:
                         _logger.warning("Database or registry unusable, trying without", exc_info=e.__cause__)
                         # TODO: move those bits in a dedicated function
@@ -375,6 +379,67 @@ def serve_nodb(request: Request) -> Response:
         response = exc.get_response()
         HttpDispatcher(request).post_dispatch(response)
         return response
+
+
+def serve_db_assets(request: Request) -> Response:
+    """ Fast lane to serve ir.assert without a registry. """
+    # Keep me synchronized with odoo.addons.web.controllers.binary.Binary.content_assets
+    # /web/assets/<string:unique>/<string:filename>
+    # /web/assets/<int:website_id>/<unique>/<string:filename>
+    url = request.httprequest.path
+    *pre, unique, filename = url.split('/')
+    if unique in ('any', '%'):
+        unique = '_______'  # ANY_UNIQUE
+        url = '/'.join(pre + [unique, filename])
+    if unique != 'debug':
+        try:
+            conn = db_connect(request.db, readonly=True)
+        except psycopg2.OperationalError:
+            pass
+        else:
+            with conn.cursor() as cr:
+                # like Binary.content_assets
+                cr.execute("""
+                    SELECT name, checksum, store_fname, mimetype
+                    FROM ir_attachment
+                    WHERE "public" IS TRUE
+                      AND "type" = 'binary'
+                      AND "url" is not NULL
+                      AND "url" like %s
+                      AND "res_model" = 'ir.ui.view'
+                      AND "res_id" = 0
+                      AND "store_fname" is not NULL
+                      AND "create_uid" = %s
+                """, (
+                    request.httprequest.path,
+                    SUPERUSER_ID,
+                ))
+                row = cr.dictfetchone()
+                if row:
+                    # like env['ir.attachment']._to_http_stream
+                    path = os.path.join(
+                        config.filestore(request.db),
+                        re.sub(r'[.:]', '', row['store_fname']).strip('/\\'),
+                    )
+                    try:
+                        stat = os.stat(path)
+                    except OSError:
+                        pass
+                    else:
+                        return Stream(
+                            type='path',
+                            path=path,
+                            mimetype=row['mimetype'],
+                            download_name=filename,
+                            etag=row['checksum'],
+                            last_modified=stat.st_mtime,
+                            immutable=True,
+                            size=stat.st_size,
+                            public=True,
+                        ).get_response()
+
+    # Couldn't find an attachment, use the slow lane
+    return serve_db(request)
 
 
 def serve_db(request: Request) -> Response:
