@@ -6,7 +6,7 @@
         </xpath>
         <xpath expr="//img[hasclass('o_user_avatar')]" position="replace">
             <DiscussAvatar t-if="this.store.self_user" record="this.store.self_user" showStatusMessage="true" size="26"/>
-            <t t-else="">$0</t>
+            <t t-else=""><replace-target/></t>
         </xpath>
     </t>
 </templates>
