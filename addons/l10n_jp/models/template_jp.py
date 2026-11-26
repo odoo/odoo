@@ -57,6 +57,10 @@ class AccountChartTemplate(models.AbstractModel):
             },
         }
 
+    @template('jp', 'account.payment.term')
+    def _get_jp_account_payment_term(self):
+        return self._parse_csv('jp', 'account.payment.term', module='l10n_jp')
+
     @template('jp', 'account.account')
     def _get_jp_account_account(self):
         return {
