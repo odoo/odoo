@@ -14,7 +14,10 @@ export class DiscussCorePublicWeb {
         this.store = services["mail.store"];
         this.busService = services.bus_service;
         this.notificationService = services.notification;
-        this.busService.subscribe("discuss.channel/joined", async (payload) => {
+        this.busService.subscribe("discuss.channel/joined", async (payload, { id }) => {
+            // Notifications of the new channel sent after this one, such as the join
+            // message, must not be missed.
+            this.busService.forceUpdateChannels({ fromId: id });
             const {
                 store_data,
                 channel_id,
