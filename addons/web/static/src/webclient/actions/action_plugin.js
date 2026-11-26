@@ -6,6 +6,7 @@ import {
     onWillUnmount,
     Plugin,
     proxy,
+    Resource,
     STATUS,
     t,
     useConfig,
@@ -140,13 +141,6 @@ export class InvalidButtonParamsError extends Error {}
 // regex that matches context keys not to forward from an action to another
 const CTX_KEY_REGEX =
     /^(?:(?:default_|search_default_|show_).+|.+_view_ref|group_by|active_id|active_ids|orderedBy)$/;
-// keys added to the context for the embedded actions feature
-const EMBEDDED_ACTIONS_CTX_KEYS = [
-    "current_embedded_action_id",
-    "parent_action_embedded_actions",
-    "parent_action_id",
-    "from_embedded_action",
-];
 
 // only register this template once for all dynamic classes ControllerComponent
 const ControllerComponentTemplate = xml`<t t-component="this.Component" t-props="this.componentProps"/>`;
@@ -172,6 +166,12 @@ export class ActionPlugin extends Plugin {
     #controllerStack = [];
     #dialog = null;
     #nextDialog = null;
+
+    /**
+     * Functions called with each controller about to be displayed (but not
+     * when opened in a new window), e.g. to add entries to its config.
+     */
+    controllerSetups = new Resource({ name: "controller_setups", validation: t.function() });
 
     setup() {
         // public methods are bound as some callers keep detached references to them
@@ -649,8 +649,7 @@ export class ActionPlugin extends Plugin {
                     (!lastAction.context?.active_id ||
                         lastAction.context?.active_id === context.active_id) &&
                     (!lastAction.context?.active_ids ||
-                        shallowEqual(lastAction.context?.active_ids, context.active_ids)) &&
-                    !lastAction.embedded_action_ids?.length
+                        shallowEqual(lastAction.context?.active_ids, context.active_ids))
                 ) {
                     actionRequest = lastAction;
                 } else {
@@ -884,16 +883,6 @@ export class ActionPlugin extends Plugin {
         viewProps.noBreadcrumbs =
             "_noBreadcrumbs" in action ? action._noBreadcrumbs : target === "new";
 
-        // selecting an embedded action replaces the current action, which isn't
-        // the action of the dialog, so we don't display them in a dialog. A form
-        // view only displays them if it is the view of the action itself, not a
-        // record opened from a multi-record view of the action
-        const embeddedActions =
-            target === "new" || (view.type === "form" && views.some((v) => v.multiRecord))
-                ? []
-                : context.parent_action_embedded_actions || action.embedded_action_ids;
-        const parentActionId = (embeddedActions?.length && context.parent_action_id) || false;
-        const currentEmbeddedActionId = context.current_embedded_action_id || false;
         return {
             props: viewProps,
             currentState,
@@ -903,9 +892,6 @@ export class ActionPlugin extends Plugin {
                 cache: action.cache,
                 actionType: "ir.actions.act_window",
                 actionXmlId: action.xml_id,
-                embeddedActions,
-                parentActionId,
-                currentEmbeddedActionId,
                 views: action.views,
                 viewSwitcherEntries,
             },
@@ -998,6 +984,7 @@ export class ActionPlugin extends Plugin {
         }
         const index = this.#computeStackIndex(options);
         const nextStack = [...this.#controllerStack.slice(0, index), controller];
+
         if (action.target !== "new" && options.newWindow) {
             return this.#openActionInNewWindow(action, this.#makeState(nextStack));
         }
@@ -1018,12 +1005,6 @@ export class ActionPlugin extends Plugin {
                 controller.config.breadcrumbs.pop();
             }
         };
-        controller.config.setCurrentEmbeddedAction = (embeddedActionId) => {
-            controller.currentEmbeddedActionId = embeddedActionId;
-        };
-        controller.config.setEmbeddedActions = (embeddedActions) => {
-            controller.embeddedActions = embeddedActions;
-        };
         controller.config.historyBack = () => {
             const previousController = this.#controllerStack[this.#controllerStack.length - 2];
             if (previousController) {
@@ -1033,6 +1014,9 @@ export class ActionPlugin extends Plugin {
             }
         };
         controller.config.isReloadingController = controller === this.#controllerStack.at(-1);
+        for (const setupController of this.controllerSetups.items()) {
+            setupController(controller);
+        }
 
         const plugin = this;
         class ControllerComponent extends Component {
@@ -1657,23 +1641,15 @@ export class ActionPlugin extends Plugin {
      *
      * @param {DoActionButtonParams} params
      * @params {Object} [options={}]
-     * @params {boolean} [options.isEmbeddedAction] set to true if the action request is an
-     *  embedded action. This allows to do the necessary context cleanup and avoid infinite
-     *  recursion.
      * @params {boolean} [options.newWindow] set to true to open the action in a new tab/window.
      * @returns {Promise<void>}
      */
-    async #doActionButton(params, { isEmbeddedAction, newWindow } = {}) {
+    async #doActionButton(params, { newWindow } = {}) {
         if (!params.name && !params.special) {
             return;
         }
         // determine the action to execute according to the params
         let action;
-        if (!isEmbeddedAction) {
-            for (const key of EMBEDDED_ACTIONS_CTX_KEYS) {
-                delete params.context?.[key];
-            }
-        }
         const context = makeContext([params.context, params.buttonContext]);
         const blockUi = exprToBoolean(params["block-ui"]);
         if (blockUi) {
@@ -1720,57 +1696,6 @@ export class ActionPlugin extends Plugin {
                 this.#ui.unblock();
             }
             throw new InvalidButtonParamsError("Missing type for doActionButton request");
-        }
-        if (!isEmbeddedAction && action.embedded_action_ids?.length) {
-            const activeId = action.context?.active_id || params.resId;
-            const embeddedActionsKey = `${action.id}+${activeId || ""}`;
-            const embeddedActionsOrder =
-                user.settings.embedded_actions_config_ids?.[embeddedActionsKey]
-                    ?.embedded_actions_order;
-            const embeddedActionId = embeddedActionsOrder?.[0];
-            const embeddedAction = action.embedded_action_ids?.find(
-                (embeddedAction) => embeddedAction.id === embeddedActionId
-            );
-            if (embeddedAction) {
-                const embeddedActions = [
-                    ...action.embedded_action_ids,
-                    {
-                        id: false,
-                        name: action.name,
-                        parent_action_id: action.id,
-                        parent_res_model: action.res_model,
-                        action_id: action.id,
-                        user_id: false,
-                        context: {},
-                    },
-                ];
-                const context = {
-                    ...action.context,
-                    ...(embeddedAction.context ? makeContext([embeddedAction.context]) : {}),
-                    active_id: activeId,
-                    active_model: action.context?.active_id
-                        ? action.context.active_model || embeddedAction.parent_res_model
-                        : params.resModel,
-                    current_embedded_action_id: embeddedActionId,
-                    parent_action_embedded_actions: embeddedActions,
-                    parent_action_id: action.id,
-                };
-                await this.#doActionButton(
-                    {
-                        name:
-                            embeddedAction.python_method ||
-                            embeddedAction.action_id[0] ||
-                            embeddedAction.action_id,
-                        resId: activeId,
-                        context,
-                        type: embeddedAction.python_method ? "object" : "action",
-                        resModel: embeddedAction.parent_res_model,
-                        viewType: embeddedAction.default_view_mode,
-                    },
-                    { isEmbeddedAction: true }
-                );
-                return;
-            }
         }
         // filter out context keys that are specific to the current action, because:
         //  - wrong default_* and search_default_* values won't give the expected result

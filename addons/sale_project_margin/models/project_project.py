@@ -16,13 +16,10 @@ class ProjectProject(models.Model):
 
     def action_estimated_margin(self):
         self.ensure_one()
-        embedded_action_context = self.env.context.get('from_embedded_action', False)
         action = self.env['ir.actions.act_window']._for_xml_id('sale_project_margin.action_project_forecast_margin')
         all_sale_orders_lines = self._fetch_sale_order_items({'project.task': [('is_closed', '=', False)]})
-        action['display_name'] = self.env._("%(name)s's Forecast Margins", name=self.name)
         action["domain"] = [("id", "in", all_sale_orders_lines.ids)]
         action['context'] = {
-            'from_embedded_action': embedded_action_context,
-            'search_default_filter_order_date': not embedded_action_context,
+            'search_default_filter_order_date': self.env.context.get('margin_date_filter', True),
         }
         return action

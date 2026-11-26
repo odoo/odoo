@@ -304,7 +304,6 @@ export class SearchModel extends EventBus {
                 },
                 {
                     actionId: this.env.config.actionId,
-                    embeddedActionId: this.env.config.currentEmbeddedActionId,
                     loadIrFilters: loadIrFilters || false,
                 }
             );
@@ -2425,7 +2424,7 @@ export class SearchModel extends EventBus {
      * @returns {{ preFavorite: Object, irFilter: Object }}
      */
     _getIrFilterDescription(params = {}) {
-        const { description, isDefault, isShared, embeddedActionId } = params;
+        const { description, isDefault, isShared } = params;
         const fns = this.env.__getContext__.callbacks;
         const localContext = Object.assign({}, ...fns.map((fn) => fn()));
         const gs = this.env.__getOrderBy__.callbacks;
@@ -2460,8 +2459,6 @@ export class SearchModel extends EventBus {
             action_id: this.env.config.actionId,
             model_id: this.resModel,
             domain,
-            embedded_action_id: embeddedActionId,
-            embedded_parent_res_id: this.globalContext.active_id || false,
             is_default: isDefault,
             sort: JSON.stringify(orderBy.map((o) => `${o.name}${o.asc === false ? " desc" : ""}`)),
             user_ids: userIds,

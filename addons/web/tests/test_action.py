@@ -1,6 +1,8 @@
 import json
+from unittest.mock import patch
 
-from odoo.tests import HttpCase, tagged
+from odoo.fields import Command
+from odoo.tests import HttpCase, new_test_user, tagged
 
 
 @tagged('post_install', '-at_install')
@@ -273,3 +275,71 @@ class TestLoadBreadcrumbs(HttpCase):
             }),
         )
         self.assertEqual(resp.json()['error']['message'], 'Odoo Server Error')
+
+
+@tagged('post_install', '-at_install')
+class TestActionHub(HttpCase):
+    """ The routes opening actions add the hub of the opened item (see
+    ``test_ir_hub`` for the content of the hub).
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user = new_test_user(cls.env, 'hub_http_user', groups='base.group_user')
+        cls.partners = cls.env['res.partner'].create([{'name': 'Hub partner 1'}, {'name': 'Hub partner 2'}])
+        cls.window_action = cls.env['ir.actions.act_window'].create({'name': 'Partners', 'res_model': 'res.partner'})
+        cls.env['ir.hub'].search([('res_model', '=', 'res.partner')]).unlink()
+        cls.hub = cls.env['ir.hub'].create({
+            'name': 'Partner hub',
+            'res_model': 'res.partner',
+            'item_ids': [
+                Command.create({'name': 'Method', 'python_method': 'action_hub_test', 'res_model': 'res.partner'}),
+                Command.create({'name': 'Action', 'action_id': cls.window_action.id}),
+            ],
+        })
+        cls.method_item, cls.action_item = cls.hub.item_ids
+
+        def action_hub_test(self):
+            return {'type': 'ir.actions.act_window', 'res_model': 'res.partner', 'views': [[False, 'list']]}
+
+        cls.startClassPatcher(patch.object(
+            cls.registry['res.partner'], 'action_hub_test', action_hub_test, create=True,
+        ))
+
+    def setUp(self):
+        super().setUp()
+        self.authenticate('hub_http_user', 'hub_http_user')
+
+    def _call_button(self, partners):
+        return self.make_jsonrpc_request('/web/dataset/call_button', {
+            'model': 'res.partner', 'method': 'action_hub_test', 'args': [partners.ids], 'kwargs': {},
+        })
+
+    # a button calling an item's method on one record opens that item's hub
+    def test_call_button_hub(self):
+        with self.assertNoLogs('odoo.addons.web.controllers.utils', 'WARNING'):
+            action = self._call_button(self.partners[0])
+        self.assertEqual(action['hub']['active_item_id'], self.method_item.id)
+
+    # a button called on several records opens no hub
+    def test_call_button_multi_ids(self):
+        self.assertNotIn('hub', self._call_button(self.partners))
+
+    # loading an item's action opens its hub only when given an active record
+    # of the hub's model
+    def test_action_load_hub(self):
+        def load(context=None):
+            return self.make_jsonrpc_request('/web/action/load', {
+                'action_id': self.window_action.id, 'context': context or {},
+            })
+
+        partner_id = self.partners[0].id
+        action = load({'active_id': partner_id, 'active_model': 'res.partner'})
+        self.assertEqual(action['hub']['active_item_id'], self.action_item.id)
+        # restored from the url, without active_model
+        self.assertEqual(load({'active_id': partner_id})['hub']['active_item_id'], self.action_item.id)
+        self.assertNotIn('hub', load())
+        self.assertNotIn('hub', load({'active_id': partner_id, 'active_model': 'res.users'}))
+        missing_id = self.env['res.partner'].search([], order='id desc', limit=1).id + 1
+        self.assertNotIn('hub', load({'active_id': missing_id}))

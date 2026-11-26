@@ -110,19 +110,6 @@ export async function showTemplateView({ recordId }) {
     }
     await action.doAction(actionDescr);
 }
-export async function showProjectForm({ model, recordId, context }, options) {
-    const action = usePlugin(ActionPlugin);
-    await action.doAction(
-        {
-            type: "ir.actions.act_window",
-            res_model: model,
-            views: [[false, "form"]],
-            res_id: recordId,
-            context,
-        },
-        options
-    );
-}
 
 // Task → Template Notification
 registry.category("actions").add("project_show_template_notification", (action) => {
@@ -184,17 +171,3 @@ registry
         });
         return params.next;
     });
-
-// Top Menu → Project Form  Make Breadcrumbs
-registry.category("actions").add("project_top_menu_overview", (action, options) => {
-    const params = action || {};
-    showProjectForm(
-        {
-            model: "project.project",
-            recordId: action.res_id,
-            context: action.context,
-        },
-        options
-    );
-    return params.next;
-});

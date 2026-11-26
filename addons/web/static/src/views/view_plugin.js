@@ -17,8 +17,6 @@ import { DebugModePlugin } from "@web/core/debug_mode_plugin";
  * @property {boolean} is_default
  * @property {string} model_id
  * @property {[number, string] | false} action_id
- * @property {number | false} embedded_action_id
- * @property {number | false} embedded_parent_res_id
  */
 
 /**
@@ -72,8 +70,6 @@ export class ViewPlugin extends Plugin {
         const { context, resModel, views } = params;
         const loadViewsOptions = {
             action_id: options.actionId || false,
-            embedded_action_id: options.embeddedActionId || false,
-            embedded_parent_res_id: options.embeddedParentResId || false,
             load_filters: options.loadIrFilters || false,
             toolbar: (!context?.disable_toolbar && options.loadActionMenus) || false,
         };
@@ -81,8 +77,6 @@ export class ViewPlugin extends Plugin {
             if (
                 ![
                     "actionId",
-                    "embeddedActionId",
-                    "embeddedParentResId",
                     "loadIrFilters",
                     "loadActionMenus",
                 ].includes(key)
