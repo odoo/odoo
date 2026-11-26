@@ -1,12 +1,11 @@
 from odoo import Command
 from odoo.tests import tagged
 from odoo.addons.l10n_jo_edi.tests.jo_edi_common import JoEdiCommon
-from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class JoEdiPosCommon(JoEdiCommon, TestPoSCommon, TestPointOfSaleHttpCommon):
+class JoEdiPosCommon(JoEdiCommon, TestPointOfSaleHttpCommon):
 
     _test_user_groups = None  # FIXME list needed groups
 

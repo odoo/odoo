@@ -1,6 +1,6 @@
 from odoo import Command
 from odoo.addons.account.tests.test_taxes_downpayment import TestTaxesDownPayment
-from odoo.addons.point_of_sale.tests.test_frontend import TestTaxCommonPOS
+from odoo.addons.point_of_sale.tests.common import TestTaxCommonPOS
 from odoo.addons.sale.tests.common import TestTaxCommonSale
 from odoo.tests import tagged
 

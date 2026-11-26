@@ -6,14 +6,13 @@ from freezegun import freeze_time
 import odoo.tests
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
 from odoo.addons.point_of_sale.tests.common import archive_products
-from odoo.addons.point_of_sale.tests.common import CommonPosTest
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 from odoo import Command, fields
 import json
 from datetime import datetime, timedelta
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestFrontendCommon(TestPointOfSaleHttpCommon, CommonPosTest):
+class TestFrontendCommon(TestPointOfSaleHttpCommon):
 
     _test_user_groups = None  # FIXME list needed groups
 
