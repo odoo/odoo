@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, proxy, useExternalListener } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { _t } from "@web/core/l10n/translation";
@@ -14,6 +14,17 @@ export class ConnectWebSerialScale extends Component {
     setup() {
         super.setup();
         this.notification = useService("notification");
+        this.state = proxy({ connected: false });
+        if (navigator.serial) {
+            const update = () => this.updateConnectedState();
+            update();
+            useExternalListener(navigator.serial, "connect", update);
+            useExternalListener(navigator.serial, "disconnect", update);
+        }
+    }
+
+    async updateConnectedState() {
+        this.state.connected = (await WebSerialScale.getConnectedPorts()).length > 0;
     }
 
     checkBrowserCompatibility() {
@@ -52,6 +63,7 @@ export class ConnectWebSerialScale extends Component {
                 });
                 await port.forget();
             }
+            await this.updateConnectedState();
         } catch {
             this.notification.add(_t("No device was selected."), { type: "warning" });
         }

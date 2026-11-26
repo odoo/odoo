@@ -45,14 +45,16 @@ export class WebSerialScale extends ScaleInterface {
         }
     }
 
-    async connectToScale() {
+    static async getConnectedPorts() {
         if (!navigator.serial) {
-            return false;
+            return [];
         }
-
         const allowedPorts = await navigator.serial.getPorts();
-        const connectedPorts = allowedPorts.filter((port) => port.connected);
-        for (const port of connectedPorts) {
+        return allowedPorts.filter((port) => port.connected);
+    }
+
+    async connectToScale() {
+        for (const port of await WebSerialScale.getConnectedPorts()) {
             this.serialPort = port;
             if (await this.isScaleSupported()) {
                 break;
