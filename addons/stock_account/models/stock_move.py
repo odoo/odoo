@@ -348,9 +348,10 @@ class StockMove(models.Model):
             return
 
         for company, moves in done_moves.grouped('company_id').items():
+            moves = moves.with_company(company)
             correction_line_vals = []
             move_ids_to_create = set()
-            for move in done_moves:
+            for move in moves:
                 if move._should_create_account_move():
                     if move.account_move_id:
                         correction_line_vals += move._get_account_move_line_vals()
@@ -358,30 +359,31 @@ class StockMove(models.Model):
                         # If previous value was 0, then no line would be existing yet.
                         move_ids_to_create.add(move.id)
             if move_ids_to_create:
-                moves_to_create = self.env['stock.move'].browse(move_ids_to_create)
+                moves_to_create = moves.browse(move_ids_to_create)
                 moves_to_create._create_account_move()
-            moves_with_cogs = done_moves.filtered('cogs_aml_ids')
-            moves_without_cogs = (done_moves - moves_with_cogs)
+            moves_with_cogs = moves.filtered('cogs_aml_ids')
+            moves_without_cogs = moves - moves_with_cogs
             correction_line_vals += moves_with_cogs.cogs_aml_ids._set_cogs()
             if moves_without_cogs:
                 # If previous value was zero, then no cogs would existing yet.
                 moves_by_invoices = moves_without_cogs._get_moves_by_invoice()
                 locked_cogs_vals, unlocked_cogs_vals = [], []
-                for invoice, moves in moves_by_invoices.items():
+                for invoice in moves_by_invoices:
                     invoice = invoice.with_company(invoice.company_id)
                     locked = bool(invoice.company_id._get_lock_date_violations(invoice.date, sale=False, purchase=False))
                     cogs_vals_list = locked_cogs_vals if locked else unlocked_cogs_vals
                     cogs_vals_list += invoice._get_cogs_lines_vals()
                 # Lines from invoices outside of lock period can be created directly in them. Otherwise, create a correction entry
-                self.env['account.move.line'].create(unlocked_cogs_vals)
+                moves.env['account.move.line'].create(unlocked_cogs_vals)
                 correction_line_vals += locked_cogs_vals
-            refs = list(set(done_moves.mapped('reference')))
+
+            if not correction_line_vals:
+                continue
+
+            refs = list(set(moves.mapped('reference')))
             if len(refs) > 10:
                 refs = refs[:10] + [self.env._("Others")]
             justification = self.env._("Valuation correction following a cost change on: %s", refs)
-
-            if not correction_line_vals:
-                return
             correction_move = self.env['account.move'].with_context(clean_context(self.env.context)).with_company(company).create({
                 'journal_id': company.account_stock_journal_id.id,
                 'date': fields.Date.context_today(self),
