@@ -24,12 +24,11 @@ export class PaymentMercadoPago extends PaymentInterface {
         );
     }
     async get_last_status_payment_intent() {
-        const line = this.pos.get_order().get_selected_paymentline();
         // mp_payment_intent_get will call the Mercado Pago api
         return await this.env.services.orm.silent.call(
             "pos.payment.method",
             "mp_payment_intent_get",
-            [[line.payment_method_id.id], this.payment_intent.id]
+            [[this.payment_method_id.id], this.payment_intent.id]
         );
     }
 
@@ -44,12 +43,11 @@ export class PaymentMercadoPago extends PaymentInterface {
     }
 
     async get_payment(payment_id) {
-        const line = this.pos.get_order().get_selected_paymentline();
         // mp_get_payment_status will call the Mercado Pago api
         return await this.env.services.orm.silent.call(
             "pos.payment.method",
             "mp_get_payment_status",
-            [[line.payment_method_id.id], payment_id]
+            [[this.payment_method_id.id], payment_id]
         );
     }
 
@@ -102,8 +100,10 @@ export class PaymentMercadoPago extends PaymentInterface {
         return true;
     }
 
-    async handleMercadoPagoWebhook() {
-        const line = this.pos.get_order().get_selected_paymentline();
+    async handleMercadoPagoWebhook(line) {
+        if (!line) {
+            return;
+        }
         const MAX_RETRY = 5; // Maximum number of retries for the "ON_TERMINAL" BUG
         const RETRY_DELAY = 1000; // Delay between retries in milliseconds for the "ON_TERMINAL" BUG
 
