@@ -122,6 +122,10 @@ class IrModel(models.Model):
                             ) or (property_definition['type'] == 'separator')):
                                 # Ignore non-fully defined properties
                                 continue
+                            if property_definition['type'] == 'signature':
+                                # TODO: remove once signature properties are
+                                # supported in website forms.
+                                continue
                             property_definition['_property'] = {
                                 'field': field,
                             }
