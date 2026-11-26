@@ -7,7 +7,7 @@ from collections import UserList, defaultdict
 from contextlib import suppress
 from datetime import date, datetime
 from functools import partial, wraps
-from itertools import product
+from itertools import product, repeat
 from types import CellType, MethodType
 from typing import Generic, TypeVar
 
@@ -260,8 +260,11 @@ class Store:
         """
         if not values:
             return self
-        data_list = []
-        self._add_abstract_fields_value(self._format_fields(values), data_list)
+        if isinstance(values, dict) and not any(map(callable, values.values())):
+            data_list = [values]
+        else:
+            data_list = []
+            self._add_abstract_fields_value(self._format_fields(values), data_list)
         index = self._get_record_index(model_name, [id_data or {}] + data_list)
         for data in data_list:
             self._add_values(data, model_name, index)
@@ -569,7 +572,7 @@ class Store:
 
     def _add_abstract_fields_value(self, abstract_fields, data_list, record=None, unversioned=None):
         for field in abstract_fields:
-            with suppress(MissingError):
+            try:
                 if isinstance(field, dict):
                     data_list.append(field)
                 elif not field.predicate or field.predicate(record):
@@ -598,6 +601,8 @@ class Store:
                                 field.field_name: Store._format_version(version),
                             }
                     data_list.append(data)
+            except MissingError:
+                pass
 
     def _get_record_index(self, model_name, data_list):
         # regroup indentifying fields into values as they might be spread accross data_list entries
@@ -619,8 +624,8 @@ class Store:
     def _deep_freeze(obj, with_captures=True):
         """Recursively convert a data structure into an immutable version that can be hashed and
         compared for identity. Without captures, a function counts by its code only."""
-        if isinstance(obj, (Store.FieldList, Store.Attr, Store.TargetBlock)):
-            return Store._deep_freeze(obj._identity(), with_captures)
+        if obj is None or isinstance(obj, (str, int)):
+            return obj
         if isinstance(obj, dict):
             return (
                 "__dict__",
@@ -630,11 +635,13 @@ class Store:
                 ),
             )
         if isinstance(obj, list):
-            return ("__list__", tuple(Store._deep_freeze(i, with_captures) for i in obj))
+            return ("__list__", tuple(map(Store._deep_freeze, obj, repeat(with_captures))))
         if isinstance(obj, tuple):
-            return tuple(Store._deep_freeze(i, with_captures) for i in obj)
+            return tuple(map(Store._deep_freeze, obj, repeat(with_captures)))
         if isinstance(obj, set):
-            return frozenset(Store._deep_freeze(i, with_captures) for i in obj)
+            return frozenset(map(Store._deep_freeze, obj, repeat(with_captures)))
+        if isinstance(obj, (Store.Attr, Store.FieldList, Store.TargetBlock)):
+            return Store._deep_freeze(obj._identity(), with_captures)
         if isinstance(obj, models.BaseModel):
             return ("__records__", obj.env, obj._name, obj._ids)
         if with_captures and isinstance(obj, MethodType):
@@ -1139,6 +1146,9 @@ class Store:
             super().__init__()
             # records for which the field list will apply. Useful to pre-compute values in batch.
             self.records = records
+
+        def __iter__(self):
+            return iter(self.data)
 
         def __contains__(self, field):
             # Also match Store.Attr (not relations) by field name.
