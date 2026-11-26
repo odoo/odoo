@@ -307,6 +307,16 @@ class HrVersion(models.Model):
                 # take vals from template, but priority given to the original vals
                 vals.update({**contract_vals, **vals})
 
+        def set_employee_company(created_vals_list):
+            # the default company is the current one: a version belongs to the company of its employee
+            employee_ids = {vals['employee_id'] for vals in created_vals_list if vals.get('employee_id') and 'company_id' not in vals}
+            if employee_ids:
+                # sudo: hr.employee - only the company of the employee is read
+                company_by_employee = {employee.id: employee.company_id.id for employee in self.env['hr.employee'].sudo().browse(employee_ids)}
+                for vals in created_vals_list:
+                    if vals.get('employee_id') and 'company_id' not in vals:
+                        vals['company_id'] = company_by_employee[vals['employee_id']]
+
         if self.env.context.get('import_file'):
             new_vals_list = []
             existing_records_by_idx = {}
@@ -337,6 +347,8 @@ class HrVersion(models.Model):
                         continue
                 new_vals_list.append((idx, vals))
 
+            # only the versions created, a version found by the import keeps its company
+            set_employee_company([vals for _idx, vals in new_vals_list])
             if existing_records_by_idx:
                 created = super().create([v for i, v in new_vals_list]) if new_vals_list else self.browse()
                 created._track_log_version_creation()
@@ -346,6 +358,7 @@ class HrVersion(models.Model):
                     for i in range(len(vals_list))
                 ])
 
+        set_employee_company(vals_list)
         versions = super().create(vals_list)
         versions._track_log_version_creation()
         return versions
