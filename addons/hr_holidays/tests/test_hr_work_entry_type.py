@@ -521,3 +521,32 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
         for user, expected in ((self.user_responsible, False), (self.user_hrmanager, True)):
             wizard = self.env['hr.leave.generate.multi.wizard'].with_user(user).new({})
             self.assertEqual(not_selectable_type in wizard.allowed_work_entry_type_ids._origin, expected)
+
+    @freeze_time('2026-06-01')
+    def test_time_off_time_types_sorted_by_allocation_then_code(self):
+        """The time types of a time off list the ones with an allocation first, then by code"""
+        allocated, variant, not_allocated, generic = self.env['hr.work.entry.type'].create([
+            {'name': 'Allocated', 'code': 'ZZZ.00', 'sequence': 3, 'requires_allocation': True},
+            {'name': 'Variant', 'code': 'AAA.08', 'sequence': 1, 'requires_allocation': False},
+            {'name': 'Not Allocated', 'code': 'AAA.04', 'sequence': 2, 'requires_allocation': True},
+            {'name': 'Generic', 'code': 'AAA.00', 'sequence': 4, 'requires_allocation': False},
+        ])
+        self.env['hr.leave.allocation'].create({
+            'employee_id': self.employee_emp_id,
+            'work_entry_type_id': allocated.id,
+            'number_of_days': 10,
+            'date_from': date(2026, 1, 1),
+        })
+        types = allocated | variant | not_allocated | generic
+        WorkEntryType = self.env['hr.work.entry.type'].with_context(employee_id=self.employee_emp_id)
+        time_off_context = self.env['hr.leave']._fields['work_entry_type_id'].context
+
+        self.assertEqual(
+            WorkEntryType.with_context(**time_off_context).search([('id', 'in', types.ids)]).ids,
+            (allocated | generic | not_allocated | variant).ids,
+        )
+        self.assertEqual(
+            WorkEntryType.search([('id', 'in', types.ids)]).ids,
+            (variant | not_allocated | allocated | generic).ids,
+            "Outside of a time off, the time types keep their sequence order",
+        )

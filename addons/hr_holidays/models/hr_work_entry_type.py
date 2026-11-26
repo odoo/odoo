@@ -32,7 +32,15 @@ class HrWorkEntryType(models.Model):
 
     @api.model
     def _model_sorting_key(self, work_entry_type):
-        """Return the sort key of the types in :meth:`_search` (``sequence``)."""
+        """Return the sort key of the types in :meth:`_search`.
+
+        ``sequence``, or with ``work_entry_type_sort_by_allocation`` in the context (time type of
+        a time off): the types the employee has an allocation for first, then by code, so that a
+        generic type (``002.00``) comes before its variants (``002.08``).
+        """
+        if self.env.context.get('work_entry_type_sort_by_allocation'):
+            has_allocation = work_entry_type.requires_allocation and work_entry_type.has_valid_allocation
+            return not has_allocation, work_entry_type.code
         return work_entry_type.sequence
 
     create_calendar_meeting = fields.Boolean(
