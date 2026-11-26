@@ -499,6 +499,35 @@ class HrAttendance(models.Model):
                                                        empl_name=employee.name,
                                                        datetime=format_datetime(self.env, starting_during[-1].check_in, dt_format=False)))
 
+    def _get_break_rule_lines(self):
+        """Return the break rule line of each closed attendance: the line of the employee's break rule with the highest
+        hours that the attendance (``check_out - check_in``) exceeds.
+
+        :return: ``{attendance: hr.attendance.break.rule.line}``, only the attendances with a line
+        :rtype: dict
+        """
+        attendances = self.filtered('check_out')
+        rule_by_employee = self.env['hr.attendance.break.rule']._get_rule_by_employee(attendances.employee_id)
+        result = {}
+        for attendance in attendances:
+            if not (rule := rule_by_employee.get(attendance.employee_id)):
+                continue
+            if line := rule._get_line(time_to_float(attendance.check_out - attendance.check_in)):
+                result[attendance] = line
+        return result
+
+    def _get_break_rule_raises(self):
+        """Return the attendances whose break is below the minimum break of their break rule line.
+
+        :return: ``{minimum break: attendances}``
+        :rtype: dict
+        """
+        to_raise = defaultdict(self.browse)
+        for attendance, line in self._get_break_rule_lines().items():
+            if float_compare(attendance.break_duration, line.break_hours, precision_digits=4) < 0:
+                to_raise[line.break_hours] |= attendance
+        return to_raise
+
     # The fields that a manager approves when reviewing an attendance. When one of them changes, the issues of its day
     # may change. When the employee changes one of them, the attendance needs a new review.
     _REVIEWED_FIELDS = frozenset({'check_in', 'check_out', 'break_duration', 'employee_id'})
@@ -558,6 +587,10 @@ class HrAttendance(models.Model):
         super(HrAttendance, edited_by_manager).write(manager_vals)
         super(HrAttendance, edited_by_employee - moved_to_unmanaged).write(employee_vals)
         super(HrAttendance, moved_to_unmanaged).write({**employee_vals, "in_mode": "manual", "out_mode": "manual"})
+        if changes_reviewed_fields:
+            for break_hours, attendances in self._get_break_rule_raises().items():
+                # sudo: the rule applies whoever writes the attendance
+                super(HrAttendance, attendances.sudo()).write({'break_duration': break_hours})
 
         # the issues first: they read has_issue before the overtime changes
         had_issue = (same_day_attendances_before | self)._recompute_same_day_issues()
@@ -1153,6 +1186,9 @@ class HrAttendance(models.Model):
                     self.env._("Only the attendance managers of the employees can review their attendances."),
                 )
         attendances = super().create(vals_list)
+        for break_hours, to_raise in attendances._get_break_rule_raises().items():
+            # sudo: the rule applies whoever creates the attendance
+            super(HrAttendance, to_raise.sudo()).write({'break_duration': break_hours})
         # the new attendances change the issues of the other attendances of their days
         had_issue = attendances.filtered_domain(self._get_worked_time_domain())._recompute_same_day_issues()
         (attendances._search_same_day_attendances() - attendances)._recompute_expected_hours()

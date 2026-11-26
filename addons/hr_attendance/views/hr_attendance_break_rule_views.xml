@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_attendance_break_rule_view_form" model="ir.ui.view">
+        <field name="name">hr.attendance.break.rule.form</field>
+        <field name="model">hr.attendance.break.rule</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="e.g. Legal breaks"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="employee_domain" widget="domain_company" options="{'model': 'hr.employee'}"/>
+                        </group>
+                        <group>
+                            <field name="company_id" placeholder="All companies" domain="[('id', 'in', allowed_company_ids)]"
+                                groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <field name="line_ids">
+                        <list editable="bottom">
+                            <field name="work_hours" widget="float_time"/>
+                            <field name="break_hours" widget="float_time"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_attendance_break_rule_view_list" model="ir.ui.view">
+        <field name="name">hr.attendance.break.rule.list</field>
+        <field name="model">hr.attendance.break.rule</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="employee_domain" widget="domain_count" options="{'model': 'hr.employee'}"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_attendance_break_rule_action" model="ir.actions.act_window">
+        <field name="name">Break Rules</field>
+        <field name="res_model">hr.attendance.break.rule</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'default_company_id': context.get('allowed_company_ids', [False])[0]}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create a break rule</p>
+            <p>Give the attendances a minimum break, by the hours of the attendance.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_hr_attendance_break_rule" name="Break Rules" parent="menu_hr_attendance_configuration"
+        action="hr_attendance_break_rule_action" sequence="20" groups="hr_attendance.group_hr_attendance_user"/>
+</odoo>
