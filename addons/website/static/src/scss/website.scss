@@ -2044,6 +2044,15 @@ header {
     .o_grid_header_3_cols:has(.o_header_search_right_col.order-0) .navbar-brand {
         order: 1;
     }
+
+    .o_header_search_right_col {
+        justify-content: flex-end;
+
+        &.order-0 {
+            justify-content: flex-start;
+            padding-left: 0 !important;
+        }
+    }
 }
 
 .o_grid_header_3_cols {
