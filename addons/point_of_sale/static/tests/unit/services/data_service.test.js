@@ -261,6 +261,52 @@ describe("data_service", () => {
         expect.verifySteps([{ models: [], cached: true }]);
     });
 
+    test("syncInitialData only writes records returned by the server to indexedDB", async () => {
+        const store = await setupPosEnv();
+        const data = store.data;
+        const written = [];
+        patchWithCleanup(data, {
+            async cleanOldModels() {},
+            async synchronizeServerDataInIndexedDB(serverData) {
+                written.push(serverData);
+            },
+        });
+        patchWithCleanup(data.indexedDB, {
+            delete() {},
+        });
+
+        const localData = {
+            "res.partner": [
+                { id: 1, name: "Cached Partner" },
+                { id: 2, name: "Removed Partner" },
+            ],
+            "product.template": [{ id: 10, name: "Cached Product" }],
+        };
+        const serverData = {
+            "res.partner": {
+                records: [{ id: 3, name: "New Partner" }],
+                to_remove: [2],
+            },
+            "product.template": {
+                records: [],
+                to_remove: [],
+            },
+        };
+
+        await data.syncInitialData(serverData, localData);
+
+        expect(written).toEqual([{ "res.partner": [{ id: 3, name: "New Partner" }] }]);
+        expect(localData["res.partner"].map((r) => r.id)).toEqual([1, 3]);
+        expect(localData["product.template"].map((r) => r.id)).toEqual([10]);
+
+        written.length = 0;
+        await data.syncInitialData(
+            { "product.template": { records: [], to_remove: [] } },
+            localData
+        );
+        expect(written).toEqual([]);
+    });
+
     test("websocket reconnections don't duplicate the notification listeners", async () => {
         const store = await setupPosEnv();
         const bus = store.data.bus;

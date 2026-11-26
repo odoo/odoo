@@ -596,7 +596,15 @@ export class PosDataPlugin extends Plugin {
 
     async syncInitialData(data, localData) {
         await this.cleanLocalData(data, localData);
-        this.synchronizeServerDataInIndexedDB(localData);
+        const updatedRecords = {};
+        for (const [model, values] of Object.entries(data)) {
+            if (values.records?.length) {
+                updatedRecords[model] = values.records;
+            }
+        }
+        if (Object.keys(updatedRecords).length) {
+            this.synchronizeServerDataInIndexedDB(updatedRecords);
+        }
     }
 
     async cleanOldModels(localData, data) {
