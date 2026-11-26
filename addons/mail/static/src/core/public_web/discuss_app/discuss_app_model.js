@@ -35,9 +35,6 @@ export class DiscussApp extends Record {
     );
     isActive = false;
     isMemberPanelOpenByDefault = this.localStorage(true);
-    isSidebarCollapsed = this.computed(
-        () => this.isSidebarCollapseEnabled && this.canCollapseSidebar()
-    );
     isSidebarCollapseEnabled = this.localStorage(false);
     lastActiveId = this.localStorage(undefined);
     /** Width shared by the panels on the side of the conversation. */

@@ -3,6 +3,14 @@
     --PivotView-gutter: 1rem;
     --PivotView-background-color: var(--background-color, var(--o-webclient-background-color));
 
+    .o_resizable_panel_edge + & {
+        flex-grow: 1;
+        min-width: 0;
+        border: var(--border-width) solid var(--border-color);
+        border-bottom: 0;
+        padding-top: var(--o-bs-spacer-2);
+    }
+
     .o_pivot,
     .o_pivot_buttons {
         margin-inline: var(--PivotView-gutter);

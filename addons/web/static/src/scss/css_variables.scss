@@ -10,6 +10,13 @@
     @return escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path fill='none' stroke='#{$color}' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/></svg>"));
 }
 
+/* Registered so that its computed value resolves to px, readable from JS. */
+@property --o-datetime-picker-reduced-width {
+    syntax: "<length>";
+    inherits: true;
+    initial-value: 0px;
+}
+
 :root,
 :host {
     --o-action: #{$o-action};
@@ -141,7 +148,6 @@
     --o-search-bar-facet-value-width: #{$o-search-bar-facet-value-width};
     --o-search-bar-menu-max-width: calc(100vw - #{map-get($spacers, 3) * 2});
     --o-search-panel-font-size: #{$o-search-panel-font-size};
-    --o-search-panel-width: #{$o-search-panel-width};
     --o-shadow-color: #{$o-shadow-color};
     --o-sheet-vpadding: #{$o-sheet-vpadding};
     --o-spacer: #{$o-spacer};

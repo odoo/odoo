@@ -132,3 +132,27 @@ test("Dropdown closes on category selection", async () => {
     await contains(".o_search_panel_category_value:nth-of-type(2) header").click();
     expect(".o-dropdown--menu").toHaveCount(0);
 });
+
+test("hide search panel if there is no records", async () => {
+    Partner._records = [];
+    Partner._views = {
+        search: /* xml */ `
+            <search>
+                <searchpanel>
+                    <field name="category_id" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        `,
+    };
+    class Parent extends Component {
+        static components = { SearchPanel };
+        static template = xml`<SearchPanel/>`;
+    }
+
+    await mountWithSearch(Parent, {
+        resModel: "partner",
+        searchViewId: false,
+    });
+
+    expect(".o_search_panel").toHaveCount(0);
+});
