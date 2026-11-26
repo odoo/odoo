@@ -223,3 +223,23 @@ class TestWorkorder(TestMrpCommon):
         with Form(mo) as mo_form:
             with mo_form.workorder_ids.edit(0) as wo_form:
                 wo_form.qty_produced = 1
+
+    def test_update_qty_produced_on_workorders_of_different_mos(self):
+        """Updating the produced quantity of several work orders belonging to
+        different MOs at once (list view multi-edit) should update every MO
+        instead of raising an "Expected singleton" error.
+        """
+        mo_1, mo_2 = self.env['mrp.production'].create([
+            {'bom_id': self.bom_4.id, 'product_qty': 2},
+            {'bom_id': self.bom_4.id, 'product_qty': 3},
+        ])
+        (mo_1 | mo_2).action_confirm()
+        workorders = mo_1.workorder_ids | mo_2.workorder_ids
+        self.assertEqual(len(workorders), 2)
+
+        workorders.write({'qty_produced': 1})
+
+        self.assertRecordValues(workorders, [{'qty_produced': 1}, {'qty_produced': 1}])
+        self.assertRecordValues(mo_1 | mo_2, [{'qty_producing': 1}, {'qty_producing': 1}])
+        self.assertEqual(mo_1.move_raw_ids.quantity, 1)
+        self.assertEqual(mo_2.move_raw_ids.quantity, 1)
