@@ -2,12 +2,37 @@
 
 from odoo import api, fields, models
 
+# The `discount_type` of a privilege => the key of the matching ID in `additional_identifiers` of the customer
+PRIVILEGE_IDENTIFIER_KEYS = {
+    "pwd": "PH_PWD_ID",
+    "sc": "PH_SC_ID",
+}
+
 
 class AccountMove(models.Model):
     _inherit = "account.move"
 
     l10n_ph_has_discount_privilege = fields.Boolean(
         compute="_compute_l10n_ph_has_discount_privilege",
+    )
+
+    l10n_ph_privilege_id_no = fields.Char(
+        string="PWD/SC ID No.",
+        compute="_compute_l10n_ph_privilege_id_no",
+        store=True,
+        readonly=False,
+        copy=False,
+        help="Identification number of the PWD or Senior Citizen entitled to the discount privilege.",
+    )
+    l10n_ph_privilege_representative_name = fields.Char(
+        string="Representative Name",
+        copy=False,
+        help="Name of the person transacting on behalf of the PWD or Senior Citizen, if any.",
+    )
+    l10n_ph_privilege_representative_id_no = fields.Char(
+        string="Representative ID No.",
+        copy=False,
+        help="Identification number of the representative transacting on behalf of the PWD or Senior Citizen.",
     )
 
     @api.depends("invoice_line_ids.l10n_ph_discount_privilege_id", "move_type")
@@ -18,6 +43,38 @@ class AccountMove(models.Model):
                 for line in move.invoice_line_ids
                 if line.display_type == "product"
             )
+
+    @api.depends(
+        "partner_id.additional_identifiers",
+        "invoice_line_ids.l10n_ph_discount_privilege_id.discount_type",
+    )
+    def _compute_l10n_ph_privilege_id_no(self):
+        """
+        Fill the ID of the privilege holder from the matching ID of the customer,
+        e.g. the PWD ID when a PWD discount is applied.
+
+        Only drafts follow the customer: a posted invoice keeps the ID it was issued with, whatever
+        happens to the customer afterwards. Without a matching ID, what was typed in is kept.
+        """
+        for move in self:
+            identifiers = move.partner_id.additional_identifiers or {}
+            applied_types = {
+                line.l10n_ph_discount_privilege_id.discount_type
+                for line in move.invoice_line_ids
+                if line.display_type == "product"
+            }
+            id_no = next(
+                (
+                    identifiers[key]
+                    for discount_type, key in PRIVILEGE_IDENTIFIER_KEYS.items()
+                    if discount_type in applied_types and identifiers.get(key)
+                ),
+                False,
+            )
+            if move.state == "draft" and id_no:
+                move.l10n_ph_privilege_id_no = id_no
+            else:
+                move.l10n_ph_privilege_id_no = move.l10n_ph_privilege_id_no
 
     def action_open_discount_privilege_wizard(self):
         self.ensure_one()
