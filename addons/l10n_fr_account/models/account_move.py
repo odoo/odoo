@@ -21,9 +21,6 @@ class AccountMove(models.Model):
         for record in self:
             record.l10n_fr_is_company_french = record.country_code in record.company_id._get_france_country_codes()
 
-    @api.depends("country_code", "move_type")
-    def _compute_show_delivery_date(self):
-        # EXTEND 'account'
-        super()._compute_show_delivery_date()
-        for move in self.filtered(lambda m: m.country_code == 'FR'):
-            move.show_delivery_date = move.is_sale_document()
+    def _is_delivery_date_expected(self):
+        # EXTENDS 'account'
+        return self.country_code == 'FR' or super()._is_delivery_date_expected()
