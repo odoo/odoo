@@ -97,7 +97,7 @@ class DiscussChannelWebclientController(WebclientController):
             member.is_favorite = is_favorite
 
     @store_handler(
-        "/discuss/channel/meeting_to_group_chat", audience="everyone", readonly=True,
+        "/discuss/channel/meeting_to_group_chat", audience="everyone", readonly=False,
     )
     def store_convert_meeting_to_group_chat(self, store: Store, channel_id):
         if channel := request.env["discuss.channel"].search([("id", "=", channel_id)]):
